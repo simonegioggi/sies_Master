@@ -111,7 +111,7 @@ if (   "N".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato())
 	<%-- MEV_9 si aggiunge il tasto di modifica --%>
   <td class="LBG">
     <a href="Javascript:modifica()">
-      <img  align="middle" src="<%=IWebConstants.IMAGES_DIR%>modifica24.gif" alt="Modifica Nota di Trasmissione" width="24" height="24" border="0">
+      <img  align="middle" src="<%=IWebConstants.IMAGES_DIR%>modifica24.gif" alt="Modifica" width="24" height="24" border="0">
     </a>
   </td>
  <!-- BOTTONE DI STAMPA -->

@@ -300,8 +300,28 @@ public class ActInserisciMAAmmProvvisoria extends ActMisuraAlternativa implement
 					lEveNot.getEvento()
 							.setCodMotivo(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO));
 			} else {
-				lEveNot.getEvento().setCodMotivo(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO));
+				// MEV_9 Si rimappano tutti i codici sius dell'Applicazione Provvisoria su nuovi codici SIEP per evere una descizione
+				// più parlante anche se non trattasi di richiesta verbale
+				if ("0680".equals(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO)))
+					lEveNot.getEvento().setCodMotivo("1400");
+				else if ("0681".equals(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO)))
+					lEveNot.getEvento().setCodMotivo("1401");
+				else if ("0690".equals(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO)))
+					lEveNot.getEvento().setCodMotivo("1410");
+				else if ("0691".equals(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO)))
+					lEveNot.getEvento().setCodMotivo("1411");
+				else if ("0692".equals(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO)))
+					lEveNot.getEvento().setCodMotivo("1412");
+				else if ("0682".equals(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO)))
+					lEveNot.getEvento().setCodMotivo("1402");
+				else if ("0693".equals(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO)))
+					lEveNot.getEvento().setCodMotivo("1413");
+				else
+				// MEV_9 - FINE				
+					lEveNot.getEvento().setCodMotivo(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO));
 			}
+			
+
 			lEveNot.setEvento(super.setEventoProvvedimentoMisuraAlternativa(lEveNot.getEvento()));
 
 			// notifica
@@ -459,7 +479,25 @@ public class ActInserisciMAAmmProvvisoria extends ActMisuraAlternativa implement
 				else
 					lEve.getEvento().setCodMotivo(lMisAlModAMM.getCodTipoMisura());
 			} else {
-				lEve.getEvento().setCodMotivo(lMisAlModAMM.getCodTipoMisura());
+				// MEV_9 Si rimappano tutti i codici sius dell'Applicazione Provvisoria su nuovi codici SIEP per evere una descizione
+				// più parlante anche se non trattasi di richiesta verbale
+				if ("0680".equals(lMisAlModAMM.getCodTipoMisura()))
+					lEve.getEvento().setCodMotivo("1400");
+				else if ("0681".equals(lMisAlModAMM.getCodTipoMisura()))
+					lEve.getEvento().setCodMotivo("1401");
+				else if ("0690".equals(lMisAlModAMM.getCodTipoMisura()))
+					lEve.getEvento().setCodMotivo("1410");
+				else if ("0691".equals(lMisAlModAMM.getCodTipoMisura()))
+					lEve.getEvento().setCodMotivo("1411");
+				else if ("0692".equals(lMisAlModAMM.getCodTipoMisura()))
+					lEve.getEvento().setCodMotivo("1412");
+				else if ("0682".equals(lMisAlModAMM.getCodTipoMisura()))
+					lEve.getEvento().setCodMotivo("1402");
+				else if ("0693".equals(lMisAlModAMM.getCodTipoMisura()))
+					lEve.getEvento().setCodMotivo("1413");
+				else
+				// MEV_9 - FINE	
+					lEve.getEvento().setCodMotivo(lMisAlModAMM.getCodTipoMisura());
 			}
 			// lEve.getEvento().setCodMotivo(lMisAlModAMM.getCodTipoMisura());
 

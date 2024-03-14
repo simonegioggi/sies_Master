@@ -52,6 +52,12 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 
 			setRequestAttribute("documentiSius", lListaEventiOrdinanze);
 
+			
+			// MEV_9 
+			setRequestAttribute(CAMPO_TIPO_MA, lTipoMA);
+			setRequestAttribute(CAMPO_NATURA_MA, lNaturaMA);
+			// MEB_9 - FINE
+			
 			return PG_LISTA_DOCUMENTI_SIUS;
 		} else {
 			// new 05/2014 la ricerca viene effettuata per tutti i fascicoli presenti

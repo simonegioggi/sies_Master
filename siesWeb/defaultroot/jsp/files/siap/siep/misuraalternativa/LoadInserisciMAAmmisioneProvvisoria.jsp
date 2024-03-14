@@ -1076,7 +1076,7 @@ function caricaCombo() {
 }
 
 function checkDataEsecutObbl() {
-	  var codMotivo = document.LoadInserisciMisuraAlternativa.<%=ICostantiEvento.CAMPO_COD_MOTIVO%>.value();
+	  var codMotivo = document.LoadInserisciMisuraAlternativa.<%=ICostantiEvento.CAMPO_COD_MOTIVO%>.value;
 	  if (   codMotivo == '0680' || codMotivo == '0681' || codMotivo == '0690' || codMotivo == '0691' || codMotivo == '0692'
 		    || codMotivo == '0682' || codMotivo == '0693'
 		   ) 
@@ -1422,7 +1422,7 @@ if (eventonotifica.getNotifiche()!=null && eventonotifica.getNotifiche()[0]!=nul
 <table width="100%">
 	<tr>
 	
-	<td class="Titolo" colspan='8'> Dati Del Provvedimento della Sorveglianza <%=misuraalternativa.getIdMisuraAlternativa() %></td>
+	<td class="Titolo" colspan='8'> Dati Del Provvedimento della Sorveglianza</td>
 	<%-- 
 <%
 if (tipomisura.equals("AFFIDAMENTO")) {
@@ -1621,7 +1621,8 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
 	<tr>
 		<td class="l">Ufficio Emittente</td>
       	<td class="l" colspan="3">
-      		<%=MinorMask.comboEmittente(filtroMinorenni, MinorMask.EmittenteUfficio)%>
+      		<%-- MinorMask.comboEmittente(filtroMinorenni, MinorMask.EmittenteUfficio) --%>
+        	<%=MinorMask.comboEmittente(filtroMinorenni, MinorMask.EmittenteAutoritaUff, "onChange='pulisciComune();pulisciId();'",ICostantiMisuraAlternativa.CAMPO_COD_UFFICIO_SORVEGLIANZA,comboTipoUfficioSIUS)%>
       	</td>
     </tr>
     <tr>

@@ -1838,7 +1838,6 @@ public class MisuraAlternativaIndultinoController extends SiapController
 			// MEV-9 si aggiungono gli ulteriori codici motivo (sorveglianza)
 			Set<String> codiciAffidamentoSorv = new HashSet<String>(Arrays.asList(new String[]{"2006","2008","0680","0681","0690","0691","0692"}));
 			Set<String> codiciDetenzioneSorv  = new HashSet<String>(Arrays.asList(new String[]{"2005","0682","0693"}));
-
 			
 			// se la misura è eseguita da SORV cambio sempre la posizione giuridica
 			String lPosizioneDiArrivo = null;
@@ -1933,15 +1932,15 @@ public class MisuraAlternativaIndultinoController extends SiapController
 				else if (lEveModel.getCodMotivo().equals("5421"))
 					lStato = "0523"; // Richiesto Verbale per codice 2008 ()				
 				// MEV_9 - nuovi codici		
-				else if (lEveModel.getCodMotivo().equals("0680"))
+				else if (lEveModel.getCodMotivo().equals("1400"))
 					lStato = "0560"; 
-				else if (lEveModel.getCodMotivo().equals("0681"))
+				else if (lEveModel.getCodMotivo().equals("1401"))
 					lStato = "0561"; 
-				else if (lEveModel.getCodMotivo().equals("0690"))
+				else if (lEveModel.getCodMotivo().equals("1410"))
 					lStato = "0562";
-				else if (lEveModel.getCodMotivo().equals("0691"))
+				else if (lEveModel.getCodMotivo().equals("1411"))
 					lStato = "0563";
-				else if (lEveModel.getCodMotivo().equals("0692"))
+				else if (lEveModel.getCodMotivo().equals("1412"))
 					lStato = "0564";
 				// Nel caso di richiesta verbale
 				else if (lEveModel.getCodMotivo().equals("5422"))
@@ -1964,9 +1963,9 @@ public class MisuraAlternativaIndultinoController extends SiapController
 			//} else if ("2005".equals(lMisModelOrder.getCodTipoMisura())) { // Per Tipo Misura "DETENZIONE"
 				if ("2005".equals(lMisModelOrder.getCodTipoMisura())) 
 					lStato = "0068";
-				else if (lEveModel.getCodMotivo().equals("0682")) 
+				else if (lEveModel.getCodMotivo().equals("1402")) 
 					lStato = "0570";
-				else if (lEveModel.getCodMotivo().equals("0693")) 
+				else if (lEveModel.getCodMotivo().equals("1413")) 
 				  lStato = "0571";			
 		  }
 

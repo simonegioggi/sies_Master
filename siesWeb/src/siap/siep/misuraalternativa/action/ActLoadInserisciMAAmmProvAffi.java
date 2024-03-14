@@ -1,11 +1,14 @@
 package siap.siep.misuraalternativa.action;
 
 import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
+import f3b.model.DecodeModel;
 import f3b.util.F3BException;
 import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
@@ -104,7 +107,6 @@ public class ActLoadInserisciMAAmmProvAffi extends ActAmmissioneProvvisoria {
 		EventoModel lEveSorv = null;
 		UfficioModel lUffEmittente = null;
 		AutoritaEsternaModel lAutEsternaE = null;
-		// AutoritaEsternaModel lAutEsternaC = null;
 		IstitutoDetenzioneModel lIstituto = null;
 		CSSAModel lCssa = null;
 		UfficioModel lUffSorv = null;
@@ -121,7 +123,7 @@ public class ActLoadInserisciMAAmmProvAffi extends ActAmmissioneProvvisoria {
 			lEveNotMod = lCtrlEvento.ExRicercaEventoNotificaByKey(idEvento);
 			setRequestAttribute("eventonotifica", lEveNotMod);
 
-			// ricerca evento notifica
+			// ricerca evento notifica della SORV (dec/ord)
 			lEveSorv = lCtrlEvento.ExRicercaEventoByKey(lEveNotMod.getEvento().getEveIdEvento());
 			// setRequestAttribute("eventonotifica", lEveMod);
 
@@ -181,15 +183,13 @@ public class ActLoadInserisciMAAmmProvAffi extends ActAmmissioneProvvisoria {
 			EventoModel lEveVer = new EventoModel();
 			IEventoSimeone lCtrlEven = SICOLookupRemote.getEventoSimeoneRemote();
 			lEveVer = lCtrlEven.ExRicercaEventoByEveIdEventoTipoProvCodMotivo(
-					lMisAlModToChange.getEveIdEvento(), "07", "18", "0314");
+					lMisAlModToChange.getEveIdEvento(), "07", "18", "0314", "S"); // MEV_9 mi interessano i validati!!!
 
 			IVerbale lCtrlVe = SIEPLookupRemote.getVerbaleRemote();
 			VerbaleModel lVerbMod = lCtrlVe.ExRicercaVerbaleObblighiByIdEvento(lEveVer.getIdEvento());
 			setRequestAttribute("verbale", lVerbMod);
 
-			siesLogger.debug("lVerbMod.getIdVerbale()  = " + lVerbMod.getIdVerbale());
 			if (lVerbMod != null && lVerbMod.getIdVerbale() != null) {
-				siesLogger.debug("lMisAlModAMM  = " + lMisAlModAMM);
 				setRequestAttribute("misuraalternativa", lMisAlModToChange);
 				setRequestAttribute("misuraalternativaToChange", null);
 			}
@@ -237,6 +237,9 @@ public class ActLoadInserisciMAAmmProvAffi extends ActAmmissioneProvvisoria {
 		Option lOptionUffSIUS = new Option(DecodificheManager.getInstance().getTipoUfficioSIUS());
 		if (lUffEmittente != null) // se da verbale si precarica come dest l'ufficio emittente il provv sorv
 			lOptionUffSIUS.setSelected(lUffEmittente.getCodTipoUfficio());
+		
+		lOptionUffSIUS.setValueBlankItem("-");
+		lOptionUffSIUS.setAddBlankItem(Option.BLANK_ITEM);
 		setRequestAttribute("comboTipoUfficioSIUS", "" + lOptionUffSIUS);
 
 		// new d.f. DL 146/2013
@@ -255,11 +258,48 @@ public class ActLoadInserisciMAAmmProvAffi extends ActAmmissioneProvvisoria {
 		// MEV_9
 		// Option lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvAffi());
 		Option lOptionMotivo = null;
-		if (isUfficioMinorenni())
-			lOptionMotivo = new Option(
-					DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvAffiPmm());
-		else
+//		if (isUfficioMinorenni())
+//			lOptionMotivo = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvAffiPmm());
+//		else
 			lOptionMotivo = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvAffi());
+		
+		
+		Collection lMotiviColl = null;
+		if (isUfficioMinorenni())
+			lMotiviColl = DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvAffiPmm();
+		else
+			lMotiviColl = DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvAffi();
+		
+		// Scorro la collection e forzo la descrizione per alcuni codici perchè lato SIEP NON sono parlanti
+		Iterator<DecodeModel> itMot = lMotiviColl.iterator();
+		Collection nuovaColl = new Vector();
+		
+		while (itMot.hasNext()) {
+ 			DecodeModel lDecode = itMot.next();
+ 			DecodeModel lDecodeNew = new DecodeModel();
+ 			lDecodeNew.setCode(lDecode.getCode());
+ 			
+ 			// AFFIDAMENTO
+			if ("0680".equals(lDecode.getCode()))
+				lDecodeNew.setDescription("Applicazione Provvisoria "+lDecode.getDescription());
+			else if ("0681".equals(lDecode.getCode()))
+				lDecodeNew.setDescription("Applicazione Provvisoria "+lDecode.getDescription());
+			else if ("0690".equals(lDecode.getCode()))
+				lDecodeNew.setDescription("Applicazione Provvisoria "+lDecode.getDescription());
+			else if ("0691".equals(lDecode.getCode()))
+				lDecodeNew.setDescription("Applicazione Provvisoria "+lDecode.getDescription());
+			else if ("0692".equals(lDecode.getCode()))
+				lDecodeNew.setDescription("Applicazione Provvisoria "+lDecode.getDescription());
+			else 
+				lDecodeNew.setDescription(lDecode.getDescription());
+			
+			nuovaColl.add(lDecodeNew);
+		}
+		
+		lOptionMotivo = new Option (nuovaColl);
+		
+		
+		
 		// MEV_9 - FINE
 		if (lEveSorv != null)
 			lOptionMotivo.setSelected(lEveSorv.getCodMotivo());
