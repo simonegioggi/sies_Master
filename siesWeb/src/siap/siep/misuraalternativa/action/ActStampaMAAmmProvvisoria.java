@@ -96,7 +96,14 @@ public class ActStampaMAAmmProvvisoria
 
     if(lTipoMisura.equals("AFFIDAMENTO"))
     {
-      if (lEventoModel.getCodMotivo().equals("2008")){
+    	// MEV_9-SIEP si accorpano al 2008 (art 47 OP) anche i nuovi codici 1400-1410-1412
+      // if (lEventoModel.getCodMotivo().equals("2008")){
+      if (   lEventoModel.getCodMotivo().equals("2008") 
+      		|| lEventoModel.getCodMotivo().equals("1400") 
+      		|| lEventoModel.getCodMotivo().equals("1410")
+      		|| lEventoModel.getCodMotivo().equals("1412")
+      	 )
+      {
         if (lflagScarcerato.equals("PROC")){
           if (lPosizioneGiu.equals("01") || lPosizioneGiu.equals("14") || lPosizioneGiu.equals("03")
         	  || lPosizioneGiu.equals("73") || lPosizioneGiu.equals("74") || lPosizioneGiu.equals("75")
@@ -137,7 +144,20 @@ public class ActStampaMAAmmProvvisoria
         //      il motivo evento non è più il 2006 ma il 5420
         flagTemplate = "4";
       }
-      else if (lEventoModel.getCodMotivo().equals("2006"))
+     // MEV_9-SIEP si ggiungono gli ulteriori codici per le richieste verbale
+      else if (   lEventoModel.getCodMotivo().equals("5422") || lEventoModel.getCodMotivo().equals("5423") 
+ 		           || lEventoModel.getCodMotivo().equals("5424") || lEventoModel.getCodMotivo().equals("5425")
+ 		           || lEventoModel.getCodMotivo().equals("5426")
+ 		          )
+      {
+      	flagTemplate = "4";
+      }
+      // MEV_9-SIEP si accorpano al 2006 (art 309/90) anche i nuovi codici 1401-1411
+      //else if (lEventoModel.getCodMotivo().equals("2006"))
+      else if (   lEventoModel.getCodMotivo().equals("2006") 
+      		     || lEventoModel.getCodMotivo().equals("1401") 
+      		     || lEventoModel.getCodMotivo().equals("1411")
+      		    )
       { // Vecchia gestione per il codice 2006 affidamento Terapeutico
       	if (lflagScarcerato.equals("SORV"))
       	{
