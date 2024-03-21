@@ -2,7 +2,6 @@ package siap.siep.misuraalternativa.action;
 
 import java.math.BigDecimal;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -10,6 +9,7 @@ import f3b.util.F3BException;
 import f3b.web.IWebConstants;
 import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
+import siap.sico.decodifiche.model.DecodificheModel;
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.controller.IEventoSimeone;
@@ -35,7 +35,6 @@ import siap.siep.posizione.model.PosizioneGiuridicaLuogoDetenzioneAltraCausaMode
 import siap.siep.posizione.model.PosizioneGiuridicaModel;
 import siap.siep.sanzionesostitutiva.controller.ISanzioneSostitutiva;
 import siap.siep.sanzionesostitutiva.model.SanzioneSostResiduaModel;
-import siap.siep.util.MinorMask;
 import siap.siep.util.SIEPLookupRemote;
 import siap.siep.verbale.controller.IVerbale;
 import siap.siep.verbale.model.VerbaleModel;
@@ -194,6 +193,18 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 				lUffEmiMod = lCtrlUffEmi.getUfficioByKey(lMisAlModConcessa.getChiaveUfficioFascicoloSius());
 
 				setRequestAttribute("sedeUfficioEmittente", lUffEmiMod);
+				if ("MODIFICA".equals(tipoOperazione)) {
+					Collection<DecodificheModel> c = DecodificheManager.getInstance()
+							.getTipoUfficioSiepTDSMUDSM();
+					Object[] dms = c.toArray();
+					for (int i = 0; i < dms.length; i++) {
+						DecodificheModel dm = (DecodificheModel) dms[i];
+						if ("UDS".equals(dm.getCode()))
+							dm.setDescription("MAGISTRATO DI SORVEGLIANZA");
+					}
+					Option o = new Option(c, lUffEmiMod.getCodTipoUfficio());
+					setRequestAttribute("comboUfficioEmittenteModif", "" + o);
+				}
 			}
 		}
 
@@ -261,9 +272,22 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 			// + ((NotificaModel) lTable.get("NotCssa")).getCSSA().getIndirizzo();
 			setRequestAttribute("daticssa", ((NotificaModel) lTable.get("NotCssa")).getCSSA());
 			if ("MODIFICA".equals(tipoOperazione)) {
-				Collection<String> c = new HashSet<String>();
-				c.add(MinorMask.comboCSSATrattino(MinorMask.ComboCSSAId));
-				Option o = new Option(c, "" + ((NotificaModel) lTable.get("NotCssa")).getCssIdCssa());
+				Collection<DecodificheModel> c = DecodificheManager.getInstance()
+						.getTipoUffEsePenEstSerSocMin();
+				Object[] dms = c.toArray();
+				for (int i = 0; i < dms.length; i++) {
+					DecodificheModel dm = (DecodificheModel) dms[i];
+					if ("UEPE".equals(dm.getCode()))
+						dm.setDescription("UEPE");
+					else if ("USSM".equals(dm.getCode()))
+						dm.setDescription("USSM");
+				}
+				Option o = new Option(c, ((NotificaModel) lTable.get("NotCssa")).getCSSA().getTipo());
+				String[] lFiltro = new String[3];
+				lFiltro[0] = "-";
+				lFiltro[1] = "UEPE";
+				lFiltro[2] = "USSM";
+				o.setFilter(lFiltro);
 				setRequestAttribute("comboCSSATrattinoModif", "" + o);
 			}
 		}
@@ -369,9 +393,9 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 		}
 		}
 
-		if ((aFlagAffi != null && aFlagAffi.equals("S")) || (aPosizione.equals("13") // vecchio affidamento in
-																						// prova provvisorio
-				&& (IdEventoAmmProvvAff != null && !IdEventoAmmProvvAff.equals("")))
+		if ((aFlagAffi != null && aFlagAffi.equals("S"))
+				|| (aPosizione.equals("13") // vecchio affidamento in prova provvisorio
+						&& (IdEventoAmmProvvAff != null && !IdEventoAmmProvvAff.equals("")))
 				|| (aPosizione.equals("54"))) { // affidamento in prova provvisorio
 			lEve.getEvento().setCodTipoProvvedimento("12");
 			if ("0001".equals(aMotivo))

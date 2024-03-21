@@ -458,7 +458,9 @@ public class ActInserisciConcessione extends ActConcessione {
 		// se il soggetto è in detenzione domiciliare provvisoria (29) e viene concessa la detenzione
 		// mantengo la stessa data inizio misura della detenzione domiciliare provvisoria (precedentemente
 		// caricata in maschera)
-		if (aPosMod.getCodPosizioneGiuridica().equals("29") && atipoMisura.equals("DETENZIONE")) {
+		if ((aPosMod.getCodPosizioneGiuridica().equals("29") && atipoMisura.equals("DETENZIONE"))
+				// MEV_9-SIEP: aggiunta or condition per gestione ordinanza applicazione provvisoria
+				||(aPosMod.isLibero() && atipoMisura.equals("AFFIDAMENTO"))) {
 			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA))
 				aDataInizio = getRequestDateParameter(
 						ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA,

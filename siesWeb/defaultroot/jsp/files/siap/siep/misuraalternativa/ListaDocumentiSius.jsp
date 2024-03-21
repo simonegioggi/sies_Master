@@ -15,12 +15,11 @@
 
 <%@ page import="siap.siep.misuraalternativa.action.ICostantiMisuraAlternativa"%>
 
-<jsp:useBean id="documentiSius" scope="request" class="java.util.ArrayList" />
-
-<%-- MEV_9 --%>
-<jsp:useBean id="TipoMA"   scope="request" class="java.lang.String" />
-<jsp:useBean id="NaturaMA" scope="request" class="java.lang.String" />
-<%-- MEV_9 - FINE --%>
+<jsp:useBean id="documentiSius" scope="request" class="java.util.ArrayList"/>
+<%-- MEV_9-SIEP --%>
+<jsp:useBean id="TipoMA"   		scope="request" class="java.lang.String"/>
+<jsp:useBean id="NaturaMA" 		scope="request" class="java.lang.String"/>
+<%-- FINE MEV_9-SIEP --%>
 
 <html>
 <head>
@@ -97,7 +96,6 @@ function insertIT(
 		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_CHIAVE_ANNO_FASCICOLO_SIUS%>.value = annoSius;
 	else
   		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_CHIAVE_ANNO_FASCICOLO_SIUS%>.value = "";
-
 	if (numeroSius != '-')
   		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_CHIAVE_PROGR_FASCICOLO_SIUS%>.value = numeroSius;
 	else
@@ -546,23 +544,17 @@ if (!documentiSius.isEmpty()) {
         // poichè non individua i codici TDSM e UDSM
         String lUfficio = StringUtils.toStringJSP(eventoModel.getCodTipoUfficioEmittente(), "-");
      	// MEV_9-SIEP: aggiunto controllo per escludere dalla visualizzazione
-        if (!"AMMISSIONE_PROVVISORIA".equals(NaturaMA)){
-          if (   (   "TDS".equals(lUfficio)
-                  && (   "0680".equals(misuraModel.getCodTipoMisura())
-                      || "0681".equals(misuraModel.getCodTipoMisura())
-                     )
-                  )
-              || (   "TDSM".equals(lUfficio)
-                  && (   "0690".equals(misuraModel.getCodTipoMisura())
-                      || "0691".equals(misuraModel.getCodTipoMisura())
-                      || "0692".equals(misuraModel.getCodTipoMisura())
-                     )
-                  )
-              )
-          continue;
-        }
-        
-       
+        if (!"AMMISSIONE_PROVVISORIA".equals(NaturaMA)) {
+			if (("TDS".equals(lUfficio)
+					&& ("0680".equals(misuraModel.getCodTipoMisura())
+							|| "0681".equals(misuraModel.getCodTipoMisura())))
+					|| ("TDSM".equals(lUfficio)
+							&& ("0690".equals(misuraModel.getCodTipoMisura())
+									|| "0691".equals(misuraModel.getCodTipoMisura())
+									|| "0692".equals(misuraModel.getCodTipoMisura())))
+					&& !Utils.isNullObj(misuraModel.getDataEsecutivita()))
+				continue;
+		}
 %>
 	<tr>
 		<td class="c">
@@ -595,22 +587,18 @@ if (!documentiSius.isEmpty()) {
 			<%=StringUtils.toStringJSP(misuraModel.getDescrTipoDecisione(), "-")%>
 <%
 		}
+		if ("0680".equals(misuraModel.getCodTipoMisura())
+				|| "0681".equals(misuraModel.getCodTipoMisura())
+				|| "0690".equals(misuraModel.getCodTipoMisura())
+				|| "0691".equals(misuraModel.getCodTipoMisura())
+				|| "0692".equals(misuraModel.getCodTipoMisura())
+				|| "0682".equals(misuraModel.getCodTipoMisura())
+				|| "0693".equals(misuraModel.getCodTipoMisura())) {
 %>
-
-<% 
-if (   "0680".equals(misuraModel.getCodTipoMisura())
-	  || "0681".equals(misuraModel.getCodTipoMisura())
-	  || "0690".equals(misuraModel.getCodTipoMisura())
-	  || "0691".equals(misuraModel.getCodTipoMisura())
-	  || "0692".equals(misuraModel.getCodTipoMisura())
-	  || "0682".equals(misuraModel.getCodTipoMisura())
-	  || "0693".equals(misuraModel.getCodTipoMisura())
-		) 
-{ %>
-	Applicazione Provvisoria 
-<% } %>
-
-
+			Applicazione Provvisoria 
+<%
+		}
+%>
 			<%=StringUtils.toStringJSP(eventoModel.getDescrMotivo(), "-")%>
 		</td>
 <%

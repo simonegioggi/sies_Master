@@ -1321,8 +1321,8 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 
 			EventoModel lEveModel = (EventoModel) lSqlDAO.getModelByKey();
 			BigDecimal lKeyEvento = null;
-			if (lEveModel == null) // Se non presente lo inserisce
-			{
+			if (lEveModel == null) {
+				// Se non presente lo inserisce
 				BigDecimal lProgr = lSqlDAO.getProgressivo(aEvento.getEvento());
 				aEvento.getEvento().setProgrProtocollo(new BigDecimal(lProgr.intValue() + 1));
 
@@ -1330,9 +1330,8 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 
 				lKeyEvento = lEveDao.insert();
 				lEveRet.getEvento().setIdEvento(lKeyEvento);
-
-			} else // Se presente lo aggiorna
-			{
+			} else {
+				// Se presente lo aggiorna
 				lKeyEvento = lEveModel.getIdEvento();
 				lEveRet.getEvento().setIdEvento(lKeyEvento);
 
@@ -1474,16 +1473,8 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 					lPenKey = lPenaResDao.insert();
 					lPenaResDao.stop();
 				}
-			} else if (aPenaResidua != null && aPenaResidua.getIdPenaResidua() == null) // solo quando si
-																						// ricalcola la pena
-																						// quindi revoca e
-																						// prosecuzioni e
-																						// sospensioni della
-																						// pena
-			{
-				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-				// LogF3B.getLogger()
-				// siesLogger.debug("2 vado in inserimento");
+			} else if (aPenaResidua != null && aPenaResidua.getIdPenaResidua() == null) {
+				// solo quando si ricalcola la pena quindi revoca e prosecuzioni e sospensioni della pena
 				lPenaResDao.setDAOFromModel(aPenaResidua);
 				if (lKeyEvento != null) {
 					lPenaResDao.setEveIdEvento(lKeyEvento);
