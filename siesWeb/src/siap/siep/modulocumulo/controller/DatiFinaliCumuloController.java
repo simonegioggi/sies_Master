@@ -143,12 +143,8 @@ import siap.sius.rifasiep.dao.RiferimentoFascicoloSiepDAO;
 import siap.sius.rifasiep.model.RiferimentoFascicoloSiepModel;
 
 /**
- * <p>
- * Title: DatiFinaliCumuloController
- * </p>
- * <p>
+ * Title: DatiFinaliCumuloController 
  * Description: Classe Controller per DatiFinaliCumulo
- * </p>
  *
  * @version 1.0
  */
@@ -1421,6 +1417,11 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 				lFascDao.setFlagAltraCausa(flagAltraCausa);
 			}
 			// FINE [Ticket#20210430011] - aggiorno eventualmente il flagAltraCausa
+			// Ticket#202402120123 - Se non presente sul cumulo va comunque rimosso il flag AC sul fascicolo
+			else {
+				lFascDao.setFlagAltraCausa("N");
+			}
+			// Ticket#202402120123 - FINE
 
 			// INTERVENTO PER Ticket#20200220015 — Cumulo su procedimento archiviato
 			// se sto validanto un cumulo e lo stato in cui si trova il fascicolo è ARCHIVIATO, questo va
@@ -3297,12 +3298,11 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 					// del provvedimento
 					if ("S".equals(lPenaRidetCumuloMod.getFlagPenaResiduaCumulo())) {
 						if (lPenaRidetCumuloMod.getDataFine() != null // Pena in decorrenza
-								&& !"03".equals(lPenaRidetCumuloMod.getCodTipoPenaDetentiva()) // non
-																								// ergastolo
-								&& !"04".equals(lPenaRidetCumuloMod.getCodTipoPenaDetentiva()) // non
-																								// ergastolo
-						) { // Pena in decorrenza calcolo i quantum residui alla data di emissione
-
+								// non ergastolo
+								&& !"03".equals(lPenaRidetCumuloMod.getCodTipoPenaDetentiva())
+								// non ergastolo
+								&& !"04".equals(lPenaRidetCumuloMod.getCodTipoPenaDetentiva())) {
+							// Pena in decorrenza calcolo i quantum residui alla data di emissione
 							PenaResiduaModel lPenaDaEspiareAdOggi = this.calcolaResiduoPenaAdOggi(
 									lPenaRidetCumuloMod, aEventoNotModel.getEvento().getDataEmissione());
 
@@ -3318,7 +3318,6 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 							}
 
 							lPenaRidetCumuloMod.setStringaPenaResiduaAdOggi(lStrResiduoAdOggi);
-
 						}
 					}
 				} catch (Exception e) {
@@ -3364,9 +3363,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 
 							while (lIterTipologia.hasNext()) {
 								TipologiaOrarioModel lTipol = lIterTipologia.next();
-
 								lTipol.calcolaStringaDurata();
-
 								lTreeUltSanz.add(new TreeModel(lTipol));
 							}
 						}
@@ -4057,9 +4054,8 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 				lMisuraNew.setNumMesi(lMisuraCum.getNumMesi());
 				lMisuraNew.setNumGiorni(lMisuraCum.getNumGiorni());
 
-				lMisuraNew.setFasSieIdFascicoloSiep(lFasClasseIVMod.getIdFascicoloSiep()); // Collegata al
-																							// fascicolo di
-																							// classe IV
+				// Collegata al fascicolo di classe IV
+				lMisuraNew.setFasSieIdFascicoloSiep(lFasClasseIVMod.getIdFascicoloSiep()); 
 				lMisuraNew.setEveIdEvento(null);
 				lMisuraNew.setFasSiuIdFascicoloSius(null);
 
@@ -4378,23 +4374,15 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 						&& lProcCum.getChiaveProgrFasCumulato()
 								.compareTo(lFascModelDaAggiornare.getChiaveProgr()) == 0
 						&& lProcCum.getCodUfficioFasCumulato()
-								.equals(lFascModelDaAggiornare.getChiaveUfficio())) { // Caso particolare in
-																						// cui ha
-																						// caricato in cumulo
-																						// il
-																						// classe IV ed lo ho
-																						// selezionato anche
-																						// come
-																						// fascicolo a cui
-																						// aggiungere
-																						// le MS
+								.equals(lFascModelDaAggiornare.getChiaveUfficio())) {
+					// Caso particolare in cui ha caricato in cumulo il classe IV ed lo ho selezionato anche
+					// come fascicolo a cui aggiungere le MS
 					isStessoProcedimento = true;
 				}
 
-				if (lMisuraCum.getAnnoFascicoloSiepIV() != null) { // La MS da caricare è già collegata a un
-																	// classe IV, verifico che non
-																	// coincida con il classe IV su cui la
-																	// devo caricare a seguito del cumulo
+				if (lMisuraCum.getAnnoFascicoloSiepIV() != null) {
+					// La MS da caricare è già collegata a un  classe IV, verifico che non
+					// coincida con il classe IV su cui la devo caricare a seguito del cumulo
 					lUffSqlDao = new UfficioSqlDAO(lConn);
 
 					lUffSqlDao.selUfficioByCod(lMisuraCum.getCodAutoritaEmittenteIV());
@@ -4846,8 +4834,11 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	// }
 
 	/*
-	 * ISSUE MAC : aggiunto metodo che aggiorna il flag altra causa (posizione giuridica) sul fascicolo Numero
-	 * MAC : 20191128013 Autore : monica Data : 19/dic/2019 Branch : 11.2.4
+	 * ISSUE MAC : aggiunto metodo che aggiorna il flag altra causa (posizione giuridica) sul fascicolo 
+	 * Numero MAC : 20191128013 
+	 * Autore : monica 
+	 * Data : 19/dic/2019 
+	 * Branch : 11.2.4
 	 */
 	/**
 	 * Aggiorna il flag altra causa sul fascicolo
@@ -4898,6 +4889,6 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			cleanup(lConn);
 		}
 	} // CHIUDE ExUpdateFlagAltraCausaFascicolo()
-		// ***** FINE INTERVENTO 20191128013 *****//
+	// ***** FINE INTERVENTO 20191128013 *****//
 
 }
