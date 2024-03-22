@@ -239,6 +239,8 @@ public class DecodificheManagerBean {
 	private Collection mMotivoProvvedimentoAmmProvDetDomPmm;
 	private Collection mMotivoProvvedimentoAmmProvAffiPmm;
 	private Collection mMotivoProvvedimentoMAAffPMinor;
+	private Collection mMotivoProvvedimentoAmmProvSemilibPm;
+	private Collection mMotivoProvvedimentoAmmProvSemilibPmm;
 	// MEV_9-SIEP - FINE
 
 	private Collection mMotivoProvvedimentoMADetDomTemp;
@@ -1433,6 +1435,10 @@ public class DecodificheManagerBean {
 					.ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_AFFI_PM");
 			mMotivoProvvedimentoAmmProvAffiPmm = lDecodifiche
 					.ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_AFFI_PMM");
+			mMotivoProvvedimentoAmmProvSemilibPm = lDecodifiche
+					.ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_SEMILIB_PM");
+			mMotivoProvvedimentoAmmProvSemilibPmm = lDecodifiche
+					.ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_SEMILIB_PMM");			
 			mMotivoProvvedimentoMAAffPMinor = lDecodifiche.ExListaMotivoProvvMA("AFFIDAMENTO", "PMM");
 			// MEV_9-SIEP - FINE
 
@@ -2696,6 +2702,13 @@ public class DecodificheManagerBean {
 
 	public Collection getMotivoProvvedimentoMAffPMinor() {
 		return mMotivoProvvedimentoMAAffPMinor;
+	}
+	
+	public Collection getMotivoProvvedimentoAmmProvSemilibPmm() {
+		return mMotivoProvvedimentoAmmProvSemilibPmm;
+	}
+	public Collection getMotivoProvvedimentoAmmProvSemilibPm() {
+		return mMotivoProvvedimentoAmmProvSemilibPm;
 	}
 	// MEV_9-SIEP - FINE
 

@@ -942,6 +942,10 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 			lStatement += " AND (RV_LOW_VALUE in ('2006','2008','0680','0681')) ";
 		else if (aTipo.equals("AMMISSIONE_PROV_AFFI_PMM"))
 			lStatement += " AND (RV_LOW_VALUE in ('2006','2008','0690','0691','0692')) ";
+		else if (aTipo.equals("AMMISSIONE_PROV_SEMILIB_PMM"))
+			lStatement += " AND (RV_LOW_VALUE in ('2007','0694')) ";
+		else if (aTipo.equals("AMMISSIONE_PROV_SEMILIB_PM"))
+			lStatement += " AND (RV_LOW_VALUE in ('2007','0683')) ";
 
 		lStatement += " ORDER BY RV_ABBREVIATION ";
 
