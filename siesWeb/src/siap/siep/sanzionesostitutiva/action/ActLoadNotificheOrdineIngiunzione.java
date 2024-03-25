@@ -2,7 +2,6 @@ package siap.siep.sanzionesostitutiva.action;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
@@ -20,17 +19,15 @@ import siap.sico.web.ActionSiap;
 import siap.siep.fascicolo.action.ICostantiFascicoloSiep;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.notifica.model.NotificaModel;
-import siap.siep.pagoPA.controller.IBollettinoPagopa;
-import siap.siep.pagoPA.model.BollettinoPagopaModel;
 import siap.siep.posizione.controller.IPosizioneGiuridica;
 import siap.siep.posizione.model.PosizioneGiuridicaLuogoDetenzioneAltraCausaModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * MEV_2023-13: aggiunta classe 
- * 
+ * MEV_2023-13: aggiunta classe
+ *
  * Classe per la load della form di inserimento e mnodifica delle notifiche
- * 
+ *
  *
  * @author sgioggi
  * @version 1.0
@@ -97,13 +94,13 @@ public class ActLoadNotificheOrdineIngiunzione extends ActionSiap implements ICo
 		List lListAvvocatiSiep = new ArrayList();
 		List lListaObbligati = new ArrayList();
 		String notifichePending = "NO";
-		
+
 		int contaAvvenute = 0;
 		for (int i = 0; i < lNotifiche.length; i++) {
-		    
-		    if (lNotifiche[i].getDataAvvenutaNotifica()!=null)
-		        contaAvvenute++;
-		    
+
+			if (lNotifiche[i].getDataAvvenutaNotifica() != null)
+				contaAvvenute++;
+
 			// Autorita Esterne
 			if (lNotifiche[i].getAvvIdAvvocatoFascicoloSiep() == null
 					&& lNotifiche[i].getIdCivilmenteObbligato() == null) {
@@ -127,28 +124,30 @@ public class ActLoadNotificheOrdineIngiunzione extends ActionSiap implements ICo
 		setRequestAttribute("lListaNotObbligati", lListaObbligati);
 		setRequestAttribute("notifichePending", notifichePending);
 
-		if (contaAvvenute>0 && isRequestParameterNullEmptyObj("modifica"))
-		    return IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
-	        + "=siap.siep.sanzionesostitutiva.action.ActDettaglioNotificaOrdineIngiunzione";
+		if (contaAvvenute > 0 && isRequestParameterNullEmptyObj("modifica"))
+			return IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
+					+ "=siap.siep.sanzionesostitutiva.action.ActDettaglioNotificaOrdineIngiunzione";
 
-		
-		// 2023/05/02 - a seguito collaudo si richiede il blocco della registrazione delle notifiche in caso in cui
-		//              non siano stati emessi i bollettini. Per problema sull'aggiornamento della data scadenza
-//		IBollettinoPagopa lBollCtrl = SIEPLookupRemote.getBollettinoPagopaRemote();
-//		Vector<BollettinoPagopaModel> listaBollettini = lBollCtrl.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep (lFascMod.getIdFascicoloSiep(), null);
-//        if (listaBollettini == null || listaBollettini.size() == 0) {
-//            RedirectTo lRedirigi = new RedirectTo();
-//            lRedirigi.setPage(IWebConstants.PG_MAIN);
-//            setRequestAttribute(IWebConstants.MESSAGE_TEXT,
-//                    "Nessun bollettino generato per il Procedimento corrente. Per poter procedere alla registrazione delle notifiche"
-//                            + " e' necessario prima produrre i relativi bollettini.");
-//            lRedirigi.setAction("siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzione&"
-//                    + ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
-//            setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
-//
-//            return IWebConstants.PG_MESSAGE;
-//        }
-		
+		// 2023/05/02 - a seguito collaudo si richiede il blocco della registrazione delle notifiche in caso
+		// in cui
+		// non siano stati emessi i bollettini. Per problema sull'aggiornamento della data scadenza
+		// IBollettinoPagopa lBollCtrl = SIEPLookupRemote.getBollettinoPagopaRemote();
+		// Vector<BollettinoPagopaModel> listaBollettini =
+		// lBollCtrl.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep (lFascMod.getIdFascicoloSiep(), null);
+		// if (listaBollettini == null || listaBollettini.size() == 0) {
+		// RedirectTo lRedirigi = new RedirectTo();
+		// lRedirigi.setPage(IWebConstants.PG_MAIN);
+		// setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+		// "Nessun bollettino generato per il Procedimento corrente. Per poter procedere alla registrazione
+		// delle notifiche"
+		// + " e' necessario prima produrre i relativi bollettini.");
+		// lRedirigi.setAction("siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzione&"
+		// + ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
+		// setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
+		//
+		// return IWebConstants.PG_MESSAGE;
+		// }
+
 		// info per il log
 		siesLogger.info(getClass().getName() + ".processRequest: fine");
 

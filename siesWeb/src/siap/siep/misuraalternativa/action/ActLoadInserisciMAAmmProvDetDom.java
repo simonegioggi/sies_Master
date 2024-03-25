@@ -38,14 +38,13 @@ import siap.siep.verbale.controller.IVerbale;
 import siap.siep.verbale.model.VerbaleModel;
 
 /**
- * Title: ActLoadInserisciMAAmmProvDetDom
- * Description: Classe Action per la load inserisci di MisuraAlternativa
+ * ActLoadInserisciMAAmmProvDetDom - Classe Action per la load inserisci di MisuraAlternativa
  *
  * @version 1.0
  */
 public class ActLoadInserisciMAAmmProvDetDom extends ActAmmissioneProvvisoria {
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public String processRequest() throws F3BException {
 
 		// tutti i controlli e la maggior parte delle request si trovano nel padre
@@ -86,7 +85,7 @@ public class ActLoadInserisciMAAmmProvDetDom extends ActAmmissioneProvvisoria {
 		if (!isRequestParameterNullObj("tipoOperazione"))
 			tipoOperazione = getRequestStringParameter("tipoOperazione");
 		setRequestAttribute("tipoOperazione", tipoOperazione);
-		
+
 		MisuraAlternativaModel lMisAlModToChange = null;
 		EventoModel lEveSorv = null;
 		UfficioModel lUffEmittente = null;
@@ -98,7 +97,7 @@ public class ActLoadInserisciMAAmmProvDetDom extends ActAmmissioneProvvisoria {
 		if ("MODIFICA".equals(tipoOperazione)) {
 			// Blocco l'editabilita' in modifica
 			setRequestAttribute("dataeditabile", "N");
-		
+
 			BigDecimal idEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
 
 			// ricerca evento notifica SIEP
@@ -115,7 +114,7 @@ public class ActLoadInserisciMAAmmProvDetDom extends ActAmmissioneProvvisoria {
 			lMisAlModToChange = lMisAltCtrl
 					.ExRicercaMisuraAlternativaByIdEvento(lEveNotMod.getEvento().getEveIdEvento());
 			setRequestAttribute("misuraalternativaToChange", lMisAlModToChange);
-			
+
 			IUfficio lCtrlUffEmi = SICOLookupRemote.getUfficioRemote();
 			lUffEmittente = lCtrlUffEmi.getUfficioByKey(lMisAlModToChange.getChiaveUfficioFascicoloSius());
 			setRequestAttribute("UfficioEmittente", lUffEmittente);
@@ -124,11 +123,11 @@ public class ActLoadInserisciMAAmmProvDetDom extends ActAmmissioneProvvisoria {
 			IMagistrato lCtrlM = SICOLookupRemote.getMagistratoRemote();
 			MagistratoModel lMagi = lCtrlM
 					.ExRicercaMagistratoByCod(lEveNotMod.getEvento().getCodMagistrato());
-			
+
 			MagistratoCompetenteMagistratoModel lMagMod = new MagistratoCompetenteMagistratoModel();
 			lMagMod.setMagistrato(lMagi);
 			setRequestAttribute("magistratocompetente", lMagMod);
-			
+
 			// Ciclo sui destinatari
 			NotificaModel[] listaNotifiche = lEveNotMod.getNotifiche();
 			for (int i = 0; i < listaNotifiche.length; i++) {
@@ -161,13 +160,14 @@ public class ActLoadInserisciMAAmmProvDetDom extends ActAmmissioneProvvisoria {
 					setRequestAttribute("NotificaAvv", lNotifica);
 				}
 			}
-			
+
 			// Provo a capire se trattasi del provvedimento che segue il verbale
 			EventoModel lEveVer = new EventoModel();
 			IEventoSimeone lCtrlEven = SICOLookupRemote.getEventoSimeoneRemote();
 			lEveVer = lCtrlEven.ExRicercaEventoByEveIdEventoTipoProvCodMotivo(
-					lMisAlModToChange.getEveIdEvento(), "07", "18", "0314", "S"); // MEV_9 mi interessano i validati!!!
-			
+					lMisAlModToChange.getEveIdEvento(), "07", "18", "0314", "S"); // MEV_9 mi interessano i
+																					// validati!!!
+
 			IVerbale lCtrlVe = SIEPLookupRemote.getVerbaleRemote();
 			VerbaleModel lVerbMod = lCtrlVe.ExRicercaVerbaleObblighiByIdEvento(lEveVer.getIdEvento());
 			setRequestAttribute("verbale", lVerbMod);
@@ -175,11 +175,11 @@ public class ActLoadInserisciMAAmmProvDetDom extends ActAmmissioneProvvisoria {
 			if (lVerbMod != null && lVerbMod.getIdVerbale() != null) {
 				setRequestAttribute("misuraalternativa", lMisAlModToChange);
 				setRequestAttribute("misuraalternativaToChange", null);
-			}			
+			}
 		}
 		// =======================================================================================
 		// MEV_9 - FINE
-		
+
 		// Controllo esistenza almeno un avvocato per fascicolo.
 		IAvvocato lAvv = SIEPLookupRemote.getAvvocatoRemote();
 		Vector lAvvocati = null;
@@ -212,16 +212,16 @@ public class ActLoadInserisciMAAmmProvDetDom extends ActAmmissioneProvvisoria {
 		// MEV_9 x modifica
 		if (lCssa != null)
 			setRequestAttribute("daticssa", lCssa);
-		
+
 		// MEV_9 si precarca eventualmente in caso di modifica il tipo uff SORV nella combo
 		Option lOptionUffSIUS = new Option(DecodificheManager.getInstance().getTipoUfficioSIUS());
-		if (lUffEmittente != null) 
+		if (lUffEmittente != null)
 			lOptionUffSIUS.setSelected(lUffEmittente.getCodTipoUfficio());
-		
+
 		lOptionUffSIUS.setValueBlankItem("-");
 		lOptionUffSIUS.setAddBlankItem(Option.BLANK_ITEM);
 		setRequestAttribute("comboTipoUfficioSIUS", "" + lOptionUffSIUS);
-		
+
 		// MEV_9 - Si caricano i dati per la combo decreto/ordinaza
 		Vector<DecodificheModel> lTipoProvvSorv = new Vector<>();
 		lTipoProvvSorv.add(new DecodificheModel("-", "-", "", "", "", "", "", "", ""));
@@ -240,14 +240,12 @@ public class ActLoadInserisciMAAmmProvDetDom extends ActAmmissioneProvvisoria {
 		// Option lOption = new
 		// Option(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvDetDom());
 		/*
-		Option lOption = null;
-		if (isUfficioMinorenni())
-			lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvDetDomPmm());
-		else
-			lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvDetDom());
-		*/
+		 * Option lOption = null; if (isUfficioMinorenni()) lOption = new
+		 * Option(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvDetDomPmm()); else lOption =
+		 * new Option(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvDetDom());
+		 */
 		// MEV_9 - FINE
-		
+
 		Collection lMotiviColl = null;
 		if (isUfficioMinorenni())
 			lMotiviColl = DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvDetDomPmm();
@@ -257,35 +255,34 @@ public class ActLoadInserisciMAAmmProvDetDom extends ActAmmissioneProvvisoria {
 		Iterator<DecodeModel> itMot = lMotiviColl.iterator();
 		Collection nuovaColl = new Vector();
 		while (itMot.hasNext()) {
- 			DecodeModel lDecode = itMot.next();
- 			DecodeModel lDecodeNew = new DecodeModel();
- 			lDecodeNew.setCode(lDecode.getCode());
- 			
+			DecodeModel lDecode = itMot.next();
+			DecodeModel lDecodeNew = new DecodeModel();
+			lDecodeNew.setCode(lDecode.getCode());
+
 			// DETENZIONE
 			if ("0682".equals(lDecode.getCode()))
-				lDecodeNew.setDescription("Applicazione Provvisoria "+lDecode.getDescription());
+				lDecodeNew.setDescription("Applicazione Provvisoria " + lDecode.getDescription());
 			else if ("0693".equals(lDecode.getCode()))
-				lDecodeNew.setDescription("Applicazione Provvisoria "+lDecode.getDescription());
-			else 
+				lDecodeNew.setDescription("Applicazione Provvisoria " + lDecode.getDescription());
+			else
 				lDecodeNew.setDescription(lDecode.getDescription());
-			
+
 			nuovaColl.add(lDecodeNew);
 		}
-		Option lOptionMotivo = new Option (nuovaColl);
-		
+		Option lOptionMotivo = new Option(nuovaColl);
+
 		if (lEveSorv != null)
 			lOptionMotivo.setSelected(lEveSorv.getCodMotivo());
-		
+
 		setRequestAttribute("motivoProvv", "" + lOptionMotivo);
-		
-		//setRequestAttribute("motivoProvv", "" + lOption);
+
+		// setRequestAttribute("motivoProvv", "" + lOption);
 
 		// Riempimento ComboBoX
 		Option lOptionAvv = new Option(DecodificheManager.getInstance().getTipoAutorita(), "22");
 		setRequestAttribute("autoritaEsternaAvv", "" + lOptionAvv);
 
 		setRequestAttribute("tipomisura", "DETENZIONE");
-		
 
 		// MEV 10 - filtro sui minorenni
 		setRequestAttribute("filtroMinorenni", this.getFiltroMinorenni());
