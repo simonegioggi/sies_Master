@@ -333,6 +333,13 @@ public interface ICostantiMisuraAlternativa {
 	public static final String PG_BUTTONS_SORVEGLIANZA = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/misuraalternativa/buttonsSorveglianza.jsp";
 
+	// MEV_9-SIEP
+	public static final String PG_LOAD_INSERISCI_MA_AMM_PROVV_SEMILIBERTA = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/misuraalternativa/LoadInserisciMAAmmProvvSemiliberta.jsp";
+	public static final String PG_LOAD_DETTAGLIO_MA_AMM_PROVV_SEMILIBERTA = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/misuraalternativa/DettaglioMAAmmProvvSemiliberta.jsp";	
+  //MEV_9-SIEP - FINE
+	
 	// TEMPLATE VUOTO
 	public static final String TEMPLATE_VUOTO = "SIEP_VUOTO";
 

@@ -353,7 +353,16 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 
 				lCodMotivi = estraiCodiciDecodifiche(lOggetti);
 
-			}
+				// MEV_9 - SIEP si aggiunge la ammissione porvv per la semiliberta
+			} else if (aNaturaMA.equals((AMMISSIONE_PROVVISORIA) )) {
+				if (isUfficioMinorenni())
+					lCodMotivi = estraiCodiciDecodifiche(
+							DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvSemilibPmm());
+				else
+					lCodMotivi = estraiCodiciDecodifiche(
+							DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvSemilibPm());
+				// MEV_9 - SIEP - FINE
+			}			
 		} else if (aTipoMA.equals(INDULTINO)) {
 			if (aNaturaMA.equals(CONCESSIONE)) {
 				lCodMotivi = estraiCodiciDecodifiche(
@@ -602,6 +611,9 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 				|| (aNaturaMA.equals(AMMISSIONE_PROVVISORIA) && aTipoMA.equals(AFFIDAMENTO_IN_PROVA))
 				// MEV_9 anche per la deetenzione domiciliare - ammissione provvisoria si prevedono sia
 				// decreti che ordinanze
+				// MEV_9 - SIEP - Si aggiunge la gestione della semilibertà
+				|| (aNaturaMA.equals(AMMISSIONE_PROVVISORIA) && aTipoMA.equals(SEMILIBERTA))
+			  // MEV_9 - SIEP - FINE
 				|| (aNaturaMA.equals(AMMISSIONE_PROVVISORIA) && aTipoMA.equals(DETENZIONE_DOMICILIARE))
 				|| (aNaturaMA.equals(PROSECUZIONE_51BIS)) // DL 146/20113
 				|| (aNaturaMA.equals(PROSECUZIONE_51BIS_CUMULO)) // DL 146/20113

@@ -6003,4 +6003,90 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 		return lCodEsito;
 	}
 
+	/**
+	 * Metodo generico per inserire sia su deposito Ordinanza che su Deposito decreto le MA 
+	 * iscritte da SIEP.
+	 * Non scrine sulle Notifiche
+	 * 
+	 * @since MEV_9-SIEP 03.2024
+	 * 
+	 */
+  public MisuraAlternativaModel ExInserisciDecretoOrdinanzaMisAlt (EventoNotificaModel aEveNotMod,
+      DepositoDecretoModel lDepDecMod, DepositoOrdinanzaPcModel lDepOrdMod, TenoreModel lTenMod
+      , MisuraAlternativaModel aMisuraAlternativa)
+      throws F3BException 
+ {
+    Connection lConn = null;
+
+    EventoDAO lEveDAO = null;
+    DepositoDecretoDAO lDepDecDAO = null;
+    DepositoOrdinanzaPcDAO lDepOrdDAO = null;
+    TenoreDAO lTenDAO = null;
+    MisuraAlternativaDAO lMisDao = null;    
+
+    MisuraAlternativaModel lMisMod = null;
+    
+    try {
+      lConn = getDBTransaction();      
+
+      // ======================
+      // inserimento evento
+      // ======================
+      lEveDAO = new EventoDAO(lConn);
+      EventoModel lEveMod = new EventoModel(aEveNotMod.getEvento());
+      lEveDAO.setDAOFromModel(lEveMod);
+      BigDecimal lKeyEvento = lEveDAO.insert();
+     
+      // ========================================================================
+      // Inserisco il Deposito Decreto o Deposito Ordinanza
+      // ========================================================================
+      if (lDepDecMod!=null) {
+        lDepDecDAO = new DepositoDecretoDAO(lConn);
+        DepositoDecretoModel lDepDecretoMod = new DepositoDecretoModel(lDepDecMod);
+        lDepDecretoMod.setIdEventoGenerato(lKeyEvento);
+        lDepDecDAO.setDAOFromModel(lDepDecretoMod);
+        BigDecimal lKeyDep = lDepDecDAO.insert();
+        lTenMod.setDepDecIdDepositoDecreto(lKeyDep);
+      }
+      else if (lDepOrdMod!=null) {
+        lDepOrdDAO = new DepositoOrdinanzaPcDAO(lConn);
+        DepositoOrdinanzaPcModel lDepPCMod = new DepositoOrdinanzaPcModel(lDepOrdMod);
+        lDepPCMod.setIdEventoGenerato(lKeyEvento);
+        lDepOrdDAO.setDAOFromModel(lDepPCMod);
+        BigDecimal lKeyDep = lDepOrdDAO.insert();
+        lTenMod.setDepOpidDepositoOrdinanzaPc(lKeyDep);
+      }
+      
+      // ======================
+      // insert tenore
+      // ======================
+      lTenDAO = new TenoreDAO(lConn);
+      lTenDAO.setDAOFromModel(lTenMod);
+      lTenDAO.insert();      
+
+      // ===========================
+      // insert misura alternativa
+      // ===========================      
+      lMisMod = new MisuraAlternativaModel(aMisuraAlternativa);
+      lMisMod.setEveIdEvento(lKeyEvento);
+      lMisDao = new MisuraAlternativaDAO(lConn);
+      lMisDao.setDAOFromModel(lMisMod);
+      lMisDao.insert();
+
+      commit(lConn);
+    } catch (DAOException ex) {
+      rollback(lConn);
+      siesLogger.error("DAOException: " , ex);
+      throw new F3BException("MisuraAlternativaController.ExInserisciDecretoOrdinanzaMisAlt: "+ex);
+    } finally {      
+      cleanup(lEveDAO);
+      cleanup(lDepDecDAO);
+      cleanup(lDepOrdDAO);
+      cleanup(lTenDAO);      
+      cleanup(lMisDao);
+
+      cleanup(lConn);
+    }
+    return lMisMod;
+  }
 }
