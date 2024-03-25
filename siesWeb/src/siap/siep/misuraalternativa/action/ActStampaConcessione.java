@@ -40,9 +40,9 @@ public class ActStampaConcessione extends ActConcessione {
 	public String processRequest() throws F3BException {
 
 		FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
-		UtenteModel lUtenteMod = this.getUtenteConnesso();
-		UfficioModel lUff = this.getUfficioUtenteConnesso();
-		BigDecimal lIdEvento = this.getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
+		UtenteModel lUtenteMod = getUtenteConnesso();
+		UfficioModel lUff = getUfficioUtenteConnesso();
+		BigDecimal lIdEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
 
 		// posizione giuridica
 		PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lPosAltra = new PosizioneGiuridicaLuogoDetenzioneAltraCausaModel();
@@ -69,7 +69,7 @@ public class ActStampaConcessione extends ActConcessione {
 		lEveMod.getEvento().setDescrUfficioEmittente(lUff.getDescrTipoUfficio());
 		lEveMod.getEvento().setDataAggiornamento(DateUtils.getSysDate());
 		lEveMod.getEvento().setCodUfficioAggiornamento(lUff.getCodUfficio());
-		lEveMod.getEvento().setCodOperatoreAggiornamento(this.getCodUtenteConnesso());
+		lEveMod.getEvento().setCodOperatoreAggiornamento(getCodUtenteConnesso());
 		lEveMod.getEvento().setFlagDocumentoRegistrato("N");
 
 		// ricerca posizione precedente
@@ -78,8 +78,8 @@ public class ActStampaConcessione extends ActConcessione {
 				.ExRicercaPosizioneGiuridicaPrecedenteByIdFascicolo(lFascicoloModel.getIdFascicoloSiep());
 
 		// setta il flag template
-		String lTipoMisura = this.getRequestStringParameter("tipoMisura");
-		String IdEveAPF = this.getRequestStringParameter("IdEventoAmmProvvAff");
+		String lTipoMisura = getRequestStringParameter("tipoMisura");
+		String IdEveAPF = getRequestStringParameter("IdEventoAmmProvvAff");
 		String flagTemplate = null;
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -104,15 +104,7 @@ public class ActStampaConcessione extends ActConcessione {
 			if ("0605".equals(lMotivo) || "0606".equals(lMotivo) || "0607".equals(lMotivo)) {
 				lPosizioneGiu = "03";
 			}
-
 			flagTemplate = getFlagTemplateAffidamento(lPosPrec, lPosizioneGiu, lMisMod, IdEveAPF);
-
-			// MEV_9-SIEP: imposto flag_template
-			if ("5460".equals(lMotivo) || "5461".equals(lMotivo) || "5462".equals(lMotivo)
-					|| "5463".equals(lMotivo) || "5464".equals(lMotivo) || "5443".equals(lMotivo)
-					|| "5444".equals(lMotivo) || "5445".equals(lMotivo) || "5446".equals(lMotivo)
-					|| "5447".equals(lMotivo))
-				flagTemplate = "1";
 		} else if (lTipoMisura.equals("DETENZIONE")) {
 			flagTemplate = getFlagTemplateDetDom(lPosPrec, lPosizioneGiu, lMisMod);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -167,8 +159,20 @@ public class ActStampaConcessione extends ActConcessione {
 		if (flagTemplate != null && lEventoModel != null && lEventoModel.getCodTipoEvento() != null
 				&& lEventoModel.getCodMotivo() != null && !lEventoModel.getCodMotivo().equals("0000")
 				&& lMisMod != null && lMisMod.getCodTipoMisura() != null) {
-			lTemMod = lCtrlTem.ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplate(
-					lEventoModel.getCodTipoEvento(), "03", lMisMod.getCodTipoMisura(), flagTemplate);
+			// MEV_9-SIEP: imposto flag_template e codTipoMisura e codTipoProvvedimento
+			if ("0680".equals(lMotivo)
+					|| "0681".equals(lMotivo) || "0690".equals(lMotivo) || "0691".equals(lMotivo)
+					|| "0692".equals(lMotivo))
+				flagTemplate = "1";
+			if ("5460".equals(lMotivo) || "5461".equals(lMotivo) || "5462".equals(lMotivo)
+					|| "5463".equals(lMotivo) || "5464".equals(lMotivo) /*|| "5443".equals(lMotivo)
+					|| "5444".equals(lMotivo) || "5445".equals(lMotivo) || "5446".equals(lMotivo)
+					|| "5447".equals(lMotivo)*/) {
+				lTemMod = lCtrlTem.ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplate(
+						lEventoModel.getCodTipoEvento(), "12", lMotivo, "1");
+			} else
+				lTemMod = lCtrlTem.ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplate(
+						lEventoModel.getCodTipoEvento(), "03", lMisMod.getCodTipoMisura(), flagTemplate);
 			lEveMod.setNomeTemplate(lTemMod.getIdTemplate());
 		} else
 			lEveMod.setNomeTemplate(TEMPLATE_VUOTO);

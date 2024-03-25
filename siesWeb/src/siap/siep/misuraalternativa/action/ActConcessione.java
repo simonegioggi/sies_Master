@@ -6,6 +6,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import f3b.util.F3BException;
+import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
@@ -15,6 +16,8 @@ import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.controller.IEventoSimeone;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
+import siap.sico.magistrato.controller.IMagistrato;
+import siap.sico.magistrato.model.MagistratoModel;
 import siap.sico.magistratocompetente.controller.IMagistratoCompetente;
 import siap.sico.magistratocompetente.model.MagistratoCompetenteMagistratoModel;
 import siap.sico.misuraalternativa.controller.IMisuraAlternativa;
@@ -214,11 +217,22 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 			lTable = ricercaNotifiche(lEveMod.getNotifiche());
 
 		// ricerca magistrato competente
-		IMagistratoCompetente lMagComp = SICOLookupRemote.getMagistratoCompetenteRemote();
-		MagistratoCompetenteMagistratoModel lMagMod = lMagComp
+		IMagistratoCompetente imc = SICOLookupRemote.getMagistratoCompetenteRemote();
+		MagistratoCompetenteMagistratoModel mcmm = imc
 				.ExRicercaMagistratoCompetenteByFascicolo(lFascMod.getIdFascicoloSiep());
-		if (lMagMod != null)
-			setRequestAttribute("magistratocompetente", lMagMod);
+		// MEV_9-SIEP: per la modifica (se non esiste il MAGISTRATO nel fascicolo ma solo nell'evento)
+		if (Utils.isNullObj(mcmm)) {
+			if (!Utils.isNullObj(lEveMod) && !Utils.isNullObj(lEveMod.getEvento())
+					&& !Utils.isNullObj(lEveMod.getEvento().getCodMagistrato())) {
+				// Ricerca Magistrato
+				IMagistrato im = SICOLookupRemote.getMagistratoRemote();
+				MagistratoModel mm = im.ExRicercaMagistratoByCod(lEveMod.getEvento().getCodMagistrato());
+				mcmm = new MagistratoCompetenteMagistratoModel();
+				mcmm.setMagistrato(mm);
+			}
+		}
+		if (mcmm != null)
+			setRequestAttribute("magistratocompetente", mcmm);
 
 		// Avvocato
 		IAvvocato lAvvCtrl = SIEPLookupRemote.getAvvocatoRemote();
@@ -393,8 +407,9 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 		}
 		}
 
+		// vecchio affidamento in prova provvisorio
 		if ((aFlagAffi != null && aFlagAffi.equals("S"))
-				|| (aPosizione.equals("13") // vecchio affidamento in prova provvisorio
+				|| (aPosizione.equals("13")
 						&& (IdEventoAmmProvvAff != null && !IdEventoAmmProvvAff.equals("")))
 				|| (aPosizione.equals("54"))) { // affidamento in prova provvisorio
 			lEve.getEvento().setCodTipoProvvedimento("12");
@@ -432,17 +447,23 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 		else if ("0732".equals(aMotivo))
 			lEve.getEvento().setCodMotivo("5464");
 		else if ("0680".equals(aMotivo))
-			lEve.getEvento().setCodMotivo("5443");
+			lEve.getEvento().setCodMotivo(aMotivo);
 		else if ("0681".equals(aMotivo))
-			lEve.getEvento().setCodMotivo("5444");
+			lEve.getEvento().setCodMotivo(aMotivo);
 		else if ("0690".equals(aMotivo))
-			lEve.getEvento().setCodMotivo("5445");
+			lEve.getEvento().setCodMotivo(aMotivo);
 		else if ("0691".equals(aMotivo))
-			lEve.getEvento().setCodMotivo("5446");
+			lEve.getEvento().setCodMotivo(aMotivo);
 		else if ("0692".equals(aMotivo))
-			lEve.getEvento().setCodMotivo("5447");
+			lEve.getEvento().setCodMotivo(aMotivo);
+
+		// aggiunto controllo per codici tipo misura
+		if ("0720".equals(aMotivo) || "0721".equals(aMotivo) || "0730".equals(aMotivo)
+				|| "0731".equals(aMotivo) || "0732".equals(aMotivo))
+			lEve.getEvento().setCodTipoProvvedimento("12");
 		// FINE MEV_9-SIEP
 
+		// model di ritorno
 		return lEve;
 	}
 

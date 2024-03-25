@@ -111,6 +111,12 @@ public class ActDettaglioConcessione extends ActMisuraAlternativa implements ICo
 					|| lMisAlModConcessa.getCodTipoMisura().equals("0002")
 					|| lMisAlModConcessa.getCodTipoMisura().equals("0003")
 					|| lMisAlModConcessa.getCodTipoMisura().equals("0030")
+					// MEV_9: aggiunti codici tipo misura
+					|| lMisAlModConcessa.getCodTipoMisura().equals("0680")
+					|| lMisAlModConcessa.getCodTipoMisura().equals("0681")
+					|| lMisAlModConcessa.getCodTipoMisura().equals("0690")
+					|| lMisAlModConcessa.getCodTipoMisura().equals("0691")
+					|| lMisAlModConcessa.getCodTipoMisura().equals("0692")
 					// MEV_9-SIEP: aggiunti codici tipo misura
 					|| lMisAlModConcessa.getCodTipoMisura().equals("0720")
 					|| lMisAlModConcessa.getCodTipoMisura().equals("0721")

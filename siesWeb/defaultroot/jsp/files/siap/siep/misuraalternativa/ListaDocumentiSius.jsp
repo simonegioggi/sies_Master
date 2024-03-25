@@ -624,7 +624,8 @@ if (!documentiSius.isEmpty()) {
 				MisuraAlternativaEventoModel maem = (MisuraAlternativaEventoModel) iter.next();
 				MisuraAlternativaModel mam = maem.getMisuraAlternativa();
 				EventoModel em = maem.getEvento();
-				if (idFascicoloSius.compareTo(em.getFasSiuIdFascicoloSius()) == 0
+				if (!Utils.isNullObj(em.getFasSiuIdFascicoloSius())
+						&& idFascicoloSius.compareTo(em.getFasSiuIdFascicoloSius()) == 0
 						&& "0680".equals(em.getCodMotivo()) && "0270".equals(em.getCodEsito())) {
 					dataOrdinanzaProvvisoria = mam.getDataDecisione();
 					annoOrdinanzaProvvisoria = mam.getAnnoRegistro();

@@ -603,7 +603,9 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		else if (aMisAlt.equals(ICostantiMisuraAlternativa.ESP_PRESSO_DOM))
 			lStatement += "AND (RV_LOW_VALUE = '" + ICostantiMisuraAlternativa.ESP_PRESSO_DOM_MOTIVO
 					+ "' OR RV_LOW_VALUE = '0610') ";
-		lStatement += "ORDER BY RV_ABBREVIATION ";
+		// MEV_9-SIEP: modificato ordinamento
+		// lStatement += "ORDER BY RV_ABBREVIATION ";
+		lStatement += "ORDER BY RV_MEANING";
 
 		setStatement(lStatement);
 	}
