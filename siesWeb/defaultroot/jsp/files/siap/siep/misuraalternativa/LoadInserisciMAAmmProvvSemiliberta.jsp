@@ -47,7 +47,9 @@
 <jsp:useBean id="sedeUfficioEmittente"  scope="request" class="siap.sico.ufficio.model.UfficioModel"/>
 <jsp:useBean id="avvocati"              scope="request" class="java.util.Vector"/>
 <jsp:useBean id="autoritaEsternaAvv"    scope="request" class="java.lang.String"/>
-<jsp:useBean id="daticssa"              scope="request" class="siap.sico.cssa.model.CSSAModel"/>
+      <jsp:useBean id="daticssa"              scope="request" class="siap.sico.cssa.model.CSSAModel"/>
+      
+<jsp:useBean id="datiIstituto"          scope="request" class="siap.siep.istitutodetenzione.model.IstitutoDetenzioneModel"/>
 <jsp:useBean id="autoritaEsternaE"      scope="request" class="siap.siep.autoritaesterna.model.AutoritaEsternaModel"/>
 <jsp:useBean id="comboTipoUfficioSIUS"  scope="request" class="java.lang.String"/>
 <jsp:useBean id="comboTipoProvvSorv"    scope="request" class="java.lang.String"/>
@@ -183,15 +185,15 @@ function radio() {
   } 
   else if (verbale.getIdVerbale() != null) 
   {
-  	if (!lPosizione.isLibero() && "29".equals(lPosizione.getCodPosizioneGiuridica()) )
-  	{ // FIXME va gestita la PG di arrivo
+  	if (!lPosizione.isLibero() && "14".equals(lPosizione.getCodPosizioneGiuridica()) )
+  	{ 
     %>
 	    divEutoritaE('none');
 	    divIstituto('block');
 	    divCssa('block');
 	    divSorv('block');
 	    divAutoritaC('block');
-    <% } else {%>
+    <% } else { /*?????*/ %>
 	    divEutoritaE('block');
 	    divIstituto('none');
 	    divCssa('block');
@@ -618,7 +620,7 @@ if ("MODIFICA".equals(tipoOperazione))
 %>
 
 
-<body class="corpo" onload="radio();caricaCombo();">
+<body class="corpo" onload="radio();caricaCombo();VisualizzaAvvocati();">
 	<table> 
 	  <tr>
 	    <td class="LBG">
@@ -969,7 +971,14 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
       <INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getYearToString(misuraalternativa.getDataDecisione()))%>">
     </td>
   </tr>
-
+  <tr>
+    <td class="l">Data Esecutivita'</td>
+    <td class="l" colspan="3">
+      <font class="campo">
+        <%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataEsecutivita(), "dd-MM-yyyy"),"&nbsp;")%>
+      </font>
+    </td>
+  </tr>
   <tr>
     <td class="l">Luogo della Prova </td>
     <td class="l" colspan="3">
@@ -1252,6 +1261,14 @@ if (misuraalternativa.getIdMisuraAlternativa() == null)
         lDescIstituto = StringUtils.toStringJSP(lIstDetenzione.getDescrTipoIstituto(),"")+" di "+StringUtils.toStringJSP(lIstDetenzione.getDescrComune(),"");
         lIdIstituto = lIstDetenzione.getIdIstitutoDetenzione();
       }
+      
+      // Se provengo dal verbale precarico i dati dell'istituto che ha 
+      // mandato il verbale
+      if(datiIstituto.getIdIstitutoDetenzione()!=null && !datiIstituto.getIdIstitutoDetenzione().equals("")) { 
+      	lDescIstituto = StringUtils.toStringJSP(datiIstituto.getDescrTipoIstituto(),"")+" di "+StringUtils.toStringJSP(datiIstituto.getDescrComune(),"");
+      	lIdIstituto = datiIstituto.getIdIstitutoDetenzione();
+      }
+      
       %>
         <input readonly Title="Istituto" name="Comune" value="<%=StringUtils.toStringJSP(lDescIstituto)%>" size=50>
         <input type="hidden" Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" 

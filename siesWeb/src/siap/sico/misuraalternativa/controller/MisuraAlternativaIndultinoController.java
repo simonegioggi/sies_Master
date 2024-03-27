@@ -2596,7 +2596,7 @@ public class MisuraAlternativaIndultinoController extends SiapController
       boolean lCambioPos = false;
       if (lMisModelOrder.getCodTipoUfficioScarcerazione().equals("SORV")) {
         lCambioPos = true;
-        lPosizioneDiArrivo = "91"; // Nuova PG
+        lPosizioneDiArrivo = "14"; // Nuova PG
       }
 
       // se la misura è eseguita da PROC cambio la posizione giuridica solo se non è libero
@@ -2645,14 +2645,7 @@ public class MisuraAlternativaIndultinoController extends SiapController
       else if (lEveModel.getCodMotivo().equals("1403"))
         lStato = "0573";    
       else if (lEveModel.getCodMotivo().equals("1414"))
-        lStato = "0574";
-      // con richiesta verbale
-      else if (lEveModel.getCodMotivo().equals("5427"))
-        lStato = "5475";     
-      else if (lEveModel.getCodMotivo().equals("5428"))
-        lStato = "0576";    
-      else if (lEveModel.getCodMotivo().equals("5429"))
-        lStato = "0577";         
+        lStato = "0574";       
 
       // Delete/Insert
       InserimentoCancellazioneStatoProcedimento(lConn, aFascicolo.getIdFascicoloSiep(), lEveMod, lStato);

@@ -35,6 +35,7 @@
 // MEV-9 si aggiungono gli ulteriori codici motivo (sorveglianza)
 Set<String> codiciAffidamentoSorvNew = new HashSet<String>(Arrays.asList(new String[]{"0680","0681","0690","0691","0692"}));
 Set<String> codiciDetenzioneSorvNew  = new HashSet<String>(Arrays.asList(new String[]{"0682","0693"}));
+Set<String> codiciSemilibertaSorvNew = new HashSet<String>(Arrays.asList(new String[]{"2007","0683","0694"}));
 %>
 <script language="JavaScript">
 
@@ -62,7 +63,13 @@ Set<String> codiciDetenzioneSorvNew  = new HashSet<String>(Arrays.asList(new Str
      %>
          document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMAAmmProvAffi&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraposold.getIdMisuraAlternativa()%>";
      <%
-       }      
+       } // MEV_9 si aggiungono i nuovi codici per la semilibertà provvisoria
+       else if (codiciSemilibertaSorvNew.contains(misuraposold.getCodTipoMisura()))
+       {
+     %>
+         document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMAAmmProvSemiliberta&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraposold.getIdMisuraAlternativa()%>";
+     <%
+       }       
       else if(misuraposold.getCodTipoMisura().equals("0004"))
        {%>
          document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMASemiliberta&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraposold.getIdMisuraAlternativa()%>";
@@ -145,7 +152,9 @@ Set<String> codiciDetenzioneSorvNew  = new HashSet<String>(Arrays.asList(new Str
       <% } else if(codiciAffidamentoSorvNew.contains(misuraposold.getCodTipoMisura())) { %> <%--// MEV_9 --%>
       <td class="l" colspan=2>Applicazione Provvisoria ad Affidamento in Prova - Art. 678 comma 1-ter c.p.p.</td>
       <% } else if(codiciDetenzioneSorvNew.contains(misuraposold.getCodTipoMisura())) { %> <%--// MEV_9 --%>
-      <td class="l" colspan=2>Applicazione Provvisoria a Detenzione Domiciliare - Art. 678 comma 1-ter c.p.p.</td>                
+      <td class="l" colspan=2>Applicazione Provvisoria a Detenzione Domiciliare - Art. 678 comma 1-ter c.p.p.</td>   
+      <% } else if(codiciSemilibertaSorvNew.contains(misuraposold.getCodTipoMisura())) { %> <%--// MEV_9-SIEP --%>
+      <td class="l" colspan=2>Applicazione Provvisoria a Semiliberta' - Art. 678 comma 1-ter c.p.p.</td>              
      <%}%>
     </tr>
 		<tr>

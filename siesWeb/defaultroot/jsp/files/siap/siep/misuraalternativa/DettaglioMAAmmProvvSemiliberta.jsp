@@ -361,7 +361,7 @@ else if("03".equals(misuraalternativa.getCodTipoDecisione() )) {
 
 <tr>
   <td class="l">Data Esecutivita'</td>
-  <td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataEsecutivita(),"dd-MM-yyyy"))%></font></td>
+  <td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataEsecutivita(),"dd-MM-yyyy"),"&nbsp;")%></font></td>
 </tr>
 
 <%if(verbale.getDataEmissione()!= null) {%>
