@@ -144,13 +144,7 @@ function ListaDocumentiSius(a_formname) {
 }
 
 function pulisciId() {
-<%
-if (!"MODIFICA".equals(tipoOperazione)) {
-%>
 	document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ID_DOCUMENTO_SIUS%>.value = "";
-<%
-}
-%>
 }
 
 function Verify() {
@@ -195,6 +189,8 @@ if (!lPosizione.isLibero() || ("S".equals(lFascicoloAssociato.getFlagAltraCausa(
 	    return false;
   	}
 	var campo = document.LoadInserisciMisuraAlternativa.<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>.value;
+	// MEV_9-SIEP: aggiunta variabile
+	var codMotivo = document.LoadInserisciMisuraAlternativa.<%=ICostantiEvento.CAMPO_COD_MOTIVO%>.value;
 	// Controllo sui campi dell'ordinanza
 	if (document.LoadInserisciMisuraAlternativa.flagmisura.value == "N") {
   		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>.value.length == 1)
@@ -215,7 +211,22 @@ if (!lPosizione.isLibero() || ("S".equals(lFascicoloAssociato.getFlagAltraCausa(
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_SEDE_TDS_EMITT%>.focus();
 			return false;
   		}
-		// MEV_9-SIEP
+		// MEV_9-SIEP: aggiunti controlli
+		if (codMotivo == "0720" || codMotivo == "0721") {
+			if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>.value == ""
+					|| document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT%>.value == "") {
+				alert('Anno e Numero Ordinanza Provvisoria obbligatori!');
+				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>.focus();
+				return false;
+			}
+			if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value == ""
+					&& document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.value == ""
+					&& document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>.value == "") {
+				alert('Data Emissione Provvedimento obbligatoria!');
+				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.focus();
+				return false;
+			}
+		}
 		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value != ""
 			|| document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.value != ""
 			|| document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>.value != "") {
@@ -245,6 +256,16 @@ if (!lPosizione.isLibero() || ("S".equals(lFascicoloAssociato.getFlagAltraCausa(
 // if (lPosizione.isLibero() || tipoMisura.equals("SEMILIBERTA")) {
 if (lPosizione.isLibero() && tipoMisura.equals("AFFIDAMENTO")) {
 %>
+		// MEV_9-SIEP: aggiunti controlli
+		if (codMotivo == "0720" || codMotivo == "0721") {
+			if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.value == ""
+					&& document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>.value == ""
+					&& document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>.value == "") {
+				alert('Data Applicazione Provvisoria obbligatoria');
+				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.focus();
+				return false;
+			}
+		}
 		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.value != ""
 				|| document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>.value != ""
 				|| document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>.value != "") {
@@ -263,7 +284,7 @@ if (lPosizione.isLibero() && tipoMisura.equals("AFFIDAMENTO")) {
 				return false;
 			}
 		}
-		// FINE MEV_9-SIEP
+// FINE MEV_9-SIEP
 <%
 } else if (lPosizione.isDetenuto()
 				|| lPosizione.getCodPosizioneGiuridica().equals("14") // Espiazione Pena in Regime di Semilibertà
@@ -426,7 +447,8 @@ if (lPosizione.isLibero() && (verbale == null || verbale.getIdVerbale() == null)
 --%>
 	if (!document.LoadInserisciMisuraAlternativa.<%=ICostantiCSSA.CAMPO_ID_CSSA%>.disabled) {
 		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiCSSA.CAMPO_ID_CSSA%>.value == ""
-				|| document.LoadInserisciMisuraAlternativa.<%=ICostantiCSSA.CAMPO_ID_CSSA%>.value == "-") {
+				|| document.LoadInserisciMisuraAlternativa.<%=ICostantiCSSA.CAMPO_ID_CSSA%>.value == "-"
+				|| document.LoadInserisciMisuraAlternativa.<%=MinorMask.ComboCSSAId%>.value == "-") {
 			alert("L'UEPE/USSM e' obbligatorio");
 			return false;
   		}
@@ -1214,6 +1236,8 @@ if (tipoMisura.equals("ESP_PRESSO_DOM")) {
 <INPUT type="HIDDEN" name="<%=ICostantiMisuraAlternativa.CAMPO_ID_DOCUMENTO_SIUS%>" value="<%=StringUtils.toStringJSP(misuraalternativa.getEveIdEvento())%>">
 <INPUT type="HIDDEN" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%=StringUtils.toStringJSP(lEventoAmmProvvAff.getIdEvento())%>">
 <INPUT type="HIDDEN" name="lFlagSanzione" value="<%=lFlagSanzione%>">
+<%-- MEV_9-SIEP: aggiunta impostazione campo nascosto --%>
+<INPUT type="HIDDEN" name="tipoOperazione" value="<%=tipoOperazione%>">
 <%
 if (tipoMisura.equals("AFFIDAMENTO")) {
 %>
@@ -1501,19 +1525,42 @@ if ("S".equals(lFlagSanzione) && penaresidua != null && penaresidua.getFlagSanzi
 //==============================================================================      
 // FINE SANZIONE SOSTITUTIVA
 //==============================================================================      
-%>       
+%>
 	<tr>
+<%
+// MEV_9-SIEP: aggiunta gestione modifica
+String giornoDE = DateUtils.getSysDate("dd"), meseDE = DateUtils.getSysDate("MM"), annoDE = DateUtils.getSysDate("yyyy");
+String giornoDT = giornoDE, meseDT = meseDE, annoDT = annoDE;
+if (!Utils.isNullObj(eventonotifica.getEvento())) {
+	if (!Utils.isNullObj(eventonotifica.getEvento().getDataEmissione())) {
+		giornoDE = DateUtils.getDateToString(eventonotifica.getEvento().getDataEmissione(), "dd");
+		meseDE = DateUtils.getDateToString(eventonotifica.getEvento().getDataEmissione(), "MM");
+		annoDE = DateUtils.getDateToString(eventonotifica.getEvento().getDataEmissione(), "yyyy");
+	}
+	if (eventonotifica != null && eventonotifica.getNotifiche() != null && eventonotifica.getNotifiche().length > 0
+			&& eventonotifica.getNotifiche()[0] != null && eventonotifica.getNotifiche()[0].getDataInvio() != null) {
+		giornoDT = DateUtils.getDateToString(eventonotifica.getNotifiche()[0].getDataInvio(), "dd");
+		meseDT = DateUtils.getDateToString(eventonotifica.getNotifiche()[0].getDataInvio(), "MM");
+		annoDT = DateUtils.getDateToString(eventonotifica.getNotifiche()[0].getDataInvio(), "yyyy");
+	} else if (!Utils.isNullObj(eventonotifica.getEvento().getDataTrasmissioneAtti())) {
+		giornoDT = DateUtils.getDateToString(eventonotifica.getEvento().getDataTrasmissioneAtti(), "dd");
+		meseDT = DateUtils.getDateToString(eventonotifica.getEvento().getDataTrasmissioneAtti(), "MM");
+		annoDT = DateUtils.getDateToString(eventonotifica.getEvento().getDataTrasmissioneAtti(), "yyyy");
+	}
+}
+// FINE MEV_9-SIEP
+%>
 		<td class="l">Data Emissione</td>
         <td class="L">
-			<input title="Giorno Data Emissione" value="<%=DateUtils.getSysDate("dd")%>" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>" <%=IWebConstants.UTIL_DATA%>> -
-			<input title="Mese Data Emissione" value="<%=DateUtils.getSysDate("MM")%>" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>" <%=IWebConstants.UTIL_DATA%>> -
-			<input title="Anno Data Emissione" value="<%=DateUtils.getSysDate("yyyy")%>" type="text" size="4" maxlength="4" name="<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
+			<input title="Giorno Data Emissione" value="<%=giornoDE%>" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>" <%=IWebConstants.UTIL_DATA%>> -
+			<input title="Mese Data Emissione" value="<%=meseDE%>" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>" <%=IWebConstants.UTIL_DATA%>> -
+			<input title="Anno Data Emissione" value="<%=annoDE%>" type="text" size="4" maxlength="4" name="<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
         </td>
         <td class="l">Data Trasmissione</td>
         <td class="L" colspan="2">
-			<input title="Giorno Data Trasmissione" value="<%=DateUtils.getSysDate("dd")%>" type="text" size="2" maxlength="2" name="<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>" <%=IWebConstants.UTIL_DATA%>> -
-			<input title="Mese Data Trasmissione" value="<%=DateUtils.getSysDate("MM")%>" type="text" size="2" maxlength="2" name="<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>" <%=IWebConstants.UTIL_DATA%>> -
-			<input title="Anno Data Trasmissione" value="<%=DateUtils.getSysDate("yyyy")%>" type="text" size="4" maxlength="4" name="<%=ICostantiNotifica.CAMPO_ANNO_DATA_INVIO%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
+			<input title="Giorno Data Trasmissione" value="<%=giornoDT%>" type="text" size="2" maxlength="2" name="<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>" <%=IWebConstants.UTIL_DATA%>> -
+			<input title="Mese Data Trasmissione" value="<%=meseDT%>" type="text" size="2" maxlength="2" name="<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>" <%=IWebConstants.UTIL_DATA%>> -
+			<input title="Anno Data Trasmissione" value="<%=annoDT%>" type="text" size="4" maxlength="4" name="<%=ICostantiNotifica.CAMPO_ANNO_DATA_INVIO%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
         </td>
 	</tr>
 </table>
@@ -1744,11 +1791,11 @@ else { // misuraalternativa.getIdMisuraAlternativa() == null
 		<td class="l" colspan="3">
 <%if (isModifica) {%>
 			<font class="campo">
-				<input title="Giorno Data Emissione Ordinanza" value="<%=StringUtils.toStringJSP(DateUtils.getDayToString(misuraalternativa.getDataDecisione()))%>"
+				<input title="Giorno Data Emissione Ordinanza" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisione(), "dd"))%>"
 				type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>" <%=IWebConstants.UTIL_DATA%> onChange="pulisciId();"> -
-				<input title="Mese Data Emissione Ordinanza" value="<%=StringUtils.toStringJSP(DateUtils.getMonthToString(misuraalternativa.getDataDecisione()))%>"
+				<input title="Mese Data Emissione Ordinanza" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisione(), "MM"))%>"
 				type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE%>" <%=IWebConstants.UTIL_DATA%> onChange="pulisciId();"> -
-				<input title="Anno Data Emissione Ordinanza" value="<%=StringUtils.toStringJSP(DateUtils.getYearToString(misuraalternativa.getDataDecisione()))%>"
+				<input title="Anno Data Emissione Ordinanza" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisione(), "yyyy"))%>"
 				type="text" size="4" maxlength="4" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE%>" <%=IWebConstants.UTIL_DATA_ANNO%> onChange="pulisciId();">
 			</font>
 <%} else {%>
@@ -1798,13 +1845,13 @@ else { // misuraalternativa.getIdMisuraAlternativa() == null
 	  	<td class="l" colspan="3">
 	    	<input title="Giorno Data Emissione Provvedimento" type="text" size="2" maxlength="2" 
 	    		name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>" <%=IWebConstants.UTIL_DATA%> onChange="pulisciId();"
-	    		value="<%=StringUtils.toStringJSP(DateUtils.getDayToString(misuraalternativa.getDataDecisioneMaAt()))%>"> -
+	    		value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "dd"))%>"> -
 			<input title="Mese Data Emissione Provvedimento" type="text" size="2" maxlength="2" 
 				name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>" <%=IWebConstants.UTIL_DATA%> onChange="pulisciId();"
-				value="<%=StringUtils.toStringJSP(DateUtils.getMonthToString(misuraalternativa.getDataDecisioneMaAt()))%>"> -
+				value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "MM"))%>"> -
 			<input title="Anno Data Emissione Provvedimento" type="text" size="4" maxlength="4" 
 				name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>" <%=IWebConstants.UTIL_DATA_ANNO%> onChange="pulisciId();"
-				value="<%=StringUtils.toStringJSP(DateUtils.getYearToString(misuraalternativa.getDataDecisioneMaAt()))%>">
+				value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "yyyy"))%>">
 	  	</td>
 	</tr>
 <!-- </table> -->

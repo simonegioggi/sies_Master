@@ -3,9 +3,8 @@ package siap.siep.misuraalternativa.action;
 import f3b.web.IWebConstants;
 
 /**
- * Title: ICostantiMisuraAlternativa
- * Description: Classe di costanti di MisuraAlternativa
- * 
+ * ICostantiMisuraAlternativa - Classe di costanti di MisuraAlternativa
+ *
  * @version 1.0
  */
 public interface ICostantiMisuraAlternativa {
@@ -121,16 +120,16 @@ public interface ICostantiMisuraAlternativa {
 	public static final String CAMPO_ID_DOCUMENTO_SIUS = "IdDocumentoSius";
 	public static final String CAMPO_NATURA_MA = "NaturaMA";
 	public static final String CAMPO_TIPO_MA = "TipoMA";
-	
+
 	public static final String CAMPO_FLAG_DECISIONE_TRIBUNALE_MINORI = "FlagDecisioneTribunaleMinori";
 	public static final String CAMPO_TDS_GIORNO_DATA_INIZIO_MISURA = "TdsGiornoDataInizioMisura";
 	public static final String CAMPO_TDS_MESE_DATA_INIZIO_MISURA = "TdsMeseDataInizioMisura";
 	public static final String CAMPO_TDS_ANNO_DATA_INIZIO_MISURA = "TdsAnnoDataInizioMisura";
-	
+
 	public static final String CAMPO_TDS_GIORNO_DATA_FINE_MISURA = "TdsGiornoDataFineMisura";
 	public static final String CAMPO_TDS_MESE_DATA_FINE_MISURA = "TdsMeseDataFineMisura";
 	public static final String CAMPO_TDS_ANNO_DATA_FINE_MISURA = "TdsAnnoDataFineMisura";
-	
+
 	public static final String CAMPO_TDS_NUM_ANNI_MISURA = "TdsNumAnniMisura";
 	public static final String CAMPO_TDS_NUM_MESI_MISURA = "TdsNumMesiMisura";
 	public static final String CAMPO_TDS_NUM_GIORNI_MISURA = "TdsNumGiorniMisura";
@@ -153,7 +152,7 @@ public interface ICostantiMisuraAlternativa {
 	public static final String CAMPO_ANNO_DATA_DECISIONE_MA_AT = "AnnoDataDecisioneMAAltroTitolo";
 
 	public static final String CAMPO_COD_LUOGO_EMITTENTE = "CodLuogoEmittente";
-	
+
 	// MEV_9
 	public static final String CAMPO_GIORNO_DATA_ESECUTIVITA = "GiornoDataEsecutivita";
 	public static final String CAMPO_MESE_DATA_ESECUTIVITA = "MeseDataEsecutivita";
@@ -298,8 +297,6 @@ public interface ICostantiMisuraAlternativa {
 			+ "files/siap/siep/misuraalternativa/LoadInserisciMACessazione51bis.jsp";
 	public static final String PG_DETTAGLIO_MA_CESSAZIONE_51BIS = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/misuraalternativa/DettaglioMACessazione51bis.jsp";
-	//
-	// ============================================================================
 
 	public static final String PG_LOAD_INSERISCI_MA_EST_DEF = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/misuraalternativa/LoadInserisciEstensioneDefinitiva.jsp";
@@ -337,9 +334,9 @@ public interface ICostantiMisuraAlternativa {
 	public static final String PG_LOAD_INSERISCI_MA_AMM_PROVV_SEMILIBERTA = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/misuraalternativa/LoadInserisciMAAmmProvvSemiliberta.jsp";
 	public static final String PG_LOAD_DETTAGLIO_MA_AMM_PROVV_SEMILIBERTA = IWebConstants.ROOT_DIR
-			+ "files/siap/siep/misuraalternativa/DettaglioMAAmmProvvSemiliberta.jsp";	
-  //MEV_9-SIEP - FINE
-	
+			+ "files/siap/siep/misuraalternativa/DettaglioMAAmmProvvSemiliberta.jsp";
+	// MEV_9-SIEP - FINE
+
 	// TEMPLATE VUOTO
 	public static final String TEMPLATE_VUOTO = "SIEP_VUOTO";
 
@@ -355,16 +352,16 @@ public interface ICostantiMisuraAlternativa {
 
 	// Ammissione ad Affidamento
 	public static final String TEMPLATE_DDS_MOTIVO_0192 = "SIEP_MA_090";
-	public static final String TEMPLATE_DDS_MOTIVO_0192_BIS = "SIEP_MA_090"; // Modificare con il template
-																				// effettivo
+	// Modificare con il template effettivo
+	public static final String TEMPLATE_DDS_MOTIVO_0192_BIS = "SIEP_MA_090";
 
 	// PROROGA ULTERIORE PERIODO
 	public static final String TEMPLATE_PROROGA_ULT_PERIODO = "SIEP_MA_089";
 
 	// SOSPENSIONE PROVVISORIA
 	public static final String TEMPLATE_DDS_MOTIVO_2152 = "SIEP_MA_092";
-	public static final String TEMPLATE_DDS_MOTIVO_2152_BIS = "SIEP_MA_092"; // Modificare con il template
-																				// effettivo
+	// Modificare con il template effettivo
+	public static final String TEMPLATE_DDS_MOTIVO_2152_BIS = "SIEP_MA_092";
 
 	// RIPRISTINO DET DOM SPEC
 	public static final String TEMPLATE_SCARCERATO = "SIEP_MA_093";

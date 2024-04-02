@@ -42,28 +42,29 @@ import siap.siep.verbale.controller.IVerbale;
 import siap.siep.verbale.model.VerbaleModel;
 
 /**
- * MEV_9-SIEP
- * Si agggiunge la gestione dell'ammissione provvisoria anche per la semilibertà.
- * 
- * Da verificare:questa action viene richiamata
- * -- dalla griglia della semilibertà
- * -- dalla funzione di modifica
- * -- dal dettaglio del verbale di sottomissione (verificare se previsto)
- * 
+ * MEV_9-SIEP Si agggiunge la gestione dell'ammissione provvisoria anche per la semilibertà.
+ *
+ * Da verificare:questa action viene richiamata -- dalla griglia della semilibertà -- dalla funzione di
+ * modifica -- dal dettaglio del verbale di sottomissione (verificare se previsto)
+ *
  */
 public class ActLoadInserisciMAAmmProvSemiliberta extends ActAmmissioneProvvisoria {
+
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
-	
-	@SuppressWarnings("rawtypes")
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public String processRequest() throws F3BException {
-		
+
+		// info per il log
+		siesLogger.info(getClass().getName() + "processRequest: inizio");
+
 		// tutti i controlli e la maggior parte delle request si trovano nel padre
 		String lRitorno = getAmmissioneProvvisoria();
 		if (!lRitorno.equals(""))
 			return lRitorno;
-		
+
 		// Se provengo dal dettaglio del verbale mi viene passato l'id_della misura legata al verbale.
-		// Carico i dati e li passo alla form (non modificabili) 
+		// Carico i dati e li passo alla form (non modificabili)
 		MisuraAlternativaModel lMisAlModAMM = new MisuraAlternativaModel();
 		if (!isRequestParameterNullEmptyObj(CAMPO_ID_MISURA_ALTERNATIVA)) {
 			BigDecimal lIdMisuraAlternativa = getRequestBigDecimalParameter(CAMPO_ID_MISURA_ALTERNATIVA);
@@ -72,12 +73,12 @@ public class ActLoadInserisciMAAmmProvSemiliberta extends ActAmmissioneProvvisor
 			IMisuraAlternativa lMisAltCtrl = SICOLookupRemote.getMisuraAlternativaRemote();
 			lMisAlModAMM = lMisAltCtrl.ExRicercaMisuraAlternativaByKey(lIdMisuraAlternativa);
 			setRequestAttribute("misuraalternativa", lMisAlModAMM);
-			
+
 			// Recupero il verbale - legato alla misura
 			EventoModel lEveVer = new EventoModel();
 			IEventoSimeone lCtrlEven = SICOLookupRemote.getEventoSimeoneRemote();
-			lEveVer = lCtrlEven.ExRicercaEventoByEveIdEventoTipoProvCodMotivo(
-					lMisAlModAMM.getEveIdEvento(), "07", "16", "0314");
+			lEveVer = lCtrlEven.ExRicercaEventoByEveIdEventoTipoProvCodMotivo(lMisAlModAMM.getEveIdEvento(),
+					"07", "16", "0314");
 
 			IVerbale lCtrlVe = SIEPLookupRemote.getVerbaleRemote();
 			VerbaleModel lVerbMod = lCtrlVe.ExRicercaVerbaleObblighiByIdEvento(lEveVer.getIdEvento());
@@ -85,24 +86,25 @@ public class ActLoadInserisciMAAmmProvSemiliberta extends ActAmmissioneProvvisor
 
 			// Recupero il Istituto che ha redatto il verbale se presente (???)
 			if (lVerbMod.getIstDetIdIstitutoDetenzione() != null) {
-				IIstitutoDetenzione lIstCtrl= SIEPLookupRemote.getIstitutoDetenzioneRemote();
-				IstitutoDetenzioneModel lIstModel = lIstCtrl.ExRicercaIstitutoDetenzioneByKey (lVerbMod.getIstDetIdIstitutoDetenzione());
+				IIstitutoDetenzione lIstCtrl = SIEPLookupRemote.getIstitutoDetenzioneRemote();
+				IstitutoDetenzioneModel lIstModel = lIstCtrl
+						.ExRicercaIstitutoDetenzioneByKey(lVerbMod.getIstDetIdIstitutoDetenzione());
 				setRequestAttribute("datiIstituto", lIstModel);
 			}
 
-			//???????? SERVE??
+			// ???????? SERVE??
 			UfficioModel lUffEmiMod = new UfficioModel();
 			IUfficio lCtrlUffEmi = SICOLookupRemote.getUfficioRemote();
 			lUffEmiMod = lCtrlUffEmi.getUfficioByKey(lMisAlModAMM.getChiaveUfficioFascicoloSius());
 			setRequestAttribute("sedeUfficioEmittente", lUffEmiMod);
 		}
-		
+
 		String tipoOperazione = "INSERIMENTO";
 		if (!isRequestParameterNullObj("tipoOperazione"))
 			tipoOperazione = getRequestStringParameter("tipoOperazione");
 		setRequestAttribute("tipoOperazione", tipoOperazione);
-		
-	  // =======================================================================================
+
+		// =======================================================================================
 		// In caso di modifica recupero i dati per poi preselezionare i valori nelle combo
 		//
 		MisuraAlternativaModel lMisAlModToChange = null;
@@ -180,12 +182,13 @@ public class ActLoadInserisciMAAmmProvSemiliberta extends ActAmmissioneProvvisor
 					setRequestAttribute("NotificaAvv", lNotifica);
 				}
 			}
-			
+
 			// Provo a capire se trattasi del provvedimento che segue il verbale
 			EventoModel lEveVer = new EventoModel();
 			IEventoSimeone lCtrlEven = SICOLookupRemote.getEventoSimeoneRemote();
 			lEveVer = lCtrlEven.ExRicercaEventoByEveIdEventoTipoProvCodMotivo(
-					lMisAlModToChange.getEveIdEvento(), "07", "16", "0314", "S"); // MEV_9 mi interessano i validati!!!
+					lMisAlModToChange.getEveIdEvento(), "07", "16", "0314", "S"); // MEV_9 mi interessano i
+																					// validati!!!
 
 			IVerbale lCtrlVe = SIEPLookupRemote.getVerbaleRemote();
 			VerbaleModel lVerbMod = lCtrlVe.ExRicercaVerbaleObblighiByIdEvento(lEveVer.getIdEvento());
@@ -196,35 +199,35 @@ public class ActLoadInserisciMAAmmProvSemiliberta extends ActAmmissioneProvvisor
 				setRequestAttribute("misuraalternativaToChange", null);
 			}
 		}
-		
+
 		// Controllo esistenza almeno un avvocato per fascicolo
 		IAvvocato lAvv = SIEPLookupRemote.getAvvocatoRemote();
 		Vector lAvvocati = null;
 		FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSessionAttribute("fascicolo");
-		
+
 		try {
 			lAvvocati = lAvv.ExRicercaAvvocatiByFascicolo(lFascMod.getIdFascicoloSiep());
 			setRequestAttribute("avvocati", lAvvocati);
 		} catch (SIEPException e) {
 			RedirectTo lRedirigi = new RedirectTo();
 			lRedirigi.setPage(IWebConstants.PG_MAIN);
-			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
-					e.getMessage() + " Impossibile eseguire la richiesta. Nessun avvocato associato al fascicolo.");
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT, e.getMessage()
+					+ " Impossibile eseguire la richiesta. Nessun avvocato associato al fascicolo.");
 			lRedirigi.setAction("siap.siep.avvocato.action.ActLoadInserisciAvvocato&"
 					+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
 			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
 
 			return IWebConstants.PG_MESSAGE;
 		}
-		
-		//=================================
+
+		// =================================
 		// Caricamento delle combo
-	  //=================================
+		// =================================
 		// Tipo Ufficio SIUS
 		Option lOptionUffSIUS = new Option(DecodificheManager.getInstance().getTipoUfficioSIUS());
 		if (lUffEmittente != null) // se da verbale si precarica come dest l'ufficio emittente il provv sorv
 			lOptionUffSIUS.setSelected(lUffEmittente.getCodTipoUfficio());
-		
+
 		lOptionUffSIUS.setValueBlankItem("-");
 		lOptionUffSIUS.setAddBlankItem(Option.BLANK_ITEM);
 		setRequestAttribute("comboTipoUfficioSIUS", "" + lOptionUffSIUS);
@@ -243,43 +246,44 @@ public class ActLoadInserisciMAAmmProvSemiliberta extends ActAmmissioneProvvisor
 
 		// Setto il campo codice motivo provv SIUS
 		// FIXME recuperare i codici corretti. Da capire se cambia tra PM e PMM
-		Option lOptionMotivo = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvAffi());		
+		Option lOptionMotivo = new Option(
+				DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvAffi());
 		Collection lMotiviColl = null;
 		if (isUfficioMinorenni())
 			lMotiviColl = DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvSemilibPmm();
 		else
 			lMotiviColl = DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvSemilibPm();
-		
+
 		// Scorro la collection e forzo la descrizione per alcuni codici perchè lato SIEP NON sono parlanti
 		Iterator<DecodeModel> iterMot = lMotiviColl.iterator();
 		Collection lMotiviCollSIEP = new Vector();
 		while (iterMot.hasNext()) {
- 			DecodeModel lDecode = iterMot.next();
- 			DecodeModel lDecodeNew = new DecodeModel();
- 			lDecodeNew.setCode(lDecode.getCode());
- 			
- 			// AFFIDAMENTO
+			DecodeModel lDecode = iterMot.next();
+			DecodeModel lDecodeNew = new DecodeModel();
+			lDecodeNew.setCode(lDecode.getCode());
+
+			// AFFIDAMENTO
 			if ("0683".equals(lDecode.getCode()))
-				lDecodeNew.setDescription("Applicazione Provvisoria "+lDecode.getDescription());
+				lDecodeNew.setDescription("Applicazione Provvisoria " + lDecode.getDescription());
 			else if ("0694".equals(lDecode.getCode()))
-				lDecodeNew.setDescription("Applicazione Provvisoria "+lDecode.getDescription());
-			else 
+				lDecodeNew.setDescription("Applicazione Provvisoria " + lDecode.getDescription());
+			else
 				lDecodeNew.setDescription(lDecode.getDescription());
-			
+
 			lMotiviCollSIEP.add(lDecodeNew);
 		}
-		lOptionMotivo = new Option (lMotiviCollSIEP);		
+		lOptionMotivo = new Option(lMotiviCollSIEP);
 
 		// Preselezione in caso di modifica
 		if (lEveSorv != null)
 			lOptionMotivo.setSelected(lEveSorv.getCodMotivo());
 
 		setRequestAttribute("motivoProvv", "" + lOptionMotivo);
-		
+
 		// Destinatari - Se da verbale o modifica precarico il CSS che ha redatto il verbale
 		if (lCssa != null)
 			setRequestAttribute("daticssa", lCssa);
-		
+
 		// Autorita' esterna E
 		Option lOptionAutoritaE = new Option(DecodificheManager.getInstance().getTipoAutorita());
 		if (lAutEsternaE != null) {
@@ -287,16 +291,21 @@ public class ActLoadInserisciMAAmmProvSemiliberta extends ActAmmissioneProvvisor
 			setRequestAttribute("autoritaEsternaE", lAutEsternaE);
 		}
 		setRequestAttribute("codiceAutoritaE", "" + lOptionAutoritaE);
-		
-		// 
+
+		//
 		Option lOptionAvv = new Option(DecodificheManager.getInstance().getTipoAutorita(), "22");
 		setRequestAttribute("autoritaEsternaAvv", "" + lOptionAvv);
 
 		// SERVE???
 		setRequestAttribute("filtroMinorenni", getFiltroMinorenni());
-		
+
 		setRequestAttribute("tipomisura", "SEMILIBERTA");
-		
+
+		// info per il log
+		siesLogger.info(getClass().getName() + "processRequest: fine");
+
+		// pagina di ritorno
 		return PG_LOAD_INSERISCI_MA_AMM_PROVV_SEMILIBERTA;
-	}		
+	}
+
 }

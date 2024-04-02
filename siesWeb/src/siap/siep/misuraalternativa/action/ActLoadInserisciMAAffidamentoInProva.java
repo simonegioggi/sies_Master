@@ -4,8 +4,10 @@ import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
 import f3b.util.F3BException;
+import f3b.util.Utils;
 import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
+import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.misuraalternativa.controller.IMisuraAlternativa;
@@ -31,20 +33,12 @@ public class ActLoadInserisciMAAffidamentoInProva extends ActConcessione {
 		if (!lRitorno.equals(""))
 			return lRitorno;
 
-		/*
-		 * paolo cherubini 17/01/2011 provo a commentare probabilmente nons serve // AMBROSINO 21/10/2010 :
-		 * Ammissione Provvisoria ad Affidamento in Prova (54) // Dal 01/2011 è cambiato il codice della
-		 * PosGiu da 51 a 54 // Eseguo gli stessi controlli effettuati per PosGiu = 13 lRitorno =
-		 * getConcessione("54"); if(!lRitorno.equals("")) return lRitorno; fine paolo
-		 */
-
 		// setto il campo codice motivo
 		Option lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoMAffP());
 		setRequestAttribute("motivoProvv", "" + lOption);
 
 		setRequestAttribute("tipoMisura", "AFFIDAMENTO");
 
-		// Cerca gli Eventi "validati" con motivo "2006"
 		// Instanzia il model dell'evento
 		EventoModel lEvent = new EventoModel();
 
@@ -61,28 +55,36 @@ public class ActLoadInserisciMAAffidamentoInProva extends ActConcessione {
 		// since marzo 2015 MEV29. Prima cercava solo l'affidamento provvisorio
 		// ==========================================================================
 
-		// prende dalla Session l'ID del procedimento e lo carica nel model
-		lEvent.setFasSieIdFascicoloSiep(
-				((FascicoloSiepModel) getSessionAttribute("fascicolo")).getIdFascicoloSiep());
-		// carica nel model il Tipo evento
-		lEvent.setCodTipoEvento("01");
-		// carica nel model il flag documento registrato
-		lEvent.setFlagDocumentoRegistrato("S");
-		// carica nel model il codice dei provvedimenti
-		String[] lProvv = { "04", "09", "12" };
-		// carica nel model il tipo motivo
-		String[] lMotivo = null;
-		if ("29".equals(lCodPosizione)) {// Pos Giu 29 Detenzione Domiciliare Provvisoria
-			// carica nel model il tipo motivo
-			lMotivo = new String[] { "2005" };
+		// MEV_9-SIEP: aggiunta nuova gestione per modifica
+		IEvento ie = SICOLookupRemote.getEventoRemote();
+		EventoModel lEve = null;
+		String tipoOperazione = "";
+		if (!isRequestParameterNullObj("tipoOperazione"))
+			tipoOperazione = getRequestStringParameter("tipoOperazione");
+		if ("MODIFICA".equals(tipoOperazione)) {
+			lEve = ie.ExRicercaEventoByKey(getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO));
 		} else {
+			// prende dalla Session l'ID del procedimento e lo carica nel model
+			lEvent.setFasSieIdFascicoloSiep(
+					((FascicoloSiepModel) getSessionAttribute("fascicolo")).getIdFascicoloSiep());
+			// carica nel model il Tipo evento
+			lEvent.setCodTipoEvento("01");
+			// carica nel model il flag documento registrato
+			lEvent.setFlagDocumentoRegistrato("S");
+			// carica nel model il codice dei provvedimenti
+			String[] lProvv = { "04", "09", "12" };
 			// carica nel model il tipo motivo
-			lMotivo = new String[] { "2006", "2008" };
+			String[] lMotivo = null;
+			if ("29".equals(lCodPosizione)) {// Pos Giu 29 Detenzione Domiciliare Provvisoria
+				// carica nel model il tipo motivo
+				lMotivo = new String[] { "2005" };
+			} else {
+				// carica nel model il tipo motivo
+				lMotivo = new String[] { "2006", "2008" };
+			}
+			// Ricerca eventuale Provvedimeto di Concessione Misura Provvisoria (affidamento/Detenzione)
+			lEve = ie.ExRicercaEventoPerMotivoPerProvv(lMotivo, lProvv, lEvent);
 		}
-
-		// Ricerca eventuale Provvedimeto di Concessione Misura Provvisoria (affidamento/Detenzione)
-		IEvento lCtrlEvento = SICOLookupRemote.getEventoRemote();
-		EventoModel lEve = lCtrlEvento.ExRicercaEventoPerMotivoPerProvv(lMotivo, lProvv, lEvent);
 
 		// setta la risposta della ricerca nella request
 		setRequestAttribute("eventoammissioneprovvisoriaaffidamento", lEve);
@@ -97,11 +99,17 @@ public class ActLoadInserisciMAAffidamentoInProva extends ActConcessione {
 
 		if (lEve != null) {
 			// Ricerca nella tabella MISURA ALTERNATIVA
-			IMisuraAlternativa lCtrlMA = SICOLookupRemote.getMisuraAlternativaRemote();
-			MisuraAlternativaModel lMA = lCtrlMA.ExRicercaMisuraAlternativaByIdEvento(lEve.getEveIdEvento());
+			IMisuraAlternativa ima = SICOLookupRemote.getMisuraAlternativaRemote();
+			MisuraAlternativaModel mam = ima.ExRicercaMisuraAlternativaByIdEvento(lEve.getEveIdEvento());
 
 			// setta la risposta della ricerca nella request
-			setRequestAttribute("maammissioneprovvisoria", lMA);
+			setRequestAttribute("maammissioneprovvisoria", mam);
+
+			// MEV_9-SIEP: aggiunta impostazione per il campo codice motivo
+			if (!Utils.isNullObj(mam)) {
+				lOption.setSelected(mam.getCodTipoMisura());
+				setRequestAttribute("motivoProvv", "" + lOption);
+			}
 		}
 
 		// MEV 10 - filtro sui minorenni

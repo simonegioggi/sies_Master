@@ -114,11 +114,6 @@ if ((eventonotifica.getEvento().getFlagDocumentoRegistrato() != null
 		&& eventonotifica.getEvento().getFlagDocumentoRegistrato().compareTo("N") == 0)
 		|| eventonotifica.getEvento().getFlagDocumentoRegistrato() == null) {
 	// MEV_9-SIEP: aggiunto pulsante di modifica
-	if (misuraalternativa.getCodTipoMisura().equals("0720")
-			|| misuraalternativa.getCodTipoMisura().equals("0721")
-			|| misuraalternativa.getCodTipoMisura().equals("0730")
-			|| misuraalternativa.getCodTipoMisura().equals("0731")
-			|| misuraalternativa.getCodTipoMisura().equals("0732")) {
 %>
      	<!-- BOTTONE DI MODIFICA -->
      	<td class="LBG">
@@ -129,7 +124,7 @@ if ((eventonotifica.getEvento().getFlagDocumentoRegistrato() != null
 			</a>
 		</td>
 <%
-	}
+// 	}
 %>
 		<!-- BOTTONE DI STAMPA -->
    		<jsp:include page="<%=ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>">
@@ -479,7 +474,7 @@ if (misuraalternativa.getDescrLuogoProva() != null) {
 <%
 }
 // MEV_9-SIEP: aggiunte etichette
-if (misuraalternativa.getAnnoRegistroMaAt() != null) {
+if (tipoMisura.equals("AFFIDAMENTO") && misuraalternativa.getAnnoRegistroMaAt() != null) {
 %>
 	<tr>
 		<td class="l">Anno/Numero Ordinanza Provvisoria</td>

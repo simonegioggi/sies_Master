@@ -136,16 +136,19 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 				lMisAlModConcessa = lMisAltCtrl.ExRicercaMisuraAlternativaByKey(lIdMisuraAlternativa);
 				setRequestAttribute("misuraalternativa", lMisAlModConcessa);
 
+				// MEV_9-SIEP: aggiunta impostazione parametro
+				if (!isRequestParameterNullObj("tipoOperazione")) {
+					tipoOperazione = getRequestStringParameter("tipoOperazione");
+					setRequestAttribute("tipoOperazione", tipoOperazione);
+				}
+
 				// ricerca per il provvedimento e le notifiche relative
 				if (!(lMisAlModConcessa.getCodTipoMisura().equals("0001")
 						|| lMisAlModConcessa.getCodTipoMisura().equals("0002")
-						|| lMisAlModConcessa.getCodTipoMisura().equals("0003"))) {
-					// MEV_9-SIEP: aggiunto controllo per codici tipo misura
-					if (lMisAlModConcessa.getCodTipoMisura().equals("0720")
-							|| lMisAlModConcessa.getCodTipoMisura().equals("0721")
-							|| lMisAlModConcessa.getCodTipoMisura().equals("0730")
-							|| lMisAlModConcessa.getCodTipoMisura().equals("0731")
-							|| lMisAlModConcessa.getCodTipoMisura().equals("0732")) {
+						|| lMisAlModConcessa.getCodTipoMisura().equals("0003"))
+						|| "MODIFICA".equals(tipoOperazione)) { // MEV_9-SIEP: aggiunta OR condition
+					// MEV_9-SIEP: aggiunto controllo per diversificare la ricerca
+					if ("MODIFICA".equals(tipoOperazione)) {
 						if (!isRequestParameterNullObj(ICostantiEvento.CAMPO_ID_EVENTO))
 							lEveMod = lCtrlEvento.ExRicercaEventoNotificaByKey(
 									getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO));
@@ -153,12 +156,6 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 						lEveMod = lCtrlEvento
 								.ExRicercaEventoNotificaByEveIdEvento(lMisAlModConcessa.getEveIdEvento());
 					setRequestAttribute("eventonotifica", lEveMod);
-				}
-
-				// MEV_9-SIEP: aggiunta impostazione parametro
-				if (!isRequestParameterNullObj("tipoOperazione")) {
-					tipoOperazione = getRequestStringParameter("tipoOperazione");
-					setRequestAttribute("tipoOperazione", tipoOperazione);
 				}
 
 				// Data Sottoscrizione Verbale Obblighi
@@ -295,6 +292,10 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 						dm.setDescription("UEPE");
 					else if ("USSM".equals(dm.getCode()))
 						dm.setDescription("USSM");
+					else if ("UEPESS".equals(dm.getCode()))
+						dm.setDescription("UEPESS");
+					else if ("USSMSS".equals(dm.getCode()))
+						dm.setDescription("USSMSS");
 				}
 				Option o = new Option(c, ((NotificaModel) lTable.get("NotCssa")).getCSSA().getTipo());
 				String[] lFiltro = new String[3];
@@ -456,6 +457,18 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 			lEve.getEvento().setCodMotivo(aMotivo);
 		else if ("0692".equals(aMotivo))
 			lEve.getEvento().setCodMotivo(aMotivo);
+		if ("26".equals(lEve.getEvento().getCodTipoProvvedimento())) {
+			if ("0680".equals(aMotivo))
+				lEve.getEvento().setCodMotivo("5443");
+			else if ("0681".equals(aMotivo))
+				lEve.getEvento().setCodMotivo("5444");
+			else if ("0690".equals(aMotivo))
+				lEve.getEvento().setCodMotivo("5445");
+			else if ("0691".equals(aMotivo))
+				lEve.getEvento().setCodMotivo("5446");
+			else if ("0692".equals(aMotivo))
+				lEve.getEvento().setCodMotivo("5447");
+		}
 
 		// aggiunto controllo per codici tipo misura
 		if ("0720".equals(aMotivo) || "0721".equals(aMotivo) || "0730".equals(aMotivo)

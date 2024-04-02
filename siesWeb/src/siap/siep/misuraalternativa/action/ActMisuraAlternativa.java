@@ -26,8 +26,7 @@ import siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel;
 import siap.sius.tenore.model.TenoreModel;
 
 /**
- * Title: ActMisuraAlternativa 
- * Description: Azione Generalizzata di tutte le Action delle Misure Alternative
+ * ActMisuraAlternativa - Azione Generalizzata di tutte le Action delle Misure Alternative
  *
  * @version 1.0
  */
@@ -1517,7 +1516,8 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 		// MEV_9 - SI aggiunge la data Esecutività
 		if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA)
 				&& getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA) != null
-				&& !getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA).equals("-"))
+				&& !getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA)
+						.equals("-"))
 			lMisMod.setDataEsecutivita(
 					getRequestDateParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA,
 							ICostantiMisuraAlternativa.CAMPO_MESE_DATA_ESECUTIVITA,
