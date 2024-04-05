@@ -527,6 +527,11 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 		if (aNaturaMA.equals(CONCESSIONE_SOSPENSIONE)) {
 			lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance().getOggettoDecisione());
 		}
+		
+		// MEV_9-SIEP
+		if (aNaturaMA.equals(CONCESSIONE_SOSPENSIONE678)) {
+			lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance().getOggettiDecisioneSosp678());
+		}
 
 		return lCodMotivi;
 	}
@@ -613,6 +618,7 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 				// decreti che ordinanze
 				// MEV_9 - SIEP - Si aggiunge la gestione della semilibertà
 				|| (aNaturaMA.equals(AMMISSIONE_PROVVISORIA) && aTipoMA.equals(SEMILIBERTA))
+				|| (aNaturaMA.equals(CONCESSIONE_SOSPENSIONE678))
 			  // MEV_9 - SIEP - FINE
 				|| (aNaturaMA.equals(AMMISSIONE_PROVVISORIA) && aTipoMA.equals(DETENZIONE_DOMICILIARE))
 				|| (aNaturaMA.equals(PROSECUZIONE_51BIS)) // DL 146/20113
@@ -688,7 +694,12 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 			lCodNatura = new String[2];
 			lCodNatura[0] = "ED"; // ED sia per MDS che TDS
 			lCodNatura[1] = "EC"; // EC solo per MDS iscritte SIEP
+		} else if (lNaturaMA.equals(CONCESSIONE_SOSPENSIONE678)) {
+			lCodNatura[0] = "CO"; // MEV_9-SIEP
 		}
+		
+		
+		
 		// else if(lNaturaMA.equals(PROSECUZIONE_51BIS_CUMULO)){
 		// lCodNatura[0] = "PC"; //FIXME DL 146/2013 verificare la natura decisione della Sorveglianza ED?
 		// Estensione Definitva

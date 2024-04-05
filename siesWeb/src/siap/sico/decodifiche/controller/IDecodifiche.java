@@ -176,6 +176,9 @@ public interface IDecodifiche {
 	 * @throws F3BException
 	 */
 	public Collection ExListaMotivoProvvRigettoDifferimento() throws F3BException;
+	
+	// MEV_9-SIEP
+	public Collection ExListaMotivoProvvSosp678() throws F3BException;
 
 	public Collection ExListaMotivoProvvedimentoRigettoMA() throws F3BException;
 

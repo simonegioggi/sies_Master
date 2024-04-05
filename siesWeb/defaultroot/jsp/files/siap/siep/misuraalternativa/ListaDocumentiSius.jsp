@@ -555,6 +555,14 @@ if (!documentiSius.isEmpty()) {
 					&& !Utils.isNullObj(misuraModel.getDataEsecutivita()))
 				continue;
 		}
+        
+        // MEV_9-SIEP per le sospe 678 provvisorie prendo solo quelle con esito 0270 Applica provvisoriamente 
+        if ("CONCESSIONE_SOSPENSIONE678".equals(NaturaMA)) {  
+        	if (!"0270".equals(eventoModel.getCodEsito()))
+        		continue;
+        }
+        
+        
 %>
 	<tr>
 		<td class="c">
@@ -593,7 +601,9 @@ if (!documentiSius.isEmpty()) {
 				|| "0691".equals(misuraModel.getCodTipoMisura())
 				|| "0692".equals(misuraModel.getCodTipoMisura())
 				|| "0682".equals(misuraModel.getCodTipoMisura())
-				|| "0693".equals(misuraModel.getCodTipoMisura())) {
+				|| "0693".equals(misuraModel.getCodTipoMisura())
+				|| "0684".equals(misuraModel.getCodTipoMisura())
+				|| "0695".equals(misuraModel.getCodTipoMisura())) {
 %>
 			Applicazione Provvisoria 
 <%

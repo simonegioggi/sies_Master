@@ -390,7 +390,9 @@ public interface ICostantiMisuraAlternativa {
 	public static final String PROSECUZIONE_51BIS_CUMULO = "PROSECUZIONE_51BIS_CUMULO";
 	public static final String PROSECUZIONE_PROVVISORIA_CUMULO = "PROSECUZIONE_PROVVISORIA_CUMULO";
 	public static final String CONCESSIONE_SOSPENSIONE = "CONCESSIONE_SOSPENSIONE";
-
+	// MEV_9-SIEP
+	public static final String CONCESSIONE_SOSPENSIONE678 = "CONCESSIONE_SOSPENSIONE678";
+  // MEV_9-SIEP - FINE
 	public static final String AFFIDAMENTO_IN_PROVA = "AFFIDAMENTO_IN_PROVA";
 	public static final String DETENZIONE_DOMICILIARE = "DETENZIONE_DOMICILIARE";
 	public static final String SEMILIBERTA = "SEMILIBERTA";
