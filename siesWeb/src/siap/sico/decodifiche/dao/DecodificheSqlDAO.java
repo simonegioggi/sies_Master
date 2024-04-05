@@ -584,20 +584,34 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		String lStatement = new String();
 		lStatement = "SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
 		if (aMisAlt.equals("DETENZIONE"))
-			lStatement += "AND (RV_LOW_VALUE = '0005' OR RV_LOW_VALUE = '0010' OR RV_LOW_VALUE = '0013') ";
+			// MEV_9-SIEP: aggiunta condizione di estrazione x DETENZIONE DOMICILIARE
+			// lStatement += "AND (RV_LOW_VALUE = '0005' OR RV_LOW_VALUE = '0010' OR RV_LOW_VALUE = '0013') ";
+			if ("PMM".equals(aCodTipoUfficio))
+				lStatement += "AND (RV_LOW_VALUE = '0005' OR RV_LOW_VALUE = '0010' OR RV_LOW_VALUE = '0013' "
+						+ "OR RV_LOW_VALUE = '0693' OR RV_LOW_VALUE = '0733') ";
+			else
+				lStatement += "AND (RV_LOW_VALUE = '0005' OR RV_LOW_VALUE = '0010' OR RV_LOW_VALUE = '0013' "
+						+ "OR RV_LOW_VALUE = '0682' OR RV_LOW_VALUE = '0722') ";
 		else if (aMisAlt.equals("AFFIDAMENTO")) {
+			// MEV_9-SIEP: aggiunta condizione di estrazione x AFFIDAMENTO IN PROVA
 			// lStatement += "AND (RV_LOW_VALUE = '0001' OR RV_LOW_VALUE = '0002' OR RV_LOW_VALUE = '0003')";
-			// MEV_9-SIEP: aggiunta condizione di estrazione
 			if ("PMM".equals(aCodTipoUfficio))
 				lStatement += "AND (RV_LOW_VALUE = '0001' OR RV_LOW_VALUE = '0002' OR RV_LOW_VALUE = '0003' "
-						+ "or RV_LOW_VALUE = '0690' or RV_LOW_VALUE = '0691' or RV_LOW_VALUE = '0692' "
-						+ "or RV_LOW_VALUE = '0730' or RV_LOW_VALUE = '0731' or RV_LOW_VALUE = '0732') ";
+						+ "OR RV_LOW_VALUE = '0690' OR RV_LOW_VALUE = '0691' OR RV_LOW_VALUE = '0692' "
+						+ "OR RV_LOW_VALUE = '0730' OR RV_LOW_VALUE = '0731' OR RV_LOW_VALUE = '0732') ";
 			else
 				lStatement += "AND (RV_LOW_VALUE = '0001' OR RV_LOW_VALUE = '0002' OR RV_LOW_VALUE = '0003' "
-						+ "or RV_LOW_VALUE = '0680' or RV_LOW_VALUE = '0681' "
-						+ "or RV_LOW_VALUE = '0720' or RV_LOW_VALUE = '0721') ";
+						+ "OR RV_LOW_VALUE = '0680' OR RV_LOW_VALUE = '0681' "
+						+ "OR RV_LOW_VALUE = '0720' OR RV_LOW_VALUE = '0721') ";
 		} else if (aMisAlt.equals("SEMILIBERTA"))
-			lStatement += "AND (RV_LOW_VALUE = '0004') ";
+			// MEV_9-SIEP: aggiunta condizione di estrazione x SEMILIBERTA'
+			// lStatement += "AND (RV_LOW_VALUE = '0004') ";
+			if ("PMM".equals(aCodTipoUfficio))
+				lStatement += "AND (RV_LOW_VALUE = '0004' "
+						+ "OR RV_LOW_VALUE = '0694' OR RV_LOW_VALUE = '0734') ";
+			else
+				lStatement += "AND (RV_LOW_VALUE = '0004' "
+						+ "OR RV_LOW_VALUE = '0683' OR RV_LOW_VALUE = '0723') ";
 		else if (aMisAlt.equals("INDULTINO"))
 			lStatement += "AND (RV_LOW_VALUE = '2245') ";
 		else if (aMisAlt.equals(ICostantiMisuraAlternativa.ESP_PRESSO_DOM))

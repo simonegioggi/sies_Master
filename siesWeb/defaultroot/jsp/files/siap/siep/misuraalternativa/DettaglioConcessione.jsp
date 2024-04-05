@@ -113,11 +113,16 @@ if (tipoMisura.equals("AFFIDAMENTO")) {
 if ((eventonotifica.getEvento().getFlagDocumentoRegistrato() != null
 		&& eventonotifica.getEvento().getFlagDocumentoRegistrato().compareTo("N") == 0)
 		|| eventonotifica.getEvento().getFlagDocumentoRegistrato() == null) {
-	// MEV_9-SIEP: aggiunto pulsante di modifica
+	// MEV_9-SIEP: aggiunto pulsante di modifica diversificato per tipo misura
+	String action = "ActLoadInserisciMAAffidamentoInProva";
+	if (tipoMisura.equals("DETENZIONE"))
+		action = "ActLoadInserisciMADetenzioneDomiciliare";
+	else if (tipoMisura.equals("SEMILIBERTA"))
+		action = "ActLoadInserisciMASemiliberta";
 %>
      	<!-- BOTTONE DI MODIFICA -->
      	<td class="LBG">
-			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMAAffidamentoInProva
+			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.<%=action%>
 			&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraalternativa.getIdMisuraAlternativa()%>&tipoOperazione=MODIFICA
 			&<%=ICostantiEvento.CAMPO_ID_EVENTO%>=<%=eventonotifica.getEvento().getIdEvento()%>">
 				<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>modifica24.gif" alt="Modifica" width="24" height="24" border="0">
@@ -148,7 +153,7 @@ if ((eventonotifica.getEvento().getFlagDocumentoRegistrato() != null
 <jsp:include page="/jsp/files/siap/siep/fascicolo/DettaglioSoggettoSentenza.jsp"/>
 <table cellspacing="0" cellpadding="0" width="95%">
 	<tr>
-		<td>
+		<td width="20%">
 <%
 if (flagmisura.equals("N")) {
 %>

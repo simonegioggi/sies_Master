@@ -329,10 +329,11 @@ function insertIT(
 	//===============================================================
 	// CO = concessione DIFFERIMENTO PROVVISORIO/DEFINITIVO -- oggetto 2140 --> concessione espulsione
 	//===============================================================
+
 	if (natura != '-' && natura == 'CO'
 			&& (oggetto == '2010' || oggetto == '2011' || oggetto == '0030' || oggetto == '0031' || oggetto == '0032'
 					|| oggetto == '0033' || oggetto == '0201' || oggetto == '0202' || oggetto == '2140'
-					<%-- MEV_9-SIEP: aggiunti nuovi oggetti ed aggiunto try..catch --%>
+					<%-- MEV_9-SIEP: aggiunti nuovi oggetti ed aggiunto try..catch x AFFIDAMENTO --%>
 					|| oggetto == '0720' || oggetto == '0721' || oggetto == '0730' || oggetto == '0731' || oggetto == '0732')) {
 		try {
 	  		// Quantum di differimento
@@ -357,12 +358,12 @@ function insertIT(
     			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.value = giornoInizioMisura;
 			else
 			 	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.value = "";
-			
+
 			if (meseInizioMisura != '-' )
 			  	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>.value = meseInizioMisura;
 			else
 			  	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>.value = "";
-			
+
 			if (annoInizioMisura != '-')
 			  	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>.value = annoInizioMisura;
 			else
@@ -546,12 +547,16 @@ if (!documentiSius.isEmpty()) {
      	// MEV_9-SIEP: aggiunto controllo per escludere dalla visualizzazione
         if (!"AMMISSIONE_PROVVISORIA".equals(NaturaMA)) {
 			if (("TDS".equals(lUfficio)
-					&& ("0680".equals(misuraModel.getCodTipoMisura())
-							|| "0681".equals(misuraModel.getCodTipoMisura())))
+					&& ("0680".equals(misuraModel.getCodTipoMisura())					// AFFIDAMENTO
+							|| "0681".equals(misuraModel.getCodTipoMisura())			// AFFIDAMENTO
+							|| "0682".equals(misuraModel.getCodTipoMisura())			// DETENZIONE DOMICILIARE
+							|| "0683".equals(misuraModel.getCodTipoMisura())))			// SEMILIBERTA'
 					|| ("TDSM".equals(lUfficio)
-							&& ("0690".equals(misuraModel.getCodTipoMisura())
-									|| "0691".equals(misuraModel.getCodTipoMisura())
-									|| "0692".equals(misuraModel.getCodTipoMisura())))
+							&& ("0690".equals(misuraModel.getCodTipoMisura())			// AFFIDAMENTO
+									|| "0691".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
+									|| "0692".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
+									|| "0693".equals(misuraModel.getCodTipoMisura())	// DETENZIONE DOMICILIARE
+									|| "0694".equals(misuraModel.getCodTipoMisura())))	// SEMILIBERTA'
 					&& !Utils.isNullObj(misuraModel.getDataEsecutivita()))
 				continue;
 		}
@@ -587,13 +592,16 @@ if (!documentiSius.isEmpty()) {
 			<%=StringUtils.toStringJSP(misuraModel.getDescrTipoDecisione(), "-")%>
 <%
 		}
-		if ("0680".equals(misuraModel.getCodTipoMisura())
-				|| "0681".equals(misuraModel.getCodTipoMisura())
-				|| "0690".equals(misuraModel.getCodTipoMisura())
-				|| "0691".equals(misuraModel.getCodTipoMisura())
-				|| "0692".equals(misuraModel.getCodTipoMisura())
-				|| "0682".equals(misuraModel.getCodTipoMisura())
-				|| "0693".equals(misuraModel.getCodTipoMisura())) {
+		// MEV_9-SIEP: aggiunto controllo x varie tipologie
+		if ("0680".equals(misuraModel.getCodTipoMisura())			// AFFIDAMENTO
+				|| "0681".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
+				|| "0682".equals(misuraModel.getCodTipoMisura())	// DETENZIONE DOMICILIARE
+				|| "0683".equals(misuraModel.getCodTipoMisura())	// SEMILIBERTA'
+				|| "0690".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
+				|| "0691".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
+				|| "0692".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
+				|| "0693".equals(misuraModel.getCodTipoMisura())	// DETENZIONE DOMICILIARE
+				|| "0694".equals(misuraModel.getCodTipoMisura())) {	// SEMILIBERTA'
 %>
 			Applicazione Provvisoria 
 <%
@@ -604,15 +612,18 @@ if (!documentiSius.isEmpty()) {
 <%
 		// MEV_9-SIEP: aggiunti campi in estrazione
 		boolean isOrdinanzaProvvisoria = false;
-		if (("TDS".equals(lUfficio)
-				&& ("0720".equals(misuraModel.getCodTipoMisura())
-						|| "0721".equals(misuraModel.getCodTipoMisura()))
-				&& "0271".equals(eventoModel.getCodEsito()))
+		if ("0271".equals(eventoModel.getCodEsito()) &&									// 'CO' - Conferma Decisione del Magistrato Relatore
+				(("TDS".equals(lUfficio)
+				&& ("0720".equals(misuraModel.getCodTipoMisura())						// AFFIDAMENTO
+						|| "0721".equals(misuraModel.getCodTipoMisura())				// AFFIDAMENTO
+						|| "0722".equals(misuraModel.getCodTipoMisura())				// DETENZIONE DOMICILIARE
+						|| "0723".equals(misuraModel.getCodTipoMisura())))				// SEMILIBERTA'
 				|| ("TDSM".equals(lUfficio)
-						&& ("0730".equals(misuraModel.getCodTipoMisura())
-								|| "0731".equals(misuraModel.getCodTipoMisura())
-								|| "0732".equals(misuraModel.getCodTipoMisura()))
-						&& "0271".equals(eventoModel.getCodEsito()))) {
+						&& ("0730".equals(misuraModel.getCodTipoMisura())				// AFFIDAMENTO
+								|| "0731".equals(misuraModel.getCodTipoMisura())		// AFFIDAMENTO
+								|| "0732".equals(misuraModel.getCodTipoMisura())		// AFFIDAMENTO
+								|| "0733".equals(misuraModel.getCodTipoMisura())		// DETENZIONE DOMICILIARE
+								|| "0734".equals(misuraModel.getCodTipoMisura()))))) {	// SEMILIBERTA'
 			isOrdinanzaProvvisoria = true;
 			Date dataOrdinanzaProvvisoria = null;
 			BigDecimal annoOrdinanzaProvvisoria = null;
@@ -626,7 +637,16 @@ if (!documentiSius.isEmpty()) {
 				EventoModel em = maem.getEvento();
 				if (!Utils.isNullObj(em.getFasSiuIdFascicoloSius())
 						&& idFascicoloSius.compareTo(em.getFasSiuIdFascicoloSius()) == 0
-						&& "0680".equals(em.getCodMotivo()) && "0270".equals(em.getCodEsito())) {
+						&& ("0680".equals(em.getCodMotivo())			// AFFIDAMENTO
+								|| "0681".equals(em.getCodMotivo())		// AFFIDAMENTO
+								|| "0682".equals(em.getCodMotivo())		// DETENZIONE DOMICILIARE
+								|| "0683".equals(em.getCodMotivo())		// SEMILIBERTA'
+								|| "0690".equals(em.getCodMotivo())		// AFFIDAMENTO
+								|| "0691".equals(em.getCodMotivo())		// AFFIDAMENTO
+								|| "0692".equals(em.getCodMotivo())		// AFFIDAMENTO
+								|| "0693".equals(em.getCodMotivo())		// DETENZIONE DOMICILIARE
+								|| "0694".equals(em.getCodMotivo()))	// SEMILIBERTA'
+						&& "0270".equals(em.getCodEsito())) {
 					dataOrdinanzaProvvisoria = mam.getDataDecisione();
 					annoOrdinanzaProvvisoria = mam.getAnnoRegistro();
 					numeroOrdinanzaProvvisoria = mam.getNumeroRegistro();

@@ -953,13 +953,17 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 
 	public void ricercaEventoMANonRegistratoMAByFascicoloSiep(BigDecimal aIdFascicolo, BigDecimal aEveKey)
 			throws DAOException {
+
 		String lStatement = getSqlQuery();
 
 		lStatement += " AND (EVENTO.COD_TIPO_EVENTO = '01')";
 		lStatement += " AND (EVENTO.COD_TIPO_PROVVEDIMENTO = '04'"
 				// MEV_9-SIEP: aggiunta or condition per gestire conferma applicazione provvisoria
 				+ " OR EVENTO.COD_MOTIVO in" // affidamento in prova provvisorio=12; libero=26
-				+ " ('5460', '5461', '5462', '5463', '5464', '5443', '5444', '5445', '5446', '5447'))";
+				// AFFIDAMENTO
+				+ " ('5443', '5444', '5445', '5446', '5447', '5460', '5461', '5462', '5463', '5464',"
+				// DETENZIONE E SEMILIBERTA'
+				+ " '5465', '5466', '5467', '5468'))";
 		lStatement += " AND  EVENTO.EVE_ID_EVENTO = " + aEveKey;
 		lStatement += " AND (EVENTO.FLAG_DOCUMENTO_REGISTRATO ='N' OR EVENTO.FLAG_DOCUMENTO_REGISTRATO IS NULL)";
 		lStatement += " AND FAS_SIE_ID_FASCICOLO_SIEP = " + aIdFascicolo;

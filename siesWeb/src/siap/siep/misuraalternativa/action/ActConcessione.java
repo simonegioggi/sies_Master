@@ -5,6 +5,9 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
+
+import f3b.log.LogF3B;
 import f3b.util.F3BException;
 import f3b.util.Utils;
 import f3b.web.IWebConstants;
@@ -50,7 +53,14 @@ import siap.siep.verbale.model.VerbaleModel;
 @SuppressWarnings("rawtypes")
 public class ActConcessione extends ActMisuraAlternativa implements ICostantiMisuraAlternativa {
 
+	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+
 	public String getConcessione(String aPosizione) throws F3BException {
+
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
 
 		if (isSessionAttributeNullObj("fascicolo"))
 			return ICostantiFascicoloSiep.REDIRECT_FASCICOLO_RICERCATO + getClass().getName();
@@ -338,6 +348,10 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 		Option lOption = new Option(DecodificheManager.getInstance().getTipoAutorita(), "22");
 		setRequestAttribute("autoritaEsternaAvv", "" + lOption);
 
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.debug(getClass().getName() + ".processRequest: fine");
+
 		return "";
 	}
 
@@ -562,8 +576,8 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 		}
 		}
 
-		if (aFlagAffi != null && aFlagAffi.equals("S")) // Registrazione data inizio misura
-		{
+		// Registrazione data inizio misura
+		if (aFlagAffi != null && aFlagAffi.equals("S")) {
 			lEveNot.getEvento().setCodTipoProvvedimento("12");
 			if ("0013".equals(aMotivo))
 				lEveNot.getEvento().setCodMotivo("0372");
@@ -572,13 +586,32 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 			else if ("0010".equals(aMotivo))
 				lEveNot.getEvento().setCodMotivo("0229");
 		}
+
 		// mev 62
 		if (aTipo != null && aTipo.equals("PROC")) // da scarcerare
 			lEveNot.getEvento().setCodTipoProvvedimento("06");
+
+		// MEV_9-SIEP: aggiunte casistiche
+		if ("0722".equals(aMotivo))
+			lEveNot.getEvento().setCodMotivo("5465");
+		else if ("0733".equals(aMotivo))
+			lEveNot.getEvento().setCodMotivo("5466");
+		else if ("0682".equals(aMotivo))
+			lEveNot.getEvento().setCodMotivo(aMotivo);
+		else if ("0693".equals(aMotivo))
+			lEveNot.getEvento().setCodMotivo(aMotivo);
+
+		// aggiunto controllo per codici tipo misura
+		if ("0722".equals(aMotivo) || "0733".equals(aMotivo))
+			lEveNot.getEvento().setCodTipoProvvedimento("12");
+		// FINE MEV_9-SIEP
+
 		return lEveNot;
 	}
 
-	protected EventoNotificaModel getProvvedimentoMotivoSemiliberta(String aPosizione, String aFlagAffi) {
+	// MEV_9-SIEP: cambiata firma al metodo aggiunto codMotivo
+	protected EventoNotificaModel getProvvedimentoMotivoSemiliberta(String aPosizione, String aFlagAffi,
+			String aMotivo) {
 
 		EventoNotificaModel lEve = new EventoNotificaModel();
 		switch (Integer.parseInt(aPosizione)) {
@@ -623,11 +656,27 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 		}
 		}
 
-		if (aFlagAffi != null && aFlagAffi.equals("S")) // Registrazione data inizio misura
-		{
+		// Registrazione data inizio misura
+		if (aFlagAffi != null && aFlagAffi.equals("S")) {
 			lEve.getEvento().setCodTipoProvvedimento("09");
 			lEve.getEvento().setCodMotivo("0373");
 		}
+
+		// MEV_9-SIEP: aggiunte casistiche
+		if ("0723".equals(aMotivo))
+			lEve.getEvento().setCodMotivo("5467");
+		else if ("0734".equals(aMotivo))
+			lEve.getEvento().setCodMotivo("5468");
+		else if ("0683".equals(aMotivo))
+			lEve.getEvento().setCodMotivo(aMotivo);
+		else if ("0694".equals(aMotivo))
+			lEve.getEvento().setCodMotivo(aMotivo);
+
+		// aggiunto controllo per codici tipo misura
+		if ("0723".equals(aMotivo) || "0734".equals(aMotivo))
+			lEve.getEvento().setCodTipoProvvedimento("12");
+		// FINE MEV_9-SIEP
+
 		return lEve;
 	}
 

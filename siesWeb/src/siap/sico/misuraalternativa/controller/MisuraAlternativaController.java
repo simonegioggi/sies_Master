@@ -995,8 +995,11 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 				lPenMod.setMisAltIdMisuraAlternativa(lMisMod.getIdMisuraAlternativa());
 
 				/*
-				 * ISSUE MEV : aggiunta linea di codice per prevenire nullpointer Numero MEV : SIES v10 Autore
-				 * : gioggi Data : 28/gen/2016 Branch : MEV_SIES v10
+				 * ISSUE MEV : aggiunta linea di codice per prevenire nullpointer 
+				 * Numero MEV : SIES v10 
+				 * Autore : gioggi 
+				 * Data : 28/gen/2016 
+				 * Branch : MEV_SIES v10
 				 */
 				lPenResiduaDAO = new PenaResiduaDAO(lConn);
 				// ***** FINE INTERVENTO MEV_SIES v10 *****//
@@ -1660,8 +1663,11 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			// carica nel model il tipo motivo
 
 			/*
-			 * ISSUE MEV : eseguito merge tra 15 MEV: interpretazione con codice commentato Numero MEV : SIES
-			 * v10 Autore : gioggi Data : 28/gen/2016 Branch : MEV_SIES v10
+			 * ISSUE MEV : eseguito merge tra 15 MEV: interpretazione con codice commentato 
+			 * Numero MEV : SIES v10 
+			 * Autore : gioggi 
+			 * Data : 28/gen/2016 
+			 * Branch : MEV_SIES v10
 			 */
 			// String[] lMotivo = { "2006", "2008" };
 			// ***** FINE INTERVENTO MEV_SIES v10 *****//
@@ -1679,11 +1685,15 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 				IdEveAmmProvvAff = lEveModelperAmmProvAff.getIdEvento();
 			}
 
-			// if (tipoMisura.equals("DETENZIONE"))
 			// Controllo per "DETENZIONE"
 			if (lMisModelOrder.getCodTipoMisura().equals("0005")
 					|| lMisModelOrder.getCodTipoMisura().equals("0010")
-					|| lMisModelOrder.getCodTipoMisura().equals("0013")) {
+					|| lMisModelOrder.getCodTipoMisura().equals("0013")
+					// MEV_9-SIEP: aggiunti codici tipo misura x DETENZIONE
+					|| "0722".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0733".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0682".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0693".equals(lMisModelOrder.getCodTipoMisura())) {
 				// Aggiunta gestione per Posizione Giuridica "29"
 				if (lPosMod != null && lPosMod.getCodPosizioneGiuridica() != null
 				// new 50 Espiazione presso il domicilio
@@ -1718,12 +1728,24 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 				} else if ("SORV".equals(lMisModelOrder.getCodTipoUfficioScarcerazione())) {
 					lStatoProcMod = "0029"; // Espiazione Pena in Regime di Detenzione Domiciliare - Emessa
 											// Comunicazione Scadenza Misura
+				} else if ("0722".equals(lMisModelOrder.getCodTipoMisura())
+						|| "0733".equals(lMisModelOrder.getCodTipoMisura())
+						|| "0682".equals(lMisModelOrder.getCodTipoMisura())
+						|| "0693".equals(lMisModelOrder.getCodTipoMisura())) {
+					// MEV_9-SIEP: gestione nuovi codici tipo misura x DETENZIONE
+					if ("0722".equals(lMisModelOrder.getCodTipoMisura()))
+						lStatoProcMod = "0570";
+					else if ("0733".equals(lMisModelOrder.getCodTipoMisura()))
+						lStatoProcMod = "0571";
+					else if ("0682".equals(lMisModelOrder.getCodTipoMisura()))
+						lStatoProcMod = "0570";
+					else
+						lStatoProcMod = "0571";
 				} else {
 					lStatoProcMod = "0026"; // Default
 				}
 			}
-			// else if (tipoMisura.equals("AFFIDAMENTO"))
-			// Controllo per affidamento in prova
+			// Controllo per AFFIDAMENTO in prova
 			else if (lMisModelOrder.getCodTipoMisura().equals("0001")
 					|| lMisModelOrder.getCodTipoMisura().equals("0002")
 					|| lMisModelOrder.getCodTipoMisura().equals("0003")
@@ -1733,7 +1755,12 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 					|| "0721".equals(lMisModelOrder.getCodTipoMisura())
 					|| "0730".equals(lMisModelOrder.getCodTipoMisura())
 					|| "0731".equals(lMisModelOrder.getCodTipoMisura())
-					|| "0732".equals(lMisModelOrder.getCodTipoMisura())) {
+					|| "0732".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0680".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0681".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0690".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0691".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0692".equals(lMisModelOrder.getCodTipoMisura())) {
 				if (lPosMod != null && lPosMod.getCodPosizioneGiuridica() != null && lPosMod.isLibero()
 						&& lMisModelOrder != null && lMisModelOrder.getDataInizioMisura() == null) {
 					lStatoProcMod = "0023";
@@ -1763,7 +1790,12 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 						|| "0721".equals(lMisModelOrder.getCodTipoMisura())
 						|| "0730".equals(lMisModelOrder.getCodTipoMisura())
 						|| "0731".equals(lMisModelOrder.getCodTipoMisura())
-						|| "0732".equals(lMisModelOrder.getCodTipoMisura())) {
+						|| "0732".equals(lMisModelOrder.getCodTipoMisura())
+						|| "0680".equals(lMisModelOrder.getCodTipoMisura())
+						|| "0681".equals(lMisModelOrder.getCodTipoMisura())
+						|| "0690".equals(lMisModelOrder.getCodTipoMisura())
+						|| "0691".equals(lMisModelOrder.getCodTipoMisura())
+						|| "0692".equals(lMisModelOrder.getCodTipoMisura())) {
 					// MEV_9-SIEP: gestione nuovi codici tipo misura x AFFIDAMENTO
 					if ("0720".equals(lMisModelOrder.getCodTipoMisura()))
 						lStatoProcMod = "0560";
@@ -1773,8 +1805,18 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 						lStatoProcMod = "0562";
 					else if ("0731".equals(lMisModelOrder.getCodTipoMisura()))
 						lStatoProcMod = "0563";
-					else
+					else if ("0732".equals(lMisModelOrder.getCodTipoMisura()))
 						lStatoProcMod = "0564";
+					else if ("0680".equals(lMisModelOrder.getCodTipoMisura()))
+						lStatoProcMod = "0565";
+					else if ("0681".equals(lMisModelOrder.getCodTipoMisura()))
+						lStatoProcMod = "0566";
+					else if ("0690".equals(lMisModelOrder.getCodTipoMisura()))
+						lStatoProcMod = "0567";
+					else if ("0691".equals(lMisModelOrder.getCodTipoMisura()))
+						lStatoProcMod = "0568";
+					else
+						lStatoProcMod = "0569";
 				} else {
 					if (lPosMod != null && lPosMod.getCodPosizioneGiuridica() != null && lPoModelPrec != null
 							&& lPoModelPrec.isLibero() && lPosMod.getCodPosizioneGiuridica().equals("13")
@@ -1784,9 +1826,13 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 					lStatoProcMod = "0022";
 				}
 			}
-			// else if (tipoMisura.equals("SEMILIBERTA"))
-			// Controllo per semiliberta
-			else if (lMisModelOrder.getCodTipoMisura().equals("0004")) {
+			// Controllo per "SEMILIBERTA"
+			else if (lMisModelOrder.getCodTipoMisura().equals("0004")
+					// MEV_9-SIEP: aggiunti codici tipo misura x SEMILIBERTA'
+					|| "0723".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0734".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0683".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0694".equals(lMisModelOrder.getCodTipoMisura())) {
 				if (lPosMod != null && lPosMod.getCodPosizioneGiuridica() != null && (lPosMod.isLibero())
 						&& lMisModelOrder != null && lMisModelOrder.getDataInizioMisura() == null) {
 					lStatoProcMod = "0031";
@@ -1802,10 +1848,22 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 								// MEV 10 S3 gestite le nuove posizioni giuridiche (82,83,84)
 								|| lPosMod.getCodPosizioneGiuridica().equals("82")
 								|| lPosMod.getCodPosizioneGiuridica().equals("83")
-								|| lPosMod.getCodPosizioneGiuridica().equals("84"))) // 17/12/2010
-
-				{
+								// 17/12/2010
+								|| lPosMod.getCodPosizioneGiuridica().equals("84"))) {
 					lStatoProcMod = "0032";
+				} else if ("0723".equals(lMisModelOrder.getCodTipoMisura())
+						|| "0734".equals(lMisModelOrder.getCodTipoMisura())
+						|| "0683".equals(lMisModelOrder.getCodTipoMisura())
+						|| "0694".equals(lMisModelOrder.getCodTipoMisura())) {
+					// MEV_9-SIEP: gestione nuovi codici tipo misura x SEMILIBERTA'
+					if ("0723".equals(lMisModelOrder.getCodTipoMisura()))
+						lStatoProcMod = "0573";
+					else if ("0734".equals(lMisModelOrder.getCodTipoMisura()))
+						lStatoProcMod = "0574";
+					else if ("0683".equals(lMisModelOrder.getCodTipoMisura()))
+						lStatoProcMod = "0573";
+					else
+						lStatoProcMod = "0574";
 				} else {
 					lStatoProcMod = "0030";
 				}
@@ -1826,10 +1884,11 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 						&& (lPosMod.getCodPosizioneGiuridica().equals("03")
 								|| lPosMod.getCodPosizioneGiuridica().equals("12")
 								|| lPosMod.getCodPosizioneGiuridica().equals("04")
-								|| lPosMod.getCodPosizioneGiuridica().equals("53") || // 17/12/2010
-								lPosMod.getCodPosizioneGiuridica().equals("50") || // 15/02/2011 paolo
-																					// cherubini
-								lPosMod.getCodPosizioneGiuridica().equals("14")
+								// 17/12/2010
+								|| lPosMod.getCodPosizioneGiuridica().equals("53")
+								// 15/02/2011 paolo cherubini
+								|| lPosMod.getCodPosizioneGiuridica().equals("50")
+								|| lPosMod.getCodPosizioneGiuridica().equals("14")
 								|| lPosMod.getCodPosizioneGiuridica().equals("82")
 								|| lPosMod.getCodPosizioneGiuridica().equals("83")
 								|| lPosMod.getCodPosizioneGiuridica().equals("84")
@@ -2089,13 +2148,17 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			PosizioneGiuridicaModel lPosModelData = (PosizioneGiuridicaModel) lPosSqlDAO.getModelByKey();
 			PosizioneGiuridicaModel lPosizione = new PosizioneGiuridicaModel();
 
-			// if (tipoMisura.equals("DETENZIONE"))
 			// Controllo per "DETENZIONE"
 			if (lMisModelOrder.getCodTipoMisura().equals("0005") // Detenzione Domiciliare art. 47 ter O.P.
 					// Detenzione Domiciliare art. 47 ter 1 bis
 					|| lMisModelOrder.getCodTipoMisura().equals("0010")
 					// Detenzione Domiciliare art. 47 quater o.p.
-					|| lMisModelOrder.getCodTipoMisura().equals("0013")) {
+					|| lMisModelOrder.getCodTipoMisura().equals("0013")
+					// MEV_9-SIEP: aggiunti codici tipo misura x DETENZIONE
+					|| "0722".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0733".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0682".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0693".equals(lMisModelOrder.getCodTipoMisura())) {
 				if (lPosMod != null && lPosMod.getCodPosizioneGiuridica() != null && !lPosMod.isLibero()
 						&& !lPosMod.getCodPosizioneGiuridica().equals("12")) {
 					if (lPosMod.getCodPosizioneGiuridica().equals("03")
@@ -2169,9 +2232,13 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 					}
 				}
 			} else
-			// if (tipoMisura.equals("SEMILIBERTA"))
-			// Controllo per semiliberta
-			if (lMisModelOrder.getCodTipoMisura().equals("0004")) { // Semiliberta'
+			// Controllo per SEMILIBERTA
+			if (lMisModelOrder.getCodTipoMisura().equals("0004")
+					// MEV_9-SIEP: aggiunti codici tipo misura x SEMILIBERTA'
+					|| "0723".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0734".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0683".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0694".equals(lMisModelOrder.getCodTipoMisura())) { // Semiliberta'
 				if (lPosMod != null && lPosMod.getCodPosizioneGiuridica() != null && !lPosMod.isLibero()
 						&& !lPosMod.getCodPosizioneGiuridica().equals("14")) {
 					if (lPosMod.getCodPosizioneGiuridica().equals("03")
@@ -2207,8 +2274,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 					}
 				}
 			} else
-			// if (tipoMisura.equals("AFFIDAMENTO"))
-			// Controllo per affidamento in prova
+			// Controllo per AFFIDAMENTO in prova
 			// Affidamento Servizio Sociale ex art. 94 DPR 309/90
 			if (lMisModelOrder.getCodTipoMisura().equals("0001")
 					// Affidamento al Servizio Sociale
@@ -2222,7 +2288,12 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 					|| "0721".equals(lMisModelOrder.getCodTipoMisura())
 					|| "0730".equals(lMisModelOrder.getCodTipoMisura())
 					|| "0731".equals(lMisModelOrder.getCodTipoMisura())
-					|| "0732".equals(lMisModelOrder.getCodTipoMisura())) {
+					|| "0732".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0680".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0681".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0690".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0691".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0692".equals(lMisModelOrder.getCodTipoMisura())) {
 				if (lPosMod != null && lPosMod.getCodPosizioneGiuridica() != null && !lPosMod.isLibero()
 						&& !lPosMod.getCodPosizioneGiuridica().equals("13")) {
 					if (lPosMod.getCodPosizioneGiuridica().equals("03")
@@ -2298,7 +2369,6 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 					}
 				}
 			}
-			// else if (tipoMisura.equals("INDULTINO"))
 			// Controllo per indultino ed Espiazione presso il domicilio
 			// 28/09/2010 Aggiunto Controllo per Espiazione Pena presso Domicilio
 			else if (lMisModelOrder.getCodTipoMisura().equals("2245") // INDULTINO
@@ -2365,9 +2435,9 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 					lPosDao.stop();
 				}
 			}
+
 			// AMBROSINO - Vengo da Ammissione provvisoria
-			// if (tipoMisura.equals("AFFIDAMENTO"))
-			// Controllo per affidamento in prova
+			// Controllo per AFFIDAMENTO in prova
 			if (lMisModelOrder.getCodTipoMisura().equals("0001")
 					|| lMisModelOrder.getCodTipoMisura().equals("0002")
 					|| lMisModelOrder.getCodTipoMisura().equals("0003")
@@ -2377,7 +2447,12 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 					|| "0721".equals(lMisModelOrder.getCodTipoMisura())
 					|| "0730".equals(lMisModelOrder.getCodTipoMisura())
 					|| "0731".equals(lMisModelOrder.getCodTipoMisura())
-					|| "0732".equals(lMisModelOrder.getCodTipoMisura())) {
+					|| "0732".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0680".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0681".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0690".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0691".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0692".equals(lMisModelOrder.getCodTipoMisura())) {
 				if (lPosMod.getCodPosizioneGiuridica().equals("54")) {
 					if (lPosModelData != null && lPosModelData.getDataFine() == null) {
 						if (lMisModelOrder != null && lMisModelOrder.getCodTipoUfficioScarcerazione() != null
@@ -2425,11 +2500,15 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 
 			lNomProvvDAO = new NomeProvvedimentoDAO(lConn);
 
-			// if (tipoMisura.equals("DETENZIONE"))
 			// Controllo per "DETENZIONE"
 			if (lMisModelOrder.getCodTipoMisura().equals("0005")
 					|| lMisModelOrder.getCodTipoMisura().equals("0010")
-					|| lMisModelOrder.getCodTipoMisura().equals("0013")) {
+					|| lMisModelOrder.getCodTipoMisura().equals("0013")
+					// MEV_9-SIEP: aggiunti codici tipo misura x DETENZIONE
+					|| "0722".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0733".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0682".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0693".equals(lMisModelOrder.getCodTipoMisura())) {
 				if (lPosizioneGiu.equals("03")) {
 					lNomProvvDAO.setCodNomeProvvedimento("NP029");
 				} else if (lPosMod.isLibero() && lMisModelOrder.getDataFineMisura() != null) {
@@ -2444,9 +2523,13 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 					lNomProvvDAO.setCodNomeProvvedimento("NPDD0");
 				}
 			}
-			// else if (tipoMisura.equals("SEMILIBERTA"))
-			// Controllo per semiliberta
-			else if (lMisModelOrder.getCodTipoMisura().equals("0004")) {
+			// Controllo per SEMILIBERTA
+			else if (lMisModelOrder.getCodTipoMisura().equals("0004")
+					// MEV_9-SIEP: aggiunti codici tipo misura x SEMILIBERTA'
+					|| "0723".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0734".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0683".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0694".equals(lMisModelOrder.getCodTipoMisura())) {
 				if ((lPosMod.isLibero() && lMisModelOrder.getDataFineMisura() == null)
 						|| lPosizioneGiu.equals("04")) {
 					lNomProvvDAO.setCodNomeProvvedimento("NP030");
@@ -2459,8 +2542,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 					lNomProvvDAO.setCodNomeProvvedimento("NPSL0");
 				}
 			}
-			// else if (tipoMisura.equals("AFFIDAMENTO"))
-			// Controllo per affidamento in prova
+			// Controllo per AFFIDAMENTO in prova
 			else if (lMisModelOrder.getCodTipoMisura().equals("0001")
 					|| lMisModelOrder.getCodTipoMisura().equals("0002")
 					|| lMisModelOrder.getCodTipoMisura().equals("0003")
@@ -2470,7 +2552,12 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 					|| "0721".equals(lMisModelOrder.getCodTipoMisura())
 					|| "0730".equals(lMisModelOrder.getCodTipoMisura())
 					|| "0731".equals(lMisModelOrder.getCodTipoMisura())
-					|| "0732".equals(lMisModelOrder.getCodTipoMisura())) {
+					|| "0732".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0680".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0681".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0690".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0691".equals(lMisModelOrder.getCodTipoMisura())
+					|| "0692".equals(lMisModelOrder.getCodTipoMisura())) {
 				if ((lPosMod.isLibero() && (lVerbMod == null || lVerbMod.getIdVerbale() == null))
 						|| lPosizioneGiu.equals("04")) {
 					lNomProvvDAO.setCodNomeProvvedimento("NP023");
@@ -2487,8 +2574,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 					lNomProvvDAO.setCodNomeProvvedimento("NPAF0");
 				}
 			}
-			// else if (tipoMisura.equals("INDULTINO"))
-			// Controllo per indultino
+			// Controllo per INDULTINO
 			else if (lMisModelOrder.getCodTipoMisura().equals("2245")) {
 				if (lPoModelPrec != null && lPoModelPrec.getCodPosizioneGiuridica() != null
 						&& (lPoModelPrec.isLibero()) && lMisModelOrder.getDataInizioMisura() != null
@@ -6036,7 +6122,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 
 	/**
 	 * Metodo generico per inserire sia su deposito Ordinanza che su Deposito decreto le MA iscritte da SIEP.
-	 * Non scrine sulle Notifiche
+	 * Non scrive sulle Notifiche
 	 *
 	 * @since MEV_9-SIEP 03.2024
 	 *

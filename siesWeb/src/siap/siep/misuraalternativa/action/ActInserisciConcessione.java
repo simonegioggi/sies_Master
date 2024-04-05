@@ -272,14 +272,6 @@ public class ActInserisciConcessione extends ActConcessione {
 			EventoNotificaModel lEveNot = new EventoNotificaModel();
 			lEveNot = SettaProvvedimento(lFlagSan, tipoMisura, lPosizione, lFlagAffi,
 					getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO), lMisMod);
-			// MEV_9-SIEP: gestione modifica (se ho fatto la pulisciID) allora inserisco ex novo solo la MA
-			// e vado in update dell'evento
-			// if ("MODIFICA".equals(tipoOperazione)
-			// && !isRequestParameterNullEmptyObj(ICostantiEvento.CAMPO_ID_EVENTO)) {
-			// EventoModel em = ie
-			// .ExRicercaEventoByKey(getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO));
-			// lEveNot.getEvento().setEveIdEvento(em.getEveIdEvento());
-			// } else
 			lEveNot.getEvento().setEveIdEvento(lMisuraModel.getEveIdEvento());
 			// notifiche
 			// NotificaModel[] lNotificheMod = setNotificheMisuraAlternativa();
@@ -296,20 +288,13 @@ public class ActInserisciConcessione extends ActConcessione {
 			EventoNotificaModel lEveNotModel = lCtrlMisuraAlt.ExInserisciOModificaMANotifica(lEveNot, prm,
 					null, null);
 
-			// MEV_9-SIEP: gestione modifica (se ho fatto la pulisciID) allora inserisco ex novo solo la MA
-			// e vado in update dell'evento
-			// if ("MODIFICA".equals(tipoOperazione)
-			// && !isRequestParameterNullEmptyObj(ICostantiEvento.CAMPO_ID_EVENTO)) {
-			// lEveNotModel.getEvento().setEveIdEvento(lMisuraModel.getEveIdEvento());
-			// ie.ExModificaEvento(lEveNotModel.getEvento());
-			// }
-
 			// pagina di ritorno
 			lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
 					+ "=siap.siep.misuraalternativa.action.ActDettaglioConcessione&"
 					+ ICostantiEvento.CAMPO_ID_EVENTO + "=" + lEveNotModel.getEvento().getIdEvento();
-		} else { // la misura alternativa esiste (NEL CASO DEI MINORENNI GIA' ESISTE PERCHE' INSERITA DALLA
-					// SORVEGLIANZA)
+		} else {
+			// la misura alternativa esiste (NEL CASO DEI MINORENNI GIA' ESISTE PERCHE' INSERITA DALLA
+			// SORVEGLIANZA)
 			// MEV_62 [EC] 15/05/2018 - INIZIO
 			if (lMisAlModConcessa.getCodTipoUfficioScarcerazione() == null
 					|| "".equals(lMisAlModConcessa.getCodTipoUfficioScarcerazione())) {
@@ -317,11 +302,6 @@ public class ActInserisciConcessione extends ActConcessione {
 			}
 			// MEV_62 [EC] 15/05/2018 - FINE
 			EventoNotificaModel lEveNot = new EventoNotificaModel();
-			// MEV_9-SIEP: in modifica prendo il CAMPO_COD_MOTIVO ed aggiorno la MA
-			// if ("MODIFICA".equals(tipoOperazione))
-			// lEveNot = SettaProvvedimento(lFlagSan, tipoMisura, lPosizione, lFlagAffi,
-			// getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO), lMisAlModConcessa);
-			// else
 			lEveNot = SettaProvvedimento(lFlagSan, tipoMisura, lPosizione, lFlagAffi,
 					lMisAlModConcessa.getCodTipoMisura(), lMisAlModConcessa);
 			lEveNot.getEvento().setEveIdEvento(lIdOrdinanza);
@@ -469,7 +449,8 @@ public class ActInserisciConcessione extends ActConcessione {
 			aEveNot = getProvvedimentoMotivoDetDom(aPosizione, aFlagAffi,
 					aMisMod.getCodTipoUfficioScarcerazione(), aCodice);
 		else if (atipoMisura.equals("SEMILIBERTA"))
-			aEveNot = getProvvedimentoMotivoSemiliberta(aPosizione, aFlagAffi);
+			// MEV_9-SIEP: cambiata firma al metodo aggiunto codMotivo
+			aEveNot = getProvvedimentoMotivoSemiliberta(aPosizione, aFlagAffi, aCodice);
 		else if (atipoMisura.equals("INDULTINO"))
 			aEveNot = getProvvedimentoMotivoIndultino(aPosizione, aFlagAffi,
 					aMisMod.getCodTipoUfficioScarcerazione(), aCodice);

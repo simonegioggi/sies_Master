@@ -27,6 +27,10 @@ public class ActLoadInserisciMAAffidamentoInProva extends ActConcessione {
 
 	public String processRequest() throws F3BException {
 
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
+
 		// tutti i controlli e la maggior parte delle request si trovano nel padre
 		// passo la posizione attuale per vedere se esiste il verbale o no
 		String lRitorno = getConcessione("13");
@@ -114,6 +118,10 @@ public class ActLoadInserisciMAAffidamentoInProva extends ActConcessione {
 
 		// MEV 10 - filtro sui minorenni
 		setRequestAttribute("filtroMinorenni", getFiltroMinorenni());
+
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.debug(getClass().getName() + ".processRequest: fine");
 
 		return PG_LOAD_INSERISCI_MA_CONCESSIONE;
 	}

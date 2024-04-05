@@ -31,6 +31,10 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 
 	public String processRequest() throws Exception {
 
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
+
 		BigDecimal lIdFascicoloSiep = getRequestBigDecimalParameter(
 				ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP);
 		String lNaturaMA = getRequestStringParameter(CAMPO_NATURA_MA);
@@ -51,12 +55,11 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 					lIdFascicoloSiep, lTipoDecisone, lNaturaDecisione, lTipoMisura);
 
 			setRequestAttribute("documentiSius", lListaEventiOrdinanze);
-
 			
-			// MEV_9 
+			// MEV_9-SIEP
 			setRequestAttribute(CAMPO_TIPO_MA, lTipoMA);
 			setRequestAttribute(CAMPO_NATURA_MA, lNaturaMA);
-			// MEB_9 - FINE
+			// MEV_9-SIEP - FINE
 			
 			return PG_LISTA_DOCUMENTI_SIUS;
 		} else {
@@ -124,6 +127,11 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 			siesLogger.debug("Totale Misure Trovate = " + lListaEventiOrdinanze.size());
 			setRequestAttribute("documentiFascicoliSius", lListaEventiOrdinanze);
 
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug(getClass().getName() + ".processRequest: fine");
+
+			// pagina di ritorno
 			return PG_LISTA_DOCUMENTI_SIUS_PER_SOGGETTO;
 		}
 	}
@@ -148,6 +156,7 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 				else
 					lCodMotivi = estraiCodiciDecodifiche(
 							DecodificheManager.getInstance().getMotivoProvvedimentoMAffP());
+				// FINE MEV_9-SIEP
 			} else if (aNaturaMA.equals(SOSPENSIONE_PROVVISORIA)) {
 				lCodMotivi = estraiCodiciDecodifiche(
 						DecodificheManager.getInstance().getMotivoProvvedimentoSospProvvMAffP());
@@ -211,8 +220,14 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 			}
 		} else if (aTipoMA.equals(DETENZIONE_DOMICILIARE)) {
 			if (aNaturaMA.equals(CONCESSIONE)) {
-				lCodMotivi = estraiCodiciDecodifiche(
-						DecodificheManager.getInstance().getMotivoProvvedimentoMADDom());
+				// MEV_9-SIEP: si differenzia per PM e PMM
+				if (isUfficioMinorenni())
+					lCodMotivi = estraiCodiciDecodifiche(
+							DecodificheManager.getInstance().getMotivoProvvedimentoMADDomMinor());
+				else
+					lCodMotivi = estraiCodiciDecodifiche(
+							DecodificheManager.getInstance().getMotivoProvvedimentoMADDom());
+				// FINE MEV_9-SIEP
 			} else if (aNaturaMA.equals(SOSPENSIONE_PROVVISORIA)) {
 				lCodMotivi = estraiCodiciDecodifiche(
 						DecodificheManager.getInstance().getMotivoProvvedimentoSospProvvMADetDom());
@@ -289,8 +304,14 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 			}
 		} else if (aTipoMA.equals(SEMILIBERTA)) {
 			if (aNaturaMA.equals(CONCESSIONE)) {
-				lCodMotivi = estraiCodiciDecodifiche(
-						DecodificheManager.getInstance().getMotivoProvvedimentoMASemiL());
+				// MEV_9-SIEP: si differenzia per PM e PMM
+				if (isUfficioMinorenni())
+					lCodMotivi = estraiCodiciDecodifiche(
+							DecodificheManager.getInstance().getMotivoProvvedimentoMASemiLMinor());
+				else
+					lCodMotivi = estraiCodiciDecodifiche(
+							DecodificheManager.getInstance().getMotivoProvvedimentoMASemiL());
+				// FINE MEV_9-SIEP
 			} else if (aNaturaMA.equals(SOSPENSIONE_PROVVISORIA)) {
 				lCodMotivi = estraiCodiciDecodifiche(
 						DecodificheManager.getInstance().getMotivoProvvedimentoSospProvvMASemiL());

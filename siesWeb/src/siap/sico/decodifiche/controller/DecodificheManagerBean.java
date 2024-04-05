@@ -238,9 +238,11 @@ public class DecodificheManagerBean {
 	// MEV_9-SIEP
 	private Collection mMotivoProvvedimentoAmmProvDetDomPmm;
 	private Collection mMotivoProvvedimentoAmmProvAffiPmm;
-	private Collection mMotivoProvvedimentoMAAffPMinor;
 	private Collection mMotivoProvvedimentoAmmProvSemilibPm;
 	private Collection mMotivoProvvedimentoAmmProvSemilibPmm;
+	private Collection mMotivoProvvedimentoMAAffPMinor;
+	private Collection mMotivoProvvedimentoMADDomMinor;
+	private Collection mMotivoProvvedimentoMASemiLMinor;
 	// MEV_9-SIEP - FINE
 
 	private Collection mMotivoProvvedimentoMADetDomTemp;
@@ -1422,7 +1424,7 @@ public class DecodificheManagerBean {
 			mMotivoProvvedimentoRipristinoDetDomSpec = lDecodifiche
 					.ExListaMotivoProvvRipristinoDetDomSpeciale("RIPRISTINO_DET_DOM_SPEC");
 
-			// MEV_9-SIEP
+			// MEV_9-SIEP: aggiunti metodi di estrazione dati
 			// mMotivoProvvedimentoAmmProvDetDom = lDecodifiche
 			// .ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_DET_DOM");
 			// mMotivoProvvedimentoAmmProvAffi = lDecodifiche
@@ -1438,8 +1440,10 @@ public class DecodificheManagerBean {
 			mMotivoProvvedimentoAmmProvSemilibPm = lDecodifiche
 					.ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_SEMILIB_PM");
 			mMotivoProvvedimentoAmmProvSemilibPmm = lDecodifiche
-					.ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_SEMILIB_PMM");			
+					.ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_SEMILIB_PMM");
 			mMotivoProvvedimentoMAAffPMinor = lDecodifiche.ExListaMotivoProvvMA("AFFIDAMENTO", "PMM");
+			mMotivoProvvedimentoMADDomMinor = lDecodifiche.ExListaMotivoProvvMA("DETENZIONE", "PMM");
+			mMotivoProvvedimentoMASemiLMinor = lDecodifiche.ExListaMotivoProvvMA("SEMILIBERTA", "PMM");
 			// MEV_9-SIEP - FINE
 
 			mMotivoProvvedimentoMADetDomTemp = lDecodifiche
@@ -2703,12 +2707,21 @@ public class DecodificheManagerBean {
 	public Collection getMotivoProvvedimentoMAffPMinor() {
 		return mMotivoProvvedimentoMAAffPMinor;
 	}
-	
+
 	public Collection getMotivoProvvedimentoAmmProvSemilibPmm() {
 		return mMotivoProvvedimentoAmmProvSemilibPmm;
 	}
+
 	public Collection getMotivoProvvedimentoAmmProvSemilibPm() {
 		return mMotivoProvvedimentoAmmProvSemilibPm;
+	}
+
+	public Collection getMotivoProvvedimentoMADDomMinor() {
+		return mMotivoProvvedimentoMADDomMinor;
+	}
+
+	public Collection getMotivoProvvedimentoMASemiLMinor() {
+		return mMotivoProvvedimentoMASemiLMinor;
 	}
 	// MEV_9-SIEP - FINE
 
