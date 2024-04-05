@@ -248,7 +248,7 @@ if (!lPosizione.isLibero() || ("S".equals(lFascicoloAssociato.getFlagAltraCausa(
 			}
 		}
 		// FINE MEV_9-SIEP
-	}
+	} // fine if (document.LoadInserisciMisuraAlternativa.flagmisura.value == "N")
 <%
 // AMBROSINO   - 23-12-2010
 //============================================================================
@@ -1236,11 +1236,15 @@ if (tipoMisura.equals("ESP_PRESSO_DOM")) {
 <INPUT type="HIDDEN" name="posizionegiuridica" value="<%=lPosizione.getCodPosizioneGiuridica()%>">
 <INPUT type="HIDDEN" name="lFlagAffi" value="<%=lFlagAffi%>">
 <INPUT type="HIDDEN" name="<%=ICostantiMisuraAlternativa.CAMPO_ID_DOCUMENTO_SIUS%>" value="<%=StringUtils.toStringJSP(misuraalternativa.getEveIdEvento())%>">
-<INPUT type="HIDDEN" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%=StringUtils.toStringJSP(lEventoAmmProvvAff.getIdEvento())%>">
+<%-- MEV_9-SIEP: aggiunto controllo per DETENZIONE E SEMILIBERTA --%>
+<INPUT type="HIDDEN" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%=!Utils.isNullObj(lEventoAmmProvvAff.getIdEvento()) ? StringUtils.toStringJSP(lEventoAmmProvvAff.getIdEvento()) : StringUtils.toStringJSP(eventoammissioneprovvisoria.getIdEvento())%>">
 <INPUT type="HIDDEN" name="lFlagSanzione" value="<%=lFlagSanzione%>">
 <%-- MEV_9-SIEP: aggiunta impostazione campo nascosto --%>
 <INPUT type="HIDDEN" name="tipoOperazione" value="<%=tipoOperazione%>">
 <%
+//MEV_9-SIEP: aggiunta gestione modifica
+boolean isModifica = "MODIFICA".equals(tipoOperazione);
+
 if (tipoMisura.equals("AFFIDAMENTO")) {
 %>
 <input type="HIDDEN" name="tipomisura" value="AFFIDAMENTO">
@@ -1268,7 +1272,8 @@ String dascarceraredisabilita = null;
 String disabilitaData = null;
 String scarcerato = null;
 String scarcerare = null;
-if (misuraalternativa == null || misuraalternativa.getIdMisuraAlternativa() == null) {
+// MEV_9: aggiunta OR condition
+if (misuraalternativa == null || misuraalternativa.getIdMisuraAlternativa() == null || isModifica) {
 %>
 <input type="HIDDEN" name="flagmisura" value="N">
 <%
@@ -1571,8 +1576,6 @@ if (!Utils.isNullObj(eventonotifica.getEvento())) {
 		<td class="Titolo" colspan="4"> Dati Ordinanza Tribunale di Sorveglianza </td>
    	</tr>
 <%
-// MEV_9-SIEP: aggiunta gestione modifica
-boolean isModifica = "MODIFICA".equals(tipoOperazione);
 if (misuraalternativa.getIdMisuraAlternativa() != null && !isModifica) {
 %>
 	<tr>

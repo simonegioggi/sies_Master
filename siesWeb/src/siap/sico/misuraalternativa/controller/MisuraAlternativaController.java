@@ -1729,18 +1729,9 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 					lStatoProcMod = "0029"; // Espiazione Pena in Regime di Detenzione Domiciliare - Emessa
 											// Comunicazione Scadenza Misura
 				} else if ("0722".equals(lMisModelOrder.getCodTipoMisura())
-						|| "0733".equals(lMisModelOrder.getCodTipoMisura())
-						|| "0682".equals(lMisModelOrder.getCodTipoMisura())
-						|| "0693".equals(lMisModelOrder.getCodTipoMisura())) {
+						|| "0733".equals(lMisModelOrder.getCodTipoMisura())) {
 					// MEV_9-SIEP: gestione nuovi codici tipo misura x DETENZIONE
-					if ("0722".equals(lMisModelOrder.getCodTipoMisura()))
-						lStatoProcMod = "0570";
-					else if ("0733".equals(lMisModelOrder.getCodTipoMisura()))
-						lStatoProcMod = "0571";
-					else if ("0682".equals(lMisModelOrder.getCodTipoMisura()))
-						lStatoProcMod = "0570";
-					else
-						lStatoProcMod = "0571";
+					lStatoProcMod = "0581";
 				} else {
 					lStatoProcMod = "0026"; // Default
 				}
@@ -1770,9 +1761,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 						&& lPosMod.getCodPosizioneGiuridica().equals("13") // Attuale in Affidamento
 						&& lMisModelOrder.getDataInizioMisura() != null)
 						|| ("PROC".equals(lMisModelOrder.getCodTipoUfficioScarcerazione())
-								&& !lPosMod.getCodPosizioneGiuridica().equals("29")
-						// FIXME 04/09/2015 TEST MEVxx - Gestione Misure Provvisorie
-						)) {
+								&& !lPosMod.getCodPosizioneGiuridica().equals("29"))) {
 					// Espiazione Pena in Regime di Affidamento in Prova - Emesso Decreto con
 					// Decorrenza/Scadenza
 					lStatoProcMod = "0024";
@@ -1790,33 +1779,8 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 						|| "0721".equals(lMisModelOrder.getCodTipoMisura())
 						|| "0730".equals(lMisModelOrder.getCodTipoMisura())
 						|| "0731".equals(lMisModelOrder.getCodTipoMisura())
-						|| "0732".equals(lMisModelOrder.getCodTipoMisura())
-						|| "0680".equals(lMisModelOrder.getCodTipoMisura())
-						|| "0681".equals(lMisModelOrder.getCodTipoMisura())
-						|| "0690".equals(lMisModelOrder.getCodTipoMisura())
-						|| "0691".equals(lMisModelOrder.getCodTipoMisura())
-						|| "0692".equals(lMisModelOrder.getCodTipoMisura())) {
-					// MEV_9-SIEP: gestione nuovi codici tipo misura x AFFIDAMENTO
-					if ("0720".equals(lMisModelOrder.getCodTipoMisura()))
-						lStatoProcMod = "0560";
-					else if ("0721".equals(lMisModelOrder.getCodTipoMisura()))
-						lStatoProcMod = "0561";
-					else if ("0730".equals(lMisModelOrder.getCodTipoMisura()))
-						lStatoProcMod = "0562";
-					else if ("0731".equals(lMisModelOrder.getCodTipoMisura()))
-						lStatoProcMod = "0563";
-					else if ("0732".equals(lMisModelOrder.getCodTipoMisura()))
-						lStatoProcMod = "0564";
-					else if ("0680".equals(lMisModelOrder.getCodTipoMisura()))
-						lStatoProcMod = "0565";
-					else if ("0681".equals(lMisModelOrder.getCodTipoMisura()))
-						lStatoProcMod = "0566";
-					else if ("0690".equals(lMisModelOrder.getCodTipoMisura()))
-						lStatoProcMod = "0567";
-					else if ("0691".equals(lMisModelOrder.getCodTipoMisura()))
-						lStatoProcMod = "0568";
-					else
-						lStatoProcMod = "0569";
+						|| "0732".equals(lMisModelOrder.getCodTipoMisura())) {
+					lStatoProcMod = "0580";
 				} else {
 					if (lPosMod != null && lPosMod.getCodPosizioneGiuridica() != null && lPoModelPrec != null
 							&& lPoModelPrec.isLibero() && lPosMod.getCodPosizioneGiuridica().equals("13")
@@ -1852,18 +1816,9 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 								|| lPosMod.getCodPosizioneGiuridica().equals("84"))) {
 					lStatoProcMod = "0032";
 				} else if ("0723".equals(lMisModelOrder.getCodTipoMisura())
-						|| "0734".equals(lMisModelOrder.getCodTipoMisura())
-						|| "0683".equals(lMisModelOrder.getCodTipoMisura())
-						|| "0694".equals(lMisModelOrder.getCodTipoMisura())) {
+						|| "0734".equals(lMisModelOrder.getCodTipoMisura())) {
 					// MEV_9-SIEP: gestione nuovi codici tipo misura x SEMILIBERTA'
-					if ("0723".equals(lMisModelOrder.getCodTipoMisura()))
-						lStatoProcMod = "0573";
-					else if ("0734".equals(lMisModelOrder.getCodTipoMisura()))
-						lStatoProcMod = "0574";
-					else if ("0683".equals(lMisModelOrder.getCodTipoMisura()))
-						lStatoProcMod = "0573";
-					else
-						lStatoProcMod = "0574";
+					lStatoProcMod = "0582";
 				} else {
 					lStatoProcMod = "0030";
 				}
@@ -2100,8 +2055,9 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			// inserendo lo scadenzario fine pena. La lPenResMod è la pena appena inserita e collegata
 			// al provvedimento che si sta validando ed è quindi sicuramente validata.
 			// Come intervento: commentato && lPenResMod.getFlagValidato().equals("S")
-			if (lPenResMod != null && lPenResMod.getDataInizio() != null && lPenResMod.getDataFine() != null) {
-			// && lPenResMod.getFlagValidato().equals("S")
+			if (lPenResMod != null && lPenResMod.getDataInizio() != null
+					&& lPenResMod.getDataFine() != null) {
+				// && lPenResMod.getFlagValidato().equals("S")
 				InserimentoAggiornamentoScadenzarioFinePena(lConn, lPenResMod, lEveModel,
 						lPenResMod.getDataFine(), aFascicolo.getIdFascicoloSiep());
 			}
@@ -2282,7 +2238,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 					// Affidamento art. 47 quater O.P.
 					|| lMisModelOrder.getCodTipoMisura().equals("0003")
 					// Differimento Pena facoltativo attesa grazia
-					|| lMisModelOrder.getCodTipoMisura().equals("0030") 
+					|| lMisModelOrder.getCodTipoMisura().equals("0030")
 					// MEV_9-SIEP: aggiunti codici tipo misura x AFFIDAMENTO
 					|| "0720".equals(lMisModelOrder.getCodTipoMisura())
 					|| "0721".equals(lMisModelOrder.getCodTipoMisura())
