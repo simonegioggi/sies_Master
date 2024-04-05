@@ -339,6 +339,9 @@ public class DecodificheManagerBean {
 	private Collection mTipoProvvSorveglianza;
 	private Collection mMotivoSospensionePm;
 	private Collection mOggettoDecisione;
+	// MEV_9-SIEP - nuovi oggetti sospensione art 678
+	private Collection mOggettiDecisioneSosp678;
+  //MEV_9-SIEP - FIME
 	// private Collection mEsitoSiep;
 	private Collection mTipoPermesso; // 23/07/2004
 	private Collection mStatoProcedimento; // 8/9/2004
@@ -1560,7 +1563,9 @@ public class DecodificheManagerBean {
 			mTipologiaDecisioneRevocaDiff = lDecodifiche.ExListaMotivoProvvRevocaDifferimento();
 			mTipologiaDecisioneRigettoDiff = lDecodifiche.ExListaMotivoProvvRigettoDifferimento();
 			mOggettoDecisione = lDecodifiche.ExListaOggettiSospensioneDecisioneSor();
-
+			
+			mOggettiDecisioneSosp678 = lDecodifiche.ExListaMotivoProvvSosp678();
+			
 			// Oggetti dell'espulsione
 			mMotivoProvvedimentoEspulsione = lDecodifiche.ExListaMotivoProvvedimentoEspulsione("CONCESSIONE");
 			mMotivoProvvedimentoAccoglieOpEspulsione = lDecodifiche
@@ -2937,6 +2942,10 @@ public class DecodificheManagerBean {
 		return mOggettoDecisione;
 	}
 
+	public Collection getOggettiDecisioneSosp678() {
+		return mOggettiDecisioneSosp678;
+	}
+	
 	public Collection getStatoProcedimento() {
 		return this.mStatoProcedimento;
 	}

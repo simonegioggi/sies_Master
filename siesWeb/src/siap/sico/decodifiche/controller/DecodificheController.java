@@ -3564,4 +3564,39 @@ public class DecodificheController extends SiapController implements IDecodifich
 		return descOggettoSige;
 	}
 
+	/**
+	 * MEV_9-SIEP
+	 */
+	public Collection ExListaMotivoProvvSosp678() throws F3BException {
+
+		Connection lConn = null;
+		Collection lDecodifiche = new Vector();
+		DecodificheSqlDAO lDecSqlDao = null;
+
+		try {
+			lConn = getDBConnection();
+
+			lDecSqlDao = new DecodificheSqlDAO(lConn);
+
+			lDecSqlDao.listaMotivoProvvSosp678();
+
+			lDecSqlDao.start();
+
+			while (lDecSqlDao.next())
+				lDecodifiche.add(lDecSqlDao.getModel());
+
+			lDecSqlDao.stop();
+		} catch (DAOException daoex) {
+			throw new SICOException(F3BException.USER_MESSAGE,
+					"DecodificheController.ExListaMotivoProvvSosp678: " + daoex);
+		} catch (Exception sqex) {
+			throw new SICOException(F3BException.USER_MESSAGE,
+					"DecodificheController.ExListaMotivoProvvSosp678: " + sqex);
+		} finally {
+			cleanup(lDecSqlDao);
+			cleanup(lConn);
+		}
+
+		return lDecodifiche;
+	}
 }

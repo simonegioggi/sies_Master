@@ -1656,4 +1656,13 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 
 	}
 
+	// MEV_9-SIEP
+	public void listaMotivoProvvSosp678() throws DAOException {
+		String lStatement = new String();
+
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		lStatement += " AND RV_LOW_VALUE in ('0684', '0695')";
+
+		setStatement(lStatement);
+	}
 }

@@ -1,10 +1,17 @@
 package siap.siep.misuraalternativa.action;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
+
+import f3b.log.LogF3B;
 import f3b.model.DecodeModel;
 import f3b.util.F3BException;
 import f3b.web.IWebConstants;
@@ -52,7 +59,7 @@ import siap.siep.verbale.model.VerbaleModel;
 
 public class ActLoadInserisciMAAmmProvAffi extends ActAmmissioneProvvisoria {
 
-	// private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public String processRequest() throws F3BException {
@@ -292,8 +299,11 @@ public class ActLoadInserisciMAAmmProvAffi extends ActAmmissioneProvvisoria {
 
 			nuovaColl.add(lDecodeNew);
 		}
-
-		lOptionMotivo = new Option(nuovaColl);
+		// Ordino per descrizione
+		
+		
+		//lOptionMotivo = new Option(nuovaColl);
+		lOptionMotivo = new Option(ordinaByDesc(nuovaColl));
 
 		// MEV_9 - FINE
 		if (lEveSorv != null)
@@ -309,4 +319,26 @@ public class ActLoadInserisciMAAmmProvAffi extends ActAmmissioneProvvisoria {
 		return PG_LOAD_INSERISCI_MA_AMM_PROVVISORIA;
 	}
 
+	private Collection ordinaByDesc (Collection sCollToSort){
+		Collection orderedCollection = new Vector();
+		
+		Map<String, DecodeModel> map = new HashMap<>();
+		
+		Iterator<DecodeModel> itMot = sCollToSort.iterator();
+
+		while (itMot.hasNext()) {
+			DecodeModel lDecode = itMot.next();
+			map.put(lDecode.getDescription().toLowerCase(),lDecode);
+		}
+		
+    ArrayList<String> sortedKeys = new ArrayList<String>(map.keySet());
+    Collections.sort(sortedKeys);
+    // Display the TreeMap which is naturally sorted
+    for (String desc : sortedKeys){
+    		siesLogger.debug("Key = " + desc + ", Value = " + map.get(desc));
+    		orderedCollection.add(map.get(desc));
+    }
+	
+		return orderedCollection;
+	}
 }
