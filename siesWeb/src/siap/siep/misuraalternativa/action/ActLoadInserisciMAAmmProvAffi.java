@@ -300,9 +300,8 @@ public class ActLoadInserisciMAAmmProvAffi extends ActAmmissioneProvvisoria {
 			nuovaColl.add(lDecodeNew);
 		}
 		// Ordino per descrizione
-		
-		
-		//lOptionMotivo = new Option(nuovaColl);
+
+		// lOptionMotivo = new Option(nuovaColl);
 		lOptionMotivo = new Option(ordinaByDesc(nuovaColl));
 
 		// MEV_9 - FINE
@@ -319,26 +318,29 @@ public class ActLoadInserisciMAAmmProvAffi extends ActAmmissioneProvvisoria {
 		return PG_LOAD_INSERISCI_MA_AMM_PROVVISORIA;
 	}
 
-	private Collection ordinaByDesc (Collection sCollToSort){
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private Collection ordinaByDesc(Collection sCollToSort) {
+
 		Collection orderedCollection = new Vector();
-		
+
 		Map<String, DecodeModel> map = new HashMap<>();
-		
+
 		Iterator<DecodeModel> itMot = sCollToSort.iterator();
 
 		while (itMot.hasNext()) {
 			DecodeModel lDecode = itMot.next();
-			map.put(lDecode.getDescription().toLowerCase(),lDecode);
+			map.put(lDecode.getDescription().toLowerCase(), lDecode);
 		}
-		
-    ArrayList<String> sortedKeys = new ArrayList<String>(map.keySet());
-    Collections.sort(sortedKeys);
-    // Display the TreeMap which is naturally sorted
-    for (String desc : sortedKeys){
-    		siesLogger.debug("Key = " + desc + ", Value = " + map.get(desc));
-    		orderedCollection.add(map.get(desc));
-    }
-	
+
+		ArrayList<String> sortedKeys = new ArrayList<>(map.keySet());
+		Collections.sort(sortedKeys);
+		// Display the TreeMap which is naturally sorted
+		for (String desc : sortedKeys) {
+			siesLogger.debug("Key = " + desc + ", Value = " + map.get(desc));
+			orderedCollection.add(map.get(desc));
+		}
+
 		return orderedCollection;
 	}
+
 }

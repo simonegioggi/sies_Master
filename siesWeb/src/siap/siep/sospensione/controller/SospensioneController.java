@@ -65,18 +65,7 @@ import siap.siep.verbale.dao.VerbaleDAO;
 import siap.siep.verbale.model.VerbaleModel;
 
 /**
- * <p>
- * Title: SospensioneController
- * </p>
- * <p>
- * Description: Classe Controller per Sospensione
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * SospensioneController - Classe Controller per Sospensione
  *
  * @version 1.0
  */
@@ -779,10 +768,10 @@ public class SospensioneController extends SiapController implements ISospension
 			lConn = getDBConnection();
 
 			lSosDao = new SospensioneSqlDAO(lConn);
-			// Ticket#202105240111 - Modificato metodo chiamato per recuperare solo le 
+			// Ticket#202105240111 - Modificato metodo chiamato per recuperare solo le
 			// sospenzioni legate ed eventi e PR trasferibili (validati)
-			//lSosDao.ricercaSospensioneByFascicolo(aKeyFascicolo);
-			lSosDao.ricercaSospensioneByFascicoloXTrasferimento (aKeyFascicolo);
+			// lSosDao.ricercaSospensioneByFascicolo(aKeyFascicolo);
+			lSosDao.ricercaSospensioneByFascicoloXTrasferimento(aKeyFascicolo);
 			// Ticket#202105240111 - FINE
 			lSospensioni = new Vector<SospensioneModel>(lSosDao.getModels());
 		} catch (DAOException daoEx) {
@@ -4307,110 +4296,113 @@ public class SospensioneController extends SiapController implements ISospension
 	/**
 	 * MEV_9-SIEP
 	 */
-  public EventoModel ExUpdateValidaSospensioneDecisioniSorveglianza678 (EventoModel aEvento,
-      FascicoloSiepModel aFascicolo) throws F3BException {
+	public EventoModel ExUpdateValidaSospensioneDecisioniSorveglianza678(EventoModel aEvento,
+			FascicoloSiepModel aFascicolo) throws F3BException {
 
-    Connection lConn = null;
+		Connection lConn = null;
 
-    EventoSqlDAO lEveSqlDao = null;
-    PosizioneGiuridicaSqlDAO lPosSqlDao = null;
-    MisuraAlternativaSqlDAO lMisSqlDAO = null;
-    EventoDAO lEveDaoMisAlt = null;
-    EventoDAO lEveDaoBlob = null;
+		EventoSqlDAO lEveSqlDao = null;
+		PosizioneGiuridicaSqlDAO lPosSqlDao = null;
+		MisuraAlternativaSqlDAO lMisSqlDAO = null;
+		EventoDAO lEveDaoMisAlt = null;
+		EventoDAO lEveDaoBlob = null;
 
-    EventoModel lEveMod = new EventoModel(aEvento);
+		EventoModel lEveMod = new EventoModel(aEvento);
 
-    try {
-      lConn = getDBTransaction();
+		try {
+			lConn = getDBTransaction();
 
-      // ** Aggiorna EVENTO **
-      lEveSqlDao = new EventoSqlDAO(lConn);
-      lEveSqlDao.ricercaEventoByKey(aEvento.getIdEvento());
-      EventoModel lEveModel = (EventoModel) lEveSqlDao.getModelByKey();
-      String Motivo = lEveModel.getCodMotivo();
+			// ** Aggiorna EVENTO **
+			lEveSqlDao = new EventoSqlDAO(lConn);
+			lEveSqlDao.ricercaEventoByKey(aEvento.getIdEvento());
+			EventoModel lEveModel = (EventoModel) lEveSqlDao.getModelByKey();
+			// String motivo = lEveModel.getCodMotivo();
 
-      lEveModel.setCodOperatoreAggiornamento (aEvento.getCodOperatoreAggiornamento());
-      lEveModel.setCodUfficioAggiornamento   (aEvento.getCodUfficioAggiornamento());
-      lEveModel.setDataAggiornamento         (aEvento.getDataAggiornamento());
+			lEveModel.setCodOperatoreAggiornamento(aEvento.getCodOperatoreAggiornamento());
+			lEveModel.setCodUfficioAggiornamento(aEvento.getCodUfficioAggiornamento());
+			lEveModel.setDataAggiornamento(aEvento.getDataAggiornamento());
 
-      // cerca la misura
-      lMisSqlDAO = new MisuraAlternativaSqlDAO(lConn);
-      lMisSqlDAO.ricercaMisuraAlternativaByIdEvento(lEveModel.getEveIdEvento());
-      MisuraAlternativaModel lMisMDS = (MisuraAlternativaModel) lMisSqlDAO.getModelByKey();
+			// cerca la misura
+			lMisSqlDAO = new MisuraAlternativaSqlDAO(lConn);
+			lMisSqlDAO.ricercaMisuraAlternativaByIdEvento(lEveModel.getEveIdEvento());
+			MisuraAlternativaModel lMisMDS = (MisuraAlternativaModel) lMisSqlDAO.getModelByKey();
 
-      // Valido l'evento riferito alla misura alternativa modifica 
-      if (lMisMDS != null && lMisMDS.getIdMisuraAlternativa() != null) {
-        lEveSqlDao.ricercaEventoByKey(lMisMDS.getEveIdEvento());
-        EventoModel lEveModelMis = (EventoModel) lEveSqlDao.getModelByKey();
-        lEveDaoMisAlt = new EventoDAO(lConn);
+			// Valido l'evento riferito alla misura alternativa modifica
+			if (lMisMDS != null && lMisMDS.getIdMisuraAlternativa() != null) {
+				lEveSqlDao.ricercaEventoByKey(lMisMDS.getEveIdEvento());
+				EventoModel lEveModelMis = (EventoModel) lEveSqlDao.getModelByKey();
+				lEveDaoMisAlt = new EventoDAO(lConn);
 
-        if (   lEveModelMis != null && (lEveModelMis.getFlagDocumentoRegistrato() == null
-            || lEveModelMis.getFlagDocumentoRegistrato().equals("N"))) 
-        {
-          lEveModelMis.setFlagDocumentoRegistrato("S");
-          lEveModelMis.setCodOperatoreAggiornamento(aEvento.getCodOperatoreAggiornamento());
-          lEveModelMis.setCodUfficioAggiornamento(aEvento.getCodUfficioAggiornamento());
-          lEveModelMis.setDataAggiornamento(DateUtils.getSysDate());
+				if (lEveModelMis != null && (lEveModelMis.getFlagDocumentoRegistrato() == null
+						|| lEveModelMis.getFlagDocumentoRegistrato().equals("N"))) {
+					lEveModelMis.setFlagDocumentoRegistrato("S");
+					lEveModelMis.setCodOperatoreAggiornamento(aEvento.getCodOperatoreAggiornamento());
+					lEveModelMis.setCodUfficioAggiornamento(aEvento.getCodUfficioAggiornamento());
+					lEveModelMis.setDataAggiornamento(DateUtils.getSysDate());
 
-          lEveDaoMisAlt.setDAOFromModelForUpdate(lEveModelMis);
-          lEveDaoMisAlt.update();
-          lEveDaoMisAlt.stop();
-        }
-      }
+					lEveDaoMisAlt.setDAOFromModelForUpdate(lEveModelMis);
+					lEveDaoMisAlt.update();
+					lEveDaoMisAlt.stop();
+				}
+			}
 
-      // SETTA LO STATO PROCEDIMENTO
-      String lStatoProcMod = "0575";
+			// SETTA LO STATO PROCEDIMENTO
+			String lStatoProcMod = "0575";
 
-      InserimentoCancellazioneStatoProcedimento(lConn, aFascicolo.getIdFascicoloSiep(), lEveModel,
-          lStatoProcMod);
+			InserimentoCancellazioneStatoProcedimento(lConn, aFascicolo.getIdFascicoloSiep(), lEveModel,
+					lStatoProcMod);
 
-      // Aggiorna Inserisci PENA_RESIDUA
-      InserimentoAggiornamentoPenResMisuraAlternativa(lConn, lEveModel, aFascicolo.getIdFascicoloSiep());
+			// Aggiorna Inserisci PENA_RESIDUA
+			InserimentoAggiornamentoPenResMisuraAlternativa(lConn, lEveModel,
+					aFascicolo.getIdFascicoloSiep());
 
-      // Aggiorna POSIZIONE_GIURIDICA
-      String lPosizione = "47"; // Libero in Sospensione 309/90 
+			// Aggiorna POSIZIONE_GIURIDICA
+			String lPosizione = "47"; // Libero in Sospensione 309/90
 
-      Date lData = lEveModel.getDataEmissione();
-      if (lMisMDS != null && lMisMDS.getDataScarcerazione() != null)
-        lData = lMisMDS.getDataScarcerazione();// data sospensione esecuzione
+			Date lData = lEveModel.getDataEmissione();
+			if (lMisMDS != null && lMisMDS.getDataScarcerazione() != null)
+				lData = lMisMDS.getDataScarcerazione();// data sospensione esecuzione
 
-      // Cerca POSIZIONE_GIURIDICA corrente
-      lPosSqlDao = new PosizioneGiuridicaSqlDAO(lConn);
-      lPosSqlDao.ricercaPosGiuCorrenteByIdFascicolo(aFascicolo.getIdFascicoloSiep());
-      PosizioneGiuridicaModel lPosMod = (PosizioneGiuridicaModel) lPosSqlDao.getModelByKey();
+			// Cerca POSIZIONE_GIURIDICA corrente
+			lPosSqlDao = new PosizioneGiuridicaSqlDAO(lConn);
+			lPosSqlDao.ricercaPosGiuCorrenteByIdFascicolo(aFascicolo.getIdFascicoloSiep());
+			PosizioneGiuridicaModel lPosMod = (PosizioneGiuridicaModel) lPosSqlDao.getModelByKey();
 
-      InserimentoAggiornamentoPosizioneGiuridica(lConn, lPosizione, lPosMod, lData, lEveModel,
-          aFascicolo.getIdFascicoloSiep(), aEvento.getIdEvento());
+			InserimentoAggiornamentoPosizioneGiuridica(lConn, lPosizione, lPosMod, lData, lEveModel,
+					aFascicolo.getIdFascicoloSiep(), aEvento.getIdEvento());
 
-      // ------- EVENTO--------
-      lEveDaoBlob = new EventoDAO(lConn);
-      lEveDaoBlob.setDAOFromModelForUpdateBlob(aEvento);
+			// ------- EVENTO--------
+			lEveDaoBlob = new EventoDAO(lConn);
+			lEveDaoBlob.setDAOFromModelForUpdateBlob(aEvento);
 
-      lEveDaoBlob.selCondizioneUpdate(aEvento.getIdEvento());
-      lEveDaoBlob.update();
-      lEveDaoBlob.stop();
+			lEveDaoBlob.selCondizioneUpdate(aEvento.getIdEvento());
+			lEveDaoBlob.update();
+			lEveDaoBlob.stop();
 
-      commit(lConn);
-    } catch (DAOException daoEx) {
-      siesLogger.error("DAOException: " , daoEx);
-      rollback(lConn);
-      daoEx.printStackTrace();
-      throw new F3BException("SospensioneController.ExUpdateValidaSospensioneDecisioniSorveglianza678 : " + daoEx);
-    } catch (Exception ex) {
-      siesLogger.error("Exception: ", ex);
-      rollback(lConn);
-      ex.printStackTrace();
-      throw new F3BException("SospensioneController.ExUpdateValidaSospensioneDecisioniSorveglianza678 : " + ex);
-    } finally {
-      cleanup(lEveSqlDao);
-      cleanup(lPosSqlDao);
-      cleanup(lMisSqlDAO);
-      cleanup(lEveDaoMisAlt);
+			commit(lConn);
+		} catch (DAOException daoEx) {
+			siesLogger.error("DAOException: ", daoEx);
+			rollback(lConn);
+			daoEx.printStackTrace();
+			throw new F3BException(
+					"SospensioneController.ExUpdateValidaSospensioneDecisioniSorveglianza678 : " + daoEx);
+		} catch (Exception ex) {
+			siesLogger.error("Exception: ", ex);
+			rollback(lConn);
+			ex.printStackTrace();
+			throw new F3BException(
+					"SospensioneController.ExUpdateValidaSospensioneDecisioniSorveglianza678 : " + ex);
+		} finally {
+			cleanup(lEveSqlDao);
+			cleanup(lPosSqlDao);
+			cleanup(lMisSqlDAO);
+			cleanup(lEveDaoMisAlt);
 
-      cleanup(lConn);
-      cleanup(lEveDaoBlob);
-    }
+			cleanup(lConn);
+			cleanup(lEveDaoBlob);
+		}
 
-    return lEveMod;
-  }
+		return lEveMod;
+	}
+
 }
