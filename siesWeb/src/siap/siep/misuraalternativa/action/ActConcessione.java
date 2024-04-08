@@ -203,6 +203,7 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 				lUffEmiMod = lCtrlUffEmi.getUfficioByKey(lMisAlModConcessa.getChiaveUfficioFascicoloSius());
 
 				setRequestAttribute("sedeUfficioEmittente", lUffEmiMod);
+				// MEV_9-SIEP: aggiunto controllo per diversificare la setRequestAttribute
 				if ("MODIFICA".equals(tipoOperazione)) {
 					Collection<DecodificheModel> c = DecodificheManager.getInstance()
 							.getTipoUfficioSiepTDSMUDSM();
@@ -228,14 +229,18 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 		MagistratoCompetenteMagistratoModel mcmm = imc
 				.ExRicercaMagistratoCompetenteByFascicolo(lFascMod.getIdFascicoloSiep());
 		// MEV_9-SIEP: per la modifica (se non esiste il MAGISTRATO nel fascicolo ma solo nell'evento)
-		if (Utils.isNullObj(mcmm)) {
+		// oppure se siamo in modifica
+		if (Utils.isNullObj(mcmm) || "MODIFICA".equals(tipoOperazione)) {
 			if (!Utils.isNullObj(lEveMod) && !Utils.isNullObj(lEveMod.getEvento())
 					&& !Utils.isNullObj(lEveMod.getEvento().getCodMagistrato())) {
 				// Ricerca Magistrato
 				IMagistrato im = SICOLookupRemote.getMagistratoRemote();
 				MagistratoModel mm = im.ExRicercaMagistratoByCod(lEveMod.getEvento().getCodMagistrato());
-				mcmm = new MagistratoCompetenteMagistratoModel();
-				mcmm.setMagistrato(mm);
+				if (!Utils.isNullObj(mcmm) && !Utils.isNullObj(mcmm.getMagistrato())
+						&& !mm.getCodMagistrato().equals(mcmm.getMagistrato().getCodMagistrato())) {
+					mcmm = new MagistratoCompetenteMagistratoModel();
+					mcmm.setMagistrato(mm);
+				}
 			}
 		}
 		if (mcmm != null)
@@ -287,11 +292,9 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 		setRequestAttribute("codiceAutoritaC", "" + lOptionAutoritaC);
 
 		// Cssa
-		// String lCssa = null;
 		if (lTable.get("NotCssa") != null) {
-			// lCssa = ((NotificaModel) lTable.get("NotCssa")).getCSSA().getComune() + " "
-			// + ((NotificaModel) lTable.get("NotCssa")).getCSSA().getIndirizzo();
 			setRequestAttribute("daticssa", ((NotificaModel) lTable.get("NotCssa")).getCSSA());
+			// MEV_9-SIEP: aggiunto controllo per diversificare la setRequestAttribute
 			if ("MODIFICA".equals(tipoOperazione)) {
 				Collection<DecodificheModel> c = DecodificheManager.getInstance()
 						.getTipoUffEsePenEstSerSocMin();
@@ -345,7 +348,13 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 
 		}
 
-		Option lOption = new Option(DecodificheManager.getInstance().getTipoAutorita(), "22");
+		// MEV_9-SIEP: aggiunto controllo per diversificare la setRequestAttribute
+		Option lOption = null;
+		if (lAutN != null && lAutN.getCodTipoAutorita() != null)
+			lOption = new Option(DecodificheManager.getInstance().getTipoAutorita(),
+					lAutN.getCodTipoAutorita());
+		else
+			lOption = new Option(DecodificheManager.getInstance().getTipoAutorita(), "22");
 		setRequestAttribute("autoritaEsternaAvv", "" + lOption);
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
