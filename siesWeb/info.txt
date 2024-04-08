@@ -2,6 +2,7 @@ Branch MEV_2023-33: nato dal branch release_12.5.0.0 in data 05/06/2023
 				   merge del branch release_12.5.1.0 in data 21/06/2023
 				   merge del branch release_12.5.3.0 in data 25/09/2023
 				   merge del branch release_12.5.6.0 in data 09/01/2023
+				   merge del branch release_12.5.7.0 in data 08/04/2023
 Richiesta scheda 2023-33 - SIES - interventi Cartabia e pagoPA fase 2
 Requisiti funzionali lato SIEP:
 Completamento della versione Riscossione Pene Pecuniarie
