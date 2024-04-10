@@ -84,14 +84,15 @@ function insertIT(
 		giornoEsecutivita, 
 		meseEsecutivita,
 		annoEsecutivita,
-		<%-- MEV_9-SIEP (x6) --%>
+		<%-- MEV_9-SIEP (x7) --%>
 		giornoDecisione, 
 		meseDecisione,
 		annoDecisione,
 		annoOrdinanzaProvvisoria,
 		numeroOrdinanzaProvvisoria,
 		idOrdinanzaProvvisoria,
-		isOrdinanzaProvvisoria) {
+		isOrdinanzaProvvisoria,
+		descrLuogoProva) {
 	if (annoSius != '-')
 		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_CHIAVE_ANNO_FASCICOLO_SIUS%>.value = annoSius;
 	else
@@ -225,6 +226,11 @@ function insertIT(
 			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.disabled = true;
 			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>.disabled = true;
 	  	}
+
+  		if (descrLuogoProva != '-')
+    		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA_MA_AT%>.value = descrLuogoProva;
+		else
+  			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA_MA_AT%>.value = "";
 	} catch (err) { }
 	// FINE MEV_9-SIEP
 
@@ -550,14 +556,16 @@ if (!documentiSius.isEmpty()) {
 					&& ("0680".equals(misuraModel.getCodTipoMisura())					// AFFIDAMENTO
 							|| "0681".equals(misuraModel.getCodTipoMisura())			// AFFIDAMENTO
 							|| "0682".equals(misuraModel.getCodTipoMisura())			// DETENZIONE DOMICILIARE
-							|| "0683".equals(misuraModel.getCodTipoMisura())))			// SEMILIBERTA'
+							|| "0683".equals(misuraModel.getCodTipoMisura())			// SEMILIBERTA'
+							|| "0684".equals(misuraModel.getCodTipoMisura())))			// SOSPENSIONE
 					|| ("TDSM".equals(lUfficio)
 							&& ("0690".equals(misuraModel.getCodTipoMisura())			// AFFIDAMENTO
 									|| "0691".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
 									|| "0692".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
 									|| "0693".equals(misuraModel.getCodTipoMisura())	// DETENZIONE DOMICILIARE
-									|| "0694".equals(misuraModel.getCodTipoMisura())))	// SEMILIBERTA'
-					&& !Utils.isNullObj(misuraModel.getDataEsecutivita()))
+									|| "0694".equals(misuraModel.getCodTipoMisura())	// SEMILIBERTA'
+									|| "0695".equals(misuraModel.getCodTipoMisura())))	// SOSPENSIONE
+					/*&& !Utils.isNullObj(misuraModel.getDataEsecutivita())*/)
 				continue;
 		}
         
@@ -605,11 +613,13 @@ if (!documentiSius.isEmpty()) {
 				|| "0681".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
 				|| "0682".equals(misuraModel.getCodTipoMisura())	// DETENZIONE DOMICILIARE
 				|| "0683".equals(misuraModel.getCodTipoMisura())	// SEMILIBERTA'
+				|| "0684".equals(misuraModel.getCodTipoMisura())	// SOSPENSIONE
 				|| "0690".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
 				|| "0691".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
 				|| "0692".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
 				|| "0693".equals(misuraModel.getCodTipoMisura())	// DETENZIONE DOMICILIARE
-				|| "0694".equals(misuraModel.getCodTipoMisura())) {	// SEMILIBERTA'
+				|| "0694".equals(misuraModel.getCodTipoMisura())	// SEMILIBERTA'
+				|| "0695".equals(misuraModel.getCodTipoMisura())) {	// SOSPENSIONE
 %>
 			Applicazione Provvisoria 
 <%
@@ -625,19 +635,22 @@ if (!documentiSius.isEmpty()) {
 				&& ("0720".equals(misuraModel.getCodTipoMisura())						// AFFIDAMENTO
 						|| "0721".equals(misuraModel.getCodTipoMisura())				// AFFIDAMENTO
 						|| "0722".equals(misuraModel.getCodTipoMisura())				// DETENZIONE DOMICILIARE
-						|| "0723".equals(misuraModel.getCodTipoMisura())))				// SEMILIBERTA'
+						|| "0723".equals(misuraModel.getCodTipoMisura())				// SEMILIBERTA'
+						|| "0724".equals(misuraModel.getCodTipoMisura())))				// SOSPENSIONE
 				|| ("TDSM".equals(lUfficio)
 						&& ("0730".equals(misuraModel.getCodTipoMisura())				// AFFIDAMENTO
 								|| "0731".equals(misuraModel.getCodTipoMisura())		// AFFIDAMENTO
 								|| "0732".equals(misuraModel.getCodTipoMisura())		// AFFIDAMENTO
 								|| "0733".equals(misuraModel.getCodTipoMisura())		// DETENZIONE DOMICILIARE
-								|| "0734".equals(misuraModel.getCodTipoMisura()))))) {	// SEMILIBERTA'
+								|| "0734".equals(misuraModel.getCodTipoMisura())		// SEMILIBERTA'
+								|| "0735".equals(misuraModel.getCodTipoMisura()))))) {	// SOSPENSIONE
 			isOrdinanzaProvvisoria = true;
 			Date dataOrdinanzaProvvisoria = null;
 			BigDecimal annoOrdinanzaProvvisoria = null;
 			BigDecimal numeroOrdinanzaProvvisoria = null;
 			BigDecimal idFascicoloSius = eventoModel.getFasSiuIdFascicoloSius();
 			BigDecimal idOrdinanzaProvvisoria = null;
+			String descrLuogoProva = "";
 			Iterator<?> iter = documentiSius.iterator();
 			while (iter.hasNext()) {
 				MisuraAlternativaEventoModel maem = (MisuraAlternativaEventoModel) iter.next();
@@ -649,16 +662,19 @@ if (!documentiSius.isEmpty()) {
 								|| "0681".equals(em.getCodMotivo())		// AFFIDAMENTO
 								|| "0682".equals(em.getCodMotivo())		// DETENZIONE DOMICILIARE
 								|| "0683".equals(em.getCodMotivo())		// SEMILIBERTA'
+								|| "0684".equals(em.getCodMotivo())		// SOSPENSIONE
 								|| "0690".equals(em.getCodMotivo())		// AFFIDAMENTO
 								|| "0691".equals(em.getCodMotivo())		// AFFIDAMENTO
 								|| "0692".equals(em.getCodMotivo())		// AFFIDAMENTO
 								|| "0693".equals(em.getCodMotivo())		// DETENZIONE DOMICILIARE
-								|| "0694".equals(em.getCodMotivo()))	// SEMILIBERTA'
+								|| "0694".equals(em.getCodMotivo())		// SEMILIBERTA'
+								|| "0695".equals(em.getCodMotivo()))	// SOSPENSIONE
 						&& "0270".equals(em.getCodEsito())) {
 					dataOrdinanzaProvvisoria = mam.getDataDecisione();
 					annoOrdinanzaProvvisoria = mam.getAnnoRegistro();
 					numeroOrdinanzaProvvisoria = mam.getNumeroRegistro();
 					idOrdinanzaProvvisoria = mam.getEveIdEvento();
+					descrLuogoProva = mam.getDescrLuogoProva();
 					break;
 				}
 			}
@@ -719,7 +735,8 @@ if (!documentiSius.isEmpty()) {
                                          '<%=StringUtils.toStringJSP(annoOrdinanzaProvvisoria, "-")%>',
                                          '<%=StringUtils.toStringJSP(numeroOrdinanzaProvvisoria, "-")%>',
                                          '<%=StringUtils.toStringJSP(idOrdinanzaProvvisoria, "-")%>',
-                                         '<%=StringUtils.toStringJSP(isOrdinanzaProvvisoria, "-")%>'
+                                         '<%=StringUtils.toStringJSP(isOrdinanzaProvvisoria, "-")%>',
+                                         '<%=StringUtils.toStringJSP(descrLuogoProva, "-")%>'
                                          );">
 				<img align="middle" src="/images/fileselected.gif" border=0>
 			</a>
@@ -778,7 +795,8 @@ if (!documentiSius.isEmpty()) {
                                          '',
                                          '',
                                          '',
-                                         '<%=StringUtils.toStringJSP(isOrdinanzaProvvisoria, "-")%>'
+                                         '<%=StringUtils.toStringJSP(isOrdinanzaProvvisoria, "-")%>',
+                                         ''
                                          );">
 				<img align="middle" src="/images/fileselected.gif" border=0>
 			</a>

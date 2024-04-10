@@ -339,9 +339,10 @@ public class DecodificheManagerBean {
 	private Collection mTipoProvvSorveglianza;
 	private Collection mMotivoSospensionePm;
 	private Collection mOggettoDecisione;
-	// MEV_9-SIEP - nuovi oggetti sospensione art 678
+	// MEV_9-SIEP - nuovi oggetti sospensione art 678 e minori
+	private Collection mOggettoDecisioneMinor;
 	private Collection mOggettiDecisioneSosp678;
-  //MEV_9-SIEP - FIME
+	// MEV_9-SIEP - FIME
 	// private Collection mEsitoSiep;
 	private Collection mTipoPermesso; // 23/07/2004
 	private Collection mStatoProcedimento; // 8/9/2004
@@ -1562,10 +1563,13 @@ public class DecodificheManagerBean {
 			mTipologiaDecisioneSospensioneDiffDef = lDecodifiche.ExListaMotivoProvvSospDifferimentoDef();
 			mTipologiaDecisioneRevocaDiff = lDecodifiche.ExListaMotivoProvvRevocaDifferimento();
 			mTipologiaDecisioneRigettoDiff = lDecodifiche.ExListaMotivoProvvRigettoDifferimento();
-			mOggettoDecisione = lDecodifiche.ExListaOggettiSospensioneDecisioneSor();
-			
+			// MEV_9-SIEP: cambiata firma del metodo per distinguere PM da PMM
+			mOggettoDecisione = lDecodifiche.ExListaOggettiSospensioneDecisioneSor("PM");
+			// MEV_9-SIEP: aggiunto metodo per i minori
+			mOggettoDecisioneMinor = lDecodifiche.ExListaOggettiSospensioneDecisioneSor("PMM");
+
 			mOggettiDecisioneSosp678 = lDecodifiche.ExListaMotivoProvvSosp678();
-			
+
 			// Oggetti dell'espulsione
 			mMotivoProvvedimentoEspulsione = lDecodifiche.ExListaMotivoProvvedimentoEspulsione("CONCESSIONE");
 			mMotivoProvvedimentoAccoglieOpEspulsione = lDecodifiche
@@ -2942,10 +2946,16 @@ public class DecodificheManagerBean {
 		return mOggettoDecisione;
 	}
 
+	// MEV_9-SIEP: aggiunti metodi GET
+	public Collection getOggettoDecisioneMinor() {
+		return mOggettoDecisioneMinor;
+	}
+
 	public Collection getOggettiDecisioneSosp678() {
 		return mOggettiDecisioneSosp678;
 	}
-	
+	// FINE MEV_9-SIEP
+
 	public Collection getStatoProcedimento() {
 		return this.mStatoProcedimento;
 	}

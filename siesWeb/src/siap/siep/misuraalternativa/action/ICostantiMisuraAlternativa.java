@@ -157,6 +157,7 @@ public interface ICostantiMisuraAlternativa {
 	public static final String CAMPO_GIORNO_DATA_ESECUTIVITA = "GiornoDataEsecutivita";
 	public static final String CAMPO_MESE_DATA_ESECUTIVITA = "MeseDataEsecutivita";
 	public static final String CAMPO_ANNO_DATA_ESECUTIVITA = "AnnoDataEsecutivita";
+	// FINE MEV_9
 
 	public static final String PG_LOAD_INSERISCI_MA_CONCESSIONE = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/misuraalternativa/LoadInserisciConcessione.jsp";
@@ -286,7 +287,6 @@ public interface ICostantiMisuraAlternativa {
 	public static final String PG_DETTAGLIO_MA_PROSECUZIONE = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/misuraalternativa/DettaglioMAProsecuzione.jsp";
 
-	// ============================================================================
 	// new DL 146/2013
 	public static final String PG_LOAD_INSERISCI_MA_PROSECUZIONE_51_BIS = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/misuraalternativa/LoadInserisciMAProsecuzione51bis.jsp";
@@ -335,6 +335,7 @@ public interface ICostantiMisuraAlternativa {
 			+ "files/siap/siep/misuraalternativa/LoadInserisciMAAmmProvvSemiliberta.jsp";
 	public static final String PG_LOAD_DETTAGLIO_MA_AMM_PROVV_SEMILIBERTA = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/misuraalternativa/DettaglioMAAmmProvvSemiliberta.jsp";
+	public static final String CAMPO_DESCR_LUOGO_PROVA_MA_AT = "DescrLuogoProvaMAAltroTitolo";
 	// MEV_9-SIEP - FINE
 
 	// TEMPLATE VUOTO
@@ -392,7 +393,7 @@ public interface ICostantiMisuraAlternativa {
 	public static final String CONCESSIONE_SOSPENSIONE = "CONCESSIONE_SOSPENSIONE";
 	// MEV_9-SIEP
 	public static final String CONCESSIONE_SOSPENSIONE678 = "CONCESSIONE_SOSPENSIONE678";
-  // MEV_9-SIEP - FINE
+	// MEV_9-SIEP - FINE
 	public static final String AFFIDAMENTO_IN_PROVA = "AFFIDAMENTO_IN_PROVA";
 	public static final String DETENZIONE_DOMICILIARE = "DETENZIONE_DOMICILIARE";
 	public static final String SEMILIBERTA = "SEMILIBERTA";

@@ -189,7 +189,8 @@ public interface IDecodifiche {
 	public Collection ExListaMotiviInammissibilitaxSottoSistema(String aTipoUff, String aSottoSistema)
 			throws Exception;
 
-	public Collection ExListaOggettiSospensioneDecisioneSor() throws F3BException;
+	// MEV_9-SIEP: cambiata firma del metodo per distinguere PM da PMM
+	public Collection ExListaOggettiSospensioneDecisioneSor(String aCodTipoUfficio) throws F3BException;
 
 	public Collection ExListaMotiviInammissibilitaCPP(String aTipoUff) throws Exception;
 

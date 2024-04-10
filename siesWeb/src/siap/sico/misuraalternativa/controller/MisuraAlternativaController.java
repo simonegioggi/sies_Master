@@ -5,10 +5,8 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -995,11 +993,8 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 				lPenMod.setMisAltIdMisuraAlternativa(lMisMod.getIdMisuraAlternativa());
 
 				/*
-				 * ISSUE MEV : aggiunta linea di codice per prevenire nullpointer 
-				 * Numero MEV : SIES v10 
-				 * Autore : gioggi 
-				 * Data : 28/gen/2016 
-				 * Branch : MEV_SIES v10
+				 * ISSUE MEV : aggiunta linea di codice per prevenire nullpointer Numero MEV : SIES v10 Autore
+				 * : gioggi Data : 28/gen/2016 Branch : MEV_SIES v10
 				 */
 				lPenResiduaDAO = new PenaResiduaDAO(lConn);
 				// ***** FINE INTERVENTO MEV_SIES v10 *****//
@@ -1663,11 +1658,8 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			// carica nel model il tipo motivo
 
 			/*
-			 * ISSUE MEV : eseguito merge tra 15 MEV: interpretazione con codice commentato 
-			 * Numero MEV : SIES v10 
-			 * Autore : gioggi 
-			 * Data : 28/gen/2016 
-			 * Branch : MEV_SIES v10
+			 * ISSUE MEV : eseguito merge tra 15 MEV: interpretazione con codice commentato Numero MEV : SIES
+			 * v10 Autore : gioggi Data : 28/gen/2016 Branch : MEV_SIES v10
 			 */
 			// String[] lMotivo = { "2006", "2008" };
 			// ***** FINE INTERVENTO MEV_SIES v10 *****//
@@ -5537,17 +5529,18 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 
 				// MEV_9-SIEP: scarto solo se esito NON è "Concede" (0001) oppure "Conferma Decisione del
 				// Magistrato Relatore" (0271)
-				boolean testEsito = "0001".equals(lEvento.getCodEsito())
-						|| "0271".equals(lEvento.getCodEsito());
-				if (!testEsito) {
-					// MEV_9 scarto le ammissioni provvisorie se non valorizzato il nuovo campo
-					// DATA_ESECUTIVITA
-					Set<String> mySet = new HashSet<>(Arrays
-							.asList(new String[] { "0680", "0681", "0690", "0691", "0692", "0682", "0693" }));
-					if (lMisMod.getDataEsecutivita() == null && mySet.contains(lMisMod.getCodTipoMisura()))
-						continue;
-					// MEV_9 - FINE
-				}
+				// boolean testEsito = "0001".equals(lEvento.getCodEsito())
+				// || "0271".equals(lEvento.getCodEsito());
+				// if (!testEsito) {
+				// // MEV_9 scarto le ammissioni provvisorie se non valorizzato il nuovo campo
+				// // DATA_ESECUTIVITA
+				// Set<String> mySet = new HashSet<>(Arrays
+				// .asList(new String[] { "0680", "0681", "0690", "0691", "0692", "0682", "0693" }));
+				// if (lMisMod.getDataEsecutivita() == null && mySet.contains(lMisMod.getCodTipoMisura()))
+				// continue;
+				// // MEV_9 - FINE
+				// }
+				// NON SCARTO PIù poiché la data esecutività non è più obbligatoria!!!
 				// MEV_9-SIEP - FINE
 
 				if (lEvento != null && lEvento.getFlagDocumentoRegistrato() != null

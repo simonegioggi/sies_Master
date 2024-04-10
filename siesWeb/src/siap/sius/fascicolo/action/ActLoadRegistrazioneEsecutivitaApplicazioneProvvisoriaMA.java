@@ -184,6 +184,25 @@ public class ActLoadRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Ac
 		IDepositoOrdinanzaPc idopc = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
 		DepositoOrdinanzaPcModel dopm = idopc.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd(
 				fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), "AM");
+
+		// MEV_9-SIEP: aggiunto controllo altrimenti faceva un finto inserimento
+		// boolean existConfermaDecisioneMR = false;
+		// DepositoOrdinanzaPcModel dopcmCM = idopc.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd(
+		// fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), "CM");
+		// if (!Utils.isNullObj(dopcmCM)) {
+		// BigDecimal idEventoMA = dopcmCM.getIdEventoGenerato();
+		// EventoModel emMA = ie.ExRicercaEventoByKey(idEventoMA);
+		// if (!"A".equals(emMA.getFlagDocumentoRegistrato()))
+		// existConfermaDecisioneMR = true;
+		// }
+		// if (!Utils.isNullObj(dopm) && !Utils.isPresent(dopm.getDataEsecutivita()) &&
+		// existConfermaDecisioneMR)
+		// throw new SIUSException(SIUSException.USER_MESSAGE,
+		// "Operazione consentita solo se sul Procedimento NON sia stata emessa un'ordinanza di "
+		// + "'Conferma Applicazione Provvisoria M.A.' con esito "
+		// + "'Conferma Decisione del Magistrato Relatore'!");
+		// FINE MEV-9-SIEP
+
 		// DepositoOrdinanzaPcModel dopm = new DepositoOrdinanzaPcModel();
 		// dopm.setGenPridGeneraleProcedimento(
 		// fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());

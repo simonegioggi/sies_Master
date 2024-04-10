@@ -480,6 +480,7 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 			lEve.getEvento().setCodMotivo(aMotivo);
 		else if ("0692".equals(aMotivo))
 			lEve.getEvento().setCodMotivo(aMotivo);
+		// '26' - RICHIESTA
 		if ("26".equals(lEve.getEvento().getCodTipoProvvedimento())) {
 			if ("0680".equals(aMotivo))
 				lEve.getEvento().setCodMotivo("5443");
@@ -493,7 +494,7 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 				lEve.getEvento().setCodMotivo("5447");
 		}
 
-		// aggiunto controllo per codici tipo misura
+		// aggiunto controllo per codici tipo misura - COMUNICAZIONE ('12')
 		if ("0720".equals(aMotivo) || "0721".equals(aMotivo) || "0730".equals(aMotivo)
 				|| "0731".equals(aMotivo) || "0732".equals(aMotivo))
 			lEve.getEvento().setCodTipoProvvedimento("12");

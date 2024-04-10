@@ -2,6 +2,12 @@ package siap.siep.sospensione.action;
 
 import java.math.BigDecimal;
 
+import org.apache.log4j.Logger;
+
+import f3b.log.LogF3B;
+import f3b.web.IWebConstants;
+import f3b.web.RedirectTo;
+import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.magistratocompetente.controller.IMagistratoCompetente;
 import siap.sico.magistratocompetente.model.MagistratoCompetenteMagistratoModel;
@@ -28,51 +34,41 @@ import siap.siep.posizione.model.PosizioneGiuridicaModel;
 import siap.siep.sospensione.model.SospensioneModel;
 import siap.siep.util.SIEPLookupRemote;
 import siap.web.ISIAPCostantiWeb;
-import f3b.web.IWebConstants;
-import f3b.web.RedirectTo;
-import f3b.web.html.Option;
 
 /**
- * <p>
- * Title: ActLoadInserisciSospensioneDecisioniSorv
- * </p>
- * <p>
- * Description: Classe Action per la load inserimento di Sospensione Decisioni Sorveglianza
- * </p>
- * <p>
- * Copyright: Copyright (c) 2006
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author unascribed
+ * ActLoadInserisciSospensioneDecisioniSorv - Classe Action per la load inserimento di Sospensione Decisioni
+ * Sorveglianza
+ *
  * @version 1.0
  */
 public class ActLoadInserisciSospensioneDecisioniSorv extends ActionSiap implements ICostantiSospensione {
 
+	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+
 	public String processRequest() throws Exception {
 
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
+
 		// Controllo Presenza del Fascicolo in Sessione
-		if (this.isSessionAttributeNullObj("fascicolo"))
+		if (isSessionAttributeNullObj("fascicolo"))
 			return ICostantiFascicoloSiep.REDIRECT_FASCICOLO_RICERCATO + getClass().getName();
 
 		FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 		BigDecimal lIdFascicolo = lFascMod.getIdFascicoloSiep();
 
-		this.isFascicoloSiepDiCompetenza();
+		isFascicoloSiepDiCompetenza();
 
-		if (isFascicoloNonValidato())
-			return IWebConstants.PG_MESSAGE;
-
-		if (isFascicoloArchiviatoDefinito())
+		if (isFascicoloNonValidato() || isFascicoloArchiviatoDefinito())
 			return IWebConstants.PG_MESSAGE;
 
 		/******************************* Posizione Giuridica **********************************/
 		PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lPos = new PosizioneGiuridicaLuogoDetenzioneAltraCausaModel();
 		IPosizioneGiuridica lPosCtrl = SIEPLookupRemote.getPosizioneGiuridicaRemote();
-		lPos = lPosCtrl.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicolo(lFascMod
-				.getIdFascicoloSiep());
+		lPos = lPosCtrl.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicolo(
+				lFascMod.getIdFascicoloSiep());
 
 		if (notEsistePosizioneGiuridica(lPos))
 			return IWebConstants.PG_MESSAGE;
@@ -105,8 +101,8 @@ public class ActLoadInserisciSospensioneDecisioniSorv extends ActionSiap impleme
 		IPenaResidua lPenResCtrl = SIEPLookupRemote.getPenaResiduaRemote();
 		PenaResiduaModel lPenaResMod = new PenaResiduaModel();
 
-		if (!this.isRequestParameterNullObj(ICostantiPenaResidua.CAMPO_ID_PENA_RESIDUA)
-				&& this.getRequestStringParameter(ICostantiPenaResidua.CAMPO_ID_PENA_RESIDUA) != null) {
+		if (!isRequestParameterNullObj(ICostantiPenaResidua.CAMPO_ID_PENA_RESIDUA)
+				&& getRequestStringParameter(ICostantiPenaResidua.CAMPO_ID_PENA_RESIDUA) != null) {
 			BigDecimal lKeyPenaRe = new BigDecimal(
 					getRequestStringParameter(ICostantiPenaResidua.CAMPO_ID_PENA_RESIDUA));
 			lPenaResMod = lPenResCtrl.ExRicercaPenaResiduaByKey(lKeyPenaRe);
@@ -115,24 +111,24 @@ public class ActLoadInserisciSospensioneDecisioniSorv extends ActionSiap impleme
 			PenaResiduaModel lPenModel = (PenaResiduaModel) getSessionAttribute("SOSPpenaresidua");
 			setRequestAttribute("nuovapenaresidua", lPenModel);
 
-			if (!this.isSessionAttributeNullObj("SOSPENSIONE")) {
+			if (!isSessionAttributeNullObj("SOSPENSIONE")) {
 				SospensioneModel lSospModel = (SospensioneModel) getSessionAttribute("SOSPENSIONE");
 				setRequestAttribute("sospensione", lSospModel);
 			}
 		} else {
 
-			this.isEventoNonValidato();
+			isEventoNonValidato();
 			// rimuovo la pena dalla sessione
-			this.removeSessionAttribute("SOSPpenaresidua");
+			removeSessionAttribute("SOSPpenaresidua");
 			// rimuovo la sospensione dalla sessione
-			this.removeSessionAttribute("SOSPENSIONE");
+			removeSessionAttribute("SOSPENSIONE");
 
 			if (lPosizione.getCodPosizioneGiuridica() != null
 					&& (!lPosizione.getCodPosizioneGiuridica().equals("07")
 							&& !lPosizione.getCodPosizioneGiuridica().equals("16")
 							&& !lPosizione.getCodPosizioneGiuridica().equals("17")
-							&& !lPosizione.getCodPosizioneGiuridica().equals("46") && !lPosizione
-							.getCodPosizioneGiuridica().equals("47"))) // LIBERO
+							&& !lPosizione.getCodPosizioneGiuridica().equals("46")
+							&& !lPosizione.getCodPosizioneGiuridica().equals("47"))) // LIBERO
 			{
 				lPenaResMod = lPenResCtrl.ExRicercaPenaResiduaUltimaValidata(lIdFascicolo);
 			} else {
@@ -150,10 +146,11 @@ public class ActLoadInserisciSospensioneDecisioniSorv extends ActionSiap impleme
 				lAzioneChiamante = "siap.siep.calcolopena.action.ActLoadCalcoloPena";
 			} else if ((!lPosizione.isLibero() && !lPosizione.getCodPosizioneGiuridica().equals("16")
 					&& !lPosizione.getCodPosizioneGiuridica().equals("17")
-					&& !lPosizione.getCodPosizioneGiuridica().equals("46") && !lPosizione
-					.getCodPosizioneGiuridica().equals("47")) // non è libero
+					&& !lPosizione.getCodPosizioneGiuridica().equals("46")
+					&& !lPosizione.getCodPosizioneGiuridica().equals("47")) // non è libero
 					&& (lPenaResMod.getDataInizio() == null // non ha le date
-					|| lPenaResMod.getDataFine() == null) && lFlagErgastolo.equals("N")) {
+							|| lPenaResMod.getDataFine() == null)
+					&& lFlagErgastolo.equals("N")) {
 				lErrore = "Data decorrenza pena inestistente. Rivedere la Posizione Giuridica";
 				lAzioneChiamante = "siap.siep.posizione.action.ActLoadInserisciPosizioneGiuridica";
 			}
@@ -182,15 +179,13 @@ public class ActLoadInserisciSospensioneDecisioniSorv extends ActionSiap impleme
 			/******************************* SOSPENSIONE ***********************************/
 			// Se è libero in sospensione mi aspetto una pena sospesa validata e sospesa
 			// con il relativo record di sospensione, se non è l'ultima la cerco
-			if (lPenaResMod.getFlagPenaSospesa() == null
-					|| (lPenaResMod.getFlagPenaSospesa() != null && lPenaResMod.getFlagPenaSospesa().equals(
-							"N"))) {
+			if (lPenaResMod.getFlagPenaSospesa() == null || (lPenaResMod.getFlagPenaSospesa() != null
+					&& lPenaResMod.getFlagPenaSospesa().equals("N"))) {
 				PenaResiduaModel lPenaResiduaSospesaValidata = lPenResCtrl
 						.ExRicercaPenaResiduaUltimaValidataSospesa(lIdFascicolo);
 
 				if (lPenaResiduaSospesaValidata == null)
-					throw new SIEPException(
-							SIEPException.USER_MESSAGE,
+					throw new SIEPException(SIEPException.USER_MESSAGE,
 							"La posizione giuridica è LIBERO IN SOSPENSIONE ma non esiste una pena residua validata e sospesa. Impossibile eseguire la richiesta.");
 			}
 
@@ -202,7 +197,8 @@ public class ActLoadInserisciSospensioneDecisioniSorv extends ActionSiap impleme
 
 		MisuraAlternativaModel lMisSospesa = null;
 		if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_ID_DOCUMENTO_SIUS)) {
-			BigDecimal lIdOrdinanza = getRequestBigDecimalParameter(ICostantiMisuraAlternativa.CAMPO_ID_DOCUMENTO_SIUS);
+			BigDecimal lIdOrdinanza = getRequestBigDecimalParameter(
+					ICostantiMisuraAlternativa.CAMPO_ID_DOCUMENTO_SIUS);
 			if (lIdOrdinanza != null && !lIdOrdinanza.toString().equals(""))
 				lMisSospesa = lMisAltCtrl.ExRicercaMisuraAlternativaByIdEvento(lIdOrdinanza);
 
@@ -240,7 +236,7 @@ public class ActLoadInserisciSospensioneDecisioniSorv extends ActionSiap impleme
 		setRequestAttribute("motivoProvv", "" + lOptionOggetto);
 
 		// MEV 10 - filtro sui minorenni
-		setRequestAttribute("filtroMinorenni", this.getFiltroMinorenni());
+		setRequestAttribute("filtroMinorenni", getFiltroMinorenni());
 
 		// MEV10-s3: aggiunta impostazione attributo nella richiesta
 		UtenteModel lUtenteMod = new UtenteModel(
@@ -248,7 +244,12 @@ public class ActLoadInserisciSospensioneDecisioniSorv extends ActionSiap impleme
 		String lCodTipoUfficio = lUtenteMod.getUfficioUtente().getCodTipoUfficio();
 		setRequestAttribute("codiceTipoUfficio", lCodTipoUfficio);
 
-		return PG_LOAD_INSERISCI_SOSPENSIONE_DECISIONI_SORVEGLIANZA; // restituisce la jsp di VIEW
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.debug(getClass().getName() + ".processRequest: fine");
+
+		// restituisce la jsp di VIEW
+		return PG_LOAD_INSERISCI_SOSPENSIONE_DECISIONI_SORVEGLIANZA;
 	}
 
 }

@@ -460,19 +460,26 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		setStatement(lStatement);
 	}
 
-	public void listaOggettiSospensioneDecisioneSor() throws DAOException {
+	// MEV_9-SIEP: cambiata firma del metodo per gestione maggiorenni/minorenni
+	public void listaOggettiSospensioneDecisioneSor(String aCodTipoUfficio) throws DAOException {
+
 		String lStatement = new String();
 		// 09/10/2009 lStatement =
-		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
-		// "
-		// +
-		lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		// "SELECT RV_DOMAIN,RV_LOW_VALUE,RV_MEANING,RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE"
+		lStatement = "SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
 		// Ticket#20211006019 - Sostituito il dominio U001 in X001 a seguito dell'aggiornamento della
 		// CG_REF_CODES
 		// E' cambiato l'oggetto per le sospensioni
 		// lStatement += " AND (RV_HIGH_VALUE = 'U001' OR RV_HIGH_VALUE = 'U071')";
-		lStatement += " AND (RV_HIGH_VALUE = 'X001' OR RV_HIGH_VALUE = 'U071')";
+		lStatement += "AND (RV_HIGH_VALUE = 'X001' OR RV_HIGH_VALUE = 'U071' ";
 		// Ticket#20211006019 - FINE
+		// MEV_9-SIEP: aggiunta condizione di estrazione x SOSPENSIONE ESECUZIONE PENA ed ordinamento
+		if ("PMM".equals(aCodTipoUfficio))
+			lStatement += "OR RV_LOW_VALUE = '0695' OR RV_LOW_VALUE = '0735') ";
+		else
+			lStatement += "OR RV_LOW_VALUE = '0684' OR RV_LOW_VALUE = '0724') ";
+		lStatement += "ORDER BY RV_MEANING";
+
 		setStatement(lStatement);
 	}
 

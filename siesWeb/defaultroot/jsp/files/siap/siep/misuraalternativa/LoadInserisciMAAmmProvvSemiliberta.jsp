@@ -1579,14 +1579,9 @@ while(lItxAvv.hasNext()) {
     </tr>
   </table>
 </div>
-
+</form>
 <script language="JavaScript" type="text/javascript">
 var frmvalidator  = new Validator("LoadInserisciMisuraAlternativa");
 </script>
 </body>
-</html>	
-	
-	
-	
-	
-	
+</html>

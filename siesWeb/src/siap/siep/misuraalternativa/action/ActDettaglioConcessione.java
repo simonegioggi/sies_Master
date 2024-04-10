@@ -116,6 +116,8 @@ public class ActDettaglioConcessione extends ActMisuraAlternativa implements ICo
 					|| lMisAlModConcessa.getCodTipoMisura().equals("0010")
 					|| lMisAlModConcessa.getCodTipoMisura().equals("0013")
 					// MEV_9-SIEP: aggiunti codici tipo misura x DETENZIONE
+					|| "0682".equals(lMisAlModConcessa.getCodTipoMisura())
+					|| "0693".equals(lMisAlModConcessa.getCodTipoMisura())
 					|| "0722".equals(lMisAlModConcessa.getCodTipoMisura())
 					|| "0733".equals(lMisAlModConcessa.getCodTipoMisura())) {
 				setRequestAttribute("tipoMisura", "DETENZIONE");
@@ -140,6 +142,8 @@ public class ActDettaglioConcessione extends ActMisuraAlternativa implements ICo
 				lTipoProvvVerbale = "18";
 			} else if (lMisAlModConcessa.getCodTipoMisura().equals("0004")
 					// MEV_9-SIEP: aggiunti codici tipo misura x SEMILIBERTA'
+					|| "0683".equals(lMisAlModConcessa.getCodTipoMisura())
+					|| "0694".equals(lMisAlModConcessa.getCodTipoMisura())
 					|| "0723".equals(lMisAlModConcessa.getCodTipoMisura())
 					|| "0734".equals(lMisAlModConcessa.getCodTipoMisura())) {
 				setRequestAttribute("tipoMisura", "SEMILIBERTA");

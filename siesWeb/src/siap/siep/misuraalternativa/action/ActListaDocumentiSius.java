@@ -46,7 +46,7 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 		String[] lTipoDecisone = getCodTipoDecisione(lNaturaMA, lTipoMA); // Decreto/Ordinanza
 		String[] lNaturaDecisione = getCodNaturaDecisione(lNaturaMA);
 		String[] lTipoMisura = getCodTipoMisura(lNaturaMA, lTipoMA);
-		
+
 		if (isRequestParameterNullObj("RICERCA_PER_SOGGETTO")) { // Ricerca MA per Fascicolo corrente
 			IMisuraAlternativa lCtrlMisura = SICOLookupRemote.getMisuraAlternativaRemote();
 
@@ -55,12 +55,12 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 					lIdFascicoloSiep, lTipoDecisone, lNaturaDecisione, lTipoMisura);
 
 			setRequestAttribute("documentiSius", lListaEventiOrdinanze);
-			
+
 			// MEV_9-SIEP
 			setRequestAttribute(CAMPO_TIPO_MA, lTipoMA);
 			setRequestAttribute(CAMPO_NATURA_MA, lNaturaMA);
 			// MEV_9-SIEP - FINE
-			
+
 			return PG_LISTA_DOCUMENTI_SIUS;
 		} else {
 			// new 05/2014 la ricerca viene effettuata per tutti i fascicoli presenti
@@ -183,14 +183,12 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 						.getMotivoProvvedimentoCessazioneMAffP();
 				Collection<DecodificheModel> lOggettoTDS51BisSuReclamo = new Vector(
 						DecodificheManager.getInstance().getMotivoProvvedimentoCessazioneMAffPTDS51bis());
-
 				Collection lOggetti = new Vector(lOggettoTDS);
 				lOggetti.addAll(lOggettoTDS51BisSuReclamo);
 				lCodMotivi = estraiCodiciDecodifiche(lOggetti);
 			} else if (aNaturaMA.equals(CESSAZIONE_51BIS_MDS)) {
 				Collection<DecodificheModel> lOggettoMDS51bis = DecodificheManager.getInstance()
 						.getMotivoProvvedimentoCessazioneMAffPMDS51bis();
-
 				lCodMotivi = estraiCodiciDecodifiche(lOggettoMDS51bis);
 			} else if (aNaturaMA.equals(PROSECUZIONE_PROVVISORIA)) {
 				lCodMotivi = estraiCodiciDecodifiche(
@@ -213,7 +211,6 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 						.getMotivoProvvedimentoProsecMAAffProMDS51Bis();
 				Collection<DecodificheModel> lOggettoTDS = DecodificheManager.getInstance()
 						.getMotivoProvvedimentoProsecMAAffPro_TDS_51Bis();
-
 				Collection lOggetti = new Vector(lOggettoMDS51bis);
 				lOggetti.addAll(lOggettoTDS);
 				lCodMotivi = estraiCodiciDecodifiche(lOggetti);
@@ -243,23 +240,19 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 			} else if (aNaturaMA.equals(CESSAZIONE)) {
 				// lCodMotivi =
 				// estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoCessazioneMADetDom());
-
 				Collection<DecodificheModel> lOggettoTDS = new Vector(
 						DecodificheManager.getInstance().getMotivoProvvedimentoCessazioneMADetDom());
 				Collection<DecodificheModel> lOggettoTDS51BisSuReclamo = new Vector(
 						DecodificheManager.getInstance().getMotivoProvvedimentoCessazioneMADetDomTDS51bis());
 				// Collection <DecodificheModel> lOggettoMDS51bis = new
 				// Vector(DecodificheManager.getInstance().getMotivoProvvedimentoCessazioneMADetDomMDS51bis());
-
 				Collection lOggetti = new Vector(lOggettoTDS);
 				lOggetti.addAll(lOggettoTDS51BisSuReclamo);
 				// lOggetti.addAll(lOggettoMDS51bis);
-
 				lCodMotivi = estraiCodiciDecodifiche(lOggetti);
 			} else if (aNaturaMA.equals(CESSAZIONE_51BIS_MDS)) {
 				Collection<DecodificheModel> lOggettoMDS51bis = DecodificheManager.getInstance()
 						.getMotivoProvvedimentoCessazioneMADetDomMDS51bis();
-
 				lCodMotivi = estraiCodiciDecodifiche(lOggettoMDS51bis);
 			} else if (aNaturaMA.equals(SOSPENSIONE_PROVVISORIA_51_BIS)) {
 				lCodMotivi = estraiCodiciDecodifiche(
@@ -296,10 +289,8 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 						.getMotivoProvvedimentoProsecMADetDomMDS51Bis();
 				Collection<DecodificheModel> lOggettoTDS = DecodificheManager.getInstance()
 						.getMotivoProvvedimentoProsecMADetDom_TDS_51Bis();
-
 				Collection lOggetti = new Vector(lOggettoTDS);
 				lOggetti.addAll(lOggettoMDS51bis);
-
 				lCodMotivi = estraiCodiciDecodifiche(lOggetti);
 			}
 		} else if (aTipoMA.equals(SEMILIBERTA)) {
@@ -327,24 +318,19 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 			} else if (aNaturaMA.equals(CESSAZIONE)) {
 				// lCodMotivi =
 				// estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoCessazioneMASemiL());
-
 				Collection<DecodificheModel> lOggettoTDS = DecodificheManager.getInstance()
 						.getMotivoProvvedimentoCessazioneMASemiL();
 				Collection<DecodificheModel> lOggettoTDS51BisSuReclamo = new Vector(
 						DecodificheManager.getInstance().getMotivoProvvedimentoCessazioneMASemiLTDS51bis());
 				// Collection <DecodificheModel> lOggettoMDS51bis =
 				// DecodificheManager.getInstance().getMotivoProvvedimentoCessazioneMASemiLMDS51bis();
-
 				Collection lOggetti = new Vector(lOggettoTDS);
 				lOggetti.addAll(lOggettoTDS51BisSuReclamo);
 				// lOggetti.addAll(lOggettoMDS51bis);
-
 				lCodMotivi = estraiCodiciDecodifiche(lOggetti);
-
 			} else if (aNaturaMA.equals(CESSAZIONE_51BIS_MDS)) {
 				Collection<DecodificheModel> lOggettoMDS51bis = DecodificheManager.getInstance()
 						.getMotivoProvvedimentoCessazioneMASemiLMDS51bis();
-
 				lCodMotivi = estraiCodiciDecodifiche(lOggettoMDS51bis);
 			} else if (aNaturaMA.equals(SOSPENSIONE_PROVVISORIA_51_BIS)) {
 				lCodMotivi = estraiCodiciDecodifiche(
@@ -368,14 +354,11 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 						.getMotivoProvvedimentoProsecMASemMDS51Bis();
 				Collection<DecodificheModel> lOggettoTDS = DecodificheManager.getInstance()
 						.getMotivoProvvedimentoProsecMASem_TDS_51Bis();
-
 				Collection lOggetti = new Vector(lOggettoTDS);
 				lOggetti.addAll(lOggettoMDS51bis);
-
 				lCodMotivi = estraiCodiciDecodifiche(lOggetti);
-
 				// MEV_9 - SIEP si aggiunge la ammissione porvv per la semiliberta
-			} else if (aNaturaMA.equals((AMMISSIONE_PROVVISORIA) )) {
+			} else if (aNaturaMA.equals((AMMISSIONE_PROVVISORIA))) {
 				if (isUfficioMinorenni())
 					lCodMotivi = estraiCodiciDecodifiche(
 							DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvSemilibPmm());
@@ -383,7 +366,7 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 					lCodMotivi = estraiCodiciDecodifiche(
 							DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvSemilibPm());
 				// MEV_9 - SIEP - FINE
-			}			
+			}
 		} else if (aTipoMA.equals(INDULTINO)) {
 			if (aNaturaMA.equals(CONCESSIONE)) {
 				lCodMotivi = estraiCodiciDecodifiche(
@@ -409,7 +392,6 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 			} else if (aNaturaMA.equals(CESSAZIONE_51BIS_MDS)) {
 				Collection<DecodificheModel> lOggettoMDS51bis = DecodificheManager.getInstance()
 						.getMotivoProvvedimentoCessazioneMAIndultinoMDS51bis();
-
 				lCodMotivi = estraiCodiciDecodifiche(lOggettoMDS51bis);
 			}
 		}
@@ -450,27 +432,20 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 						DecodificheManager.getInstance().getMotivoProvvedimentoCessazioneMAEspPressoDom());
 				Collection<DecodificheModel> lOggettoTDS51BisSuReclamo = new Vector(DecodificheManager
 						.getInstance().getMotivoProvvedimentoCessazioneMAEspPressoDomTDS51bis());
-
 				lOggettoTDS.addAll(lOggettoTDS51BisSuReclamo);
-
 				lCodMotivi = estraiCodiciDecodifiche(lOggettoTDS);
 			} else if (aNaturaMA.equals(CESSAZIONE_51BIS_MDS)) {
 				Collection<DecodificheModel> lOggettoMDS51bis = DecodificheManager.getInstance()
 						.getMotivoProvvedimentoCessazioneMAEspPressoDomMDS51bis();
-
 				lCodMotivi = estraiCodiciDecodifiche(lOggettoMDS51bis);
 			} else if (aNaturaMA.equals(PROSECUZIONE_51BIS) || aNaturaMA.equals(PROSECUZIONE_51BIS_CUMULO)) {
 				Collection<DecodificheModel> lOggettoMDS51bis = DecodificheManager.getInstance()
 						.getMotivoProvvedimentoProsecMAEsecPreDomMDS51Bis();
 				Collection<DecodificheModel> lOggettoTDS = DecodificheManager.getInstance()
 						.getMotivoProvvedimentoProsecMAEsecPreDom_TDS_51Bis();
-
 				Collection lOggetti = new Vector(lOggettoMDS51bis);
 				lOggetti.addAll(lOggettoTDS);
 				lCodMotivi = estraiCodiciDecodifiche(lOggetti);
-
-				// lCodMotivi =
-				// estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoProsecMAEsecPreDomMDS51Bis());
 			}
 		} else if (aTipoMA.equals(RIGETTO)) {
 			lCodMotivi = estraiCodiciDecodifiche(
@@ -486,27 +461,20 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
 						.getMotivoProvvedimentoMADetDomTempProrogaProvvisoria());
 			} else if (aNaturaMA.equals(PROSECUZIONE_51BIS) || aNaturaMA.equals(PROSECUZIONE_51BIS_CUMULO)) {
-				// lCodMotivi =
-				// estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoProsecMADetDomTerMDS51Bis());
 				Collection<DecodificheModel> lOggettoMDS51bis = DecodificheManager.getInstance()
 						.getMotivoProvvedimentoProsecMADetDomTerMDS51Bis();
 				Collection<DecodificheModel> lOggettoTDS = DecodificheManager.getInstance()
 						.getMotivoProvvedimentoProsecMADetDomTer_TDS_51Bis();
-
 				Collection lOggetti = new Vector(lOggettoTDS);
 				lOggetti.addAll(lOggettoMDS51bis);
-
 				lCodMotivi = estraiCodiciDecodifiche(lOggetti);
-
 			} else if (aNaturaMA.equals(CESSAZIONE)) {
 				Collection<DecodificheModel> lOggettoTDS = new Vector(
 						DecodificheManager.getInstance().getMotivoProvvedimentoCessazioneMADetDomTerm());
 				Collection<DecodificheModel> lOggettoTDS51BisSuReclamo = new Vector(DecodificheManager
 						.getInstance().getMotivoProvvedimentoCessazioneMADetDomTermTDS51bis());
-
 				Collection lOggetti = new Vector(lOggettoTDS);
 				lOggetti.addAll(lOggettoTDS51BisSuReclamo);
-
 				lCodMotivi = estraiCodiciDecodifiche(lOggetti);
 			} else if (aNaturaMA.equals(CESSAZIONE_51BIS_MDS)) {
 				Collection<DecodificheModel> lOggettoMDS51bis = new Vector(DecodificheManager.getInstance()
@@ -544,16 +512,22 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 						DecodificheManager.getInstance().getMotivoProvvedimentoRevocaArrestiDom());
 			}
 		}
-
 		if (aNaturaMA.equals(CONCESSIONE_SOSPENSIONE)) {
-			lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance().getOggettoDecisione());
+			// MEV_9-SIEP: si differenzia per PM e PMM
+			if (isUfficioMinorenni())
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getOggettoDecisioneMinor());
+			else
+				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance().getOggettoDecisione());
+			// FINE MEV_9-SIEP
 		}
-		
 		// MEV_9-SIEP
 		if (aNaturaMA.equals(CONCESSIONE_SOSPENSIONE678)) {
-			lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance().getOggettiDecisioneSosp678());
+			lCodMotivi = estraiCodiciDecodifiche(
+					DecodificheManager.getInstance().getOggettiDecisioneSosp678());
 		}
 
+		// valore di ritorno
 		return lCodMotivi;
 	}
 
@@ -640,7 +614,7 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 				// MEV_9 - SIEP - Si aggiunge la gestione della semilibertà
 				|| (aNaturaMA.equals(AMMISSIONE_PROVVISORIA) && aTipoMA.equals(SEMILIBERTA))
 				|| (aNaturaMA.equals(CONCESSIONE_SOSPENSIONE678))
-			  // MEV_9 - SIEP - FINE
+				// MEV_9 - SIEP - FINE
 				|| (aNaturaMA.equals(AMMISSIONE_PROVVISORIA) && aTipoMA.equals(DETENZIONE_DOMICILIARE))
 				|| (aNaturaMA.equals(PROSECUZIONE_51BIS)) // DL 146/20113
 				|| (aNaturaMA.equals(PROSECUZIONE_51BIS_CUMULO)) // DL 146/20113
@@ -718,9 +692,7 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 		} else if (lNaturaMA.equals(CONCESSIONE_SOSPENSIONE678)) {
 			lCodNatura[0] = "CO"; // MEV_9-SIEP
 		}
-		
-		
-		
+
 		// else if(lNaturaMA.equals(PROSECUZIONE_51BIS_CUMULO)){
 		// lCodNatura[0] = "PC"; //FIXME DL 146/2013 verificare la natura decisione della Sorveglianza ED?
 		// Estensione Definitva

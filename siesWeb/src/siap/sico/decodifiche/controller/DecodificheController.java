@@ -1982,7 +1982,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 		return lListaOggettiSospensione;
 	}
 
-	public Collection ExListaOggettiSospensioneDecisioneSor() throws F3BException {
+	// MEV_9-SIEP: cambiata firma del metodo per distinguere PM da PMM
+	public Collection ExListaOggettiSospensioneDecisioneSor(String aCodTipoUfficio) throws F3BException {
 
 		Connection lConn = null;
 		DecodificheSqlDAO lDecSqlDao = null;
@@ -1990,7 +1991,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 		try {
 			lConn = getDBConnection();
 			lDecSqlDao = new DecodificheSqlDAO(lConn);
-			lDecSqlDao.listaOggettiSospensioneDecisioneSor();
+			lDecSqlDao.listaOggettiSospensioneDecisioneSor(aCodTipoUfficio);
 			lDecSqlDao.start();
 			while (lDecSqlDao.next()) {
 				DecodificheModel lDecMod = new DecodificheModel();
