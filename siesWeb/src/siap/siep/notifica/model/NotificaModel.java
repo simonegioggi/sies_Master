@@ -10,6 +10,7 @@ package siap.siep.notifica.model;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Vector;
 
 import f3b.model.GenericModel;
 import siap.sico.avvocato.model.AvvocatoModel;
@@ -66,6 +67,10 @@ public class NotificaModel extends GenericModel {
 	private CivilmenteObbligatoModel mCivilmenteObbligato; 
 	// MEV_2023-13 - FINE
 
+	// MEV_2023-33
+	private Vector <RinnovoModel> mListaRinnovi;
+	// MEV_2023-33 - FINE
+	
     private AutoritaEsternaModel mAutoritaEsternaDelegata;
 
 	// PM - 20030609
@@ -489,7 +494,12 @@ public class NotificaModel extends GenericModel {
     }
     // MEV_2023-13 - FINE
 
-
+    // MEV_2023-33 
+    public Vector <RinnovoModel> getListaRinnovi () {
+    	return mListaRinnovi;
+    }
+    // MEV_2023-33 - FINE
+    
 	//
 	// METODI SET()
 	//
@@ -700,6 +710,12 @@ public class NotificaModel extends GenericModel {
         this.mCivilmenteObbligato = mCivilmenteObbligato;
     }
     // MEV_2023-13 - FINE
+    
+    // MEV_2023-33 
+    public void setListaRinnovi (Vector <RinnovoModel> aValore) {
+    	this.mListaRinnovi = aValore;
+    }
+    // MEV_2023-33 - FINE
     
 	/*****************************************************************************
 	 * Metodo toString() che restituisce il contenuto del Model opportunamente formattato. Utile per il debug.

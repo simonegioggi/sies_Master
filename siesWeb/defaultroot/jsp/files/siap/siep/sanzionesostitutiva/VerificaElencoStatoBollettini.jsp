@@ -11,12 +11,16 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
+<jsp:useBean id="UtenteConnesso" scope="session" class="siap.sico.utente.model.UtenteModel" />
+
 <jsp:useBean id="elencoStatoPagamenti" 	scope="request" class="java.util.Vector<BollettinoPagopaModel>"/>
 <jsp:useBean id="TornaQui"    			scope="request" class="java.lang.String"/>
 <jsp:useBean id="evento"    			scope="request" class="siap.sico.evento.model.EventoModel"/>
 <jsp:useBean id="modalitaPagamento" 	scope="request" class="java.lang.String"/>
 <jsp:useBean id="importoPagato" 		scope="request" class="java.lang.String"/>
 <jsp:useBean id="importoDaPagare" 		scope="request" class="java.lang.String"/>
+<%-- MEV_2023-33: aggiunti useBean --%>
+<jsp:useBean id="dataAvvenutaNotifica" 	scope="request" class="java.lang.String"/>
 
 <html>
 <head>
@@ -40,12 +44,18 @@ function tornaIndietro(action) {
       	</td>
       	<td class="LBG">
       		<font class="label">Funzione :</font>&nbsp;&nbsp;
-			<font class="campo">Verifica Stato Pagamento Bollettini per PagoPA</font>
+			<font class="campo">Verifica Stato Pagamento Bollettini su PagoPA</font>
       	</td>
       	<td class="LBG">
-			<a href="javascript:tornaIndietro('siap.siep.sanzionesostitutiva.action.ActGrigliaBollettiniPagoPA')">
+          <% if ("90".equals(UtenteConnesso.getUserProfile().getProfileId().toString())) { %>
+          <a href="<%=IWebConstants.PG_MAIN%>?Action=siap.siep.pagoPA.action.ActVerificaErroriPagopa">
+              <img align="middle" src="<%=IWebConstants.IMAGES_DIR%>arrowleft24.gif" alt="ritorna su" width="24" height="24" border="0">
+          </a>  
+          <% } else { %>
+			    <a href="javascript:tornaIndietro('siap.siep.sanzionesostitutiva.action.ActGrigliaBollettiniPagoPA')">
           		<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>arrowleft24.gif" alt="ritorna su" width="24" height="24" border="0">
         	</a>
+        	<% } %>
 		</td>
 	</tr>
 </table>
@@ -73,6 +83,16 @@ if (elencoStatoPagamenti.size() == 0) {
 			<%=StringUtils.toStringJSP(evento.getDescrTipoProvvedimento())%>&nbsp;
 			<%=StringUtils.toStringJSP(evento.getDescrMotivo())%>&nbsp;del&nbsp;
 			<font class="cViola"><%=StringUtils.toStringJSP(DateUtils.getDateToString(evento.getDataEmissione(), "dd-MM-yyyy"))%></font>
+			<%-- MEV_2023-33: aggiunta frase di notifica --%>
+			&nbsp;notificato&nbsp;il:&nbsp;
+			<font class="campo"><%=dataAvvenutaNotifica%></font>
+<%
+	if ("A".equals(evento.getFlagDocumentoRegistrato())) {
+%>
+      		<font style="color:red"> &nbsp;&nbsp;&nbsp;&nbsp;(Annullato)</font>
+<%
+	}
+%>	
 		</td>
 	</tr>
 	<tr>
@@ -129,18 +149,23 @@ if (elencoStatoPagamenti.size() == 0) {
 %>
       	<td class="<%=coloreClasse%>"><%=StringUtils.toStringJSP(bpm.getDescrStatoPagamento())%></td>
       	<td class="c">
-      		<input type="checkbox" name="idBollettinoPagopa" value="<%=StringUtils.toStringJSP(bpm.getIdBollettinoPagopa(), "")%>">
+          <input type="checkbox" name="idBollettinoPagopa" value="<%=StringUtils.toStringJSP(bpm.getIdBollettinoPagopa(), "")%>">
       	</td>
 	</tr>
 <%
 	} // end while su iterator sugli eventi
-} // end else
 %>
+
 	<tr>
 		<td class="lNoBord">
        		<br><INPUT class="bottone" type="submit" name="I" value="Inoltra">
        	</td>
    	</tr>
+
+   	
+<%
+} // end else
+%>
 </table>
 </FORM>
 </body>

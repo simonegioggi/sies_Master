@@ -7,7 +7,6 @@ import java.util.Vector;
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
-import f3b.util.F3BException;
 import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
 import f3b.web.html.Option;
@@ -76,34 +75,46 @@ public class ActLoadInserisciOrdineIngiunzione extends ActionSiap implements ICo
 			return IWebConstants.PG_MESSAGE;
 		}
 
-		this.isEventoNonValidato();
-		// =======================================
+		// controllo se evento non sia validato
+		isEventoNonValidato();
 
 		// Ricerca i pagamenti per id Fascicolo
 		Vector<RateizzazionePPModel> listaRateizzazioni = new Vector<>();
 		IRateizzazionePP lRateCTRL = SIEPLookupRemote.getRateizzazionePPRemote();
-		listaRateizzazioni = lRateCTRL.exRicercaRateizzazioniByIdFasc(lFascMod.getIdFascicoloSiep());
+		// 2023.09.19 Si visualizzano solo quelle "Libere"
+		// listaRateizzazioni = lRateCTRL.exRicercaRateizzazioniByIdFasc(lFascMod.getIdFascicoloSiep());
+		listaRateizzazioni = lRateCTRL.exRicercaRateizzazioniLibereByIdFasc(lFascMod.getIdFascicoloSiep());
+		// 2023.09.19 - FINE
 
 		if (listaRateizzazioni.size() == 0) {
-			throw new F3BException(F3BException.USER_MESSAGE,
-					"Non e' stato inserito un metodo di pagamento: unica rata o rateizzazione. Impossibile procedere");
+			RedirectTo rt = new RedirectTo();
+			rt.setPage(IWebConstants.PG_MAIN);
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+					"Non e' stato inserito un metodo di pagamento: unica rata o rateizzazione. "
+							+ "Impossibile procedere! "
+							+ "Si reindirizza alla pagina di Gestione Modalita' Pagamento.");
+			rt.setAction("siap.siep.rateizzazionepp.action.ActLoadDettagloRateizzazione&"
+					+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
+			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
+			return IWebConstants.PG_MESSAGE;
 		}
-		
-        IEvento lCtrl = SICOLookupRemote.getEventoRemote();
-        Hashtable <BigDecimal, EventoNotificaModel> listaOrdiniIngiunzione = new Hashtable <BigDecimal, EventoNotificaModel>();
-        for (RateizzazionePPModel rata : listaRateizzazioni) {
-            if (rata.getEveIdEvento()!=null)  {
-                if (listaOrdiniIngiunzione.get(rata.getEveIdEvento())!=null) {
-                    rata.setOrdineIngiunzione(listaOrdiniIngiunzione.get(rata.getEveIdEvento()));
-                }
-                else {                                                
-                    EventoNotificaModel lEveNotMod = lCtrl.ExRicercaEventoNotificaByKey (rata.getEveIdEvento());
-                    rata.setOrdineIngiunzione(lEveNotMod);
-                    listaOrdiniIngiunzione.put(lEveNotMod.getEvento().getIdEvento(), lEveNotMod);
-                }
-            }
-        }
-            
+
+		IEvento lCtrl = SICOLookupRemote.getEventoRemote();
+		Hashtable<BigDecimal, EventoNotificaModel> listaOrdiniIngiunzione = new Hashtable<>();
+		// MEV_2023-33: aggiunto controllo per storicizzazione evento OIP
+		for (RateizzazionePPModel rata : listaRateizzazioni) {
+			if (rata.getEveIdEvento() != null) {
+				EventoNotificaModel lEveNotMod = lCtrl.ExRicercaEventoNotificaByKey(rata.getEveIdEvento());
+				if (listaOrdiniIngiunzione.get(rata.getEveIdEvento()) != null) {
+					rata.setOrdineIngiunzione(listaOrdiniIngiunzione.get(rata.getEveIdEvento()));
+				} else {
+					rata.setOrdineIngiunzione(lEveNotMod);
+					listaOrdiniIngiunzione.put(lEveNotMod.getEvento().getIdEvento(), lEveNotMod);
+				}
+				rata.setStoricizzato("A".equals(lEveNotMod.getEvento().getFlagDocumentoRegistrato()));
+			}
+		}
+
 		setRequestAttribute("listaRateizzazioni", listaRateizzazioni);
 
 		// Posizione giuridica
@@ -138,21 +149,20 @@ public class ActLoadInserisciOrdineIngiunzione extends ActionSiap implements ICo
 
 		// Avvocati
 		try {
-	        IAvvocato lAvvCtrl = SIEPLookupRemote.getAvvocatoRemote();
-		    Vector lAvvocati = lAvvCtrl.ExRicercaAvvocatiByFascicolo(lFascMod.getIdFascicoloSiep());
-	        setRequestAttribute("avvocati", lAvvocati);
-		}
-		catch (SIEPException e) {
-		    // nessun avvocato trovato
-            RedirectTo lRedirigi = new RedirectTo();
-            lRedirigi.setPage(IWebConstants.PG_MAIN);
-            setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Al Procedimento N." + lFascMod.getChiaveAnno()
-                    + "/" + lFascMod.getChiaveProgr() + " non è stato associato alcun avvocato.");
-            lRedirigi.setAction("siap.siep.avvocato.action.ActLoadInserisciAvvocato&"
-                    + ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
-            setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
+			IAvvocato lAvvCtrl = SIEPLookupRemote.getAvvocatoRemote();
+			Vector lAvvocati = lAvvCtrl.ExRicercaAvvocatiByFascicolo(lFascMod.getIdFascicoloSiep());
+			setRequestAttribute("avvocati", lAvvocati);
+		} catch (SIEPException e) {
+			// nessun avvocato trovato
+			RedirectTo lRedirigi = new RedirectTo();
+			lRedirigi.setPage(IWebConstants.PG_MAIN);
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Al Procedimento N." + lFascMod.getChiaveAnno()
+					+ "/" + lFascMod.getChiaveProgr() + " non è stato associato alcun avvocato.");
+			lRedirigi.setAction("siap.siep.avvocato.action.ActLoadInserisciAvvocato&"
+					+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
+			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
 
-            return IWebConstants.PG_MESSAGE;		    
+			return IWebConstants.PG_MESSAGE;
 		}
 
 		// Autorità esterna

@@ -532,8 +532,8 @@ if(   lPosizione.getCodPosizioneGiuridica() != null
               <font class="campo">
                 <%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescrTipo())%>
               </font>
+              <input type="HIDDEN" title="Codice Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep())%>" type="text" name="<%= ICostantiAvvocato.CAMPO_ID_AVVOCATO %>"  maxlength="35" size="35">
             </td>
-            <input type="HIDDEN" title="Codice Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep())%>" type="text" name="<%= ICostantiAvvocato.CAMPO_ID_AVVOCATO %>"  maxlength="35" size="35">
           </tr>
         </table>
         <table style="width: 95%;">

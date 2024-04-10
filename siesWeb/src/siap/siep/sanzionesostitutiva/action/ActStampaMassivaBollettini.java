@@ -20,13 +20,22 @@ import com.lowagie.text.pdf.PdfWriter;
 
 import f3b.log.LogF3B;
 import f3b.util.F3BException;
+import f3b.util.Utils;
 import f3b.web.IWebConstants;
+import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.web.ActionSiap;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.pagoPA.controller.IBollettinoPagopa;
 import siap.siep.pagoPA.model.BollettinoPagopaModel;
 import siap.siep.util.SIEPLookupRemote;
 
+/**
+ * Classe per la stampa massiva dei bollettini
+ *
+ * @author sgioggi
+ * @since MEV_2023-33
+ * @version 1.0
+ */
 public class ActStampaMassivaBollettini extends ActionSiap {
 
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
@@ -40,19 +49,32 @@ public class ActStampaMassivaBollettini extends ActionSiap {
 		// recupero il fascicolo dalla sessione
 		FascicoloSiepModel fsm = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 		BigDecimal idFascicolo = fsm.getIdFascicoloSiep();
+		// [SG]: MEV_2023-33 recupero idEvento aggiunto nella chiamata dalla JSP
+		BigDecimal idEvento = null;
+		if (!isRequestParameterNullObj(ICostantiEvento.CAMPO_ID_EVENTO))
+			idEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
 
 		IBollettinoPagopa ibp = SIEPLookupRemote.getBollettinoPagopaRemote();
-		Vector<BollettinoPagopaModel> elencoStatoPagamenti = ibp
-				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo, "");
+		// [SG]: MEV_2023-33 chiamo query per idFascicolo + idEvento
+		Vector<BollettinoPagopaModel> elencoStatoPagamenti = null;
+		if (Utils.isNullObj(idEvento))
+			elencoStatoPagamenti = ibp.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo);
+		else
+			elencoStatoPagamenti = ibp.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiepIdEvento(idFascicolo,
+					idEvento);
 		Iterator<BollettinoPagopaModel> iterBPM = elencoStatoPagamenti.iterator();
 		ByteArrayOutputStream baosSingolo = null;
-		List<byte[]> listaByteArray = new ArrayList<byte[]>(elencoStatoPagamenti.size());
+		List<byte[]> listaByteArray = new ArrayList<>(elencoStatoPagamenti.size());
 		siesLogger.debug("Stampa Massiva di: " + elencoStatoPagamenti.size() + " Bollettini!");
 		while (iterBPM.hasNext()) {
 			BollettinoPagopaModel bpm = iterBPM.next();
 			baosSingolo = ibp.ExGetBollettino(bpm.getIdBollettinoPagopa());
-			listaByteArray.add(baosSingolo.toByteArray());
+			if (baosSingolo != null && baosSingolo.size() > 0)
+				listaByteArray.add(baosSingolo.toByteArray());
 		}
+		// [SG]: MEV_2023-33 aggiunto controllo consistenza blob (sopra) ed array per stampa massiva
+		if ((listaByteArray == null) || (listaByteArray.size() == 0))
+			throw new F3BException(F3BException.USER_MESSAGE, "Nessun Bollettino Associato");
 		siesLogger.debug("Inizio la concatenzaione dei PDFs!");
 		ByteArrayOutputStream baosMassivo = concatPDF(listaByteArray);
 

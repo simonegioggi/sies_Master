@@ -14,8 +14,12 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <jsp:useBean id="listaRichiestaBollettini" 	scope="request" class="java.util.Vector<EventoRateizzazionePPModel>"/>
-<jsp:useBean id="modalitaPagamento" 		scope="request" class="java.lang.String"/>
+<jsp:useBean id="modalitaPagamento" 		scope="request" class="java.util.ArrayList<String>"/>
 <jsp:useBean id="TornaQui"    				scope="request" class="java.lang.String"/>
+<%-- MEV_2023-33: aggiunti useBean --%>
+<jsp:useBean id="isSoloPrimaRata"			scope="request" class="java.util.ArrayList<java.lang.Boolean>"/>
+<jsp:useBean id="isRateale"					scope="request" class="java.lang.Boolean"/>
+<jsp:useBean id="areRateGiaGenerate"		scope="request" class="java.util.ArrayList<java.lang.Boolean>"/>
 
 <html>
 <head>
@@ -48,10 +52,33 @@ function tornaIndietro(action) {
 <body class="corpo">
 <table>
     <tr>
-      	<td class="LBG"><a href="Javascript:window.print();"><img src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
+      	<td class="LBG">
+      		<a href="Javascript:window.print();">
+      			<img src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0>
+      		</a>
+      	</td>
       	<td class="LBG">
       		<font class="label">Funzione :</font>&nbsp;&nbsp;
+<%
+// MEV_2023-33: aggiungo gestione numero dei Bollettini da generare
+if ((!areRateGiaGenerate.isEmpty() && areRateGiaGenerate.get(areRateGiaGenerate.size()-1)) || !isRateale) {
+%>
 			<font class="campo">Richiesta a PagoPA Generazione Bollettini Pagamento Pena Pecuniaria</font>
+<%
+} else {
+	if (isRateale) {
+		if (!isSoloPrimaRata.isEmpty() && isSoloPrimaRata.get(isSoloPrimaRata.size()-1)) {
+%>
+    		<font class="campo">Richiesta a PagoPA Generazione Bollettini Pagamento Pena Pecuniaria Rimanenti Rate</font>
+<%
+		} else {
+%>
+			<font class="campo">Richiesta a PagoPA Generazione Primo Bollettino Pagamento Pena Pecuniaria</font>
+<%
+		}
+	}
+}
+%>
       	</td>
       	<td class="LBG"><!-- Tasto indietro alla Griglia dei dati analitici -->
         	<a href="javascript:tornaIndietro('siap.siep.sanzionesostitutiva.action.ActGrigliaBollettiniPagoPA')">
@@ -93,25 +120,37 @@ if (listaRichiestaBollettini.size() == 0) {
 	</tr>
 <%
 	Iterator<EventoRateizzazionePPModel> itx = listaRichiestaBollettini.iterator();
+	int cont = 0;
+	final int size = listaRichiestaBollettini.size();
 	while (itx.hasNext()) {
 		EventoRateizzazionePPModel erppm = (EventoRateizzazionePPModel) itx.next();
 		EventoModel em = erppm.getEvento();
+		
+		String annullato = "";
+		if ("A".equals(em.getFlagDocumentoRegistrato()))
+		  annullato = "<br><font style='color:red'>(Annullato)</font>";
 %>
 	<tr>
 		<td class="c">
 			<%=StringUtils.toStringJSP(em.getDescrTipoProvvedimento()) 
 			+ " " + StringUtils.toStringJSP(em.getDescrMotivo())%>
-			&nbsp;del&nbsp;<%=StringUtils.toStringJSP(DateUtils.getDateToString(em.getDataEmissione(), "dd/MM/yyyy"))%>
+			&nbsp;del&nbsp;<%=StringUtils.toStringJSP(DateUtils.getDateToString(em.getDataEmissione(), "dd/MM/yyyy"))%><%=annullato%>
 		</td>
 		<td class="l">
-			<%=modalitaPagamento%>
+			<%=modalitaPagamento.get(cont)%>
 		</td>
 <%
-if (Utils.isNullObj(em.getDataTrasmissioneAtti()) && Utils.isNullObj(em.getDataRicezioneAtti())) {
+// MEV_2023-33: posso inoltrare anche se il pagamento è rateale ed ho emesso solo la prima delle n rate
+if (((Utils.isNullObj(em.getDataTrasmissioneAtti()) && Utils.isNullObj(em.getDataRicezioneAtti()))
+		|| (isSoloPrimaRata.get(cont) && !areRateGiaGenerate.get(cont))) && cont == size-1) {
 %>
       	<td class="c">
+      	<% if ("S".equals(em.getFlagDocumentoRegistrato())) { %>
       		<a href="javascript:eseguiAzione('Inoltra', <%=em.getIdEvento()%>)">
 				<img src="/images/esegui.gif" alt="Genera Avviso PagoPA" width="12" height="12" border="0">
+        <% } else { %>	
+        &nbsp;			
+        <% } %>
 			</a>
 		</td>
 <%
@@ -130,6 +169,7 @@ if (Utils.isNullObj(em.getDataTrasmissioneAtti()) && Utils.isNullObj(em.getDataR
       	</td>
 	</tr>
 <%
+		cont++;
 	} // end while su iterator sugli eventi
 } // end else
 %>

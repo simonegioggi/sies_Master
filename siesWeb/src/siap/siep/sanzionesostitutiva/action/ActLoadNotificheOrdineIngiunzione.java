@@ -1,7 +1,9 @@
 package siap.siep.sanzionesostitutiva.action;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
@@ -11,8 +13,8 @@ import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
 import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
+import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
-import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
@@ -21,15 +23,15 @@ import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.notifica.model.NotificaModel;
 import siap.siep.posizione.controller.IPosizioneGiuridica;
 import siap.siep.posizione.model.PosizioneGiuridicaLuogoDetenzioneAltraCausaModel;
+import siap.siep.rateizzazionepp.controller.IRateizzazionePP;
+import siap.siep.rateizzazionepp.model.EventoRateizzazionePPModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * MEV_2023-13: aggiunta classe
- *
- * Classe per la load della form di inserimento e mnodifica delle notifiche
- *
+ * Classe per la load della form di inserimento e modifica delle notifiche
  *
  * @author sgioggi
+ * @since MEV_2023-13
  * @version 1.0
  */
 public class ActLoadNotificheOrdineIngiunzione extends ActionSiap implements ICostantiSanzioneSostitutiva {
@@ -47,34 +49,39 @@ public class ActLoadNotificheOrdineIngiunzione extends ActionSiap implements ICo
 
 		FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 
-		// Verifico esistenza Ordine di ingiunzione
+		// MEV_2023-33
 		IEvento eventoCtrl = SICOLookupRemote.getEventoRemote();
+		BigDecimal idEvento = new BigDecimal(0);
+		if (isRequestParameterNullObj(ICostantiEvento.CAMPO_ID_EVENTO)) {
+			IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
+			Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzione = irpp
+					.exRicercaEventoRateizzazionePP(lFascMod.getIdFascicoloSiep(), "ALL", "S");
 
-		EventoModel lEveRicerca = new EventoModel();
-		lEveRicerca.setCodTipoEvento("01");
-		lEveRicerca.setCodTipoProvvedimento("06");
-		lEveRicerca.setCodMotivo("0622");
+			if (listaOrdiniIngiunzione.isEmpty()) {
+				// non ho trovato ordini di ingiunzione esco con errore
+				RedirectTo rt = new RedirectTo();
+				rt.setPage(IWebConstants.PG_MAIN);
+				setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+						"Attenzione! Non sono presenti ordini di ingiunzione per questo fascicolo.");
+				rt.setAction("siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzione");
+				setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
+				return IWebConstants.PG_MESSAGE;
+			} else if (listaOrdiniIngiunzione.size() > 1) { // n.b per test deve essere >1
+				// Carico la pagina con la scelta degli OI
+				setRequestAttribute("listaOrdiniIngiunzione", listaOrdiniIngiunzione);
+				setRequestAttribute("azioneChiamante", this.getClass().getName());
 
-		lEveRicerca.setFasSieIdFascicoloSiep(lFascMod.getIdFascicoloSiep());
-		lEveRicerca.setFlagDocumentoRegistrato("S");
-
-		EventoModel lOrdineIngiunzione = eventoCtrl.ExRicercaUltimoTipoEventoByIdFascicolo(lEveRicerca);
-		if (lOrdineIngiunzione == null || lOrdineIngiunzione.getIdEvento() == null) {
-			RedirectTo lRedirigi = new RedirectTo();
-			lRedirigi.setPage(IWebConstants.PG_MAIN);
-			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
-					"Sul Procedimento N." + lFascMod.getChiaveAnno() + "/" + lFascMod.getChiaveProgr()
-							+ " non è presente alcun ordine di ingiunzione valido. Impossibile procedere.");
-			lRedirigi.setAction("siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzione&"
-					+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
-			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
-
-			return IWebConstants.PG_MESSAGE;
+				return PG_LOAD_SELEZIONA_ORDINE_INGIUNZIONE;
+			} else {
+				idEvento = listaOrdiniIngiunzione.elementAt(0).getEvento().getIdEvento();
+			}
+		} else {
+			idEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
 		}
+		// MEV_2023-33 - FINE
 
 		// Recupero l'ordine di ingiunzione
-		EventoNotificaModel lEveNotMod = eventoCtrl
-				.ExRicercaEventoNotificaByKey(lOrdineIngiunzione.getIdEvento());
+		EventoNotificaModel lEveNotMod = eventoCtrl.ExRicercaEventoNotificaByKey(idEvento);
 		setRequestAttribute("ordineIngiunzione", lEveNotMod);
 
 		// Verifica per ogni destinatario se già registrate l'avvenuta notifica
@@ -126,7 +133,8 @@ public class ActLoadNotificheOrdineIngiunzione extends ActionSiap implements ICo
 
 		if (contaAvvenute > 0 && isRequestParameterNullEmptyObj("modifica"))
 			return IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
-					+ "=siap.siep.sanzionesostitutiva.action.ActDettaglioNotificaOrdineIngiunzione";
+					+ "=siap.siep.sanzionesostitutiva.action.ActDettaglioNotificaOrdineIngiunzione" + "&"
+					+ ICostantiEvento.CAMPO_ID_EVENTO + "=" + lEveNotMod.getEvento().getIdEvento();
 
 		// 2023/05/02 - a seguito collaudo si richiede il blocco della registrazione delle notifiche in caso
 		// in cui

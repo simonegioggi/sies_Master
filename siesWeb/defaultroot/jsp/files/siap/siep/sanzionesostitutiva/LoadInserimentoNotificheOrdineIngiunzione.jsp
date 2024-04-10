@@ -38,13 +38,15 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
 
 String listaIdNotAvv = "";
 for (int i = 0; i < listaNotAvvSiep.size(); i++) 
-	listaIdNotAvv+=","+ ((NotificaModel) listaNotAvvSiep.get(i)).getIdNotifica();
-listaIdNotAvv = "[" + listaIdNotAvv.substring(1) + "]";
+	listaIdNotAvv += "," + ((NotificaModel) listaNotAvvSiep.get(i)).getIdNotifica();
+if (listaNotAvvSiep.size() > 0)
+	listaIdNotAvv = "[" + listaIdNotAvv.substring(1) + "]";
+else
+	listaIdNotAvv = "[]";
 
 String listaIdNotObbl = "";
 for (int i = 0; i < lListaNotObbligati.size(); i++) 
 	listaIdNotObbl += "," + ((NotificaModel) lListaNotObbligati.get(i)).getIdNotifica();
-
 if (lListaNotObbligati.size() > 0)
 	listaIdNotObbl = "[" + listaIdNotObbl.substring(1) + "]";
 else
@@ -186,8 +188,8 @@ for (int i = 0; i < lNotifiche.length; i++) {
 			indirizzoAutorita = StringUtils.toStringJSP(lNotifica.getAutoritaEsternaDelegata().getDescrizione(), "");
 %>
 	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>_<%=lNotifica.getIdNotifica()%> option[value="<%=codTipoAutorita%>"]').attr("selected", "selected");
-	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>_<%=lNotifica.getIdNotifica()%>').val('<%=sedeAutorita%>');
-	$('#<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>_<%=lNotifica.getIdNotifica()%>').val('<%=indirizzoAutorita%>');
+	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>_<%=lNotifica.getIdNotifica()%>').val("<%=sedeAutorita%>");
+	$('#<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>_<%=lNotifica.getIdNotifica()%>').val("<%=indirizzoAutorita%>");
 	document.getElementById("<%=ICostantiOrdineEsecuzione.ABILITA_NOTIFICA%>_"+<%=lNotifica.getIdNotifica()%>).checked = true;
 <%
 		} else {
@@ -286,7 +288,7 @@ if (notificaAlCondannato.getAutoritaEsterna() != null) {
 %>
 	<tr>
 		<td class="L">Indirizzo</td>
-        <td class="L" colspan="3"><font class="campo"><%=StringUtils.toStringJSP(notificaAlCondannato.getNote())%></font>&nbsp;</td>
+        <td class="L" colspan="3"><font class="campo"><%=StringUtils.toStringJSP(notificaAlCondannato.getNote())%></font></td>
 	</tr>
 <%
 	}
@@ -365,9 +367,7 @@ if (notificaAlCondannato.getIstitutoDetenzione() != null) {
 		</td>
     	<td class="l">Indirizzo</td>
     	<td class="L">
-      		<TEXTAREA title="Indirizzo" id="<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>_<%=notificaAlCondannato.getIdNotifica()%>" 
-				name="<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>_<%=notificaAlCondannato.getIdNotifica()%>" cols="30">
-			</TEXTAREA>
+      		<TEXTAREA title="Indirizzo" id="<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>_<%=notificaAlCondannato.getIdNotifica()%>" name="<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>_<%=notificaAlCondannato.getIdNotifica()%>" cols="30"></TEXTAREA>
 		</td>
   	</tr>
 <%
@@ -478,10 +478,7 @@ for (int i = 0; i < listaNotAvvSiep.size(); i++) {
 		</td>
 	    <td class="l">Indirizzo</td>
 	    <td class="L">
-      		<TEXTAREA title="Indirizzo" cols="30"
-                id="<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>_<%=lNotificaDifensore.getIdNotifica()%>"
-                name="<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>_<%=lNotificaDifensore.getIdNotifica()%>">
-			</TEXTAREA>
+      		<TEXTAREA title="Indirizzo" cols="30" id="<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>_<%=lNotificaDifensore.getIdNotifica()%>" name="<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>_<%=lNotificaDifensore.getIdNotifica()%>"></TEXTAREA>
 		</td>
 	</tr>
 <%
@@ -595,9 +592,7 @@ if (lListaNotObbligati.size() > 0) {
     	</td>
     	<td class="l">Indirizzo</td>
     	<td class="L">
-			<TEXTAREA title="Indirizzo" id="<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>_<%=lNotificaObbligato.getIdNotifica()%>" 
-				name="<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>_<%=lNotificaObbligato.getIdNotifica()%>" cols="30">
-			</TEXTAREA>
+			<TEXTAREA title="Indirizzo" id="<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>_<%=lNotificaObbligato.getIdNotifica()%>" name="<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>_<%=lNotificaObbligato.getIdNotifica()%>" cols="30"></TEXTAREA>
     	</td>
   	</tr>
 <%

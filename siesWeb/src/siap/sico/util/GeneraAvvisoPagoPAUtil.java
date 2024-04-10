@@ -1,6 +1,7 @@
 package siap.sico.util;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import org.apache.log4j.Logger;
 
@@ -58,7 +59,6 @@ public class GeneraAvvisoPagoPAUtil {
 		siesLogger.debug(GeneraAvvisoPagoPAUtil.class.getName() + ".caricaDatiVersamento");
 
 		DatiVersamento dv = new DatiVersamento();
-		dv.setBicAddebito(null);
 		// DatiSingoloVersamento[] dsv = caricaDatiSingoloVersamento(sm, bpm);
 		DatiSingoloVersamento[] dsvs = new DatiSingoloVersamento[1];
 		// dati singolo versamento
@@ -75,7 +75,6 @@ public class GeneraAvvisoPagoPAUtil {
 		// dv.setDatiSingoloVersamento(i, dsv[i]); // da 1 a 5 occorrenze
 		// IbanAddebito: da non valorizzare nel caso in cui il file debba essere usato in generaAvviso()
 		dv.setImportoTotale(dsvs[0].getImporto());
-		dv.setIbanAddebito(null);
 		return dv;
 	}
 
@@ -139,8 +138,9 @@ public class GeneraAvvisoPagoPAUtil {
 		AnagraficaSoggetto as = new AnagraficaSoggetto();
 		as.setCap(null);
 		as.setCivico(null);
-		// C.F. or P.I. (OBBLIGATORIO)
-		as.setCodiceIdentificativoUnivoco(sm.getCodFiscale());
+		// C.F. or P.I. (NON OBBLIGATORIO --> se nullo passo "ANONIMO")
+		String cf = Utils.isPresent(sm.getCodFiscale()) ? sm.getCodFiscale() : "ANONIMO";
+		as.setCodiceIdentificativoUnivoco(cf);
 		as.setEmail(null);
 		as.setIndirizzo(null);
 		as.setLocalita(null);
@@ -152,8 +152,9 @@ public class GeneraAvvisoPagoPAUtil {
 		return as;
 	}
 
+	// MEV_2023-33: cambiata firma del metodo con la data Emissione OEIP
 	public static BollettinoPagopaModel popolaBollettino(RateizzazionePPModel rata, String codUtente,
-			String codUfficio, String statoPagamento, int cont) {
+			String codUfficio, String statoPagamento, int cont, Date dataEmissioneOI) {
 
 		BollettinoPagopaModel bpm = new BollettinoPagopaModel();
 		bpm.setCodOperatoreInserimento(codUtente);
@@ -161,7 +162,13 @@ public class GeneraAvvisoPagoPAUtil {
 		bpm.setDataInserimento(DateUtils.getSysDate());
 		// bpm.setDataAvvPagamento(null);
 		// bpm.setDataScadenza(null);
-		bpm.setDataScadenzaRich(DateUtils.getDate("31/12/2049", "dd/MM/yyyy"));
+		// bpm.setDataScadenzaRich(DateUtils.getDate("31/12/2049", "dd/MM/yyyy"));
+		if ("R".equals(rata.getTipoRateizzazione()))
+			bpm.setDataScadenzaRich(
+					DateUtils.moveDateTo(dataEmissioneOI, java.util.Calendar.DAY_OF_MONTH, 60));
+		else
+			bpm.setDataScadenzaRich(
+					DateUtils.moveDateTo(dataEmissioneOI, java.util.Calendar.DAY_OF_MONTH, 120));
 		bpm.setFasSieIdFascicolSiep(rata.getFasSieIdFascicoloSiep());
 		// bpm.setImportoPagato(null);
 		// bpm.setIuv(null);
@@ -170,10 +177,12 @@ public class GeneraAvvisoPagoPAUtil {
 		bpm.setRatIdRateizzazionePP(rata.getIdRateizzazionePP());
 		bpm.setStatoPagamento(statoPagamento);
 		bpm.setTipoRateizzazione(rata.getTipoRateizzazione());
-		if ("U".equals(rata.getTipoRateizzazione()))
-			bpm.setImportoRata(rata.getImportoDaPagare());
-		else
-			bpm.setImportoRata(rata.getImportoRata());
+		// MEV_2023-33: metto sempre importo rata poichè si può inserire un importo diverso dal totale da
+		// pagare
+		// if ("U".equals(rata.getTipoRateizzazione()))
+		// bpm.setImportoRata(rata.getImportoDaPagare());
+		// else
+		bpm.setImportoRata(rata.getImportoRata());
 
 		// valore di ritorno
 		return bpm;

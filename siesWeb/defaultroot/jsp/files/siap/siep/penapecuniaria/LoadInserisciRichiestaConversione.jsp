@@ -448,14 +448,6 @@ function Verify() {
    	return true; 
 }
 
-  
-
-
-
-
-	  
-	  
-	
 	
 </script>
 </head>
@@ -505,11 +497,11 @@ if (sMultaResidua.length() > 1 || sAmmendaResidua.length() > 1) {
   <%-- FINE MAC20191129017-MG-04/12/2019: aggiunti oggetti --%>
 </table>
 
-<table>
 	<!-- 28/01/2015 MEV23 Se si sta iscrivendo la richiesta per classe VII bisogna inserire gli estremi del fascicolo di classe I a cui va collegato -->
 <%  if (lFasPro > 70000 && lFasPro < 80000)
     {%>
 
+<table>
      <tr><td>&nbsp;</td></tr>
      <tr>
        <td class="l" colspan="3">Inserimento Estremi del Fascicolo di Classe I </td>

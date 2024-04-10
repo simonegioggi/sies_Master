@@ -82,11 +82,11 @@
             isAvvocatoForoSoppresso = true;
             contaSoppressi++;
             
-            strAlertAvvocato+= " L’Avvocato "+StringUtils.toStringJSP(lAvvocatoModel.getCognome())+" "
+            strAlertAvvocato+= " L’'avvocato "+StringUtils.toStringJSP(lAvvocatoModel.getCognome())+" "
                                +StringUtils.toStringJSP(lAvvocatoModel.getNome())
                                +" risulta iscritto al Foro di "
                                +StringUtils.toStringJSP(lAvvocatoModel.getForo())
-                               +" soppresso a seguito dell’accorpamento degli uffici giudiziari. ";
+                               +" soppresso a seguito dell’'accorpamento degli uffici giudiziari. ";
           }
           
           // INIZIO: MEV_21 (avvocati)
@@ -148,11 +148,15 @@
     <tr>
       <td class="L">
         <font class="label">Procedimento : N.</font>
+        <% if ("90".equals(UtenteConnesso.getUserProfile().getProfileId().toString())) { %>
+            <%=fascicolo.getChiaveAnno()%> / <%=fascicolo.getChiaveProgr()%>
+          <% } else { %>
           <a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>=<%=fascicolo.getIdFascicoloSiep()%>" title="Procedimento">
             <%=fascicolo.getChiaveAnno()%>
             /
             <%=fascicolo.getChiaveProgr()%>
-          </a>
+          </a>          
+          <% } %>
           &nbsp;
 <%
           if(fascicolo.getFlagCumulante()!=null && fascicolo.getFlagCumulante().equals("S"))
@@ -232,9 +236,13 @@
     <tr>
       <td class="L" width=100%><font class="label">Soggetto : </font>
       <font class="campo">
+        <% if ("90".equals(UtenteConnesso.getUserProfile().getProfileId().toString())) { %>
+          <%=soggetto.getCognome()%>&nbsp;<%=soggetto.getNome()%>
+        <% } else { %>
         <a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.soggetto.action.ActLoadDettaglioSoggetto&<%=ICostantiSoggetto.CAMPO_ID_SOGGETTO%>=<%=soggetto.getIdSoggetto()%>" title="Soggetto">
           <%=soggetto.getCognome()%>&nbsp;<%=soggetto.getNome()%>
         </a>
+        <% } %>
       </font>&nbsp;
 <%
 if(soggetto.getDataNascita() == null){
@@ -322,8 +330,14 @@ if(soggetto.getDataNascita() == null){
     <tr>
       <td class="L">
         <font class="label"><%=sentenza.getDescrTipoProvvedimento().substring(0,1).toUpperCase()+sentenza.getDescrTipoProvvedimento().substring(1).toLowerCase()%></font>&nbsp;:<font class="label"> N.</font>
-        <font class="campo"> <a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sentenza.action.ActLoadDettaglioSentenza&<%=ICostantiSentenza.CAMPO_ID_SENTENZA%>=<%=sentenza.getIdSentenza()%>" title="Sentenza">
-          <%=StringUtils.toStringJSP(sentenza.getAnnoSentenza())%> / <%=StringUtils.toStringJSP(sentenza.getNumeroSentenza())%> </a>&nbsp;  
+        <font class="campo"> 
+          <% if ("90".equals(UtenteConnesso.getUserProfile().getProfileId().toString())) { %>
+          <%=StringUtils.toStringJSP(sentenza.getAnnoSentenza())%> / <%=StringUtils.toStringJSP(sentenza.getNumeroSentenza())%>&nbsp; 
+          <% } else { %>
+          <a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sentenza.action.ActLoadDettaglioSentenza&<%=ICostantiSentenza.CAMPO_ID_SENTENZA%>=<%=sentenza.getIdSentenza()%>" title="Sentenza">
+          <%=StringUtils.toStringJSP(sentenza.getAnnoSentenza())%> / <%=StringUtils.toStringJSP(sentenza.getNumeroSentenza())%> 
+          </a>&nbsp;            
+          <% } %>
           <font class="label">del</font>&nbsp;
 
             <%=DateUtils.getDateToString(sentenza.getDataProvvedimento(), "dd-MM-yyyy")%>

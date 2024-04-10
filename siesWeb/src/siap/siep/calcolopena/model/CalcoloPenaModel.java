@@ -9,6 +9,9 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.model.GenericModel;
+import f3b.util.DateUtils;
 import siap.sico.calendar.model.CalendarModel;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.libertaanticipata.model.LicenzaLibAnticipataModel;
@@ -26,51 +29,31 @@ import siap.siep.sanzionesostitutiva.model.SanzioneSostitutivaModel;
 import siap.siep.sospensione.model.SospensioneModel;
 import siap.siep.util.CaricaHTML_Servlet;
 import siap.siep.util.SIEPLookupRemote;
-import f3b.log.LogF3B;
-import f3b.model.GenericModel;
-import f3b.util.DateUtils;
 
 /**
- * <p>
- * Title: CalcoloPenaModel
- * </p>
- * <p>
  * Description: Classe Model contenete tutti i dati (Model) che concorrono al calcolo della pena in un certo
- * istante
- * </p>
- * <p>
- * Espone i metodi per recuperare i dati ed effettuare i calcoli. La sequenza corretta di invocazione dei
- * metodi è: es: CalcoloPenaModel lCalcoloPenaMod = null; ActCalcoloPenaMain lActCalcoloPenaMain = new
+ * istante Espone i metodi per recuperare i dati ed effettuare i calcoli. La sequenza corretta di invocazione
+ * dei metodi è: es: CalcoloPenaModel lCalcoloPenaMod = null; ActCalcoloPenaMain lActCalcoloPenaMain = new
  * ActCalcoloPenaMain();
- * 
+ *
  * -- Recupero tutti i dati già a aistema (VALIDATI) per il fascicolo ed aventualmente -- per l'evento.
  * lCalcoloPenaMod = lActCalcoloPenaMain.calcoloPena(BigDecimal lFascID, BigDecimal lIdEvento)
- * 
+ *
  * -- Aggiungere eventuali altri dati (es Presofferto)
  * lCalcoloPenaMod.getPresoffertoAltroReato().add(lAnnMod);
- * 
+ *
  * -- Recupero la pena da espiare (PenaResiduaModel) calcolata a partire dai dati -- a sistema e dagli
  * eventuali dati aggiunti
- * 
+ *
  * PenaResiduaModel lPenResMod = lCalPenaMod.getPenaDaEspiare(); FungibilitaModel lFungModel =
  * lCalcoloPenaModel.getFungibilitaCalcolata(); CalendarModel lPenaGiaEspiata =
  * lCalcoloPenaModel.getPenaEspiata();
  *
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class CalcoloPenaModel extends GenericModel {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5543231268907673781L;
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
@@ -128,7 +111,7 @@ public class CalcoloPenaModel extends GenericModel {
 	private Vector mLibAnticipate;
 
 	// Scomputi Permessi e Licenze (new v4.0)
-	//private Vector mScomputiPermLic;
+	// private Vector mScomputiPermLic;
 
 	// Vettore contenente i periodi già espiati a seguito di interruzioni/sospensioni...
 	private Vector mPeneGiaEspiate;
@@ -191,7 +174,7 @@ public class CalcoloPenaModel extends GenericModel {
 		// Liberazioni anticipate
 		this.mLibAnticipate = new Vector();
 		// Scomputio Permessi/Licenze
-		//this.mScomputiPermLic = new Vector();
+		// this.mScomputiPermLic = new Vector();
 
 		// Pene Già Espiate
 		this.mPeneGiaEspiate = new Vector();
@@ -351,9 +334,9 @@ public class CalcoloPenaModel extends GenericModel {
 	}
 
 	// Scomputi Permessi e Licenze
-//	public Vector getScomputiPermLic() {
-//		return mScomputiPermLic;
-//	}
+	// public Vector getScomputiPermLic() {
+	// return mScomputiPermLic;
+	// }
 
 	public Vector getPeneGiaEspiate() {
 		return mPeneGiaEspiate;
@@ -361,7 +344,7 @@ public class CalcoloPenaModel extends GenericModel {
 
 	/**
 	 * Restituisce la PenaResidua ricalcolata all'ultima chiamata a getPenaDaEspiare()
-	 * 
+	 *
 	 * @return pena residua ricalcolata
 	 */
 	public PenaResiduaModel getPenaResiduaRicalcolata() {
@@ -370,7 +353,7 @@ public class CalcoloPenaModel extends GenericModel {
 
 	/**
 	 * Restituisce la Fungibilità ricalcolata all'ultima chiamata a getPenaDaEspiare()
-	 * 
+	 *
 	 * @return
 	 */
 	public FungibilitaModel getFungibilitaCalcolata() {
@@ -387,7 +370,7 @@ public class CalcoloPenaModel extends GenericModel {
 	 * 2) dopo la chiamata alla calcolaPenaDaSospensione() viene valorizzato con in quantum ricalcolato a
 	 * seguito della sospensione. Il quantum restituito è comprende non solo la pena effettivamente espiata,
 	 * ma anche eventuali giorni di LA concessi al momento della sospensione.
-	 * 
+	 *
 	 * @return
 	 */
 	public CalendarModel getPenaEspiata() {
@@ -539,9 +522,9 @@ public class CalcoloPenaModel extends GenericModel {
 	}
 
 	// Scomputi Permessi e Licenze
-//	public void setScomputiPermLic(Vector aValore) {
-//		mScomputiPermLic = aValore;
-//	}
+	// public void setScomputiPermLic(Vector aValore) {
+	// mScomputiPermLic = aValore;
+	// }
 
 	public void setPeneGiaEspiate(Vector aValore) {
 		mPeneGiaEspiate = aValore;
@@ -570,7 +553,7 @@ public class CalcoloPenaModel extends GenericModel {
 	// ============================================================================
 	/**
 	 * Restituisce la somma di tutti i benefici concessi o revocati In Sentenza per Reclusione e Multa
-	 * 
+	 *
 	 * @param aFlagConcessiRevocati
 	 *            C = concessi R = revocati
 	 * @return CalendarModel contenente i Quantum di benefici di reclusione concessi in sentenza e l'importo
@@ -606,12 +589,12 @@ public class CalcoloPenaModel extends GenericModel {
 
 	/**
 	 * Restituisce la somma di tutti i benefici concessi in sentenza per Arresti e Ammenda
-	 * 
+	 *
 	 * @param aFlagConcessiRevocati
 	 *            C = concessi R = revocati
 	 * @return CalendarModel contenente i Quantum di benefici di Arresti concessi in sentenza e l'importo
 	 *         della Ammenda
-	 * 
+	 *
 	 */
 	public CalendarModel getBeneficiArrestiInSentenza(String aFlagConcessiRevocati) {
 		CalendarModel lBenConc = new CalendarModel();
@@ -644,7 +627,7 @@ public class CalcoloPenaModel extends GenericModel {
 	/**
 	 * Restituisce il totale dei Quantum di Reclusione per Misure Cautelari stesso reato iscritte in sentenza
 	 * (CodTipoMisura='CA')
-	 * 
+	 *
 	 * @return
 	 */
 	public CalendarModel getMCReclusioneInSentenza() {
@@ -673,7 +656,7 @@ public class CalcoloPenaModel extends GenericModel {
 	/**
 	 * Restituisce il totale dei Quantum di Arresti per Misure Cautelari stesso reato iscritte in sentenza
 	 * (CodTipoMisura='AD')
-	 * 
+	 *
 	 * @return
 	 */
 	public CalendarModel getMCArrestiInSentenza() {
@@ -702,7 +685,7 @@ public class CalcoloPenaModel extends GenericModel {
 	/**
 	 * Restituisce il totale dei Quantum di Custodia Cautelare in Regime di Permanenza in Casa stesso reato
 	 * iscritte in sentenza (CodTipoMisura='CB')
-	 * 
+	 *
 	 * @return
 	 */
 	public CalendarModel getMCPermanenzaInCasaInSentenza() {
@@ -731,7 +714,7 @@ public class CalcoloPenaModel extends GenericModel {
 	/**
 	 * Restituisce il totale dei Quantum di Custodia Cautelare in Collocamento in Comunità stesso reato
 	 * iscritte in sentenza (CodTipoMisura='CC')
-	 * 
+	 *
 	 * @return
 	 */
 	public CalendarModel getMCCollocamentoInComunitaInSentenza() {
@@ -760,7 +743,7 @@ public class CalcoloPenaModel extends GenericModel {
 	/**
 	 * Restituisce il totale dei Quantum di Custodia Cautelare in Misura di Sicurezza Applicata in via
 	 * Provvisoria stesso reato iscritte in sentenza (CodTipoMisura='CD')
-	 * 
+	 *
 	 * @return
 	 */
 	public CalendarModel getMCMisuraSicurezzaApplicataInSentenza() {
@@ -789,7 +772,7 @@ public class CalcoloPenaModel extends GenericModel {
 	/**
 	 * Restituisce il totale dei Quantum di Custodia Cautelare in Camera di Sicurezza stesso reato iscritte in
 	 * sentenza (CodTipoMisura='CE')
-	 * 
+	 *
 	 * @return
 	 */
 	public CalendarModel getMCCameraSicurezzaInSentenza() {
@@ -818,7 +801,7 @@ public class CalcoloPenaModel extends GenericModel {
 	/**
 	 * Restituisce il totale dei Quantum di Computo periodo messa alla prova stesso reato iscritte in sentenza
 	 * (CodTipoMisura='CL')
-	 * 
+	 *
 	 * @return
 	 */
 	public CalendarModel getMCComputoMessoAllaProvaInSentenza() {
@@ -847,7 +830,7 @@ public class CalcoloPenaModel extends GenericModel {
 	/**
 	 * Restituisce il totale dei Quantum di Custodia Cautelare in Regime di Arresti Domiciliari ex art 89 dpr
 	 * 309/90 stesso reato iscritte in sentenza (CodTipoMisura='CM')
-	 * 
+	 *
 	 * @return
 	 */
 	public CalendarModel getMCArrestiDomiciliariInSentenza() {
@@ -875,7 +858,7 @@ public class CalcoloPenaModel extends GenericModel {
 
 	/**
 	 * Restituisce il totale dei Quantum per Misure Cautelari
-	 * 
+	 *
 	 * @return
 	 */
 	public CalendarModel getMisureCautelariReclusioneInSentenza() {
@@ -1427,9 +1410,9 @@ public class CalcoloPenaModel extends GenericModel {
 	 * dati presi in considerazione sono: Richieste al GE con anticipazione degli effetti - Indulto - Amnistia
 	 * - Depenalizzazione - Incostituzionalità Decisioni del GE - Indulto - Amnistia - Depenalizzazione -
 	 * Incostituzionalità
-	 * 
+	 *
 	 * Il aFlagPiuMeno indica se recuperare le concessioni (-) o le revoche (+)
-	 * 
+	 *
 	 * @param aFlagPiuMeno
 	 *            ('+':revocati, '-':concessi)
 	 * @return
@@ -1495,9 +1478,9 @@ public class CalcoloPenaModel extends GenericModel {
 	 * dati presi in considerazione sono: Richieste al GE con anticipazione degli effetti - Indulto - Amnistia
 	 * - Depenalizzazione - Incostituzionalità Decisioni del GE - Indulto - Amnistia - Depenalizzazione -
 	 * Incostituzionalità
-	 * 
+	 *
 	 * Il aFlagPiuMeno indica se recuperare le concessioni (-) o le revoche (+)
-	 * 
+	 *
 	 * @param aFlagPiuMeno
 	 *            ('+':revocati, '-':concessi)
 	 * @return
@@ -1564,9 +1547,9 @@ public class CalcoloPenaModel extends GenericModel {
 	 * - Presofferti altro reato<br>
 	 * - Fungibilità altro reato Misure Cautelari<br>
 	 * - Fungibilità altro reato Pena Detentiva<br>
-	 * 
+	 *
 	 * Il aFlagPiuMeno indica se recuperare le concessioni (-) o le revoche (+)
-	 * 
+	 *
 	 * @param aFlagPiuMeno
 	 *            ('+':revocati, '-':concessi)
 	 * @return CalendarModel con il totale normalizzato n.b. sempre >0
@@ -1633,9 +1616,9 @@ public class CalcoloPenaModel extends GenericModel {
 	 * - Presofferti altro reato<br>
 	 * - Fungibilità altro reato Misure Cautelari<br>
 	 * - Fungibilità altro reato Pena Detentiva<br>
-	 * 
+	 *
 	 * Il aFlagPiuMeno indica se recuperare le concessioni (-) o le revoche (+)
-	 * 
+	 *
 	 * @param aFlagPiuMeno
 	 *            ('+':revocati, '-':concessi)
 	 * @return CalendarModel con il totale normalizzato n.b. sempre >0
@@ -1701,7 +1684,7 @@ public class CalcoloPenaModel extends GenericModel {
 	 * Restituisce il totale <b>Quantum di Reclusione</b> e <b>Multa</b> delle <b>Rideterminazioni pena
 	 * 'Altro'</b>:<br>
 	 * <br>
-	 * 
+	 *
 	 * Il aFlagPiuMeno indica se recuperare le concessioni (-) o le revoche (+)
 	 *
 	 * @param aFlagPiuMeno
@@ -1757,9 +1740,9 @@ public class CalcoloPenaModel extends GenericModel {
 	 * Restituisce il totale <b>Quantum di Arresti</b> e <b>Ammenda</b> delle <b>Rideterminazioni pena
 	 * 'Altro'</b>:<br>
 	 * <br>
-	 * 
+	 *
 	 * Il aFlagPiuMeno indica se recuperare le concessioni (-) o le revoche (+)
-	 * 
+	 *
 	 * @param aFlagPiuMeno
 	 *            ('+':revocati, '-':concessi)
 	 * @return CalendarModel con il totale normalizzato n.b. sempre >0
@@ -1811,7 +1794,7 @@ public class CalcoloPenaModel extends GenericModel {
 	/**
 	 * Restituisce il totale <b>Quantum di Reclusione</b> e <b>Multa</b> dei <b>Computi RES</b>:<br>
 	 * <br>
-	 * 
+	 *
 	 * Il aFlagPiuMeno indica se recuperare le concessioni (-) o le revoche (+)
 	 *
 	 * @param aFlagPiuMeno
@@ -1866,9 +1849,9 @@ public class CalcoloPenaModel extends GenericModel {
 	/**
 	 * Restituisce il totale <b>Quantum di Arresti</b> e <b>Ammenda</b> dei <b>Computi RES</b>:<br>
 	 * <br>
-	 * 
+	 *
 	 * Il aFlagPiuMeno indica se recuperare le concessioni (-) o le revoche (+)
-	 * 
+	 *
 	 * @param aFlagPiuMeno
 	 *            ('+':revocati, '-':concessi)
 	 * @return CalendarModel con il totale normalizzato n.b. sempre >0
@@ -1920,7 +1903,7 @@ public class CalcoloPenaModel extends GenericModel {
 	/**
 	 * Restituisce il totale Giorni Liberazione Anticipata (LA) indipendentemente dal fatto che siano
 	 * elaborate o meno. NON prende in considerazione gli scomputi permesso PP e EP
-	 * 
+	 *
 	 * @return
 	 */
 	public int getLiberazioneAnticipata() {
@@ -1957,7 +1940,7 @@ public class CalcoloPenaModel extends GenericModel {
 	 * Restituisce il totale Giorni Liberazione Anticipata (con flag_concesso DIVERSO da "C" , quindi Scomputi
 	 * o Revoche) indipendentemente dal fatto che siano elaborate o meno, per il Tipo di L.A. specificata da
 	 * parametro
-	 * 
+	 *
 	 * @param aTipoLA
 	 *            (LA, LS, LI)
 	 * @return
@@ -2018,7 +2001,7 @@ public class CalcoloPenaModel extends GenericModel {
 
 	/**
 	 * Restituisce il totale Giorni Liberazione Anticipata da concedere, quelli con flag_elaborato a N o null
-	 * 
+	 *
 	 * @return
 	 */
 	public int getLiberazioneAnticipataDaConcedere() {
@@ -2072,7 +2055,7 @@ public class CalcoloPenaModel extends GenericModel {
 	/**
 	 * Restituisce il totale Giorni Liberazione Anticipata "Ordinaria" da concedere, quelli con flag_elaborato
 	 * a N o null
-	 * 
+	 *
 	 * @return
 	 */
 	public int getLiberazioneAnticipataDaConcedereLA() {
@@ -2136,7 +2119,7 @@ public class CalcoloPenaModel extends GenericModel {
 	/**
 	 * Restituisce il totale Giorni Liberazione Anticipata Speciale da concedere, quelli con flag_elaborato a
 	 * N o null
-	 * 
+	 *
 	 * @return
 	 */
 	public int getLiberazioneAnticipataDaConcedereLS() {
@@ -2180,7 +2163,7 @@ public class CalcoloPenaModel extends GenericModel {
 	/**
 	 * Restituisce il totale Giorni Liberazione Anticipata Integrazione da concedere, quelli con
 	 * flag_elaborato a N o null
-	 * 
+	 *
 	 * @return
 	 */
 	public int getLiberazioneAnticipataDaConcedereLI() {
@@ -2255,7 +2238,7 @@ public class CalcoloPenaModel extends GenericModel {
 	/**
 	 * Restituisce il totale Giorni Liberazione Anticipata già concessi, quelli con flag_elaborato <> da N o
 	 * null
-	 * 
+	 *
 	 * @return
 	 */
 	public int getLiberazioneAnticipataGiaConcesse() {
@@ -2311,7 +2294,7 @@ public class CalcoloPenaModel extends GenericModel {
 	/**
 	 * Restituisce il totale Giorni Liberazione Anticipata "Ordinaria" già concessi, quelli con flag_elaborato
 	 * <> da N o null
-	 * 
+	 *
 	 * @return
 	 */
 	public int getLiberazioneAnticipataGiaConcesseLA() {
@@ -2378,7 +2361,7 @@ public class CalcoloPenaModel extends GenericModel {
 	/**
 	 * Restituisce il totale Giorni Liberazione Anticipata Speciale già concessi, quelli con flag_elaborato <>
 	 * da N o null
-	 * 
+	 *
 	 * @return
 	 */
 	public int getLiberazioneAnticipataGiaConcesseLS() {
@@ -2425,7 +2408,7 @@ public class CalcoloPenaModel extends GenericModel {
 	/**
 	 * Restituisce il totale Giorni Integrazione Liberazione Anticipata già concessi, quelli con
 	 * flag_elaborato <> da N o null
-	 * 
+	 *
 	 * @return
 	 */
 	public int getLiberazioneAnticipataGiaConcesseLI() {
@@ -2501,7 +2484,7 @@ public class CalcoloPenaModel extends GenericModel {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 * @deprecated non ha senso x gli scomputi distinguere tra LA-LS-LI
 	 */
@@ -2552,7 +2535,7 @@ public class CalcoloPenaModel extends GenericModel {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 * @deprecated non ha senso x gli scomputi distinguere tra LA-LS-LI
 	 */
@@ -2593,7 +2576,7 @@ public class CalcoloPenaModel extends GenericModel {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 * @deprecated non ha senso x gli scomputi distinguere tra LA-LS-LI
 	 */
@@ -2637,7 +2620,7 @@ public class CalcoloPenaModel extends GenericModel {
 
 	/**
 	 * Restitiusce il numero di Giorni di Ridimensionamento LA da concedere - Anna per Ridim. LA ottobre 2010
-	 * 
+	 *
 	 * @return
 	 */
 	public int getRidimensionamentoLAdaConcedere() {
@@ -2662,7 +2645,7 @@ public class CalcoloPenaModel extends GenericModel {
 
 	/**
 	 * Restitiusce il numero di Giorni di Ridimensionamento LA concessi - Anna per Ridim. LA ottobre 2010
-	 * 
+	 *
 	 * @return
 	 */
 	public int getRidimensionamentoLAConcesso() {
@@ -2688,7 +2671,7 @@ public class CalcoloPenaModel extends GenericModel {
 	/**
 	 * Ritorna il totale di GG di Risarcimento riconosciuti così come previsto dal DL 92 /2014
 	 * indipendentemente se già computati o da computare
-	 * 
+	 *
 	 * @return
 	 * @since 10/2014 DL92/2014
 	 */
@@ -2715,7 +2698,7 @@ public class CalcoloPenaModel extends GenericModel {
 	/**
 	 * Ritorna il totale di GG di Risarcimento riconosciuti così come previsto dal DL 92 /2014 già concessi,
 	 * ovvero computato su una pena residua
-	 * 
+	 *
 	 * @return
 	 * @since 10/2014 DL92/2014
 	 */
@@ -2743,7 +2726,7 @@ public class CalcoloPenaModel extends GenericModel {
 	/**
 	 * Ritorna il totale di GG di Risarcimento riconosciuti così come previsto dal DL 92 /2014 da concedere,
 	 * ovvero NON computato su una pena residua
-	 * 
+	 *
 	 * @return
 	 * @since 10/2014 DL92/2014
 	 */
@@ -2771,7 +2754,7 @@ public class CalcoloPenaModel extends GenericModel {
 
 	/**
 	 * Restitiusce il numero totale di Giorni scomputati - COD_TIPO_LICENZA = 'PP' per scomputo Permessi -
-	 * 
+	 *
 	 * @return
 	 */
 	public int getTotaleScomputi() {
@@ -2796,7 +2779,7 @@ public class CalcoloPenaModel extends GenericModel {
 		 * Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
 		 * siesLogger.debug("devo contare gliSCOMPUTI"); while (itx.hasNext()){ LicenzaLibAnticipataModel
 		 * lLibAntModScomp = (LicenzaLibAnticipataModel) itx.next();
-		 * 
+		 *
 		 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		 * LogF3B.getLogger() siesLogger.debug("lLibAntModScomp.getFlagElaborato() = "+lLibAntModScomp.
 		 * getIdLicenzaLibanticipata
@@ -2809,7 +2792,7 @@ public class CalcoloPenaModel extends GenericModel {
 
 	/**
 	 * Restutiusce la somma dei periodi già espiati recuperati dai record Sospensione
-	 * 
+	 *
 	 * @return
 	 */
 	public CalendarModel getQuantumPenaGiaEspiata() {
@@ -2855,7 +2838,7 @@ public class CalcoloPenaModel extends GenericModel {
 
 	/**
 	 * Restituisce il totale di giorni di LA computati sulle sospensioni
-	 * 
+	 *
 	 * @return
 	 */
 	public int getLAsuPenaEspiata() {
@@ -2897,7 +2880,7 @@ public class CalcoloPenaModel extends GenericModel {
 	 * - somma i quantum <br>
 	 * - determina le date di espiazione se presente data decorrenza sulla pena iniziale<br>
 	 * - arretra il fine pena se presenti LA da computare<br>
-	 * 
+	 *
 	 * @param aDataInizioPena
 	 *            Data di decorrenza rispetto alla quale si vuole che vengano calcolate le date di decorrenza
 	 *            (fine Reclusione/fine pena)
@@ -2923,9 +2906,9 @@ public class CalcoloPenaModel extends GenericModel {
 	 * - somma i quantum <br>
 	 * - determina le date di espiazione se presente data decorrenza sulla pena iniziale<br>
 	 * - arretra il fine pena se presenti LA da computare<br>
-	 * 
+	 *
 	 * DA estendere per gestire il calcolo anche in caso di ergastolo
-	 * 
+	 *
 	 * @param aDataInizioPena
 	 *            Data di decorrenza rispetto alla quale si vuole che vengano calcolate le date di decorrenza
 	 *            (fine Reclusione/fine pena)
@@ -2944,7 +2927,7 @@ public class CalcoloPenaModel extends GenericModel {
 	 *            Opzione utilizzata nel caso del'OS fungibilità per poter operare sulle vecchie date
 	 *            piuttosto che su quella calcolata dalla nuova procedura.
 	 * @return Un model PenaResiduaModel con quantum e importi valorizzati oltre alle date di decorrenza.
-	 * 
+	 *
 	 */
 	public PenaResiduaModel getPenaDaEspiare(Date aDataInizioPena, Date aDataSistema, String tipoCalcolo,
 			Date aDataFineDaForzare) throws Exception {
@@ -3720,7 +3703,7 @@ public class CalcoloPenaModel extends GenericModel {
 	/**
 	 * Effettua il calcolo della SS da espiare a partire dall'ultima SS a sistema sottraendo o sommando i
 	 * quantum specificati in input
-	 * 
+	 *
 	 * @param aTotComputi
 	 *            calendar model con il totale da DETENTIVA da scomputare sulla SS a sistema
 	 * @return
@@ -3829,6 +3812,38 @@ public class CalcoloPenaModel extends GenericModel {
 
 				lSSRideterminata = lCalUtil.sottraiGiorniValuteNew(lSSIniziale, lTotDaComputare);
 			}
+			// MEV_2023-33: aggiunti codici
+			// TIPO_SANZIONE_SOSTITUTIVA T G Pena Sostitutiva Semiliberta' sostitutiva
+			// TIPO_SANZIONE_SOSTITUTIVA V H Pena Sostitutiva Detenzione Domiciliare sostitutiva
+			else if (mSanzioneSostitutiva.getCodTipoSanzione().equals("V")) {
+				// Detenzione Domiciliare sostitutiva: conversione 1 a 1, 1g di detentiva = 1 g di Detenzione
+				// Domiciliare sostitutiva
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("Detenzione Domiciliare sostitutiva: conversione 1 a 1, "
+						+ "1g di detentiva = 1 g di Detenzione Domiciliare sostitutiva");
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("lTotDaComputare = " + lTotDaComputare);
+				lSSRideterminata = lCalUtil.sottraiGiorniValuteNew(lSSIniziale, lTotDaComputare);
+			} else if (mSanzioneSostitutiva.getCodTipoSanzione().equals("T")) {
+				// Semiliberta' sostitutiva: conversione 1 a 2, 1g di detentiva = 2g di Semiliberta'
+				// sostitutiva
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("Semiliberta' sostitutiva: conversione 1 a 2, "
+						+ "1g di detentiva = 2g di Semiliberta' sostitutiva");
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("lTotDaComputare = " + lTotDaComputare);
+				lTotDaComputare.setNumAnni(2 * lTotDaComputare.getNumAnni());
+				lTotDaComputare.setNumMesi(2 * lTotDaComputare.getNumMesi());
+				lTotDaComputare.setNumGiorni(2 * lTotDaComputare.getNumGiorni());
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("lTotDaComputare convertito = " + lTotDaComputare);
+				lSSRideterminata = lCalUtil.sottraiGiorniValuteNew(lSSIniziale, lTotDaComputare);
+			}
 			// else if (mSanzioneSostitutiva.getCodTipoSanzione().equals("P")){
 			// // In tutti gli altri casi non c'è conversione
 			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -3875,7 +3890,7 @@ public class CalcoloPenaModel extends GenericModel {
 	/**
 	 * Calcola la pena residua da espiare e il quantum di pena espiato in seguito a una
 	 * sospensione/interruzione dell'esecuzione della pena
-	 * 
+	 *
 	 * @param aPenResMod
 	 *            Model contenente la pena residua in decorrenza. Tale model deve contenere i quantum totali e
 	 *            le date già anticipate per effetto di eventuali LA. Se il model non viene passato in input
@@ -4082,7 +4097,7 @@ public class CalcoloPenaModel extends GenericModel {
 
 	/**
 	 * Restituisce la data dell'ultima sospensione (se presente)
-	 * 
+	 *
 	 * @return data inizio sospensione o null
 	 * @throws Exception
 	 */
@@ -4105,7 +4120,7 @@ public class CalcoloPenaModel extends GenericModel {
 	 * detrarre. Utilizzata nel caso di pena non in decorrenza (data inizio = null) per conoscere l'effettivo
 	 * quantum residuo ai fini dell'applicazione dei benefici. n.b. il metodo non entra nel merito se la pena
 	 * sia o meno in decorrenza, ma effettua una semplice sottrazione sui quantum
-	 * 
+	 *
 	 * @return CalendarModel contenente i quantum di pena residua totale (reclusione+arresti)
 	 * @throws Exception
 	 */
@@ -4173,7 +4188,7 @@ public class CalcoloPenaModel extends GenericModel {
 	 * computare oltre a quelli delle 'pena iniziale'. n.b. non vengono prese in considerazione eventuale LA
 	 * inserite dopo la pena iniziale. Il controllo viene quindi effettuato SOLO sui quantum, non sulle date
 	 * di decorrenza
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean isPenaIniziale() {
