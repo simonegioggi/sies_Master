@@ -61,8 +61,7 @@ public class ActStampaSospensioneDecisioniSorv678 extends ActionSiap implements 
 		/* lPos = */lPosCtrl.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicolo(
 				lFascicoloModel.getIdFascicoloSiep());
 
-		// impostare template
-		// FIXME da stabilire i template. Per ora se ne prevedono 2 uno per l'ordine di scarcerazione e uno
+		// Per ora si prevedono 2 template, uno per l'ordine di scarcerazione e uno
 		// per la comunicazione
 		String flagTemplate = null;
 		if ("PROC".equals(lMisMod.getCodTipoUfficioScarcerazione())) {

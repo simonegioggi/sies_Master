@@ -1108,11 +1108,11 @@ if ("MODIFICA".equals(tipoOperazione))
 
 if (tipomisura.equals("DETENZIONE")) {
 %>
-      		<font class="campo"><%=tipoOperazioneView%> AMMISSIONE PROVVISORIA A DETENZIONE DOMICILIARE</font>
+      		<font class="campo"><%=tipoOperazioneView%> AMMISSIONE/APPLICAZIONE PROVVISORIA A DETENZIONE DOMICILIARE</font>
 <%
 } else {
 %>
-      		<font class="campo"><%=tipoOperazioneView%> AMMISSIONE PROVVISORIA AD AFFIDAMENTO IN PROVA</font>
+      		<font class="campo"><%=tipoOperazioneView%> AMMISSIONE/APPLICAZIONE AD AFFIDAMENTO IN PROVA</font>
 <%
 }
 %>

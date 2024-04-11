@@ -88,9 +88,9 @@
     <td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
     <td class="LBG"><font class="label">Funzione :</font>&nbsp;&nbsp;
       <% if(tipoMisura.equals("AFFIDAMENTO")) {%>
-      <font class="campo">Dettaglio Ammissone Provvisoria ad Affidamento in Prova</font>
+      <font class="campo">Dettaglio Ammissone/Applicazione Provvisoria ad Affidamento in Prova</font>
       <% } else if(tipoMisura.equals("DETENZIONE")) {%>
-      <font class="campo">Dettaglio Ammissione Provvisoria Detenzione Domiciliare</font>
+      <font class="campo">Dettaglio Ammissione/Applicazione Provvisoria Detenzione Domiciliare</font>
       <% } %>
     </td>
 

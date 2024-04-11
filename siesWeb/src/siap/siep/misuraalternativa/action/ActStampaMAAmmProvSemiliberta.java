@@ -91,8 +91,14 @@ public class ActStampaMAAmmProvSemiliberta extends ActConcessione implements ICo
 		// n.b. si opera sulla falsa riga della stampa della concessione Semilibertà
 		// (0004)
 		String flagTemplate = null;
-		flagTemplate = getFlagTemplateSemiliberta(lPosPrec, lPosGiu.getCodPosizioneGiuridica(), lMisAlModConcessa);
-
+		//flagTemplate = getFlagTemplateSemiliberta(lPosPrec, lPosGiu.getCodPosizioneGiuridica(), lMisAlModConcessa);
+		
+		String lflagScarcerato = lMisAlModConcessa.getCodTipoUfficioScarcerazione();
+		if (lflagScarcerato.equals("PROC"))
+			flagTemplate = "1";
+		else if (lflagScarcerato.equals("SORV"))
+			flagTemplate = "0";
+		
 		if (flagTemplate != null && lEventoModel.getCodMotivo() != null && !lEventoModel.getCodMotivo().equals("0000")) {
 			ITemplate lCtrlTem = SICOLookupRemote.getTemplateRemote();
 			TemplateModel lTemMod = null;
