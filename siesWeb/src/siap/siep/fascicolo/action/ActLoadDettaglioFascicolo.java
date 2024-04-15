@@ -1,11 +1,14 @@
 package siap.siep.fascicolo.action;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -792,6 +795,39 @@ public class ActLoadDettaglioFascicolo extends ActionSiap implements ICostantiFa
 		setRequestAttribute("continuazioni", lRCtrl.getTableContinuazioni(lReatiVect));
 
 		setRequestAttribute("dettagliofascicolo", lDettaglio);
+		// TEST MEV_9-SIEP
+		// in caso di PG - 14 = Espiazione Pena in Regime di Semiliberta'
+		// provo a capire se trattasi della provvisoria a partire dell'evento che la ha generata
+		// o meglio all'ordinanza collegata all'evento
+		siesLogger.debug("TestDettaglio");
+		if (   lDettaglio.getPosizioneGiuridica()!=null
+				&& "14".equals(lDettaglio.getPosizioneGiuridica().getCodPosizioneGiuridica()) // Espiazione Pena in Regime di Semiliberta' 
+				&& lDettaglio.getPosizioneGiuridica().getIdEventoRiferimento()!=null
+			 )
+		{
+  		IEvento lCtrlEvento = SICOLookupRemote.getEventoRemote();
+			EventoModel lEveSemilib = lCtrlEvento.ExRicercaEventoByKey(lDettaglio.getPosizioneGiuridica().getIdEventoRiferimento());
+			
+			if (lEveSemilib!=null) 
+			{
+				// n.b lEveSemilib potrebbe essere il verbale o il provvedimento. Entrambi puntano l'ordinanza
+				//     Recupero l'ordinanza
+				EventoModel lEveOrd = lCtrlEvento.ExRicercaEventoByKey(lEveSemilib.getEveIdEvento());
+				if (   lEveOrd!=null
+						&& (   "2007".equals(lEveOrd.getCodMotivo())
+								|| "0683".equals(lEveOrd.getCodMotivo())
+								|| "0694".equals(lEveOrd.getCodMotivo())
+							)
+					 ) 
+				{
+					String descrPGNew = lDettaglio.getPosizioneGiuridica().getDescrPosizioneGiuridica() + " (a seguito Applicazione/Ammissione Provvisoria)";
+					lDettaglio.getPosizioneGiuridica().setDescrPosizioneGiuridica(descrPGNew);
+				}								
+			}
+		}
+		// TEST MEV_9-SIEP - FINE
+		
+		
 		// setRequestAttribute("flagDettaglio", flagDettaglio);
 
 		// Inserisce nella session il fascicolo (contenente Soggetto e Sentenza)

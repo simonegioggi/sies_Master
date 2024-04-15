@@ -979,12 +979,6 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
       </font>
     </td>
   </tr>
-  <tr>
-    <td class="l">Luogo della Prova </td>
-    <td class="l" colspan="3">
-      <font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getDescrLuogoProva())%></font>
-    </td>
-  </tr>
 
   
 <% if (verbale.getDataEmissione() != null) { %>
@@ -1126,16 +1120,6 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
   </tr>
  
   <tr>
-    <td class="l">Luogo della Prova</td>
-    <td class="l" colspan="3">
-      <font class="campo">
-        <input Title="Luogo svolgimento della prova" size=35 type="text" <%-- onChange="pulisciId();" MEV 9 --%>
-               value="<%=StringUtils.toStringJSP(misuraalternativaToChange.getDescrLuogoProva())%>" 
-               name="<%=ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA%>" >
-      </font>
-    </td>
-  </tr>
-  <tr>
     <td class="l">Note</td>
     <td class="L" colspan="3">
       <TEXTAREA title="Note" name="<%=ICostantiMisuraAlternativa.CAMPO_NOTE %>"  cols=80 rows=2><%=StringUtils.toStringJSP(misuraalternativaToChange.getNote())%></textarea>
@@ -1152,9 +1136,11 @@ if (misuraalternativa.getIdMisuraAlternativa() == null)
   String radioProcura = "";
   String radioSorv = "";
   radioProcura="checked";
+  Date dataInizioMisura = null;
   if ("SORV".equals(misuraalternativaToChange.getCodTipoUfficioScarcerazione())) {
     radioProcura = "";
     radioSorv = "checked";
+    dataInizioMisura = misuraalternativaToChange.getDataInizioMisura();
   }  
 %>
 <table width="100%">
@@ -1165,9 +1151,9 @@ if (misuraalternativa.getIdMisuraAlternativa() == null)
       <input type="radio" name="tipo" value="mds" onClick="javascript:radio();" <%=radioSorv%>>
     </td>
     <td class="l">Data Inizio Misura &nbsp; 
-      <input type="text" size="2" maxlength="2" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativaToChange.getDataInizioMisura(),"dd"))%>" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> -
-      <input type="text" size="2" maxlength="2" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativaToChange.getDataInizioMisura(),"MM"))%>" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_SCARCERAZIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> -
-      <input type="text" size="4" maxlength="4" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativaToChange.getDataInizioMisura(),"yyyy"))%>" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_SCARCERAZIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
+      <input type="text" size="2" maxlength="2" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataInizioMisura,"dd"))%>" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> -
+      <input type="text" size="2" maxlength="2" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataInizioMisura,"MM"))%>" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_SCARCERAZIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> -
+      <input type="text" size="4" maxlength="4" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataInizioMisura,"yyyy"))%>" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_SCARCERAZIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
     </td>
   </tr>
 </table>

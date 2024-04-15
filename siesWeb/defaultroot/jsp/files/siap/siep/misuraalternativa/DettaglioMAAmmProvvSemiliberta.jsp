@@ -385,12 +385,6 @@ else if("03".equals(misuraalternativa.getCodTipoDecisione() )) {
   <%}%>
 </tr>
   
-<tr> 
-  <td class="l">Luogo della Prova</td>
-  <td class="l">
-    <font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getDescrLuogoProva())%>&nbsp;</font>
-  <td>
-</tr>
 
 <%if(misuraalternativa.getNote() != null){%>
 <tr>

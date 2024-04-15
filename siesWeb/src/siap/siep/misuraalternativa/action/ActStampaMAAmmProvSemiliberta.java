@@ -94,10 +94,33 @@ public class ActStampaMAAmmProvSemiliberta extends ActConcessione implements ICo
 		//flagTemplate = getFlagTemplateSemiliberta(lPosPrec, lPosGiu.getCodPosizioneGiuridica(), lMisAlModConcessa);
 		
 		String lflagScarcerato = lMisAlModConcessa.getCodTipoUfficioScarcerazione();
-		if (lflagScarcerato.equals("PROC"))
-			flagTemplate = "1";
-		else if (lflagScarcerato.equals("SORV"))
-			flagTemplate = "0";
+		
+		if ("2007".equals(lEventoModel.getCodMotivo())) {
+			if (lEventoModel.getCodTipoProvvedimento().equals("09")) {
+				// Ordine di scarcerazione a seguito del verbale di arresto/sottoscrizione
+				flagTemplate = "1";
+			}	else if (   lPosGiu.isLibero() ) {
+				flagTemplate = "0";
+		  } else if (   lPosGiu.getCodPosizioneGiuridica().equals("04")
+					       || lPosGiu.getCodPosizioneGiuridica().equals("12")
+					       || lPosGiu.getCodPosizioneGiuridica().equals("13")
+					       || lPosGiu.getCodPosizioneGiuridica().equals("14")
+					       || lPosGiu.getCodPosizioneGiuridica().equals("29")
+					       || lPosGiu.getCodPosizioneGiuridica().equals("54")
+				)
+			{ // Arresti domiciliari e simili
+				flagTemplate = "3";
+			} else if (lPosGiu.getCodPosizioneGiuridica().equals("03") ) {
+				// detenuto
+				flagTemplate = "2";
+			}
+		} else {
+			// per tutti gli altri codici vale solo chi esegua
+			if (lflagScarcerato.equals("PROC"))
+				flagTemplate = "0";
+			else if (lflagScarcerato.equals("SORV"))
+				flagTemplate = "0"; // DA VERIFICARE
+		}
 		
 		if (flagTemplate != null && lEventoModel.getCodMotivo() != null && !lEventoModel.getCodMotivo().equals("0000")) {
 			ITemplate lCtrlTem = SICOLookupRemote.getTemplateRemote();

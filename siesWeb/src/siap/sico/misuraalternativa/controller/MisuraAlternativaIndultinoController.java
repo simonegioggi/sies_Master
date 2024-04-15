@@ -2640,8 +2640,12 @@ public class MisuraAlternativaIndultinoController extends SiapController
 
       // SETTA LO STATO PROCEDIMENTO
       String lStato = null;
-      if (lEveModel.getCodMotivo().equals("2007"))
-        lStato = "0572";     
+      if (lEveModel.getCodMotivo().equals("2007")) {
+        if (lEveModel.getCodTipoProvvedimento().equals("09"))
+        	lStato = "0576";
+        else 
+        	lStato = "0572";   
+      }
       else if (lEveModel.getCodMotivo().equals("1403"))
         lStato = "0573";    
       else if (lEveModel.getCodMotivo().equals("1414"))

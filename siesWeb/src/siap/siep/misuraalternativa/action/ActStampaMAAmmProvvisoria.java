@@ -147,7 +147,10 @@ public class ActStampaMAAmmProvvisoria extends ActionSiap implements ICostantiMi
 					|| lEventoModel.getCodMotivo().equals("1410")
 					|| lEventoModel.getCodMotivo().equals("1411")
 					|| lEventoModel.getCodMotivo().equals("1412")) {
-				flagTemplate = "5";
+				if (lEventoModel.getCodTipoProvvedimento().equals("12"))
+					flagTemplate = "0";
+				else
+					flagTemplate = "5";
 			}
 		  // MEV_9-SIEP - FINE
 			else if (lEventoModel.getCodMotivo().equals("2006")) { // Vecchia gestione per il codice 2006

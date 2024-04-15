@@ -382,7 +382,7 @@ public class ActInserisciMAAmmProvSemiliberta extends ActMisuraAlternativa
 	}
 
 	/**
-	 * Restitiusce il tipo provvedimento da emettere in funzione del tipo di misura, AFFIDAMENTO o DETENZIONE,
+	 * Restitiusce il tipo provvedimento da emettere in funzione 
 	 * della posizione giuridica
 	 *
 	 * @param tipoMisura
@@ -399,16 +399,13 @@ public class ActInserisciMAAmmProvSemiliberta extends ActMisuraAlternativa
 
 		if (flagverbale.equals("S")) {
 			// in caso di provvedimento successivo al verbale si emette sempre una comunicazione
-			aCodTipoProvedimento = "12"; // Comunicazione
+			aCodTipoProvedimento = "09"; // Comunicazione
 		} else if ("PROC".equals(aMisMod.getCodTipoUfficioScarcerazione()) && aPosMod.isLibero()) {
-			aCodTipoProvedimento = "06"; // Ordine sesecuzione
+			aCodTipoProvedimento = "06"; // Ordine esecuzione
 		} else if ("PROC".equals(aMisMod.getCodTipoUfficioScarcerazione()) && PosizioneGiu.equals("03")) {
 			aCodTipoProvedimento = "12"; // Comunicazione
-		} else if ("PROC".equals(aMisMod.getCodTipoUfficioScarcerazione()) && (PosizioneGiu.equals("04") // arresti
-																											// domiciliari
-				|| PosizioneGiu.equals("12") || PosizioneGiu.equals("13") || PosizioneGiu.equals("14") // già
-																										// in
-																										// misura
+		} else if ("PROC".equals(aMisMod.getCodTipoUfficioScarcerazione()) && (PosizioneGiu.equals("04") 
+				|| PosizioneGiu.equals("12") || PosizioneGiu.equals("13") || PosizioneGiu.equals("14") 
 				|| PosizioneGiu.equals("29") // Det Dom PROVV
 				|| PosizioneGiu.equals("54") // Aff Prov PROVV
 		)) { // FIXME da verificare
