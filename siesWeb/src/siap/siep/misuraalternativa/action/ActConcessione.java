@@ -345,7 +345,6 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 
 			setRequestAttribute("Istituto", Istituto);
 			setRequestAttribute("LuogoIstituto", LuogoIstituto);
-
 		}
 
 		// MEV_9-SIEP: aggiunto controllo per diversificare la setRequestAttribute

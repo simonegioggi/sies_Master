@@ -1272,7 +1272,7 @@ String dascarceraredisabilita = null;
 String disabilitaData = null;
 String scarcerato = null;
 String scarcerare = null;
-// MEV_9: aggiunta OR condition
+// MEV_9-SIEP: aggiunta OR condition
 if (misuraalternativa == null || misuraalternativa.getIdMisuraAlternativa() == null || isModifica) {
 %>
 <input type="HIDDEN" name="flagmisura" value="N">
@@ -1579,15 +1579,13 @@ if (!Utils.isNullObj(eventonotifica.getEvento())) {
 if (misuraalternativa.getIdMisuraAlternativa() != null && !isModifica) {
 %>
 	<tr>
-		<td class="l" width="25%">Anno/Numero SIUS</td>
+		<td class="l" width="25%">Anno / Numero SIUS</td>
 	  	<td class="l">
-			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getChiaveAnnoFascicoloSius())%>/</font>
-			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getChiaveProgrFascicoloSius())%></font>
+			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getChiaveAnnoFascicoloSius())%>&nbsp;/&nbsp;<%=StringUtils.toStringJSP(misuraalternativa.getChiaveProgrFascicoloSius())%></font>
 		</td>
-		<td class="l">Anno/Numero Ordinanza</td>
+		<td class="l">Anno / Numero Ordinanza</td>
 		<td class="l">
-			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistro())%>/</font>
-			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistro())%></font>
+			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistro())%>&nbsp;/&nbsp;<%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistro())%></font>
 	 	</td>
 	</tr>
 	<tr>
@@ -1620,12 +1618,11 @@ if (misuraalternativa.getIdMisuraAlternativa() != null && !isModifica) {
 	    	<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getDescrLuogoProva())%></font>	
 	  	</td>
 	</tr>
-	<%-- MEV_9-SIEP: aggiunte tre nuove sezioni x AFFIDAMENTO - SIAMO IN PRESENZA MISURA ALTERNATIVA --%>
+	<%-- MEV_9-SIEP: aggiunte due nuove sezioni x AFFIDAMENTO - SIAMO IN PRESENZA MISURA ALTERNATIVA --%>
 	<tr>
-		<td class="l" width="20%">Anno/Numero Ordinanza Provvisoria</td>
+		<td class="l" width="20%">Anno / Numero Ordinanza Provvisoria</td>
 		<td class="l" colspan="3">
-			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistroMaAt())%>/</font>
-			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistroMaAt())%></font>
+			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistroMaAt())%>&nbsp;/&nbsp;<%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistroMaAt())%></font>
 			<input type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_EVE_ID_EVENTO%>" value="<%=StringUtils.toStringJSP(misuraalternativa.getEveIdEvento())%>">
 	 	</td>
 	</tr>
@@ -1636,12 +1633,6 @@ if (misuraalternativa.getIdMisuraAlternativa() != null && !isModifica) {
 			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getDayToString(misuraalternativa.getDataDecisioneMaAt()))%>">
 			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getMonthToString(misuraalternativa.getDataDecisioneMaAt()))%>">
 			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getYearToString(misuraalternativa.getDataDecisioneMaAt()))%>">
-	  	</td>
-	</tr>
-	<tr>
-	  	<td class="l">Luogo della Prova Ordinanza Provvisoria</td>
-	  	<td class="l" colspan="3">
-	    	<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getDescrTipoMisuraMaAt())%></font>	
 	  	</td>
 	</tr>
 	<%-- FINE MEV_9-SIEP --%>
@@ -1654,12 +1645,11 @@ if (misuraalternativa.getIdMisuraAlternativa() != null && !isModifica) {
 	    	<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getDescrLuogoProva())%></font>
 	  	</td>
 	</tr>
-	<%-- MEV_9-SIEP: aggiunte tre nuove sezioni x DETENZIONE - SIAMO IN PRESENZA MISURA ALTERNATIVA --%>
+	<%-- MEV_9-SIEP: aggiunte due nuove sezioni x DETENZIONE - SIAMO IN PRESENZA MISURA ALTERNATIVA --%>
 	<tr>
-		<td class="l" width="20%">Anno/Numero Ordinanza Provvisoria</td>
+		<td class="l" width="20%">Anno / Numero Ordinanza Provvisoria</td>
 		<td class="l" colspan="3">
-			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistroMaAt())%>/</font>
-			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistroMaAt())%></font>
+			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistroMaAt())%>&nbsp;/&nbsp;<%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistroMaAt())%></font>
 			<input type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_EVE_ID_EVENTO%>" value="<%=StringUtils.toStringJSP(misuraalternativa.getEveIdEvento())%>">
 	 	</td>
 	</tr>
@@ -1670,12 +1660,6 @@ if (misuraalternativa.getIdMisuraAlternativa() != null && !isModifica) {
 			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getDayToString(misuraalternativa.getDataDecisioneMaAt()))%>">
 			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getMonthToString(misuraalternativa.getDataDecisioneMaAt()))%>">
 			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getYearToString(misuraalternativa.getDataDecisioneMaAt()))%>">
-	  	</td>
-	</tr>
-		<tr>
-	  	<td class="l">Luogo della Prova Ordinanza Provvisoria</td>
-	  	<td class="l" colspan="3">
-	    	<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getDescrTipoMisuraMaAt())%></font>	
 	  	</td>
 	</tr>
 	<%-- FINE MEV_9-SIEP --%>
@@ -1692,12 +1676,11 @@ if (misuraalternativa.getIdMisuraAlternativa() != null && !isModifica) {
 	// MEV_9-SIEP: aggiunto ramo else x SEMILIBERTA'
 	} else if (tipoMisura.equals("SEMILIBERTA")) {
 %>
-	<%-- MEV_9-SIEP: aggiunte tre nuove sezioni x SEMILIBERTA' - SIAMO IN PRESENZA MISURA ALTERNATIVA --%>
+	<%-- MEV_9-SIEP: aggiunte due nuove sezioni x SEMILIBERTA' - SIAMO IN PRESENZA MISURA ALTERNATIVA --%>
 	<tr>
-		<td class="l" width="20%">Anno/Numero Ordinanza Provvisoria</td>
+		<td class="l" width="20%">Anno / Numero Ordinanza Provvisoria</td>
 		<td class="l" colspan="3">
-			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistroMaAt())%>/</font>
-			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistroMaAt())%></font>
+			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistroMaAt())%>&nbsp;/&nbsp;<%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistroMaAt())%></font>
 			<input type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_EVE_ID_EVENTO%>" value="<%=StringUtils.toStringJSP(misuraalternativa.getEveIdEvento())%>">
 	 	</td>
 	</tr>
@@ -1708,12 +1691,6 @@ if (misuraalternativa.getIdMisuraAlternativa() != null && !isModifica) {
 			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getDayToString(misuraalternativa.getDataDecisioneMaAt()))%>">
 			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getMonthToString(misuraalternativa.getDataDecisioneMaAt()))%>">
 			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getYearToString(misuraalternativa.getDataDecisioneMaAt()))%>">
-	  	</td>
-	</tr>
-		<tr>
-	  	<td class="l">Luogo della Prova Ordinanza Provvisoria</td>
-	  	<td class="l" colspan="3">
-	    	<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getDescrTipoMisuraMaAt())%></font>	
 	  	</td>
 	</tr>
 	<%-- FINE MEV_9-SIEP --%>
@@ -1774,7 +1751,7 @@ else { // misuraalternativa.getIdMisuraAlternativa() == null
 		</td>
 	</tr>
 	<tr>
-	   	<td class="l" width="25%">Anno/Numero SIUS</td>
+	   	<td class="l" width="25%">Anno / Numero SIUS</td>
 	   	<td class="l">
 	     	<input Title="Anno Fascicolo Sius" name="<%=ICostantiMisuraAlternativa.CAMPO_CHIAVE_ANNO_FASCICOLO_SIUS%>" type="text" size="4" maxlength="4" 
 				onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)" onChange="pulisciId();"
@@ -1784,7 +1761,7 @@ else { // misuraalternativa.getIdMisuraAlternativa() == null
 				onkeypress="return TicTabNumField(this,event)" onChange="pulisciId();"
 				value="<%=StringUtils.toStringJSP(misuraalternativa.getChiaveProgrFascicoloSius())%>">
 		</td>
-		<td class="l">Anno/Numero Ordinanza</td>
+		<td class="l">Anno / Numero Ordinanza</td>
 		<td class="l">
 			<input Title="Anno Ordinanza" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO%>" type="text" size="4" maxlength="4" 
 				onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillYear(value)" onChange="pulisciId();"
@@ -1807,15 +1784,17 @@ else { // misuraalternativa.getIdMisuraAlternativa() == null
 <%
 	} else {
 		listaComuniScript = "ListaComuniEmitTdsMinor";
+		if (isModifica) {
 %>
-<%if (isModifica) {%>
 			<select Title="Ufficio Emittente" class="small" name="<%=ICostantiMisuraAlternativa.CAMPO_COD_UFFICIO_SORVEGLIANZA%>" id="<%=MinorMask.ComboEmittenteId%>">
 				<%=comboUfficioEmittenteModif%>
        		</select>
-<%} else {%>
-			<%=MinorMask.comboEmittente(filtroMinorenni, MinorMask.EmittenteTribunale)%>
-<%}%>
 <%
+		} else {
+%>
+			<%=MinorMask.comboEmittente(filtroMinorenni, MinorMask.EmittenteTribunale)%>
+<%
+		}
 	}
 %>      
 		</td>
@@ -1854,7 +1833,9 @@ else { // misuraalternativa.getIdMisuraAlternativa() == null
     <tr>
 		<td class="l">Data Emissione Ordinanza</td>
 		<td class="l" colspan="3">
-<%if (isModifica) {%>
+<%
+if (isModifica) {
+%>
 			<font class="campo">
 				<input title="Giorno Data Emissione Ordinanza" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisione(), "dd"))%>"
 				type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>" <%=IWebConstants.UTIL_DATA%> onChange="pulisciId();"> -
@@ -1863,7 +1844,9 @@ else { // misuraalternativa.getIdMisuraAlternativa() == null
 				<input title="Anno Data Emissione Ordinanza" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisione(), "yyyy"))%>"
 				type="text" size="4" maxlength="4" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE%>" <%=IWebConstants.UTIL_DATA_ANNO%> onChange="pulisciId();">
 			</font>
-<%} else {%>
+<%
+} else {
+%>
 			<font class="campo">
 				<input title="Giorno Data Emissione Ordinanza" value="<%=DateUtils.getSysDate("dd")%>" type="text" size="2" maxlength="2"
 				name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>" <%=IWebConstants.UTIL_DATA%> onChange="pulisciId();"> -
@@ -1872,7 +1855,9 @@ else { // misuraalternativa.getIdMisuraAlternativa() == null
 				<input title="Anno Data Emissione Ordinanza" value="<%=DateUtils.getSysDate("yyyy")%>" type="text" size="4" maxlength="4"
 				name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE%>" <%=IWebConstants.UTIL_DATA_ANNO%> onChange="pulisciId();">
 			</font>
-<%}%>
+<%
+}
+%>
 		</td>
     </tr>
 
@@ -1888,9 +1873,9 @@ else { // misuraalternativa.getIdMisuraAlternativa() == null
 	    	</font>
 	  	</td>
 	</tr>
-	<%-- MEV_9-SIEP: aggiunte tre nuove sezioni x AFFIDAMENTO - SIAMO IN ASSENZA MISURA ALTERNATIVA --%>
+	<%-- MEV_9-SIEP: aggiunte due nuove sezioni x AFFIDAMENTO - SIAMO IN ASSENZA MISURA ALTERNATIVA --%>
 	<tr>
-		<td class="l" width="20%">Anno/Numero Ordinanza Provvisoria</td>
+		<td class="l" width="20%">Anno / Numero Ordinanza Provvisoria</td>
 		<td class="l" colspan="3">
 			<input Title="Anno Ordinanza Provvisoria" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>" type="text" size="4" maxlength="4" 
 				onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)" onChange="pulisciId();"
@@ -1914,15 +1899,6 @@ else { // misuraalternativa.getIdMisuraAlternativa() == null
 			<input title="Anno Data Emissione Ordinanza Provvisoria" type="text" size="4" maxlength="4" 
 				name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>" <%=IWebConstants.UTIL_DATA_ANNO%> onChange="pulisciId();"
 				value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "yyyy"))%>">
-	  	</td>
-	</tr>
-	<tr>
-	    <td class="l">Luogo della Prova Ordinanza Provvisoria</td>
-	  	<td class="l" colspan="3">
-	    	<font class="campo">
-	      		<input Title="Luogo svolgimento della prova Ordinanza Provvisoria" name="<%=ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA_MA_AT%>"
-	      		value="<%=StringUtils.toStringJSP(misuraalternativa.getDescrTipoMisuraMaAt())%>" size="50" type="text" onChange="pulisciId();">
-	    	</font>
 	  	</td>
 	</tr>
 	<%-- FINE MEV_9-SIEP --%>
@@ -1937,9 +1913,9 @@ else { // misuraalternativa.getIdMisuraAlternativa() == null
 	    	</font>
 	  	</td>
 	</tr>
-	<%-- MEV_9-SIEP: aggiunte tre nuove sezioni x DETENZIONE - SIAMO IN ASSENZA MISURA ALTERNATIVA --%>
+	<%-- MEV_9-SIEP: aggiunte due nuove sezioni x DETENZIONE - SIAMO IN ASSENZA MISURA ALTERNATIVA --%>
 	<tr>
-		<td class="l" width="20%">Anno/Numero Ordinanza Provvisoria</td>
+		<td class="l" width="20%">Anno / Numero Ordinanza Provvisoria</td>
 		<td class="l" colspan="3">
 			<input Title="Anno Ordinanza Provvisoria" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>" type="text" size="4" maxlength="4" 
 				onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)" onChange="pulisciId();"
@@ -1963,15 +1939,6 @@ else { // misuraalternativa.getIdMisuraAlternativa() == null
 			<input title="Anno Data Emissione Ordinanza Provvisoria" type="text" size="4" maxlength="4" 
 				name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>" <%=IWebConstants.UTIL_DATA_ANNO%> onChange="pulisciId();"
 				value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "yyyy"))%>">
-	  	</td>
-	</tr>
-		<tr>
-	    <td class="l">Luogo della Prova Ordinanza Provvisoria</td>
-	  	<td class="l" colspan="3">
-	    	<font class="campo">
-	      		<input Title="Luogo della Prova Ordinanza Provvisoria" name="<%=ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA_MA_AT%>"
-	      			value="<%=StringUtils.toStringJSP(lMAAmmProvv.getDescrTipoMisuraMaAt())%>" size="50" type="text" onChange="pulisciId();">
-	    	</font>
 	  	</td>
 	</tr>
 	<%-- FINE MEV_9-SIEP --%>
@@ -1990,9 +1957,9 @@ else { // misuraalternativa.getIdMisuraAlternativa() == null
 	// MEV_9-SIEP: aggiunto ramo else x SEMILIBERTA'
 	} else if (tipoMisura.equals("SEMILIBERTA")) {
 %>
-	<%-- MEV_9-SIEP: aggiunte tre nuove sezioni x SEMILIBERTA' - SIAMO IN ASSENZA MISURA ALTERNATIVA --%>
+	<%-- MEV_9-SIEP: aggiunte due nuove sezioni x SEMILIBERTA' - SIAMO IN ASSENZA MISURA ALTERNATIVA --%>
 	<tr>
-		<td class="l" width="20%">Anno/Numero Ordinanza Provvisoria</td>
+		<td class="l" width="20%">Anno / Numero Ordinanza Provvisoria</td>
 		<td class="l" colspan="3">
 			<input Title="Anno Ordinanza Provvisoria" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>" type="text" size="4" maxlength="4" 
 				onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)" onChange="pulisciId();"
@@ -2016,14 +1983,6 @@ else { // misuraalternativa.getIdMisuraAlternativa() == null
 			<input title="Anno Data Emissione Ordinanza Provvisoria" type="text" size="4" maxlength="4" 
 				name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>" <%=IWebConstants.UTIL_DATA_ANNO%> onChange="pulisciId();"
 				value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "yyyy"))%>">
-	  	</td>
-	</tr>
-	<tr>
-	    <td class="l">Luogo della Prova Ordinanza Provvisoria</td>
-	  	<td class="l" colspan="3">
-	    	<font class="campo">
-	      		<input Title="Luogo della Prova Ordinanza Provvisoria" name="<%=ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA_MA_AT%>" size="50" type="text" onChange="pulisciId();">
-	    	</font>
 	  	</td>
 	</tr>
 	<%-- FINE MEV_9-SIEP --%>
@@ -2064,15 +2023,21 @@ if (lPosizione.isLibero() && tipoMisura.equals("AFFIDAMENTO")) {
 	<tr>
 		<td class="l" width="20%">Data Applicazione Provvisoria</td>
 		<td class="l">
-<%if (isModifica) {%>
+<%
+if (isModifica) {
+%>
 	 		<input title="Giorno Data Applicazione Provvisoria" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataInizioMisura(), "dd"))%>" <%=IWebConstants.UTIL_DATA%>> -
 			<input title="Mese Data Applicazione Provvisoria" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataInizioMisura(), "MM"))%>" <%=IWebConstants.UTIL_DATA%>> -
 			<input title="Anno Data Applicazione Provvisoria" type="text" size="4" maxlength="4" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataInizioMisura(), "yyyy"))%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
-<%} else {%>
+<%
+} else {
+%>
 			<input title="Giorno Data Applicazione Provvisoria" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "dd"))%>" <%=IWebConstants.UTIL_DATA%>> -
 			<input title="Mese Data Applicazione Provvisoria" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "MM"))%>" <%=IWebConstants.UTIL_DATA%>> -
 			<input title="Anno Data Applicazione Provvisoria" type="text" size="4" maxlength="4" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "yyyy"))%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
-<%}%>
+<%
+}
+%>
 		</td>
 	</tr>
 <%
@@ -2161,15 +2126,21 @@ else if ((lPosizione.getCodPosizioneGiuridica().equals("13") && lEventoAmmProvvA
 %>
 		<td class="l" width="20%">Data Applicazione Provvisoria</td>
 		<td class="l">
-<%if (isModifica) {%>
+<%
+if (isModifica) {
+%>
 	 		<input title="Giorno Data Applicazione Provvisoria" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataInizioMisura(), "dd"))%>" <%=IWebConstants.UTIL_DATA%>> -
 			<input title="Mese Data Applicazione Provvisoria" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataInizioMisura(), "MM"))%>" <%=IWebConstants.UTIL_DATA%>> -
 			<input title="Anno Data Applicazione Provvisoria" type="text" size="4" maxlength="4" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataInizioMisura(), "yyyy"))%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
-<%} else {%>
+<%
+} else {
+%>
 			<input title="Giorno Data Applicazione Provvisoria" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "dd"))%>" <%=IWebConstants.UTIL_DATA%>> -
 			<input title="Mese Data Applicazione Provvisoria" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "MM"))%>" <%=IWebConstants.UTIL_DATA%>> -
 			<input title="Anno Data Applicazione Provvisoria" type="text" size="4" maxlength="4" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "yyyy"))%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
-<%}%>
+<%
+}
+%>
 		</td>
 <%
 	} else {
@@ -2350,13 +2321,19 @@ if (posizioneluogoaltra != null &&  posizioneluogoaltra .getLuogoDetenzione()!= 
 	<tr>
 		<td class="l" width="25%">Destinatario <font class=ob>(*)</font></td>
 		<td class="l">
-<%if (isModifica) {%>
+<%
+if (isModifica) {
+%>
 			<select Title="UEPE/USSM" class="small" name="<%=MinorMask.ComboCSSAId%>" id="<%=MinorMask.ComboCSSAId%>">
 				<%=comboCSSATrattinoModif%>
        		</select>
-<%} else {%>
+<%
+} else {
+%>
 			<%=MinorMask.comboCSSATrattino(MinorMask.ComboCSSAId)%>
-<%}%>
+<%
+}
+%>
 		</td>
 	</tr>
 	<tr>

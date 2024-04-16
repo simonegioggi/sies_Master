@@ -91,8 +91,7 @@ function insertIT(
 		annoOrdinanzaProvvisoria,
 		numeroOrdinanzaProvvisoria,
 		idOrdinanzaProvvisoria,
-		isOrdinanzaProvvisoria,
-		descrLuogoProva) {
+		isOrdinanzaProvvisoria) {
 	if (annoSius != '-')
 		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_CHIAVE_ANNO_FASCICOLO_SIUS%>.value = annoSius;
 	else
@@ -226,11 +225,6 @@ function insertIT(
 			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.disabled = true;
 			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>.disabled = true;
 	  	}
-
-  		if (descrLuogoProva != '-')
-    		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA_MA_AT%>.value = descrLuogoProva;
-		else
-  			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA_MA_AT%>.value = "";
 	} catch (err) { }
 	// FINE MEV_9-SIEP
 
@@ -550,7 +544,7 @@ if (!documentiSius.isEmpty()) {
         // Il codice precedente ribalta in modo non corretto l'Autorità Emittente,
         // poichè non individua i codici TDSM e UDSM
         String lUfficio = StringUtils.toStringJSP(eventoModel.getCodTipoUfficioEmittente(), "-");
-     	// MEV_9-SIEP: aggiunto controllo per escludere dalla visualizzazione
+        // MEV_9-SIEP: aggiunto controllo per escludere dalla visualizzazione
         if (!"AMMISSIONE_PROVVISORIA".equals(NaturaMA)) {
 			if (("TDS".equals(lUfficio)
 					&& ("0680".equals(misuraModel.getCodTipoMisura())					// AFFIDAMENTO
@@ -630,33 +624,43 @@ if (!documentiSius.isEmpty()) {
 <%
 		// MEV_9-SIEP: aggiunti campi in estrazione
 		boolean isOrdinanzaProvvisoria = false;
-		if ("0271".equals(eventoModel.getCodEsito()) &&									// 'CO' - Conferma Decisione del Magistrato Relatore
-				(("TDS".equals(lUfficio)
-				&& ("0720".equals(misuraModel.getCodTipoMisura())						// AFFIDAMENTO
-						|| "0721".equals(misuraModel.getCodTipoMisura())				// AFFIDAMENTO
-						|| "0722".equals(misuraModel.getCodTipoMisura())				// DETENZIONE DOMICILIARE
-						|| "0723".equals(misuraModel.getCodTipoMisura())				// SEMILIBERTA'
-						|| "0724".equals(misuraModel.getCodTipoMisura())))				// SOSPENSIONE
-				|| ("TDSM".equals(lUfficio)
-						&& ("0730".equals(misuraModel.getCodTipoMisura())				// AFFIDAMENTO
-								|| "0731".equals(misuraModel.getCodTipoMisura())		// AFFIDAMENTO
-								|| "0732".equals(misuraModel.getCodTipoMisura())		// AFFIDAMENTO
-								|| "0733".equals(misuraModel.getCodTipoMisura())		// DETENZIONE DOMICILIARE
-								|| "0734".equals(misuraModel.getCodTipoMisura())		// SEMILIBERTA'
-								|| "0735".equals(misuraModel.getCodTipoMisura()))))) {	// SOSPENSIONE
+		String descrLuogoProva = misuraModel.getDescrLuogoProva();
+		// "0271".equals(eventoModel.getCodEsito()) && // 'CO' - Conferma Decisione del Magistrato Relatore
+		if ("0720".equals(misuraModel.getCodTipoMisura())			// AFFIDAMENTO
+				|| "0721".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
+				|| "0722".equals(misuraModel.getCodTipoMisura())	// DETENZIONE DOMICILIARE
+				|| "0723".equals(misuraModel.getCodTipoMisura())	// SEMILIBERTA'
+				|| "0724".equals(misuraModel.getCodTipoMisura())	// SOSPENSIONE
+				|| "0680".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
+				|| "0681".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
+				|| "0682".equals(misuraModel.getCodTipoMisura())	// DETENZIONE DOMICILIARE
+				|| "0683".equals(misuraModel.getCodTipoMisura())	// SEMILIBERTA'
+				|| "0684".equals(misuraModel.getCodTipoMisura())	// SOSPENSIONE
+				|| "0730".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
+				|| "0731".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
+				|| "0732".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
+				|| "0733".equals(misuraModel.getCodTipoMisura())	// DETENZIONE DOMICILIARE
+				|| "0734".equals(misuraModel.getCodTipoMisura())	// SEMILIBERTA'
+				|| "0735".equals(misuraModel.getCodTipoMisura())	// SOSPENSIONE
+				|| "0690".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
+				|| "0691".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
+				|| "0692".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
+				|| "0693".equals(misuraModel.getCodTipoMisura())	// DETENZIONE DOMICILIARE
+				|| "0694".equals(misuraModel.getCodTipoMisura())	// SEMILIBERTA'
+				|| "0695".equals(misuraModel.getCodTipoMisura())) {	// SOSPENSIONE
 			isOrdinanzaProvvisoria = true;
 			Date dataOrdinanzaProvvisoria = null;
 			BigDecimal annoOrdinanzaProvvisoria = null;
 			BigDecimal numeroOrdinanzaProvvisoria = null;
 			BigDecimal idFascicoloSius = eventoModel.getFasSiuIdFascicoloSius();
 			BigDecimal idOrdinanzaProvvisoria = null;
-			String descrLuogoProva = "";
 			Iterator<?> iter = documentiSius.iterator();
 			while (iter.hasNext()) {
 				MisuraAlternativaEventoModel maem = (MisuraAlternativaEventoModel) iter.next();
 				MisuraAlternativaModel mam = maem.getMisuraAlternativa();
 				EventoModel em = maem.getEvento();
 				if (!Utils.isNullObj(em.getFasSiuIdFascicoloSius())
+						&& !Utils.isNullObj(idFascicoloSius)
 						&& idFascicoloSius.compareTo(em.getFasSiuIdFascicoloSius()) == 0
 						&& ("0680".equals(em.getCodMotivo())			// AFFIDAMENTO
 								|| "0681".equals(em.getCodMotivo())		// AFFIDAMENTO
@@ -697,7 +701,7 @@ if (!documentiSius.isEmpty()) {
                                          '<%=StringUtils.toStringJSP(DateUtils.getDateToString(eventoModel.getDataEmissione(), "dd"), "-")%>',
                                          '<%=StringUtils.toStringJSP(DateUtils.getDateToString(eventoModel.getDataEmissione(), "MM"), "-")%>',
                                          '<%=StringUtils.toStringJSP(DateUtils.getDateToString(eventoModel.getDataEmissione(), "yyyy"), "-")%>',
-                                         '<%=StringUtils.cStrForJS(misuraModel.getDescrLuogoProva())%>',
+                                         '<%=StringUtils.cStrForJS(descrLuogoProva)%>',
                                          '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataInizioMisura(), "dd"), "-")%>',
                                          '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataInizioMisura(), "MM"), "-")%>',
                                          '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataInizioMisura(), "yyyy"), "-")%>',
@@ -735,8 +739,7 @@ if (!documentiSius.isEmpty()) {
                                          '<%=StringUtils.toStringJSP(annoOrdinanzaProvvisoria, "-")%>',
                                          '<%=StringUtils.toStringJSP(numeroOrdinanzaProvvisoria, "-")%>',
                                          '<%=StringUtils.toStringJSP(idOrdinanzaProvvisoria, "-")%>',
-                                         '<%=StringUtils.toStringJSP(isOrdinanzaProvvisoria, "-")%>',
-                                         '<%=StringUtils.toStringJSP(descrLuogoProva, "-")%>'
+                                         '<%=StringUtils.toStringJSP(isOrdinanzaProvvisoria, "-")%>'
                                          );">
 				<img align="middle" src="/images/fileselected.gif" border=0>
 			</a>
@@ -757,7 +760,7 @@ if (!documentiSius.isEmpty()) {
                                          '<%=StringUtils.toStringJSP(DateUtils.getDateToString(eventoModel.getDataEmissione(), "dd"), "-")%>',
                                          '<%=StringUtils.toStringJSP(DateUtils.getDateToString(eventoModel.getDataEmissione(), "MM"), "-")%>',
                                          '<%=StringUtils.toStringJSP(DateUtils.getDateToString(eventoModel.getDataEmissione(), "yyyy"), "-")%>',
-                                         '<%=StringUtils.cStrForJS(misuraModel.getDescrLuogoProva())%>',
+                                         '<%=StringUtils.cStrForJS(descrLuogoProva)%>',
                                          '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataInizioMisura(), "dd"), "-")%>',
                                          '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataInizioMisura(), "MM"), "-")%>',
                                          '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataInizioMisura(), "yyyy"), "-")%>',
@@ -795,8 +798,7 @@ if (!documentiSius.isEmpty()) {
                                          '',
                                          '',
                                          '',
-                                         '<%=StringUtils.toStringJSP(isOrdinanzaProvvisoria, "-")%>',
-                                         ''
+                                         '<%=StringUtils.toStringJSP(isOrdinanzaProvvisoria, "-")%>'
                                          );">
 				<img align="middle" src="/images/fileselected.gif" border=0>
 			</a>

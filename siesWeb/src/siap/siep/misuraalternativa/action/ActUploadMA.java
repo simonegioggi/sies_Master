@@ -3,6 +3,9 @@ package siap.siep.misuraalternativa.action;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
+import org.apache.log4j.Logger;
+
+import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
@@ -21,7 +24,14 @@ import siap.siep.fascicolo.model.FascicoloSiepModel;
  */
 public class ActUploadMA extends ActionSiap implements ICostantiEvento {
 
+	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+
 	public String processRequest() throws Exception {
+
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
 
 		FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 		EventoModel lModel = new EventoModel();
@@ -65,6 +75,11 @@ public class ActUploadMA extends ActionSiap implements ICostantiEvento {
 			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
 		}
 
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.debug(getClass().getName() + ".processRequest: fine");
+
+		// messaggio di ritorno
 		return IWebConstants.PG_MESSAGE;
 	}
 

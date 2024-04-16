@@ -1,14 +1,11 @@
 package siap.siep.fascicolo.action;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -800,34 +797,30 @@ public class ActLoadDettaglioFascicolo extends ActionSiap implements ICostantiFa
 		// provo a capire se trattasi della provvisoria a partire dell'evento che la ha generata
 		// o meglio all'ordinanza collegata all'evento
 		siesLogger.debug("TestDettaglio");
-		if (   lDettaglio.getPosizioneGiuridica()!=null
-				&& "14".equals(lDettaglio.getPosizioneGiuridica().getCodPosizioneGiuridica()) // Espiazione Pena in Regime di Semiliberta' 
-				&& lDettaglio.getPosizioneGiuridica().getIdEventoRiferimento()!=null
-			 )
-		{
-  		IEvento lCtrlEvento = SICOLookupRemote.getEventoRemote();
-			EventoModel lEveSemilib = lCtrlEvento.ExRicercaEventoByKey(lDettaglio.getPosizioneGiuridica().getIdEventoRiferimento());
-			
-			if (lEveSemilib!=null) 
-			{
+		if (lDettaglio.getPosizioneGiuridica() != null
+				&& "14".equals(lDettaglio.getPosizioneGiuridica().getCodPosizioneGiuridica()) // Espiazione
+																								// Pena in
+																								// Regime di
+																								// Semiliberta'
+				&& lDettaglio.getPosizioneGiuridica().getIdEventoRiferimento() != null) {
+			IEvento lCtrlEvento = SICOLookupRemote.getEventoRemote();
+			EventoModel lEveSemilib = lCtrlEvento
+					.ExRicercaEventoByKey(lDettaglio.getPosizioneGiuridica().getIdEventoRiferimento());
+
+			if (lEveSemilib != null) {
 				// n.b lEveSemilib potrebbe essere il verbale o il provvedimento. Entrambi puntano l'ordinanza
-				//     Recupero l'ordinanza
+				// Recupero l'ordinanza
 				EventoModel lEveOrd = lCtrlEvento.ExRicercaEventoByKey(lEveSemilib.getEveIdEvento());
-				if (   lEveOrd!=null
-						&& (   "2007".equals(lEveOrd.getCodMotivo())
-								|| "0683".equals(lEveOrd.getCodMotivo())
-								|| "0694".equals(lEveOrd.getCodMotivo())
-							)
-					 ) 
-				{
-					String descrPGNew = lDettaglio.getPosizioneGiuridica().getDescrPosizioneGiuridica() + " (a seguito Applicazione/Ammissione Provvisoria)";
+				if (lEveOrd != null && ("2007".equals(lEveOrd.getCodMotivo())
+						|| "0683".equals(lEveOrd.getCodMotivo()) || "0694".equals(lEveOrd.getCodMotivo()))) {
+					String descrPGNew = lDettaglio.getPosizioneGiuridica().getDescrPosizioneGiuridica()
+							+ " (a seguito Applicazione/Ammissione Provvisoria)";
 					lDettaglio.getPosizioneGiuridica().setDescrPosizioneGiuridica(descrPGNew);
-				}								
+				}
 			}
 		}
 		// TEST MEV_9-SIEP - FINE
-		
-		
+
 		// setRequestAttribute("flagDettaglio", flagDettaglio);
 
 		// Inserisce nella session il fascicolo (contenente Soggetto e Sentenza)
@@ -964,11 +957,11 @@ public class ActLoadDettaglioFascicolo extends ActionSiap implements ICostantiFa
 					if (ICostantiJMS.RESTITUITO.equals(lAnnotaModel.getCodEsito())) {
 						// Niente da visualizzare. La trasmissione è di fatto annullata
 						lLastEveTrasm = null;
-					// Ticket#202210130113 - Aggiunta gestione el codice di RIGETTO
+						// Ticket#202210130113 - Aggiunta gestione el codice di RIGETTO
 					} else if (ICostantiJMS.RIGETTATO.equals(lAnnotaModel.getCodEsito())) {
-							// Niente da visualizzare. La trasmissione è di fatto annullata
+						// Niente da visualizzare. La trasmissione è di fatto annullata
 						lLastEveTrasm = null;
-					// Ticket#202210130113 - FINE
+						// Ticket#202210130113 - FINE
 					} else if ("1040".equals(lLastEveTrasm.getCodMotivo())
 							&& ICostantiJMS.ASSORBITO_IN_CUMULO.equals(lAnnotaModel.getCodEsito())) {
 						// Niente da visualizzare. Archiviazione automatica stesso ufficio

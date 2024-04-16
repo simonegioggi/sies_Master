@@ -4,6 +4,7 @@
 <%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
+<%@ page import="f3b.util.Utils"%>
 
 <%@ page import="siap.sico.evento.model.EventoModel"%>
 <%@ page import="siap.siep.avvocato.model.AvvocatoSiepModel"%>
@@ -128,17 +129,21 @@ if ((eventonotifica.getEvento().getFlagDocumentoRegistrato() != null
 				<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>modifica24.gif" alt="Modifica" width="24" height="24" border="0">
 			</a>
 		</td>
-<%
-// 	}
-%>
 		<!-- BOTTONE DI STAMPA -->
    		<jsp:include page="<%=ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>">
      		<jsp:param name="ActionLink" value="<%="/jsp/Main.jsp?Action=siap.siep.misuraalternativa.action.ActStampaConcessione&IdEvento="+eventonotifica.getEvento().getIdEvento()+"&tipoMisura="+tipoMisura+"&IdEventoAmmProvvAff="+StringUtils.toStringJSP(lEventoAmmProvvAff.getIdEvento())%>"/>
 		</jsp:include>
+		<%-- MEV_9-SIEP: aggiunto pulsante di validazione diretta --%>
+		<!-- BOTTONE DI VALIDAZIONE DIRETTA -->
+  		<td class="LBG">
+    		<a href="/jsp/Main.jsp?Action=siap.siep.misuraalternativa.action.ActUploadMA&<%=ICostantiEvento.CAMPO_ID_EVENTO%>=<%=eventonotifica.getEvento().getIdEvento()%>&<%=ICostantiEvento.CAMPO_AZIONE_DETTAGLIO%>=siap.siep.misuraalternativa.action.ActDettaglioConcessione&<%=ICostantiEvento.CAMPO_VALIDA%>=S&noblob=S">
+      			<img align="middle" src="/images/upload24.gif" alt="Valida Provvedimento" width="24" height="24" border="0">
+    		</a>
+  		</td>
 <%
 // MEV_9-SIEP: stava dentro if (eventonotifica.getEvento().getFlagDocumentoRegistrato() != null) quindi era dead code
 // if (eventonotifica.getEvento().getFlagDocumentoRegistrato() == null)
-} 
+}
 %>
 <%-- 		<!-- BOTTONE DI STAMPA --> --%>
 <%--    		<jsp:include page="<%=ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>"> --%>
@@ -425,19 +430,17 @@ if (eventonotifica != null && eventonotifica.getNotifiche() != null && eventonot
 <%
 if (misuraalternativa.getChiaveAnnoFascicoloSius() != null) {
 %>
-	<td class="l">Anno/Numero SIUS</td>
+	<td class="l">Anno / Numero SIUS</td>
 	<td class="l">
-		<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getChiaveAnnoFascicoloSius())%>/</font>
-		<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getChiaveProgrFascicoloSius())%></font>
+		<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getChiaveAnnoFascicoloSius())%>&nbsp;/&nbsp;<%=StringUtils.toStringJSP(misuraalternativa.getChiaveProgrFascicoloSius())%></font>
 	</td>
 <%
 }
 if (misuraalternativa.getAnnoRegistro() != null) {
 %>
-		<td class="l">Anno/Numero Ordinanza</td>
+		<td class="l">Anno / Numero Ordinanza</td>
 		<td class="l">
-			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistro())%>/</font>
-			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistro())%></font>
+			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistro())%>&nbsp;/&nbsp;<%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistro())%></font>
 		</td>
 <%
 }
@@ -466,7 +469,7 @@ if (("PM".equals(codiceTipoUfficio) || "PMM".equals(codiceTipoUfficio) || "PGCAP
 		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getDescrTipoMisura())%></font></td>
 		<td class="l">Data Emissione Ordinanza</td>
 		<td class="l">
-			<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisione(),"dd-MM-yyyy"))%></font>
+			<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisione(), "dd-MM-yyyy"))%></font>
 		</td>
 	</tr>
 <%
@@ -478,18 +481,18 @@ if (misuraalternativa.getDescrLuogoProva() != null) {
 	</tr>
 <%
 }
-// MEV_9-SIEP: aggiunte etichette
-if (tipoMisura.equals("AFFIDAMENTO") && misuraalternativa.getAnnoRegistroMaAt() != null) {
+// MEV_9-SIEP: aggiunte etichette x tre tipo misura
+if ((tipoMisura.equals("AFFIDAMENTO") || tipoMisura.equals("DETENZIONE") || tipoMisura.equals("SEMILIBERTA"))
+		&&!Utils.isNullObj(misuraalternativa.getAnnoRegistroMaAt())) {
 %>
 	<tr>
-		<td class="l">Anno/Numero Ordinanza Provvisoria</td>
+		<td class="l">Anno / Numero Ordinanza Provvisoria</td>
 		<td class="l" colspan="3">
-			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistroMaAt())%>/</font>
-			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistroMaAt())%></font>
+			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistroMaAt())%>&nbsp;/&nbsp;<%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistroMaAt())%></font>
 		</td>
 	</tr>
 	<tr>
-	  	<td class="l">Data Emissione Provvedimento</td>
+	  	<td class="l">Data Emissione Ordinanza Provvisoria</td>
 	  	<td class="L" colspan="3">
 			<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "dd-MM-yyyy"))%></font>
 		</td>

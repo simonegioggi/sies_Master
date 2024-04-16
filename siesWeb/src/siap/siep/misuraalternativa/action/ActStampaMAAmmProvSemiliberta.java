@@ -27,10 +27,9 @@ import siap.siep.util.SIEPLookupRemote;
 
 /*
  * Funzione di stampa dei provvedimenti di Ammissione Provvisoria alla Semilibertà
- * 
+ *
  * n.b. si opera sulla falsa riga della stampa della concessione Semilibertà (0004)
- * 
- * 
+ *
  * @since MEV_9-SIEP 03.2024
  */
 public class ActStampaMAAmmProvSemiliberta extends ActConcessione implements ICostantiMisuraAlternativa {
@@ -38,6 +37,7 @@ public class ActStampaMAAmmProvSemiliberta extends ActConcessione implements ICo
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	public String processRequest() throws F3BException {
+
 		FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 		UtenteModel lUtenteMod = this.getUtenteConnesso();
 
@@ -45,7 +45,7 @@ public class ActStampaMAAmmProvSemiliberta extends ActConcessione implements ICo
 		PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lPosAltra = null;
 		IPosizioneGiuridica lPosCtrl = SIEPLookupRemote.getPosizioneGiuridicaRemote();
 		lPosAltra = lPosCtrl.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicolo(
-		    lFascicoloModel.getIdFascicoloSiep());
+				lFascicoloModel.getIdFascicoloSiep());
 
 		PosizioneGiuridicaModel lPosGiu = lPosAltra.getPosizioneGiuridica();
 
@@ -84,33 +84,33 @@ public class ActStampaMAAmmProvSemiliberta extends ActConcessione implements ICo
 		// String lflagScarcerato = lMisAlModConcessa.getCodTipoUfficioScarcerazione();
 
 		// ricerca posizione precedente
-		PosizioneGiuridicaModel lPosPrec = new PosizioneGiuridicaModel();
-		lPosPrec = lPosCtrl.ExRicercaPosizioneGiuridicaPrecedenteByIdFascicolo(lFascicoloModel.getIdFascicoloSiep());
+		// PosizioneGiuridicaModel lPosPrec = new PosizioneGiuridicaModel();
+		/* lPosPrec = */lPosCtrl
+				.ExRicercaPosizioneGiuridicaPrecedenteByIdFascicolo(lFascicoloModel.getIdFascicoloSiep());
 
 		// Stabilisco il flagTemplate
 		// n.b. si opera sulla falsa riga della stampa della concessione Semilibertà
 		// (0004)
 		String flagTemplate = null;
-		//flagTemplate = getFlagTemplateSemiliberta(lPosPrec, lPosGiu.getCodPosizioneGiuridica(), lMisAlModConcessa);
-		
+		// flagTemplate = getFlagTemplateSemiliberta(lPosPrec, lPosGiu.getCodPosizioneGiuridica(),
+		// lMisAlModConcessa);
+
 		String lflagScarcerato = lMisAlModConcessa.getCodTipoUfficioScarcerazione();
-		
+
 		if ("2007".equals(lEventoModel.getCodMotivo())) {
 			if (lEventoModel.getCodTipoProvvedimento().equals("09")) {
 				// Ordine di scarcerazione a seguito del verbale di arresto/sottoscrizione
 				flagTemplate = "1";
-			}	else if (   lPosGiu.isLibero() ) {
+			} else if (lPosGiu.isLibero()) {
 				flagTemplate = "0";
-		  } else if (   lPosGiu.getCodPosizioneGiuridica().equals("04")
-					       || lPosGiu.getCodPosizioneGiuridica().equals("12")
-					       || lPosGiu.getCodPosizioneGiuridica().equals("13")
-					       || lPosGiu.getCodPosizioneGiuridica().equals("14")
-					       || lPosGiu.getCodPosizioneGiuridica().equals("29")
-					       || lPosGiu.getCodPosizioneGiuridica().equals("54")
-				)
-			{ // Arresti domiciliari e simili
+			} else if (lPosGiu.getCodPosizioneGiuridica().equals("04")
+					|| lPosGiu.getCodPosizioneGiuridica().equals("12")
+					|| lPosGiu.getCodPosizioneGiuridica().equals("13")
+					|| lPosGiu.getCodPosizioneGiuridica().equals("14")
+					|| lPosGiu.getCodPosizioneGiuridica().equals("29")
+					|| lPosGiu.getCodPosizioneGiuridica().equals("54")) { // Arresti domiciliari e simili
 				flagTemplate = "3";
-			} else if (lPosGiu.getCodPosizioneGiuridica().equals("03") ) {
+			} else if (lPosGiu.getCodPosizioneGiuridica().equals("03")) {
 				// detenuto
 				flagTemplate = "2";
 			}
@@ -121,12 +121,13 @@ public class ActStampaMAAmmProvSemiliberta extends ActConcessione implements ICo
 			else if (lflagScarcerato.equals("SORV"))
 				flagTemplate = "0"; // DA VERIFICARE
 		}
-		
-		if (flagTemplate != null && lEventoModel.getCodMotivo() != null && !lEventoModel.getCodMotivo().equals("0000")) {
+
+		if (flagTemplate != null && lEventoModel.getCodMotivo() != null
+				&& !lEventoModel.getCodMotivo().equals("0000")) {
 			ITemplate lCtrlTem = SICOLookupRemote.getTemplateRemote();
 			TemplateModel lTemMod = null;
-			lTemMod = lCtrlTem.ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplate("01", "03", lEventoModel.getCodMotivo(),
-			    flagTemplate);
+			lTemMod = lCtrlTem.ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplate("01", "03",
+					lEventoModel.getCodMotivo(), flagTemplate);
 			lEveMod.setNomeTemplate(lTemMod.getIdTemplate());
 
 			siesLogger.debug("lTemMod = " + lTemMod);

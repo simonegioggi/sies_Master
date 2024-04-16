@@ -4,6 +4,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
+import f3b.log.LogF3B;
 import f3b.util.F3BException;
 import f3b.web.IWebConstants;
 import f3b.web.html.Option;
@@ -24,27 +27,22 @@ import siap.siep.penaresidua.model.PenaResiduaModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * <p>
- * Title: ActLoadInserisciVerbaleSottoscrizione
- * </p>
- * <p>
- * Description: Classe Action per la load inserisci di Verbale Sottoscrizione
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * ActLoadInserisciVerbaleSottoscrizione - Classe Action per la load inserisci di Verbale Sottoscrizione
  *
  * @version 1.0
  */
 public class ActLoadInserisciVerbaleSottoscrizione extends ActionSiap
 		implements ICostantiVerbale, ICostantiPenaResidua {
 
+	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+
 	public String processRequest() throws F3BException {
 
-		if (this.isSessionAttributeNullObj("fascicolo"))
+		// info per il log
+		siesLogger.info(getClass().getName() + "processRequest: inizio");
+
+		if (isSessionAttributeNullObj("fascicolo"))
 			return ICostantiFascicoloSiep.REDIRECT_FASCICOLO_RICERCATO + getClass().getName();
 
 		FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSessionAttribute("fascicolo");
@@ -57,14 +55,14 @@ public class ActLoadInserisciVerbaleSottoscrizione extends ActionSiap
 		if (isFascicoloArchiviatoDefinito())
 			return IWebConstants.PG_MESSAGE;
 
-		this.isEventoNonValidato();
+		isEventoNonValidato();
 
 		/************************************ MODIFICA *****************************************/
 		PenaResiduaModel lPenMod = new PenaResiduaModel();
 		IPenaResidua IPenRes = SIEPLookupRemote.getPenaResiduaRemote();
 		lPenMod = IPenRes.ExRicercaPenaResiduaCorrenteByFascicoloSiep(lFascMod.getIdFascicoloSiep());
 
-		if (this.notEsistePenaResiduaCorrenteByFascicoloSiep(lPenMod))
+		if (notEsistePenaResiduaCorrenteByFascicoloSiep(lPenMod))
 			return IWebConstants.PG_MESSAGE;
 		else {
 			setRequestAttribute("penaRes", lPenMod);
@@ -106,11 +104,12 @@ public class ActLoadInserisciVerbaleSottoscrizione extends ActionSiap
 			throw new SIEPException(SIEPException.USER_MESSAGE,
 					"Non esiste l'Ordinanza/Decreto del TDS/MDS.");
 
-		
 		// MEV-9 si aggiungono gli ulteriori codici motivo (sorveglianza)
-		Set<String> codiciAffidamentoSorvNew = new HashSet<String>(Arrays.asList(new String[]{"0680","0681","0690","0691","0692"}));
-		Set<String> codiciDetenzioneSorvNew  = new HashSet<String>(Arrays.asList(new String[]{"0682","0693"}));
-		
+		Set<String> codiciAffidamentoSorvNew = new HashSet<>(
+				Arrays.asList(new String[] { "0680", "0681", "0690", "0691", "0692" }));
+		Set<String> codiciDetenzioneSorvNew = new HashSet<>(
+				Arrays.asList(new String[] { "0682", "0693" }));
+
 		if (lEveMod != null && lEveMod.getCodTipoEvento() != null && lEveMod.getCodTipoProvvedimento() != null
 				&& lEveMod.getCodTipoEvento().equals("01") // Provvedimento
 				&& (lEveMod.getCodTipoProvvedimento().equals("03") // Ordinanza
@@ -123,16 +122,22 @@ public class ActLoadInserisciVerbaleSottoscrizione extends ActionSiap
 						|| lEveMod.getCodMotivo().equals("0013") // Detenzione
 						|| lEveMod.getCodMotivo().equals("0004") // Semilibertà
 						|| lEveMod.getCodMotivo().equals("2245") // Indultino
-						|| lEveMod.getCodMotivo().equals("2630") // Esecuzione presso domicilio della pena detentiva ( UdS )
+						|| lEveMod.getCodMotivo().equals("2630") // Esecuzione presso domicilio della pena
+																	// detentiva ( UdS )
 						|| lEveMod.getCodMotivo().equals("0011") // Detenzione a termine
-						|| lEveMod.getCodMotivo().equals("2005") // Ammissione provvisoria a detenzione domiciliare
-						|| lEveMod.getCodMotivo().equals("2006") // Ammissione provvisoria ad Affidamento in Prova - Affidamento Terapeutico
-						|| lEveMod.getCodMotivo().equals("2008") // Ammissione provvisoria ad Affidamento in Prova - new DL146 2013
+						|| lEveMod.getCodMotivo().equals("2005") // Ammissione provvisoria a detenzione
+																	// domiciliare
+						|| lEveMod.getCodMotivo().equals("2006") // Ammissione provvisoria ad Affidamento in
+																	// Prova - Affidamento Terapeutico
+						|| lEveMod.getCodMotivo().equals("2008") // Ammissione provvisoria ad Affidamento in
+																	// Prova - new DL146 2013
 						// MEV_9 - SIEP - Si gestiscono anche i codici della semiliberta
 						|| lEveMod.getCodMotivo().equals("2007") // Ammissione provvisoria a Semiliberta'
-						|| lEveMod.getCodMotivo().equals("0683") // Semiliberta' (Art. 50 comma 1 O.P. - Art. 678 comma 1-ter c.p.p.)
-						|| lEveMod.getCodMotivo().equals("0694") // Semiliberta' (art. 7 d.lgs. 121/2018, art. 678 comma 1 ter cp.p.)
-					  // MEV_9 - SIEP - Fine Semiliberta
+						|| lEveMod.getCodMotivo().equals("0683") // Semiliberta' (Art. 50 comma 1 O.P. - Art.
+																	// 678 comma 1-ter c.p.p.)
+						|| lEveMod.getCodMotivo().equals("0694") // Semiliberta' (art. 7 d.lgs. 121/2018, art.
+																	// 678 comma 1 ter cp.p.)
+						// MEV_9 - SIEP - Fine Semiliberta
 						// MEV_9 - SIEP Si gestiscono gli ulteriori codici AFFIDAMENTO
 						|| codiciAffidamentoSorvNew.contains(lEveMod.getCodMotivo())
 						// MEV_9 - SIEP Si gestiscono gli ulteriori codici DETENZIONE DOMICILIARE
@@ -165,6 +170,9 @@ public class ActLoadInserisciVerbaleSottoscrizione extends ActionSiap
 
 		// Imposta Modalità.
 		setRequestAttribute("modalita", "I");
+
+		// info per il log
+		siesLogger.info(getClass().getName() + "processRequest: fine");
 
 		// restituisce la jsp di VIEW
 		return PG_LOAD_INSERISCI_VERBALE_SOTTOSCRIZIONE;

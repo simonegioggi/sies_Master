@@ -335,7 +335,6 @@ public interface ICostantiMisuraAlternativa {
 			+ "files/siap/siep/misuraalternativa/LoadInserisciMAAmmProvvSemiliberta.jsp";
 	public static final String PG_LOAD_DETTAGLIO_MA_AMM_PROVV_SEMILIBERTA = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/misuraalternativa/DettaglioMAAmmProvvSemiliberta.jsp";
-	public static final String CAMPO_DESCR_LUOGO_PROVA_MA_AT = "DescrLuogoProvaMAAltroTitolo";
 	// MEV_9-SIEP - FINE
 
 	// TEMPLATE VUOTO

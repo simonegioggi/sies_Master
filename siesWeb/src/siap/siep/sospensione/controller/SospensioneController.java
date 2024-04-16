@@ -2552,7 +2552,7 @@ public class SospensioneController extends SiapController implements ISospension
 			lEveSqlDao = new EventoSqlDAO(lConn);
 			lEveSqlDao.ricercaEventoByKey(aEvento.getIdEvento());
 			EventoModel lEveModel = (EventoModel) lEveSqlDao.getModelByKey();
-			String Motivo = lEveModel.getCodMotivo();
+			String motivo = lEveModel.getCodMotivo();
 
 			lEveModel.setCodOperatoreAggiornamento(aEvento.getCodOperatoreAggiornamento());
 			lEveModel.setCodUfficioAggiornamento(aEvento.getCodUfficioAggiornamento());
@@ -2569,20 +2569,18 @@ public class SospensioneController extends SiapController implements ISospension
 				lEveSqlDao.ricercaEventoByKey(lMisMDS.getEveIdEvento());
 				EventoModel lEveModelMis = (EventoModel) lEveSqlDao.getModelByKey();
 				lEveDaoMisAlt = new EventoDAO(lConn);
-
 				if (lEveModelMis != null && (lEveModelMis.getFlagDocumentoRegistrato() == null
 						|| lEveModelMis.getFlagDocumentoRegistrato().equals("N"))) {
 					lEveModelMis.setFlagDocumentoRegistrato("S");
 					lEveModelMis.setCodOperatoreAggiornamento(aEvento.getCodOperatoreAggiornamento());
 					lEveModelMis.setCodUfficioAggiornamento(aEvento.getCodUfficioAggiornamento());
 					lEveModelMis.setDataAggiornamento(DateUtils.getSysDate());
-
 					lEveDaoMisAlt.setDAOFromModelForUpdate(lEveModelMis);
 					lEveDaoMisAlt.update();
 					lEveDaoMisAlt.stop();
 				}
 			}
-
+			
 			// Cerca POSIZIONE_GIURIDICA corrente
 			lPosSqlDao = new PosizioneGiuridicaSqlDAO(lConn);
 			lPosSqlDao.ricercaPosGiuCorrenteByIdFascicolo(aFascicolo.getIdFascicoloSiep());
@@ -2591,10 +2589,13 @@ public class SospensioneController extends SiapController implements ISospension
 			// Aggiorna NOME_PROVVREDIMENTO
 			lNomProvvDAO = new NomeProvvedimentoDAO(lConn);
 
-			if (Motivo.equals("0263"))
+			if (motivo.equals("0263"))
 				lNomProvvDAO.setCodNomeProvvedimento("NP104");
-			else if (Motivo.equals("0241"))
+			else if (motivo.equals("0241"))
 				lNomProvvDAO.setCodNomeProvvedimento("NP105");
+			// MEV_9-SIEP: gestione nuovi codici tipo misura
+			else if (motivo.equals("5469") || motivo.equals("5496")) 
+				lNomProvvDAO.setCodNomeProvvedimento("NP104");
 
 			lNomProvvDAO.setEveIdEvento(lEveModel.getIdEvento());
 			lNomProvvDAO.insert();
@@ -2602,10 +2603,13 @@ public class SospensioneController extends SiapController implements ISospension
 
 			// SETTA LO STATO PROCEDIMENTO
 			String lStatoProcMod = null;
-			if (Motivo.equals("0263"))
+			if (motivo.equals("0263"))
 				lStatoProcMod = "0083";
-			else if (Motivo.equals("0241"))
+			else if (motivo.equals("0241"))
 				lStatoProcMod = "0155";
+			// MEV_9-SIEP: gestione nuovi codici tipo misura
+			else if (motivo.equals("5469") || motivo.equals("5496"))
+				lStatoProcMod = "0577";
 
 			InserimentoCancellazioneStatoProcedimento(lConn, aFascicolo.getIdFascicoloSiep(), lEveModel,
 					lStatoProcMod);
@@ -2617,10 +2621,13 @@ public class SospensioneController extends SiapController implements ISospension
 
 			// Aggiorna POSIZIONE_GIURIDICA
 			String lPosizione = null;
-			if (Motivo.equals("0263"))
+			if (motivo.equals("0263"))
 				lPosizione = "46";
-			else if (Motivo.equals("0241"))
+			else if (motivo.equals("0241"))
 				lPosizione = "47";
+			// MEV_9-SIEP: gestione nuovi codici tipo misura
+			else if (motivo.equals("5469") || motivo.equals("5496"))
+				lPosizione = "46";
 
 			Date lData = lEveModel.getDataEmissione();
 			if (lMisMDS != null && lMisMDS.getDataScarcerazione() != null)
