@@ -8,7 +8,6 @@ import org.apache.log4j.Logger;
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
-import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
@@ -110,17 +109,11 @@ public class ActStampaConcessione extends ActConcessione {
 				lPosizioneGiu = "03";
 			}
 			flagTemplate = getFlagTemplateAffidamento(lPosPrec, lPosizioneGiu, lMisMod, IdEveAPF);
-		} else if (lTipoMisura.equals("DETENZIONE")) {
+		} else if (lTipoMisura.equals("DETENZIONE"))
 			flagTemplate = getFlagTemplateDetDom(lPosPrec, lPosizioneGiu, lMisMod);
-			// MEV_9-SIEP: gestione per DETENZIONE
-			if (Utils.isNullObj(flagTemplate))
-				flagTemplate = "1";
-		} else if (lTipoMisura.equals("SEMILIBERTA")) {
+		else if (lTipoMisura.equals("SEMILIBERTA"))
 			flagTemplate = getFlagTemplateSemiliberta(lPosPrec, lPosizioneGiu, lMisMod);
-			// MEV_9-SIEP: gestione per SEMILIBERTA'
-			if (Utils.isNullObj(flagTemplate))
-				flagTemplate = "1";
-		} else if (lTipoMisura.equals("INDULTINO"))
+		else if (lTipoMisura.equals("INDULTINO"))
 			flagTemplate = getFlagTemplateIndultino(lPosPrec, lPosizioneGiu, lMisMod);
 		// 24/08/2010 Stampa Ordinanza Detenzione presso domicilio
 		else if (lTipoMisura.equals("ESP_PRESSO_DOM"))
@@ -169,7 +162,7 @@ public class ActStampaConcessione extends ActConcessione {
 					|| "5465".equals(lMotivo) || "5466".equals(lMotivo) // DETENZIONE DOMICILIARE
 					|| "5467".equals(lMotivo) || "5468".equals(lMotivo)) // SEMILIBERTA'
 				lTemMod = lCtrlTem.ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplate(
-						lEventoModel.getCodTipoEvento(), "12", lMotivo, flagTemplate);
+						lEventoModel.getCodTipoEvento(), "12", lMotivo, "1");
 			else
 				lTemMod = lCtrlTem.ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplate(
 						lEventoModel.getCodTipoEvento(), "03", lMisMod.getCodTipoMisura(), flagTemplate);

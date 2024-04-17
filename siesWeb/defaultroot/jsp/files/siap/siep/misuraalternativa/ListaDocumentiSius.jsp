@@ -546,7 +546,7 @@ if (!documentiSius.isEmpty()) {
         String lUfficio = StringUtils.toStringJSP(eventoModel.getCodTipoUfficioEmittente(), "-");
         // MEV_9-SIEP: aggiunto controllo per escludere dalla visualizzazione
         if (!"AMMISSIONE_PROVVISORIA".equals(NaturaMA)) {
-			if (("TDS".equals(lUfficio)
+			if ((("TDS".equals(lUfficio)
 					&& ("0680".equals(misuraModel.getCodTipoMisura())					// AFFIDAMENTO
 							|| "0681".equals(misuraModel.getCodTipoMisura())			// AFFIDAMENTO
 							|| "0682".equals(misuraModel.getCodTipoMisura())			// DETENZIONE DOMICILIARE
@@ -558,8 +558,8 @@ if (!documentiSius.isEmpty()) {
 									|| "0692".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
 									|| "0693".equals(misuraModel.getCodTipoMisura())	// DETENZIONE DOMICILIARE
 									|| "0694".equals(misuraModel.getCodTipoMisura())	// SEMILIBERTA'
-									|| "0695".equals(misuraModel.getCodTipoMisura())))	// SOSPENSIONE
-					&& !"0270".equals(eventoModel.getCodEsito()))
+									|| "0695".equals(misuraModel.getCodTipoMisura()))))	// SOSPENSIONE
+					&& !"0270".equals(eventoModel.getCodEsito()) && !"0001".equals(eventoModel.getCodEsito()))
 				continue;
 		}
 
