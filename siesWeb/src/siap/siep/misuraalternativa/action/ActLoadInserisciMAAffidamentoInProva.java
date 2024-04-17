@@ -38,7 +38,13 @@ public class ActLoadInserisciMAAffidamentoInProva extends ActConcessione {
 			return lRitorno;
 
 		// setto il campo codice motivo
-		Option lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoMAffP());
+		Option lOption = null;
+		// MEV_9-SIEP: si differenzia per PM e PMM
+		if (isUfficioMinorenni())
+			lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoMAffPMinor());
+		else
+			lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoMAffP());
+		// FINE MEV_9-SIEP
 		setRequestAttribute("motivoProvv", "" + lOption);
 
 		setRequestAttribute("tipoMisura", "AFFIDAMENTO");

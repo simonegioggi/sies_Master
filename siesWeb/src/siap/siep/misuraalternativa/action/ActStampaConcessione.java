@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
+import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
@@ -111,21 +112,15 @@ public class ActStampaConcessione extends ActConcessione {
 			flagTemplate = getFlagTemplateAffidamento(lPosPrec, lPosizioneGiu, lMisMod, IdEveAPF);
 		} else if (lTipoMisura.equals("DETENZIONE")) {
 			flagTemplate = getFlagTemplateDetDom(lPosPrec, lPosizioneGiu, lMisMod);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			siesLogger.info("===========> +++++++++++++++++++++++++++++++++ <--------");
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			siesLogger.info("===========> lMotivo " + lMotivo + "<--------");
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			siesLogger.info("===========> lPosizioneGiu " + lPosizioneGiu + "<--------");
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			siesLogger.info("===========> flagTemplate " + flagTemplate + "<--------");
-		} else if (lTipoMisura.equals("SEMILIBERTA"))
+			// MEV_9-SIEP: gestione per DETENZIONE
+			if (Utils.isNullObj(flagTemplate))
+				flagTemplate = "1";
+		} else if (lTipoMisura.equals("SEMILIBERTA")) {
 			flagTemplate = getFlagTemplateSemiliberta(lPosPrec, lPosizioneGiu, lMisMod);
-		else if (lTipoMisura.equals("INDULTINO"))
+			// MEV_9-SIEP: gestione per SEMILIBERTA'
+			if (Utils.isNullObj(flagTemplate))
+				flagTemplate = "1";
+		} else if (lTipoMisura.equals("INDULTINO"))
 			flagTemplate = getFlagTemplateIndultino(lPosPrec, lPosizioneGiu, lMisMod);
 		// 24/08/2010 Stampa Ordinanza Detenzione presso domicilio
 		else if (lTipoMisura.equals("ESP_PRESSO_DOM"))
@@ -164,17 +159,17 @@ public class ActStampaConcessione extends ActConcessione {
 				&& lEventoModel.getCodMotivo() != null && !lEventoModel.getCodMotivo().equals("0000")
 				&& lMisMod != null && lMisMod.getCodTipoMisura() != null) {
 			// MEV_9-SIEP: imposto flag_template e codTipoMisura e codTipoProvvedimento
-			if ("0680".equals(lMotivo) || "0681".equals(lMotivo) // AFFIDAMENTO
-					|| "0690".equals(lMotivo) || "0691".equals(lMotivo) || "0692".equals(lMotivo) // AFFIDAMENTO
-					|| "0682".equals(lMotivo) || "0693".equals(lMotivo) // DETENZIONE DOMICILIARE
-					|| "0683".equals(lMotivo) || "0694".equals(lMotivo)) // SEMILIBERTA'
-				flagTemplate = "1";
+			// if ("0680".equals(lMotivo) || "0681".equals(lMotivo) // AFFIDAMENTO
+			// || "0690".equals(lMotivo) || "0691".equals(lMotivo) || "0692".equals(lMotivo) // AFFIDAMENTO
+			// || "0682".equals(lMotivo) || "0693".equals(lMotivo) // DETENZIONE DOMICILIARE
+			// || "0683".equals(lMotivo) || "0694".equals(lMotivo)) // SEMILIBERTA'
+			// flagTemplate = "1";
 			if ("5460".equals(lMotivo) || "5461".equals(lMotivo) // AFFIDAMENTO
-					|| "5462".equals(lMotivo) || "5463".equals(lMotivo)	|| "5464".equals(lMotivo) // AFFIDAMENTO
+					|| "5462".equals(lMotivo) || "5463".equals(lMotivo) || "5464".equals(lMotivo) // AFFIDAMENTO
 					|| "5465".equals(lMotivo) || "5466".equals(lMotivo) // DETENZIONE DOMICILIARE
 					|| "5467".equals(lMotivo) || "5468".equals(lMotivo)) // SEMILIBERTA'
 				lTemMod = lCtrlTem.ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplate(
-						lEventoModel.getCodTipoEvento(), "12", lMotivo, "1");
+						lEventoModel.getCodTipoEvento(), "12", lMotivo, flagTemplate);
 			else
 				lTemMod = lCtrlTem.ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplate(
 						lEventoModel.getCodTipoEvento(), "03", lMisMod.getCodTipoMisura(), flagTemplate);

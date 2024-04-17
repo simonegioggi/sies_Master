@@ -325,6 +325,20 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 		if (lTable.get("UffTDS") != null) {
 			UffTDS = ((NotificaModel) lTable.get("UffTDS")).getUfficio().getDescrComune();
 			setRequestAttribute("UffTDS", UffTDS);
+			// MEV_9-SIEP: aggiunto controllo per diversificare la setRequestAttribute
+			if ("MODIFICA".equals(tipoOperazione)) {
+				Collection<DecodificheModel> c = new Vector<>();
+				c.add(new DecodificheModel("-", "-", "-", "-", "-", "", "", "", ""));
+				c.add(new DecodificheModel("TDS", "Tribunale di Sorveglianza", "-", "-", "-", "", "", "",
+						""));
+				c.add(new DecodificheModel("TDSM",
+						"Tribunale per i  Minorenni in funzione di Tribunale di Sorveglianza", "-", "-", "-",
+						"", "", "", ""));
+				Option o = new Option(c,
+						((NotificaModel) lTable.get("UffTDS")).getUfficio().getCodTipoUfficio());
+				setRequestAttribute("comboTribunaleTrattinoModif", "" + o);
+			}
+			// FINE MEV_9-SIEP
 		}
 
 		// Ufficio UDS
@@ -332,6 +346,18 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 		if (lTable.get("UffUDS") != null) {
 			UffUDS = ((NotificaModel) lTable.get("UffUDS")).getUfficio().getDescrComune();
 			setRequestAttribute("UffUDS", UffUDS);
+			// MEV_9-SIEP: aggiunto controllo per diversificare la setRequestAttribute
+			if ("MODIFICA".equals(tipoOperazione)) {
+				Collection<DecodificheModel> c = new Vector<>();
+				c.add(new DecodificheModel("-", "-", "-", "-", "-", "", "", "", ""));
+				c.add(new DecodificheModel("UDS", "Ufficio di Sorveglianza", "-", "-", "-", "", "", "", ""));
+				c.add(new DecodificheModel("UDSM", "Magistrato di Sorveglianza per i minorenni", "-", "-",
+						"-", "", "", "", ""));
+				Option o = new Option(c,
+						((NotificaModel) lTable.get("UffUDS")).getUfficio().getCodTipoUfficio());
+				setRequestAttribute("comboMagistratoTrattinoModif", "" + o);
+			}
+			// FINE MEV_9-SIEP
 		}
 
 		// istituto

@@ -2609,7 +2609,7 @@ public class SospensioneController extends SiapController implements ISospension
 				lStatoProcMod = "0155";
 			// MEV_9-SIEP: gestione nuovi codici tipo misura
 			else if (motivo.equals("5469") || motivo.equals("5496"))
-				lStatoProcMod = "0577";
+				lStatoProcMod = "0583";
 
 			InserimentoCancellazioneStatoProcedimento(lConn, aFascicolo.getIdFascicoloSiep(), lEveModel,
 					lStatoProcMod);

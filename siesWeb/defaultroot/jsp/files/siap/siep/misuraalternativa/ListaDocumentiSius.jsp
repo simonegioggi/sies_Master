@@ -559,10 +559,10 @@ if (!documentiSius.isEmpty()) {
 									|| "0693".equals(misuraModel.getCodTipoMisura())	// DETENZIONE DOMICILIARE
 									|| "0694".equals(misuraModel.getCodTipoMisura())	// SEMILIBERTA'
 									|| "0695".equals(misuraModel.getCodTipoMisura())))	// SOSPENSIONE
-					/*&& !Utils.isNullObj(misuraModel.getDataEsecutivita())*/)
+					&& !"0270".equals(eventoModel.getCodEsito()))
 				continue;
 		}
-        
+
         // MEV_9-SIEP per le sospe 678 provvisorie prendo solo quelle con esito 0270 Applica provvisoriamente 
         if ("CONCESSIONE_SOSPENSIONE678".equals(NaturaMA)) {  
         	if (!"0270".equals(eventoModel.getCodEsito()))
@@ -679,6 +679,7 @@ if (!documentiSius.isEmpty()) {
 					numeroOrdinanzaProvvisoria = mam.getNumeroRegistro();
 					idOrdinanzaProvvisoria = mam.getEveIdEvento();
 					descrLuogoProva = mam.getDescrLuogoProva();
+					misuraModel.setDataInizioMisura(mam.getDataInizioMisura());
 					break;
 				}
 			}

@@ -39,7 +39,13 @@ public class ActLoadInserisciMADetenzioneDomiciliare extends ActConcessione {
 			return lRitorno;
 
 		// setto il campo codice motivo
-		Option lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoMADDom());
+		Option lOption = null;
+		// MEV_9-SIEP: si differenzia per PM e PMM
+		if (isUfficioMinorenni())
+			lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoMADDomMinor());
+		else
+			lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoMADDom());
+		// FINE MEV_9-SIEP
 		setRequestAttribute("motivoProvv", "" + lOption);
 
 		setRequestAttribute("tipoMisura", "DETENZIONE");

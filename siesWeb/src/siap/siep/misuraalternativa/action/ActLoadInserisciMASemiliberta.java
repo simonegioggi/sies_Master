@@ -50,7 +50,13 @@ public class ActLoadInserisciMASemiliberta extends ActConcessione {
 		// lCodiceMotivo = lDecMod.getCode();}}
 		// setRequestAttribute("motivoProvv", lDesMotivo);
 		// setRequestAttribute("codicemotivo", lCodiceMotivo);
-		Option lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoMASemiL());
+		Option lOption = null;
+		// MEV_9-SIEP: si differenzia per PM e PMM
+		if (isUfficioMinorenni())
+			lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoMASemiLMinor());
+		else
+			lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoMASemiL());
+		// FINE MEV_9-SIEP
 		setRequestAttribute("motivoProvv", "" + lOption);
 
 		setRequestAttribute("tipoMisura", "SEMILIBERTA");

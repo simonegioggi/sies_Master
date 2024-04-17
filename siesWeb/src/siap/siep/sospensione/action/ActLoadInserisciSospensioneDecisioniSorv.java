@@ -399,10 +399,16 @@ public class ActLoadInserisciSospensioneDecisioniSorv extends ActionSiap impleme
 		setRequestAttribute("tipoUfficioSIUS", "" + lOptionSIUS);
 
 		// OGGETTO DECISIONE
-		Option lOptionOggetto = new Option(DecodificheManager.getInstance().getOggettoDecisione());
+		Option lOptionOggetto = null;
+		// MEV_9-SIEP: si differenzia per PM e PMM
+		if (isUfficioMinorenni())
+			lOptionOggetto = new Option(DecodificheManager.getInstance().getOggettoDecisioneMinor());
+		else
+			lOptionOggetto = new Option(DecodificheManager.getInstance().getOggettoDecisione());
 		// MEV_9-SIEP: aggiunta impostazione per il campo codice motivo
 		if (!Utils.isNullObj(lMisSospesa))
 			lOptionOggetto.setSelected(lMisSospesa.getCodTipoMisura());
+		// FINE MEV_9-SIEP
 		setRequestAttribute("motivoProvv", "" + lOptionOggetto);
 
 		// MEV 10 - filtro sui minorenni
