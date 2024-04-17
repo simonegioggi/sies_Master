@@ -119,7 +119,7 @@ public class ActStampaMAAmmProvSemiliberta extends ActConcessione implements ICo
 			if (lflagScarcerato.equals("PROC"))
 				flagTemplate = "0";
 			else if (lflagScarcerato.equals("SORV"))
-				flagTemplate = "0"; // DA VERIFICARE
+				flagTemplate = "1";
 		}
 
 		if (flagTemplate != null && lEventoModel.getCodMotivo() != null

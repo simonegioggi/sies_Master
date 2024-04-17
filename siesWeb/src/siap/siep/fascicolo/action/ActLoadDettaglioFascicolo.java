@@ -792,10 +792,11 @@ public class ActLoadDettaglioFascicolo extends ActionSiap implements ICostantiFa
 		setRequestAttribute("continuazioni", lRCtrl.getTableContinuazioni(lReatiVect));
 
 		setRequestAttribute("dettagliofascicolo", lDettaglio);
-		// TEST MEV_9-SIEP
+		// MEV_9-SIEP
 		// in caso di PG - 14 = Espiazione Pena in Regime di Semiliberta'
 		// provo a capire se trattasi della provvisoria a partire dell'evento che la ha generata
 		// o meglio all'ordinanza collegata all'evento
+		// anche per la 47 Sospensione
 		siesLogger.debug("TestDettaglio");
 		if (lDettaglio.getPosizioneGiuridica() != null
 				&& "14".equals(lDettaglio.getPosizioneGiuridica().getCodPosizioneGiuridica()) // Espiazione
@@ -819,7 +820,31 @@ public class ActLoadDettaglioFascicolo extends ActionSiap implements ICostantiFa
 				}
 			}
 		}
-		// TEST MEV_9-SIEP - FINE
+		if (   lDettaglio.getPosizioneGiuridica()!=null
+				&& "47".equals(lDettaglio.getPosizioneGiuridica().getCodPosizioneGiuridica()) // Libero in sospensione 
+				&& lDettaglio.getPosizioneGiuridica().getIdEventoRiferimento()!=null
+			 )
+		{
+  		IEvento lCtrlEvento = SICOLookupRemote.getEventoRemote();
+			EventoModel lEveSosp = lCtrlEvento.ExRicercaEventoByKey(lDettaglio.getPosizioneGiuridica().getIdEventoRiferimento());
+			
+			if (lEveSosp!=null) 
+			{
+				// n.b lEveSosp potrebbe essere il verbale o il provvedimento. Entrambi puntano l'ordinanza
+				//     Recupero l'ordinanza
+				EventoModel lEveOrd = lCtrlEvento.ExRicercaEventoByKey(lEveSosp.getEveIdEvento());
+				if (   lEveOrd!=null
+						&& (   "0684".equals(lEveOrd.getCodMotivo())
+								|| "0695".equals(lEveOrd.getCodMotivo())
+							)
+					 ) 
+				{
+					String descrPGNew = lDettaglio.getPosizioneGiuridica().getDescrPosizioneGiuridica() + " (a seguito Applicazione/Ammissione Provvisoria)";
+					lDettaglio.getPosizioneGiuridica().setDescrPosizioneGiuridica(descrPGNew);
+				}								
+			}
+		}
+		// MEV_9-SIEP - FINE
 
 		// setRequestAttribute("flagDettaglio", flagDettaglio);
 
