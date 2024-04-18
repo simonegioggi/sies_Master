@@ -1709,8 +1709,9 @@ if (misuraalternativa.getIdMisuraAlternativa() != null && !isModifica) {
 <%
 	}
 	// MEV_9-SIEP: aggiunto controllo
-	if (!((lPosizione.getCodPosizioneGiuridica().equals("13") && lEventoAmmProvvAff.getIdEvento() != null)
-			|| lPosizione.getCodPosizioneGiuridica().equals("54"))) {
+	if ((!((lPosizione.getCodPosizioneGiuridica().equals("13") && lEventoAmmProvvAff.getIdEvento() != null)
+			|| lPosizione.getCodPosizioneGiuridica().equals("54")))
+			|| lPosizione.getCodPosizioneGiuridica().equals("14") && tipoMisura.equals("SEMILIBERTA")) {
 		if (misuraalternativa.getDataInizioMisura() != null) {
 %>
 	<tr>

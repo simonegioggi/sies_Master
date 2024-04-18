@@ -1693,10 +1693,17 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 					|| "0693".equals(lMisModelOrder.getCodTipoMisura())
 					|| "5465".equals(lMisModelOrder.getCodTipoMisura())
 					|| "5466".equals(lMisModelOrder.getCodTipoMisura())) {
-				// Aggiunta gestione per Posizione Giuridica "29"
-				if (lPosMod != null && lPosMod.getCodPosizioneGiuridica() != null
+				// MEV_9-SIEP: aggiunta impostazione stato proc x DETENZIONE
+				if ("0722".equals(lMisModelOrder.getCodTipoMisura())
+						|| "0733".equals(lMisModelOrder.getCodTipoMisura())
+						|| "5465".equals(lMisModelOrder.getCodTipoMisura())
+						|| "5466".equals(lMisModelOrder.getCodTipoMisura()))
+					// MEV_9-SIEP: gestione nuovi codici tipo misura x DETENZIONE
+					lStatoProcMod = "0581";
+				else if (lPosMod != null && lPosMod.getCodPosizioneGiuridica() != null
 				// new 50 Espiazione presso il domicilio
 						&& lPosMod.getCodPosizioneGiuridica().equals("50")) {
+					// Aggiunta gestione per Posizione Giuridica "29"
 					// Espiazione Pena in Regime di Detenzione Domiciliare - Emessa Comunicazione Scadenza
 					// Misura
 					lStatoProcMod = "0029";
@@ -1705,20 +1712,20 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 						&& lPoModelPrec.getCodPosizioneGiuridica() != null && lPoModelPrec.isLibero()) {
 					lStatoProcMod = "0026";
 				} else if (lPosMod != null && lPosMod.getCodPosizioneGiuridica() != null
-						&& lPosMod.getCodPosizioneGiuridica().equals("29") // Aggiunta gestione per Posizione
-																			// Giuridica "29"
-						&& lPoModelPrec != null && lPoModelPrec.getCodPosizioneGiuridica() != null
-						&& lPoModelPrec.isLibero()) { // Passaggio da Libero a Detenzione Provvisoria
-														// (verbale) a Definitiva
-					lStatoProcMod = "0026"; // Espiazione Pena in Regime di Detenzione Domiciliare - Emessa
-											// Ordinanza TDS
+				// Aggiunta gestione per Posizione Giuridica "29"
+						&& lPosMod.getCodPosizioneGiuridica().equals("29") && lPoModelPrec != null
+						&& lPoModelPrec.getCodPosizioneGiuridica() != null && lPoModelPrec.isLibero()) {
+					// Passaggio da Libero a Detenzione Provvisoria (verbale) a Definitiva
+					// Espiazione Pena in Regime di Detenzione Domiciliare - Emessa Ordinanza TDS
+					lStatoProcMod = "0026";
 				} else if (lPosMod != null && lPosMod.getCodPosizioneGiuridica() != null
 						&& ((lPosMod.getCodPosizioneGiuridica().equals("12") // detenzione Domiciliare
 								&& lPoModelPrec != null && lPoModelPrec.getCodPosizioneGiuridica() != null
 								&& lPoModelPrec.isLibero() && lMisModelOrder.getDataInizioMisura() != null)
 								|| (lPosMod.getCodPosizioneGiuridica().equals("29")))) {
-					lStatoProcMod = "0028"; // Espiazione Pena in Regime di Detenzione Domiciliare - Emesso
-											// Decreto con Decorrenza/Scadenza
+					// Espiazione Pena in Regime di Detenzione Domiciliare - Emesso Decreto con
+					// Decorrenza/Scadenza
+					lStatoProcMod = "0028";
 				} else if ((lPosMod != null && lPosMod.getCodPosizioneGiuridica() != null
 						&& lPosMod.isLibero() && lMisModelOrder.getDataInizioMisura() == null)
 						|| "PROC".equals(lMisModelOrder.getCodTipoUfficioScarcerazione())) {
@@ -1727,12 +1734,6 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 				} else if ("SORV".equals(lMisModelOrder.getCodTipoUfficioScarcerazione())) {
 					lStatoProcMod = "0029"; // Espiazione Pena in Regime di Detenzione Domiciliare - Emessa
 											// Comunicazione Scadenza Misura
-				} else if ("0722".equals(lMisModelOrder.getCodTipoMisura())
-						|| "0733".equals(lMisModelOrder.getCodTipoMisura())
-						|| "5465".equals(lMisModelOrder.getCodTipoMisura())
-						|| "5466".equals(lMisModelOrder.getCodTipoMisura())) {
-					// MEV_9-SIEP: gestione nuovi codici tipo misura x DETENZIONE
-					lStatoProcMod = "0581";
 				} else {
 					lStatoProcMod = "0026"; // Default
 				}
@@ -1758,7 +1759,14 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 					|| "5462".equals(lMisModelOrder.getCodTipoMisura())
 					|| "5463".equals(lMisModelOrder.getCodTipoMisura())
 					|| "5464".equals(lMisModelOrder.getCodTipoMisura())) {
-				if (lPosMod != null && lPosMod.getCodPosizioneGiuridica() != null && lPosMod.isLibero()
+				// MEV_9-SIEP: aggiunta impostazione stato proc x AFFIDAMENTO
+				if ("0720".equals(lMisModelOrder.getCodTipoMisura())
+						|| "0721".equals(lMisModelOrder.getCodTipoMisura())
+						|| "0730".equals(lMisModelOrder.getCodTipoMisura())
+						|| "0731".equals(lMisModelOrder.getCodTipoMisura())
+						|| "0732".equals(lMisModelOrder.getCodTipoMisura())) {
+					lStatoProcMod = "0580";
+				} else if (lPosMod != null && lPosMod.getCodPosizioneGiuridica() != null && lPosMod.isLibero()
 						&& lMisModelOrder != null && lMisModelOrder.getDataInizioMisura() == null) {
 					lStatoProcMod = "0023";
 				} else if ((lPosMod != null && lPosMod.getCodPosizioneGiuridica() != null
@@ -1781,12 +1789,6 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 					// Espiazione Pena in Regime di Affidamento in Prova - Emessa Comunicazione Scadenza
 					// Misura
 					lStatoProcMod = "0025";
-				} else if ("0720".equals(lMisModelOrder.getCodTipoMisura())
-						|| "0721".equals(lMisModelOrder.getCodTipoMisura())
-						|| "0730".equals(lMisModelOrder.getCodTipoMisura())
-						|| "0731".equals(lMisModelOrder.getCodTipoMisura())
-						|| "0732".equals(lMisModelOrder.getCodTipoMisura())) {
-					lStatoProcMod = "0580";
 				} else {
 					if (lPosMod != null && lPosMod.getCodPosizioneGiuridica() != null && lPoModelPrec != null
 							&& lPoModelPrec.isLibero() && lPosMod.getCodPosizioneGiuridica().equals("13")
@@ -1805,7 +1807,13 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 					|| "0694".equals(lMisModelOrder.getCodTipoMisura())
 					|| "5467".equals(lMisModelOrder.getCodTipoMisura())
 					|| "5468".equals(lMisModelOrder.getCodTipoMisura())) {
-				if (lPosMod != null && lPosMod.getCodPosizioneGiuridica() != null && (lPosMod.isLibero())
+				// MEV_9-SIEP: aggiunta impostazione stato proc x SEMILIBERTA'
+				if ("0723".equals(lMisModelOrder.getCodTipoMisura())
+						|| "0734".equals(lMisModelOrder.getCodTipoMisura())
+						|| "5467".equals(lMisModelOrder.getCodTipoMisura())
+						|| "5468".equals(lMisModelOrder.getCodTipoMisura())) {
+					lStatoProcMod = "0582";
+				} else if (lPosMod != null && lPosMod.getCodPosizioneGiuridica() != null && (lPosMod.isLibero())
 						&& lMisModelOrder != null && lMisModelOrder.getDataInizioMisura() == null) {
 					lStatoProcMod = "0031";
 				} else if (lPosMod != null && lPosMod.getCodPosizioneGiuridica() != null
@@ -1823,12 +1831,6 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 								// 17/12/2010
 								|| lPosMod.getCodPosizioneGiuridica().equals("84"))) {
 					lStatoProcMod = "0032";
-				} else if ("0723".equals(lMisModelOrder.getCodTipoMisura())
-						|| "0734".equals(lMisModelOrder.getCodTipoMisura())
-						|| "5467".equals(lMisModelOrder.getCodTipoMisura())
-						|| "5468".equals(lMisModelOrder.getCodTipoMisura())) {
-					// MEV_9-SIEP: gestione nuovi codici tipo misura x SEMILIBERTA'
-					lStatoProcMod = "0582";
 				} else {
 					lStatoProcMod = "0030";
 				}
@@ -5755,7 +5757,10 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 				lPosDao.setDataFine(lData);
 
 				/*
-				 * ISSUE MAC : modifica al codice Numero MAC : 13/01/2017 Autore : Sessa Data : 16/gen/2017
+				 * ISSUE MAC : modifica al codice 
+				 * Numero MAC : 13/01/2017 
+				 * Autore : Sessa 
+				 * Data : 16/gen/2017
 				 * Branch : MAC_13/01/2017
 				 */
 				if (lEveModel.getCodUfficioAggiornamento() != null) {
@@ -5786,7 +5791,10 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 				lPosDao.setDataInizio(lData);
 
 				/*
-				 * ISSUE MAC : modifica al codice Numero MAC : 13/01/2017 Autore : Gioggi Data : 16/gen/2017
+				 * ISSUE MAC : modifica al codice 
+				 * Numero MAC : 13/01/2017 
+				 * Autore : Gioggi 
+				 * Data : 16/gen/2017
 				 * Branch : MAC_13/01/2017
 				 */
 				if (lEveModel.getCodOperatoreAggiornamento() != null) {

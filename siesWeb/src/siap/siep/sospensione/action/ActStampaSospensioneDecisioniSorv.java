@@ -27,7 +27,7 @@ import siap.siep.util.SIEPLookupRemote;
 
 /**
  * ActStampaSospensioneDecisioniSorv - Classe Action per la Stampa Sospensione della pena
- * 
+ *
  * @version 1.0
  */
 public class ActStampaSospensioneDecisioniSorv extends ActionSiap implements ICostantiSospensione {
@@ -100,9 +100,14 @@ public class ActStampaSospensioneDecisioniSorv extends ActionSiap implements ICo
 
 		ITemplate lCtrlTem = SICOLookupRemote.getTemplateRemote();
 		TemplateModel lTemMod = new TemplateModel();
-		lTemMod = lCtrlTem.ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplate(
-				lEventoModel.getCodTipoEvento(), lEventoModel.getCodTipoProvvedimento(), lMotivo,
-				flagTemplate);
+		// MEV_9-SIEP: imposto flag_template e codTipoMisura e codTipoProvvedimento
+		if ("5469".equals(lMotivo) || "5496".equals(lMotivo))
+			lTemMod = lCtrlTem.ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplate(
+					lEventoModel.getCodTipoEvento(), "12", lMotivo, "1");
+		else
+			lTemMod = lCtrlTem.ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplate(
+					lEventoModel.getCodTipoEvento(), lEventoModel.getCodTipoProvvedimento(), lMotivo,
+					flagTemplate);
 		lEveMod.setNomeTemplate(lTemMod.getIdTemplate());
 
 		ByteArrayOutputStream lReport = lCtrl.ExStampaDocumento(lEveMod, lUtenteMod);

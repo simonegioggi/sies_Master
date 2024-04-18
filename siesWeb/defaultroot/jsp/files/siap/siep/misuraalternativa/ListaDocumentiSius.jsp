@@ -329,7 +329,6 @@ function insertIT(
 	//===============================================================
 	// CO = concessione DIFFERIMENTO PROVVISORIO/DEFINITIVO -- oggetto 2140 --> concessione espulsione
 	//===============================================================
-
 	if (natura != '-' && natura == 'CO'
 			&& (oggetto == '2010' || oggetto == '2011' || oggetto == '0030' || oggetto == '0031' || oggetto == '0032'
 					|| oggetto == '0033' || oggetto == '0201' || oggetto == '0202' || oggetto == '2140'
@@ -354,20 +353,23 @@ function insertIT(
 		} catch (err) { }
 
 	 	if (oggetto != '2140') {
-  			if (giornoInizioMisura != '-')
-    			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.value = giornoInizioMisura;
-			else
-			 	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.value = "";
-
-			if (meseInizioMisura != '-' )
-			  	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>.value = meseInizioMisura;
-			else
-			  	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>.value = "";
-
-			if (annoInizioMisura != '-')
-			  	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>.value = annoInizioMisura;
-			else
-			  	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>.value = "";
+	 		// MEV_9-SIEP: aggiunta gestione errore
+	 		try {
+	  			if (giornoInizioMisura != '-')
+	    			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.value = giornoInizioMisura;
+				else
+				 	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.value = "";
+	
+				if (meseInizioMisura != '-' )
+				  	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>.value = meseInizioMisura;
+				else
+				  	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>.value = "";
+	
+				if (annoInizioMisura != '-')
+				  	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>.value = annoInizioMisura;
+				else
+				  	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>.value = "";
+	 		} catch (err) { }
 
 		  	// Da scarcerare/già scarcerato
 			try {
@@ -559,7 +561,7 @@ if (!documentiSius.isEmpty()) {
 									|| "0693".equals(misuraModel.getCodTipoMisura())	// DETENZIONE DOMICILIARE
 									|| "0694".equals(misuraModel.getCodTipoMisura())	// SEMILIBERTA'
 									|| "0695".equals(misuraModel.getCodTipoMisura()))))	// SOSPENSIONE
-					&& !"0270".equals(eventoModel.getCodEsito()) && !"0001".equals(eventoModel.getCodEsito()))
+					&& "0270".equals(eventoModel.getCodEsito()))
 				continue;
 		}
 
@@ -603,7 +605,7 @@ if (!documentiSius.isEmpty()) {
 <%
 		}
 		// MEV_9-SIEP: aggiunto controllo x varie tipologie
-		if ("0680".equals(misuraModel.getCodTipoMisura())			// AFFIDAMENTO
+		if (("0680".equals(misuraModel.getCodTipoMisura())			// AFFIDAMENTO
 				|| "0681".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
 				|| "0682".equals(misuraModel.getCodTipoMisura())	// DETENZIONE DOMICILIARE
 				|| "0683".equals(misuraModel.getCodTipoMisura())	// SEMILIBERTA'
@@ -613,7 +615,8 @@ if (!documentiSius.isEmpty()) {
 				|| "0692".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
 				|| "0693".equals(misuraModel.getCodTipoMisura())	// DETENZIONE DOMICILIARE
 				|| "0694".equals(misuraModel.getCodTipoMisura())	// SEMILIBERTA'
-				|| "0695".equals(misuraModel.getCodTipoMisura())) {	// SOSPENSIONE
+				|| "0695".equals(misuraModel.getCodTipoMisura()))	// SOSPENSIONE
+				&& "0270".equals(eventoModel.getCodEsito())) {
 %>
 			Applicazione Provvisoria 
 <%

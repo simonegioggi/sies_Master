@@ -995,6 +995,8 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 				break;
 			}
 			case 3: // Espiazione Pena in Regime Carcerario
+				// MEV_9-SIEP: aggiunta gestione codice
+			case 14:// Espiazione Pena in Regime di Semiliberta'
 			{
 				FlagTemplate = "2";
 				break;
