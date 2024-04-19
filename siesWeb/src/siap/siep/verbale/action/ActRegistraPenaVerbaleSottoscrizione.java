@@ -12,6 +12,8 @@ import java.math.BigDecimal;
 
 import siap.sico.cssa.controller.ICSSA;
 import siap.sico.cssa.model.CSSAModel;
+import siap.sico.evento.controller.IEvento;
+import siap.sico.evento.model.EventoModel;
 import siap.sico.misuraalternativa.controller.IMisuraAlternativa;
 import siap.sico.misuraalternativa.model.MisuraAlternativaModel;
 import siap.sico.util.SICOLookupRemote;
@@ -148,6 +150,13 @@ public class ActRegistraPenaVerbaleSottoscrizione extends ActionSiap implements 
     MisuraAlternativaModel lMisuraModel = new MisuraAlternativaModel();
     lMisuraModel = lMisAltCtrl.ExCalcolaFineEspiazionePenaMAConcessa(lVerMod, lPenMod, lPosMod, lMisAlMod, lFascMod.getIdFascicoloSiep());
 
+    
+	  // MEV_9-SIEP mi serve anche l'evento decreto/ord puntato dalla MA per testare l'esito
+    IEvento lCtrlEve = SICOLookupRemote.getEventoRemote();
+		EventoModel provvSorv = lCtrlEve.ExRicercaEventoByKey(lMisuraModel.getEveIdEvento());
+		setRequestAttribute("provvSorv", provvSorv);
+	  // MEV_9-SIEP - FINE
+    
     setRequestAttribute("penaresidua", lPenMod);
     setRequestAttribute("vedoDataIntermedia", this.getRequestStringParameter("vedoDataIntermedia"));
     setRequestAttribute("verbale",lVerMod);

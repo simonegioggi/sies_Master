@@ -630,7 +630,7 @@ if ("MODIFICA".equals(tipoOperazione))
 	    </td>
 	    <td class="LBG">
 	      <font class="label">Funzione :</font>&nbsp;&nbsp;          
-	      <font class="campo"><%=tipoOperazioneView%> AMMISSIONE/APPLICAZIONE PROVVISORIA (ART 678 C.1 TER C.P.P.)</font>
+	      <font class="campo"><%=tipoOperazioneView%> AMMISSIONE/APPLICAZIONE PROVVISORIA SEMILIBERTA' (ART 678 C.1 TER C.P.P.)</font>
 	    </td>
 	  </tr>
 	</table>

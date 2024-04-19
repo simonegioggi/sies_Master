@@ -13,7 +13,10 @@ package siap.siep.misuraalternativa.action;
  */
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -206,6 +209,21 @@ public class ActInserisciMAAmmProvvisoria extends ActMisuraAlternativa implement
 			// setto il tenore
 			TenoreModel lTenMod = setTenore(new BigDecimal(1), "0001"); // 0001 - Concede
 
+			
+			Set<String> codiciAffidamentoSorvNew = new HashSet<String>(Arrays.asList(new String[]{"0680","0681","0690","0691","0692"}));
+			Set<String> codiciDetenzioneSorvNew  = new HashSet<String>(Arrays.asList(new String[]{"0682","0693"}));
+			
+			// MEV_9-SIEP - Per l'ammissione provvisoria dei nuovi codici 678 va scritto l'esito anche 
+			//              sull'evento e sul tenore l'esito e 0270 e non 0001 (vedi SIUS)
+			if (   codiciAffidamentoSorvNew.contains(lEveMod.getEvento().getCodMotivo())
+					|| codiciDetenzioneSorvNew.contains(lEveMod.getEvento().getCodMotivo())
+				 ) 
+			{
+				lEveMod.getEvento().setCodEsito("0270"); //Applica provvisoriamente 
+				lTenMod.setCodEsitoTenore("0270");
+			}
+		  // MEV_9-SIEP - FINE
+			
 			lMisMod = setMisuraAlternativa(lTipoProvvedimento, "CO", lCodiceUffEmi,
 					getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO), lUffScar);
 

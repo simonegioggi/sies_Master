@@ -22,6 +22,10 @@
 <jsp:useBean id="lTotGiorniConcessi"  scope="request" class="java.lang.String"/>
 <jsp:useBean id="lTotGiorniRDConcessi"  scope="request" class="java.lang.String"/>
 <jsp:useBean id="dettaglioProvvedimento" scope="request" class="java.lang.String" />
+
+<% // MEV_9-SIEP aggiunto decreto/ordinanza per testare l'esito e capire se provvisoria o concessione %>
+<jsp:useBean id="provvSorv" scope="request" class="siap.sico.evento.model.EventoModel" />
+
 <% 
 // caricaDecorrenzaScadenza = S inidca l'assenza del provvedimento di decorrenza scadenza
 // e quindi consente di procedere allla registrazione di tale provvedimento anche
@@ -97,29 +101,47 @@ Set<String> codiciSemilibertaSorvNew = new HashSet<String>(Arrays.asList(new Str
       document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMASemiliberta&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraalternativa.getIdMisuraAlternativa()%>";
 <%
     }
-		// MEV_9 si aggiungono i nuovi codici
-    //else if(misuraalternativa.getCodTipoMisura().equals("2005"))
-    else if(misuraalternativa.getCodTipoMisura().equals("2005") || codiciDetenzioneSorvNew.contains(misuraalternativa.getCodTipoMisura()))
+    else if(misuraalternativa.getCodTipoMisura().equals("2005"))
     {
 %>
       document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMAAmmProvDetDom&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraalternativa.getIdMisuraAlternativa()%>";
 <%
     }
+		// MEV_9 si aggiungono i nuovi codici dell'ammissione provv
+		else if (codiciDetenzioneSorvNew.contains(misuraalternativa.getCodTipoMisura()))
+		{%>
+		   <% if ("0270".equals(provvSorv.getCodEsito())) { %>
+		   document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMAAmmProvDetDom&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraalternativa.getIdMisuraAlternativa()%>";
+		   <% } else { %>
+		   document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMADetenzioneDomiciliare&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraalternativa.getIdMisuraAlternativa()%>";
+		   <% } %>
+		<%} 
 		//MEV_9 si aggiungono i nuovi codici
-    // else if(misuraalternativa.getCodTipoMisura().equals("2006") || misuraalternativa.getCodTipoMisura().equals("2008"))
-    else if(misuraalternativa.getCodTipoMisura().equals("2006") || misuraalternativa.getCodTipoMisura().equals("2008") || codiciAffidamentoSorvNew.contains(misuraalternativa.getCodTipoMisura())  )
+    else if(misuraalternativa.getCodTipoMisura().equals("2006") || misuraalternativa.getCodTipoMisura().equals("2008"))
     {
 %>
-      document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMAAmmProvAffi&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraalternativa.getIdMisuraAlternativa()%>";
+      document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMAAffidamentoInProva&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraalternativa.getIdMisuraAlternativa()%>";
 <%
     }
-		//MEV_9 si aggiungono i nuovi codici
-		else if(codiciSemilibertaSorvNew.contains(misuraalternativa.getCodTipoMisura())  )
-		{
-		%>
+		// MEV_9-SIEP si aggiungono i nuovi codici per la semilibertà provvisoria
+		else if (codiciAffidamentoSorvNew.contains(misuraalternativa.getCodTipoMisura()))
+		{%>
+		  <% if ("0270".equals(provvSorv.getCodEsito())) { %>
+		  document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMAAmmProvAffi&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraalternativa.getIdMisuraAlternativa()%>";
+		  <% } else { %>
+		  document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMAAffidamentoInProva&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraalternativa.getIdMisuraAlternativa()%>";
+		  <% } %>
+		<%} // MEV_9 si aggiungono i nuovi codici per la semilibertà provvisoria
+		else if (codiciSemilibertaSorvNew.contains(misuraalternativa.getCodTipoMisura()))
+		{%>
+		  <% if ("0270".equals(provvSorv.getCodEsito())) { %>
 		  document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMAAmmProvSemiliberta&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraalternativa.getIdMisuraAlternativa()%>";
+		  <% } else { %>
+		  document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMASemiliberta&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraalternativa.getIdMisuraAlternativa()%>";
+		  <% } %>
 		<%
-		}
+		}   
+		//MEV_9-SIEP fine
     else if(misuraalternativa.getCodTipoMisura().equals("2245"))
     {
 %>

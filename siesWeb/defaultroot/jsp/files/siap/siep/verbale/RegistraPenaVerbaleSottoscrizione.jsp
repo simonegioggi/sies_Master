@@ -19,6 +19,10 @@
 <jsp:useBean id="cssa" scope="request" class="siap.sico.cssa.model.CSSAModel" />
 <jsp:useBean id="misuraposold" scope="request" class="siap.sico.misuraalternativa.model.MisuraAlternativaModel" />
 <jsp:useBean id="istitutodetenzione" scope="request" class="siap.siep.istitutodetenzione.model.IstitutoDetenzioneModel" />
+
+<% // MEV_9-SIEP aggiunto decreto/ordinanza per testare l'esito e capire se provvisoria o concessione %>
+<jsp:useBean id="provvSorv" scope="request" class="siap.sico.evento.model.EventoModel" />
+
 <!--
 < jsp:useBean id="lTotGiorniConcessi"  scope="request" class="java.lang.String"/>
 -->
@@ -50,25 +54,42 @@ Set<String> codiciSemilibertaSorvNew = new HashSet<String>(Arrays.asList(new Str
        {%>
         document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMADetenzioneDomiciliare&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraposold.getIdMisuraAlternativa()%>";
      <%}
-       // MEV_9 si aggiungono i nuovi codici
-       // else if(misuraposold.getCodTipoMisura().equals("2005"))
-       else if(misuraposold.getCodTipoMisura().equals("2005") || codiciDetenzioneSorvNew.contains(misuraposold.getCodTipoMisura()))
+       else if (misuraposold.getCodTipoMisura().equals("2005"))
        {%>
           document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMAAmmProvDetDom&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraposold.getIdMisuraAlternativa()%>";
-     <%}
-       // MEV_9 si aggiungono i nuovi codici
-       // else if(misuraposold.getCodTipoMisura().equals("2006") || misuraposold.getCodTipoMisura().equals("2008"))
-       else if(misuraposold.getCodTipoMisura().equals("2006") || misuraposold.getCodTipoMisura().equals("2008") || codiciAffidamentoSorvNew.contains(misuraposold.getCodTipoMisura()))
+       <%}
+       // MEV_9 si aggiungono i nuovi codici dell'ammissione provv
+       else if (codiciDetenzioneSorvNew.contains(misuraposold.getCodTipoMisura()))
+       {%>
+          <% if ("0270".equals(provvSorv.getCodEsito())) { %>
+          document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMAAmmProvDetDom&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraposold.getIdMisuraAlternativa()%>";
+          <% } else { %>
+          document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMADetenzioneDomiciliare&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraposold.getIdMisuraAlternativa()%>";
+          <% } %>
+       <%}      
+       else if(misuraposold.getCodTipoMisura().equals("2006") || misuraposold.getCodTipoMisura().equals("2008"))
        {
-     %>
+       %>
          document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMAAmmProvAffi&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraposold.getIdMisuraAlternativa()%>";
-     <%
-       } // MEV_9 si aggiungono i nuovi codici per la semilibertà provvisoria
+       <%
+       }
+       // MEV_9-SIEP si aggiungono i nuovi codici per la semilibertà provvisoria
+       else if (codiciAffidamentoSorvNew.contains(misuraposold.getCodTipoMisura()))
+       {%>
+	       <% if ("0270".equals(provvSorv.getCodEsito())) { %>
+	       document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMAAmmProvAffi&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraposold.getIdMisuraAlternativa()%>";
+	       <% } else { %>
+         document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMAAffidamentoInProva&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraposold.getIdMisuraAlternativa()%>";
+	       <% } %>
+       <%} // MEV_9 si aggiungono i nuovi codici per la semilibertà provvisoria
        else if (codiciSemilibertaSorvNew.contains(misuraposold.getCodTipoMisura()))
-       {
-     %>
+       {%>
+	       <% if ("0270".equals(provvSorv.getCodEsito())) { %>
          document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMAAmmProvSemiliberta&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraposold.getIdMisuraAlternativa()%>";
-     <%
+	       <% } else { %>
+	       document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMASemiliberta&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraposold.getIdMisuraAlternativa()%>";
+	       <% } %>
+       <%
        }       
       else if(misuraposold.getCodTipoMisura().equals("0004"))
        {%>

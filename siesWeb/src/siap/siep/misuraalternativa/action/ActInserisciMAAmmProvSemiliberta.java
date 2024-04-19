@@ -163,9 +163,12 @@ public class ActInserisciMAAmmProvSemiliberta extends ActMisuraAlternativa
 			else if ("03".equals(lTipoProvvedimento))
 				lDepOrdMod = super.setDepositoOrdinanzaPc(lCodiceUffEmi);
 
+			// Forzo l'esito anche sull'evento Ordinanza/Decreto
+			lEveMod.getEvento().setCodEsito("0270"); //Applica provvisoriamente 
+			
 			// setto il tenore
-			TenoreModel lTenMod = setTenore(new BigDecimal(1), "0270"); // 0001 - Concede - 0270 = Applica
-																		// Provvisoriamente
+			TenoreModel lTenMod = setTenore(new BigDecimal(1), "0270"); 
+			// 0001 - Concede - 0270 = Applica Provvisoriamente
 
 			lMisMod = setMisuraAlternativa(lTipoProvvedimento, "CO", lCodiceUffEmi,
 					getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO), lUffScar);

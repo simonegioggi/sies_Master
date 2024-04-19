@@ -3583,8 +3583,13 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.start();
 
-			while (lDecSqlDao.next())
-				lDecodifiche.add(lDecSqlDao.getModel());
+			while (lDecSqlDao.next()) {
+				//lDecodifiche.add(lDecSqlDao.getModel());				
+				DecodificheModel lDecMod = new DecodificheModel();
+				lDecMod.setCode(lDecSqlDao.getModelRvLowValue());
+				lDecMod.setDescription(lDecSqlDao.getModelRvMeaning());
+				lDecodifiche.add(lDecMod);
+			}
 
 			lDecSqlDao.stop();
 		} catch (DAOException daoex) {
