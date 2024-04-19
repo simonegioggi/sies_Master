@@ -394,6 +394,10 @@ public class ActInserisciSospensioneDecisioniSorv extends ActMisuraAlternativa
 					lEve.getEvento().setCodMotivo("5469");
 				else if ("0735".equals(codiceMotivo))
 					lEve.getEvento().setCodMotivo("5496");
+				else if (codiceMotivo.equals("0684"))
+			        lEve.getEvento().setCodMotivo(codiceMotivo);
+			      else if (codiceMotivo.equals("0695"))
+			        lEve.getEvento().setCodMotivo(codiceMotivo);
 
 				lEve.setEvento(setEventoProvvedimentoMisuraAlternativa(lEve.getEvento()));
 				lEve.getMagistrato().setCodMagistrato(calcolaMagistrato());

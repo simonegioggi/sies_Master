@@ -820,28 +820,24 @@ public class ActLoadDettaglioFascicolo extends ActionSiap implements ICostantiFa
 				}
 			}
 		}
-		if (   lDettaglio.getPosizioneGiuridica()!=null
-				&& "47".equals(lDettaglio.getPosizioneGiuridica().getCodPosizioneGiuridica()) // Libero in sospensione 
-				&& lDettaglio.getPosizioneGiuridica().getIdEventoRiferimento()!=null
-			 )
-		{
-  		IEvento lCtrlEvento = SICOLookupRemote.getEventoRemote();
-			EventoModel lEveSosp = lCtrlEvento.ExRicercaEventoByKey(lDettaglio.getPosizioneGiuridica().getIdEventoRiferimento());
-			
-			if (lEveSosp!=null) 
-			{
+		if (lDettaglio.getPosizioneGiuridica() != null
+				&& "47".equals(lDettaglio.getPosizioneGiuridica().getCodPosizioneGiuridica()) // Libero in
+																								// sospensione
+				&& lDettaglio.getPosizioneGiuridica().getIdEventoRiferimento() != null) {
+			IEvento lCtrlEvento = SICOLookupRemote.getEventoRemote();
+			EventoModel lEveSosp = lCtrlEvento
+					.ExRicercaEventoByKey(lDettaglio.getPosizioneGiuridica().getIdEventoRiferimento());
+
+			if (lEveSosp != null) {
 				// n.b lEveSosp potrebbe essere il verbale o il provvedimento. Entrambi puntano l'ordinanza
-				//     Recupero l'ordinanza
+				// Recupero l'ordinanza
 				EventoModel lEveOrd = lCtrlEvento.ExRicercaEventoByKey(lEveSosp.getEveIdEvento());
-				if (   lEveOrd!=null
-						&& (   "0684".equals(lEveOrd.getCodMotivo())
-								|| "0695".equals(lEveOrd.getCodMotivo())
-							)
-					 ) 
-				{
-					String descrPGNew = lDettaglio.getPosizioneGiuridica().getDescrPosizioneGiuridica() + " (a seguito Applicazione/Ammissione Provvisoria)";
+				if (lEveOrd != null
+						&& ("0684".equals(lEveOrd.getCodMotivo()) || "0695".equals(lEveOrd.getCodMotivo()))) {
+					String descrPGNew = lDettaglio.getPosizioneGiuridica().getDescrPosizioneGiuridica()
+							+ " (a seguito Applicazione/Ammissione Provvisoria)";
 					lDettaglio.getPosizioneGiuridica().setDescrPosizioneGiuridica(descrPGNew);
-				}								
+				}
 			}
 		}
 		// MEV_9-SIEP - FINE
