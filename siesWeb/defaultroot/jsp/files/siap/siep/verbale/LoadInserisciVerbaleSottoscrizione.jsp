@@ -331,11 +331,23 @@ if (evento.getCodMotivo().equals("0004")) {
        {%>
     <td class="l" colspan=2>Esecuzione presso domicilio della pena detentiva ( TdS )</td>
       <% } else if(codiciAffidamentoSorvNew.contains(evento.getCodMotivo())) { %> <%--// MEV_9-SIEP --%>
-      <td class="l" colspan=2>Applicazione Provvisoria ad Affidamento in Prova - Art. 678 comma 1-ter c.p.p.</td>
+          <% if ("0270".equals(evento.getCodEsito())) {%>
+          <td class="l" colspan=2>Applicazione Provvisoria ad Affidamento in Prova - Art. 678 comma 1-ter c.p.p.</td> 
+          <% } else { %>
+          <td class="l" colspan=2>Concessione Affidamento in Prova - Art. 678 comma 1-ter c.p.p.</td>
+          <% } %>      
       <% } else if(codiciDetenzioneSorvNew.contains(evento.getCodMotivo())) { %> <%--// MEV_9-SIEP --%>
-      <td class="l" colspan=2>Applicazione Provvisoria a Detenzione Domiciliare - Art. 678 comma 1-ter c.p.p.</td>   
+          <% if ("0270".equals(evento.getCodEsito())) {%>
+          <td class="l" colspan=2>Applicazione Provvisoria a Detenzione Domiciliare - Art. 678 comma 1-ter c.p.p.</td> 
+          <% } else { %>
+          <td class="l" colspan=2>Concessione Detenzione Domiciliare - Art. 678 comma 1-ter c.p.p.</td>
+          <% } %>
       <% } else if(codiciSemilibertaSorvNew.contains(evento.getCodMotivo())) { %> <%--// MEV_9-SIEP --%>
-      <td class="l" colspan=2>Applicazione Provvisoria a Semiliberta' - Art. 678 comma 1-ter c.p.p.</td>   
+          <% if ("0270".equals(evento.getCodEsito())) {%>
+          <td class="l" colspan=2>Applicazione Provvisoria a Semiliberta' - Art. 678 comma 1-ter c.p.p.</td> 
+          <% } else { %>
+          <td class="l" colspan=2>Concessione Semiliberta' - Art. 678 comma 1-ter c.p.p.</td>
+          <% } %>
      <%}%>     
     </tr>
 

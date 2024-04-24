@@ -798,11 +798,9 @@ public class ActLoadDettaglioFascicolo extends ActionSiap implements ICostantiFa
 		// o meglio all'ordinanza collegata all'evento
 		// anche per la 47 Sospensione
 		siesLogger.debug("TestDettaglio");
+		// 14 - Espiazione Pena in Regime di Semiliberta'
 		if (lDettaglio.getPosizioneGiuridica() != null
-				&& "14".equals(lDettaglio.getPosizioneGiuridica().getCodPosizioneGiuridica()) // Espiazione
-																								// Pena in
-																								// Regime di
-																								// Semiliberta'
+				&& "14".equals(lDettaglio.getPosizioneGiuridica().getCodPosizioneGiuridica()) 
 				&& lDettaglio.getPosizioneGiuridica().getIdEventoRiferimento() != null) {
 			IEvento lCtrlEvento = SICOLookupRemote.getEventoRemote();
 			EventoModel lEveSemilib = lCtrlEvento
@@ -812,7 +810,9 @@ public class ActLoadDettaglioFascicolo extends ActionSiap implements ICostantiFa
 				// n.b lEveSemilib potrebbe essere il verbale o il provvedimento. Entrambi puntano l'ordinanza
 				// Recupero l'ordinanza
 				EventoModel lEveOrd = lCtrlEvento.ExRicercaEventoByKey(lEveSemilib.getEveIdEvento());
-				if (lEveOrd != null && ("2007".equals(lEveOrd.getCodMotivo())
+				if (lEveOrd != null 
+						&& "0270".equals(lEveOrd.getCodEsito())
+						&& ("2007".equals(lEveOrd.getCodMotivo())
 						|| "0683".equals(lEveOrd.getCodMotivo()) || "0694".equals(lEveOrd.getCodMotivo()))) {
 					String descrPGNew = lDettaglio.getPosizioneGiuridica().getDescrPosizioneGiuridica()
 							+ " (a seguito Applicazione/Ammissione Provvisoria)";
@@ -833,6 +833,7 @@ public class ActLoadDettaglioFascicolo extends ActionSiap implements ICostantiFa
 				// Recupero l'ordinanza
 				EventoModel lEveOrd = lCtrlEvento.ExRicercaEventoByKey(lEveSosp.getEveIdEvento());
 				if (lEveOrd != null
+						&& "0270".equals(lEveOrd.getCodEsito())
 						&& ("0684".equals(lEveOrd.getCodMotivo()) || "0695".equals(lEveOrd.getCodMotivo()))) {
 					String descrPGNew = lDettaglio.getPosizioneGiuridica().getDescrPosizioneGiuridica()
 							+ " (a seguito Applicazione/Ammissione Provvisoria)";
