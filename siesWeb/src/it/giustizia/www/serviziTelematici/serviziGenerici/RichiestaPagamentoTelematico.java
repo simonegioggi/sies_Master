@@ -16,8 +16,6 @@ public class RichiestaPagamentoTelematico  implements java.io.Serializable {
 
     private it.giustizia.www.serviziTelematici.serviziGenerici.AnagraficaSoggetto soggettoPagatore;
 
-    private it.giustizia.www.serviziTelematici.serviziGenerici.AnagraficaSoggetto soggettoVersante;
-
     private it.giustizia.www.serviziTelematici.serviziGenerici.DatiVersamento datiVersamento;
 
     private java.util.Calendar dataScadenza;
@@ -30,14 +28,12 @@ public class RichiestaPagamentoTelematico  implements java.io.Serializable {
            java.lang.String codiceUfficio,
            java.lang.String autenticazioneSoggetto,
            it.giustizia.www.serviziTelematici.serviziGenerici.AnagraficaSoggetto soggettoPagatore,
-           it.giustizia.www.serviziTelematici.serviziGenerici.AnagraficaSoggetto soggettoVersante,
            it.giustizia.www.serviziTelematici.serviziGenerici.DatiVersamento datiVersamento,
            java.util.Calendar dataScadenza) {
            this.codiceDistretto = codiceDistretto;
            this.codiceUfficio = codiceUfficio;
            this.autenticazioneSoggetto = autenticazioneSoggetto;
            this.soggettoPagatore = soggettoPagatore;
-           this.soggettoVersante = soggettoVersante;
            this.datiVersamento = datiVersamento;
            this.dataScadenza = dataScadenza;
     }
@@ -124,26 +120,6 @@ public class RichiestaPagamentoTelematico  implements java.io.Serializable {
 
 
     /**
-     * Gets the soggettoVersante value for this RichiestaPagamentoTelematico.
-     * 
-     * @return soggettoVersante
-     */
-    public it.giustizia.www.serviziTelematici.serviziGenerici.AnagraficaSoggetto getSoggettoVersante() {
-        return soggettoVersante;
-    }
-
-
-    /**
-     * Sets the soggettoVersante value for this RichiestaPagamentoTelematico.
-     * 
-     * @param soggettoVersante
-     */
-    public void setSoggettoVersante(it.giustizia.www.serviziTelematici.serviziGenerici.AnagraficaSoggetto soggettoVersante) {
-        this.soggettoVersante = soggettoVersante;
-    }
-
-
-    /**
      * Gets the datiVersamento value for this RichiestaPagamentoTelematico.
      * 
      * @return datiVersamento
@@ -206,9 +182,6 @@ public class RichiestaPagamentoTelematico  implements java.io.Serializable {
             ((this.soggettoPagatore==null && other.getSoggettoPagatore()==null) || 
              (this.soggettoPagatore!=null &&
               this.soggettoPagatore.equals(other.getSoggettoPagatore()))) &&
-            ((this.soggettoVersante==null && other.getSoggettoVersante()==null) || 
-             (this.soggettoVersante!=null &&
-              this.soggettoVersante.equals(other.getSoggettoVersante()))) &&
             ((this.datiVersamento==null && other.getDatiVersamento()==null) || 
              (this.datiVersamento!=null &&
               this.datiVersamento.equals(other.getDatiVersamento()))) &&
@@ -237,9 +210,6 @@ public class RichiestaPagamentoTelematico  implements java.io.Serializable {
         }
         if (getSoggettoPagatore() != null) {
             _hashCode += getSoggettoPagatore().hashCode();
-        }
-        if (getSoggettoVersante() != null) {
-            _hashCode += getSoggettoVersante().hashCode();
         }
         if (getDatiVersamento() != null) {
             _hashCode += getDatiVersamento().hashCode();
@@ -281,13 +251,6 @@ public class RichiestaPagamentoTelematico  implements java.io.Serializable {
         elemField.setFieldName("soggettoPagatore");
         elemField.setXmlName(new javax.xml.namespace.QName("", "soggettoPagatore"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/serviziGenerici", "anagraficaSoggetto"));
-        elemField.setNillable(false);
-        typeDesc.addFieldDesc(elemField);
-        elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("soggettoVersante");
-        elemField.setXmlName(new javax.xml.namespace.QName("", "soggettoVersante"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/serviziGenerici", "anagraficaSoggetto"));
-        elemField.setMinOccurs(0);
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();

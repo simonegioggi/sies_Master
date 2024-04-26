@@ -4,18 +4,21 @@ import java.util.LinkedList;
 
 import org.apache.log4j.Logger;
 
-import siap.sico.security.ICostantiFunzioni;
-//import siap.sico.security.controller.SecurityController;
-import siap.sico.security.controller.ISecurity;
-import siap.sico.utente.model.UtenteModel;
-import siap.sico.util.SICOLookupRemote;
-import siap.sico.web.ActionSiap;
 import f3b.log.LogF3B;
 import f3b.security.model.FunctionModel;
 import f3b.util.F3BException;
 import f3b.util.StringUtils;
 import f3b.util.Utils;
 import f3b.web.IWebConstants;
+import siap.sico.security.ICostantiFunzioni;
+//import siap.sico.security.controller.SecurityController;
+import siap.sico.security.controller.ISecurity;
+import siap.sico.utente.model.UtenteModel;
+import siap.sico.util.SICOLookupRemote;
+import siap.sico.web.ActionSiap;
+import siap.siep.pagoPaBatch.controller.IBatchPagopa;
+import siap.siep.pagoPaBatch.model.BatchPagopaModel;
+import siap.siep.util.SIEPLookupRemote;
 
 public class ActLogin extends ActionSiap implements ICostantiSecurity {
 
@@ -24,7 +27,18 @@ public class ActLogin extends ActionSiap implements ICostantiSecurity {
 
 	@SuppressWarnings("rawtypes")
 	public String processRequest() throws F3BException {
-		// Rimuove dalla sessione gli oggetti indicati eventualmente presenti
+
+	  // 2024.01.17 La sessione va invalidata e ricreata altrimenti 
+	  // se l'utente si limita a chiudere la pagina principale e a cambiare
+	  // utenza resta attiva la vecchia sessione che contiene i dati del precedente
+	  // utente se non rimossi
+	  if (getRequest().getSession(false)!=null) {
+	    invalidateSession();
+	    // si crea e registra la nuova sessione
+	    super.setReqSes (getRequest(), getRequest().getSession());
+	  }
+	  
+		// Rimuove dalla sessione gli oggetti indicati eventualmente presenti	  
 		removeSessionAttribute("soggetto");
 		removeSessionAttribute("sentenza");
 		removeSessionAttribute("fascicolo");
@@ -36,7 +50,7 @@ public class ActLogin extends ActionSiap implements ICostantiSecurity {
 		removeSessionAttribute(FUN_RADICE_MENU_ORZ);
 		removeSessionAttribute(FUN_RADICE_MENU_SR);
 		removeSessionAttribute(FUN_ANTENATE);
-
+		
 		// prepara il model dell'utente per la login
 		String lUserId = StringUtils.convertSqlString(getRequestStringParameter(CAMPO_USER_ID));
 		String lPassword = getRequestStringParameter(CAMPO_PASSWORD);
@@ -84,6 +98,38 @@ public class ActLogin extends ActionSiap implements ICostantiSecurity {
 		FunctionModel lFunRadiceMenuSceltaRapida = lSctrl.ExLoadFunzioniMenuSceltaRapida(
 				lUtente.getUserProfile(), lFunRadMenuSceltaRapida);
 
+		
+		// MEV_2023-33 - Se amministratore di sistema verifico l'ultima esecuzione del batch
+		//               Si estende a tutte le utenze SIEP
+		if (   lUtente.getUserProfile().getProfileId().intValue() == 99
+        || lUtente.getUserProfile().getProfileId().intValue() == 90
+        || lUtente.getUserProfile().getProfileId().intValue() == 4
+        || lUtente.getUserProfile().getProfileId().intValue() == 40
+        || lUtente.getUserProfile().getProfileId().intValue() == 50
+       ) 
+		{
+		  try {
+  		  IBatchPagopa lCtrlBatch = SIEPLookupRemote.getBatchPagopaPagopaRemote();
+  		  BatchPagopaModel lancioBatch = lCtrlBatch.getLastEsecuzioneBatch();
+  		  siesLogger.debug("Ultimo lancio "+lancioBatch);
+  		  
+  		  if (   (lancioBatch.getErroreEsecuzione()!=null && lancioBatch.getErroreEsecuzione().length()>0)
+  		      || (lancioBatch.getNumErroriInvocazione()!=null && lancioBatch.getNumErroriInvocazione().intValue()>0) ){
+  		    setSessionAttribute("ErroreBatchPagoPa", "S");
+  		    setSessionAttribute("BatchPagoPa",lancioBatch);
+  		  }
+		  } catch (Exception e) {
+		    siesLogger.error("Errore in fase di verifica dell'ultimo run del batch pagopas",e);
+		  }  
+		}
+		else {
+		  //removeSessionAttribute("ErroreBatchPagoPa");
+		  //removeSessionAttribute("BatchPagoPa");
+		}
+	  // MEV_2023-33 - FINE
+		
+		
+		
 		// Disponibile per tutta la durata della sessione utente
 		setSessionAttribute(SESSION_UTENTE_CONNESSO, lUtente);
 		setSessionAttribute(FUN_RADICE_MENU_VRT, lFunRadiceMenu);

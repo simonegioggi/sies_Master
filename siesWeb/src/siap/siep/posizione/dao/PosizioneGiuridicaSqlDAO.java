@@ -152,7 +152,8 @@ public class PosizioneGiuridicaSqlDAO extends SIAPSqlDAO
                   " AUTORITA_COMPETENTE,"+
                   " AUTORITA_COMPETENTE_SEDE, LUOGOCOMPE.DESCRIZIONE  AUTORITA_COMPETENTE_SEDE_DESC, "+
                   " AUTORITA_COMPETENTE_INDIRIZZO, ALT_CAU_ID_ALTRA_CAUSA, "+
-                  " COD_MASCHERA";
+                  " COD_MASCHERA, "+
+                  " POS_GIU.RV_ALT5_VALUE as COD_MASCHERA_CG "; // MEV_2023-33
     lStatement += " FROM POSIZIONE_GIURIDICA, CG_REF_CODES POS_GIU,";
     lStatement += " CG_REF_CODES POSIZIONE_PROCESSUALE, COMUNE LUOGOCOMPE ";
     lStatement += " WHERE POS_GIU.RV_DOMAIN = 'POSIZIONE_GIURIDICA' AND POS_GIU.RV_LOW_VALUE = POSIZIONE_GIURIDICA.COD_POSIZIONE_GIURIDICA";
@@ -205,6 +206,10 @@ public class PosizioneGiuridicaSqlDAO extends SIAPSqlDAO
 	 aModel.setAutoritaCompetenteIndirizzo(getString("AUTORITA_COMPETENTE_INDIRIZZO") ); 
 	 aModel.setCodMaschera(getString("COD_MASCHERA") ); 
 	 aModel.setAltCauIdAltraCausa(getBigDecimal("ALT_CAU_ID_ALTRA_CAUSA") ); 
+	 
+	 // MEV_2023-33
+	 aModel.setCodMascheraCG(getString("COD_MASCHERA_CG") ); 
+	 
 
     return aModel;
   }

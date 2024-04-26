@@ -24,6 +24,8 @@ import siap.sico.web.ActionSiap;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.pagoPA.controller.IBollettinoPagopa;
 import siap.siep.pagoPA.model.BollettinoPagopaModel;
+import siap.siep.pagoPA.model.ErroriSiesPagopaModel;
+import siap.siep.pagoPA.util.RegistraErrorePagopaUtil;
 import siap.siep.util.SIEPLookupRemote;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 
@@ -76,8 +78,8 @@ public class ActInvocaWSVerificaStatoBollettini extends ActionSiap implements IC
 
 		// recupero il/i bollettino/i
 		IBollettinoPagopa ibp = SIEPLookupRemote.getBollettinoPagopaRemote();
-		Vector<BollettinoPagopaModel> bpms = ibp.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo,
-				"");
+		Vector<BollettinoPagopaModel> bpms = ibp
+				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo);
 		Iterator<BollettinoPagopaModel> iter = bpms.iterator();
 
 		// inizio chiamata al servizio PST - EndpointAddressPagoPA_ServiziInvioPagamentiTelematici
@@ -97,15 +99,34 @@ public class ActInvocaWSVerificaStatoBollettini extends ActionSiap implements IC
 					// java.lang.String codiceCRS, java.lang.String tipologia, java.lang.String codiceFiscale,
 					// java.lang.String codiceDistretto, java.lang.String causale, java.lang.String stato,
 					// java.util.Calendar dataRichiestaDa, java.util.Calendar dataRichiestaA, int
-					// dimensionePagina, int numeroPagina
+					// dimensionePagina, int numeroPagina, java.util.Calendar dataRicevutaDa,
+					// java.util.Calendar dataRicevutaA
+					// C.F. or P.I. (NON OBBLIGATORIO --> se nullo passo "ANONIMO")
+					String cf = Utils.isPresent(bpm.getCodiceFiscale()) ? bpm.getCodiceFiscale() : "ANONIMO";
 					siesLogger.debug("Parametri di passaggio: codiceCRS = " + "3" + bpm.getIuv()
-							+ "; tipologia = 'PENPE'; " + "codiceFiscale = " + bpm.getCodiceFiscale()
-							+ "; codiceDistretto = " + bpm.getCodiceDistretto()
+							+ "; tipologia = 'PENPE'; " + "codiceFiscale = " + cf + "; codiceDistretto = "
+							+ bpm.getCodiceDistretto()
 							+ "; causale, stato, dataRichiestaDa, dataRichiestaA = NULL"
-							+ "; dimensionePagina, numeroPagina = 0;");
-					rr = scpt.elencoPagamenti("3" + bpm.getIuv(), "PENPE", bpm.getCodiceFiscale(),
-							bpm.getCodiceDistretto(), null, null, null, null, 0, 0);
+							+ "; dimensionePagina, numeroPagina = 0; dataRicevutaDa, dataRicevutaA = NULL");
+					rr = scpt.elencoPagamenti("3" + bpm.getIuv(), "PENPE", cf, bpm.getCodiceDistretto(), null,
+							null, null, null, 0, 0, null, null);
 				} catch (IOException ioe) {
+	        // Si aggiunge la tracciatura dell'errore
+	        {
+	          RegistraErrorePagopaUtil regErrUtil = new RegistraErrorePagopaUtil();
+	          ErroriSiesPagopaModel errModel = new ErroriSiesPagopaModel();
+	          errModel.setIdFascicoloSiep (fsm.getIdFascicoloSiep());
+	          errModel.setIdEvento (getRequestBigDecimalParameter("IdEvento"));
+	          errModel.setAzioneContestoJava (ICostantiErroriSiesPagopa.DESC_ACTION_VERIFICA); 
+	          errModel.setDescrizioneFunzione (ICostantiErroriSiesPagopa.DESC_FUNZIONE_VERIFICA);
+	          errModel.setCodUtente (getCodUtenteConnesso());
+	          errModel.setCodUfficio (getCodUfficioUtenteConnesso());
+	          errModel.setErroreEsecuzione (ioe.getMessage());
+	          errModel.setDataInserimento (DateUtils.getSysDate());
+
+	          regErrUtil.registraErrore(errModel);
+	        } 
+	        
 					ioe.printStackTrace();
 					siesLogger.error(ioe.getMessage());
 					if (Utils.isPresent(ioe.getMessage())
@@ -124,10 +145,38 @@ public class ActInvocaWSVerificaStatoBollettini extends ActionSiap implements IC
 					}
 					throw new F3BException(getClass().getName() + ".processRequest: " + ioe);
 				} catch (Exception e) {
+          {
+            RegistraErrorePagopaUtil regErrUtil = new RegistraErrorePagopaUtil();
+            ErroriSiesPagopaModel errModel = new ErroriSiesPagopaModel();
+            errModel.setIdFascicoloSiep (fsm.getIdFascicoloSiep());
+            errModel.setIdEvento (getRequestBigDecimalParameter("IdEvento"));
+            errModel.setAzioneContestoJava (ICostantiErroriSiesPagopa.DESC_ACTION_VERIFICA); 
+            errModel.setDescrizioneFunzione (ICostantiErroriSiesPagopa.DESC_FUNZIONE_VERIFICA);
+            errModel.setCodUtente (getCodUtenteConnesso());
+            errModel.setCodUfficio (getCodUfficioUtenteConnesso());
+            errModel.setErroreEsecuzione (e.getMessage());
+            errModel.setDataInserimento (DateUtils.getSysDate());
+
+            regErrUtil.registraErrore(errModel);
+          } 
 					e.printStackTrace();
 					siesLogger.error(e.getMessage());
 					throw new F3BException(getClass().getName() + ".processRequest: " + e);
 				}
+
+				
+        {
+          // Se presente rimuovo l'eventuale errore
+          siesLogger.debug("Se presente rimuovo l'eventuale errore");
+          RegistraErrorePagopaUtil regErrUtil = new RegistraErrorePagopaUtil();
+          ErroriSiesPagopaModel errModel = new ErroriSiesPagopaModel();
+          errModel.setIdFascicoloSiep (fsm.getIdFascicoloSiep());
+          errModel.setIdEvento (getRequestBigDecimalParameter("IdEvento"));
+          errModel.setAzioneContestoJava ("siap.siep.sanzionesostitutiva.action.ActVerificaStatoElencoBollettini"); 
+
+          regErrUtil.rimuoviErrore(errModel);
+        } 				
+				
 				
 				// info per il log
 				if (rr != null && rr.getCount() > 0) {
@@ -198,9 +247,9 @@ public class ActInvocaWSVerificaStatoBollettini extends ActionSiap implements IC
 		// STATO_PAGAMENTO PA PAGATO
 		// STATO_PAGAMENTO PP PAGATO PARZIALMENTE
 		String sp = "DISPONIBILE".equals(srp.getStato()) ? "PA" : "PN";
-		bpm.setStatoPagamento(sp);		
-		
-		// 02.05.2023 - Aggiorno i dati del pagamento Importo e Data solo se lo stato è PAGATO 
+		bpm.setStatoPagamento(sp);
+
+		// 02.05.2023 - Aggiorno i dati del pagamento Importo e Data solo se lo stato è PAGATO
 		if ("DISPONIBILE".equals(srp.getStato())) {
 			if (Utils.isPresent(dataRicevuta))
 				bpm.setDataAvvPagamento(DateUtils.getDate(dataRicevuta, "dd/MM/yyyy"));
@@ -210,7 +259,7 @@ public class ActInvocaWSVerificaStatoBollettini extends ActionSiap implements IC
 			bpm.setImportoPagato(importoPagato);
 		}
 		// 02.05.2023 - FINE
-		
+
 		ibp.ExModificaBollettinoPagopa(bpm);
 	}
 

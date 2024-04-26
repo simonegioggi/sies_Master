@@ -52,6 +52,10 @@ public class PosizioneGiuridicaModel extends GenericModel {
 	private String mAutoritaCompetenteIndirizzo;
 	private String mCodMaschera;
 	private BigDecimal mAltCauIdAltraCausa;
+	
+	// MEV_2023_33 - Aggiunta decodifica COD_MASCHERA prelevata dalla CG.RV_ALT5_VALUE 
+	private String mCodMascheraCG;
+	
 
 	// private boolean mPrimaPosizione;
 
@@ -87,7 +91,7 @@ public class PosizioneGiuridicaModel extends GenericModel {
 		this.mAutoritaCompetenteIndirizzo = "";
 		this.mCodMaschera = "";
 		this.mAltCauIdAltraCausa = null;
-
+		this.mCodMascheraCG = null; // MEV_2023_33
 	}
 
 	// COSTRUTTORE DI COPIA
@@ -124,6 +128,7 @@ public class PosizioneGiuridicaModel extends GenericModel {
 		this.mCodMaschera = aModel.mCodMaschera;
 		this.mAltCauIdAltraCausa = aModel.mAltCauIdAltraCausa;
 
+		this.mCodMascheraCG = aModel.mCodMascheraCG; // MEV_2023_33
 	}
 
 	// COSTRUTTORE MODEL
@@ -284,7 +289,12 @@ public class PosizioneGiuridicaModel extends GenericModel {
 	public BigDecimal getAltCauIdAltraCausa() {
 		return mAltCauIdAltraCausa;
 	}
-
+	
+	//MEV_2023_33
+	public String getCodMascheraCG() {
+	  return mCodMascheraCG;
+	}
+	
 	// public boolean isPrimaPosizione() { return mPrimaPosizione; }
 	//
 	// METODI SET()
@@ -401,7 +411,12 @@ public class PosizioneGiuridicaModel extends GenericModel {
 	public void setAltCauIdAltraCausa(BigDecimal aValore) {
 		mAltCauIdAltraCausa = aValore;
 	}
-
+	
+  // MEV_2023-33
+	public void setCodMascheraCG(String aValore) {
+	    mCodMascheraCG = aValore;
+	}
+	
 	// public void setPrimaPosizione(boolean aValore ) { mPrimaPosizione = aValore; }
 
 	public boolean isMisAlt() {

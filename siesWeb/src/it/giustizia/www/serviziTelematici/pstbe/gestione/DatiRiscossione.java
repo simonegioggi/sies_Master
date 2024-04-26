@@ -22,6 +22,12 @@ public class DatiRiscossione  extends it.giustizia.www.serviziTelematici.pstbe.g
 
     private java.lang.String tassonomia;
 
+    private java.lang.Boolean distrettoUfficio;
+
+    private java.lang.Boolean visibile;
+
+    private boolean beneficiarioSettore;
+
     public DatiRiscossione() {
     }
 
@@ -32,7 +38,10 @@ public class DatiRiscossione  extends it.giustizia.www.serviziTelematici.pstbe.g
            java.lang.String codiceUtilizzatore,
            java.lang.String codiceGeneratore,
            java.lang.String codiceVersamento,
-           java.lang.String tassonomia) {
+           java.lang.String tassonomia,
+           java.lang.Boolean distrettoUfficio,
+           java.lang.Boolean visibile,
+           boolean beneficiarioSettore) {
         this.id = id;
         this.codCausale = codCausale;
         this.descCausale = descCausale;
@@ -40,6 +49,9 @@ public class DatiRiscossione  extends it.giustizia.www.serviziTelematici.pstbe.g
         this.codiceGeneratore = codiceGeneratore;
         this.codiceVersamento = codiceVersamento;
         this.tassonomia = tassonomia;
+        this.distrettoUfficio = distrettoUfficio;
+        this.visibile = visibile;
+        this.beneficiarioSettore = beneficiarioSettore;
     }
 
 
@@ -182,6 +194,66 @@ public class DatiRiscossione  extends it.giustizia.www.serviziTelematici.pstbe.g
         this.tassonomia = tassonomia;
     }
 
+
+    /**
+     * Gets the distrettoUfficio value for this DatiRiscossione.
+     * 
+     * @return distrettoUfficio
+     */
+    public java.lang.Boolean getDistrettoUfficio() {
+        return distrettoUfficio;
+    }
+
+
+    /**
+     * Sets the distrettoUfficio value for this DatiRiscossione.
+     * 
+     * @param distrettoUfficio
+     */
+    public void setDistrettoUfficio(java.lang.Boolean distrettoUfficio) {
+        this.distrettoUfficio = distrettoUfficio;
+    }
+
+
+    /**
+     * Gets the visibile value for this DatiRiscossione.
+     * 
+     * @return visibile
+     */
+    public java.lang.Boolean getVisibile() {
+        return visibile;
+    }
+
+
+    /**
+     * Sets the visibile value for this DatiRiscossione.
+     * 
+     * @param visibile
+     */
+    public void setVisibile(java.lang.Boolean visibile) {
+        this.visibile = visibile;
+    }
+
+
+    /**
+     * Gets the beneficiarioSettore value for this DatiRiscossione.
+     * 
+     * @return beneficiarioSettore
+     */
+    public boolean isBeneficiarioSettore() {
+        return beneficiarioSettore;
+    }
+
+
+    /**
+     * Sets the beneficiarioSettore value for this DatiRiscossione.
+     * 
+     * @param beneficiarioSettore
+     */
+    public void setBeneficiarioSettore(boolean beneficiarioSettore) {
+        this.beneficiarioSettore = beneficiarioSettore;
+    }
+
     private java.lang.Object __equalsCalc = null;
     public synchronized boolean equals(java.lang.Object obj) {
         if (!(obj instanceof DatiRiscossione)) return false;
@@ -214,7 +286,14 @@ public class DatiRiscossione  extends it.giustizia.www.serviziTelematici.pstbe.g
               this.codiceVersamento.equals(other.getCodiceVersamento()))) &&
             ((this.tassonomia==null && other.getTassonomia()==null) || 
              (this.tassonomia!=null &&
-              this.tassonomia.equals(other.getTassonomia())));
+              this.tassonomia.equals(other.getTassonomia()))) &&
+            ((this.distrettoUfficio==null && other.getDistrettoUfficio()==null) || 
+             (this.distrettoUfficio!=null &&
+              this.distrettoUfficio.equals(other.getDistrettoUfficio()))) &&
+            ((this.visibile==null && other.getVisibile()==null) || 
+             (this.visibile!=null &&
+              this.visibile.equals(other.getVisibile()))) &&
+            this.beneficiarioSettore == other.isBeneficiarioSettore();
         __equalsCalc = null;
         return _equals;
     }
@@ -247,6 +326,13 @@ public class DatiRiscossione  extends it.giustizia.www.serviziTelematici.pstbe.g
         if (getTassonomia() != null) {
             _hashCode += getTassonomia().hashCode();
         }
+        if (getDistrettoUfficio() != null) {
+            _hashCode += getDistrettoUfficio().hashCode();
+        }
+        if (getVisibile() != null) {
+            _hashCode += getVisibile().hashCode();
+        }
+        _hashCode += (isBeneficiarioSettore() ? Boolean.TRUE : Boolean.FALSE).hashCode();
         __hashCodeCalc = false;
         return _hashCode;
     }
@@ -304,6 +390,26 @@ public class DatiRiscossione  extends it.giustizia.www.serviziTelematici.pstbe.g
         elemField.setXmlName(new javax.xml.namespace.QName("", "tassonomia"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
         elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("distrettoUfficio");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "distrettoUfficio"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "boolean"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("visibile");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "visibile"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "boolean"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("beneficiarioSettore");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "beneficiarioSettore"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "boolean"));
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
     }

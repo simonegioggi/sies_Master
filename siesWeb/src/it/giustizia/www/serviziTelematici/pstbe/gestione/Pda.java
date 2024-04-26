@@ -14,6 +14,8 @@ public class Pda  extends it.giustizia.www.serviziTelematici.pstbe.gestione.Anag
 
     private byte[] certificatoSSL;
 
+    private java.lang.String codFornitore;
+
     private java.lang.String codPagTel;
 
     private java.lang.String codiceAlbo;
@@ -46,6 +48,8 @@ public class Pda  extends it.giustizia.www.serviziTelematici.pstbe.gestione.Anag
 
     private java.lang.String urlWebService;
 
+    private boolean visibile;
+
     public Pda() {
     }
 
@@ -53,6 +57,7 @@ public class Pda  extends it.giustizia.www.serviziTelematici.pstbe.gestione.Anag
            java.lang.String id,
            java.lang.String certificatoHash,
            byte[] certificatoSSL,
+           java.lang.String codFornitore,
            java.lang.String codPagTel,
            java.lang.String codiceAlbo,
            java.util.Calendar dataAutorizzazione,
@@ -68,10 +73,12 @@ public class Pda  extends it.giustizia.www.serviziTelematici.pstbe.gestione.Anag
            java.lang.String sedeLegale,
            it.giustizia.www.serviziTelematici.pstbe.gestione.TipologiaPda tipologia,
            java.lang.String url,
-           java.lang.String urlWebService) {
+           java.lang.String urlWebService,
+           boolean visibile) {
         this.id = id;
         this.certificatoHash = certificatoHash;
         this.certificatoSSL = certificatoSSL;
+        this.codFornitore = codFornitore;
         this.codPagTel = codPagTel;
         this.codiceAlbo = codiceAlbo;
         this.dataAutorizzazione = dataAutorizzazione;
@@ -88,6 +95,7 @@ public class Pda  extends it.giustizia.www.serviziTelematici.pstbe.gestione.Anag
         this.tipologia = tipologia;
         this.url = url;
         this.urlWebService = urlWebService;
+        this.visibile = visibile;
     }
 
 
@@ -148,6 +156,26 @@ public class Pda  extends it.giustizia.www.serviziTelematici.pstbe.gestione.Anag
      */
     public void setCertificatoSSL(byte[] certificatoSSL) {
         this.certificatoSSL = certificatoSSL;
+    }
+
+
+    /**
+     * Gets the codFornitore value for this Pda.
+     * 
+     * @return codFornitore
+     */
+    public java.lang.String getCodFornitore() {
+        return codFornitore;
+    }
+
+
+    /**
+     * Sets the codFornitore value for this Pda.
+     * 
+     * @param codFornitore
+     */
+    public void setCodFornitore(java.lang.String codFornitore) {
+        this.codFornitore = codFornitore;
     }
 
 
@@ -470,6 +498,26 @@ public class Pda  extends it.giustizia.www.serviziTelematici.pstbe.gestione.Anag
         this.urlWebService = urlWebService;
     }
 
+
+    /**
+     * Gets the visibile value for this Pda.
+     * 
+     * @return visibile
+     */
+    public boolean isVisibile() {
+        return visibile;
+    }
+
+
+    /**
+     * Sets the visibile value for this Pda.
+     * 
+     * @param visibile
+     */
+    public void setVisibile(boolean visibile) {
+        this.visibile = visibile;
+    }
+
     private java.lang.Object __equalsCalc = null;
     public synchronized boolean equals(java.lang.Object obj) {
         if (!(obj instanceof Pda)) return false;
@@ -491,6 +539,9 @@ public class Pda  extends it.giustizia.www.serviziTelematici.pstbe.gestione.Anag
             ((this.certificatoSSL==null && other.getCertificatoSSL()==null) || 
              (this.certificatoSSL!=null &&
               java.util.Arrays.equals(this.certificatoSSL, other.getCertificatoSSL()))) &&
+            ((this.codFornitore==null && other.getCodFornitore()==null) || 
+             (this.codFornitore!=null &&
+              this.codFornitore.equals(other.getCodFornitore()))) &&
             ((this.codPagTel==null && other.getCodPagTel()==null) || 
              (this.codPagTel!=null &&
               this.codPagTel.equals(other.getCodPagTel()))) &&
@@ -538,7 +589,8 @@ public class Pda  extends it.giustizia.www.serviziTelematici.pstbe.gestione.Anag
               this.url.equals(other.getUrl()))) &&
             ((this.urlWebService==null && other.getUrlWebService()==null) || 
              (this.urlWebService!=null &&
-              this.urlWebService.equals(other.getUrlWebService())));
+              this.urlWebService.equals(other.getUrlWebService()))) &&
+            this.visibile == other.isVisibile();
         __equalsCalc = null;
         return _equals;
     }
@@ -566,6 +618,9 @@ public class Pda  extends it.giustizia.www.serviziTelematici.pstbe.gestione.Anag
                     _hashCode += obj.hashCode();
                 }
             }
+        }
+        if (getCodFornitore() != null) {
+            _hashCode += getCodFornitore().hashCode();
         }
         if (getCodPagTel() != null) {
             _hashCode += getCodPagTel().hashCode();
@@ -623,6 +678,7 @@ public class Pda  extends it.giustizia.www.serviziTelematici.pstbe.gestione.Anag
         if (getUrlWebService() != null) {
             _hashCode += getUrlWebService().hashCode();
         }
+        _hashCode += (isVisibile() ? Boolean.TRUE : Boolean.FALSE).hashCode();
         __hashCodeCalc = false;
         return _hashCode;
     }
@@ -651,6 +707,13 @@ public class Pda  extends it.giustizia.www.serviziTelematici.pstbe.gestione.Anag
         elemField.setFieldName("certificatoSSL");
         elemField.setXmlName(new javax.xml.namespace.QName("", "certificatoSSL"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "base64Binary"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("codFornitore");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "codFornitore"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
@@ -764,6 +827,12 @@ public class Pda  extends it.giustizia.www.serviziTelematici.pstbe.gestione.Anag
         elemField.setXmlName(new javax.xml.namespace.QName("", "urlWebService"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
         elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("visibile");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "visibile"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "boolean"));
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
     }

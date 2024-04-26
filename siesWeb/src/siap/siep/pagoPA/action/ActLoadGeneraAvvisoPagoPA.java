@@ -7,10 +7,18 @@ import java.util.Vector;
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.Utils;
 import siap.sico.evento.action.ICostantiEvento;
+import siap.sico.evento.controller.IEvento;
+import siap.sico.evento.model.EventoModel;
+import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.util.GeneraAvvisoPagoPAUtil;
+import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
+import siap.siep.fascicolo.controller.IFascicoloSiep;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
+import siap.siep.notifica.model.NotificaModel;
 import siap.siep.pagoPA.controller.IBollettinoPagopa;
 import siap.siep.pagoPA.model.BollettinoPagopaModel;
 import siap.siep.rateizzazionepp.controller.IRateizzazionePP;
@@ -38,48 +46,104 @@ public class ActLoadGeneraAvvisoPagoPA extends ActionSiap implements ICostantiPa
 
 		// info per il log
 		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
-
+		
+    if (!isRequestParameterNullEmptyObj("fromListaErrori")){
+      // Provengo dalla lista errori PagoPa. Devo verificare che il fascicolo caricato in sessione coincida con quello 
+      // dell'evento 
+      BigDecimal idFascicoloSiep = getRequestBigDecimalParameter("idFascicoloSiep");
+      // Carico il nuovo fascicolo in sessione
+      IFascicoloSiep lCtrlFasc = SIEPLookupRemote.getFascicoloSiepRemote();
+      FascicoloSiepModel lFascMod = lCtrlFasc.ExRicercaFascicoloByKey(idFascicoloSiep);
+  
+      setSessionAttribute("fascicolo", lFascMod);
+      setSessionAttribute("soggetto", lFascMod.getSoggetto());
+      setSessionAttribute("sentenza", lFascMod.getSentenza());    
+    }
+    
 		// info utente ufficio collegato
 		codUtente = getCodUtenteConnesso();
 		codUfficio = getCodUfficioUtenteConnesso();
 
-		BigDecimal idEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
-		siesLogger.debug("ID_EVENTO = " + idEvento);
 		FascicoloSiepModel fsm = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 		BigDecimal idFascicolo = fsm.getIdFascicoloSiep();
 		siesLogger.debug("ID_FASCICOLO = " + idFascicolo);
+		BigDecimal idEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
+		siesLogger.debug("ID_EVENTO = " + idEvento);
 		IBollettinoPagopa ibp = SIEPLookupRemote.getBollettinoPagopaRemote();
 		// Ricerca lo stato dei pagamenti per id fascicolo
 		Vector<BollettinoPagopaModel> elencoStatoPagamenti = ibp
-				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo, "");
+				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiepIdEvento(idFascicolo, idEvento);
 		boolean isElencoEmpty = elencoStatoPagamenti.isEmpty();
-		// Ricerca i pagamenti per id evento
+
+		// Ricerca i pagamenti per idFascicolo
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
-		Vector<EventoRateizzazionePPModel> listaRichiestaBollettini = irpp
-				.exRicercaEventoRateizzazionePP(idFascicolo);
+		Vector<RateizzazionePPModel> listaRateizzazioni = irpp.exRicercaRateizzazioniByIdEvento(idEvento);
+		Vector<EventoRateizzazionePPModel> listaRichiestaBollettini = new Vector<>();
+		EventoRateizzazionePPModel erppm = new EventoRateizzazionePPModel();
+		IEvento ie = SICOLookupRemote.getEventoRemote();
+		EventoModel em = ie.ExRicercaEventoByKey(idEvento);
+		erppm.setEvento(em);
+		erppm.setListaRateizzazioniPP(listaRateizzazioni);
+		listaRichiestaBollettini.add(erppm);
+
 		if (!listaRichiestaBollettini.isEmpty()) {
-			Vector<RateizzazionePPModel> rateizzazioni = listaRichiestaBollettini.firstElement()
-					.getListaRateizzazioniPP();
-			setRequestAttribute("evento", listaRichiestaBollettini.firstElement().getEvento());
-			if (isElencoEmpty) {
-				int progressivoRata = 1;
-				// dalle rateizzazioni creo i bollettini
-				Iterator<RateizzazionePPModel> iter = rateizzazioni.iterator();
-				while (iter.hasNext()) {
-					RateizzazionePPModel rata = iter.next();
-					for (int i = 0; i < rata.getNumeroRate().intValue(); i++) {
-						BollettinoPagopaModel bpm = GeneraAvvisoPagoPAUtil.popolaBollettino(rata,
-								codUtente, codUfficio, "PN", progressivoRata);
-						ibp.ExInserisciBollettinoPagopa(bpm);
-						progressivoRata++;
-					}
+			Iterator<EventoRateizzazionePPModel> iterERPPM = listaRichiestaBollettini.iterator();
+			while (iterERPPM.hasNext()) {
+				erppm = iterERPPM.next();
+				Vector<RateizzazionePPModel> rateizzazioni = erppm.getListaRateizzazioniPP();
+				setRequestAttribute("evento", em);
+				// MEV_2023-33: controllo notifica al condannato
+				EventoNotificaModel enm = ie.ExRicercaEventoNotificaByKey(idEvento);
+				NotificaModel[] nms = enm.getNotifiche();
+				String dataNotificaCondannato = "";
+				for (int i = 0; i < nms.length; i++) {
+					// NOTIFICA AL CONDANNATO
+					if (nms[i].getAvvIdAvvocatoFascicoloSiep() == null
+							&& nms[i].getIdCivilmenteObbligato() == null)
+						dataNotificaCondannato = DateUtils.getDateToString(nms[i].getDataAvvenutaNotifica(),
+								"dd/MM/yyyy");
 				}
-				elencoStatoPagamenti = ibp.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo, "");
+				setRequestAttribute("dataNotificaCondannato", dataNotificaCondannato);
+
+				if (isElencoEmpty) {
+					int progressivoRata = 1;
+					// dalle rateizzazioni creo i bollettini
+					Iterator<RateizzazionePPModel> iter = rateizzazioni.iterator();
+					while (iter.hasNext()) {
+						RateizzazionePPModel rata = iter.next();
+						for (int i = 0; i < rata.getNumeroRate().intValue(); i++) {
+							// MEV_2023-33: cambiata firma del metodo con la data Emissione OEIP
+							BollettinoPagopaModel bpm = GeneraAvvisoPagoPAUtil.popolaBollettino(rata,
+									codUtente, codUfficio, "PN", progressivoRata, em.getDataEmissione());
+							ibp.ExInserisciBollettinoPagopa(bpm);
+							progressivoRata++;
+						}
+					}
+					elencoStatoPagamenti = ibp
+							.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiepIdEvento(idFascicolo, idEvento);
+				}
 			}
 		}
 
 		// poi li imposto nella pagina
 		setRequestAttribute("elencoStatoPagamenti", elencoStatoPagamenti);
+		// MEV_2023-33: aggiunte impostazioni di attributo
+		boolean isUnico = !elencoStatoPagamenti.isEmpty() && elencoStatoPagamenti.size() == 1
+				&& "U".equals(elencoStatoPagamenti.get(0).getTipoRateizzazione());
+		setRequestAttribute("isRateale", !isUnico);
+		boolean isSoloPrimaRata = false;
+		if (!isUnico) {
+			Iterator<BollettinoPagopaModel> itx = elencoStatoPagamenti.iterator();
+			int contaIUV = 0;
+			while (itx.hasNext()) {
+				BollettinoPagopaModel bpm = itx.next();
+				if (Utils.isPresent(bpm.getIuv()))
+					contaIUV++;
+			}
+			if (contaIUV == 1)
+				isSoloPrimaRata = true;
+		}
+		setRequestAttribute("isSoloPrimaRata", isSoloPrimaRata);
 
 		// info per il log
 		siesLogger.debug(getClass().getName() + ".processRequest: fine");

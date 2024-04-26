@@ -40,10 +40,14 @@ import siap.siep.istitutodetenzione.model.IstitutoDetenzioneModel;
 import siap.siep.modulocumulo.controller.IDatiFinaliCumulo;
 import siap.siep.modulocumulo.model.DatiFinaliCumuloModel;
 import siap.siep.modulocumulo.util.ModuloCumuloUtils;
+import siap.siep.pagoPA.dao.BollettinoPagopaSqlDAO;
+import siap.siep.pagoPA.model.BollettinoPagopaModel;
 import siap.siep.penapecuniaria.dao.RichiestaConversioneSqlDAO;
 import siap.siep.penapecuniaria.model.RichiestaConversioneModel;
 import siap.siep.penaresidua.dao.PenaResiduaPerStatoEsecuzioneSqlDAO;
 import siap.siep.penaresidua.model.PenaResiduaModel;
+import siap.siep.rateizzazionepp.dao.RateizzazionePPSqlDAO;
+import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 import siap.siep.rinnovo.controller.IRinnovo;
 import siap.siep.rinnovo.model.RinnovoModel;
 import siap.siep.scambiosanzione.dao.ScambioSanzioneSqlDAO;
@@ -111,6 +115,12 @@ public class StatoEsecuzioneController extends SiapController {
 
 		DepositoOrdinanzaPcModel lDepOrdPCMod = null;
 
+		
+		// MEV_2023-33
+		RateizzazionePPSqlDAO lRateSqlDao = null;
+		BollettinoPagopaSqlDAO lBollettiniSqlDao = null;
+		// MEV_2023-33 - 
+		    
 		try {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.info("\n>>> SONO 222 NEL REWORK DELLO STATO ESECUZIONE!!! <<< ");
@@ -124,6 +134,11 @@ public class StatoEsecuzioneController extends SiapController {
 			lTenSql = new TenoreSqlDAO(lConn);
 			lScaSanSql = new ScambioSanzioneSqlDAO(lConn);
 
+		   // MEV_2023-33
+			lRateSqlDao = new RateizzazionePPSqlDAO (lConn);
+			lBollettiniSqlDao = new BollettinoPagopaSqlDAO (lConn);
+	    // MEV_2023-33 - 
+			
 			// Ricerca Eventi per lo stato esecuzione
 			lEveDaoStampa.ricercaEventoByFascicoloSiepXStampa(lKeyFascicolo);
 			Vector lVectEve = new Vector(lEveDaoStampa.getModels());
@@ -317,6 +332,45 @@ public class StatoEsecuzioneController extends SiapController {
 								+ " - ID EVENTO = " + lAnnoModel.getEveIdEvento());
 					}
 				}
+			  
+				// MEV_2023-33
+				// Dveo recupera i bollletino collegati al fascicolo, le rate collegate al fascicole
+				// ed aggregare i bollettini allal rete ele rate agli ecento
+        siesLogger.debug("Ricerco le rate collegate al fascicolo...");
+				lRateSqlDao.ricercaRateizzazionePPByIdFascicoloSiep(lKeyFascicolo);
+				Vector lListaRateizzazioni = new Vector(lRateSqlDao.getModels());
+				
+				Hashtable lHashRateizzazioni = new Hashtable();
+				if (lListaRateizzazioni != null) {
+				  siesLogger.debug("Rate trovate...");
+				  Iterator lItxRate = lListaRateizzazioni.iterator();
+
+				  while (lItxRate.hasNext()) {
+				    RateizzazionePPModel lRataModel = (RateizzazionePPModel) lItxRate.next();
+				    
+				    if (lRataModel.getEveIdEvento()!=null) {
+				      // 
+				      lBollettiniSqlDao.ricercaBollettinoPagopaByReteizzazione(lRataModel.getIdRateizzazionePP());
+				      Vector lListaBollettini = new Vector(lBollettiniSqlDao.getModels());
+				      lRataModel.setListaBollettini(lListaBollettini);
+				      
+				      if (lHashRateizzazioni.containsKey(lRataModel.getEveIdEvento())) {
+				        ((Vector) lHashRateizzazioni.get(lRataModel.getEveIdEvento())).add(lRataModel);
+				      }
+				      else {
+				        Vector <RateizzazionePPModel> lListaRateEvento = new Vector <RateizzazionePPModel>();
+				        lListaRateEvento.add (lRataModel);
+				        lHashRateizzazioni.put (lRataModel.getEveIdEvento(), lListaRateEvento);
+				      }
+				    }
+
+				    siesLogger.debug("lRataModel = " + lRataModel);
+				  }
+				}			
+				siesLogger.debug("Dopo ricerca rate...");
+			  // MEV_2023-33 - FINE 		
+				
+				
 				// --------------------------------------------------------------------
 				// FINE SEZIONE caricamento hash table
 				// --------------------------------------------------------------------
@@ -337,6 +391,11 @@ public class StatoEsecuzioneController extends SiapController {
 				lStatEsec.setHashEventiRiferimento(lHashSorveglianza);
 				lStatEsec.setHashMisure(lHashMisAlt);
 				lStatEsec.setEveIdEvento(lEveIdEventi);
+				
+				// MEV_2023-33 
+				lStatEsec.setHashRateizzazioni(lHashRateizzazioni);
+				// MEV_2023-33 - FINE
+				
 				// FIXME d.f. verificare se e' il caso di recuperare anche le LA.
 				// Sebbene siano legate al provvedimento SIUS hanno un ref anche al fascicolo SIEP
 				// Si potrebber recuperare le LA legate a Ordinanze/Decreti puntati
@@ -789,6 +848,23 @@ public class StatoEsecuzioneController extends SiapController {
 								lStatEve.add(new TreeModel(lLA.next()));
 							}
 						}
+
+            // MEV_2023-33
+            if (lEve.getListaRateizzazioni() != null && lEve.getListaRateizzazioni().size() > 0) {
+              Iterator <RateizzazionePPModel> lIterRate = lEve.getListaRateizzazioni().iterator();
+              while (lIterRate.hasNext()) {
+                RateizzazionePPModel lRata = lIterRate.next();
+                TreeModel lTreeRata = new TreeModel(lRata);
+                if (lRata.getListaBollettini()!=null && lRata.getListaBollettini().size()>0) {
+                  Iterator <BollettinoPagopaModel> lIterBoll = lRata.getListaBollettini().iterator();
+                  while (lIterBoll.hasNext()) {
+                    lTreeRata.add(new TreeModel(lIterBoll.next()));
+                  }
+                }
+                lStatEve.add(lTreeRata);
+              }
+            }
+            //MEV_2023-33
 
 						if (lEve.getFungibilita() != null) {
 							TreeModel lTreeFung = new TreeModel(lEve.getFungibilita());

@@ -11,11 +11,19 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
+import f3b.util.StringUtils;
+import f3b.util.Utils;
 import f3b.util.report.ReportGenerator;
 import f3b.util.xml.TreeModel;
 import siap.controller.SiapController;
@@ -26,12 +34,16 @@ import siap.sico.evento.dao.EventoDAO;
 import siap.sico.evento.dao.EventoSqlDAO;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
+import siap.sico.soggetto.model.SoggettoModel;
 import siap.sico.stampa.controller.StampaSSController;
 import siap.sico.template.controller.TemplateManager;
+import siap.sico.ufficio.model.UfficioModel;
 import siap.sico.utente.model.UtenteModel;
 import siap.sico.util.SICOLookupRemote;
+import siap.siep.SIEPException;
 import siap.siep.autoritaesterna.dao.AutoritaEsternaDAO;
 import siap.siep.autoritaesterna.model.AutoritaEsternaModel;
+import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.nomeprovvedimento.dao.NomeProvvedimentoDAO;
 import siap.siep.notifica.dao.NotificaDAO;
 import siap.siep.notifica.dao.NotificaEventoSqlDAO;
@@ -49,13 +61,17 @@ import siap.siep.posizione.dao.PosizioneGiuridicaSqlDAO;
 import siap.siep.posizione.model.PosizioneGiuridicaModel;
 import siap.siep.rateizzazionepp.dao.RateizzazionePPDAO;
 import siap.siep.rateizzazionepp.dao.RateizzazionePPSqlDAO;
+import siap.siep.rateizzazionepp.dao.RicercaStatoPagamentiSqlDao;
 import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
+import siap.siep.sanzionesostitutiva.action.ICostantiSanzioneSostitutiva;
 import siap.siep.sanzionesostitutiva.dao.SanzioneSostResiduaDAO;
 import siap.siep.sanzionesostitutiva.dao.SanzioneSostResiduaSqlDAO;
+import siap.siep.sanzionesostitutiva.model.RicercaStatoPagamentiModel;
 import siap.siep.sanzionesostitutiva.model.SanzioneSostResiduaModel;
 import siap.siep.scadenzario.dao.ScadenzarioDAO;
 import siap.siep.scadenzario.dao.ScadenzarioSqlDAO;
 import siap.siep.scadenzario.model.ScadenzarioModel;
+import siap.siep.scadenzario.util.ScadenzarioUtils;
 import siap.siep.sospensione.dao.SospensioneDAO;
 import siap.siep.sospensione.dao.SospensioneSqlDAO;
 import siap.siep.sospensione.model.SospensioneModel;
@@ -66,7 +82,9 @@ import siap.siep.verbale.dao.VerbaleDAO;
 import siap.siep.verbale.model.VerbaleModel;
 
 /**
- * Title: SanzioneSostitutivaController Description: Controller della SanzioniSostitutive
+ * Controller della Sanzioni Sostitutive
+ * 
+ * @version	1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class SanzioneSostitutivaController extends SiapController implements ISanzioneSostitutiva {
@@ -1800,7 +1818,7 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 		NotificaDAO lNotDao = null;
 		AutoritaEsternaDAO lAutDao = null;
 		PenaResiduaDAO lPenResDao = null;
-		PenaResiduaSqlDAO lPenResSqlDao = null;
+		// PenaResiduaSqlDAO lPenResSqlDao = null;
 
 		EventoNotificaModel lEveRet = new EventoNotificaModel(aEvNotModel);
 
@@ -1969,7 +1987,7 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 			cleanup(lNotDao);
 			cleanup(lAutDao);
 			cleanup(lPenResDao);
-			cleanup(lPenResSqlDao);
+			// cleanup(lPenResSqlDao);
 
 			cleanup(lConn);
 		}
@@ -2698,11 +2716,9 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 		return lEveRet;
 	}
 
-	/**
-	 *
-	 */
 	public void exAggiornaNotificheOrdineIngiunzione(EventoModel aEvento,
 			Vector<NotificaModel> aListaNotDaAggiornare) throws F3BException {
+
 		Connection lConn = null;
 
 		NotificaDAO lNotDAO = null;
@@ -2775,12 +2791,37 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 				lVectNot.add(lNotModel);
 				siesLogger.debug("lNotModel.getCodTipoNotifica() = " + lNotModel.getCodTipoNotifica());
+				lScaSqlDao = new ScadenzarioSqlDAO(lConn);
 				if ("E".equals(lNotModel.getCodTipoNotifica())) {
 					siesLogger.debug("Notifica al condannato. Attivo/Cancello lo scadenzario");
 
+					// 2023.11.20 - Cancello eventuali scadenzario 30 collegato ad altri eventi
+					lScaSqlDao.ricercaScadenzarioByTipoScadenzarioIdFascicolo("30", aEvento.getFasSieIdFascicoloSiep());
+					Vector <ScadenzarioModel> listaScadenzari = new Vector <ScadenzarioModel>(lScaSqlDao.getModels());
+					siesLogger.debug("listaScadenzari.size() = "+listaScadenzari.size());
+					for (ScadenzarioModel scadenzarioPrecedente : listaScadenzari) {
+					  if (scadenzarioPrecedente.getEveIdEvento().compareTo(aEvento.getIdEvento())!=0
+					      && "N".equals(scadenzarioPrecedente.getFlagVisto())) {
+					    siesLogger.debug("Annullo lo scadenzario con id = "+scadenzarioPrecedente.getIdScadenzario());
+//					    lScaDao.setFlagVisto("S");
+//					    lScaDao.setDataAggiornamento(DateUtils.getSysDate());
+//					    lScaDao.setCodOperatoreAggiornamento(lNotModel.getCodOperatoreInserimento());
+//					    lScaDao.setCodUfficioAggiornamento(lNotModel.getCodUfficioInserimento());
+              lScaDao.setCondizioneUpdate(scadenzarioPrecedente.getIdScadenzario());
+              lScaDao.delete();
+//              lScaDao.update();
+              lScaDao.stop();					    
+					  }					  
+					}
+				  // 2023.11.20 - 
+					
+					Date dataScadenzaPrimaRata = null;
+
 					if (lNotModel.getDataAvvenutaNotifica() == null) {
-						siesLogger.debug("Notifica al condannato Rimossa Cancello lo scadenzario");
-						lScaSqlDao = new ScadenzarioSqlDAO(lConn);
+						siesLogger.debug("Notifica al condannato Rimossa, Cancello lo scadenzario");
+						
+					  // 2023.11.20 - Dovrei ripristinare lo scadenzario precedente. Storicizzazione attualmente non prevista					
+						
 						lScaSqlDao.ricercaScadenzarioByIdEvento(aEvento.getIdEvento());
 						ScadenzarioModel lScadenzarioAttuale = (ScadenzarioModel) lScaSqlDao.getModelByKey();
 
@@ -2794,7 +2835,6 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 						siesLogger.debug(
 								"Notifica al condannato Inserita/Modificata Attivo/Modifico lo scadenzario");
 
-						lScaSqlDao = new ScadenzarioSqlDAO(lConn);
 						// lScaSqlDao.ricercaScadenzarioByTipoScadenzarioIdFascicolo ("30",
 						// aEvento.getFasSieIdFascicoloSiep());
 						lScaSqlDao.ricercaScadenzarioByIdEvento(aEvento.getIdEvento());
@@ -2815,7 +2855,7 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 							}
 						}
 
-						Date dataScadenza = DateUtils.moveDateTo(lNotModel.getDataAvvenutaNotifica(),
+						dataScadenzaPrimaRata = DateUtils.moveDateTo(lNotModel.getDataAvvenutaNotifica(),
 								Calendar.DAY_OF_MONTH, primaRata.getScadenzaGiorni().intValue());
 
 						if (lScadenzarioAttuale == null) {
@@ -2826,7 +2866,7 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 							lScadModel.setCodTipoScadenzario("30");
 							lScadModel.setDataInizioScadenza(lNotModel.getDataAvvenutaNotifica());
-							lScadModel.setDataFineScadenza(dataScadenza);
+							lScadModel.setDataFineScadenza(dataScadenzaPrimaRata);
 
 							lScadModel
 									.setCodOperatoreInserimento(lNotModel.getCodiceOperatoreAggiornamento());
@@ -2846,7 +2886,7 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 							siesLogger.debug(
 									"Notifica al condannato: scadenzario gia' attivo ma con data differente lo aggiorno");
 							lScaDao.setDataInizioScadenza(lNotModel.getDataAvvenutaNotifica());
-							lScaDao.setDataFineScadenza(dataScadenza);
+							lScaDao.setDataFineScadenza(dataScadenzaPrimaRata);
 
 							lScaDao.setCodOperatoreAggiornamento(lNotModel.getCodiceOperatoreAggiornamento());
 							lScaDao.setCodUfficioAggiornamento(lNotModel.getCodUfficioAggiornamento());
@@ -2856,52 +2896,62 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 							lScaDao.update();
 							lScaDao.stop();
 						}
-
-						// Se presenti i bollettini aggiorno la data di scadenza
-						lBollSqlDao = new BollettinoPagopaSqlDAO(lConn);
-						lBollSqlDao.ricercaBollettinoPagopaByFasSieIdFascicoloSiep(
-								aEvento.getFasSieIdFascicoloSiep(), null);
-
-						Vector<BollettinoPagopaModel> lListaBollettini = new Vector<BollettinoPagopaModel>(
-								lBollSqlDao.getModels());
-						if (lListaBollettini.size() > 0) {
-							boolean isBollettiniGenerati = false;
-							boolean isBollettiniPagati = false;
-							// boolean isDataScadenzaCalcolata = false;
-							for (BollettinoPagopaModel lBoll : lListaBollettini) {
-								if (lBoll.getIuv() != null)
-									isBollettiniGenerati = true;
-								if (lBoll.getDataAvvPagamento() != null)
-									isBollettiniPagati = true;
-								// if (lBoll.getDataScadenza() != null)
-								// isDataScadenzaCalcolata = true;
-							}
-
-							if (isBollettiniGenerati) {
-								if (!isBollettiniPagati /* && !isDataScadenzaCalcolata */) {
-									// Calcolo la data scadenza e la aggiornao
-									lBollDao = new BollettinoPagopaDAO(lConn);
-									lBollDao.setDataScadenza(dataScadenza);
-									lBollDao.selCondizioneByIdFascicolo(aEvento.getFasSieIdFascicoloSiep());
-									lBollDao.update();
-								} else {
-									// se il primo bollettino è stato già pagato allora le date dei successivi
-									// sono state
-									// calcolate in base al pagamento della prima rata. NON HA SENSO
-									// MODIFICARE LE SCADENZA
-									// Al più si potrebbe modificare SOLO la data scadenza del PRIMO
-									// bollettino pagato
-								}
-							} else {
-								// la potrei aggiornare comunque
-								lBollDao = new BollettinoPagopaDAO(lConn);
-								lBollDao.setDataScadenza(dataScadenza);
-								lBollDao.selCondizioneByIdFascicolo(aEvento.getFasSieIdFascicoloSiep());
-								lBollDao.update();
-							}
-						}
-
 					}
+
+					// MEV_2023-33: le date di scadenza delle rate successive vanno subito calcolate in fase
+					// di
+					// registrazione della notifica e non a seguito dall'avvenuto pagamento della
+					// prima rata
+					// Data scadenza ulteriori rata = ultimo del mese successivo alla scadenza della rata
+					// precedente
+					// Se presenti i bollettini aggiorno la data di scadenza
+					lBollSqlDao = new BollettinoPagopaSqlDAO(lConn);
+					// lBollSqlDao.ricercaBollettinoPagopaByFasSieIdFascicoloSiep(aEvento.getFasSieIdFascicoloSiep(),
+					// null);
+					lBollSqlDao.ricercaBollettinoPagopaByIdEvento(aEvento.getIdEvento());
+					Vector<BollettinoPagopaModel> lListaBollettini = new Vector<BollettinoPagopaModel>(
+							lBollSqlDao.getModels());
+
+					lBollDao = new BollettinoPagopaDAO(lConn);
+					if (lListaBollettini.size() > 0) {
+						// n.b. per ora si procede all'aggiornamento delle scadenze indipendentemente se il
+						// bollettino sia stato generato o meno o già pagato
+						Date dataScadenzaRataSuccessiva = dataScadenzaPrimaRata;
+						for (BollettinoPagopaModel lBoll : lListaBollettini) {
+							siesLogger.debug("ProgRata = " + lBoll.getProgRata() + ", dataScadenza "
+									+ dataScadenzaRataSuccessiva);
+
+							lBollDao.setDataScadenza(dataScadenzaRataSuccessiva);
+							lBollDao.setCondizioneUpdate(lBoll.getIdBollettinoPagopa());
+							lBollDao.update();
+
+							if (dataScadenzaRataSuccessiva != null)
+								dataScadenzaRataSuccessiva = DateUtils
+										.calcolaUtimoDelProxMese(dataScadenzaRataSuccessiva);
+						}
+					}
+
+					/*
+					 * if (lListaBollettini.size() > 0) { boolean isBollettiniGenerati = false; boolean
+					 * isBollettiniPagati = false; // boolean isDataScadenzaCalcolata = false; for
+					 * (BollettinoPagopaModel lBoll : lListaBollettini) { if (lBoll.getIuv() != null)
+					 * isBollettiniGenerati = true; if (lBoll.getDataAvvPagamento() != null)
+					 * isBollettiniPagati = true; // if (lBoll.getDataScadenza() != null) //
+					 * isDataScadenzaCalcolata = true; }
+					 *
+					 * if (isBollettiniGenerati) { //if (!isBollettiniPagati && !isDataScadenzaCalcolata) { if
+					 * (!isBollettiniPagati ) { // Calcolo la data scadenza e la aggiornao lBollDao = new
+					 * BollettinoPagopaDAO(lConn); lBollDao.setDataScadenza(dataScadenzaPrimaRata);
+					 * lBollDao.selCondizioneByIdFascicolo(aEvento.getFasSieIdFascicoloSiep());
+					 * lBollDao.update(); } else { // se il primo bollettino è stato già pagato allora le date
+					 * dei successivi // sono state // calcolate in base al pagamento della prima rata. NON HA
+					 * SENSO // MODIFICARE LE SCADENZA // Al più si potrebbe modificare SOLO la data scadenza
+					 * del PRIMO // bollettino pagato } } else { // la potrei aggiornare comunque lBollDao =
+					 * new BollettinoPagopaDAO(lConn); lBollDao.setDataScadenza(dataScadenzaPrimaRata);
+					 * lBollDao.selCondizioneByIdFascicolo(aEvento.getFasSieIdFascicoloSiep());
+					 * lBollDao.update(); } }
+					 */
+
 				}
 			}
 
@@ -2935,6 +2985,7 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 	 */
 	public EventoNotificaModel exModificaOrdineIngiunzione(EventoNotificaModel aEvNotModel,
 			String[] lArrayIdRate) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEventoDao = null;
@@ -3057,6 +3108,1023 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 		}
 
 		return lEveRet;
+	}
+
+	/**
+	 * MEV_2023-33 Metodo per la ricerca (paginata) dei fascicoli SIEP dell'ufficio per stato pagamento
+	 */
+	public BigDecimal ExGetCountRicercaFascicoliPerStatoPagamento(FascicoloSiepModel aFascicolo,
+			String aTipoRicerca) throws F3BException {
+
+		BigDecimal lCount = new BigDecimal(0);
+		Connection lConn = null;
+
+		RicercaStatoPagamentiSqlDao ricercaStatoPagamentiSqlDao = null;
+		try {
+			lConn = getDBConnection();
+
+			ricercaStatoPagamentiSqlDao = new RicercaStatoPagamentiSqlDao(lConn);
+
+			ricercaStatoPagamentiSqlDao.getCountRicercaFascicoliPerStatoPagamento(aFascicolo, aTipoRicerca);
+			ricercaStatoPagamentiSqlDao.start();
+			ricercaStatoPagamentiSqlDao.next();
+			lCount = ricercaStatoPagamentiSqlDao.getBigDecimal("HowManyRecords");
+			ricercaStatoPagamentiSqlDao.stop();
+		} catch (DAOException daoEx) {
+			siesLogger.error(daoEx.getLocalizedMessage());
+			throw new SIEPException(SIEPException.USER_MESSAGE,
+					"SanzioneSostitutivaController.ExGetCountRicercaFascicoliPerStatoPagamento: errore "
+							+ daoEx);
+		} finally {
+			cleanup(ricercaStatoPagamentiSqlDao);
+			cleanup(lConn);
+		}
+		return lCount;
+	}
+
+	/**
+	 * MEV_2023-33 Metodo per la ricerca (paginata) dei fascicoli SIEP dell'ufficio per stato pagamento
+	 */
+	public Vector ExRicercaFascicoliPerStatoPagamentoPaged(FascicoloSiepModel aFasMod, int aPagina,
+			String aTipoRicera) throws F3BException {
+
+		siesLogger.debug("ExRicercaFascicoloStatoPagamentoPaged");
+		Connection lConn = null;
+		RicercaStatoPagamentiSqlDao ricercaStatoPagamentiSqlDao = null;
+		Vector elencoFascicoli = new Vector();
+
+		try {
+			lConn = getDBConnection();
+
+			ricercaStatoPagamentiSqlDao = new RicercaStatoPagamentiSqlDao(lConn);
+
+			ricercaStatoPagamentiSqlDao.ricercaFascicoliPerStatoPagamento(aFasMod, aPagina, aTipoRicera);
+
+			elencoFascicoli = new Vector(ricercaStatoPagamentiSqlDao.getModels());
+
+		} catch (DAOException ex) {
+			throw new F3BException(
+					"SanzioneSostitutivaController.ExRicercaFascicoliPerStatoPagamentoPaged: " + ex);
+		} catch (Exception ex) {
+			throw new F3BException(
+					"SanzioneSostitutivaController.ExRicercaFascicoliPerStatoPagamentoPaged: " + ex);
+		} finally {
+			cleanup(ricercaStatoPagamentiSqlDao);
+
+			cleanup(lConn);
+		}
+
+		return elencoFascicoli;
+	}
+
+	/**
+	 * Inserise l'evento e la notifica
+	 *
+	 * @since MEV_2023-33
+	 */
+	public EventoNotificaModel exInserisciNotaTrasmissione(EventoNotificaModel aEvNotModel)
+			throws F3BException {
+		Connection lConn = null;
+
+		EventoDAO lEventoDao = null;
+		NotificaDAO lNotDao = null;
+		AutoritaEsternaDAO lAutDao = null;
+
+		EventoNotificaModel lEveRet = new EventoNotificaModel(aEvNotModel);
+
+		try {
+			lConn = getDBConnection();
+
+			// =========================================
+			// Inserisco la Nota di trasmissione
+			// =========================================
+			lEventoDao = new EventoDAO(lConn);
+			lEventoDao.setDAOFromModel(aEvNotModel.getEvento());
+			BigDecimal lIdEvento = lEventoDao.insert();
+			lEventoDao.stop();
+
+			lEveRet.getEvento().setIdEvento(lIdEvento);
+			siesLogger.debug("lIdEvento = " + lIdEvento);
+
+			// =========================================================
+			// Inserisco le Notifiche collegate all'evento se presenti
+			// =========================================================
+			int count = 0;
+			lAutDao = new AutoritaEsternaDAO(lConn);
+			BigDecimal lKeyAutorita = null;
+
+			while (count < aEvNotModel.getNotifiche().length) {
+				siesLogger.debug("count = " + count);
+				siesLogger.debug("Notifica[" + count + "] = " + aEvNotModel.getNotifiche()[count]);
+
+				if (aEvNotModel.getNotifiche()[count] != null) {
+					// Se è stata specificata anche l'autorità esterna per l'avvocato,
+					// recupero l'id da inserire nella notifica
+					// n.b. se autorità non presente la creo
+					if (aEvNotModel.getNotifiche()[count].getAutoritaEsterna() != null) {
+						// Provo a verificare se a sistema (tab AUTORITA_ESTERNA) esiste
+						// già l'autorità esterna specificata nella form (dalla form ho solo
+						// codice e sede)
+						lAutDao.setRicercaByAutSede(aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
+						AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
+						lAutMod = (AutoritaEsternaModel) lAutDao.getModelByKey();
+
+						if (lAutMod == null) { // non esiste, la inserisco (n.b. ho solo tipo e sede)
+							lAutDao.setDAOFromModel(aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
+							lKeyAutorita = lAutDao.insert();
+							aEvNotModel.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
+						} else {
+							lKeyAutorita = lAutMod.getIdAutoritaEsterna();
+							aEvNotModel.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
+						}
+					}
+
+					// ===========================================
+					aEvNotModel.getNotifiche()[count].setEveIdEvento(lIdEvento);
+
+					lNotDao = new NotificaDAO(lConn);
+
+					lNotDao.setDAOFromModel(aEvNotModel.getNotifiche()[count]);
+					BigDecimal lKeyNotifica = lNotDao.insert();
+					lNotDao.stop();
+
+					siesLogger.debug("Inserita Notifica " + lKeyNotifica);
+				}
+
+				count++;
+			}
+
+			commit(lConn);
+		} catch (DAOException ex) {
+			rollback(lConn);
+			throw new F3BException("SanzioneSostitutivaController.exInserisciNotaTrasmissione: " + ex);
+		} catch (Exception ex) {
+			siesLogger.error("Eccezione Generica", ex);
+			rollback(lConn);
+			throw new F3BException("SanzioneSostitutivaController.exInserisciNotaTrasmissione: " + ex);
+		} finally {
+			cleanup(lEventoDao);
+			cleanup(lNotDao);
+			cleanup(lAutDao);
+
+			cleanup(lConn);
+		}
+
+		return lEveRet;
+	}
+
+	/**
+	 * Funzione per ma lodifica della nota di trasmissione Effettua una delete insert dei dati
+	 */
+	public EventoNotificaModel exModificaNotaTrasmissione(EventoNotificaModel aEvNotModel)
+			throws F3BException {
+		Connection lConn = null;
+
+		EventoDAO lEventoDao = null;
+		NotificaDAO lNotDao = null;
+		AutoritaEsternaDAO lAutDao = null;
+
+		EventoNotificaModel lEveRet = new EventoNotificaModel(aEvNotModel);
+
+		try {
+			lConn = getDBConnection();
+
+			lNotDao = new NotificaDAO(lConn);
+			lNotDao.setCondizioneEvento(aEvNotModel.getEvento().getIdEvento());
+			lNotDao.delete();
+
+			lEventoDao = new EventoDAO(lConn);
+			lEventoDao.selCondizioneUpdate(aEvNotModel.getEvento().getIdEvento());
+			lEventoDao.delete();
+
+			// =========================================
+			// Inserisco la Nota di trasmissione
+			// =========================================
+			lEventoDao = new EventoDAO(lConn);
+			lEventoDao.setDAOFromModel(aEvNotModel.getEvento());
+			BigDecimal lIdEvento = lEventoDao.insert();
+			lEventoDao.stop();
+
+			lEveRet.getEvento().setIdEvento(lIdEvento);
+			siesLogger.debug("lIdEvento = " + lIdEvento);
+
+			// =========================================================
+			// Inserisco le Notifiche collegate all'evento se presenti
+			// =========================================================
+			int count = 0;
+			lAutDao = new AutoritaEsternaDAO(lConn);
+			BigDecimal lKeyAutorita = null;
+
+			while (count < aEvNotModel.getNotifiche().length) {
+				siesLogger.debug("count = " + count);
+				siesLogger.debug("Notifica[" + count + "] = " + aEvNotModel.getNotifiche()[count]);
+
+				if (aEvNotModel.getNotifiche()[count] != null) {
+					// Se è stata specificata anche l'autorità esterna per l'avvocato,
+					// recupero l'id da inserire nella notifica
+					// n.b. se autorità non presente la creo
+					if (aEvNotModel.getNotifiche()[count].getAutoritaEsterna() != null) {
+						// Provo a verificare se a sistema (tab AUTORITA_ESTERNA) esiste
+						// già l'autorità esterna specificata nella form (dalla form ho solo
+						// codice e sede)
+						lAutDao.setRicercaByAutSede(aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
+						AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
+						lAutMod = (AutoritaEsternaModel) lAutDao.getModelByKey();
+
+						if (lAutMod == null) { // non esiste, la inserisco (n.b. ho solo tipo e sede)
+							lAutDao.setDAOFromModel(aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
+							lKeyAutorita = lAutDao.insert();
+							aEvNotModel.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
+						} else {
+							lKeyAutorita = lAutMod.getIdAutoritaEsterna();
+							aEvNotModel.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
+						}
+					}
+
+					// ===========================================
+					aEvNotModel.getNotifiche()[count].setEveIdEvento(lIdEvento);
+
+					lNotDao = new NotificaDAO(lConn);
+
+					lNotDao.setDAOFromModel(aEvNotModel.getNotifiche()[count]);
+					BigDecimal lKeyNotifica = lNotDao.insert();
+					lNotDao.stop();
+
+					siesLogger.debug("Inserita Notifica " + lKeyNotifica);
+				}
+
+				count++;
+			}
+
+			commit(lConn);
+		} catch (DAOException ex) {
+			rollback(lConn);
+			throw new F3BException("SanzioneSostitutivaController.exInserisciNotaTrasmissione: " + ex);
+		} catch (Exception ex) {
+			siesLogger.error("Eccezione Generica", ex);
+			rollback(lConn);
+			throw new F3BException("SanzioneSostitutivaController.exInserisciNotaTrasmissione: " + ex);
+		} finally {
+			cleanup(lEventoDao);
+			cleanup(lNotDao);
+			cleanup(lAutDao);
+
+			cleanup(lConn);
+		}
+
+		return lEveRet;
+	}
+
+	/**
+	 * Metodo di validazione della nota di trasmissione
+	 *
+	 * @param aEvento
+	 * @return
+	 * @throws F3BException
+	 * @since MEV_2023-33
+	 */
+	public EventoModel exUpdateNotaTrasmissione(EventoModel aEvento) throws F3BException {
+
+		Connection lConn = null;
+
+		EventoDAO lEventoDao = null;
+		EventoSqlDAO lEveSqlDAO = null;
+		StatoProcedimentoDAO lStatoDao = null;
+
+		EventoDAO lEveDaoBlob = null;
+
+		EventoModel lEveRet = new EventoModel(aEvento);
+
+		try {
+			lConn = getDBConnection();
+
+			// ========================================================================
+			// Recupero l'EVENTO completo, quello in input contiene solo i dati da
+			// aggiornare
+			// ========================================================================
+			lEveSqlDAO = new EventoSqlDAO(lConn);
+			lEveSqlDAO.ricercaEventoByKey(aEvento.getIdEvento());
+
+			EventoModel lEveModelRich = (EventoModel) lEveSqlDAO.getModelByKey();
+			String idEvento = Utils.isNullObj(lEveModelRich.getIdEvento()) ? " EVENTO NULLO"
+					: "" + lEveModelRich.getIdEvento();
+			siesLogger.debug("ID_EVENTO = " + idEvento);
+			lEveSqlDAO.stop();
+
+			// ========================================================================
+			// Aggiorna lo stato del PROCEDIMENTO cancellando i record precedenti
+			// ========================================================================
+			siesLogger.debug("Aggiornamento stato procedimento");
+
+			StatoProcedimentoModel lStatoProcMod = new StatoProcedimentoModel();
+
+			lStatoProcMod.setProgressivo(new BigDecimal(1));
+			lStatoProcMod.setFasSieIdFascicoloSiep(lEveModelRich.getFasSieIdFascicoloSiep());
+
+			lStatoProcMod.setData(lEveModelRich.getDataEmissione());
+			lStatoProcMod.setCodStatoProcedimento("0363");
+
+			lStatoProcMod.setCodOperatoreInserimento(aEvento.getCodOperatoreAggiornamento());
+			lStatoProcMod.setDataInserimento(aEvento.getDataAggiornamento());
+			lStatoProcMod.setCodUfficioInserimento(aEvento.getCodUfficioAggiornamento());
+
+			lStatoDao = new StatoProcedimentoDAO(lConn);
+
+			// - Cancella eventuali record prima di inserire un nuovo STATO_PROCEDIMENTO
+			lStatoDao.setCondizioneByIdFascicolo(lEveModelRich.getFasSieIdFascicoloSiep());
+			lStatoDao.delete();
+			siesLogger.debug("Cancellato old stato");
+			// - Inserisce
+			lStatoDao.setDAOFromModel(lStatoProcMod);
+			lStatoDao.insert();
+			lStatoDao.stop();
+			siesLogger.debug("Inserito nuovo stato");
+			// ========================================================================
+			// Aggiorno il blob sull'evento
+			// ========================================================================
+			siesLogger.debug("Aggiornamento Blob");
+			// lConnBlob = getDBConnection();
+
+			lEveDaoBlob = new EventoDAO(lConn);
+			lEveDaoBlob.setDAOFromModelForUpdateBlob(aEvento);
+
+			lEveDaoBlob.selCondizioneUpdate(aEvento.getIdEvento());
+			lEveDaoBlob.update();
+			lEveDaoBlob.stop();
+			siesLogger.debug("Blob Aggiornato");
+
+			// -----------------------
+			commit(lConn);
+			// commit(lConnBlob);
+		} catch (DAOException ex) {
+			siesLogger.error("DAOException", ex);
+			rollback(lConn);
+			throw new F3BException("SanzioneSostitutivaController.exUpdateNotaTrasmissione: " + ex);
+		} catch (Exception ex) {
+			siesLogger.error("Exception", ex);
+			rollback(lConn);
+			throw new F3BException("SanzioneSostitutivaController.exUpdateNotaTrasmissione: " + ex);
+		} finally {
+			cleanup(lEventoDao);
+			cleanup(lEveSqlDAO);
+			cleanup(lStatoDao);
+
+			cleanup(lConn);
+			cleanup(lEveDaoBlob);
+		}
+
+		return lEveRet;
+	}
+
+	/**
+	 *
+	 * @param aEvNotModel
+	 * @param lArrayIdRate
+	 * @return
+	 * @throws F3BException
+	 * @since MEV_2023-33
+	 */
+	public EventoNotificaModel exInserisciProvvedimentoEstinzione(EventoNotificaModel aEvNotModel)
+			throws F3BException {
+		Connection lConn = null;
+
+		EventoDAO lEventoDao = null;
+		NotificaDAO lNotDao = null;
+		AutoritaEsternaDAO lAutDao = null;
+
+		EventoNotificaModel lEveRet = new EventoNotificaModel(aEvNotModel);
+
+		try {
+			lConn = getDBConnection();
+
+			// =========================================
+			// Inserisco l'evento
+			// =========================================
+			lEventoDao = new EventoDAO(lConn);
+			lEventoDao.setDAOFromModel(aEvNotModel.getEvento());
+			BigDecimal lIdEvento = lEventoDao.insert();
+			lEventoDao.stop();
+			lEveRet.getEvento().setIdEvento(lIdEvento);
+			siesLogger.debug("lIdEvento = " + lIdEvento);
+
+			// =========================================================
+			// Inserisco le Notifiche collegate all'evento se presenti
+			// =========================================================
+			int count = 0;
+			lAutDao = new AutoritaEsternaDAO(lConn);
+			BigDecimal lKeyAutorita = null;
+
+			if (aEvNotModel != null && aEvNotModel.getNotifiche() != null) {
+				siesLogger.debug("Presenti " + aEvNotModel.getNotifiche().length + " notifiche");
+
+				while (count < aEvNotModel.getNotifiche().length) {
+					siesLogger.debug("count = " + count);
+					siesLogger.debug("Notifica[" + count + "] = " + aEvNotModel.getNotifiche()[count]);
+
+					if (aEvNotModel.getNotifiche()[count] != null) {
+						// Se è stata specificata anche l'autorità esterna per l'avvocato,
+						// recupero l'id da inserire nella notifica
+						// n.b. se autorità non presente la creo
+						if (aEvNotModel.getNotifiche()[count].getAutoritaEsterna() != null) {
+							// Provo a verificare se a sistema (tab AUTORITA_ESTERNA) esiste
+							// già l'autorità esterna specificata nella form (dalla form ho solo
+							// codice e sede)
+							lAutDao.setRicercaByAutSede(
+									aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
+							AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
+							lAutMod = (AutoritaEsternaModel) lAutDao.getModelByKey();
+
+							if (lAutMod == null) { // non esiste, la inserisco (n.b. ho solo tipo e sede)
+								siesLogger.debug("Ins Aut Est = "
+										+ aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
+								lAutDao.setDAOFromModel(
+										aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
+								lKeyAutorita = lAutDao.insert();
+								aEvNotModel.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
+							} else {
+								lKeyAutorita = lAutMod.getIdAutoritaEsterna();
+								aEvNotModel.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
+							}
+						}
+
+						// ===========================================
+						aEvNotModel.getNotifiche()[count].setEveIdEvento(lIdEvento);
+
+						lNotDao = new NotificaDAO(lConn);
+
+						lNotDao.setDAOFromModel(aEvNotModel.getNotifiche()[count]);
+						BigDecimal lKeyNotifica = lNotDao.insert();
+						lNotDao.stop();
+
+						siesLogger.debug("Inserita Notifica " + lKeyNotifica);
+					}
+
+					count++;
+				}
+			}
+
+			commit(lConn);
+		} catch (DAOException ex) {
+			rollback(lConn);
+			throw new F3BException("SanzioneSostitutivaController.exInserisciOrdineIngiunzione: " + ex);
+		} catch (Exception ex) {
+			siesLogger.error("Eccezione Generica", ex);
+			rollback(lConn);
+			throw new F3BException("SanzioneSostitutivaController.exInserisciOrdineIngiunzione: " + ex);
+		} finally {
+			cleanup(lEventoDao);
+			cleanup(lNotDao);
+			cleanup(lAutDao);
+
+			cleanup(lConn);
+		}
+
+		return lEveRet;
+	}
+
+	/**
+	 * Metodo per la modifica del provvedimento di Estinzione della Pena Pecuniaria
+	 *
+	 * @param aEvNotModel
+	 * @return
+	 * @throws F3BException
+	 * @since MEV_2023-33
+	 */
+	public EventoNotificaModel exModificaProvvedimentoEstinzione(EventoNotificaModel aEvNotModel)
+			throws F3BException {
+
+		Connection lConn = null;
+
+		EventoDAO lEventoDao = null;
+		NotificaDAO lNotDao = null;
+		AutoritaEsternaDAO lAutDao = null;
+
+		EventoNotificaModel lEveRet = new EventoNotificaModel(aEvNotModel);
+
+		try {
+			lConn = getDBConnection();
+
+			lNotDao = new NotificaDAO(lConn);
+			lNotDao.setCondizioneEvento(aEvNotModel.getEvento().getIdEvento());
+			lNotDao.delete();
+
+			lEventoDao = new EventoDAO(lConn);
+			lEventoDao.selCondizioneUpdate(aEvNotModel.getEvento().getIdEvento());
+			lEventoDao.delete();
+
+			// =========================================
+			// Inserisco il provvedimento
+			// =========================================
+			lEventoDao.setDAOFromModel(aEvNotModel.getEvento());
+			BigDecimal lIdEvento = lEventoDao.insert();
+			lEventoDao.stop();
+			lEveRet.getEvento().setIdEvento(lIdEvento);
+			siesLogger.debug("lIdEvento = " + lIdEvento);
+
+			// =========================================================
+			// Inserisco le Notifiche collegate all'evento se presenti
+			// =========================================================
+			int count = 0;
+			lAutDao = new AutoritaEsternaDAO(lConn);
+			BigDecimal lKeyAutorita = null;
+
+			if (aEvNotModel != null && aEvNotModel.getNotifiche() != null) {
+				siesLogger.debug("Presenti " + aEvNotModel.getNotifiche().length + " notifiche");
+
+				while (count < aEvNotModel.getNotifiche().length) {
+					siesLogger.debug("count = " + count);
+					siesLogger.debug("Notifica[" + count + "] = " + aEvNotModel.getNotifiche()[count]);
+
+					if (aEvNotModel.getNotifiche()[count] != null) {
+						// Se è stata specificata anche l'autorità esterna per l'avvocato,
+						// recupero l'id da inserire nella notifica
+						// n.b. se autorità non presente la creo
+						if (aEvNotModel.getNotifiche()[count].getAutoritaEsterna() != null) {
+							// Provo a verificare se a sistema (tab AUTORITA_ESTERNA) esiste
+							// già l'autorità esterna specificata nella form (dalla form ho solo
+							// codice e sede)
+							lAutDao.setRicercaByAutSede(
+									aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
+							AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
+							lAutMod = (AutoritaEsternaModel) lAutDao.getModelByKey();
+
+							if (lAutMod == null) { // non esiste, la inserisco (n.b. ho solo tipo e sede)
+								lAutDao.setDAOFromModel(
+										aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
+								lKeyAutorita = lAutDao.insert();
+								aEvNotModel.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
+							} else {
+								lKeyAutorita = lAutMod.getIdAutoritaEsterna();
+								aEvNotModel.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
+							}
+						}
+
+						// ===========================================
+						aEvNotModel.getNotifiche()[count].setEveIdEvento(lIdEvento);
+
+						lNotDao = new NotificaDAO(lConn);
+
+						lNotDao.setDAOFromModel(aEvNotModel.getNotifiche()[count]);
+						BigDecimal lKeyNotifica = lNotDao.insert();
+						lNotDao.stop();
+
+						siesLogger.debug("Inserita Notifica " + lKeyNotifica);
+					}
+
+					count++;
+				}
+			}
+
+			commit(lConn);
+		} catch (DAOException ex) {
+			rollback(lConn);
+			throw new F3BException("SanzioneSostitutivaController.exModificaProvvedimentoEstinzione: " + ex);
+		} catch (Exception ex) {
+			siesLogger.error("Eccezione Generica", ex);
+			rollback(lConn);
+			throw new F3BException("SanzioneSostitutivaController.exModificaProvvedimentoEstinzione: " + ex);
+		} finally {
+			cleanup(lEventoDao);
+			cleanup(lNotDao);
+			cleanup(lAutDao);
+
+			cleanup(lConn);
+		}
+
+		return lEveRet;
+	}
+
+	/**
+	 * Metodo per la stampa Excel del risutato delle ricerche Stato Pagamento
+	 */
+	public void ExCreateExcelStatoPagamenti(Vector<RicercaStatoPagamentiModel> listaStatoPagamenti,
+			HSSFWorkbook wb, UfficioModel ufficio, FascicoloSiepModel aFasMod, String aTipoRicera)
+			throws F3BException {
+
+		HSSFCellStyle csNull = wb.createCellStyle();
+
+		// Create a new font and alter it.
+		HSSFFont fontBold = wb.createFont();
+		fontBold.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+
+		// stile per celle col bordo
+		HSSFCellStyle cs = wb.createCellStyle();
+		cs = getBordo4Lati(wb);
+
+		HSSFCellStyle csNullBold = wb.createCellStyle();
+		csNullBold.setFont(fontBold);
+
+		// stile per celle col bordo con carattere grassetto
+		HSSFCellStyle csBold = wb.createCellStyle();
+		csBold = getBordo4Lati(wb);
+		csBold.setFont(fontBold);
+
+		HSSFCellStyle csCenter = wb.createCellStyle();
+		csCenter = getBordo4Lati(wb);
+		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+
+		HSSFCellStyle csRight = wb.createCellStyle();
+		csRight = getBordo4Lati(wb);
+		csRight.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+
+		HSSFCellStyle csBoldCenter = wb.createCellStyle();
+		csBoldCenter = getBordo4Lati(wb);
+		csBoldCenter.setFont(fontBold);
+		csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+
+		HSSFCellStyle csEuroFormat = wb.createCellStyle();
+		// HSSFDataFormat dataFormat = wb.createDataFormat();
+		// csEuroFormat.setDataFormat(dataFormat.getFormat("0.00"));
+		short builtinFormatIndex = 4; // 4: "#,##0.00"
+		csEuroFormat.setDataFormat(builtinFormatIndex);
+		csEuroFormat.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		csEuroFormat.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		csEuroFormat.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		csEuroFormat.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+
+		// primo foglio
+		HSSFSheet sheet = wb.createSheet("Stato Pagamenti");
+		sheet.setColumnWidth(0, (40 * 256));
+
+		int numCol = 0;
+		int sizeCol = 21;
+		sheet.setColumnWidth(numCol++, (sizeCol * 256));
+		sheet.setColumnWidth(numCol++, (sizeCol * 256));
+		sheet.setColumnWidth(numCol++, (sizeCol * 256));
+		sheet.setColumnWidth(numCol++, (sizeCol * 256));
+		sheet.setColumnWidth(numCol++, (sizeCol * 256));
+		sheet.setColumnWidth(numCol++, (sizeCol * 256));
+		sheet.setColumnWidth(numCol++, (sizeCol * 256));
+		sheet.setColumnWidth(numCol++, (sizeCol * 256));
+
+		int nRow = 0;
+
+		// Intestazione del foglio excel
+		// Prima Riga
+		HSSFRow row = sheet.createRow(nRow++);
+		String value = (ufficio.getDescrTipoUfficio().toUpperCase() + " DI "
+				+ ufficio.getDescrComune().toUpperCase());
+		setCell(row, 0, value, csNull);
+
+		// Seconda Riga
+		value = "Tel. " + StringUtils.toStringJSP(ufficio.getTelefono()) + " - Fax "
+				+ StringUtils.toStringJSP(ufficio.getFax());
+		row = sheet.createRow(nRow++);
+		setCell(row, 0, value, csNull);
+
+		nRow++;
+		nRow++;
+
+		value = "Elenco Procedimenti Pene Pecuniarie In Base a Stato Pagamenti ";
+		row = sheet.createRow(nRow++);
+		setCell(row, 0, value, csNull);
+
+		nRow++;
+
+		// ===========================
+		// Criteri di ricerca
+		// ===========================
+		// Anno e Numero
+		row = sheet.createRow(nRow++);
+		setCell(row, 0, "Anno/Numero Iniziale ", csNullBold);
+		value = StringUtils.toStringJSP(aFasMod.getChiaveAnnoIniziale(), "____") + " / "
+				+ StringUtils.toStringJSP(aFasMod.getChiaveProgrIniziale(), "______");
+		setCell(row, 1, value, csNull);
+
+		setCell(row, 2, "Anno/Numero Finale ", csNullBold);
+		value = StringUtils.toStringJSP(aFasMod.getChiaveAnnoFinale(), "____") + " / "
+				+ StringUtils.toStringJSP(aFasMod.getChiaveProgrFinale(), "______");
+		setCell(row, 3, value, csNull);
+
+		// Data Iscrizione
+		row = sheet.createRow(nRow++);
+		setCell(row, 0, "Data Iscrizione Iniziale ", csNullBold);
+		value = StringUtils.toStringJSP(
+				DateUtils.getDateToString(aFasMod.getDataIscrizioneIniziale(), "dd.MM.yyyy"), " ");
+		setCell(row, 1, value, csNull);
+
+		setCell(row, 2, "Data Iscrizione Finale ", csNullBold);
+		value = StringUtils
+				.toStringJSP(DateUtils.getDateToString(aFasMod.getDataIscrizioneFinale(), "dd.MM.yyyy"), " ");
+		setCell(row, 3, value, csNull);
+
+		// Tipologia Statistica
+		String descTipoRicerca = "";
+		if (aTipoRicera.equals(ICostantiSanzioneSostitutiva.CAMPO_TIPO_RICERCA_INTERAMENTE_PAGATO))
+			descTipoRicerca = "Procedimenti con pena pecuniaria totalmente pagata";
+		else if (aTipoRicera.equals(ICostantiSanzioneSostitutiva.CAMPO_TIPO_RICERCA_RETEIZZATO_NON_PAGATO))
+			descTipoRicerca = "Procedimenti con pagamento rateizzato con rate non pagate";
+		else if (aTipoRicera.equals(ICostantiSanzioneSostitutiva.CAMPO_TIPO_RICERCA_UNICA_RATA_NON_PAGATO))
+			descTipoRicerca = "Procedimenti con pagamento in unica soluzione non pagata";
+		row = sheet.createRow(nRow++);
+		setCell(row, 0, "Tipologia Statistica ", csNullBold);
+		setCell(row, 1, StringUtils.toStringJSP(descTipoRicerca, " "), csNull);
+
+		nRow++;
+		nRow++;
+
+		// Intestazione tabella RIsultati
+		row = sheet.createRow(nRow++);
+		setCell(row, 0, "Numero SIEP", csBoldCenter);
+		setCell(row, 1, "Data Iscrizione", csBoldCenter);
+		setCell(row, 2, "Cognome", csBoldCenter);
+		setCell(row, 3, "Nome", csBoldCenter);
+		setCell(row, 4, "Tipo Pagamento", csBoldCenter);
+		setCell(row, 5, "Importo da Pagare", csBoldCenter);
+		setCell(row, 6, "Importo Pagato", csBoldCenter);
+		setCell(row, 7, "Data Ultima Scadenza", csBoldCenter);
+
+		// Ciclo sui record
+		for (RicercaStatoPagamentiModel record : listaStatoPagamenti) {
+			String tipoRat = "";
+			if ("U".equals(record.getTipoRateizzazione()))
+				tipoRat = "Unica Soluzione";
+			else if ("R".equals(record.getTipoRateizzazione()))
+				tipoRat = "Rateizzato";
+
+			row = sheet.createRow(nRow++);
+
+			setCell(row, 0, StringUtils.toStringJSP(record.getChiaveAnno()) + " / "
+					+ StringUtils.toStringJSP(record.getChiaveProgr()), cs);
+			setCell(row, 1, StringUtils.toStringJSP(
+					DateUtils.getDateToString(record.getDataIscrizione(), "dd-MM-yyyy")), csCenter);
+			setCell(row, 2, StringUtils.toStringJSP(record.getCognome()), cs);
+			setCell(row, 3, StringUtils.toStringJSP(record.getNome()), cs);
+			setCell(row, 4, StringUtils.toStringJSP(tipoRat), csCenter);
+			// setCell(row, 5, StringUtils.toEuroFormat(record.getImportoDaPagare()),
+			// csEuroFormat);csEuroFormat
+			// setCell(row, 6, StringUtils.toEuroFormat(record.getImportoPagato()), csEuroFormat);
+			setNumericCell(row, 5,
+					record.getImportoDaPagare() != null ? record.getImportoDaPagare().doubleValue() : null,
+					csEuroFormat);
+			setNumericCell(row, 6,
+					record.getImportoPagato() != null ? record.getImportoPagato().doubleValue() : null,
+					csEuroFormat);
+			setCell(row, 7,
+					StringUtils.toStringJSP(
+							DateUtils.getDateToString(record.getDataUltimaScadenza(), "dd-MM-yyyy"), " "),
+					csCenter);
+		}
+	}
+
+	private HSSFCellStyle getBordo4Lati(HSSFWorkbook wb) {
+
+		HSSFCellStyle cs = wb.createCellStyle();
+		cs.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		cs.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		cs.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		cs.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+
+		return cs;
+	}
+
+	private HSSFCell setCell(HSSFRow row, int nCol, String value, HSSFCellStyle cs) {
+
+		HSSFCell cell = row.createCell(nCol);
+		cell.setCellValue(value);
+		cell.setCellStyle(cs);
+
+		return cell;
+	}
+
+	private HSSFCell setNumericCell(HSSFRow row, int nCol, Double value, HSSFCellStyle cs) {
+
+		HSSFCell cell = row.createCell(nCol);
+		cell.setCellValue(value);
+		cell.setCellStyle(cs);
+
+		return cell;
+	}
+
+	/**
+	 * Metodo per la stampa Excel del risutato delle ricerche "Scadenzario Stato Pagamenti Pena Pecuniaria"
+	 */
+	public void ExCreateExcelScadenzariPP(Vector<ScadenzarioModel> listaScadenzari, HSSFWorkbook wb,
+			UfficioModel ufficio, ScadenzarioModel aScadMod) throws F3BException {
+
+		HSSFCellStyle csNull = wb.createCellStyle();
+
+		// Create a new font and alter it.
+		HSSFFont fontBold = wb.createFont();
+		fontBold.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+
+		// stile per celle col bordo
+		HSSFCellStyle cs = wb.createCellStyle();
+		cs = getBordo4Lati(wb);
+
+		HSSFCellStyle csNullBold = wb.createCellStyle();
+		csNullBold.setFont(fontBold);
+
+		// stile per celle col bordo con carattere grassetto
+		HSSFCellStyle csBold = wb.createCellStyle();
+		csBold = getBordo4Lati(wb);
+		csBold.setFont(fontBold);
+
+		HSSFCellStyle csCenter = wb.createCellStyle();
+		csCenter = getBordo4Lati(wb);
+		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+
+		HSSFCellStyle csRight = wb.createCellStyle();
+		csRight = getBordo4Lati(wb);
+		csRight.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+
+		HSSFCellStyle csBoldCenter = wb.createCellStyle();
+		csBoldCenter = getBordo4Lati(wb);
+		csBoldCenter.setFont(fontBold);
+		csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csBoldCenter.setWrapText(true);
+		csBoldCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+
+		HSSFCellStyle csBoldRight = wb.createCellStyle();
+		// csBoldRight = getBordo4Lati(wb);
+		csBoldRight.setFont(fontBold);
+		csBoldRight.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+
+		HSSFCellStyle csEuroFormat = wb.createCellStyle();
+		// HSSFDataFormat dataFormat = wb.createDataFormat();
+		// csEuroFormat.setDataFormat(dataFormat.getFormat("0.00"));
+		short builtinFormatIndex = 4; // 4: "#,##0.00"
+		csEuroFormat.setDataFormat(builtinFormatIndex);
+		csEuroFormat.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		csEuroFormat.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		csEuroFormat.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		csEuroFormat.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+
+		// primo foglio
+		HSSFSheet sheet = wb.createSheet("Scadenzario Pagamenti");
+		sheet.setColumnWidth(0, (40 * 256));
+
+		int numCol = 0;
+		int sizeCol = 21;
+		sheet.setColumnWidth(numCol++, (15 * 256)); // N° SIEP
+		sheet.setColumnWidth(numCol++, (sizeCol * 256)); // Cognome
+		sheet.setColumnWidth(numCol++, (sizeCol * 256)); // Nome
+		sheet.setColumnWidth(numCol++, (sizeCol * 256)); // Luogo Nascita
+		sheet.setColumnWidth(numCol++, (15 * 256)); // Data Nascita
+		sheet.setColumnWidth(numCol++, (15 * 256)); // Data Notifica
+		sheet.setColumnWidth(numCol++, (21 * 256)); // Data Scadenza richiesta retizzazione
+		sheet.setColumnWidth(numCol++, (17 * 256)); // Data Scadenza primo pagamento
+		sheet.setColumnWidth(numCol++, (23 * 256)); // N.ro giorni
+		sheet.setColumnWidth(numCol++, (18 * 256)); // Importo rate o unica soluzione
+		sheet.setColumnWidth(numCol++, (10 * 256)); // Rata
+		sheet.setColumnWidth(numCol++, (20 * 256)); // Stato pagamento
+		sheet.setColumnWidth(numCol++, (25 * 256)); // Stato scadenza
+
+		int nRow = 0;
+
+		// Intestazione del foglio excel
+		// Prima Riga
+		HSSFRow row = sheet.createRow(nRow++);
+		String value = (ufficio.getDescrTipoUfficio().toUpperCase() + " DI "
+				+ ufficio.getDescrComune().toUpperCase());
+		setCell(row, 0, value, csNull);
+
+		// Seconda Riga
+		value = "Tel. " + StringUtils.toStringJSP(ufficio.getTelefono()) + " - Fax "
+				+ StringUtils.toStringJSP(ufficio.getFax());
+		row = sheet.createRow(nRow++);
+		setCell(row, 0, value, csNull);
+
+		nRow++;
+		nRow++;
+
+		value = "Elenco Procedimenti Pene Pecuniarie In Base alla scadenza rate";
+		row = sheet.createRow(nRow++);
+		setCell(row, 0, value, csNullBold);
+
+		nRow++;
+
+		row = sheet.createRow(nRow++);
+		setCell(row, 0, "Data Estrazione ", csNullBold);
+		setCell(row, 1, DateUtils.getDateToString(new Date(), "dd-MM-yyyy"), csBoldRight);
+
+		// ===========================
+		// Criteri di ricerca
+		// ===========================
+		// Anno e Numero
+		row = sheet.createRow(nRow++);
+
+		setCell(row, 0, "Fascicolo ", csNullBold);
+		value = StringUtils.toStringJSP(aScadMod.getChiaveAnnoIniziale(), "____") + " / "
+				+ StringUtils.toStringJSP(aScadMod.getChiaveProgrIniziale(), "______");
+		setCell(row, 1, value, csBoldRight);
+
+		// Tipo estrazione
+		String descTipoEstrazione = "";
+
+		siesLogger.debug("aScadMod.getTipoRic() = " + aScadMod.getTipoRic());
+		if ("Tutti".equals(aScadMod.getTipoRic())) {
+			descTipoEstrazione += "tutti";
+		} else if ("sette".equals(aScadMod.getTipoRic())) {
+			descTipoEstrazione += "in scadenza entro";
+			if (aScadMod.getNumAnni() != null && aScadMod.getNumAnni().intValue() > 0)
+				descTipoEstrazione += " Anni " + aScadMod.getNumAnni().intValue();
+			if (aScadMod.getNumMesi() != null && aScadMod.getNumMesi().intValue() > 0)
+				descTipoEstrazione += " Mesi " + aScadMod.getNumMesi().intValue();
+			if (aScadMod.getNumGiorni() != null && aScadMod.getNumGiorni().intValue() > 0)
+				descTipoEstrazione += " Giorni " + aScadMod.getNumGiorni().intValue();
+		} else if ("oggi".equals(aScadMod.getTipoRic())) {
+			descTipoEstrazione += "In Scadenza Oggi";
+		} else if ("scaduto".equals(aScadMod.getTipoRic())) {
+			descTipoEstrazione += "Scaduti";
+		}
+
+		row = sheet.createRow(nRow++);
+		setCell(row, 0, "Tipo Estrazione ", csNullBold);
+		setCell(row, 1, StringUtils.toStringJSP(descTipoEstrazione, " "), csBoldRight);
+
+		nRow++;
+		nRow++;
+
+		// Intestazione tabella RIsultati
+		row = sheet.createRow(nRow++);
+		setCell(row, 0, "Numero SIEP", csBoldCenter);
+		setCell(row, 1, "Cognome", csBoldCenter);
+		setCell(row, 2, "Nome", csBoldCenter);
+		setCell(row, 3, "Luogo Nascita", csBoldCenter);
+		setCell(row, 4, "Data Nascita", csBoldCenter);
+		setCell(row, 5, "Data Notifica", csBoldCenter);
+		setCell(row, 6, "Data Scadenza richiesta retizzazione", csBoldCenter);
+		setCell(row, 7, "Data Scadenza primo pagamento", csBoldCenter);
+		setCell(row, 8, "N.ro giorni", csBoldCenter);
+		setCell(row, 9, "Importo rate o unica soluzione", csBoldCenter);
+		setCell(row, 10, "Rata", csBoldCenter);
+		setCell(row, 11, "Stato pagamento", csBoldCenter);
+		setCell(row, 12, "Stato Scadenza", csBoldCenter);
+
+		csCenter.setWrapText(true);
+		// Ciclo sui record
+		for (ScadenzarioModel lSca : listaScadenzari) {
+			FascicoloSiepModel lFas = lSca.getFascicoloModel();
+			SoggettoModel lSog = lFas.getSoggetto();
+			BollettinoPagopaModel lBollettino = lSca.getBollettinoModel();
+
+			String dataScadRateizzazione = "";
+			if ("U".equals(lBollettino.getTipoRateizzazione())) {
+				dataScadRateizzazione = DateUtils.getDateToString(
+						DateUtils.moveDateTo(lSca.getDataInizioScadenza(), Calendar.DAY_OF_MONTH, 20),
+						"dd/MM/yyyy");
+			}
+
+			String giorniStr = "";
+			if (lBollettino.getDataScadenza() != null) {
+				if (DateUtils.isGreater(lBollettino.getDataScadenza(), DateUtils.getSysDate()))
+					giorniStr = ScadenzarioUtils.getDifferenza(lBollettino.getDataScadenza(),
+							DateUtils.getSysDate());
+				else
+					giorniStr = ScadenzarioUtils.getDifferenza(DateUtils.getSysDate(),
+							lBollettino.getDataScadenza());
+			}
+
+			String statoScadenza = "";
+			// if ("Tutti".equals(aScadMod.getTipoRic())) {
+			if (lSca.getGiorniResidui() != null && lSca.getGiorniResidui().intValue() == 0)
+				statoScadenza = "In scadenza Oggi";
+			else if (lSca.getGiorniResidui() != null && lSca.getGiorniResidui().intValue() <= 7
+					&& lSca.getGiorniResidui().intValue() > 0)
+				statoScadenza = "In scadenza entro 7 giorni";
+			else if (lSca.getGiorniResidui() != null && lSca.getGiorniResidui().intValue() < 0)
+				statoScadenza = "Scaduto";
+			else
+				statoScadenza = "";
+			// }
+
+			row = sheet.createRow(nRow++);
+
+			setCell(row, 0, StringUtils.toStringJSP(lFas.getChiaveAnno()) + " / "
+					+ StringUtils.toStringJSP(lFas.getChiaveProgr()), cs);
+			setCell(row, 1, StringUtils.toStringJSP(lSog.getCognome()), cs);
+			setCell(row, 2, StringUtils.toStringJSP(lSog.getNome()), cs);
+			setCell(row, 3, StringUtils.toStringJSP(lSog.getDescrComuneNascita()), csCenter);
+
+			setCell(row, 4,
+					StringUtils.toStringJSP(DateUtils.getDateToString(lSog.getDataNascita(), "dd-MM-yyyy")),
+					csCenter);
+			setCell(row, 5, StringUtils.toStringJSP(
+					DateUtils.getDateToString(lSca.getDataInizioScadenza(), "dd-MM-yyyy")), csCenter);
+			setCell(row, 6, StringUtils.toStringJSP(dataScadRateizzazione), csCenter);
+			setCell(row, 7,
+					StringUtils.toStringJSP(
+							DateUtils.getDateToString(lBollettino.getDataScadenza(), "dd-MM-yyyy")),
+					csCenter);
+
+			setCell(row, 8, StringUtils.toStringJSP(giorniStr), csCenter);
+
+			setNumericCell(row, 9,
+					lBollettino.getImportoRata() != null ? lBollettino.getImportoRata().doubleValue() : null,
+					csEuroFormat);
+
+			setCell(row, 10, StringUtils.toStringJSP(lBollettino.getProgRata(), "") + "/"
+					+ StringUtils.toStringJSP(lBollettino.getNumeroRate(), ""), csCenter);
+
+			if ("PN".equals(lBollettino.getStatoPagamento()))
+				setCell(row, 11, StringUtils.toStringJSP("Non Pagato"), csCenter);
+			else
+				setCell(row, 11, StringUtils.toStringJSP("Pagato"), csCenter);
+
+			// statoScadenza
+			setCell(row, 12, StringUtils.toStringJSP(statoScadenza), cs);
+		}
 	}
 
 }

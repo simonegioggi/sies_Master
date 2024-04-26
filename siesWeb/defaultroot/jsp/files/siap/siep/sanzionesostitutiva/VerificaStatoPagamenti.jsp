@@ -13,7 +13,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <jsp:useBean id="listaRichiestaBollettini" 	scope="request" class="java.util.Vector<EventoRateizzazionePPModel>"/>
-<jsp:useBean id="modalitaPagamento" 		scope="request" class="java.lang.String"/>
+<jsp:useBean id="modalitaPagamento" 		scope="request" class="java.util.ArrayList<String>"/>
 <jsp:useBean id="TornaQui"    				scope="request" class="java.lang.String"/>
 
 <html>
@@ -83,18 +83,23 @@ if (listaRichiestaBollettini.size() == 0) {
 	</tr>
 <%
 	Iterator<EventoRateizzazionePPModel> itx = listaRichiestaBollettini.iterator();
+	int cont = 0;
 	while (itx.hasNext()) {
 		EventoRateizzazionePPModel erppm = (EventoRateizzazionePPModel) itx.next();
 		EventoModel em = erppm.getEvento();
+		
+    String annullato = "";
+	  if ("A".equals(em.getFlagDocumentoRegistrato()))
+	      annullato = "<br><font style='color:red'>(Annullato)</font>";	
 %>
 	<tr>
 		<td class="c">
 			<%=StringUtils.toStringJSP(em.getDescrTipoProvvedimento()) 
 			+ " " + StringUtils.toStringJSP(em.getDescrMotivo())%>
-			&nbsp;del&nbsp;<%=StringUtils.toStringJSP(DateUtils.getDateToString(em.getDataEmissione(), "dd/MM/yyyy"))%>
+			&nbsp;del&nbsp;<%=StringUtils.toStringJSP(DateUtils.getDateToString(em.getDataEmissione(), "dd/MM/yyyy"))%><%=annullato%>
 		</td>
 		<td class="l">
-			<%=modalitaPagamento%>
+			<%=modalitaPagamento.get(cont)%>
 		</td>
       	<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(em.getDataTrasmissioneAtti(), "dd/MM/yyyy"), "-")%></td>
       	<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(em.getDataRicezioneAtti(), "dd/MM/yyyy"), "-")%></td>
@@ -105,6 +110,7 @@ if (listaRichiestaBollettini.size() == 0) {
 		</td>
 	</tr>
 <%
+		cont++;
 	} // end while su iterator sugli eventi
 } // end else
 %>

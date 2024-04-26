@@ -30,7 +30,9 @@ public class BatchPagopaDAO extends SIAPTableDAO {
 		setField("DATA_INIZIO_ESECUZIONE", DATE);
 		setField("DATA_FINE_ESECUZIONE", DATE);
 		setField("NUM_POS_DEBITORIE_VERIFICATE", BIG_DECIMAL);
+    setField("NUM_IUV_VERIFICATI", BIG_DECIMAL);    
 		setField("NUM_BOLLETTINI_AGGIORNATI", BIG_DECIMAL);
+		setField("NUM_ERRORI_INVOCAZIONE", BIG_DECIMAL);
 		setField("ESITO_ESECUZIONE", STRING);
 		setField("ERRORE_ESECUZIONE", STRING);
 	}
@@ -53,11 +55,19 @@ public class BatchPagopaDAO extends SIAPTableDAO {
 	public BigDecimal getNumPosDebitorieVerificate() throws DAOException {
 		return getBigDecimal("NUM_POS_DEBITORIE_VERIFICATE");
 	}
+	
+	public BigDecimal getNumIUVVerificati() throws DAOException {
+	  return getBigDecimal("NUM_IUV_VERIFICATI");
+	}
 
 	public BigDecimal getNumBollettiniAggiornati() throws DAOException {
 		return getBigDecimal("NUM_BOLLETTINI_AGGIORNATI");
 	}
-
+	
+  public BigDecimal getNumErroriInvocazione() throws DAOException {
+    return getBigDecimal("NUM_ERRORI_INVOCAZIONE");
+  }
+	
 	public String getEsitoEsecuzione() throws DAOException {
 		return getString("ESITO_ESECUZIONE");
 	}
@@ -84,11 +94,19 @@ public class BatchPagopaDAO extends SIAPTableDAO {
 	public void setNumPosDebitorieVerificate(BigDecimal aValore) {
 		setBigDecimal("NUM_POS_DEBITORIE_VERIFICATE", aValore);
 	}
-
+	
+  public void setNumIUVVerificati(BigDecimal aValore) {
+    setBigDecimal("NUM_IUV_VERIFICATI", aValore);
+  }
+  
 	public void setNumBollettiniAggiornati(BigDecimal aValore) {
 		setBigDecimal("NUM_BOLLETTINI_AGGIORNATI", aValore);
 	}
 
+  public void setNumErroriInvocazione(BigDecimal aValore)  {
+    setBigDecimal("NUM_ERRORI_INVOCAZIONE", aValore);
+  }
+  
 	public void setEsitoEsecuzione(String aValore) {
 		setString("ESITO_ESECUZIONE", aValore);
 	}
@@ -106,7 +124,9 @@ public class BatchPagopaDAO extends SIAPTableDAO {
 		lModel.setDataInizioEsecuzione(getDataInizioEsecuzione());
 		lModel.setDataFineEsecuzione(getDataFineEsecuzione());
 		lModel.setNumPosDebitorieVerificate(getNumPosDebitorieVerificate());
+		lModel.setNumIUVVerificati(getNumIUVVerificati());
 		lModel.setNumBollettiniAggiornati(getNumBollettiniAggiornati());
+		lModel.setNumErroriInvocazione(getNumErroriInvocazione());
 		lModel.setEsitoEsecuzione(getEsitoEsecuzione());
 		lModel.setErroreEsecuzione(getErroreEsecuzione());
 
@@ -119,7 +139,9 @@ public class BatchPagopaDAO extends SIAPTableDAO {
 		setDataInizioEsecuzione(aModel.getDataInizioEsecuzione());
 		setDataFineEsecuzione(aModel.getDataFineEsecuzione());
 		setNumPosDebitorieVerificate(aModel.getNumPosDebitorieVerificate());
+		setNumIUVVerificati(aModel.getNumIUVVerificati());
 		setNumBollettiniAggiornati(aModel.getNumBollettiniAggiornati());
+		setNumErroriInvocazione(aModel.getNumErroriInvocazione());
 		setEsitoEsecuzione(aModel.getEsitoEsecuzione());
 		setErroreEsecuzione(aModel.getErroreEsecuzione());
 	}
@@ -130,11 +152,18 @@ public class BatchPagopaDAO extends SIAPTableDAO {
 		setDataInizioEsecuzione(aModel.getDataInizioEsecuzione());
 		setDataFineEsecuzione(aModel.getDataFineEsecuzione());
 		setNumPosDebitorieVerificate(aModel.getNumPosDebitorieVerificate());
+		setNumIUVVerificati(aModel.getNumIUVVerificati());
 		setNumBollettiniAggiornati(aModel.getNumBollettiniAggiornati());
+		setNumErroriInvocazione(aModel.getNumErroriInvocazione());
 		setEsitoEsecuzione(aModel.getEsitoEsecuzione());
 		setErroreEsecuzione(aModel.getErroreEsecuzione());
 	}
 
+	public void setCondizioneByKey(BigDecimal IdBatchPagopa) {
+
+		setCondition(" ID_BATCH_PAGOPA = " + IdBatchPagopa);
+	}
+	
 	public void setCondizioneUpdate(BigDecimal IdBatchPagopa) {
 
 		setCondition(" ID_BATCH_PAGOPA = " + IdBatchPagopa);

@@ -69,9 +69,23 @@ public interface IRinnovo {
 	 * Seleziona un singolo documento rtf sul DB e lo restituisce come ByteArrayOutputStream
 	 * 
 	 * @param aProvvedimento
-	 * @return Array con il Documento recuperato dal DB
+	 * @return ByteArray con il Documento recuperato dal DB
 	 * @throws F3BException
 	 */
 	public ByteArrayOutputStream ExGetDocumento(RinnovoModel aRinnovo) throws F3BException;
 
+	// MEV_2023-33
+	public Vector ExRicercaRinnovoIdNotificaCodTipoRinnovoStato(BigDecimal aIdNotifica, String[] aTipoRinnovo, String aStato)
+			throws F3BException;
+	public void ExCancellaRinnovoPP (RinnovoModel aRinnovo) throws F3BException;
+	public RinnovoModel ExUpdateValidaRinnovoPP (FascicoloSiepModel aFasc, RinnovoModel aRinnovo)
+			throws F3BException;
+  public RinnovoModel ExUpdateValidaRichiestaComma5 (FascicoloSiepModel aFasc, RinnovoModel aRinnovo)
+       throws F3BException;
+  public RinnovoModel ExUpdateValidaRinnovazioneNotifichePP (FascicoloSiepModel aFasc, RinnovoModel aRinnovo)
+	     throws F3BException;
+  public RinnovoModel ExUpdateValidaSollecitiPP(FascicoloSiepModel aFasc, RinnovoModel aRinnovo)
+	      throws F3BException;
+	// MEV_2023-33
+	
 }

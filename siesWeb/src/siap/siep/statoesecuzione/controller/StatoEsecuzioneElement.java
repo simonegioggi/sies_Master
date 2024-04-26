@@ -23,6 +23,10 @@ public class StatoEsecuzioneElement extends GenericController implements AStatoE
 	protected Hashtable mHashMisure;
 	protected EventoModel mEventoStatoEsecuzione;
 
+	// MEV_2023-33
+	protected Hashtable mHashRateizzazioni;
+	// MEV_2023-33
+	
 	/* Stringa che indica LA detratta e da detrarre */
 	protected String mStringLiberazioneAnticipata = null;
 	// 20/05/2014 Nuova L.A. - DL 146/2014
@@ -47,6 +51,10 @@ public class StatoEsecuzioneElement extends GenericController implements AStatoE
 		mHashEventiRiferimento.clear();
 		mHashAnnotazioni.clear();
 		mHashMisure.clear();
+		
+	  // MEV_2023-33
+		mHashRateizzazioni = new Hashtable();
+	  mHashRateizzazioni.clear();
 	}
 
 	/**
@@ -58,6 +66,9 @@ public class StatoEsecuzioneElement extends GenericController implements AStatoE
 		this.mHashAnnotazioni = aCopy.getHashAnnotazioni();
 		this.mHashMisure = aCopy.getHashMisure();
 		this.mEveIdEvento = aCopy.getEveIdEvento();
+		
+	  // MEV_2023-33
+	  this.mHashRateizzazioni = aCopy.getHashRateizzazioni();
 	}
 
 	/*
@@ -88,6 +99,11 @@ public class StatoEsecuzioneElement extends GenericController implements AStatoE
 		mHashMisure = aValore;
 	}
 
+	public void setHashRateizzazioni (Hashtable aValore) {
+	  mHashRateizzazioni = aValore;
+  }
+
+	
 	/**
 	 * Metodi GET degli attributi
 	 * 
@@ -108,7 +124,13 @@ public class StatoEsecuzioneElement extends GenericController implements AStatoE
 	public Hashtable getHashMisure() {
 		return mHashMisure;
 	}
-
+	
+  // MEV_2023-33
+	public Hashtable getHashRateizzazioni () {
+    return mHashRateizzazioni;
+  }
+  //MEV_2023-33
+	
 	public void elabora(siap.sico.evento.model.EventoModel aEvento) {
 	}
 

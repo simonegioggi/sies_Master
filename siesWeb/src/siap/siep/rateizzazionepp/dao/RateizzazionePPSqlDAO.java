@@ -8,15 +8,16 @@ import org.apache.log4j.Logger;
 import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.model.GenericModel;
+import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import siap.dao.SIAPSqlDAO;
 import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 
 /**
- * MEV_2023-13: aggiunta classe SQL DAO
- * Title: RateizzazionePPSqlDAO
- * Description: Classe SqlDAO che rappresenta la tabella RATEIZZAZIONE_PP
+ * Classe SqlDAO che rappresenta la tabella RATEIZZAZIONE_PP
  *
+ * @author sgioggi
+ * @since MEV_2023-13
  * @version 1.0
  */
 public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
@@ -25,7 +26,7 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Costruttore
-	 * 
+	 *
 	 * @param con
 	 */
 	public RateizzazionePPSqlDAO(Connection con) {
@@ -35,11 +36,12 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Restituisce il numero di record dell'operazione di ricerca costruendo la clausola where con lo stesso
 	 * model utilizzato per la ricerca
-	 * 
+	 *
 	 * @param aModel
 	 * @throws DAOException
 	 */
 	public void getCountRateizzazionePP(RateizzazionePPModel aModel) throws DAOException {
+
 		// Costruisce lo statement da eseguire
 		String lStatement = "SELECT COUNT(*) HowManyRecords FROM RATEIZZAZIONE_PP ";
 
@@ -56,12 +58,13 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Effettua la ricerca e restituisce solo i risultati nel range di record che vanno inseriti nella pagfina
 	 * passata in input
-	 * 
+	 *
 	 * @param aModel
 	 * @param aPage
 	 * @throws DAOException
 	 */
 	public void ricercaRateizzazionePPPaged(RateizzazionePPModel aModel, int aPage) throws DAOException {
+
 		String lStatement = new String("");
 
 		lStatement += getSqlQuery();
@@ -71,8 +74,6 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
 
 		if (!lCondizioni.trim().equals(""))
 			lStatement += " WHERE " + lCondizioni;
-
-		lStatement += " " + getOrderBy() + " ";
 
 		String lPaginedStatement = "";
 		lPaginedStatement = "SELECT * FROM (SELECT INNER.* , Rownum rn FROM (" + lStatement
@@ -84,33 +85,39 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Effettua la generica ricerca in base ai dati specificati nel model
-	 * 
+	 *
 	 * @param aModel
+	 * @param test
 	 * @throws DAOException
 	 */
-	public void ricercaRateizzazionePP(RateizzazionePPModel aModel) throws DAOException {
+	public void ricercaRateizzazionePP(RateizzazionePPModel rppm, String test) throws DAOException {
+
 		// Recupera la select...from
-		String lSql = getSqlQuery();
+		String sql = getSqlQuery();
 
 		// Recupero la where condition in base al model
-		String lCondizioni = setCondizioni(aModel);
+		String condizioni = setCondizioni(rppm);
 
-		if (!lCondizioni.trim().equals(""))
-			lSql += " AND " + lCondizioni;
+		if (Utils.isPresent(condizioni.trim()))
+			sql += " AND " + condizioni;
 
-		lSql += " " + getOrderBy() + " ";
+		if (Utils.isPresent(test)) {
+			sql += " AND EVE_ID_EVENTO	" + test;
+			sql += " " + getOrderBy() + " ";
+		}
 
 		// Imposta lo statement da eseguire
-		setStatement(lSql);
+		setStatement(sql);
 	}
 
 	/**
 	 * Metodo che imposta la statement di ricerca per chiave
-	 * 
+	 *
 	 * @param aKey
 	 * @throws DAOException
 	 */
 	public void ricercaRateizzazionePPByKey(BigDecimal aIdRateizzazionePP) throws DAOException {
+
 		// Recupera la select...from
 		String lSql = getSqlQuery();
 
@@ -123,28 +130,50 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Metodo che imposta la statement di ricerca per chiave Fascicolo SIEP
-	 * 
+	 *
 	 * @param aIdFasSIEP
 	 * @throws DAOException
 	 */
 	public void ricercaRateizzazionePPByIdFasSIEP(BigDecimal aIdFasSIEP) throws DAOException {
+
 		// Recupera la select...from
 		String lSql = getSqlQuery();
 
 		lSql += setCondizioniByIdFasSIEP(aIdFasSIEP);
-
-		lSql += " order by PROGRESSIVO_RATA ";
+		// MEV_2023-33: aggiunta condizione di order by
+		lSql += " order by PROGRESSIVO_RATA, ID_RATEIZZAZIONE_PP ";
 
 		// Imposta lo statement da eseguire
 		setStatement(lSql);
 	}
 
 	/**
-	 * 
+	 * Metodo di ricerca rateizzazioni libere per idFascicolo
+	 *
+	 * @since MEV_2023-33
+	 * @param aIdFasSIEP
+	 * @throws DAOException
+	 */
+	public void ricercaRateizzazionePPByIdFasSIEPLibero(BigDecimal aIdFasSIEP) throws DAOException {
+
+		// Recupera la select...from
+		String lSql = getSqlQuery();
+
+		lSql += setCondizioniByIdFasSIEP(aIdFasSIEP);
+		lSql += " AND EVE_ID_EVENTO is null ";
+		lSql += " order by PROGRESSIVO_RATA, ID_RATEIZZAZIONE_PP ";
+
+		// Imposta lo statement da eseguire
+		setStatement(lSql);
+	}
+
+	/**
+	 *
 	 * @param aIdEvento
 	 * @throws DAOException
 	 */
 	public void ricercaRateizzazionePPByEveIdEvento(BigDecimal aIdEvento) throws DAOException {
+
 		// Recupera la select...from
 		String lSql = getSqlQuery();
 
@@ -158,11 +187,12 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Metodo che carica il record del result set nel model
-	 * 
+	 *
 	 * @return
 	 * @throws DAOException
 	 */
 	public GenericModel getModel() throws DAOException {
+
 		RateizzazionePPModel lModel = new RateizzazionePPModel();
 
 		// Inserire le opportune set delle descrizioni!
@@ -191,11 +221,12 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Metodo che imposta le condizioni di where per la ricerca
-	 * 
+	 *
 	 * @param aModel
 	 * @return
 	 */
 	public String setCondizioni(RateizzazionePPModel aModel) {
+
 		String lCondizioni = new String();
 
 		if (aModel.getIdRateizzazionePP() != null) {
@@ -241,11 +272,12 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Metodo che imposta le condizioni di select per chiave
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 */
 	public String setCondizioniByKey(BigDecimal aIdRateizzazionePP) {
+
 		String lCondizioni = new String();
 
 		lCondizioni += " and ID_RATEIZZAZIONE_PP = " + aIdRateizzazionePP;
@@ -255,11 +287,12 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Metodo che imposta le condizioni di select per Id Fascicolo SIEP
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 */
 	public String setCondizioniByIdFasSIEP(BigDecimal aIdFasSIEP) {
+
 		String lCondizioni = new String();
 
 		lCondizioni += " and FAS_SIE_ID_FASCICOLO_SIEP = " + aIdFasSIEP;
@@ -268,6 +301,7 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
 	}
 
 	public String setCondizioniByEveIdEvento(BigDecimal aIdEvento) {
+
 		String lCondizioni = new String();
 
 		lCondizioni += " and EVE_ID_EVENTO = " + aIdEvento;
@@ -277,18 +311,19 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Metodo per la costruzione della sezione order by
-	 * 
+	 *
 	 * @return
 	 */
 	protected String getOrderBy() {
+
 		String orderBy = new String("");
-		// orderBy = " ORDER BY xxxxx";
+		orderBy = " ORDER BY DATA_INSERIMENTO DESC";
 		return orderBy;
 	}
 
 	/**
 	 * Metodo che imposta la statement di ricerca per id Fascicolo Siep
-	 * 
+	 *
 	 * @param aKey
 	 * @throws DAOException
 	 */
@@ -308,10 +343,11 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Metodo per la costruzione della sql query per ricercaRichiestaConversioneByEvento
-	 * 
+	 *
 	 * @return
 	 */
 	protected String getSqlQuery() {
+
 		String lStatement = new String("");
 
 		lStatement += " SELECT ID_RATEIZZAZIONE_PP, IMPORTO_DA_PAGARE, IMPORTO_RATA, NUMERO_RATE "
@@ -329,4 +365,23 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
 		return lStatement;
 	}
 
+	 public void ricercaRateizzazionePPUltimoEventoValidatoByIdFasc(BigDecimal aIdFascicoloSIEP) throws DAOException {
+
+	    String lStatement = new String("");
+
+	    lStatement += getSqlQuery();
+
+	    // 
+	    lStatement += " AND FAS_SIE_ID_FASCICOLO_SIEP = "+aIdFascicoloSIEP;
+	    lStatement += " AND EVE_ID_EVENTO = (SELECT MAX(EVENTO.ID_EVENTO) ";
+	    lStatement +=                        " FROM RATEIZZAZIONE_PP, EVENTO ";
+	    lStatement +=                       " WHERE 1=1 ";
+	    lStatement +=                         " AND RATEIZZAZIONE_PP.EVE_ID_EVENTO = EVENTO.ID_EVENTO ";
+	    lStatement +=                         " AND EVENTO.FLAG_DOCUMENTO_REGISTRATO = 'S' ";
+	    lStatement +=                         " AND EVENTO.FAS_SIE_ID_FASCICOLO_SIEP = "+aIdFascicoloSIEP;
+	    lStatement +=                      " ) ";
+
+
+	    setStatement(lStatement);
+	  }
 }

@@ -125,23 +125,13 @@ import siap.siep.util.SIEPLookupRemote;
 import siap.util.SIESSwitch;
 
 /**
- * <p>
- * Title: Stampa Controller
- * </p>
- * <p>
  * Description: Classe Controller per le selezioni della Stampa
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
  *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class StampaController extends SIAPStampaController implements IStampa {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
@@ -688,11 +678,15 @@ public class StampaController extends SIAPStampaController implements IStampa {
 		SanzioneSostResiduaSqlDAO lSSSqlDAO = null;
 		NuovaIstanzaSqlDAO lIstSqlDao = null;
 		SollecitoEsitoTrasmissioneSqlDAO lSollecitoEsitoSqlDao = null;
-		
-		// MEV_2023-13 
+
+		// MEV_2023-13
 		RateizzazionePPSqlDAO lRateSqlDao = null;
 		CivilmenteObbligatoSqlDAO lCivilmenteObblSqlDao = null;
 
+		// MEV_2023-33 - Si aggiunge anche il ramo AnnotazioneManuale
+		AnnotazioneManualeSqlDAO lAnnoSqlDao = null;
+		
+		
 		SospensioneModel lSospMod = null;
 		TreeModel lSospTree = null;
 		StampaMAUtils lStampa = new StampaMAUtils();
@@ -878,6 +872,7 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			// - Pena Accessorie
 			// - CampoNota
 			// - CompetenzaModel
+			// - AnnotazioneManuale (new MEV_2023-33)
 			// ========================================================================
 			TreeModel lTreeEveMod = new TreeModel(aEveModel.getEvento());
 
@@ -963,14 +958,56 @@ public class StampaController extends SIAPStampaController implements IStampa {
 				this.prelevaDatiCampoNota(lTreeEveMod, aEveModel.getEvento().getIdEvento(), lConn);
 			}
 
-			// MEV_2023-13 - Si aggiungono anche le rate puntate dall'evento 
-			lRateSqlDao = new RateizzazionePPSqlDAO (lConn);
-			lRateSqlDao.ricercaRateizzazionePPByEveIdEvento (aEveModel.getEvento().getIdEvento());
-			Vector <RateizzazionePPModel> listaRate = new Vector <RateizzazionePPModel> (lRateSqlDao.getModels());
-			for (RateizzazionePPModel rata: listaRate) {
-			    lTreeEveMod.add(new TreeModel(rata));
-			}   
-			// MEV_2023-13 - FINE 
+			// MEV_2023-13 - Si aggiungono anche le rate puntate dall'evento
+			lRateSqlDao = new RateizzazionePPSqlDAO(lConn);
+			lRateSqlDao.ricercaRateizzazionePPByEveIdEvento(aEveModel.getEvento().getIdEvento());
+			Vector<RateizzazionePPModel> listaRate = new Vector<RateizzazionePPModel>(
+					lRateSqlDao.getModels());
+			for (RateizzazionePPModel rata : listaRate) {
+				lTreeEveMod.add(new TreeModel(rata));
+			}
+			// MEV_2023-13 - FINE
+
+			// MEV_2023-33
+			// In caso di nota di trasmissione recupera i dati dell'evento collegato
+			if (("1306".equals(aEveModel.getEvento().getCodMotivo())
+					// anche per avviso mancato pagamento
+					|| "1308".equals(aEveModel.getEvento().getCodMotivo()))
+					&& aEveModel.getEvento().getEveIdEvento() != null) {
+				TreeModel lEveNotCollegatoTree = super.getTreeEventoOrdineIngiunzione(
+						aEveModel.getEvento().getEveIdEvento(), lConn);
+
+				lTreeEveMod.add(lEveNotCollegatoTree);
+			}
+			// MEV_2023-33 - FINE
+
+      // MEV_2023-33
+      // In caso di nota Rideterminazione si recuperano anche i dati
+			// dell'annutazione manuale
+			siesLogger.debug("annotazione");
+      if ("1307".equals(aEveModel.getEvento().getCodMotivo())) {
+        siesLogger.debug("Ricerco le annotazione");
+        
+        lAnnoSqlDao = new AnnotazioneManualeSqlDAO(lConn);
+        
+        // n.b. non utilizzare le sql standard di annotazionemanuale.
+        // RideterminazionePP scrive i dati in modo errato in tabella e le query join falliscono
+        // Va utilizzato il metodo custom
+        lAnnoSqlDao.ricercaAnnotazioneManualeByIdEventoIdFascicolo(aEveModel.getEvento().getIdEvento(),lKeyFascicolo);
+        AnnotazioneManualeModel lAnnotazione = (AnnotazioneManualeModel) lAnnoSqlDao.getModelByKey();
+        if (lAnnotazione!=null && lAnnotazione.getIdAnnotazioneManuale()!=null)
+          lTreeEveMod.add(new TreeModel(lAnnotazione));
+        
+//        lAnnoSqlDao.ricercaAnnotazioneManualeByIdEvento(aEveModel.getEvento().getIdEvento());
+//        Vector <AnnotazioneManualeModel> lListaAnnotazione = new Vector <AnnotazioneManualeModel> (lAnnoSqlDao.getModels());
+//        siesLogger.debug("lListaAnnotazione.size() = "+lListaAnnotazione.size());
+//        for (AnnotazioneManualeModel lAnnotazione : lListaAnnotazione) {
+//          lTreeEveMod.add(new TreeModel(lAnnotazione));
+//        }  
+        
+      }
+      // MEV_2023-33 - FINE			
+			
 			
 			lTreeRoot.add(lTreeEveMod);
 
@@ -1303,10 +1340,10 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			cleanup(lIstSqlDao);
 			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
 			cleanup(lSollecitoEsitoSqlDao);
-			
-			cleanup(lRateSqlDao); // MEV_2023-13 
-			cleanup(lCivilmenteObblSqlDao); // MEV_2023-13 			
-			
+
+			cleanup(lRateSqlDao); // MEV_2023-13
+			cleanup(lCivilmenteObblSqlDao); // MEV_2023-13
+
 			cleanup(lConn);
 		}
 
@@ -1872,8 +1909,7 @@ public class StampaController extends SIAPStampaController implements IStampa {
 							|| aEveModel.getEvento().getCodMotivo().equals("5507")
 							|| aEveModel.getEvento().getCodMotivo().equals("5508")
 							// Ticket#20220323018 - FINE
-							|| aEveModel.getEvento().getCodMotivo().equals("0063"))) 
-			{
+							|| aEveModel.getEvento().getCodMotivo().equals("0063"))) {
 				if (!lPos.isLibero()) {
 					PenaResiduaModel lPenaModel = null;
 

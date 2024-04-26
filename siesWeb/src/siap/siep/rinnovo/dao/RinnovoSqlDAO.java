@@ -122,6 +122,37 @@ public class RinnovoSqlDAO extends SqlDAO {
 		setStatement(lSql);
 	}
 
+	// MEV_2023-33
+	public void ricercaRinnovoIdNotificaCodTipoRinnovoStato(BigDecimal aKeyNot, String[] aCodTipoRinnovo, String aStato)
+			throws DAOException {
+		String lSql = getSqlQuery();
+
+		lSql += " AND NOT_ID_NOTIFICA = " + aKeyNot;
+
+		if (aCodTipoRinnovo != null) {
+			if (aCodTipoRinnovo.length > 0) {
+				lSql += " AND COD_TIPO_RINNOVO IN (";
+
+				for (int i = 0; i < aCodTipoRinnovo.length; i++) {
+					lSql += "'" + aCodTipoRinnovo[i] + "'";
+
+					if (aCodTipoRinnovo.length > 1 && i < aCodTipoRinnovo.length - 1) {
+						lSql += ",";
+					}
+				}
+
+				lSql += ")";
+			}
+		}
+
+		if ("S".equals(aStato))
+			lSql += " AND FLAG_DOCUMENTO_REGISTRATO = 'S'";
+
+		lSql += " ORDER BY DATA_RINNOVO DESC";
+
+		setStatement(lSql);
+	}
+	
 	public void ricercaRinnovoByKey(BigDecimal aKey) throws DAOException {
 		String lSql = getSqlQuery();
 
@@ -140,6 +171,8 @@ public class RinnovoSqlDAO extends SqlDAO {
 				+ "COD_OPERATORE_AGGIORNAMENTO, " + "DATA_AGGIORNAMENTO, " + "COD_UFFICIO_AGGIORNAMENTO, "
 				+ "NOT_ID_NOTIFICA, " + "VER_ID_VERBALE, " + "FLAG_DOCUMENTO_REGISTRATO, "
 				+ "TEM_ID_TEMPLATE, " + "NUOVO_LUOGO_NOTIFICA ";
+		//MEV_2023-33
+		lStatement += " , RINNOVO.ESITO ";
 
 		lStatement += " FROM RINNOVO,CG_REF_CODES COD_UFF_RIN, COMUNE COD_LUO_RIN,CG_REF_CODES COD_TIP_RIN ";
 		lStatement += " WHERE  COD_UFF_RIN.RV_DOMAIN = 'TIPO_AUTORITA' AND COD_UFF_RIN.RV_LOW_VALUE = COD_TIPO_AUTORITA_RINNOVO";
@@ -160,6 +193,9 @@ public class RinnovoSqlDAO extends SqlDAO {
 				+ "RINNOVO.DATA_AGGIORNAMENTO, " + "RINNOVO.COD_UFFICIO_AGGIORNAMENTO, " + "NOT_ID_NOTIFICA, "
 				+ "VER_ID_VERBALE, " + "RINNOVO.FLAG_DOCUMENTO_REGISTRATO, " + "RINNOVO.TEM_ID_TEMPLATE, "
 				+ "NUOVO_LUOGO_NOTIFICA ";
+		
+		// MEV_2023-33
+		lStatement += " , RINNOVO.ESITO ";
 
 		lStatement += " FROM EVENTO,NOTIFICA,RINNOVO,CG_REF_CODES COD_UFF_RIN, COMUNE COD_LUO_RIN,CG_REF_CODES COD_TIP_RIN ";
 		lStatement += " WHERE  COD_UFF_RIN.RV_DOMAIN = 'TIPO_AUTORITA' AND COD_UFF_RIN.RV_LOW_VALUE = COD_TIPO_AUTORITA_RINNOVO";
@@ -200,6 +236,8 @@ public class RinnovoSqlDAO extends SqlDAO {
 		aModel.setFlagDocumentoRegistrato(getString("FLAG_DOCUMENTO_REGISTRATO"));
 		aModel.setTemIdTemplate(getString("TEM_ID_TEMPLATE"));
 		aModel.setNuovoLuogoNotifica(getString("NUOVO_LUOGO_NOTIFICA"));
+		// MEV_2023-33
+		aModel.setEsito(getString("ESITO"));
 
 		return aModel;
 	}
