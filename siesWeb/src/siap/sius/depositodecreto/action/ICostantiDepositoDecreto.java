@@ -374,6 +374,7 @@ public interface ICostantiDepositoDecreto {
 	public static final String INOSSERVANZA_OBBLIGHI = "20";
 	public static final String PROPOSTA_DECLAR_ESITO_PROVA = "21";
 	public static final String GENERICO = "22";
+	public static final String GENERICO2 = "GE"; // MEV_2023-35 si aggiunge un nuovo codice per il decreto generico
 	public static final String LICENZA = "23";
 	public static final String ESCLUSIONE_COMPUTO = "24";
 	public static final String REVOCA_PERMESSO = "25";

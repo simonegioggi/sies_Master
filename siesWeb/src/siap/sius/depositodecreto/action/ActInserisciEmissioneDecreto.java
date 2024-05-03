@@ -324,7 +324,9 @@ public class ActInserisciEmissioneDecreto extends ActionSius implements ICostant
 		if (lCodTipoDec == null)
 			throw new SIUSException(SIUSException.USER_MESSAGE, "Tipo decreto automatico non definito");
 
-		if (lCodTipoDec.compareTo(GENERICO) == 0) {
+		// MEV_2023-35 si aggiunge un nuovo codice per il decreto generico (GENERICO2=GE)
+		//if (lCodTipoDec.compareTo(GENERICO) == 0 ) {
+		if (lCodTipoDec.compareTo(GENERICO) == 0 || lCodTipoDec.compareTo(GENERICO2) == 0) {
 			// Decreto Generico
 			mRetPage = PG_INSERISCI_GENERICO;
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di

@@ -857,7 +857,23 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 							"siap.sius.depositoordinanzapc.action.ActLoadDettaglioOrdinanza");
 
 					lRetPage = lRedirectTo.toString();
-				} else {
+				} 
+				else if (!isRequestParameterNullObj(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
+                    && getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
+                            .equals("U125")) {
+                  siesLogger.debug("Prescrizioni SP: ");
+  
+                  RedirectTo lRedirectTo = new RedirectTo();
+                  lRedirectTo.setPage(IWebConstants.PG_MAIN);
+                  lRedirectTo.setAction("siap.sius.prescrizione.action.ActLoadInserisciPrescrizioneNew");
+                  lRedirectTo.setParameter(ICostantiEvento.CAMPO_ID_EVENTO,
+                          lOrdEveTenGP.getEvento().getIdEvento().toString());
+                  // Action successiva
+                  lRedirectTo.setParameter("nextaction",
+                          "siap.sius.depositoordinanzapc.action.ActLoadDettaglioOrdinanza");
+  
+                  lRetPage = lRedirectTo.toString();
+                }	else {
 					lRetPage = ICostantiPrescrizione.PG_LOAD_INSERISCIPRESCRIZIONE;
 				}
 

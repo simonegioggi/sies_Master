@@ -206,6 +206,7 @@ public class ActLoadDettaglioDecretoDeposito extends ActionSius implements ICost
 
     // Switch sul tipo di decreto
     if (   lTipoDecreto.compareTo(GENERICO) == 0
+         || lTipoDecreto.compareTo(GENERICO2) == 0  // MEV_2023-35 si aggiunge un nuovo codice per il decreto generico (GENERICO2=GE)
 				|| lTipoDecreto.compareTo(ICostantiDepositoOrdinanzaPc.RICHIESTA_OTTEMPERANZA) == 0) {
       // Decreto di tipo GENERICO
         lRetPage = PG_DETTAGLIO_GENERICO;

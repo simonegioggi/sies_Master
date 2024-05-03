@@ -1951,12 +1951,12 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			// 2008-01-09 - Gestione inserimento record nella tabella SCAMBIO_SANZIONE.
 			// 2009-03-11 - Isolata la fase di gestione delle Sanzioni Sostitutive per inserimento record
 			// nella tabella SCAMBIO_SANZIONE.
-			if (lDepMod.getCodTipoOrdinanza()
-					.compareTo(ICostantiDepositoOrdinanzaPc.APPLICAZIONE_SANZIONI_SOSTITUTIVE) == 0
-					|| lDepMod.getCodTipoOrdinanza()
-							.compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_SANZIONI_SOSTITUTIVE) == 0
-					|| lDepMod.getCodTipoOrdinanza()
-							.compareTo(ICostantiDepositoOrdinanzaPc.RINVIO_SANZIONI_SOSTITUTIVE) == 0
+			if (   lDepMod.getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.APPLICAZIONE_SANZIONI_SOSTITUTIVE) == 0
+			    // MEV_2023-35 - Per scivere su SCAMBIO_SANZIONE
+			    || lDepMod.getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.APPLICAZIONE_PENE_SOSTITUTIVE) == 0
+			     // MEV_2023-35 - FINE
+				|| lDepMod.getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_SANZIONI_SOSTITUTIVE) == 0
+			    || lDepMod.getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RINVIO_SANZIONI_SOSTITUTIVE) == 0
 					||
 					// 08/07/2015
 					// lDepMod.getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_PENE_PECUNIARIE)==0

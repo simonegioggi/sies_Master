@@ -777,6 +777,9 @@ if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza() != null
 	// 12-03-2009 Caso Applicazione Sanzione Sostitutiva o Conversione Pene Pecuniarie (Tipo di Prescrizioni diverso)
 	// 08-04-2011 Stessa gestione per Applicazione Misure Sicurezza
    	if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.APPLICAZIONE_SANZIONI_SOSTITUTIVE) == 0
+   	    // MEV_2023-35 - Si aggiungono le PENE SOSTITUTIVE
+   	    || datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.APPLICAZIONE_PENE_SOSTITUTIVE) == 0
+   	    // MEV_2023-35 - FINE
    			|| datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_PENE_PECUNIARIE) == 0
    			|| datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.MISURA_SICUREZZA) == 0) {
 %>
@@ -993,7 +996,11 @@ if (!modificaOrdinanza) {
    		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.APPLICAZIONE_SANZIONI_SOSTITUTIVE) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_APPLICAZIONE_SS %>"/>
-<%
+<% // MEV_2023-35 
+      } else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.APPLICAZIONE_PENE_SOSTITUTIVE) == 0) {
+%>
+<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_APPLICAZIONE_SP %>"/>
+<% // MEV_2023-35 - FINE
    		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoDecreto.RICOVERO_OPG_OSS_PSICHE) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_RICOVERO_OPG_OSS_PSICHE%>"/>
@@ -1159,13 +1166,13 @@ else {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_MODIFICA_ORDINANZA_RECLAMI_VIOLAZIONE_CEDU%>"/>
 <%
-	} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RIMESSIONE_ATTI) != 0) {
+	} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RIMESSIONE_ATTI) == 0) {
 %>
-<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_MODIFICA_ORDINANZA%>"/>
+<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_MODIFICA_RIMESSIONE_ATTI%>"/>
 <%
 	} else { 
 %>
-<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_MODIFICA_RIMESSIONE_ATTI%>"/>
+<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_MODIFICA_ORDINANZA%>"/>
 <%
 	}
 } // end else --> if(!modificaOrdinanza)

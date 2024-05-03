@@ -415,6 +415,16 @@ public interface ICostantiDepositoOrdinanzaPc {
 	public static final String PG_LOAD_DETTAGLIO_ORDINANZA_APPLICAZIONE_SS = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/depositoordinanzapc/DettaglioOrdinanzaApplicazioneSS.jsp";
 
+	// MEV_2023-35
+	// Applicazione Pene Sostitutive
+    public static final String APPLICAZIONE_PENE_SOSTITUTIVE = "SP";
+    public static final String PG_LOAD_INSERISCI_ORDINANZA_APPLICAZIONE_SP = IWebConstants.ROOT_DIR
+            + "files/siap/sius/depositoordinanzapc/InserisciOrdinanzaApplicazioneSP.jsp";
+    public static final String PG_LOAD_DETTAGLIO_ORDINANZA_APPLICAZIONE_SP = IWebConstants.ROOT_DIR
+            + "files/siap/sius/depositoordinanzapc/DettaglioOrdinanzaApplicazioneSP.jsp";
+    // MEV_2023-35 - FINE
+	
+	
 	// Declaratoria Estinzione Sanzioni Sostitutive
 	public static final String PG_LOAD_DETTAGLIO_ORDINANZA_DECLARATORIA_ESTINZIONE_SS = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/depositoordinanzapc/DettaglioOrdinanzaDeclaratoriaEstinsioneSS.jsp";
@@ -520,6 +530,8 @@ public interface ICostantiDepositoOrdinanzaPc {
 	public static final String OGG_DISP_DECOR_PER_MINIM = "0307";
 	public static final String OGG_ORD_RECLAMO_LICENZA = "C043";
 	public static final String OGG_SOSTITUISCE_LA_MISURA = "0133";
+	// MEV_2023-35 si aggiunge un nuovo codice 
+	public static final String OGG_APPL_PENE_SOSTITUTIVE = "U125";
 
 	public static final String CAMPO_GIORNI_NUOVA_MISURA = "giorniNuovaMisura";
 	public static final String CAMPO_MESI_NUOVA_MISURA = "mesiNuovaMisura";

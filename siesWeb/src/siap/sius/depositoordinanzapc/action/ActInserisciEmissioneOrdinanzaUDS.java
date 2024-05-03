@@ -491,8 +491,10 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 			// LogF3B.getLogger()
 			siesLogger.debug("Ordinanza di Applicazione Sanzione Sostitutiva " + lCodTipoDec);
 		}
-
-		else if (lCodTipoDec.compareTo(ICostantiDepositoDecreto.GENERICO) == 0) {
+		// MEV_2023-35 si aggiunge un nuovo codice per il decreto generico (GENERICO2=GE)
+		//else if (lCodTipoDec.compareTo(ICostantiDepositoDecreto.GENERICO) == 0) {
+		  else if (   lCodTipoDec.compareTo(ICostantiDepositoDecreto.GENERICO) == 0
+		           || lCodTipoDec.compareTo(ICostantiDepositoDecreto.GENERICO2) == 0) {
 			// Decreto Generico diventa Ordinanza Generica
 			lCodTipoDec = GENERICA;
 			mRetPage = PG_LOAD_INSERISCI_ORDINANZA_GENERICA;
@@ -748,7 +750,17 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("Ordinanza Appello contro Provvedimento Misura Sicurezza: " + lCodTipoDec);
-		} else
+		} 
+	    // MEV_2023-35 - Applicazione Pene Sostitutive
+        else if (lCodTipoDec.compareTo(APPLICAZIONE_PENE_SOSTITUTIVE) == 0) {
+            // Applicazione Sanzione Sostitutiva
+            mRetPage = PG_LOAD_INSERISCI_ORDINANZA_APPLICAZIONE_SP; 
+            ricercaPenaComplessivaSanzioneSostitutivaByIdFasSiep(); // DA VERIFICARE
+            preparaListaTipoUfficiCompetente();
+            siesLogger.debug("Ordinanza di Applicazione Pene Sostitutiva " + lCodTipoDec);
+        }
+        // MEV_2023-35 - FINE
+		else
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Ordinanza non prevista per il contenuto indicato");
 
