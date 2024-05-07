@@ -328,20 +328,31 @@ if (fascicoloUnificante != null && fascicoloUnificante.getFascicoloSiusModel() !
 								</a>
 							</td>
 						<%
-       }
-      if (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodTipoRegistro() != null){
-        if (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodTipoRegistro().compareTo("S22")==0
-        ||  fascicoloSiusGP.getGeneraleProcedimentoModel().getCodTipoRegistro().compareTo("S12")==0
-        	||  fascicoloSiusGP.getGeneraleProcedimentoModel().getCodTipoRegistro().compareTo("S09") == 0) {
-			String lTipoEsecuzione = "E.M.A.";
-			String lAzioneDiEsecuzione = "siap.sius.esecuzionemisuraalternativa.action.ActRicercaEsecuzioneMA";
-		if (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodTipoRegistro().compareTo("S12") == 0) {
-        lTipoEsecuzione="E.S.S.";
-        lAzioneDiEsecuzione="siap.sius.esecuzionesanzionesostitutiva.action.ActRicercaEsecuzioneSS";
-      	} else if (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodTipoRegistro().compareTo("S09") == 0) {
-        lTipoEsecuzione="E.M.S.";
-        lAzioneDiEsecuzione="siap.sius.esecuzionemisurasicurezza.action.ActRicercaEsecuzioneMS";
-      }
+					    }
+
+			      if (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodTipoRegistro() != null){
+			        if (   fascicoloSiusGP.getGeneraleProcedimentoModel().getCodTipoRegistro().compareTo("S22")==0
+			            || fascicoloSiusGP.getGeneraleProcedimentoModel().getCodTipoRegistro().compareTo("S12")==0
+			            || fascicoloSiusGP.getGeneraleProcedimentoModel().getCodTipoRegistro().compareTo("S09")==0
+                        // MEV_2023-35
+                        || fascicoloSiusGP.getGeneraleProcedimentoModel().getCodTipoRegistro().compareTo("S30")==0
+                        // MEV_2023-35 - FINE			            
+			           ) 
+			        {
+			          String lTipoEsecuzione = "E.M.A.";
+			          String lAzioneDiEsecuzione = "siap.sius.esecuzionemisuraalternativa.action.ActRicercaEsecuzioneMA";
+			          if (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodTipoRegistro().compareTo("S12") == 0) {
+			              lTipoEsecuzione="E.S.S.";
+			              lAzioneDiEsecuzione="siap.sius.esecuzionesanzionesostitutiva.action.ActRicercaEsecuzioneSS";
+			          } else if (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodTipoRegistro().compareTo("S09") == 0) {
+			              lTipoEsecuzione="E.M.S.";
+			              lAzioneDiEsecuzione="siap.sius.esecuzionemisurasicurezza.action.ActRicercaEsecuzioneMS";
+			          // MEV_2023-35    
+			          } else if (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodTipoRegistro().compareTo("S30") == 0) {
+			              lTipoEsecuzione="E.P.S.";
+			              lAzioneDiEsecuzione="siap.sius.esecuzionesanzionesostitutiva.action.ActRicercaEsecuzioneSS";
+			          }
+			          // MEV_2023-35 - FINE 
 %>
 					</tr>
 					<tr>

@@ -549,8 +549,10 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 			}
 			// In caso di Applicazione Sanzioni Sostitutive (U019), vengono inserite le occorrenze di
 			// ESECUZIONE_SANZIONE_SOSTITUTIVA.
-			else if (aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
-					.equals("U019")) {
+			// MEV_2023-35 - Si gestisce l'esecuzione Pene Sostitutive (U126) come le Sanzioni Sostitutive (U019) 
+			//else if (aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U019")) {
+			else if (   aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U019")
+			         || aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U126")) {
 				if (insertEMA_ESS == true)
 					// insertESS(aFascicoloGPModel, aIdEventoInviato, lConn );
 					insertESS(aFascicoloGPModel, aIdEventoInviato, lConn, aDurataEsitoAnni, aDurataEsitoMesi,
@@ -1239,6 +1241,10 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 					lTipoProcedimento = "della Sanzione Sostitutiva";
 				if (aTipoRegistro.compareTo("S22") == 0)
 					lTipoProcedimento = "della Misura Alternativa";
+				// MEV_2023-35
+                if (aTipoRegistro.compareTo("S30") == 0)
+                  lTipoProcedimento = "della Pena Sostitutiva";
+                // MEV_2023-35 - FINE
 				throw new SIUSException(F3BException.USER_MESSAGE,
 						"Procedimento di Esecuzione " + lTipoProcedimento + " " + aChiaveAnno + "/"
 								+ aChiaveProgr + " inesistente o non riferito al soggetto in esame ");

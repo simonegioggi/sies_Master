@@ -189,6 +189,34 @@ if (request.getAttribute("idFascicoloInviato")!=null)
                 S22_b.style.visibility='visible';
                 break;
               }
+              // MEV_2023-35 - 05/2024 PENE SOSTITUTIVE
+              if (document.FormTestS22.HighValue[i].value =='S30')
+              {
+                if ( document.FormTestS22.LowValue[i].value == 'U126' )
+                {
+                  S22_ab.style.visibility='visible';
+                  S22_ab.style.top='-20px';
+                  S22_a.style.visibility='hidden';
+                  S22_aa.style.visibility='hidden';
+                  S22_ems.style.visibility='hidden';
+                  resultS22='U126';
+                  document.LoadIscrProcedimentoUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.value='<%=annoProvvedimento%>';
+                  document.LoadIscrProcedimentoUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.value='<%=progrProvvedimento%>';
+                }
+                else
+                {
+                  S22_a.style.visibility='hidden';
+                  S22_ab.style.visibility='hidden';
+                  S22_aa.style.visibility='visible';
+                  S22_ems.style.visibility='hidden';
+                  resultS22='S30';
+                  document.LoadIscrProcedimentoUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.value='';
+                  document.LoadIscrProcedimentoUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.value='';
+                }
+                S22_b.style.visibility='visible';
+                break;
+              } 
+              // MEV_2023-35 - 05/2024 PENE SOSTITUTIVE - FINE
               // 21/04/2011 MISURE SICUREZZA
               if (document.FormTestS22.HighValue[i].value =='S09')
               {
@@ -292,7 +320,8 @@ if (request.getAttribute("idFascicoloInviato")!=null)
           alert("Campo Anno dell'Ordinanza Obbligatorio");
           document.LoadIscrProcedimentoUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.focus();
           return false;
-        }
+        }    
+        
         if(resultS22=='S12' &&
             progrS22 =="" )
         {
@@ -308,6 +337,37 @@ if (request.getAttribute("idFascicoloInviato")!=null)
           return false;
         }
 
+        // MEV_2023-35 - 05/2024 PENE SOSTITUTIVE
+        if(resultS22=='S30' &&
+            annoS22 =="" )
+        {
+          alert("Campo Anno del Procedimento di Esecuzione della Pena Sostitutiva Obbligatorio");
+          document.LoadIscrProcedimentoUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.focus();
+          return false;
+        }
+        if(resultS22=='U126' &&
+            annoS22 =="" )
+        {
+          alert("Campo Anno dell'Ordinanza Obbligatorio");
+          document.LoadIscrProcedimentoUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.focus();
+          return false;
+        } 
+        if(resultS22=='S30' &&
+        		  progrS22 =="" )
+        {
+          alert("Campo Progressivo del Procedimento di Esecuzione della Pena Sostitutiva Obbligatorio");
+          document.LoadIscrProcedimentoUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.focus();
+          return false;
+        }
+        if(resultS22=='U126' &&
+            progrS22 =="" )
+        {
+          alert("Campo Progressivo dell'Ordinanza Obbligatorio");
+          document.LoadIscrProcedimentoUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.focus();
+          return false;
+        }        
+        // MEV_2023-35 - 05/2024 PENE SOSTITUTIVE - FINE
+        
         // 21/04/2011 Controlli Misure Sicurezza
         if(resultS22=='S09' &&
             annoS22 =="" )

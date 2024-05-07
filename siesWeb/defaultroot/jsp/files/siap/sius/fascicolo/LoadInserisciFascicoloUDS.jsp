@@ -99,9 +99,11 @@ while (itx.hasNext()) {
           	S22_ems.style.visibility='hidden'; //29/047/2011
           	S22_ab.style.visibility='hidden';
           	S22_b.style.visibility='hidden';
+          	S22_EPS.style.visibility='hidden'; //19/07/2007
           	resultS22 = '';
           	for (i = 0; i < document.FormTestS22.LowValue.length; i++) {
             	if (Code == document.FormTestS22.LowValue[i].value) {
+          		
               		// Imposta il Tipo Registro (da utilizzare in fase di inserimento).
              		document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_COD_TIPO_REGISTRO%>.value=document.FormTestS22.HighValue[i].value;
               		// STUB 30/03/2004 if(document.FormTestS22.LowValue[i].value != 'U004'   &&
@@ -111,12 +113,14 @@ while (itx.hasNext()) {
 							S22_ab.style.top='-20px';
 							S22_a.style.visibility='hidden';
 							S22_aa.style.visibility='hidden'; // 19/07/2007
+							S22_EPS.style.visibility='hidden'; 
 							S22_ems.style.visibility='hidden';
 							resultS22='U004';
                 		} else {
 							S22_a.style.visibility='visible';
 							S22_a.style.top='+4px';
 							S22_aa.style.visibility='hidden'; // 19/07/2007
+							S22_EPS.style.visibility='hidden'; 
 							S22_ems.style.visibility='hidden';
 							S22_ab.style.visibility='hidden';
 							resultS22='S22';
@@ -132,17 +136,43 @@ while (itx.hasNext()) {
 							S22_a.style.visibility='hidden';
 							S22_aa.style.visibility='hidden';
 							S22_ems.style.visibility='hidden';
+							S22_EPS.style.visibility='hidden'; 
 							resultS22='U019';
                			} else {
 							S22_a.style.visibility='hidden';
 							S22_ab.style.visibility='hidden';
 							S22_aa.style.visibility='visible';
 							S22_ems.style.visibility='hidden';
+							S22_EPS.style.visibility='hidden';
 							resultS22='S12';
                 		}
                 		S22_b.style.visibility='visible';
                 		break;
               		}
+              		
+              	  // MEV_2023-35 - 05/2024 PENE SOSTITUTIVE
+                    if (document.FormTestS22.HighValue[i].value =='S30') {
+                      if (document.FormTestS22.LowValue[i].value == 'U126') {
+					                S22_ab.style.visibility='visible';
+					                S22_ab.style.top='-20px';
+					                S22_a.style.visibility='hidden';
+					                S22_aa.style.visibility='hidden';
+					                S22_ems.style.visibility='hidden';
+					                S22_EPS.style.visibility='hidden';
+					                resultS22='U126';
+					            } else {
+					                S22_a.style.visibility='hidden';
+					                S22_ab.style.visibility='hidden';
+					                S22_aa.style.visibility='hidden';
+					                S22_ems.style.visibility='hidden';
+					                S22_EPS.style.visibility='visible';
+					                resultS22='S30';
+                      }
+                      S22_b.style.visibility='visible';
+                      break;
+                    }             		
+                 // MEV_2023-35 - 05/2024 PENE SOSTITUTIVE - FINE
+              		
               		// 29/04/2011 MISURE SICUREZZA
               		if (document.FormTestS22.HighValue[i].value =='S09') {
                 		if (document.FormTestS22.LowValue[i].value == 'U024') {
@@ -151,12 +181,14 @@ while (itx.hasNext()) {
 							S22_a.style.visibility='hidden';
 							S22_aa.style.visibility='hidden';
 							S22_ems.style.visibility='hidden';
+							S22_EPS.style.visibility='hidden';
 							resultS22='U024';
                 		} else {
 							S22_a.style.visibility='hidden';
 							S22_ab.style.visibility='hidden';
 							S22_aa.style.visibility='hidden';
 							S22_ems.style.visibility='visible';
+							S22_EPS.style.visibility='hidden';
 							resultS22='S09';
                 		}
                 		S22_b.style.visibility='visible';
@@ -204,7 +236,20 @@ while (itx.hasNext()) {
           	document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.focus();
           	return false;
         }
-
+        
+        // MEV_2023-35 - 05/2024 PENE SOSTITUTIVE
+        if (resultS22 == 'S30' && annoS22 == "") {
+            alert("Campo Anno del Procedimento di Esecuzione della Pena Sostitutiva Obbligatorio");
+            document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.focus();
+            return false;
+        }
+        if (resultS22 == 'U126' && annoS22 == "") {
+            alert("Campo Anno dell'Ordinanza Obbligatorio");
+            document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.focus();
+            return false;
+        }
+        // MEV_2023-35 - 05/2024 PENE SOSTITUTIVE - FINE
+        
         // 29/04/2011 Controlli Misure Sicurezza
         if (resultS22 == 'S09' && annoS22 == "") {
           	alert("Campo Anno del Procedimento di Esecuzione della Misura Sicurezza Obbligatorio");
@@ -244,6 +289,19 @@ while (itx.hasNext()) {
           	return false;
         }
 
+        // MEV_2023-35 - 05/2024 PENE SOSTITUTIVE
+        if (resultS22 == 'S30' && progrS22 == "") {
+            alert("Campo Progressivo del Procedimento di Esecuzione della Pena Sostitutiva Obbligatorio");
+            document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.focus();
+            return false;
+        }
+        if (resultS22 == 'U126' && progrS22 == "") {
+            alert("Campo Progressivo dell'Ordinanza Obbligatorio");
+            document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.focus();
+            return false;
+        }     
+        // MEV_2023-35 - 05/2024 PENE SOSTITUTIVE - FINE
+        
         // 24/04/2011 Controlli Misure Sicurezza
         if (resultS22 == 'S09' && progrS22 == "") {
           	alert("Campo Progressivo del Procedimento di Esecuzione della Misura Sicurezza Obbligatorio");
@@ -676,6 +734,12 @@ if (modalita.equals("IE") || modalita.equals("IM")) {
 	        		Anno/Progressivo del Procedimento di Esecuzione della Sanzione Sostitutiva
 	        		<font class=ob>(*)</font>
 	      		</div>
+	      		<%-- MEV_2023-35 --%>
+	      		<div id=S22_EPS style="visibility:hidden; position:absolute; top:+256px;" >
+              Anno/Progressivo del Procedimento di Esecuzione della Pena Sostitutiva
+              <font class=ob>(*)</font>
+            </div>
+            <%-- MEV_2023-35 - FINE --%>
 	      		<div id=S22_ems style="visibility:hidden; position:absolute; top:+256px;" >
 	        		Anno/Progressivo del Procedimento di Esecuzione della Misura Sicurezza
 	        		<font class=ob>(*)</font>

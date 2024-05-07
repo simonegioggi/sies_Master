@@ -84,6 +84,7 @@ public class ActInserisciFascicoloUDS extends ActionSiap implements ICostantiFas
 		// form di inserimento.
 		// N.B. Se non esiste, il controller solleva un errore di eccezione sull'esistenza del procedimento.
 		// 20180105: [SG] tolto il commento su questo controllo per segnalazione 01/01/2018 errore SIUS LECCE
+		/*
 		if ((getRequestBigDecimalParameter(CAMPO_CHIAVE_ANNO_S22) != null)
 				&& (getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO) != null)
 				&& (((getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S22") == 0) && (getRequestStringParameter(
@@ -101,45 +102,78 @@ public class ActInserisciFascicoloUDS extends ActionSiap implements ICostantiFas
 					getRequestBigDecimalParameter(CAMPO_CHIAVE_PROGR_S22), lCodContenuto,
 					getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO), getCodUfficioUtenteConnesso(),
 					lFasSiepMod.getSoggetto().getIdSoggetto());
-		}
+		}*/
 
+	    // Ho selezionato un contenuto legato a un fascicolo di esecuzione (CAMPO_CHIAVE_ANNO_S22!=null && CAMPO_COD_TIPO_REGISTRO!=null)
+	    // Se il contenuto NON è quello del fascicolo di esecuzione ma di uno dei collegati, verifico che gli estremi del 
+	    // fascicolo di esecuzione siano corretti (ricerco il fascicolo)
+	    if (   getRequestBigDecimalParameter(CAMPO_CHIAVE_ANNO_S22) != null  
+	        && getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO) != null
+	        && (   (   getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S22") == 0
+	                && getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U004") != 0
+	               )           
+	            || (   getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S12") == 0
+	                && getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U019") != 0     
+	               ) 
+	            || (   getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S09") == 0
+	                && getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U024") != 0
+	               )
+	               // MEV_2023-35 - si aggiunge il provvedimento di esecuzione pene sospese
+                || (   getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S30") == 0
+                    && getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U126") != 0
+                   )
+                   // MEV_2023-35 - FINE
+	           )
+	       ) 
+	    {
+	      String lCodContenutoFE = "";
+	      
+	      if (getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S22") == 0)
+	        lCodContenutoFE = "U004";
+	      else if (getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S12") == 0)
+	        lCodContenutoFE = "U019";
+	      else if (getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S09") == 0)
+	        lCodContenutoFE = "U024";
+	      else if (getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S30") == 0)
+	        lCodContenutoFE = "U126";
+	      
+	      IFascicoloSiusUDS lCtrl = SIUSLookupRemote.getFascicoloSiusUDSRemote();
+	      lCtrl.ExistProcedimentoEsecuzione(getRequestBigDecimalParameter(CAMPO_CHIAVE_ANNO_S22),
+	                                        getRequestBigDecimalParameter(CAMPO_CHIAVE_PROGR_S22), 
+	                                        lCodContenutoFE,
+	                                        getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO), 
+	                                        getCodUfficioUtenteConnesso(),
+	                                        lFasSiepMod.getSoggetto().getIdSoggetto());
+	    }		
+		
+		
+		
 		// Istanzio il Model che incapsula il FascicoloSIUS, il GeneraleProcedimento e il Tenore
 		FascicoloGPModel lFasGPMod = new FascicoloGPModel();
 
 		// Caricamento Fascicolo SIUS
-		lFasGPMod.getFascicoloSiusModel().setChiaveAnno(new BigDecimal(DateUtils.getSysDate("yyyy"))); // Anno
-																										// corrente
-		lFasGPMod.getFascicoloSiusModel().setChiaveUfficio(lUtenteMod.getUfficioUtente().getCodUfficio()); // Ufficio
-																											// dell'operatore
-																											// che
-																											// inserisce
+		// Anno corrente
+		lFasGPMod.getFascicoloSiusModel().setChiaveAnno(new BigDecimal(DateUtils.getSysDate("yyyy"))); 
+		// Ufficio dell'operatore che inserisce
+		lFasGPMod.getFascicoloSiusModel().setChiaveUfficio(lUtenteMod.getUfficioUtente().getCodUfficio()); 
 		// Il progressivo del fascicolo (in base all'anno all'ufficio) viene calcolato applicativamente nel
 		// controller
 		lFasGPMod.getFascicoloSiusModel().setDataInserimento(DateUtils.getSysDate());
 		lFasGPMod.getFascicoloSiusModel().setDataIscrizione(DateUtils.getSysDate());
-		lFasGPMod.getFascicoloSiusModel().setCodStatoFascicolo("02"); // Stato Fascicolo SIUS settato ad
-																		// aperto
-		lFasGPMod.getFascicoloSiusModel().setCodOperatoreInserimento(lUtenteMod.getUserId()); // Codice
-																								// dell'operatore
-																								// che
-																								// inserisce
+		// Stato Fascicolo SIUS settato ad aperto
+		lFasGPMod.getFascicoloSiusModel().setCodStatoFascicolo("02"); 
+		
+		lFasGPMod.getFascicoloSiusModel().setCodOperatoreInserimento(lUtenteMod.getUserId()); 
 		lFasGPMod.getFascicoloSiusModel().setCodUfficioInserimento(
 				lUtenteMod.getUfficioUtente().getCodUfficio()); // Codice dell'ufficio inserimento
-		lFasGPMod.getFascicoloSiusModel().setSogIdSoggetto(lFasSiepMod.getSoggetto().getIdSoggetto()); // Foreign
-																										// KEY
-																										// del
-																										// soggetto.
-		lFasGPMod.getFascicoloSiusModel().setFasSieIdFascicoloSiep(lFasSiepMod.getIdFascicoloSiep()); // Foreign
-																										// KEY
-																										// del
-																										// fascicolo
-																										// SIEP.
+		
+		lFasGPMod.getFascicoloSiusModel().setSogIdSoggetto(lFasSiepMod.getSoggetto().getIdSoggetto());
+		lFasGPMod.getFascicoloSiusModel().setFasSieIdFascicoloSiep(lFasSiepMod.getIdFascicoloSiep()); 
 		lFasGPMod.getFascicoloSiusModel().setChiaveAnnoSIEP(lFasSiepMod.getChiaveAnno());
 		lFasGPMod.getFascicoloSiusModel().setChiaveProgrSIEP(lFasSiepMod.getChiaveProgr());
 		lFasGPMod.getFascicoloSiusModel().setChiaveUfficioSIEP(lFasSiepMod.getChiaveUfficio());
-		lFasGPMod.getFascicoloSiusModel().setSoggetto(lFasSiepMod.getSoggetto()); // Soggetto recuperato dal
-																					// Fascicolo SIEP in
-																					// sessione
+		// Soggetto recuperato dal Fascicolo SIEP in sessione
+		lFasGPMod.getFascicoloSiusModel().setSoggetto(lFasSiepMod.getSoggetto()); 
 
 		ComuneModel lComMod = new ComuneModel(
 				getCodComuneByDescr(getRequestStringParameter(CAMPO_COD_SEDE_MITTENTE)));
