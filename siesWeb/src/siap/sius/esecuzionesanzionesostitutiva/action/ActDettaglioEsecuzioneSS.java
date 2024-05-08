@@ -83,7 +83,7 @@ public class ActDettaglioEsecuzioneSS extends ActionSiap implements ICostantiEse
 
 		if (lESSModel == null || lESSModel.getIdEsecuzioneSanzioneSost() == null)
 			throw new SIUSException(SIUSException.USER_MESSAGE,
-					"Attenzione! ESECUZIONE SANZIONE sOSTITUTIVA Assente!");
+					"Attenzione! ESECUZIONE SANZIONE SOSTITUTIVA Assente!");
 		else
 			setRequestAttribute("sanzioneSostitutiva", lESSModel);
 
@@ -94,15 +94,20 @@ public class ActDettaglioEsecuzioneSS extends ActionSiap implements ICostantiEse
 
 		setRequestAttribute("lCodUfficioFascicolo", lCodUfficio);
 
+		String lCodContenuto = "";
+	    if (!lESSModel.getGenPridGeneraleProcedimento().equals(null)) {  // ??? COME FA AD essere null?
+            IFascicoloSius lFasCtrl = SIUSLookupRemote.getFascicoloSiusRemote();
+            FascicoloGPModel lFasGPModel = lFasCtrl
+                    .ExRicercaFascicoloByGenProc(lESSModel.getGenPridGeneraleProcedimento());
+            setRequestAttribute("sanzioneUno", lFasGPModel);
+            lCodContenuto = lFasGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento();
+        }
+	      
+	    // MEV_2023-35 si parametrizza il lCodContenuto per gestire anche le EPS
 		Vector[] lVectSanzioniECorrelati = lESSCtrl.ExRicercaDettaglioESSeCorrelati(lIdEsecuzioneSS,
-				lIdSoggetto, lCodUfficio);
+				lIdSoggetto, lCodUfficio, lCodContenuto);
 
-		if (!lESSModel.getGenPridGeneraleProcedimento().equals(null)) {
-			IFascicoloSius lFasCtrl = SIUSLookupRemote.getFascicoloSiusRemote();
-			FascicoloGPModel lFasGPModel = lFasCtrl
-					.ExRicercaFascicoloByGenProc(lESSModel.getGenPridGeneraleProcedimento());
-			setRequestAttribute("sanzioneUno", lFasGPModel);
-		}
+
 
 		setRequestAttribute("sanzioni", lVectSanzioniECorrelati[0]);
 		setRequestAttribute("correlati", lVectSanzioniECorrelati[1]);

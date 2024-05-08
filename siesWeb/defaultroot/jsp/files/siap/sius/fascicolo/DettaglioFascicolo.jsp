@@ -343,14 +343,14 @@ if (fascicoloUnificante != null && fascicoloUnificante.getFascicoloSiusModel() !
 			          String lAzioneDiEsecuzione = "siap.sius.esecuzionemisuraalternativa.action.ActRicercaEsecuzioneMA";
 			          if (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodTipoRegistro().compareTo("S12") == 0) {
 			              lTipoEsecuzione="E.S.S.";
-			              lAzioneDiEsecuzione="siap.sius.esecuzionesanzionesostitutiva.action.ActRicercaEsecuzioneSS";
+			              lAzioneDiEsecuzione="siap.sius.esecuzionesanzionesostitutiva.action.ActRicercaEsecuzioneSS&"+ICostantiFascicoloSius.CAMPO_COD_CONTENUTO+"=U019";
 			          } else if (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodTipoRegistro().compareTo("S09") == 0) {
 			              lTipoEsecuzione="E.M.S.";
 			              lAzioneDiEsecuzione="siap.sius.esecuzionemisurasicurezza.action.ActRicercaEsecuzioneMS";
 			          // MEV_2023-35    
 			          } else if (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodTipoRegistro().compareTo("S30") == 0) {
 			              lTipoEsecuzione="E.P.S.";
-			              lAzioneDiEsecuzione="siap.sius.esecuzionesanzionesostitutiva.action.ActRicercaEsecuzioneSS";
+			              lAzioneDiEsecuzione="siap.sius.esecuzionesanzionesostitutiva.action.ActRicercaEsecuzioneSS&"+ICostantiFascicoloSius.CAMPO_COD_CONTENUTO+"=U126";
 			          }
 			          // MEV_2023-35 - FINE 
 %>

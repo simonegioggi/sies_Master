@@ -14,6 +14,8 @@ public class ActLoadRicercaEsecuzioneSS extends ActionSiap implements ICostantiE
 {
   public String processRequest() throws Exception
   {
-    return PG_LOAD_RICERCA_ESECUZIONE_SS;  //restituisce la jsp di VIEW
+    // MEV_35 si aggiunge il parametro sul contebuto per gestire anche le EPS
+    setRequestAttribute("ContenutoES","U019");
+    return PG_LOAD_RICERCA_ESECUZIONE_SS; 
   }
 }

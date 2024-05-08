@@ -101,14 +101,30 @@ public class ActInsFascicoloDaSoggettoUDS extends ActionSiap implements ICostant
 		// Recupero del Procedimento di Esecuzione della MA-SS-MS, nel caso fosse impostato nella form di
 		// inserimento.
 		// N.B. Se non esiste, il controller solleva un errore di eccezione sull'esistenza del procedimento.
-		if ((getRequestBigDecimalParameter(CAMPO_CHIAVE_ANNO_S22) != null)
+		/*if ((getRequestBigDecimalParameter(CAMPO_CHIAVE_ANNO_S22) != null)
 				&& (getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO) != null)
 				&& (((getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S22") == 0) && (getRequestStringParameter(
 						CAMPO_COD_CONTENUTO).compareTo("U004") != 0))
 						|| ((getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S12") == 0) && (getRequestStringParameter(
 								CAMPO_COD_CONTENUTO).compareTo("U019") != 0)) || ((getRequestStringParameter(
 						CAMPO_COD_TIPO_REGISTRO).compareTo("S09") == 0) && (getRequestStringParameter(
-						CAMPO_COD_CONTENUTO).compareTo("U024") != 0)))) {
+						CAMPO_COD_CONTENUTO).compareTo("U024") != 0)))) {*/
+		  
+		if (   getRequestBigDecimalParameter(CAMPO_CHIAVE_ANNO_S22) != null
+		    && getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO) != null
+		    && (   (   getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S22") == 0 
+		            && getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U004") != 0)
+		        || (   getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S12") == 0 
+		            && getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U019") != 0) 
+		        || (   getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S09") == 0 
+		            && getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U024") != 0)
+		        // MEV_2023-35- si aggiunge la gestione delle EPS
+                || (   getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S30") == 0 
+                    && getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U126") != 0)	
+                // MEV_2023-35 - FINE
+		      )
+		   ) 
+		{  
 			// String lCodContenuto =
 			// ((getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S22")==0) ? "U004" : "U019");
 			String lCodContenuto = "";
@@ -117,8 +133,12 @@ public class ActInsFascicoloDaSoggettoUDS extends ActionSiap implements ICostant
 				lCodContenuto = "U004";
 			else if (getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S12") == 0)
 				lCodContenuto = "U019";
-			else
-				lCodContenuto = "U024";
+			else if (getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S09") == 0)
+			  lCodContenuto = "U024";
+			// MEV_2023-35- si aggiunge la gestione delle EPS
+			else if (getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S30") == 0)
+				lCodContenuto = "U126";
+			// MEV_2023-35 - FINE
 
 			IFascicoloSiusUDS lCtrl = SIUSLookupRemote.getFascicoloSiusUDSRemote();
 			/* boolean esiste = */lCtrl.ExistProcedimentoEsecuzione(
