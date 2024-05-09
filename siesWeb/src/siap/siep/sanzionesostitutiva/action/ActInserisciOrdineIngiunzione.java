@@ -59,13 +59,13 @@ public class ActInserisciOrdineIngiunzione extends ActionSiap implements ICostan
 		String[] lArrayIdRate = this.getRequestStringParameters(ICostantiRateizzazionePP.CAMPO_EVE_ID_EVENTO);
 
 		ISanzioneSostitutiva lCtrlSS = SIEPLookupRemote.getSanzioneSostitutivaRemote();
-		/* EventoNotificaModel lRetModel = */lCtrlSS.exInserisciOrdineIngiunzione(lEveNot, lArrayIdRate);
+		EventoNotificaModel lRetModel = lCtrlSS.exInserisciOrdineIngiunzione(lEveNot, lArrayIdRate);
 
 		String lPage = null;
 
 		lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
 				+ "=siap.siep.sanzionesostitutiva.action.ActLoadDettaglioOrdineIngiunzione&"
-				+ ICostantiEvento.CAMPO_ID_EVENTO + "=" + lEveNot.getEvento().getIdEvento();
+				+ ICostantiEvento.CAMPO_ID_EVENTO + "=" + lRetModel.getEvento().getIdEvento();
 
 		// info per il log
 		siesLogger.info(getClass().getName() + ".processRequest: fine");

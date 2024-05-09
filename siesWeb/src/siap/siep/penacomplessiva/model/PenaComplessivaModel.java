@@ -67,6 +67,9 @@ public class PenaComplessivaModel extends GenericModel {
 	 */
 	private PenaResiduaModel mPenaResidua;
 
+	// MEV_2023-33
+	private BigDecimal mImportoTotale;
+	
 	// COSTRUTTORE DI DEFAULT
 	public PenaComplessivaModel() {
 		this.mIdPenaComplessiva = null;
@@ -452,6 +455,11 @@ public class PenaComplessivaModel extends GenericModel {
 		return mPenaResidua;
 	}
 
+	//MEV_2023-33
+	public BigDecimal getImportoTotale() {
+	  return mImportoTotale;
+	}
+  
 	//
 	// METODI SET()
 	//
@@ -607,6 +615,11 @@ public class PenaComplessivaModel extends GenericModel {
 		mPenaResidua = aValore;
 	}
 
+	// MEV_2023-33
+  public void setImportoTotale(BigDecimal aValore) {
+    mImportoTotale = aValore;
+  }
+	 
 	@Override
 	public String toString() {
 		String lStr = new String();

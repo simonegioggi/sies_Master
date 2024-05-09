@@ -51,8 +51,12 @@ function over_effect(e, state) {
 	<tr>
 		<td class="LBG">
 	        <font class="label">Funzione :</font>&nbsp;
-	        <font class="campo">Gestione Ordine di Ingiunzione</font>
+	        <font class="campo">Gestione Notifiche</font>
       	</td>
+        <td class="LBG">
+          <a href="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActGrigliaRiscossionePP">
+            <img align="middle" src="/images/arrowleft24.gif" alt="ritorna su" width="24" height="24" border="0"></a>      
+      </td>       	
 	</tr>
 </table>
 <br>
@@ -64,21 +68,18 @@ function over_effect(e, state) {
     		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadNotificheOrdineIngiunzione">Notifiche</a>
 		</td>
 		<td width="32%" class="menulines" nowrap>
-			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.web.ActionUnderConstruction">Rinnovo Ricerche per Omesse Notifiche</a>
+			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadInserisciRinnovoRicercheOIPP">Rinnovo Ricerche per Omesse Notifiche</a>
 		</td>
 		<td width="32%" class="menulines" nowrap>
-  			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.web.ActionUnderConstruction">Richiesta Informazioni comma 8 bis</a>
+  			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadInserisciRichInfoComma5">Richiesta Informazioni comma 5</a>
 		</td>
  	</tr>
 	<tr>
 		<td width="32%" class="menulines" nowrap>
-			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.web.ActionUnderConstruction">Rinnovazione Notifica</a>
+			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadInserisciRinnovazioneOIPP">Rinnovazione Notifica successiva alla Richiesta Informazioni</a>
 		</td>
 		<td width="32%" class="menulines" nowrap>
-	  		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.web.ActionUnderConstruction">Irreperibilità</a>
-		</td>
-		<td width="32%" class="menulines" nowrap>
-  			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.web.ActionUnderConstruction">Solleciti</a>
+	  		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadInserisciSollecitiOIPP">Solleciti</a>
 		</td>
 	</tr>
 </table>

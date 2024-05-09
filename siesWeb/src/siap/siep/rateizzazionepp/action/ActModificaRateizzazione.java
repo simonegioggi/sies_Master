@@ -12,28 +12,34 @@ import siap.siep.rateizzazionepp.controller.IRateizzazionePP;
 import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 import siap.siep.util.SIEPLookupRemote;
 
-public class ActModificaRateizzazione extends ActInserisciRateizzazione
-    implements ICostantiRateizzazionePP 
-{
-    private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+/**
+ * Classe per la modifica delle rateizzazioni
+ * 
+ * @since MEV_2023-13
+ * @version 1.0
+ */
+public class ActModificaRateizzazione extends ActInserisciRateizzazione implements ICostantiRateizzazionePP {
 
-    public String processRequest() throws F3BException 
-    {        
-        FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSessionAttribute("fascicolo");
-        
-        siesLogger.debug("Sono in Modifica delle rateizzazioni per il fascicolo "+lFascMod.getIdFascicoloSiep());
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
-        Vector <RateizzazionePPModel> aListaRate = this.recuperaRate();        
-        
-        // Inserimento
-        IRateizzazionePP lRateCTRL = SIEPLookupRemote.getRateizzazionePPRemote();
-        lRateCTRL.exModificaRateizzazioni (aListaRate, lFascMod.getIdFascicoloSiep());
-        
-        //  
-        String lPage = "";
-        lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
-                + "=siap.siep.rateizzazionepp.action.ActLoadDettagloRateizzazione";
-        return lPage;
-    }
+	public String processRequest() throws F3BException {
+
+		FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSessionAttribute("fascicolo");
+
+		siesLogger.debug(
+				"Sono in Modifica delle rateizzazioni per il fascicolo " + lFascMod.getIdFascicoloSiep());
+
+		Vector<RateizzazionePPModel> aListaRate = this.recuperaRate();
+
+		// Inserimento
+		IRateizzazionePP lRateCTRL = SIEPLookupRemote.getRateizzazionePPRemote();
+		lRateCTRL.exModificaRateizzazioni(aListaRate, lFascMod.getIdFascicoloSiep());
+
+		//
+		String lPage = "";
+		lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
+				+ "=siap.siep.rateizzazionepp.action.ActLoadDettagloRateizzazione";
+		return lPage;
+	}
 
 }

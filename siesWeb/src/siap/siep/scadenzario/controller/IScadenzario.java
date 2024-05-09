@@ -101,4 +101,7 @@ public interface IScadenzario {
 	// 20191121 [SG]: aggiunto metodo
 	public BigDecimal ExGetCountRicercaScadenzarioPagedMisSic(ScadenzarioModel sm) throws F3BException;
 
+	//MEV_2023-33
+	public BigDecimal ExGetCountScadenzariPP(ScadenzarioModel aScadenzario) throws F3BException;
+	public Vector ExRicercaScadenzarioPagedPP(ScadenzarioModel aScadenzario, int aPage) throws F3BException;
 }

@@ -22,6 +22,10 @@
    </xs:complexType>
   </xs:schema>
   <xs:schema targetNamespace='http://www.giustizia.it/serviziTelematici/serviziGenerici' version='1.0' xmlns:tns='http://www.giustizia.it/serviziTelematici/serviziGenerici' xmlns:xs='http://www.w3.org/2001/XMLSchema'>
+   <xs:element name='InfoPagamentoRendicontato' type='tns:InfoPagamentoRendicontato'/>
+   <xs:element name='ServiziPagamentiException' type='tns:ServiziPagamentiException'/>
+   <xs:element name='downloadPDFRicevuta' type='tns:downloadPDFRicevuta'/>
+   <xs:element name='downloadPDFRicevutaResponse' type='tns:downloadPDFRicevutaResponse'/>
    <xs:element name='downloadRicevuta' type='tns:downloadRicevuta'/>
    <xs:element name='downloadRicevutaResponse' type='tns:downloadRicevutaResponse'/>
    <xs:element name='downloadRichiesta' type='tns:downloadRichiesta'/>
@@ -30,8 +34,13 @@
    <xs:element name='elencoPagamentiResponse' type='tns:elencoPagamentiResponse'/>
    <xs:element name='elencoPagamentiRevocati' type='tns:elencoPagamentiRevocati'/>
    <xs:element name='elencoPagamentiRevocatiResponse' type='tns:elencoPagamentiRevocatiResponse'/>
+   <xs:element name='flussiList' type='tns:FlussiList'/>
    <xs:element name='getAPAinKO' type='tns:getAPAinKO'/>
    <xs:element name='getAPAinKOResponse' type='tns:getAPAinKOResponse'/>
+   <xs:element name='getInfoPagamentoRendicontato' type='tns:getInfoPagamentoRendicontato'/>
+   <xs:element name='getInfoPagamentoRendicontatoResponse' type='tns:getInfoPagamentoRendicontatoResponse'/>
+   <xs:element name='getPagamentiByFlusso' type='tns:getPagamentiByFlusso'/>
+   <xs:element name='getPagamentiByFlussoResponse' type='tns:getPagamentiByFlussoResponse'/>
    <xs:element name='getPagamentiRevocati' type='tns:getPagamentiRevocati'/>
    <xs:element name='getPagamentiRevocatiResponse' type='tns:getPagamentiRevocatiResponse'/>
    <xs:element name='getPagamentoByCRS' type='tns:getPagamentoByCRS'/>
@@ -75,6 +84,8 @@
      <xs:element minOccurs='0' name='dataRichiestaA' type='xs:dateTime'/>
      <xs:element name='dimensionePagina' type='xs:int'/>
      <xs:element name='numeroPagina' type='xs:int'/>
+     <xs:element minOccurs='0' name='dataRicevutaDa' type='xs:dateTime'/>
+     <xs:element minOccurs='0' name='dataRicevutaA' type='xs:dateTime'/>
     </xs:sequence>
    </xs:complexType>
    <xs:complexType name='elencoPagamentiResponse'>
@@ -287,6 +298,17 @@
      <xs:element minOccurs='0' name='tipologiaPagamento' type='xs:string'/>
     </xs:sequence>
    </xs:complexType>
+   <xs:complexType name='downloadPDFRicevuta'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='idPagamento' type='xs:string'/>
+     <xs:element name='bollo' type='xs:boolean'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='downloadPDFRicevutaResponse'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='return' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
    <xs:complexType name='getAPAinKO'>
     <xs:sequence>
      <xs:element minOccurs='0' name='dataRichiestaDa' type='xs:dateTime'/>
@@ -302,13 +324,74 @@
      <xs:element minOccurs='0' name='return' type='tns:risultatoRicercaPagamenti'/>
     </xs:sequence>
    </xs:complexType>
+   <xs:complexType name='getPagamentiByFlusso'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='codUffNep' type='xs:string'/>
+     <xs:element minOccurs='0' name='idFlusso' type='xs:string'/>
+     <xs:element minOccurs='0' name='dataOraFlusso' type='xs:dateTime'/>
+     <xs:element minOccurs='0' name='idPSP' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='getPagamentiByFlussoResponse'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='return' type='tns:risultatoRicercaRiversamenti'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='risultatoRicercaRiversamenti'>
+    <xs:sequence>
+     <xs:element name='count' type='xs:int'/>
+     <xs:element maxOccurs='unbounded' minOccurs='0' name='items' type='tns:pagamentoRes'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='pagamentoRes'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='codice' type='xs:string'/>
+     <xs:element minOccurs='0' name='crs' type='xs:string'/>
+     <xs:element minOccurs='0' name='idUnivocoRiscossione' type='xs:string'/>
+     <xs:element name='importo' type='xs:float'/>
+     <xs:element minOccurs='0' name='iuv' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='ServiziPagamentiException'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='CRS' type='xs:string'/>
+     <xs:element minOccurs='0' name='message' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='getInfoPagamentoRendicontato'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='iuv' type='xs:string'/>
+     <xs:element minOccurs='0' name='codiceUfficio' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='getInfoPagamentoRendicontatoResponse'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='return' type='tns:InfoPagamentoRendicontato'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='InfoPagamentoRendicontato'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='iuv' type='xs:string'/>
+     <xs:element maxOccurs='unbounded' minOccurs='0' name='dettaglioCrs' type='tns:DettaglioCrsPagamento'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='DettaglioCrsPagamento'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='codice' type='xs:string'/>
+     <xs:element minOccurs='0' name='flussiRendicontazione' type='tns:FlussiList'/>
+     <xs:element minOccurs='0' name='idUnivocoRiscossione' type='xs:string'/>
+     <xs:element name='importo' type='xs:float'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='FlussiList'>
+    <xs:sequence>
+     <xs:element maxOccurs='unbounded' minOccurs='0' name='idFlusso' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
   </xs:schema>
  </types>
- <message name='ServiziConsultazionePagamentiTelematici_downloadRicevuta'>
-  <part element='tns:downloadRicevuta' name='downloadRicevuta'></part>
- </message>
- <message name='ServiziConsultazionePagamentiTelematici_getPagamentoByDateResponse'>
-  <part element='tns:getPagamentoByDateResponse' name='getPagamentoByDateResponse'></part>
+ <message name='ServiziConsultazionePagamentiTelematici_getInfoPagamentoRendicontatoResponse'>
+  <part element='tns:getInfoPagamentoRendicontatoResponse' name='getInfoPagamentoRendicontatoResponse'></part>
  </message>
  <message name='ServiziConsultazionePagamentiTelematici_getPagamentoByCRS'>
   <part element='tns:getPagamentoByCRS' name='getPagamentoByCRS'></part>
@@ -322,11 +405,41 @@
  <message name='ServiziConsultazionePagamentiTelematici_elencoPagamentiResponse'>
   <part element='tns:elencoPagamentiResponse' name='elencoPagamentiResponse'></part>
  </message>
+ <message name='ServiziConsultazionePagamentiTelematici_getPagamentiByFlussoResponse'>
+  <part element='tns:getPagamentiByFlussoResponse' name='getPagamentiByFlussoResponse'></part>
+ </message>
  <message name='ServiziConsultazionePagamentiTelematici_getPagamentoByCRSResponse'>
   <part element='tns:getPagamentoByCRSResponse' name='getPagamentoByCRSResponse'></part>
  </message>
  <message name='ServiziConsultazionePagamentiTelematici_getPagamentiRevocatiResponse'>
   <part element='tns:getPagamentiRevocatiResponse' name='getPagamentiRevocatiResponse'></part>
+ </message>
+ <message name='ServiziPagamentiException'>
+  <part element='tns:ServiziPagamentiException' name='ServiziPagamentiException'></part>
+ </message>
+ <message name='ServiziConsultazionePagamentiTelematici_ricercaPagamentiNonVerificatiResponse'>
+  <part element='tns:ricercaPagamentiNonVerificatiResponse' name='ricercaPagamentiNonVerificatiResponse'></part>
+ </message>
+ <message name='ServiziConsultazionePagamentiTelematici_getInfoPagamentoRendicontato'>
+  <part element='tns:getInfoPagamentoRendicontato' name='getInfoPagamentoRendicontato'></part>
+ </message>
+ <message name='ServiziConsultazionePagamentiTelematici_getPagamentoByDate'>
+  <part element='tns:getPagamentoByDate' name='getPagamentoByDate'></part>
+ </message>
+ <message name='ServiziConsultazionePagamentiTelematici_elencoPagamentiRevocatiResponse'>
+  <part element='tns:elencoPagamentiRevocatiResponse' name='elencoPagamentiRevocatiResponse'></part>
+ </message>
+ <message name='ServiziConsultazionePagamentiTelematici_elencoPagamentiRevocati'>
+  <part element='tns:elencoPagamentiRevocati' name='elencoPagamentiRevocati'></part>
+ </message>
+ <message name='ServiziConsultazionePagamentiTelematici_downloadRicevuta'>
+  <part element='tns:downloadRicevuta' name='downloadRicevuta'></part>
+ </message>
+ <message name='ServiziConsultazionePagamentiTelematici_getPagamentoByDateResponse'>
+  <part element='tns:getPagamentoByDateResponse' name='getPagamentoByDateResponse'></part>
+ </message>
+ <message name='ServiziConsultazionePagamentiTelematici_getPagamentiByFlusso'>
+  <part element='tns:getPagamentiByFlusso' name='getPagamentiByFlusso'></part>
  </message>
  <message name='ServiziConsultazionePagamentiTelematici_getAPAinKOResponse'>
   <part element='tns:getAPAinKOResponse' name='getAPAinKOResponse'></part>
@@ -334,23 +447,23 @@
  <message name='ServiziConsultazionePagamentiTelematici_getPagamentiRevocati'>
   <part element='tns:getPagamentiRevocati' name='getPagamentiRevocati'></part>
  </message>
- <message name='ServiziConsultazionePagamentiTelematici_ricercaPagamentiNonVerificatiResponse'>
-  <part element='tns:ricercaPagamentiNonVerificatiResponse' name='ricercaPagamentiNonVerificatiResponse'></part>
+ <message name='ServiziConsultazionePagamentiTelematici_downloadPDFRicevutaResponse'>
+  <part element='tns:downloadPDFRicevutaResponse' name='downloadPDFRicevutaResponse'></part>
  </message>
  <message name='ServiziConsultazionePagamentiTelematici_ricercaFlussiRendicontazioneScaricatiResponse'>
   <part element='tns:ricercaFlussiRendicontazioneScaricatiResponse' name='ricercaFlussiRendicontazioneScaricatiResponse'></part>
  </message>
- <message name='ServiziConsultazionePagamentiTelematici_ricercaFlussiRendicontazioneScaricati'>
-  <part element='tns:ricercaFlussiRendicontazioneScaricati' name='ricercaFlussiRendicontazioneScaricati'></part>
- </message>
  <message name='ServiziConsultazionePagamentiTelematici_downloadRichiesta'>
   <part element='tns:downloadRichiesta' name='downloadRichiesta'></part>
  </message>
+ <message name='ServiziConsultazionePagamentiTelematici_ricercaFlussiRendicontazioneScaricati'>
+  <part element='tns:ricercaFlussiRendicontazioneScaricati' name='ricercaFlussiRendicontazioneScaricati'></part>
+ </message>
+ <message name='ServiziConsultazionePagamentiTelematici_downloadPDFRicevuta'>
+  <part element='tns:downloadPDFRicevuta' name='downloadPDFRicevuta'></part>
+ </message>
  <message name='ServiziConsultazionePagamentiTelematici_downloadRichiestaResponse'>
   <part element='tns:downloadRichiestaResponse' name='downloadRichiestaResponse'></part>
- </message>
- <message name='ServiziConsultazionePagamentiTelematici_getPagamentoByDate'>
-  <part element='tns:getPagamentoByDate' name='getPagamentoByDate'></part>
  </message>
  <message name='ServiziConsultazionePagamentiTelematici_ricercaPagamentiNonVerificati'>
   <part element='tns:ricercaPagamentiNonVerificati' name='ricercaPagamentiNonVerificati'></part>
@@ -358,13 +471,11 @@
  <message name='ServiziConsultazionePagamentiTelematici_elencoPagamenti'>
   <part element='tns:elencoPagamenti' name='elencoPagamenti'></part>
  </message>
- <message name='ServiziConsultazionePagamentiTelematici_elencoPagamentiRevocati'>
-  <part element='tns:elencoPagamentiRevocati' name='elencoPagamentiRevocati'></part>
- </message>
- <message name='ServiziConsultazionePagamentiTelematici_elencoPagamentiRevocatiResponse'>
-  <part element='tns:elencoPagamentiRevocatiResponse' name='elencoPagamentiRevocatiResponse'></part>
- </message>
  <portType name='ServiziConsultazionePagamentiTelematici'>
+  <operation name='downloadPDFRicevuta' parameterOrder='downloadPDFRicevuta'>
+   <input message='tns:ServiziConsultazionePagamentiTelematici_downloadPDFRicevuta'></input>
+   <output message='tns:ServiziConsultazionePagamentiTelematici_downloadPDFRicevutaResponse'></output>
+  </operation>
   <operation name='downloadRicevuta' parameterOrder='downloadRicevuta'>
    <input message='tns:ServiziConsultazionePagamentiTelematici_downloadRicevuta'></input>
    <output message='tns:ServiziConsultazionePagamentiTelematici_downloadRicevutaResponse'></output>
@@ -384,6 +495,15 @@
   <operation name='getAPAinKO' parameterOrder='getAPAinKO'>
    <input message='tns:ServiziConsultazionePagamentiTelematici_getAPAinKO'></input>
    <output message='tns:ServiziConsultazionePagamentiTelematici_getAPAinKOResponse'></output>
+  </operation>
+  <operation name='getInfoPagamentoRendicontato' parameterOrder='getInfoPagamentoRendicontato'>
+   <input message='tns:ServiziConsultazionePagamentiTelematici_getInfoPagamentoRendicontato'></input>
+   <output message='tns:ServiziConsultazionePagamentiTelematici_getInfoPagamentoRendicontatoResponse'></output>
+  </operation>
+  <operation name='getPagamentiByFlusso' parameterOrder='getPagamentiByFlusso'>
+   <input message='tns:ServiziConsultazionePagamentiTelematici_getPagamentiByFlusso'></input>
+   <output message='tns:ServiziConsultazionePagamentiTelematici_getPagamentiByFlussoResponse'></output>
+   <fault message='tns:ServiziPagamentiException' name='ServiziPagamentiException'></fault>
   </operation>
   <operation name='getPagamentiRevocati' parameterOrder='getPagamentiRevocati'>
    <input message='tns:ServiziConsultazionePagamentiTelematici_getPagamentiRevocati'></input>
@@ -408,6 +528,15 @@
  </portType>
  <binding name='ServiziConsultazionePagamentiTelematiciBinding' type='tns:ServiziConsultazionePagamentiTelematici'>
   <soap:binding style='document' transport='http://schemas.xmlsoap.org/soap/http'/>
+  <operation name='downloadPDFRicevuta'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body use='literal'/>
+   </input>
+   <output>
+    <soap:body use='literal'/>
+   </output>
+  </operation>
   <operation name='downloadRicevuta'>
    <soap:operation soapAction=''/>
    <input>
@@ -452,6 +581,27 @@
    <output>
     <soap:body use='literal'/>
    </output>
+  </operation>
+  <operation name='getInfoPagamentoRendicontato'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body use='literal'/>
+   </input>
+   <output>
+    <soap:body use='literal'/>
+   </output>
+  </operation>
+  <operation name='getPagamentiByFlusso'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body use='literal'/>
+   </input>
+   <output>
+    <soap:body use='literal'/>
+   </output>
+   <fault name='ServiziPagamentiException'>
+    <soap:fault name='ServiziPagamentiException' use='literal'/>
+   </fault>
   </operation>
   <operation name='getPagamentiRevocati'>
    <soap:operation soapAction=''/>

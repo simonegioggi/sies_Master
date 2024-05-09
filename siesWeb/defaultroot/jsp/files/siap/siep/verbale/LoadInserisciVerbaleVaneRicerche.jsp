@@ -13,6 +13,7 @@
 
 <jsp:useBean id="tipoAutorita" scope="request" class="java.lang.String"/>
 <jsp:useBean id="FlagOmesse" scope="request" class="java.lang.String"/>
+<jsp:useBean id="idEventoOIPP" scope="request" class="java.lang.String"/>
 
 
 <head>
@@ -75,15 +76,25 @@ function Verifica()
 			%><font class="campo">Inserimento Verbale Vane Ricerche</font>
 
        </td>
+       
+      <% if (idEventoOIPP.length()>0) { %>
+      <td class="LBG">
+        <a href="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActLoadInserisciRinnovoRicercheOIPP&IdEvento=<%=idEventoOIPP%>">
+          <img align="middle" src="/images/arrowleft24.gif" alt="ritorna su" width="24" height="24" border="0"></a>      
+      </td>  
+      <% } %>
+             
       </tr>
    </table>
+   
     <br>
     <jsp:include page="/jsp/files/siap/siep/fascicolo/DettaglioSoggettoSentenza.jsp"/>
     <br>
+    
 		<FORM method="POST" action="<%= IWebConstants.PG_MAIN%>" name="LoadInserisciVerbaleVaneRicerche">
      <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.verbale.action.ActInserisciVerbaleVaneRicerche">
      <input type="HIDDEN" name="FlagOmesse" value="<%=FlagOmesse %>">
-
+     <input type="HIDDEN" name="idEventoOIPP" value="<%=idEventoOIPP %>">
 
 		 <table cellspacing=2 cellpadding=2>
 

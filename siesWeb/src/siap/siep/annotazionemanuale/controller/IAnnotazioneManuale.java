@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.sico.camponota.model.CampoNotaModel;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
@@ -15,23 +17,10 @@ import siap.siep.annotazionemanuale.model.AnnotazioneManualeModel;
 import siap.siep.annotazionemanuale.model.AnnotazioneOrdinanzaModel;
 import siap.siep.annotazionemanuale.model.AnnotazioneOrdinanzaSigeModel;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
 
 /**
- * <p>
- * Title: AnnotazioneManualeController
- * </p>
- * <p>
- * Description: Classe Controller per AnnotazioneManuale
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ * Title: AnnotazioneManualeController Description: Classe Controller per AnnotazioneManuale
+ *
  * @version 1.0
  */
 @SuppressWarnings("rawtypes")
@@ -41,9 +30,7 @@ public interface IAnnotazioneManuale {
 			throws F3BException;
 
 	/**
-	 * <p>
 	 * Inserisce l'evento e l'annotazione manuale agganciandogliela. Invocata nel caso di inserimento:
-	 * </p>
 	 * Richieste e decisioni del GE<br>
 	 * - depenalizazione<br>
 	 * - incostituzionalità<br>
@@ -51,10 +38,8 @@ public interface IAnnotazioneManuale {
 	 * Rideterminazione pena<br>
 	 * - Presofferto e fungibilità<br>
 	 *
-	 * <p>
 	 * !!! Aggancia all'evento anche tutte le annotazioni trovate a sistema per lo stesso fascicolo, non
 	 * ancora validate, e dello stesso tipo di quella che si sta inserendo ma con FLAG_APP_PROVVISORIA='-' (?)
-	 * <p>
 	 *
 	 * @param aAnnotazioneManuale
 	 *            - annotazione
@@ -68,7 +53,7 @@ public interface IAnnotazioneManuale {
 	/**
 	 * Come la funzione precedente, ma oltre a quella effettua la validazione dell'Annotazione Manuale passata
 	 * tramite ID e che rappresenta la decisione del GE:
-	 * 
+	 *
 	 * @param aAnnotazioneManuale
 	 * @param aEvento
 	 * @param aIdAnnotazioneManuale
@@ -83,7 +68,7 @@ public interface IAnnotazioneManuale {
 	/**
 	 * Come la funzione precedente, ma poi lega l'annotazione inserita alla Richieta iniziale tramite ID e che
 	 * rappresenta la decisione del GE:
-	 * 
+	 *
 	 * @param aAnnotazioneManuale
 	 * @param aEvento
 	 * @param aIdAnnotazioneManuale
@@ -115,7 +100,7 @@ public interface IAnnotazioneManuale {
 
 	/**
 	 * Inserisce l'evento e le Annotazioni manuali ad esso associate ed eventualmente il campo nota.
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aListaAnnotazioni
 	 * @param aCampoNote
@@ -168,7 +153,7 @@ public interface IAnnotazioneManuale {
 	/**
 	 * Ricerca le annotazioni manuali per il fascicolo specificato e il tipo. Scarta le richieste al GE (A e
 	 * R) ORDER BY DATA_INSERIMENTO
-	 * 
+	 *
 	 * @param aIdFascicolo
 	 * @param aCodTipoAnnotazione
 	 * @param aFlagValidazione
@@ -181,7 +166,7 @@ public interface IAnnotazioneManuale {
 	/**
 	 * Ricerca le annotazioni di tipo Amnistia o Indulto legate a Richieste ('R') <b>non validate</b> senza
 	 * anticipazione
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
@@ -191,7 +176,7 @@ public interface IAnnotazioneManuale {
 
 	/**
 	 * Recupera tutte le annotazioni manuali legate a Richieste con anticipazione 'A' ma non ancora validate
-	 * 
+	 *
 	 * @param aKey
 	 * @throws DAOException
 	 */
@@ -200,7 +185,7 @@ public interface IAnnotazioneManuale {
 
 	/**
 	 * Ricerca tutte le annotazioni manuali con FLAG_APP_PROVVISORIA<>A e R associate al reato validate o meno
-	 * 
+	 *
 	 * @param aKey
 	 *            id del reato
 	 * @return
@@ -211,7 +196,7 @@ public interface IAnnotazioneManuale {
 	/**
 	 * Recupero una annotazione associata all'evento. n.b. se ne è presente più di una ne viene recuperata una
 	 * a caso
-	 * 
+	 *
 	 * @param aKeyEvento
 	 * @return
 	 * @throws F3BException
@@ -238,7 +223,7 @@ public interface IAnnotazioneManuale {
 	/**
 	 * Ricerca TUTTE le annotazioni manuali legate all'evento indipendentemente dallo stato di validazione e
 	 * dal tipo di annotazione
-	 * 
+	 *
 	 * @param aKey
 	 *            = id dell'evento
 	 * @return vettore di AnnotazioneManualeModel
@@ -263,7 +248,7 @@ public interface IAnnotazioneManuale {
 
 	/**
 	 * Inserisce l'annotazione Manuale, l'Evento e le notifiche
-	 * 
+	 *
 	 * @param AnnotazioneManualeModel
 	 *            model dell'annotazione manuale
 	 * @param EventoNotificaModel
@@ -280,7 +265,7 @@ public interface IAnnotazioneManuale {
 	/**
 	 * Funzione per la validazione diretta del Provvedimento di Rideterminazione Pena - Altro nella nuova
 	 * versione 4.0.
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aFascicolo
 	 * @param aConn
@@ -297,7 +282,7 @@ public interface IAnnotazioneManuale {
 	 * Aggiorna il flagComputabile sull'annotazione
 	 *
 	 * Utilizzata per le decisioni del GE
-	 * 
+	 *
 	 * @param aIdAnnotazione
 	 * @throws F3BException
 	 */
@@ -330,5 +315,18 @@ public interface IAnnotazioneManuale {
 			throws F3BException;
 
 	public void ExAggiornaFlagSelQuantum(String ids, String flag) throws F3BException;
+
+	/**
+	 * Aggiunto metodo di ricerca puntuale
+	 * 
+	 * @author sgioggi
+	 * @since MEV_2023-33
+	 * 
+	 * @param idEvento
+	 * @param idFascicoloSiep
+	 * @return AnnotazioneManualeModel
+	 */
+	public AnnotazioneManualeModel ExRicercaAnnotazioneManualeByIdEventoIdFascicolo(BigDecimal idEvento,
+			BigDecimal idFascicoloSiep) throws F3BException;
 
 }

@@ -44,6 +44,12 @@ public class ServiziConsultazionePagamentiTelematiciProxy implements it.giustizi
     return serviziConsultazionePagamentiTelematici;
   }
   
+  public java.lang.String downloadPDFRicevuta(java.lang.String idPagamento, boolean bollo) throws java.rmi.RemoteException{
+    if (serviziConsultazionePagamentiTelematici == null)
+      _initServiziConsultazionePagamentiTelematiciProxy();
+    return serviziConsultazionePagamentiTelematici.downloadPDFRicevuta(idPagamento, bollo);
+  }
+  
   public byte[] downloadRicevuta(java.lang.String codiceCRS, boolean originale) throws java.rmi.RemoteException{
     if (serviziConsultazionePagamentiTelematici == null)
       _initServiziConsultazionePagamentiTelematiciProxy();
@@ -56,10 +62,10 @@ public class ServiziConsultazionePagamentiTelematiciProxy implements it.giustizi
     return serviziConsultazionePagamentiTelematici.downloadRichiesta(codiceCRS);
   }
   
-  public it.giustizia.www.serviziTelematici.serviziGenerici.RisultatoRicerca elencoPagamenti(java.lang.String codiceCRS, java.lang.String tipologia, java.lang.String codiceFiscale, java.lang.String codiceDistretto, java.lang.String causale, java.lang.String stato, java.util.Calendar dataRichiestaDa, java.util.Calendar dataRichiestaA, int dimensionePagina, int numeroPagina) throws java.rmi.RemoteException{
+  public it.giustizia.www.serviziTelematici.serviziGenerici.RisultatoRicerca elencoPagamenti(java.lang.String codiceCRS, java.lang.String tipologia, java.lang.String codiceFiscale, java.lang.String codiceDistretto, java.lang.String causale, java.lang.String stato, java.util.Calendar dataRichiestaDa, java.util.Calendar dataRichiestaA, int dimensionePagina, int numeroPagina, java.util.Calendar dataRicevutaDa, java.util.Calendar dataRicevutaA) throws java.rmi.RemoteException{
     if (serviziConsultazionePagamentiTelematici == null)
       _initServiziConsultazionePagamentiTelematiciProxy();
-    return serviziConsultazionePagamentiTelematici.elencoPagamenti(codiceCRS, tipologia, codiceFiscale, codiceDistretto, causale, stato, dataRichiestaDa, dataRichiestaA, dimensionePagina, numeroPagina);
+    return serviziConsultazionePagamentiTelematici.elencoPagamenti(codiceCRS, tipologia, codiceFiscale, codiceDistretto, causale, stato, dataRichiestaDa, dataRichiestaA, dimensionePagina, numeroPagina, dataRicevutaDa, dataRicevutaA);
   }
   
   public it.giustizia.www.serviziTelematici.serviziGenerici.RisultatoRicerca elencoPagamentiRevocati(java.util.Calendar dataRicevutaRevocataDa, java.util.Calendar dataRicevutaRevocataA, int dimensionePagina, int numeroPagina) throws java.rmi.RemoteException{
@@ -72,6 +78,18 @@ public class ServiziConsultazionePagamentiTelematiciProxy implements it.giustizi
     if (serviziConsultazionePagamentiTelematici == null)
       _initServiziConsultazionePagamentiTelematiciProxy();
     return serviziConsultazionePagamentiTelematici.getAPAinKO(dataRichiestaDa, dataRichiestaA, codiceDistretto, codiceUfficio, dimensionePagina, numeroPagina);
+  }
+  
+  public it.giustizia.www.serviziTelematici.serviziGenerici.InfoPagamentoRendicontato getInfoPagamentoRendicontato(java.lang.String iuv, java.lang.String codiceUfficio) throws java.rmi.RemoteException{
+    if (serviziConsultazionePagamentiTelematici == null)
+      _initServiziConsultazionePagamentiTelematiciProxy();
+    return serviziConsultazionePagamentiTelematici.getInfoPagamentoRendicontato(iuv, codiceUfficio);
+  }
+  
+  public it.giustizia.www.serviziTelematici.serviziGenerici.RisultatoRicercaRiversamenti getPagamentiByFlusso(java.lang.String codUffNep, java.lang.String idFlusso, java.util.Calendar dataOraFlusso, java.lang.String idPSP) throws java.rmi.RemoteException, it.giustizia.www.serviziTelematici.serviziGenerici.ServiziPagamentiException{
+    if (serviziConsultazionePagamentiTelematici == null)
+      _initServiziConsultazionePagamentiTelematiciProxy();
+    return serviziConsultazionePagamentiTelematici.getPagamentiByFlusso(codUffNep, idFlusso, dataOraFlusso, idPSP);
   }
   
   public it.giustizia.www.serviziTelematici.serviziGenerici.RisultatoRicercaRevocati getPagamentiRevocati(java.util.Calendar dataRicevutaRevocataDa, java.util.Calendar dataRicevutaRevocataA, java.util.Calendar dataRevocataDa, java.util.Calendar dataRevocataA, int dimensionePagina, int numeroPagina) throws java.rmi.RemoteException{
@@ -104,5 +122,11 @@ public class ServiziConsultazionePagamentiTelematiciProxy implements it.giustizi
     return serviziConsultazionePagamentiTelematici.ricercaPagamentiNonVerificati(dataControlloDa, dataControlloA, idFlusso, dataRicevutaDa, dataRicevutaA, dimensionePagina, numeroPagina);
   }
   
-  
+  /**
+   * 2023.03.30 DF Da verificare l'implementazione
+   */
+  public org.apache.axis.client.Call getLastCall() {
+      org.apache.axis.client.Call lastCall = null; //super._getCall();
+      return lastCall;
+  }
 }

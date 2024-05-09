@@ -36,18 +36,20 @@ LuogoDetenzioneModel lLuogoDetenzione = posizioneluogoaltra.getLuogoDetenzione()
 AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
 
 String listaIdNotAvv = "";
-for (int i=0;i<listaNotAvvSiep.size();i++) 
-  listaIdNotAvv+=","+ ((NotificaModel) listaNotAvvSiep.get(i)).getIdNotifica();
-listaIdNotAvv="["+ listaIdNotAvv.substring(1)+"]";
+for (int i = 0; i < listaNotAvvSiep.size(); i++) 
+	listaIdNotAvv += "," + ((NotificaModel) listaNotAvvSiep.get(i)).getIdNotifica();
+if (listaNotAvvSiep.size() > 0)
+	listaIdNotAvv = "[" + listaIdNotAvv.substring(1) + "]";
+else
+	listaIdNotAvv = "[]";
 
 String listaIdNotObbl = "";
-for (int i=0;i<lListaNotObbligati.size();i++) 
-  listaIdNotObbl+=","+((NotificaModel) lListaNotObbligati.get(i)).getIdNotifica();
-
-if (lListaNotObbligati.size()>0)
-    listaIdNotObbl="["+ listaIdNotObbl.substring(1)+"]";
+for (int i = 0; i < lListaNotObbligati.size(); i++) 
+	listaIdNotObbl += "," + ((NotificaModel) lListaNotObbligati.get(i)).getIdNotifica();
+if (lListaNotObbligati.size() > 0)
+    listaIdNotObbl = "[" + listaIdNotObbl.substring(1) + "]";
 else
-    listaIdNotObbl="[]";
+	listaIdNotObbl = "[]";
 %>
 
 <html>
@@ -346,6 +348,14 @@ else
 	} // end obbligati
 }
 %>  
+</table>
+
+<table>
+  <tr>
+    <td class="L">
+      <a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActRichiestaBollettiniPagoPA">Richiesta Generazione Bollettini</a>
+    </td>
+  </tr>
 </table>
 </body>
 </html>

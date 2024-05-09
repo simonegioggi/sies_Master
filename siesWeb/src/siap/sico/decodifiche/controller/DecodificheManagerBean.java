@@ -423,6 +423,8 @@ public class DecodificheManagerBean {
 	
 	// MEV_2023-13
     private Collection mTipoPenaSostitutiva;
+    // MEV_2023-33: aggiunta collezione per le autorita' di polizia (HighValue='AP')
+    private Collection mTipoAutoritaPolizia;
 
 	/**
 	 * Inizializzazione degli attributi del Singleton
@@ -1499,8 +1501,6 @@ public class DecodificheManagerBean {
 			mMotivoProvvedimentoProsecMADetDomTer_TDS_51Bis = lDecodifiche
 					.ExListaMotivoProvvedimentoProsecMA51Bis("DETDOMTERM_TDS");
 
-			// ===========
-
 			mMotivoProvvedimentoEstDefMAffP = lDecodifiche.ExListaMotivoProvvedimentoEstDefMA("AFFIDAMENTO");
 			mMotivoProvvedimentoEstDefMADetDom = lDecodifiche
 					.ExListaMotivoProvvedimentoEstDefMA("DETENZIONE");
@@ -1539,7 +1539,6 @@ public class DecodificheManagerBean {
 					.ExListaMotivoProvvedimentoEspulsione("ACCOGLIE");
 			mMotivoProvvedimentoRigettoOpEspulsione = lDecodifiche
 					.ExListaMotivoProvvedimentoEspulsione("RIFIUTA");
-			// --------------------------------------------------------------------------------------------------
 
 			lModel.setContesto("FLAG_STATO");
 			mFlagStato = lDecodifiche.ExRicercaDecodifiche(lModel);
@@ -1654,9 +1653,7 @@ public class DecodificheManagerBean {
 							"TIPO_UFFICIO_SIUS", "", "", "", "", "", ""));
 
 			// aggiunta collection per Siep dove la descrizione per UDSM e' diversa da quella presente sul DB
-			// e
-			// da Sius
-			// A.S. 18/05/2015 su richiesta di Michele/Nunzia
+			// e da Sius A.S. 18/05/2015 su richiesta di Michele/Nunzia
 			// Per SIEP la descrizione UDSM cambia da
 			// "Ufficio di Sorveglianza presso il Tribunale per minorenni"
 			// in "Magistrato di Sorveglianza per i minorenni"
@@ -1888,6 +1885,15 @@ public class DecodificheManagerBean {
 			DecodificheModel lTipoLPUModel = new DecodificheModel();
 			lTipoLPUModel.setContesto("TIPO_SANZIONE_SOSTITUTIVA_LPU");
 			mTipoSanzioneSostitutivaLpu = lDecodifiche.ExRicercaDecodifiche(lTipoLPUModel);
+
+            // MEV_2023-33 - INIZIO
+            lModel.setContesto("TIPO_AUTORITA");
+            lModel.setCodiceAlt2("AP");
+            mTipoAutoritaPolizia = lDecodifiche.ExRicercaDecodifiche(lModel);
+            mTipoAutoritaPolizia.add(new DecodificheModel("-", "-", "-", "-", "-", "-", "-", "-", "-"));
+            lModel.setContesto("");
+            lModel.setCodiceAlt2("");
+            // MEV_2023-33 - FINE
 		} catch (F3BException ex) {
 			ex.printStackTrace();
 		} catch (Exception ex) {
@@ -3122,5 +3128,10 @@ public class DecodificheManagerBean {
 	public Collection getRagioneSocialeCO() {
 		return mRagioneSocialeCO;
 	}
+
+	// MEV_2023-33
+    public Collection getTipoAutoritaPolizia() {
+        return mTipoAutoritaPolizia;
+    }
 
 }

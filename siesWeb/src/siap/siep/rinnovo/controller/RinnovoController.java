@@ -164,7 +164,7 @@ public class RinnovoController extends SiapController implements IRinnovo {
 
 		} catch (DAOException ex) {
 			rollback(lConn);
-			throw new F3BException("RinnovoController.ExInserisci: Non posso inserire: " + ex);
+			throw new F3BException("RinnovoController.ExInserisciRinnovo: Non posso inserire: " + ex);
 		} finally {
 			cleanup(lRinDao);
 			cleanup(lConn);
@@ -230,6 +230,37 @@ public class RinnovoController extends SiapController implements IRinnovo {
 		return lRinnovi;
 	}
 
+	// MEV_2023-33
+	public Vector ExRicercaRinnovoIdNotificaCodTipoRinnovoStato(BigDecimal aIdNotifica, String[] aTipoRinnovo,
+			String aStato) throws F3BException {
+
+		Connection lConn = null;
+
+		Vector lRinnovi = new Vector();
+		RinnovoSqlDAO lRinDao = null;
+
+		try {
+			lConn = getDBConnection();
+
+			lRinDao = new RinnovoSqlDAO(lConn);
+
+			lRinDao.ricercaRinnovoIdNotificaCodTipoRinnovoStato(aIdNotifica, aTipoRinnovo, aStato);
+
+			lRinnovi = new Vector(lRinDao.getModels());
+		} catch (DAOException daoEx) {
+
+			throw new F3BException(
+					"RinnovoController.ExRicercaRinnovoIdNotificaCodTipoRinnovoStato: Non posso leggere : "
+							+ daoEx);
+		} finally {
+			cleanup(lRinDao);
+
+			cleanup(lConn);
+		}
+
+		return lRinnovi;
+	}
+
 	public RinnovoModel ExRicercaRinnovoByKey(BigDecimal aKey) throws F3BException {
 
 		Connection lConn = null;
@@ -242,7 +273,7 @@ public class RinnovoController extends SiapController implements IRinnovo {
 			lRinDao.ricercaRinnovoByKey(aKey);
 			lRinMod = (RinnovoModel) lRinDao.getModelByKey();
 		} catch (DAOException daoEx) {
-			throw new F3BException("RinnovoController.ExRicercaRinnovo: Non posso leggere : " + daoEx);
+			throw new F3BException("RinnovoController.ExRicercaRinnovoByKey: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lRinDao);
 			cleanup(lConn);
@@ -273,12 +304,11 @@ public class RinnovoController extends SiapController implements IRinnovo {
 		}
 		return lRinMod;
 	}
-	
+
 	/**
-	 * Ticket#202106220110 - per la stampa mi interessa solo un rinnovo validato con
-	 * DATA_RINNOVO valorizzata
-	 * Metodo aggiunto in sostituzione del metodo ExRicercaRinnovoByKeyEvento precedentemente 
-	 * utilizzato.
+	 * Ticket#202106220110 - per la stampa mi interessa solo un rinnovo validato con DATA_RINNOVO valorizzata
+	 * Metodo aggiunto in sostituzione del metodo ExRicercaRinnovoByKeyEvento precedentemente utilizzato.
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
@@ -302,8 +332,7 @@ public class RinnovoController extends SiapController implements IRinnovo {
 			cleanup(lConn);
 		}
 		return lRinMod;
-	}	
-	
+	}
 
 	public RinnovoModel ExModificaRinnovo(RinnovoModel aRinnovo) throws F3BException {
 
@@ -843,10 +872,7 @@ public class RinnovoController extends SiapController implements IRinnovo {
 
 			lRinDao.stop();
 
-			if (lByteArrayOut == null)
-				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Documento Associato");
-
-			if (lByteArrayOut.size() == 0)
+			if ((lByteArrayOut == null) || (lByteArrayOut.size() == 0))
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Documento Associato");
 		} catch (F3BException eF3b) {
 			throw eF3b;
@@ -888,5 +914,326 @@ public class RinnovoController extends SiapController implements IRinnovo {
 			cleanup(lStatoDao);
 		}
 	}
+
+
+	/**
+	 * Funzione di cancellazione dei rinnovi per gli ordini di ingiunzione al pagamento
+	 * 
+	 * @since MEV-2023_33
+	 */
+	public void ExCancellaRinnovoPP(RinnovoModel aRinnovo) throws F3BException {
+
+		Connection lConn = null;
+
+		RinnovoDAO lRinDao = null;
+		RinnovoSqlDAO lRinSqlDao = null;
+		VerbaleDAO lVerbaleDao = null;
+
+		try {
+			lConn = getDBTransaction();
+
+			lRinDao = new RinnovoDAO(lConn);
+			lRinSqlDao = new RinnovoSqlDAO(lConn);
+			lVerbaleDao = new VerbaleDAO(lConn);
+
+			// ricerca rinnovo da cancellare
+			lRinSqlDao.ricercaRinnovoByKey(aRinnovo.getIdRinnovo());
+			RinnovoModel lRinnovoMod = (RinnovoModel) lRinSqlDao.getModelByKey();
+			lRinSqlDao.stop();
+
+			// cancella rinnovo
+			lRinDao.setCondizioneUpdate(lRinnovoMod.getIdRinnovo());
+			lRinDao.delete();
+			lRinDao.stop();
+
+			// ricerca eventuale verbale
+			if ("A".equals(lRinnovoMod.getCodTipoRinnovo()) || "N".equals(lRinnovoMod.getCodTipoRinnovo())) {
+				if (lRinnovoMod.getVerIdVerbale() != null) {
+					lVerbaleDao.setCondizioneUpdate(lRinnovoMod.getVerIdVerbale());
+					lVerbaleDao.delete();
+					lVerbaleDao.stop();
+				}
+			}
+
+			commit(lConn);
+			// } catch (DAOException daoEx) {
+			// rollback (lConn);
+			// throw new F3BException("RinnovoController.ExCancellaRinnovoPP: Non posso leggere : " + daoEx);
+		} catch (Exception ex) {
+			rollback(lConn);
+			throw new F3BException("RinnovoController.ExCancellaRinnovoPP: Non posso leggere : " + ex);
+		} finally {
+			cleanup(lRinDao);
+			cleanup(lRinSqlDao);
+			cleanup(lVerbaleDao);
+
+			cleanup(lConn);
+		}
+	}
+
+	/**
+	 * Funzione di validazione per il rinnovo per omesse notifiche per gli ordini di ingiunzione
+	 *
+	 * @param aFasc
+	 * @param aRinnovo
+	 * @return
+	 * @throws F3BException
+	 * @since MAV_2023-33
+	 */
+	public RinnovoModel ExUpdateValidaRinnovoPP(FascicoloSiepModel aFasc, RinnovoModel aRinnovo)
+			throws F3BException {
+
+		Connection lConn = null;
+
+		RinnovoDAO lRinDaoBlob = null;
+		RinnovoSqlDAO lRinSql = null;
+
+		ScadenzarioSqlDAO lScaSqlDao = null;
+		ScadenzarioDAO lScaDao = null;
+		ParametroSqlDAO lParSqlDao = null;
+
+		try {
+			lConn = getDBTransaction();
+
+			lScaSqlDao = new ScadenzarioSqlDAO(lConn);
+			lScaDao = new ScadenzarioDAO(lConn);
+			lParSqlDao = new ParametroSqlDAO(lConn);
+			lRinSql = new RinnovoSqlDAO(lConn);
+
+			// ricerca rinnovo
+			RinnovoModel lRinMod = new RinnovoModel();
+			lRinSql.ricercaRinnovoByKey(aRinnovo.getIdRinnovo());
+			lRinMod = (RinnovoModel) lRinSql.getModelByKey();
+
+			// info per il log
+			siesLogger.info(lRinMod);
+
+			// Stato procedimento
+			/*
+			 * String lStatoProcMod = null;
+			 *
+			 * if (lRinMod != null && lRinMod.getCodTipoRinnovo() != null &&
+			 * lRinMod.getCodTipoRinnovo().equals("R")) { lStatoProcMod = "0110"; } else if (lRinMod != null
+			 * && lRinMod.getCodTipoRinnovo() != null && lRinMod.getCodTipoRinnovo().equals("N")) {
+			 * lStatoProcMod = "0111"; } else if (lRinMod != null && lRinMod.getCodTipoRinnovo() != null &&
+			 * lRinMod.getCodTipoRinnovo().equals("A")) { lStatoProcMod = "0112"; }
+			 *
+			 * aRinnovo.setDataRinnovo(lRinMod.getDataRinnovo());
+			 * InserimentoCancellazioneStatoProcedimento(lConn, aFasc.getIdFascicoloSiep(), aRinnovo,
+			 * lStatoProcMod);
+			 */
+
+			lRinDaoBlob = new RinnovoDAO(lConn);
+			lRinDaoBlob.setDAOFromModelForUpdateBlob(aRinnovo);
+
+			lRinDaoBlob.setCondizioneUpdate(aRinnovo.getIdRinnovo());
+			lRinDaoBlob.update();
+			lRinDaoBlob.stop();
+
+			// Ricalcola lo stato dello scadenzario Simeone
+			// aggiornaStatoNotificaScadenzarioSimeone(lConn, lScaDao, lRinMod, aFasc.getIdFascicoloSiep());
+
+			commit(lConn);
+		} catch (DAOException daoEx) {
+			rollback(lConn);
+			siesLogger.error("RinnovoController.ExUpdateValidaRinnovoPP", daoEx);
+			throw new F3BException("RinnovoController.ExUpdateValidaRinnovoPP : " + daoEx);
+		} catch (Exception ex) {
+			rollback(lConn);
+			siesLogger.error("RinnovoController.ExUpdateValidaRinnovoPP", ex);
+			throw new F3BException("RinnovoController.ExUpdateValidaRinnovoPP : " + ex);
+		} finally {
+			cleanup(lRinDaoBlob);
+			cleanup(lScaSqlDao);
+			cleanup(lScaDao);
+			cleanup(lParSqlDao);
+			cleanup(lRinSql);
+
+			cleanup(lConn);
+		}
+
+		return aRinnovo;
+	}
+
+	/**
+	 * Funzione di validazione delle richieste comma 5 per gli ordini di ingiunzione al pagamento
+	 *
+	 * @param aFasc
+	 * @param aRinnovo
+	 * @return
+	 * @throws F3BException
+	 * @since MAV_2023-33
+	 */
+	public RinnovoModel ExUpdateValidaRichiestaComma5(FascicoloSiepModel aFasc, RinnovoModel aRinnovo)
+			throws F3BException {
+
+		Connection lConn = null;
+
+		RinnovoSqlDAO lRinSqlDao = null;
+		RinnovoDAO lRinDaoBlob = null;
+		// ScadenzarioDAO lScaDao = null;
+
+		RinnovoModel lRinMod = null;
+
+		try {
+			lConn = getDBTransaction();
+
+			lRinSqlDao = new RinnovoSqlDAO(lConn);
+			lRinDaoBlob = new RinnovoDAO(lConn);
+			// lScaDao = new ScadenzarioDAO(lConn);
+
+			// lRinSqlDao.ricercaRinnovoByKey(aRinnovo.getIdRinnovo());
+			// lRinMod = (RinnovoModel) lRinSqlDao.getModelByKey();
+
+			// Stato procedimento
+			// InserimentoCancellazioneStatoProcedimento(lConn, aFasc.getIdFascicoloSiep(), lRinMod, "0113");
+
+			lRinDaoBlob.setDAOFromModelForUpdateBlob(aRinnovo);
+
+			lRinDaoBlob.setCondizioneUpdate(aRinnovo.getIdRinnovo());
+			lRinDaoBlob.update();
+			lRinDaoBlob.stop();
+
+			// Ricalcola lo stato dello scadenzario Simeone
+			// aggiornaStatoNotificaScadenzarioSimeone(lConn, lScaDao, lRinMod, aFasc.getIdFascicoloSiep());
+
+			commit(lConn);
+		} catch (DAOException daoEx) {
+			rollback(lConn);
+			siesLogger.error("Errore in fase di validazione della Richieste comma 5 OI", daoEx);
+			throw new F3BException("RinnovoController.ExUpdateValidaRichiestaComma5 : " + daoEx);
+		} catch (Exception ex) {
+			rollback(lConn);
+      siesLogger.error("Errore in fase di validazione della Richieste comma 5 OI", ex);
+			throw new F3BException("RinnovoController.ExUpdateValidaRichiestaComma5 : " + ex);
+		} finally {
+			cleanup(lRinSqlDao);
+			cleanup(lRinDaoBlob);
+			// cleanup(lScaDao);
+
+			cleanup(lConn);
+		}
+
+		return lRinMod;
+	}
+
+	/**
+	 * Funzione di validazione delle RInnovazione degli Ordini di ingiunzione al pagamento
+	 *
+	 * n.b. per ora si omettono attività sugli scadenzari e il cambio stato procedimento
+	 *
+	 * @param aFasc
+	 * @param aRinnovo
+	 * @return
+	 * @throws F3BException
+	 * @since MEV_2023-33
+	 */
+	public RinnovoModel ExUpdateValidaRinnovazioneNotifichePP(FascicoloSiepModel aFasc, RinnovoModel aRinnovo)
+			throws F3BException {
+
+		Connection lConn = null;
+
+		RinnovoDAO lRinDaoBlob = null;
+		RinnovoSqlDAO lRinSql = null;
+
+		try {
+			lConn = getDBTransaction();
+
+			lRinSql = new RinnovoSqlDAO(lConn);
+
+			// ricerca rinnovo
+			RinnovoModel lRinMod = new RinnovoModel();
+			lRinSql.ricercaRinnovoByKey(aRinnovo.getIdRinnovo());
+			lRinMod = (RinnovoModel) lRinSql.getModelByKey();
+
+			// Stato procedimento
+			// FIXME da verificare il codice
+			aRinnovo.setDataRinnovo(lRinMod.getDataRinnovo());
+			InserimentoCancellazioneStatoProcedimento(lConn, aFasc.getIdFascicoloSiep(), aRinnovo, "0114");
+
+			lRinDaoBlob = new RinnovoDAO(lConn);
+			lRinDaoBlob.setDAOFromModelForUpdateBlob(aRinnovo);
+
+			lRinDaoBlob.setCondizioneUpdate(aRinnovo.getIdRinnovo());
+			lRinDaoBlob.update();
+			lRinDaoBlob.stop();
+
+			commit(lConn);
+		} catch (DAOException daoEx) {
+			rollback(lConn);
+			siesLogger.error("Errore in fase di validazione della Rinnovazione OI", daoEx);
+			throw new F3BException("RinnovoController.ExUpdateValidaRinnovazioneNotifichePP : " + daoEx);
+		} catch (Exception ex) {
+			rollback(lConn);
+			siesLogger.error("Errore in fase di validazione della Rinnovazione OI", ex);
+			throw new F3BException("RinnovoController.ExUpdateValidaRinnovazioneNotifichePP : " + ex);
+		} finally {
+			cleanup(lRinDaoBlob);
+			cleanup(lRinSql);
+
+			cleanup(lConn);
+		}
+
+		return aRinnovo;
+	}
+	
+	/**
+   * Funzione di validazione dei SOlleciti degli Ordini di ingiunzione al pagamento
+   *
+   * n.b. per ora si omettono attività sugli scadenzari e il cambio stato procedimento
+   * 
+	 * @since MEV-2023_33
+	 */
+	 public RinnovoModel ExUpdateValidaSollecitiPP (FascicoloSiepModel aFasc, RinnovoModel aRinnovo)
+	      throws F3BException {
+
+	    Connection lConn = null;
+
+	    RinnovoDAO lRinDaoBlob = null;
+	    RinnovoSqlDAO lRinSql = null;
+
+	    try {
+	      lConn = getDBTransaction();
+
+	      lRinSql = new RinnovoSqlDAO(lConn);
+
+	      // ricerca rinnovo
+	      RinnovoModel lRinMod = new RinnovoModel();
+	      lRinSql.ricercaRinnovoByKey(aRinnovo.getIdRinnovo());
+	      lRinMod = (RinnovoModel) lRinSql.getModelByKey();
+
+	      // Stato procedimento
+	      aRinnovo.setDataRinnovo(lRinMod.getDataRinnovo());
+	      //FIXME - Verificare lo stato precedimento
+	      InserimentoCancellazioneStatoProcedimento(lConn, aFasc.getIdFascicoloSiep(), aRinnovo, "0116");
+
+	      lRinDaoBlob = new RinnovoDAO(lConn);
+	      lRinDaoBlob.setDAOFromModelForUpdateBlob(aRinnovo);
+
+	      lRinDaoBlob.setCondizioneUpdate(aRinnovo.getIdRinnovo());
+	      lRinDaoBlob.update();
+	      lRinDaoBlob.stop();
+
+	      // Ricalcola lo stato dello scadenzario Simeone
+	      //aggiornaStatoNotificaScadenzarioSimeone(lConn, lScaDao, lRinMod, aFasc.getIdFascicoloSiep());
+
+	      commit(lConn);
+	    } catch (DAOException daoEx) {
+	      siesLogger.error("Errore in fase di validazione dei Solleciti OIPP", daoEx);
+	      rollback(lConn);
+	      throw new F3BException("RinnovoController.ExUpdateValidaSollecitiPP : " + daoEx);
+	    } catch (Exception ex) {
+	      siesLogger.error("Errore in fase di validazione dei Solleciti OIPP", ex);
+	      rollback(lConn);
+	      throw new F3BException("RinnovoController.ExUpdateValidaSolleciti : " + ex);
+	    } finally {
+	      cleanup(lRinDaoBlob);
+	      cleanup(lRinSql);
+
+	      cleanup(lConn);
+	    }
+
+	    return aRinnovo;
+	  }
 
 }

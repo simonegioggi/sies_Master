@@ -1,18 +1,16 @@
-/**
- * 
- */
 package siap.siep.statoesecuzione.controller;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.util.DecodificheUtils;
 import siap.sico.evento.model.EventoModel;
-import f3b.log.LogF3B;
 
 /**
- * @author Giselda De Vita CreatorStatoEsecuzione - Creator dello Stato Esecuzione, Capisce il tipo di
- *         provvedimento e lo istanzia.
+ * CreatorStatoEsecuzione - Creator dello Stato Esecuzione, Capisce il tipo di provvedimento e lo istanzia
+ * 
+ * @author Giselda De Vita 
  */
 public class CreatorStatoEsecuzione {
 
@@ -20,6 +18,7 @@ public class CreatorStatoEsecuzione {
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	public StatoEsecuzioneElement create(String aTipoEvento, StatoEsecuzioneElement lStatElement) {
+
 		StatoEsecuzioneElement lStatoEsec = null;
 
 		if (aTipoEvento.equals("MAC"))
@@ -52,6 +51,9 @@ public class CreatorStatoEsecuzione {
 			lStatoEsec = new StatoEsecuzioneIndulto(lStatElement);
 		if (aTipoEvento.equals("RIDETERM"))
 			lStatoEsec = new StatoEsecuzioneRideterminazione(lStatElement);
+		// MEV_2023-33
+		if (aTipoEvento.equals("PENEPECUNIARIE"))
+			lStatoEsec = new StatoEsecuzionePP(lStatElement);
 
 		return lStatoEsec;
 	}
@@ -59,20 +61,17 @@ public class CreatorStatoEsecuzione {
 	/**
 	 * Metodo per la decisione di quale evento fare il Dispatch. Dal codice del provvedimento e dal codice
 	 * motivo viene deciso a quale tipo di famiglia appartiene il Provvedimento in questione.
-	 * 
+	 *
 	 * @param aEvento
 	 * @return Tipo Evento
 	 */
 	public String getTipoStatoEsecuzioneDaCreare(EventoModel aEvento) {
+
 		String lFamigliaEvento = "PROVV";
 
 		try {
-			if (aEvento.getCodMotivo().startsWith("C") || aEvento.getCodMotivo().equals("0993")) // aggiunta
-																									// nuova
-																									// istanza
-																									// Paolo
-																									// c.
-																									// 17/09/2010
+			// aggiunta nuova istanza Paolo c. 17/09/2010
+			if (aEvento.getCodMotivo().startsWith("C") || aEvento.getCodMotivo().equals("0993")) 
 				return "IST";
 
 			if (aEvento.getCodTipoProvvedimento().equals("02")
@@ -86,6 +85,10 @@ public class CreatorStatoEsecuzione {
 
 			if (lIntMotivo == 61 || lIntMotivo == 63 || lIntMotivo == 117 || lIntMotivo == 104)
 				return "SIMEONE";
+
+			// MEV_2023-33
+			if (lIntMotivo == 622 || lIntMotivo == 1307 || lIntMotivo == 1308 || lIntMotivo == 1309)
+				return "PENEPECUNIARIE";
 
 			if (isIndulto(lIntMotivo))
 				return "INDULTO";
@@ -145,36 +148,32 @@ public class CreatorStatoEsecuzione {
 
 	/**
 	 * Metodo che verifica se il tipo di provvedimento è di tipo MA Concessione
-	 * 
+	 *
 	 * @param aTipoProvv
 	 * @param aCodMotivo
 	 * @return
 	 */
 	private boolean isMAC(int aTipoProvv, int aCodMotivo) {
+
 		boolean lReturn = false;
 
-		if (aTipoProvv == 6
-				&& (aCodMotivo == 228 || aCodMotivo == 229 || aCodMotivo == 372 || aCodMotivo == 373
-						|| (aCodMotivo >= 2145 && aCodMotivo <= 2151) || aCodMotivo == 2245
-						|| aCodMotivo == 373 || aCodMotivo == 372 || aCodMotivo == 2293 || aCodMotivo == 11))
+		if (aTipoProvv == 6 && (aCodMotivo == 228 || aCodMotivo == 229 || aCodMotivo == 372
+				|| aCodMotivo == 373 || (aCodMotivo >= 2145 && aCodMotivo <= 2151) || aCodMotivo == 2245
+				|| aCodMotivo == 373 || aCodMotivo == 372 || aCodMotivo == 2293 || aCodMotivo == 11))
 			lReturn = true;
 
-		if (aTipoProvv == 9
-				&& ((aCodMotivo >= 226 && aCodMotivo <= 229) || (aCodMotivo >= 371 && aCodMotivo <= 373)
-						|| (aCodMotivo >= 2145 && aCodMotivo <= 2151) || aCodMotivo == 2005
-						|| aCodMotivo == 2006 || aCodMotivo == 2245 || aCodMotivo == 11))
+		if (aTipoProvv == 9 && ((aCodMotivo >= 226 && aCodMotivo <= 229)
+				|| (aCodMotivo >= 371 && aCodMotivo <= 373) || (aCodMotivo >= 2145 && aCodMotivo <= 2151)
+				|| aCodMotivo == 2005 || aCodMotivo == 2006 || aCodMotivo == 2245 || aCodMotivo == 11))
 			lReturn = true;
 
-		if (aTipoProvv == 12
-				&& ((aCodMotivo >= 226 && aCodMotivo <= 229) || (aCodMotivo >= 235 && aCodMotivo <= 243)
-						|| (aCodMotivo >= 304 && aCodMotivo <= 311)
-						|| (aCodMotivo >= 371 && aCodMotivo <= 393)
-						|| (aCodMotivo >= 450 && aCodMotivo <= 459)
-						|| (aCodMotivo >= 450 && aCodMotivo <= 459)
-						|| (aCodMotivo >= 2145 && aCodMotivo <= 2151)
-						|| (aCodMotivo >= 2160 && aCodMotivo <= 2167) || aCodMotivo == 197
-						|| aCodMotivo == 11 || aCodMotivo == 2005 || aCodMotivo == 2006 || aCodMotivo == 2289
-						|| aCodMotivo == 2293 || aCodMotivo == 410 || aCodMotivo == 11))
+		if (aTipoProvv == 12 && ((aCodMotivo >= 226 && aCodMotivo <= 229)
+				|| (aCodMotivo >= 235 && aCodMotivo <= 243) || (aCodMotivo >= 304 && aCodMotivo <= 311)
+				|| (aCodMotivo >= 371 && aCodMotivo <= 393) || (aCodMotivo >= 450 && aCodMotivo <= 459)
+				|| (aCodMotivo >= 450 && aCodMotivo <= 459) || (aCodMotivo >= 2145 && aCodMotivo <= 2151)
+				|| (aCodMotivo >= 2160 && aCodMotivo <= 2167) || aCodMotivo == 197 || aCodMotivo == 11
+				|| aCodMotivo == 2005 || aCodMotivo == 2006 || aCodMotivo == 2289 || aCodMotivo == 2293
+				|| aCodMotivo == 410 || aCodMotivo == 11))
 			lReturn = true;
 
 		/*
@@ -190,17 +189,18 @@ public class CreatorStatoEsecuzione {
 
 	/**
 	 * Metodo che verifica se il tipo di provvedimento è di tipo MA Revoca
-	 * 
+	 *
 	 * @param aTipoProvv
 	 * @param aCodMotivo
 	 * @return
 	 */
 	private boolean isMAR(int aTipoProvv, int aCodMotivo) {
+
 		boolean lReturn = false;
 
-		if (aTipoProvv == 6
-				&& (aCodMotivo == 16 || aCodMotivo == 87 || aCodMotivo == 88 || aCodMotivo == 89
-						|| aCodMotivo == 91 || aCodMotivo == 15 || aCodMotivo == 86 || aCodMotivo == 196 || aCodMotivo == 14))
+		if (aTipoProvv == 6 && (aCodMotivo == 16 || aCodMotivo == 87 || aCodMotivo == 88 || aCodMotivo == 89
+				|| aCodMotivo == 91 || aCodMotivo == 15 || aCodMotivo == 86 || aCodMotivo == 196
+				|| aCodMotivo == 14))
 			lReturn = true;
 
 		return lReturn;
@@ -208,11 +208,12 @@ public class CreatorStatoEsecuzione {
 
 	/**
 	 * Questo metodo controlla se è l'evento corrente puo' avere la Liberazione Anticipata
-	 * 
+	 *
 	 * @param lEve
 	 * @return
 	 */
 	private boolean isEventoConLiberazioneAnticipata(EventoModel lEve) {
+
 		if (lEve != null && lEve.getCodTipoEvento() != null && lEve.getCodTipoProvvedimento() != null
 				&& lEve.getCodMotivo() != null) {
 			boolean aRet1 = lEve.getCodTipoEvento().equals("01")
@@ -231,9 +232,9 @@ public class CreatorStatoEsecuzione {
 			boolean aRet5 = lEve.getCodTipoEvento().equals("01")
 					&& lEve.getCodTipoProvvedimento().equals("09")
 					&& (lEve.getCodMotivo().equals("5491") || lEve.getCodMotivo().equals("5492")
-							// inizio ticket 20190805017 - Mancata attribuzione dei giorni di detrazione rimedi risarcitori 
-							|| lEve.getCodMotivo().equals("9254") || lEve.getCodMotivo().equals("9154")
-							);
+					// inizio ticket 20190805017 - Mancata attribuzione dei giorni di detrazione rimedi
+					// risarcitori
+							|| lEve.getCodMotivo().equals("9254") || lEve.getCodMotivo().equals("9154"));
 
 			// DL92 - Comunicazioni
 			boolean aRet6 = lEve.getCodTipoEvento().equals("01")
@@ -242,17 +243,17 @@ public class CreatorStatoEsecuzione {
 																											// Condannato
 																											// Libero
 							|| lEve.getCodMotivo().equals("5494") // DL92 - Condannato in Ergastolo
-					|| lEve.getCodMotivo().equals("5495") // DL92 - Condannato già Scarcerato
-					//  ticket 20190805017 - Mancata attribuzione dei giorni di detrazione rimedi risarcitori 
-					|| lEve.getCodMotivo().equals("9032")
-					|| lEve.getCodMotivo().equals("9033")
-					|| lEve.getCodMotivo().equals("9034"));
+							|| lEve.getCodMotivo().equals("5495") // DL92 - Condannato già Scarcerato
+							// ticket 20190805017 - Mancata attribuzione dei giorni di detrazione rimedi
+							// risarcitori
+							|| lEve.getCodMotivo().equals("9032") || lEve.getCodMotivo().equals("9033")
+							|| lEve.getCodMotivo().equals("9034"));
 
 			// MOD MEV29 per visualizzare i periodi anche per le comunicazioni LA
 			boolean aRet7 = lEve.getCodTipoEvento().equals("01")
 					&& lEve.getCodTipoProvvedimento().equals("12") && (lEve.getCodMotivo().equals("0922") // Condannato
 																											// Libero
-					|| lEve.getCodMotivo().equals("0923")); // Condannato in Ergastolo
+							|| lEve.getCodMotivo().equals("0923")); // Condannato in Ergastolo
 
 			// 0998 ridimensionamento + Revoca
 
@@ -263,11 +264,12 @@ public class CreatorStatoEsecuzione {
 
 	/**
 	 * Verifico se il motivo passato è un'archiviazione
-	 * 
+	 *
 	 * @param aMotivo
 	 * @return true se il motivo è un'archiviazione
 	 */
 	private boolean isArchiviazione(int aIntMotivo) {
+
 		/*
 		 * Archiviazione RES da 400 a 409
 		 */
@@ -296,8 +298,8 @@ public class CreatorStatoEsecuzione {
 		if (aIntMotivo > 399 && aIntMotivo < 410)
 			return true;
 
-		if ((aIntMotivo > 5 && aIntMotivo < 10) || (aIntMotivo > 96 && aIntMotivo < 100)
-				|| (aIntMotivo == 19) || (aIntMotivo == 22) || (aIntMotivo == 120) || (aIntMotivo == 353)
+		if ((aIntMotivo > 5 && aIntMotivo < 10) || (aIntMotivo > 96 && aIntMotivo < 100) || (aIntMotivo == 19)
+				|| (aIntMotivo == 22) || (aIntMotivo == 120) || (aIntMotivo == 353)
 				|| (aIntMotivo > 410 && aIntMotivo < 423) || (aIntMotivo > 423 && aIntMotivo < 427)
 				|| (aIntMotivo == 473) || (aIntMotivo > 475 && aIntMotivo < 489) || (aIntMotivo == 356)
 				|| (aIntMotivo == 357))
@@ -309,37 +311,38 @@ public class CreatorStatoEsecuzione {
 
 	/**
 	 * Verifico se il motivo passato è un'archiviazione
-	 * 
+	 *
 	 * @param aMotivo
 	 * @return true se il motivo è un'archiviazione
 	 */
-//	private boolean isDifferimento(int aIntMotivo) {
-//		/*
-//		 * Differimento da 0428 a 0435 da 0030 a 0033 da 2010 2011 da 410
-//		 */
-//
-//		if ((aIntMotivo > 427 && aIntMotivo < 436) || (aIntMotivo > 29 && aIntMotivo < 34)
-//				|| (aIntMotivo == 2010 || aIntMotivo == 2011))
-//			return true;
-//
-//		/*
-//		 * if( (aIntMotivo > 5 && aIntMotivo < 10) || (aIntMotivo > 96 && aIntMotivo < 100) ||
-//		 * (aIntMotivo==19) || (aIntMotivo==22) || (aIntMotivo==120) || (aIntMotivo==353) || (aIntMotivo > 410
-//		 * && aIntMotivo < 423) || (aIntMotivo > 423 && aIntMotivo < 427) || (aIntMotivo==473) || (aIntMotivo
-//		 * > 475 && aIntMotivo < 489) || (aIntMotivo == 356) || (aIntMotivo == 357))
-//		 */
-//
-//		return false;
-//
-//	}
+	// private boolean isDifferimento(int aIntMotivo) {
+	// /*
+	// * Differimento da 0428 a 0435 da 0030 a 0033 da 2010 2011 da 410
+	// */
+	//
+	// if ((aIntMotivo > 427 && aIntMotivo < 436) || (aIntMotivo > 29 && aIntMotivo < 34)
+	// || (aIntMotivo == 2010 || aIntMotivo == 2011))
+	// return true;
+	//
+	// /*
+	// * if( (aIntMotivo > 5 && aIntMotivo < 10) || (aIntMotivo > 96 && aIntMotivo < 100) ||
+	// * (aIntMotivo==19) || (aIntMotivo==22) || (aIntMotivo==120) || (aIntMotivo==353) || (aIntMotivo > 410
+	// * && aIntMotivo < 423) || (aIntMotivo > 423 && aIntMotivo < 427) || (aIntMotivo==473) || (aIntMotivo
+	// * > 475 && aIntMotivo < 489) || (aIntMotivo == 356) || (aIntMotivo == 357))
+	// */
+	//
+	// return false;
+	//
+	// }
 
 	/**
 	 * Verifico se il motivo passato è un'archiviazione
-	 * 
+	 *
 	 * @param aMotivo
 	 * @return true se il motivo è un'archiviazione
 	 */
 	private boolean isIndulto(int aIntMotivo) {
+
 		/*
 		 * Decisioni del GE Aministia/Indulto - Incostituzionalità - Depenalizzazione da 0285 a 0286 da 0284
 		 */
@@ -358,11 +361,12 @@ public class CreatorStatoEsecuzione {
 
 	/**
 	 * Verifico se il motivo passato è Rideterminazione Pena
-	 * 
+	 *
 	 * @param aMotivo
 	 * @return true se il motivo è Rideterminazione Pena
 	 */
 	private boolean isRideterminazione(String aCodMotivo) {
+
 		/*
 		 * Rideterminazione Pena da 0212 0213 0121 Provvedimento di computo da 0913 a 0919 rideterminazione
 		 * pena altro vecchi codici
@@ -379,17 +383,14 @@ public class CreatorStatoEsecuzione {
 		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		// siesLogger.debug("Controllo aCodMotivo = "+aCodMotivo);
-		if (DecodificheUtils.containsCode(DecodificheManager.getInstance()
-				.getRideterminazionePenaAltroDufficio(), aCodMotivo))
-			return true; // D'ufficio
-		if (DecodificheUtils.containsCode(DecodificheManager.getInstance()
-				.getRideterminazionePenaAltroAUfficio(), aCodMotivo))
-			return true; // Altro Ufficio - Altra Autorita
-		if (DecodificheUtils.containsCode(DecodificheManager.getInstance().getRideterminazionePenaAltroGE(),
-				aCodMotivo))
-			return true; // Altro Ufficio - Giudice esecuzione
+		 // D'ufficio
+		 // Altro Ufficio - Altra Autorita
+		 // Altro Ufficio - Giudice esecuzione
 		if (DecodificheUtils.containsCode(
-				DecodificheManager.getInstance().getRideterminazionePenaAltroSORV(), aCodMotivo))
+				DecodificheManager.getInstance().getRideterminazionePenaAltroDufficio(), aCodMotivo) || DecodificheUtils.containsCode(
+				DecodificheManager.getInstance().getRideterminazionePenaAltroAUfficio(), aCodMotivo) || DecodificheUtils.containsCode(DecodificheManager.getInstance().getRideterminazionePenaAltroGE(),
+				aCodMotivo) || DecodificheUtils.containsCode(DecodificheManager.getInstance().getRideterminazionePenaAltroSORV(),
+				aCodMotivo))
 			return true; // Altro Ufficio - Sorveglianza
 
 		// OE di rideterminazione! Per rideterminazione pena Computi.

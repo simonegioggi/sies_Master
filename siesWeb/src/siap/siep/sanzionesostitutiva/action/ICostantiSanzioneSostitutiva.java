@@ -82,7 +82,7 @@ public interface ICostantiSanzioneSostitutiva {
 	public static final String PG_LOAD_INSERIMENTO_NOTIFICHE_OI = IWebConstants.ROOT_DIR
 			+ "/files/siap/siep/sanzionesostitutiva/LoadInserimentoNotificheOrdineIngiunzione.jsp";
 	public static final String PG_LOAD_DETTAGLIO_NOTIFICHE_OI = IWebConstants.ROOT_DIR
-	            + "/files/siap/siep/sanzionesostitutiva/LoadDettaglioNotificheOrdineIngiunzione.jsp";
+			+ "/files/siap/siep/sanzionesostitutiva/LoadDettaglioNotificheOrdineIngiunzione.jsp";
 	public static final String PG_VERIFICA_STATO_PAGAMENTI = IWebConstants.ROOT_DIR
 			+ "/files/siap/siep/sanzionesostitutiva/VerificaStatoPagamenti.jsp";
 	public static final String PG_ELENCO_STATO_PAGAMENTI = IWebConstants.ROOT_DIR
@@ -92,6 +92,62 @@ public interface ICostantiSanzioneSostitutiva {
 	public static final String PG_VERIFICA_ELENCO_STATO_BOLLETTINI = IWebConstants.ROOT_DIR
 			+ "/files/siap/siep/sanzionesostitutiva/VerificaElencoStatoBollettini.jsp";
 	// MEV_2023-13 - FINE
+
+	// MEV_2023-33
+	public static final String PG_LOAD_INSERISCI_RINNOVO_RICERCHE = IWebConstants.ROOT_DIR
+			+ "/files/siap/siep/sanzionesostitutiva/LoadInserisciRinnovoRicercheOIPP.jsp";
+	public static final String PG_LOAD_SELEZIONA_ORDINE_INGIUNZIONE = IWebConstants.ROOT_DIR
+			+ "/files/siap/siep/sanzionesostitutiva/LoadSelezionaOrdineIngiunzione.jsp";
+	public static final String PG_DETTAGLIO_OMESSA_NOTIFICA_OIPP = IWebConstants.ROOT_DIR
+			+ "/files/siap/siep/sanzionesostitutiva/LoadDettaglioRinnovoRicercheOIPP.jsp";
+
+	public static final String PG_LOAD_GRIGLIA_SCADENZARI = IWebConstants.ROOT_DIR
+			+ "/files/siap/siep/sanzionesostitutiva/GrigliaScadenzariPP.jsp";
+	public static final String PG_LOAD_RICERCA_STATO_PAGAMENTI = IWebConstants.ROOT_DIR
+			+ "/files/siap/siep/sanzionesostitutiva/LoadRicercaStatoPagamenti.jsp";
+	public static final String PG_ESITO_RICERCA_STATO_PAGAMENTI = IWebConstants.ROOT_DIR
+			+ "/files/siap/siep/sanzionesostitutiva/EsitoRicercaStatoPagamenti.jsp";
+
+	public static final String CAMPO_TIPO_RICERCA_STATO_PAGAMENTO = "TipoRicercaStatoPagamento";
+	public static final String CAMPO_TIPO_RICERCA_INTERAMENTE_PAGATO = "InteramentePagato";
+	public static final String CAMPO_TIPO_RICERCA_RETEIZZATO_NON_PAGATO = "RateizzatoNonPagato";
+	public static final String CAMPO_TIPO_RICERCA_UNICA_RATA_NON_PAGATO = "UnicaRataNonPagato";
+	public static final String PG_GRIGLIA_ORDINE_INGIUNZIONE_ALTRI_PAGAMENTI = IWebConstants.ROOT_DIR
+			+ "/files/siap/siep/sanzionesostitutiva/GrigliaOrdineIngiunzioneAltriProvvedimenti.jsp";
+	public static final String PG_LOAD_INSERISCI_RICH_COMMA5 = IWebConstants.ROOT_DIR
+			+ "/files/siap/siep/sanzionesostitutiva/LoadInserisciRichComma5.jsp";
+	public static final String PG_DETTAGLIO_RICH_COMMA5 = IWebConstants.ROOT_DIR
+			+ "/files/siap/siep/sanzionesostitutiva/LoadDettaglioRichComma5.jsp";
+	// Rinnovazione
+	public static final String PG_LOAD_INSERISCI_RINNOVAZIONE_RICERCHE = IWebConstants.ROOT_DIR
+			+ "/files/siap/siep/sanzionesostitutiva/LoadInserisciRinnovazioneOIPP.jsp";
+	public static final String PG_DETTAGLIO_RINNOVAZIONE_NOTIFICA = IWebConstants.ROOT_DIR
+			+ "/files/siap/siep/sanzionesostitutiva/LoadDettaglioRinnovazioneOIPP.jsp";
+	// Solleciti
+	public static final String PG_LOAD_INSERISCI_SOLLECITI_OIPP = IWebConstants.ROOT_DIR
+			+ "/files/siap/siep/sanzionesostitutiva/LoadInserisciSollecitiOIPP.jsp";
+	public static final String PG_DETTAGLIO_SOLLECITI_OIPP = IWebConstants.ROOT_DIR
+			+ "/files/siap/siep/sanzionesostitutiva/LoadDettaglioSollecitiOIPP.jsp";
+	// Nota trasmissione
+	public static final String PG_LOAD_INSERISCI_NOTA_TRASNISSIONE = IWebConstants.ROOT_DIR
+			+ "/files/siap/siep/sanzionesostitutiva/LoadInserisciNotaTrasmissione.jsp";
+	public static final String PG_DETTAGLIO_NOTA_TRASNISSIONE = IWebConstants.ROOT_DIR
+			+ "/files/siap/siep/sanzionesostitutiva/LoadDettaglioNotaTrasmissione.jsp";
+	// Esecuzione Pene Sostitutive Brevi
+	public static final String PG_GRIGLIA_ESECUZIONE_PENE_SOSTITUTIVE_BREVI = IWebConstants.ROOT_DIR
+			+ "/files/siap/siep/sanzionesostitutiva/GrigliaEsecuzionePeneSostitutiveBrevi.jsp";
+	public static final String PG_GRIGLIA_SEMILIBERTA_DETENZIONE_DOMICILIARE = IWebConstants.ROOT_DIR
+			+ "/files/siap/siep/sanzionesostitutiva/GrigliaSemilibertaDetenzioneDomiciliare.jsp";
+	public static final String PG_LOAD_TRASMISSIONE_ATTI_ESECUZIONE = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/sanzionesostitutiva/LoadTrasmissioneAttiEsecuzione.jsp";
+	public static final String PG_LOAD_DETTAGLIO_TRASMISSIONE_ATTI_ESECUZIONE = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/sanzionesostitutiva/LoadDettaglioTrasmissioneAttiEsecuzione.jsp";
+	public static final String CAMPO_COD_DESTINATARIO = "CodDestinatario";
+	public static final String PG_LOAD_RICERCA_TRASMISSIONE_ATTI_ESECUZIONE_PS = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/sanzionesostitutiva/LoadRicercaTrasmissioneAttiEsecuzionePS.jsp";
+	public static final String PG_RICERCA_TRASMISSIONE_ATTI_ESECUZIONE_PS = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/sanzionesostitutiva/RicercaTrasmissioneAttiEsecuzionePS.jsp";
+	// MEV_2023-33 - FINE
 
 	public static final String PG_LOAD_RICERCASANZIONESOSTITUTIVA = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/sanzionesostitutiva/LoadRicercaSanzioneSostitutiva.jsp";

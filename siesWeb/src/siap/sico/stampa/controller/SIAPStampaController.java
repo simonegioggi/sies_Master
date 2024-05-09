@@ -78,6 +78,11 @@ import siap.siep.misurasicurezza.model.FascMsToFascSiepModel;
 import siap.siep.misurasicurezza.model.MisuraSicurezzaModel;
 import siap.siep.modulocumulo.dao.PenaRideterminataCumuloSqlDAO;
 import siap.siep.modulocumulo.model.PenaRideterminataCumuloModel;
+import siap.siep.notifica.model.NotificaModel;
+import siap.siep.pagoPA.dao.BollettinoPagopaSqlDAO;
+import siap.siep.pagoPA.dao.CivilmenteObbligatoSqlDAO;
+import siap.siep.pagoPA.model.BollettinoPagopaModel;
+import siap.siep.pagoPA.model.CivilmenteObbligatoModel;
 import siap.siep.penaaccessoria.dao.PenaAccessoriaSqlDAO;
 import siap.siep.penaaccessoria.model.PenaAccessoriaModel;
 import siap.siep.penacomplessiva.dao.PenaComplessivaSqlDAO;
@@ -91,6 +96,9 @@ import siap.siep.posizione.controller.IPosizioneGiuridica;
 import siap.siep.posizione.dao.PosizioneGiuridicaSqlDAO;
 import siap.siep.posizione.model.PosizioneGiuridicaLuogoDetenzioneAltraCausaModel;
 import siap.siep.posizione.model.PosizioneGiuridicaModel;
+import siap.siep.rateizzazionepp.dao.RateizzazionePPSqlDAO;
+import siap.siep.rateizzazionepp.model.EventoRateizzazionePPModel;
+import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 import siap.siep.reato.controller.IReato;
 import siap.siep.reato.controller.ReatoContinuazioneController;
 import siap.siep.reato.dao.ReatoSqlDAO;
@@ -110,8 +118,9 @@ import siap.sius.rifasiep.model.RiferimentoFascicoloSiepModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * Title:SIAPStampaController Description: Classe padre della stampa. Riunisce tutti i metodi comuni alle
- * varie classi specializzate di stampa Copyright: Copyright (c) 2004 Company: Bull Italia S.p.A.
+ * Classe padre della stampa: riunisce tutti i metodi comuni alle varie classi specializzate di stampa
+ *
+ * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class SIAPStampaController extends SiapController {
@@ -122,6 +131,7 @@ public class SIAPStampaController extends SiapController {
 	protected StampaEventoUtils mEventoUtils = new StampaEventoUtils();
 
 	protected XModel createRoot(EventoNotificaModel aEveModel) throws F3BException {
+
 		return createRoot(aEveModel, null);
 	}
 
@@ -198,6 +208,11 @@ public class SIAPStampaController extends SiapController {
 		ContinuazioneSqlDAO lContSqlDAO = null;
 		EventoSqlDAO lEveSqlDAO = null;
 
+		// MEV_2023-33
+		RateizzazionePPSqlDAO lRateSqlDAO = null;
+		CivilmenteObbligatoSqlDAO lCivilObbligatoSqlDao = null;
+		ResidenzaSqlDAO lResidenzaSqlDao = null;
+
 		PenaComplessivaSanzioneSostitutivaModel lPenSanMod = null;
 		Vector lContinuazioni = null;
 
@@ -209,6 +224,12 @@ public class SIAPStampaController extends SiapController {
 			PenaComplessivaModel lPenMod = (PenaComplessivaModel) lPenDao.getModelByKey();
 
 			if (lPenMod != null) {
+				// MEV_2023-33
+				BigDecimal lImportoTotale = new BigDecimal(0);
+				lImportoTotale = lImportoTotale.add(lPenMod.getImportoMulta());
+				lImportoTotale = lImportoTotale.add(lPenMod.getImportoAmmenda());
+				// MEV_2023-33 - FINE
+
 				lSanDao = new SanzioneSostitutivaSqlDAO(lConn);
 				lSanDao.ricercaSanzioneSostitutivaByIdPenaComplessiva(lPenMod.getIdPenaComplessiva());
 				SanzioneSostitutivaModel lSanMod = (SanzioneSostitutivaModel) lSanDao.getModelByKey();
@@ -216,7 +237,13 @@ public class SIAPStampaController extends SiapController {
 				if (lSanMod != null) {
 					lSanMod.calcolaStringaSanzione();
 					lSanMod.calcolaPeriodoSanzione();
+
+					// MEV_2023-33
+					if (!Utils.isNullObj(lSanMod.getSanzionePecuniariaMulta()))
+						lImportoTotale = lImportoTotale.add(lSanMod.getSanzionePecuniariaMulta());
 				}
+				// MEV_2023-33
+				lPenMod.setImportoTotale(lImportoTotale);
 
 				lPenSanMod = new PenaComplessivaSanzioneSostitutivaModel(lPenMod, lSanMod);
 
@@ -232,6 +259,43 @@ public class SIAPStampaController extends SiapController {
 				lContSqlDAO.ricercaContinuazioneByIdPenaComplessiva(lPenMod.getIdPenaComplessiva());
 				lContinuazioni = new Vector(lContSqlDAO.getModels());
 			}
+
+			// ==============================================================================================
+			// MEV_2023-33 - Aggiungo al nodo del Fascicolo anche le rateizzazioni e i civilmente obbligati
+			// Quelle legate all'ultimo evento validato o quelle legata al fascicolo
+			//
+			lRateSqlDAO = new RateizzazionePPSqlDAO(lConn);
+			lRateSqlDAO.ricercaRateizzazionePPUltimoEventoValidatoByIdFasc(lKeyFascicolo);
+			Vector<RateizzazionePPModel> lListaRate = new Vector(lRateSqlDAO.getModels());
+			if (lListaRate.size() == 0) {
+				// Cerco quelle 'libere' sul fascicolo
+				lRateSqlDAO.ricercaRateizzazionePPByIdFasSIEPLibero(lKeyFascicolo);
+				lListaRate = new Vector(lRateSqlDAO.getModels());
+			}
+			for (RateizzazionePPModel lRata : lListaRate) {
+				aTreeFasMod.add(new TreeModel(lRata));
+			}
+
+			// Ricerco il civilmente obbligato
+			lCivilObbligatoSqlDao = new CivilmenteObbligatoSqlDAO(lConn);
+			lCivilObbligatoSqlDao.ricercaCivilmenteObbligatiByFasSieIdFascicoloSiep(lKeyFascicolo);
+			lResidenzaSqlDao = new ResidenzaSqlDAO(lConn);
+
+			Vector<CivilmenteObbligatoModel> lListaObbligati = new Vector(lCivilObbligatoSqlDao.getModels());
+			for (CivilmenteObbligatoModel lObbligato : lListaObbligati) {
+				TreeModel lCivilmenteTree = new TreeModel(lObbligato);
+				aTreeFasMod.add(lCivilmenteTree);
+				// Ricerco se presente la residenza
+				lResidenzaSqlDao.ricercaDomicilioCorrenteByIdCivilmenteObbligato(
+						lObbligato.getIdCivilmenteObbligato());
+				ResidenzaModel lResidenza = (ResidenzaModel) lResidenzaSqlDao.getModelByKey();
+				if (lResidenza != null)
+					lCivilmenteTree.add(new TreeModel(lResidenza));
+
+				lResidenzaSqlDao.stop();
+			}
+			// MEV_2023-33
+			// ==============================================================================================
 
 			// Pena Accessoria
 			lPenAccDao = new PenaAccessoriaSqlDAO(lConn);
@@ -847,6 +911,11 @@ public class SIAPStampaController extends SiapController {
 			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
 			cleanup(lContSqlDAO);
 			cleanup(lEveSqlDAO);
+
+			// MEV_2023-33
+			cleanup(lRateSqlDAO);
+			cleanup(lCivilObbligatoSqlDao);
+			cleanup(lResidenzaSqlDao);
 		}
 	}
 
@@ -897,8 +966,11 @@ public class SIAPStampaController extends SiapController {
 
 								/*
 								 * ISSUE MEV : eseguito merge tra 15 MEV: interpretazione con codice
-								 * commentato Numero MEV : SIES v10 Autore : gioggi Data : 15/feb/2016 Branch
-								 * : MEV_SIES v10
+								 * commentato 
+								 * Numero MEV : SIES v10 
+								 * Autore : gioggi 
+								 * Data : 15/feb/2016 
+								 * Branch : MEV_SIES v10
 								 */
 								// IReato lReaCtr =
 								// SIEPLookupRemote.getReatoRemote();
@@ -1860,6 +1932,100 @@ public class SIAPStampaController extends SiapController {
 		}
 
 		return lTreeSenMod;
+	}
+
+	/**
+	 * Preleva la struttura dell'evento Ordine di ingiunzione: evento, magistrato, notifiche e rateizzazzionei
+	 * <Evento> <Notifica> <AutoritaEsterna> <Avvocato> </Notifica> <Rateizzazione></Rateizzazione>
+	 * <Magistrato></Magistrato> </Evento>
+	 *
+	 * @param aKeyFascicolo
+	 * @param aCodMotivo
+	 * @return TreeModel dell'evento
+	 * @throws F3BException
+	 * @since MEV_2023-33
+	 */
+	protected TreeModel getTreeEventoOrdineIngiunzione(BigDecimal aIdEvento, Connection aConn)
+			throws F3BException {
+
+		Connection lConn = null;
+
+		RateizzazionePPSqlDAO lRateSqlDao = null;
+		BollettinoPagopaSqlDAO lBollettinoSqlDao = null;
+		
+		TreeModel lEveRatModel = null;
+		TreeModel lEveNotCollegatoTree = null;
+
+		try {
+			if (aConn != null)
+				lConn = aConn;
+			else
+				lConn = getDBConnection();
+
+			EventoRateizzazionePPModel eveRat = new EventoRateizzazionePPModel();
+
+			IEvento lCtrlEvento = SICOLookupRemote.getEventoRemote();
+			EventoNotificaModel lEveNotCollegatoMod = lCtrlEvento.ExRicercaEventoNotificaByKey(aIdEvento,
+					lConn);
+			lEveNotCollegatoTree = new TreeModel(lEveNotCollegatoMod.getEvento());
+
+			lEveRatModel = new TreeModel(eveRat);
+			lEveRatModel.add(lEveNotCollegatoTree);
+
+			for (NotificaModel notifica : lEveNotCollegatoMod.getNotifiche()) {
+				siesLogger.debug("Aggiungo le notifiche al tree collegato");
+
+				TreeModel lNotificaTree = new TreeModel(notifica);
+				if (notifica.getAutoritaEsterna() != null)
+					lNotificaTree.add(new TreeModel(notifica.getAutoritaEsterna()));
+
+				if (notifica.getAvvocato() != null)
+					lNotificaTree.add(new TreeModel(notifica.getAvvocato()));
+
+				lEveNotCollegatoTree.add(lNotificaTree);
+			}
+
+			siesLogger.debug("Aggiungo il magistrato...");
+			if (lEveNotCollegatoMod.getMagistrato() != null)
+				lEveNotCollegatoTree.add(new TreeModel(lEveNotCollegatoMod.getMagistrato()));
+
+			// Recupero le rateizzazioni
+			siesLogger.debug("Recupero le rateizzazioni del collegato...");
+			lRateSqlDao = new RateizzazionePPSqlDAO(lConn);
+			lRateSqlDao.ricercaRateizzazionePPByEveIdEvento(lEveNotCollegatoMod.getEvento().getIdEvento());
+			Vector<RateizzazionePPModel> listaRateCollegato = new Vector<RateizzazionePPModel>(
+					lRateSqlDao.getModels());
+
+			eveRat.setListaRateizzazioniPP(listaRateCollegato);
+
+			lBollettinoSqlDao = new BollettinoPagopaSqlDAO(lConn);
+			for (RateizzazionePPModel rata : listaRateCollegato) {
+				siesLogger.debug("add rata");
+				TreeModel lTreeRata = new TreeModel(rata);
+				lEveNotCollegatoTree.add(lTreeRata);
+				
+				// recupero anche i bollettini collegati alla rata
+				lBollettinoSqlDao.ricercaBollettinoPagopaByReteizzazione(rata.getIdRateizzazionePP());
+				Vector<BollettinoPagopaModel> listaBollettini = new Vector<BollettinoPagopaModel>(
+						lBollettinoSqlDao.getModels());
+				for (BollettinoPagopaModel bollettini : listaBollettini) {
+					siesLogger.debug("add bollettino rata");
+					lTreeRata.add(new TreeModel(bollettini));
+				}
+			}
+
+		} catch (DAOException daoEx) {
+			siesLogger.error("DAOException: " + daoEx);
+			throw new F3BException("SIAPStampaController.getTreeEventoOrdineIngiunzione: " + daoEx);
+		} finally {
+			cleanup(lRateSqlDao);
+			cleanup(lBollettinoSqlDao);			
+
+			if (aConn == null)
+				cleanup(lConn);
+		}
+
+		return lEveRatModel;
 	}
 
 }

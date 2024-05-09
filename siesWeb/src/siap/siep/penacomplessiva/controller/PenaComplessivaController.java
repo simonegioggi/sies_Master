@@ -25,18 +25,8 @@ import siap.sige.penacomplessiva.dao.PenaCompSenSigeDAO;
 import siap.sige.penacomplessiva.model.PenaCompSigeModel;
 
 /**
- * <p>
  * Title: PenaComplessivaController
- * </p>
- * <p>
  * Description: Classe Controller per PenaComplessiva
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
  *
  * @version 1.0
  */
@@ -850,5 +840,65 @@ public class PenaComplessivaController extends SiapController implements IPenaCo
 			cleanup(lConn);
 		}
 	}
+
+	/**
+	 * Aggiunto metodo di ricerca pena sostituiva per tipologia (highValue della
+	 * cg_ref_codes.TIPO_SANZIONE_SOSTITUTIVA)
+	 * 
+	 * @author 	sgioggi
+	 * @since	MEV_2023-33
+	 * 
+	 * @param 	idFascicoloSiep
+	 * @param 	highValue
+	 * @return 	PenaComplessivaSanzioneSostitutivaModel
+	 * @throws	F3BException
+	 */
+	@Override
+	public PenaComplessivaSanzioneSostitutivaModel ExRicercaPenaComplessivaPenaSostitutivaByIdFascicoloSiep(
+			BigDecimal idFascicoloSiep, String highValue) throws F3BException {
+
+		Connection c = null;
+
+		PenaComplessivaSqlDAO pcsdao = null;
+		SanzioneSostitutivaSqlDAO sssdao = null;
+
+		PenaComplessivaSanzioneSostitutivaModel pcssm = null;
+		PenaComplessivaModel pcm = null;
+		SanzioneSostitutivaModel ssm = null;
+
+		try {
+			c = getDBConnection();
+
+			pcsdao = new PenaComplessivaSqlDAO(c);
+			pcsdao.ricercaPenaComplessivaByIdFascicolo(idFascicoloSiep);
+
+			pcsdao.start();
+			if (pcsdao.next())
+				pcm = (PenaComplessivaModel) pcsdao.getModel();
+			pcsdao.stop();
+
+			if (pcm != null) {
+				sssdao = new SanzioneSostitutivaSqlDAO(c);
+				sssdao.ricercaPenaSostitutivaByIdPenaComplessiva(pcm.getIdPenaComplessiva(), highValue);
+				sssdao.start();
+				if (sssdao.next())
+					ssm = (SanzioneSostitutivaModel) sssdao.getModel();
+				sssdao.stop();
+				pcssm = new PenaComplessivaSanzioneSostitutivaModel(pcm, ssm);
+			}
+		} catch (DAOException daoEx) {
+			throw new F3BException(
+					"PenaComplessivaController.ExRicercaPenaComplessivaPenaSostitutivaByIdFascicoloSiep: "
+							+ daoEx);
+		} finally {
+			cleanup(pcsdao);
+			cleanup(sssdao);
+
+			cleanup(c);
+		}
+
+		return pcssm;
+	}
+	// FINE MEV_2023-33
 
 }

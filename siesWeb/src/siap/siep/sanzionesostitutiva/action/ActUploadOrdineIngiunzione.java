@@ -73,12 +73,14 @@ public class ActUploadOrdineIngiunzione extends ActionSiap implements ICostantiE
 		//
 		setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Aggiornamento Documento Avvenuto Correttamente!");
 
-		RedirectTo lRedirigi = new RedirectTo();
-		lRedirigi.setPage(IWebConstants.PG_MAIN);
-		lRedirigi.setAction(getRequestStringParameter(ICostantiEvento.CAMPO_AZIONE_DETTAGLIO));
-		lRedirigi.setParameter(ICostantiEvento.CAMPO_ID_EVENTO, lEveUpdateModel.getIdEvento().toString());
-		setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
-
+		if (!isRequestParameterNullObj(CAMPO_AZIONE_DETTAGLIO))
+		{
+			RedirectTo lRedirigi = new RedirectTo();
+			lRedirigi.setPage(IWebConstants.PG_MAIN);
+			lRedirigi.setAction(getRequestStringParameter(ICostantiEvento.CAMPO_AZIONE_DETTAGLIO));
+			lRedirigi.setParameter(ICostantiEvento.CAMPO_ID_EVENTO, lEveUpdateModel.getIdEvento().toString());
+			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
+		}
 		// info per il log
 		siesLogger.info(getClass().getName() + ".processRequest: fine");
 
