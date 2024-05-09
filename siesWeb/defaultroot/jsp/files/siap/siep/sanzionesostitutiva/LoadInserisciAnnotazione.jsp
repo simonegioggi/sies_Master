@@ -1780,8 +1780,9 @@ if((!lPosizione.isLibero()) || (lFascicoloAssociato.getFlagAltraCausa()!=null &&
       </tr>
 <%if(!tipoMisura.equals("INDULTINO")){%>
    <tr>
-           <td class="L" width=30%>Tribunale di Sorveglianza <font class=ob>(*)</font></td>
+           <td class="L" width=30%>Tribunale di Sorveglianza <font class=ob>(*)</font>
          <input type="hidden" value="TDS" name="<%=ICostantiMisuraAlternativa.CAMPO_COD_TRIBUNALE%>">
+         </td>
         <td class="L">
          <input title="Sede Tribunale Sorveglianza" value="<%=StringUtils.toStringJSP(sedeUfficioEmittente.getDescrComune())%>" type="text" name="<%= ICostantiMisuraAlternativa.CAMPO_SEDE_TDS %>"  maxlength="35" size="35">
         <a href="Javascript:ListaComuniTds('LoadInserisciMisuraAlternativa','<%= ICostantiMisuraAlternativa.CAMPO_SEDE_TDS%>');">
@@ -1856,8 +1857,8 @@ if((!lPosizione.isLibero()) || (lFascicoloAssociato.getFlagAltraCausa()!=null &&
               <font class="campo">
                 <%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescrTipo())%>
               </font>
+              <input type="HIDDEN" title="Codice Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep())%>" type="text" name="<%= ICostantiAvvocato.CAMPO_ID_AVVOCATO %>" maxlength="35" size="35">
             </td>
-            <input type="HIDDEN" title="Codice Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep())%>" type="text" name="<%= ICostantiAvvocato.CAMPO_ID_AVVOCATO %>"  maxlength="35" size="35">
           </tr>
         </table>
          <table>

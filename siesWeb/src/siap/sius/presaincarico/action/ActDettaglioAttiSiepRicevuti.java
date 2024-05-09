@@ -19,20 +19,8 @@ import siap.siep.sanzionesostitutiva.model.SanzioneSostResiduaModel;
 import siap.sius.SIUSException;
 
 /**
- * <p>
- * Title: ActDettaglioAttiSiepRicevuti
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
+ * Classe Action per il dettaglio degli atti SIEP ricevuti
+ *
  * @version 1.0
  */
 public class ActDettaglioAttiSiepRicevuti extends ActionSiap implements ICostantiPresaincarico {
@@ -41,6 +29,9 @@ public class ActDettaglioAttiSiepRicevuti extends ActionSiap implements ICostant
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	public String processRequest() throws Exception {
+
+		// info per il log
+		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
 
 		// Controllo che non si stia lavorando su una entità in modifica ad altri
 		LockModel lck = lockIfNotLocked("caricoistanza",
@@ -58,47 +49,47 @@ public class ActDettaglioAttiSiepRicevuti extends ActionSiap implements ICostant
 		}
 
 		// Questa classe presenta il dettaglio del MESSAGGIO selezionato.
-		BigDecimal lIdMessage = this.getRequestBigDecimalParameter(ICostantiMessaggio.CAMPO_ID_MESSAGGIO);
+		BigDecimal lIdMessage = getRequestBigDecimalParameter(ICostantiMessaggio.CAMPO_ID_MESSAGGIO);
 
 		IMessaggio lCrtl = JMSLookupRemote.getMessaggioRemote();
 		MessaggioModel lMess = lCrtl.ExRicercaMessaggioByKey(lIdMessage);
 
-		this.setRequestAttribute("Messaggio", lMess);
+		setRequestAttribute("Messaggio", lMess);
 
 		ParserMessage lParser = new ParserMessage(lMess.getTreeModel());
 
 		if (lParser.getFascicolo() != null)
-			this.setRequestAttribute("fascicolo", lParser.getFascicolo());
+			setRequestAttribute("fascicolo", lParser.getFascicolo());
 		else if (lParser.getDettaglioFascicoloSiep() != null) {
-			this.setRequestAttribute("dettagliofascicolo", lParser.getDettaglioFascicoloSiep());
-			this.setRequestAttribute("fascicolo", lParser.getDettaglioFascicoloSiep().getFascicoloSiep());
+			setRequestAttribute("dettagliofascicolo", lParser.getDettaglioFascicoloSiep());
+			setRequestAttribute("fascicolo", lParser.getDettaglioFascicoloSiep().getFascicoloSiep());
 		} else
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Errore nella Ricezione del Procedimento SIEP. <BR>Rivolgersi all'amministratore di sistema!");
 
 		if (lParser.getSoggetto() != null)
-			this.setRequestAttribute("soggetto", lParser.getFascicolo().getSoggetto());
+			setRequestAttribute("soggetto", lParser.getFascicolo().getSoggetto());
 		else if (lParser.getDettaglioFascicoloSiep().getFascicoloSiep().getSoggetto() != null)
-			this.setRequestAttribute("soggetto",
+			setRequestAttribute("soggetto",
 					lParser.getDettaglioFascicoloSiep().getFascicoloSiep().getSoggetto());
 		else
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Errore nella Ricezione del Soggetto. <BR>Rivolgersi all'amministratore di sistema!");
 
 		if (lParser.getEvento() != null)
-			this.setRequestAttribute("evento", lParser.getEvento());
+			setRequestAttribute("evento", lParser.getEvento());
 		else if (lParser.getDettaglioFascicoloSiep().getEventi() != null)
-			this.setRequestAttribute("eventi", lParser.getDettaglioFascicoloSiep().getEventi());
+			setRequestAttribute("eventi", lParser.getDettaglioFascicoloSiep().getEventi());
 		else
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Errore nella Ricezione dell'Evento. <BR>Rivolgersi all'amministratore di sistema!");
 
 		/*
 		 * 2010-04-30 - Sostituito per NuovaIstanza. if (lParser.getIstanza()!=null)
-		 * this.setRequestAttribute("istanza", lParser.getIstanza());
+		 * setRequestAttribute("istanza", lParser.getIstanza());
 		 */
 		if (lParser.getNuovaIstanza() != null)
-			this.setRequestAttribute("nuovaistanza", lParser.getNuovaIstanza());
+			setRequestAttribute("nuovaistanza", lParser.getNuovaIstanza());
 
 		if (lParser.getDettaglioFascicoloSiep() != null
 				&& lParser.getDettaglioFascicoloSiep().getFascicoloSiep() != null)
@@ -110,7 +101,7 @@ public class ActDettaglioAttiSiepRicevuti extends ActionSiap implements ICostant
 				&& lParser.getDettaglioFascicoloSiep().getDatiSiepPerTrasferimento()
 						.getListRichiesteConversioniPP() != null)
 
-			this.setRequestAttribute("richiesteConversioni", lParser.getDettaglioFascicoloSiep()
+			setRequestAttribute("richiesteConversioni", lParser.getDettaglioFascicoloSiep()
 					.getDatiSiepPerTrasferimento().getListRichiesteConversioniPP());
 
 		// ==========================================================================
@@ -134,15 +125,19 @@ public class ActDettaglioAttiSiepRicevuti extends ActionSiap implements ICostant
 
 		// Eventuali misure di sicurezza
 		if (lParser.getDettaglioFascicoloSiep().getMisureSicurezza() != null)
-			this.setRequestAttribute("misureSicurezza",
-					lParser.getDettaglioFascicoloSiep().getMisureSicurezza());
+			setRequestAttribute("misureSicurezza", lParser.getDettaglioFascicoloSiep().getMisureSicurezza());
 
+		// info per il log
+		siesLogger.debug(getClass().getName() + ".processRequest: fine");
+
+		// pagina di ritorno
 		return PG_DETTAGLIO_ATTOSIEP_RICEVUTO;
 	}
 
 	// Viene ricavata la Sanzione Residua o la Sanzione Sostitutiva e passata alla request
 	private void ricercaPenaComplessivaSanzioneSostitutivaByIdFasSiep(ParserMessage aParser)
 			throws Exception {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("ricercaPenaComplessivaSanzioneSostitutivaByIdFasSiep: inizio");

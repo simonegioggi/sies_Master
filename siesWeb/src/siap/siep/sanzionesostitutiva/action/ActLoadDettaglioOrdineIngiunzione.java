@@ -51,8 +51,12 @@ public class ActLoadDettaglioOrdineIngiunzione extends ActionSiap implements ICo
 		// Ricerca i pagamenti per id Fascicolo
 		Vector<RateizzazionePPModel> listaRateizzazioni = new Vector<>();
 		IRateizzazionePP lRateCTRL = SIEPLookupRemote.getRateizzazionePPRemote();
-		listaRateizzazioni = lRateCTRL
-				.exRicercaRateizzazioniByIdFasc(lEveNotMod.getEvento().getFasSieIdFascicoloSiep());
+//		listaRateizzazioni = lRateCTRL
+//				.exRicercaRateizzazioniByIdFasc(lEveNotMod.getEvento().getFasSieIdFascicoloSiep());
+		// MEV33 si recuperano le rate collegat
+		listaRateizzazioni = lRateCTRL.exRicercaRateizzazioniByIdEvento(lEveNotMod.getEvento().getIdEvento());
+		siesLogger.debug("listaRateizzazioni.size() = "+listaRateizzazioni.size());
+		
 		setRequestAttribute("listaRateizzazioni", listaRateizzazioni);
 
 		// MAGISTRATO

@@ -57,6 +57,10 @@ function over_effect(e, state) {
 	        <font class="label">Funzione :</font>&nbsp;
 	        <font class="campo"><%=strFunzione%></font>
       	</td>
+      	<td class="LBG">
+          <a href="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActGestioneAltreSanzioni">
+            <img align="middle" src="/images/arrowleft24.gif" alt="ritorna su" width="24" height="24" border="0"></a>      
+      </td>   
 	</tr>
 </table>
 <br>
@@ -72,10 +76,10 @@ if (!fascicoloNotInSession.equals("S")) {
 <table cellpadding="5" cellspacing="5" width="95%" onMouseover="over_effect(event,'outset')" onMouseout="over_effect(event,'solid')" onMousedown="over_effect(event,'inset')" onMouseup="over_effect(event,'outset')">
 	<tr>
   		<td width="32%" class="menulines" nowrap>
-    		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadInserisciOrdineIngiunzione">Ordine Ingiunzione Pagamento</a>
+    		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzioneAltriProvvedimenti">Ordine Ingiunzione / Altri Provvedimenti</a>
 		</td>
 		<td width="32%" class="menulines" nowrap>
-  			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzione">Gestione Ordine Ingiunzione</a>
+  			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzione">Gestione Notifiche</a>
 		</td>
 		<td width="32%" class="menulines" nowrap>
   			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActGrigliaBollettiniPagoPA">Gestione Bollettini PagoPA</a>
@@ -83,7 +87,10 @@ if (!fascicoloNotInSession.equals("S")) {
 	</tr>
 	<tr>
   		<td width="32%" class="menulines" nowrap>
-    		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.web.ActionUnderConstruction">Scadenzari</a>
+    		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActGrigliaScadenzari">Scadenzari</a>
+    	</td>
+  		<td width="32%" class="menulines" nowrap>
+    		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadRicercaStatoPagamenti">Ricerca Stato Pagamenti</a>
     	</td>
 	</tr>
 </table>

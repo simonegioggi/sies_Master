@@ -5,13 +5,16 @@ import java.util.Date;
 import java.util.Vector;
 
 import f3b.model.GenericModel;
+import f3b.util.StringUtils;
 import siap.sico.misuraalternativa.model.MisuraAlternativaModel;
 import siap.siep.fungibilita.model.FungibilitaModel;
+import siap.siep.pagoPA.model.BollettinoPagopaModel;
 import siap.siep.penaresidua.model.PenaResiduaModel;
+import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 
 /**
  * Model per lo Stato Esecuzione
- * 
+ *
  * @author Giselda De Vita
  *
  */
@@ -19,7 +22,7 @@ import siap.siep.penaresidua.model.PenaResiduaModel;
 public class EventoModel extends GenericModel {
 
 	/**
-	 * 
+	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = -7646021410688812826L;
 
@@ -66,6 +69,8 @@ public class EventoModel extends GenericModel {
 
 	private FungibilitaModel mFungibilita = null;
 
+	private Vector<RateizzazionePPModel> mListaRateizzazioni = null;
+
 	/**
 	 * Attributo da utilizzare solo nel caso in cui si tratti di un'ordinanza/decreto SIUS senza alcun
 	 * provveidmento SIEP associato
@@ -84,6 +89,9 @@ public class EventoModel extends GenericModel {
 	private String mNotifica1;
 	private String mNotifica2;
 	private String mNotifica3;
+	// MEV_2023-33 Aggiornte altre 2 notifiche per i civilmente obbligati
+	private String mNotifica4;
+	private String mNotifica5;
 
 	private PenaResiduaModel mPenaResidua;
 	private MisuraAlternativaModel mMisuraAlternativa;
@@ -331,8 +339,61 @@ public class EventoModel extends GenericModel {
 		return mDettagliLibAnticipate;
 	}
 
+	// MEV_2023-33
+	public Vector<RateizzazionePPModel> getListaRateizzazioni() {
+		return mListaRateizzazioni;
+	}
+
 	public FungibilitaModel getFungibilita() {
 		return mFungibilita;
+	}
+
+	public String getStringTotalePagatoPP() {
+		String lStringTotalePagatoPP = null;
+		BigDecimal lTotaleImportoPagato = new BigDecimal(0);
+		if (mListaRateizzazioni != null) {
+			for (RateizzazionePPModel rata : mListaRateizzazioni) {
+				Vector<BollettinoPagopaModel> lListaBollettini = rata.getListaBollettini();
+				if (lListaBollettini != null) {
+					for (BollettinoPagopaModel bollettino : lListaBollettini) {
+						if (bollettino.getImportoPagato() != null)
+							lTotaleImportoPagato = lTotaleImportoPagato.add(bollettino.getImportoPagato());
+					}
+				}
+			}
+		}
+
+		lStringTotalePagatoPP = StringUtils.toEuroFormat(lTotaleImportoPagato);
+
+		return lStringTotalePagatoPP;
+	}
+
+	public String getStringTotaleDaPagarePP() {
+		String lStringTotaleDaPagarePP = null;
+		BigDecimal lTotaleImportoDaPagare = new BigDecimal(0);
+		BigDecimal lTotaleImportoPagato = new BigDecimal(0);
+		if (mListaRateizzazioni != null) {
+			int i = 0;
+			for (RateizzazionePPModel rata : mListaRateizzazioni) {
+				i++;
+				if (i == 1)
+					lTotaleImportoDaPagare = lTotaleImportoDaPagare.add(rata.getImportoDaPagare());
+
+				Vector<BollettinoPagopaModel> lListaBollettini = rata.getListaBollettini();
+				if (lListaBollettini != null) {
+					for (BollettinoPagopaModel bollettino : lListaBollettini) {
+						if (bollettino.getImportoPagato() != null)
+							lTotaleImportoPagato = lTotaleImportoPagato.add(bollettino.getImportoPagato());
+					}
+				}
+			}
+		}
+
+		lTotaleImportoDaPagare = lTotaleImportoDaPagare.subtract(lTotaleImportoPagato);
+
+		lStringTotaleDaPagarePP = StringUtils.toEuroFormat(lTotaleImportoDaPagare);
+
+		return lStringTotaleDaPagarePP;
 	}
 
 	//
@@ -461,6 +522,11 @@ public class EventoModel extends GenericModel {
 
 	public void setDettagliLibAnticipate(Vector<DettaglioLAModel> aListaDettagli) {
 		mDettagliLibAnticipate = aListaDettagli;
+	}
+
+	// MEV_2023-33
+	public void setListaRateizzazioni(Vector<RateizzazionePPModel> aListaRate) {
+		mListaRateizzazioni = aListaRate;
 	}
 
 	public void setFungibilita(FungibilitaModel aFungibilita) {
@@ -743,5 +809,23 @@ public class EventoModel extends GenericModel {
 	public void setNotifica3(String notifica3) {
 		mNotifica3 = notifica3;
 	}
+
+	// MEV_2023-33
+	public String getNotifica4() {
+		return mNotifica4;
+	}
+
+	public void setNotifica4(String notifica4) {
+		mNotifica4 = notifica4;
+	}
+
+	public String getNotifica5() {
+		return mNotifica5;
+	}
+
+	public void setNotifica5(String notifica5) {
+		mNotifica5 = notifica5;
+	}
+	// MEV_2023-33
 
 }

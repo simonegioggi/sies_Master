@@ -58,10 +58,30 @@
     <script language="JavaScript" src="<%=IWebConstants.JS_CONFIRM%>"></script>
     <script language="JavaScript" src="<%=ISIAPCostantiWeb.JS_CONTROL_UPLOAD%>"></script>
     <script language="JavaScript">
-
-
-
     </script>
+    
+		<STYLE>
+		.menulines {
+		  border:2.5px solid #BEC6FC;
+		  text-align : center;
+		  font-family: 'Tahoma';
+		  color : Navy;
+		  font-size : 13px;
+		  text-decoration : none;
+		  height:100%;
+		}
+		
+		.menulines a {
+		  text-align : center;
+		  text-decoration:none;
+		  color:black;
+		  font-family: 'Tahoma';
+		  color : Navy;
+		  font-size : 13px;
+		  width:100%;
+		  height:100%;
+		}
+		</STYLE>    
   </head>
   
 <body class="corpo">
@@ -119,7 +139,8 @@
   </table>
 
 <%
-if (!"A".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato()) )
+//if (!"A".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato()) )
+if (listaRateizzazioni.size()>0 )
 {
   // Se l'evento non e'annullato faccio vedere i dati della rate agganciate
   RateizzazionePPModel primarata = (RateizzazionePPModel) listaRateizzazioni.elementAt(0);
@@ -180,7 +201,9 @@ if (!"A".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato()) )
         <% } %>
       <% } // end while %>
     </table>
-<% } %>
+<% 
+} 
+%>
 
   <table>
     <tr>
@@ -353,11 +376,15 @@ if (!"A".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato()) )
 %>
   </table>
 
-<% if ("S".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato())) { %>   
-<table>
+<% if ("S".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato())) { %> 
+<br>  
+<table cellspacing=2 cellpadding=2 >    
   <tr>
-    <td class="L">
-      <a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadNotificheOrdineIngiunzione">Visualizza stato notifiche</a>
+    <td width="32%" class="menulines" nowrap>
+      <a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadNotificheOrdineIngiunzione&<%=ICostantiEvento.CAMPO_ID_EVENTO%>=<%=eventonotifica.getEvento().getIdEvento()%>">Visualizza stato notifiche</a>
+    </td>      
+    <td width="32%" class="menulines" nowrap>
+      <a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActRichiestaBollettiniPagoPA">Richiesta Bollettini</a>
     </td>
   </tr>
 </table>

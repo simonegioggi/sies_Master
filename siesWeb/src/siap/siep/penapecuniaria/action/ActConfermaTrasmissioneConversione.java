@@ -1,8 +1,13 @@
 package siap.siep.penapecuniaria.action;
 
-
 import java.math.BigDecimal;
 
+import org.apache.log4j.Logger;
+
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.web.IWebConstants;
+import f3b.web.RedirectTo;
 import siap.jms.ICostantiJMS;
 import siap.jms.SIAPSender;
 import siap.jms.messaggio.action.ICostantiMessaggio;
@@ -19,112 +24,113 @@ import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.jms.controller.IRicercaJMS;
 //import siap.siep.notifica.model.NotificaModel;
 import siap.siep.util.SIEPLookupRemote;
-import f3b.util.DateUtils;
-import f3b.web.IWebConstants;
-import f3b.web.RedirectTo;
-
 
 /**
- * <p>Title: ActConfermaTrasmissioneLSOrdineEsecuzione</p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2002</p>
- * <p>Company: </p>
- * @author not attributable
+ * Classe Action per la conferma della trasmissione della conversione
+ *
  * @version 1.0
  */
-public class ActConfermaTrasmissioneConversione extends ActionSiap 
-				implements ICostantiJMS
-{
-  public String processRequest() throws Exception
-  {
-    BigDecimal lEveId = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
+public class ActConfermaTrasmissioneConversione extends ActionSiap implements ICostantiJMS {
 
-    IEvento lCtrl = SICOLookupRemote.getEventoRemote();
-    EventoNotificaModel lNotEvento = lCtrl.ExRicercaEventoNotificaByKey(lEveId);
+	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
-    if(lNotEvento != null && lNotEvento.getEvento()!= null &&
-       !"S".equals(lNotEvento.getEvento().getFlagDocumentoRegistrato()))
-    {
-     EventoModel lModel = new EventoModel();
-     lModel.setIdEvento(lEveId);
-     lModel.setDataAggiornamento( DateUtils.getSysDate());
-     lModel.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso() );
-     lModel.setCodOperatoreAggiornamento(getCodUtenteConnesso() );
-     lModel.setFlagDocumentoRegistrato("S");
+	public String processRequest() throws Exception {
 
-     lCtrl.ExUpdateDocument(lModel);
-    }
+		// info per il log
+		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
 
-    //Preparo la trasmissione vera e propria dell'Istanza
-    FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
+		BigDecimal lEveId = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
 
-    /*String lTipoUff = getRequestStringParameter(ICostantiIstanza.CAMPO_COD_TIPO_UFFICIO_DESTINATARIO);
-    String lSedeUff = getRequestStringParameter(ICostantiIstanza.CAMPO_COD_LUOGO_DESTINATARIO);*/
+		IEvento lCtrl = SICOLookupRemote.getEventoRemote();
+		EventoNotificaModel lNotEvento = lCtrl.ExRicercaEventoNotificaByKey(lEveId);
 
-    String lCodiceUfficio = getRequestStringParameter(ICostantiUfficio.CAMPO_COD_UFFICIO);
+		if (lNotEvento != null && lNotEvento.getEvento() != null
+				&& !"S".equals(lNotEvento.getEvento().getFlagDocumentoRegistrato())) {
+			EventoModel lModel = new EventoModel();
+			lModel.setIdEvento(lEveId);
+			lModel.setDataAggiornamento(DateUtils.getSysDate());
+			lModel.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
+			lModel.setCodOperatoreAggiornamento(getCodUtenteConnesso());
+			lModel.setFlagDocumentoRegistrato("S");
 
-    UfficioModel lLocal = getUfficioByCodUfficio(lCodiceUfficio);
-    UfficioModel lBDI = getUfficioByCodUfficio(lLocal.getCodDistretto());
+			lCtrl.ExUpdateDocument(lModel);
+		}
 
-    UfficioModel lBDIMittente = getUfficioByCodUfficio(getUfficioUtenteConnesso().getCodDistretto());
+		// Preparo la trasmissione vera e propria dell'Istanza
+		FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 
+		/*
+		 * String lTipoUff = getRequestStringParameter(ICostantiIstanza.CAMPO_COD_TIPO_UFFICIO_DESTINATARIO);
+		 * String lSedeUff = getRequestStringParameter(ICostantiIstanza.CAMPO_COD_LUOGO_DESTINATARIO);
+		 */
 
-//******** Esegue tutta una serie di operazioni sul DB locale **********************
-    EventoModel lEveMod = new EventoModel();
-    lEveMod.setIdEvento(lEveId);
-    lEveMod.setDataTrasmissioneAtti(DateUtils.getSysDate());
-    lEveMod.setCodUfficioDestinatario(lCodiceUfficio);
-    lEveMod.setCodLuogoDestinatario(lLocal.getCodComune());
+		String lCodiceUfficio = getRequestStringParameter(ICostantiUfficio.CAMPO_COD_UFFICIO);
 
+		UfficioModel lLocal = getUfficioByCodUfficio(lCodiceUfficio);
+		UfficioModel lBDI = getUfficioByCodUfficio(lLocal.getCodDistretto());
 
-  //  NotificaModel lNot = new NotificaModel(lNotEvento.getNotifiche()[0]);
+		UfficioModel lBDIMittente = getUfficioByCodUfficio(getUfficioUtenteConnesso().getCodDistretto());
 
-    // 26/03/2008 Rispettare la transazionalità delle fasi monolitiche!
-    // ExConfermaTrasmissione modifica l'evento di SS contrassegnandolo come "TRASFERITA A uds"
-    // ma potrebbe non andar bene la vera e propria spedizione!
-  //  EventoNotificaModel lEveNotMod = lCtrl.ExConfermaTrasmissione(lEveMod, lNot);
-    //**************************************************************************************/
+		// ******** Esegue tutta una serie di operazioni sul DB locale **********************
+		EventoModel lEveMod = new EventoModel();
+		lEveMod.setIdEvento(lEveId);
+		lEveMod.setDataTrasmissioneAtti(DateUtils.getSysDate());
+		lEveMod.setCodUfficioDestinatario(lCodiceUfficio);
+		lEveMod.setCodLuogoDestinatario(lLocal.getCodComune());
 
-    //ITrasmissioneJMS lCtrlMess = SIEPLookupRemote.getTrasmissioneJMS();
-    //MessaggioModel lMessage = lCtrlMess.getMessageForProvvedimento(lEveId, lFascicoloModel.getIdFascicoloSiep());
-    //ITrasmissioneJMS lCtrlMess = SIEPLookupRemote.getTrasmissioneJMS();
-    //MessaggioModel lMessage = lCtrlMess.getMessageForProvvedimento(lEveId, lFascicoloModel.getIdFascicoloSiep());
-    IRicercaJMS lCtrlMes = SIEPLookupRemote.getRicercaJMS();
-    MessaggioModel lMessage = lCtrlMes.ExRicercaFascicoloSiepPerTrasferimento(lFascicoloModel);
+		// NotificaModel lNot = new NotificaModel(lNotEvento.getNotifiche()[0]);
 
-    //-------->>>>>>>>>>> Inserire un meccanismo di reperimento della BDI a partire
-    lMessage.setDescrBdiDestinataria(lBDI.getDescrComune());
-    lMessage.setCodBdiDestinataria(lBDI.getCodUfficio());
-    lMessage.setCodBdiMittente(lBDIMittente.getCodUfficio());
-    lMessage.setDescrBdiMittente(lBDIMittente.getDescrComune());
-    lMessage.setCodUfficioDestinatario(lCodiceUfficio);
-    lMessage.setCodUfficioMittente(getCodUfficioUtenteConnesso());
-    lMessage.setCodTipoMessaggio(RICHIESTA);
-    
- // attenzione verificare in seguito
- //   lMessage.setCodTipoOperazione(TRASFERIMENTO_SANZIONE_SOSTITUTIVA);
-    lMessage.setCodiceUtenteMittente(this.getCodUtenteConnesso());
-    lMessage.setDataInvio(DateUtils.getSysDate());
-    //SETTA RIFERIMENTI FASCICOLO SIEP
-    lMessage.setChiaveAnnoSiep(lFascicoloModel.getChiaveAnno());
-    lMessage.setChiaveProgrSiep(lFascicoloModel.getChiaveProgr());
+		// 26/03/2008 Rispettare la transazionalità delle fasi monolitiche!
+		// ExConfermaTrasmissione modifica l'evento di SS contrassegnandolo come "TRASFERITA A uds"
+		// ma potrebbe non andar bene la vera e propria spedizione!
+		// EventoNotificaModel lEveNotMod = lCtrl.ExConfermaTrasmissione(lEveMod, lNot);
+		// **************************************************************************************/
 
+		// ITrasmissioneJMS lCtrlMess = SIEPLookupRemote.getTrasmissioneJMS();
+		// MessaggioModel lMessage = lCtrlMess.getMessageForProvvedimento(lEveId,
+		// lFascicoloModel.getIdFascicoloSiep());
+		// ITrasmissioneJMS lCtrlMess = SIEPLookupRemote.getTrasmissioneJMS();
+		// MessaggioModel lMessage = lCtrlMess.getMessageForProvvedimento(lEveId,
+		// lFascicoloModel.getIdFascicoloSiep());
+		IRicercaJMS lCtrlMes = SIEPLookupRemote.getRicercaJMS();
+		MessaggioModel lMessage = lCtrlMes.ExRicercaFascicoloSiepPerTrasferimento(lFascicoloModel);
 
-    SIAPSender lSender = new SIAPSender();
-    lSender.send(lMessage);
+		// -------->>>>>>>>>>> Inserire un meccanismo di reperimento della BDI a partire
+		lMessage.setDescrBdiDestinataria(lBDI.getDescrComune());
+		lMessage.setCodBdiDestinataria(lBDI.getCodUfficio());
+		lMessage.setCodBdiMittente(lBDIMittente.getCodUfficio());
+		lMessage.setDescrBdiMittente(lBDIMittente.getDescrComune());
+		lMessage.setCodUfficioDestinatario(lCodiceUfficio);
+		lMessage.setCodUfficioMittente(getCodUfficioUtenteConnesso());
+		lMessage.setCodTipoMessaggio(RICHIESTA);
 
-    // setta la risposta nella request
-    setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Trasmissione Provvedimento sottomessa al Sistema!");
+		lMessage.setCodiceUtenteMittente(this.getCodUtenteConnesso());
+		lMessage.setDataInvio(DateUtils.getSysDate());
+		// SETTA RIFERIMENTI FASCICOLO SIEP
+		lMessage.setChiaveAnnoSiep(lFascicoloModel.getChiaveAnno());
+		lMessage.setChiaveProgrSiep(lFascicoloModel.getChiaveProgr());
 
-    //Prepara la "pagina" di destinAction
-    RedirectTo lRedirigi = new RedirectTo();
-    lRedirigi.setPage( IWebConstants.PG_MAIN );
-    lRedirigi.setAction( "siap.siep.penapecuniaria.action.ActDettaglioTrasmissioneConversione" );
-    lRedirigi.setParameter( ICostantiMessaggio.CAMPO_ID_MESSAGGIO, lMessage.getIdMessaggio().toString() );
-    lRedirigi.setParameter( ICostantiEvento.CAMPO_ID_EVENTO, lEveId.toString() );
+		SIAPSender lSender = new SIAPSender();
+		lSender.send(lMessage);
 
-    setRequestAttribute( IWebConstants.GOTO_PAGE, "" + lRedirigi );
+		// setta la risposta nella request
+		setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Trasmissione Provvedimento sottomessa al Sistema!");
 
-    return IWebConstants.PG_MESSAGE;
-  }
+		// Prepara la "pagina" di destinAction
+		RedirectTo lRedirigi = new RedirectTo();
+		lRedirigi.setPage(IWebConstants.PG_MAIN);
+		lRedirigi.setAction("siap.siep.penapecuniaria.action.ActDettaglioTrasmissioneConversione");
+		lRedirigi.setParameter(ICostantiMessaggio.CAMPO_ID_MESSAGGIO, lMessage.getIdMessaggio().toString());
+		lRedirigi.setParameter(ICostantiEvento.CAMPO_ID_EVENTO, lEveId.toString());
+
+		setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
+
+		// info per il log
+		siesLogger.debug(getClass().getName() + ".processRequest: fine");
+
+		// valore di ritorno
+		return IWebConstants.PG_MESSAGE;
+	}
+
 }

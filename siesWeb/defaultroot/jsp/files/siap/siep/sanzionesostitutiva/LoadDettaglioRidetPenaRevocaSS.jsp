@@ -528,6 +528,4 @@ if (   aEveNotRichiesta.getEvento().getFlagDocumentoRegistrato()==null
 </div>
 
 </body>
-</html>
-</form>
-  
+</html>  

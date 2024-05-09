@@ -217,5 +217,3 @@ if (   aEveNotRichiesta.getEvento().getFlagDocumentoRegistrato()==null
 
 </body>
 </html>
-</form>
-  

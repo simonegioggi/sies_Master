@@ -17,6 +17,8 @@ import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.ordineesecuzione.controller.IOrdineEsecuzione;
+import siap.siep.pagoPA.controller.IBollettinoPagopa;
+import siap.siep.pagoPA.model.BollettinoPagopaModel;
 import siap.siep.util.SIEPLookupRemote;
 import siap.sius.SIUSException;
 import siap.sius.depositoordinanzapc.controller.IDepositoOrdinanzaPc;
@@ -26,18 +28,8 @@ import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * <p>
- * Title: ActLoadCancellaProvvedimento
- * </p>
- * <p>
- * Description: Classe Action per la load ActLoadCancellaProvvedimento
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * Title: ActLoadCancellaProvvedimento 
+ * Description: Classe Action per la load di cancellazione evento
  *
  * @version 1.0
  */
@@ -57,70 +49,66 @@ public class ActLoadCancellaProvvedimento extends ActionSiap implements ICostant
 			// Per un'ordinanza di LA su cui sia già stato emesso un provvedimento della procura o ci siano
 			// comunque licenze
 			// con flag_elaborato ad "S" vanno bloccate le modifiche
-			IDepositoOrdinanzaPc lCtrOrd = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
-			DepositoOrdinanzaPcModel lOrdMod = lCtrOrd
-					.ExRicercaDepositoOrdinanzaPcByEvento(this.getRequestBigDecimalParameter("IdEvento"));
-			ILicenzaPeriodiLibAnticipata lCtrlDep = SICOLookupRemote.getLicenzaPeriodiLibAntRemote();
-			Vector lLicenze = new Vector();
+			IDepositoOrdinanzaPc idop = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
+			DepositoOrdinanzaPcModel dopm = idop
+					.ExRicercaDepositoOrdinanzaPcByEvento(getRequestBigDecimalParameter("IdEvento"));
+			ILicenzaPeriodiLibAnticipata ilpla = SICOLookupRemote.getLicenzaPeriodiLibAntRemote();
+			Vector licenze = new Vector();
 			try {
-				lLicenze = lCtrlDep.ExRicercaLicenzeByEve(this.getRequestBigDecimalParameter("IdEvento"));
+				licenze = ilpla.ExRicercaLicenzeByEve(getRequestBigDecimalParameter("IdEvento"));
 			} catch (F3BException F3BEx) {
 				siesLogger.debug("F3BException: " + F3BEx);
 			}
 
-			if (lOrdMod != null && lOrdMod.getCodTipoOrdinanza().compareTo("LA") == 0
-					&& checkStatoElaborazioneLA(lOrdMod, lLicenze))
+			if (dopm != null && dopm.getCodTipoOrdinanza().compareTo("LA") == 0
+					&& checkStatoElaborazioneLA(dopm, licenze))
 				throw new SIUSException(SIUSException.USER_MESSAGE,
-						"Non è consentito annullare il provvedimento! La liberazione anticipata è già stata elaborata dalla procura!");
+						"Non è consentito annullare il provvedimento! "
+								+ "La liberazione anticipata è già stata elaborata dalla procura!");
 		}
 
 		// 12/12/2019 - Ticket 201911260116 - Non si consente la cancellazione del provvedimento in caso di
 		// presenza di Comunicazioni Cumulo afferenti non validate
-		EventoModel lEveRic = new EventoModel();
+		EventoModel emRic = new EventoModel();
 
-		lEveRic.setCodTipoEvento("01");
-		lEveRic.setCodTipoProvvedimento("12");
-		lEveRic.setCodMotivo("0670");
-		
-		
-		/* 
+		emRic.setCodTipoEvento("01");
+		emRic.setCodTipoProvvedimento("12");
+		emRic.setCodMotivo("0670");
+
+		/*
 		 * ISSUE MAC : recupero l'id fascicolo e lo setto nell'evento 
-		 * Numero MAC : 20200331014
-		 * Autore    : monica
-		 * Data      : 02/apr/2020
-		 * Branch    : mac-otrs-20200331014
+		 * Numero MAC : 20200331014 
+		 * Autore : monica
+		 * Data : 02/apr/2020 
+		 * Branch : mac-otrs-20200331014
 		 */
 		BigDecimal idFascicoloSiep = null;
-		if (!this.isSessionAttributeNullObj("fascicolo")) {
+		if (!isSessionAttributeNullObj("fascicolo")) {
 			idFascicoloSiep = ((FascicoloSiepModel) getSessionAttribute("fascicolo")).getIdFascicoloSiep();
-			lEveRic.setFasSieIdFascicoloSiep(idFascicoloSiep); 
-		}		
-		//***** FINE INTERVENTO mac-otrs-20200331014 *****//
+			emRic.setFasSieIdFascicoloSiep(idFascicoloSiep);
+		}
+		// ***** FINE INTERVENTO mac-otrs-20200331014 *****//
 
+		emRic.setEveIdEvento(getRequestBigDecimalParameter("IdEvento"));
 
-		lEveRic.setEveIdEvento(this.getRequestBigDecimalParameter("IdEvento"));
-	
-		IEvento lCtrlEve = SICOLookupRemote.getEventoRemote(); 
-		EventoModel lEve = new EventoModel();
-		// EventoNotificaModel lEveNot = new EventoNotificaModel();
-
-		lEve = lCtrlEve.ExRicercaEventoNonRegistrato(lEveRic);
-		if (lEve != null) {
+		IEvento ie = SICOLookupRemote.getEventoRemote();
+		EventoModel em = new EventoModel();
+		em = ie.ExRicercaEventoNonRegistrato(emRic);
+		if (em != null) {
 			throw new SIUSException(SIUSException.USER_MESSAGE,
-					"Non è consentito annullare il provvedimento! Sono presenti Comunicazioni Cumulo non validate!");
+					"Non è consentito annullare il provvedimento! "
+							+ "Sono presenti Comunicazioni Cumulo non validate!");
 		}
 
-		IOrdineEsecuzione lCtrlOrd = SIEPLookupRemote.getOrdineEsecuzioneRemote();
+		IOrdineEsecuzione ioe = SIEPLookupRemote.getOrdineEsecuzioneRemote();
+		CampoNotaModel cnm = ioe
+				.ExRicercaEventoCampoNotaByIdEvento(getRequestBigDecimalParameter("IdEvento"));
+		setRequestAttribute("camponota", cnm);
 
-		CampoNotaModel lCampoMod = lCtrlOrd
-				.ExRicercaEventoCampoNotaByIdEvento(this.getRequestBigDecimalParameter("IdEvento"));
-		this.setRequestAttribute("camponota", lCampoMod);
+		em = ie.ExRicercaEventoByKey(getRequestBigDecimalParameter("IdEvento"));
+		setRequestAttribute("evento", em);
 
-		IEvento lCtrlEv = SICOLookupRemote.getEventoRemote();
-		EventoModel lEveMod = lCtrlEv.ExRicercaEventoByKey(this.getRequestBigDecimalParameter("IdEvento"));
-		this.setRequestAttribute("evento", lEveMod);
-
-		this.setRequestAttribute("IdEvento", this.getRequestStringParameter("IdEvento"));
+		setRequestAttribute("IdEvento", getRequestStringParameter("IdEvento"));
 		// 10/04/2006 il parametro nextAction consente di prestabilire l'azione da eseguire
 		// alla fine dell'attività di revoca/cancellazione provvedimento.
 		if (!isRequestParameterNullObj("nextAction"))
@@ -129,33 +117,65 @@ public class ActLoadCancellaProvvedimento extends ActionSiap implements ICostant
 		if (!isRequestParameterNullObj("lOrdinamento"))
 			setRequestAttribute("lOrdinamento", getRequestStringParameter("lOrdinamento"));
 
-		// 08/09/2015 L’annullamento dell’evento di Comunicazione Richiesta impossibilità esazione Pena
-		// Pecuniaria
-		// deve essere consentito solo se al procedimento SIEP non è ancora collegato un procedimento SIUS di
-		// Conversione Pene Pecuniarie.
-		if (lEveMod.getCodMotivo().compareTo("0942") == 0) {
-			IFascicoloSius lCtrlFasSius = SIUSLookupRemote.getFascicoloSiusRemote();
-			Vector lFascicoliPerNumeroSIEP = new Vector();
+		// 08/09/2015 L'’annullamento dell'’evento di Comunicazione Richiesta impossibilità esazione Pena
+		// Pecuniaria deve essere consentito solo se al procedimento SIEP non è ancora collegato un
+		// procedimento SIUS di Conversione Pene Pecuniarie
+		if (em.getCodMotivo().compareTo("0942") == 0) {
+			IFascicoloSius ifs = SIUSLookupRemote.getFascicoloSiusRemote();
+			Vector fascicoliPerNumeroSIEP = new Vector();
 			try {
-				lFascicoliPerNumeroSIEP = lCtrlFasSius
-						.ExRicercaFascicoliPerNumeroSIEP(lEveMod.getFasSieIdFascicoloSiep());
+				fascicoliPerNumeroSIEP = ifs.ExRicercaFascicoliPerNumeroSIEP(em.getFasSieIdFascicoloSiep());
 			} catch (F3BException F3BEx) {
 				siesLogger.debug("F3BException: " + F3BEx);
 			}
 
-			if (lFascicoliPerNumeroSIEP != null && lFascicoliPerNumeroSIEP.size() > 0) {
-
-				Iterator itx1 = lFascicoliPerNumeroSIEP.iterator();
+			if (fascicoliPerNumeroSIEP != null && fascicoliPerNumeroSIEP.size() > 0) {
+				Iterator itx1 = fascicoliPerNumeroSIEP.iterator();
 				while (itx1.hasNext()) {
-					FascicoloGPModel fascicoloSIUS = (FascicoloGPModel) itx1.next();
-					if (fascicoloSIUS.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
+					FascicoloGPModel fgpm = (FascicoloGPModel) itx1.next();
+					if (fgpm.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
 							.compareTo("U070") == 0)
 						throw new SIUSException(SIUSException.USER_MESSAGE,
-								"Non è consentito annullare il provvedimento! La Comunicazione di Richiesta impossibilità esazione Pena Pecuniaria è collegata ad un fascicolo SIUS di Conversione Pene Pecuniarie!");
+								"Non è consentito annullare il provvedimento! "
+										+ "La Comunicazione di Richiesta impossibilità esazione Pena Pecuniaria"
+										+ " è collegata ad un fascicolo SIUS di Conversione Pene Pecuniarie!");
 				}
 			}
 		}
 
+		/*
+		 * ISSUE MEV : In caso di Procedimento con Ordine di ingiunzione al pagamento emesso e validato e poi
+		 * 				annullato, in quanto errato, al momento dell'annullamento dell'OI, il sistema
+		 * 				storicizza i dati della modalità pagamento ed i bollettini generati, l'annullamento
+		 * 				deve essere possibile solo se non risulta già pagato alcun bollettino!
+		 * Numero MEV : 2023-33
+		 * Autore : sgioggi 
+		 * Data : 8 ago 2023 
+		 * Branch : MEV_2023-33
+		 */
+		if (!"A".equals(em.getFlagDocumentoRegistrato()) && em.getCodMotivo().compareTo("0622") == 0) {
+			// Ricerca lo stato dei pagamenti per id fascicolo
+			IBollettinoPagopa ibp = SIEPLookupRemote.getBollettinoPagopaRemote();
+			Vector<BollettinoPagopaModel> elencoStatoPagamenti = ibp
+					.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(em.getFasSieIdFascicoloSiep());
+			Iterator<BollettinoPagopaModel> iterBPM = elencoStatoPagamenti.iterator();
+			boolean esisteBollettinoPagato = false;
+			while (iterBPM.hasNext()) {
+				BollettinoPagopaModel bpm = iterBPM.next();
+				if ("PA".equals(bpm.getStatoPagamento())) {
+					esisteBollettinoPagato = true;
+					break;
+				}
+			}
+			if (esisteBollettinoPagato) {
+				throw new SIUSException(SIUSException.USER_MESSAGE,
+						"Attenzione! Non è consentito annullare il provvedimento! "
+						+ "Esistono dei bollettini già pagati!");
+			}
+		}
+		// ***** FINE INTERVENTO MEV_2023-33 *****//
+
+		// pagina di ritorno
 		return PG_INSERICI_MOTIVAZIONI_EVENTO;
 	}
 

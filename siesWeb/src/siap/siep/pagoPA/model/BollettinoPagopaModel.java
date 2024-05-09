@@ -48,6 +48,8 @@ public class BollettinoPagopaModel extends GenericModel {
     private String mCodiceDistretto;
     private Date mDataGenerazioneBollettino;
     
+  private BigDecimal mIdInvocazionePagopa; 
+    
 	// COSTRUTTORE DI DEFAULT
 	public BollettinoPagopaModel() {
 
@@ -271,7 +273,10 @@ public class BollettinoPagopaModel extends GenericModel {
         return mDataGenerazioneBollettino;
     }
     
-    
+    public BigDecimal getIdInvocazionePagopa() {
+      return mIdInvocazionePagopa;
+    }
+
 	//
 	// METODI SET()
 	//
@@ -386,5 +391,9 @@ public class BollettinoPagopaModel extends GenericModel {
    
    public void setDataGenerazioneBollettino(Date aValore) {
 	   this.mDataGenerazioneBollettino = aValore;
+   }
+   
+   public void  setIdInvocazionePagopa(BigDecimal aValore) {
+      mIdInvocazionePagopa = aValore;
    }
 }

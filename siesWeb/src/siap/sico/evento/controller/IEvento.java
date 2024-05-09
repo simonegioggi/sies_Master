@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
+import f3b.util.F3BException;
 import siap.sico.camponota.model.CampoNotaModel;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
@@ -16,25 +17,12 @@ import siap.sico.template.model.TemplateModel;
 import siap.sico.utente.model.UtenteModel;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.notifica.model.NotificaModel;
-import siap.siep.penaresidua.model.PenaResiduaModel;
 import siap.sige.provvedimento.model.ProvvedimentoSigeEventoModel;
 import siap.sius.avvocatura.model.AvvisiAvvocatoModel;
-import f3b.util.F3BException;
 
 /**
- * <p>
- * Title: EventoController
- * </p>
- * <p>
- * Description: Classe Controller per Evento
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ * Classe Controller per Evento
+ *
  * @version 1.0
  */
 @SuppressWarnings("rawtypes")
@@ -45,14 +33,12 @@ public interface IEvento {
 	public EventoNotificaModel ExInserisciEventoNotifica(EventoNotificaModel aEvento, Connection aConn)
 			throws F3BException;
 
-	// public EventoNotificaModel ExAggiornaEventoNotifica ( EventoNotificaModel aEvento )throws F3BException;
-
-	public EventoNotificaModel ExInserisciEventoNotifica(EventoNotificaModel aEvento,
-			PenaResiduaModel aPenaResidua) throws F3BException;
+	// public EventoNotificaModel ExInserisciEventoNotifica(EventoNotificaModel aEvento,
+	// PenaResiduaModel aPenaResidua) throws F3BException;
 
 	/**
 	 * Ricerca l'evento per Id evento
-	 * 
+	 *
 	 * @param aKey
 	 *            id dell'evento
 	 * @return Model dell'evento
@@ -61,7 +47,7 @@ public interface IEvento {
 
 	/**
 	 * Ricerca l'evento per Id evento X conversione pene pec
-	 * 
+	 *
 	 * @param aKey
 	 *            id dell'evento
 	 * @return Model dell'evento
@@ -77,8 +63,9 @@ public interface IEvento {
 	 * per data EMISSIONE descrescente. n.b. non tutti i campi del model vengono utilizzati per comporre la
 	 * query n.b. se non trava corrispondenza viene rilanciata una eccezione con error code
 	 * F3BException.USER_MESSAGE = 'Nessun elemento trovato'
-	 * 
-	 * @param aEvento e' il Model di ricerca
+	 *
+	 * @param aEvento
+	 *            e' il Model di ricerca
 	 * @return vettore di EventoModel
 	 * @throws F3BException
 	 */
@@ -186,7 +173,7 @@ public interface IEvento {
 	/**
 	 * Restituisce l'ultimo evento inserito con stato FLAG_REGISTRATO=N o NULL e con le caratteristiche
 	 * specificate nel model in input
-	 * 
+	 *
 	 * @param aModel
 	 * @return
 	 * @throws F3BException
@@ -207,7 +194,7 @@ public interface IEvento {
 	/**
 	 * Ricerca l'ultimo evento che ha codice motivo e tipo provvedimento tra quelli passati in input, mentre
 	 * le condizione su idFascicolo codTipoEvento e FlagDocumentoRegistrato vengono recuperati del Model.
-	 * 
+	 *
 	 * @param aMotivo
 	 *            vettore contenente l'elenco dei codici motivo su cui effettuare la ricerca
 	 * @param aTipoProvv
@@ -236,7 +223,7 @@ public interface IEvento {
 	/**
 	 * Ricerca gli eventi eventi in base a idFascicolo, tipoEvento, tipoProvvedimento, motivoProvvedimento
 	 * recuperati dal model. Ordinati per data Inserimento decrescente
-	 * 
+	 *
 	 * @param aModel
 	 *            - EventoModel con i parametri per la ricerca
 	 * @param lFlagDocReg
@@ -258,7 +245,7 @@ public interface IEvento {
 	 * Ricerca gli Eventi con coppie COD_MOTIVO e COD_TIPO_PROVVEDIMENTO passati attraverso due array di
 	 * String. Gli eventi vengono restituiti ordinati per DATA_INSERIMENTO DESC La condzione sullo stato di
 	 * validazione viene specificata nel model
-	 * 
+	 *
 	 * @param aModel
 	 * @param aTipoProv
 	 * @param aCodMotiv
@@ -277,7 +264,7 @@ public interface IEvento {
 	/**
 	 * Ricerca gli Ordini di Esecuzione emessi per la richiesta di restituzione. Gli OE sono ordinati per
 	 * data_emissione decrescente
-	 * 
+	 *
 	 * @param aFascKey
 	 * @return Vettore di EventoModel
 	 * @throws F3BException
@@ -288,7 +275,7 @@ public interface IEvento {
 
 	/**
 	 * ExRicercaEventiPerMotivoTipoProvv
-	 * 
+	 *
 	 * @param aMotivo
 	 * @param aModel
 	 * @return
@@ -300,7 +287,7 @@ public interface IEvento {
 
 	/**
 	 * ExModificaEventoNotifiche
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aNotMod
 	 * @return
@@ -310,7 +297,7 @@ public interface IEvento {
 
 	/**
 	 * ExConfermaTrasmissione
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aNotifica
 	 * @return EventoNotificaModel
@@ -327,7 +314,7 @@ public interface IEvento {
 
 	/**
 	 * ExUpdateValidaProvvedimento Valida provvedimento in Conversione Pene Pec
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aPos
 	 * @param StatoPro
@@ -355,19 +342,23 @@ public interface IEvento {
 
 	public void ExModificaEventoProvvedimentoSIGE(EventoModel aEvento,
 			ProvvedimentoSigeEventoModel aProvvSIGEMod) throws F3BException;
-	
-	// MEV_AVVOCATURA
-	public EventoModel ExUpdateDocument(EventoModel aEvento, Vector<AvvisiAvvocatoModel> lAvvvisiAvvocato) throws F3BException;
 
-  	// MEV 26 CUMULO
+	// MEV_AVVOCATURA
+	public EventoModel ExUpdateDocument(EventoModel aEvento, Vector<AvvisiAvvocatoModel> lAvvvisiAvvocato)
+			throws F3BException;
+
+	// MEV 26 CUMULO
 	public Vector ExRicercaEventoByTipoEveKeyIstruttoriaCumulo(BigDecimal aIstruCumKey, String[] aTipoEvento)
 			throws F3BException;
 
 	// MEV 16 CUMULO: aggiunto metodo di controllo
 	public boolean isCumulo(String lCodMotivo, BigDecimal idEvento) throws F3BException;
-	
-	// intervento per MEV 64- AVVOCATURA (anche in stampa devono apparire solo le ordinanze/decreti depositati)
+
+	// intervento per MEV 64- AVVOCATURA (anche in stampa devono apparire solo le ordinanze/decreti
+	// depositati)
 	public Vector ExRicercaProvvedimentiConDataDeposito(EventoModel aEvento) throws F3BException;
-	
+
+	// MEV_2023-33: aggiunto metodo di modifica
+	public void ExModificaEventoNotifiche(EventoNotificaModel enm) throws F3BException;
 
 }

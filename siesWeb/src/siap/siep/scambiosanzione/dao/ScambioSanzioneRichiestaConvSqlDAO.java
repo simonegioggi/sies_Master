@@ -48,7 +48,7 @@ public class ScambioSanzioneRichiestaConvSqlDAO extends SIAPSqlDAO {
 		// Recupera la select...from
 		String lSql = getSqlQueryPenPec();
 
-		lSql += " AND SCAMBIO_SANZIONE.COD_TIPO_DECISIONE = " + TipoDec;
+		lSql += " AND SCAMBIO_SANZIONE.COD_TIPO_DECISIONE = '" + TipoDec + "' ";
 		lSql += " AND RICHIESTA_CONVERSIONE.FAS_SIE_ID_FASCICOLO_SIEP = " + aFascicolo;
 		lSql += " AND RICHIESTA_CONVERSIONE.DATA_DEPOSITO IS NOT NULL";
 		// Imposta lo statement da eseguire

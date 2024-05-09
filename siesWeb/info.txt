@@ -1,12 +1,34 @@
-BRANCH SIES VERSIONE 12.5.7.0
-Nasce dal branch 12.5.6.0 in data 22/12/2023
-Questa release verrà rilasciata il 22/03/2024 (Patch mese di Gennaio, Febbraio e Marzo 2024)
+BRANCH SIES VERSIONE 12.6.0.0
+Nasce dal branch MEV_2023-33 in data 09/05/2024
 
-1)	Ticket#20240228011 - SIEP Fascicolo non validato
-	Corretta gestione pena residua in fase di inserimento cumulo.
-	In fase di iscrizione di una richiesta conversione PP sul classe VII il controller
-	sganciava la pena residua dell'evento precedente ed inoltre inseriva una pena
-	complessiva inutile.
-	Classe modificata:
-	-	siap.siep.penapecuniaria.controller.RichiestaConversioneController.java
-	(metodo ExInserisciRichiestaConversione)
+Branch MEV_2023-33: nato dal branch release_12.5.0.0 in data 05/06/2023
+				   merge del branch release_12.5.1.0 in data 21/06/2023
+				   merge del branch release_12.5.3.0 in data 25/09/2023
+				   merge del branch release_12.5.6.0 in data 09/01/2023
+				   merge del branch release_12.5.7.0 in data 08/04/2023
+Richiesta scheda 2023-33 - SIES - interventi Cartabia e pagoPA fase 2
+Requisiti funzionali lato SIEP:
+Completamento della versione Riscossione Pene Pecuniarie
+Il sistema consegnato con la scheda 2023-13 va integrato con le seguenti modifiche:
+	-	Template
+		-	Rivedere tabella posizioni giuridiche che deve comprendere solamente due valori:
+			-	Libero
+			-	Detenuto in istituto per qualsiasi titolo
+		-	Completamento template ingiunzione:
+			Quelli attualmente prodotti dall'applicativo vanno integrati nella parte dispositiva con la 
+			disposizione del giudice sulla tipologia di pagamento, unica soluzione rate mensili.
+		-	Modifica di alcuni template in uso con integrazione del testo in modo specifico sulla legge Cartabia.
+	-	Gestione ordine di ingiunzione
+		Attualmente si riesce ad annotare solamente la notifica ai soli difensore e condannato.
+		Vanno realizzate le seguenti funzioni:
+		-	Notifiche (già realizzata)
+		-	Rinnovo ricerche per Omessa notifica
+		-	Richieste informazione
+		-	Rinnovazione notifiche
+		-	Irreperibilità
+		-	Solleciti
+	-	Gestione civilmente obbligato
+	-	Gestione difensore
+	-	Annotazione notifiche
+	-	Generazione template
+	-	Emissione ordine ingiunzione di pagamento (prima notifica)
