@@ -1,5 +1,5 @@
-Branch MEV_2023-35: nato dal branch 12.5.7.0 in data 24/04/2024
-				   merge del branch MEV_2023-33 in data 26/04/2024
+Branch MEV_2023-35: nato dal branch 12.5.6.0 in data 24/04/2024
+				   merge del branch 12.6.1.0 in data 26/05/2024
 
 Nell'ambito del sistema SIES, sottosistema SIUS, al fine di soddisfare i requisiti espressi dall'Amministrazione in relazione alla richiesta 
 di adeguamento normativo del Sistema, nella sua interezza, al d.lgs. 10 ottobre 2022, n. 150 cd Riforma Cartabia, alla Riforma Cartabia.
