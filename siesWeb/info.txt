@@ -1,3 +1,8 @@
+BRANCH SIES VERSIONE 12.6.1.0	(ex release_12.5.7.0)
+Nasce dal branch 12.6.0.0 in data 09/05/2024
+
+Il branch 12.6.0.0 coincide col rilascio della MEV_2023-33
+
 Branch MEV_2023-33: nato dal branch release_12.5.0.0 in data 05/06/2023
 				   merge del branch release_12.5.1.0 in data 21/06/2023
 				   merge del branch release_12.5.3.0 in data 25/09/2023
