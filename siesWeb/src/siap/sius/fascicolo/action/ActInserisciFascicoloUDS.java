@@ -245,8 +245,10 @@ public class ActInserisciFascicoloUDS extends ActionSiap implements ICostantiFas
 		// Eliminato controllo sull' ufficio mittente (Ufficio Inesistente)
 		// nel caso di "Iscrizione di una Esecuzione Misura di Sicurezza"
 		String aCodUfficioMittente = "";
-		if (getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U004") == 0
-				|| getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U019") == 0) {
+		if (   getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U004") == 0
+			|| getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U019") == 0
+			// MEV_2023-35 - Si gestisce anche il cod delle Pene Sospese U126
+			|| getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U126") == 0) {
 			if (getRequestStringParameter(CAMPO_DESCR_SEDE_MITTENTE) != "") {
 				aCodUfficioMittente = getCodUfficioByCodTipoUfficioDescrComune(
 						DecodificheUtils.getCodebyDesc(DecodificheManager.getInstance().getTipoUfficio(),
@@ -388,6 +390,7 @@ public class ActInserisciFascicoloUDS extends ActionSiap implements ICostantiFas
 					}
 				}
 			}
+			
 			// nel caso ASS
 			if ((getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U019") == 0)
 					&& (lFascOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
@@ -409,6 +412,31 @@ public class ActInserisciFascicoloUDS extends ActionSiap implements ICostantiFas
 						durataEsitoGiorni = aDepositoOrdinanzaPc.getNumGiorniDetenzioneDom().intValue();
 				}
 			}
+			
+            // MEV_2023-35 nel caso ESS
+			// Se sto iscrivendo il fascicolo di Esecuzione (U126) e il collegato è il fascicolo di applicazione (U125)
+			// in stato Emesso provvedimento (07), recupero le durate delle Pene sospese del Deposito Decreto del
+			// fascicolo di applicazione
+            if (   getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U126") == 0
+                && lFascOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U125") == 0
+                && lFascOrigine.getFascicoloSiusModel().getCodStatoFascicolo().compareTo("07") == 0) 
+            {
+                // ATT: va presa l'ordinanza, non la EPS
+                IDepositoOrdinanzaPc lCtrlDOP = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
+                DepositoOrdinanzaPcModel aDepositoOrdinanzaPc = new DepositoOrdinanzaPcModel();
+                aDepositoOrdinanzaPc = lCtrlDOP.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd(lFascOrigine
+                        .getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), "SP"); // n.b. SP per le Pene Sost
+
+                if (aDepositoOrdinanzaPc != null) {
+                    if (aDepositoOrdinanzaPc.getNumAnniDetenzioneDom() != null)
+                        durataEsitoAnni = aDepositoOrdinanzaPc.getNumAnniDetenzioneDom().intValue();
+                    if (aDepositoOrdinanzaPc.getNumMesiDetenzioneDom() != null)
+                        durataEsitoMesi = aDepositoOrdinanzaPc.getNumMesiDetenzioneDom().intValue();
+                    if (aDepositoOrdinanzaPc.getNumGiorniDetenzioneDom() != null)
+                        durataEsitoGiorni = aDepositoOrdinanzaPc.getNumGiorniDetenzioneDom().intValue();
+                }
+            }
+            // MEV_2023-35 - FINE
 		}
 
 		// Fine aggiunta eredità quantum pena

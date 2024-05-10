@@ -252,9 +252,11 @@ public class ActInsFascicoloDaSiusUDS extends ActionSiap
 		// Eliminato controllo sull' ufficio mittente (Ufficio Inesistente)
 		// nel caso di "Iscrizione di una Esecuzione Misura di Sicurezza"
 		String aCodUfficioMittente = "";
-		if (getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO).compareTo("U004") == 0
-				|| getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
-						.compareTo("U019") == 0) {
+		if (   getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO).compareTo("U004") == 0
+			|| getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO).compareTo("U019") == 0
+			// MEV_2023-35 - si aggiunge il codice U126
+			|| getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO).compareTo("U126") == 0
+			) {
 			// 20191128 [SG]: risoluzione Ticket#201911250110 cambio interfaccia di riferimento (era
 			// ICostantiFascicoloSius)
 			// aDescrUfficioMittente = DecodificheUtils.getDescbyCode(DecodificheManager.getInstance()

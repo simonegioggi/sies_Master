@@ -362,9 +362,14 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 			}
 			lEseSSSqlDao.stop();
 
-			if (lEsecuzioneSS.isEmpty())
-				throw new SIUSException(F3BException.USER_MESSAGE,
-						"Esecuzione Sanzione Sostitutiva non trovata");
+			if (lEsecuzioneSS.isEmpty()){
+			  if ("U019".equals(lCodContenuto))
+				throw new SIUSException(F3BException.USER_MESSAGE,"Esecuzione Sanzione Sostitutiva non trovata");
+			  else if ("U126".equals(lCodContenuto))
+			    throw new SIUSException(F3BException.USER_MESSAGE,"Esecuzione Pena Sostitutiva non trovata");
+	          else 
+	            throw new SIUSException(F3BException.USER_MESSAGE,"Esecuzione non trovata");
+			}
 		} catch (DAOException daoEx) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
