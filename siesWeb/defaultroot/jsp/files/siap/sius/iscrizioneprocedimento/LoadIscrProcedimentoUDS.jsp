@@ -125,6 +125,7 @@ if (request.getAttribute("idFascicoloInviato")!=null)
           S22_ems.style.visibility='hidden'; //21/04/2011
           S22_ab.style.visibility='hidden';
           S22_b.style.visibility='hidden';
+          S22_EPS.style.visibility='hidden'; // MEV_2023-35
           resultS22='';
           for (i = 0; i < document.FormTestS22.LowValue.length ; i++ )
           {
@@ -144,6 +145,7 @@ if (request.getAttribute("idFascicoloInviato")!=null)
                   S22_a.style.visibility='hidden';
                   S22_aa.style.visibility='hidden'; // 19/07/2007
                   S22_ems.style.visibility='hidden'; //21/04/2011
+                  S22_EPS.style.visibility='hidden'; // MEV_2023-35
                   resultS22='U004';
                   document.LoadIscrProcedimentoUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.value='<%=annoProvvedimento%>';
                   document.LoadIscrProcedimentoUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.value='<%=progrProvvedimento%>';
@@ -155,6 +157,7 @@ if (request.getAttribute("idFascicoloInviato")!=null)
                   S22_aa.style.visibility='hidden'; // 19/07/2007
                   S22_ems.style.visibility='hidden'; //21/04/2011
                   S22_ab.style.visibility='hidden';
+                  S22_EPS.style.visibility='hidden'; // MEV_2023-35
                   resultS22='S22';
                   document.LoadIscrProcedimentoUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.value='';
                   document.LoadIscrProcedimentoUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.value='';
@@ -172,6 +175,7 @@ if (request.getAttribute("idFascicoloInviato")!=null)
                   S22_a.style.visibility='hidden';
                   S22_aa.style.visibility='hidden';
                   S22_ems.style.visibility='hidden'; //21/04/2011
+                  S22_EPS.style.visibility='hidden'; // MEV_2023-35
                   resultS22='U019';
                   document.LoadIscrProcedimentoUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.value='<%=annoProvvedimento%>';
                   document.LoadIscrProcedimentoUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.value='<%=progrProvvedimento%>';
@@ -182,6 +186,7 @@ if (request.getAttribute("idFascicoloInviato")!=null)
                   S22_ab.style.visibility='hidden';
                   S22_aa.style.visibility='visible';
                   S22_ems.style.visibility='hidden'; //21/04/2011
+                  S22_EPS.style.visibility='hidden'; // MEV_2023-35
                   resultS22='S12';
                   document.LoadIscrProcedimentoUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.value='';
                   document.LoadIscrProcedimentoUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.value='';
@@ -189,26 +194,29 @@ if (request.getAttribute("idFascicoloInviato")!=null)
                 S22_b.style.visibility='visible';
                 break;
               }
+              
               // MEV_2023-35 - 05/2024 PENE SOSTITUTIVE
               if (document.FormTestS22.HighValue[i].value =='S30')
               {
                 if ( document.FormTestS22.LowValue[i].value == 'U126' )
                 {
-                  S22_ab.style.visibility='visible';
+                  S22_ab.style.visibility='hidden';
                   S22_ab.style.top='-20px';
                   S22_a.style.visibility='hidden';
                   S22_aa.style.visibility='hidden';
                   S22_ems.style.visibility='hidden';
+                  S22_EPS.style.visibility='visible'; // MEV_2023-35
                   resultS22='U126';
                   document.LoadIscrProcedimentoUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.value='<%=annoProvvedimento%>';
                   document.LoadIscrProcedimentoUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.value='<%=progrProvvedimento%>';
                 }
                 else
-                {
+                { // figlio
                   S22_a.style.visibility='hidden';
                   S22_ab.style.visibility='hidden';
                   S22_aa.style.visibility='visible';
                   S22_ems.style.visibility='hidden';
+                  S22_EPS.style.visibility='visible'; // MEV_2023-35
                   resultS22='S30';
                   document.LoadIscrProcedimentoUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.value='';
                   document.LoadIscrProcedimentoUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.value='';
@@ -217,6 +225,7 @@ if (request.getAttribute("idFascicoloInviato")!=null)
                 break;
               } 
               // MEV_2023-35 - 05/2024 PENE SOSTITUTIVE - FINE
+              
               // 21/04/2011 MISURE SICUREZZA
               if (document.FormTestS22.HighValue[i].value =='S09')
               {
@@ -227,6 +236,7 @@ if (request.getAttribute("idFascicoloInviato")!=null)
                   S22_a.style.visibility='hidden';
                   S22_aa.style.visibility='hidden';
                   S22_ems.style.visibility='hidden'; //21/04/2011
+                  S22_EPS.style.visibility='hidden'; // MEV_2023-35
                   resultS22='U024';
                   document.LoadIscrProcedimentoUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.value='<%=annoProvvedimento%>';
                   document.LoadIscrProcedimentoUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.value='<%=progrProvvedimento%>';
@@ -237,6 +247,7 @@ if (request.getAttribute("idFascicoloInviato")!=null)
                   S22_ab.style.visibility='hidden';
                   S22_aa.style.visibility='hidden';
                   S22_ems.style.visibility='visible'; //21/04/2011
+                  S22_EPS.style.visibility='hidden'; // MEV_2023-35
                   resultS22='S09';
                   document.LoadIscrProcedimentoUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.value='';
                   document.LoadIscrProcedimentoUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.value='';
@@ -345,22 +356,19 @@ if (request.getAttribute("idFascicoloInviato")!=null)
           document.LoadIscrProcedimentoUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.focus();
           return false;
         }
-        if(resultS22=='U126' &&
-            annoS22 =="" )
+        if(resultS22=='U126' && annoS22 =="" )
         {
           alert("Campo Anno dell'Ordinanza Obbligatorio");
           document.LoadIscrProcedimentoUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.focus();
           return false;
         } 
-        if(resultS22=='S30' &&
-        		  progrS22 =="" )
+        if(resultS22=='S30' && progrS22 =="" )
         {
           alert("Campo Progressivo del Procedimento di Esecuzione della Pena Sostitutiva Obbligatorio");
           document.LoadIscrProcedimentoUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.focus();
           return false;
         }
-        if(resultS22=='U126' &&
-            progrS22 =="" )
+        if(resultS22=='U126' && progrS22 =="" )
         {
           alert("Campo Progressivo dell'Ordinanza Obbligatorio");
           document.LoadIscrProcedimentoUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.focus();
@@ -642,10 +650,16 @@ if (request.getAttribute("idFascicoloInviato")!=null)
         <div id=S22_a style="visibility='visible';">
           Anno/Progressivo del Procedimento di Esecuzione della misura alternativa <font class=ob>(*)</font>
         </div>
-	      <div id=S22_aa style="visibility:hidden; position:absolute; top:+256px;" >
+	    <div id=S22_aa style="visibility:hidden; position:absolute; top:+256px;" >
   	      Anno/Progressivo del Procedimento di Esecuzione della Sanzione Sostitutiva
     	    <font class=ob>(*)</font>
       	</div>
+      	<%-- MEV_2023-35 --%>
+	    <div id=S22_EPS style="visibility:hidden; position:absolute; top:+256px;" >
+	        Anno/Progressivo del Procedimento di Esecuzione della Pena Sostitutiva
+	        <font class=ob>(*)</font>
+	    </div>
+	    <%-- MEV_2023-35 - FINE --%>
       	<div id=S22_ems style="visibility:hidden; position:absolute; top:+256px;" >
   	      Anno/Progressivo del Procedimento di Esecuzione della Misura Sicurezza
     	    <font class=ob>(*)</font>

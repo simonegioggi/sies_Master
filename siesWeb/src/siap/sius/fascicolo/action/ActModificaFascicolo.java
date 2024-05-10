@@ -290,7 +290,10 @@ public class ActModificaFascicolo extends ActionSiap implements ICostantiFascico
 
 		// STUB 30/07/2007 Caricamento Esecuzione Sanzione Sostitutiva.
 		// BigDecimal lIdEsecuzioneSS = null;
-		if (lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U019") == 0) {
+		if (   lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U019") == 0
+		    // MEV_2023-35 aggiunta gestione U126 EPS
+		    || lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U126") == 0
+		   ) {
 			if (!isRequestParameterNullObj(ICostantiEsecuzioneSS.CAMPO_ID_ESECUZIONE_SS)
 					&& getRequestStringParameter(ICostantiEsecuzioneSS.CAMPO_ID_ESECUZIONE_SS).length() > 4) {
 				IEsecuzioneSS lESSCtrl = SIUSLookupRemote.getEsecuzioneSSRemote();
@@ -300,6 +303,7 @@ public class ActModificaFascicolo extends ActionSiap implements ICostantiFascico
 
 				if (lSizeVector > 0)
 					lESSModel.setCodTipoSanzione(lTenori[0].getCodOggettoTenore());
+				
 				lESSModel.setDataOrdinanza(getRequestDateParameter(CAMPO_ANNO_DATA_ATTO, CAMPO_MESE_DATA_ATTO,
 						CAMPO_GIORNO_DATA_ATTO));
 				// Valorizzazione del codice Ufficio
@@ -309,9 +313,13 @@ public class ActModificaFascicolo extends ActionSiap implements ICostantiFascico
 				Collection lUffici = DecodificheManager.getInstance().getTipoUfficio();
 				lCodTipoUfficioMittente = DecodificheUtils.getCodebyDesc(lUffici, lDescrMittente);
 
-				if (lCodTipoUfficioMittente.compareTo("-") == 0)
-					throw new SIUSException(SIUSException.USER_MESSAGE,
-							"Ufficio Mittente non valido per la Sanzione Sostitutiva");
+				if (lCodTipoUfficioMittente.compareTo("-") == 0){
+				  if (lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U019") == 0)
+                    throw new SIUSException(SIUSException.USER_MESSAGE,"Ufficio Mittente non valido per la Sanzione Sostitutiva");
+				  else if (lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U126") == 0)
+                    throw new SIUSException(SIUSException.USER_MESSAGE,"Ufficio Mittente non valido per la Pena Sostitutiva");
+				}
+
 
 				lESSModel.setCodAutoritaEmittOrd(getCodUfficioByCodTipoUfficioDescrComune(
 						lCodTipoUfficioMittente, getRequestStringParameter(CAMPO_DESCR_SEDE_MITTENTE)));

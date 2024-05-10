@@ -99,7 +99,7 @@ while (itx.hasNext()) {
           	S22_ems.style.visibility='hidden'; //29/047/2011
           	S22_ab.style.visibility='hidden';
           	S22_b.style.visibility='hidden';
-          	S22_EPS.style.visibility='hidden'; //19/07/2007
+          	S22_EPS.style.visibility='hidden'; // MEV_2023-35
           	resultS22 = '';
           	for (i = 0; i < document.FormTestS22.LowValue.length; i++) {
             	if (Code == document.FormTestS22.LowValue[i].value) {
@@ -113,14 +113,14 @@ while (itx.hasNext()) {
 							S22_ab.style.top='-20px';
 							S22_a.style.visibility='hidden';
 							S22_aa.style.visibility='hidden'; // 19/07/2007
-							S22_EPS.style.visibility='hidden'; 
+							S22_EPS.style.visibility='hidden'; // MEV_2023-35
 							S22_ems.style.visibility='hidden';
 							resultS22='U004';
                 		} else {
 							S22_a.style.visibility='visible';
 							S22_a.style.top='+4px';
 							S22_aa.style.visibility='hidden'; // 19/07/2007
-							S22_EPS.style.visibility='hidden'; 
+							S22_EPS.style.visibility='hidden'; // MEV_2023-35
 							S22_ems.style.visibility='hidden';
 							S22_ab.style.visibility='hidden';
 							resultS22='S22';
@@ -136,14 +136,14 @@ while (itx.hasNext()) {
 							S22_a.style.visibility='hidden';
 							S22_aa.style.visibility='hidden';
 							S22_ems.style.visibility='hidden';
-							S22_EPS.style.visibility='hidden'; 
+							S22_EPS.style.visibility='hidden'; // MEV_2023-35
 							resultS22='U019';
                			} else {
 							S22_a.style.visibility='hidden';
 							S22_ab.style.visibility='hidden';
 							S22_aa.style.visibility='visible';
 							S22_ems.style.visibility='hidden';
-							S22_EPS.style.visibility='hidden';
+							S22_EPS.style.visibility='hidden'; // MEV_2023-35
 							resultS22='S12';
                 		}
                 		S22_b.style.visibility='visible';
@@ -181,14 +181,14 @@ while (itx.hasNext()) {
 							S22_a.style.visibility='hidden';
 							S22_aa.style.visibility='hidden';
 							S22_ems.style.visibility='hidden';
-							S22_EPS.style.visibility='hidden';
+							S22_EPS.style.visibility='hidden'; // MEV_2023-35
 							resultS22='U024';
                 		} else {
 							S22_a.style.visibility='hidden';
 							S22_ab.style.visibility='hidden';
 							S22_aa.style.visibility='hidden';
 							S22_ems.style.visibility='visible';
-							S22_EPS.style.visibility='hidden';
+							S22_EPS.style.visibility='hidden'; // MEV_2023-35
 							resultS22='S09';
                 		}
                 		S22_b.style.visibility='visible';

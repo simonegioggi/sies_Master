@@ -88,32 +88,43 @@ public class ActInsFascicoloDaSoggettoUDSManuale extends ActionSiap implements I
 		// Recupero del Procedimento di Esecuzione della misura alternativa, nel caso fosse impostato nella
 		// form di inserimento.
 		// N.B. Se non esiste, il controller solleva un errore di eccezione sull'esistenza del procedimento.
-		if ((getRequestBigDecimalParameter(CAMPO_CHIAVE_ANNO_S22) != null)
-				&& (getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO) != null)
-				&& (((getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S22") == 0) && (getRequestStringParameter(
-						CAMPO_COD_CONTENUTO).compareTo("U004") != 0))
-						|| ((getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S12") == 0) && (getRequestStringParameter(
-								CAMPO_COD_CONTENUTO).compareTo("U019") != 0)) || ((getRequestStringParameter(
-						CAMPO_COD_TIPO_REGISTRO).compareTo("S09") == 0) && (getRequestStringParameter(
-						CAMPO_COD_CONTENUTO).compareTo("U024") != 0)))) {
-			// String lCodContenuto =
-			// ((getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S22")==0) ? "U004" : "U019");
-			String lCodContenuto = "";
+	    if (   getRequestBigDecimalParameter(CAMPO_CHIAVE_ANNO_S22) != null
+	        && getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO) != null
+	        && (   (   getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S22") == 0
+	                && getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U004") != 0)
+	            || (   getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S12") == 0 
+	                && getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U019") != 0) 
+	            || (   getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S09") == 0 
+	                && getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U024") != 0)
+	                // MEV_2023-35 - si aggiunge il provvedimento di esecuzione pene sospese
+	            || (   getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S30") == 0 
+	                && getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U126") != 0)
+	                // MEV_2023-35 - FINE
+	           )
+	       ) 
+	    {
+	      // String lCodContenuto =
+	      // ((getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S22")==0) ? "U004" : "U019");
+	      String lCodContenuto = "";
 
-			if (getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S22") == 0)
-				lCodContenuto = "U004";
-			else if (getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S12") == 0)
-				lCodContenuto = "U019";
-			else
-				lCodContenuto = "U024";
+	      if (getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S22") == 0)
+	        lCodContenuto = "U004";
+	      else if (getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S12") == 0)
+	        lCodContenuto = "U019";
+	      else if (getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S09") == 0)
+	        lCodContenuto = "U024";  
+	      // MEV_2023-35 - si aggiunge il provvedimento di esecuzione pene sospese      
+	      else if (getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S30") == 0)
+	        lCodContenuto = "U126";
+	      // MEV_2023-35 - FINE	      
 
-			IFascicoloSiusUDS lCtrl = SIUSLookupRemote.getFascicoloSiusUDSRemote();
-			/* boolean esiste = */lCtrl.ExistProcedimentoEsecuzione(
-					getRequestBigDecimalParameter(CAMPO_CHIAVE_ANNO_S22),
-					getRequestBigDecimalParameter(CAMPO_CHIAVE_PROGR_S22), lCodContenuto,
-					getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO), getCodUfficioUtenteConnesso(),
-					lSoggettoMod.getIdSoggetto());
-		}
+	      IFascicoloSiusUDS lCtrl = SIUSLookupRemote.getFascicoloSiusUDSRemote();
+	      /* boolean esiste = */lCtrl.ExistProcedimentoEsecuzione(
+	          getRequestBigDecimalParameter(CAMPO_CHIAVE_ANNO_S22),
+	          getRequestBigDecimalParameter(CAMPO_CHIAVE_PROGR_S22), lCodContenuto,
+	          getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO), getCodUfficioUtenteConnesso(),
+	          lSoggettoMod.getIdSoggetto());
+	    }
 
 		// Istanzio il Model che incapsula il FascicoloSIUS e il GeneraleProcedimento
 		FascicoloGPModel lFasGPMod = new FascicoloGPModel();
@@ -210,8 +221,12 @@ public class ActInsFascicoloDaSoggettoUDSManuale extends ActionSiap implements I
 		// Eliminato controllo sull' ufficio mittente (Ufficio Inesistente)
 		// nel caso di "Iscrizione di una Esecuzione Misura di Sicurezza"
 		String aCodUfficioMittente = "";
-		if (getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U004") == 0
-				|| getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U019") == 0) {
+		if (   getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U004") == 0
+		    || getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U019") == 0
+		    // MEV_2023-35 - si aggiunge U126
+			|| getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U126") == 0
+		   ) 
+		{// In caso di ESS, EPS e EMA decodifico l'ufficio Mittente e lo salvo su GP.COD_UFF_MITT
 			aDescrUfficioMittente = DecodificheUtils.getDescbyCode(DecodificheManager.getInstance()
 					.getMittenteAtto(), getRequestStringParameter(CAMPO_COD_MITTENTE_ATTO));
 			aCodUfficioMittente = getCodUfficioByCodTipoUfficioDescrComune(DecodificheUtils.getCodebyDesc(

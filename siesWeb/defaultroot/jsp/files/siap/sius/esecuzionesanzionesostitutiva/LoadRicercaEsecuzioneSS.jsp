@@ -132,8 +132,10 @@ U126 per EPS
     </tr>
   </table>
 </form>
+
 <form method="POST" action="<%=IWebConstants.PG_MAIN%>" name='f'>
   <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.sius.esecuzionesanzionesostitutiva.action.ActRicercaEsecuzioneSS">
+  <input type="HIDDEN" name="<%=ICostantiFascicoloSius.CAMPO_COD_CONTENUTO%>" value="<%=ContenutoES%>">
 
   <table cellpadding=2 cellspacing=2 width=50% >
     <tr><td class="Titolo" colspan=4>Periodo</td></tr>

@@ -11,6 +11,22 @@
 <jsp:useBean id="esecuzioni" scope="request" class="java.util.Vector" />
 <jsp:useBean id="TornaQui"     scope="request" class="java.lang.String"/>
 
+<%-- MEV_2023-35 Si aggiunge il codContenuto per gestire sia ESS che ESP --%>
+<jsp:useBean id="CodContenutoES" scope="request" class="java.lang.String"/>
+
+<%
+String strTitolo = "";
+String strTitoloColonna = "";
+if ("U126".equals(CodContenutoES)) {
+  strTitolo = "Elenco Procedimenti di Esecuzione Pene Sostitutive";
+  strTitoloColonna = "Pena da eseguire";
+}
+else {
+  strTitolo = "Elenco Procedimenti di Esecuzione Sanzioni Sostitutive";
+  strTitoloColonna = "Sanzione da eseguire";
+}
+%>
+
 <%
   // presenza del Link per il bottone di ritorno
   boolean retFlag = false;
@@ -30,7 +46,7 @@
   <FORM method="POST" name="elenco" action="<%=IWebConstants.PG_MAIN%>">
   <table>
     <tr><td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
-      <td class="LBG"><font class=label>Funzione :</font>&nbsp;<font class="campo">Elenco Procedimenti di Esecuzione Sanzioni Sostitutive</font></td>
+      <td class="LBG"><font class=label>Funzione :</font>&nbsp;<font class="campo"><%=strTitolo%></font></td>
    </tr>
   </table>
 
@@ -42,7 +58,7 @@
       <td class="int">Ordinanza</td>
       <td class="int">UDS Emittente</td>
       <td class="int">Data Emissione</td>
-      <td class="int">Sanzione da eseguire</td>
+      <td class="int"><%=strTitoloColonna%></td>
       <td class="int">Data inizio sanzione</td>
       <td class="int">Soggetto</td>
       <td class="int">Azioni</td>
@@ -79,6 +95,7 @@
              <jsp:param name="IdFascicoloSius" value="<%=esecuzione.getFascicoloSiusModel().getIdFascicoloSius()%>" />
              <jsp:param name="IdFascicoloSIEP" value="<%=esecuzione.getFascicoloSiusModel().getFasSieIdFascicoloSiep()%>" />
              <jsp:param name="TornaQui" value="<%=TornaQui%>" />
+             <jsp:param name="CodContenutoES" value="<%=CodContenutoES%>" /> 
           </jsp:include>
         </td>
       </tr>

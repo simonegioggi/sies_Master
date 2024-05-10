@@ -196,6 +196,8 @@ public interface ICostantiFascicoloSius
   public static final String COD_OGGETTO_PROCEDIMENTO_MA = "U004";  // Esecuzione Misura Alternativa
   public static final String COD_OGGETTO_PROCEDIMENTO_SS = "U019";  // Esecuzione Sanzioni Sostitutive
   public static final String COD_OGGETTO_PROCEDIMENTO_MS = "U024";  // Esecuzione Misure di Sicurezza
+  // MEV_2023-35 
+  public static final String COD_OGGETTO_PROCEDIMENTO_PS = "U126";  // Esecuzione Pen Sostitutive 
 
   // CODIFICA STATO FASCICOLO
   public static final String COD_DEFINITO               = "01";

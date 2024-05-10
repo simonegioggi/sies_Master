@@ -1084,8 +1084,9 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 			}
 			// In caso di Applicazione Sanzioni Sostitutive (U019), vengono inserite le occorrenze di
 			// ESECUZIONE_SANZIONE_SOSTITUTIVA.
-			else if (aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
-					.equals("U019")) {
+			// MEV_2023-35 - Si gestisce l'esecuzione Pene Sostitutive (U126) come le Sanzioni Sostitutive (U019) 
+			else if (   aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U019")
+                     || aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U126")) {
 				if (insertEMA_ESS == true)
 					// insertESS(aFascicoloGPModel, aIdEventoInviato, lConn );
 					insertESS(aFascicoloGPModel, aIdEventoInviato, lConn, aDurataEsitoAnni, aDurataEsitoMesi,
@@ -1103,9 +1104,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				lGenProDao.update();
 			}
 			// In caso di Applicazione Misure Sicurezza (U024), vengono inserite le occorrenze di
-			// ESECUZIONE_MISURA_SICUREZZA.
-			else if (aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
-					.equals("U024")) {
+			// ESECUZIONE_MISURA_SICUREZZA.			
+			else if (   aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U024")){
 				String oggEsecDaAMS = "";
 				if (insertEMA_ESS == true)
 					oggEsecDaAMS = insertEMS(aFascicoloGPModel, aIdEventoInviato, lConn, aDurataEsitoAnni,
@@ -1757,7 +1757,10 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 			}
 			// 28/08/2007 In caso di Concessione Sanzioni Sostitutive (U019), viene inserita l'occorrenza di
 			// ESECUZIONE_SANZIONE_SOSTITUTIVA.
-			if (aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U019")) {
+			// MEV_2023-35 si aggiunge la gestione delle Esecuzione Pene Sospese (U126)
+			//if (aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U019")) {
+			if (   aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U019")
+			    || aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U126")) {
 				// Lettura dell'Ordinanza collegata.
 				DepositoOrdinanzaPcModel lDepOrdMod = new DepositoOrdinanzaPcModel();
 				lDepOrdSqlDao = new DepositoOrdinanzaPcSqlDAO(lConn);
@@ -1822,6 +1825,7 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 					lSanSosModel.setCodTipoSanzione(aFascicoloGPModel.getTenori()[0].getCodOggettoTenore());
 				else
 					lSanSosModel.setCodTipoSanzione("-");
+				
 				// Valorizzazione del codice Ufficio mittente, se presente.
 				if (aFascicoloGPModel.getGeneraleProcedimentoModel().getCodUfficioMittente().length() > 1)
 					lSanSosModel.setCodAutoritaEmittOrd(
@@ -1835,16 +1839,15 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				// Caso di Inserimento ESECUZIONE_SANZIONE_SOSTITUTIVA - ISCRIZIONE.
 				// ATTENZIONE! Occorre Updatare il Generale Procedimento appena inserito nei campi ANNO_S1 &
 				// PROGR_S1 poichè in essi hanno "viaggiato" Anno e Numero Ordinanza!
-				if (aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
-						.equals("U019")) {
-					aFascicoloGPModel.getGeneraleProcedimentoModel()
-							.setAnnoS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
-					aFascicoloGPModel.getGeneraleProcedimentoModel()
-							.setProgrS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
+				//if (aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U019")) {
+				if (   aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U019")
+				    || aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U126")) 
+				{
+					aFascicoloGPModel.getGeneraleProcedimentoModel().setAnnoS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
+					aFascicoloGPModel.getGeneraleProcedimentoModel().setProgrS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
 					// Set del DAO e aggiornamento del GeneraleProcedimento.
 					lGenProDao.setDAOFromModelForUpdate(aFascicoloGPModel.getGeneraleProcedimentoModel());
-					lGenProDao.setCondizioneUpdate(
-							aFascicoloGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
+					lGenProDao.setCondizioneUpdate(aFascicoloGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 					lGenProDao.update();
 				}
 			}
@@ -2511,8 +2514,9 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 			}
 			// In caso di Applicazione Sanzioni Sostitutive (U019), viene inserita l'ccorrenza di
 			// ESECUZIONE_SANZIONE_SOSTITUTIVA.
-			else if (aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
-					.equals("U019")) {
+			// MEV_2023-35 - Si gestisce l'esecuzione Pene Sostitutive (U126) come le Sanzioni Sostitutive (U019) 
+			else if (   aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U019")
+			         || aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U126")) {
 				if (insertEMA_ESS == true)
 					// insertESS(aFascicoloGPModel, null, lConn );
 					insertESS(aFascicoloGPModel, null, lConn, 0, 0, 0);

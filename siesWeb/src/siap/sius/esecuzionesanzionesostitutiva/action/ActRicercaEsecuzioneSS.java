@@ -76,6 +76,7 @@ public class ActRicercaEsecuzioneSS extends ActionSiap implements ICostantiEsecu
 		String lCodContenuto = null;
 		if (!isRequestParameterNullObj(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO))
 		  lCodContenuto = getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO);
+		setRequestAttribute("CodContenutoES", lCodContenuto);
 		
 		String lReturnPage = "";
 		IEsecuzioneSS lEseSSCtrl = SIUSLookupRemote.getEsecuzioneSSRemote();

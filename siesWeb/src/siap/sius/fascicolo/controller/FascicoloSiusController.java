@@ -1843,7 +1843,13 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 					insertEMS = true;
 				if (lGenMod.getCodOggettoProcedimento().compareTo("U024") == 0)
 					deleteEMS = true;
-
+				
+				// MEV_2023-35 - si gestisce ance il COD U126 per esecuzione Pena Sospese (scrivono anche lore su EsecuzioneSanzioneSost)
+				if (aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U126") == 0)
+                  insertESS = true;
+                if (lGenMod.getCodOggettoProcedimento().compareTo("U126") == 0)
+                  deleteESS = true;
+                // MEV_2023-35 - FINE
 			}
 
 			// Set del DAO e aggiornamento del FascicoloSius.
@@ -1858,14 +1864,15 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 			 * Data : 11 giu 2020
 			 * Branch : MAC_20200610014
 			 */
-			if (aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U004")
-					|| aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
-							.equals("U019")
-					|| aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
-							.equals("U024")) {
+			if (   aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U004")
+			    || aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U019")
+			    // MEV_2023-35 - si gestisce ance il COD U126 per esecuzione Pena Sospese
+			    || aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U026")
+				|| aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U024")) {
 				// Caso di Inserimento ESECUZIONE_MISURA_ALTERNATIVA - U004
 				// Caso di Inserimento ESECUZIONE_SANZIONE_SOSTITUTIVA - U019
 				// Caso di Inserimento ESECUZIONE_MISURA_SICUREZZA - U024
+			    // Caso di Inserimento ESECUZIONE_PENA_SOSTITUTIVA - U126
 				// ATTENZIONE! Occorre Updatare il Generale Procedimento appena inserito nei campi ANNO_S1 &
 				// PROGR_S1 poichè in essi hanno "viaggiato" Anno e Numero Ordinanza!
 				aFascicoloGPModel.getGeneraleProcedimentoModel()
