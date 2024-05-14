@@ -44,23 +44,29 @@
 <%
 // MEV_2023-35: si gestisce in form anche l'esecuzione Pene sostitutive
 String codOggettoProcedimentoES = sanzioneUno.getGeneraleProcedimentoModel().getCodOggettoProcedimento();
+String strTitoloFunzione = "";
+String strLabelBtnIscrizione = "";
+String strLabelBtnModifica = "";
 String strProcedimentES = "";
 String strDurataES = "";
 String strElencoES = "";
 String strEsecuzionePriva ="";
-String strTitoloFunzione = "";
 if ("U019".equals(codOggettoProcedimentoES)) {
-  strTitoloFunzione  = "Elenco dei Procedimenti relativi all' Esecuzione della Sanzione Sostitutiva";
-  strProcedimentES   = "N.ro Procedimento E.S.S. : ";
-  strDurataES        = "Durata sanzione: ";
-  strElencoES        = "Elenco Periodi Sanzione Sostitutiva ";
-  strEsecuzionePriva = "Esecuzione Sanzione Sostitutiva priva di procedimenti";
+  strTitoloFunzione     = "Elenco dei Procedimenti relativi all' Esecuzione della Sanzione Sostitutiva";
+  strLabelBtnIscrizione = "Iscrizione procedimento di Esecuzione S.S.";
+  strLabelBtnModifica   = "Modifica procedimento di Esecuzione S.S.";
+  strProcedimentES      = "N.ro Procedimento E.S.S. : ";
+  strDurataES           = "Durata sanzione: ";
+  strElencoES           = "Elenco Periodi Sanzione Sostitutiva ";
+  strEsecuzionePriva    = "Esecuzione Sanzione Sostitutiva priva di procedimenti";
 } else if ("U126".equals(codOggettoProcedimentoES)) {
-  strTitoloFunzione  = "Elenco dei Procedimenti relativi all' Esecuzione della Pena Sostitutiva";
-  strProcedimentES   = "N.ro Procedimento E.P.S. : ";
-  strDurataES        = "Durata pena: ";
-  strElencoES        = "Elenco Periodi Pena Sostitutiva ";
-  strEsecuzionePriva = "Esecuzione Pena Sostitutiva priva di procedimenti";
+  strTitoloFunzione     = "Elenco dei Procedimenti relativi all' Esecuzione della Pena Sostitutiva";
+  strLabelBtnIscrizione = "Iscrizione procedimento di Esecuzione P.S.";
+  strLabelBtnModifica   = "Modifica procedimento di Esecuzione P.S.";
+  strProcedimentES      = "N.ro Procedimento E.P.S. : ";
+  strDurataES           = "Durata pena: ";
+  strElencoES           = "Elenco Periodi Pena Sostitutiva ";
+  strEsecuzionePriva    = "Esecuzione Pena Sostitutiva priva di procedimenti";
 }
 %>
 <html>
@@ -113,11 +119,11 @@ if ("U019".equals(codOggettoProcedimentoES)) {
 	      if ( dettaglioFascSiep !=null  )
 	      {%>
 	        <a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.fascicolo.action.ActLoadInsFascicoloDaSoggettoUDS&<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>=<%=IdFascicoloSius%>&TornaQui=<%=TornaQui%>">
-	          <img align="middle" src="<%=IWebConstants.IMAGES_DIR%>new24.gif" alt="Iscrizione procedimento di Esecuzione S.S." width="24" height="24" border="0">
+	          <img align="middle" src="<%=IWebConstants.IMAGES_DIR%>new24.gif" alt="<%=strLabelBtnIscrizione %>" width="24" height="24" border="0">
 	        </a>
 	      <%}else{%>
 	        <a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.fascicolo.action.ActLoadInsFascicoloDaSoggettoUDS&<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>=<%=IdFascicoloSius%>&<%=ICostantiSoggetto.CAMPO_ID_SOGGETTO%>=<%=IdSoggetto%>&TornaQui=<%=TornaQui%>">
-	          <img align="middle" src="<%=IWebConstants.IMAGES_DIR%>new24.gif" alt="Iscrizione procedimento di Esecuzione S.S." width="24" height="24" border="0">
+	          <img align="middle" src="<%=IWebConstants.IMAGES_DIR%>new24.gif" alt="<%=strLabelBtnIscrizione %>"  width="24" height="24" border="0">
 	        </a>
 	      <%}%>
 	      </td>
@@ -128,11 +134,11 @@ if ("U019".equals(codOggettoProcedimentoES)) {
 	      if ( dettaglioFascSiep !=null  )
 	      {%>
 	        <a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.esecuzionesanzionesostitutiva.action.ActLoadModificaEsecuzioneSS&<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>=<%=IdFascicoloSius%>&<%=ICostantiSoggetto.CAMPO_ID_SOGGETTO%>=<%=IdSoggetto%>&<%=ICostantiEsecuzioneSS.CAMPO_ID_FASCICOLO_SIEP%>=<%=dettaglioFascSiep.getFascicoloSiep().getIdFascicoloSiep()%>&TornaQui=<%=TornaQui%>">
-	          <img align="middle" src="<%=IWebConstants.IMAGES_DIR%>modifica24.gif" alt="Modifica procedimento di Esecuzione S.S." width="24" height="24" border="0">
+	          <img align="middle" src="<%=IWebConstants.IMAGES_DIR%>modifica24.gif" alt="<%=strLabelBtnModifica %>" width="24" height="24" border="0">
 	        </a>
 	      <%}else{%>
 	        <a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.esecuzionesanzionesostitutiva.action.ActLoadModificaEsecuzioneSS&<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>=<%=IdFascicoloSius%>&<%=ICostantiSoggetto.CAMPO_ID_SOGGETTO%>=<%=IdSoggetto%>&TornaQui=<%=TornaQui%>">
-	          <img align="middle" src="<%=IWebConstants.IMAGES_DIR%>modifica24.gif" alt="Modifica procedimento di Esecuzione S.S." width="24" height="24" border="0">
+	          <img align="middle" src="<%=IWebConstants.IMAGES_DIR%>modifica24.gif" alt="<%=strLabelBtnModifica %>" width="24" height="24" border="0">
 	        </a>
 	      <%}%>
 	      </td>

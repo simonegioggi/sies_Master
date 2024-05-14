@@ -28,6 +28,13 @@
 
 <%
    FascicoloGPModel fascicoloUno = (FascicoloGPModel) fascicoli.get(0);
+
+//MEV_2023-35 si parametrizza il titolo funzione
+String strTitoloFunzione = "";
+if ("U019".equals(codContenuto))
+  strTitoloFunzione = "Elenco Soggetti con Procedimenti di Esecuzione Sanzioni Sostitutive";
+else if ("U126".equals(codContenuto))
+  strTitoloFunzione = "Elenco Soggetti con Procedimenti di Esecuzione Pene Sostitutive";
 %>
 
 <html>
@@ -42,7 +49,7 @@
   <FORM method="POST" name="elenco" action="<%=IWebConstants.PG_MAIN%>">
   <table>
     <tr><td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
-      <td class="LBG"><font class=label>Funzione :</font>&nbsp;<font class="campo">Elenco Soggetti con Procedimenti di Esecuzione Sanzioni Sostitutive</font></td>
+      <td class="LBG"><font class=label>Funzione :</font>&nbsp;<font class="campo"><%=strTitoloFunzione %></font></td>
 
       <!-- BOTTONE DI ISCRIZIONE NUOVO SOGGETTO -->
       <td class="LBG">

@@ -6,13 +6,11 @@ import f3b.util.F3BException;
 import f3b.web.html.Option;
 
 /**
- * <p>Title: ActLoadRicercaSoggettiConProcDiEsecuzioneSS</p>
- * <p>Description: Azione di caricamento della form di ricerca dei Soggetti con Procedimenti di Esecuzione S.S.</p>
- * <p>Copyright: Bull Italia Copyright (c) 2007</p>
- * <p>Company: EUNICS S.p.A.</p>
+ * MEV_2023-35 Nuovo aggancio per la ricerca dei procedimenti di esecuzione Pene Sostitutive per SOggettp
+ *
+ *
  */
-
-public class ActLoadRicercaSoggettiConProcDiEsecuzioneSS extends ActionSiap implements ICostantiFascicoloSius
+public class ActLoadRicercaSoggettiConProcDiEsecuzionePS extends ActionSiap implements ICostantiFascicoloSius
 {
   public String processRequest() throws F3BException
   {
@@ -27,13 +25,13 @@ public class ActLoadRicercaSoggettiConProcDiEsecuzioneSS extends ActionSiap impl
 
     // Imposta Contenuto.
     lOption = new Option( DecodificheManager.getInstance().getOggettoProcedimento(), 75);
-    lOption.setFilter("U019");
+    lOption.setFilter("U126");
     setRequestAttribute("contenuto", "" + lOption );
     
     // MEV_2023-35 si passa il cotenuto alla form per parametrizzare le etichette
-    // essendo la jsp utilizzata anche per EPS (U126)
-    setRequestAttribute("ContenutoES","U019");
+    // essendo la jsp utilizzata anche per EAS (U019)
+    setRequestAttribute("ContenutoES","U126");
 
-    return PG_LOAD_RICERCASOGGETTICONPROCDIESECUZIONESS; //restituisce la jsp di VIEW
+    return PG_LOAD_RICERCASOGGETTICONPROCDIESECUZIONESS;
   }
 }

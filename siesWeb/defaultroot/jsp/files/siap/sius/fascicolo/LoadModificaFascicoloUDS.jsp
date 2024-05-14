@@ -272,7 +272,7 @@ String lDisable = "";  // 25/03/2007
                   S22_EPS.style.visibility='hidden'; // MEV_2023-35
                   resultS22='S30';
                 }
-S22_b.style.visibility='visible';
+                S22_b.style.visibility='visible';
                 // Nella modifica del contenuto, per le APS NON vengono ripuliti i campi Anno e numero Ordinanza.
                 if ( document.FormTestS22.InitHighValue.value == 'S30' )
                 {
@@ -297,6 +297,7 @@ S22_b.style.visibility='visible';
                   S22_a.style.visibility='hidden';
                   S22_aa.style.visibility='hidden';
                   S22_ems.style.visibility='hidden';
+                  S22_EPS.style.visibility='hidden'; // MEV_2023-35
                   resultS22='U024';
                 }
                 else
@@ -305,6 +306,7 @@ S22_b.style.visibility='visible';
                   S22_ab.style.visibility='hidden';
                   S22_aa.style.visibility='hidden';
                   S22_ems.style.visibility='visible';
+                  S22_EPS.style.visibility='hidden'; // MEV_2023-35
                   resultS22='S09';
                 }
                 S22_b.style.visibility='visible';
