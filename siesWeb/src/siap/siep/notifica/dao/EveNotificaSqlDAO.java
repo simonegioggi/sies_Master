@@ -80,6 +80,8 @@ public class EveNotificaSqlDAO extends NotificaSqlDAO
       //modifica relativa al tipo istituto
       " N.IST_DET_ID_ISTITUTO_DETENZIONE, " +
       " N.ID_PARTE_UDIENZA" +
+      // Ticket#202405170122 - angiunta colonna 
+       " , N.ID_CIVILMENTE_OBBLIGATO "+
       " FROM NOTIFICA N, CG_REF_CODES COD_NOT,"+
       " CG_REF_CODES COD_ESI, "+
       " EVENTO E, CG_REF_CODES CODMOV " +
