@@ -4,4 +4,8 @@ Questa release verrà rilasciata il 24/05/2024 (Patch mese di Maggio 2024)
 
 Comprende i seguenti Ticket MAC:
 
-1)	Ticket#
+1)	Ticket#202405170122 — errore nella ricerca di fascicoli SIUS in cui è presente una richiesta istruttoria
+	Modulo corretto:
+	-	siap.siep.notifica.dao.EveNotificaSqlDAO.java	(Metodo getSqlQuery())
+	Aggiunta colonna "ID_CIVILMENTE_OBBLIGATO" nella select in quanto EveNotificaSqlDAO estende "NotificaSqlDAO"
+	richiamandone il "getModel()" dove è referenziata la colonna.
