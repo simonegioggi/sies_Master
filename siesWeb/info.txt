@@ -9,3 +9,8 @@ Comprende i seguenti Ticket MAC:
 	-	siap.siep.notifica.dao.EveNotificaSqlDAO.java	(Metodo getSqlQuery())
 	Aggiunta colonna "ID_CIVILMENTE_OBBLIGATO" nella select in quanto EveNotificaSqlDAO estende "NotificaSqlDAO"
 	richiamandone il "getModel()" dove è referenziata la colonna.
+
+2)	Ticket#202405200130 — Errore verbnale di vane
+	Modulo modificato:
+	-	siap.siep.verbale.action.ActInserisciVerbaleVaneRicerche
+	Si testa esplicitamente che non si arrivi dalla Omesse notifiche dell'Ordine Ingiunzione
