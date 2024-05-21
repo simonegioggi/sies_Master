@@ -2,6 +2,9 @@ package siap.siep.verbale.action;
 
 import java.math.BigDecimal;
 
+import org.apache.log4j.Logger;
+
+import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
 import f3b.web.IWebConstants;
@@ -18,11 +21,13 @@ import siap.siep.verbale.controller.IVerbale;
 import siap.siep.verbale.model.VerbaleModel;
 
 /**
- * Title: ActInserisciVerbale Description: Classe Action per l'inserimento di Verbale
+ * ActInserisciVerbale - Classe Action per l'inserimento di Verbale
  *
  * @version 1.0
  */
 public class ActInserisciVerbaleVaneRicerche extends ActionSiap implements ICostantiVerbale {
+
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	/**
 	 * Azione di Inserimento del Verbale
@@ -80,17 +85,20 @@ public class ActInserisciVerbaleVaneRicerche extends ActionSiap implements ICost
 
 		// se proviene dalla maschera di omesse notifiche
 		EventoNotificaModel lEveNot = null;
-		// 2023.12.20 FlagOmesse è sempre presente come campo hidden nella jsp per cui il test era
-		// SEMPRE true
-		// if (!isRequestParameterNullObj("FlagOmesse")) {
-		if (!isRequestParameterNullEmptyObj("FlagOmesse")) {
-			// 2023.12.20 - FINE
-			setRequestAttribute("FlagOmesse", getRequestStringParameter("FlagOmesse"));
-			lEveNot = new EventoNotificaModel();
-			IEventoSimeone lCtrl = SICOLookupRemote.getEventoSimeoneRemote();
-			lEveNot = lCtrl.ExRicercaEventoNotificaByIdFascicoloDescrMotivo(lFascMod.getIdFascicoloSiep(),
-					"LS");
-		}
+		// Ticket#202405200130 — Errore verbale di vane
+		// Solo se NON provengo dall'omesse notifiche Ordine Ingiunzione effettuo il precedente controllo LS
+		// altrimenti devo ricercare LEGA_VVR direttamente nel controller
+		if (isRequestParameterNullEmptyObj("idEventoOIPP")) {
+			siesLogger.debug("Non provengo da OI testo LS");
+			if (!isRequestParameterNullObj("FlagOmesse")) {
+				setRequestAttribute("FlagOmesse", getRequestStringParameter("FlagOmesse"));
+				lEveNot = new EventoNotificaModel();
+				IEventoSimeone lCtrl = SICOLookupRemote.getEventoSimeoneRemote();
+				lEveNot = lCtrl.ExRicercaEventoNotificaByIdFascicoloDescrMotivo(lFascMod.getIdFascicoloSiep(),
+						"LS");
+			}
+		} else
+			siesLogger.debug("Provengo da OI NON testo LS");
 
 		// NEL CONTROLLER GESTISCE LO STATO PROCEDIMENTO
 		IVerbale lCtrl = SIEPLookupRemote.getVerbaleRemote();
@@ -104,6 +112,7 @@ public class ActInserisciVerbaleVaneRicerche extends ActionSiap implements ICost
 			setRequestAttribute("FlagOmesse", getRequestStringParameter("FlagOmesse"));
 
 		// MEV_2023-33 se proviene dalla maschera di omesse notifiche
+		// ??????????????????????????????????????????
 		if (!isRequestParameterNullObj("idEventoOIPP")) {
 			setRequestAttribute("idEventoOIPP", getRequestStringParameter("idEventoOIPP"));
 		}
