@@ -1,10 +1,9 @@
-Ticket#202405170122 — errore nella ricerca di fascicoli SIUS in cui è presente una richiesta istruttoria
+Ticket#202405200130 — Errore verbnale di vane
 
 
-Modulo corretto
-siap.siep.notifica.dao.EveNotificaSqlDAO
+Modulo modificato
+siap.siep.verbale.action.ActInserisciVerbaleVaneRicerche
 
-Metodo getSqlQuery()
-Aggiunta colonna ID_CIVILMENTE_OBBLIGATO nella select in quanto 
-EveNotificaSqlDAO estende  NotificaSqlDAO richiamandone il getModel 
-dove è referenziata la colonna
+Si testa esplicitamente che non si arrivi dalla Omesse notifiche dell'Ordine Ingiunzione
+
+
