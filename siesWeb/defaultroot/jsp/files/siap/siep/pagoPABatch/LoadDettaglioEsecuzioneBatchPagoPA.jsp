@@ -196,7 +196,9 @@ if (BatchModel.getNumErroriInvocazione()!=null && BatchModel.getNumErroriInvocaz
           <% } %>
           </td>
           <td class="c">
-            <% if (invocaModel.getXmlRisposta()!=null && invocaModel.getXmlRisposta().length()>0) { %>
+            <%-- Ticket#202405210111 - 20240521012 - Si sposta l'xml di risposta su un campo clob causa dimensioni > 4000 --%>
+            <%-- if (invocaModel.getXmlRisposta()!=null && invocaModel.getXmlRisposta().length()>0) { --%>
+            <% if (invocaModel.getXmlRispostaClob()!=null && invocaModel.getXmlRispostaClob().length()>0) { %>
             <table>
               <tr>
 	              <td class="c" style="border-style:none;">
