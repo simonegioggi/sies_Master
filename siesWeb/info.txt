@@ -1,10 +1,13 @@
-Ticket#202405170122 — errore nella ricerca di fascicoli SIUS in cui è presente una richiesta istruttoria
+Ticket#202405210111 - 20240521012 
 
 
-Modulo corretto
-siap.siep.notifica.dao.EveNotificaSqlDAO
 
-Metodo getSqlQuery()
-Aggiunta colonna ID_CIVILMENTE_OBBLIGATO nella select in quanto 
-EveNotificaSqlDAO estende  NotificaSqlDAO richiamandone il getModel 
-dove è referenziata la colonna
+Nel salvataggio in tabella INVOCAZIONE_PAGOPA.XML_RISPOSTA della risposta
+ricevuta da pagopa il sql andava in errore perchè il campo varchar2 è insufficiente 
+in caso di numerosi bollettini restituiti da pagop a(rateizzazione?).
+E stato aggiunto iun campo CLOG in tabella XML_RISPOSTA_CLOB dove inserire i dati.
+
+Quelli già a sistema vengono migrati sul campo nuovo.
+Il vecchio campo XML_RISPOSTA è stato "rimosso" da dao, sql e Model.
+Non è più usato.
+
