@@ -26,7 +26,10 @@ public class InvocazionePagopaSqlDAO extends SIAPSqlDAO {
         lStatement += " SELECT ID_INVOCAZIONE_PAGOPA, "
                            + " DATA_INVOCAZIONE, "
                            + " CODICE_FISCALE, IUV, "
-                           + " XML_RICHIESTA, XML_RISPOSTA, "
+                           // Ticket#202405210111 - 20240521012 - Si sposta l'xml di risposta su un campo clob causa dimensioni > 4000
+                           //+ " XML_RICHIESTA, XML_RISPOSTA, "
+                           + " XML_RICHIESTA, XML_RISPOSTA_CLOB, "
+                           // Ticket#202405210111 - 20240521012 - FINE
                            + " ERRORE, FK_ID_BATCH, "
                            + " COD_OPERATORE_INSERIMENTO, DATA_INSERIMENTO, COD_UFFICIO_INSERIMENTO, "
                            + " COD_OPERATORE_AGGIORNAMENTO, DATA_AGGIORNAMENTO, COD_UFFICIO_AGGIORNAMENTO "; 
@@ -45,7 +48,11 @@ public class InvocazionePagopaSqlDAO extends SIAPSqlDAO {
 		lModel.setCodiceFiscale        (getString("CODICE_FISCALE"));
 		lModel.setIuv                  (getString("IUV"));
 		lModel.setXmlRichiesta         (getString("XML_RICHIESTA"));
-		lModel.setXmlRisposta          (getString("XML_RISPOSTA"));
+		// Ticket#202405210111 - 20240521012 - Si sposta l'xml di risposta su un campo clob causa dimensioni > 4000
+		//lModel.setXmlRisposta          (getString("XML_RISPOSTA"));
+		lModel.setXmlRispostaClob      (getString("XML_RISPOSTA_CLOB"));
+	  // Ticket#202405210111 - 20240521012 - FINE
+	
 		lModel.setErrore               (getString("ERRORE"));
 		lModel.setFkIdBatch            (getBigDecimal("FK_ID_BATCH"));
 		

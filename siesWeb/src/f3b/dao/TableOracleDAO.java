@@ -800,7 +800,14 @@ public class TableOracleDAO extends GenericDAO {
 
 				case CLOB:
 					// if (lValue != null)
-					mPs.setClob(lFieldsCount, (Clob) lValue);
+				  
+				  // Ticket#202405210111 - 20240521012 - Si sposta l'xml di risposta su un campo clob causa dimensioni > 4000
+				  //mPs.setClob(lFieldsCount, (Clob) lValue);
+				  Clob myClob = mPs.getConnection().createClob();
+				  myClob.setString(1, (String) lValue);
+				  mPs.setClob(lFieldsCount, myClob);
+				  // Ticket#202405210111 - 20240521012 - FINE
+					
 					// else
 					// mPs.setClob(lFieldsCount, null);
 					break;

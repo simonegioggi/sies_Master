@@ -32,7 +32,10 @@ public class ActDownloadXMLInvocazionePagoPa extends ActionSiap implements ICost
 	    	nomeFile = "Richiesta.xml";
 	    }
 	    else if (tipoXml.equals(ICostantiInvocazionePagopa.CAMPO_XML_RISPOSTA)) {
-	    	xmlDownload = lInvocazioneModel.getXmlRisposta();
+	      // Ticket#202405210111 - 20240521012 - Si sposta l'xml di risposta su un campo clob causa dimensioni > 4000
+	    	//xmlDownload = lInvocazioneModel.getXmlRisposta();
+	    	xmlDownload = lInvocazioneModel.getXmlRispostaClob();
+	    	// Ticket#202405210111 - 20240521012 -
 	    	nomeFile = "Risposta.xml";
 	    }
 	    

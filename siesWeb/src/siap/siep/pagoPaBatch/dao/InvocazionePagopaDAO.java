@@ -30,7 +30,10 @@ public class InvocazionePagopaDAO extends SIAPTableDAO {
 		setField("CODICE_FISCALE", STRING);
 		setField("IUV", STRING);
 		setField("XML_RICHIESTA", STRING);
-		setField("XML_RISPOSTA", STRING);		
+	  // Ticket#202405210111 - 20240521012 - Si sposta l'xml di risposta su un campo clob causa dimensioni > 4000
+		// setField("XML_RISPOSTA", STRING);		
+    setField("XML_RISPOSTA_CLOB", CLOB); 
+    // Ticket#202405210111 - 20240521012 - FINE
 		setField("ERRORE", STRING);
 		setField("FK_ID_BATCH", BIG_DECIMAL);		
 		
@@ -48,7 +51,12 @@ public class InvocazionePagopaDAO extends SIAPTableDAO {
 	public String     getCodiceFiscale()       throws DAOException { return getString("CODICE_FISCALE");}
 	public String     getIuv()                 throws DAOException { return getString("IUV");}
 	public String     getXmlRichiesta()        throws DAOException { return getString("XML_RICHIESTA");}
-	public String     getXmlRisposta()         throws DAOException { return getString("XML_RISPOSTA");}
+	
+	// Ticket#202405210111 - 20240521012 - Si sposta l'xml di risposta su un campo clob causa dimensioni > 4000
+	//public String     getXmlRisposta()         throws DAOException { return getString("XML_RISPOSTA");}
+  public String       getXmlRispostaClob()     throws DAOException { return getString("XML_RISPOSTA_CLOB");}	
+  // Ticket#202405210111 - 20240521012 - FINE
+  
 	public String     getErrore()              throws DAOException { return getString("ERRORE");}
 	public BigDecimal getFkIdBatch()           throws DAOException { return getBigDecimal("FK_ID_BATCH");}
 
@@ -65,7 +73,10 @@ public class InvocazionePagopaDAO extends SIAPTableDAO {
 	public void setCodiceFiscale       (String     aValore) { setString("CODICE_FISCALE", aValore);  }
 	public void setIuv                 (String     aValore) { setString("IUV", aValore); }
 	public void setXmlRichiesta        (String     aValore) { setString("XML_RICHIESTA", aValore); }
-	public void setXmlRisposta         (String     aValore) { setString("XML_RISPOSTA", aValore);  }
+  // Ticket#202405210111 - 20240521012 - Si sposta l'xml di risposta su un campo clob causa dimensioni > 4000
+	// public void setXmlRisposta         (String     aValore) { setString("XML_RISPOSTA", aValore);  }
+  public void setXmlRispostaClob         (String     aValore) { setString("XML_RISPOSTA_CLOB", aValore);  }	
+  // Ticket#202405210111 - 20240521012 - 
 	public void setErrore              (String     aValore) { setString("ERRORE", aValore); }
 	public void setFkIdBatch           (BigDecimal aValore) { setBigDecimal("FK_ID_BATCH", aValore);  }
 
@@ -86,7 +97,11 @@ public class InvocazionePagopaDAO extends SIAPTableDAO {
 		lModel.setCodiceFiscale(getCodiceFiscale());
 		lModel.setIuv(getIuv());
 		lModel.setXmlRichiesta(getXmlRichiesta());
-		lModel.setXmlRisposta(getXmlRisposta());
+		// Ticket#202405210111 - 20240521012 - Si sposta l'xml di risposta su un campo clob causa dimensioni > 4000
+		//lModel.setXmlRisposta(getXmlRisposta());
+		lModel.setXmlRispostaClob (getXmlRispostaClob());
+	  // Ticket#202405210111 - 20240521012 - FINE
+		
 		lModel.setErrore(getErrore());
 		lModel.setFkIdBatch(getFkIdBatch());
 		
@@ -95,8 +110,7 @@ public class InvocazionePagopaDAO extends SIAPTableDAO {
 		lModel.setCodUfficioInserimento(getCodUfficioInserimento());
 		lModel.setCodOperatoreAggiornamento(getCodOperatoreAggiornamento());
 		lModel.setDataAggiornamento(getDataAggiornamento());
-		lModel.setCodUfficioAggiornamento(getCodUfficioAggiornamento());
-		
+		lModel.setCodUfficioAggiornamento(getCodUfficioAggiornamento());		
 		
 		return lModel;
 	}
@@ -109,7 +123,10 @@ public class InvocazionePagopaDAO extends SIAPTableDAO {
 		setCodiceFiscale(aModel.getCodiceFiscale());
 		setIuv(aModel.getIuv());
 		setXmlRichiesta(aModel.getXmlRichiesta());
-		setXmlRisposta(aModel.getXmlRisposta());
+	  // Ticket#202405210111 - 20240521012 - Si sposta l'xml di risposta su un campo clob causa dimensioni > 4000
+		// setXmlRisposta(aModel.getXmlRisposta());
+    setXmlRispostaClob(aModel.getXmlRispostaClob());  
+    // Ticket#202405210111 - 20240521012
 		setErrore(aModel.getErrore());
 		setFkIdBatch(aModel.getFkIdBatch());
 		
@@ -128,7 +145,12 @@ public class InvocazionePagopaDAO extends SIAPTableDAO {
 		// setCodiceFiscale(aModel.getCodiceFiscale());
 		// setIuv(aModel.getIuv());
 		setXmlRichiesta(aModel.getXmlRichiesta());
-		setXmlRisposta(aModel.getXmlRisposta());
+		
+		// Ticket#202405210111 - 20240521012 - Si sposta l'xml di risposta su un campo clob causa dimensioni > 4000
+		//setXmlRisposta(aModel.getXmlRisposta());		
+		setXmlRispostaClob(aModel.getXmlRispostaClob());	
+		// Ticket#202405210111 - 20240521012
+		
 		setErrore(aModel.getErrore());
 		//setFkIdBatch(aModel.getFkIdBatch());
 		
