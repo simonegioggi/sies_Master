@@ -1,11 +1,37 @@
-BRANCH SIES VERSIONE 12.6.1.0
-Nasce dal branch 12.6.0.0 in data 09/05/2024
-Questa release verrà rilasciata il 09/05/2024 (Patch mesi di Gennaio, Febbraio, Marzo e Aprile 2024)
+BRANCH MASTER
+
+Allineato al:
+
+BRANCH SIES VERSIONE 12.6.2.0
+Nasce dal branch 12.6.1.0 in data 09/05/2024
+Questa release verrà rilasciata il 24/05/2024 (Patch mese di Maggio 2024)
 
 Comprende i seguenti Ticket MAC:
 
-1)	Ticket#20240228011 - SIEP Fascicolo non validato
-	Corretta gestione pena residua in fase di inserimento cumulo.
+1)	Ticket#202405170122 - errore nella ricerca di fascicoli SIUS in cui è presente una richiesta istruttoria
 	Classe modificata:
-	-	siap.siep.penapecuniaria.controller.RichiestaConversioneController.java
-	(metodo ExInserisciRichiestaConversione)
+	-	siap.siep.notifica.dao.EveNotificaSqlDAO.java	(Metodo getSqlQuery())
+	Aggiunta colonna "ID_CIVILMENTE_OBBLIGATO" nella select in quanto EveNotificaSqlDAO estende "NotificaSqlDAO"
+	richiamandone il "getModel()" dove è referenziata la colonna.
+
+2)	Ticket#202405200130 - Errore verbnale di vane
+	Classe modificata:
+	-	siap.siep.verbale.action.ActInserisciVerbaleVaneRicerche
+	Si testa esplicitamente che non si arrivi dalla Omesse notifiche dell'Ordine Ingiunzione
+
+3)	Ticket#202405210111 - Errore batch notturno
+	Nel salvataggio in tabella INVOCAZIONE_PAGOPA.XML_RISPOSTA della risposta
+	ricevuta da pagopa il sql andava in errore perchè il campo varchar2 è insufficiente 
+	in caso di numerosi bollettini restituiti da pagopa.
+	E' stato aggiunto un campo CLOB in tabella XML_RISPOSTA_CLOB dove inserire i dati.
+	Quelli già a sistema vengono migrati sul campo nuovo.
+	Il vecchio campo XML_RISPOSTA è stato "rimosso" da dao, sql e Model.
+	Non è più usato.
+	Classi modificate:
+	-	defaultroot.jsp.files.siap.siep.pagoPABatch.LoadDettaglioEsecuzioneBatchPagoPA.jsp
+	-	src.f3b.dao.TableOracleDAO.java
+	-	src.siap.siep.pagoPaBatch.action.ActDownloadXMLInvocazionePagoPa.java
+	-	src.siap.siep.pagoPaBatch.controller.BatchPagopaController.java
+	-	src.siap.siep.pagoPaBatch.dao.InvocazionePagopaDAO.java
+	-	src.siap.siep.pagoPaBatch.dao.InvocazionePagopaSqlDAO.java
+	-	src.siap.siep.pagoPaBatch.model.InvocazionePagopaModel.java

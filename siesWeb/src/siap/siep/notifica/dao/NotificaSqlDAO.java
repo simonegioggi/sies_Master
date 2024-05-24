@@ -11,7 +11,7 @@ import siap.siep.notifica.model.NotificaModel;
 
 /**
  * Classe SqlDAO che rappresenta la tabella Notifica
- * 
+ *
  * @version 1.0
  */
 public class NotificaSqlDAO extends SIAPSqlDAO {
@@ -117,7 +117,7 @@ public class NotificaSqlDAO extends SIAPSqlDAO {
 				+ " N.UFF_COD_UFFICIO," + " N.CUR_ID_CURATORE," +
 				// modifica relativa al tipo istituto
 				" N.IST_DET_ID_ISTITUTO_DETENZIONE," + " N.ID_PARTE_UDIENZA"
-				//MEV_2023-33
+				// MEV_2023-33
 				+ " , N.ID_CIVILMENTE_OBBLIGATO ";
 
 		return lStatement;
@@ -172,7 +172,7 @@ public class NotificaSqlDAO extends SIAPSqlDAO {
 		aModel.setCurIdCuratore(getBigDecimal("CUR_ID_CURATORE"));
 
 		aModel.setIdParteUdienza(getBigDecimal("ID_PARTE_UDIENZA"));
-		
+
 		aModel.setIdCivilmenteObbligato(getBigDecimal("ID_CIVILMENTE_OBBLIGATO"));
 
 		return aModel;
@@ -191,10 +191,11 @@ public class NotificaSqlDAO extends SIAPSqlDAO {
 	}
 
 	/**
-	 * metodo di ricerca, restituisce il numero di notifiche legate ad un evento ancora da
-	 * notificare, ovvero con data di avvenuta notifica a null.
-	 * 
-	 * @param BigDecimal aIdEve : Identificativo Evento
+	 * metodo di ricerca, restituisce il numero di notifiche legate ad un evento ancora da notificare, ovvero
+	 * con data di avvenuta notifica a null.
+	 *
+	 * @param BigDecimal
+	 *            aIdEve : Identificativo Evento
 	 * @return int : numero di record selezionati
 	 * @throws DAOException
 	 */
@@ -216,10 +217,11 @@ public class NotificaSqlDAO extends SIAPSqlDAO {
 	}
 
 	/**
-	 * metodo di ricerca, restituisce il numero di notifiche di tipo N legate ad un evento ancora
-	 * da notificare, ovvero con data di avvenuta notifica a null.
-	 * 
-	 * @param BigDecimal aIdEve : Identificativo Evento
+	 * metodo di ricerca, restituisce il numero di notifiche di tipo N legate ad un evento ancora da
+	 * notificare, ovvero con data di avvenuta notifica a null.
+	 *
+	 * @param BigDecimal
+	 *            aIdEve : Identificativo Evento
 	 * @return int : numero di record selezionati
 	 * @throws DAOException
 	 */
@@ -242,10 +244,11 @@ public class NotificaSqlDAO extends SIAPSqlDAO {
 	}
 
 	/**
-	 * metodo di ricerca, restituisce la data più recente di un gruppo di notifiche legate ad uno
-	 * stesso evento.
-	 * 
-	 * @param BigDecimal aIdEve : Identificativo Evento
+	 * metodo di ricerca, restituisce la data più recente di un gruppo di notifiche legate ad uno stesso
+	 * evento.
+	 *
+	 * @param BigDecimal
+	 *            aIdEve : Identificativo Evento
 	 * @return Date data
 	 * @throws DAOException
 	 */
@@ -266,10 +269,11 @@ public class NotificaSqlDAO extends SIAPSqlDAO {
 	}
 
 	/**
-	 * metodo di ricerca, restituisce la data più recente di un gruppo di notifiche legate ad uno
-	 * stesso evento.
-	 * 
-	 * @param BigDecimal aIdEve : Identificativo Evento
+	 * metodo di ricerca, restituisce la data più recente di un gruppo di notifiche legate ad uno stesso
+	 * evento.
+	 *
+	 * @param BigDecimal
+	 *            aIdEve : Identificativo Evento
 	 * @return Date data
 	 * @throws DAOException
 	 */

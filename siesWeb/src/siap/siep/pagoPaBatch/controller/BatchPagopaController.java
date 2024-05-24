@@ -348,8 +348,19 @@ public class BatchPagopaController extends SiapController implements IBatchPagop
 					siesLogger.debug("requestXML \n" + requestXML);
 					siesLogger.debug("responseXML \n" + responseXML);
 
+					// Ticket#202405210111 — Errore Batch notturno
+					// Le risposte possono essere molto grandi se presenti più bollettini per la singola
+					// ricerca.
+					// if (responseXML!=null && responseXML.length() > 4000)
+					// responseXML = responseXML.substring(0, 4000);
+					// Ticket#202405210111 - fine
+
 					lInvocazioneModel.setXmlRichiesta(requestXML);
-					lInvocazioneModel.setXmlRisposta(responseXML);
+					// Ticket#202405210111 - 20240521012 - Si sposta l'xml di risposta su un campo clob causa
+					// dimensioni > 4000
+					// lInvocazioneModel.setXmlRisposta(responseXML);
+					lInvocazioneModel.setXmlRispostaClob(responseXML);
+					// Ticket#202405210111 - 20240521012 - FINE
 
 					lInvocazioneModel.setErrore(null);
 					lInvocazioneModel = lCtrlInvocazione.ExAggiornaInvocazionePagopa(lInvocazioneModel);
