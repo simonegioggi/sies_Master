@@ -1,10 +1,13 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@page import="f3b.util.Utils"%>
+<%@page import="siap.sius.generaleprocedimento.model.GeneraleProcedimentoModel"%>
+<%@page import="siap.sius.fascicolo.model.FascicoloGPModel"%>
+<%@ page import="java.math.BigDecimal"%>
 <%@ page import="java.util.Iterator"%>
 
-<%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.StringUtils"%>
 <%@ page import="f3b.util.DateUtils"%>
-<%@ page import="java.math.BigDecimal"%>
+<%@ page import="f3b.web.IWebConstants"%>
 
 <%@ page import="siap.sius.fascicolo.action.ICostantiFascicoloSius"%>
 <%@ page import="siap.sico.evento.action.ICostantiEvento"%>
@@ -13,73 +16,88 @@
 <%@ page import="siap.sius.depositodecreto.action.ICostantiDepositoDecreto"%>
 <%@ page import="siap.sico.template.action.ICostantiTemplate"%>
 <%@ page import="siap.sius.avvocato.action.ICostantiAvvocatoFascicoloSius"%>
+<%@ page import="siap.sico.security.action.ICostantiSecurity"%>
+<%@ page import="siap.sico.utente.model.UtenteModel"%>
+<%@ page import="siap.sico.ufficio.model.UfficioModel"%>
+<%@ page import="siap.sius.avvocatura.action.ICostantiAvvisiAvvocato"%>
 <%@ page import="siap.web.ISIAPCostantiWeb"%>
-<%@ page import="siap.sico.security.action.ICostantiSecurity" %>
-<%@ page import="siap.sico.utente.model.UtenteModel" %>
-<%@ page import="siap.sico.ufficio.model.UfficioModel" %>
-<%@ page import="siap.sius.avvocatura.action.ICostantiAvvisiAvvocato" %>
 
 <jsp:useBean id="depositoDecretoMotivazioni" scope="request" class="siap.sius.depositodecreto.model.DepositoDecretoEventoMotivazioniModel"/>
 <jsp:useBean id="tenori"                     scope="request" class="java.util.Vector"/>
 <jsp:useBean id="PeriodoAltraSanzione" 	     scope="request" class="siap.sius.sanzionesostitutiva.model.PeriodoAltraSanzioneModel"/>
 
+<%
+UtenteModel lUteMod = (UtenteModel) session.getAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO);
+UfficioModel lUffMod = lUteMod.getUfficioUtente();
+String CodUff = new String(lUffMod.getCodTipoUfficio());
+String labelUfficio = "";
+if (CodUff.equals("TDSM") || CodUff.equals("UDSM")) {
+	labelUfficio = "Tribunale per i Minorenni in funzione di Tribunale Sorveglianza";
+} else {
+	labelUfficio = "Tribunale di Sorveglianza";
+}
+// MEV_35: recupero info sul fascicolo per oggetto procedimento
+String codOggettoProcedimento = "", tipoSostituzione = "Sanzione";
+FascicoloGPModel fgpm = (FascicoloGPModel) session.getAttribute("fascicoloSiusGP");
+GeneraleProcedimentoModel gpm = new GeneraleProcedimentoModel();
+if (!Utils.isNullObj(fgpm.getGeneraleProcedimentoModel()))
+	gpm = fgpm.getGeneraleProcedimentoModel();
+if (!Utils.isNullObj(gpm.getCodOggettoProcedimento()))
+	codOggettoProcedimento = gpm.getCodOggettoProcedimento();
+if ("U134".equals(codOggettoProcedimento))
+	tipoSostituzione = "Pena";
+%>
 
 <html>
 <head>
-<title>[S.I.E.S.] - Dettaglio Decreto Sospensione Esecuzione Sanzione Sostitutiva </title>
-
+<title>[S.I.E.S.] - Dettaglio Decreto Sospensione Esecuzione <%=tipoSostituzione%> Sostitutiva</title>
 <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
-
 <script language="JavaScript" src="/html/conferma.js"></script>
 <script language="JavaScript" src="/html/gestisciUploadStampa.js"></script>
-
 </head>
-<%
-	UtenteModel lUteMod = (UtenteModel)session.getAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO);
-	UfficioModel lUffMod = lUteMod.getUfficioUtente();
-	String CodUff = new String(lUffMod.getCodTipoUfficio());
-	String labelUfficio = "";
-	if(CodUff.equals("TDSM") || CodUff.equals("UDSM")){
-		labelUfficio = "Tribunale per i Minorenni in funzione di Tribunale Sorveglianza";
-	} else {
-		labelUfficio = "Tribunale di Sorveglianza";
-	}
-%>
-  <body class="corpo">
-  <form name="dettaglio">
-
-  <table>
-      <tr><td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
-        <td class="LBG"><font class="label">Funzione : </font>
-          <font class="campo">Dettaglio Decreto Sospensione Esecuzione Sanzione Sostitutiva</font>&nbsp;
+<body class="corpo">
+<form name="dettaglio">
+<table>
+	<tr>
+		<td class="LBG">
+			<a href="Javascript:window.print();">
+				<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border="0">
+			</a>
+		</td>
+        <td class="LBG">
+        	<font class="label">Funzione : </font>
+        	<font class="campo">Dettaglio Decreto Sospensione Esecuzione <%=tipoSostituzione%> Sostitutiva</font>
         </td>
         <jsp:include page="<%=ICostantiDepositoDecreto.BOTTONI_DETTAGLIO_DECRETO%>"/>
-      </tr>
-    </table>
-    <jsp:include page="<%=ICostantiFascicoloSius.PG_LOAD_SINTESIPROCEDIMENTOSIUS%>"/>
-    <jsp:include page="<%=ICostantiMagistratoRelatore.PG_SINTESIMAGISTRATORELATORE%>"/>
-    <jsp:include page="<%=ICostantiAvvocatoFascicoloSius.PG_INCLUDE_AVVOCATI%>"/>
+	</tr>
+</table>
+<jsp:include page="<%=ICostantiFascicoloSius.PG_LOAD_SINTESIPROCEDIMENTOSIUS%>"/>
+<jsp:include page="<%=ICostantiMagistratoRelatore.PG_SINTESIMAGISTRATORELATORE%>"/>
+<jsp:include page="<%=ICostantiAvvocatoFascicoloSius.PG_INCLUDE_AVVOCATI%>"/>
 
-  <table cellspacing=4 cellpadding=4 width=95%>
-  <tr>
-    <input Title="Id Evento" type="hidden" name="<%=ICostantiEvento.CAMPO_ID_EVENTO %>" value="<%=depositoDecretoMotivazioni.getEvento().getIdEvento()%>" >
-  </tr>
-  <tr>
-        <jsp:include page="<%=ICostantiDepositoDecreto.PG_DETTAGLIO_DATA%>"/>
-  </tr>
-  <tr>
-    <td class="l"> Eventuale Motivazione </td>
-    <td class="l"><font class="campo"> <%=StringUtils.toStringJSP(depositoDecretoMotivazioni.getDepositoDecreto().getNote(),"-")%></font></td>
-  </tr>
-  <tr>
-    <td class="l"> <%=labelUfficio%> Competente</td>
-    <td class="l"> <font class="campo"><%=StringUtils.toStringJSP(depositoDecretoMotivazioni.getDepositoDecreto().getDescrTdsComp(),"-")%></font></td>
-  </tr>
-  <tr>
-    <td class="l"> Data Decorrenza Sospensione</td>
-    <td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(depositoDecretoMotivazioni.getDepositoDecreto().getDataSospensioneSS(),"dd/MM/yyyy"))%> </font>&nbsp;</td>
-  </tr>
-  <%if(depositoDecretoMotivazioni.getDepositoDecreto().getSospensioneAASS().compareTo(new BigDecimal(0)) !=0 || 
+<table cellspacing=4 cellpadding=4 width=95%>
+	<tr>
+		<td>
+    		<input Title="Id Evento" type="hidden" name="<%=ICostantiEvento.CAMPO_ID_EVENTO %>" value="<%=depositoDecretoMotivazioni.getEvento().getIdEvento()%>">
+    	</td>
+  	</tr>
+  	<tr>
+		<jsp:include page="<%=ICostantiDepositoDecreto.PG_DETTAGLIO_DATA%>"/>
+  	</tr>
+  	<tr>
+	    <td class="l"> Eventuale Motivazione </td>
+	    <td class="l"><font class="campo"> <%=StringUtils.toStringJSP(depositoDecretoMotivazioni.getDepositoDecreto().getNote(),"-")%></font></td>
+  	</tr>
+  	<tr>
+	    <td class="l"> <%=labelUfficio%> Competente</td>
+	    <td class="l"> <font class="campo"><%=StringUtils.toStringJSP(depositoDecretoMotivazioni.getDepositoDecreto().getDescrTdsComp(),"-")%></font></td>
+  	</tr>
+  	<tr>
+	    <td class="l"> Data Decorrenza Sospensione</td>
+	    <td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(depositoDecretoMotivazioni.getDepositoDecreto().getDataSospensioneSS(),"dd/MM/yyyy"))%> </font>&nbsp;</td>
+  	</tr>
+<%
+if (depositoDecretoMotivazioni.getDepositoDecreto().getSospensioneAASS().compareTo(new BigDecimal(0)) !=0 || 
 		  depositoDecretoMotivazioni.getDepositoDecreto().getSospensioneMMSS().compareTo(new BigDecimal(0)) !=0  || 
 		  	depositoDecretoMotivazioni.getDepositoDecreto().getSospensioneGGSS().compareTo(new BigDecimal(0)) !=0)
   	{%>
@@ -110,11 +128,11 @@
     <td colspan=2>&nbsp;</td>
   </tr>
   <tr>
-    <td class="l">Sanzione Sostitutiva Espiata</td>
+    <td class="l"><%=tipoSostituzione%> Sostitutiva Espiata</td>
     <td class="l"><font class="campo">ANNI <%=PeriodoAltraSanzione.getEspiataAA() %> MESI <%=PeriodoAltraSanzione.getEspiataMM() %> GIORNI <%=PeriodoAltraSanzione.getEspiataGG() %></font></td>
   </tr>
   <tr>
-    <td class="l">Sanzione Sostitutiva residua da Espiare</td>
+    <td class="l"><%=tipoSostituzione%> Sostitutiva residua da Espiare</td>
     <td class="l"><font class="campo">ANNI <%=PeriodoAltraSanzione.getResiduaAA() %> MESI <%=PeriodoAltraSanzione.getResiduaMM() %> GIORNI <%=PeriodoAltraSanzione.getResiduaGG() %></font></td>
   </tr>
  <%} 

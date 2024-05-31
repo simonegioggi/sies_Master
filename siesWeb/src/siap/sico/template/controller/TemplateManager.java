@@ -63,7 +63,10 @@ public class TemplateManager {
 			Iterator lItx = lVector.iterator();
 			while (lItx.hasNext()) {
 				TemplateModel lTemp = new TemplateModel((TemplateModel) lItx.next());
-				mTemplates.put(lTemp.getIdTemplate(), lTemp.getPathRicerca() + lTemp.getNomeTemplate());
+				// FIXME: remove
+				String pathRicerca = lTemp.getPathRicerca().replace("/", "\\").replace("\\var\\SIES", "C:");
+				mTemplates.put(lTemp.getIdTemplate(), pathRicerca + lTemp.getNomeTemplate());
+				// TODO: cancellare
 			}
 		} catch (F3BException ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di

@@ -281,10 +281,7 @@ public class ActModificaFascicolo extends ActionSiap implements ICostantiFascico
 		// BigDecimal lIdEsecuzioneSS = null;
 		if (lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U019") == 0
 				// MEV_2023-35 aggiunta gestione U126 EPS
-				|| lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U126") == 0
-				// Sospensione Esecuzione Pene Sostitutive (U134 - S30)
-				|| lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
-						.compareTo("U134") == 0) {
+				|| lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U126") == 0) {
 			if (!isRequestParameterNullObj(ICostantiEsecuzioneSS.CAMPO_ID_ESECUZIONE_SS)
 					&& getRequestStringParameter(ICostantiEsecuzioneSS.CAMPO_ID_ESECUZIONE_SS).length() > 4) {
 				IEsecuzioneSS lESSCtrl = SIUSLookupRemote.getEsecuzioneSSRemote();
@@ -308,10 +305,7 @@ public class ActModificaFascicolo extends ActionSiap implements ICostantiFascico
 								"Ufficio Mittente non valido per la Sanzione Sostitutiva");
 					// MEV_2023-35 aggiunta gestione U126 EPS
 					else if (lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
-							.compareTo("U126") == 0
-							// Sospensione Esecuzione Pene Sostitutive (U134 - S30)
-							|| lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
-									.compareTo("U134") == 0)
+							.compareTo("U126") == 0)
 						throw new SIUSException(SIUSException.USER_MESSAGE,
 								"Ufficio Mittente non valido per la Pena Sostitutiva");
 				}

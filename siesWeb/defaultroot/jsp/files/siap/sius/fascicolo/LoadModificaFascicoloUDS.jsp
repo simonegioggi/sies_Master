@@ -59,9 +59,7 @@ if (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento().c
 // Se il Fascicolo in modifica è di ESS, occorre diversificare la gestione di anno/progressivo di riferimento...
 if (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U019") == 0 
     	// MEV_2023-35 si conforma U126 EPS a U019 ESS
-    	|| fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U126") == 0
-		// Sospensione Esecuzione Pene Sostitutive (U134 - S30)
-    	|| fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U134") == 0) {
+    	|| fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U126") == 0) {
 	if (sanzioneSostitutiva.getDepOpidDepositoOrdinanzaPc() != null
 			&& sanzioneSostitutiva.getDepOpidDepositoOrdinanzaPc().toString().length() > 1)
     	aReadOnly = "READONLY";
@@ -217,9 +215,7 @@ function TestS22(Code) {
 
 				// MEV_2023-35 - 05/2024 PENE SOSTITUTIVE
           		if (document.FormTestS22.HighValue[i].value == 'S30') {
-            		if (document.FormTestS22.LowValue[i].value == 'U126'
-            				// Sospensione Esecuzione Pene Sostitutive (U134 - S30)
-            				|| document.FormTestS22.LowValue[i].value == 'U134') {
+            		if (document.FormTestS22.LowValue[i].value == 'U126') {
 						S22_ab.style.visibility = 'hidden';
 						S22_ab.style.top = '-20px';
 						S22_a.style.visibility = 'hidden';
@@ -617,9 +613,7 @@ if (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento().e
 		|| fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U019")
 		|| fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U024")
 		// MEV_2023-35
-		|| fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U126")
-		// Sospensione Esecuzione Pene Sostitutive (U134 - S30)
-		|| fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U134")) {
+		|| fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U126")) {
 %>
 			<input type="HIDDEN" name="CodContenutoHidden" value="<%=fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento()%>">
 <%

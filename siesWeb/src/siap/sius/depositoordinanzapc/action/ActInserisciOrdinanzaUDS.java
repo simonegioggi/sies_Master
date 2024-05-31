@@ -661,19 +661,18 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 			// "Proposta di aggravamento della libertà vigilata per persone in stato di
 			// infermità psichica (art.232 c.p.)" ed esito "Sostituisce la libertà vigilata
 			// con la casa di cura e custodia"
-			
+
 			// Ticket#20220415019 — cancellazione/pagina errore
-			// In caso di Revoca misura alternativa (C002) veniva inserito un record MISURA_SICUREZZA senza alcun
-			// motivo a causa della presenza dei campi AnnoDataDecorrenza ecc. In fase di cancellazione si verificava
+			// In caso di Revoca misura alternativa (C002) veniva inserito un record MISURA_SICUREZZA senza
+			// alcun
+			// motivo a causa della presenza dei campi AnnoDataDecorrenza ecc. In fase di cancellazione si
+			// verificava
 			// una violazione di integrità. Si escludono le revoche MA
-			if (   !isRequestParameterNullObj(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
-				&& getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO).equals("C002")) 
-			{
-   			    // non faccio nulla
+			if (!isRequestParameterNullObj(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
+					&& getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO).equals("C002")) {
+				// non faccio nulla
 				siesLogger.debug("Revoca MA non gestisco l'inserimento MS ");
-			} 
-			else 
-			{
+			} else {
 				Date dataDecorrenzaMS = null;
 				if (!isRequestParameterNullObj(ICostantiSiusMisuraSicurezza.CAMPO_ANNO_DATA_DECORRENZA))
 					dataDecorrenzaMS = getRequestDateParameter(
@@ -681,8 +680,8 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 							ICostantiSiusMisuraSicurezza.CAMPO_MESE_DATA_DECORRENZA,
 							ICostantiSiusMisuraSicurezza.CAMPO_GIORNO_DATA_DECORRENZA);
 				// MERGE v10: aggiunta porzione di codice per gestire la data
-				if (!Utils.isPresent(dataDecorrenzaMS)
-						&& !isRequestParameterNullObj(ICostantiDepositoOrdinanzaPc.CAMPO_ANNO_DATA_DECORRENZA))
+				if (!Utils.isPresent(dataDecorrenzaMS) && !isRequestParameterNullObj(
+						ICostantiDepositoOrdinanzaPc.CAMPO_ANNO_DATA_DECORRENZA))
 					dataDecorrenzaMS = getRequestDateParameter(
 							ICostantiDepositoOrdinanzaPc.CAMPO_ANNO_DATA_DECORRENZA,
 							ICostantiDepositoOrdinanzaPc.CAMPO_MESE_DATA_DECORRENZA,
@@ -699,12 +698,13 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 					// BigDecimal idFascicoloSius = mFasGPMod.getFascicoloSiusModel().getIdFascicoloSius();
 					if (idFascicoloSius != null) {
 						IMisuraSicurezza lCtrl = SIEPLookupRemote.getMisuraSicurezzaRemote();
-						List lMisureSicurezza = lCtrl.ExRicercaMisuraSicurezzaByIdFascicoloSIUS(idFascicoloSius);
+						List lMisureSicurezza = lCtrl
+								.ExRicercaMisuraSicurezzaByIdFascicoloSIUS(idFascicoloSius);
 						// non esiste la misura di sicurezza associata al fascicolo Sius corrente
 						// pertanto devo inserirla
 						if (lMisureSicurezza.size() == 0) {
 							MisuraSicurezzaModel lNuovaMisura = new MisuraSicurezzaModel();
-	
+
 							lNuovaMisura.setCodOperatoreInserimento(getCodUtenteConnesso());
 							lNuovaMisura.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
 							lNuovaMisura.setDataInserimento(DateUtils.getSysDate());
@@ -722,7 +722,7 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 							lNuovaMisura.setNumAnni(getAnniMisuraParameter());
 							lNuovaMisura.setNumMesi(getMesiMisuraParameter());
 							lNuovaMisura.setNumGiorni(getGiorniMisuraParameter());
-	
+
 							// Effettuo l'Inserimento della Misura di Sicurezza
 							lNuovaMisura = lCtrl.ExInserisciMisuraSicurezza(lNuovaMisura);
 						} else {
@@ -730,13 +730,13 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 							Iterator itxMis = lMisureSicurezza.iterator();
 							while (itxMis.hasNext()) {
 								MisuraSicurezzaModel lMisSicuSius = (MisuraSicurezzaModel) itxMis.next();
-	
+
 								lMisSicuSius.setCodOperatoreAggiornamento(getCodUtenteConnesso());
 								lMisSicuSius.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
 								lMisSicuSius.setDataAggiornamento(DateUtils.getSysDate());
 								lMisSicuSius.setEveIdEvento(lOrdEveTenGP.getEvento().getIdEvento());
 								lMisSicuSius.setDataDecorrenza(dataDecorrenzaMS);
-	
+
 								// Effettuo la Modifica della Misura di Sicurezza
 								lCtrl.ExModificaMisuraSicurezza(lMisSicuSius);
 							}
@@ -745,10 +745,13 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 				} // if(dataDecorrenzaMS != null){
 
 			} // Ticket#20220415019 - FINE
-			
+
 			/*
-			 * ISSUE MEV : aggiunto codice per gestione oggetto C029 Numero MEV : 39 Autore : Gioggi Data :
-			 * 19/giu/2017 Branch : MEV_39
+			 * ISSUE MEV : aggiunto codice per gestione oggetto C029 
+			 * Numero MEV : 39 
+			 * Autore : Gioggi 
+			 * Data : 19/giu/2017 
+			 * Branch : MEV_39
 			 */
 			if (codOggettoProcedimento.equalsIgnoreCase(OGG_ORD_APPELLO_CONTRO_PROVV_MS)) {
 				TenoreModel tenori[] = lOrdEveTenGP.getTenori();
@@ -857,23 +860,22 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 							"siap.sius.depositoordinanzapc.action.ActLoadDettaglioOrdinanza");
 
 					lRetPage = lRedirectTo.toString();
-				} 
-				else if (!isRequestParameterNullObj(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
-                    && getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
-                            .equals("U125")) {
-                  siesLogger.debug("Prescrizioni SP: ");
-  
-                  RedirectTo lRedirectTo = new RedirectTo();
-                  lRedirectTo.setPage(IWebConstants.PG_MAIN);
-                  lRedirectTo.setAction("siap.sius.prescrizione.action.ActLoadInserisciPrescrizioneNew");
-                  lRedirectTo.setParameter(ICostantiEvento.CAMPO_ID_EVENTO,
-                          lOrdEveTenGP.getEvento().getIdEvento().toString());
-                  // Action successiva
-                  lRedirectTo.setParameter("nextaction",
-                          "siap.sius.depositoordinanzapc.action.ActLoadDettaglioOrdinanza");
-  
-                  lRetPage = lRedirectTo.toString();
-                }	else {
+				} else if (!isRequestParameterNullObj(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
+						&& getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
+								.equals("U125")) {
+					siesLogger.debug("Prescrizioni SP: ");
+
+					RedirectTo lRedirectTo = new RedirectTo();
+					lRedirectTo.setPage(IWebConstants.PG_MAIN);
+					lRedirectTo.setAction("siap.sius.prescrizione.action.ActLoadInserisciPrescrizioneNew");
+					lRedirectTo.setParameter(ICostantiEvento.CAMPO_ID_EVENTO,
+							lOrdEveTenGP.getEvento().getIdEvento().toString());
+					// Action successiva
+					lRedirectTo.setParameter("nextaction",
+							"siap.sius.depositoordinanzapc.action.ActLoadDettaglioOrdinanza");
+
+					lRetPage = lRedirectTo.toString();
+				} else {
 					lRetPage = ICostantiPrescrizione.PG_LOAD_INSERISCIPRESCRIZIONE;
 				}
 

@@ -249,7 +249,7 @@ public class ActInsFascicoloDaSoggettoUDS extends ActionSiap implements ICostant
 		if (getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U004") == 0
 				|| getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U019") == 0
 				// MEV_2023-35
-				|| getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U126") == 0) {
+				/*|| getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U126") == 0*/) {
 			aDescrUfficioMittente = DecodificheUtils.getDescbyCode(
 					DecodificheManager.getInstance().getMittenteAtto(),
 					getRequestStringParameter(CAMPO_COD_MITTENTE_ATTO));

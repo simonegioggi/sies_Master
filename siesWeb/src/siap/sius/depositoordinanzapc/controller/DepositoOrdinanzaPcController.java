@@ -98,18 +98,7 @@ import siap.sius.tenore.model.TenoreModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * <p>
- * Title: DepositoOrdinanzaPcController
- * </p>
- * <p>
- * Description: Classe Controller per DepositoOrdinanzaPc
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * DepositoOrdinanzaPcController - Classe Controller per DepositoOrdinanzaPc
  *
  * @version 1.0
  */
@@ -1012,7 +1001,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			PeriodoAltraSanzioneModel lPASMod = (PeriodoAltraSanzioneModel) lPASSqlDao.getModelByKey();
 
 			if (lPASMod != null && lPASMod.getFasSiuIdFascicoloSius() != null
-					&& aDepOrd.getFlagRecuperoSS().equals("S")) {
+					&& "S".equals(aDepOrd.getFlagRecuperoSS())) {
 				// ---- Ricerca in Esecuzione Sanzione Sostitutiva con l'ID del Fascicolo SIUS (PADRE) trovato
 				// ----
 				lESSSqlDao = new EsecuzioneSanzioneSostitutivaSqlDAO(aConn);
@@ -1951,12 +1940,16 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			// 2008-01-09 - Gestione inserimento record nella tabella SCAMBIO_SANZIONE.
 			// 2009-03-11 - Isolata la fase di gestione delle Sanzioni Sostitutive per inserimento record
 			// nella tabella SCAMBIO_SANZIONE.
-			if (   lDepMod.getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.APPLICAZIONE_SANZIONI_SOSTITUTIVE) == 0
-			    // MEV_2023-35 - Per scivere su SCAMBIO_SANZIONE
-			    || lDepMod.getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.APPLICAZIONE_PENE_SOSTITUTIVE) == 0
-			     // MEV_2023-35 - FINE
-				|| lDepMod.getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_SANZIONI_SOSTITUTIVE) == 0
-			    || lDepMod.getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RINVIO_SANZIONI_SOSTITUTIVE) == 0
+			if (lDepMod.getCodTipoOrdinanza()
+					.compareTo(ICostantiDepositoOrdinanzaPc.APPLICAZIONE_SANZIONI_SOSTITUTIVE) == 0
+					// MEV_2023-35 - Per scivere su SCAMBIO_SANZIONE
+					|| lDepMod.getCodTipoOrdinanza()
+							.compareTo(ICostantiDepositoOrdinanzaPc.APPLICAZIONE_PENE_SOSTITUTIVE) == 0
+					// MEV_2023-35 - FINE
+					|| lDepMod.getCodTipoOrdinanza()
+							.compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_SANZIONI_SOSTITUTIVE) == 0
+					|| lDepMod.getCodTipoOrdinanza()
+							.compareTo(ICostantiDepositoOrdinanzaPc.RINVIO_SANZIONI_SOSTITUTIVE) == 0
 					||
 					// 08/07/2015
 					// lDepMod.getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_PENE_PECUNIARIE)==0
@@ -2262,8 +2255,11 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			DepositoOrdinanzaPcModel lDepOrdMod = new DepositoOrdinanzaPcModel();
 
 			/*
-			 * ISSUE MEV : eseguito merge tra 15 MEV: interpretazione con codice commentato Numero MEV : SIES
-			 * v10 Autore : gioggi Data : 27/gen/2016 Branch : MEV_SIES v10
+			 * ISSUE MEV : eseguito merge tra 15 MEV: interpretazione con codice commentato 
+			 * Numero MEV : SIES v10 
+			 * Autore : gioggi 
+			 * Data : 27/gen/2016 
+			 * Branch : MEV_SIES v10
 			 */
 			// lDepOrdSqlDao.ricercaDepositoOrdinanzaPcByIdEveGenerato( aIdEvento );
 			lDepOrdSqlDao.ricercaDepositoOrdinanzaCssaUssmPcByIdEveGenerato(aIdEvento);
@@ -2509,8 +2505,11 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			lDepDao = new DepositoOrdinanzaPcSqlDAO(lConn);
 
 			/*
-			 * ISSUE MEV : eseguito merge tra 15 MEV: interpretazione con codice commentato Numero MEV : SIES
-			 * v10 Autore : gioggi Data : 27/gen/2016 Branch : MEV_SIES v10
+			 * ISSUE MEV : eseguito merge tra 15 MEV: interpretazione con codice commentato 
+			 * Numero MEV : SIES v10 
+			 * Autore : gioggi 
+			 * Data : 27/gen/2016 
+			 * Branch : MEV_SIES v10
 			 */
 			// lDepDao.ricercaDepositoOrdinanzaPcByIdEveGenerato(aEveKey);
 			lDepDao.ricercaDepositoOrdinanzaCssaUssmPcByIdEveGenerato(aEveKey);
@@ -3867,8 +3866,11 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 	}
 
 	/*
-	 * ISSUE MEV : aggiunti metodi di ricerca provvedimenti differimento SIUS Numero MEV : 39 Autore : Gioggi
-	 * Data : 24/feb/2017 Branch : MEV_39
+	 * ISSUE MEV : aggiunti metodi di ricerca provvedimenti differimento SIUS 
+	 * Numero MEV : 39 
+	 * Autore : Gioggi
+	 * Data : 24/feb/2017 
+	 * Branch : MEV_39
 	 */
 	public Vector ExRicercaEventoProvvedimentiDifferimentoSIUSByFascicoloSiep(BigDecimal idFascicoloSiep)
 			throws F3BException {

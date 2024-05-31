@@ -7,6 +7,8 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.util.xml.TreeModel;
 import siap.jms.util.ParserMessageRec;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoModel;
@@ -20,7 +22,6 @@ import siap.siep.fascicolo.model.DettaglioFascicoloModel;
 import siap.siep.misurasicurezza.controller.IMisuraSicurezza;
 import siap.siep.misurasicurezza.model.MisuraSicurezzaModel;
 import siap.siep.notifica.controller.INotifica;
-import siap.siep.posizionematerialefasc.model.PosizioneMaterialeFascModel;
 import siap.siep.util.SIEPLookupRemote;
 import siap.sius.ActionSius;
 import siap.sius.cancassfascsius.controller.ICancAssFascSius;
@@ -50,17 +51,19 @@ import siap.sius.udienzaprocedimento.controller.IUdienzaProcedimento;
 import siap.sius.ulterioreistanza.controller.IUlterioreIstanza;
 import siap.sius.ulterioreistanza.model.UlterioreIstanzaModel;
 import siap.sius.util.SIUSLookupRemote;
-import f3b.log.LogF3B;
-import f3b.util.xml.TreeModel;
 
-@SuppressWarnings({"rawtypes", "unchecked"})
-public class ActLoadDettaglioFascicoloPerAnnoProgUfficio extends ActionSius implements
-		ICostantiFascicoloSius, ICostantiProvvedimento {
+@SuppressWarnings({ "rawtypes", "unchecked" })
+public class ActLoadDettaglioFascicoloPerAnnoProgUfficio extends ActionSius
+		implements ICostantiFascicoloSius, ICostantiProvvedimento {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+
 	public String processRequest() throws Exception {
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getPackage().getName() + ".processRequest : inizio");
+
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.debug(getClass().getName()+ ".processRequest : inizio");
 
 		setLinkRitorno();
 
@@ -89,8 +92,8 @@ public class ActLoadDettaglioFascicoloPerAnnoProgUfficio extends ActionSius impl
 		// 20/06/2006 Elenco Fascicoli Collegati
 		Vector lVectCol = null;
 		if (lFasGPMod.getFascicoloSiusModel() != null)
-			lVectCol = lCtrl.ExRicercaFascicoliXIdOrigine(lFasGPMod.getFascicoloSiusModel()
-					.getIdFascicoloSius());
+			lVectCol = lCtrl
+					.ExRicercaFascicoliXIdOrigine(lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
 
 		setRequestAttribute("elencoFasCollegati", lVectCol);
 
@@ -99,11 +102,11 @@ public class ActLoadDettaglioFascicoloPerAnnoProgUfficio extends ActionSius impl
 		if (lFasGPMod.getFascicoloSiusModel().getIdFascicoloSiusOrigine() != null) {
 			// 29/01/2008 Per fascicoli ExtraUfficio Il Fascicolo Padre può anche non esistere in archivio.
 			if (CAMPO_CHIAVE_UFFICIO.compareTo(lFasGPMod.getFascicoloSiusModel().getChiaveUfficio()) == 0)
-				lFasPadre = lCtrl.ExRicercaFascicoloByKey(lFasGPMod.getFascicoloSiusModel()
-						.getIdFascicoloSiusOrigine());
+				lFasPadre = lCtrl.ExRicercaFascicoloByKey(
+						lFasGPMod.getFascicoloSiusModel().getIdFascicoloSiusOrigine());
 			else
-				lFasPadre = lCtrl.ExRicercaFascicoloCollegato(lFasGPMod.getFascicoloSiusModel()
-						.getIdFascicoloSiusOrigine());
+				lFasPadre = lCtrl.ExRicercaFascicoloCollegato(
+						lFasGPMod.getFascicoloSiusModel().getIdFascicoloSiusOrigine());
 		}
 		setRequestAttribute("fascicoloPadre", lFasPadre);
 
@@ -125,7 +128,7 @@ public class ActLoadDettaglioFascicoloPerAnnoProgUfficio extends ActionSius impl
 
 		// Leggo se il fascicolo e' modificabile
 		String lModificabile = "NO";
-		if (this.IsFascicoloSiusModificabile() == true)
+		if (this.IsFascicoloSiusModificabile())
 			lModificabile = "SI";
 		else
 			lModificabile = "NO";
@@ -140,8 +143,8 @@ public class ActLoadDettaglioFascicoloPerAnnoProgUfficio extends ActionSius impl
 		// Modifica del 09/09/2013 per correzione errore preesistente
 		// TreeModel lTreeDati = lCtrlSta.ExPrelevaDatiVideo(
 		// getRequestBigDecimalParameter(CAMPO_ID_FASCICOLO_SIUS), aTipoDati);
-		TreeModel lTreeDati = lCtrlSta.ExPrelevaDatiVideo(lFasGPMod.getFascicoloSiusModel()
-				.getIdFascicoloSius(), aTipoDati);
+		TreeModel lTreeDati = lCtrlSta
+				.ExPrelevaDatiVideo(lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius(), aTipoDati);
 
 		// Converte i dati ottenuti per utilizzarli come model
 		ParserMessageRec lParser = new ParserMessageRec(lTreeDati);
@@ -161,24 +164,27 @@ public class ActLoadDettaglioFascicoloPerAnnoProgUfficio extends ActionSius impl
 		// 08/2014 - Magistrato ESPERTO
 
 		if (lParser.getMagistrati() != null) {
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			// siesLogger.debug(" XXXXX ----> lMagistrato != null");
 		} else if (lParser.getEsperti() != null) {
 			Iterator itx33 = lParser.getEsperti().iterator();
 			while (itx33.hasNext()) {
 				EspertoModel lEspMod = (EspertoModel) itx33.next();
-				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				// siesLogger.debug(" XXXXX ----> lEspMod = "+lEspMod);
 				this.setRequestAttribute("esperto", lEspMod);
 			}
 		} else {
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			// siesLogger.debug(" XXXXX ----> lMagistrato e Esperto = null");
 		}
 
 		// Permesso / Licenza Depositata
-		LicenzaLibAnticipataModel lLibAnt = ricercaPermessoLicenzaDepositata(lFasGPMod
-				.getFascicoloSiusModel().getIdFascicoloSius());
+		LicenzaLibAnticipataModel lLibAnt = ricercaPermessoLicenzaDepositata(
+				lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
 		setRequestAttribute("licenza", lLibAnt);
 
 		// 20061113
@@ -202,15 +208,15 @@ public class ActLoadDettaglioFascicoloPerAnnoProgUfficio extends ActionSius impl
 
 		// ricerca gli eventi collegati al fascicolo e li passa nella Request
 		INotifica nCtrl = SIEPLookupRemote.getNotificaRemote();
-		Vector lVect = nCtrl.ExRicercaNotificheByFascicoloSius(lFasGPMod.getFascicoloSiusModel()
-				.getIdFascicoloSius(), "05");
+		Vector lVect = nCtrl.ExRicercaNotificheByFascicoloSius(
+				lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius(), "05");
 		setRequestAttribute("atti", lVect);
 
 		// Metto in sessione il Dettaglio Fascicolo Siep per recuperare Pena Residua, Posizione Giuridica etc.
 		if (lFasGPMod.getFascicoloSiusModel().getFasSieIdFascicoloSiep() != null) {
-			IFascicoloSiep fCtrl = (IFascicoloSiep) SIEPLookupRemote.getFascicoloSiepRemote();
-			DettaglioFascicoloModel detFasSiep = fCtrl.ExDettaglioFascicoloSiep(lFasGPMod
-					.getFascicoloSiusModel().getFasSieIdFascicoloSiep());
+			IFascicoloSiep fCtrl = SIEPLookupRemote.getFascicoloSiepRemote();
+			DettaglioFascicoloModel detFasSiep = fCtrl
+					.ExDettaglioFascicoloSiep(lFasGPMod.getFascicoloSiusModel().getFasSieIdFascicoloSiep());
 			setRequestAttribute("dettagliofascicolo", detFasSiep);
 		}
 
@@ -221,8 +227,8 @@ public class ActLoadDettaglioFascicoloPerAnnoProgUfficio extends ActionSius impl
 
 		// ========================================================================
 		// new DL 146 opposizione e impugnazioni vanno recuperate in modo separato
-		Hashtable<BigDecimal, Vector<ImpugnazioneModel>> lImpugnazioniEvento = new Hashtable<BigDecimal, Vector<ImpugnazioneModel>>();
-		Hashtable<BigDecimal, Vector<ImpugnazioneModel>> lOpposizioniEvento = new Hashtable<BigDecimal, Vector<ImpugnazioneModel>>();
+		Hashtable<BigDecimal, Vector<ImpugnazioneModel>> lImpugnazioniEvento = new Hashtable<>();
+		Hashtable<BigDecimal, Vector<ImpugnazioneModel>> lOpposizioniEvento = new Hashtable<>();
 
 		IImpugnazione lCtrlImp = SIUSLookupRemote.getImpugnazioneRemote();
 		for (int i = 0; i < lVect.size(); i++) {
@@ -258,8 +264,8 @@ public class ActLoadDettaglioFascicoloPerAnnoProgUfficio extends ActionSius impl
 		 * setRequestAttribute("provvedimentiDataRicorso", aData);
 		 */
 
-		Vector lVectAltri = mCtrl.ExRicercaAltroEventoByFascicoloSius(lFasGPMod.getFascicoloSiusModel()
-				.getIdFascicoloSius(), COD_EVENTO_PROVVEDIMENTO);
+		Vector lVectAltri = mCtrl.ExRicercaAltroEventoByFascicoloSius(
+				lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius(), COD_EVENTO_PROVVEDIMENTO);
 		if (lVectAltri != null)
 			setRequestAttribute("provvedimentiAltri", lVectAltri);
 		else
@@ -276,8 +282,8 @@ public class ActLoadDettaglioFascicoloPerAnnoProgUfficio extends ActionSius impl
 		// Elenco Movimenti Udienza
 		Vector lUdiProVect = null;
 		IUdienzaProcedimento lUdiProCtrl = SIUSLookupRemote.getUdienzaProcedimentoRemote();
-		lUdiProVect = lUdiProCtrl.ExRicercaUdienzaProcedimentoUdiByGeneraleProcedimento(lFasGPMod
-				.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
+		lUdiProVect = lUdiProCtrl.ExRicercaUdienzaProcedimentoUdiByGeneraleProcedimento(
+				lFasGPMod.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 		setRequestAttribute("MovimentiUdienze", lUdiProVect);
 
 		// Elenco NOTE STUB 06/09/2005
@@ -288,15 +294,15 @@ public class ActLoadDettaglioFascicoloPerAnnoProgUfficio extends ActionSius impl
 
 		// Posizione Materiale Fascicolo
 		IPosizioneMaterialeFascSius lPosMatCtrl = SIUSLookupRemote.getPosizioneMaterialeFascSiusRemote();
-		Vector lPosizioniMat = lPosMatCtrl.ExRicercaPosizioneMaterialeFascAttiva(lFasGPMod
-				.getFascicoloSiusModel().getIdFascicoloSius());
+		Vector lPosizioniMat = lPosMatCtrl.ExRicercaPosizioneMaterialeFascAttiva(
+				lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
 		if (lPosizioniMat != null && lPosizioniMat.size() > 0)
-			setRequestAttribute("posizione_materiale", (PosizioneMaterialeFascModel) lPosizioniMat.get(0));
+			setRequestAttribute("posizione_materiale", lPosizioniMat.get(0));
 
 		// Cancelleria Assegnataria
 		ICancAssFascSius lCancAssFascCtrl = SIUSLookupRemote.getCancAssFascSiusRemote();
-		CancAssFascSiusModel lCancAssFascAttiva = lCancAssFascCtrl.ExRicercaCancAssFascSiusAttiva(lFasGPMod
-				.getFascicoloSiusModel().getIdFascicoloSius());
+		CancAssFascSiusModel lCancAssFascAttiva = lCancAssFascCtrl
+				.ExRicercaCancAssFascSiusAttiva(lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
 		// Se esiste una Cancelleria Assegnataria per il fascicolo viene passato alla request
 		if (lCancAssFascAttiva != null)
 			setRequestAttribute("cancelleria_assegnataria", lCancAssFascAttiva);
@@ -314,7 +320,7 @@ public class ActLoadDettaglioFascicoloPerAnnoProgUfficio extends ActionSius impl
 
 		if (lVectFC.size() > 0) {
 			Iterator itx = lVectFC.iterator();
-//			int k = 0;
+			// int k = 0;
 			while (itx.hasNext()) {
 				EventoModel lProv = (EventoModel) itx.next();
 				if (lProv.getNumAllegati() > 0)
@@ -329,7 +335,7 @@ public class ActLoadDettaglioFascicoloPerAnnoProgUfficio extends ActionSius impl
 								+ mDocAll.getProgrFoglioComplementare());
 					}
 				}
-//				k++;
+				// k++;
 			}
 		}
 
@@ -340,8 +346,8 @@ public class ActLoadDettaglioFascicoloPerAnnoProgUfficio extends ActionSius impl
 		Vector lVectTenStralcio = null;
 		IStralcio lCtrlStra = SIUSLookupRemote.getStralcioRemote();
 		if (lFasGPMod.getFascicoloSiusModel() != null) {
-			lVectTenStralcio = lCtrlStra.ExRicercaTenoriStralciatiByIdFascicolo(lFasGPMod
-					.getFascicoloSiusModel().getIdFascicoloSius());
+			lVectTenStralcio = lCtrlStra.ExRicercaTenoriStralciatiByIdFascicolo(
+					lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
 		}
 		setRequestAttribute("elencoTenoriStralcio", lVectTenStralcio);
 
@@ -359,7 +365,8 @@ public class ActLoadDettaglioFascicoloPerAnnoProgUfficio extends ActionSius impl
 		// Collaboratore di giustizia
 		if (isCollaboratoreDiGiustizia(lFasGPMod)) {
 			setRequestAttribute("collaboratore", "Collaboratore di Giustizia");
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("è un collaboratore di Giustizia");
 		}
 
@@ -368,13 +375,15 @@ public class ActLoadDettaglioFascicoloPerAnnoProgUfficio extends ActionSius impl
 				.compareTo(COD_OGGETTO_PROCEDIMENTO_MS) == 0)
 			verificaOggettiEMSAMS(lFasGPMod);
 
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getPackage().getName() + ".processRequest : fine");
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.debug(getClass().getName()+ ".processRequest : fine");
 
 		return PG_DETTAGLIOFASCICOLOSIUS;
 	}
 
 	private boolean isCollaboratoreDiGiustizia(FascicoloGPModel aFasGPMod) throws Exception {
+
 		boolean retValue = false;
 		if (aFasGPMod != null && aFasGPMod.getFascicoloSiusModel() != null
 				&& aFasGPMod.getFascicoloSiusModel().getIdFascicoloSius() != null) {
@@ -388,8 +397,7 @@ public class ActLoadDettaglioFascicoloPerAnnoProgUfficio extends ActionSius impl
 
 	/**
 	 * Esegue la ricerca del permesso o licenza depositata.
-	 * <p>
-	 * 
+	 *
 	 * @param aIdFascSius
 	 *            id del fascilo sius di riferimento.
 	 * @return
@@ -398,7 +406,9 @@ public class ActLoadDettaglioFascicoloPerAnnoProgUfficio extends ActionSius impl
 	 */
 	private LicenzaLibAnticipataModel ricercaPermessoLicenzaDepositata(BigDecimal aIdFascSius)
 			throws Exception {
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug("##### RicercaPermessoLicenzaDepositata ###### ");
 		IPermesso lCtrl = SIUSLookupRemote.getPermessoRemote();
 		return lCtrl.ExRicercaTipoPermessoLicenzaDepositata(aIdFascSius);
@@ -407,8 +417,7 @@ public class ActLoadDettaglioFascicoloPerAnnoProgUfficio extends ActionSius impl
 	/**
 	 * Verifica che le misure applicate nell'ordinanza del fascicolo collegato siano oggetto di questo o di
 	 * altri fascicoli, quindi prepara un warning che sarà letto nella jsp di dettaglio
-	 * <p>
-	 * 
+	 *
 	 * @param lFasGPEMS
 	 *            FascicoloGPModel di riferimento.
 	 * @return
@@ -416,17 +425,18 @@ public class ActLoadDettaglioFascicoloPerAnnoProgUfficio extends ActionSius impl
 	 *             propaga errore di eccezione.
 	 */
 	private void verificaOggettiEMSAMS(FascicoloGPModel lFasGPEMS) throws Exception {
+
 		String warnigToJsp = null;
 
 		IEsecuzioneMS lCtrEMS = SIUSLookupRemote.getEsecuzioneMSRemote();
 		EsecuzioneMisuraSicurezzaModel lEMSMod = new EsecuzioneMisuraSicurezzaModel();
 
-		lEMSMod = lCtrEMS.ExRicercaEsecuzioneMisuraSicurezzaByIdFascicolo(lFasGPEMS.getFascicoloSiusModel()
-				.getIdFascicoloSius());
+		lEMSMod = lCtrEMS.ExRicercaEsecuzioneMisuraSicurezzaByIdFascicolo(
+				lFasGPEMS.getFascicoloSiusModel().getIdFascicoloSius());
 		if (lEMSMod != null && lEMSMod.getDepOpidDepositoOrdinanzaPc() != null) {
 			IDepositoOrdinanzaPc lCtrDOPC = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
-			DepositoOrdinanzaPcModel DOPCMod = lCtrDOPC.ExRicercaDepositoOrdinanzaPcByKey(lEMSMod
-					.getDepOpidDepositoOrdinanzaPc());
+			DepositoOrdinanzaPcModel DOPCMod = lCtrDOPC
+					.ExRicercaDepositoOrdinanzaPcByKey(lEMSMod.getDepOpidDepositoOrdinanzaPc());
 
 			if (DOPCMod != null && DOPCMod.getIdEventoGenerato() != null) {
 				IEvento lCtrEve = SICOLookupRemote.getEventoRemote();
@@ -436,15 +446,14 @@ public class ActLoadDettaglioFascicoloPerAnnoProgUfficio extends ActionSius impl
 
 				if (EveEMSMod != null && EveEMSMod.getFasSiuIdFascicoloSius() != null) {
 					IFascicoloSius lCtrFasAMS = SIUSLookupRemote.getFascicoloSiusRemote();
-					FascicoloGPModel lFasGPAMS = lCtrFasAMS.ExRicercaFascicoloByKey(EveEMSMod
-							.getFasSiuIdFascicoloSius());
+					FascicoloGPModel lFasGPAMS = lCtrFasAMS
+							.ExRicercaFascicoloByKey(EveEMSMod.getFasSiuIdFascicoloSius());
 					Vector listaOggettiMisure = new Vector();
-					if (EveEMSMod.getCodMotivo() != null
-							&& (EveEMSMod.getCodMotivo().equals("2110")
-									|| EveEMSMod.getCodMotivo().equals("2111")
-									|| EveEMSMod.getCodMotivo().equals("2112")
-									|| EveEMSMod.getCodMotivo().equals("2113") || EveEMSMod.getCodMotivo()
-									.equals("2114"))) { // Deriva da Ordinanza AMS
+					if (EveEMSMod.getCodMotivo() != null && (EveEMSMod.getCodMotivo().equals("2110")
+							|| EveEMSMod.getCodMotivo().equals("2111")
+							|| EveEMSMod.getCodMotivo().equals("2112")
+							|| EveEMSMod.getCodMotivo().equals("2113")
+							|| EveEMSMod.getCodMotivo().equals("2114"))) { // Deriva da Ordinanza AMS
 						IMisuraSicurezza lCtrMS = SIEPLookupRemote.getMisuraSicurezzaRemote();
 						MisuraSicurezzaModel lMSMod = new MisuraSicurezzaModel();
 						lMSMod.setFasSiuIdFascicoloSius(EveEMSMod.getFasSiuIdFascicoloSius());
@@ -465,20 +474,17 @@ public class ActLoadDettaglioFascicoloPerAnnoProgUfficio extends ActionSius impl
 					if (listaOggettiMisure != null && lFasGPAMS.getTenori() != null
 							&& lFasGPAMS.getTenori().length > 0) {
 						for (int jOgg = 0; jOgg < lFasGPEMS.getTenori().length; jOgg++) {
-							if (listaOggettiMisure.indexOf(lFasGPEMS.getTenori()[jOgg].getCodOggettoTenore()) >= 0)
+							if (listaOggettiMisure
+									.indexOf(lFasGPEMS.getTenori()[jOgg].getCodOggettoTenore()) >= 0)
 								// lFasGPAMS.getTenori()[jOgg].getCodOggettoTenore();
 								warnigToJsp = "OK";
 						}
 					}
-
 				}
-
 			}
-
 		}
 
 		setRequestAttribute("fascEMSdaAMS", warnigToJsp);
-
 	}
 
 }
