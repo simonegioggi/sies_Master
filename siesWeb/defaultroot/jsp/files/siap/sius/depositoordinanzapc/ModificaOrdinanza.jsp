@@ -155,6 +155,8 @@ else
 			        }
 			        return true;
 				}
+		     	
+		     	return true;
 		    }
 		
 			function VerificaDate() {

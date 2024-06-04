@@ -760,6 +760,15 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
             siesLogger.debug("Ordinanza di Applicazione Pene Sostitutiva " + lCodTipoDec);
         }
         // MEV_2023-35 - FINE
+        // MEV_2023-35 - Revoca Autorizzazioni pene sostitutive 
+        else if (lCodTipoDec.compareTo(REVOCA_AUTORIZZAZIONE_PS) == 0) {
+          // Attenzione si utilizzano le stesse costanti del Decreto (per ora ) ICostantiDepositoDecreto
+            // Revoca Autorizzazioni pene sostitutive 
+            mRetPage = PG_INSERISCI_REVOCA_AUTORIZZAZIONE_PENA_SOSTITUTIVA_ORD; 
+            ricercaFascicoloOrigine();
+            siesLogger.debug("Ordinanza di ARevoca Autorizzazioni pene sostitutive " + lCodTipoDec);
+        }
+        // MEV_2023-35 - FINE		
 		else
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Ordinanza non prevista per il contenuto indicato");
