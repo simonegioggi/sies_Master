@@ -466,6 +466,19 @@ public class ActLoadDettaglioDecretoDeposito extends ActionSius
 			// Ricerca di eventuali prescrizioni collegatie al decreto.
 			ricercaPrescrizioni(lDepDecreto.getIdEventoGenerato());
 		}
+		// MEV_2023-35 - Revoca Autorizzazioni / Modifica Pena Sostitutive
+	    else if (lTipoDecreto.compareTo(REVOCA_AUTORIZZAZIONE_PS) == 0) {
+            // Revoca Autorizzazioni / Modifica Pena Sostitutive
+            lRetPage = PG_DETTAGLIO_REVOCA_AUTORIZZAZIONE_PENA_SOSTITUTIVA;
+            gestioneTemplate(lIdEvento);
+            if (lFasGPMod.getFascicoloSiusModel() != null 
+                && lFasGPMod.getFascicoloSiusModel().getIdFascicoloSiusOrigine() != null) {
+              ricercaFascicoloOrigine(lFasGPMod.getFascicoloSiusModel().getIdFascicoloSiusOrigine());
+            }            
+            // Ricerca di eventuali prescrizioni collegatie al decreto.
+            ricercaPrescrizioni(lDepDecreto.getIdEventoGenerato());
+        }
+		// MEV_2023-35 - FINE
 		// ***** FINE INTERVENTO MEV_39 *****//
 		else {
 			lRetPage = IWebConstants.PG_MESSAGE;

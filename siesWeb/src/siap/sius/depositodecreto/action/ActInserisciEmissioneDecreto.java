@@ -627,6 +627,14 @@ public class ActInserisciEmissioneDecreto extends ActionSius implements ICostant
 			siesLogger.debug("RINVIO ESECUZIONE MISURA SICUREZZA EX ART. 684 CPP C. 2 " + lCodTipoDec);
 		}
 		// ***** FINE INTERVENTO MEV_39 *****//
+		// MEV_2023-35 - Revoca Autorizzazioni Pena Sostitutiva
+        else if (lCodTipoDec.compareTo(REVOCA_AUTORIZZAZIONE_PS) == 0) {
+          // Revoca Autorizzazione Pena Sostitutiva
+          mRetPage = PG_INSERISCI_REVOCA_AUTORIZZAZIONE_PENA_SOSTITUTIVA; 
+          ricercaFascicoloOrigine();
+          siesLogger.debug("Decreto Revoca Autorizzazione Pena Sostitutiva " + lCodTipoDec);
+        }
+		// MEV_2023-35 - FINE
 		else
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Decreto non previsto per il contenuto indicato");
