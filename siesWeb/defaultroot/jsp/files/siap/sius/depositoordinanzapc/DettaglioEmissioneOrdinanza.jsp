@@ -81,7 +81,7 @@ if (!Utils.isPresent(codOggettoProcedimento)) {
 	GeneraleProcedimentoModel gpm = new GeneraleProcedimentoModel();
 	if (!Utils.isNullObj(fgpm.getGeneraleProcedimentoModel()))
 		gpm = fgpm.getGeneraleProcedimentoModel();
-	if (!Utils.isNullObj(gpm.getCodOggettoProcedimento()))
+	if (Utils.isPresent(gpm.getCodOggettoProcedimento()))
 		codOggettoProcedimento = gpm.getCodOggettoProcedimento();
 }
 
@@ -212,7 +212,7 @@ if (codice.compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_ORDINANZA) != 0
 String tipoOrdinanza = "";
 if (Utils.isPresent(codice))
 	tipoOrdinanza = DecodificheUtils.getDescbyCode(DecodificheManager.getInstance().getTipoOrdinanza(), codice);
-if ("U134".equals(codOggettoProcedimento))
+if ("U134".equals(codOggettoProcedimento) || "U126".equals(codOggettoProcedimento))
 	tipoOrdinanza = tipoOrdinanza.replace("Sanzioni", "Pene");
 if (codice.compareTo(ICostantiDepositoOrdinanzaPc.RINVIO_ESECUZIONE_MSIC) == 0)
 	codice = "42";

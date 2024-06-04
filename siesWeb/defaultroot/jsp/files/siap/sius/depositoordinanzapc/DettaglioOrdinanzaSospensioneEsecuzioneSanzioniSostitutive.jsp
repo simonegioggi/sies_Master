@@ -32,7 +32,7 @@ if (!Utils.isPresent(codOggettoProcedimento)) {
 	GeneraleProcedimentoModel gpm = new GeneraleProcedimentoModel();
 	if (!Utils.isNullObj(fgpm.getGeneraleProcedimentoModel()))
 		gpm = fgpm.getGeneraleProcedimentoModel();
-	if (!Utils.isNullObj(gpm.getCodOggettoProcedimento()))
+	if (Utils.isPresent(gpm.getCodOggettoProcedimento()))
 		codOggettoProcedimento = gpm.getCodOggettoProcedimento();
 }
 if ("U134".equals(codOggettoProcedimento))
