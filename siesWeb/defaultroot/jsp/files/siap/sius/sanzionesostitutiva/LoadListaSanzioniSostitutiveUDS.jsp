@@ -105,8 +105,8 @@ if (!listaSanzioniSius.isEmpty()) {
 		// ossia manca un giorno  paolo c. 23/04/2010
 		if (CalendarUtil.getTotGiorni(lCal) >= 0) {
 			// MEV_35: aggiunto controllo descrizione motivo
-			if (lPeriodoAltraSanzioneModel.getDescrMotivo().contains("Sanzione"))
-				lPeriodoAltraSanzioneModel.setDescrMotivo(lPeriodoAltraSanzioneModel.getDescrMotivo().replace("Sanzione", "Pena"));
+			if (lPeriodoAltraSanzioneModel.getDescrMotivo().contains("Inizio Sanzione Sostitutiva"))
+				lPeriodoAltraSanzioneModel.setDescrMotivo(lPeriodoAltraSanzioneModel.getDescrMotivo().replace("Inizio Sanzione Sostitutiva", "Inizio Pena Sostitutiva"));
 %>
 		<td class="c">
 		    <font class="label">Anni</font>

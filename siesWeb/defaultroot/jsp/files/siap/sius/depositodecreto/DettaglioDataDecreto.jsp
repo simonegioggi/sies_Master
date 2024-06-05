@@ -40,6 +40,8 @@ if (modificaDecreto) {
 	String contenuto = fgpm.getGeneraleProcedimentoModel().getCodOggettoProcedimento();
 	if ("U128".equals(contenuto)) {
 		descrContenuto = "decreto autorizzazione su pene sostitutive";
+	} else if ("U129".equals(contenuto)) {
+		descrContenuto = "decreto Modifica Modalita' di Esecuzione / Luogo Esecuzione Pene Sostitutive";
 	}
 %>
   	<tr>
