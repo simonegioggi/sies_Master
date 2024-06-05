@@ -1,7 +1,12 @@
-BRANCH SIES VERSIONE 12.6.3.0
-Nasce dal branch 12.6.2.0 in data 27/05/2024
-Questa release verrà rilasciata il 28/06/2024 (Patch mese di Giugno 2024)
+Ticket#202406050145 - SIEP - Problemi visualizzazione Pena pecuniaria sostitutiva 
 
-Comprende i seguenti Ticket MAC:
 
-1)	
+Nella precedente versione, l'annullamneto di un Ordine di ingiunzione sganciava
+le rate dell'evento e il dettaglio in questo caso va in errore aspettandosi invece 
+sempre la presenza delle rate.
+
+Corretta jsp per gestire l'eventuale assenza delle rate per i vecchi OI annullati.
+
+DettaglioRateizzazionePP.jsp
+
+
