@@ -18,7 +18,7 @@
 <jsp:useBean id="fascicoloSiusGP" 	scope="session" class="siap.sius.fascicolo.model.FascicoloGPModel"/>
 
 <%
-// MEV_35: recupero info sul fascicolo per oggetto procedimento
+// MEV_2023-35: recupero info sul fascicolo per oggetto procedimento
 String codOggettoProcedimento = "", tipoSostituzione = "Sanzione";
 GeneraleProcedimentoModel gpm = new GeneraleProcedimentoModel();
 if (!Utils.isNullObj(fascicoloSiusGP.getGeneraleProcedimentoModel()))
@@ -104,7 +104,7 @@ if (!listaSanzioniSius.isEmpty()) {
 		// metto false altrimenti in fase di elenco periodi SS sbaglia il calcolo
 		// ossia manca un giorno  paolo c. 23/04/2010
 		if (CalendarUtil.getTotGiorni(lCal) >= 0) {
-			// MEV_35: aggiunto controllo descrizione motivo
+			// MEV_2023-35: aggiunto controllo descrizione motivo
 			if (lPeriodoAltraSanzioneModel.getDescrMotivo().contains("Inizio Sanzione Sostitutiva"))
 				lPeriodoAltraSanzioneModel.setDescrMotivo(lPeriodoAltraSanzioneModel.getDescrMotivo().replace("Inizio Sanzione Sostitutiva", "Inizio Pena Sostitutiva"));
 %>

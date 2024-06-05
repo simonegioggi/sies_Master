@@ -37,11 +37,11 @@ UtenteModel lUtenteMod = new UtenteModel((UtenteModel) session.getAttribute(ICos
 String lUffUtente =  lUtenteMod.getUfficioUtente().getCodUfficio();
 ProfileModel lProfilo = (ProfileModel) lUtenteMod.getUserProfile();
 
-// MEV_35: recupero info sul fascicolo per oggetto procedimento
+// MEV_2023-35: recupero info sul fascicolo per oggetto procedimento
 String codOggettoProcedimento = "", tipoSostituzione = "Sanzione";
 FascicoloGPModel fgpm = (FascicoloGPModel) session.getAttribute("fascicoloSiusGP");
 GeneraleProcedimentoModel gpm = new GeneraleProcedimentoModel();
-if (!Utils.isNullObj(fgpm.getGeneraleProcedimentoModel()))
+if (!Utils.isNullObj(fgpm) && !Utils.isNullObj(fgpm.getGeneraleProcedimentoModel()))
 	gpm = fgpm.getGeneraleProcedimentoModel();
 if (Utils.isPresent(gpm.getCodOggettoProcedimento()))
 	codOggettoProcedimento = gpm.getCodOggettoProcedimento();
@@ -156,7 +156,7 @@ if (lFunFiglie != null && lFunFiglie.size() != 0) {
 		boolean daInserire = false;
 		while (lIterCombo.hasNext()) {
   			lFun = (FunctionModel) lIterCombo.next();
-  			// MEV_35: cambio nome funziona in un caso particolare (U126)
+  			// MEV_2023-35: cambio nome funziona in un caso particolare (U126)
   			if (lFun.getLabelFunction().contains("Ripresa Sanzione Sostitutiva")
   					&& "U126".equals(codOggettoProcedimento))
   				lFun.setLabelFunction(lFun.getLabelFunction().replace("Ripresa Sanzione Sostitutiva", "Ripresa Pena Sostitutiva"));

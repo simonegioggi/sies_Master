@@ -15,7 +15,7 @@
 <jsp:useBean id="modalita" 						scope="request" class="java.lang.String"/>
 
 <%
-// Flag per indicare la modalità di Modifica Decreto
+// Flag per indicare la modalita' di Modifica Decreto
 boolean modificaDecreto = false;
 if (modalita != null && modalita.trim().equalsIgnoreCase("M"))
 	modificaDecreto = true;
@@ -41,7 +41,9 @@ if (modificaDecreto) {
 	if ("U128".equals(contenuto)) {
 		descrContenuto = "decreto autorizzazione su pene sostitutive";
 	} else if ("U129".equals(contenuto)) {
-		descrContenuto = "decreto Modifica Modalita' di Esecuzione / Luogo Esecuzione Pene Sostitutive";
+		descrContenuto = "decreto Modifica Modalit&agrave; di Esecuzione / Luogo Esecuzione Pene Sostitutive";
+	} else if ("U137".equals(contenuto)) {
+		descrContenuto = "decreto Sospensione Lavoro Pubblica Utilit&agrave; Sostitutivo";
 	}
 %>
   	<tr>

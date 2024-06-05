@@ -70,7 +70,7 @@ String titolo = "Dettaglio Ordinanza";
 if (modificaOrdinanza)
 	titolo = "Modifica Ordinanza";
 
-// MEV_35: recupero info sul fascicolo per oggetto procedimento
+// MEV_2023-35: recupero info sul fascicolo per oggetto procedimento
 String codOggettoProcedimento = "", codice = "";
 if (datiOrdinanza != null && datiOrdinanza.getOrdinanza() != null && datiOrdinanza.getOrdinanza().getCodTipoOrdinanza() != null)
 	codice = datiOrdinanza.getOrdinanza().getCodTipoOrdinanza();
@@ -208,7 +208,7 @@ if (codice.compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_ORDINANZA) != 0
 	<tr>
     	<td class="l">Tipo di Ordinanza</td>
 <%
-// MEV_35: aggiunto controllo
+// MEV_2023-35: aggiunto controllo
 String tipoOrdinanza = "";
 if (Utils.isPresent(codice))
 	tipoOrdinanza = DecodificheUtils.getDescbyCode(DecodificheManager.getInstance().getTipoOrdinanza(), codice);

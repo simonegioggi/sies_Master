@@ -14,7 +14,7 @@
 <jsp:useBean id="modalita" scope="request" class="java.lang.String"/>
 
 <%
-// MEV_35: recupero info sul fascicolo per oggetto procedimento
+// MEV_2023-35: recupero info sul fascicolo per oggetto procedimento
 String codOggettoProcedimento = "", tipoSostituzione = "Sanzione";
 GeneraleProcedimentoModel gpm = new GeneraleProcedimentoModel();
 if (!Utils.isNullObj(fascicoloSiusGP.getGeneraleProcedimentoModel()))

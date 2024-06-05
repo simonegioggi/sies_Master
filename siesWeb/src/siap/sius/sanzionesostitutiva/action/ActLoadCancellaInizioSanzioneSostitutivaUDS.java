@@ -187,13 +187,11 @@ public class ActLoadCancellaInizioSanzioneSostitutivaUDS extends ActSanzioneSost
 				lScaMod81c = lCtrl
 						.ExRicercaScadenzarioSiusByIdFascicoloTipo(lPerMod.getFasSiuIdFascicoloSius(), "81");
 				lCtrl1.ExCancellaPeriodoAltraSanzione(lScaMod81c, null, lScaMod80, IdPerCanc, lESSModel);
-
 			} else {
 				// se cancello una sospensione:
 				// (termine differimento) scadenzario 81 -> ripristino al precedente
 				// (termine sanzione sostitutiva) scadenzario 80 -> ripristino la Data Termine Attuale
 				// qualora fossero stati sommati dei gg da recuperare
-
 				lScaMod80 = lCtrl
 						.ExRicercaScadenzarioSiusByIdFascicoloTipo(lPerMod.getFasSiuIdFascicoloSius(), "80");
 				lPerMod = (PeriodoAltraSanzioneModel) lListaSanzioniSius.get(lListaSanzioniSius.size() - 2);

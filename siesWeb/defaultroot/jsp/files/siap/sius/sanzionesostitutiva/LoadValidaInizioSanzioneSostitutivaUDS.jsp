@@ -14,7 +14,7 @@
 <jsp:useBean id="lESSModel" 			scope="request" class="siap.sius.esecuzionesanzionesostitutiva.model.EsecuzioneSanzioneSostitutivaModel"/>
 
 <%
-// MEV_35: recupero info sul fascicolo per oggetto procedimento
+// MEV_2023-35: recupero info sul fascicolo per oggetto procedimento
 String codOggettoProcedimento = "", tipoSostituzione = "Sanzione";
 GeneraleProcedimentoModel gpm = new GeneraleProcedimentoModel();
 if (!Utils.isNullObj(fascicoloSiusGP.getGeneraleProcedimentoModel()))

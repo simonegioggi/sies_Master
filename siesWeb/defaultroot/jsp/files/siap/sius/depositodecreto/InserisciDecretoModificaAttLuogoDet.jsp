@@ -38,7 +38,7 @@ if (CodUff.equals("TDSM") || CodUff.equals("UDSM")) {
 String lAction = new String();
 lAction = "siap.sius.depositodecreto.action.ActInserisciEmissioneDecretoDeposito";
 
-// MEV_35: recupero info sul fascicolo per oggetto procedimento
+// MEV_2023-35: recupero info sul fascicolo per oggetto procedimento
 String tipoDecreto = "Modifica Attivit&agrave; Lavorativa / Luogo Detenzione";
 String tipoAttivita = "Attivit&agrave; lavorativa";
 String tipoDetenzione = "detenzione domiciliare";

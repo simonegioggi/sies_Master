@@ -47,8 +47,8 @@ public class ActLoadInserisciInizioSanzioneSostitutivaUDS extends ActSanzioneSos
 		List lListaSanzioniSius = lCtrl1.ExRicercaSanzioneSostitutivaByIdFascicolo(lIdFasSius);
 		setRequestAttribute("listaSanzioniSius", lListaSanzioniSius);
 
-		// MEV_35: cambio nome etichetta in un caso particolare (U126)
-		// MEV_35: recupero info sul fascicolo per oggetto procedimento
+		// MEV_2023-35: cambio nome etichetta in un caso particolare (U126)
+		// MEV_2023-35: recupero info sul fascicolo per oggetto procedimento
 		String codOggettoProcedimento = "", tipoSostituzione = "Sanzione";
 		FascicoloGPModel fgpm = (FascicoloGPModel) getSessionAttribute("fascicoloSiusGP");
 		GeneraleProcedimentoModel gpm = new GeneraleProcedimentoModel();

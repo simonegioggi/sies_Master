@@ -16,7 +16,7 @@
 <jsp:useBean id="istitutodetenzione" 	scope="request" class="siap.siep.istitutodetenzione.model.IstitutoDetenzioneModel"/>
 
 <%
-// MEV_35: recupero info sul fascicolo per oggetto procedimento
+// MEV_2023-35: recupero info sul fascicolo per oggetto procedimento
 String codOggettoProcedimento = "", tipoSostituzione = "Sanzione";
 GeneraleProcedimentoModel gpm = new GeneraleProcedimentoModel();
 if (!Utils.isNullObj(fascicoloSiusGP.getGeneraleProcedimentoModel()))

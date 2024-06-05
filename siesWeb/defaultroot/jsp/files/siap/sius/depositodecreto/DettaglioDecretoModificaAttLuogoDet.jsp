@@ -45,7 +45,7 @@ if (CodUff.equals("TDSM") || CodUff.equals("UDSM")) {
 	labelUfficio = "Ufficio di Sorveglianza";
 }
 
-//MEV_35: recupero info sul fascicolo per oggetto procedimento
+//MEV_2023-35: recupero info sul fascicolo per oggetto procedimento
 String codOggettoProcedimento = "";
 FascicoloGPModel fgpm = (FascicoloGPModel) session.getAttribute("fascicoloSiusGP");
 GeneraleProcedimentoModel gpm = new GeneraleProcedimentoModel();

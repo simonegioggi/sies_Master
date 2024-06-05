@@ -23,7 +23,7 @@ if(CodUff.equals("TDSM") || CodUff.equals("UDSM")){
 } else {
 	labelUfficio = "Tribunale di Sorveglianza";
 }
-// MEV_35: recupero info sul fascicolo per oggetto procedimento
+// MEV_2023-35: recupero info sul fascicolo per oggetto procedimento
 String codOggettoProcedimento = "", tipoSostituzione = "Sanzione";;
 if (datiOrdinanza != null && datiOrdinanza.getOrdinanza() != null && datiOrdinanza.getOrdinanza().getOggettoProcedimento() != null)
 	codOggettoProcedimento = datiOrdinanza.getOrdinanza().getOggettoProcedimento();

@@ -36,9 +36,12 @@ if (CodUff.equals("TDSM") || CodUff.equals("UDSM")) {
 	labelUfficio = "Tribunale di Sorveglianza";
 }
 
-// MEV_35: aggiunto controllo
-boolean isU134 = "U134".equals(contenuto);
-String tipoSosp = isU134 ? "Pena" : "Sanzione";
+// MEV_2023-35: aggiunti controlli sul contenuto
+String tipoSosp = "Sanzione Sostitutiva";
+if ("U134".equals(contenuto))
+	tipoSosp = "Pena Sostitutiva";
+else if ("U137".equals(contenuto))
+	tipoSosp = "Lavoro Pubblica Utilit&agrave; Sostitutivo";
 
 // Imposta varibabili se Decreto o Ordinanza
 String lAction = new String();
@@ -48,10 +51,10 @@ boolean lFlagOrdinanza = false;
 if (Action.trim().length() > 1) {
 	lAction = Action;
 	lFlagOrdinanza = true;
-	lFunctionName = "Emissione Ordinanza Sospensione " + tipoSosp + " Sostitutiva";
+	lFunctionName = "Emissione Ordinanza Sospensione " + tipoSosp;
 } else {
 	lAction = "siap.sius.depositodecreto.action.ActInserisciEmissioneDecretoDeposito";
-	lFunctionName = "Emissione Decreto Sospensione " + tipoSosp + " Sostitutiva";
+	lFunctionName = "Emissione Decreto Sospensione " + tipoSosp;
 }
 %>
 
@@ -302,7 +305,8 @@ boolean chkContenuto = false;
 // Come richiesto il 28/01/2008 Si inibisce la visualizzazione dei giorni da recuperare per il codice contenuto
 // pari a U060 e lo si abilita per il codice U061 e/o eventuali altri codici non specificati.
 if ("U060".equalsIgnoreCase(contenuto) // Sopensione Esecuzione Sanzioni Sostitutive
-		|| "U134".equalsIgnoreCase(contenuto)) // MEV_35: aggiunto contenuto "Sopensione Esecuzione Pene Sostitutive"
+		|| "U134".equalsIgnoreCase(contenuto)  // MEV_2023-35: aggiunto contenuto "Sopensione Esecuzione Pene Sostitutive"
+		|| "U137".equalsIgnoreCase(contenuto)) // MEV_2023-35: aggiunto contenuto "Sospensione lavoro di pubblica utilita' sostitutivo"
 	chkContenuto = true;
 if (!chkContenuto) {
 %>
