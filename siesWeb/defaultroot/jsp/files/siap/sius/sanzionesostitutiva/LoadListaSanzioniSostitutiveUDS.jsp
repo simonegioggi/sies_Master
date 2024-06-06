@@ -37,7 +37,7 @@ if ("U134".equals(codOggettoProcedimento) || "U126".equals(codOggettoProcediment
 <script language="JavaScript">
 function cancella(idEvento, flagMotivo, flagDocumentoRegistrato, idPeriodoAltraSanzione, idFascicoloSius) {
 	if (flagDocumentoRegistrato == "S" && flagMotivo == "03") {
-		if (window.confirm('Attenzione: Periodo agganciato ad un Decreto o Ordinanza. <br> Si vuole procedere con la cancellazione?')) {
+		if (window.confirm('Attenzione: Periodo agganciato ad un Decreto o Ordinanza.\nSi vuole procedere con la cancellazione?')) {
         	str = "/jsp/Main.jsp?Action=siap.sius.sanzionesostitutiva.action.ActLoadCancellaInizioSanzioneSostitutivaUDS&<%=ICostantiSanzioneSostitutiva.CAMPO_ID_PERIODO_ALTRA_SANZIONE%>="+idPeriodoAltraSanzione+"&<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>="+idFascicoloSius;
         	window.location.href=str;
       	}

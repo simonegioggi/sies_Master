@@ -143,7 +143,6 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 							lFasGPModOrigine.getGeneraleProcedimentoModel().getAnnoS1(),
 							lFasGPModOrigine.getGeneraleProcedimentoModel().getProgrS1(),
 							lFasGPModOrigine.getGeneraleProcedimentoModel().getCodUfficioInserimento());
-
 					// prendo l'ultimo periodo altra sanzione per visualizzare la pena residua ed espiata
 					lListaSanzioniSius = lCtrllst.ExRicercaSanzioneSostitutivaByIdFascicolo(
 							lFasGPModPadreESS.getFascicoloSiusModel().getIdFascicoloSius());
@@ -530,7 +529,9 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("Ordinanza di Modifica Permanente Sanzioni Sostitutive " + lCodTipoDec);
-		} else if (lCodTipoDec.compareTo(SOSPENSIONE_ESECUZIONE_SS) == 0) {
+		} else if (lCodTipoDec.compareTo(SOSPENSIONE_ESECUZIONE_SS) == 0
+				// MEV_2023-35: aggiunta condizione di inserimento
+				&& !"U137".equals(lCodContenuto)) {
 			// Sospensione Esecuzione su Sanzioni Sostitutive
 			mRetPage = PG_INSERISCI_SOSPENSIONE_ESECUZIONE_SANZIONI_SOSTITUTIVE;
 			// setRequestAttribute("Action", "siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaUDS");

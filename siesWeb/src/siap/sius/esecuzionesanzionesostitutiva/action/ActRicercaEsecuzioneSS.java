@@ -13,20 +13,8 @@ import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
 
 /**
- * <p>
- * Title: ActRicercaEsecuzioneSS
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2007
- * </p>
- * <p>
- * Company:
- * </p>
+ * ActRicercaEsecuzioneSS - Classe per la ricerca dei procedimenti di esecuzione sanzioni sostituive
  * 
- * @author unascribed
  * @version 1.0
  */
 public class ActRicercaEsecuzioneSS extends ActionSiap implements ICostantiEsecuzioneSS {

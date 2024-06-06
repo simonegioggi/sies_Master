@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.util.F3BException;
+import f3b.util.Utils;
 import siap.controller.SiapController;
 import siap.sius.SIUSException;
 import siap.sius.esecuzionesanzionesostitutiva.dao.EsecuzioneSanzioneSostitutivaDAO;
@@ -20,18 +21,7 @@ import siap.sius.tenore.dao.TenoreSqlDAO;
 import siap.sius.tenore.model.TenoreModel;
 
 /**
- * <p>
- * Title: EsecuzioneSSController
- * </p>
- * <p>
- * Description: Classe Controller per EsecuzioneSanzioneSostitutiva
- * </p>
- * <p>
- * Copyright: Copyright (c) 2007
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * EsecuzioneSSController - Classe Controller per EsecuzioneSanzioneSostitutiva
  *
  * @version 1.0
  */
@@ -182,6 +172,12 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 			lEseDao = new EsecuzioneSanzioneSostitutivaSqlDAO(lConn);
 			lEseDao.ricercaEsecuzioneSanzioneSostitutivaByIdFascicolo(aKey);
 			lEseMod = (EsecuzioneSanzioneSostitutivaModel) lEseDao.getModelByKey();
+			// MEV_2023-35: aggiunto controllo se la cancellazione si fa dal procedimento figlio piuttosto che
+			// dal padre
+			if (Utils.isNullObj(lEseMod)) {
+				lEseDao.ricercaEsecuzioneSanzioneSostitutivaByIdFascicoloFiglio(aKey);
+				lEseMod = (EsecuzioneSanzioneSostitutivaModel) lEseDao.getModelByKey();
+			}
 		} catch (DAOException daoEx) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -362,13 +358,15 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 			}
 			lEseSSSqlDao.stop();
 
-			if (lEsecuzioneSS.isEmpty()){
-			  if ("U019".equals(lCodContenuto))
-				throw new SIUSException(F3BException.USER_MESSAGE,"Esecuzione Sanzione Sostitutiva non trovata");
-			  else if ("U126".equals(lCodContenuto))
-			    throw new SIUSException(F3BException.USER_MESSAGE,"Esecuzione Pena Sostitutiva non trovata");
-	          else 
-	            throw new SIUSException(F3BException.USER_MESSAGE,"Esecuzione non trovata");
+			if (lEsecuzioneSS.isEmpty()) {
+				if ("U019".equals(lCodContenuto))
+					throw new SIUSException(F3BException.USER_MESSAGE,
+							"Esecuzione Sanzione Sostitutiva non trovata");
+				else if ("U126".equals(lCodContenuto))
+					throw new SIUSException(F3BException.USER_MESSAGE,
+							"Esecuzione Pena Sostitutiva non trovata");
+				else
+					throw new SIUSException(F3BException.USER_MESSAGE, "Esecuzione non trovata");
 			}
 		} catch (DAOException daoEx) {
 			rollback(lConn);
@@ -710,7 +708,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 	 * @return Vettore di FascicoloGPModel
 	 * @throws F3BException
 	 * @deprecated 05.2024 il metodo non viene mai chiamato (MEV_2023-35)
-	 */	
+	 */
 	// FIXME verificare se tale metodo viene richiamato. NO era commentato anche nell'interfaccia
 	// MEV_2023-35 si parametrizza il lCodContenuto per gestire anche le EPS.
 	public Vector ExRicercaDettaglioEsecuzioneSSbyFascicolo(BigDecimal aIdFascicolo, BigDecimal aIdSoggetto,
@@ -735,7 +733,8 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 
 			// MEV_2023-35 si parametrizza il lCodContenuto per gestire anche le EPS.
 			lEseSSSqlDao = new EsecuzioneSanzioneSostitutivaSqlDAO(lConn);
-			lEseSSSqlDao.ricercaDettaglioEsecuzioneSSbyFascicolo(aIdFascicolo, lUfficioUtenteConnesso, lCodContenuto);
+			lEseSSSqlDao.ricercaDettaglioEsecuzioneSSbyFascicolo(aIdFascicolo, lUfficioUtenteConnesso,
+					lCodContenuto);
 			lEseSSSqlDao.start();
 
 			FascicoloGPModel lFascicolo = null;

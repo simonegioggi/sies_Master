@@ -256,6 +256,10 @@ for (int i = 0; i < tenori.length; i++) {
 %>            
 </table>
 <br>
+<%
+// MEV_2023-35: aggiunto controllo preventivo per fa vedere la tabella
+if (!("U134".equals(contenuto) || "U137".equals(contenuto))) {
+%>
 <table cellspacing="2" cellpadding="2">
     <tr>
 		<td class="l"><%=labelUfficio%> Competente</td>
@@ -268,6 +272,9 @@ for (int i = 0; i < tenori.length; i++) {
 	</tr>
 </table>
 <br>
+<%
+}
+%>
 <table cellspacing="2" cellpadding="2" width="90%">
 	<tr>
 		<td class="l">Data Decorrenza Sospensione</td>
