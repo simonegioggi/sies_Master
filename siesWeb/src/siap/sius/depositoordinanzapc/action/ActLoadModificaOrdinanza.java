@@ -291,6 +291,7 @@ public class ActLoadModificaOrdinanza extends ActDettaglioEmissioneOrdinanza {
 		}
 
 		setRequestAttribute("modalita", "M");
+		siesLogger.debug("lRetPage = "+lRetPage);
 		return lRetPage;
 	}
 

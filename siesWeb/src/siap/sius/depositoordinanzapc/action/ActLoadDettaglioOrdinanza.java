@@ -221,6 +221,28 @@ public class ActLoadDettaglioOrdinanza extends ActDettaglioEmissioneOrdinanza
 					}
 				}
 			}
+			// MEV_2023-35
+            else if (mOrdEveTenPreMod.getOrdinanza().getCodTipoOrdinanza()
+                .compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_REVOCA_PENA_SOST) == 0) {
+              lFasGPMod = new FascicoloGPModel((FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"));
+              BigDecimal lIdFascicoloSius = lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius();
+              if (lIdFascicoloSius != null) {
+                  // Caricamento delle Richieste Conversioni
+                  RichiestaConversioneModel aRichiestaConversione = new RichiestaConversioneModel();
+                  aRichiestaConversione.setFasSiuIdFascicoloSius(lIdFascicoloSius);
+                  IRichiestaConversione lCtrlRC = SIEPLookupRemote.getRichiestaConversioneRemote();
+                  Vector lVectRichConversioniPP = lCtrlRC
+                          .ExRicercaRichiestaConversioneEstesa(aRichiestaConversione);
+  
+                  if (lVectRichConversioniPP != null)
+                      setRequestAttribute("richiesteconversioni", lVectRichConversioniPP);
+  
+              }
+            }
+			// MEV_2023-35 - FINE
+			
+			
+			
 		}
 
 		// 01/2014 - Decreto legge 146/2013 - Misura alternativa Ammissione in prova
@@ -395,6 +417,8 @@ public class ActLoadDettaglioOrdinanza extends ActDettaglioEmissioneOrdinanza
 		setRequestAttribute("codTipoUfficio", codTipoUfficio);
 
 		// valore di ritorno
+		siesLogger.debug("ActLoadDettaglioOrdinanza retPage = "+retPage);
+		
 		return retPage;
 	}
 

@@ -1069,6 +1069,18 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 						+ lIdDepOrd);
 			}
 
+	        // MEV_2023-35 - Revoca e Conversione Pena Pecuniaria Sostitutiva
+			// Il record RICHIESTA_CONVERSIONE con i dati dell'ordinanza punta l'evento.
+			// Va eliminato prima di eliminare l'evento
+			if (aDepOrd.getCodTipoOrdinanza()
+                 .compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_REVOCA_PENA_SOST) == 0) {
+			  lRCDao = new RichiestaConversioneDAO(aConn);
+			  lRCDao.selCondizioneByIdEvento(aDepOrd.getIdEventoGenerato());
+			  lRCDao.delete();
+              siesLogger.debug(">>>> Elimino il record Richieste Conv collegato all'evento"
+                  + lIdDepOrd);
+	        }
+			
 			// Per le Ordinanze di Applicazione Misure Sicurezza, se l'Ordinanza stessa ha trasformato la
 			// misura
 			// occorre cancellare la misura generata dall' Ordinanza
@@ -3933,5 +3945,58 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 		return lDepMod;
 	}
 	// ***** FINE INTERVENTO MEV_39 *****//
+
+  /*
+   * Inserimento del'ordinanza di Revoca e Conversione Pena Pecuniaria Sostitutiva
+   * 
+   * @since MEV_2023-35
+   */
+  public OrdinanzaEventoTenoriGProcModel ExInserisciOrdinanzaRevocaConversionePPS (
+         OrdinanzaEventoTenoriGProcModel aGProcOrdEveTenori,
+         RichiestaConversioneModel aRicConvMod)throws F3BException
+  {
+    Connection lConn = null;
+    OrdinanzaEventoTenoriGProcModel lModRet = null;
+    RichiestaConversioneDAO lRicConvDAO = null;
+
+    try {
+      lConn = getDBTransaction();      
+      
+      // Inserimento DepositoOrdinanza, Tenore, Evento...
+      lModRet = ExInserisciOrdinanza(aGProcOrdEveTenori, lConn);
+
+      // Inserimento della RICHIESTA_CONVERSIONE
+      lRicConvDAO = new RichiestaConversioneDAO(lConn);
+      
+      // Aggancio la richieta al fascicolo SIUS e all'ordinanza??
+      aRicConvMod.setFasSiuIdFascicoloSius (lModRet.getEvento().getFasSiuIdFascicoloSius());
+      aRicConvMod.setEveIdEvento           (lModRet.getEvento().getIdEvento());
+      
+      aRicConvMod.setCodOperatoreAggiornamento  (lModRet.getEvento().getCodOperatoreInserimento());
+      aRicConvMod.setCodUfficioAggiornamento    (lModRet.getEvento().getCodUfficioInserimento());
+      aRicConvMod.setDataAggiornamento          (lModRet.getEvento().getDataInserimento());
+
+      lRicConvDAO.setDAOFromModel(aRicConvMod);
+      lRicConvDAO.insert();
+
+      commit(lConn);
+    } catch (DAOException daoEx) {
+      rollback(lConn);
+      siesLogger.debug("DAOException: ", daoEx);
+      throw new SIUSException("DepositoOrdinanzaPcController.ExInserisciOrdinanzaRevocaConversionePPS : "+ daoEx);
+    } catch (SQLException sqlEx) {
+      rollback(lConn);
+      siesLogger.debug("SQLException: ", sqlEx);
+      throw new SIUSException("DepositoOrdinanzaPcController.ExInserisciOrdinanzaRevocaConversionePPS : "+ sqlEx);
+    } catch (Exception e) {
+      rollback(lConn);
+      siesLogger.debug("Exception: ", e);
+      throw new SIUSException("DepositoOrdinanzaPcController.ExInserisciOrdinanzaRevocaConversionePPS : " + e);
+    } finally {
+      cleanup(lRicConvDAO);
+      cleanup(lConn);
+    }
+    return lModRet;
+  } 
 
 }

@@ -15,6 +15,9 @@ import f3b.web.RedirectTo;
 import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.util.DecodificheUtils;
+import siap.sico.evento.controller.IEvento;
+import siap.sico.evento.model.EventoModel;
+import siap.sico.util.SICOLookupRemote;
 import siap.siep.misurasicurezza.controller.MisuraSicurezzaController;
 import siap.siep.misurasicurezza.model.MisuraSicurezzaModel;
 import siap.siep.penacomplessiva.controller.IPenaComplessiva;
@@ -23,6 +26,8 @@ import siap.siep.penapecuniaria.controller.IRichiestaConversione;
 import siap.siep.penapecuniaria.model.RichiestaConversioneModel;
 import siap.siep.penaresidua.controller.IPenaResidua;
 import siap.siep.penaresidua.model.PenaResiduaModel;
+import siap.siep.rateizzazionepp.controller.IRateizzazionePP;
+import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 import siap.siep.sanzionesostitutiva.controller.ISanzioneSostitutiva;
 import siap.siep.sanzionesostitutiva.model.SanzioneSostResiduaModel;
 import siap.siep.util.SIEPLookupRemote;
@@ -769,7 +774,18 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
             ricercaFascicoloOrigine();
             siesLogger.debug("Ordinanza di ARevoca Autorizzazioni pene sostitutive " + lCodTipoDec);
         }
-        // MEV_2023-35 - FINE		
+        // MEV_2023-35 - Revoca / Conversione Pena Pecuniaria Sostitutiva 
+        else if (lCodTipoDec.compareTo(CONVERSIONE_REVOCA_PENA_SOST) == 0) {
+          // Revoca / Conversione Pena Pecuniaria Sostitutiva 
+          mRetPage = PG_LOAD_INSERISCI_ORDINANZA_REV_CONV_PPS;
+          // Provo a recuperare l'importo da pagare dal fascicolo SIEP collegato se esiste
+          RateizzazionePPModel lRataMancatoPagamento = ricercaMancatoPagamento();
+          
+          setRequestAttribute("RataMancatoPagamento",lRataMancatoPagamento);
+          setRequestAttribute("Action", "siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaUDS");
+          siesLogger.debug("Ordinanza Revoca Conversione Pena Pecuniaria Sostitutiva " + lCodTipoDec);
+       // MEV_2023-35 - FINE
+        } 	
 		else
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Ordinanza non prevista per il contenuto indicato");
@@ -886,5 +902,46 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 																										// Emittenti.
 		setRequestAttribute("tipoUfficioCompetente", "" + lOption);
 	}
+	
+    // MEV_2023-35 Recupero Se Presente la Rateizzazione collegata all'ultimo avviso mancato pagamento
+    // del SIEP collegato
+    private RateizzazionePPModel ricercaMancatoPagamento() throws Exception {
+      siesLogger.debug("ricercaMancatoPagamento");
+      RateizzazionePPModel lRataMancatoPagamento = null;
 
+      if (!isSessionAttributeNullObj("fascicoloSiusGP")) {
+        FascicoloGPModel lFasGPMod = (FascicoloGPModel) getSessionAttribute("fascicoloSiusGP");
+        BigDecimal lIdFasicoloSIEP = null;
+        if (   lFasGPMod.getFascicoloSiusModel() != null 
+            && lFasGPMod.getFascicoloSiusModel().getFasSieIdFascicoloSiep()!=null)  {
+          
+          lIdFasicoloSIEP = lFasGPMod.getFascicoloSiusModel().getFasSieIdFascicoloSiep();
+          
+          // Ricerca ultimo evento 01-04-1308-Avviso mancato pagamento Pena Pecuniaria
+          // validato
+          
+          EventoModel lEveRicerca = new EventoModel();
+          lEveRicerca.setFlagDocumentoRegistrato("S");
+          lEveRicerca.setFasSieIdFascicoloSiep(lIdFasicoloSIEP);
+          lEveRicerca.setCodMotivo("1308");
+          lEveRicerca.setCodTipoProvvedimento("04");
+          
+          IEvento lEveCtrl = SICOLookupRemote.getEventoRemote();
+          //Vector <EventoModel> lListaAvvisi = lEveCtrl.ricercaEvento(new String[]{"1308"}, new String[]{"04"}, lEveRicerca);
+          Vector <EventoModel> lListaAvvisi = lEveCtrl.ExRicercaEvento(lEveRicerca);
+          
+          
+          if (lListaAvvisi!=null && lListaAvvisi.size()>0) {
+            BigDecimal idEvento = lListaAvvisi.elementAt(0).getIdEvento();
+            IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
+            Vector <RateizzazionePPModel> listaRateizzazioni = irpp.exRicercaRateizzazioniByIdEvento(idEvento);
+            
+            if (listaRateizzazioni!=null && listaRateizzazioni.size()>0)
+              lRataMancatoPagamento = listaRateizzazioni.elementAt(0); //presente 1 solo di tipo U
+          }
+        }
+      }
+      
+      return lRataMancatoPagamento;
+    }
 }

@@ -11,6 +11,7 @@ import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.libertaanticipata.model.LicenzaLibAnticipataModel;
 import siap.sico.libertaanticipata.model.LicenzaPeriodiLibAnticipataModel;
 import siap.sico.utente.model.UtenteModel;
+import siap.siep.penapecuniaria.model.RichiestaConversioneModel;
 import siap.sius.depositodecreto.model.DepositoDecretoModel;
 import siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel;
 import siap.sius.depositoordinanzapc.model.OrdinanzaEventoTenoriFascicoloSiusModel;
@@ -215,5 +216,11 @@ public interface IDepositoOrdinanzaPc {
 	public DepositoOrdinanzaPcModel ExRicercaDepositoOrdinanzaPcByGenProc(BigDecimal idGeneraleProcedimento)
 			throws F3BException;
 	// ***** FINE INTERVENTO MEV_39 *****//
+
+    // MEV_2023-35
+    public OrdinanzaEventoTenoriGProcModel ExInserisciOrdinanzaRevocaConversionePPS (
+         OrdinanzaEventoTenoriGProcModel aGProcOrdEveTenori,
+         RichiestaConversioneModel aRicConvMod) throws F3BException;
+    // MEV_2023-35 - FINE
 
 }

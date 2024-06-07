@@ -1053,6 +1053,11 @@ if (!modificaOrdinanza) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_ESEC_PRESSO_DOMICILIO%>"/>	
 <%
+// MEV_2023-35 - Revoca e Conversione Pena Pecuniaria Sostitutiva
+        } else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_REVOCA_PENA_SOST) == 0) {
+%>
+<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_REV_CONV_PPS %>"/>
+<%
    		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.VIOLAZIONE_CEDU) == 0) { // DL 92/2014 : Violazione CEDU
 %>
 <table cellspacing="4" cellpadding="4">

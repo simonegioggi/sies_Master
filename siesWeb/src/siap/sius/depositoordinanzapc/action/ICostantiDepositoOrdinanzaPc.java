@@ -436,6 +436,14 @@ public interface ICostantiDepositoOrdinanzaPc {
     //        + "files/siap/sius/depositoordinanzapc/DettaglioOrdinanzaRevocaAutorizzazionePenaSostitutiva.jsp";    
     // MEV_2023-35 - FINE
     
+    // MEV_2023-35
+    // Revoca e Conversione Pena Pecuniaria Sostitutiva
+    public static final String CONVERSIONE_REVOCA_PENA_SOST = "CR";
+    public static final String PG_LOAD_INSERISCI_ORDINANZA_REV_CONV_PPS = IWebConstants.ROOT_DIR
+            + "files/siap/sius/depositoordinanzapc/InserisciOrdinanzaRevocaConverPPS.jsp";
+    public static final String PG_LOAD_DETTAGLIO_ORDINANZA_REV_CONV_PPS = IWebConstants.ROOT_DIR
+            + "files/siap/sius/depositoordinanzapc/DettaglioOrdinanzaConverRevocaPPS.jsp";
+    // MEV_2023-35 - FINE
     
 	// Declaratoria Estinzione Sanzioni Sostitutive
 	public static final String PG_LOAD_DETTAGLIO_ORDINANZA_DECLARATORIA_ESTINZIONE_SS = IWebConstants.ROOT_DIR
