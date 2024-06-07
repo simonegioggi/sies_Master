@@ -19,13 +19,16 @@
 
 <%
 // MEV_2023-35: recupero info sul fascicolo per oggetto procedimento
-String codOggettoProcedimento = "", tipoSostituzione = "Sanzione";
+String codOggettoProcedimento = "", codTipoRegistro = "", tipoSostituzione = "Sanzione";
 GeneraleProcedimentoModel gpm = new GeneraleProcedimentoModel();
 if (!Utils.isNullObj(fascicoloSiusGP.getGeneraleProcedimentoModel()))
 	gpm = fascicoloSiusGP.getGeneraleProcedimentoModel();
 if (Utils.isPresent(gpm.getCodOggettoProcedimento()))
 	codOggettoProcedimento = gpm.getCodOggettoProcedimento();
-if ("U134".equals(codOggettoProcedimento) || "U126".equals(codOggettoProcedimento))
+if (Utils.isPresent(gpm.getCodTipoRegistro()))
+	codTipoRegistro = gpm.getCodTipoRegistro();
+if ("U134".equals(codOggettoProcedimento) || "U126".equals(codOggettoProcedimento)
+		|| "S30".equals(codTipoRegistro))
 	tipoSostituzione = "Pena";
 %>
 
@@ -105,7 +108,7 @@ if (!listaSanzioniSius.isEmpty()) {
 		// ossia manca un giorno  paolo c. 23/04/2010
 		if (CalendarUtil.getTotGiorni(lCal) >= 0) {
 			// MEV_2023-35: aggiunto controllo descrizione motivo
-			if ("U134".equals(codOggettoProcedimento) || "U126".equals(codOggettoProcedimento)) {
+			if ("Pena".equals(tipoSostituzione)) {
 				if (lPeriodoAltraSanzioneModel.getDescrMotivo().contains("Inizio Sanzione Sostitutiva"))
 					lPeriodoAltraSanzioneModel.setDescrMotivo(lPeriodoAltraSanzioneModel.getDescrMotivo().replace("Inizio Sanzione Sostitutiva", "Inizio Pena Sostitutiva"));
 				else if (lPeriodoAltraSanzioneModel.getDescrMotivo().contains("Sospensione Sanzione Sostitutiva"))
