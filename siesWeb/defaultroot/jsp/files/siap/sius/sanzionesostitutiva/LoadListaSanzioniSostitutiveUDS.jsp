@@ -105,8 +105,12 @@ if (!listaSanzioniSius.isEmpty()) {
 		// ossia manca un giorno  paolo c. 23/04/2010
 		if (CalendarUtil.getTotGiorni(lCal) >= 0) {
 			// MEV_2023-35: aggiunto controllo descrizione motivo
-			if (lPeriodoAltraSanzioneModel.getDescrMotivo().contains("Inizio Sanzione Sostitutiva"))
-				lPeriodoAltraSanzioneModel.setDescrMotivo(lPeriodoAltraSanzioneModel.getDescrMotivo().replace("Inizio Sanzione Sostitutiva", "Inizio Pena Sostitutiva"));
+			if ("U134".equals(codOggettoProcedimento) || "U126".equals(codOggettoProcedimento)) {
+				if (lPeriodoAltraSanzioneModel.getDescrMotivo().contains("Inizio Sanzione Sostitutiva"))
+					lPeriodoAltraSanzioneModel.setDescrMotivo(lPeriodoAltraSanzioneModel.getDescrMotivo().replace("Inizio Sanzione Sostitutiva", "Inizio Pena Sostitutiva"));
+				else if (lPeriodoAltraSanzioneModel.getDescrMotivo().contains("Sospensione Sanzione Sostitutiva"))
+					lPeriodoAltraSanzioneModel.setDescrMotivo(lPeriodoAltraSanzioneModel.getDescrMotivo().replace("Sospensione Sanzione Sostitutiva", "Sospensione Pena Sostitutiva"));
+			}
 %>
 		<td class="c">
 		    <font class="label">Anni</font>
