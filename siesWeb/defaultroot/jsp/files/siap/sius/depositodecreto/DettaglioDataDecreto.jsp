@@ -44,6 +44,8 @@ if (modificaDecreto) {
 		descrContenuto = "decreto Modifica Modalit&agrave; di Esecuzione / Luogo Esecuzione Pene Sostitutive";
 	} else if ("U137".equals(contenuto)) {
 		descrContenuto = "decreto Sospensione Lavoro Pubblica Utilit&agrave; Sostitutivo";
+	} else if ("U133".equals(contenuto)) {
+		descrContenuto = "Decreto Diffida al Puntuale Rispetto delle Prescrizioni - Pene Sostitutive";
 	}
 %>
   	<tr>

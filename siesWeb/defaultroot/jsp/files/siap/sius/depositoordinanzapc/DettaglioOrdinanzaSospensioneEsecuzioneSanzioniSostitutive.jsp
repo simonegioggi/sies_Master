@@ -62,16 +62,16 @@ if (datiOrdinanza.getOrdinanza().getSospensioneAASS().compareTo(new BigDecimal(0
 		|| datiOrdinanza.getOrdinanza().getSospensioneGGSS().compareTo(new BigDecimal(0)) != 0) {
 %>
   	<tr>
-	    <td class="l"> Periodo Sospensione</td>
-	    <td class="l"><font class="campo">ANNI <%=datiOrdinanza.getOrdinanza().getSospensioneAASS() %> MESI <%=datiOrdinanza.getOrdinanza().getSospensioneMMSS() %> GIORNI <%=datiOrdinanza.getOrdinanza().getSospensioneGGSS() %></font></td>
+	    <td class="l">Periodo Sospensione</td>
+	    <td class="l"><font class="campo">ANNI <%=datiOrdinanza.getOrdinanza().getSospensioneAASS()%> MESI <%=datiOrdinanza.getOrdinanza().getSospensioneMMSS()%> GIORNI <%=datiOrdinanza.getOrdinanza().getSospensioneGGSS()%></font></td>
   	</tr>
 <%
 }
 if (datiOrdinanza.getOrdinanza().getDataScadenzaSospensioneSS() != null) {
 %>
    	<tr>
-	    <td class="l"> Fino al</td>
-	    <td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(datiOrdinanza.getOrdinanza().getDataScadenzaSospensioneSS(),"dd/MM/yyyy"))%> </font>&nbsp;</td>
+	    <td class="l">Fino al</td>
+	    <td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(datiOrdinanza.getOrdinanza().getDataScadenzaSospensioneSS(),"dd/MM/yyyy"))%></font></td>
   	</tr>
 <%
 }
@@ -81,7 +81,7 @@ if (datiOrdinanza.getOrdinanza().getFlagRecuperoSS() != null
 %>
   	<tr>
 	    <td class="l">Giorni da Recuperare</td>
-	    <td class="l"><font class="campo"><%=StringUtils.toStringJSP(datiOrdinanza.getOrdinanza().getGiorniRecuperoSS())%>&nbsp;</font></td>
+	    <td class="l"><font class="campo"><%=StringUtils.toStringJSP(datiOrdinanza.getOrdinanza().getGiorniRecuperoSS())%></font></td>
  	</tr>
 <%
 } 
@@ -89,11 +89,11 @@ if (PeriodoAltraSanzione != null && PeriodoAltraSanzione.getIdPeriodoAltraSanzio
 %>
   	<tr>
 	    <td class="l"><%=tipoSostituzione%> Sostitutiva Espiata</td>
-	    <td class="l"><font class="campo">ANNI <%=PeriodoAltraSanzione.getEspiataAA() %> MESI <%=PeriodoAltraSanzione.getEspiataMM() %> GIORNI <%=PeriodoAltraSanzione.getEspiataGG() %></font></td>
+	    <td class="l"><font class="campo">ANNI <%=PeriodoAltraSanzione.getEspiataAA()%> MESI <%=PeriodoAltraSanzione.getEspiataMM()%> GIORNI <%=PeriodoAltraSanzione.getEspiataGG()%></font></td>
   	</tr>
   	<tr>
 	    <td class="l"><%=tipoSostituzione%> Sostitutiva residua da Espiare</td>
-	    <td class="l"><font class="campo">ANNI <%=PeriodoAltraSanzione.getResiduaAA() %> MESI <%=PeriodoAltraSanzione.getResiduaMM() %> GIORNI <%=PeriodoAltraSanzione.getResiduaGG() %></font></td>
+	    <td class="l"><font class="campo">ANNI <%=PeriodoAltraSanzione.getResiduaAA()%> MESI <%=PeriodoAltraSanzione.getResiduaMM()%> GIORNI <%=PeriodoAltraSanzione.getResiduaGG()%></font></td>
   	</tr>
 <%
 } 
