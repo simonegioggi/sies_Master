@@ -46,6 +46,10 @@ if (modificaDecreto) {
 		descrContenuto = "decreto Sospensione Lavoro Pubblica Utilit&agrave; Sostitutivo";
 	} else if ("U133".equals(contenuto)) {
 		descrContenuto = "Decreto Diffida al Puntuale Rispetto delle Prescrizioni - Pene Sostitutive";
+	} else if ("U138".equals(contenuto)) {
+		descrContenuto = "Decreto Rinvio Esecuzione Pena Sostitutiva";
+	} else if ("U139".equals(contenuto)) {
+		descrContenuto = "Decreto Rinvio Esecuzione Pena Sostitutiva Derivante da Conversione";
 	}
 %>
   	<tr>

@@ -51,7 +51,7 @@ if(lIndexMulta == -1)
 else
 {
 	lParteInteraMulta = StringUtils.toStringJSP(penacomplessiva.getImportoMulta()).substring(0,lIndexMulta);
-    lParteDecimaleMulta = StringUtils.toStringJSP(penacomplessiva.getImportoMulta()).substring(lIndexMulta+1);;
+    lParteDecimaleMulta = StringUtils.toStringJSP(penacomplessiva.getImportoMulta()).substring(lIndexMulta+1);
 }
          
 String lParteInteraAmmenda = "";
@@ -65,7 +65,7 @@ if(lIndexAmmenda == -1)
 else
 {
   	lParteInteraAmmenda = StringUtils.toStringJSP(penacomplessiva.getImportoAmmenda()).substring(0,lIndexAmmenda);
-  	lParteDecimaleAmmenda = StringUtils.toStringJSP(penacomplessiva.getImportoAmmenda()).substring(lIndexAmmenda+1);;
+  	lParteDecimaleAmmenda = StringUtils.toStringJSP(penacomplessiva.getImportoAmmenda()).substring(lIndexAmmenda+1);
 }
 
 String lFunzione="";

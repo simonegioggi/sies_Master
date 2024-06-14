@@ -100,7 +100,7 @@ import f3b.model.GenericModel;
       if(aModel.getCodPosizioneMateriale() != null && aModel.getCodPosizioneMateriale().trim().length() > 0)
       {
         lInserito = true;
-        lCondizioni = " COD_POSIZIONE_MATERIALE = '" + aModel.getCodPosizioneMateriale().trim() + "'";;
+        lCondizioni = " COD_POSIZIONE_MATERIALE = '" + aModel.getCodPosizioneMateriale().trim() + "'";
       }
       
       if(aModel.getCodUfficio() != null && aModel.getCodUfficio().trim().length() > 0)
@@ -109,7 +109,7 @@ import f3b.model.GenericModel;
           lCondizioni += " AND";
 
         lInserito = true;
-        lCondizioni += " P.COD_UFFICIO = '" + aModel.getCodUfficio().trim() + "'";;
+        lCondizioni += " P.COD_UFFICIO = '" + aModel.getCodUfficio().trim() + "'";
       }
 
       if(aModel.getDescPosizioneMateriale() != null && aModel.getDescPosizioneMateriale().trim().length() > 0)

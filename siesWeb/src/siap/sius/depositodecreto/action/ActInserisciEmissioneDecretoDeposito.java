@@ -394,9 +394,21 @@ public class ActInserisciEmissioneDecretoDeposito extends ActionSius implements 
 				lDepDecrEveModel.getDepositoDecreto()
 						.setDescrCommActa(getRequestStringParameter(CAMPO_DESCR_COMM_ACTA));
 			}
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			// siesLogger.debug("Deposito Decreto = "+lDepDecrEveModel.getDepositoDecreto());
+
+			// MEV_2023-35: aggiunto recupero dell'importo della pena pecuniaria convertita
+			if (!isRequestParameterNullObj(CAMPO_INTERO_PENA_PECUNIARIA_CONVERTITA)
+					&& ((getRequestStringParameter(CAMPO_INTERO_PENA_PECUNIARIA_CONVERTITA) != null
+							&& !(getRequestStringParameter(CAMPO_INTERO_PENA_PECUNIARIA_CONVERTITA))
+									.equals(""))
+							|| (getRequestStringParameter(CAMPO_DECIMALE_PENA_PECUNIARIA_CONVERTITA) != null
+									&& !(getRequestStringParameter(CAMPO_DECIMALE_PENA_PECUNIARIA_CONVERTITA))
+											.equals("")))) {
+				lDepDecrEveModel.getDepositoDecreto()
+						.setSommaRisarcimentoDanni((new BigDecimal(getRequestStringParameter(
+								CAMPO_INTERO_PENA_PECUNIARIA_CONVERTITA) + "."
+								+ getRequestStringParameter(CAMPO_DECIMALE_PENA_PECUNIARIA_CONVERTITA))));
+			}
+			// FINE MEV_2023-35
 
 			// Inserisce nel model aggregante l'Array di model dei Tenori e Il model
 			// GeneraleProcedimento.
@@ -728,7 +740,6 @@ public class ActInserisciEmissioneDecretoDeposito extends ActionSius implements 
 		else
 			lLicMod.setCodTipoLicenza("PI"); // Permesso Internato
 
-		// TODO carmela verificare
 		if (!isRequestParameterNullObj(ICostantiLicenzaLibanticipata.CAMPO_NUMERO_MESI)
 				&& getRequestStringParameter(ICostantiLicenzaLibanticipata.CAMPO_NUMERO_MESI).trim()
 						.length() > 0)
@@ -827,7 +838,6 @@ public class ActInserisciEmissioneDecretoDeposito extends ActionSius implements 
 			lLicenza.setCodTipoLicenza("LC"); // Licenza
 
 		lLicenza.setFlagConcesso("C");
-		// TODO carmela verificare
 		if (!isRequestParameterNullObj(ICostantiLicenzaLibanticipata.CAMPO_NUMERO_MESI)
 				&& getRequestStringParameter(ICostantiLicenzaLibanticipata.CAMPO_NUMERO_MESI).trim()
 						.length() > 0)

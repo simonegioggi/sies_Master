@@ -15,138 +15,134 @@
 <%@ page import="siap.sius.prescrizione.model.PrescrizioneModel"%>
 <%@ page import="siap.sico.decodifiche.util.DecodificheUtils"%>
 <%@ page import="siap.sius.prescrizione.action.ICostantiPrescrizione"%>
-<%@ page import="siap.sius.avvocato.model.AvvocatoModel" %>
+<%@ page import="siap.sius.avvocato.model.AvvocatoModel"%>
 <%@ page import="siap.sico.template.action.ICostantiTemplate"%>
 <%@ page import="siap.sius.avvocato.action.ICostantiAvvocatoFascicoloSius"%>
 <%@ page import="siap.web.ISIAPCostantiWeb"%>
-<%@ page import="siap.sius.avvocatura.action.ICostantiAvvisiAvvocato" %>
+<%@ page import="siap.sius.avvocatura.action.ICostantiAvvisiAvvocato"%>
 
-<jsp:useBean id="depositoDecretoMotivazioni" scope="request" class="siap.sius.depositodecreto.model.DepositoDecretoEventoMotivazioniModel"/>
-<jsp:useBean id="tenori"                     scope="request" class="java.util.Vector"/>
-<jsp:useBean id="StatoLibertatis"               scope="request" class="java.util.Vector"/>
-
+<jsp:useBean id="depositoDecretoMotivazioni" 	scope="request" class="siap.sius.depositodecreto.model.DepositoDecretoEventoMotivazioniModel"/>
+<jsp:useBean id="tenori"                     	scope="request" class="java.util.Vector"/>
+<jsp:useBean id="StatoLibertatis"				scope="request" class="java.util.Vector"/>
 
 <html>
 <head>
-<title>[S.I.E.S.] - Dettaglio Decreto Rinvio Esecuzione Pena </title>
-
+<title>[S.I.E.S.] - Dettaglio Decreto Sospensione Esecuzione Pena </title>
 <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
-
 <script language="JavaScript" src="/html/conferma.js"></script>
 <script language="JavaScript" src="/html/gestisciUploadStampa.js"></script>
-
- <script language="JavaScript">
-    function InserisciPrescrizioni()
-    {
-    alert("da implementare");
-    }
- </script>
-
-
 </head>
 
-  <body class="corpo">
-  <form name="dettaglio">
-    <table>
-      <tr><td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
-        <td class="LBG"><font class="label">Funzione : </font>
-          <font class="campo">Dettaglio Decreto Rinvio Esecuzione Pena</font>&nbsp;
-        </td>
-        <jsp:include page="<%=ICostantiDepositoDecreto.BOTTONI_DETTAGLIO_DECRETO%>"/>
-      </tr>
-    </table>
-    <jsp:include page="<%=ICostantiFascicoloSius.PG_LOAD_SINTESIPROCEDIMENTOSIUS%>"/>
-    <jsp:include page="<%=ICostantiMagistratoRelatore.PG_SINTESIMAGISTRATORELATORE%>"/>
-    <jsp:include page="<%=ICostantiAvvocatoFascicoloSius.PG_INCLUDE_AVVOCATI%>"/>
-
-  <table cellspacing=4 cellpadding=4 width=95%>
-  <tr>
-    <input Title="Id Evento" type="hidden" name="<%=ICostantiEvento.CAMPO_ID_EVENTO %>" value="<%=depositoDecretoMotivazioni.getEvento().getIdEvento()%>" >
-  </tr>
-  <tr>
-        <jsp:include page="<%=ICostantiDepositoDecreto.PG_DETTAGLIO_DATA%>"/>
-  </tr>
-  <tr>
-    <td class="l"> Rilevato</td>
-    <td class="l"><font class="campo">  <%=StringUtils.toStringJSP(depositoDecretoMotivazioni.getDepositoDecreto().getNote(),"-")%></font></td>
-  </tr>
-  <tr>
-    <td class="l"> Ufficio Tribunale di Sorveglianza Competente</td>
-    <td class="l"><font class="campo">  <%=StringUtils.toStringJSP(depositoDecretoMotivazioni.getDepositoDecreto().getDescrTdsComp(),"-")%></font></td>
-  </tr>
-  <tr>
-    <td class="l"> Procura Competente</td>
-    <td class="l"><font class="campo">  <%=StringUtils.toStringJSP(depositoDecretoMotivazioni.getDepositoDecreto().getDescrProcuraEsecuzione(),"-")%></font></td>
-  </tr>
-<%
-if (depositoDecretoMotivazioni.getDepositoDecreto().getAnnoProcRevocato() != null)
-{
- %>
- <td class="l"> Rif. procedimento da revocare </td>
-    <td class="l"><font class="campo">  <%=depositoDecretoMotivazioni.getDepositoDecreto().getAnnoProcRevocato()%>/<%=depositoDecretoMotivazioni.getDepositoDecreto().getProgrProcRevocato()%> </font></td>
-  </tr>
- <tr>
- <td class="l"> Sede procedimento da revocare</td>
- <td class="l"><font class="campo">  <%=StringUtils.toStringJSP(depositoDecretoMotivazioni.getDepositoDecreto().getDescrProcuraRevocato(),"-")%></font></td>
- </tr>
-<% } %>
-  <tr>
-    <td colspan=2>&nbsp;</td>
-  </tr>
-
-  <tr>
-    <td class="Titolo" colspan=2> Esiti</td>
-  </tr>
+<body class="corpo">
+<form name="dettaglio">
+<table>
+	<tr>
+		<td class="LBG">
+			<a href="Javascript:window.print();">
+				<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border="0">
+			</a>
+		</td>
+		<td class="LBG">
+			<font class="label">Funzione : </font>
+			<font class="campo">Dettaglio Decreto Sospensione Esecuzione Pena</font>
+		</td>
+		<jsp:include page="<%=ICostantiDepositoDecreto.BOTTONI_DETTAGLIO_DECRETO%>"/>
+	</tr>
 </table>
-<table cellspacing=4 cellpadding=4 width=95%>
-
+<jsp:include page="<%=ICostantiFascicoloSius.PG_LOAD_SINTESIPROCEDIMENTOSIUS%>"/>
+<jsp:include page="<%=ICostantiMagistratoRelatore.PG_SINTESIMAGISTRATORELATORE%>"/>
+<jsp:include page="<%=ICostantiAvvocatoFascicoloSius.PG_INCLUDE_AVVOCATI%>"/>
+<table cellspacing="4" cellpadding="4" width="95%">
+	<tr>
+		<td>
+	  		<input type="hidden" name="<%=ICostantiEvento.CAMPO_ID_EVENTO %>" value="<%=depositoDecretoMotivazioni.getEvento().getIdEvento()%>">
+	  	</td>
+	</tr>
+	<tr>
+	      <jsp:include page="<%=ICostantiDepositoDecreto.PG_DETTAGLIO_DATA%>"/>
+	</tr>
+	<tr>
+	  <td class="l">Rilevato</td>
+	  <td class="l">
+	  	<font class="campo">  <%=StringUtils.toStringJSP(depositoDecretoMotivazioni.getDepositoDecreto().getNote(), "-")%></font>
+	  </td>
+	</tr>
+	<tr>
+		<td class="l">Ufficio Tribunale di Sorveglianza Competente</td>
+		<td class="l">
+			<font class="campo"><%=StringUtils.toStringJSP(depositoDecretoMotivazioni.getDepositoDecreto().getDescrTdsComp(), "-")%></font>
+		</td>
+	</tr>
+	<tr>
+		<td class="l">Procura Competente</td>
+		<td class="l">
+			<font class="campo"><%=StringUtils.toStringJSP(depositoDecretoMotivazioni.getDepositoDecreto().getDescrProcuraEsecuzione(), "-")%></font>
+		</td>
+	</tr>
 <%
-  Iterator lInd = tenori.iterator();
-  while (lInd.hasNext())
-  {
+if (depositoDecretoMotivazioni.getDepositoDecreto().getAnnoProcRevocato() != null) {
 %>
-   <tr>
-      <%
-        TenoreModel lTen = (TenoreModel) lInd.next();
-      %>
-      <td class="l" width=70% ><%=lTen.getDescrOggettoTenore()%></td>
-      <td class="l" width=30% ><%=lTen.getDescrEsitoTenore()%></td>
-  </tr>
+	<tr>
+		<td class="l">Rif. procedimento da revocare</td>
+	   	<td class="l">
+	   		<font class="campo"><%=depositoDecretoMotivazioni.getDepositoDecreto().getAnnoProcRevocato()%>/<%=depositoDecretoMotivazioni.getDepositoDecreto().getProgrProcRevocato()%></font>
+	   	</td>
+	</tr>
+	<tr>
+		<td class="l">Sede procedimento da revocare</td>
+		<td class="l">
+			<font class="campo"><%=StringUtils.toStringJSP(depositoDecretoMotivazioni.getDepositoDecreto().getDescrProcuraRevocato(), "-")%></font>
+		</td>
+	</tr>
 <%
-  }
+}
 %>
-  <tr>
-    <td  colspan=2> &nbsp;</td>
-  </tr>
-
-
-<tr>  <td> </td> </tr>
-<tr>  <td> </td> </tr>
-  </table>
-  <jsp:include page="<%=ICostantiTemplate.PG_COMBO_TEMPLATE%>"/>
+	<tr>
+	  	<td colspan="2">&nbsp;</td>
+	</tr>
+	<tr>
+	  	<td class="Titolo" colspan="2">Esiti</td>
+	</tr>
+</table>
+<table cellspacing="4" cellpadding="4" width="95%">
+<%
+Iterator lInd = tenori.iterator();
+while (lInd.hasNext()) {
+%>
+<tr>
+<%
+	TenoreModel lTen = (TenoreModel) lInd.next();
+%>
+		<td class="l" width=70% ><%=lTen.getDescrOggettoTenore()%></td>
+		<td class="l" width=30% ><%=lTen.getDescrEsitoTenore()%></td>
+	</tr>
+<%
+}
+%>
+	<tr>
+	  	<td colspan="2">&nbsp;</td>
+	</tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+</table>
+<jsp:include page="<%=ICostantiTemplate.PG_COMBO_TEMPLATE%>"/>
 </form>
 
- <div align=left style="visibility:hidden" id="upld">
-  <FORM name="comandi" enctype="multipart/form-data" method="post">
-  <table>
-          <jsp:include page="<%=ISIAPCostantiWeb.CAMPI_VALIDA_UPLOAD%>" />
-    <tr>
-      <td class="L">
-       	<input class="bottone"  type="submit" value="Conferma">
-       	<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.sico.evento.action.ActUploadDocument">
-       	<input type="HIDDEN" name="IdEvento"  value="<%=depositoDecretoMotivazioni.getEvento().getIdEvento()%>">
-      	<input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_AZIONE_DETTAGLIO%>"  value="siap.sius.depositodecreto.action.ActLoadDettaglioDecretoDeposito">
-      	<input type="HIDDEN" name="FlagAvvocatura" value="<%=ICostantiAvvisiAvvocato.EMISSIONE_DECRETO%>">
-      </td>
-    </tr>
-  </table>
-
-  </FORM>
-  </div>
-
+<div align=left style="visibility:hidden" id="upld">
+<FORM name="comandi" enctype="multipart/form-data" method="post">
+<table>
+	<jsp:include page="<%=ISIAPCostantiWeb.CAMPI_VALIDA_UPLOAD%>"/>
+	<tr>
+		<td class="L">
+		   	<input class="bottone"  type="submit" value="Conferma">
+		   	<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.sico.evento.action.ActUploadDocument">
+			<input type="HIDDEN" name="IdEvento" value="<%=depositoDecretoMotivazioni.getEvento().getIdEvento()%>">
+			<input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_AZIONE_DETTAGLIO%>"  value="siap.sius.depositodecreto.action.ActLoadDettaglioDecretoDeposito">
+			<input type="HIDDEN" name="FlagAvvocatura" value="<%=ICostantiAvvisiAvvocato.EMISSIONE_DECRETO%>">
+    	</td>
+  	</tr>
+</table>
+</FORM>
+</div>
 </body>
-<script language="JavaScript">
-   //document.dettaglio.ListaTemplate.options[document.dettaglio.ListaTemplate.options.selectedIndex].text=red;
-</script>
-
 </html>
