@@ -165,9 +165,9 @@ while (itx.hasNext()) {
     // provvedimento quindi va testato se presenti altrimenti si rischia un arrayindex out....
     String lTipoRateizzazione = "";
     BigDecimal lImportoDaPagare = null;
-    if (erppm.getListaRateizzazioniPP().size()>0) {
-      lTipoRateizzazione = erppm.getListaRateizzazioniPP().elementAt(0).getTipoRateizzazione();
-      lImportoDaPagare   = erppm.getListaRateizzazioniPP().elementAt(0).getImportoDaPagare();
+    if (erppm.getListaRateizzazioniPP().size() > 0) {
+		lTipoRateizzazione = erppm.getListaRateizzazioniPP().elementAt(0).getTipoRateizzazione();
+		lImportoDaPagare   = erppm.getListaRateizzazioniPP().elementAt(0).getImportoDaPagare();
     }
     // String lTipoRateizzazione = erppm.getListaRateizzazioniPP().elementAt(0).getTipoRateizzazione();
     // BigDecimal lImportoDaPagare = erppm.getListaRateizzazioniPP().elementAt(0).getImportoDaPagare();
@@ -177,19 +177,27 @@ while (itx.hasNext()) {
     	<td class="int" colspan="8">
       		<%=StringUtils.toStringJSP(em.getDescrTipoProvvedimento()) + " " + StringUtils.toStringJSP(em.getDescrMotivo())%>
 			&nbsp;del&nbsp;<%=StringUtils.toStringJSP(DateUtils.getDateToString(em.getDataEmissione(), "dd/MM/yyyy"))%>
-			<% if ("A".equals(em.getFlagDocumentoRegistrato())) { %>
-      &nbsp;&nbsp;(Provvedimento Annullato)
-      <% } %>
+<%
+	if ("A".equals(em.getFlagDocumentoRegistrato())) {
+%>
+      		&nbsp;&nbsp;(Provvedimento Annullato)
+<%
+	}
+%>
     	</td>
 	</tr>
-	<% if (lImportoDaPagare!=null) { %>
+<%
+	if (lImportoDaPagare != null) {
+%>
 	<tr>
 		<td class="L" colspan="8">
 			<font class="label">Importo da pagare</font>
 			<font class="campo"><%=StringUtils.toEuroFormat(lImportoDaPagare)%> &euro;</font>
 		</td>
 	</tr>
-	<% } %>
+<%
+	}
+%>
 	<tr>
 <%
 	if (lTipoRateizzazione.equals(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_UNICA)) {
@@ -200,30 +208,35 @@ while (itx.hasNext()) {
 %>
         <td class="Titolo" colspan="6"> Pagamento Rateizzato </td>
 <%
-  } else {
+  	} else {
 %>
         <td class="Titolo" colspan="6"> Rateizzazione non disponibile </td>
 <%
-    } 
+	}
 %>
 		<td class="Titolo" colspan="1">Emessi bollettini</td>
 		<td class="Titolo" colspan="1">Emesso Provvedimento</td>
   	</tr>
-  	
-<% if (erppm.getListaRateizzazioniPP().size()==0) { %>
-<tr>
-  <td class="C" nowrap colspan="6"><font class="label">n.d.</font></td>      
-  <td class="C"><font class="label">n.d.</font></td>
-   <% if ("A".equals(em.getFlagDocumentoRegistrato())) { %>
-    <td class="C" nowrap><img src="<%=IWebConstants.IMAGES_DIR%>TickRed.gif"><br>(annullato)</td>
-   <% } else { %>
-    <td class="C"><font class="label">n.d.</font></td>    
-   <% } %>
-</tr>
-<% } %>
-  	
-  	 
 <%
+	if (erppm.getListaRateizzazioniPP().size() == 0) {
+%>
+	<tr>
+		<td class="C" nowrap colspan="6"><font class="label">n.d.</font></td>      
+		<td class="C"><font class="label">n.d.</font></td>
+<%
+		if ("A".equals(em.getFlagDocumentoRegistrato())) {
+%>
+		<td class="C" nowrap><img src="<%=IWebConstants.IMAGES_DIR%>TickRed.gif"><br>(annullato)</td>
+<%
+		} else {
+%>
+		<td class="C"><font class="label">n.d.</font></td>    
+<%
+		}
+%>
+	</tr>
+<%
+	}
 	// Recupero le rateizzazioni
 	Vector<RateizzazionePPModel> listaRateizzazioni = erppm.getListaRateizzazioniPP();
 	Iterator<RateizzazionePPModel> IteRate = listaRateizzazioni.iterator();
