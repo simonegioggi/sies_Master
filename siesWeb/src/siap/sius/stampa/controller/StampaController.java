@@ -18,6 +18,7 @@ import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
+import f3b.util.Utils;
 import f3b.util.xml.TreeModel;
 import siap.sico.camponota.dao.CampoNotaSqlDAO;
 import siap.sico.camponota.model.CampoNotaModel;
@@ -279,7 +280,8 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 			if (lFasGP.getFascicoloSiusModel().getIdFascicoloSiusOrigine() != null) {
 				// 20191025 [SG]: aggiunto codice per estrarre MS modificata
 				boolean test = false;
-				if (lFasGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento() != null
+				if (lFasGP.getGeneraleProcedimentoModel() != null
+						&& lFasGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento() != null
 						&& "C029".equals(lFasGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento()))
 					test = true;
 				lTreeFasOri = prelevaDatiFascicoloSiusOrigine(
@@ -301,7 +303,8 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 			}
 
 			// MEV_66: aggiunto calcolo raggiungimento 25° anno di eta'
-			if (lFasGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento() != null
+			if (lFasGP.getGeneraleProcedimentoModel() != null
+					&& lFasGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento() != null
 					&& lFasGP.getFascicoloSiusModel().getSoggetto().getDataNascita() != null
 					&& ("U121".equals(lFasGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento())
 							|| "U122"
@@ -602,7 +605,8 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 			// MEV_66: aggiunto calcolo raggiungimento 25° anno di eta'
 			// "prelevaDatiSoggetto" è ridondante poichè lo calcola già "prelevaDatiFascicoloSius"
-			if (lFasGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento() != null
+			if (lFasGP.getGeneraleProcedimentoModel() != null
+					&& lFasGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento() != null
 					&& lFasGP.getFascicoloSiusModel().getSoggetto().getDataNascita() != null
 					&& ("U121".equals(lFasGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento())
 							|| "U122"
@@ -639,6 +643,22 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 					lTreeDecreto.add(prelevaDatiFascicoloSiusByIdEvento(lEvento.getEveIdEvento(), lConn));
 				}
 			}
+
+			// MEV_2023-35: aggiunta gestione procura esecuzione per U136 (Licenza - pene sostitutive -
+			// Inosservanza prescrizioni)
+			if (lFasGP.getGeneraleProcedimentoModel() != null
+					&& lFasGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento() != null
+					&& "U136".equals(lFasGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento())) {
+				DepositoDecretoModel ddm = (DepositoDecretoModel) lTreeDecreto.getModel();
+				if (ddm != null && Utils.isPresent(ddm.getDescrProcuraEsecuzione())) {
+					String descrProcuraEsecuzione = ddm.getDescrProcuraEsecuzione();
+					if (ddm.getProcuraEsecuzione() != null
+							&& ddm.getProcuraEsecuzione().getDescrTipoUfficio() != null)
+						ddm.setDescrProcuraEsecuzione(ddm.getProcuraEsecuzione().getDescrTipoUfficio() + " "
+								+ descrProcuraEsecuzione);
+				}
+			}
+			// FINE MEV_2023-35
 
 			// 22/01/2007 Fascicolo SIUS Origine.
 			if (lFasGP.getFascicoloSiusModel().getIdFascicoloSiusOrigine() != null)

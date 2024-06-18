@@ -481,16 +481,16 @@ public class ActInserisciEmissioneDecreto extends ActionSius implements ICostant
 			// 20110524 - PM Commentato per sostituzione.
 			// ricercaDecretiDaRevocare(LICENZA, "LC");
 			// 20110524 - PM si considera anche LI ( Licenza per Internati )
-
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("Cod Oggetto Procedimento :"
 					+ lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento());
-
 			if (lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U069"))
 				ricercaDecretiDaRevocare(LICENZA, "LI"); // licenza per internati
+			else if (lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U136"))
+				ricercaDecretiDaRevocare(LICENZA, "LP"); // MEV_2023-35: aggiunta Licenza pene sostitutive
 			else
-				ricercaDecretiDaRevocare(LICENZA, "LC"); // licenza per internati
+				ricercaDecretiDaRevocare(LICENZA, "LC"); // licenza
 
 			mRetPage = PG_INSERISCI_ESCLUSIONE_COMPUTO;
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -499,12 +499,12 @@ public class ActInserisciEmissioneDecreto extends ActionSius implements ICostant
 		} else if (lCodTipoDec.compareTo(REVOCA_LICENZA) == 0) {
 			// Revoca licenza
 			// Viene effettuata la Ricerca del decreto Licenza da revocare
-
 			if (lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U069"))
 				ricercaDecretiDaRevocare(LICENZA, "LI"); // licenza per internati
+			else if (lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U136"))
+				ricercaDecretiDaRevocare(LICENZA, "LP"); // MEV_2023-35: aggiunta Licenza pene sostitutive
 			else
-				ricercaDecretiDaRevocare(LICENZA, "LC"); // licenza per internati
-
+				ricercaDecretiDaRevocare(LICENZA, "LC"); // licenza
 			mRetPage = PG_INSERISCI_REVOCA_PERMESSO;
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -518,7 +518,6 @@ public class ActInserisciEmissioneDecreto extends ActionSius implements ICostant
 		} else if (lCodTipoDec.compareTo(REVOCA_DECRETO) == 0) {
 			// throw new SIUSException(SIUSException.USER_MESSAGE,
 			// "Decreto di Revoca non ancora prevista ma in fase di rilascio.");
-
 			// Esiste sia il Decreto che l'ordinanza. Luigi 8-11-2006
 			mRetPage = ICostantiDepositoOrdinanzaPc.PG_LOAD_INSERISCI_ORDINANZA_REVOCA;
 			ricercaFascicoloOrigine();
@@ -663,7 +662,6 @@ public class ActInserisciEmissioneDecreto extends ActionSius implements ICostant
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
 				siesLogger.info("N.ro dei decreti da revocare trovati: " + lDecreti.size());
-
 				if (lDecreti.size() > 0)
 					setRequestAttribute("decreti", lDecreti);
 			}

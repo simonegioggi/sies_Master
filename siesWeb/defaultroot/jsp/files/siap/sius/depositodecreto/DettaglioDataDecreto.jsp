@@ -50,6 +50,10 @@ if (modificaDecreto) {
 		descrContenuto = "Decreto Rinvio Esecuzione Pena Sostitutiva";
 	} else if ("U139".equals(contenuto)) {
 		descrContenuto = "Decreto Rinvio Esecuzione Pena Sostitutiva Derivante da Conversione";
+	} else if ("U135".equals(contenuto)) {
+		descrContenuto = "Decreto Licenza Pene Sostitutive";
+	} else if ("U136".equals(contenuto)) {
+		descrContenuto = "Decreto Esclusione Computo Licenza Pene Sostitutive";
 	}
 %>
   	<tr>
