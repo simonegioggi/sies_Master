@@ -208,20 +208,20 @@ if (codice.compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_ORDINANZA) != 0
 	<tr>
     	<td class="l">Tipo di Ordinanza</td>
 <%
-// MEV_2023-35: aggiunto controllo
+// MEV_2023-35: aggiunto controllo per gestione codice Oggetto Procedimento
 String tipoOrdinanza = "";
 if (Utils.isPresent(codice))
 	tipoOrdinanza = DecodificheUtils.getDescbyCode(DecodificheManager.getInstance().getTipoOrdinanza(), codice);
 if ("U134".equals(codOggettoProcedimento) || "U126".equals(codOggettoProcedimento))
 	tipoOrdinanza = tipoOrdinanza.replace("Sanzioni", "Pene");
+else if ("C064".equals(codOggettoProcedimento))
+	tipoOrdinanza += " Sostitutiva";
+else if ("C065".equals(codOggettoProcedimento))
+	tipoOrdinanza += " Sostitutiva Derivante da Conversione Pene Pecuniarie";
 if (codice.compareTo(ICostantiDepositoOrdinanzaPc.RINVIO_ESECUZIONE_MSIC) == 0)
 	codice = "42";
 %>
-    	<td class="l">
-    		<font class="campo">
-    			<%=tipoOrdinanza%>
-			</font>
-		</td>
+    	<td class="l"><font class="campo"><%=tipoOrdinanza%></font></td>
 <%
 if (!modificaOrdinanza) {
 %>

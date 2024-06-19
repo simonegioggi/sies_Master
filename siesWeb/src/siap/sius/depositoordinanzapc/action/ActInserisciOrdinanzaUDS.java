@@ -1038,6 +1038,22 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 					getRequestStringParameter(CAMPO_COD_UFFICIO_MAGISTRATO_COMP_RECLA));
 		}
 
+		// MEV_2023-35: aggiunto recupero dell'importo della pena pecuniaria convertita
+		if (getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO).equals("C065")) {
+			if (!isRequestParameterNullObj(CAMPO_INTERO_PENA_PECUNIARIA_CONVERTITA)
+					&& ((getRequestStringParameter(CAMPO_INTERO_PENA_PECUNIARIA_CONVERTITA) != null
+							&& !(getRequestStringParameter(CAMPO_INTERO_PENA_PECUNIARIA_CONVERTITA))
+									.equals(""))
+							|| (getRequestStringParameter(CAMPO_DECIMALE_PENA_PECUNIARIA_CONVERTITA) != null
+									&& !(getRequestStringParameter(CAMPO_DECIMALE_PENA_PECUNIARIA_CONVERTITA))
+											.equals("")))) {
+				lDepOrdModel.setSommaRisarcimento((new BigDecimal(
+						getRequestStringParameter(CAMPO_INTERO_PENA_PECUNIARIA_CONVERTITA) + "."
+								+ getRequestStringParameter(CAMPO_DECIMALE_PENA_PECUNIARIA_CONVERTITA))));
+			}
+		}
+		// FINE MEV_2023-35
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("DepositoOrdinanza = " + lDepOrdModel);

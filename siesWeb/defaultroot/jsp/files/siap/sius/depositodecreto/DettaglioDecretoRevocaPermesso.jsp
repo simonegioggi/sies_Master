@@ -81,7 +81,7 @@ if (CodUff.equals("TDSM") || CodUff.equals("UDSM")) {
 
 <html>
 <head>
-<title>[S.I.A.P.] - Dettaglio Decreto Revoca Permesso </title>
+<title>[S.I.A.P.] - <%=nomeFunzione%></title>
 <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
 <script language="JavaScript" src="/html/conferma.js"></script>
 <script language="JavaScript" src="/html/gestisciUploadStampa.js"></script>

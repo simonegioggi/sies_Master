@@ -168,6 +168,10 @@ public interface ICostantiDepositoOrdinanzaPc {
 	public static final String CAMPO_FORMA_MISURA = "RadioFormaMisura";
 	public static final String CAMPO_NOME_COMUNITA = "NomeComunita";
 
+	// MEV_2023-35: aggiunto importo della pena pecuniaria convertita
+	public static final String CAMPO_INTERO_PENA_PECUNIARIA_CONVERTITA = "InteroPenaPecuniariaConvertita";
+	public static final String CAMPO_DECIMALE_PENA_PECUNIARIA_CONVERTITA = "DecimalePenaPecuniariaConvertita";
+
 	public static final String COD_OGGETTO_PROC_CONCESSIONE_MISURE_ALTERNATIVA = "C001";
 	public static final String COD_OGGETTO_PROC_CONCESSIONE_LIBERAZIONE_CONDIZIONALE = "C009";
 
