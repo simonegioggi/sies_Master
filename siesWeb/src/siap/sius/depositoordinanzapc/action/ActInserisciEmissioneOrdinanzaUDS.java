@@ -496,9 +496,9 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 			siesLogger.debug("Ordinanza di Applicazione Sanzione Sostitutiva " + lCodTipoDec);
 		}
 		// MEV_2023-35 si aggiunge un nuovo codice per il decreto generico (GENERICO2=GE)
-		//else if (lCodTipoDec.compareTo(ICostantiDepositoDecreto.GENERICO) == 0) {
-		  else if (   lCodTipoDec.compareTo(ICostantiDepositoDecreto.GENERICO) == 0
-		           || lCodTipoDec.compareTo(ICostantiDepositoDecreto.GENERICO2) == 0) {
+		// else if (lCodTipoDec.compareTo(ICostantiDepositoDecreto.GENERICO) == 0) {
+		else if (lCodTipoDec.compareTo(ICostantiDepositoDecreto.GENERICO) == 0
+				|| lCodTipoDec.compareTo(ICostantiDepositoDecreto.GENERICO2) == 0) {
 			// Decreto Generico diventa Ordinanza Generica
 			lCodTipoDec = GENERICA;
 			mRetPage = PG_LOAD_INSERISCI_ORDINANZA_GENERICA;
@@ -566,31 +566,32 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("Ordinanza Rinvio su Sanzioni Sostitutive " + lCodTipoDec);
-		} else if (lCodTipoDec.compareTo(CONVERSIONE_PENE_PECUNIARIE) == 0) {
+		} else if (lCodTipoDec.compareTo(CONVERSIONE_PENE_PECUNIARIE) == 0
+				// MEV_2023-35: aggiunto tipo ordinanza
+				|| lCodTipoDec.compareTo(CONVERSIONE_PENE_PECUNIARIE_MANCATO_PAGAMENTO) == 0) {
 			// Controllo selezione Oggetti x Conversione Pene Pecuniarie.
 			String lCodOggetto = getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_OGGETTO);
 			if (lCodOggetto.length() > 5)
 				throw new SIUSException(SIUSException.USER_MESSAGE,
 						"Ordinanza di Conversione Pene Pecuniare possibile con un solo Oggetto");
-			if (lCodOggetto.indexOf("2471") < 0 && lCodOggetto.indexOf("2470") < 0)
-				throw new SIUSException(SIUSException.USER_MESSAGE,
-						"Ordinanza di Conversione Pene Pecuniare richiede un oggetto specifico");
-
-			// Lettura dell'eventuale Richiesta di Conversione Pene Pecuniarie.
-			RichiestaConversioneModel aRichiestaConversione = new RichiestaConversioneModel();
-			FascicoloGPModel lFasGPMod = new FascicoloGPModel(
-					(FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"));
-			aRichiestaConversione
-					.setFasSiuIdFascicoloSius(lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
-			IRichiestaConversione lCtrlRC = SIEPLookupRemote.getRichiestaConversioneRemote();
-			Vector lVectRichConversioniPP = lCtrlRC
-					.ExRicercaRichiestaConversioneEstesa(aRichiestaConversione);
-
-			if (!(lVectRichConversioniPP.size() > 0))
-				throw new SIUSException(SIUSException.USER_MESSAGE,
-						"Ordinanza di Conversione Pene Pecuniare impossibile senza Richiesta Conversione");
-
-			setRequestAttribute("richiesteconversioni", lVectRichConversioniPP);
+			if (lCodTipoDec.compareTo(CONVERSIONE_PENE_PECUNIARIE) == 0) {
+				if (lCodOggetto.indexOf("2471") < 0 && lCodOggetto.indexOf("2470") < 0)
+					throw new SIUSException(SIUSException.USER_MESSAGE,
+							"Ordinanza di Conversione Pene Pecuniare richiede un oggetto specifico");
+				// Lettura dell'eventuale Richiesta di Conversione Pene Pecuniarie.
+				RichiestaConversioneModel aRichiestaConversione = new RichiestaConversioneModel();
+				FascicoloGPModel lFasGPMod = new FascicoloGPModel(
+						(FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"));
+				aRichiestaConversione
+						.setFasSiuIdFascicoloSius(lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
+				IRichiestaConversione lCtrlRC = SIEPLookupRemote.getRichiestaConversioneRemote();
+				Vector lVectRichConversioniPP = lCtrlRC
+						.ExRicercaRichiestaConversioneEstesa(aRichiestaConversione);
+				if (!(lVectRichConversioniPP.size() > 0))
+					throw new SIUSException(SIUSException.USER_MESSAGE,
+							"Ordinanza di Conversione Pene Pecuniare impossibile senza Richiesta Conversione");
+				setRequestAttribute("richiesteconversioni", lVectRichConversioniPP);
+			}
 
 			// Conversione Pene Pecuniarie
 			mRetPage = PG_LOAD_INSERISCI_ORDINANZA_CONVERSIONE_PP;
@@ -665,13 +666,14 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 			// Lettura elenco Misure di Sicurezza Collegate al Fascicolo SIUS
 			FascicoloGPModel lFasGPMod = new FascicoloGPModel(
 					(FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"));
-			
-//29/10/2019 eliminazione BLOCCO su richiesta di GASBARRI!!!
-			if (!Utils.isNullObj(lFasGPMod.getFascicoloSiusModel().getIdFascicoloSiusOrigine())){
-	//				throw new SIUSException(SIUSException.USER_MESSAGE,
-	//						"Impossibile leggere la Misura Sicurezza in Esecuzione!");
+
+			// 29/10/2019 eliminazione BLOCCO su richiesta di GASBARRI!!!
+			if (!Utils.isNullObj(lFasGPMod.getFascicoloSiusModel().getIdFascicoloSiusOrigine())) {
+				// throw new SIUSException(SIUSException.USER_MESSAGE,
+				// "Impossibile leggere la Misura Sicurezza in Esecuzione!");
 				// fascicolo originale
-				BigDecimal idFascicoloSiusOrigine = lFasGPMod.getFascicoloSiusModel().getIdFascicoloSiusOrigine();
+				BigDecimal idFascicoloSiusOrigine = lFasGPMod.getFascicoloSiusModel()
+						.getIdFascicoloSiusOrigine();
 				// info per il log
 				siesLogger.debug("ID del Fascicolo Origine ->" + idFascicoloSiusOrigine);
 				// ricerco provvedimento impugnato
@@ -685,27 +687,25 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 					DepositoDecretoModel ddm = rpc.RicercaDecreto("ALL");
 					if (ddm != null)
 						setRequestAttribute("decreto", ddm);
-// risoluzione anomalia n.2 del verbale di collaudo 11.3 (terza sessione)
-//					else
-//						throw new SIUSException(SIUSException.USER_MESSAGE,
-//								"Impossibile leggere la Misura Sicurezza in Esecuzione!");
+					// risoluzione anomalia n.2 del verbale di collaudo 11.3 (terza sessione)
+					// else
+					// throw new SIUSException(SIUSException.USER_MESSAGE,
+					// "Impossibile leggere la Misura Sicurezza in Esecuzione!");
 				}
 			}
-			
-			//29/10/2019 eliminazione BLOCCO su richiesta di GASBARRI!!!
+
+			// 29/10/2019 eliminazione BLOCCO su richiesta di GASBARRI!!!
 			BigDecimal idFascicoloSiusOrigine = lFasGPMod.getFascicoloSiusModel().getIdFascicoloSiusOrigine();
 			BigDecimal idFascicoloSiusLavorazione = null;
-			if (idFascicoloSiusOrigine != null){
-				idFascicoloSiusLavorazione = idFascicoloSiusOrigine;			
-			}
-			else{
+			if (idFascicoloSiusOrigine != null) {
+				idFascicoloSiusLavorazione = idFascicoloSiusOrigine;
+			} else {
 				idFascicoloSiusLavorazione = lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius();
-			}	
-			
+			}
+
 			MisuraSicurezzaModel aMisuraSicurezza = new MisuraSicurezzaModel();
 			// ricerco non per id fasc sius ma per id fasc sius origine (UDS)
-			aMisuraSicurezza
-					.setFasSiuIdFascicoloSius(idFascicoloSiusLavorazione);
+			aMisuraSicurezza.setFasSiuIdFascicoloSius(idFascicoloSiusLavorazione);
 			MisuraSicurezzaController lCtrl = new MisuraSicurezzaController();
 			Vector lVect = lCtrl.ExRicercaMisuraSicurezza(aMisuraSicurezza);
 			MisuraSicurezzaModel msm = null;
@@ -714,9 +714,8 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 				msm = (MisuraSicurezzaModel) lVect.firstElement();
 				v.add(msm);
 				setRequestAttribute("misuresicurezza", v);
-			} 
-			else if(lVect.isEmpty()){
-				// ricerco non per id fasc sius ma per id fasc sius 
+			} else if (lVect.isEmpty()) {
+				// ricerco non per id fasc sius ma per id fasc sius
 				aMisuraSicurezza
 						.setFasSiuIdFascicoloSius(lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
 				lCtrl = new MisuraSicurezzaController();
@@ -725,9 +724,8 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 					msm = (MisuraSicurezzaModel) lVect.firstElement();
 					v.add(msm);
 					setRequestAttribute("misuresicurezza", v);
-				} 
-			}
-			else {
+				}
+			} else {
 				// Lettura Misura di Sicurezza in Esecuzione Collegata al Fascicolo SIUS EMS padre
 				IFascicoloSius ifs = SIUSLookupRemote.getFascicoloSiusRemote();
 				FascicoloGPModel fgpm = ifs.ExRicercaFascicoloByKey(idFascicoloSiusLavorazione);
@@ -738,13 +736,13 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 				IEsecuzioneMS lEseMSCtrl = SIUSLookupRemote.getEsecuzioneMSRemote();
 				EsecuzioneMisuraSicurezzaModel aEMS = lEseMSCtrl
 						.ExRicercaEsecuzioneMisuraSicurezzaByIdFascicolo(idFascicoloSiusLavorazione);
-// risoluzione anomalia n.2 del verbale di collaudo 11.3 (terza sessione)					
-//					if (aEMS == null)
-//						throw new SIUSException(SIUSException.USER_MESSAGE,
-//								"Impossibile leggere la Misura Sicurezza in Esecuzione! Inserire la Misura di Sicurezza.");
+				// risoluzione anomalia n.2 del verbale di collaudo 11.3 (terza sessione)
+				// if (aEMS == null)
+				// throw new SIUSException(SIUSException.USER_MESSAGE,
+				// "Impossibile leggere la Misura Sicurezza in Esecuzione! Inserire la Misura di Sicurezza.");
 				setRequestAttribute("esecuzionemisurasicurezza", aEMS);
 			}
-			
+
 			// Occorre passare alla jsp di inserimento anche le option per l'eventuale scelta di una nuova
 			// misura
 			// Option lOptionN = new Option(DecodificheManager.getInstance().getNaturaMisuraSicurezza());
@@ -756,37 +754,36 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("Ordinanza Appello contro Provvedimento Misura Sicurezza: " + lCodTipoDec);
-		} 
-	    // MEV_2023-35 - Applicazione Pene Sostitutive
-        else if (lCodTipoDec.compareTo(APPLICAZIONE_PENE_SOSTITUTIVE) == 0) {
-            // Applicazione Sanzione Sostitutiva
-            mRetPage = PG_LOAD_INSERISCI_ORDINANZA_APPLICAZIONE_SP; 
-            ricercaPenaComplessivaSanzioneSostitutivaByIdFasSiep(); // DA VERIFICARE
-            preparaListaTipoUfficiCompetente();
-            siesLogger.debug("Ordinanza di Applicazione Pene Sostitutiva " + lCodTipoDec);
-        }
-        // MEV_2023-35 - FINE
-        // MEV_2023-35 - Revoca Autorizzazioni pene sostitutive 
-        else if (lCodTipoDec.compareTo(REVOCA_AUTORIZZAZIONE_PS) == 0) {
-          // Attenzione si utilizzano le stesse costanti del Decreto (per ora ) ICostantiDepositoDecreto
-            // Revoca Autorizzazioni pene sostitutive 
-            mRetPage = PG_INSERISCI_REVOCA_AUTORIZZAZIONE_PENA_SOSTITUTIVA_ORD; 
-            ricercaFascicoloOrigine();
-            siesLogger.debug("Ordinanza di ARevoca Autorizzazioni pene sostitutive " + lCodTipoDec);
-        }
-        // MEV_2023-35 - Revoca / Conversione Pena Pecuniaria Sostitutiva 
-        else if (lCodTipoDec.compareTo(CONVERSIONE_REVOCA_PENA_SOST) == 0) {
-          // Revoca / Conversione Pena Pecuniaria Sostitutiva 
-          mRetPage = PG_LOAD_INSERISCI_ORDINANZA_REV_CONV_PPS;
-          // Provo a recuperare l'importo da pagare dal fascicolo SIEP collegato se esiste
-          RateizzazionePPModel lRataMancatoPagamento = ricercaMancatoPagamento();
-          
-          setRequestAttribute("RataMancatoPagamento",lRataMancatoPagamento);
-          setRequestAttribute("Action", "siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaUDS");
-          siesLogger.debug("Ordinanza Revoca Conversione Pena Pecuniaria Sostitutiva " + lCodTipoDec);
-       // MEV_2023-35 - FINE
-        } 	
-		else
+		}
+		// MEV_2023-35 - Applicazione Pene Sostitutive
+		else if (lCodTipoDec.compareTo(APPLICAZIONE_PENE_SOSTITUTIVE) == 0) {
+			// Applicazione Sanzione Sostitutiva
+			mRetPage = PG_LOAD_INSERISCI_ORDINANZA_APPLICAZIONE_SP;
+			ricercaPenaComplessivaSanzioneSostitutivaByIdFasSiep(); // DA VERIFICARE
+			preparaListaTipoUfficiCompetente();
+			siesLogger.debug("Ordinanza di Applicazione Pene Sostitutiva " + lCodTipoDec);
+		}
+		// MEV_2023-35 - FINE
+		// MEV_2023-35 - Revoca Autorizzazioni pene sostitutive
+		else if (lCodTipoDec.compareTo(REVOCA_AUTORIZZAZIONE_PS) == 0) {
+			// Attenzione si utilizzano le stesse costanti del Decreto (per ora ) ICostantiDepositoDecreto
+			// Revoca Autorizzazioni pene sostitutive
+			mRetPage = PG_INSERISCI_REVOCA_AUTORIZZAZIONE_PENA_SOSTITUTIVA_ORD;
+			ricercaFascicoloOrigine();
+			siesLogger.debug("Ordinanza di ARevoca Autorizzazioni pene sostitutive " + lCodTipoDec);
+		}
+		// MEV_2023-35 - Revoca / Conversione Pena Pecuniaria Sostitutiva
+		else if (lCodTipoDec.compareTo(CONVERSIONE_REVOCA_PENA_SOST) == 0) {
+			// Revoca / Conversione Pena Pecuniaria Sostitutiva
+			mRetPage = PG_LOAD_INSERISCI_ORDINANZA_REV_CONV_PPS;
+			// Provo a recuperare l'importo da pagare dal fascicolo SIEP collegato se esiste
+			RateizzazionePPModel lRataMancatoPagamento = ricercaMancatoPagamento();
+
+			setRequestAttribute("RataMancatoPagamento", lRataMancatoPagamento);
+			setRequestAttribute("Action", "siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaUDS");
+			siesLogger.debug("Ordinanza Revoca Conversione Pena Pecuniaria Sostitutiva " + lCodTipoDec);
+			// MEV_2023-35 - FINE
+		} else
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Ordinanza non prevista per il contenuto indicato");
 
@@ -902,46 +899,47 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 																										// Emittenti.
 		setRequestAttribute("tipoUfficioCompetente", "" + lOption);
 	}
-	
-    // MEV_2023-35 Recupero Se Presente la Rateizzazione collegata all'ultimo avviso mancato pagamento
-    // del SIEP collegato
-    private RateizzazionePPModel ricercaMancatoPagamento() throws Exception {
-      siesLogger.debug("ricercaMancatoPagamento");
-      RateizzazionePPModel lRataMancatoPagamento = null;
 
-      if (!isSessionAttributeNullObj("fascicoloSiusGP")) {
-        FascicoloGPModel lFasGPMod = (FascicoloGPModel) getSessionAttribute("fascicoloSiusGP");
-        BigDecimal lIdFasicoloSIEP = null;
-        if (   lFasGPMod.getFascicoloSiusModel() != null 
-            && lFasGPMod.getFascicoloSiusModel().getFasSieIdFascicoloSiep()!=null)  {
-          
-          lIdFasicoloSIEP = lFasGPMod.getFascicoloSiusModel().getFasSieIdFascicoloSiep();
-          
-          // Ricerca ultimo evento 01-04-1308-Avviso mancato pagamento Pena Pecuniaria
-          // validato
-          
-          EventoModel lEveRicerca = new EventoModel();
-          lEveRicerca.setFlagDocumentoRegistrato("S");
-          lEveRicerca.setFasSieIdFascicoloSiep(lIdFasicoloSIEP);
-          lEveRicerca.setCodMotivo("1308");
-          lEveRicerca.setCodTipoProvvedimento("04");
-          
-          IEvento lEveCtrl = SICOLookupRemote.getEventoRemote();
-          //Vector <EventoModel> lListaAvvisi = lEveCtrl.ricercaEvento(new String[]{"1308"}, new String[]{"04"}, lEveRicerca);
-          Vector <EventoModel> lListaAvvisi = lEveCtrl.ExRicercaEvento(lEveRicerca);
-          
-          
-          if (lListaAvvisi!=null && lListaAvvisi.size()>0) {
-            BigDecimal idEvento = lListaAvvisi.elementAt(0).getIdEvento();
-            IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
-            Vector <RateizzazionePPModel> listaRateizzazioni = irpp.exRicercaRateizzazioniByIdEvento(idEvento);
-            
-            if (listaRateizzazioni!=null && listaRateizzazioni.size()>0)
-              lRataMancatoPagamento = listaRateizzazioni.elementAt(0); //presente 1 solo di tipo U
-          }
-        }
-      }
-      
-      return lRataMancatoPagamento;
-    }
+	// MEV_2023-35 Recupero Se Presente la Rateizzazione collegata all'ultimo avviso mancato pagamento
+	// del SIEP collegato
+	private RateizzazionePPModel ricercaMancatoPagamento() throws Exception {
+		siesLogger.debug("ricercaMancatoPagamento");
+		RateizzazionePPModel lRataMancatoPagamento = null;
+
+		if (!isSessionAttributeNullObj("fascicoloSiusGP")) {
+			FascicoloGPModel lFasGPMod = (FascicoloGPModel) getSessionAttribute("fascicoloSiusGP");
+			BigDecimal lIdFasicoloSIEP = null;
+			if (lFasGPMod.getFascicoloSiusModel() != null
+					&& lFasGPMod.getFascicoloSiusModel().getFasSieIdFascicoloSiep() != null) {
+
+				lIdFasicoloSIEP = lFasGPMod.getFascicoloSiusModel().getFasSieIdFascicoloSiep();
+
+				// Ricerca ultimo evento 01-04-1308-Avviso mancato pagamento Pena Pecuniaria
+				// validato
+
+				EventoModel lEveRicerca = new EventoModel();
+				lEveRicerca.setFlagDocumentoRegistrato("S");
+				lEveRicerca.setFasSieIdFascicoloSiep(lIdFasicoloSIEP);
+				lEveRicerca.setCodMotivo("1308");
+				lEveRicerca.setCodTipoProvvedimento("04");
+
+				IEvento lEveCtrl = SICOLookupRemote.getEventoRemote();
+				// Vector <EventoModel> lListaAvvisi = lEveCtrl.ricercaEvento(new String[]{"1308"}, new
+				// String[]{"04"}, lEveRicerca);
+				Vector<EventoModel> lListaAvvisi = lEveCtrl.ExRicercaEvento(lEveRicerca);
+
+				if (lListaAvvisi != null && lListaAvvisi.size() > 0) {
+					BigDecimal idEvento = lListaAvvisi.elementAt(0).getIdEvento();
+					IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
+					Vector<RateizzazionePPModel> listaRateizzazioni = irpp
+							.exRicercaRateizzazioniByIdEvento(idEvento);
+
+					if (listaRateizzazioni != null && listaRateizzazioni.size() > 0)
+						lRataMancatoPagamento = listaRateizzazioni.elementAt(0); // presente 1 solo di tipo U
+				}
+			}
+		}
+
+		return lRataMancatoPagamento;
+	}
 }

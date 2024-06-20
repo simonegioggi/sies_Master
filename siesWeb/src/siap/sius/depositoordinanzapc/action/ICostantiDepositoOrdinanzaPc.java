@@ -15,7 +15,7 @@ import f3b.web.IWebConstants;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 public interface ICostantiDepositoOrdinanzaPc {
@@ -421,34 +421,38 @@ public interface ICostantiDepositoOrdinanzaPc {
 
 	// MEV_2023-35
 	// Applicazione Pene Sostitutive
-    public static final String APPLICAZIONE_PENE_SOSTITUTIVE = "SP";
-    public static final String PG_LOAD_INSERISCI_ORDINANZA_APPLICAZIONE_SP = IWebConstants.ROOT_DIR
-            + "files/siap/sius/depositoordinanzapc/InserisciOrdinanzaApplicazioneSP.jsp";
-    public static final String PG_LOAD_DETTAGLIO_ORDINANZA_APPLICAZIONE_SP = IWebConstants.ROOT_DIR
-            + "files/siap/sius/depositoordinanzapc/DettaglioOrdinanzaApplicazioneSP.jsp";
-    // MEV_2023-35 - FINE
+	public static final String APPLICAZIONE_PENE_SOSTITUTIVE = "SP";
+	public static final String PG_LOAD_INSERISCI_ORDINANZA_APPLICAZIONE_SP = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/depositoordinanzapc/InserisciOrdinanzaApplicazioneSP.jsp";
+	public static final String PG_LOAD_DETTAGLIO_ORDINANZA_APPLICAZIONE_SP = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/depositoordinanzapc/DettaglioOrdinanzaApplicazioneSP.jsp";
+	// Conversione pene pecuniarie principali per mancato pagamento (artt. 102 - 103 L. 689/81 - 55 d. lgs.
+	// 274/00)
+	public static final String CONVERSIONE_PENE_PECUNIARIE_MANCATO_PAGAMENTO = "SR";
+	// MEV_2023-35 - FINE
 
-    
-    // MEV_2023-35 - Revoca Autorizzazioni pene sostitutive 
-    // n.b. REVOCA_AUTORIZZAZIONE_PS si usa quella del decreto mentre per il dettaglio va bene il dettaglio generico (per ora)
-    //public static final String REVOCA_AUTORIZZAZIONE_PS = "AR"; // AR = RV_ABBREVIATION dell'oggetto U130    
-    // Inserisci Revoca Autorizzazione Pena Sostitutiva
-    public static final String PG_INSERISCI_REVOCA_AUTORIZZAZIONE_PENA_SOSTITUTIVA_ORD = IWebConstants.ROOT_DIR
-            + "files/siap/sius/depositoordinanzapc/InserisciOrdinanzaRevocaAutorizzazionePenaSostitutiva.jsp";
-    // Dettaglio Revoca Autorizzazione Pena Sostitutiva
-    //public static final String PG_DETTAGLIO_REVOCA_AUTORIZZAZIONE_PENA_SOSTITUTIVA_ORD = IWebConstants.ROOT_DIR
-    //        + "files/siap/sius/depositoordinanzapc/DettaglioOrdinanzaRevocaAutorizzazionePenaSostitutiva.jsp";    
-    // MEV_2023-35 - FINE
-    
-    // MEV_2023-35
-    // Revoca e Conversione Pena Pecuniaria Sostitutiva
-    public static final String CONVERSIONE_REVOCA_PENA_SOST = "CR";
-    public static final String PG_LOAD_INSERISCI_ORDINANZA_REV_CONV_PPS = IWebConstants.ROOT_DIR
-            + "files/siap/sius/depositoordinanzapc/InserisciOrdinanzaRevocaConverPPS.jsp";
-    public static final String PG_LOAD_DETTAGLIO_ORDINANZA_REV_CONV_PPS = IWebConstants.ROOT_DIR
-            + "files/siap/sius/depositoordinanzapc/DettaglioOrdinanzaConverRevocaPPS.jsp";
-    // MEV_2023-35 - FINE
-    
+	// MEV_2023-35 - Revoca Autorizzazioni pene sostitutive
+	// n.b. REVOCA_AUTORIZZAZIONE_PS si usa quella del decreto mentre per il dettaglio va bene il dettaglio
+	// generico (per ora)
+	// public static final String REVOCA_AUTORIZZAZIONE_PS = "AR"; // AR = RV_ABBREVIATION dell'oggetto U130
+	// Inserisci Revoca Autorizzazione Pena Sostitutiva
+	public static final String PG_INSERISCI_REVOCA_AUTORIZZAZIONE_PENA_SOSTITUTIVA_ORD = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/depositoordinanzapc/InserisciOrdinanzaRevocaAutorizzazionePenaSostitutiva.jsp";
+	// Dettaglio Revoca Autorizzazione Pena Sostitutiva
+	// public static final String PG_DETTAGLIO_REVOCA_AUTORIZZAZIONE_PENA_SOSTITUTIVA_ORD =
+	// IWebConstants.ROOT_DIR
+	// + "files/siap/sius/depositoordinanzapc/DettaglioOrdinanzaRevocaAutorizzazionePenaSostitutiva.jsp";
+	// MEV_2023-35 - FINE
+
+	// MEV_2023-35
+	// Revoca e Conversione Pena Pecuniaria Sostitutiva
+	public static final String CONVERSIONE_REVOCA_PENA_SOST = "CR";
+	public static final String PG_LOAD_INSERISCI_ORDINANZA_REV_CONV_PPS = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/depositoordinanzapc/InserisciOrdinanzaRevocaConverPPS.jsp";
+	public static final String PG_LOAD_DETTAGLIO_ORDINANZA_REV_CONV_PPS = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/depositoordinanzapc/DettaglioOrdinanzaConverRevocaPPS.jsp";
+	// MEV_2023-35 - FINE
+
 	// Declaratoria Estinzione Sanzioni Sostitutive
 	public static final String PG_LOAD_DETTAGLIO_ORDINANZA_DECLARATORIA_ESTINZIONE_SS = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/depositoordinanzapc/DettaglioOrdinanzaDeclaratoriaEstinsioneSS.jsp";
@@ -554,7 +558,7 @@ public interface ICostantiDepositoOrdinanzaPc {
 	public static final String OGG_DISP_DECOR_PER_MINIM = "0307";
 	public static final String OGG_ORD_RECLAMO_LICENZA = "C043";
 	public static final String OGG_SOSTITUISCE_LA_MISURA = "0133";
-	// MEV_2023-35 si aggiunge un nuovo codice 
+	// MEV_2023-35 si aggiunge un nuovo codice
 	public static final String OGG_APPL_PENE_SOSTITUTIVE = "U125";
 
 	public static final String CAMPO_GIORNI_NUOVA_MISURA = "giorniNuovaMisura";
@@ -607,7 +611,7 @@ public interface ICostantiDepositoOrdinanzaPc {
 	public static final String PG_LOAD_MOD_ORDINANZA_APPELLO_CONTRO_PROVV_MS = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/depositoordinanzapc/ModificaOrdinanzaAppelloControProvvMS.jsp";
 
-	//@emma: 28/08/2018 : intervento post-collaudo
+	// @emma: 28/08/2018 : intervento post-collaudo
 	public static final String PG_LOAD_DETTAGLIO_EMISSIONE_ORDINANZA_MS = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/depositoordinanzapc/DettaglioEmissioneOrdinanzaMS.jsp";
 
