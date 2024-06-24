@@ -221,6 +221,9 @@ public interface IDepositoOrdinanzaPc {
     public OrdinanzaEventoTenoriGProcModel ExInserisciOrdinanzaRevocaConversionePPS (
          OrdinanzaEventoTenoriGProcModel aGProcOrdEveTenori,
          RichiestaConversioneModel aRicConvMod) throws F3BException;
+    public OrdinanzaEventoTenoriGProcModel ExInserisciOrdinanzaRevocaPS (
+        OrdinanzaEventoTenoriGProcModel aGProcOrdEveTenori,
+        EsecuzioneSanzioneSostitutivaModel aEsecSenSostMod) throws F3BException;    
     // MEV_2023-35 - FINE
 
 }

@@ -1081,6 +1081,18 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
                   + lIdDepOrd);
 	        }
 			
+			// MEV_2023-35 - Revoca e Conversione Pena Sostitutiva
+            // Il record ESECUZIONE_SANZ_SOST con i dati dell'ordinanza punta
+			// il deposito ordinanza 
+            // Va eliminato prima di eliminare l'evento
+	        if (aDepOrd.getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_PENA_SOSTITUTIVA) == 0) {
+	           lESSDao = new EsecuzioneSanzioneSostitutivaDAO(aConn);
+	           lESSDao.setCondizioneDeleteByGP(lIdDepOrd);
+	           lESSDao.delete();
+	           siesLogger.debug(">>>> Elimino il record ESECUZIONE_SANZ_SOST al deposito"
+	                  + lIdDepOrd);
+	        }
+			
 			// Per le Ordinanze di Applicazione Misure Sicurezza, se l'Ordinanza stessa ha trasformato la
 			// misura
 			// occorre cancellare la misura generata dall' Ordinanza
@@ -3999,4 +4011,56 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
     return lModRet;
   } 
 
+  
+  /*
+   * Inserimento del'ordinanza di Revoca e Conversione Pena Pecuniaria Sostitutiva
+   * 
+   * @since MEV_2023-35
+   */
+  public OrdinanzaEventoTenoriGProcModel  ExInserisciOrdinanzaRevocaPS (
+      OrdinanzaEventoTenoriGProcModel aGProcOrdEveTenori,
+      EsecuzioneSanzioneSostitutivaModel aEsecSenSostMod) throws F3BException
+  {
+    Connection lConn = null;
+    OrdinanzaEventoTenoriGProcModel lModRet = null;
+    EsecuzioneSanzioneSostitutivaDAO lEsecSanSostDAO = null;
+
+    try {
+      lConn = getDBTransaction();      
+      
+      // Inserimento DepositoOrdinanza, Tenore, Evento...
+      lModRet = ExInserisciOrdinanza(aGProcOrdEveTenori, lConn);
+      
+      
+      if (aEsecSenSostMod!=null) {
+        // Inserimento Esecuzione
+        lEsecSanSostDAO = new EsecuzioneSanzioneSostitutivaDAO(lConn);
+        aEsecSenSostMod.setDepOpidDepositoOrdinanzaPc (lModRet.getOrdinanza().getIdDepositoOrdinanzaPc());
+        
+        aEsecSenSostMod.setCodOperatoreInserimento (lModRet.getEvento().getCodOperatoreInserimento());
+        aEsecSenSostMod.setCodUfficioInserimento   (lModRet.getEvento().getCodUfficioInserimento());
+        aEsecSenSostMod.setDataInserimento         (lModRet.getEvento().getDataInserimento());
+  
+        lEsecSanSostDAO.setDAOFromModel(aEsecSenSostMod);
+        lEsecSanSostDAO.insert();
+      }
+      commit(lConn);
+    } catch (DAOException daoEx) {
+      rollback(lConn);
+      siesLogger.error("DAOException: ", daoEx);
+      throw new SIUSException("DepositoOrdinanzaPcController.ExInserisciOrdinanzaRevocaPS : "+ daoEx);
+    } catch (SQLException sqlEx) {
+      rollback(lConn);
+      siesLogger.error("SQLException: ", sqlEx);
+      throw new SIUSException("DepositoOrdinanzaPcController.ExInserisciOrdinanzaRevocaPS : "+ sqlEx);
+    } catch (Exception e) {
+      rollback(lConn);
+      siesLogger.error("Exception: ", e);
+      throw new SIUSException("DepositoOrdinanzaPcController.ExInserisciOrdinanzaRevocaPS : " + e);
+    } finally {
+      cleanup(lEsecSanSostDAO);
+      cleanup(lConn);
+    }
+    return lModRet;
+  } 
 }

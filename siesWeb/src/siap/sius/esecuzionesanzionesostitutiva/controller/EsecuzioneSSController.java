@@ -787,4 +787,42 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 		return lSanzioni;
 	}
 
+	/**
+	 * Recupero l'eventuale record ESECUZIONE_SANZIONE_SOST collegato al deposito
+	 * @since MEV_2023-35
+	 */
+	public EsecuzioneSanzioneSostitutivaModel ExRicercaEsecuzioneSanzioneSostitutivaByIdDepositoOrd(
+           BigDecimal aIdDepositoOrdinanza) throws F3BException
+	{
+	    Connection lConn = null;
+	    EsecuzioneSanzioneSostitutivaSqlDAO lEseSSSqlDao = null;
+	    EsecuzioneSanzioneSostitutivaModel lEsecuzioneModel = null;
+	    
+	    siesLogger.debug("ExRicercaEsecuzioneSanzioneSostitutivaByIdDepositoOrd = "+aIdDepositoOrdinanza);
+	    
+	    try {
+	      lConn = getDBConnection();
+	 
+	      // MEV_2023-35 si parametrizza il lCodContenuto per gestire anche le EPS.
+	      lEseSSSqlDao = new EsecuzioneSanzioneSostitutivaSqlDAO(lConn);
+	      lEseSSSqlDao.ricercaEsecuzioneSanzioneSostitutivaByIdDepositoOrd(aIdDepositoOrdinanza);
+	      lEseSSSqlDao.start();
+	      lEsecuzioneModel = (EsecuzioneSanzioneSostitutivaModel) lEseSSSqlDao.getModelByKey();
+	 
+	      lEseSSSqlDao.stop();
+	 
+	    } catch (DAOException daoEx) {
+	      rollback(lConn);
+	      siesLogger.error("EsecuzioneSSController.ExRicercaEsecuzioneSanzioneSostitutivaByIdDepositoOrd, DAOException: ", daoEx);
+	      throw new SIUSException(F3BException.USER_MESSAGE,"EsecuzioneSSController.ExRicercaEsecuzioneSanzioneSostitutivaByIdDepositoOrd: " + daoEx);
+	    } catch (Exception e) {
+	      rollback(lConn);
+	      siesLogger.error("EsecuzioneSSController.ExRicercaEsecuzioneSanzioneSostitutivaByIdDepositoOrd: Exception ", e);
+	      throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
+	    } finally {
+	      cleanup(lEseSSSqlDao);
+	      cleanup(lConn);
+	    }
+	    return lEsecuzioneModel;	     
+	}
 }

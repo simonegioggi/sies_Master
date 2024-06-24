@@ -782,7 +782,17 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 			setRequestAttribute("RataMancatoPagamento", lRataMancatoPagamento);
 			setRequestAttribute("Action", "siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaUDS");
 			siesLogger.debug("Ordinanza Revoca Conversione Pena Pecuniaria Sostitutiva " + lCodTipoDec);
-			// MEV_2023-35 - FINE
+			// MEV_2023-35 - FINE		    
+	        // MEV_2023-35 - Revoca Pena Sostitutiva e Converte.... 
+	      } else if (lCodTipoDec.compareTo(REVOCA_PENA_SOSTITUTIVA) == 0) {
+	       // combo penaSostitutiva più grave
+	        Option lOptionPenaSost = new Option(DecodificheManager.getInstance().getMotivoEsecuzionePeneSostitutive());
+	        setRequestAttribute("tipoPeneSostitutive", "" + lOptionPenaSost);
+
+	        // Ordinanza Misura Sicurezza
+	        mRetPage = PG_LOAD_INSERISCI_REVOCA_PENA_SOSTITUTIVA;
+	        siesLogger.debug("Ordinanza Revoca e conversione Pena Sostitutiva..." + lCodTipoDec);
+	        // MEV_2023-35 - FINE
 		} else
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Ordinanza non prevista per il contenuto indicato");
