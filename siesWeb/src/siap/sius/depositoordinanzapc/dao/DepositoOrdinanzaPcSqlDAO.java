@@ -18,23 +18,14 @@ import siap.sius.fascicolo.model.FascicoloSiusModel;
 import siap.sius.tenore.model.TenoreModel;
 
 /**
- * <p>
- * Title: DepositoOrdinanzaPcSqlDAO
- * </p>
- * <p>
- * Description: Classe SqlDAO che rappresenta la tabella DepositoOrdinanzaPc
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * DepositoOrdinanzaPcSqlDAO - Classe SqlDAO che rappresenta la tabella DepositoOrdinanzaPc
  *
  * @version 1.0
  */
 public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
+
 	public DepositoOrdinanzaPcSqlDAO(Connection con) {
+
 		super(con);
 	}
 
@@ -42,6 +33,7 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 	// METODO RICERCA()
 	//
 	public void ricercaDepositoOrdinanzaPc(DepositoOrdinanzaPcModel aModel) throws DAOException {
+
 		String lSql = getSqlQuery();
 		lSql += " " + setCondizione(aModel);
 		setStatement(lSql);
@@ -363,6 +355,7 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 	}
 
 	protected String getSqlQuery() {
+
 		String lStatement = new String("");
 
 		lStatement += "SELECT ";
@@ -418,31 +411,31 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		lStatement += "DATA_SCADENZA_SOSPENSIONE_SS, ";
 		lStatement += "SOSPENSIONE_GG, ";
 		lStatement += "SOSPENSIONE_MM, ";
-		lStatement += "SOSPENSIONE_AA ";
+		lStatement += "SOSPENSIONE_AA";
 		// nuovi campi richiesta ottemperanza
-		lStatement += " , TIPO_CONTROLLO_ESECUZIONE ";
-		lStatement += " ,null as DESC_TIPO_CONTROLLO_ESECUZIONE ";
-		lStatement += " , FLAG_NOMINA_COMM_ACTA ";
-		lStatement += " , DESCR_COMM_ACTA ";
+		lStatement += ", TIPO_CONTROLLO_ESECUZIONE";
+		lStatement += ", null as DESC_TIPO_CONTROLLO_ESECUZIONE";
+		lStatement += ", FLAG_NOMINA_COMM_ACTA";
+		lStatement += ", DESCR_COMM_ACTA";
 		// 10102014 - DL 92 2014 Violazione CEDU
-		lStatement += ", SOMMA_RISARC_DANNI ";
-		lStatement += ", COD_USSM ";
-
+		lStatement += ", SOMMA_RISARC_DANNI";
+		lStatement += ", COD_USSM";
+		lStatement += ", COD_TIPO_SANZIONE "; // MEV_2023-35
 		lStatement += "FROM DEPOSITO_ORDINANZA_PC, CSSA, cg_ref_codes UFF_TIPO_MAG, ";
-		lStatement += " COMUNE COM_UFF_MAG, UFFICIO UFFI_MAG, ";
-		lStatement += " COMUNE COM_UFF_TDS, UFFICIO UFFI_TDS ";
+		lStatement += "COMUNE COM_UFF_MAG, UFFICIO UFFI_MAG, ";
+		lStatement += "COMUNE COM_UFF_TDS, UFFICIO UFFI_TDS ";
 		lStatement += "WHERE CSSA.ID_CSSA = NVL('9999',ID_CSSA_COMP) ";
-		lStatement += " AND UFF_TIPO_MAG.RV_LOW_VALUE = UFFI_MAG.COD_TIPO_UFFICIO";
-		lStatement += " AND UFFI_MAG.COD_UFFICIO = COD_UFFICIO_MAGISTRATO_COMP AND UFF_TIPO_MAG.RV_DOMAIN = 'TIPO_UFFICIO' ";
-		lStatement += " AND COM_UFF_MAG.COD_COMUNE = UFFI_MAG.COD_COMUNE";
-		lStatement += " AND UFFI_TDS.COD_UFFICIO = NVL('-',COD_UFF_TDS_CONCESSO_RIDUZIONE)";
-		lStatement += " AND COM_UFF_TDS.COD_COMUNE = UFFI_TDS.COD_COMUNE";
+		lStatement += "AND UFF_TIPO_MAG.RV_LOW_VALUE = UFFI_MAG.COD_TIPO_UFFICIO ";
+		lStatement += "AND UFFI_MAG.COD_UFFICIO = COD_UFFICIO_MAGISTRATO_COMP AND UFF_TIPO_MAG.RV_DOMAIN = 'TIPO_UFFICIO' ";
+		lStatement += "AND COM_UFF_MAG.COD_COMUNE = UFFI_MAG.COD_COMUNE ";
+		lStatement += "AND UFFI_TDS.COD_UFFICIO = NVL('-',COD_UFF_TDS_CONCESSO_RIDUZIONE) ";
+		lStatement += "AND COM_UFF_TDS.COD_COMUNE = UFFI_TDS.COD_COMUNE";
 
 		return lStatement;
 	}
 
-	// protected String getSqlQueryByIdEvento( BigDecimal aKey )
 	protected String getSqlQuery0() {
+
 		String lStatement = new String("");
 
 		lStatement += "SELECT ";
@@ -497,26 +490,24 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		lStatement += "DATA_SCADENZA_SOSPENSIONE_SS, ";
 		lStatement += "SOSPENSIONE_GG, ";
 		lStatement += "SOSPENSIONE_MM, ";
-		lStatement += "SOSPENSIONE_AA ";
-
+		lStatement += "SOSPENSIONE_AA";
 		// nuovi campi richiesta ottemperanza
-		lStatement += ", FLAG_NOMINA_COMM_ACTA ";
-		lStatement += ", DESCR_COMM_ACTA ";
-
-		lStatement += ", TIPO_CONTROLLO_ESECUZIONE, CODTIPOCONTROLLOESECUZIONE.RV_MEANING AS DESC_TIPO_CONTROLLO_ESECUZIONE ";
+		lStatement += ", FLAG_NOMINA_COMM_ACTA";
+		lStatement += ", DESCR_COMM_ACTA";
+		lStatement += ", TIPO_CONTROLLO_ESECUZIONE, CODTIPOCONTROLLOESECUZIONE.RV_MEANING AS DESC_TIPO_CONTROLLO_ESECUZIONE";
 		// 10102014 - DL 92 2014 Violazione CEDU
-		lStatement += ", SOMMA_RISARC_DANNI ";
-		lStatement += ", COD_USSM ";
-
+		lStatement += ", SOMMA_RISARC_DANNI";
+		lStatement += ", COD_USSM";
+		lStatement += ", COD_TIPO_SANZIONE ";
 		lStatement += "FROM DEPOSITO_ORDINANZA_PC LEFT  OUTER JOIN CSSA ON CSSA.ID_CSSA = ID_CSSA_COMP ";
 		lStatement += "LEFT OUTER JOIN CG_REF_CODES CODTIPOCONTROLLOESECUZIONE "
 				+ " ON (CODTIPOCONTROLLOESECUZIONE.RV_LOW_VALUE = TIPO_CONTROLLO_ESECUZIONE "
 				+ "	AND CODTIPOCONTROLLOESECUZIONE.RV_DOMAIN = 'TIPO_CONTROLLO_ESECUZIONE') ";
-		// lStatement += "WHERE ID_EVENTO_GENERATO = " + aKey;
 		return lStatement;
 	}
 
 	protected String getSqlQueryCssaUssm() {
+
 		String lStatement = new String("");
 
 		lStatement += "SELECT ";
@@ -570,21 +561,18 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		lStatement += "DATA_SCADENZA_SOSPENSIONE_SS, ";
 		lStatement += "SOSPENSIONE_GG, ";
 		lStatement += "SOSPENSIONE_MM, ";
-		lStatement += "SOSPENSIONE_AA ";
-
+		lStatement += "SOSPENSIONE_AA";
 		// nuovi campi richiesta ottemperanza
-		lStatement += ", FLAG_NOMINA_COMM_ACTA ";
-		lStatement += ", DESCR_COMM_ACTA ";
-
-		lStatement += ", TIPO_CONTROLLO_ESECUZIONE, CODTIPOCONTROLLOESECUZIONE.RV_MEANING AS DESC_TIPO_CONTROLLO_ESECUZIONE ";
-
-		lStatement += ", SOMMA_RISARC_DANNI ";
-
+		lStatement += ", FLAG_NOMINA_COMM_ACTA";
+		lStatement += ", DESCR_COMM_ACTA";
+		lStatement += ", TIPO_CONTROLLO_ESECUZIONE, CODTIPOCONTROLLOESECUZIONE.RV_MEANING AS DESC_TIPO_CONTROLLO_ESECUZIONE";
+		lStatement += ", SOMMA_RISARC_DANNI";
+		lStatement += ", COD_TIPO_SANZIONE ";
 		lStatement += "FROM DEPOSITO_ORDINANZA_PC LEFT  OUTER JOIN CSSA CSSA_CSSA  ON CSSA_CSSA .ID_CSSA = ID_CSSA_COMP ";
 		lStatement += "LEFT OUTER JOIN CSSA CSSA_USSM ON CSSA_USSM.ID_CSSA = DEPOSITO_ORDINANZA_PC.COD_USSM ";
 		lStatement += "LEFT OUTER JOIN CG_REF_CODES CODTIPOCONTROLLOESECUZIONE "
-				+ " ON (CODTIPOCONTROLLOESECUZIONE.RV_LOW_VALUE = TIPO_CONTROLLO_ESECUZIONE "
-				+ "	AND CODTIPOCONTROLLOESECUZIONE.RV_DOMAIN = 'TIPO_CONTROLLO_ESECUZIONE') ";
+				+ "ON (CODTIPOCONTROLLOESECUZIONE.RV_LOW_VALUE = TIPO_CONTROLLO_ESECUZIONE "
+				+ "AND CODTIPOCONTROLLOESECUZIONE.RV_DOMAIN = 'TIPO_CONTROLLO_ESECUZIONE')";
 
 		return lStatement;
 	}
@@ -645,16 +633,16 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		lStatement += "DATA_SCADENZA_SOSPENSIONE_SS, ";
 		lStatement += "SOSPENSIONE_GG, ";
 		lStatement += "SOSPENSIONE_MM, ";
-		lStatement += "SOSPENSIONE_AA ";
+		lStatement += "SOSPENSIONE_AA";
 		// nuovi campi richiesta ottemperanza
-		lStatement += ", FLAG_NOMINA_COMM_ACTA ";
-		lStatement += ", DESCR_COMM_ACTA ";
-		lStatement += " , TIPO_CONTROLLO_ESECUZIONE ";
-		lStatement += " ,null as DESC_TIPO_CONTROLLO_ESECUZIONE ";
+		lStatement += ", FLAG_NOMINA_COMM_ACTA";
+		lStatement += ", DESCR_COMM_ACTA";
+		lStatement += ", TIPO_CONTROLLO_ESECUZIONE";
+		lStatement += ",null as DESC_TIPO_CONTROLLO_ESECUZIONE";
 		// 10102014 - DL 92 2014 Violazione CEDU
-		lStatement += ", SOMMA_RISARC_DANNI ";
-		lStatement += ", COD_USSM ";
-
+		lStatement += ", SOMMA_RISARC_DANNI";
+		lStatement += ", COD_USSM";
+		lStatement += ", COD_TIPO_SANZIONE ";
 		lStatement += "FROM DEPOSITO_ORDINANZA_PC, CSSA ";
 		lStatement += "WHERE ID_CSSA_COMP = ID_CSSA ";
 		return lStatement;
@@ -664,6 +652,7 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 	// METODO GETMODEL()
 	//
 	public GenericModel getModel() throws DAOException {
+
 		DepositoOrdinanzaPcModel aModel = new DepositoOrdinanzaPcModel();
 
 		aModel.setIdDepositoOrdinanzaPc(getBigDecimal("ID_DEPOSITO_ORDINANZA_PC"));
@@ -678,10 +667,8 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		aModel.setIdCssaComp(getBigDecimal("ID_CSSA_COMP"));
 		aModel.setDescrComuneCssaComp(getString("COMCSSADESC"));
 		aModel.setCodUssm(getBigDecimal("COD_USSM"));
-
 		if (findColumn("COMUSSMDESC"))
 			aModel.setDescrComuneUssmComp(getString("COMUSSMDESC"));
-
 		aModel.setCodUfficioMagistratoComp(getString("COD_UFFICIO_MAGISTRATO_COMP"));
 		aModel.setDescrUfficioMagistratoComp(getString("DESCCOMMAG"));
 		aModel.setLuogoSvolgimentoProva(getString("LUOGO_SVOLGIMENTO_PROVA"));
@@ -729,25 +716,27 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		aModel.setSospensioneGGSS(getBigDecimal("SOSPENSIONE_GG"));
 		aModel.setSospensioneMMSS(getBigDecimal("SOSPENSIONE_MM"));
 		aModel.setSospensioneAASS(getBigDecimal("SOSPENSIONE_AA"));
-
 		aModel.setFlagNominaComActa(getString("FLAG_NOMINA_COMM_ACTA"));
 		aModel.setDescrCommActa(getString("DESCR_COMM_ACTA"));
-
-		// 20140603 - PA'MARONN' ( SIUS - implemntazione per il D.L. 146 )
+		// 20140603 - ( SIUS - implemntazione per il D.L. 146 )
 		aModel.setCodTipoControlloEsecuzione(getString("TIPO_CONTROLLO_ESECUZIONE"));
 		aModel.setDescrTipoControlloEsecuzione(getString("DESC_TIPO_CONTROLLO_ESECUZIONE"));
 		// 10102014 - DL 92 2014 Violazione CEDU
 		aModel.setSommaRisarcimento(getBigDecimal("SOMMA_RISARC_DANNI"));
+		if (findColumn("COD_TIPO_SANZIONE"))
+			aModel.setCodTipoSanzione(getString("COD_TIPO_SANZIONE"));
 
 		return aModel;
 	}
 
 	public String setCondizione(DepositoOrdinanzaPcModel aModel) {
+
 		String lCondizioni = new String();
 		return lCondizioni;
 	}
 
 	public String setCondizioneByS3(DepositoOrdinanzaPcModel aModel) {
+
 		String lCondizioniS3 = new String();
 
 		if (aModel.getAnnoS3() != null)
@@ -762,7 +751,6 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Imposta condizione di filtro su la chiave id del deposito ordinanza.
-	 * <p>
 	 *
 	 * @param aKey
 	 *            chaive deposito ordinanza.
@@ -985,15 +973,6 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		lStatement += " )a";
 
 		setStatement(lStatement);
-	}
-
-	private boolean findColumn(String aValue) {
-		try {
-			mRs.findColumn(aValue);
-		} catch (Exception sqex) {
-			return false;
-		}
-		return true;
 	}
 
 	protected String getQueryProvvFascicoloSiusTenoreSoggetto() {

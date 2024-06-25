@@ -9,8 +9,7 @@ import siap.sico.evento.model.EventoNotificaModel;
 import siap.siep.pagoPA.model.BollettinoPagopaModel;
 
 /**
- * Title: RateizzazionePPModel
- * Description: Classe Model che rappresenta la tabella RETEIZZAZIONE_PP
+ * RateizzazionePPModel - Classe Model che rappresenta la tabella RETEIZZAZIONE_PP
  *
  * @since MEV_2023-13
  * @version 1.0
@@ -41,6 +40,8 @@ public class RateizzazionePPModel extends GenericModel {
 	private Vector<BollettinoPagopaModel> mListaBollettini = null;
 	// MEV_2023-33: aggiunta variabile di classe
 	private boolean mStoricizzato;
+	// MEV_2023-35: aggiunta variabile di classe per gestire le rate la SIUS
+	private BigDecimal mFasSiuIdFascicoloSius;
 
 	/*****************************************************************************
 	 * Costruttore di default che inizializza i campi del model I campi String vengono inizializzati a "",
@@ -67,6 +68,7 @@ public class RateizzazionePPModel extends GenericModel {
 		this.mDescrUfficioAggiornamento = "";
 		this.mDescrTipoRateizzazione = "";
 		this.mStoricizzato = false;
+		this.mFasSiuIdFascicoloSius = null;
 	}
 
 	/*****************************************************************************
@@ -96,6 +98,7 @@ public class RateizzazionePPModel extends GenericModel {
 		this.mDescrUfficioAggiornamento = aModel.mDescrUfficioAggiornamento;
 		this.mDescrTipoRateizzazione = aModel.mDescrTipoRateizzazione;
 		this.mStoricizzato = aModel.mStoricizzato;
+		this.mFasSiuIdFascicoloSius = aModel.mFasSiuIdFascicoloSius;
 	}
 
 	/*****************************************************************************
@@ -189,6 +192,10 @@ public class RateizzazionePPModel extends GenericModel {
 		return mStoricizzato;
 	}
 
+	public BigDecimal getFasSiuIdFascicoloSius() {
+		return mFasSiuIdFascicoloSius;
+	}
+
 	// ============================================================================
 	// METODI SET()
 	// ============================================================================
@@ -276,6 +283,10 @@ public class RateizzazionePPModel extends GenericModel {
 		this.mStoricizzato = mStoricizzato;
 	}
 
+	public void setFasSiuIdFascicoloSius(BigDecimal mFasSiuIdFascicoloSius) {
+		this.mFasSiuIdFascicoloSius = mFasSiuIdFascicoloSius;
+	}
+
 	/*****************************************************************************
 	 * Metodo toString() che restituisce il contenuto del Model opportunamente formattato. Utile per il debug.
 	 ****************************************************************************/
@@ -302,7 +313,8 @@ public class RateizzazionePPModel extends GenericModel {
 				+ "[ mCodUfficioAggiornamento   = " + mCodUfficioAggiornamento + " ]\n"
 				+ "[ mDescrUfficioAggiornamento = " + mDescrUfficioAggiornamento + " ]\n"
 				+ "[ mDescrTipoRateizzazione 	= " + mDescrTipoRateizzazione + " ]\n"
-				+ "[ mStoricizzato		 		= " + mStoricizzato + " ]";
+				+ "[ mStoricizzato		 		= " + mStoricizzato + " ]\n"
+				+ "[ mFasSiuIdFascicoloSius     = " + mFasSiuIdFascicoloSius + " ]";
 
 		return lStr;
 	}

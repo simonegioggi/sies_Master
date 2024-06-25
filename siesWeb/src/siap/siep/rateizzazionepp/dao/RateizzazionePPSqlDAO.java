@@ -204,17 +204,16 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
 		lModel.setScadenzaGiorni(getBigDecimal("SCADENZA_GIORNI"));
 		lModel.setDescrTipoRateizzazione(getString("descTipoRateizzazione"));
 		lModel.setProgressivoRata(getBigDecimal("PROGRESSIVO_RATA"));
-
 		lModel.setFasSieIdFascicoloSiep(getBigDecimal("FAS_SIE_ID_FASCICOLO_SIEP"));
 		lModel.setEveIdEvento(getBigDecimal("EVE_ID_EVENTO"));
-
 		lModel.setCodOperatoreInserimento(getString("COD_OPERATORE_INSERIMENTO"));
 		lModel.setDataInserimento(getDate("DATA_INSERIMENTO"));
 		lModel.setCodUfficioInserimento(getString("COD_UFFICIO_INSERIMENTO"));
-
 		lModel.setCodOperatoreAggiornamento(getString("COD_OPERATORE_AGGIORNAMENTO"));
 		lModel.setDataAggiornamento(getDate("DATA_AGGIORNAMENTO"));
 		lModel.setCodUfficioAggiornamento(getString("COD_UFFICIO_AGGIORNAMENTO"));
+		if (findColumn("FAS_SIU_ID_FASCICOLO_SIUS"))
+			lModel.setFasSieIdFascicoloSiep(getBigDecimal("FAS_SIU_ID_FASCICOLO_SIUS"));
 
 		return lModel;
 	}

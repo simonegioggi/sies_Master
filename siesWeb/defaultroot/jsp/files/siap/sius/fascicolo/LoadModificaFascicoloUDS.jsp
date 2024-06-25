@@ -215,21 +215,21 @@ function TestS22(Code) {
 
 				// MEV_2023-35 - 05/2024 PENE SOSTITUTIVE
           		if (document.FormTestS22.HighValue[i].value == 'S30') {
-            		if (document.FormTestS22.LowValue[i].value == 'U126') {
+            		if (document.FormTestS22.LowValue[i].value != 'U126') {
 						S22_ab.style.visibility = 'hidden';
-						S22_ab.style.top = '-20px';
 						S22_a.style.visibility = 'hidden';
 						S22_aa.style.visibility = 'hidden';
 						S22_ems.style.visibility = 'hidden';
 						S22_EPS.style.visibility = 'visible'; // MEV_2023-35
-						resultS22 = 'U126';
+						resultS22 = 'S30';
             		} else {
 						S22_a.style.visibility = 'hidden';
-						S22_ab.style.visibility = 'hidden';
-						S22_aa.style.visibility = 'visible';
+						S22_ab.style.visibility = 'visible';
+						S22_ab.style.top = '-20px';
+						S22_aa.style.visibility = 'hidden';
 						S22_ems.style.visibility = 'hidden';
 						S22_EPS.style.visibility = 'hidden'; // MEV_2023-35
-						resultS22 = 'S30';
+						resultS22 = 'U126';
             		}
 					S22_b.style.visibility = 'visible';
             		// Nella modifica del contenuto, per le APS NON vengono ripuliti i campi Anno e numero Ordinanza.
@@ -322,6 +322,11 @@ function Verify() {
 		document.LoadModificaFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.focus();
 		return false;
 	}
+	if (resultS22 == 'S30' && annoS22 == "") {
+		alert("Campo Anno del Procedimento di Esecuzione della Pena Sostitutiva Obbligatorio");
+		document.LoadModificaFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.focus();
+		return false;
+	}
 	// MEV_2023-35 - FINE
 
 	// 29/04/2011 Controlli Misure Sicurezza
@@ -364,6 +369,11 @@ function Verify() {
 	// MEV_2023-35
 	if (resultS22 == 'U126' && progrS22 == "") {
 		alert("Campo Progressivo dell'Ordinanza Obbligatorio");
+		document.LoadModificaFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.focus();
+		return false;
+	}
+	if (resultS22 == 'S30' && progrS22 == "") {
+		alert("Campo Progressivo del Procedimento di Esecuzione della Pena Sostitutiva Obbligatorio");
 		document.LoadModificaFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.focus();
 		return false;
 	}

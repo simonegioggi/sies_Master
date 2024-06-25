@@ -409,9 +409,7 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("Ricovero OPG Per Oss. Psic." + lCodTipoDec);
-		}
-
-		else if (lCodTipoDec.compareTo(REVOCA_MA) == 0) {
+		} else if (lCodTipoDec.compareTo(REVOCA_MA) == 0) {
 			// Ordinanza di Revoca Misura Alternativa
 			// Occorre attivare una Action intermedia
 			RedirectTo lRedirectTo = new RedirectTo();
@@ -568,6 +566,8 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 			siesLogger.debug("Ordinanza Rinvio su Sanzioni Sostitutive " + lCodTipoDec);
 		} else if (lCodTipoDec.compareTo(CONVERSIONE_PENE_PECUNIARIE) == 0
 				// MEV_2023-35: aggiunto tipo ordinanza
+				// vale anche per 	U143 S30 SR Violazione obblighi lavoro pubblica utilita'
+				// e per 			U145 S30 SR Rateizzazione pena pecuniaria
 				|| lCodTipoDec.compareTo(CONVERSIONE_PENE_PECUNIARIE_MANCATO_PAGAMENTO) == 0) {
 			// Controllo selezione Oggetti x Conversione Pene Pecuniarie.
 			String lCodOggetto = getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_OGGETTO);
@@ -591,6 +591,11 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 					throw new SIUSException(SIUSException.USER_MESSAGE,
 							"Ordinanza di Conversione Pene Pecuniare impossibile senza Richiesta Conversione");
 				setRequestAttribute("richiesteconversioni", lVectRichConversioniPP);
+			} else if (!("U143".equals(lCodContenuto) || "U145".equals(lCodContenuto))) {
+				// MEV_2023-35: ricerca della rateizzazione per U142
+				// Provo a recuperare l'importo da pagare dal fascicolo SIEP collegato se esiste
+				RateizzazionePPModel rppm = ricercaMancatoPagamento();
+				setRequestAttribute("rataMancatoPagamento", rppm);
 			}
 
 			// Conversione Pene Pecuniarie
@@ -778,7 +783,6 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 			mRetPage = PG_LOAD_INSERISCI_ORDINANZA_REV_CONV_PPS;
 			// Provo a recuperare l'importo da pagare dal fascicolo SIEP collegato se esiste
 			RateizzazionePPModel lRataMancatoPagamento = ricercaMancatoPagamento();
-
 			setRequestAttribute("RataMancatoPagamento", lRataMancatoPagamento);
 			setRequestAttribute("Action", "siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaUDS");
 			siesLogger.debug("Ordinanza Revoca Conversione Pena Pecuniaria Sostitutiva " + lCodTipoDec);

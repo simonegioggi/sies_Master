@@ -24,7 +24,6 @@ public class RicercaStatoPagamentiModel extends GenericModel {
 	private Date mDataIscrizione;
 	private String mCognome;
 	private String mNome;
-
 	private String mTipoRateizzazione;
 	private BigDecimal mImportoDaPagare;
 	private BigDecimal mImportoPagato;

@@ -98,8 +98,8 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 				+ "S.NOME, S.COGNOME, DATA_NASCITA, R.COD_TIPO_ATTO, TRS.RV_MEANING DESCR_TIPO_ATTO, "
 				+ "U.COD_TIPO_UFFICIO DESCR_TIPO_UFFICIO, C.DESCRIZIONE DESCR_COMUNE_UFFICIO, "
 				+ "E.COGNOME||' '||E.NOME NOM_MAG, STATO_FASCICOLO.RV_MEANING DESCR_STATO_FASCICOLO, "
-				+ "NVL (SEZIONE.DESCRIZIONE,'-') DESCRIZIONE_SEZIONE, "
-				+ "F.ID_FASCICOLO_SIGE_ORIGINE, " + "SEN_ID_SENTENZA_CUMULO, ID_EVENTO_PROVV_CUMULO ";
+				+ "NVL (SEZIONE.DESCRIZIONE,'-') DESCRIZIONE_SEZIONE, " + "F.ID_FASCICOLO_SIGE_ORIGINE, "
+				+ "SEN_ID_SENTENZA_CUMULO, ID_EVENTO_PROVV_CUMULO ";
 		lStatement += " FROM FASCICOLO_SIGE F, SOGGETTO S, RICHIESTA_SIGE R, CG_REF_CODES TRS, UFFICIO U, "
 				+ "COMUNE C, MAGISTRATO_ASSEGNATARIO D, MAGISTRATO E, CG_REF_CODES STATO_FASCICOLO, SEZIONE";
 		// MEV_57: aggiunta vista ed alias "S."
@@ -213,7 +213,7 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 				+ " THEN COALESCE(TIPO_D.RV_MEANING, CASE When STATO_DEF.RV_low_value in"
 				+ " ('05', '06', '14', '15', '16', '17', '18', '19', '21') Then"
 				+ " STATO_DEF.RV_MEANING else '-' end) else '-' END MOTIVO_DEFINIZIONE,";
-				// FINE TICKET mac-otrs-202211110114
+		// FINE TICKET mac-otrs-202211110114
 
 		// @emma 13052019 INTEVENTO PER 11.2.1
 		// Ticket#20210928015 - LISTAGG duplicava la descrizione del TENORE_SIGE in caso di
@@ -753,8 +753,8 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 		// Ticket#202211110114 - Estrazione dati Sige
 		// cambio la query su indicazione di MT (STATO_DEF.RV_MEANING diventa:)
 		queryFascicoloSige += " CASE When STATO_DEF.RV_low_value in"
-		+ " ('05', '06', '14', '15', '16', '17', '18', '19', '21') Then"
-		+ " STATO_DEF.RV_MEANING else '-' end";
+				+ " ('05', '06', '14', '15', '16', '17', '18', '19', '21') Then"
+				+ " STATO_DEF.RV_MEANING else '-' end";
 		// FINE TICKET mac-otrs-202211110114
 		// Ticket#20210928015 - Aggiunto campo TSC.RV_MEANING nella group by per gestire la modifica alla
 		// select nel metodo getSqlQueryPerEstremiStatistica
@@ -1075,7 +1075,7 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 			String lCodDistretto, String majorOffice) {
 		String strQuery = "";
 
-		// Ticket#202311060117 - Ricerca  soggetti per procedimento Sige: ottimizzazione query
+		// Ticket#202311060117 - Ricerca soggetti per procedimento Sige: ottimizzazione query
 		strQuery += "select a.*, count(*) over() tot from (";
 
 		// Costruzione della query parametrizzata
@@ -1095,7 +1095,7 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 		strQuery += setGroupSoggetto();
 		strQuery += setOrderCognome();
 
-		// Ticket#202311060117 - Ricerca  soggetti per procedimento Sige: ottimizzazione query
+		// Ticket#202311060117 - Ricerca soggetti per procedimento Sige: ottimizzazione query
 		strQuery += ") a";
 
 		setStatement(strQuery);
@@ -1500,15 +1500,6 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 		lCondizioni += " AND F.SOG_ID_SOGGETTO = " + aIdSoggetto;
 
 		return lCondizioni;
-	}
-
-	private boolean findColumn(String aValue) {
-		try {
-			mRs.findColumn(aValue);
-		} catch (Exception sqex) {
-			return false;
-		}
-		return true;
 	}
 
 	private String setGroupByPerEstesa() {

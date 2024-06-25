@@ -5,9 +5,9 @@ import java.sql.Connection;
 import java.util.Date;
 
 import f3b.dao.DAOException;
-import f3b.dao.SqlDAO;
 import f3b.model.GenericModel;
 import f3b.util.DateUtils;
+import siap.dao.SIAPSqlDAO;
 import siap.siep.annotazionemanuale.model.AnnotazioneManualeModel;
 
 /**
@@ -15,7 +15,7 @@ import siap.siep.annotazionemanuale.model.AnnotazioneManualeModel;
  *
  * @version 1.0
  */
-public class AnnotazioneManualeSqlDAO extends SqlDAO {
+public class AnnotazioneManualeSqlDAO extends SIAPSqlDAO {
 
 	public AnnotazioneManualeSqlDAO(Connection con) {
 		super(con);
@@ -1063,13 +1063,13 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 		aModel.setFlagComputabile(getString("FLAG_COMPUTABILE"));
 		aModel.setFlagBeneficioDetratto(getString("FLG_BENEFICIO_DETRATTO"));
 
-		if (this.findColumn("SEN_ID_SENTENZA"))
+		if (findColumn("SEN_ID_SENTENZA"))
 			aModel.setSenIdSentenza(getBigDecimal("SEN_ID_SENTENZA"));
 
-		if (this.findColumn("TEN_ID_TENORE_SIGE"))
+		if (findColumn("TEN_ID_TENORE_SIGE"))
 			aModel.setTenIdTenoreSige(getBigDecimal("TEN_ID_TENORE_SIGE"));
 
-		if (this.findColumn("FLAG_SEL_QUANTUM"))
+		if (findColumn("FLAG_SEL_QUANTUM"))
 			aModel.setFlagSelQuantum(getString("FLAG_SEL_QUANTUM"));
 
 		// 07-2015 MEV29 punto 11 - Anno e Numro Procedimento SIGE
@@ -1077,9 +1077,9 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 		aModel.setChiaveNumeroSige(getBigDecimal("NUMERO_SIGE"));
 
 		// MEV_2023-33: aggiunta valorizzazione colonne se presenti
-		if (this.findColumn("DESCR_TIPO_UFFICIO"))
+		if (findColumn("DESCR_TIPO_UFFICIO"))
 			aModel.setDescrTipoUfficioSiep(getString("DESCR_TIPO_UFFICIO"));
-		if (this.findColumn("DESCR_COMUNE"))
+		if (findColumn("DESCR_COMUNE"))
 			aModel.setDescrLuogoUfficioSiep(getString("DESCR_COMUNE"));
 
 		return aModel;
@@ -1153,15 +1153,6 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 		lSql += " AND EVE_ID_EVENTO = " + aIdEvento;
 
 		setStatement(lSql);
-	}
-
-	private boolean findColumn(String aValue) {
-		try {
-			mRs.findColumn(aValue);
-		} catch (Exception sqex) {
-			return false;
-		}
-		return true;
 	}
 
 	/**

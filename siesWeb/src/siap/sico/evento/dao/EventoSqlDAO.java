@@ -3357,15 +3357,6 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 
 	}
 
-	private boolean findColumn(String aValue) {
-		try {
-			mRs.findColumn(aValue);
-		} catch (Exception sqex) {
-			return false;
-		}
-		return true;
-	}
-
 	/**
 	 * MEV 16: aggiunto metodo di estrazione info esistenza FC
 	 *

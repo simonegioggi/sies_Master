@@ -747,11 +747,8 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 			} // Ticket#20220415019 - FINE
 
 			/*
-			 * ISSUE MEV : aggiunto codice per gestione oggetto C029 
-			 * Numero MEV : 39 
-			 * Autore : Gioggi 
-			 * Data : 19/giu/2017 
-			 * Branch : MEV_39
+			 * ISSUE MEV : aggiunto codice per gestione oggetto C029 Numero MEV : 39 Autore : Gioggi Data :
+			 * 19/giu/2017 Branch : MEV_39
 			 */
 			if (codOggettoProcedimento.equalsIgnoreCase(OGG_ORD_APPELLO_CONTRO_PROVV_MS)) {
 				TenoreModel tenori[] = lOrdEveTenGP.getTenori();
@@ -1051,6 +1048,8 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 						getRequestStringParameter(CAMPO_INTERO_PENA_PECUNIARIA_CONVERTITA) + "."
 								+ getRequestStringParameter(CAMPO_DECIMALE_PENA_PECUNIARIA_CONVERTITA))));
 			}
+		} else if (getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO).equals("U142")) {
+			lDepOrdModel.setCodTipoOrdinanza("SR");
 		}
 		// FINE MEV_2023-35
 

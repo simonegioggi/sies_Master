@@ -7,26 +7,12 @@ import siap.sico.libertaanticipata.model.LicenzaPeriodiLibAnticipataModel;
 import f3b.model.GenericModel;
 
 /**
- * <p>
- * Title: DepositoOrdinanzaPcModel
- * </p>
- * <p>
- * Description: Classe Model che rappresenta il DepositoOrdinanzaPc
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * DepositoOrdinanzaPcModel - Classe Model che rappresenta il DepositoOrdinanzaPc
  * 
  * @version 1.0
  */
 public class DepositoOrdinanzaPcModel extends GenericModel {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5228289147247068924L;
 
 	private BigDecimal mIdDepositoOrdinanzaPc;
@@ -98,18 +84,19 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 	private BigDecimal mSospensioneGGSS;
 	private BigDecimal mSospensioneMMSS;
 	private BigDecimal mSospensioneAASS;
-
 	private String mFlagNominaComActa;
 	private String mDescrCommActa;
-
 	// 20140603 - P.M. ( SIUS - implemntazione per il D.L. 146 )
 	private String mCodTipoControlloEsecuzione;
 	private String mDescrTipoControlloEsecuzione;
 	// 10102014 - D.L. 92 2014 Violazione CEDU
 	private BigDecimal mSommaRisarcimento;
+	// MEV_2023-35: aggiunta variabile di classe per memorizzare il tipo di sanzione comminata
+	private String mCodTipoSanzione;
 
 	// COSTRUTTORE DI DEFAULT
 	public DepositoOrdinanzaPcModel() {
+
 		this.mIdDepositoOrdinanzaPc = null;
 		this.mAnnoS3 = null;
 		this.mNumS3 = null;
@@ -173,19 +160,19 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 		this.mSospensioneGGSS = null;
 		this.mSospensioneMMSS = null;
 		this.mSospensioneAASS = null;
-
 		this.mFlagNominaComActa = null;
 		this.mDescrCommActa = null;
-
 		// 20140603 - P.M. ( SIUS - implemntazione per il D.L. 146 )
 		this.mCodTipoControlloEsecuzione = null;
 		this.mDescrTipoControlloEsecuzione = null;
 		// 10102014 - D.L. 92 2014 Violazione CEDU
 		this.mSommaRisarcimento = null;
+		this.mCodTipoSanzione = "";
 	}
 
 	// COSTRUTTORE DI COPIA
 	public DepositoOrdinanzaPcModel(DepositoOrdinanzaPcModel aModel) {
+
 		this.mIdDepositoOrdinanzaPc = aModel.mIdDepositoOrdinanzaPc;
 		this.mAnnoS3 = aModel.mAnnoS3;
 		this.mNumS3 = aModel.mNumS3;
@@ -235,7 +222,6 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 		this.mAutoritaVigilante = aModel.mAutoritaVigilante;
 		this.mDataTrasmissione = aModel.mDataTrasmissione;
 		this.mDataCompFoglioComplementare = aModel.mDataCompFoglioComplementare;
-
 		// mLicenzaPeriodiLibAnticipata = aModel.mLicenzaPeriodiLibAnticipata;
 		this.mNumGiorniArrestoRev = aModel.mNumGiorniArrestoRev;
 		this.mNumMesiArrestoRev = aModel.mNumMesiArrestoRev;
@@ -250,16 +236,14 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 		this.mSospensioneGGSS = aModel.mSospensioneGGSS;
 		this.mSospensioneMMSS = aModel.mSospensioneMMSS;
 		this.mSospensioneAASS = aModel.mSospensioneAASS;
-
 		this.mFlagNominaComActa = aModel.mFlagNominaComActa;
 		this.mDescrCommActa = aModel.mDescrCommActa;
-
 		// 20140603 - P.M. ( SIUS - implemntazione per il D.L. 146 )
 		this.mCodTipoControlloEsecuzione = aModel.mCodTipoControlloEsecuzione;
 		this.mDescrTipoControlloEsecuzione = aModel.mDescrTipoControlloEsecuzione;
 		// 10102014 - D.L. 92 2014 Violazione CEDU
 		this.mSommaRisarcimento = aModel.mSommaRisarcimento;
-
+		this.mCodTipoSanzione = aModel.mCodTipoSanzione;
 	}
 
 	// COSTRUTTORE MODEL
@@ -289,7 +273,8 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 			Date aDataScadenzaSospensioneSS, BigDecimal aSospensioneGGSS, BigDecimal aSospensioneMMSS,
 			BigDecimal aSospensioneAASS, String aFlagNominaComActa, String aDescrCommActa,
 			String aCodTipoControlloEsecuzione, String aDescrTipoControlloEsecuzione,
-			BigDecimal aSommaRisarcimento) {
+			BigDecimal aSommaRisarcimento, String aCodTipoSanzione) {
+
 		this.mIdDepositoOrdinanzaPc = aIdDepositoOrdinanzaPc;
 		this.mAnnoS3 = aAnnoS3;
 		this.mNumS3 = aNumS3;
@@ -351,7 +336,6 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 		this.mSospensioneGGSS = aSospensioneGGSS;
 		this.mSospensioneMMSS = aSospensioneMMSS;
 		this.mSospensioneAASS = aSospensioneAASS;
-
 		this.mFlagNominaComActa = aFlagNominaComActa;
 		this.mDescrCommActa = aDescrCommActa;
 		// 20140603 - P.M. ( SIUS - implemntazione per il D.L. 146 )
@@ -359,6 +343,7 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 		this.mDescrTipoControlloEsecuzione = aDescrTipoControlloEsecuzione;
 		// 10102014 - D.L. 92 2014 Violazione CEDU
 		this.mSommaRisarcimento = aSommaRisarcimento;
+		this.mCodTipoSanzione = aCodTipoSanzione;
 	}
 
 	//
@@ -655,286 +640,294 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 			return new BigDecimal(0);
 	}
 
+	public String getCodTipoSanzione() {
+		return mCodTipoSanzione;
+	}
+
 	//
 	// METODI SET()
 	//
 	public void setIdDepositoOrdinanzaPc(BigDecimal aValore) {
-		mIdDepositoOrdinanzaPc = aValore;
+		this.mIdDepositoOrdinanzaPc = aValore;
 	}
 
 	public void setAnnoS3(BigDecimal aValore) {
-		mAnnoS3 = aValore;
+		this.mAnnoS3 = aValore;
 	}
 
 	public void setNumS3(BigDecimal aValore) {
-		mNumS3 = aValore;
+		this.mNumS3 = aValore;
 	}
 
 	public void setOggettoProcedimento(String aValore) {
-		mOggettoProcedimento = aValore;
+		this.mOggettoProcedimento = aValore;
 	}
 
 	public void setDataUdienza(Date aValore) {
-		mDataUdienza = aValore;
+		this.mDataUdienza = aValore;
 	}
 
 	public void setDataCameraConsiglio(Date aValore) {
-		mDataCameraConsiglio = aValore;
+		this.mDataCameraConsiglio = aValore;
 	}
 
 	public void setDataDeposito(Date aValore) {
-		mDataDeposito = aValore;
+		this.mDataDeposito = aValore;
 	}
 
 	public void setCodNaturaProvvedimento(String aValore) {
-		mCodNaturaProvvedimento = aValore;
+		this.mCodNaturaProvvedimento = aValore;
 	}
 
 	public void setDescrNaturaProvvedimento(String aValore) {
-		mDescrNaturaProvvedimento = aValore;
+		this.mDescrNaturaProvvedimento = aValore;
 	}
 
 	public void setIdCssaComp(BigDecimal aValore) {
-		mIdCssaComp = aValore;
+		this.mIdCssaComp = aValore;
 	}
 
 	public void setDescrComuneCssaComp(String aValore) {
-		mDescrComuneCssaComp = aValore;
+		this.mDescrComuneCssaComp = aValore;
 	}
 
 	public void setCodUssm(BigDecimal aValore) {
-		mCodUssm = aValore;
+		this.mCodUssm = aValore;
 	}
 
 	public void setDescrComuneUssmComp(String aValore) {
-		mDescrComuneUssmComp = aValore;
+		this.mDescrComuneUssmComp = aValore;
 	}
 
 	public void setCodUfficioMagistratoComp(String aValore) {
-		mCodUfficioMagistratoComp = aValore;
+		this.mCodUfficioMagistratoComp = aValore;
 	}
 
 	public void setDescrUfficioMagistratoComp(String aValore) {
-		mDescrUfficioMagistratoComp = aValore;
+		this.mDescrUfficioMagistratoComp = aValore;
 	}
 
 	public void setLuogoSvolgimentoProva(String aValore) {
-		mLuogoSvolgimentoProva = aValore;
+		this.mLuogoSvolgimentoProva = aValore;
 	}
 
 	public void setServizioTerapeuticoComp(String aValore) {
-		mServizioTerapeuticoComp = aValore;
+		this.mServizioTerapeuticoComp = aValore;
 	}
 
 	public void setNumGiorniDetenzioneDom(BigDecimal aValore) {
-		mNumGiorniDetenzioneDom = aValore;
+		this.mNumGiorniDetenzioneDom = aValore;
 	}
 
 	public void setNumMesiDetenzioneDom(BigDecimal aValore) {
-		mNumMesiDetenzioneDom = aValore;
+		this.mNumMesiDetenzioneDom = aValore;
 	}
 
 	public void setNumAnniDetenzioneDom(BigDecimal aValore) {
-		mNumAnniDetenzioneDom = aValore;
+		this.mNumAnniDetenzioneDom = aValore;
 	}
 
 	public void setNumGiorniPermessoAccordati(BigDecimal aValore) {
-		mNumGiorniPermessoAccordati = aValore;
+		this.mNumGiorniPermessoAccordati = aValore;
 	}
 
 	public void setNumGiorniRiduzionePena(BigDecimal aValore) {
-		mNumGiorniRiduzionePena = aValore;
+		this.mNumGiorniRiduzionePena = aValore;
 	}
 
 	public void setNumGiorniRiduzioneUsufruiti(BigDecimal aValore) {
-		mNumGiorniRiduzioneUsufruiti = aValore;
+		this.mNumGiorniRiduzioneUsufruiti = aValore;
 	}
 
 	public void setCodUffTdsConcessoRiduzione(String aValore) {
-		mCodUffTdsConcessoRiduzione = aValore;
+		this.mCodUffTdsConcessoRiduzione = aValore;
 	}
 
 	public void setDescrUffTdsConcessoRiduzione(String aValore) {
-		mDescrUffTdsConcessoRiduzione = aValore;
+		this.mDescrUffTdsConcessoRiduzione = aValore;
 	}
 
 	public void setCodOperatoreInserimento(String aValore) {
-		mCodOperatoreInserimento = aValore;
+		this.mCodOperatoreInserimento = aValore;
 	}
 
 	public void setDataInserimento(Date aValore) {
-		mDataInserimento = aValore;
+		this.mDataInserimento = aValore;
 	}
 
 	public void setCodUfficioInserimento(String aValore) {
-		mCodUfficioInserimento = aValore;
+		this.mCodUfficioInserimento = aValore;
 	}
 
 	public void setDescrUfficioInserimento(String aValore) {
-		mDescrUfficioInserimento = aValore;
+		this.mDescrUfficioInserimento = aValore;
 	}
 
 	public void setCodOperatoreAggiornamento(String aValore) {
-		mCodOperatoreAggiornamento = aValore;
+		this.mCodOperatoreAggiornamento = aValore;
 	}
 
 	public void setCodUfficioAggiornamento(String aValore) {
-		mCodUfficioAggiornamento = aValore;
+		this.mCodUfficioAggiornamento = aValore;
 	}
 
 	public void setDescrUfficioAggiornamento(String aValore) {
-		mDescrUfficioAggiornamento = aValore;
+		this.mDescrUfficioAggiornamento = aValore;
 	}
 
 	public void setDataAggiornamento(Date aValore) {
-		mDataAggiornamento = aValore;
+		this.mDataAggiornamento = aValore;
 	}
 
 	public void setGenPridGeneraleProcedimento(BigDecimal aValore) {
-		mGenPridGeneraleProcedimento = aValore;
+		this.mGenPridGeneraleProcedimento = aValore;
 	}
 
 	public void setAnnoDataCameraConsiglio(String aValore) {
-		mAnnoDataCameraConsiglio = aValore;
+		this.mAnnoDataCameraConsiglio = aValore;
 	}
 
 	public void setMeseDataCameraConsiglio(String aValore) {
-		mMeseDataCameraConsiglio = aValore;
+		this.mMeseDataCameraConsiglio = aValore;
 	}
 
 	public void setGiornoDataCameraConsiglio(String aValore) {
-		mGiornoDataCameraConsiglio = aValore;
+		this.mGiornoDataCameraConsiglio = aValore;
 	}
 
 	public void setCodMagistrato(String aValore) {
-		mCodMagistrato = aValore;
+		this.mCodMagistrato = aValore;
 	}
 
 	public void setIdEventoGenerato(BigDecimal aValore) {
-		mIdEventoGenerato = aValore;
+		this.mIdEventoGenerato = aValore;
 	}
 
 	public void setNumGiorniLibanticipata(BigDecimal aValore) {
-		mNumGiorniLibanticipata = aValore;
+		this.mNumGiorniLibanticipata = aValore;
 	}
 
 	public void setFlagElaborato(String aValore) {
-		mFlagElaborato = aValore;
+		this.mFlagElaborato = aValore;
 	}
 
 	public void setCodTipoOrdinanza(String aValore) {
-		mCodTipoOrdinanza = aValore;
+		this.mCodTipoOrdinanza = aValore;
 	}
 
 	public void setDescrTipoOrdinanza(String aValore) {
-		mDescrTipoOrdinanza = aValore;
+		this.mDescrTipoOrdinanza = aValore;
 	}
 
 	public void setDataFineMisura(Date aValore) {
-		mDataFineMisura = aValore;
+		this.mDataFineMisura = aValore;
 	}
 
 	public void setDataDecorrenza(Date aValore) {
-		mDataDecorrenza = aValore;
+		this.mDataDecorrenza = aValore;
 	}
 
 	public void setDataInizioPeriodo(Date aValore) {
-		mDataInizioPeriodo = aValore;
+		this.mDataInizioPeriodo = aValore;
 	}
 
 	public void setFlagEsistenzaReatoostativo(String aValore) {
-		mFlagEsistenzaReatoostativo = aValore;
+		this.mFlagEsistenzaReatoostativo = aValore;
 	}
 
 	public void setFlagEspiazioneReatoostativo(String aValore) {
-		mFlagEspiazioneReatoostativo = aValore;
+		this.mFlagEspiazioneReatoostativo = aValore;
 	}
 
 	public void setAutoritaVigilante(String aValore) {
-		mAutoritaVigilante = aValore;
+		this.mAutoritaVigilante = aValore;
 	}
 
 	public void setDataTrasmissione(Date aValore) {
-		mDataTrasmissione = aValore;
+		this.mDataTrasmissione = aValore;
 	}
 
 	public void setDataCompFoglioComplementare(Date aValore) {
-		mDataCompFoglioComplementare = aValore;
+		this.mDataCompFoglioComplementare = aValore;
 	}
 
 	public void setLicenzaPeriodiLibAnticipata(LicenzaPeriodiLibAnticipataModel aValore) {
-		mLicenzaPeriodiLibAnticipata = aValore;
+		this.mLicenzaPeriodiLibAnticipata = aValore;
 	}
 
 	public void setNumSemestri(String aValore) {
-		mNumSemestri = aValore;
+		this.mNumSemestri = aValore;
 	}
 
 	public void setNumGiorniArrestoRev(BigDecimal aValore) {
-		mNumGiorniArrestoRev = aValore;
+		this.mNumGiorniArrestoRev = aValore;
 	}
 
 	public void setNumMesiArrestoRev(BigDecimal aValore) {
-		mNumMesiArrestoRev = aValore;
+		this.mNumMesiArrestoRev = aValore;
 	}
 
 	public void setNumAnniArrestoRev(BigDecimal aValore) {
-		mNumAnniArrestoRev = aValore;
+		this.mNumAnniArrestoRev = aValore;
 	}
 
 	public void setUlterioreDescrizione(String aValore) {
-		mUlterioreDescrizione = aValore;
+		this.mUlterioreDescrizione = aValore;
 	}
 
 	// Nuovi campi per Sospensione Sanzioni Sostitutive
 	public void setDataSospensioneSS(Date aValore) {
-		mDataSospensioneSS = aValore;
+		this.mDataSospensioneSS = aValore;
 	}
 
 	public void setGiorniRecuperoSS(BigDecimal aValore) {
-		mGiorniRecuperoSS = aValore;
+		this.mGiorniRecuperoSS = aValore;
 	}
 
 	public void setFlagRecuperoSS(String aValore) {
-		mFlagRecuperoSS = aValore;
+		this.mFlagRecuperoSS = aValore;
 	}
 
 	public void setDataScadenzaSospensioneSS(Date aValore) {
-		mDataScadenzaSospensioneSS = aValore;
+		this.mDataScadenzaSospensioneSS = aValore;
 	}
 
 	public void setSospensioneGGSS(BigDecimal aValore) {
-		mSospensioneGGSS = aValore;
+		this.mSospensioneGGSS = aValore;
 	}
 
 	public void setSospensioneMMSS(BigDecimal aValore) {
-		mSospensioneMMSS = aValore;
+		this.mSospensioneMMSS = aValore;
 	}
 
 	public void setSospensioneAASS(BigDecimal aValore) {
-		mSospensioneAASS = aValore;
+		this.mSospensioneAASS = aValore;
 	}
 
 	public void setFlagNominaComActa(String aValore) {
-		mFlagNominaComActa = aValore;
+		this.mFlagNominaComActa = aValore;
 	}
 
 	public void setDescrCommActa(String aValore) {
-		mDescrCommActa = aValore;
+		this.mDescrCommActa = aValore;
 	}
 
 	// 20140603 - P.M. ( SIUS - implemntazione per il D.L. 146 )
 	public void setCodTipoControlloEsecuzione(String aValore) {
-		mCodTipoControlloEsecuzione = aValore;
+		this.mCodTipoControlloEsecuzione = aValore;
 	}
 
 	public void setDescrTipoControlloEsecuzione(String aValore) {
-		mDescrTipoControlloEsecuzione = aValore;
+		this.mDescrTipoControlloEsecuzione = aValore;
 	}
 
 	// 10102014 - D.L. 92 2014 Violazione CEDU
 	public void setSommaRisarcimento(BigDecimal aValore) {
-		mSommaRisarcimento = aValore;
+		this.mSommaRisarcimento = aValore;
+	}
+
+	public void setCodTipoSanzione(String aValore) {
+		this.mCodTipoSanzione = aValore;
 	}
 
 	// Metodo toString()
@@ -968,7 +961,7 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 				// 20140603 - P.M. ( SIUS - implemntazione per il D.L. 146 )
 				mCodTipoControlloEsecuzione + " - " + mDescrTipoControlloEsecuzione + " - " +
 				// 10102014 - D.L. 92 2014 Violazione CEDU
-				mSommaRisarcimento;
+				mSommaRisarcimento + " - " + mCodTipoSanzione;
 
 		return lStr;
 	}

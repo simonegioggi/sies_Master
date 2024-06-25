@@ -2,13 +2,21 @@ package siap.sius.depositoordinanzapc.action;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Vector;
 
+import org.apache.log4j.Logger;
+
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
 import f3b.util.F3BException;
 import siap.siep.penapecuniaria.action.ICostantiPenaPecuniaria;
+import siap.siep.rateizzazionepp.action.ICostantiRateizzazionePP;
+import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 import siap.sius.SIUSException;
 import siap.sius.depositodecreto.action.ICostantiDepositoDecreto;
 import siap.sius.depositoordinanzapc.controller.IDepositoOrdinanzaPc;
 import siap.sius.depositoordinanzapc.model.OrdinanzaEventoTenoriGProcModel;
+import siap.sius.fascicolo.action.ICostantiFascicoloSius;
 import siap.sius.penapecuniaria.action.ICostantiSiusPenaPecuniaria;
 import siap.sius.penapecuniaria.model.RichiesteConversioniPerOrdinanzaModel;
 import siap.sius.tenore.action.ICostantiTenore;
@@ -22,6 +30,9 @@ import siap.sius.util.SIUSLookupRemote;
  */
 public class ActInserisciOrdinanzaConversioneRateizzazionePP extends ActInserisciOrdinanzaUDS
 		implements ICostantiDepositoDecreto {
+
+	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	public String processRequest() throws Exception {
 
@@ -133,12 +144,68 @@ public class ActInserisciOrdinanzaConversioneRateizzazionePP extends ActInserisc
 			}
 		}
 
-		OrdinanzaEventoTenoriGProcModel lModRet = null;
+		// MEV_2023-35: aggiunta gestione nuovo contenuto
+		Vector<RateizzazionePPModel> aListaRate = new Vector<>();
+		if (getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO).equals("U142")) {
+			if (!isRequestParameterNullObj(ICostantiRateizzazionePP.CAMPO_VALORE_IMPORTO_I)
+					&& ((getRequestStringParameter(ICostantiRateizzazionePP.CAMPO_VALORE_IMPORTO_I) != null
+							&& !(getRequestStringParameter(ICostantiRateizzazionePP.CAMPO_VALORE_IMPORTO_I))
+									.equals(""))
+							|| (getRequestStringParameter(
+									ICostantiRateizzazionePP.CAMPO_VALORE_IMPORTO_D) != null
+									&& !(getRequestStringParameter(
+											ICostantiRateizzazionePP.CAMPO_VALORE_IMPORTO_D)).equals("")))) {
+				BigDecimal lImportoDaPagare = new BigDecimal(
+						getRequestStringParameter(ICostantiRateizzazionePP.CAMPO_VALORE_IMPORTO_I) + "."
+								+ getRequestStringParameter(ICostantiRateizzazionePP.CAMPO_VALORE_IMPORTO_D));
+				siesLogger.debug("Rateizzazione SIUS su più rate");
+				int maxNumRate = ICostantiRateizzazionePP.NUM_MAX_RATE;
+				for (int i = 0; i < maxNumRate; i++) {
+					if (!isRequestParameterNullObj(ICostantiRateizzazionePP.CAMPO_NUM_RATE + "_" + i)) {
+						siesLogger.debug("la riga (" + i + ") è abilitata, recupero i dati...");
+						RateizzazionePPModel rateizzazioneModel = new RateizzazionePPModel();
+						rateizzazioneModel
+								.setTipoRateizzazione(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_RATEALE);
+						rateizzazioneModel.setNumeroRate(getRequestBigDecimalParameter(
+								ICostantiRateizzazionePP.CAMPO_NUM_RATE + "_" + i));
+						rateizzazioneModel.setProgressivoRata(new BigDecimal(i + 1));
+						BigDecimal lImportoRata = null;
+						if ((getRequestStringParameter(
+								ICostantiRateizzazionePP.CAMPO_VALORE_RATA_I + "_" + i) != null
+								&& !getRequestStringParameter(
+										ICostantiRateizzazionePP.CAMPO_VALORE_RATA_I + "_" + i).equals(""))
+								|| (getRequestStringParameter(
+										ICostantiRateizzazionePP.CAMPO_VALORE_RATA_D + "_" + i) != null
+										&& !getRequestStringParameter(
+												ICostantiRateizzazionePP.CAMPO_VALORE_RATA_D + "_" + i)
+														.equals(""))) {
+							lImportoRata = new BigDecimal(getRequestStringParameter(
+									ICostantiRateizzazionePP.CAMPO_VALORE_RATA_I + "_" + i) + "."
+									+ getRequestStringParameter(
+											ICostantiRateizzazionePP.CAMPO_VALORE_RATA_D + "_" + i));
+						}
+						rateizzazioneModel.setImportoDaPagare(lImportoDaPagare);
+						rateizzazioneModel.setImportoRata(lImportoRata);
+						rateizzazioneModel.setFasSieIdFascicoloSiep(
+								mFasGPMod.getFascicoloSiusModel().getFasSieIdFascicoloSiep());
+						rateizzazioneModel.setFasSiuIdFascicoloSius(
+								mFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
+						rateizzazioneModel.setCodOperatoreInserimento(getCodUtenteConnesso());
+						rateizzazioneModel.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
+						rateizzazioneModel.setDataInserimento(DateUtils.getSysDate());
+						siesLogger.debug("rateizzazioneModel = " + rateizzazioneModel);
+						aListaRate.add(rateizzazioneModel);
+					}
+				}
+			}
+		}
 
+		OrdinanzaEventoTenoriGProcModel lModRet = null;
 		// inserimento
 		IDepositoOrdinanzaPc IDepOrdCtrl = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
-		lModRet = IDepOrdCtrl.ExInserisciOrdinanzaConversioneRateizzazionePP(aOrdEveTenGP, aRicConModel);
-
+		// MEV_2023-35: aggiunto parametro di passaggio
+		lModRet = IDepOrdCtrl.ExInserisciOrdinanzaConversioneRateizzazionePP(aOrdEveTenGP, aRicConModel,
+				aListaRate);
 		if (lModRet == null)
 			throw new SIUSException(SIUSException.USER_MESSAGE, "NESSUN INSERIMENTO EFFETTUATO.");
 		return lModRet;

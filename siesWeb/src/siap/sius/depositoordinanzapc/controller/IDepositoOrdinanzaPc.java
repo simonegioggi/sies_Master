@@ -12,6 +12,7 @@ import siap.sico.libertaanticipata.model.LicenzaLibAnticipataModel;
 import siap.sico.libertaanticipata.model.LicenzaPeriodiLibAnticipataModel;
 import siap.sico.utente.model.UtenteModel;
 import siap.siep.penapecuniaria.model.RichiestaConversioneModel;
+import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 import siap.sius.depositodecreto.model.DepositoDecretoModel;
 import siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel;
 import siap.sius.depositoordinanzapc.model.OrdinanzaEventoTenoriFascicoloSiusModel;
@@ -176,9 +177,11 @@ public interface IDepositoOrdinanzaPc {
 			PeriodoAltraMisuraModel aPeriodoAltraMisuraModel,
 			EsecuzioneMisuraSicurezzaModel aEsecuzioneMisuraSicurezzaModel) throws F3BException;
 
+	// MEV_2023-35: aggiunto parametro di passaggio
 	public OrdinanzaEventoTenoriGProcModel ExInserisciOrdinanzaConversioneRateizzazionePP(
 			OrdinanzaEventoTenoriGProcModel aGProcOrdEveTenori,
-			RichiesteConversioniPerOrdinanzaModel aRicConvMod) throws F3BException;
+			RichiesteConversioniPerOrdinanzaModel aRicConvMod,
+			Vector<RateizzazionePPModel> aListaRate) throws F3BException;
 
 	// Definizione del metodo afferente alla modifica del Magistrato all'ordinanza.
 	public DepositoOrdinanzaPcModel ExModificaMagistratoOrdinanza(DepositoOrdinanzaPcModel aDepOrdPcMod)
