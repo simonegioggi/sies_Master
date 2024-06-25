@@ -42,7 +42,7 @@ public class EsecuzioneSanzioneSostitutivaSqlDAO extends SIAPSqlDAO {
 		lSql += " " + setCondizione(aModel);
 		setStatement(lSql);
 	}
-
+	
 	public void ricercaEsecuzioneSanzioneSostitutivaByKey(BigDecimal aKey) throws DAOException {
 		String lSql = getSqlQuery();
 		lSql += " " + setCondizioniByKey(aKey);
@@ -910,4 +910,14 @@ public class EsecuzioneSanzioneSostitutivaSqlDAO extends SIAPSqlDAO {
 		return lStatement;
 	}
 
+	// MEV_2023-35 - si aggiunge la ricerca per idDeposito
+	public void ricercaEsecuzioneSanzioneSostitutivaByIdDepositoOrd (BigDecimal aIdDepositoOrd)
+           throws DAOException {
+       String lSql = getSqlQuery();
+       lSql += " AND DEP_OPID_DEPOSITO_ORDINANZA_PC = " + aIdDepositoOrd +" ";
+       setStatement(lSql);
+   }
+
+   
+   
 }

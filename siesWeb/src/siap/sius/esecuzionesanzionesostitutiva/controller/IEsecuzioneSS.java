@@ -78,4 +78,8 @@ public interface IEsecuzioneSS {
 	public Vector[] ExRicercaDettaglioESSeCorrelati(BigDecimal aKey, BigDecimal aIdSoggetto,
 			String lUfficioUtenteConnesso, String lCodContenuto) throws F3BException;
 
+	// MEV_2023-35 si aggiunge la ricerca er deposito ordinanza
+	public EsecuzioneSanzioneSostitutivaModel ExRicercaEsecuzioneSanzioneSostitutivaByIdDepositoOrd(
+           BigDecimal aIdDepositoOrdinanza) throws F3BException;
+	
 }

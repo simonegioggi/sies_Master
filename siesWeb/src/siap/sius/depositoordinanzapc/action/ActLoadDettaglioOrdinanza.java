@@ -26,6 +26,8 @@ import siap.sius.depositodecreto.action.ICostantiDepositoDecreto;
 import siap.sius.depositoordinanzapc.model.OrdinanzaEventoTenoriPrescrizioniModel;
 import siap.sius.esecuzionemisurasicurezza.controller.IEsecuzioneMS;
 import siap.sius.esecuzionemisurasicurezza.model.EsecuzioneMisuraSicurezzaModel;
+import siap.sius.esecuzionesanzionesostitutiva.controller.IEsecuzioneSS;
+import siap.sius.esecuzionesanzionesostitutiva.model.EsecuzioneSanzioneSostitutivaModel;
 import siap.sius.fascicolo.controller.IFascicoloSius;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.sanzionesostitutiva.controller.IPeriodoAltraSanzione;
@@ -239,10 +241,19 @@ public class ActLoadDettaglioOrdinanza extends ActDettaglioEmissioneOrdinanza
   
               }
             }
+            else if (mOrdEveTenPreMod.getOrdinanza().getCodTipoOrdinanza()
+                .compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_PENA_SOSTITUTIVA) == 0) {
+              // Ricerco eventuale record ESCEUZIONE_SANS_SOST collegato al deporito ordinanza
+              EsecuzioneSanzioneSostitutivaModel lEsecSanSostModel = null;
+
+              BigDecimal idDepositoOrd = mOrdEveTenPreMod.getOrdinanza().getIdDepositoOrdinanzaPc();
+              
+              IEsecuzioneSS lCtrlESS = SIUSLookupRemote.getEsecuzioneSSRemote();
+              lEsecSanSostModel= lCtrlESS.ExRicercaEsecuzioneSanzioneSostitutivaByIdDepositoOrd (idDepositoOrd);
+
+              setRequestAttribute("esecSansSostModel", lEsecSanSostModel);
+            }			
 			// MEV_2023-35 - FINE
-			
-			
-			
 		}
 
 		// 01/2014 - Decreto legge 146/2013 - Misura alternativa Ammissione in prova

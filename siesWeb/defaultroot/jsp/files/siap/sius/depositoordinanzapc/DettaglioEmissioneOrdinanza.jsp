@@ -1017,6 +1017,11 @@ if (!modificaOrdinanza) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_APPLICAZIONE_SP %>"/>
 <% // MEV_2023-35 - FINE
+// MEV_2023-35 
+      } else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_PENA_SOSTITUTIVA) == 0) {
+%>
+<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_REVOCA_PENA_SOSTITUTIVA %>"/>
+<% // MEV_2023-35 - FINE
    		} else if (codice.compareTo(ICostantiDepositoDecreto.RICOVERO_OPG_OSS_PSICHE) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_RICOVERO_OPG_OSS_PSICHE%>"/>

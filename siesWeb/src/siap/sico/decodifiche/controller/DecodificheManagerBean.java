@@ -425,6 +425,9 @@ public class DecodificheManagerBean {
     private Collection mTipoPenaSostitutiva;
     // MEV_2023-33: aggiunta collezione per le autorita' di polizia (HighValue='AP')
     private Collection mTipoAutoritaPolizia;
+    
+    // MEV_2023-35 Lista Oggetti Esecuzione Pene Sostitutive  U126
+    private Collection mMotivoEsecuzionePeneSostitutive;
 
 	/**
 	 * Inizializzazione degli attributi del Singleton
@@ -1307,6 +1310,14 @@ public class DecodificheManagerBean {
 			lDecModSollMS.setCode("5201");
 			mMotivoSollecitoMisureSicurezza = lDecodifiche.ExRicercaDecodifiche(lDecModSollMS);
 
+			
+			// MEV_2023-35 Lista Oggetti Esecuzione Pene Sostitutive  U126
+            DecodificheModel lDecModEPS = new DecodificheModel();
+            lDecModSollMS.setContesto("MOTIVO_PROVVEDIMENTO");
+            lDecModEPS.setCodiceAlternativo("U126");
+            mMotivoEsecuzionePeneSostitutive = lDecodifiche.ExRicercaDecodifiche(lDecModEPS);
+            // MEV_2023-35 - FINE
+			
 			lModel.setContesto("MOTIVO_PROVVEDIMENTO");
 			lModel.setCodiceAlternativo("MIS-ALT");
 			DecodificheModel lDecModMot = new DecodificheModel();
@@ -3133,5 +3144,9 @@ public class DecodificheManagerBean {
     public Collection getTipoAutoritaPolizia() {
         return mTipoAutoritaPolizia;
     }
-
+    
+    // MEV_2023-35 Lista Oggetti Esecuzione Pene Sostitutive  U126
+    public Collection getMotivoEsecuzionePeneSostitutive() {
+        return mMotivoEsecuzionePeneSostitutive;
+    }
 }

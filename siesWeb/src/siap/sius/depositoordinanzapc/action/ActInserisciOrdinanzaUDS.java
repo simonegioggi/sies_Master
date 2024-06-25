@@ -672,6 +672,11 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 					&& getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO).equals("C002")) {
 				// non faccio nulla
 				siesLogger.debug("Revoca MA non gestisco l'inserimento MS ");
+			// MEV_2023-35 aggiungo anche la revoca PS che scrivono sul campo deposito.data_decorrenza
+	        } else if (!isRequestParameterNullObj(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
+		                      && getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO).equals("U131")) {
+		        // non faccio nulla
+		        siesLogger.debug("Revoca Pene sostitutive non gestisco l'inserimento MS ");
 			} else {
 				Date dataDecorrenzaMS = null;
 				if (!isRequestParameterNullObj(ICostantiSiusMisuraSicurezza.CAMPO_ANNO_DATA_DECORRENZA))
