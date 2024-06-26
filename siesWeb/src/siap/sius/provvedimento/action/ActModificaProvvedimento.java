@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
@@ -29,6 +30,8 @@ import siap.sico.util.SICOLookupRemote;
 import siap.siep.misurasicurezza.action.ICostantiMisuraSicurezza;
 import siap.siep.misurasicurezza.controller.IMisuraSicurezza;
 import siap.siep.misurasicurezza.model.MisuraSicurezzaModel;
+import siap.siep.rateizzazionepp.controller.IRateizzazionePP;
+import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 import siap.siep.util.SIEPLookupRemote;
 import siap.sius.ActionSius;
 import siap.sius.SIUSException;
@@ -84,10 +87,10 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 
 	private PeriodoClass[] mPeriodi_int = null;
 	private int mInd_int = 0;
-	private String mTipoConcessione_int; /*
-											 * modalità di scelta dei periodi concessi. (S/C) L.A.
-											 * INTEGRAZIONE
-											 */
+	/*
+	 * modalità di scelta dei periodi concessi. (S/C) L.A. INTEGRAZIONE
+	 */
+	private String mTipoConcessione_int;
 
 	public String processRequest() throws Exception {
 
@@ -146,11 +149,9 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 		MisuraSicurezzaModel lMisuraSicurezza = null;
 
 		// ===== EVENTO E TENORE/I =====
-
 		lEvento = generaEvento();
 		lTenori = generaTenori();
 
-		// TODO carmela verificare ************
 		// Modifica del 20/09/2013 mev "Revisione Misure di Sicurezza"
 		// Aggiorna Data Decorrenza della Misura di Sicurezza
 		// legata al Fascicolo SIUS
@@ -178,7 +179,6 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 				MisuraSicurezzaModel lMisSicuSius = itxMis.next();
 				lMisuraSicurezza = generaMisuraSicurezza(lMisSicuSius);
 				// Effettuo la Modifica della Misura di Sicurezza
-
 				if (!isRequestParameterNullObj(ICostantiSiusMisuraSicurezza.CAMPO_ID_MISURA_SICUREZZA)) {
 					BigDecimal pIdMisuraSicurezza = getRequestBigDecimalParameter(
 							ICostantiSiusMisuraSicurezza.CAMPO_ID_MISURA_SICUREZZA);
@@ -222,7 +222,6 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 
 		// 10102014 - DL 92 2014 - In caso di Ordinanza col LICLIBANTICIPATA, l'aggiornamento viene
 		// fatto dopo la preparazione dei periodi di LICLIBANTICIPATA
-
 		String CodOrdinanza = "";
 		if (!isRequestParameterNullObj(ICostantiDepositoOrdinanzaPc.CAMPO_COD_TIPO_ORDINANZA)
 				&& getRequestStringParameter(ICostantiDepositoOrdinanzaPc.CAMPO_COD_TIPO_ORDINANZA) != null) {
@@ -230,12 +229,67 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 		}
 
 		IDepositoOrdinanzaPc lCtrl = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
-		if (CodOrdinanza.compareTo("VC") != 0
+		if (CodOrdinanza.compareTo(ICostantiDepositoOrdinanzaPc.VIOLAZIONE_CEDU) != 0
 				|| CodOrdinanza.compareTo(ICostantiDepositoOrdinanzaPc.RECLAMI_CEDU) == 0) {
 			// Aggiornamento dei dati
 			// lCtrl.ExAggiornaTenoriEvento(lTenori, lEvento, lIdOrdinanza, lIdDecreto);
 			lCtrl.ExAggiornaTenoriEventoDOS(lTenori, lEvento, lIdOrdinanza, lIdDecreto, lIdSentenza);
 		}
+
+		// MEV_2023-35: aggiungo gestione rateizzazione
+		if (CodOrdinanza
+				.compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_PENE_PECUNIARIE_MANCATO_PAGAMENTO) == 0) {
+			if (mFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U142")
+					|| mFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U145")) {
+				// gestione rate anche in modifica???
+				boolean isRateizzaPagamento = false;
+				for (int i = 0; i < lTenori.length; i++) {
+					TenoreModel tm = lTenori[i];
+					if ("0159".equals(tm.getCodEsitoTenore())) {
+						isRateizzaPagamento = true;
+						break;
+					}
+				}
+				if (!isRateizzaPagamento) {
+					IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
+					Vector<RateizzazionePPModel> rate = irpp.exRicercaRateizzazioniByIdFascicoloSius(
+							mFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
+					if (!rate.isEmpty())
+						irpp.exModificaRateizzazioniByIdFascicoloSius(rate,
+								mFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
+				}
+			}
+			if (mFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U142")
+					|| mFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U143")) {
+				boolean isConversione = false;
+				for (int i = 0; i < lTenori.length; i++) {
+					TenoreModel tm = lTenori[i];
+					if ("0276".equals(tm.getCodEsitoTenore()) || "0277".equals(tm.getCodEsitoTenore())
+							|| "0278".equals(tm.getCodEsitoTenore())
+							|| "0279".equals(tm.getCodEsitoTenore())
+							|| "0281".equals(tm.getCodEsitoTenore())) {
+						isConversione = true;
+						break;
+					}
+				}
+				if (!isConversione) {
+					DepositoOrdinanzaPcModel dopm = lCtrl.ExRicercaDepositoOrdinanzaPcByGenProc(
+							mFasGPMod.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
+					if (Utils.isPresent(dopm.getCodTipoSanzione())) {
+						dopm.setSommaRisarcimento(null);
+						dopm.setNumGiorniDetenzioneDom(null);
+						dopm.setNumMesiDetenzioneDom(null);
+						dopm.setNumAnniDetenzioneDom(null);
+						dopm.setCodOperatoreAggiornamento(getCodUtenteConnesso());
+						dopm.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
+						dopm.setDataAggiornamento(DateUtils.getSysDate());
+						dopm.setCodTipoSanzione(null);
+						lCtrl.ExModificaDepositoOrdinanzaPc(dopm);
+					}
+				}
+			}
+		}
+		// FINE MEV_2023-35
 
 		if (lIdOrdinanza != null) { // ORDINANZE
 			DepositoOrdinanzaPcModel lOrdinanza = lCtrl.ExRicercaDepositoOrdinanzaPcByKey(lIdOrdinanza);
@@ -641,8 +695,11 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 				// = L.A. ))
 
 			/*
-			 * ISSUE MEV : aggiunta nuova gestione campi rinvio Numero MEV : 39 Autore : Gioggi Data :
-			 * 09/giu/2017 Branch : MEV_39
+			 * ISSUE MEV : aggiunta nuova gestione campi rinvio 
+			 * Numero MEV : 39 
+			 * Autore : Gioggi 
+			 * Data : 09/giu/2017 
+			 * Branch : MEV_39
 			 */
 			String codTipoOrdinanza = "";
 			if (lOrdinanza != null)
@@ -721,8 +778,11 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 			// ***** FINE INTERVENTO MEV_39 *****//
 
 			/*
-			 * ISSUE MEV : aggiunto codice per gestione oggetto C029 Numero MEV : 39 Autore : Gioggi Data :
-			 * 19/giu/2017 Branch : MEV_39
+			 * ISSUE MEV : aggiunto codice per gestione oggetto C029 
+			 * Numero MEV : 39 
+			 * Autore : Gioggi 
+			 * Data : 19/giu/2017 
+			 * Branch : MEV_39
 			 */
 			if (codTipoOrdinanza.equalsIgnoreCase(ICostantiDepositoOrdinanzaPc.APPELLO_MS)) {
 				IMisuraSicurezza ims = SIEPLookupRemote.getMisuraSicurezzaRemote();
@@ -794,7 +854,7 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 			}
 			// ***** FINE INTERVENTO MEV_39 *****//
 
-			// MEV63: aggiunto codice per gestire modifica MA --> TODO
+			// MEV_63: aggiunto codice per gestire modifica MA
 			// String codOggettoProcedimento = mFasGPMod.getGeneraleProcedimentoModel()
 			// .getCodOggettoProcedimento();
 			// if ((codOggettoProcedimento.equalsIgnoreCase(COD_OGGETTO_PROC_CONCESSIONE_MISURE_ALTERNATIVA)
@@ -889,8 +949,11 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 				lLicenze = AggiornaLicenzePeriodiCEDU(mFasGPMod, GiorniRiduzione, SommaRisarcimento);
 			} // Chiude DECRETO VIOLAZIONE CEDU
 			/*
-			 * ISSUE MEV : aggiunta nuova gestione campi rinvio Numero MEV : 39 Autore : Gioggi Data :
-			 * 09/giu/2017 Branch : MEV_39
+			 * ISSUE MEV : aggiunta nuova gestione campi rinvio 
+			 * Numero MEV : 39 
+			 * Autore : Gioggi 
+			 * Data : 09/giu/2017 
+			 * Branch : MEV_39
 			 */
 			else if (codTipoDecreto.compareTo("42") == 0) {
 				// Data Decorrenza Sospensione
@@ -1090,11 +1153,10 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 
 				lTenModel.setIdTenore(new BigDecimal(lIdTenori[i]));
 				lTenModel.setCodEsitoTenore(lDecCtrl.ExRicercaCodEsitiProvByCodTenore(lCodEsiti[i]));
-				lTenModel.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso()); // Codice dell'ufficio
-																						// dell'operatore che
-																						// aggiorna
-				lTenModel.setCodOperatoreAggiornamento(getCodUtenteConnesso()); // Codice dell'operatore che
-																				// aggiorna
+				// Codice dell'ufficio dell'operatore che aggiorna
+				lTenModel.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
+				// Codice dell'operatore che aggiorna
+				lTenModel.setCodOperatoreAggiornamento(getCodUtenteConnesso());
 				lTenModel.setDataAggiornamento(mOggi);
 				// Data del tenore è uguale alla data di emissione
 				lTenModel.setData(mDataEmissione);
@@ -1109,7 +1171,6 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
 				siesLogger.debug("------> C - Tenore Generato N." + i + " = " + lTenori[i]);
-
 			}
 		}
 		return lTenori;
@@ -1715,7 +1776,7 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 		return lPeriodoLib;
 
 	} // chiude generaPeriodoLibAnticipa(..)
-	// - - - End
+		// - - - End
 
 	// >>>>>>>> L.A SPECIALE Preparazione di tutti i periodi di date valorizzati nella form di input.
 	private PeriodoClass[] leggiDate_spe() throws F3BException {

@@ -74,16 +74,19 @@ function Verify() {
 	}
 <%
 // MEV_2023-35: aggiunto controllo preventivo
-if ("U142".equals(contenuto)) {
+if ("U142".equals(contenuto) || "U143".equals(contenuto) || "U145".equals(contenuto)) {
+%>
+	if (document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3210'
+			|| document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3228') {
+<%
 	BigDecimal importoDaPagare = new BigDecimal(0);
- 	if (rataMancatoPagamento.getFasSieIdFascicoloSiep() != null)
+	if (rataMancatoPagamento.getFasSieIdFascicoloSiep() != null)
 		importoDaPagare = rataMancatoPagamento.getImportoDaPagare();
 %>
-	if (document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3210') {
 		var importoDaPagare = document.InserisciOrdinanzaConversionePP.<%=ICostantiRateizzazionePP.CAMPO_VALORE_IMPORTO_I%>.value
 			+ "." + document.InserisciOrdinanzaConversionePP.<%=ICostantiRateizzazionePP.CAMPO_VALORE_IMPORTO_D%>.value;
 		if (importoDaPagare == "." || parseFloat(importoDaPagare) == "0.0") {
-			alert("Totale Importo Rateizzato (intero e decimale) obbligatorio per l'esito scelto!");
+			alert("Totale Importo Rateizzato obbligatorio per l'esito scelto!");
 			document.InserisciOrdinanzaConversionePP.<%=ICostantiRateizzazionePP.CAMPO_VALORE_IMPORTO_I%>.focus();
 		    return false;
 		} else {
@@ -91,7 +94,7 @@ if ("U142".equals(contenuto)) {
 			var intero = document.InserisciOrdinanzaConversionePP.<%=ICostantiRateizzazionePP.CAMPO_VALORE_IMPORTO_I%>.value;
 			var decimale = document.InserisciOrdinanzaConversionePP.<%=ICostantiRateizzazionePP.CAMPO_VALORE_IMPORTO_D%>.value;
 			var importoRat = intero + "." + decimale;
-			if (importo < importoRat) {
+			if (parseFloat(importo) != "0.0" && importo <= importoRat) {
 				alert("Totale Importo Rateizzato non può essere superiore od uguale all'importo da rateizzare richiesto!");
 				document.InserisciOrdinanzaConversionePP.<%=ICostantiRateizzazionePP.CAMPO_VALORE_IMPORTO_I%>.focus();
 			    return false;
@@ -133,10 +136,39 @@ if ("U142".equals(contenuto)) {
 	      	if (!window.confirm(msg))
 				return false;
 	  	}
+	} else if (document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3205'
+			|| document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3206'
+			|| document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3207'
+			|| document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3208'
+			|| document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3217') {
+		var importoDaPagare = document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_INTERO_PENA_PECUNIARIA_CONVERTITA%>.value
+			+ "." + document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_DECIMALE_PENA_PECUNIARIA_CONVERTITA%>.value;
+		if (importoDaPagare == "." || parseFloat(importoDaPagare) == "0.0") {
+			alert("Importo Convertito obbligatorio per l'esito scelto!");
+			document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_INTERO_PENA_PECUNIARIA_CONVERTITA%>.focus();
+		    return false;
+		} else {
+			var importo = <%=importoDaPagare%>;
+			var intero = document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_INTERO_PENA_PECUNIARIA_CONVERTITA%>.value;
+			var decimale = document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_DECIMALE_PENA_PECUNIARIA_CONVERTITA%>.value;
+			var importoRat = intero + "." + decimale;
+			if (parseFloat(importo) != "0.0" && importo <= importoRat) {
+				alert("Totale Importo Convertito non può essere superiore od uguale all'importo da convertire richiesto!");
+				document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_INTERO_PENA_PECUNIARIA_CONVERTITA%>.focus();
+			    return false;
+			}
+		}
+		if (document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_ANNI_DETENZIONE_DOM%>.value == ''
+				|| document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_MESI_DETENZIONE_DOM%>.value == ''
+				|| document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_DETENZIONE_DOM%>.value == '') {
+			alert("Quantum Pena Sostituiva obbligatorio per l'esito scelto!");
+			document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_ANNI_DETENZIONE_DOM%>.focus();
+		    return false;
+		}
+	}
 <%
 }
 %>
-	}
 	return ritorno;
 }
 
@@ -390,8 +422,8 @@ while (itx.hasNext()) {
 			<font class="campo"><%=StringUtils.toEuroFormat(rataMancatoPagamento.getImportoDaPagare())%></font>&nbsp;&nbsp;&nbsp;-&nbsp;
 			<font class="label">Importo Convertito</font>&nbsp;
 			<font class="campo"> 
-				<input Title="Importo Rateizzato" size="7" maxlength="16" type="text" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_INTERO_IMPORTO_MULTA%>" onkeypress="return TicTabNumField(this,event)">,
-				<input Title="Importo Rateizzato" size="2" maxlength="2" type="text" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_DECIMALE_IMPORTO_MULTA%>" onkeypress="return TicTabNumField(this,event)">
+				<input Title="Importo Rateizzato" size="7" maxlength="16" type="text" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_INTERO_PENA_PECUNIARIA_CONVERTITA%>" onkeypress="return TicTabNumField(this,event)">,
+				<input Title="Importo Rateizzato" size="2" maxlength="2" type="text" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_DECIMALE_PENA_PECUNIARIA_CONVERTITA%>" onkeypress="return TicTabNumField(this,event)">
 			</font>&euro;
 		</td>
 	</tr>
@@ -399,25 +431,25 @@ while (itx.hasNext()) {
 		<td colspan="3" class="l"> 
 			<font class="label"> Q u a n t u m  &nbsp;&nbsp;  Pena &nbsp;&nbsp;  S o s t i t u t i v a  <br></font>
 			<font class="label">Anni</font>
-			<font class="campo"> <input title="Anni" type="text" size="2" maxlength="2" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_NUM_ANNI_SS%>"></font>
+			<font class="campo"> <input title="Anni" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_ANNI_DETENZIONE_DOM%>"></font>
 			<font class="label"> Mesi</font>
-			<font class="campo"> <input title="Mesi" type="text" size="2" maxlength="2" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_NUM_MESI_SS%>"></font>
+			<font class="campo"> <input title="Mesi" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_MESI_DETENZIONE_DOM%>"></font>
 			<font class="label"> Giorni</font>&nbsp;&nbsp;&nbsp;
-			<font class="campo"> <input title="Giorni" type="text" size="4" maxlength="4" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_NUM_GIORNI_SS%>"></font>
+			<font class="campo"> <input title="Giorni" type="text" size="4" maxlength="4" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_DETENZIONE_DOM%>"></font>
 <%
 	if (!"U143".equals(contenuto)) {
 %>
 			<font class="label"> Semilibert&agrave; </font>
-			<input value="01" type="radio" checked name="<%=ICostantiSiusPenaPecuniaria.CAMPO_FLAG_TIPO_SANZIONE%>">&nbsp;&nbsp;
+			<input value="01" type="radio" checked name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_FLAG_TIPO_SANZIONE%>">&nbsp;&nbsp;
 			<font class="label"> Detenzione Domiciliare </font>
-			<input value="02" type="radio" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_FLAG_TIPO_SANZIONE%>">&nbsp;&nbsp;
+			<input value="02" type="radio" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_FLAG_TIPO_SANZIONE%>">&nbsp;&nbsp;
 			<font class="label"> Lavoro Pubblica Utilit&agrave; </font>
-			<input value="03" type="radio" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_FLAG_TIPO_SANZIONE%>">
+			<input value="03" type="radio" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_FLAG_TIPO_SANZIONE%>">
 <%
 	} else {
 %>
 			<font class="label"> Permanenza Domiciliare </font>
-			<input value="01" type="radio" checked name="<%=ICostantiSiusPenaPecuniaria.CAMPO_FLAG_TIPO_SANZIONE%>">
+			<input value="04" type="radio" checked name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_FLAG_TIPO_SANZIONE%>">
 <%
 	}
 %>

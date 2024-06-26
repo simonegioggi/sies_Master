@@ -51,21 +51,10 @@ import siap.sius.tenore.controller.ITenore;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * <p>
- * Title: ActLoadEmissioneOrdinanzaUDS
- * </p>
- * <p>
- * Description: Classe Action per la load inserisci di Emissione Ordinanza UDS
- * </p>
+ * ActLoadEmissioneOrdinanzaUDS - Classe Action per la load inserisci di Emissione Ordinanza UDS
  * Poichè l'azione deve implementare la stessa funzione implementata da ActLoadEmissioneDecreto, viene estesa
  * questa in modo di utilizzare il suo processRequest(). Si sfrutta l'override della funzione
  * generaListaTipi() per differenziare la jsp.
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
  *
  * @version 1.0
  */
@@ -281,7 +270,6 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 			// LogF3B.getLogger()
 			siesLogger.debug("Ordinanza Inosservanza Obblighi su Misure Sicurezza " + lCodTipoDec);
 		} else if (lCodTipoDec.compareTo(TRASFORMA_MISURA_SICUREZZA) == 0) {
-
 			// Lettura elenco Misure di Sicurezza Collegate al Fascicolo SIUS
 			FascicoloGPModel lFasGPMod = new FascicoloGPModel(
 					(FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"));
@@ -566,8 +554,9 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 			siesLogger.debug("Ordinanza Rinvio su Sanzioni Sostitutive " + lCodTipoDec);
 		} else if (lCodTipoDec.compareTo(CONVERSIONE_PENE_PECUNIARIE) == 0
 				// MEV_2023-35: aggiunto tipo ordinanza
-				// vale anche per 	U143 S30 SR Violazione obblighi lavoro pubblica utilita'
-				// e per 			U145 S30 SR Rateizzazione pena pecuniaria
+				// vale per 		U142 S33 SR	Conversione pene pecuniarie principali per mancato pagamento
+				// e anche per		U143 S30 SR Violazione obblighi lavoro pubblica utilita'
+				// e anche per 		U145 S30 SR Rateizzazione pena pecuniaria
 				|| lCodTipoDec.compareTo(CONVERSIONE_PENE_PECUNIARIE_MANCATO_PAGAMENTO) == 0) {
 			// Controllo selezione Oggetti x Conversione Pene Pecuniarie.
 			String lCodOggetto = getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_OGGETTO);
@@ -905,12 +894,10 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 	private void preparaListaTipoUfficiCompetente() throws Exception {
 		Option lOption = new Option(DecodificheManager.getInstance().getTipoUfficio());
 		// MEV10-s3: aggiunte tipologie di ufficio
+		// solo le Autorità Emittenti.
 		lOption.setFilter(new String[] { "-", "TDS", "UDS", "TDSM", "UDSM", "CAP", "CAS", "CASAP", "CAPMI",
 				"CAPMID", "CSS", "GIPMI", "GIP", "GIPM", "GP", "GUP", "GUPM", "GUPMI", "PT", "PM", "PMM",
-				"PMPT", "PGCAP", "PGMI", "PGMID", "PMI", "TRIBSD", "CAPSM", "TMI", "DIB", "DIBM" }); // solo
-																										// le
-																										// Autorità
-																										// Emittenti.
+				"PMPT", "PGCAP", "PGMI", "PGMID", "PMI", "TRIBSD", "CAPSM", "TMI", "DIB", "DIBM" });
 		setRequestAttribute("tipoUfficioCompetente", "" + lOption);
 	}
 
@@ -919,18 +906,14 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 	private RateizzazionePPModel ricercaMancatoPagamento() throws Exception {
 		siesLogger.debug("ricercaMancatoPagamento");
 		RateizzazionePPModel lRataMancatoPagamento = null;
-
 		if (!isSessionAttributeNullObj("fascicoloSiusGP")) {
 			FascicoloGPModel lFasGPMod = (FascicoloGPModel) getSessionAttribute("fascicoloSiusGP");
 			BigDecimal lIdFasicoloSIEP = null;
 			if (lFasGPMod.getFascicoloSiusModel() != null
 					&& lFasGPMod.getFascicoloSiusModel().getFasSieIdFascicoloSiep() != null) {
-
 				lIdFasicoloSIEP = lFasGPMod.getFascicoloSiusModel().getFasSieIdFascicoloSiep();
-
 				// Ricerca ultimo evento 01-04-1308-Avviso mancato pagamento Pena Pecuniaria
 				// validato
-
 				EventoModel lEveRicerca = new EventoModel();
 				lEveRicerca.setFlagDocumentoRegistrato("S");
 				lEveRicerca.setFasSieIdFascicoloSiep(lIdFasicoloSIEP);
@@ -941,13 +924,11 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 				// Vector <EventoModel> lListaAvvisi = lEveCtrl.ricercaEvento(new String[]{"1308"}, new
 				// String[]{"04"}, lEveRicerca);
 				Vector<EventoModel> lListaAvvisi = lEveCtrl.ExRicercaEvento(lEveRicerca);
-
 				if (lListaAvvisi != null && lListaAvvisi.size() > 0) {
 					BigDecimal idEvento = lListaAvvisi.elementAt(0).getIdEvento();
 					IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 					Vector<RateizzazionePPModel> listaRateizzazioni = irpp
 							.exRicercaRateizzazioniByIdEvento(idEvento);
-
 					if (listaRateizzazioni != null && listaRateizzazioni.size() > 0)
 						lRataMancatoPagamento = listaRateizzazioni.elementAt(0); // presente 1 solo di tipo U
 				}

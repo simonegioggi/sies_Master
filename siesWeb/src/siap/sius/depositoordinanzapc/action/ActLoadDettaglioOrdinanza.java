@@ -21,8 +21,12 @@ import siap.siep.misurasicurezza.controller.MisuraSicurezzaController;
 import siap.siep.misurasicurezza.model.MisuraSicurezzaModel;
 import siap.siep.penapecuniaria.controller.IRichiestaConversione;
 import siap.siep.penapecuniaria.model.RichiestaConversioneModel;
+import siap.siep.rateizzazionepp.controller.IRateizzazionePP;
+import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 import siap.siep.util.SIEPLookupRemote;
 import siap.sius.depositodecreto.action.ICostantiDepositoDecreto;
+import siap.sius.depositoordinanzapc.controller.IDepositoOrdinanzaPc;
+import siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel;
 import siap.sius.depositoordinanzapc.model.OrdinanzaEventoTenoriPrescrizioniModel;
 import siap.sius.esecuzionemisurasicurezza.controller.IEsecuzioneMS;
 import siap.sius.esecuzionemisurasicurezza.model.EsecuzioneMisuraSicurezzaModel;
@@ -36,18 +40,7 @@ import siap.sius.tenore.model.TenoreModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * <p>
- * Title: ActLoadDettaglioOrdinanza
- * </p>
- * <p>
- * Description: Classe Action per la load dettaglio di DepositoOrdinanzaPc
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * ActLoadDettaglioOrdinanza - Classe Action per la load dettaglio di DepositoOrdinanzaPc
  *
  * @version 1.0
  */
@@ -179,7 +172,6 @@ public class ActLoadDettaglioOrdinanza extends ActDettaglioEmissioneOrdinanza
 
 				}
 			}
-			// TODO carmela
 			// Modifica del 19/09/2013 mev "Revisione Misure di Sicurezza SIUS"
 			// In fase di Emissione Ordinanza di un procedimento di: Inosservanza delle
 			// misure di sicurezza detentive con oggetto "Inosservanza delle Misure di Sicurezza
@@ -224,35 +216,43 @@ public class ActLoadDettaglioOrdinanza extends ActDettaglioEmissioneOrdinanza
 				}
 			}
 			// MEV_2023-35
-            else if (mOrdEveTenPreMod.getOrdinanza().getCodTipoOrdinanza()
-                .compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_REVOCA_PENA_SOST) == 0) {
-              lFasGPMod = new FascicoloGPModel((FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"));
-              BigDecimal lIdFascicoloSius = lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius();
-              if (lIdFascicoloSius != null) {
-                  // Caricamento delle Richieste Conversioni
-                  RichiestaConversioneModel aRichiestaConversione = new RichiestaConversioneModel();
-                  aRichiestaConversione.setFasSiuIdFascicoloSius(lIdFascicoloSius);
-                  IRichiestaConversione lCtrlRC = SIEPLookupRemote.getRichiestaConversioneRemote();
-                  Vector lVectRichConversioniPP = lCtrlRC
-                          .ExRicercaRichiestaConversioneEstesa(aRichiestaConversione);
-  
-                  if (lVectRichConversioniPP != null)
-                      setRequestAttribute("richiesteconversioni", lVectRichConversioniPP);
-  
-              }
-            }
-            else if (mOrdEveTenPreMod.getOrdinanza().getCodTipoOrdinanza()
-                .compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_PENA_SOSTITUTIVA) == 0) {
-              // Ricerco eventuale record ESCEUZIONE_SANS_SOST collegato al deporito ordinanza
-              EsecuzioneSanzioneSostitutivaModel lEsecSanSostModel = null;
+			else if (mOrdEveTenPreMod.getOrdinanza().getCodTipoOrdinanza()
+					.compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_REVOCA_PENA_SOST) == 0) {
+				lFasGPMod = new FascicoloGPModel((FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"));
+				BigDecimal lIdFascicoloSius = lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius();
+				if (lIdFascicoloSius != null) {
+					// Caricamento delle Richieste Conversioni
+					RichiestaConversioneModel aRichiestaConversione = new RichiestaConversioneModel();
+					aRichiestaConversione.setFasSiuIdFascicoloSius(lIdFascicoloSius);
+					IRichiestaConversione lCtrlRC = SIEPLookupRemote.getRichiestaConversioneRemote();
+					Vector lVectRichConversioniPP = lCtrlRC
+							.ExRicercaRichiestaConversioneEstesa(aRichiestaConversione);
 
-              BigDecimal idDepositoOrd = mOrdEveTenPreMod.getOrdinanza().getIdDepositoOrdinanzaPc();
-              
-              IEsecuzioneSS lCtrlESS = SIUSLookupRemote.getEsecuzioneSSRemote();
-              lEsecSanSostModel= lCtrlESS.ExRicercaEsecuzioneSanzioneSostitutivaByIdDepositoOrd (idDepositoOrd);
+					if (lVectRichConversioniPP != null)
+						setRequestAttribute("richiesteconversioni", lVectRichConversioniPP);
 
-              setRequestAttribute("esecSansSostModel", lEsecSanSostModel);
-            }			
+				}
+			} else if (mOrdEveTenPreMod.getOrdinanza().getCodTipoOrdinanza()
+					.compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_PENA_SOSTITUTIVA) == 0) {
+				// Ricerco eventuale record ESCEUZIONE_SANS_SOST collegato al deporito ordinanza
+				EsecuzioneSanzioneSostitutivaModel lEsecSanSostModel = null;
+				BigDecimal idDepositoOrd = mOrdEveTenPreMod.getOrdinanza().getIdDepositoOrdinanzaPc();
+				IEsecuzioneSS lCtrlESS = SIUSLookupRemote.getEsecuzioneSSRemote();
+				lEsecSanSostModel = lCtrlESS
+						.ExRicercaEsecuzioneSanzioneSostitutivaByIdDepositoOrd(idDepositoOrd);
+				setRequestAttribute("esecSansSostModel", lEsecSanSostModel);
+			} else if (mOrdEveTenPreMod.getOrdinanza().getCodTipoOrdinanza().compareTo(
+					ICostantiDepositoOrdinanzaPc.CONVERSIONE_PENE_PECUNIARIE_MANCATO_PAGAMENTO) == 0) {
+				IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
+				Vector<RateizzazionePPModel> rate = irpp.exRicercaRateizzazioniByIdFascicoloSius(
+						mFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
+				setRequestAttribute("rate", rate);
+				IDepositoOrdinanzaPc idop = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
+				DepositoOrdinanzaPcModel dopm = idop.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd(
+						mOrdEveTenPreMod.getOrdinanza().getGenPridGeneraleProcedimento(),
+						mOrdEveTenPreMod.getOrdinanza().getCodTipoOrdinanza());
+				setRequestAttribute("dopm", dopm);
+			}
 			// MEV_2023-35 - FINE
 		}
 
@@ -261,13 +261,11 @@ public class ActLoadDettaglioOrdinanza extends ActDettaglioEmissioneOrdinanza
 				&& mOrdEveTenPreMod.getOrdinanza().getCodTipoOrdinanza()
 						.compareTo(AMM_PROVVISORIA_AFFIDAMENTO_IN_PROVA_SERVIZI_SOC_ART47_OP) == 0) {
 			retPage = PG_DETT_ORDINANZA_AMM_PROVV_AFFIDAMENTO_IN_PROVA;
-
 			if (mOrdEveTenPreMod.getOrdinanza().getCodUffTdsConcessoRiduzione() != null
 					&& mOrdEveTenPreMod.getOrdinanza().getCodUffTdsConcessoRiduzione().trim().length() > 0) {
 				IUfficio lUffCtrl = SICOLookupRemote.getUfficioRemote();
 				UfficioModel lUfficio = lUffCtrl
 						.getUfficioByKey(mOrdEveTenPreMod.getOrdinanza().getCodUffTdsConcessoRiduzione());
-
 				if (lUfficio != null)
 					setRequestAttribute("ufficioTDS", lUfficio);
 			}
@@ -277,7 +275,6 @@ public class ActLoadDettaglioOrdinanza extends ActDettaglioEmissioneOrdinanza
 				IUfficio lUffCtrl = SICOLookupRemote.getUfficioRemote();
 				UfficioModel lUfficio = lUffCtrl
 						.getUfficioByKey(mOrdEveTenPreMod.getOrdinanza().getCodUfficioMagistratoComp());
-
 				if (lUfficio != null)
 					setRequestAttribute("ufficioUDS", lUfficio);
 			}
@@ -289,17 +286,14 @@ public class ActLoadDettaglioOrdinanza extends ActDettaglioEmissioneOrdinanza
 				try {
 					lUfficio = lUffCtrl
 							.getUfficioByKey(mOrdEveTenPreMod.getOrdinanza().getAutoritaVigilante());
-
 					if (lUfficio != null)
 						// mOrdEveTenPreMod.getOrdinanza().setAutoritaVigilante(lUfficio.getDescrTipoUfficio()+"
 						// di "+lUfficio.getDescrComune());
 						setRequestAttribute("ufficioProcura", lUfficio);
 				} catch (Exception e) {
-					// nulla
+					siesLogger.debug("Catturo l'eccezione senza rilanciarla: " + e.getMessage());
 				}
-
 			}
-
 		}
 
 		String codOggettoProcedimento = lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento();
@@ -317,7 +311,7 @@ public class ActLoadDettaglioOrdinanza extends ActDettaglioEmissioneOrdinanza
 			setRequestAttribute("misuraAlternativa", misuraAlternativa);
 		}
 
-		// MEV63: aggiunto codice in or condition
+		// MEV_63: aggiunto codice in or condition
 		if ((codOggettoProcedimento.equalsIgnoreCase(COD_OGGETTO_APPLICAZIONE_PROVVISORIA_MISURA_ALTERNATIVA)
 				|| codOggettoProcedimento
 						.equalsIgnoreCase(COD_OGGETTO_ESECUZIONE_PRESSO_DOMICILIO_PENA_DETENTIVA))
@@ -358,8 +352,11 @@ public class ActLoadDettaglioOrdinanza extends ActDettaglioEmissioneOrdinanza
 		}
 
 		/*
-		 * ISSUE MEV : aggiunto codice per gestione oggetto C029 Numero MEV : 39 Autore : Gioggi Data :
-		 * 19/giu/2017 Branch : MEV_39
+		 * ISSUE MEV : aggiunto codice per gestione oggetto C029 
+		 * Numero MEV : 39 
+		 * Autore : Gioggi 
+		 * Data : 19/giu/2017 
+		 * Branch : MEV_39
 		 */
 		if (codOggettoProcedimento.equalsIgnoreCase(OGG_ORD_APPELLO_CONTRO_PROVV_MS)) {
 			// 20191018 [SG]: aggiunto codice
@@ -428,8 +425,8 @@ public class ActLoadDettaglioOrdinanza extends ActDettaglioEmissioneOrdinanza
 		setRequestAttribute("codTipoUfficio", codTipoUfficio);
 
 		// valore di ritorno
-		siesLogger.debug("ActLoadDettaglioOrdinanza retPage = "+retPage);
-		
+		siesLogger.debug("ActLoadDettaglioOrdinanza retPage = " + retPage);
+
 		return retPage;
 	}
 

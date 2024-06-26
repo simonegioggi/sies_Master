@@ -118,7 +118,6 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 		// i Procedimenti con contenuto "Applicazione Misura di Sicurezza" (U023)
 		if (!isRequestParameterNullObj(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
 				&& getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO).equals("U023")) {
-
 			MisuraSicurezzaModel aMisuraSicurezza = new MisuraSicurezzaModel();
 			aMisuraSicurezza.setFasSiuIdFascicoloSius(mFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
 			MisuraSicurezzaController lCtrl = new MisuraSicurezzaController();
@@ -1382,9 +1381,8 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 				lEvento.setTemIdTemplate(TEMPLATE_ORDINANZA_RIGETTO_GENERICO);
 			else if (getRequestStringParameter(CAMPO_TIPO_ORDINANZA_DA_PRODURRE).equals("04"))
 				lEvento.setTemIdTemplate(TEMPLATE_ORDINANZA_NLP_GENERICO);
-			else if (getRequestStringParameter(CAMPO_TIPO_ORDINANZA_DA_PRODURRE).equals("01"))
-			// generazione automantica
-			{
+			else if (getRequestStringParameter(CAMPO_TIPO_ORDINANZA_DA_PRODURRE).equals("01")) {
+				// generazione automantica
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
 				siesLogger.debug(">>>> Chiama la logica Decisionale per il template  ...");

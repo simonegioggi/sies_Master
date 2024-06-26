@@ -215,14 +215,7 @@ function TestS22(Code) {
 
 				// MEV_2023-35 - 05/2024 PENE SOSTITUTIVE
           		if (document.FormTestS22.HighValue[i].value == 'S30') {
-            		if (document.FormTestS22.LowValue[i].value != 'U126') {
-						S22_ab.style.visibility = 'hidden';
-						S22_a.style.visibility = 'hidden';
-						S22_aa.style.visibility = 'hidden';
-						S22_ems.style.visibility = 'hidden';
-						S22_EPS.style.visibility = 'visible'; // MEV_2023-35
-						resultS22 = 'S30';
-            		} else {
+            		if (document.FormTestS22.LowValue[i].value == 'U126') {
 						S22_a.style.visibility = 'hidden';
 						S22_ab.style.visibility = 'visible';
 						S22_ab.style.top = '-20px';
@@ -230,6 +223,13 @@ function TestS22(Code) {
 						S22_ems.style.visibility = 'hidden';
 						S22_EPS.style.visibility = 'hidden'; // MEV_2023-35
 						resultS22 = 'U126';
+            		} else {
+            			S22_a.style.visibility = 'hidden';
+            			S22_aa.style.visibility = 'hidden';
+            			S22_ab.style.visibility = 'hidden';
+						S22_ems.style.visibility = 'hidden';
+						S22_EPS.style.visibility = 'visible'; // MEV_2023-35
+						resultS22 = 'S30';
             		}
 					S22_b.style.visibility = 'visible';
             		// Nella modifica del contenuto, per le APS NON vengono ripuliti i campi Anno e numero Ordinanza.

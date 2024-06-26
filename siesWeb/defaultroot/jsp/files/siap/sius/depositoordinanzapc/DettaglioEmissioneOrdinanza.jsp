@@ -202,7 +202,7 @@ if (codice.compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_ORDINANZA) != 0
 <table cellspacing="4" cellpadding="4" width="95%">
 	<tr>
       	<td>
-      		<input Title="Id Evento" type="hidden" name="<%= ICostantiEvento.CAMPO_ID_EVENTO %>" value="<%=IdEvento%>">
+      		<input type="hidden" name="<%= ICostantiEvento.CAMPO_ID_EVENTO %>" value="<%=IdEvento%>">
    		</td>
     </tr>
 	<tr>
@@ -218,6 +218,10 @@ else if ("C064".equals(codOggettoProcedimento))
 	tipoOrdinanza += " Sostitutiva";
 else if ("C065".equals(codOggettoProcedimento))
 	tipoOrdinanza += " Sostitutiva Derivante da Conversione Pene Pecuniarie";
+else if  ("U143".equals(codOggettoProcedimento))
+	tipoOrdinanza = "Ordinanza Conversione Pene Pecuniarie irrogate dal GdP";
+else if ("U145".equals(codOggettoProcedimento))
+	tipoOrdinanza = "Ordinanza Rateizzazione Pena Pecuniaria Sostitutiva";
 if (codice.compareTo(ICostantiDepositoOrdinanzaPc.RINVIO_ESECUZIONE_MSIC) == 0)
 	codice = "42";
 %>
@@ -793,11 +797,13 @@ if (codice != null
 	// 12-03-2009 Caso Applicazione Sanzione Sostitutiva o Conversione Pene Pecuniarie (Tipo di Prescrizioni diverso)
 	// 08-04-2011 Stessa gestione per Applicazione Misure Sicurezza
    	if (codice.compareTo(ICostantiDepositoOrdinanzaPc.APPLICAZIONE_SANZIONI_SOSTITUTIVE) == 0
-   	    // MEV_2023-35 - Si aggiungono le PENE SOSTITUTIVE
-   	    || codice.compareTo(ICostantiDepositoOrdinanzaPc.APPLICAZIONE_PENE_SOSTITUTIVE) == 0
-   	    // MEV_2023-35 - FINE
+   	    	// MEV_2023-35 - Si aggiungono le PENE SOSTITUTIVE
+   	    	|| codice.compareTo(ICostantiDepositoOrdinanzaPc.APPLICAZIONE_PENE_SOSTITUTIVE) == 0
+   	    	// MEV_2023-35 - FINE
    			|| codice.compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_PENE_PECUNIARIE) == 0
-   			|| codice.compareTo(ICostantiDepositoOrdinanzaPc.MISURA_SICUREZZA) == 0) {
+   			|| codice.compareTo(ICostantiDepositoOrdinanzaPc.MISURA_SICUREZZA) == 0
+			// MEV_2023-35: aggiunto codice per 'SR' (U142,U143,U145)
+			|| codice.compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_PENE_PECUNIARIE_MANCATO_PAGAMENTO) == 0) {
 %>
 <jsp:include page="<%=ICostantiPrescrizione.PG_INCLUDE_PRESCRIZIONI%>">
 	<jsp:param name="EveIdEvento" value="<%=IdEvento%>" />
@@ -1046,7 +1052,9 @@ if (!modificaOrdinanza) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_RINVIO_SS %>"/>
 <%
-   		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_PENE_PECUNIARIE) == 0) {
+   		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_PENE_PECUNIARIE) == 0
+   				// MEV_2023-35: aggiunto codice per 'SR' (U142,U143,U145)
+   				|| codice.compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_PENE_PECUNIARIE_MANCATO_PAGAMENTO) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_CONVERSIONE_PP %>"/>
 <%
@@ -1118,8 +1126,8 @@ if (!modificaOrdinanza) {
        			<td class="L">
 		            <input  class=bottone  type="submit" value="Conferma">
 		            <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.sico.evento.action.ActUploadDocument">
-		            <input type="HIDDEN" name="IdEvento"  value="<%= IdEvento%>">
-		            <input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_AZIONE_DETTAGLIO%>"  value="siap.sius.depositoordinanzapc.action.ActLoadDettaglioOrdinanza">
+		            <input type="HIDDEN" name="IdEvento" value="<%= IdEvento%>">
+		            <input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_AZIONE_DETTAGLIO%>" value="siap.sius.depositoordinanzapc.action.ActLoadDettaglioOrdinanza">
        				<input type="HIDDEN" name="FlagAvvocatura" value="<%=ICostantiAvvisiAvvocato.EMISSIONE_ORDINANZA%>">
        			</td>
        		</tr>

@@ -332,7 +332,6 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
 		String lSql = getSqlQuery();
 
 		// Aggiunge le where condition per chiave
-
 		lSql += " and FAS_SIE_ID_FASCICOLO_SIEP = " + aIdFascicoloSiep;
 		lSql += " ORDER BY DATA_INSERIMENTO DESC";
 
@@ -349,16 +348,16 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
 
 		String lStatement = new String("");
 
-		lStatement += " SELECT ID_RATEIZZAZIONE_PP, IMPORTO_DA_PAGARE, IMPORTO_RATA, NUMERO_RATE "
+		lStatement += "SELECT ID_RATEIZZAZIONE_PP, IMPORTO_DA_PAGARE, IMPORTO_RATA, NUMERO_RATE "
 				+ ", TIPO_RATEIZZAZIONE, SCADENZA_GIORNI, PROGRESSIVO_RATA, FAS_SIE_ID_FASCICOLO_SIEP "
 				+ ", EVE_ID_EVENTO " + ", cgTipoRateizzazione.RV_MEANING descTipoRateizzazione"
 				+ ", COD_OPERATORE_INSERIMENTO, DATA_INSERIMENTO, COD_UFFICIO_INSERIMENTO "
-				+ ", COD_OPERATORE_AGGIORNAMENTO, DATA_AGGIORNAMENTO, COD_UFFICIO_AGGIORNAMENTO ";
+				+ ", COD_OPERATORE_AGGIORNAMENTO, DATA_AGGIORNAMENTO, COD_UFFICIO_AGGIORNAMENTO";
 
 		// Aggiungo la from condition (completarla con eventuali altre tabelle per recuperare le descrizioni)
 		lStatement += " FROM RATEIZZAZIONE_PP, CG_REF_CODES cgTipoRateizzazione";
-		lStatement += " WHERE 1=1 ";
-		lStatement += " AND cgTipoRateizzazione.RV_DOMAIN = 'TIPO_RATEIZZAZIONE'  ";
+		lStatement += " WHERE 1=1";
+		lStatement += " AND cgTipoRateizzazione.RV_DOMAIN = 'TIPO_RATEIZZAZIONE'";
 		lStatement += " AND (nvl(RATEIZZAZIONE_PP.TIPO_RATEIZZAZIONE,'-')) = cgTipoRateizzazione.RV_LOW_VALUE ";
 
 		return lStatement;
@@ -383,4 +382,40 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
 
 	    setStatement(lStatement);
 	  }
+
+	/**
+	 * @since MEV_2023_35
+	 * Metodo che imposta la statement di ricerca per chiave Fascicolo SIUS
+	 *
+	 * @param aIdFasSIEP
+	 * @throws DAOException
+	 */
+	public void ricercaRateizzazionePPByIdFascicoloSius(BigDecimal idFascicoloSius) throws DAOException {
+	
+		// Recupera la select...from
+		String lSql = getSqlQuery();
+	
+		lSql += setCondizioniByIdFascicoloSius(idFascicoloSius);
+		lSql += " order by PROGRESSIVO_RATA, ID_RATEIZZAZIONE_PP";
+	
+		// Imposta lo statement da eseguire
+		setStatement(lSql);
+	}
+
+	/**
+	 * @since MEV_2023_35
+	 * Metodo che imposta la condizione di ricerca per chiave Fascicolo SIUS
+	 * 
+	 * @param aIdFasSIUS
+	 * @return String
+	 */
+	public String setCondizioniByIdFascicoloSius(BigDecimal idFascicoloSius) {
+
+		String lCondizioni = new String();
+
+		lCondizioni += "and FAS_SIU_ID_FASCICOLO_SIUS = " + idFascicoloSius;
+
+		return lCondizioni;
+	}
+
 }

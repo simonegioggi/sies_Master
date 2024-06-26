@@ -177,11 +177,11 @@ public interface IDepositoOrdinanzaPc {
 			PeriodoAltraMisuraModel aPeriodoAltraMisuraModel,
 			EsecuzioneMisuraSicurezzaModel aEsecuzioneMisuraSicurezzaModel) throws F3BException;
 
-	// MEV_2023-35: aggiunto parametro di passaggio
+	// MEV_2023-35: aggiunti parametri di passaggio
 	public OrdinanzaEventoTenoriGProcModel ExInserisciOrdinanzaConversioneRateizzazionePP(
 			OrdinanzaEventoTenoriGProcModel aGProcOrdEveTenori,
 			RichiesteConversioniPerOrdinanzaModel aRicConvMod,
-			Vector<RateizzazionePPModel> aListaRate) throws F3BException;
+			Vector<RateizzazionePPModel> aListaRate, DepositoOrdinanzaPcModel dopm) throws F3BException;
 
 	// Definizione del metodo afferente alla modifica del Magistrato all'ordinanza.
 	public DepositoOrdinanzaPcModel ExModificaMagistratoOrdinanza(DepositoOrdinanzaPcModel aDepOrdPcMod)
