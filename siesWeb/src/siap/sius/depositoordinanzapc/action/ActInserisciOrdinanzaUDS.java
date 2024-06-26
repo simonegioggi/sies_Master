@@ -673,7 +673,10 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 				siesLogger.debug("Revoca MA non gestisco l'inserimento MS ");
 			// MEV_2023-35 aggiungo anche la revoca PS che scrivono sul campo deposito.data_decorrenza
 	        } else if (!isRequestParameterNullObj(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
-		                      && getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO).equals("U131")) {
+		               && (getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO).equals("U131")
+		                   ||getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO).equals("U132")
+		                   )
+		              ) {
 		        // non faccio nulla
 		        siesLogger.debug("Revoca Pene sostitutive non gestisco l'inserimento MS ");
 			} else {

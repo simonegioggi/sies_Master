@@ -44,7 +44,10 @@ public class ActInserisciOrdinanzaRevocaPS extends ActInserisciOrdinanzaUDS {
     for (int i = 0 ; i <lEsitiTenore.length; i++) {
       siesLogger.debug("lEsitoTenore = "+lEsitiTenore[i]);
       
-      if ("3114".equals(lEsitiTenore[i]) || "3115".equals(lEsitiTenore[i])){
+      if (   "3114".equals(lEsitiTenore[i]) || "3115".equals(lEsitiTenore[i])
+          || "3120".equals(lEsitiTenore[i]) || "3121".equals(lEsitiTenore[i])
+          )
+      {
         siesLogger.debug("esito 'revoca', procedo a registrare EsecuzioneSanzioneSostitutivaModel ");
         isRevoca = true;
       }      

@@ -63,6 +63,8 @@ function AbilitaCampiEsiti()
       if (   document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].selected   
           && (   document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value =="3114"
               || document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value =="3115"
+              || document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value =="3120"
+              || document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value =="3121"
              )
          )
       {
@@ -73,7 +75,6 @@ function AbilitaCampiEsiti()
   else    
   { // Nel caso di più oggetti, la div d rideterminazione è visibile se almeno un esito è di Revoca
     // Scorro gli Oggetti
-    alert("tipo 2");
     for (j = 0; j < document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.length ; j++ )
     {
       // Scorro gli esiti
@@ -82,6 +83,8 @@ function AbilitaCampiEsiti()
         if (   document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j][i].selected
             && (   document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j][i].value == "3114" 
                 || document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j][i].value == "3115" 
+                || document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j][i].value == "3120" 
+                || document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j][i].value == "3121" 
                )
            )
         {

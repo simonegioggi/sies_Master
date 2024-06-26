@@ -198,25 +198,25 @@ if (request.getAttribute("idFascicoloInviato")!=null)
               // MEV_2023-35 - 05/2024 PENE SOSTITUTIVE
               if (document.FormTestS22.HighValue[i].value =='S30')
               {
-                if ( document.FormTestS22.LowValue[i].value == 'U126' )
+                if ( document.FormTestS22.LowValue[i].value == 'U126' ) // Fascicolo di Esecuzione
                 {
-                  S22_ab.style.visibility='hidden';
+                  S22_ab.style.visibility='visible'; // Mostro anno e numero Ordinanza Applicazione
                   S22_ab.style.top='-20px';
                   S22_a.style.visibility='hidden';
                   S22_aa.style.visibility='hidden';
                   S22_ems.style.visibility='hidden';
-                  S22_EPS.style.visibility='visible'; // MEV_2023-35
+                  S22_EPS.style.visibility='hidden'; // Riferimento fasciolo di Esecuzione
                   resultS22='U126';
                   document.LoadIscrProcedimentoUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.value='<%=annoProvvedimento%>';
                   document.LoadIscrProcedimentoUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.value='<%=progrProvvedimento%>';
                 }
                 else
-                { // figlio
-                  S22_a.style.visibility='hidden';
+                { // figlio di EPS
+                  S22_a.style.visibility='hidden'; // Nascondo riferimento APS
                   S22_ab.style.visibility='hidden';
                   S22_aa.style.visibility='visible';
                   S22_ems.style.visibility='hidden';
-                  S22_EPS.style.visibility='visible'; // MEV_2023-35
+                  S22_EPS.style.visibility='visible'; // Visualizzo EPS
                   resultS22='S30';
                   document.LoadIscrProcedimentoUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.value='';
                   document.LoadIscrProcedimentoUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.value='';
