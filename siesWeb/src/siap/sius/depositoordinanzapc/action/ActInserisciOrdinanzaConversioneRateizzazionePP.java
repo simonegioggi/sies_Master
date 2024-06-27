@@ -235,9 +235,12 @@ public class ActInserisciOrdinanzaConversioneRateizzazionePP extends ActInserisc
 					anniQuantum = getRequestStringParameter(
 							ICostantiDepositoOrdinanzaPc.CAMPO_NUM_ANNI_DETENZIONE_DOM);
 					dopm.setSommaRisarcimento(importoConvertito);
-					dopm.setNumGiorniDetenzioneDom(new BigDecimal(giorniQuantum));
-					dopm.setNumMesiDetenzioneDom(new BigDecimal(mesiQuantum));
-					dopm.setNumAnniDetenzioneDom(new BigDecimal(anniQuantum));
+					dopm.setNumGiorniDetenzioneDom(
+							new BigDecimal(Utils.isPresent(giorniQuantum) ? giorniQuantum : "0"));
+					dopm.setNumMesiDetenzioneDom(
+							new BigDecimal(Utils.isPresent(mesiQuantum) ? mesiQuantum : "0"));
+					dopm.setNumAnniDetenzioneDom(
+							new BigDecimal(Utils.isPresent(anniQuantum) ? anniQuantum : "0"));
 					dopm.setCodOperatoreAggiornamento(getCodUtenteConnesso());
 					dopm.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
 					dopm.setDataAggiornamento(DateUtils.getSysDate());
@@ -251,7 +254,8 @@ public class ActInserisciOrdinanzaConversioneRateizzazionePP extends ActInserisc
 		// inserimento
 		IDepositoOrdinanzaPc IDepOrdCtrl = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
 		// MEV_2023-35: aggiunti parametri di passaggio
-		lModRet = IDepOrdCtrl.ExInserisciOrdinanzaConversioneRateizzazionePP(aOrdEveTenGP, aRicConModel, aListaRate, dopm);
+		lModRet = IDepOrdCtrl.ExInserisciOrdinanzaConversioneRateizzazionePP(aOrdEveTenGP, aRicConModel,
+				aListaRate, dopm);
 		if (lModRet == null)
 			throw new SIUSException(SIUSException.USER_MESSAGE, "NESSUN INSERIMENTO EFFETTUATO.");
 		return lModRet;
