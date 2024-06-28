@@ -1,5 +1,5 @@
-BRANCH SIES VERSIONE 12.6.3.0
+BRANCH SIES VERSIONE 12.6.4.0
 
-Nasce dal branch 12.6.2.0 in data 27/05/2024
+Nasce dal branch 12.6.3.0 in data 28/06/2024
 
-Questa release verrà rilasciata il 28/06/2024 (Patch mese di Giugno 2024)
+Questa release verrà rilasciata il 26/07/2024 (Patch mese di Luglio 2024)
