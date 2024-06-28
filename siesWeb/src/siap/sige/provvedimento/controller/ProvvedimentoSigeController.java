@@ -80,18 +80,7 @@ import siap.sius.documentoallegato.dao.DocumentoAllegatoSqlDAO;
 import siap.sius.documentoallegato.model.DocumentoAllegatoModel;
 
 /**
- * <p>
- * Title: ProvvedimentoSigeController
- * </p>
- * <p>
- * Description: Classe Controller per ProvvedimentoSige
- * </p>
- * <p>
- * Copyright: Copyright (c) 2008
- * </p>
- * <p>
- * Company:
- * </p>
+ * Title: ProvvedimentoSigeController Description: Classe Controller per ProvvedimentoSige
  *
  * @version 1.0
  */
@@ -304,17 +293,9 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 
 	/**
 	 * Esegue l'inserimento del Provvedimento SIGE. e (da decidere) l'aggiornamento del Fascicolo SIGE.
-	 * <p>
-	 * Description: Funzione per l'inserimento del Provvedimento SIGE.
-	 * </p>
-	 * Le tabelle coinvolte sono:
-	 * <p>
-	 * PROVVEDIMENTO_SIGE : viene inserito il nuovo record (ordinanza/decreto);
-	 * <p>
-	 * EVENTO : viene inserito un nuovo record;
-	 * <p>
-	 * TENORE : vengono chiusi i tenori attivi (data_fine) ed inseriti i nuovi tenori;
-	 * <p>
+	 * Description: Funzione per l'inserimento del Provvedimento SIGE. Le tabelle coinvolte sono:
+	 * PROVVEDIMENTO_SIGE : viene inserito il nuovo record (ordinanza/decreto); EVENTO : viene inserito un
+	 * nuovo record; TENORE : vengono chiusi i tenori attivi (data_fine) ed inseriti i nuovi tenori;
 	 * FASCICOLO_SIGE : ?? update dello stato del FASCICOLO.
 	 *
 	 * @param IdFascicoloSige
@@ -1266,7 +1247,6 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 
 	/**
 	 * Esecuzione stampa Ordinanza.
-	 * <p>
 	 *
 	 * @param aIdFascicolo
 	 * @param lProvEvento
@@ -1774,7 +1754,6 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 
 	/**
 	 * Esegue la cancellazione di un record di Provvedimento SIGE.
-	 * <p>
 	 *
 	 * @param aProvvedimento
 	 *            : model ProvvedimentoSige in cui siano valorizzati almeno i campi IDProvvedimentoSige e
@@ -1839,7 +1818,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 
 			// 13/01/2011 condizionato l'aggiornamento dei TENORE_SIGE se quelli appena cancellati avevano
 			// DATA_FINE = null.
-			if (lDataFineNull == true) {
+			if (lDataFineNull) {
 				// 20/07/2009 Ripristino records tenori storicizzati al momento dall'emissione del
 				// provvedimento
 				// che si sta cancellando.
@@ -1963,9 +1942,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	}
 
 	/**
-	 * Description: Funzione di ricerca dei provvedimenti SIGE.
-	 * </p>
-	 * Parametro di ricerca: Id_FascicoloSige.
+	 * Description: Funzione di ricerca dei provvedimenti SIGE. Parametro di ricerca: Id_FascicoloSige.
 	 *
 	 * @param aIdFasSige
 	 * @throws F3BException
@@ -2059,9 +2036,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	}
 
 	/**
-	 * Description: Funzione di ricerca dei provvedimenti SIGE.
-	 * </p>
-	 * Parametro di ricerca: Id_FascicoloSige.
+	 * Description: Funzione di ricerca dei provvedimenti SIGE. Parametro di ricerca: Id_FascicoloSige.
 	 *
 	 * @param aIdFasSige
 	 * @throws F3BException
@@ -2156,9 +2131,8 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	}
 
 	/**
-	 * Description: Funzione di ricerca dei provvedimenti di sospensione per un provvedimento SIGE.
-	 * </p>
-	 * Parametro di ricerca: Provv_Id_Provvedimentosige.
+	 * Description: Funzione di ricerca dei provvedimenti di sospensione per un provvedimento SIGE. Parametro
+	 * di ricerca: Provv_Id_Provvedimentosige.
 	 *
 	 * @param aProvvId
 	 * @throws F3BException
@@ -2205,9 +2179,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	}
 
 	/**
-	 * Description: Funzione di ricerca dei provvedimenti SIGE.
-	 * </p>
-	 * Parametro di ricerca: Id_FascicoloSige.
+	 * Description: Funzione di ricerca dei provvedimenti SIGE. Parametro di ricerca: Id_FascicoloSige.
 	 *
 	 * @param aIdFasSige
 	 * @param aTipiProvvedimento
@@ -2297,7 +2269,10 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 
 				/*
 				 * ISSUE MEV : Gestito il recupero dell'Udienza Sige nel caso di
-				 * "Ordinanza Conflitto di Competenza" Numero MEV : 15_S4 Autore : sessa Data : 29/gen/2016
+				 * "Ordinanza Conflitto di Competenza" 
+				 * Numero MEV : 15_S4 
+				 * Autore : sessa 
+				 * Data : 29/gen/2016
 				 * Branch : MEV_15_S4
 				 */
 				if (lUdiMod != null || (lProvModel != null && lProvModel.getUdiIdUdienzaSige() != null)) {
@@ -2359,9 +2334,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	}
 
 	/**
-	 * Description: Funzione di ricerca dei provvedimenti SIGE.
-	 * </p>
-	 * Parametro di ricerca: Id_FascicoloSige.
+	 * Description: Funzione di ricerca dei provvedimenti SIGE. Parametro di ricerca: Id_FascicoloSige.
 	 *
 	 * @param aIdFasSige
 	 * @param aTipiProvvedimento
@@ -2790,17 +2763,9 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 
 	/**
 	 * Esegue l'inserimento del Provvedimento SIGE. e (da decidere) l'aggiornamento del Fascicolo SIGE.
-	 * <p>
-	 * Description: Funzione per l'inserimento del Provvedimento SIGE.
-	 * </p>
-	 * Le tabelle coinvolte sono:
-	 * <p>
-	 * PROVVEDIMENTO_SIGE : viene inserito il nuovo record (ordinanza/decreto);
-	 * <p>
-	 * EVENTO : viene inserito un nuovo record;
-	 * <p>
-	 * TENORE : vengono chiusi i tenori attivi (data_fine) ed inseriti i nuovi tenori;
-	 * <p>
+	 * Description: Funzione per l'inserimento del Provvedimento SIGE. Le tabelle coinvolte sono:
+	 * PROVVEDIMENTO_SIGE : viene inserito il nuovo record (ordinanza/decreto); EVENTO : viene inserito un
+	 * nuovo record; TENORE : vengono chiusi i tenori attivi (data_fine) ed inseriti i nuovi tenori;
 	 * FASCICOLO_SIGE : ?? update dello stato del FASCICOLO.
 	 *
 	 * @param IdFascicoloSige
@@ -2927,19 +2892,11 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	}
 
 	/**
-	 * Esegue l'inserimento del Provvedimento SIGE di Sospensione di altra ordinanza
-	 * <p>
-	 * Description: Funzione per l'inserimento del Provvedimento SIGE di Sospensione
-	 * </p>
-	 * Le tabelle coinvolte sono:
-	 * <p>
-	 * PROVVEDIMENTO_SIGE : viene inserito il nuovo record (ordinanza);
-	 * <p>
-	 * EVENTO : viene inserito un nuovo record;
-	 * <p>
-	 * TENORE : vengono inseriti i nuovi tenori senza storicizzare i precedenti;
-	 * <p>
-	 * FASCICOLO_SIGE : ?? update dello stato del FASCICOLO.
+	 * Esegue l'inserimento del Provvedimento SIGE di Sospensione di altra ordinanza Description: Funzione per
+	 * l'inserimento del Provvedimento SIGE di Sospensione Le tabelle coinvolte sono: PROVVEDIMENTO_SIGE :
+	 * viene inserito il nuovo record (ordinanza); EVENTO : viene inserito un nuovo record; TENORE : vengono
+	 * inseriti i nuovi tenori senza storicizzare i precedenti; FASCICOLO_SIGE : ?? update dello stato del
+	 * FASCICOLO.
 	 *
 	 * @param IdFascicoloSige
 	 * @param ProvvedimentoSigeEventoModel
@@ -3219,8 +3176,11 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 			}
 
 			/*
-			 * ISSUE MEV : Viene aggiornata la Data Definizione del Fascicolo Sige Numero MEV : 15_S4 Autore :
-			 * sessa Data : 01/feb/2016 Branch : MEV_15_S4
+			 * ISSUE MEV : Viene aggiornata la Data Definizione del Fascicolo Sige 
+			 * Numero MEV : 15_S4 
+			 * Autore : sessa 
+			 * Data : 01/feb/2016 
+			 * Branch : MEV_15_S4
 			 */
 			lFasSigeDao = new FascicoloSigeDAO(lConn);
 			lFasSigeDao.setDAOFromModelForUpdate(aFasSige);
@@ -3437,9 +3397,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 
 	/**
 	 * Description: Funzione di ricerca dei provvedimenti SIGE per i quali e' possibile compilare il Foglio
-	 * Complementare.
-	 * </p>
-	 * Parametro di ricerca: Id_FascicoloSige.
+	 * Complementare. Parametro di ricerca: Id_FascicoloSige.
 	 *
 	 * @param aIdFasSige
 	 * @param aTipiProvvedimento
