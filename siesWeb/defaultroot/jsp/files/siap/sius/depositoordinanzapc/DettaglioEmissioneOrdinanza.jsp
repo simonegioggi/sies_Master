@@ -222,6 +222,9 @@ else if  ("U143".equals(codOggettoProcedimento))
 	tipoOrdinanza = "Ordinanza Conversione Pene Pecuniarie irrogate dal GdP";
 else if ("U145".equals(codOggettoProcedimento))
 	tipoOrdinanza = "Ordinanza Rateizzazione Pena Pecuniaria Sostitutiva";
+else if ("U140".equals(codOggettoProcedimento))
+  tipoOrdinanza += " - Pene Sostitutive ";
+
 if (codice.compareTo(ICostantiDepositoOrdinanzaPc.RINVIO_ESECUZIONE_MSIC) == 0)
 	codice = "42";
 %>

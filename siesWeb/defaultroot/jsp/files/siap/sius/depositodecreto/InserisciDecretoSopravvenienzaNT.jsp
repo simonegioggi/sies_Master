@@ -82,18 +82,29 @@
       <%
         String lAction = new String();
         String lFunctionName = new String();
-
+        // MEV_2023-35
+		String lSuffissoFunctionName = "";
+		if ("U140".equals(contenuto))
+		  lSuffissoFunctionName = " - PENE SOSTITUTIVE ";
+		// MEV_2023-35 - FINE
+    
         boolean lFlagOrdinanza = false;
         if (Action.trim().length() > 1)
         {
            lAction = Action;
            lFlagOrdinanza = true;
-           lFunctionName = "Emissione Ordinanza Sopravvenienza Nuovo Titolo";
+           // MEV_2023-35
+           //lFunctionName = "Emissione Ordinanza Sopravvenienza Nuovo Titolo";
+           lFunctionName = "Emissione Ordinanza Sopravvenienza Nuovo Titolo"+lSuffissoFunctionName;
+           // MEV_2023-35 -FINE
         }
         else
         {
            lAction = "siap.sius.depositodecreto.action.ActInserisciEmissioneDecretoDeposito";
-           lFunctionName = "Emissione Decreto Sopravvenienza Nuovo Titolo";
+           // MEV_2023-35
+           //lFunctionName = "Emissione Decreto Sopravvenienza Nuovo Titolo";
+           lFunctionName = "Emissione Decreto Sopravvenienza Nuovo Titolo"+lSuffissoFunctionName;
+           // MEV_2023-35 - FINE
         }
       %>
 

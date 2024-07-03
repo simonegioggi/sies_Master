@@ -613,7 +613,12 @@ if ("42".equals(tipo) || "MS".equals(tipo)) {
 <input type="HIDDEN" name="<%=ICostantiDepositoDecreto.CAMPO_ID_DEPOSITO_DECRETO%>" value="<%=lIdDecreto%>">
 <input type="HIDDEN" name="<%=ICostantiSiusMisuraSicurezza.CAMPO_DATA_DECORRENZA%>" value="">
 <%-- MEV_2023-35: aggiunto campo nascosto --%>
-<input type="HIDDEN" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_TIPO_ORDINANZA%>" value="<%=datiOrdinanza.getOrdinanza().getCodTipoOrdinanza()%>">
+<%
+String lTipoOrdinanza = "";
+if (datiOrdinanza!=null && datiOrdinanza.getOrdinanza()!=null && datiOrdinanza.getOrdinanza().getCodTipoOrdinanza()!=null)
+  lTipoOrdinanza = datiOrdinanza.getOrdinanza().getCodTipoOrdinanza();
+%>
+<input type="HIDDEN" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_TIPO_ORDINANZA%>" value="<%=lTipoOrdinanza%>">
 </form>
 
 <script language="JavaScript" type="text/javascript">

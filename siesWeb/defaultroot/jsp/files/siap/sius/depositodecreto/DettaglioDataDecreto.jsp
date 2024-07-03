@@ -54,6 +54,9 @@ if (modificaDecreto) {
 		descrContenuto = "Decreto Licenza Pene Sostitutive";
 	} else if ("U136".equals(contenuto)) {
 		descrContenuto = "Decreto Esclusione Computo Licenza Pene Sostitutive";
+	// MEV_2023-35
+	} else if ("U140".equals(contenuto)) {
+        descrContenuto += " - Pene Sospese";
 	}
 %>
   	<tr>
