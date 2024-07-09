@@ -90,7 +90,13 @@ String[] esiti  = (String[])request.getAttribute("esiti");
     <table>
     <tr>
       <td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
-      <td class=LBG><font class="label">Funzione : </font> <font class="campo">Emissione Ordinanza Generica</font>&nbsp;
+      <%-- MEV_2023-35 --%>
+      <% if ("U146".equals(contenuto)){ %>
+      <td class=LBG><font class="label">Funzione : </font> <font class="campo">Emissione Ordinanza Revoca pena sostitutiva a seguito pagamento pena pecuniaria</font>&nbsp;
+      <% } else { %>
+      <td class=LBG><font class="label">Funzione : </font> <font class="campo">Emissione Ordinanza Generica </font>&nbsp;
+      <% } %>
+      <%-- MEV_2023-35 - FINE --%>
       </td>
     </tr>
     <tr>
@@ -100,32 +106,33 @@ String[] esiti  = (String[])request.getAttribute("esiti");
 
   <FORM method="POST" action="<%=IWebConstants.PG_MAIN%>" name="InserisciOrdinanzaGenerica">
     <table width=35%>
-   <tr>
-     <td class="l" width==30%> Data Emissione</td>
-     <td class="l" width==70%> <%=DateUtils.getDateToString(data_emissione,"dd/MM/yyyy")%></td>
-   </tr>
+	   <tr>
+	     <td class="l" width==30%> Data Emissione</td>
+	     <td class="l" width==70%> <%=DateUtils.getDateToString(data_emissione,"dd/MM/yyyy")%></td>
+	   </tr>
     </table>
 
-    <tr> <td>&nbsp;</td> </tr>
-     <table cellspacing="2" cellpadding="2" style="width: 90%;">
+    <br>
+    
+    <table cellspacing="2" cellpadding="2" style="width: 90%;">
     <tr>
-        <td class="Titolo" colspan=6 > Specificare esito per ciascun oggetto: </td>
+        <td class="Titolo" colspan=2 > Specificare esito per ciascun oggetto: </td>
     </tr>
     <tr>
-        <td class="l" colspan=2 > Oggetto </td>
-        <td class="l" colspan=2 > Esito </td>
+        <td class="l" > Oggetto </td>
+        <td class="l" > Esito </td>
     </tr>
     <%
    for (int i=0; i< tenori.length;i++)
     {
     %>
        <tr>
-        <td class="l"colspan=2 >
-          <input Title="Oggetto" name="<%=ICostantiTenore.CAMPO_DESCR_OGGETTO_TENORE %>" value="<%=tenori[i].getDescrOggettoTenore()%>"  readonly size=60%>
+        <td class="l" >
+          <input Title="Oggetto" name="<%=ICostantiTenore.CAMPO_DESCR_OGGETTO_TENORE %>" value="<%=tenori[i].getDescrOggettoTenore()%>"  readonly size="100%">
           <input Title="Cod Oggetto" type="hidden" name="<%= ICostantiTenore.CAMPO_COD_OGGETTO_TENORE %>" value="<%=tenori[i].getCodOggettoTenore()%>" >
           <input Title="Cod Dettaglio Oggetto" type="hidden" name="<%= ICostantiTenore.CAMPO_COD_DETTAGLIO_OGGETTO %>" value="<%=tenori[i].getCodDettaglioOggetto()%>" >
         </td>
-          <td class="l"colspan=2 >
+          <td class="l" >
            <select Title="Cod Esito" name="<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>" onChange="enableForma();">
              <%=esiti[i]%>
           </select>

@@ -335,8 +335,8 @@
 			if( !controlloDataUdienza() )
 				return false;
 			// controlloLuogoUdienza.
-			if( !controlloLuogoUdienza() )
-				return false;
+			//if( !controlloLuogoUdienza() )
+			//	return false;
 	
 							
     	return true;
@@ -695,7 +695,7 @@
 
     </table>
 
-<div id="AltriDatiUdienzaDiv" style="position:relative;  top: 0; left: 0;   visibility:hidden;" >  
+<div id="AltriDatiUdienzaDiv" style="position:relative;  top: 0; left: 0;" >  
 <table>
     <tr>
       <td class="l">Sezione</td>

@@ -212,6 +212,7 @@ if (codice.compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_ORDINANZA) != 0
 String tipoOrdinanza = "";
 if (Utils.isPresent(codice))
 	tipoOrdinanza = DecodificheUtils.getDescbyCode(DecodificheManager.getInstance().getTipoOrdinanza(), codice);
+
 if ("U134".equals(codOggettoProcedimento) || "U126".equals(codOggettoProcedimento))
 	tipoOrdinanza = tipoOrdinanza.replace("Sanzioni", "Pene");
 else if ("C064".equals(codOggettoProcedimento))
@@ -224,6 +225,10 @@ else if ("U145".equals(codOggettoProcedimento))
 	tipoOrdinanza = "Ordinanza Rateizzazione Pena Pecuniaria Sostitutiva";
 else if ("U140".equals(codOggettoProcedimento))
   tipoOrdinanza += " - Pene Sostitutive ";
+// MEV_2023-35
+else if ("U146".equals(codOggettoProcedimento))
+  tipoOrdinanza = " Ordinanza Revoca pena sostitutiva conseguente alla conversione pena pecuniaria per avvenuto pagamento";
+//MEV_2023-35
 
 if (codice.compareTo(ICostantiDepositoOrdinanzaPc.RINVIO_ESECUZIONE_MSIC) == 0)
 	codice = "42";
