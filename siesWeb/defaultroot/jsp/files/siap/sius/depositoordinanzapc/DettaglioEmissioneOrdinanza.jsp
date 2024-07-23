@@ -1025,16 +1025,19 @@ if (!modificaOrdinanza) {
 <%
    		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.APPLICAZIONE_SANZIONI_SOSTITUTIVE) == 0) {
 %>
-<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_APPLICAZIONE_SS %>"/>
+<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_APPLICAZIONE_SS%>"/>
 <% // MEV_2023-35 
       } else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.APPLICAZIONE_PENE_SOSTITUTIVE) == 0) {
 %>
-<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_APPLICAZIONE_SP %>"/>
-<% // MEV_2023-35 - FINE
-// MEV_2023-35 
+<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_APPLICAZIONE_SP%>"/>
+<% 
       } else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_PENA_SOSTITUTIVA) == 0) {
 %>
-<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_REVOCA_PENA_SOSTITUTIVA %>"/>
+<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_REVOCA_PENA_SOSTITUTIVA%>"/>
+<% 
+      } else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.RECLAMO_AVVERSO_REVOCA_PENA_SOSTITUTIVA) == 0) {
+%>
+<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_RECLAMO_AVVERSO_REVOCA_PENA_SOSTITUTIVA%>"/>
 <% // MEV_2023-35 - FINE
    		} else if (codice.compareTo(ICostantiDepositoDecreto.RICOVERO_OPG_OSS_PSICHE) == 0) {
 %>
@@ -1058,17 +1061,17 @@ if (!modificaOrdinanza) {
 <%
    		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.RINVIO_SANZIONI_SOSTITUTIVE) == 0) {
 %>
-<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_RINVIO_SS %>"/>
+<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_RINVIO_SS%>"/>
 <%
    		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_PENE_PECUNIARIE) == 0
    				// MEV_2023-35: aggiunto codice per 'SR' (U142,U143,U145)
    				|| codice.compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_PENE_PECUNIARIE_MANCATO_PAGAMENTO) == 0) {
 %>
-<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_CONVERSIONE_PP %>"/>
+<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_CONVERSIONE_PP%>"/>
 <%
    		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.RIMESSIONE_ATTI) == 0) {
 %>
-<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_RIMESSIONE_ATTI %>"/>
+<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_RIMESSIONE_ATTI%>"/>
 <%
    		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.ESEC_PRESSO_DOMICILIO) == 0) {
 %>
@@ -1077,7 +1080,7 @@ if (!modificaOrdinanza) {
 // MEV_2023-35 - Revoca e Conversione Pena Pecuniaria Sostitutiva
         } else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_REVOCA_PENA_SOST) == 0) {
 %>
-<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_REV_CONV_PPS %>"/>
+<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_REV_CONV_PPS%>"/>
 <%
    		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.VIOLAZIONE_CEDU) == 0) { // DL 92/2014 : Violazione CEDU
 %>

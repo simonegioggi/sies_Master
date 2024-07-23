@@ -233,7 +233,9 @@ public class ActLoadDettaglioOrdinanza extends ActDettaglioEmissioneOrdinanza
 
 				}
 			} else if (mOrdEveTenPreMod.getOrdinanza().getCodTipoOrdinanza()
-					.compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_PENA_SOSTITUTIVA) == 0) {
+					.compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_PENA_SOSTITUTIVA) == 0
+					|| mOrdEveTenPreMod.getOrdinanza().getCodTipoOrdinanza().compareTo(
+							ICostantiDepositoOrdinanzaPc.RECLAMO_AVVERSO_REVOCA_PENA_SOSTITUTIVA) == 0) {
 				// Ricerco eventuale record ESCEUZIONE_SANS_SOST collegato al deporito ordinanza
 				EsecuzioneSanzioneSostitutivaModel lEsecSanSostModel = null;
 				BigDecimal idDepositoOrd = mOrdEveTenPreMod.getOrdinanza().getIdDepositoOrdinanzaPc();

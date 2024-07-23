@@ -2,32 +2,36 @@
 <%@ page import="java.util.Date"%>
 <%@ page import="java.math.BigDecimal"%>
 
-<%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
 <%@ page import="f3b.util.Utils"%>
+<%@ page import="f3b.web.IWebConstants"%>
 
 <%@ page import="siap.sius.fascicolo.model.FascicoloGPModel"%>
 <%@ page import="siap.sius.generaleprocedimento.model.GeneraleProcedimentoModel"%>
 <%@ page import="siap.sius.fascicolo.action.ICostantiFascicoloSius"%>
 <%@ page import="siap.sius.tenore.action.ICostantiTenore"%>
 <%@ page import="siap.sius.depositoordinanzapc.action.ICostantiDepositoOrdinanzaPc"%>
-<%@ page import="siap.sico.soggetto.model.SoggettoModel" %>
-<%@ page import="siap.sius.tenore.model.TenoreModel" %>
+<%@ page import="siap.sico.soggetto.model.SoggettoModel"%>
+<%@ page import="siap.sius.tenore.model.TenoreModel"%>
 <%@ page import="siap.sico.evento.action.ICostantiEvento"%>
 <%@ page import="siap.sius.depositodecreto.model.DepositoDecretoEventoMotivazioniModel"%>
 <%@ page import="siap.sius.depositodecreto.action.ICostantiDepositoDecreto"%>
 <%@ page import="siap.sius.misurasicurezza.action.ICostantiSiusMisuraSicurezza"%>
-<%@ page import="siap.sico.security.action.ICostantiSecurity" %>
-<%@ page import="siap.sico.utente.model.UtenteModel" %>
-<%@ page import="siap.sico.ufficio.model.UfficioModel" %>
+<%@ page import="siap.sico.security.action.ICostantiSecurity"%>
+<%@ page import="siap.sico.utente.model.UtenteModel"%>
+<%@ page import="siap.sico.ufficio.model.UfficioModel"%>
+<%@ page import="siap.sius.esecuzionesanzionesostitutiva.action.ICostantiEsecuzioneSS"%>
 
-<jsp:useBean id="modalita"  					scope="request" class="java.lang.String"/>
-<jsp:useBean id="fascicoloSiusGP" 				scope="session" class="siap.sius.fascicolo.model.FascicoloGPModel" />
-<jsp:useBean id="datiOrdinanza" 				scope="request" class="siap.sius.depositoordinanzapc.model.OrdinanzaEventoTenoriPrescrizioniModel"/>
-<jsp:useBean id="depositoDecretoMotivazioni" 	scope="request" class="siap.sius.depositodecreto.model.DepositoDecretoEventoMotivazioniModel"/>
-<jsp:useBean id="tenori" 						scope="request" class="java.util.Vector"/>
-<jsp:useBean id="misuraSicurezza" 				scope="request" class="siap.siep.misurasicurezza.model.MisuraSicurezzaModel"/>
+<jsp:useBean id="modalita"  							scope="request" class="java.lang.String"/>
+<jsp:useBean id="fascicoloSiusGP" 						scope="session" class="siap.sius.fascicolo.model.FascicoloGPModel"/>
+<jsp:useBean id="datiOrdinanza" 						scope="request" class="siap.sius.depositoordinanzapc.model.OrdinanzaEventoTenoriPrescrizioniModel"/>
+<jsp:useBean id="depositoDecretoMotivazioni" 			scope="request" class="siap.sius.depositodecreto.model.DepositoDecretoEventoMotivazioniModel"/>
+<jsp:useBean id="tenori" 								scope="request" class="java.util.Vector"/>
+<jsp:useBean id="misuraSicurezza" 						scope="request" class="siap.siep.misurasicurezza.model.MisuraSicurezzaModel"/>
+<%-- MEV_2023-35: aggiunto useBean per gestione Ordinanza Reclamo Avverso Revoca Pena Sostitutiva --%>
+<jsp:useBean id="tipoPeneSostitutive" 					scope="request" class="java.lang.String"/>
+<jsp:useBean id="esecuzioneSanzioneSostitutivaModel" 	scope="request" class="siap.sius.esecuzionesanzionesostitutiva.model.EsecuzioneSanzioneSostitutivaModel"/>
   
 <%
 String[] esiti = (String[]) request.getAttribute("esiti");
@@ -294,7 +298,7 @@ else
 		        		}
 			        }
 		    	} // fine ciclo for
-		    }	
+		    }
 		
 		    function visualizza_data_decorrenza() {
 		      var data_decorrenza = '<%=data_decorrenza_ins%>';
@@ -365,9 +369,11 @@ else
 	    			document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NOME_COMUNITA%>.disabled = false;
 		    }
 
-		    <%-- MEV_39: aggiunta funzione --%>
-		    function AbilitaCampiEsiti() {
-		    	<% if ("42".equals(tipo) || "MS".equals(tipo)) { %>
+<%-- MEV_39: aggiunta funzione --%>
+function AbilitaCampiEsiti() {
+<%
+if ("42".equals(tipo) || "MS".equals(tipo)) {
+%>
 		        	var node = document.getElementById("datarinvio");
 		        	var ric = document.getElementById("ricovero");
 		     	   	if (typeof (document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[0][0]) == "undefined") {
@@ -405,10 +411,31 @@ else
 		              		}
 		            	}
 					} // Fine caso più oggetti
-				<% } %>
-			}
-		</script>
-	</head>
+<%
+}
+// MEV_2023-35: aggiunta gestione Ordinanza Reclamo Avverso Revoca Pena Sostitutiva (C063)
+else if (tipo.equals(ICostantiDepositoOrdinanzaPc.RECLAMO_AVVERSO_REVOCA_PENA_SOSTITUTIVA)) {
+%>
+	var nodeReclamoAvversoRevocaPenaSostitutiva = document.getElementById('idDivReclamoAvversoRevocaPenaSostitutiva');
+  	var isReclamo = "false";
+  	if (typeof (document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[0][0]) == "undefined") {
+    	for (j = 0; j < document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.length ; j++) {
+      		if (document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].selected
+      				&& (document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value == "3127")) {
+      			isReclamo = "true";
+      		}
+    	} // fine ciclo for
+	} // Fine caso singolo oggetto
+	if (isReclamo == "true")
+    	nodeReclamoAvversoRevocaPenaSostitutiva.style.display = "block";
+  	else
+    	nodeReclamoAvversoRevocaPenaSostitutiva.style.display = "none";
+<%
+}
+%>
+}
+</script>
+</head>
 <body class="corpo" onload="visualizza_data_decorrenza()">
 <FORM method="POST" action="<%=IWebConstants.PG_MAIN%>" name="ModificaOrdinanza">
 <input type="hidden" name="<%=ICostantiSiusMisuraSicurezza.CAMPO_ID_MISURA_SICUREZZA%>" value="<%=(misuraSicurezza!=null?misuraSicurezza.getIdMisuraSicurezza():"") %>">
@@ -432,9 +459,9 @@ else
 	<tr>
 		<td class="l" width="50%">Data Decorrenza Misura di Sicurezza</td> 
 		<td class="L" width="50%">
-          	<input value="<%=(misuraSicurezza.getDataDecorrenza() == null ? "":DateUtils.getDateToString(misuraSicurezza.getDataDecorrenza(), "dd"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiSiusMisuraSicurezza.CAMPO_GIORNO_DATA_DECORRENZA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)" /> /
-          	<input value="<%=(misuraSicurezza.getDataDecorrenza() == null ? "":DateUtils.getDateToString(misuraSicurezza.getDataDecorrenza(), "MM"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiSiusMisuraSicurezza.CAMPO_MESE_DATA_DECORRENZA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)" /> /
-          	<input value="<%=(misuraSicurezza.getDataDecorrenza() == null ? "":DateUtils.getDateToString(misuraSicurezza.getDataDecorrenza(), "yyyy"))%>" type="text" size="4" maxlength="4" name="<%=ICostantiSiusMisuraSicurezza.CAMPO_ANNO_DATA_DECORRENZA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillYear(value)" />
+          	<input value="<%=(misuraSicurezza.getDataDecorrenza() == null ? "":DateUtils.getDateToString(misuraSicurezza.getDataDecorrenza(), "dd"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiSiusMisuraSicurezza.CAMPO_GIORNO_DATA_DECORRENZA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"/> /
+          	<input value="<%=(misuraSicurezza.getDataDecorrenza() == null ? "":DateUtils.getDateToString(misuraSicurezza.getDataDecorrenza(), "MM"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiSiusMisuraSicurezza.CAMPO_MESE_DATA_DECORRENZA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"/> /
+          	<input value="<%=(misuraSicurezza.getDataDecorrenza() == null ? "":DateUtils.getDateToString(misuraSicurezza.getDataDecorrenza(), "yyyy"))%>" type="text" size="4" maxlength="4" name="<%=ICostantiSiusMisuraSicurezza.CAMPO_ANNO_DATA_DECORRENZA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)"/>
   		</td>
 	</tr>
 </table>
@@ -520,25 +547,25 @@ if ("42".equals(tipo) || "MS".equals(tipo)) {
 				}
 %>
 		<td class="L" colspan="2">
-			<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(depositoDecretoMotivazioni.getDepositoDecreto().getDataSospensioneSS(),"dd"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoDecreto.CAMPO_GIORNO_SOSPENSIONE_SS%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
-			<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(depositoDecretoMotivazioni.getDepositoDecreto().getDataSospensioneSS(),"MM"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoDecreto.CAMPO_MESE_SOSPENSIONE_SS%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
-			<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(depositoDecretoMotivazioni.getDepositoDecreto().getDataSospensioneSS(),"yyyy"))%>" type="text" size="4" maxlength="4" name="<%=ICostantiDepositoDecreto.CAMPO_ANNO_SOSPENSIONE_SS%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
+			<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(depositoDecretoMotivazioni.getDepositoDecreto().getDataSospensioneSS(), "dd"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoDecreto.CAMPO_GIORNO_SOSPENSIONE_SS%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
+			<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(depositoDecretoMotivazioni.getDepositoDecreto().getDataSospensioneSS(), "MM"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoDecreto.CAMPO_MESE_SOSPENSIONE_SS%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
+			<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(depositoDecretoMotivazioni.getDepositoDecreto().getDataSospensioneSS(), "yyyy"))%>" type="text" size="4" maxlength="4" name="<%=ICostantiDepositoDecreto.CAMPO_ANNO_SOSPENSIONE_SS%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
 		</td>
 	</tr>
 	<tr>
 		<td class="l">Rinvio fino al</td>
 		<td class="L">
-			<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(depositoDecretoMotivazioni.getDepositoDecreto().getDataScadenzaSospensioneSS(),"dd"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoDecreto.CAMPO_GIORNO_SCADENZA_SOSPENSIONE_SS%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
-			<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(depositoDecretoMotivazioni.getDepositoDecreto().getDataScadenzaSospensioneSS(),"MM"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoDecreto.CAMPO_MESE_SCADENZA_SOSPENSIONE_SS%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
-			<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(depositoDecretoMotivazioni.getDepositoDecreto().getDataScadenzaSospensioneSS(),"yyyy"))%>" type="text" size="4" maxlength="4" name="<%=ICostantiDepositoDecreto.CAMPO_ANNO_SCADENZA_SOSPENSIONE_SS%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
+			<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(depositoDecretoMotivazioni.getDepositoDecreto().getDataScadenzaSospensioneSS(), "dd"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoDecreto.CAMPO_GIORNO_SCADENZA_SOSPENSIONE_SS%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
+			<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(depositoDecretoMotivazioni.getDepositoDecreto().getDataScadenzaSospensioneSS(), "MM"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoDecreto.CAMPO_MESE_SCADENZA_SOSPENSIONE_SS%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
+			<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(depositoDecretoMotivazioni.getDepositoDecreto().getDataScadenzaSospensioneSS(), "yyyy"))%>" type="text" size="4" maxlength="4" name="<%=ICostantiDepositoDecreto.CAMPO_ANNO_SCADENZA_SOSPENSIONE_SS%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
 		</td>
 		<td class="l">oppure Rinvio nella misura di: 
 			Anni
-			<input value="<%=StringUtils.toZerotoStringaVuota(StringUtils.toStringJSP(depositoDecretoMotivazioni.getDepositoDecreto().getSospensioneAASS()),"")%>" title="Numero Anni sospensione" type="text" size="3" maxlength="2" name="<%=ICostantiDepositoDecreto.CAMPO_SOSPENSIONE_AA_SS%>"> 
+			<input value="<%=StringUtils.toZerotoStringaVuota(StringUtils.toStringJSP(depositoDecretoMotivazioni.getDepositoDecreto().getSospensioneAASS()), "")%>" title="Numero Anni sospensione" type="text" size="3" maxlength="2" name="<%=ICostantiDepositoDecreto.CAMPO_SOSPENSIONE_AA_SS%>"> 
 			Mesi
-			<input value="<%=StringUtils.toZerotoStringaVuota(StringUtils.toStringJSP(depositoDecretoMotivazioni.getDepositoDecreto().getSospensioneMMSS()),"")%>" title="Numero Mesi sospensione" type="text" size="3" maxlength="2" name="<%=ICostantiDepositoDecreto.CAMPO_SOSPENSIONE_MM_SS%>"> 
+			<input value="<%=StringUtils.toZerotoStringaVuota(StringUtils.toStringJSP(depositoDecretoMotivazioni.getDepositoDecreto().getSospensioneMMSS()), "")%>" title="Numero Mesi sospensione" type="text" size="3" maxlength="2" name="<%=ICostantiDepositoDecreto.CAMPO_SOSPENSIONE_MM_SS%>"> 
 			Giorni
-			<input value="<%=StringUtils.toZerotoStringaVuota(StringUtils.toStringJSP(depositoDecretoMotivazioni.getDepositoDecreto().getSospensioneGGSS()),"")%>" title="Numero Giorni sospensione" type="text" size="4" maxlength="2" name="<%=ICostantiDepositoDecreto.CAMPO_SOSPENSIONE_GG_SS%>">
+			<input value="<%=StringUtils.toZerotoStringaVuota(StringUtils.toStringJSP(depositoDecretoMotivazioni.getDepositoDecreto().getSospensioneGGSS()), "")%>" title="Numero Giorni sospensione" type="text" size="4" maxlength="2" name="<%=ICostantiDepositoDecreto.CAMPO_SOSPENSIONE_GG_SS%>">
 		</td>
 	</tr>
 	<tr id="ricovero" style="display: none;">
@@ -553,7 +580,8 @@ if ("42".equals(tipo) || "MS".equals(tipo)) {
 	<tr>
 <%
 				if(datiOrdinanza.getOrdinanza().getCodTipoOrdinanza() != null && 
-				   (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().equals("42") || datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().equals("MS")) ){
+				   (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().equals("42")
+						   || datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().equals("MS"))) {
 %>
 		<td class="l">Data Decorrenza Differimento Esecuzione</td>
 <%
@@ -599,6 +627,39 @@ if ("42".equals(tipo) || "MS".equals(tipo)) {
 }
 %>
 <%-- FINE MEV_39 --%>
+
+<%
+// MEV_2023-35: aggiunta gestione Ordinanza Reclamo Avverso Revoca Pena Sostitutiva (C063)
+if (tipo.equals(ICostantiDepositoOrdinanzaPc.RECLAMO_AVVERSO_REVOCA_PENA_SOSTITUTIVA)) {
+%>
+<div id="idDivReclamoAvversoRevocaPenaSostitutiva" style="display:none;"> 
+<table cellspacing="2" cellpadding="2" width="95%">
+	<tr>
+		<td class="l" width="30%"><font class="label">Pena Sostitutiva piu' grave</font></td>  
+        <td class="l">          
+          	<select title="Tipo Pena Sostitutiva" name="<%=ICostantiEsecuzioneSS.CAMPO_COD_TIPO_SANZIONE%>">
+          		<option value="-">-</option>
+          		<%=tipoPeneSostitutive%>
+          	</select>
+		</td>
+	</tr>
+	<tr>
+		<td class="l"><font class="label">Rideterminazione Quantum Pena Da Espiare</font></td>
+		<td class="l">
+			<font class="label">Anni</font>&nbsp;
+			<input type="text" title="Anni" size="4" maxlength="2" name="<%=ICostantiEsecuzioneSS.CAMPO_NUM_ANNI_SANZIONE%>" value="<%=StringUtils.toZerotoStringaVuota(StringUtils.toStringJSP(esecuzioneSanzioneSostitutivaModel.getNumAnniSanzione()), "")%>" ONKEYPRESS="return TicTabNumField(this,event)">
+			<font class="label">Mesi</font>&nbsp;
+			<input type="text" title="Mesi" size="4" maxlength="2" name="<%=ICostantiEsecuzioneSS.CAMPO_NUM_MESI_SANZIONE%>" value="<%=StringUtils.toZerotoStringaVuota(StringUtils.toStringJSP(esecuzioneSanzioneSostitutivaModel.getNumMesiSanzione()), "")%>" ONKEYPRESS="return TicTabNumField(this,event)">
+			<font class="label">Giorni</font>&nbsp;
+			<input type="text" title="Giorni" size="4" maxlength="2" name="<%=ICostantiEsecuzioneSS.CAMPO_NUM_GIORNI_SANZIONE%>" value="<%=StringUtils.toZerotoStringaVuota(StringUtils.toStringJSP(esecuzioneSanzioneSostitutivaModel.getNumGiorniSanzione()), "")%>" ONKEYPRESS="return TicTabNumField(this,event)">
+		</td>
+	</tr>
+</table>
+</div>
+<%
+}
+%>
+
 <br>
 <table>
 	<tr>

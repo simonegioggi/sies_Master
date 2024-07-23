@@ -729,7 +729,6 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 							lNuovaMisura.setNumAnni(getAnniMisuraParameter());
 							lNuovaMisura.setNumMesi(getMesiMisuraParameter());
 							lNuovaMisura.setNumGiorni(getGiorniMisuraParameter());
-
 							// Effettuo l'Inserimento della Misura di Sicurezza
 							lNuovaMisura = lCtrl.ExInserisciMisuraSicurezza(lNuovaMisura);
 						} else {
@@ -737,25 +736,25 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 							Iterator itxMis = lMisureSicurezza.iterator();
 							while (itxMis.hasNext()) {
 								MisuraSicurezzaModel lMisSicuSius = (MisuraSicurezzaModel) itxMis.next();
-
 								lMisSicuSius.setCodOperatoreAggiornamento(getCodUtenteConnesso());
 								lMisSicuSius.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
 								lMisSicuSius.setDataAggiornamento(DateUtils.getSysDate());
 								lMisSicuSius.setEveIdEvento(lOrdEveTenGP.getEvento().getIdEvento());
 								lMisSicuSius.setDataDecorrenza(dataDecorrenzaMS);
-
 								// Effettuo la Modifica della Misura di Sicurezza
 								lCtrl.ExModificaMisuraSicurezza(lMisSicuSius);
 							}
 						}
 					} // if(idFascicoloSius != null){
 				} // if(dataDecorrenzaMS != null){
-
 			} // Ticket#20220415019 - FINE
 
 			/*
-			 * ISSUE MEV : aggiunto codice per gestione oggetto C029 Numero MEV : 39 Autore : Gioggi Data :
-			 * 19/giu/2017 Branch : MEV_39
+			 * ISSUE MEV : aggiunto codice per gestione oggetto C029 
+			 * Numero MEV : 39 
+			 * Autore : Gioggi 
+			 * Data : 19/giu/2017 
+			 * Branch : MEV_39
 			 */
 			if (codOggettoProcedimento.equalsIgnoreCase(OGG_ORD_APPELLO_CONTRO_PROVV_MS)) {
 				TenoreModel tenori[] = lOrdEveTenGP.getTenori();

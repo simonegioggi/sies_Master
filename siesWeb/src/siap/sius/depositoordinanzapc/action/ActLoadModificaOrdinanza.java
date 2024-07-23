@@ -27,40 +27,30 @@ import siap.siep.misurasicurezza.model.MisuraSicurezzaModel;
 import siap.siep.util.SIEPLookupRemote;
 import siap.sius.SIUSException;
 import siap.sius.depositodecreto.model.DepositoDecretoModel;
+import siap.sius.depositoordinanzapc.controller.IDepositoOrdinanzaPc;
 import siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel;
 import siap.sius.depositoordinanzapc.model.OrdinanzaEventoTenoriPrescrizioniModel;
 import siap.sius.depositoordinanzapc.util.RicercaProvvedimentiCollegati;
 import siap.sius.esecuzionemisurasicurezza.controller.IEsecuzioneMS;
 import siap.sius.esecuzionemisurasicurezza.model.EsecuzioneMisuraSicurezzaModel;
+import siap.sius.esecuzionesanzionesostitutiva.controller.IEsecuzioneSS;
+import siap.sius.esecuzionesanzionesostitutiva.model.EsecuzioneSanzioneSostitutivaModel;
 import siap.sius.fascicolo.controller.IFascicoloSius;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.tenore.model.TenoreModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * <p>
- * Title: ActLoadModificaOrdinanza
- * </p>
- * <p>
- * Description: Classe Action devoluta alla preparazione della Form di modifica di un'Ordinanza.
- * </p>
- * <p>
+ * ActLoadModificaOrdinanza - Classe Action devoluta alla preparazione della Form di modifica di un'Ordinanza.
  * Poichè i dati da visualizzare sono gli stessi utilizzati per la visualizzazione del Dettaglio, la classe è
  * ottenuta come specializzazione della ActDettaglioEmissioneOrdinanza in modo da poter utilizzare le stesse
  * funzioni per ricavare i dati.
- * </p>
- * *
- * <p>
- * Copyright: Copyright (c) 2007
- * </p>
- * <p>
- * Company: Eunics
- * </p>
  *
  * @version 2.2
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ActLoadModificaOrdinanza extends ActDettaglioEmissioneOrdinanza {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
@@ -187,8 +177,11 @@ public class ActLoadModificaOrdinanza extends ActDettaglioEmissioneOrdinanza {
 		}
 
 		/*
-		 * ISSUE MEV : aggiunto codice per gestione oggetto C029 - AP Numero MEV : 39 Autore : Gioggi Data :
-		 * 20/giu/2017 Branch : MEV_39
+		 * ISSUE MEV : aggiunto codice per gestione oggetto C029 - AP 
+		 * Numero MEV : 39 
+		 * Autore : Gioggi 
+		 * Data : 20/giu/2017 
+		 * Branch : MEV_39
 		 */
 		if (mOrdEveTenPreMod != null && mOrdEveTenPreMod.getOrdinanza() != null
 				&& mOrdEveTenPreMod.getOrdinanza().getCodTipoOrdinanza().compareTo(APPELLO_MS) == 0) {
@@ -211,12 +204,13 @@ public class ActLoadModificaOrdinanza extends ActDettaglioEmissioneOrdinanza {
 				if (ddm != null)
 					setRequestAttribute("decreto", ddm);
 			}
-			MisuraSicurezzaModel aMisuraSicurezza = new MisuraSicurezzaModel();			
+			MisuraSicurezzaModel aMisuraSicurezza = new MisuraSicurezzaModel();
 			// ricerco non per id fasc sius ma per id fasc sius origine (UDS) se esiste
-						// altrimenti ricerco per id fasc sius 20200125 [SG]
-			aMisuraSicurezza.setFasSiuIdFascicoloSius(lFasGPMod.getFascicoloSiusModel().getIdFascicoloSiusOrigine() != null
-								? lFasGPMod.getFascicoloSiusModel().getIdFascicoloSiusOrigine()
-								: lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
+			// altrimenti ricerco per id fasc sius 20200125 [SG]
+			aMisuraSicurezza.setFasSiuIdFascicoloSius(
+					lFasGPMod.getFascicoloSiusModel().getIdFascicoloSiusOrigine() != null
+							? lFasGPMod.getFascicoloSiusModel().getIdFascicoloSiusOrigine()
+							: lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
 			MisuraSicurezzaController lCtrl = new MisuraSicurezzaController();
 			Vector lVect = lCtrl.ExRicercaMisuraSicurezza(aMisuraSicurezza);
 			MisuraSicurezzaModel msm = null;
@@ -290,8 +284,26 @@ public class ActLoadModificaOrdinanza extends ActDettaglioEmissioneOrdinanza {
 			}
 		}
 
+		// MEV_2023-35 - RECLAMO AVVERSO REVOCA PENA SOSTITUTIVA...
+		if (mOrdEveTenPreMod != null && mOrdEveTenPreMod.getOrdinanza() != null
+				&& mOrdEveTenPreMod.getOrdinanza().getCodTipoOrdinanza()
+						.compareTo(RECLAMO_AVVERSO_REVOCA_PENA_SOSTITUTIVA) == 0) {
+			IDepositoOrdinanzaPc idop = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
+			DepositoOrdinanzaPcModel dopm = idop.ExRicercaDepositoOrdinanzaPcByGenProc(
+					mFasGPMod.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
+			IEsecuzioneSS iess = SIUSLookupRemote.getEsecuzioneSSRemote();
+			EsecuzioneSanzioneSostitutivaModel essm = iess
+					.ExRicercaEsecuzioneSanzioneSostitutivaByIdDepositoOrd(dopm.getIdDepositoOrdinanzaPc());
+			// combo penaSostitutiva più grave
+			Option o = new Option(DecodificheManager.getInstance().getMotivoEsecuzionePeneSostitutive());
+			if (!Utils.isNullObj(essm))
+				o.setSelected(essm.getCodTipoSanzione());
+			setRequestAttribute("esecuzioneSanzioneSostitutivaModel", essm);
+			setRequestAttribute("tipoPeneSostitutive", "" + o);
+		}
+
 		setRequestAttribute("modalita", "M");
-		siesLogger.debug("lRetPage = "+lRetPage);
+		siesLogger.debug("lRetPage = " + lRetPage);
 		return lRetPage;
 	}
 
@@ -353,7 +365,6 @@ public class ActLoadModificaOrdinanza extends ActDettaglioEmissioneOrdinanza {
 			siesLogger.debug("codice esito selezionato -> null ");
 
 		return lOption.toString();
-
 	}
 
 	// Preleva l'Elenco di Esiti corrispondente ad un dato oggetto
@@ -543,12 +554,12 @@ public class ActLoadModificaOrdinanza extends ActDettaglioEmissioneOrdinanza {
 	}
 
 	/**
+	 * emma: 28/08/2018 : intervento post-collaudo
+	 *
 	 * @param codiceOggetto
 	 * @param acodAltEsitoSelezionato
-	 * @return
+	 * @return String
 	 * @throws Exception
-	 *
-	 *             emma: 28/08/2018 : intervento post-collaudo
 	 */
 	private String getEsitiMSCompatibiliPerModificaU023(String codiceOggetto, String acodAltEsitoSelezionato)
 			throws Exception {
@@ -578,7 +589,6 @@ public class ActLoadModificaOrdinanza extends ActDettaglioEmissioneOrdinanza {
 			siesLogger.debug("codice esito selezionato -> null ");
 
 		return lOption.toString();
-
 	}
 
 }

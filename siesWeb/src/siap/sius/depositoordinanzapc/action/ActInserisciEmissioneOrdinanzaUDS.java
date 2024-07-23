@@ -2,6 +2,7 @@ package siap.sius.depositoordinanzapc.action;
 
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -9,6 +10,7 @@ import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
+import f3b.util.F3BException;
 import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
@@ -51,10 +53,10 @@ import siap.sius.tenore.controller.ITenore;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * ActLoadEmissioneOrdinanzaUDS - Classe Action per la load inserisci di Emissione Ordinanza UDS
- * Poichè l'azione deve implementare la stessa funzione implementata da ActLoadEmissioneDecreto, viene estesa
- * questa in modo di utilizzare il suo processRequest(). Si sfrutta l'override della funzione
- * generaListaTipi() per differenziare la jsp.
+ * ActLoadEmissioneOrdinanzaUDS - Classe Action per la load inserisci di Emissione Ordinanza UDS Poichè
+ * l'azione deve implementare la stessa funzione implementata da ActLoadEmissioneDecreto, viene estesa questa
+ * in modo di utilizzare il suo processRequest(). Si sfrutta l'override della funzione generaListaTipi() per
+ * differenziare la jsp.
  *
  * @version 1.0
  */
@@ -92,8 +94,6 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 		// lettura tipo di ordinanza Sempre automatica 13-9-04
 		String lCodTipoDec = null;
 
-		// UtenteModel lUtenteModel = this.getUtenteConnesso();
-
 		// Generazione automatica in base al contenuto
 		Collection lOggetti = DecodificheManager.getInstance().getOggettoProcedimento();
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -111,7 +111,6 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 					(FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"));
 			BigDecimal lIdFascicoloSiusOrigine = lFasGPMod.getFascicoloSiusModel()
 					.getIdFascicoloSiusOrigine();
-
 			if (lIdFascicoloSiusOrigine != null) {
 				IFascicoloSius lCtrl = SIUSLookupRemote.getFascicoloSiusRemote();
 				FascicoloGPModel lFasGPModOrigine = lCtrl.ExRicercaFascicoloByKey(lIdFascicoloSiusOrigine);
@@ -491,15 +490,11 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("Ordinanza Generica per Decreto Generico " + lCodTipoDec);
-		}
-
-		else if (lCodTipoDec.compareTo(REVOCA_ORDINANZA) == 0) {
+		} else if (lCodTipoDec.compareTo(REVOCA_ORDINANZA) == 0) {
 			// throw new SIUSException(SIUSException.USER_MESSAGE,
 			// "Ordinanza di Revoca non ancora prevista ma in fase di rilascio.");
-
 			// Esiste il decreto oltre all'ordinanza. Luigi 8-11-2006
 			// Ordinanza di Revoca Ordinanza
-
 			mRetPage = PG_LOAD_INSERISCI_ORDINANZA_REVOCA;
 			ricercaFascicoloOrigine();
 			// setRequestAttribute("Action", "siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaUDS");
@@ -554,9 +549,9 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 			siesLogger.debug("Ordinanza Rinvio su Sanzioni Sostitutive " + lCodTipoDec);
 		} else if (lCodTipoDec.compareTo(CONVERSIONE_PENE_PECUNIARIE) == 0
 				// MEV_2023-35: aggiunto tipo ordinanza
-				// vale per 		U142 S33 SR	Conversione pene pecuniarie principali per mancato pagamento
-				// e anche per		U143 S30 SR Violazione obblighi lavoro pubblica utilita'
-				// e anche per 		U145 S30 SR Rateizzazione pena pecuniaria
+				// vale per U142 S33 SR Conversione pene pecuniarie principali per mancato pagamento
+				// e anche per U143 S30 SR Violazione obblighi lavoro pubblica utilita'
+				// e anche per U145 S30 SR Rateizzazione pena pecuniaria
 				|| lCodTipoDec.compareTo(CONVERSIONE_PENE_PECUNIARIE_MANCATO_PAGAMENTO) == 0) {
 			// Controllo selezione Oggetti x Conversione Pene Pecuniarie.
 			String lCodOggetto = getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_OGGETTO);
@@ -775,17 +770,26 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 			setRequestAttribute("RataMancatoPagamento", lRataMancatoPagamento);
 			setRequestAttribute("Action", "siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaUDS");
 			siesLogger.debug("Ordinanza Revoca Conversione Pena Pecuniaria Sostitutiva " + lCodTipoDec);
-			// MEV_2023-35 - FINE		    
-	        // MEV_2023-35 - Revoca Pena Sostitutiva e Converte.... 
-	      } else if (lCodTipoDec.compareTo(REVOCA_PENA_SOSTITUTIVA) == 0) {
-	       // combo penaSostitutiva più grave
-	        Option lOptionPenaSost = new Option(DecodificheManager.getInstance().getMotivoEsecuzionePeneSostitutive());
-	        setRequestAttribute("tipoPeneSostitutive", "" + lOptionPenaSost);
-
-	        // Ordinanza Misura Sicurezza
-	        mRetPage = PG_LOAD_INSERISCI_REVOCA_PENA_SOSTITUTIVA;
-	        siesLogger.debug("Ordinanza Revoca e conversione Pena Sostitutiva..." + lCodTipoDec);
-	        // MEV_2023-35 - FINE
+			// MEV_2023-35 - FINE
+			// MEV_2023-35 - Revoca Pena Sostitutiva e Converte...
+		} else if (lCodTipoDec.compareTo(REVOCA_PENA_SOSTITUTIVA) == 0) {
+			// combo penaSostitutiva più grave
+			Option lOptionPenaSost = new Option(
+					DecodificheManager.getInstance().getMotivoEsecuzionePeneSostitutive());
+			setRequestAttribute("tipoPeneSostitutive", "" + lOptionPenaSost);
+			mRetPage = PG_LOAD_INSERISCI_REVOCA_PENA_SOSTITUTIVA;
+			siesLogger.debug("Ordinanza Revoca e conversione Pena Sostitutiva..." + lCodTipoDec);
+			// MEV_2023-35 - FINE
+			// MEV_2023-35 - RECLAMO AVVERSO REVOCA PENA SOSTITUTIVA...
+		} else if (lCodTipoDec.compareTo(RECLAMO_AVVERSO_REVOCA_PENA_SOSTITUTIVA) == 0) {
+			// combo penaSostitutiva più grave
+			Option o = new Option(DecodificheManager.getInstance().getMotivoEsecuzionePeneSostitutive());
+			setRequestAttribute("tipoPeneSostitutive", "" + o);
+			// Ricerca Provvedimento di Revoca Pena Sostitutiva
+			ricercaProvvedimentoRevocaPS();
+			mRetPage = PG_LOAD_INSERISCI_RECLAMO_AVVERSO_REVOCA_PENA_SOSTITUTIVA;
+			siesLogger.debug("Ordinanza RECLAMO AVVERSO REVOCA PENA SOSTITUTIVA..." + lCodTipoDec);
+			// MEV_2023-35 - FINE
 		} else
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Ordinanza non prevista per il contenuto indicato");
@@ -904,6 +908,7 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 	// MEV_2023-35 Recupero Se Presente la Rateizzazione collegata all'ultimo avviso mancato pagamento
 	// del SIEP collegato
 	private RateizzazionePPModel ricercaMancatoPagamento() throws Exception {
+
 		siesLogger.debug("ricercaMancatoPagamento");
 		RateizzazionePPModel lRataMancatoPagamento = null;
 		if (!isSessionAttributeNullObj("fascicoloSiusGP")) {
@@ -923,7 +928,13 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 				IEvento lEveCtrl = SICOLookupRemote.getEventoRemote();
 				// Vector <EventoModel> lListaAvvisi = lEveCtrl.ricercaEvento(new String[]{"1308"}, new
 				// String[]{"04"}, lEveRicerca);
-				Vector<EventoModel> lListaAvvisi = lEveCtrl.ExRicercaEvento(lEveRicerca);
+				Vector<EventoModel> lListaAvvisi = null;
+				try {
+					lListaAvvisi = lEveCtrl.ExRicercaEvento(lEveRicerca);
+				} catch (Exception e) {
+					siesLogger.debug("NON ESISTE un provvedimento di mancato pagamento (1308) sul "
+							+ "procedimento SIEP collegato!");
+				}
 				if (lListaAvvisi != null && lListaAvvisi.size() > 0) {
 					BigDecimal idEvento = lListaAvvisi.elementAt(0).getIdEvento();
 					IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
@@ -937,4 +948,46 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 
 		return lRataMancatoPagamento;
 	}
+
+	/**
+	 * Ricerca del provvedimento Revoca Pena Sostitutiva collegato
+	 *
+	 * @throws F3BException
+	 */
+	private void ricercaProvvedimentoRevocaPS() throws F3BException {
+
+		// Si preleva dalla sessione il fascicolo GPModel
+		if (!isSessionAttributeNullObj("fascicoloSiusGP")) {
+			FascicoloGPModel fgpm = new FascicoloGPModel(
+					(FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"));
+			if (!Utils.isNullObj(fgpm.getFascicoloSiusModel())) {
+				BigDecimal idFascicoloSiusOrigine = fgpm.getFascicoloSiusModel().getIdFascicoloSiusOrigine();
+				if (!Utils.isNullObj(idFascicoloSiusOrigine)) {
+					IFascicoloSius ifs = SIUSLookupRemote.getFascicoloSiusRemote();
+					FascicoloGPModel fgpmdOrigine = ifs.ExRicercaFascicoloByKey(idFascicoloSiusOrigine);
+					if ("U131".equals(fgpmdOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento())
+							|| "U132".equals(fgpmdOrigine.getGeneraleProcedimentoModel()
+									.getCodOggettoProcedimento())) {
+						FascicoloSiusModel fsm = fgpmdOrigine.getFascicoloSiusModel();
+						setRequestAttribute("procedimentoCollegato", fsm);
+						IEvento ie = SICOLookupRemote.getEventoRemote();
+						Vector<EventoModel> eventi = ie
+								.ExRicercaEventoByFascicoloSius(fsm.getIdFascicoloSius(), "01");
+						if (!eventi.isEmpty()) {
+							Iterator<EventoModel> iterEM = eventi.iterator();
+							while (iterEM.hasNext()) {
+								EventoModel em = (EventoModel) iterEM.next();
+								if ("03".equals(em.getCodTipoProvvedimento())) {
+									setRequestAttribute("eventoProcedimentoCollegato", em);
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	// FINE MEV_2023-35
+
 }

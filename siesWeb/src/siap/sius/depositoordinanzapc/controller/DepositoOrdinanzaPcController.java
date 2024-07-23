@@ -1063,11 +1063,13 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			}
 
 			// MEV_2023-35 - Revoca e Conversione Pena Sostitutiva
-			// Il record ESECUZIONE_SANZ_SOST con i dati dell'ordinanza punta
-			// il deposito ordinanza
-			// Va eliminato prima di eliminare l'evento
+			// 				anche x RECLAMO_AVVERSO_REVOCA_PENA_SOSTITUTIVA
+			// Il record ESECUZIONE_SANZ_SOST con i dati dell'ordinanza punta il deposito ordinanza
+			// Va eliminato prima di eliminare l'evento!
 			if (aDepOrd.getCodTipoOrdinanza()
-					.compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_PENA_SOSTITUTIVA) == 0) {
+					.compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_PENA_SOSTITUTIVA) == 0
+					|| aDepOrd.getCodTipoOrdinanza().compareTo(
+							ICostantiDepositoOrdinanzaPc.RECLAMO_AVVERSO_REVOCA_PENA_SOSTITUTIVA) == 0) {
 				lESSDao = new EsecuzioneSanzioneSostitutivaDAO(aConn);
 				lESSDao.setCondizioneDeleteByGP(lIdDepOrd);
 				lESSDao.delete();
@@ -2251,8 +2253,11 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			DepositoOrdinanzaPcModel lDepOrdMod = new DepositoOrdinanzaPcModel();
 
 			/*
-			 * ISSUE MEV : eseguito merge tra 15 MEV: interpretazione con codice commentato Numero MEV : SIES
-			 * v10 Autore : gioggi Data : 27/gen/2016 Branch : MEV_SIES v10
+			 * ISSUE MEV : eseguito merge tra 15 MEV: interpretazione con codice commentato 
+			 * Numero MEV : SIES v10 
+			 * Autore : gioggi 
+			 * Data : 27/gen/2016 
+			 * Branch : MEV_SIES v10
 			 */
 			// lDepOrdSqlDao.ricercaDepositoOrdinanzaPcByIdEveGenerato( aIdEvento );
 			lDepOrdSqlDao.ricercaDepositoOrdinanzaCssaUssmPcByIdEveGenerato(aIdEvento);
@@ -2495,8 +2500,11 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			lDepDao = new DepositoOrdinanzaPcSqlDAO(lConn);
 
 			/*
-			 * ISSUE MEV : eseguito merge tra 15 MEV: interpretazione con codice commentato Numero MEV : SIES
-			 * v10 Autore : gioggi Data : 27/gen/2016 Branch : MEV_SIES v10
+			 * ISSUE MEV : eseguito merge tra 15 MEV: interpretazione con codice commentato 
+			 * Numero MEV : SIES v10 
+			 * Autore : gioggi 
+			 * Data : 27/gen/2016 
+			 * Branch : MEV_SIES v10
 			 */
 			// lDepDao.ricercaDepositoOrdinanzaPcByIdEveGenerato(aEveKey);
 			lDepDao.ricercaDepositoOrdinanzaCssaUssmPcByIdEveGenerato(aEveKey);
@@ -3858,8 +3866,11 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 	}
 
 	/*
-	 * ISSUE MEV : aggiunti metodi di ricerca provvedimenti differimento SIUS Numero MEV : 39 Autore : Gioggi
-	 * Data : 24/feb/2017 Branch : MEV_39
+	 * ISSUE MEV : aggiunti metodi di ricerca provvedimenti differimento SIUS 
+	 * Numero MEV : 39 
+	 * Autore : Gioggi
+	 * Data : 24/feb/2017 
+	 * Branch : MEV_39
 	 */
 	public Vector ExRicercaEventoProvvedimentiDifferimentoSIUSByFascicoloSiep(BigDecimal idFascicoloSiep)
 			throws F3BException {
@@ -3986,6 +3997,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 	public OrdinanzaEventoTenoriGProcModel ExInserisciOrdinanzaRevocaPS(
 			OrdinanzaEventoTenoriGProcModel aGProcOrdEveTenori,
 			EsecuzioneSanzioneSostitutivaModel aEsecSenSostMod) throws F3BException {
+
 		Connection lConn = null;
 		OrdinanzaEventoTenoriGProcModel lModRet = null;
 		EsecuzioneSanzioneSostitutivaDAO lEsecSanSostDAO = null;

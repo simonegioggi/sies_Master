@@ -189,8 +189,8 @@ function AbilitaCampiEsiti()
 
   <table cellspacing="2" cellpadding="2" width="50%">
     <tr>
-      <td class="l" width==30%> Data Emissione</td>
-      <td class="l" width==70%> <%=DateUtils.getDateToString(data_emissione,"dd/MM/yyyy")%></td>
+      <td class="l" width="30%"> Data Emissione</td>
+      <td class="l" width="70%"> <%=DateUtils.getDateToString(data_emissione,"dd/MM/yyyy")%></td>
     </tr>  
     <tr>
       <td class="l">Eventuale Motivazione</td>

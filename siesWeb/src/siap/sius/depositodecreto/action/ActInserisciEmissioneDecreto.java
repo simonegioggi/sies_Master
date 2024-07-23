@@ -34,24 +34,10 @@ import siap.sius.tenore.model.TenoreModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * <p>
- * Title: ActInserisciEmissioneDecreto
- * </p>
- * <p>
- * Description: Classe Action per l'inserimento dell'Emissione di un decreto generico.
- * </p>
+ * ActInserisciEmissioneDecreto - Classe Action per l'inserimento dell'Emissione di un decreto generico.
  * L'azione legge contenuto ed oggetti relativi al procedimento scelto.
- * </p>
  * Legge il tipo di decreto da emettere.
- * </p>
  * Non effettua nesun inserimento nel DB ma passa i dati letti (tenori) alla form successiva.
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
  *
  * @version 1.0
  */
@@ -59,6 +45,7 @@ public class ActInserisciEmissioneDecreto extends ActionSius implements ICostant
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+
 	public String mRetPage = IWebConstants.PG_MESSAGE; // pagina di view
 	FascicoloGPModel lFasGPMod = null;
 
@@ -301,7 +288,8 @@ public class ActInserisciEmissioneDecreto extends ActionSius implements ICostant
 	}
 
 	/**
-	 *
+	 * Metodo per la selezione
+	 * 
 	 * @return
 	 * @throws Exception
 	 */
@@ -618,8 +606,11 @@ public class ActInserisciEmissioneDecreto extends ActionSius implements ICostant
 			siesLogger.debug("Decreto di Risarcimrnto Art. 3 CEDU " + lCodTipoDec);
 		}
 		/*
-		 * ISSUE MEV : aggiunta casistica per contenuto U082 Numero MEV : 39 Autore : Gioggi Data :
-		 * 08/giu/2017 Branch : MEV_39
+		 * ISSUE MEV : aggiunta casistica per contenuto U082 
+		 * Numero MEV : 39 
+		 * Autore : Gioggi 
+		 * Data : 08/giu/2017 
+		 * Branch : MEV_39
 		 */
 		else if (lCodTipoDec.compareTo(RINVIO_ESECUZIONE_MS) == 0) {
 			mRetPage = PG_RINVIO_ESECUZIONE_MS;
@@ -646,7 +637,8 @@ public class ActInserisciEmissioneDecreto extends ActionSius implements ICostant
 	}
 
 	/**
-	 *
+	 * Metodo per la ricerca di decreti da revocare
+	 * 
 	 * @param aTipoDecreto
 	 * @param aTipoLicenza
 	 * @throws Exception
@@ -673,7 +665,8 @@ public class ActInserisciEmissioneDecreto extends ActionSius implements ICostant
 	}
 
 	/**
-	 *
+	 * Metodo per la ricerca dek Fascicolo d'Origine
+	 * 
 	 * @throws Exception
 	 */
 	public void ricercaFascicoloOrigine() throws Exception {

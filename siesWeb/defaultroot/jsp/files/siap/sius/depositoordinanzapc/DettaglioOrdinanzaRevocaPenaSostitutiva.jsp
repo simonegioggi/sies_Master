@@ -38,7 +38,7 @@ if (esecSansSostModel.getIdEsecuzioneSanzioneSost()!=null)
 {
   
 %>
-    <table cellspacing="2" cellpadding="2" width1="90%" >
+    <table cellspacing="2" cellpadding="2" width="90%" >
       <tr>
         <td class="L">
           <font class="label">Quantum pena revocata</font>

@@ -3,18 +3,7 @@ package siap.sius.depositoordinanzapc.action;
 import f3b.web.IWebConstants;
 
 /**
- * <p>
- * Title: ICostantiDepositoOrdinanzaPc
- * </p>
- * <p>
- * Description: Classe di costanti di DepositoOrdinanzaPc
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * ICostantiDepositoOrdinanzaPc - Classe di costanti di DepositoOrdinanzaPc
  *
  * @version 1.0
  */
@@ -454,15 +443,25 @@ public interface ICostantiDepositoOrdinanzaPc {
 			+ "files/siap/sius/depositoordinanzapc/DettaglioOrdinanzaConverRevocaPPS.jsp";
 	// MEV_2023-35 - FINE
 
-    // MEV_2023-35
-    // Revoca Pena Sostitutiva
-    public static final String REVOCA_PENA_SOSTITUTIVA = "PR";
-    public static final String PG_LOAD_INSERISCI_REVOCA_PENA_SOSTITUTIVA = IWebConstants.ROOT_DIR
-      + "files/siap/sius/depositoordinanzapc/InserisciOrdinanzaRevocaPenaSostitutiva.jsp";
-    public static final String PG_LOAD_DETTAGLIO_REVOCA_PENA_SOSTITUTIVA = IWebConstants.ROOT_DIR
-      + "files/siap/sius/depositoordinanzapc/DettaglioOrdinanzaRevocaPenaSostitutiva.jsp";
-    // MEV_2023-35 - FINE
-    
+	// MEV_2023-35
+	// Revoca Pena Sostitutiva
+	public static final String REVOCA_PENA_SOSTITUTIVA = "PR";
+	public static final String PG_LOAD_INSERISCI_REVOCA_PENA_SOSTITUTIVA = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/depositoordinanzapc/InserisciOrdinanzaRevocaPenaSostitutiva.jsp";
+	public static final String PG_LOAD_DETTAGLIO_REVOCA_PENA_SOSTITUTIVA = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/depositoordinanzapc/DettaglioOrdinanzaRevocaPenaSostitutiva.jsp";
+	// MEV_2023-35 - FINE
+
+	// MEV_2023-35
+	// RECLAMO AVVERSO REVOCA PENA SOSTITUTIVA (C063)
+	public static final String COD_OGGETTO_RECLAMO_AVVERSO_REVOCA_PENA_SOSTITUTIVA = "C063";
+	public static final String RECLAMO_AVVERSO_REVOCA_PENA_SOSTITUTIVA = "RC";
+	public static final String PG_LOAD_INSERISCI_RECLAMO_AVVERSO_REVOCA_PENA_SOSTITUTIVA = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/depositoordinanzapc/InserisciOrdinanzaReclamoAvversoRevocaPenaSostitutiva.jsp";
+	public static final String PG_LOAD_DETTAGLIO_RECLAMO_AVVERSO_REVOCA_PENA_SOSTITUTIVA = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/depositoordinanzapc/DettaglioOrdinanzaReclamoAvversoRevocaPenaSostitutiva.jsp";
+	// MEV_2023-35 - FINE
+
 	// Declaratoria Estinzione Sanzioni Sostitutive
 	public static final String PG_LOAD_DETTAGLIO_ORDINANZA_DECLARATORIA_ESTINZIONE_SS = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/depositoordinanzapc/DettaglioOrdinanzaDeclaratoriaEstinsioneSS.jsp";

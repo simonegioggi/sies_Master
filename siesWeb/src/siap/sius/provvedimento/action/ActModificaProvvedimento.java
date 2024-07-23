@@ -42,6 +42,9 @@ import siap.sius.depositoordinanzapc.action.ICostantiDepositoOrdinanzaPc;
 import siap.sius.depositoordinanzapc.controller.IDepositoOrdinanzaPc;
 import siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel;
 import siap.sius.depositosentenza.action.ICostantiDepositoSentenza;
+import siap.sius.esecuzionesanzionesostitutiva.action.ICostantiEsecuzioneSS;
+import siap.sius.esecuzionesanzionesostitutiva.controller.IEsecuzioneSS;
+import siap.sius.esecuzionesanzionesostitutiva.model.EsecuzioneSanzioneSostitutivaModel;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.misurasicurezza.action.ICostantiSiusMisuraSicurezza;
 import siap.sius.tenore.action.ICostantiTenore;
@@ -265,8 +268,7 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 				for (int i = 0; i < lTenori.length; i++) {
 					TenoreModel tm = lTenori[i];
 					if ("0276".equals(tm.getCodEsitoTenore()) || "0277".equals(tm.getCodEsitoTenore())
-							|| "0278".equals(tm.getCodEsitoTenore())
-							|| "0279".equals(tm.getCodEsitoTenore())
+							|| "0278".equals(tm.getCodEsitoTenore()) || "0279".equals(tm.getCodEsitoTenore())
 							|| "0281".equals(tm.getCodEsitoTenore())) {
 						isConversione = true;
 						break;
@@ -286,6 +288,63 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 						dopm.setCodTipoSanzione(null);
 						lCtrl.ExModificaDepositoOrdinanzaPc(dopm);
 					}
+				}
+			}
+		}
+		// Aggiungo gestione Ordinanza Reclamo Avverso Revoca Pena Sostitutiva (C063)
+		if (CodOrdinanza.compareTo(ICostantiDepositoOrdinanzaPc.RECLAMO_AVVERSO_REVOCA_PENA_SOSTITUTIVA) == 0
+				&& mFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals(
+						ICostantiDepositoOrdinanzaPc.COD_OGGETTO_RECLAMO_AVVERSO_REVOCA_PENA_SOSTITUTIVA)) {
+			DepositoOrdinanzaPcModel dopm = lCtrl.ExRicercaDepositoOrdinanzaPcByGenProc(
+					mFasGPMod.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
+			IEsecuzioneSS iess = SIUSLookupRemote.getEsecuzioneSSRemote();
+			EsecuzioneSanzioneSostitutivaModel essm = iess
+					.ExRicercaEsecuzioneSanzioneSostitutivaByIdDepositoOrd(dopm.getIdDepositoOrdinanzaPc());
+			boolean isReclamo = false;
+			for (int i = 0; i < lTenori.length; i++) {
+				TenoreModel tm = lTenori[i];
+				// 3127 C063 0273 Accoglie reclamo e converte in altra pena sostitutiva
+				if ("0273".equals(tm.getCodEsitoTenore())) {
+					isReclamo = true;
+					break;
+				}
+			}
+			if (!isReclamo) {
+				if (!Utils.isNullObj(essm) && !Utils.isNullObj(essm.getIdEsecuzioneSanzioneSost())) {
+					// cancello il record di ESS se ho modificato l'esito dell'ordinanza
+					iess.ExCancellaEsecuzioneSanzioneSostitutiva(essm.getIdEsecuzioneSanzioneSost());
+					siesLogger.debug("HO CANCELLATO IL RECORD DI ESECUZIONE PENA SOSTITUTIVA!");
+				}
+			} else {
+				EsecuzioneSanzioneSostitutivaModel essmNew = new EsecuzioneSanzioneSostitutivaModel();
+				essmNew.setAnnoS07(mFasGPMod.getGeneraleProcedimentoModel().getAnnoS1());
+				essmNew.setProgrS07(mFasGPMod.getGeneraleProcedimentoModel().getProgrS1());
+				essmNew.setCodTipoSanzione(
+						getRequestStringParameter(ICostantiEsecuzioneSS.CAMPO_COD_TIPO_SANZIONE));
+				essmNew.setNumAnniSanzione(
+						getRequestBigDecimalParameter(ICostantiEsecuzioneSS.CAMPO_NUM_ANNI_SANZIONE));
+				essmNew.setNumMesiSanzione(
+						getRequestBigDecimalParameter(ICostantiEsecuzioneSS.CAMPO_NUM_MESI_SANZIONE));
+				essmNew.setNumGiorniSanzione(
+						getRequestBigDecimalParameter(ICostantiEsecuzioneSS.CAMPO_NUM_GIORNI_SANZIONE));
+				essmNew.setGenPridGeneraleProcedimento(
+						mFasGPMod.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
+				essmNew.setDepOpidDepositoOrdinanzaPc(dopm.getIdDepositoOrdinanzaPc());
+				if (Utils.isNullObj(essm)) {
+					// inserisco il record di ESS se ho modificato l'esito dell'ordinanza
+					// e prima NON c'era il record di ESS
+					essmNew.setCodOperatoreInserimento(getCodUtenteConnesso());
+					essmNew.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
+					essmNew.setDataInserimento(DateUtils.getSysDate());
+					iess.ExInserisciEsecuzioneSanzioneSostitutiva(essmNew);
+				} else {
+					// modifico il record di ESS se ho modificato l'esito dell'ordinanza
+					// e prima c'era il record di ESS
+					essmNew.setCodOperatoreAggiornamento(getCodUtenteConnesso());
+					essmNew.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
+					essmNew.setDataAggiornamento(DateUtils.getSysDate());
+					essmNew.setIdEsecuzioneSanzioneSost(essm.getIdEsecuzioneSanzioneSost());
+					iess.ExModificaEsecuzioneSanzioneSostitutiva(essmNew);
 				}
 			}
 		}
