@@ -79,6 +79,8 @@ import siap.siep.penapecuniaria.model.RichiestaConversioneModel;
 import siap.siep.penaresidua.dao.PenaResiduaSqlDAO;
 import siap.siep.penaresidua.model.PenaResiduaModel;
 import siap.siep.posizione.dao.PosizioneGiuridicaSqlDAO;
+import siap.siep.rateizzazionepp.controller.IRateizzazionePP;
+import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 import siap.siep.reato.dao.ReatoSqlDAO;
 import siap.siep.sentenza.dao.SentenzaSqlDAO;
 import siap.siep.sentenza.model.SentenzaModel;
@@ -2206,6 +2208,10 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 				lTreeFasSIUS = prelevaMisureSicurezza(lTreeFasSIUS,
 						lFasGP.getFascicoloSiusModel().getIdFascicoloSius());
 
+				// MEV_2023-35: aggiunto ramo rateizzazioniPP
+				lTreeFasSIUS = prelevaRateizzazioni(lTreeFasSIUS,
+						lFasGP.getFascicoloSiusModel().getIdFascicoloSius());
+
 			} // endif (lFasGP.getFascicoloSiusModel() != null)
 		} catch (F3BException fe) {
 			throw fe;
@@ -2215,6 +2221,39 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 			cleanup(lTenDao);
 		}
 		return lTreeFasSIUS;
+	}
+
+	/**
+	 * Metodo per stampare le rateizzazioni legate al fascicolo sius
+	 * 
+	 * @param tm
+	 * @param idFascicoloSius
+	 * @return TreeModel
+	 * 
+	 * @since MEV_2023-35
+	 * @author sgioggi
+	 */
+	private TreeModel prelevaRateizzazioni(TreeModel tm, BigDecimal idFascicoloSius) throws F3BException {
+
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.debug("##### Ricerca Rateizzazioni per Fascicolo SIUS con ID : " + idFascicoloSius);
+
+		if (idFascicoloSius != null) {
+			IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
+			Vector<RateizzazionePPModel> rate = irpp.exRicercaRateizzazioniByIdFascicoloSius(idFascicoloSius);
+			if (!Utils.isNullObj(rate) && !rate.isEmpty()) {
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("##### Num. Rateizzazioni trovate : " + rate.size());
+				Iterator iterRate = rate.iterator();
+				while (iterRate.hasNext())
+					tm.add(new TreeModel(((RateizzazionePPModel) iterRate.next())));
+			}
+		}
+
+		// valore di ritorno
+		return tm;
 	}
 
 	/**

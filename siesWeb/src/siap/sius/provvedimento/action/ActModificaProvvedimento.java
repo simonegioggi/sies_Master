@@ -258,7 +258,7 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 					Vector<RateizzazionePPModel> rate = irpp.exRicercaRateizzazioniByIdFascicoloSius(
 							mFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
 					if (!rate.isEmpty())
-						irpp.exModificaRateizzazioniByIdFascicoloSius(rate,
+						irpp.exCancellaRateizzazioniByIdFascicoloSius(
 								mFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
 				}
 			}

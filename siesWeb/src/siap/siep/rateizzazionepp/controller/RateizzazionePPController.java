@@ -474,11 +474,8 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 	}
 
 	/*
-	 * ISSUE MEV : aggiunti metodi per insert, update, print 
-	 * Numero MEV : 2023-33 
-	 * Autore : sgioggi 
-	 * Data : 29 ago 2023 
-	 * Branch : MEV_2023-33
+	 * ISSUE MEV : aggiunti metodi per insert, update, print Numero MEV : 2023-33 Autore : sgioggi Data : 29
+	 * ago 2023 Branch : MEV_2023-33
 	 */
 	@Override
 	public BigDecimal exInserisciRideterminazionePP(EventoNotificaModel enm, String[] arrayIdRate,
@@ -2208,22 +2205,21 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 		Connection c = null;
 
 		RateizzazionePPDAO lRateizzazioneDao = null;
-		RateizzazionePPSqlDAO lRateizzazioneSqlDao = null;
 
 		try {
 			c = getDBTransaction();
 
-			lRateizzazioneSqlDao = new RateizzazionePPSqlDAO(c);
 			lRateizzazioneDao = new RateizzazionePPDAO(c);
 			siesLogger.debug("Cancello le precedenti rate.");
 			lRateizzazioneDao.selCondizioneByIdFasSius(idFascicoloSius);
 			lRateizzazioneDao.delete();
-			// siesLogger.debug("Ciclo caricamento rate. Num rate = " + rate.size());
-			// for (int i = 0; i < rate.size(); i++) {
-			// RateizzazionePPModel lRataModel = rate.elementAt(i);
-			// lRateizzazioneDao.setDAOFromModel(lRataModel);
-			// lRateizzazioneDao.insert();
-			// }
+			siesLogger.debug("Ciclo caricamento rate. Num rate = " + rate.size());
+			for (int i = 0; i < rate.size(); i++) {
+				RateizzazionePPModel lRataModel = rate.elementAt(i);
+				lRateizzazioneDao.setDAOFromModel(lRataModel);
+				lRateizzazioneDao.insert();
+				lRateizzazioneDao.stop();
+			}
 
 			commit(c);
 		} catch (DAOException daoEx) {
@@ -2236,12 +2232,51 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 			throw new F3BException("RateizzazionePPController.exModificaRateizzazioni: " + ex);
 		} finally {
 			cleanup(lRateizzazioneDao);
-			cleanup(lRateizzazioneSqlDao);
 
 			cleanup(c);
 		}
 
 		return;
+	}
+
+	/**
+	 * Metodo che cancella le rateizzazioni per id fascicolo SIUS
+	 *
+	 * @author sgioggi
+	 * @since MEV_2023-35
+	 */
+	@Override
+	public void exCancellaRateizzazioniByIdFascicoloSius(BigDecimal idFascicoloSius) throws F3BException {
+
+		Connection c = null;
+
+		RateizzazionePPDAO lRateizzazioneDao = null;
+
+		try {
+			c = getDBConnection();
+
+			lRateizzazioneDao = new RateizzazionePPDAO(c);
+
+			siesLogger.debug("Cancello le rate per il FASCICOLO SIUS " + idFascicoloSius);
+			lRateizzazioneDao.selCondizioneByIdFasSius(idFascicoloSius);
+			lRateizzazioneDao.delete();
+
+			commit(c);
+		} catch (DAOException daoEx) {
+			siesLogger.error("DAOException", daoEx);
+			rollback(c);
+			throw new F3BException(
+					"RateizzazionePPController.exCancellaRateizzazioniByIdFascicoloSius: " + daoEx);
+		} catch (Exception ex) {
+			siesLogger.error("Exception", ex);
+			rollback(c);
+			throw new F3BException(
+					"RateizzazionePPController.exCancellaRateizzazioniByIdFascicoloSius: " + ex);
+		} finally {
+			cleanup(lRateizzazioneDao);
+
+			cleanup(c);
+		}
 	}
 
 }

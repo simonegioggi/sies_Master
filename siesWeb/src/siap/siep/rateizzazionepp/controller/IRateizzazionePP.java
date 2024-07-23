@@ -99,5 +99,7 @@ public interface IRateizzazionePP {
 	// MEV_2023-35: aggiunto metodo di modifica per rate ed id fasc sius
 	public void exModificaRateizzazioniByIdFascicoloSius(Vector<RateizzazionePPModel> rate,
 			BigDecimal idFascicoloSius) throws F3BException;
+	// MEV_2023-35: aggiunto metodo di cancellazione per rate ed id fasc sius
+	public void exCancellaRateizzazioniByIdFascicoloSius(BigDecimal idFascicoloSius) throws F3BException;
 
 }

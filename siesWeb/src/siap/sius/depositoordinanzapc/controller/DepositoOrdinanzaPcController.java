@@ -47,6 +47,7 @@ import siap.siep.notifica.controller.INotifica;
 import siap.siep.notifica.dao.NotificaDAO;
 import siap.siep.penapecuniaria.dao.RichiestaConversioneDAO;
 import siap.siep.penapecuniaria.model.RichiestaConversioneModel;
+import siap.siep.rateizzazionepp.controller.IRateizzazionePP;
 import siap.siep.rateizzazionepp.dao.RateizzazionePPDAO;
 import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 import siap.siep.scambiosanzione.dao.ScambioSanzioneDAO;
@@ -80,8 +81,10 @@ import siap.sius.esecuzionesanzionesostitutiva.model.EsecuzioneSanzioneSostituti
 import siap.sius.fascicolo.dao.FascicoloGPSqlDAO;
 import siap.sius.fascicolo.dao.FascicoloSiusDAO;
 import siap.sius.fascicolo.model.FascicoloGPModel;
+import siap.sius.generaleprocedimento.controller.IGeneraleProcedimento;
 import siap.sius.generaleprocedimento.dao.GeneraleProcedimentoDAO;
 import siap.sius.generaleprocedimento.model.GPTenoreModel;
+import siap.sius.generaleprocedimento.model.GeneraleProcedimentoModel;
 import siap.sius.misurasicurezza.dao.PeriodoAltraMisuraDAO;
 import siap.sius.misurasicurezza.dao.PeriodoAltraMisuraSqlDAO;
 import siap.sius.misurasicurezza.model.PeriodoAltraMisuraModel;
@@ -1010,7 +1013,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// LogF3B.getLogger()
 					siesLogger.debug(
-							">>>> Modificata Esecuzione Sanzione Sostitutiva collegata a DepOrdinanzaPC"
+							">>>> Modificata Esecuzione Sanzione Sostitutiva collegata a DepOrdinanzaPC "
 									+ lIdDepOrd);
 				}
 			}
@@ -1022,7 +1025,8 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			lPASDao.delete();
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug(">>>> Cancellata Periodo Altra Sanzione collegata a DepOrdinanzaPC" + lIdDepOrd);
+			siesLogger
+					.debug(">>>> Cancellata Periodo Altra Sanzione collegata a DepOrdinanzaPC " + lIdDepOrd);
 
 			// 06-03-2009 Modifica di eventuali Richieste Conversioni Pene Pecuniarie (Con Azzeramento dati di
 			// Ordinanza).
@@ -1047,7 +1051,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 				lRCDao.update();
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
-				siesLogger.debug(">>>> Aggiornate le Richieste Conv. Pene Pec. collegata a DepOrdinanzaPC"
+				siesLogger.debug(">>>> Aggiornate le Richieste Conv. Pene Pec. collegata a DepOrdinanzaPC "
 						+ lIdDepOrd);
 			}
 
@@ -1059,11 +1063,12 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 				lRCDao = new RichiestaConversioneDAO(aConn);
 				lRCDao.selCondizioneByIdEvento(aDepOrd.getIdEventoGenerato());
 				lRCDao.delete();
-				siesLogger.debug(">>>> Elimino il record Richieste Conv collegato all'evento" + lIdDepOrd);
+				siesLogger.debug(">>>> Elimino il record Richieste Conv collegato all'evento "
+						+ aDepOrd.getIdEventoGenerato());
 			}
 
 			// MEV_2023-35 - Revoca e Conversione Pena Sostitutiva
-			// 				anche x RECLAMO_AVVERSO_REVOCA_PENA_SOSTITUTIVA
+			// anche x RECLAMO_AVVERSO_REVOCA_PENA_SOSTITUTIVA
 			// Il record ESECUZIONE_SANZ_SOST con i dati dell'ordinanza punta il deposito ordinanza
 			// Va eliminato prima di eliminare l'evento!
 			if (aDepOrd.getCodTipoOrdinanza()
@@ -1073,7 +1078,33 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 				lESSDao = new EsecuzioneSanzioneSostitutivaDAO(aConn);
 				lESSDao.setCondizioneDeleteByGP(lIdDepOrd);
 				lESSDao.delete();
-				siesLogger.debug(">>>> Elimino il record ESECUZIONE_SANZ_SOST al deposito" + lIdDepOrd);
+				siesLogger.debug(
+						">>>> Elimino il record ESECUZIONE_SANZ_SOST collegate al deposito " + lIdDepOrd);
+			}
+
+			// MEV_2023-35 - Conversione pene pecuniarie principali per mancato pagamento
+			// (artt. 102 - 103 L. 689/81 - 55 d. lgs. 274/00)
+			// Il record di rateizzazione_pp va eliminato prima di eliminare l'evento!
+			// U142 S33 SR Conversione pene pecuniarie principali per mancato pagamento
+			if (aDepOrd.getCodTipoOrdinanza().compareTo(
+					ICostantiDepositoOrdinanzaPc.CONVERSIONE_PENE_PECUNIARIE_MANCATO_PAGAMENTO) == 0) {
+				IGeneraleProcedimento igp = SIUSLookupRemote.getGeneraleProcedimentoRemote();
+				GeneraleProcedimentoModel gpm = new GeneraleProcedimentoModel();
+				gpm.setIdGeneraleProcedimento(aDepOrd.getGenPridGeneraleProcedimento());
+				Vector vGP = igp.ExRicercaGeneraleProcedimento(gpm);
+				if (!Utils.isNullObj(vGP) && !vGP.isEmpty()) {
+					GeneraleProcedimentoModel gpmFS = (GeneraleProcedimentoModel) vGP.firstElement();
+					if (!Utils.isNullObj(gpmFS) && !Utils.isNullObj(gpmFS.getFasSiuIdFascicoloSius())) {
+						IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
+						Vector<RateizzazionePPModel> rate = irpp.exRicercaRateizzazioniByIdFascicoloSius(
+								gpmFS.getFasSiuIdFascicoloSius());
+						if (!Utils.isNullObj(rate) && !rate.isEmpty()) {
+							irpp.exCancellaRateizzazioniByIdFascicoloSius(gpmFS.getFasSiuIdFascicoloSius());
+							siesLogger.debug(">>>> Elimino i record RateizzazionePP al fascicolo SIUS "
+									+ gpmFS.getFasSiuIdFascicoloSius());
+						}
+					}
+				}
 			}
 
 			// Per le Ordinanze di Applicazione Misure Sicurezza, se l'Ordinanza stessa ha trasformato la
@@ -1128,12 +1159,8 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			PeriodoAltraMisuraModel lPAMMod = (PeriodoAltraMisuraModel) lPAMSqlDao.getModelByKey();
 
 			if (lPAMMod != null && lPAMMod.getFasSiuIdFascicoloSius() != null
-					&& aDepOrd.getFlagRecuperoSS() != null && aDepOrd.getFlagRecuperoSS().equals("S")) // Al
-																										// momento
-																										// il
-																										// Flag
-																										// Recupero
-			{ // non e' utilizzato per
+					&& aDepOrd.getFlagRecuperoSS() != null && aDepOrd.getFlagRecuperoSS().equals("S")) {
+				// Al momento il Flag Recupero non e' utilizzato per
 				// ---- Ricerca in Esecuzione Misura Sicurezza con l'ID del Fascicolo SIUS (PADRE) trovato
 				// ---- // le Misure di Sicurezza
 				lEMSSqlDao = new EsecuzioneMisuraSicurezzaSqlDAO(aConn); // (24/5/2011)

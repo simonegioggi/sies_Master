@@ -94,7 +94,7 @@ if ("U142".equals(contenuto) || "U143".equals(contenuto) || "U145".equals(conten
 			var intero = document.InserisciOrdinanzaConversionePP.<%=ICostantiRateizzazionePP.CAMPO_VALORE_IMPORTO_I%>.value;
 			var decimale = document.InserisciOrdinanzaConversionePP.<%=ICostantiRateizzazionePP.CAMPO_VALORE_IMPORTO_D%>.value;
 			var importoRat = intero + "." + decimale;
-			if (parseFloat(importo) != "0.0" && importo <= importoRat) {
+			if (parseFloat(importo) != "0.0" && importo < importoRat) {
 				alert("Totale Importo Rateizzato non può essere superiore od uguale all'importo da rateizzare richiesto!");
 				document.InserisciOrdinanzaConversionePP.<%=ICostantiRateizzazionePP.CAMPO_VALORE_IMPORTO_I%>.focus();
 			    return false;
