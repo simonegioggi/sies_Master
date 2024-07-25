@@ -33,6 +33,7 @@ import siap.siep.misurasicurezza.action.ICostantiMisuraSicurezza;
 import siap.siep.misurasicurezza.controller.IMisuraSicurezza;
 import siap.siep.misurasicurezza.controller.MisuraSicurezzaController;
 import siap.siep.misurasicurezza.model.MisuraSicurezzaModel;
+import siap.siep.penaaccessoria.action.ICostantiPenaAccessoria;
 import siap.siep.util.SIEPLookupRemote;
 import siap.sius.ActionSius;
 import siap.sius.SIUSException;
@@ -671,14 +672,13 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 					&& getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO).equals("C002")) {
 				// non faccio nulla
 				siesLogger.debug("Revoca MA non gestisco l'inserimento MS ");
-			// MEV_2023-35 aggiungo anche la revoca PS che scrivono sul campo deposito.data_decorrenza
-	        } else if (!isRequestParameterNullObj(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
-		               && (getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO).equals("U131")
-		                   ||getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO).equals("U132")
-		                   )
-		              ) {
-		        // non faccio nulla
-		        siesLogger.debug("Revoca Pene sostitutive non gestisco l'inserimento MS ");
+				// MEV_2023-35 aggiungo anche la revoca PS che scrivono sul campo deposito.data_decorrenza
+			} else if (!isRequestParameterNullObj(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
+					&& (getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO).equals("U131")
+							|| getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
+									.equals("U132"))) {
+				// non faccio nulla
+				siesLogger.debug("Revoca Pene sostitutive non gestisco l'inserimento MS ");
 			} else {
 				Date dataDecorrenzaMS = null;
 				if (!isRequestParameterNullObj(ICostantiSiusMisuraSicurezza.CAMPO_ANNO_DATA_DECORRENZA))
@@ -1283,7 +1283,6 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 					lDepOrdModel.setCodUfficioMagistratoComp("-");
 			}
 		}
-		// ===============================
 
 		// Data Decorrenza Sospensione
 		if (!isRequestParameterNullObj(ICostantiDepositoDecreto.CAMPO_GIORNO_SOSPENSIONE_SS)
@@ -1337,6 +1336,21 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 			lDepOrdModel.setSospensioneGGSS(
 					getRequestBigDecimalParameter(ICostantiDepositoDecreto.CAMPO_SOSPENSIONE_GG_SS));
 
+		// MEV_2023-35: aggiungo controllo per Data "Fino al"
+		if ((!isRequestParameterNullObj(ICostantiDepositoDecreto.CAMPO_GIORNO_SCADENZA_SOSPENSIONE_SS)
+				&& getRequestStringParameter(ICostantiDepositoDecreto.CAMPO_GIORNO_SCADENZA_SOSPENSIONE_SS)
+						.length() > 0)
+				&& (!isRequestParameterNullObj(ICostantiDepositoDecreto.CAMPO_MESE_SCADENZA_SOSPENSIONE_SS)
+						&& getRequestStringParameter(
+								ICostantiDepositoDecreto.CAMPO_MESE_SCADENZA_SOSPENSIONE_SS).length() > 0)
+				&& (!isRequestParameterNullObj(ICostantiDepositoDecreto.CAMPO_ANNO_SCADENZA_SOSPENSIONE_SS)
+						&& getRequestStringParameter(
+								ICostantiDepositoDecreto.CAMPO_ANNO_SCADENZA_SOSPENSIONE_SS).length() > 0))
+			lDepOrdModel.setDataScadenzaSospensioneSS(
+					getRequestDateParameter(ICostantiDepositoDecreto.CAMPO_ANNO_SCADENZA_SOSPENSIONE_SS,
+							ICostantiDepositoDecreto.CAMPO_MESE_SCADENZA_SOSPENSIONE_SS,
+							ICostantiDepositoDecreto.CAMPO_GIORNO_SCADENZA_SOSPENSIONE_SS));
+
 		if (!isRequestParameterNullObj(ICostantiDepositoDecreto.CAMPO_COD_TIPO_DECRETO))
 			lDepOrdModel = leggiDatiDecreto(lDepOrdModel);
 
@@ -1359,6 +1373,25 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 						getRequestStringParameter(ICostantiFascicoloSius.CAMPO_DESCR_COMUNE_UFFICIO)));
 			else
 				lDepOrdModel.setCodUfficioMagistratoComp("-");
+		}
+
+		// MEV_2023-35: gestione Sospensione esecuzione pene accessorie
+		String codOggettoProcedimento = mFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento();
+		if (COD_OGGETTO_SOSPENSIONE_ESECUZIONE_PENE_ACCESSORIE_TDS.equals(codOggettoProcedimento)
+				|| COD_OGGETTO_SOSPENSIONE_ESECUZIONE_PENE_ACCESSORIE_UDS.equals(codOggettoProcedimento)) {
+			lDepOrdModel.setCodTipoPenaAccessoria(
+					getRequestStringParameter(ICostantiPenaAccessoria.CAMPO_COD_TIPO_PENA_ACCESSORIA));
+			if (!isRequestParameterNullEmptyObj(ICostantiPenaAccessoria.CAMPO_DURATA))
+				lDepOrdModel.setDurata(getRequestStringParameter(ICostantiPenaAccessoria.CAMPO_DURATA));
+			if (!isRequestParameterNullEmptyObj(ICostantiPenaAccessoria.CAMPO_NUM_ANNI))
+				lDepOrdModel
+						.setNumAnni(getRequestBigDecimalParameter(ICostantiPenaAccessoria.CAMPO_NUM_ANNI));
+			if (!isRequestParameterNullEmptyObj(ICostantiPenaAccessoria.CAMPO_NUM_MESI))
+				lDepOrdModel
+						.setNumMesi(getRequestBigDecimalParameter(ICostantiPenaAccessoria.CAMPO_NUM_MESI));
+			if (!isRequestParameterNullEmptyObj(ICostantiPenaAccessoria.CAMPO_NUM_GIORNI))
+				lDepOrdModel.setNumGiorni(
+						getRequestBigDecimalParameter(ICostantiPenaAccessoria.CAMPO_NUM_GIORNI));
 		}
 
 		// Aggiornamento Ordinanza effettuato

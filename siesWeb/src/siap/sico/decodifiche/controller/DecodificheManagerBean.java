@@ -420,14 +420,16 @@ public class DecodificheManagerBean {
 	private Collection mTipoTutore;
 	// MEV_2023-13: aggiunta collezione per la ragione sociale
 	private Collection mRagioneSocialeCO;
-	
+
 	// MEV_2023-13
-    private Collection mTipoPenaSostitutiva;
-    // MEV_2023-33: aggiunta collezione per le autorita' di polizia (HighValue='AP')
-    private Collection mTipoAutoritaPolizia;
-    
-    // MEV_2023-35 Lista Oggetti Esecuzione Pene Sostitutive  U126
-    private Collection mMotivoEsecuzionePeneSostitutive;
+	private Collection mTipoPenaSostitutiva;
+	// MEV_2023-33: aggiunta collezione per le autorita' di polizia (HighValue='AP')
+	private Collection mTipoAutoritaPolizia;
+
+	// MEV_2023-35 Lista Oggetti Esecuzione Pene Sostitutive (U126)
+	private Collection mMotivoEsecuzionePeneSostitutive;
+	// MEV_2023-35 Lista Oggetti Sospensione esecuzione pene accessorie (U141, C066)
+	private Collection mTipoPenaAccessoriaPS;
 
 	/**
 	 * Inizializzazione degli attributi del Singleton
@@ -1056,17 +1058,17 @@ public class DecodificheManagerBean {
 					.add(new DecodificheModel("63", "Decreto di Archiviazione", "", "", "", "", "", "", ""));
 
 			lModel.setContesto("TIPO_SANZIONE_SOSTITUTIVA");
-            // MEV_2023-13 aggiunto filtro sul dominio per l'aggiunta dei codici della "Pena Sostitutiva"
-            lModel.setFiltro("Sanzione Sostitutiva");
-            mTipoSanzioneSostitutiva = lDecodifiche.ExRicercaDecodificheOrdinatePerCodiceAlternativo(lModel);
-            lModel.setFiltro(""); // ripulisco il filtro
-            
-            // MEV_2023-13
-            lModel.setContesto("TIPO_SANZIONE_SOSTITUTIVA");
-            lModel.setFiltro("Pena Sostitutiva");
-            mTipoPenaSostitutiva = lDecodifiche.ExRicercaDecodificheOrdinatePerCodiceAlternativo(lModel);
-            lModel.setFiltro(""); // ripulisco il filtro
-            // MEV_2023-13 - FINE
+			// MEV_2023-13 aggiunto filtro sul dominio per l'aggiunta dei codici della "Pena Sostitutiva"
+			lModel.setFiltro("Sanzione Sostitutiva");
+			mTipoSanzioneSostitutiva = lDecodifiche.ExRicercaDecodificheOrdinatePerCodiceAlternativo(lModel);
+			lModel.setFiltro(""); // ripulisco il filtro
+
+			// MEV_2023-13
+			lModel.setContesto("TIPO_SANZIONE_SOSTITUTIVA");
+			lModel.setFiltro("Pena Sostitutiva");
+			mTipoPenaSostitutiva = lDecodifiche.ExRicercaDecodificheOrdinatePerCodiceAlternativo(lModel);
+			lModel.setFiltro(""); // ripulisco il filtro
+			// MEV_2023-13 - FINE
 
 			lModel.setContesto("TIPO_SANZIONE_CONVERTITA");
 			mTipoSanzioneConvertita = lDecodifiche.ExRicercaDecodificheOrdinatePerCodiceAlternativo(lModel);
@@ -1310,14 +1312,18 @@ public class DecodificheManagerBean {
 			lDecModSollMS.setCode("5201");
 			mMotivoSollecitoMisureSicurezza = lDecodifiche.ExRicercaDecodifiche(lDecModSollMS);
 
-			
-			// MEV_2023-35 Lista Oggetti Esecuzione Pene Sostitutive  U126
-            DecodificheModel lDecModEPS = new DecodificheModel();
-            lDecModSollMS.setContesto("MOTIVO_PROVVEDIMENTO");
-            lDecModEPS.setCodiceAlternativo("U126");
-            mMotivoEsecuzionePeneSostitutive = lDecodifiche.ExRicercaDecodifiche(lDecModEPS);
-            // MEV_2023-35 - FINE
-			
+			// MEV_2023-35 Lista Oggetti Esecuzione Pene Sostitutive U126
+			DecodificheModel lDecModEPS = new DecodificheModel();
+			lDecModSollMS.setContesto("MOTIVO_PROVVEDIMENTO");
+			lDecModEPS.setCodiceAlternativo("U126");
+			mMotivoEsecuzionePeneSostitutive = lDecodifiche.ExRicercaDecodifiche(lDecModEPS);
+			// MEV_2023-35 Lista Oggetti Sospensione esecuzione pene accessorie (U141, C066)
+			DecodificheModel dmTPA = new DecodificheModel();
+			dmTPA.setContesto("TIPO_PENA_ACCESSORIA");
+			dmTPA.setCodiceAlternativo("PS");
+			mTipoPenaAccessoriaPS = lDecodifiche.ExRicercaDecodifiche(dmTPA);
+			// MEV_2023-35 - FINE
+
 			lModel.setContesto("MOTIVO_PROVVEDIMENTO");
 			lModel.setCodiceAlternativo("MIS-ALT");
 			DecodificheModel lDecModMot = new DecodificheModel();
@@ -1889,22 +1895,22 @@ public class DecodificheManagerBean {
 			// MEV_2023-13: aggiunta collezione per la ragione sociale
 			mRagioneSocialeCO = new Vector();
 			mRagioneSocialeCO.add(new DecodificheModel("-", "-", "-", "-", "-", "-", "-", "-", "-"));
-			mRagioneSocialeCO.add(new DecodificheModel("Ente", "Ente", "RAGIONE_SOCIALE", "", "", "", "", "",
-					""));
+			mRagioneSocialeCO
+					.add(new DecodificheModel("Ente", "Ente", "RAGIONE_SOCIALE", "", "", "", "", "", ""));
 
 			// FIXME MEV26 solo per sviluppo da sostituire con la versione ufficiale LPU
 			DecodificheModel lTipoLPUModel = new DecodificheModel();
 			lTipoLPUModel.setContesto("TIPO_SANZIONE_SOSTITUTIVA_LPU");
 			mTipoSanzioneSostitutivaLpu = lDecodifiche.ExRicercaDecodifiche(lTipoLPUModel);
 
-            // MEV_2023-33 - INIZIO
-            lModel.setContesto("TIPO_AUTORITA");
-            lModel.setCodiceAlt2("AP");
-            mTipoAutoritaPolizia = lDecodifiche.ExRicercaDecodifiche(lModel);
-            mTipoAutoritaPolizia.add(new DecodificheModel("-", "-", "-", "-", "-", "-", "-", "-", "-"));
-            lModel.setContesto("");
-            lModel.setCodiceAlt2("");
-            // MEV_2023-33 - FINE
+			// MEV_2023-33 - INIZIO
+			lModel.setContesto("TIPO_AUTORITA");
+			lModel.setCodiceAlt2("AP");
+			mTipoAutoritaPolizia = lDecodifiche.ExRicercaDecodifiche(lModel);
+			mTipoAutoritaPolizia.add(new DecodificheModel("-", "-", "-", "-", "-", "-", "-", "-", "-"));
+			lModel.setContesto("");
+			lModel.setCodiceAlt2("");
+			// MEV_2023-33 - FINE
 		} catch (F3BException ex) {
 			ex.printStackTrace();
 		} catch (Exception ex) {
@@ -2189,11 +2195,11 @@ public class DecodificheManagerBean {
 	public Collection getTipoSanzioneSostitutiva() {
 		return mTipoSanzioneSostitutiva;
 	}
-	
+
 	// MEV_2023-13
-    public Collection getTipoPenaSostitutiva() {
-        return mTipoPenaSostitutiva;
-    }
+	public Collection getTipoPenaSostitutiva() {
+		return mTipoPenaSostitutiva;
+	}
 
 	public Collection getTipoAtto() {
 		return mTipoAtto;
@@ -3141,12 +3147,18 @@ public class DecodificheManagerBean {
 	}
 
 	// MEV_2023-33
-    public Collection getTipoAutoritaPolizia() {
-        return mTipoAutoritaPolizia;
-    }
-    
-    // MEV_2023-35 Lista Oggetti Esecuzione Pene Sostitutive  U126
-    public Collection getMotivoEsecuzionePeneSostitutive() {
-        return mMotivoEsecuzionePeneSostitutive;
-    }
+	public Collection getTipoAutoritaPolizia() {
+		return mTipoAutoritaPolizia;
+	}
+
+	// MEV_2023-35 Lista Oggetti Esecuzione Pene Sostitutive U126
+	public Collection getMotivoEsecuzionePeneSostitutive() {
+		return mMotivoEsecuzionePeneSostitutive;
+	}
+
+	// MEV_2023-35 Lista Oggetti Sospensione esecuzione pene accessorie (U141, C066)
+	public Collection getTipoPenaAccessoriaPS() {
+		return mTipoPenaAccessoriaPS;
+	}
+
 }

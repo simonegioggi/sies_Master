@@ -1,23 +1,19 @@
 package siap.siep.penaaccessoria.model;
 
-/**
-* <p>Title: PenaAccessoriaModel</p>
-* <p>Description: Classe Model che rappresenta il PenaAccessoria</p>
-* <p>Copyright: Copyright (c) 2002</p>
-* <p>Company: Bull</p>
-* @version 1.0
-*/
-
 import java.math.BigDecimal;
 import java.util.Date;
 
 import f3b.model.GenericModel;
 
+/**
+ * PenaAccessoriaModel - Classe Model che rappresenta il PenaAccessoria
+ *
+ * @version 1.0
+ */
 public class PenaAccessoriaModel extends GenericModel {
-	/**
-	 *
-	 */
+
 	private static final long serialVersionUID = 4226511611216544573L;
+
 	private BigDecimal mIdPenaAccessoria;
 	private String mCodTipoPenaAccessoria;
 	private String mDescrTipoPenaAccessoria;
@@ -99,6 +95,7 @@ public class PenaAccessoriaModel extends GenericModel {
 
 	// COSTRUTTORE DI DEFAULT
 	public PenaAccessoriaModel() {
+
 		this.mIdPenaAccessoria = null;
 		this.mCodTipoPenaAccessoria = "-";
 		this.mDescrTipoPenaAccessoria = null;
@@ -173,12 +170,12 @@ public class PenaAccessoriaModel extends GenericModel {
 		this.mLetteraGE = ""; // 04/04/2006
 		this.mNumeroGE = ""; // 04/04/2006
 		this.mArticoloGE = ""; // 04/04/2006
-
 		this.mBenIdBeneficio = null;
 	}
 
 	// COSTRUTTORE DI COPIA
 	public PenaAccessoriaModel(PenaAccessoriaModel aModel) {
+
 		this.mIdPenaAccessoria = aModel.mIdPenaAccessoria;
 		this.mCodTipoPenaAccessoria = aModel.mCodTipoPenaAccessoria;
 		this.mDescrTipoPenaAccessoria = aModel.mDescrTipoPenaAccessoria;
@@ -253,7 +250,6 @@ public class PenaAccessoriaModel extends GenericModel {
 		this.mLetteraGE = aModel.mLetteraGE; // 04/04/2006
 		this.mNumeroGE = aModel.mNumeroGE; // 04/04/2006
 		this.mArticoloGE = aModel.mArticoloGE; // 04/04/2006
-
 		this.mBenIdBeneficio = aModel.mBenIdBeneficio;
 	}
 
@@ -291,9 +287,8 @@ public class PenaAccessoriaModel extends GenericModel {
 			String aLetteraGE, // 04/04/2006
 			String aNumeroGE, // 04/04/2006
 			String aArticoloGE, // 04/04/2006
-			BigDecimal aBenIdBeneficio)
+			BigDecimal aBenIdBeneficio) {
 
-	{
 		this.mIdPenaAccessoria = aIdPenaAccessoria;
 		this.mCodTipoPenaAccessoria = aCodTipoPenaAccessoria;
 		this.mDescrTipoPenaAccessoria = aDescrTipoPenaAccessoria;
@@ -368,7 +363,6 @@ public class PenaAccessoriaModel extends GenericModel {
 		this.mLetteraGE = aLetteraGE; // 04/04/2006
 		this.mNumeroGE = aNumeroGE; // 04/04/2006
 		this.mArticoloGE = aArticoloGE; // 04/04/2006
-
 		this.mBenIdBeneficio = aBenIdBeneficio;
 	}
 
@@ -982,6 +976,7 @@ public class PenaAccessoriaModel extends GenericModel {
 
 	@Override
 	public String toString() {
+
 		String lStr = new String();
 
 		lStr = "" + mIdPenaAccessoria + " - " + mCodTipoPenaAccessoria + " - " + mDescrTipoPenaAccessoria
@@ -1011,4 +1006,5 @@ public class PenaAccessoriaModel extends GenericModel {
 
 		return lStr;
 	}
+
 }

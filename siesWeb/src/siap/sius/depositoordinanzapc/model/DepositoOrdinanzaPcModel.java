@@ -3,12 +3,12 @@ package siap.sius.depositoordinanzapc.model;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import siap.sico.libertaanticipata.model.LicenzaPeriodiLibAnticipataModel;
 import f3b.model.GenericModel;
+import siap.sico.libertaanticipata.model.LicenzaPeriodiLibAnticipataModel;
 
 /**
  * DepositoOrdinanzaPcModel - Classe Model che rappresenta il DepositoOrdinanzaPc
- * 
+ *
  * @version 1.0
  */
 public class DepositoOrdinanzaPcModel extends GenericModel {
@@ -93,6 +93,14 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 	private BigDecimal mSommaRisarcimento;
 	// MEV_2023-35: aggiunta variabile di classe per memorizzare il tipo di sanzione comminata
 	private String mCodTipoSanzione;
+	// MEV_2023-35: aggiunte variabili di classe per memorizzare il tipo di PA sospesa
+	private String mCodTipoPenaAccessoria;
+	private String mDescrTipoPenaAccessoria;
+	private String mDurata;
+	private String mDescrDurata;
+	private BigDecimal mNumAnni;
+	private BigDecimal mNumMesi;
+	private BigDecimal mNumGiorni;
 
 	// COSTRUTTORE DI DEFAULT
 	public DepositoOrdinanzaPcModel() {
@@ -168,6 +176,13 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 		// 10102014 - D.L. 92 2014 Violazione CEDU
 		this.mSommaRisarcimento = null;
 		this.mCodTipoSanzione = "";
+		this.mCodTipoPenaAccessoria = "-";
+		this.mDescrTipoPenaAccessoria = null;
+		this.mDurata = "-";
+		this.mDescrDurata = null;
+		this.mNumAnni = null;
+		this.mNumMesi = null;
+		this.mNumGiorni = null;
 	}
 
 	// COSTRUTTORE DI COPIA
@@ -244,6 +259,13 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 		// 10102014 - D.L. 92 2014 Violazione CEDU
 		this.mSommaRisarcimento = aModel.mSommaRisarcimento;
 		this.mCodTipoSanzione = aModel.mCodTipoSanzione;
+		this.mCodTipoPenaAccessoria = aModel.mCodTipoPenaAccessoria;
+		this.mDescrTipoPenaAccessoria = aModel.mDescrTipoPenaAccessoria;
+		this.mDurata = aModel.mDurata;
+		this.mDescrDurata = aModel.mDescrDurata;
+		this.mNumAnni = aModel.mNumAnni;
+		this.mNumMesi = aModel.mNumMesi;
+		this.mNumGiorni = aModel.mNumGiorni;
 	}
 
 	// COSTRUTTORE MODEL
@@ -273,7 +295,9 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 			Date aDataScadenzaSospensioneSS, BigDecimal aSospensioneGGSS, BigDecimal aSospensioneMMSS,
 			BigDecimal aSospensioneAASS, String aFlagNominaComActa, String aDescrCommActa,
 			String aCodTipoControlloEsecuzione, String aDescrTipoControlloEsecuzione,
-			BigDecimal aSommaRisarcimento, String aCodTipoSanzione) {
+			BigDecimal aSommaRisarcimento, String aCodTipoSanzione, String aCodTipoPenaAccessoria,
+			String aDescrTipoPenaAccessoria, String aDurata, String aDescrDurata, BigDecimal aNumAnni,
+			BigDecimal aNumMesi, BigDecimal aNumGiorni) {
 
 		this.mIdDepositoOrdinanzaPc = aIdDepositoOrdinanzaPc;
 		this.mAnnoS3 = aAnnoS3;
@@ -344,6 +368,13 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 		// 10102014 - D.L. 92 2014 Violazione CEDU
 		this.mSommaRisarcimento = aSommaRisarcimento;
 		this.mCodTipoSanzione = aCodTipoSanzione;
+		this.mCodTipoPenaAccessoria = aCodTipoPenaAccessoria;
+		this.mDescrTipoPenaAccessoria = aDescrTipoPenaAccessoria;
+		this.mDurata = aDurata;
+		this.mDescrDurata = aDescrDurata;
+		this.mNumAnni = aNumAnni;
+		this.mNumMesi = aNumMesi;
+		this.mNumGiorni = aNumGiorni;
 	}
 
 	//
@@ -644,6 +675,34 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 		return mCodTipoSanzione;
 	}
 
+	public String getCodTipoPenaAccessoria() {
+		return mCodTipoPenaAccessoria;
+	}
+
+	public String getDescrTipoPenaAccessoria() {
+		return mDescrTipoPenaAccessoria;
+	}
+
+	public String getDurata() {
+		return mDurata;
+	}
+
+	public String getDescrDurata() {
+		return mDescrDurata;
+	}
+
+	public BigDecimal getNumAnni() {
+		return mNumAnni;
+	}
+
+	public BigDecimal getNumMesi() {
+		return mNumMesi;
+	}
+
+	public BigDecimal getNumGiorni() {
+		return mNumGiorni;
+	}
+
 	//
 	// METODI SET()
 	//
@@ -930,6 +989,34 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 		this.mCodTipoSanzione = aValore;
 	}
 
+	public void setCodTipoPenaAccessoria(String aValore) {
+		mCodTipoPenaAccessoria = aValore;
+	}
+
+	public void setDescrTipoPenaAccessoria(String aValore) {
+		mDescrTipoPenaAccessoria = aValore;
+	}
+
+	public void setDurata(String aValore) {
+		mDurata = aValore;
+	}
+
+	public void setDescrDurata(String aValore) {
+		mDescrDurata = aValore;
+	}
+
+	public void setNumAnni(BigDecimal aValore) {
+		mNumAnni = aValore;
+	}
+
+	public void setNumMesi(BigDecimal aValore) {
+		mNumMesi = aValore;
+	}
+
+	public void setNumGiorni(BigDecimal aValore) {
+		mNumGiorni = aValore;
+	}
+
 	// Metodo toString()
 	public String toString() {
 		String lStr = new String();
@@ -961,7 +1048,9 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 				// 20140603 - P.M. ( SIUS - implemntazione per il D.L. 146 )
 				mCodTipoControlloEsecuzione + " - " + mDescrTipoControlloEsecuzione + " - " +
 				// 10102014 - D.L. 92 2014 Violazione CEDU
-				mSommaRisarcimento + " - " + mCodTipoSanzione;
+				mSommaRisarcimento + " - " + mCodTipoSanzione + " - " + mCodTipoPenaAccessoria + " - "
+				+ mDescrTipoPenaAccessoria + " - " + mDurata + " - " + mDescrDurata + " - " + mNumAnni + " - "
+				+ mNumMesi + " - " + mNumGiorni;
 
 		return lStr;
 	}

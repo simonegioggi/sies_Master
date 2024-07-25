@@ -225,10 +225,9 @@ else if ("U145".equals(codOggettoProcedimento))
 	tipoOrdinanza = "Ordinanza Rateizzazione Pena Pecuniaria Sostitutiva";
 else if ("U140".equals(codOggettoProcedimento))
   tipoOrdinanza += " - Pene Sostitutive ";
-// MEV_2023-35
 else if ("U146".equals(codOggettoProcedimento))
   tipoOrdinanza = " Ordinanza Revoca pena sostitutiva conseguente alla conversione pena pecuniaria per avvenuto pagamento";
-//MEV_2023-35
+// FINE MEV_2023-35
 
 if (codice.compareTo(ICostantiDepositoOrdinanzaPc.RINVIO_ESECUZIONE_MSIC) == 0)
 	codice = "42";
@@ -1051,7 +1050,9 @@ if (!modificaOrdinanza) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_MODIFICA_PERMANENTE_SS%>"/>	
 <%
-   		} else if (codice.compareTo(ICostantiDepositoDecreto.SOSPENSIONE_ESECUZIONE_SS) == 0) {
+   		} else if (codice.compareTo(ICostantiDepositoDecreto.SOSPENSIONE_ESECUZIONE_SS) == 0
+   			// MEV_2023-35: aggiunto codice per 'PA' (U141 e C066)
+			|| codice.compareTo(ICostantiDepositoOrdinanzaPc.SOSPENSIONE_ESECUZIONE_PENE_ACCESSORIE) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_SOSPENSIONE_ESECUZIONE_SANZIONI_SOSTITUTIVE%>"/>
 <%

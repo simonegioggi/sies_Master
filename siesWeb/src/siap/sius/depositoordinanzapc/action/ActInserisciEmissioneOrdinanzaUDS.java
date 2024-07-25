@@ -469,9 +469,7 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("ORDINANZA di Revoca Liberazione Anticipata " + lCodTipoDec);
-		}
-		// <--
-		else if (lCodTipoDec.compareTo(APPLICAZIONE_SANZIONI_SOSTITUTIVE) == 0) {
+		} else if (lCodTipoDec.compareTo(APPLICAZIONE_SANZIONI_SOSTITUTIVE) == 0) {
 			// Applicazione Sanzione Sostitutiva
 			mRetPage = PG_LOAD_INSERISCI_ORDINANZA_APPLICAZIONE_SS;
 			ricercaPenaComplessivaSanzioneSostitutivaByIdFasSiep();
@@ -515,17 +513,25 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("Ordinanza di Modifica Permanente Sanzioni Sostitutive " + lCodTipoDec);
-		} else if (lCodTipoDec.compareTo(SOSPENSIONE_ESECUZIONE_SS) == 0
-				// MEV_2023-35: aggiunta condizione di inserimento
-				&& !"U137".equals(lCodContenuto)) {
+		} else if ((lCodTipoDec.compareTo(SOSPENSIONE_ESECUZIONE_SS) == 0
+				// MEV_2023-35: aggiunte condizioni di inserimento
+				&& !"U137".equals(lCodContenuto))
+				|| lCodTipoDec.compareTo(SOSPENSIONE_ESECUZIONE_PENE_ACCESSORIE) == 0) {
 			// Sospensione Esecuzione su Sanzioni Sostitutive
 			mRetPage = PG_INSERISCI_SOSPENSIONE_ESECUZIONE_SANZIONI_SOSTITUTIVE;
-			// setRequestAttribute("Action", "siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaUDS");
 			setRequestAttribute("Action",
 					"siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaPeriodoAltraSanzioneModificaESS");
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("Ordinanza Sospensione Esecuzione su Sanzioni Sostitutive " + lCodTipoDec);
+			if (lCodTipoDec.compareTo(SOSPENSIONE_ESECUZIONE_PENE_ACCESSORIE) == 0) {
+				Option o = new Option(DecodificheManager.getInstance().getTipoPenaAccessoriaPS(), true);
+				o.setValueBlankItem("-");
+				setRequestAttribute("TipoPenaAccessoria", "" + o);
+				o = new Option(DecodificheManager.getInstance().getDurataPeneAccessorie());
+				setRequestAttribute("DurataPeneAccessorie", "" + o);
+				setRequestAttribute("Action", "siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaUDS");
+			}
 		} else if (lCodTipoDec.compareTo(REVOCA_SANZIONE_SOSTITUTIVA) == 0) {
 			// Ordinanza Revoca Sanzione Sostitutiva
 			mRetPage = PG_LOAD_INSERISCI_ORDINANZA_REVOCA_SS;
@@ -752,7 +758,6 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 			preparaListaTipoUfficiCompetente();
 			siesLogger.debug("Ordinanza di Applicazione Pene Sostitutiva " + lCodTipoDec);
 		}
-		// MEV_2023-35 - FINE
 		// MEV_2023-35 - Revoca Autorizzazioni pene sostitutive
 		else if (lCodTipoDec.compareTo(REVOCA_AUTORIZZAZIONE_PS) == 0) {
 			// Attenzione si utilizzano le stesse costanti del Decreto (per ora ) ICostantiDepositoDecreto
@@ -770,7 +775,6 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 			setRequestAttribute("RataMancatoPagamento", lRataMancatoPagamento);
 			setRequestAttribute("Action", "siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaUDS");
 			siesLogger.debug("Ordinanza Revoca Conversione Pena Pecuniaria Sostitutiva " + lCodTipoDec);
-			// MEV_2023-35 - FINE
 			// MEV_2023-35 - Revoca Pena Sostitutiva e Converte...
 		} else if (lCodTipoDec.compareTo(REVOCA_PENA_SOSTITUTIVA) == 0) {
 			// combo penaSostitutiva più grave
@@ -779,7 +783,6 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 			setRequestAttribute("tipoPeneSostitutive", "" + lOptionPenaSost);
 			mRetPage = PG_LOAD_INSERISCI_REVOCA_PENA_SOSTITUTIVA;
 			siesLogger.debug("Ordinanza Revoca e conversione Pena Sostitutiva..." + lCodTipoDec);
-			// MEV_2023-35 - FINE
 			// MEV_2023-35 - RECLAMO AVVERSO REVOCA PENA SOSTITUTIVA...
 		} else if (lCodTipoDec.compareTo(RECLAMO_AVVERSO_REVOCA_PENA_SOSTITUTIVA) == 0) {
 			// combo penaSostitutiva più grave
@@ -976,7 +979,7 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 						if (!eventi.isEmpty()) {
 							Iterator<EventoModel> iterEM = eventi.iterator();
 							while (iterEM.hasNext()) {
-								EventoModel em = (EventoModel) iterEM.next();
+								EventoModel em = iterEM.next();
 								if ("03".equals(em.getCodTipoProvvedimento())) {
 									setRequestAttribute("eventoProcedimentoCollegato", em);
 									break;

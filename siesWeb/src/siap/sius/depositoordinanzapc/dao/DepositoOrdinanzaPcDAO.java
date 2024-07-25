@@ -89,7 +89,13 @@ public class DepositoOrdinanzaPcDAO extends SIAPTableDAO {
 		setField("TIPO_CONTROLLO_ESECUZIONE", STRING);
 		// 10102014 - DL 92 2014 Violazione CEDU
 		setField("SOMMA_RISARC_DANNI", BIG_DECIMAL);
-		setField("COD_TIPO_SANZIONE", STRING); // MEV_2023-35
+		// MEV_2023-35: aggiunti campi
+		setField("COD_TIPO_SANZIONE", STRING);
+		setField("COD_TIPO_PENA_ACCESSORIA", STRING);
+		setField("DURATA", STRING);
+		setField("NUM_ANNI", BIG_DECIMAL);
+		setField("NUM_MESI", BIG_DECIMAL);
+		setField("NUM_GIORNI", BIG_DECIMAL);
 	}
 
 	//
@@ -323,6 +329,26 @@ public class DepositoOrdinanzaPcDAO extends SIAPTableDAO {
 		return getString("COD_TIPO_SANZIONE");
 	}
 
+	public String getCodTipoPenaAccessoria() throws DAOException {
+		return getString("COD_TIPO_PENA_ACCESSORIA");
+	}
+
+	public String getDurata() throws DAOException {
+		return getString("DURATA");
+	}
+
+	public BigDecimal getNumAnni() throws DAOException {
+		return getBigDecimal("NUM_ANNI");
+	}
+
+	public BigDecimal getNumMesi() throws DAOException {
+		return getBigDecimal("NUM_MESI");
+	}
+
+	public BigDecimal getNumGiorni() throws DAOException {
+		return getBigDecimal("NUM_GIORNI");
+	}
+
 	//
 	// METODI SET()
 	//
@@ -554,6 +580,26 @@ public class DepositoOrdinanzaPcDAO extends SIAPTableDAO {
 		setString("COD_TIPO_SANZIONE", aValore);
 	}
 
+	public void setCodTipoPenaAccessoria(String aValore) {
+		setString("COD_TIPO_PENA_ACCESSORIA", aValore);
+	}
+
+	public void setDurata(String aValore) {
+		setString("DURATA", aValore);
+	}
+
+	public void setNumAnni(BigDecimal aValore) {
+		setBigDecimal("NUM_ANNI", aValore);
+	}
+
+	public void setNumMesi(BigDecimal aValore) {
+		setBigDecimal("NUM_MESI", aValore);
+	}
+
+	public void setNumGiorni(BigDecimal aValore) {
+		setBigDecimal("NUM_GIORNI", aValore);
+	}
+
 	public GenericModel getModel() throws DAOException {
 
 		return new DepositoOrdinanzaPcModel(getIdDepositoOrdinanzaPc(), getAnnoS3(), getNumS3(),
@@ -578,7 +624,8 @@ public class DepositoOrdinanzaPcDAO extends SIAPTableDAO {
 				// 20140603 - P.M. ( SIUS - implemntazione per il D.L. 146 )
 				getCodTipoControlloEsecuzione(), "",
 				// 10102014 - DL 92 2014 Violazione CEDU
-				getSommaRisarcimento(), getCodTipoSanzione());
+				getSommaRisarcimento(), getCodTipoSanzione(), getCodTipoPenaAccessoria(), "", getDurata(), "",
+				getNumAnni(), getNumMesi(), getNumGiorni());
 	}
 
 	public void setDAOFromModel(DepositoOrdinanzaPcModel aModel) throws DAOException {
@@ -642,6 +689,11 @@ public class DepositoOrdinanzaPcDAO extends SIAPTableDAO {
 		// 10102014 - DL 92 2014
 		setSommaRisarcimento(aModel.getSommaRisarcimento());
 		setCodTipoSanzione(aModel.getCodTipoSanzione());
+		setCodTipoPenaAccessoria(aModel.getCodTipoPenaAccessoria());
+		setDurata(aModel.getDurata());
+		setNumAnni(aModel.getNumAnni());
+		setNumMesi(aModel.getNumMesi());
+		setNumGiorni(aModel.getNumGiorni());
 	}
 
 	public void setDAOFromModelForUpdate(DepositoOrdinanzaPcModel aModel) throws DAOException {
@@ -702,6 +754,11 @@ public class DepositoOrdinanzaPcDAO extends SIAPTableDAO {
 		// 10102014 - DL 92 2014 Violazione CEDU
 		setSommaRisarcimento(aModel.getSommaRisarcimento());
 		setCodTipoSanzione(aModel.getCodTipoSanzione());
+		setCodTipoPenaAccessoria(aModel.getCodTipoPenaAccessoria());
+		setDurata(aModel.getDurata());
+		setNumAnni(aModel.getNumAnni());
+		setNumMesi(aModel.getNumMesi());
+		setNumGiorni(aModel.getNumGiorni());
 		setCondizioneUpdate(aModel.getIdDepositoOrdinanzaPc());
 	}
 

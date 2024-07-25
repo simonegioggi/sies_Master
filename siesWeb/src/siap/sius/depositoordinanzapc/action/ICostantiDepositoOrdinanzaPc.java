@@ -25,11 +25,11 @@ public interface ICostantiDepositoOrdinanzaPc {
 	public static final String CAMPO_COD_NATURA_PROVVEDIMENTO = "CodNaturaProvvedimento";
 	public static final String CAMPO_ID_CSSA_COMP = "IdCssaComp";
 	public static final String CAMPO_COMUNE_CSSA_COMP = "ComuneCssaComp";
-	//
+
 	public static final String CAMPO_COD_UFFICIO_MAGISTRATO_COMP = "CodUfficioMagistratoComp";
 	public static final String CAMPO_COD_UFFICIO_MAGISTRATO_COMP_RECLA = "CodUfficioMagistratoCompRecla";
 	public static final String CAMPO_UFFICIO_USSM = "Ussm";
-	//
+
 	public static final String CAMPO_COD_UFFICIO_TDS_COMP = "CodUfficioOrdTdSComp";
 	public static final String CAMPO_LUOGO_SVOLGIMENTO_PROVA = "LuogoSvolgimentoProva";
 	public static final String CAMPO_SERVIZIO_TERAPEUTICO_COMP = "ServizioTerapeuticoComp";
@@ -58,21 +58,21 @@ public interface ICostantiDepositoOrdinanzaPc {
 	// Nuova Odinanza L.A - decreto legge 146/2013
 	public static final String CAMPO_NUM_GIORNI_LIBANTICIPATA_SPE = "NumGiorniLibanticipataspe";
 	public static final String CAMPO_NUM_GIORNI_LIBANTICIPATA_INT = "NumGiorniLibanticipataint";
-	//
+
 	public static final String CAMPO_FLAG_ELABORATO = "FlagElaborato";
 	public static final String CAMPO_COD_TIPO_ORDINANZA = "CodTipoOrdinanza";
 	public static final String CAMPO_CK_PRESCRIZIONI = "CheckPrescrizioni";
 	public static final String CAMPO_FLAG_ESITO_RECLAMO_LA_PM_ACCOLTO = "EsitoReclamoLaPmAccolto";
 	// 20140603 - P.M. ( SIUS - implemntazione per il D.L. 146 )
 	public static final String CAMPO_CK_TIPO_CONTROLLO_ESECUZIONE = "CheckTipoControlloEsecuzione";
-	//
+
 	public static final String CAMPO_FLAG_ESITO_RECLAMO_LA_SPE_PM_ACCOLTO = "EsitoReclamoLaSpePmAccolto";
 	public static final String CAMPO_FLAG_ESITO_RECLAMO_LA_INT_PM_ACCOLTO = "EsitoReclamoLaIntPmAccolto";
-	//
+
 	public static final String CAMPO_FLAG_ESITO_REVOCA_LA_PM_ACCOLTO = "EsitoRevocaLaPmAccolto";
 	public static final String CAMPO_FLAG_ESITO_REVOCA_LA_SPE_PM_ACCOLTO = "EsitoRevocaLaSpePmAccolto";
 	public static final String CAMPO_FLAG_ESITO_REVOCA_LA_INT_PM_ACCOLTO = "EsitoRevocaLaIntPmAccolto";
-	//
+
 	public static final String CAMPO_GIORNO_DATA_FINE_MISURA = "GiornoDataFineMisura";
 	public static final String CAMPO_MESE_DATA_FINE_MISURA = "MeseDataFineMisura";
 	public static final String CAMPO_ANNO_DATA_FINE_MISURA = "AnnoDataFineMisura";
@@ -93,7 +93,7 @@ public interface ICostantiDepositoOrdinanzaPc {
 	public static final String CAMPO_FLAG_ESISTENZA_REATOOSTATIVO = "FlagEsistenzaReatoostativo";
 	public static final String CAMPO_FLAG_ESPIAZIONE_REATOOSTATIVO = "FlagEspiazioneReatoostativo";
 	public static final String CAMPO_AUTORITA_VIGILANTE = "AutoritaVigilante";
-	//
+
 	public static final String CAMPO_GIORNO_DATA_TRASMISSIONE = "GiornoDataTrasmissione";
 	public static final String CAMPO_MESE_DATA_TRASMISSIONE = "MeseDataTrasmissione";
 	public static final String CAMPO_ANNO_DATA_TRASMISSIONE = "AnnoDataTrasmissione";
@@ -103,7 +103,7 @@ public interface ICostantiDepositoOrdinanzaPc {
 	public static final String CAMPO_GIORNO_DATA_TRASMISSIONE_INT = "GiornoDataTrasmissioneInt";
 	public static final String CAMPO_MESE_DATA_TRASMISSIONE_INT = "MeseDataTrasmissioneInt";
 	public static final String CAMPO_ANNO_DATA_TRASMISSIONE_INT = "AnnoDataTrasmissioneInt";
-	//
+
 	public static final String CAMPO_NUM_GIORNI_ARRESTO_REV = "NumGiorniArrestoRev";
 	public static final String CAMPO_NUM_MESI_ARRESTO_REV = "NumMesiArrestoRev";
 	public static final String CAMPO_NUM_ANNI_ARRESTO_REV = "NumAnniArrestoRev";
@@ -370,7 +370,7 @@ public interface ICostantiDepositoOrdinanzaPc {
 			+ "files/siap/sius/depositoordinanzapc/InserisciOrdinanzaReclamoLA.jsp";
 	public static final String PG_LOAD_MODIFICA_ORDINANZA_RECLAMO_LIBERAZIONE_ANTICIPATA = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/depositoordinanzapc/ModificaOrdinanzaReclamoLA.jsp";
-	//
+
 	public static final String PG_RIFERIMENTO_ORDINANZA_RECLAMO = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/depositoordinanzapc/RifOrdinanzaReclamo.jsp";
 	// public static final String PG_RIFERIMENTO_ORDINANZA_REVOCA = IWebConstants.ROOT_DIR +
@@ -419,7 +419,6 @@ public interface ICostantiDepositoOrdinanzaPc {
 	// Conversione pene pecuniarie principali per mancato pagamento (artt. 102 - 103 L. 689/81 - 55 d. lgs.
 	// 274/00)
 	public static final String CONVERSIONE_PENE_PECUNIARIE_MANCATO_PAGAMENTO = "SR";
-	// MEV_2023-35 - FINE
 
 	// MEV_2023-35 - Revoca Autorizzazioni pene sostitutive
 	// n.b. REVOCA_AUTORIZZAZIONE_PS si usa quella del decreto mentre per il dettaglio va bene il dettaglio
@@ -432,7 +431,6 @@ public interface ICostantiDepositoOrdinanzaPc {
 	// public static final String PG_DETTAGLIO_REVOCA_AUTORIZZAZIONE_PENA_SOSTITUTIVA_ORD =
 	// IWebConstants.ROOT_DIR
 	// + "files/siap/sius/depositoordinanzapc/DettaglioOrdinanzaRevocaAutorizzazionePenaSostitutiva.jsp";
-	// MEV_2023-35 - FINE
 
 	// MEV_2023-35
 	// Revoca e Conversione Pena Pecuniaria Sostitutiva
@@ -441,7 +439,6 @@ public interface ICostantiDepositoOrdinanzaPc {
 			+ "files/siap/sius/depositoordinanzapc/InserisciOrdinanzaRevocaConverPPS.jsp";
 	public static final String PG_LOAD_DETTAGLIO_ORDINANZA_REV_CONV_PPS = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/depositoordinanzapc/DettaglioOrdinanzaConverRevocaPPS.jsp";
-	// MEV_2023-35 - FINE
 
 	// MEV_2023-35
 	// Revoca Pena Sostitutiva
@@ -450,7 +447,6 @@ public interface ICostantiDepositoOrdinanzaPc {
 			+ "files/siap/sius/depositoordinanzapc/InserisciOrdinanzaRevocaPenaSostitutiva.jsp";
 	public static final String PG_LOAD_DETTAGLIO_REVOCA_PENA_SOSTITUTIVA = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/depositoordinanzapc/DettaglioOrdinanzaRevocaPenaSostitutiva.jsp";
-	// MEV_2023-35 - FINE
 
 	// MEV_2023-35
 	// RECLAMO AVVERSO REVOCA PENA SOSTITUTIVA (C063)
@@ -460,6 +456,12 @@ public interface ICostantiDepositoOrdinanzaPc {
 			+ "files/siap/sius/depositoordinanzapc/InserisciOrdinanzaReclamoAvversoRevocaPenaSostitutiva.jsp";
 	public static final String PG_LOAD_DETTAGLIO_RECLAMO_AVVERSO_REVOCA_PENA_SOSTITUTIVA = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/depositoordinanzapc/DettaglioOrdinanzaReclamoAvversoRevocaPenaSostitutiva.jsp";
+
+	// MEV_2023-35
+	// SOSPENSIONE ESECUZIONE PENE ACCESSORIE (TDS C066 - UDS U141)
+	public static final String COD_OGGETTO_SOSPENSIONE_ESECUZIONE_PENE_ACCESSORIE_TDS = "C066";
+	public static final String COD_OGGETTO_SOSPENSIONE_ESECUZIONE_PENE_ACCESSORIE_UDS = "U141";
+	public static final String SOSPENSIONE_ESECUZIONE_PENE_ACCESSORIE = "PA";	
 	// MEV_2023-35 - FINE
 
 	// Declaratoria Estinzione Sanzioni Sostitutive

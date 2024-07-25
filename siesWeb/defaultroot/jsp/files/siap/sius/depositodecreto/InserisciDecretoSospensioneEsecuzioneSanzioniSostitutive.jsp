@@ -16,11 +16,15 @@
 <%@ page import="siap.sico.security.action.ICostantiSecurity"%>
 <%@ page import="siap.sico.utente.model.UtenteModel"%>
 <%@ page import="siap.sico.ufficio.model.UfficioModel"%>
+<%@ page import="siap.siep.penaaccessoria.action.ICostantiPenaAccessoria"%>
 
-<jsp:useBean id="contenuto"     	scope="request" class="java.lang.String"/>
-<jsp:useBean id="tipo_decreto"    	scope="request" class="java.lang.String"/>
-<jsp:useBean id="data_emissione"  	scope="request" class="java.util.Date"/>
-<jsp:useBean id="Action"     		scope="request" class="java.lang.String"/>
+<jsp:useBean id="contenuto"     		scope="request" class="java.lang.String"/>
+<jsp:useBean id="tipo_decreto"    		scope="request" class="java.lang.String"/>
+<jsp:useBean id="data_emissione"  		scope="request" class="java.util.Date"/>
+<jsp:useBean id="Action"     			scope="request" class="java.lang.String"/>
+<%-- MEV_2023-35: aggiunti useBean per gestione Sospensione esecuzione pene accessorie --%>
+<jsp:useBean id="TipoPenaAccessoria"	scope="request" class="java.lang.String"/>
+<jsp:useBean id="DurataPeneAccessorie"	scope="request" class="java.lang.String"/>
 
 <%
 TenoreModel[] tenori = (TenoreModel[]) request.getAttribute("tenori");
@@ -42,6 +46,9 @@ if ("U134".equals(contenuto))
 	tipoSosp = "Pena Sostitutiva";
 else if ("U137".equals(contenuto))
 	tipoSosp = "Lavoro Pubblica Utilit&agrave; Sostitutivo";
+else if (ICostantiDepositoOrdinanzaPc.COD_OGGETTO_SOSPENSIONE_ESECUZIONE_PENE_ACCESSORIE_UDS.equals(contenuto)
+		|| ICostantiDepositoOrdinanzaPc.COD_OGGETTO_SOSPENSIONE_ESECUZIONE_PENE_ACCESSORIE_TDS.equals(contenuto))
+	tipoSosp = "Esecuzione Pena Accessoria";
 
 // Imposta varibabili se Decreto o Ordinanza
 String lAction = new String();
@@ -97,7 +104,7 @@ function visualizza_campo() {
  	
 function Verify() {
 	// Controllo obbligatorietà esiti
-	var lEsiti=document.InserisciDecretoSospensioneSS.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>;
+	var lEsiti = document.InserisciDecretoSospensioneSS.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>;
 	var ritorno = VerifyCombo(lEsiti, "Esito");
 	if (ritorno == false) {
 		return false;
@@ -174,7 +181,7 @@ function Verify() {
 		if (campoScelta[1] != null && campoScelta[1].checked == true) {
 			if (document.InserisciDecretoSospensioneSS.<%=ICostantiDepositoDecreto.CAMPO_GIORNI_RECUPERO_SS%>.value == '') {
 				alert('Il campo Numero Giorni deve essere impostato');
-				return false;	
+				return false;
 			}
 			// Controlla il campo Data Decorrenza Sospensione per vedere se è vuoto
 	    	if (chk_valore_data_inizio == false) {
@@ -188,6 +195,20 @@ function Verify() {
 			}
        	}
 	}
+<%
+// MEV_2023-35: aggiunto contenuto "Sospensione Esecuzione Pena Accessoria" (x2)
+if (ICostantiDepositoOrdinanzaPc.COD_OGGETTO_SOSPENSIONE_ESECUZIONE_PENE_ACCESSORIE_UDS.equalsIgnoreCase(contenuto)
+		|| ICostantiDepositoOrdinanzaPc.COD_OGGETTO_SOSPENSIONE_ESECUZIONE_PENE_ACCESSORIE_TDS.equalsIgnoreCase(contenuto)) {
+%>
+    var tipoPA = document.InserisciDecretoSospensioneSS.<%=ICostantiPenaAccessoria.CAMPO_COD_TIPO_PENA_ACCESSORIA%>.value;
+    if (tipoPA == "-") {
+		alert('Tipo Pena Accessoria Obbligatorio');
+		document.InserisciDecretoSospensioneSS.<%=ICostantiPenaAccessoria.CAMPO_COD_TIPO_PENA_ACCESSORIA%>.focus();
+		return false;
+    }
+<%
+}
+%>
 
 	return true;
 }
@@ -212,10 +233,10 @@ function Verify() {
 </table>
 
 <FORM method="POST" action="<%=IWebConstants.PG_MAIN%>" name="InserisciDecretoSospensioneSS">
-<table cellspacing="2" cellpadding="2" width="90%">
+<table cellspacing="2" cellpadding="2" width="95%">
 	<tr>
-		<td class="l" width="30%"> Data Emissione</td>
-		<td class="l" width="70%"><%=DateUtils.getDateToString(data_emissione,"dd/MM/yyyy")%></td>
+		<td class="l" width="20%"> Data Emissione</td>
+		<td class="l"><%=DateUtils.getDateToString(data_emissione,"dd/MM/yyyy")%></td>
 	</tr>
  	<tr>
 		<td class="l"> Eventuale motivazione</td>
@@ -223,12 +244,12 @@ function Verify() {
   	</tr>
 </table>
 <br>
-<table cellspacing="2" cellpadding="2" style="width: 90%;">
+<table cellspacing="2" cellpadding="2" width="95%">
     <tr>
         <td class="Titolo" colspan="2">Specificare esito per ciascun oggetto:</td>
     </tr>
     <tr>
-        <td class="l">Oggetto</td>
+        <td class="l" width="20%">Oggetto</td>
         <td class="l">Esito <font class=ob>(*)</font></td>
     </tr>
 <%
@@ -257,8 +278,10 @@ for (int i = 0; i < tenori.length; i++) {
 </table>
 <br>
 <%
-// MEV_2023-35: aggiunto controllo preventivo per fa vedere la tabella
-if (!("U134".equals(contenuto) || "U137".equals(contenuto))) {
+// MEV_2023-35: aggiunto controllo preventivo per far vedere la tabella
+if (!("U134".equals(contenuto) || "U137".equals(contenuto)
+		|| ICostantiDepositoOrdinanzaPc.COD_OGGETTO_SOSPENSIONE_ESECUZIONE_PENE_ACCESSORIE_UDS.equals(contenuto)
+		|| ICostantiDepositoOrdinanzaPc.COD_OGGETTO_SOSPENSIONE_ESECUZIONE_PENE_ACCESSORIE_TDS.equals(contenuto))) {
 %>
 <table cellspacing="2" cellpadding="2">
     <tr>
@@ -274,36 +297,67 @@ if (!("U134".equals(contenuto) || "U137".equals(contenuto))) {
 <br>
 <%
 }
+// MEV_2023-35: aggiunto contenuto "Sospensione Esecuzione Pena Accessoria" (x2)
+if (ICostantiDepositoOrdinanzaPc.COD_OGGETTO_SOSPENSIONE_ESECUZIONE_PENE_ACCESSORIE_UDS.equalsIgnoreCase(contenuto)
+		|| ICostantiDepositoOrdinanzaPc.COD_OGGETTO_SOSPENSIONE_ESECUZIONE_PENE_ACCESSORIE_TDS.equalsIgnoreCase(contenuto)) {
 %>
-<table cellspacing="2" cellpadding="2" width="90%">
+<table cellspacing="2" cellpadding="2" width="95%">
+    <tr>
+        <td class="Titolo" colspan="2">Pena Accessoria Sospesa</td>
+    </tr>
 	<tr>
-		<td class="l">Data Decorrenza Sospensione</td>
+		<td class="l" width="20%">Tipo di Pena Accessoria</td>
+		<td class="l">
+			<select class="small" name="<%=ICostantiPenaAccessoria.CAMPO_COD_TIPO_PENA_ACCESSORIA%>"><%=TipoPenaAccessoria%></select>
+		</td>
+	</tr>
+	<tr>
+		<td class="l">Tipo Durata</td>
+		<td class="l">
+			<select name="<%=ICostantiPenaAccessoria.CAMPO_DURATA%>"><%=DurataPeneAccessorie%></select>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Durata&nbsp;&nbsp;&nbsp;
+			Anni <input maxlength="2" size="2" Title="Anni Durata" value="" type="text" name="<%=ICostantiPenaAccessoria.CAMPO_NUM_ANNI%>" onkeypress="return TicTabNumField(this,event)">
+			Mesi <input maxlength="2" size="2" Title="Mesi Durata" value="" type="text" name="<%=ICostantiPenaAccessoria.CAMPO_NUM_MESI%>" onkeypress="return TicTabNumField(this,event)">
+			Giorni <input maxlength="2" size="2" Title="Giorni Durata" value="" type="text" name="<%=ICostantiPenaAccessoria.CAMPO_NUM_GIORNI%>" onkeypress="return TicTabNumField(this,event)">
+		</td>
+	</tr>
+    <tr>
+        <td class="Titolo" colspan="2">&nbsp;</td>
+    </tr>
+</table>
+<br>
+<%
+}
+%>
+<table cellspacing="2" cellpadding="2" width="95%">
+	<tr>
+		<td class="l" width="20%">Data Decorrenza Sospensione</td>
 		<td class="L">
-      		<input title = "Giorno Data Decorrenza Sospensione" value="" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoDecreto.CAMPO_GIORNO_SOSPENSIONE_SS%>" <%=IWebConstants.UTIL_DATA%>>
+      		<input title="Giorno Data Decorrenza Sospensione" value="" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoDecreto.CAMPO_GIORNO_SOSPENSIONE_SS%>" <%=IWebConstants.UTIL_DATA%>>
 			/
-			<input title = "Mese Data Decorrenza Sospensione" value="" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoDecreto.CAMPO_MESE_SOSPENSIONE_SS%>" <%=IWebConstants.UTIL_DATA%>>
+			<input title="Mese Data Decorrenza Sospensione" value="" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoDecreto.CAMPO_MESE_SOSPENSIONE_SS%>" <%=IWebConstants.UTIL_DATA%>>
 			/
-			<input title = "Anno Data Decorrenza Sospensione" value="" type="text" size="4" maxlength="4" name="<%=ICostantiDepositoDecreto.CAMPO_ANNO_SOSPENSIONE_SS%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
+			<input title="Anno Data Decorrenza Sospensione" value="" type="text" size="4" maxlength="4" name="<%=ICostantiDepositoDecreto.CAMPO_ANNO_SOSPENSIONE_SS%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
     	</td>
 	</tr>
 	<tr>
 		<td class="l">Periodo Sospensione</td>
 		<td class="L">
-			Anni <input title="Anni Sospensioni" size="2" maxlength="2" value="" type="text" name="<%=ICostantiDepositoDecreto.CAMPO_SOSPENSIONE_AA_SS%>" onkeypress="return TicTabNumField(this,event)">
+			Anni <input title="Anni Sospensione" size="2" maxlength="2" value="" type="text" name="<%=ICostantiDepositoDecreto.CAMPO_SOSPENSIONE_AA_SS%>" onkeypress="return TicTabNumField(this,event)">
 			Mesi <input title="Mesi Sospensione" size="2" maxlength="2" value="" type="text" name="<%=ICostantiDepositoDecreto.CAMPO_SOSPENSIONE_MM_SS%>" onkeypress="return TicTabNumField(this,event)">
 			Giorni <input title="Giorni Sospensione" size="2" maxlength="2" value="" type="text" name="<%=ICostantiDepositoDecreto.CAMPO_SOSPENSIONE_GG_SS%>" onkeypress="return TicTabNumField(this,event)">
       	</td>
-	</tr>	
+	</tr>
 	<tr>
 		<td class="l">Fino al</td>
 		<td class="L">
-      		<input title = "Giorno Data Scadenza Sospensione" value="" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoDecreto.CAMPO_GIORNO_SCADENZA_SOSPENSIONE_SS%>" <%=IWebConstants.UTIL_DATA%>>
+      		<input title="Giorno Data Scadenza Sospensione" value="" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoDecreto.CAMPO_GIORNO_SCADENZA_SOSPENSIONE_SS%>" <%=IWebConstants.UTIL_DATA%>>
 			/
-			<input title = "Mese Data Scadenza Sospensione" value="" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoDecreto.CAMPO_MESE_SCADENZA_SOSPENSIONE_SS%>" <%=IWebConstants.UTIL_DATA%>>
+			<input title="Mese Data Scadenza Sospensione" value="" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoDecreto.CAMPO_MESE_SCADENZA_SOSPENSIONE_SS%>" <%=IWebConstants.UTIL_DATA%>>
 			/
-			<input title = "Anno Data Scadenza Sospensione" value="" type="text" size="4" maxlength="4" name="<%=ICostantiDepositoDecreto.CAMPO_ANNO_SCADENZA_SOSPENSIONE_SS%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
+			<input title="Anno Data Scadenza Sospensione" value="" type="text" size="4" maxlength="4" name="<%=ICostantiDepositoDecreto.CAMPO_ANNO_SCADENZA_SOSPENSIONE_SS%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
     	</td>
-	</tr> 
+	</tr>
 </table>
 <%
 // 2008-02-21 commentato poichè come richiesto il controllo è da effettuarsi sul cod contenuto
@@ -312,13 +366,15 @@ boolean chkContenuto = false;
 // Come richiesto il 28/01/2008 Si inibisce la visualizzazione dei giorni da recuperare per il codice contenuto
 // pari a U060 e lo si abilita per il codice U061 e/o eventuali altri codici non specificati.
 if ("U060".equalsIgnoreCase(contenuto) // Sopensione Esecuzione Sanzioni Sostitutive
-		|| "U134".equalsIgnoreCase(contenuto)  // MEV_2023-35: aggiunto contenuto "Sopensione Esecuzione Pene Sostitutive"
-		|| "U137".equalsIgnoreCase(contenuto)) // MEV_2023-35: aggiunto contenuto "Sospensione lavoro di pubblica utilita' sostitutivo"
+		|| "U134".equalsIgnoreCase(contenuto) // MEV_2023-35: aggiunto contenuto "Sopensione Esecuzione Pene Sostitutive"
+		|| "U137".equalsIgnoreCase(contenuto) // MEV_2023-35: aggiunto contenuto "Sospensione lavoro di pubblica utilita' sostitutivo"
+		|| ICostantiDepositoOrdinanzaPc.COD_OGGETTO_SOSPENSIONE_ESECUZIONE_PENE_ACCESSORIE_UDS.equalsIgnoreCase(contenuto) // MEV_2023-35: aggiunto contenuto "Sospensione Esecuzione Pena Accessoria" (x2)
+		|| ICostantiDepositoOrdinanzaPc.COD_OGGETTO_SOSPENSIONE_ESECUZIONE_PENE_ACCESSORIE_TDS.equalsIgnoreCase(contenuto))
 	chkContenuto = true;
 if (!chkContenuto) {
 %>
 
-<table cellspacing="2" cellpadding="2" width="90%">
+<table cellspacing="2" cellpadding="2" width="95%">
 	<tr>
 		<td class="l">
 			da non recuperare <input type="radio" name="<%=ICostantiDepositoDecreto.CAMPO_FLAG_RECUPERO_SS%>" value="N" checked onClick="javascript:visualizza_campo();">
@@ -333,7 +389,7 @@ if (!chkContenuto) {
 }
 %>
 <br>
-<table cellspacing="2" cellpadding="2" style="width: 90%;">
+<table>
  	<tr>
  		<td>
      		<input class="bottone" type="submit" value="Conferma">
