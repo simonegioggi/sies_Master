@@ -12,6 +12,7 @@ import siap.jms.config.JMSProperties;
 import siap.jms.messaggio.action.ICostantiMessaggio;
 import siap.jms.messaggio.controller.IMessaggio;
 import siap.jms.messaggio.model.MessaggioModel;
+import siap.sico.jms.model.PresaInCaricoModel;
 import siap.sico.ufficio.model.UfficioModel;
 import siap.sico.web.ActionSiap;
 import siap.siep.jms.controller.IPresaInCaricoJMS;
@@ -86,7 +87,16 @@ public class ActPresaInCaricoAttoRicevuto extends ActionSiap implements ICostant
         
         IPresaInCaricoJMS lPres = SIEPLookupRemote.getPresaInCarico();
         
-        lPres.ExInserisciFascicoloSiep(lMessIns);  
+        // MEV_2024-DNA - Si passano al controller anche le informazione su data utente e ufficio 
+        //                che precede alla presa in carico
+        PresaInCaricoModel lPresaIncaricoModel = new PresaInCaricoModel();
+        lPresaIncaricoModel.setDataPresaInCarico (DateUtils.getSysDate());
+        lPresaIncaricoModel.setCodOperatorePresaInCarico (getCodUtenteConnesso());
+        lPresaIncaricoModel.setCodUfficioPresaInCarico (getCodUfficioUtenteConnesso());        
+        
+        // lPres.ExInserisciFascicoloSiep(lMessIns);  
+        lPres.ExInserisciFascicoloSiep(lMessIns, lPresaIncaricoModel);  
+        // MEV_2024-DNA - FINE
       }
       catch (F3BException ex)
       {

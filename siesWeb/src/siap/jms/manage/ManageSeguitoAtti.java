@@ -22,6 +22,7 @@ import siap.jms.jmscode.model.JmsCodeModel;
 import siap.jms.messaggio.controller.IMessaggio;
 import siap.jms.messaggio.model.MessaggioModel;
 import siap.sico.evento.model.EventoModel;
+import siap.sico.jms.model.PresaInCaricoModel;
 import siap.sico.misuraalternativa.model.MisuraAlternativaAggregatoModel;
 import siap.sico.ufficio.controller.IUfficio;
 import siap.sico.ufficio.model.UfficioModel;
@@ -57,7 +58,7 @@ public class ManageSeguitoAtti implements ICostantiJMS {
 	 * @throws Exception
 	 * @deprecated 07/2018 non più utilizzato
 	 */
-	public void elaboraMessaggioSeguitoAtti(ObjectMessage aJmsMessage, MessaggioModel aMessIns)
+	 public void elaboraMessaggioSeguitoAtti(ObjectMessage aJmsMessage, MessaggioModel aMessIns)
 			throws Exception {
 
 		siesLogger.info("[JMS]: inizio elaborazione SEGUITO ATTI");
@@ -105,8 +106,18 @@ public class ManageSeguitoAtti implements ICostantiJMS {
 			// ovvero già trasmesso e PRESO IN CARICO.
 			// Se il fascicolo NON risulta preso in carico non andrebbe aggiornato
 
+		  // MEV_2024-DNA - Si passano al controller anche le informazione su data utente e ufficio 
+	    //                che precede alla presa in carico
+			// n.b. metodo decìrepcato me si inserisce ugualmente la modifica DNS per 
+			//      evitare l'erroredi chiamata al mentodo in compilazione
+	    PresaInCaricoModel lPresaIncaricoModel = new PresaInCaricoModel();
+	    lPresaIncaricoModel.setDataPresaInCarico (DateUtils.getSysDate());
+	    lPresaIncaricoModel.setCodOperatorePresaInCarico ("nd");
+	    lPresaIncaricoModel.setCodUfficioPresaInCarico ("nd");
 			IPresaInCaricoJMS lPres = SIEPLookupRemote.getPresaInCarico();
-			/* lMessReturn = */lPres.ExInserisciFascicoloSiep(lMessIns);
+			// /* lMessReturn = */lPres.ExInserisciFascicoloSiep(lMessIns);
+			/* lMessReturn = */lPres.ExInserisciFascicoloSiep(lMessIns, lPresaIncaricoModel);
+		  // MEV_2024-DNA 
 		}
 
 		siesLogger.debug("MESSAGGIO = " + lMessIns);
@@ -136,6 +147,8 @@ public class ManageSeguitoAtti implements ICostantiJMS {
 
 	}
 
+	 
+	 
 	/**
 	 * 
 	 * @param lMess

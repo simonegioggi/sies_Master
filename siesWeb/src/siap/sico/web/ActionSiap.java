@@ -527,12 +527,31 @@ public class ActionSiap extends Action {
 		LogAttivitaModel log = new LogAttivitaModel();
 		ILogAttivita ilog = SICOLookupRemote.getLogAttivitaRemote();
 
-		if (!isSessionAttributeNullObj(ICostantiSecurity.SESSION_UTENTE_CONNESSO))
-			log.setCodOperatore(((UtenteModel) getSessionAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO))
-					.getUserId());
-		else
-			// solo alla login!!!!
-			log.setCodOperatore(getRequestStringParameter(ICostantiSecurity.CAMPO_USER_ID));
+    // MEV_2024-DNA -  eliminazione tracciature degli utenti DNA che iniziano per J
+    String lCodOperatore = "";
+    
+    if (!isSessionAttributeNullObj(ICostantiSecurity.SESSION_UTENTE_CONNESSO))
+      lCodOperatore = ((UtenteModel) getSessionAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO))
+                  .getUserId();
+      else
+          // solo alla login!!!!
+        lCodOperatore = getRequestStringParameter(ICostantiSecurity.CAMPO_USER_ID);
+    
+    if (lCodOperatore.startsWith("J"))
+      return;
+    else 
+      log.setCodOperatore (lCodOperatore);
+    
+    /*
+    if (!isSessionAttributeNullObj(ICostantiSecurity.SESSION_UTENTE_CONNESSO))
+      log.setCodOperatore(((UtenteModel) getSessionAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO))
+          .getUserId());
+    else
+      // solo alla login!!!!
+      log.setCodOperatore(getRequestStringParameter(ICostantiSecurity.CAMPO_USER_ID));
+    */
+    // MEV_2024-DNA - FINE
+
 
 		log.setIpUtente(getRequest().getRemoteAddr());
 		log.setAzioneContestoJava(aNameAction);

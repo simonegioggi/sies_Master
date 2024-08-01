@@ -10,6 +10,7 @@ import siap.jms.SIAPSender;
 import siap.jms.messaggio.action.ICostantiMessaggio;
 import siap.jms.messaggio.controller.IMessaggio;
 import siap.jms.messaggio.model.MessaggioModel;
+import siap.sico.jms.model.PresaInCaricoModel;
 import siap.sico.lock.model.LockModel;
 import siap.sico.ufficio.model.UfficioModel;
 import siap.sico.web.ActionSiap;
@@ -60,7 +61,15 @@ public class ActConfermaPresaInCarico extends ActionSiap implements ICostantiJMS
     try
     {
       IPresaInCaricoJMS lPres = SIEPLookupRemote.getPresaInCarico();
-      lMessReturn  = lPres.ExInserisciIstanzaTrasmessa(lMessIns);
+      // MEV_2024-DNA - Si passano al controller anche le informazione su data utente e ufficio 
+      //                che precede alla presa in carico
+      PresaInCaricoModel lPresaIncaricoModel = new PresaInCaricoModel();
+      lPresaIncaricoModel.setDataPresaInCarico (DateUtils.getSysDate());
+      lPresaIncaricoModel.setCodOperatorePresaInCarico (getCodUtenteConnesso());
+      lPresaIncaricoModel.setCodUfficioPresaInCarico (getCodUfficioUtenteConnesso());
+      //lMessReturn  = lPres.ExInserisciIstanzaTrasmessa(lMessIns);
+      lMessReturn  = lPres.ExInserisciIstanzaTrasmessa (lMessIns, lPresaIncaricoModel);
+      // MEV_2024-DNA - FINE
     }
     catch (Exception ex)
     {

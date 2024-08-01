@@ -159,5 +159,9 @@ public interface IMessaggio {
 
 	public Vector<MessaggioModel> ExRicercaMessaggioByIdMessaggioSollecitato(String aTipoOperazione,
 			String aIdMesSollecitato) throws F3BException;
-
+  
+	// MEV_2024-DNA 
+	// Metodo di eliminazione dei messaggi ricevuti o inviati da un certo ufficio in un certo intervallo di date
+  public void ExCancellaMessaggioByCodUfficio (String aCodUfficio, Date aDataInviaDal, Date aDataInviaAl) throws F3BException;
+  // MEV_2024-DNA - FINE
 }

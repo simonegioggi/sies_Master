@@ -95,5 +95,12 @@ public class AgdgFascicoloSiepDAO extends TableDAO
  			 {
 	 setCondition(" ID_AGDG_FASCICOLO_SIEP = " + key ); 
 		 }
+	
+	 // MEV_2024-DNA
+	 public void setCondizioneByIdFascicolo (BigDecimal aIdFascicoloSiep)
+   {
+	     setCondition(" FAS_SIE_ID_FASCICOLO_SIEP = " + aIdFascicoloSiep ); 
+   }
+	
 
 }
