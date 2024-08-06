@@ -19,12 +19,9 @@ import f3b.log.LogF3B;
 import f3b.util.F3BException;
 
 /**
- * <p>
- * Title: ActLoadDettaglioEsecuzioneLicenza
- * </p>
- * <p>
- * Description: Classe Action per la load Dettaglio Esecuzione Permesso
- * </p>
+ * ActLoadDettaglioEsecuzioneLicenza - Classe Action per la load Dettaglio Esecuzione Permesso
+ * 
+ * @version 1.0
  */
 @SuppressWarnings("rawtypes")
 public class ActLoadDettaglioEsecuzioneLicenza extends ActRicercaFSPuntuale
@@ -46,8 +43,8 @@ public class ActLoadDettaglioEsecuzioneLicenza extends ActRicercaFSPuntuale
 		if (super.isRequestParameterNullObj(ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO)
 				|| super.isRequestParameterNullObj(ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR))
 			lIDFasSius = super.getFascicoloSiusModelInSessione().getIdFascicoloSius();
-		else // altrimenti prosegue con la ricerca del fascicolo attraverso le due chiavi ANNO/PROGR
-		{
+		else {
+			// altrimenti prosegue con la ricerca del fascicolo attraverso le due chiavi ANNO/PROGR
 			super.processRequest();
 			lIDFasSius = super.getFascicoloSiusModelInSessione().getIdFascicoloSius();
 		}
@@ -88,7 +85,8 @@ public class ActLoadDettaglioEsecuzioneLicenza extends ActRicercaFSPuntuale
 		// LogF3B.getLogger()
 		siesLogger.debug(this.getClass().getName() + ".processRequest(): fine");
 
-		return lRetPage; // restituisce la jsp di VIEW
+		// restituisce la jsp di VIEW
+		return lRetPage;
 	}
 
 }
