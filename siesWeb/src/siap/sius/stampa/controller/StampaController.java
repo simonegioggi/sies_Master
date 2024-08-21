@@ -5370,6 +5370,8 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 			TotaliPermessiLicenzeModel lTotali = new TotaliPermessiLicenzeModel();
 
 			StringTokenizer lStrToken = new StringTokenizer(aCriteriRicerca.getCodMotivo(), ",");
+			// MEV_2023-35: aggiungo due contatori
+			int li = 0, lp = 0;
 			while (lStrToken.hasMoreTokens()) {
 				String lCodMotivo = lStrToken.nextToken();
 				int lNum = lPermSqlDao.getNumProvvedimentiPermessiLicenze(
@@ -5381,6 +5383,15 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 					lTotali.setNumPN(lNum);
 				else if (lCodMotivo.equals("2025"))
 					lTotali.setNumLC(lNum);
+				// MEV_2023-35: aggiunti codici x permessi e licenze
+				else if ("3130,3150,3151".contains(lCodMotivo)) {
+					lp += lNum;
+					lTotali.setNumLP(lp);
+				} else if ("2450,2451,2452,2460,2461".contains(lCodMotivo)) {
+					li += lNum;
+					lTotali.setNumLI(li);
+				} else if (lCodMotivo.equals("2680"))
+					lTotali.setNumPI(lNum);
 			}
 
 			lTreeRoot.add(new TreeModel(lTotali));

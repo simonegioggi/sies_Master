@@ -12,20 +12,8 @@ import f3b.log.LogF3B;
 import f3b.util.F3BException;
 
 /**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company:
- * </p>
+ * TemplateManager - Classe singleton per il caricamento dei templates da stampare
  * 
- * @author not attributable
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -63,7 +51,11 @@ public class TemplateManager {
 			Iterator lItx = lVector.iterator();
 			while (lItx.hasNext()) {
 				TemplateModel lTemp = new TemplateModel((TemplateModel) lItx.next());
-				mTemplates.put(lTemp.getIdTemplate(), lTemp.getPathRicerca() + lTemp.getNomeTemplate());
+				// mTemplates.put(lTemp.getIdTemplate(), lTemp.getPathRicerca() + lTemp.getNomeTemplate());
+				// FIXME: commentare - vale solo per LOCALHOST
+				String pathRicerca = lTemp.getPathRicerca().replace("/", "\\").replace("\\var\\SIES", "C:");
+				mTemplates.put(lTemp.getIdTemplate(), pathRicerca + lTemp.getNomeTemplate());
+				// TODO: commentare - vale solo per LOCALHOST
 			}
 		} catch (F3BException ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di

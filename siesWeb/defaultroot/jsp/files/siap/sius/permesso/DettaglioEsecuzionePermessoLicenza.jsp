@@ -23,9 +23,17 @@ else if (lCodTipoLicenza.equalsIgnoreCase(ICostantiLicenzaLibanticipata.PERMESSO
 	lDescrTipoLicenza = "Permesso";
 else if (lCodTipoLicenza.equalsIgnoreCase(ICostantiLicenzaLibanticipata.PERMESSO_INTERNATO))
 	lDescrTipoLicenza = "Permesso per Internato";
-// MEV_2023-35: aggiungo Licenza pene sostitutive (LP)
+// MEV_2023-35: aggiungo Licenza pene sostitutive (LP) e altre 4
 else if (lCodTipoLicenza.equalsIgnoreCase(ICostantiLicenzaLibanticipata.LICENZA_PENE_SOSTITUTIVE))
 	lDescrTipoLicenza = "Licenza Pene Sostitutive";
+else if (lCodTipoLicenza.equalsIgnoreCase(ICostantiLicenzaLibanticipata.ESCLUSIONE_COMPUTO_LICENZA))
+	lDescrTipoLicenza = "Esclusione Computo Licenza";
+else if (lCodTipoLicenza.equalsIgnoreCase(ICostantiLicenzaLibanticipata.REVOCA_LICENZA))
+	lDescrTipoLicenza = "Revoca Licenza";
+else if (lCodTipoLicenza.equalsIgnoreCase(ICostantiLicenzaLibanticipata.REVOCA_PERMESSO))
+	lDescrTipoLicenza = "Revoca Permesso";
+else if (lCodTipoLicenza.equalsIgnoreCase(ICostantiLicenzaLibanticipata.ESCLUSIONE_COMPUTO_PERMESSO))
+	lDescrTipoLicenza = "Esclusione Computo Permesso";
 %>	
 <html>
 <head>
@@ -61,7 +69,7 @@ else if (lCodTipoLicenza.equalsIgnoreCase(ICostantiLicenzaLibanticipata.LICENZA_
 LicenzaLibAnticipataModel lLic = permessoDepDecr.getLicenza();
 %>
 	<tr>
-		<td class="l" width="20%">Esito <%=lDescrTipoLicenza%></td>
+		<td class="l" width="25%">Esito <%=lDescrTipoLicenza%></td>
 		<td class="l" width="20%">
 			<font class="campo"><%=StringUtils.toStringJSP(lLic.getDescrEsito(), "-")%></font>
 		</td>

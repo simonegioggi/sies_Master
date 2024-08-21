@@ -167,17 +167,20 @@ while (itx.hasNext()) {
 <% 
 	RedirectTo lRedirDettEsec = new RedirectTo();
 	lRedirDettEsec.setPage(IWebConstants.PG_MAIN);
-	if (lModel.getLicenza().getCodTipoLicenza().startsWith("P")) // Tutti i tipi di Permessi
+	// MEV_2023-35: aggiungo codici per l'esclusione
+	if (lModel.getLicenza().getCodTipoLicenza().startsWith("P") // Tutti i tipi di Permessi
+			|| lModel.getLicenza().getCodTipoLicenza().equalsIgnoreCase(ICostantiLicenzaLibanticipata.ESCLUSIONE_COMPUTO_PERMESSO))
 		lRedirDettEsec.setAction("siap.sius.permesso.action.ActLoadDettaglioEsecuzionePermesso");
-	else if ( lModel.getLicenza().getCodTipoLicenza().startsWith("L") ) // tutti i tipi di licenza.
+	else if (lModel.getLicenza().getCodTipoLicenza().startsWith("L") // tutti i tipi di licenza
+			|| lModel.getLicenza().getCodTipoLicenza().equalsIgnoreCase(ICostantiLicenzaLibanticipata.ESCLUSIONE_COMPUTO_LICENZA)) 
 	  	lRedirDettEsec.setAction("siap.sius.permesso.action.ActLoadDettaglioEsecuzioneLicenza");			
 	// 20110525 - PM : Commentato e sostituita con la precedente, ove le condizioni di switch
 	//				  sono la lattera iniziale come aggregato.	
 	/*
-	if( lModel.getLicenza().getCodTipoLicenza().equalsIgnoreCase("PP") )
-	  lRedirDettEsec.setAction("siap.sius.permesso.action.ActLoadDettaglioEsecuzionePermesso");
-	else if ( lModel.getLicenza().getCodTipoLicenza().equalsIgnoreCase("LC") )
-	  lRedirDettEsec.setAction("siap.sius.permesso.action.ActLoadDettaglioEsecuzioneLicenza");			
+	if (lModel.getLicenza().getCodTipoLicenza().equalsIgnoreCase("PP"))
+	  	lRedirDettEsec.setAction("siap.sius.permesso.action.ActLoadDettaglioEsecuzionePermesso");
+	else if (lModel.getLicenza().getCodTipoLicenza().equalsIgnoreCase("LC"))
+		lRedirDettEsec.setAction("siap.sius.permesso.action.ActLoadDettaglioEsecuzioneLicenza");			
 	*/
 	lRedirDettEsec.setParameter(ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO, lModel.getFascicolo().getChiaveAnno().toString());
 	lRedirDettEsec.setParameter(ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR, lModel.getFascicolo().getChiaveProgr().toString());
