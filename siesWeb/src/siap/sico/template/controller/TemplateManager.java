@@ -6,14 +6,14 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
-import siap.sico.template.model.TemplateModel;
-import siap.sico.util.SICOLookupRemote;
 import f3b.log.LogF3B;
 import f3b.util.F3BException;
+import siap.sico.template.model.TemplateModel;
+import siap.sico.util.SICOLookupRemote;
 
 /**
  * TemplateManager - Classe singleton per il caricamento dei templates da stampare
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -51,10 +51,11 @@ public class TemplateManager {
 			Iterator lItx = lVector.iterator();
 			while (lItx.hasNext()) {
 				TemplateModel lTemp = new TemplateModel((TemplateModel) lItx.next());
-				// mTemplates.put(lTemp.getIdTemplate(), lTemp.getPathRicerca() + lTemp.getNomeTemplate());
+				mTemplates.put(lTemp.getIdTemplate(), lTemp.getPathRicerca() + lTemp.getNomeTemplate());
 				// FIXME: commentare - vale solo per LOCALHOST
-				String pathRicerca = lTemp.getPathRicerca().replace("/", "\\").replace("\\var\\SIES", "C:");
-				mTemplates.put(lTemp.getIdTemplate(), pathRicerca + lTemp.getNomeTemplate());
+				// String pathRicerca = lTemp.getPathRicerca().replace("/", "\\").replace("\\var\\SIES",
+				// "C:");
+				// mTemplates.put(lTemp.getIdTemplate(), pathRicerca + lTemp.getNomeTemplate());
 				// TODO: commentare - vale solo per LOCALHOST
 			}
 		} catch (F3BException ex) {
