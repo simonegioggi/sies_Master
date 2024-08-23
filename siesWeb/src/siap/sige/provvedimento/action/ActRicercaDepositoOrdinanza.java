@@ -2,31 +2,23 @@ package siap.sige.provvedimento.action;
 
 import java.util.Vector;
 
+import f3b.util.F3BException;
+import f3b.web.IWebConstants;
+import f3b.web.RedirectTo;
 import siap.sige.fascicolo.action.ActRicercaFSigePuntuale;
 import siap.sige.fascicolo.model.FascicoloSigeEstesoModel;
 import siap.sige.provvedimento.controller.IProvvedimentoSige;
 import siap.sige.provvedimento.model.ProvvedimentoSigeEventoModel;
 import siap.sige.provvedimento.model.ProvvedimentoSigeModel;
 import siap.sige.util.SIGELookupRemote;
-import siap.sius.provvedimento.action.ICostantiProvvedimento;
-import f3b.util.F3BException;
-import f3b.web.IWebConstants;
-import f3b.web.RedirectTo;
 
 /**
- * <p>
- * Title: ActRicercaDepositoOrdinanza
- * </p>
- * <p>
- * Description: Classe Action per la Ricerca delle Ordinanze Emesse per un Procedimento SIGE.
- * <p>
- * Company: Eutelia S.p.A.
- * </p>
- * 
+ * ActRicercaDepositoOrdinanza - Classe Action per la Ricerca delle Ordinanze Emesse per un Procedimento SIGE
+ *
  * @version 1.0
  */
-public class ActRicercaDepositoOrdinanza extends ActRicercaFSigePuntuale implements
-		ICostantiProvvedimentoSige, ICostantiProvvedimento {
+public class ActRicercaDepositoOrdinanza extends ActRicercaFSigePuntuale
+		implements ICostantiProvvedimentoSige {
 
 	public String processRequest() throws Exception {
 
@@ -36,7 +28,8 @@ public class ActRicercaDepositoOrdinanza extends ActRicercaFSigePuntuale impleme
 			super.processRequest();
 
 		// Fascicolo Sige Esteso in sessione.
-		FascicoloSigeEstesoModel lFasEsteso = (FascicoloSigeEstesoModel) getSessionAttribute("FascicoloSigeEsteso");
+		FascicoloSigeEstesoModel lFasEsteso = (FascicoloSigeEstesoModel) getSessionAttribute(
+				"FascicoloSigeEsteso");
 
 		// Predisposizione ritorno
 		setLinkRitorno();
@@ -46,7 +39,7 @@ public class ActRicercaDepositoOrdinanza extends ActRicercaFSigePuntuale impleme
 		try {
 			ProvvedimentoSigeModel lProvSige = new ProvvedimentoSigeModel();
 			lProvSige.setFasIdFascicoloSige(lFasEsteso.getFascicoloSige().getIdFascicoloSige());
-			lProvSige.setCodTipoProvvedimento(ICostantiProvvedimento.COD_ORDINANZA);
+			lProvSige.setCodTipoProvvedimento(ICostantiProvvedimentoSige.COD_ORDINANZA_GENERICA);
 			IProvvedimentoSige lCtrl = SIGELookupRemote.getProvvedimentoRemote();
 			ProvvedimentoSigeEventoModel lProvSigeEvento = new ProvvedimentoSigeEventoModel();
 
@@ -57,7 +50,7 @@ public class ActRicercaDepositoOrdinanza extends ActRicercaFSigePuntuale impleme
 				// Più ordinanze
 				setRequestAttribute("ordinanze", lVect);
 				lRetPage = PG_ELENCO_DEPOSITO_ORDINANZE;
-				lProvSigeEvento = (ProvvedimentoSigeEventoModel) lVect.get(0);
+				lProvSigeEvento = lVect.get(0);
 			} else if (lVect.size() == 1) {
 				// Unico provvedimento: se validato, si va al dettaglio.
 				lProvSigeEvento = lVect.get(0);
@@ -66,11 +59,10 @@ public class ActRicercaDepositoOrdinanza extends ActRicercaFSigePuntuale impleme
 					lPage.setPage(IWebConstants.PG_MAIN);
 					lPage.setAction("siap.sige.provvedimento.action.ActLoadDettaglioDataDeposito");
 					// &" + CAMPO_ID_DOCUMENTO_ALLEGATO + "=" + lDocAllMod.getIdDocumentoAllegato();
-					lPage.setParameter(ICostantiProvvedimentoSige.CAMPO_ID_EVENTO_GENERATO, lProvSigeEvento
-							.getProvvedimento().getIdEventoGenerato().toString());
+					lPage.setParameter(ICostantiProvvedimentoSige.CAMPO_ID_EVENTO_GENERATO,
+							lProvSigeEvento.getProvvedimento().getIdEventoGenerato().toString());
 					this.setRequestAttribute("ordinanza", lVect.get(0));
 					lRetPage = lPage.toString();
-
 				} else {
 					// Si passa al deposito dell' ordinanza
 					RedirectTo lPage = new RedirectTo();
@@ -78,8 +70,8 @@ public class ActRicercaDepositoOrdinanza extends ActRicercaFSigePuntuale impleme
 					lPage.setAction("siap.sige.provvedimento.action.ActLoadInserisciDataDeposito");
 					lPage.setParameter(ICostantiProvvedimentoSige.CAMPO_ID_PROVVEDIMENTO_SIGE,
 							lProvSigeEvento.getProvvedimento().getIdProvvedimentoSige().toString());
-					lPage.setParameter("IdEvento", lProvSigeEvento.getProvvedimento().getIdEventoGenerato()
-							.toString());
+					lPage.setParameter("IdEvento",
+							lProvSigeEvento.getProvvedimento().getIdEventoGenerato().toString());
 					this.setRequestAttribute("ordinanza", lVect.get(0));
 					lRetPage = lPage.toString();
 				}
@@ -107,7 +99,6 @@ public class ActRicercaDepositoOrdinanza extends ActRicercaFSigePuntuale impleme
 			setRequestAttribute("Modificabile", lModificabile);
 			setRequestAttribute("Stampabile", lStampabile);
 			setRequestAttribute("Trasferibile", lTrasferibile);
-
 		} catch (F3BException fex) {
 			if (fex.getErrorCode() == F3BException.USER_MESSAGE)
 				throw new F3BException(F3BException.USER_MESSAGE,
@@ -118,7 +109,8 @@ public class ActRicercaDepositoOrdinanza extends ActRicercaFSigePuntuale impleme
 			throw (ex);
 		}
 
-		return lRetPage; // restituisce la jsp di VIEW
+		// restituisce la jsp di VIEW
+		return lRetPage;
 	}
 
 }

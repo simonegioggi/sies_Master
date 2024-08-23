@@ -6,6 +6,7 @@ import java.util.Vector;
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
+import f3b.util.Utils;
 import f3b.web.html.Option;
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
@@ -41,19 +42,8 @@ import siap.sige.util.SIGELookupRemote;
 import siap.sige.web.ActionSige;
 
 /**
- * <p>
- * Title: ActLoadDettaglioFissazioneUdienza
- * </p>
- * <p>
- * Description: Classe Action per la load della jsp di dettaglio Fissazione Udienza
- * </p>
- * <p>
- * Copyright: Copyright (c) 2008
- * </p>
- * <p>
- * Company: Eutelia
- * </p>
- * 
+ * ActLoadDettaglioFissazioneUdienza - Classe Action per la load della jsp di dettaglio Fissazione Udienza
+ *
  * @version 1.0
  */
 public class ActLoadDettaglioFissazioneUdienza extends ActionSige implements ICostantiUdienzaSige {
@@ -252,6 +242,13 @@ public class ActLoadDettaglioFissazioneUdienza extends ActionSige implements ICo
 				lStampabile = "SI";
 			}
 		}
+
+		// aggiunto controllo altrimenti si deposita senza validazione del provvedimento
+		if (!Utils.isNullObj(lFasEsteso) && !Utils.isNullObj(lFasEsteso.getFascicoloSige())
+				&& "07".equals(lFasEsteso.getFascicoloSige().getCodStatoFascicolo())
+				&& (lEveMod.getEvento().getFlagDocumentoRegistrato() == null
+						|| lEveMod.getEvento().getFlagDocumentoRegistrato().compareTo("N") == 0))
+			lStampabile = "SI";
 
 		// 29/07/2009 Se si sta riprovando la fissazione udienza, si recupera il relativo parametro di
 		// cancellazione.
