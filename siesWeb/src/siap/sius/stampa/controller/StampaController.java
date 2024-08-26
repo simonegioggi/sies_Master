@@ -2211,7 +2211,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 				// MEV_2023-35: aggiunto ramo rateizzazioniPP
 				lTreeFasSIUS = prelevaRateizzazioni(lTreeFasSIUS,
 						lFasGP.getFascicoloSiusModel().getIdFascicoloSius());
-
 			} // endif (lFasGP.getFascicoloSiusModel() != null)
 		} catch (F3BException fe) {
 			throw fe;
@@ -2225,11 +2224,11 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Metodo per stampare le rateizzazioni legate al fascicolo sius
-	 * 
+	 *
 	 * @param tm
 	 * @param idFascicoloSius
 	 * @return TreeModel
-	 * 
+	 *
 	 * @since MEV_2023-35
 	 * @author sgioggi
 	 */
@@ -3386,8 +3385,22 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 				}
 			}
 
-			// Esecuzione Misura di Sicurezza,per id depositoOrdinanzaPC
+			// Esecuzione Misura di Sicurezza, per id depositoOrdinanzaPC
 			lTreeOrdMod.add(prelevaDatiEsecuzioneMSByIdOrdinanza(lDepMod.getIdDepositoOrdinanzaPc(), aConn));
+
+			// MEV_2023-35: aggiunto ramo Esecuzione Sanzione Sostitutiva per oggetto procedimento U132 e
+			// COD_TIPO_ORDINANZA = PR (REVOCA_PENA_SOSTITUTIVA)
+			if (lDepMod.getCodTipoOrdinanza() != null && lDepMod.getCodTipoOrdinanza()
+					.compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_PENA_SOSTITUTIVA) == 0) {
+				// cerca l'Evento per prelevare l'ID del fascicolo SIUS
+				IEvento ie = SICOLookupRemote.getEventoRemote();
+				EventoModel em = ie.ExRicercaEventoByKey(aIdEvento);
+				BigDecimal idFascicoloSius = new BigDecimal(0);
+				if (!Utils.isNullObj(em) && !Utils.isNullObj(em.getFasSiuIdFascicoloSius()))
+					idFascicoloSius = em.getFasSiuIdFascicoloSius();
+				lTreeOrdMod = prelevaEsecuzioneSanzioneSostitutivaPerOrdinanza(lTreeOrdMod, idFascicoloSius,
+						lDepMod.getIdDepositoOrdinanzaPc(), aConn);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -3398,6 +3411,80 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 		}
 
 		return lTreeOrdMod;
+	}
+
+	/**
+	 * Aggiunto metodo di prelievo dati per ESS
+	 *
+	 * @param tm
+	 * @param idFascicoloSius
+	 * @param idDepositoOrdinanzaPc
+	 * @param c
+	 * @return TreeModel
+	 * @throws F3BException
+	 *
+	 * @author sgioggi
+	 * @since MEV_2023-35
+	 */
+	private TreeModel prelevaEsecuzioneSanzioneSostitutivaPerOrdinanza(TreeModel tm,
+			BigDecimal idFascicoloSius, BigDecimal idDepositoOrdinanzaPc, Connection c) throws F3BException {
+
+		TreeModel tmAppo = null;
+
+		Vector v = new Vector();
+
+		EsecuzioneSanzioneSostitutivaSqlDAO esssdao = null;
+		PeriodoAltraSanzioneSqlDAO passdao = null;
+
+		try {
+			esssdao = new EsecuzioneSanzioneSostitutivaSqlDAO(c);
+			esssdao.ricercaEsecuzioneSanzioneSostitutivaByIdDepositoOrd(idDepositoOrdinanzaPc);
+
+			EsecuzioneSanzioneSostitutivaModel essm = (EsecuzioneSanzioneSostitutivaModel) esssdao
+					.getModelByKey();
+			tmAppo = new TreeModel(essm);
+
+			if (essm != null) {
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("##### Dati ESECUZINE SANZIONE SOSTITUTIVA prelevati nel metodo "
+						+ "prelevaEsecuzioneSanzioneSostitutivaPerOrdinanza : " + essm);
+				// ricerca i Periodi Altra Sanzione legati All'ESECUZIONE SANZIONE SOSTITUTIVA
+				passdao = new PeriodoAltraSanzioneSqlDAO(c);
+				passdao.ricercaSanzioneSostitutivaByIdFascicolo(idFascicoloSius);
+				v = new Vector(passdao.getModels());
+				if (v.size() != 0) {
+					Iterator lItxPAS = v.iterator();
+					while (lItxPAS.hasNext()) {
+						// Aggiunge al TreeModel dell'ESECUZIONE ESECUZIONE SANZIONE SOSTITUTIVA i periodi
+						// altra sanzione
+						tmAppo.add(new TreeModel((PeriodoAltraSanzioneModel) lItxPAS.next()));
+					}
+				}
+				tm.add(tmAppo);
+			} else {
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("##### metodo prelevaEsecuzioneSanzioneSostitutivaPerOrdinanza : "
+						+ "Dati non presenti");
+			}
+		} catch (DAOException daoEx) {
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("DAOException: " + daoEx);
+			throw new SIUSException(
+					"StampaController.prelevaEsecuzioneSanzioneSostitutivaPerOrdinanza : " + daoEx);
+		} catch (Exception sqlEx) {
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Exception: " + sqlEx);
+			throw new SIUSException(
+					"StampaController.prelevaEsecuzioneSanzioneSostitutivaPerOrdinanza : " + sqlEx);
+		} finally {
+			cleanup(esssdao);
+			cleanup(passdao);
+		}
+		return tm;
 	}
 
 	/**
@@ -5231,7 +5318,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	private TreeModel prelevaEsecuzioneSanzioneSostitutiva(TreeModel aTreeFasSius,
 			BigDecimal aIdFascicoloSIUS, Connection aConn) throws F3BException {
 
-		TreeModel lTreeESS = null; // new TreeModel();
+		TreeModel lTreeESS = null;
 
 		Vector lListaPAS = new Vector();
 
@@ -5247,23 +5334,21 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 			lTreeESS = new TreeModel(lESSModel);
 
 			if (lESSModel != null) {
-				// aTreeFasSius.add(new TreeModel(lESSModel));
 				aTreeFasSius.add(lTreeESS);
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
 				siesLogger.debug(
 						"##### Dati ESECUZINE SANZIONE SOSTITUTIVA prelevati nel metodo prelevaEsecuzioneSanzioneSostitutiva : "
 								+ lESSModel);
-
 				// Controlla che ci sia l'ID del Fascicolo padre
 				if (lESSModel.getGenPridGeneraleProcedimento() != null
 						&& !"".equals(lESSModel.getGenPridGeneraleProcedimento().toString())) {
 					// ricerca i Periodi Altra Sanzione legati All'ESECUZIONE SANZIONE SOSTITUTIVA
 					lPASqlDao = new PeriodoAltraSanzioneSqlDAO(aConn);
+					// ??? ricerca by IdFascicolo e gli passa IdGenPridGeneraleProcedimento ??? TODO FIXME
 					lPASqlDao.ricercaSanzioneSostitutivaByIdFascicolo(
 							lESSModel.getGenPridGeneraleProcedimento());
 					lListaPAS = new Vector(lPASqlDao.getModels());
-
 					if (lListaPAS.size() != 0) {
 						Iterator lItxPAS = lListaPAS.iterator();
 						while (lItxPAS.hasNext()) {
@@ -5272,6 +5357,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 							lTreeESS.add(new TreeModel((PeriodoAltraSanzioneModel) lItxPAS.next()));
 						}
 					}
+					// ??? ma non lo mette nel treemodel di ritorno ??? TODO FIXME
 				}
 			} else {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
