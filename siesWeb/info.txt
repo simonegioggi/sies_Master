@@ -1,5 +1,12 @@
-BRANCH SIES VERSIONE 12.6.4.0
+Ticket#202409020116 — STATISTICA SIUS - SORVEGLIANZA DI CAMPOBASSO
 
-Nasce dal branch 12.6.3.0 in data 28/06/2024
+Gli esti estratti nella statistica SIUS UDS 
+Monitoraggio Provvedimenti - Per Intervalli Temporali
 
-Questa release verrà rilasciata il 27/09/2024 (Patch mese di Luglio, Agosto e Settembre 2024)
+no erano corretti ed a volte mancanti. 
+Il COD_ESITO estratto dalla tabella TENORE veniva decodificato con il dominio ESITO_TENORE invece di ESITO_PROVVEDIMENTO
+
+La codifica era effettuata lato codice nel metodo getModel del DAO
+siap.sius.statistiche.dao.IspProcIntervalliDAO
+
+Corretto il metodo
