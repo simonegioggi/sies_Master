@@ -1,12 +1,16 @@
-Ticket#202409020116 — STATISTICA SIUS - SORVEGLIANZA DI CAMPOBASSO
+BRANCH SIES VERSIONE 12.6.4.0
 
-Gli esti estratti nella statistica SIUS UDS 
-Monitoraggio Provvedimenti - Per Intervalli Temporali
+Nasce dal branch 12.6.3.0 in data 28/06/2024
 
-no erano corretti ed a volte mancanti. 
-Il COD_ESITO estratto dalla tabella TENORE veniva decodificato con il dominio ESITO_TENORE invece di ESITO_PROVVEDIMENTO
+Questa release verrà rilasciata il 27/09/2024 (Patch mese di Luglio, Agosto e Settembre 2024)
 
-La codifica era effettuata lato codice nel metodo getModel del DAO
-siap.sius.statistiche.dao.IspProcIntervalliDAO
+Comprende i seguenti Ticket MAC:
 
-Corretto il metodo
+1)	Ticket#202409020116 - STATISTICA SIUS - SORVEGLIANZA DI CAMPOBASSO
+	Gli esti estratti nella statistica SIUS UDS 
+	Monitoraggio Provvedimenti - Per Intervalli Temporali
+	non erano corretti ed a volte mancanti. 
+	Il COD_ESITO estratto dalla tabella TENORE veniva decodificato con il dominio ESITO_TENORE invece di ESITO_PROVVEDIMENTO.
+	La codifica era effettuata lato codice nel metodo getModel del DAO.
+	Classe modificata:
+	-	siap.sius.statistiche.dao.IspProcIntervalliDAO.java
