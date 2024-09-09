@@ -1,16 +1,10 @@
-BRANCH SIES VERSIONE 12.6.4.0
+Su segnlazione Balestrieri
 
-Nasce dal branch 12.6.3.0 in data 28/06/2024
+I campi importo del cumulo (rideterminazione pena) e della pena residua manuale 
+non consentivano l'inserimento di importi con 14 interi e 2 decimali.
+Problema legato al JS che cambia campo sulla size invece che sulla maxlength.
 
-Questa release verrà rilasciata il 27/09/2024 (Patch mese di Luglio, Agosto e Settembre 2024)
+Aggiornata la size per non intervenire sul js che comporterebbe il test  di tutte le jsp
 
-Comprende i seguenti Ticket MAC:
-
-1)	Ticket#202409020116 - STATISTICA SIUS - SORVEGLIANZA DI CAMPOBASSO
-	Gli esti estratti nella statistica SIUS UDS 
-	Monitoraggio Provvedimenti - Per Intervalli Temporali
-	non erano corretti ed a volte mancanti. 
-	Il COD_ESITO estratto dalla tabella TENORE veniva decodificato con il dominio ESITO_TENORE invece di ESITO_PROVVEDIMENTO.
-	La codifica era effettuata lato codice nel metodo getModel del DAO.
-	Classe modificata:
-	-	siap.sius.statistiche.dao.IspProcIntervalliDAO.java
+LoadInserisciPenaManuale.jsp
+LoadInserisciPenaRideterminata.jsp

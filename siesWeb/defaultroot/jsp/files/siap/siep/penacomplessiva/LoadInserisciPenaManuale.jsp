@@ -590,11 +590,11 @@
             <%
             if (PenaModelDaF5.getImportoMulta()!=null && PenaModelDaF5.getImportoMulta().compareTo(new BigDecimal("0"))!=0) {
             %>
-            <input Title="Multa" size=7 maxlength=7 value="<%=StringUtils.getParteIntera   (PenaModelDaF5.getImportoMulta())%>" type="text" name="<%=ICostantiPenaComplessiva.CAMPO_INTERO_IMPORTO_MULTA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
+            <input Title="Multa" size="14" maxlength="14" value="<%=StringUtils.getParteIntera   (PenaModelDaF5.getImportoMulta())%>" type="text" name="<%=ICostantiPenaComplessiva.CAMPO_INTERO_IMPORTO_MULTA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
             ,
             <input Title="Multa" size=2 maxlength=2 value="<%=StringUtils.getParteDecimale (PenaModelDaF5.getImportoMulta())%>" type="text" name="<%=ICostantiPenaComplessiva.CAMPO_DECIMALE_IMPORTO_MULTA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
             <% } else { %>
-            <input Title="Multa" size=7 maxlength=7 value="" type="text" name="<%=ICostantiPenaComplessiva.CAMPO_INTERO_IMPORTO_MULTA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
+            <input Title="Multa" size="14" maxlength="14" value="" type="text" name="<%=ICostantiPenaComplessiva.CAMPO_INTERO_IMPORTO_MULTA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
             ,
             <input Title="Multa" size=2 maxlength=2 value="" type="text" name="<%=ICostantiPenaComplessiva.CAMPO_DECIMALE_IMPORTO_MULTA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
             <% } %>
@@ -627,11 +627,11 @@
             <%
             if (PenaModelDaF5.getImportoAmmenda()!=null && PenaModelDaF5.getImportoAmmenda().compareTo(new BigDecimal("0"))!=0) {
             %>
-            <input Title="Ammenda" size=7 maxlength=7 value="<%=StringUtils.getParteIntera   (PenaModelDaF5.getImportoAmmenda())%>" type="text" name="<%=ICostantiPenaComplessiva.CAMPO_INTERO_IMPORTO_AMMENDA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
+            <input Title="Ammenda" size="14" maxlength="14" value="<%=StringUtils.getParteIntera   (PenaModelDaF5.getImportoAmmenda())%>" type="text" name="<%=ICostantiPenaComplessiva.CAMPO_INTERO_IMPORTO_AMMENDA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
             ,
             <input Title="Ammenda" size=2 maxlength=2 value="<%=StringUtils.getParteDecimale (PenaModelDaF5.getImportoAmmenda())%>" type="text" name="<%=ICostantiPenaComplessiva.CAMPO_DECIMALE_IMPORTO_AMMENDA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
             <% } else { %>
-            <input Title="Ammenda" size=7 maxlength=7 value="" type="text" name="<%=ICostantiPenaComplessiva.CAMPO_INTERO_IMPORTO_AMMENDA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
+            <input Title="Ammenda" size="14" maxlength="14" value="" type="text" name="<%=ICostantiPenaComplessiva.CAMPO_INTERO_IMPORTO_AMMENDA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
             ,
             <input Title="Ammenda" size=2 maxlength=2 value="" type="text" name="<%=ICostantiPenaComplessiva.CAMPO_DECIMALE_IMPORTO_AMMENDA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
             <% } %>
