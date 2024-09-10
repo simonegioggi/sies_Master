@@ -14,3 +14,12 @@ Comprende i seguenti Ticket MAC:
 	La codifica era effettuata lato codice nel metodo getModel del DAO.
 	Classe modificata:
 	-	siap.sius.statistiche.dao.IspProcIntervalliDAO.java
+
+2)	Ticket#202409100121 - siep Procura Generale di Napoli
+	I campi importo del cumulo (rideterminazione pena) e della pena residua manuale 
+	non consentivano l'inserimento di importi con 14 interi e 2 decimali.
+	Problema legato al JS che cambia campo sulla size invece che sulla maxlength.
+	Aggiornata la size per non intervenire sul js che comporterebbe il test di tutte le jsp.
+	Classi modificate:
+	-	LoadInserisciPenaManuale.jsp
+	-	LoadInserisciPenaRideterminata.jsp

@@ -590,6 +590,8 @@
             <%
             if (PenaModelDaF5.getImportoMulta()!=null && PenaModelDaF5.getImportoMulta().compareTo(new BigDecimal("0"))!=0) {
             %>
+			<%-- Ticket#202409100121 - siep Procura Generale di Napoli --%>
+			<%-- aumentate le size a 14 ovunque per multa e ammenda --%>
             <input Title="Multa" size="14" maxlength="14" value="<%=StringUtils.getParteIntera   (PenaModelDaF5.getImportoMulta())%>" type="text" name="<%=ICostantiPenaComplessiva.CAMPO_INTERO_IMPORTO_MULTA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
             ,
             <input Title="Multa" size=2 maxlength=2 value="<%=StringUtils.getParteDecimale (PenaModelDaF5.getImportoMulta())%>" type="text" name="<%=ICostantiPenaComplessiva.CAMPO_DECIMALE_IMPORTO_MULTA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >

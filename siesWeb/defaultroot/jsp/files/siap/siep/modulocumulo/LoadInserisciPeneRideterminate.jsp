@@ -697,6 +697,8 @@ if (lPenaRideterminataCumulo.getIdPenaRideterminataCumulo()!=null) {
              <%=lPenaRideterminataCumulo.getImportoMulta()!=null?"checked":""%>
              >&nbsp;Multa
     </td>
+    <%-- Ticket#202409100121 - siep Procura Generale di Napoli --%>
+    <%-- aumentate le size a 14 ovunque per multa e ammenda --%>
     <td class="l" colspan=1 >
       <input type="text" Title="Multa" size="14" maxlength="14"  style="text-align:right"
              name="<%= ICostantiPenaRideterminataCumulo.CAMPO_IMPORTO_MULTA%>INT" 
