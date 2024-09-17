@@ -8,6 +8,11 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.web.IWebConstants;
+import f3b.web.RedirectTo;
 import siap.sico.calendar.model.CalendarModel;
 import siap.sico.cssa.action.ICostantiCSSA;
 import siap.sico.decodifiche.model.ComuneModel;
@@ -39,11 +44,6 @@ import siap.siep.posizione.model.PosizioneGiuridicaModel;
 import siap.siep.sanzionesostitutiva.model.SanzioneSostResiduaModel;
 import siap.siep.sanzionesostitutiva.model.SanzioneSostitutivaModel;
 import siap.siep.util.SIEPLookupRemote;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.web.IWebConstants;
-import f3b.web.RedirectTo;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ActCalcoloPena extends ActionSiap implements ICostantiAnnotazioneManuale {
@@ -55,7 +55,7 @@ public class ActCalcoloPena extends ActionSiap implements ICostantiAnnotazioneMa
 
 		BigDecimal lFascID = ((FascicoloSiepModel) getSessionAttribute("fascicolo")).getIdFascicoloSiep();
 
-		// return CalcoloPena(lFascID);
+		// valore di ritorno
 		return nuovoCalcoloPena(lFascID);
 	}
 
@@ -64,497 +64,497 @@ public class ActCalcoloPena extends ActionSiap implements ICostantiAnnotazioneMa
 	 * sistema una pena residua validata. L'inserimento viene sempre effettuato con lo stato non validato I
 	 * dati presi in considerazione sono: - pena in sentenza - benefici ( concessi revocati) - misure
 	 * cautelari sofferte computabili -
-	 * 
+	 *
 	 * @param lFascID
 	 *            - Id del fascicolo su cui effettuare il calcolo della pena
 	 * @return lPage - Pagina di ritorno che dipende da tipo di pena
 	 * @throws F3BException
 	 * @deprecated sostituito dal metodo nuovoCalcoloPena per la revisione calcolo pena
 	 */
-//	private String CalcoloPena(BigDecimal lFascID) throws Exception {
-//
-//		String Segnalazione = "N";
-//		String lPage = new String();
-//
-//		// ==========================================================================
-//		// Recupero TUTTI i record PENA_RESIDUA per il fascicolo per verificare se
-//		// già una pena validata, in questo caso esco
-//		// ==========================================================================
-//		PenaResiduaModel lPenRes = new PenaResiduaModel();
-//		lPenRes.setFasSieIdFascicoloSiep(lFascID);
-//		IPenaResidua IPenRes = SIEPLookupRemote.getPenaResiduaRemote();
-//		Vector lVect = IPenRes.ExRicercaPenaResidua(lPenRes);
-//
-//		// ==========================================================================
-//		// Verifico se esiste pena già validata, in questo caso esco, in caso contrario
-//		// verifico se andare in update o in insert.
-//		// Si va in aggiornamento della pena residua se esiste e non validata,
-//		// se validata errore, altrimanti si va in insert
-//		// ==========================================================================
-//		String op = new String("");
-//		BigDecimal lIndicePenaResidua = null;
-//		boolean noMore = false;
-//		if (lVect.size() == 0) {
-//			op = "insert";
-//		} else {
-//			for (int i = 0; i < lVect.size(); i++) {
-//				lPenRes = (PenaResiduaModel) lVect.get(i);
-//				if (lPenRes.getFlagValidato() != null && lPenRes.getFlagValidato().equals("N")) {
-//					lIndicePenaResidua = lPenRes.getIdPenaResidua();
-//					noMore = true;
-//				} else { // se trova un record già validato esco
-//					throw new SIEPException(SIEPException.USER_MESSAGE,
-//							"Primo calcolo della pena già eseguito.");
-//				}
-//			}
-//		}
-//
-//		if (noMore) {
-//			op = ((PenaResiduaModel) lVect.get(0)).getIdPenaResidua() + "";
-//		} else
-//			op = "insert";
-//
-//		// ==========================================================================
-//		// Recupero i dati necessari per calcolare il quantum di pena:
-//		// - PENA COMPLESSIVA
-//		// - BENEFICI CONCESSI/REVOCATI
-//		// - MISURE CAUTELARI COMPUTABILI
-//		// ==========================================================================
-//
-//		// =====================================================
-//		// Recupero i dati della PENA COMPLESSIVA (in sentenza)
-//		// =====================================================
-//		PenaComplessivaModel lPenMod = new PenaComplessivaModel();
-//		lPenMod.setFasSieIdFascicoloSiep(lFascID);
-//
-//		IPenaComplessiva lPCon = SIEPLookupRemote.getPenaComplessivaRemote();
-//		Vector lPComples = lPCon.ExRicercaPenaComplessivaNoError(lPenMod);
-//
-//		if (lPComples.size() == 0) {
-//			// throw new F3BException(F3BException.USER_MESSAGE,"Pena Complessiva mancante");
-//			RedirectTo lRedirigi = new RedirectTo();
-//			lRedirigi.setPage(IWebConstants.PG_MAIN);
-//			setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Pena Complessiva mancante");
-//			lRedirigi.setAction("siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&"
-//					+ ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP + "="
-//					+ ((FascicoloSiepModel) getSessionAttribute("fascicolo")).getIdFascicoloSiep());
-//			// ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
-//			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
-//
-//			return IWebConstants.PG_MESSAGE;
-//		}
-//
-//		lPenMod = (PenaComplessivaModel) (lPComples.get(0));
-//
-//		// ==================================================
-//		// Recupero i dati dei BENEFICI (periodo - durata)
-//		// ==================================================
-//		ICalcoloPena lCalPen = SIEPLookupRemote.getCalcoloPenaRemote();
-//
-//		CalendarModel lBeneficiConcessiReclusione = new CalendarModel(
-//				lCalPen.exGetBeneficiConcessiReclusione(lFascID));
-//		CalendarModel lBeneficiRevocatiReclusione = new CalendarModel(
-//				lCalPen.exGetBeneficiRevocatiReclusione(lFascID));
-//		CalendarModel lBeneficiConcessiArresto = new CalendarModel(
-//				lCalPen.exGetBeneficiConcessiArresto(lFascID));
-//		CalendarModel lBeneficiRevocatiArresto = new CalendarModel(
-//				lCalPen.exGetBeneficiRevocatiArresto(lFascID));
-//
-//		CalendarModel lBeneficiConcessiReclusioneJSP = new CalendarModel(lBeneficiConcessiReclusione);
-//		CalendarModel lBeneficiRevocatiReclusioneJSP = new CalendarModel(lBeneficiRevocatiReclusione);
-//		CalendarModel lBeneficiConcessiArrestoJSP = new CalendarModel(lBeneficiConcessiArresto);
-//		CalendarModel lBeneficiRevocatiArrestoJSP = new CalendarModel(lBeneficiRevocatiArresto);
-//
-//		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-//		// LogF3B.getLogger()
-//		siesLogger.debug("--------------------------------------");
-//		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-//		// LogF3B.getLogger()
-//		siesLogger.debug("Arresto Concessi : " + lBeneficiConcessiArrestoJSP.getImportoAmmenda() + "----"
-//				+ lBeneficiConcessiArrestoJSP.getNumAnni() + "/" + lBeneficiConcessiArrestoJSP.getNumMesi()
-//				+ "/" + lBeneficiConcessiArrestoJSP.getNumGiorni());
-//		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-//		// LogF3B.getLogger()
-//		siesLogger.debug("Arresto Revocati : " + lBeneficiRevocatiArrestoJSP.getImportoAmmenda() + "----"
-//				+ lBeneficiRevocatiArrestoJSP.getNumAnni() + "/" + lBeneficiRevocatiArrestoJSP.getNumMesi()
-//				+ "/" + lBeneficiRevocatiArrestoJSP.getNumGiorni());
-//		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-//		// LogF3B.getLogger()
-//		siesLogger.debug("--------------------------------------");
-//		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-//		// LogF3B.getLogger()
-//		siesLogger.debug("--------------------------------------");
-//		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-//		// LogF3B.getLogger()
-//		siesLogger.debug("Reclusione Concessi : " + lBeneficiConcessiReclusioneJSP.getImportoAmmenda()
-//				+ "----" + lBeneficiConcessiReclusioneJSP.getNumAnni() + "/"
-//				+ lBeneficiConcessiReclusioneJSP.getNumMesi() + "/"
-//				+ lBeneficiConcessiReclusioneJSP.getNumGiorni());
-//		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-//		// LogF3B.getLogger()
-//		siesLogger.debug("Reclusione Revocati : " + lBeneficiRevocatiReclusioneJSP.getImportoAmmenda()
-//				+ "----" + lBeneficiRevocatiReclusioneJSP.getNumAnni() + "/"
-//				+ lBeneficiRevocatiReclusioneJSP.getNumMesi() + "/"
-//				+ lBeneficiRevocatiReclusioneJSP.getNumGiorni());
-//		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-//		// LogF3B.getLogger()
-//		siesLogger.debug("--------------------------------------");
-//
-//		// =========================
-//		// MISURE CAUTELARI
-//		// =========================
-//		// Custodia cautelare in carcere (TIPO_MISURA_CAUTELARE = CA)
-//		CalendarModel lMisCauComputabiliReclusione = new CalendarModel(
-//				lCalPen.exGetMisureCautelariComputabiliReclusione(lFascID));
-//		// Custodia cautelare in Arresti domiciliari (TIPO_MISURA_CAUTELARE = AD)
-//		CalendarModel lMisCauComputabiliArresto = new CalendarModel(
-//				lCalPen.exGetMisureCautelariComputabiliArresto(lFascID));
-//
-//		// Custodia Cautelare in Misura di Sicurezza Applicata in via Provvisoria (TIPO_MISURA_CAUTELARE = CD)
-//		CalendarModel lMisCauComputabiliMisSicApplicata = new CalendarModel(
-//				lCalPen.exGetMisureCautelariComputabiliMisSicApplicata(lFascID));
-//		// Custodia Cautelare in Regime di Arresti Domiciliari ex art 89 dpr 309/90 (TIPO_MISURA_CAUTELARE =
-//		// CM)
-//		CalendarModel lMisCauComputabiliArrestiDomiciliari = new CalendarModel(
-//				lCalPen.exGetMisureCautelariComputabiliArrestiDomiciliari(lFascID));
-//		// Custodia Cautelare in Regime di Permanenza in Casa (TIPO_MISURA_CAUTELARE = CB)
-//		CalendarModel lMisCauComputabiliPermanenzaInCasa = new CalendarModel(
-//				lCalPen.exGetMisureCautelariComputabiliPermanenzaInCasa(lFascID));
-//		// Custodia Cautelare in Collocamento in Comunita' (TIPO_MISURA_CAUTELARE = CC)
-//		CalendarModel lMisCauComputabiliCollocamentoInComunita = new CalendarModel(
-//				lCalPen.exGetMisureCautelariComputabiliCollocamentoInComunita(lFascID));
-//		// Custodia cautelare in Camera di Sicurezza (TIPO_MISURA_CAUTELARE = CE)
-//		CalendarModel lMisCauComputabiliCameraDiSicurezza = new CalendarModel(
-//				lCalPen.exGetMisureCautelariComputabiliCameraDiSicurezza(lFascID));
-//		// Computo periodo di messa alla prova (TIPO_MISURA_CAUTELARE = CL)
-//		CalendarModel lMisCauComputabiliPeriodoMessaAllaProva = new CalendarModel(
-//				lCalPen.exGetMisureCautelariComputabiliPeriodoMessaAllaProva(lFascID));
-//
-//		// ==========================================================================
-//		// Se non ergastolo calcolo la pena residua passando in input alla
-//		// funzione i dati
-//		// In caso di ergastolo il calcolo della pena
-//		// ==========================================================================
-//		if (!(lPenMod.getCodTipoPenaDetentiva().equals("03") || lPenMod.getCodTipoPenaDetentiva()
-//				.equals("04"))) {
-//			// ==========================================================================
-//			// Il metodo calcola a partire dalla pena complessiva (in sentenza),
-//			// dai benefici e dalle misure cautelari la pena residua E LA INSERISCE
-//			// sul DB
-//			// Questo primo calcolo tiene solo conto dei quantum non calcola le date
-//			// ==========================================================================
-//			PenaResiduaModel lPenaComplessiva = null;
-//			lPenaComplessiva = lCalPen.exCalcolaQuantumPenaComplessivaIniziale(lFascID, lPenMod,
-//					lBeneficiConcessiReclusione, lBeneficiRevocatiReclusione, lBeneficiConcessiArresto,
-//					lBeneficiRevocatiArresto, lMisCauComputabiliReclusione, lMisCauComputabiliArresto,
-//					getCodUtenteConnesso(), getCodUfficioUtenteConnesso());
-//
-//			lIndicePenaResidua = lPenaComplessiva.getIdPenaResidua();
-//
-//			// ========================================================================
-//			// Se è stata specificata la DATA_INIZIO, calcolo:
-//			// DATA_FINE_PRESUNTA (data_fine_pena)
-//			// DATA_FINE_RECLUSIONE
-//			// DATA_INIZIO_ARRESTO
-//			// E vado in update del record PENA_RESIDUA precedentemente inserito che
-//			// contiene solo la durata (gg,mm aa)
-//			// ========================================================================
-//			String vedoDataIntermedia = "S";
-//			String lVedoJSP = "N";
-//
-//			Date lDataInizioPena = null;
-//			Date lDataFineReclusione = null;
-//			Date lDataInizioArresto = null;
-//			Date lDataFinePena = null;
-//
-//			if (!getRequestStringParameter("GiornoInizio").equals("")
-//					&& !getRequestStringParameter("GiornoInizio").equals("-")) {
-//				// Calcolo le date fine pena per Reclusione e Arresto (sono 2 date distinte,
-//				// viene scontata prima la reclusione, quindi l'arresto)
-//				lDataInizioPena = getRequestDateParameter("AnnoInizio", "MeseInizio", "GiornoInizio");
-//
-//				Vector lDateFine = lCalPen.exCalcolaDataFinePena(lDataInizioPena, lPenaComplessiva, true); // il
-//																											// flag
-//																											// true
-//																											// indica
-//																											// CON
-//																											// DIES_A_QUO
-//
-//				// Indica alla jsp di visualizzare la sezione con le date e il bottone
-//				// per la validazione della pena residua con la possibilità di modificare
-//				// manualmente la data fine pena
-//				lVedoJSP = "S";
-//
-//				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-//				// LogF3B.getLogger()
-//				siesLogger.debug("lDateFine.size() : " + lDateFine.size());
-//
-//				if (lDateFine.size() == 1) {// solo arresti o reclusione
-//					vedoDataIntermedia = "N";
-//
-//					boolean cond = lPenaComplessiva.getNumAnniArresto().equals(null)
-//							|| lPenaComplessiva.getNumAnniArresto().intValue() == 0;
-//					cond = cond
-//							&& (lPenaComplessiva.getNumMesiArresto().equals(null) || lPenaComplessiva
-//									.getNumMesiArresto().intValue() == 0);
-//					cond = cond
-//							&& (lPenaComplessiva.getNumGiorniArresto().equals(null) || lPenaComplessiva
-//									.getNumGiorniArresto().intValue() == 0);
-//					if (!cond)
-//						lDataInizioArresto = getRequestDateParameter("AnnoInizio", "MeseInizio",
-//								"GiornoInizio");
-//
-//					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-//					// LogF3B.getLogger()
-//					siesLogger.debug("USCITO DAL CALCOLO DELLA DATA FINE PENA CON : " + lDateFine.get(0));
-//
-//					lDataFinePena = (Date) lDateFine.get(0);
-//				}
-//
-//				if (lDateFine.size() == 2) { // sia reclusione che arresto
-//					lDataFineReclusione = (Date) lDateFine.get(0);
-//					lDataInizioArresto = DateUtils.getDayAfter(lDataFineReclusione);
-//					lDataFinePena = (Date) lDateFine.get(1);
-//				}
-//
-//				if (lDateFine.size() == 0) {
-//					Segnalazione = "S"; // quantum rideterminati negativi o nulli (<=0)
-//				}
-//
-//				if (lDateFine.size() != 0) {
-//					lPenaComplessiva.setDataInizio(lDataInizioPena);
-//					lPenaComplessiva.setDataFineReclusione(lDataFineReclusione);
-//					lPenaComplessiva.setDataInizioArresto(lDataInizioArresto);
-//					lPenaComplessiva.setDataFinePresunta(lDataFinePena); // n.b. il fine pena effettivo verrà
-//																			// impostato dall'utente
-//				}
-//				//
-//			}
-//
-//			// ========================================================================
-//			// Aggiorno la pena Residua, perchè qui e non nell'if precedente, se non
-//			// mi trovo nell'if non ha senso
-//			// ========================================================================
-//			lPenaComplessiva.setDiesAQuo("S"); // non serve è già stato fatto dalla
-//												// exCalcolaQuantumPenaComplessivaIniziale
-//			lPenaComplessiva.setIdPenaResidua(lIndicePenaResidua);
-//			IPenaResidua lPPres = SIEPLookupRemote.getPenaResiduaRemote();
-//			lPPres.ExModificaPenaResidua(lPenaComplessiva);
-//
-//			// ========================================================================
-//			// LIBERAZIONE ANTICIPATA
-//			// ========================================================================
-//			// Recupero le LA non ancora computate. Tali LA vengono comunque passate
-//			// alla finestra di visualizzazione dei calcoli. Se è presente una data
-//			// fine pena, viene anticipata e la LA risultano 'Concesse già detratte',
-//			// altrimenti restano 'Concesse da detrarre'.
-//			// CERCA IL TOTALE GIORNI LIB ANTICIPATA con FLAG_ELABORATO ad N o null
-//			ILicenzaPeriodiLibAnticipata lCtrlLib = SICOLookupRemote.getLicenzaPeriodiLibAntRemote();
-//			int lTotGiorniLA = lCtrlLib.ExTotalePeriodiConcessiNonElaboratiByIdFascicoloSiep(lFascID);
-//
-//			setRequestAttribute("totalegiornilibanticipata", new BigDecimal(lTotGiorniLA));
-//
-//			IPenaResidua lPenResCtrl = SIEPLookupRemote.getPenaResiduaRemote();
-//			PenaResiduaModel lPenaResMod = lPenResCtrl.ExRicercaPenaResiduaCorrenteByFascicoloSiep(lFascID);
-//			// n.b. restituisce il record con data inserimento + recente e flag validato qualunque
-//			// chiamata a questo punto restituisce necessariamente il record non validato
-//			// inserito/aggiornato precedentemente
-//
-//			lPenaResMod.setDataFine(lDataFinePena);
-//
-//			// Aggiorno la pena residua (gg,mm,aa e date fine) se sono presenti dei
-//			// giorni di liberazione anticipata non elaborati e se è presente una data fine
-//			if (lTotGiorniLA != 0 && lPenaResMod != null && lPenaResMod.getDataFine() != null) {
-//				// CALCOLA LA NUOVA PENA RESIDUA sottraendo i GG di libertà anticipata
-//				// alla data fine pena
-//				Date lDataFineRicalcolata = DateUtils.moveDateTo(lPenaResMod.getDataFine(),
-//						Calendar.DAY_OF_MONTH, -(lTotGiorniLA));
-//				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-//				// LogF3B.getLogger()
-//				siesLogger.debug("Data Fine Ricalcolata : " + lDataFineRicalcolata);
-//
-//				// Normalizza i quantum
-//				lPenaResMod = PenaResiduaUtil.calcolaPenaNuovaDataFine(lDataFineRicalcolata, lPenaResMod,
-//						true);
-//				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-//				// LogF3B.getLogger()
-//				siesLogger.debug("Nuova Pena Residua : " + lPenaResMod);
-//
-//				// Perchè il metodo PenaResiduaUtil.calcolaPenaNuovaDataFine() non tocca
-//				// la DATA_FINE_PRESUNTA
-//				lPenaResMod.setDataFinePresunta(lPenaResMod.getDataFine()); // la data fine presunta resta
-//																			// quella non anticipata
-//
-//				lPenaResMod.setCodOperatoreInserimento(getCodUtenteConnesso());
-//				lPenaResMod.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
-//				lPenaResMod.setDataInserimento(DateUtils.getSysDate());
-//
-//				lPenaResMod.setCodOperatoreAggiornamento(null);
-//				lPenaResMod.setDataAggiornamento(null);
-//				lPenaResMod.setCodUfficioAggiornamento(null);
-//
-//				// ======================================================================
-//				// Aggiorno il record PENA_RESIDUA.
-//				// ======================================================================
-//				lPenaResMod = lPenResCtrl.ExInsertOrUpdatePenaResidua(lPenaResMod);
-//
-//				// Passo alla form le date modificate per effetto delle LA
-//				lDataFinePena = lPenaResMod.getDataFine();
-//				lDataFineReclusione = lPenaResMod.getDataFineReclusione();
-//				lDataInizioArresto = lPenaResMod.getDataInizioArresto();
-//
-//				// Aggiorno anche i quantum modificati per effetto delle LA
-//				lPenaComplessiva.setNumAnniArresto(lPenaResMod.getNumAnniArresto());
-//				lPenaComplessiva.setNumMesiArresto(lPenaResMod.getNumMesiArresto());
-//				lPenaComplessiva.setNumGiorniArresto(lPenaResMod.getNumGiorniArresto());
-//
-//				lPenaComplessiva.setNumAnniReclusione(lPenaResMod.getNumAnniReclusione());
-//				lPenaComplessiva.setNumMesiReclusione(lPenaResMod.getNumMesiReclusione());
-//				lPenaComplessiva.setNumGiorniReclusione(lPenaResMod.getNumGiorniReclusione());
-//
-//				// AGGIORNA I RECORD APPENA COMPUTATI DI LIB. ANTICIPATA DA N o null AD 'E'
-//				lCtrlLib.ExModificaFlagElaboratoLicenzaLibanticipataByIdFascicoloSiep(lFascID, "N", "E");
-//
-//				// perchè vengono segnati come computati? Se si effettua di nuovo il
-//				// calcolo non verranno + calcolati ottenendo 2 risultati differenti
-//
-//			}
-//			// ******************************************************************************
-//			CalendarUtil lCalCon = new CalendarUtil();
-//
-//			setRequestAttribute("PenaComplessivaSentenza", lPenMod);
-//			setRequestAttribute("BeneficiConcessiArresto", lCalCon.toJsp(lBeneficiConcessiArrestoJSP));
-//			setRequestAttribute("BeneficiRevocatiArresto", lCalCon.toJsp(lBeneficiRevocatiArrestoJSP));
-//			setRequestAttribute("BeneficiConcessiReclusione", lCalCon.toJsp(lBeneficiConcessiReclusioneJSP));
-//			setRequestAttribute("BeneficiRevocatiReclusione", lCalCon.toJsp(lBeneficiRevocatiReclusioneJSP));
-//
-//			setRequestAttribute("MisCauComputabiliReclusione", lCalCon.toJsp(lMisCauComputabiliReclusione));
-//			setRequestAttribute("MisCauComputabiliArresto", lCalCon.toJsp(lMisCauComputabiliArresto));
-//
-//			setRequestAttribute("MisCauComputabiliMisSicApplicata",
-//					lCalCon.toJsp(lMisCauComputabiliMisSicApplicata));
-//			setRequestAttribute("MisCauComputabiliArrestiDomiciliari",
-//					lCalCon.toJsp(lMisCauComputabiliArrestiDomiciliari));
-//			setRequestAttribute("MisCauComputabiliPermanenzaInCasa",
-//					lCalCon.toJsp(lMisCauComputabiliPermanenzaInCasa));
-//			setRequestAttribute("MisCauComputabiliCollocamentoInComunita",
-//					lCalCon.toJsp(lMisCauComputabiliCollocamentoInComunita));
-//			setRequestAttribute("MisCauComputabiliCameraDiSicurezza",
-//					lCalCon.toJsp(lMisCauComputabiliCameraDiSicurezza));
-//			setRequestAttribute("MisCauComputabiliPeriodoMessaAllaProva",
-//					lCalCon.toJsp(lMisCauComputabiliPeriodoMessaAllaProva));
-//
-//			setRequestAttribute("PenaComplessiva", lPenaComplessiva);
-//			setRequestAttribute("DataInizioPena", lDataInizioPena);
-//			setRequestAttribute("DataFineReclusione", lDataFineReclusione);
-//			setRequestAttribute("DataInizioArresto", lDataInizioArresto);
-//			setRequestAttribute("DataFinePena", lDataFinePena);
-//			//
-//			// Data fine Pena =
-//			//
-//
-//			setRequestAttribute("Segnalazione", Segnalazione);
-//			setRequestAttribute("VedoJSP", lVedoJSP);
-//			setRequestAttribute("vedoDataIntermedia", vedoDataIntermedia);
-//			setRequestAttribute("FlagAltraCausa",
-//					((FascicoloSiepModel) getSessionAttribute("fascicolo")).getFlagAltraCausa());
-//			setRequestAttribute("CodPosizioneGiuridica", "");
-//
-//			lPage = new String(f3b.web.IWebConstants.ROOT_DIR
-//					+ "/files/siap/siep/calcolopena/VediCalcoloPena.jsp");
-//		} else // ERGASTOLO
-//		{
-//			// ========================================================================
-//			// Nel caso dell'ERGASTOLO. Non effettuo un vero calcolo della pena, ma
-//			// recupero i dati solamente dalla Pena Complessiva in sentenza
-//			// ========================================================================
-//			lPenRes = new PenaResiduaModel();
-//			Date lDataFinePena = null;
-//			Date lDataInizioPena = null;
-//
-//			if (!getRequestStringParameter("GiornoInizio").equals("")
-//					&& !getRequestStringParameter("GiornoInizio").equals("-"))
-//				lDataInizioPena = getRequestDateParameter("AnnoInizio", "MeseInizio", "GiornoInizio");
-//
-//			lDataFinePena = DateUtils.getDate(9999, 12, 31);
-//			if (lPenMod.getCodTipoPenaDetentiva().equals("03")) // Ergastolo
-//			{
-//				lPenRes.setFlagErgastolo("S");
-//			} else if (lPenMod.getCodTipoPenaDetentiva().equals("04")) // Ergastolo con isolamento
-//			{
-//				lPenRes.setFlagErgastolo("D");
-//			}
-//
-//			lPenRes.setDataInizio(lDataInizioPena);
-//			lPenRes.setDataFine(lDataFinePena); // 31/12/9999
-//
-//			lPenRes.setDataInizioIsolamentoDiurno(lPenMod.getDataInizioIsolamentoDiurno());
-//			lPenRes.setDataFineIsolamentoDiurno(lPenMod.getDataFineIsolamentoDiurno());
-//
-//			lPenRes.setNumGiorniIsolamentoDiurno(lPenMod.getNumGiorniIsolamentoDiurno());
-//			lPenRes.setNumMesiIsolamentoDiurno(lPenMod.getNumMesiIsolamentoDiurno());
-//			lPenRes.setNumAnniIsolamentoDiurno(lPenMod.getNumAnniIsolamentoDiurno());
-//
-//			lPenRes.setFlagValidato("S");
-//			lPenRes.setDiesAQuo("S");
-//			lPenRes.setFasSieIdFascicoloSiep(lFascID);
-//
-//			if (!op.equals("insert")) { // vado in aggiornamento
-//				lPenRes.setIdPenaResidua(new BigDecimal(op));
-//				lPenRes.setCodOperatoreAggiornamento(getCodUtenteConnesso());
-//				lPenRes.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
-//				lPenRes.setDataAggiornamento(DateUtils.getSysDate());
-//
-//				IPenRes.ExModificaPenaResidua(lPenRes);
-//			} else { // vado in insert
-//				lPenRes.setCodOperatoreInserimento(getCodUtenteConnesso());
-//				lPenRes.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
-//				lPenRes.setDataInserimento(DateUtils.getSysDate());
-//				IPenRes.ExInserisciPenaResidua(lPenRes);
-//			}
-//
-//			setRequestAttribute("PenaResidua", lPenRes);
-//
-//			// modifica richiesta da viviana 04-11-04--dario
-//			setRequestAttribute("PenaComplessiva", lPenMod);
-//
-//			lPage = new String(f3b.web.IWebConstants.ROOT_DIR
-//					+ "/files/siap/siep/calcolopena/VediErgastolo.jsp");
-//		}
-//
-//		// ==========================================================================
-//		//
-//		// ==========================================================================
-//		if (!isRequestParameterNullObj(ISIAPCostantiWeb.CAMPO_AZIONE_CHIAMANTE)) {
-//			setRequestAttribute(ISIAPCostantiWeb.CAMPO_AZIONE_CHIAMANTE,
-//					getRequestStringParameter(ISIAPCostantiWeb.CAMPO_AZIONE_CHIAMANTE));
-//		}
-//
-//		return lPage;
-//	}
+	// private String CalcoloPena(BigDecimal lFascID) throws Exception {
+	//
+	// String Segnalazione = "N";
+	// String lPage = new String();
+	//
+	// // ==========================================================================
+	// // Recupero TUTTI i record PENA_RESIDUA per il fascicolo per verificare se
+	// // già una pena validata, in questo caso esco
+	// // ==========================================================================
+	// PenaResiduaModel lPenRes = new PenaResiduaModel();
+	// lPenRes.setFasSieIdFascicoloSiep(lFascID);
+	// IPenaResidua IPenRes = SIEPLookupRemote.getPenaResiduaRemote();
+	// Vector lVect = IPenRes.ExRicercaPenaResidua(lPenRes);
+	//
+	// // ==========================================================================
+	// // Verifico se esiste pena già validata, in questo caso esco, in caso contrario
+	// // verifico se andare in update o in insert.
+	// // Si va in aggiornamento della pena residua se esiste e non validata,
+	// // se validata errore, altrimanti si va in insert
+	// // ==========================================================================
+	// String op = new String("");
+	// BigDecimal lIndicePenaResidua = null;
+	// boolean noMore = false;
+	// if (lVect.size() == 0) {
+	// op = "insert";
+	// } else {
+	// for (int i = 0; i < lVect.size(); i++) {
+	// lPenRes = (PenaResiduaModel) lVect.get(i);
+	// if (lPenRes.getFlagValidato() != null && lPenRes.getFlagValidato().equals("N")) {
+	// lIndicePenaResidua = lPenRes.getIdPenaResidua();
+	// noMore = true;
+	// } else { // se trova un record già validato esco
+	// throw new SIEPException(SIEPException.USER_MESSAGE,
+	// "Primo calcolo della pena già eseguito.");
+	// }
+	// }
+	// }
+	//
+	// if (noMore) {
+	// op = ((PenaResiduaModel) lVect.get(0)).getIdPenaResidua() + "";
+	// } else
+	// op = "insert";
+	//
+	// // ==========================================================================
+	// // Recupero i dati necessari per calcolare il quantum di pena:
+	// // - PENA COMPLESSIVA
+	// // - BENEFICI CONCESSI/REVOCATI
+	// // - MISURE CAUTELARI COMPUTABILI
+	// // ==========================================================================
+	//
+	// // =====================================================
+	// // Recupero i dati della PENA COMPLESSIVA (in sentenza)
+	// // =====================================================
+	// PenaComplessivaModel lPenMod = new PenaComplessivaModel();
+	// lPenMod.setFasSieIdFascicoloSiep(lFascID);
+	//
+	// IPenaComplessiva lPCon = SIEPLookupRemote.getPenaComplessivaRemote();
+	// Vector lPComples = lPCon.ExRicercaPenaComplessivaNoError(lPenMod);
+	//
+	// if (lPComples.size() == 0) {
+	// // throw new F3BException(F3BException.USER_MESSAGE,"Pena Complessiva mancante");
+	// RedirectTo lRedirigi = new RedirectTo();
+	// lRedirigi.setPage(IWebConstants.PG_MAIN);
+	// setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Pena Complessiva mancante");
+	// lRedirigi.setAction("siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&"
+	// + ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP + "="
+	// + ((FascicoloSiepModel) getSessionAttribute("fascicolo")).getIdFascicoloSiep());
+	// // ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
+	// setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
+	//
+	// return IWebConstants.PG_MESSAGE;
+	// }
+	//
+	// lPenMod = (PenaComplessivaModel) (lPComples.get(0));
+	//
+	// // ==================================================
+	// // Recupero i dati dei BENEFICI (periodo - durata)
+	// // ==================================================
+	// ICalcoloPena lCalPen = SIEPLookupRemote.getCalcoloPenaRemote();
+	//
+	// CalendarModel lBeneficiConcessiReclusione = new CalendarModel(
+	// lCalPen.exGetBeneficiConcessiReclusione(lFascID));
+	// CalendarModel lBeneficiRevocatiReclusione = new CalendarModel(
+	// lCalPen.exGetBeneficiRevocatiReclusione(lFascID));
+	// CalendarModel lBeneficiConcessiArresto = new CalendarModel(
+	// lCalPen.exGetBeneficiConcessiArresto(lFascID));
+	// CalendarModel lBeneficiRevocatiArresto = new CalendarModel(
+	// lCalPen.exGetBeneficiRevocatiArresto(lFascID));
+	//
+	// CalendarModel lBeneficiConcessiReclusioneJSP = new CalendarModel(lBeneficiConcessiReclusione);
+	// CalendarModel lBeneficiRevocatiReclusioneJSP = new CalendarModel(lBeneficiRevocatiReclusione);
+	// CalendarModel lBeneficiConcessiArrestoJSP = new CalendarModel(lBeneficiConcessiArresto);
+	// CalendarModel lBeneficiRevocatiArrestoJSP = new CalendarModel(lBeneficiRevocatiArresto);
+	//
+	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+	// // LogF3B.getLogger()
+	// siesLogger.debug("--------------------------------------");
+	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+	// // LogF3B.getLogger()
+	// siesLogger.debug("Arresto Concessi : " + lBeneficiConcessiArrestoJSP.getImportoAmmenda() + "----"
+	// + lBeneficiConcessiArrestoJSP.getNumAnni() + "/" + lBeneficiConcessiArrestoJSP.getNumMesi()
+	// + "/" + lBeneficiConcessiArrestoJSP.getNumGiorni());
+	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+	// // LogF3B.getLogger()
+	// siesLogger.debug("Arresto Revocati : " + lBeneficiRevocatiArrestoJSP.getImportoAmmenda() + "----"
+	// + lBeneficiRevocatiArrestoJSP.getNumAnni() + "/" + lBeneficiRevocatiArrestoJSP.getNumMesi()
+	// + "/" + lBeneficiRevocatiArrestoJSP.getNumGiorni());
+	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+	// // LogF3B.getLogger()
+	// siesLogger.debug("--------------------------------------");
+	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+	// // LogF3B.getLogger()
+	// siesLogger.debug("--------------------------------------");
+	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+	// // LogF3B.getLogger()
+	// siesLogger.debug("Reclusione Concessi : " + lBeneficiConcessiReclusioneJSP.getImportoAmmenda()
+	// + "----" + lBeneficiConcessiReclusioneJSP.getNumAnni() + "/"
+	// + lBeneficiConcessiReclusioneJSP.getNumMesi() + "/"
+	// + lBeneficiConcessiReclusioneJSP.getNumGiorni());
+	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+	// // LogF3B.getLogger()
+	// siesLogger.debug("Reclusione Revocati : " + lBeneficiRevocatiReclusioneJSP.getImportoAmmenda()
+	// + "----" + lBeneficiRevocatiReclusioneJSP.getNumAnni() + "/"
+	// + lBeneficiRevocatiReclusioneJSP.getNumMesi() + "/"
+	// + lBeneficiRevocatiReclusioneJSP.getNumGiorni());
+	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+	// // LogF3B.getLogger()
+	// siesLogger.debug("--------------------------------------");
+	//
+	// // =========================
+	// // MISURE CAUTELARI
+	// // =========================
+	// // Custodia cautelare in carcere (TIPO_MISURA_CAUTELARE = CA)
+	// CalendarModel lMisCauComputabiliReclusione = new CalendarModel(
+	// lCalPen.exGetMisureCautelariComputabiliReclusione(lFascID));
+	// // Custodia cautelare in Arresti domiciliari (TIPO_MISURA_CAUTELARE = AD)
+	// CalendarModel lMisCauComputabiliArresto = new CalendarModel(
+	// lCalPen.exGetMisureCautelariComputabiliArresto(lFascID));
+	//
+	// // Custodia Cautelare in Misura di Sicurezza Applicata in via Provvisoria (TIPO_MISURA_CAUTELARE = CD)
+	// CalendarModel lMisCauComputabiliMisSicApplicata = new CalendarModel(
+	// lCalPen.exGetMisureCautelariComputabiliMisSicApplicata(lFascID));
+	// // Custodia Cautelare in Regime di Arresti Domiciliari ex art 89 dpr 309/90 (TIPO_MISURA_CAUTELARE =
+	// // CM)
+	// CalendarModel lMisCauComputabiliArrestiDomiciliari = new CalendarModel(
+	// lCalPen.exGetMisureCautelariComputabiliArrestiDomiciliari(lFascID));
+	// // Custodia Cautelare in Regime di Permanenza in Casa (TIPO_MISURA_CAUTELARE = CB)
+	// CalendarModel lMisCauComputabiliPermanenzaInCasa = new CalendarModel(
+	// lCalPen.exGetMisureCautelariComputabiliPermanenzaInCasa(lFascID));
+	// // Custodia Cautelare in Collocamento in Comunita' (TIPO_MISURA_CAUTELARE = CC)
+	// CalendarModel lMisCauComputabiliCollocamentoInComunita = new CalendarModel(
+	// lCalPen.exGetMisureCautelariComputabiliCollocamentoInComunita(lFascID));
+	// // Custodia cautelare in Camera di Sicurezza (TIPO_MISURA_CAUTELARE = CE)
+	// CalendarModel lMisCauComputabiliCameraDiSicurezza = new CalendarModel(
+	// lCalPen.exGetMisureCautelariComputabiliCameraDiSicurezza(lFascID));
+	// // Computo periodo di messa alla prova (TIPO_MISURA_CAUTELARE = CL)
+	// CalendarModel lMisCauComputabiliPeriodoMessaAllaProva = new CalendarModel(
+	// lCalPen.exGetMisureCautelariComputabiliPeriodoMessaAllaProva(lFascID));
+	//
+	// // ==========================================================================
+	// // Se non ergastolo calcolo la pena residua passando in input alla
+	// // funzione i dati
+	// // In caso di ergastolo il calcolo della pena
+	// // ==========================================================================
+	// if (!(lPenMod.getCodTipoPenaDetentiva().equals("03") || lPenMod.getCodTipoPenaDetentiva()
+	// .equals("04"))) {
+	// // ==========================================================================
+	// // Il metodo calcola a partire dalla pena complessiva (in sentenza),
+	// // dai benefici e dalle misure cautelari la pena residua E LA INSERISCE
+	// // sul DB
+	// // Questo primo calcolo tiene solo conto dei quantum non calcola le date
+	// // ==========================================================================
+	// PenaResiduaModel lPenaComplessiva = null;
+	// lPenaComplessiva = lCalPen.exCalcolaQuantumPenaComplessivaIniziale(lFascID, lPenMod,
+	// lBeneficiConcessiReclusione, lBeneficiRevocatiReclusione, lBeneficiConcessiArresto,
+	// lBeneficiRevocatiArresto, lMisCauComputabiliReclusione, lMisCauComputabiliArresto,
+	// getCodUtenteConnesso(), getCodUfficioUtenteConnesso());
+	//
+	// lIndicePenaResidua = lPenaComplessiva.getIdPenaResidua();
+	//
+	// // ========================================================================
+	// // Se è stata specificata la DATA_INIZIO, calcolo:
+	// // DATA_FINE_PRESUNTA (data_fine_pena)
+	// // DATA_FINE_RECLUSIONE
+	// // DATA_INIZIO_ARRESTO
+	// // E vado in update del record PENA_RESIDUA precedentemente inserito che
+	// // contiene solo la durata (gg,mm aa)
+	// // ========================================================================
+	// String vedoDataIntermedia = "S";
+	// String lVedoJSP = "N";
+	//
+	// Date lDataInizioPena = null;
+	// Date lDataFineReclusione = null;
+	// Date lDataInizioArresto = null;
+	// Date lDataFinePena = null;
+	//
+	// if (!getRequestStringParameter("GiornoInizio").equals("")
+	// && !getRequestStringParameter("GiornoInizio").equals("-")) {
+	// // Calcolo le date fine pena per Reclusione e Arresto (sono 2 date distinte,
+	// // viene scontata prima la reclusione, quindi l'arresto)
+	// lDataInizioPena = getRequestDateParameter("AnnoInizio", "MeseInizio", "GiornoInizio");
+	//
+	// Vector lDateFine = lCalPen.exCalcolaDataFinePena(lDataInizioPena, lPenaComplessiva, true); // il
+	// // flag
+	// // true
+	// // indica
+	// // CON
+	// // DIES_A_QUO
+	//
+	// // Indica alla jsp di visualizzare la sezione con le date e il bottone
+	// // per la validazione della pena residua con la possibilità di modificare
+	// // manualmente la data fine pena
+	// lVedoJSP = "S";
+	//
+	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+	// // LogF3B.getLogger()
+	// siesLogger.debug("lDateFine.size() : " + lDateFine.size());
+	//
+	// if (lDateFine.size() == 1) {// solo arresti o reclusione
+	// vedoDataIntermedia = "N";
+	//
+	// boolean cond = lPenaComplessiva.getNumAnniArresto().equals(null)
+	// || lPenaComplessiva.getNumAnniArresto().intValue() == 0;
+	// cond = cond
+	// && (lPenaComplessiva.getNumMesiArresto().equals(null) || lPenaComplessiva
+	// .getNumMesiArresto().intValue() == 0);
+	// cond = cond
+	// && (lPenaComplessiva.getNumGiorniArresto().equals(null) || lPenaComplessiva
+	// .getNumGiorniArresto().intValue() == 0);
+	// if (!cond)
+	// lDataInizioArresto = getRequestDateParameter("AnnoInizio", "MeseInizio",
+	// "GiornoInizio");
+	//
+	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+	// // LogF3B.getLogger()
+	// siesLogger.debug("USCITO DAL CALCOLO DELLA DATA FINE PENA CON : " + lDateFine.get(0));
+	//
+	// lDataFinePena = (Date) lDateFine.get(0);
+	// }
+	//
+	// if (lDateFine.size() == 2) { // sia reclusione che arresto
+	// lDataFineReclusione = (Date) lDateFine.get(0);
+	// lDataInizioArresto = DateUtils.getDayAfter(lDataFineReclusione);
+	// lDataFinePena = (Date) lDateFine.get(1);
+	// }
+	//
+	// if (lDateFine.size() == 0) {
+	// Segnalazione = "S"; // quantum rideterminati negativi o nulli (<=0)
+	// }
+	//
+	// if (lDateFine.size() != 0) {
+	// lPenaComplessiva.setDataInizio(lDataInizioPena);
+	// lPenaComplessiva.setDataFineReclusione(lDataFineReclusione);
+	// lPenaComplessiva.setDataInizioArresto(lDataInizioArresto);
+	// lPenaComplessiva.setDataFinePresunta(lDataFinePena); // n.b. il fine pena effettivo verrà
+	// // impostato dall'utente
+	// }
+	// //
+	// }
+	//
+	// // ========================================================================
+	// // Aggiorno la pena Residua, perchè qui e non nell'if precedente, se non
+	// // mi trovo nell'if non ha senso
+	// // ========================================================================
+	// lPenaComplessiva.setDiesAQuo("S"); // non serve è già stato fatto dalla
+	// // exCalcolaQuantumPenaComplessivaIniziale
+	// lPenaComplessiva.setIdPenaResidua(lIndicePenaResidua);
+	// IPenaResidua lPPres = SIEPLookupRemote.getPenaResiduaRemote();
+	// lPPres.ExModificaPenaResidua(lPenaComplessiva);
+	//
+	// // ========================================================================
+	// // LIBERAZIONE ANTICIPATA
+	// // ========================================================================
+	// // Recupero le LA non ancora computate. Tali LA vengono comunque passate
+	// // alla finestra di visualizzazione dei calcoli. Se è presente una data
+	// // fine pena, viene anticipata e la LA risultano 'Concesse già detratte',
+	// // altrimenti restano 'Concesse da detrarre'.
+	// // CERCA IL TOTALE GIORNI LIB ANTICIPATA con FLAG_ELABORATO ad N o null
+	// ILicenzaPeriodiLibAnticipata lCtrlLib = SICOLookupRemote.getLicenzaPeriodiLibAntRemote();
+	// int lTotGiorniLA = lCtrlLib.ExTotalePeriodiConcessiNonElaboratiByIdFascicoloSiep(lFascID);
+	//
+	// setRequestAttribute("totalegiornilibanticipata", new BigDecimal(lTotGiorniLA));
+	//
+	// IPenaResidua lPenResCtrl = SIEPLookupRemote.getPenaResiduaRemote();
+	// PenaResiduaModel lPenaResMod = lPenResCtrl.ExRicercaPenaResiduaCorrenteByFascicoloSiep(lFascID);
+	// // n.b. restituisce il record con data inserimento + recente e flag validato qualunque
+	// // chiamata a questo punto restituisce necessariamente il record non validato
+	// // inserito/aggiornato precedentemente
+	//
+	// lPenaResMod.setDataFine(lDataFinePena);
+	//
+	// // Aggiorno la pena residua (gg,mm,aa e date fine) se sono presenti dei
+	// // giorni di liberazione anticipata non elaborati e se è presente una data fine
+	// if (lTotGiorniLA != 0 && lPenaResMod != null && lPenaResMod.getDataFine() != null) {
+	// // CALCOLA LA NUOVA PENA RESIDUA sottraendo i GG di libertà anticipata
+	// // alla data fine pena
+	// Date lDataFineRicalcolata = DateUtils.moveDateTo(lPenaResMod.getDataFine(),
+	// Calendar.DAY_OF_MONTH, -(lTotGiorniLA));
+	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+	// // LogF3B.getLogger()
+	// siesLogger.debug("Data Fine Ricalcolata : " + lDataFineRicalcolata);
+	//
+	// // Normalizza i quantum
+	// lPenaResMod = PenaResiduaUtil.calcolaPenaNuovaDataFine(lDataFineRicalcolata, lPenaResMod,
+	// true);
+	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+	// // LogF3B.getLogger()
+	// siesLogger.debug("Nuova Pena Residua : " + lPenaResMod);
+	//
+	// // Perchè il metodo PenaResiduaUtil.calcolaPenaNuovaDataFine() non tocca
+	// // la DATA_FINE_PRESUNTA
+	// lPenaResMod.setDataFinePresunta(lPenaResMod.getDataFine()); // la data fine presunta resta
+	// // quella non anticipata
+	//
+	// lPenaResMod.setCodOperatoreInserimento(getCodUtenteConnesso());
+	// lPenaResMod.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
+	// lPenaResMod.setDataInserimento(DateUtils.getSysDate());
+	//
+	// lPenaResMod.setCodOperatoreAggiornamento(null);
+	// lPenaResMod.setDataAggiornamento(null);
+	// lPenaResMod.setCodUfficioAggiornamento(null);
+	//
+	// // ======================================================================
+	// // Aggiorno il record PENA_RESIDUA.
+	// // ======================================================================
+	// lPenaResMod = lPenResCtrl.ExInsertOrUpdatePenaResidua(lPenaResMod);
+	//
+	// // Passo alla form le date modificate per effetto delle LA
+	// lDataFinePena = lPenaResMod.getDataFine();
+	// lDataFineReclusione = lPenaResMod.getDataFineReclusione();
+	// lDataInizioArresto = lPenaResMod.getDataInizioArresto();
+	//
+	// // Aggiorno anche i quantum modificati per effetto delle LA
+	// lPenaComplessiva.setNumAnniArresto(lPenaResMod.getNumAnniArresto());
+	// lPenaComplessiva.setNumMesiArresto(lPenaResMod.getNumMesiArresto());
+	// lPenaComplessiva.setNumGiorniArresto(lPenaResMod.getNumGiorniArresto());
+	//
+	// lPenaComplessiva.setNumAnniReclusione(lPenaResMod.getNumAnniReclusione());
+	// lPenaComplessiva.setNumMesiReclusione(lPenaResMod.getNumMesiReclusione());
+	// lPenaComplessiva.setNumGiorniReclusione(lPenaResMod.getNumGiorniReclusione());
+	//
+	// // AGGIORNA I RECORD APPENA COMPUTATI DI LIB. ANTICIPATA DA N o null AD 'E'
+	// lCtrlLib.ExModificaFlagElaboratoLicenzaLibanticipataByIdFascicoloSiep(lFascID, "N", "E");
+	//
+	// // perchè vengono segnati come computati? Se si effettua di nuovo il
+	// // calcolo non verranno + calcolati ottenendo 2 risultati differenti
+	//
+	// }
+	// // ******************************************************************************
+	// CalendarUtil lCalCon = new CalendarUtil();
+	//
+	// setRequestAttribute("PenaComplessivaSentenza", lPenMod);
+	// setRequestAttribute("BeneficiConcessiArresto", lCalCon.toJsp(lBeneficiConcessiArrestoJSP));
+	// setRequestAttribute("BeneficiRevocatiArresto", lCalCon.toJsp(lBeneficiRevocatiArrestoJSP));
+	// setRequestAttribute("BeneficiConcessiReclusione", lCalCon.toJsp(lBeneficiConcessiReclusioneJSP));
+	// setRequestAttribute("BeneficiRevocatiReclusione", lCalCon.toJsp(lBeneficiRevocatiReclusioneJSP));
+	//
+	// setRequestAttribute("MisCauComputabiliReclusione", lCalCon.toJsp(lMisCauComputabiliReclusione));
+	// setRequestAttribute("MisCauComputabiliArresto", lCalCon.toJsp(lMisCauComputabiliArresto));
+	//
+	// setRequestAttribute("MisCauComputabiliMisSicApplicata",
+	// lCalCon.toJsp(lMisCauComputabiliMisSicApplicata));
+	// setRequestAttribute("MisCauComputabiliArrestiDomiciliari",
+	// lCalCon.toJsp(lMisCauComputabiliArrestiDomiciliari));
+	// setRequestAttribute("MisCauComputabiliPermanenzaInCasa",
+	// lCalCon.toJsp(lMisCauComputabiliPermanenzaInCasa));
+	// setRequestAttribute("MisCauComputabiliCollocamentoInComunita",
+	// lCalCon.toJsp(lMisCauComputabiliCollocamentoInComunita));
+	// setRequestAttribute("MisCauComputabiliCameraDiSicurezza",
+	// lCalCon.toJsp(lMisCauComputabiliCameraDiSicurezza));
+	// setRequestAttribute("MisCauComputabiliPeriodoMessaAllaProva",
+	// lCalCon.toJsp(lMisCauComputabiliPeriodoMessaAllaProva));
+	//
+	// setRequestAttribute("PenaComplessiva", lPenaComplessiva);
+	// setRequestAttribute("DataInizioPena", lDataInizioPena);
+	// setRequestAttribute("DataFineReclusione", lDataFineReclusione);
+	// setRequestAttribute("DataInizioArresto", lDataInizioArresto);
+	// setRequestAttribute("DataFinePena", lDataFinePena);
+	// //
+	// // Data fine Pena =
+	// //
+	//
+	// setRequestAttribute("Segnalazione", Segnalazione);
+	// setRequestAttribute("VedoJSP", lVedoJSP);
+	// setRequestAttribute("vedoDataIntermedia", vedoDataIntermedia);
+	// setRequestAttribute("FlagAltraCausa",
+	// ((FascicoloSiepModel) getSessionAttribute("fascicolo")).getFlagAltraCausa());
+	// setRequestAttribute("CodPosizioneGiuridica", "");
+	//
+	// lPage = new String(f3b.web.IWebConstants.ROOT_DIR
+	// + "/files/siap/siep/calcolopena/VediCalcoloPena.jsp");
+	// } else // ERGASTOLO
+	// {
+	// // ========================================================================
+	// // Nel caso dell'ERGASTOLO. Non effettuo un vero calcolo della pena, ma
+	// // recupero i dati solamente dalla Pena Complessiva in sentenza
+	// // ========================================================================
+	// lPenRes = new PenaResiduaModel();
+	// Date lDataFinePena = null;
+	// Date lDataInizioPena = null;
+	//
+	// if (!getRequestStringParameter("GiornoInizio").equals("")
+	// && !getRequestStringParameter("GiornoInizio").equals("-"))
+	// lDataInizioPena = getRequestDateParameter("AnnoInizio", "MeseInizio", "GiornoInizio");
+	//
+	// lDataFinePena = DateUtils.getDate(9999, 12, 31);
+	// if (lPenMod.getCodTipoPenaDetentiva().equals("03")) // Ergastolo
+	// {
+	// lPenRes.setFlagErgastolo("S");
+	// } else if (lPenMod.getCodTipoPenaDetentiva().equals("04")) // Ergastolo con isolamento
+	// {
+	// lPenRes.setFlagErgastolo("D");
+	// }
+	//
+	// lPenRes.setDataInizio(lDataInizioPena);
+	// lPenRes.setDataFine(lDataFinePena); // 31/12/9999
+	//
+	// lPenRes.setDataInizioIsolamentoDiurno(lPenMod.getDataInizioIsolamentoDiurno());
+	// lPenRes.setDataFineIsolamentoDiurno(lPenMod.getDataFineIsolamentoDiurno());
+	//
+	// lPenRes.setNumGiorniIsolamentoDiurno(lPenMod.getNumGiorniIsolamentoDiurno());
+	// lPenRes.setNumMesiIsolamentoDiurno(lPenMod.getNumMesiIsolamentoDiurno());
+	// lPenRes.setNumAnniIsolamentoDiurno(lPenMod.getNumAnniIsolamentoDiurno());
+	//
+	// lPenRes.setFlagValidato("S");
+	// lPenRes.setDiesAQuo("S");
+	// lPenRes.setFasSieIdFascicoloSiep(lFascID);
+	//
+	// if (!op.equals("insert")) { // vado in aggiornamento
+	// lPenRes.setIdPenaResidua(new BigDecimal(op));
+	// lPenRes.setCodOperatoreAggiornamento(getCodUtenteConnesso());
+	// lPenRes.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
+	// lPenRes.setDataAggiornamento(DateUtils.getSysDate());
+	//
+	// IPenRes.ExModificaPenaResidua(lPenRes);
+	// } else { // vado in insert
+	// lPenRes.setCodOperatoreInserimento(getCodUtenteConnesso());
+	// lPenRes.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
+	// lPenRes.setDataInserimento(DateUtils.getSysDate());
+	// IPenRes.ExInserisciPenaResidua(lPenRes);
+	// }
+	//
+	// setRequestAttribute("PenaResidua", lPenRes);
+	//
+	// // modifica richiesta da viviana 04-11-04--dario
+	// setRequestAttribute("PenaComplessiva", lPenMod);
+	//
+	// lPage = new String(f3b.web.IWebConstants.ROOT_DIR
+	// + "/files/siap/siep/calcolopena/VediErgastolo.jsp");
+	// }
+	//
+	// // ==========================================================================
+	// //
+	// // ==========================================================================
+	// if (!isRequestParameterNullObj(ISIAPCostantiWeb.CAMPO_AZIONE_CHIAMANTE)) {
+	// setRequestAttribute(ISIAPCostantiWeb.CAMPO_AZIONE_CHIAMANTE,
+	// getRequestStringParameter(ISIAPCostantiWeb.CAMPO_AZIONE_CHIAMANTE));
+	// }
+	//
+	// return lPage;
+	// }
 
 	/**
 	 * Imposta tutte le notifiche associate all'evento prodotto
-	 * 
+	 *
 	 * @param lKey
 	 * @return
 	 * @throws F3BException
 	 */
 	protected NotificaModel[] setNotificheAnnotazioniManuali() throws F3BException {
 
-		String lCodiceOperatore = this.getCodUtenteConnesso();
-		String lCodiceUfficio = this.getCodUfficioUtenteConnesso();
+		String lCodiceOperatore = getCodUtenteConnesso();
+		String lCodiceUfficio = getCodUfficioUtenteConnesso();
 		Date lDataEmissione = getRequestDateParameter(ICostantiEvento.CAMPO_ANNO_DATA_TRASMISSIONE_ATTI,
 				ICostantiEvento.CAMPO_MESE_DATA_TRASMISSIONE_ATTI,
 				ICostantiEvento.CAMPO_GIORNO_DATA_TRASMISSIONE_ATTI);
 		String codPosizioneGiu = getRequestStringParameter("codPosizioneGiu");
-		String[] lAvvocati = this.getRequestStringParameters(ICostantiAvvocato.CAMPO_ID_AVVOCATO);
+		String[] lAvvocati = getRequestStringParameters(ICostantiAvvocato.CAMPO_ID_AVVOCATO);
 		ArrayList lNotifiche = new ArrayList();
 
 		// SETTO NOTIFICA AUTORITA NC
-		if (!this.isRequestParameterNullObj(ICostantiAnnotazioneManuale.AUTORITA_ESTERNA_NC)
+		if (!isRequestParameterNullObj(ICostantiAnnotazioneManuale.AUTORITA_ESTERNA_NC)
 				&& !getRequestStringParameter(ICostantiAnnotazioneManuale.AUTORITA_ESTERNA_NC).equals("-")) {
-			String lPolizia = this.getRequestStringParameter(ICostantiAnnotazioneManuale.AUTORITA_ESTERNA_NC);
+			String lPolizia = getRequestStringParameter(ICostantiAnnotazioneManuale.AUTORITA_ESTERNA_NC);
 			String lSedePolizia = this
 					.getRequestStringParameter(ICostantiAnnotazioneManuale.SEDE_AUTORITA_ESTERNA_NC);
 			String lNotePolizia = this
@@ -589,10 +589,10 @@ public class ActCalcoloPena extends ActionSiap implements ICostantiAnnotazioneMa
 		}
 
 		// SETTO NOTIFICA AUTORITA E o N
-		if (this.isRequestParameterNullObj("fungibilita")
-				&& !this.isRequestParameterNullObj(ICostantiAnnotazioneManuale.AUTORITA_ESTERNA)
+		if (isRequestParameterNullObj("fungibilita")
+				&& !isRequestParameterNullObj(ICostantiAnnotazioneManuale.AUTORITA_ESTERNA)
 				&& !getRequestStringParameter(ICostantiAnnotazioneManuale.AUTORITA_ESTERNA).equals("-")) {
-			String lPolizia = this.getRequestStringParameter(ICostantiAnnotazioneManuale.AUTORITA_ESTERNA);
+			String lPolizia = getRequestStringParameter(ICostantiAnnotazioneManuale.AUTORITA_ESTERNA);
 			String lSedePolizia = this
 					.getRequestStringParameter(ICostantiAnnotazioneManuale.SEDE_AUTORITA_ESTERNA);
 			String lNotePolizia = this
@@ -639,12 +639,10 @@ public class ActCalcoloPena extends ActionSiap implements ICostantiAnnotazioneMa
 		}
 
 		// SETTO NOTIFICA AUTORITA E
-		if (!this.isRequestParameterNullObj("fungibilita")
-				&& !this.isRequestParameterNullObj(ICostantiAnnotazioneManuale.AUTORITA_ESTERNA_E)
-				&& !getRequestStringParameter(ICostantiAnnotazioneManuale.AUTORITA_ESTERNA_E).equals("-"))
-
-		{
-			String lPolizia = this.getRequestStringParameter(ICostantiAnnotazioneManuale.AUTORITA_ESTERNA_E);
+		if (!isRequestParameterNullObj("fungibilita")
+				&& !isRequestParameterNullObj(ICostantiAnnotazioneManuale.AUTORITA_ESTERNA_E)
+				&& !getRequestStringParameter(ICostantiAnnotazioneManuale.AUTORITA_ESTERNA_E).equals("-")) {
+			String lPolizia = getRequestStringParameter(ICostantiAnnotazioneManuale.AUTORITA_ESTERNA_E);
 			String lSedePolizia = this
 					.getRequestStringParameter(ICostantiAnnotazioneManuale.SEDE_AUTORITA_ESTERNA_E);
 			String lNotePolizia = this
@@ -669,7 +667,7 @@ public class ActCalcoloPena extends ActionSiap implements ICostantiAnnotazioneMa
 			// LogF3B.getLogger()
 			siesLogger.debug("setto AUTORITA E fungibilita: " + lNotModPol);
 
-			if (!this.isRequestParameterNullObj("evento06")) {
+			if (!isRequestParameterNullObj("evento06")) {
 				AutoritaEsternaModel lAut = new AutoritaEsternaModel();
 
 				lAut.setCodTipoAutorita(lPolizia);
@@ -698,10 +696,10 @@ public class ActCalcoloPena extends ActionSiap implements ICostantiAnnotazioneMa
 		}
 
 		// SETTO NOTIFICA AUTORITA N
-		if (!this.isRequestParameterNullObj("fungibilita")
-				&& !this.isRequestParameterNullObj(ICostantiAnnotazioneManuale.AUTORITA_ESTERNA)
+		if (!isRequestParameterNullObj("fungibilita")
+				&& !isRequestParameterNullObj(ICostantiAnnotazioneManuale.AUTORITA_ESTERNA)
 				&& !getRequestStringParameter(ICostantiAnnotazioneManuale.AUTORITA_ESTERNA).equals("-")) {
-			String lPolizia = this.getRequestStringParameter(ICostantiAnnotazioneManuale.AUTORITA_ESTERNA);
+			String lPolizia = getRequestStringParameter(ICostantiAnnotazioneManuale.AUTORITA_ESTERNA);
 			String lSedePolizia = this
 					.getRequestStringParameter(ICostantiAnnotazioneManuale.SEDE_AUTORITA_ESTERNA);
 			String lNotePolizia = this
@@ -728,9 +726,9 @@ public class ActCalcoloPena extends ActionSiap implements ICostantiAnnotazioneMa
 
 			/*
 			 * AutoritaEsternaModel lAut = new AutoritaEsternaModel();
-			 * 
+			 *
 			 * lAut.setCodTipoAutorita(lPolizia);
-			 * 
+			 *
 			 * ComuneModel lComMod = new ComuneModel(getCodComuneByDescr(lSedePolizia));
 			 * lAut.setCodSede(lComMod.getCodComune()); lAut.setCodOperatoreInserimento(lCodiceOperatore);
 			 * lAut.setCodUfficioInserimento(lCodiceUfficio); lAut.setDataInserimento(DateUtils.getSysDate());
@@ -747,15 +745,15 @@ public class ActCalcoloPena extends ActionSiap implements ICostantiAnnotazioneMa
 		}
 
 		// SETTO NOTIFICA ufficio DI SORVEGLIANZA E
-		if (!this.isRequestParameterNullObj(ICostantiAnnotazioneManuale.CAMPO_COD_UDS)) {
+		if (!isRequestParameterNullObj(ICostantiAnnotazioneManuale.CAMPO_COD_UDS)) {
 
 			NotificaModel lNotModTDS = new NotificaModel();
-			String lUDS = this.getCodUfficioByCodTipoUfficioDescrComune("UDS",
+			String lUDS = getCodUfficioByCodTipoUfficioDescrComune("UDS",
 					getRequestStringParameter(ICostantiAnnotazioneManuale.CAMPO_COD_UDS));
 
 			// String lSedeMagistrato =
-			// this.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_MAG);
-			String lNoteUDS = this.getRequestStringParameter(ICostantiAnnotazioneManuale.CAMPO_NOTE_UDS);
+			// getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_MAG);
+			String lNoteUDS = getRequestStringParameter(ICostantiAnnotazioneManuale.CAMPO_NOTE_UDS);
 
 			lNotModTDS.setNote(lNoteUDS);
 			lNotModTDS.setCodEsito("-");
@@ -770,14 +768,14 @@ public class ActCalcoloPena extends ActionSiap implements ICostantiAnnotazioneMa
 		}
 
 		// SETTO CSSA
-		if (!this.isRequestParameterNullObj(ICostantiCSSA.CAMPO_ID_CSSA)) {
+		if (!isRequestParameterNullObj(ICostantiCSSA.CAMPO_ID_CSSA)) {
 			NotificaModel lNotModCSSA = new NotificaModel();
 
-			BigDecimal lCssa = this.getRequestBigDecimalParameter(ICostantiCSSA.CAMPO_ID_CSSA);
+			BigDecimal lCssa = getRequestBigDecimalParameter(ICostantiCSSA.CAMPO_ID_CSSA);
 
-			// String lSedeCssa = this.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_CSSA);
+			// String lSedeCssa = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_CSSA);
 
-			String lNoteCssa = this.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE_CSSA);
+			String lNoteCssa = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE_CSSA);
 
 			lNotModCSSA.setNote(lNoteCssa);
 			lNotModCSSA.setCodEsito("-");
@@ -814,7 +812,7 @@ public class ActCalcoloPena extends ActionSiap implements ICostantiAnnotazioneMa
 			lNotAvv.setCodUfficioInserimento(lCodiceUfficio);
 			lNotAvv.setAvvIdAvvocatoFascicoloSiep(new BigDecimal(lAvvocati[lIndex]));
 
-			if (!this.isRequestParameterNullObj(ICostantiAnnotazioneManuale.AUTORITA_ESTERNA_ND)
+			if (!isRequestParameterNullObj(ICostantiAnnotazioneManuale.AUTORITA_ESTERNA_ND)
 					&& !getRequestStringParameter(ICostantiAnnotazioneManuale.AUTORITA_ESTERNA_ND)
 							.equals("-")) {
 				String[] lTipoAutoritaEsternaAvvocato = this
@@ -829,7 +827,7 @@ public class ActCalcoloPena extends ActionSiap implements ICostantiAnnotazioneMa
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
 				siesLogger.debug("-->Note_AVVOCATO " + lNoteAvvocato[lIndex]);
-				// String lNoteAvvocato = this.getRequestStringParameter(ICostantiNotifica.CAMPO_NOTE);
+				// String lNoteAvvocato = getRequestStringParameter(ICostantiNotifica.CAMPO_NOTE);
 				// lNotAvv.setNote(lNoteAvvocato);
 
 				AutoritaEsternaModel lAut = new AutoritaEsternaModel();
@@ -851,12 +849,12 @@ public class ActCalcoloPena extends ActionSiap implements ICostantiAnnotazioneMa
 		}
 
 		// SETTO ISTITUTO DETENZIONE
-		if ((this.isRequestParameterNullObj("fungibilita") && !this
+		if ((isRequestParameterNullObj("fungibilita") && !this
 				.isRequestParameterNullObj(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE))) {
 			NotificaModel lNotModIst = new NotificaModel();
 			String lIstituto = this
 					.getRequestStringParameter(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE);
-			String lNoteIstituto = this.getRequestStringParameter(ICostantiLuogoDetenzione.CAMPO_NOTE);
+			String lNoteIstituto = getRequestStringParameter(ICostantiLuogoDetenzione.CAMPO_NOTE);
 
 			lNotModIst.setNote(lNoteIstituto);
 			lNotModIst.setCodEsito("-");
@@ -888,13 +886,13 @@ public class ActCalcoloPena extends ActionSiap implements ICostantiAnnotazioneMa
 		}
 
 		// setto istituto per la fungibilita
-		if ((!this.isRequestParameterNullObj("fungibilita") && !this
+		if ((!isRequestParameterNullObj("fungibilita") && !this
 				.isRequestParameterNullObj(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE))) {
 			NotificaModel lNotModIst = new NotificaModel();
 			String lIstituto = this
 					.getRequestStringParameter(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE);
-			String lNoteIstituto = this.getRequestStringParameter(ICostantiLuogoDetenzione.CAMPO_NOTE);
-			String istituto = this.getRequestStringParameter("istituto");
+			String lNoteIstituto = getRequestStringParameter(ICostantiLuogoDetenzione.CAMPO_NOTE);
+			String istituto = getRequestStringParameter("istituto");
 			lNotModIst.setNote(lNoteIstituto);
 			lNotModIst.setCodEsito("-");
 			lNotModIst.setCodOperatoreInserimento(lCodiceOperatore);
@@ -916,8 +914,8 @@ public class ActCalcoloPena extends ActionSiap implements ICostantiAnnotazioneMa
 
 		// Foglio Complementare
 		NotificaModel lNotFoglio = new NotificaModel();
-		if (!this.isRequestParameterNullObj(ICostantiOrdineEsecuzione.FOGLIO_COMPLEMENTARE)) {
-			if (this.isRequestChecked(ICostantiOrdineEsecuzione.FOGLIO_COMPLEMENTARE)) {
+		if (!isRequestParameterNullObj(ICostantiOrdineEsecuzione.FOGLIO_COMPLEMENTARE)) {
+			if (isRequestChecked(ICostantiOrdineEsecuzione.FOGLIO_COMPLEMENTARE)) {
 				lNotFoglio = new NotificaModel();
 
 				lNotFoglio.setCodTipoNotifica("FC");
@@ -927,8 +925,8 @@ public class ActCalcoloPena extends ActionSiap implements ICostantiAnnotazioneMa
 				lNotFoglio.setDataInserimento(DateUtils.getSysDate());
 				lNotFoglio.setCodUfficioInserimento(lCodiceUfficio);
 
-				ComuneModel lComCasellarioMod = new ComuneModel(
-						getCodComuneByDescr(getRequestStringParameter(ICostantiAutoritaEsterna.CAMPO_COD_SEDE_CAS)));
+				ComuneModel lComCasellarioMod = new ComuneModel(getCodComuneByDescr(
+						getRequestStringParameter(ICostantiAutoritaEsterna.CAMPO_COD_SEDE_CAS)));
 				/*
 				 * SedeGiudiziariaModel lSedeGiuMod = null; String lCodCas =
 				 * lFascicoloModel.getSoggetto().getCodComuneCasellario(); ISedeGiudiziaria lCtrl =
@@ -1066,7 +1064,7 @@ public class ActCalcoloPena extends ActionSiap implements ICostantiAnnotazioneMa
 	 * aggiorna, altrimenti la inserisce L'inserimento viene sempre effettuato con lo stato non validato (???)
 	 * I dati presi in considerazione sono: - pena in sentenza - benefici ( concessi revocati) - misure
 	 * cautelari sofferte computabili -
-	 * 
+	 *
 	 * @param lFascID
 	 *            - Id del fascicolo su cui effettuare il calcolo della pena
 	 * @return lPage - Pagina di ritorno che dipende da tipo di pena (ergastolo)
@@ -1140,8 +1138,8 @@ public class ActCalcoloPena extends ActionSiap implements ICostantiAnnotazioneMa
 		// Se non ergastolo calcolo la pena residua recuperando tutti i dati che
 		// concorrono al calcolo
 		// ==========================================================================
-		if (!(lPenCompMod.getCodTipoPenaDetentiva().equals("03") || lPenCompMod.getCodTipoPenaDetentiva()
-				.equals("04"))) {
+		if (!(lPenCompMod.getCodTipoPenaDetentiva().equals("03")
+				|| lPenCompMod.getCodTipoPenaDetentiva().equals("04"))) {
 			// ==========================================================================
 			// Recupero i dati necessari per calcolare il quantum di pena:
 			// - PENA COMPLESSIVA
@@ -1170,9 +1168,9 @@ public class ActCalcoloPena extends ActionSiap implements ICostantiAnnotazioneMa
 
 			// Calcolo l'eventuale Sanzione Sostitutiva residua
 			CalendarUtil lCalUtilSS = new CalendarUtil();
-			CalendarModel lMCTotali = lCalUtilSS
-					.sommaGiornieValute(lCalcoloPenaModel.getMCReclusioneInSentenza(),
-							lCalcoloPenaModel.getMCArrestiInSentenza());
+			CalendarModel lMCTotali = lCalUtilSS.sommaGiornieValute(
+					lCalcoloPenaModel.getMCReclusioneInSentenza(),
+					lCalcoloPenaModel.getMCArrestiInSentenza());
 
 			SanzioneSostResiduaModel lSSResidua = lCalcoloPenaModel
 					.getSanzioneSostitutivaDaEspiare(lMCTotali);
@@ -1186,17 +1184,14 @@ public class ActCalcoloPena extends ActionSiap implements ICostantiAnnotazioneMa
 				lSSResidua.setDataInserimento(DateUtils.getSysDate());
 			}
 
-			if (lSSResidua != null
-					&& (lSSResidua.getCodTipoSanzione().equals("S") || lSSResidua.getCodTipoSanzione()
-							.equals("L"))) { // Carico la SS nel model solo se trattasi di Semidetenzioe o
-												// Libertà
-												// controllata.
+			// Carico la SS nel model solo se trattasi di Semidetenzione o Libertà controllata
+			if (lSSResidua != null && (lSSResidua.getCodTipoSanzione().equals("S")
+					|| lSSResidua.getCodTipoSanzione().equals("L"))) {
 				lPenaRideterminata.setSanzSostResidua(lSSResidua);
 
-				// In questo caso devo verificare anche se presente già a sistema la
-				// Trasmissione atti per competenza (02-31-0396,0941) in quanto in
-				// questo cso il tasto Conferma deve portare su Comunicazione Nuovo Residuo
-				// Pena
+				// In questo caso devo verificare anche se presente già a sistema la Trasmissione atti per
+				// competenza (02-31-0396,0941) in quanto in questo caso il tasto Conferma deve portare su
+				// Comunicazione Nuovo Residuo Pena
 				EventoModel lEveTrasm = new EventoModel();
 				lEveTrasm.setFasSieIdFascicoloSiep(lFascID);
 				lEveTrasm.setCodTipoEvento("02");
@@ -1212,9 +1207,38 @@ public class ActCalcoloPena extends ActionSiap implements ICostantiAnnotazioneMa
 				if (lUltimaTrasm != null && lUltimaTrasm.getIdEvento() != null) {
 					setRequestAttribute("EsisteTrasmissioneAtti", "SI");
 				}
-
 			}
-			// CalendarModel lPenaGiaEspiata = lCalcoloPenaModel.getPenaEspiata();
+			/*
+			 * ISSUE MEV : aggiunti controlli su nuovi codici motivo
+			 * 				1312 Al Mds per l'esecuzione di pene sostitutive
+			 * 				1313 Al Mds per l'esecuzione di pene sostitutive a seguito restituzione
+			 * Numero MEV : 2023-33 
+			 * Autore : sgioggi 
+			 * Data : 1 dic 2023 
+			 * Branch : MEV_2023-33
+			 */
+			// Carico la SS nel model solo se trattasi di:
+			// TIPO_SANZIONE_SOSTITUTIVA T G Pena Sostitutiva Semiliberta' sostitutiva
+			// TIPO_SANZIONE_SOSTITUTIVA V H Pena Sostitutiva Detenzione Domiciliare sostitutiva
+			else if (lSSResidua != null && (lSSResidua.getCodTipoSanzione().equals("T")
+					|| lSSResidua.getCodTipoSanzione().equals("V"))) {
+				lPenaRideterminata.setSanzSostResidua(lSSResidua);
+				EventoModel emRic = new EventoModel();
+				emRic.setFasSieIdFascicoloSiep(lFascID);
+				emRic.setCodTipoEvento("02");
+				emRic.setCodTipoProvvedimento("31");
+				emRic.setFlagDocumentoRegistrato("S");
+				String[] motivi = new String[] { "1312", "1313" };
+				IEvento ie = SICOLookupRemote.getEventoRemote();
+				EventoModel em = ie.ExRicercaEventoPerMotivo(motivi, emRic);
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("EventoModel: ExRicercaEventoPerMotivo(1312, 1313) = " + em);
+				if (em != null && em.getIdEvento() != null) {
+					setRequestAttribute("EsisteTrasmissioneAtti", "SI");
+				}
+			}
+			// ***** FINE INTERVENTO MEV_2023-33 *****//
 
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -1260,8 +1284,8 @@ public class ActCalcoloPena extends ActionSiap implements ICostantiAnnotazioneMa
 
 			if (lSSResidua != null) {
 				ICalcoloPenaF5 lCalcPenaF5Ctrl = SIEPLookupRemote.getCalcoloPenaF5();
-				SanzioneSostitutivaModel lSanzSostMod = lCalcPenaF5Ctrl.exGetSanzioneSostitutiva(lPenCompMod
-						.getIdPenaComplessiva());
+				SanzioneSostitutivaModel lSanzSostMod = lCalcPenaF5Ctrl
+						.exGetSanzioneSostitutiva(lPenCompMod.getIdPenaComplessiva());
 				setRequestAttribute("SanzioneSostitutivaInSentenza", lSanzSostMod);
 			}
 
@@ -1331,8 +1355,8 @@ public class ActCalcoloPena extends ActionSiap implements ICostantiAnnotazioneMa
 					((FascicoloSiepModel) getSessionAttribute("fascicolo")).getFlagAltraCausa());
 			setRequestAttribute("CodPosizioneGiuridica", "");
 
-			lPage = new String(f3b.web.IWebConstants.ROOT_DIR
-					+ "/files/siap/siep/calcolopena/VediCalcoloPena.jsp");
+			lPage = new String(
+					f3b.web.IWebConstants.ROOT_DIR + "/files/siap/siep/calcolopena/VediCalcoloPena.jsp");
 
 		} else {
 			// ========================================================================
@@ -1387,8 +1411,8 @@ public class ActCalcoloPena extends ActionSiap implements ICostantiAnnotazioneMa
 			// modifica richiesta da viviana 04-11-04--dario
 			setRequestAttribute("PenaComplessiva", lPenCompMod);
 
-			lPage = new String(f3b.web.IWebConstants.ROOT_DIR
-					+ "/files/siap/siep/calcolopena/VediErgastolo.jsp");
+			lPage = new String(
+					f3b.web.IWebConstants.ROOT_DIR + "/files/siap/siep/calcolopena/VediErgastolo.jsp");
 		}
 
 		return lPage;

@@ -71,18 +71,7 @@ import siap.sius.scadenzario.dao.ScadenzarioSiusDAO;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * <p>
- * Title: VerbaleController
- * </p>
- * <p>
  * Description: Classe Controller per Verbale
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
  *
  * @version 1.0
  */
@@ -986,9 +975,9 @@ public class VerbaleController extends SiapController implements IVerbale {
 			String lFlagRS = "N";
 			String lFlagCUM = "N";
 			/*
-			 * ISSUE MAC : aggiunta variabile
-			 * Numero MAC : 20200220016
-			 * Autore : monica
+			 * ISSUE MAC : aggiunta variabile 
+			 * Numero MAC : 20200220016 
+			 * Autore : monica 
 			 * Data : 02/mar/2020
 			 * Branch : 12.1
 			 */
@@ -1013,7 +1002,7 @@ public class VerbaleController extends SiapController implements IVerbale {
 				}
 				/*
 				 * ISSUE MAC : gestito il motivo 0630 - Ordine di esecuzione per la carcerazione ex Art 656
-				 * 				comma 1 cpp
+				 * comma 1 cpp 
 				 * Numero MAC : 20200220016 
 				 * Autore : monica 
 				 * Data : 02/mar/2020 
@@ -1028,12 +1017,26 @@ public class VerbaleController extends SiapController implements IVerbale {
 						|| lEveModOELSRSCUM.getCodMotivo().equals("0224")
 						|| lEveModOELSRSCUM.getCodMotivo().equals("0277")
 						|| lEveModOELSRSCUM.getCodMotivo().equals("0225")) { // 0225 per gestire un'eventuale
-																			 // pregresso
+																				// pregresso
 					lFlagCUM = "S";
 				}
 				lDataPrelevata = lEveModOELSRSCUM.getDataEmissione();
 
 			}
+
+			// MEV_2023-33
+			String lCodMotivoEventoPP = "";
+			if (lEveNot.getEvento() != null) {
+				if (lEveModOELSRSCUM == null
+						|| lEveModOELSRSCUM.getIdEvento().compareTo(lEveNot.getEvento().getIdEvento()) != 0) {
+					lEveDao.setIdEvento(lEveNot.getEvento().getIdEvento());
+					lEveDao.selByKey();
+					EventoModel lEventoPP = (EventoModel) lEveDao.getModelByKey();
+					lCodMotivoEventoPP = lEventoPP.getCodMotivo();
+					lDataPrelevata = lEventoPP.getDataEmissione();
+				}
+			}
+			// MEV_2023-33 - FINE
 
 			// insert
 			lStaProDao = new StatoProcedimentoDAO(lConn);
@@ -1052,17 +1055,28 @@ public class VerbaleController extends SiapController implements IVerbale {
 						lStaProMod.setCodStatoProcedimento("0057"); // cumulo -- stesso stato di ordine
 																	// esecuzione
 					/*
-					 * ISSUE MAC : gestito lo stato "Emesso Ordine di Esecuzione con Arresto Il" del cumulo new
-					 * Numero MAC : 20200220016
-					 * Autore : monica
-					 * Data : 02/mar/2020
+					 * ISSUE MAC : gestito lo stato "Emesso Ordine di Esecuzione con Arresto Il" del cumulo
+					 * new 
+					 * Numero MAC : 20200220016 
+					 * Autore : monica 
+					 * Data : 02/mar/2020 
 					 * Branch : 12.1
 					 */
 					else if (lFlagCUMNEW.equals("S"))
 						lStaProMod.setCodStatoProcedimento("0001"); // Emesso Ordine di Esecuzione con Arresto
 																	// Il
 					// ***** FINE INTERVENTO 20200220016 *****//
-
+					// MEV_2023-33
+					else if (lCodMotivoEventoPP.equals("0622"))
+						lStaProMod.setCodStatoProcedimento("0336"); // Emesso Ordine esecuzione di Ingiunzione
+																	// al Pagamento della Pena Pecuniaria
+					else if (lCodMotivoEventoPP.equals("1307"))
+						lStaProMod.setCodStatoProcedimento("0364"); // Emesso Provvedimento Rideterminazione
+																	// Pena Pecuniaria Sostitutiva
+					else if (lCodMotivoEventoPP.equals("1308"))
+						lStaProMod.setCodStatoProcedimento("0365"); // Emesso Provvedimento Avviso Mancato
+																	// Pagamento
+					// MEV_2023-33 - FINE
 					else
 						lStaProMod.setCodStatoProcedimento("0011"); // o.e.s.
 

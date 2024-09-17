@@ -27,92 +27,77 @@
 <jsp:useBean id="tipoUDS"             scope="request" class="java.lang.String"/>
 
 <% 
-
-  FascicoloSiepModel lFascicoloAssociato = (FascicoloSiepModel)session.getAttribute("fascicolo");
-
-  PosizioneGiuridicaModel lPosizione = posizioneluogoaltra.getPosizioneGiuridica();
-  LuogoDetenzioneModel lLuogoDetenzione = posizioneluogoaltra.getLuogoDetenzione();
-  AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
-
-  if(lPosizione == null)
-     lPosizione = new PosizioneGiuridicaModel();
-  
-  if(lLuogoDetenzione == null)
-    lLuogoDetenzione = new LuogoDetenzioneModel();
-
-  if(lAltraCausa == null)
-    lAltraCausa = new AltraCausaModel(); 
- 
-  
+FascicoloSiepModel lFascicoloAssociato = (FascicoloSiepModel)session.getAttribute("fascicolo");
+PosizioneGiuridicaModel lPosizione = posizioneluogoaltra.getPosizioneGiuridica();
+LuogoDetenzioneModel lLuogoDetenzione = posizioneluogoaltra.getLuogoDetenzione();
+AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
+if (lPosizione == null)
+	lPosizione = new PosizioneGiuridicaModel();
+if (lLuogoDetenzione == null)
+  	lLuogoDetenzione = new LuogoDetenzioneModel();
+if (lAltraCausa == null)
+	lAltraCausa = new AltraCausaModel(); 
 %>
-
 <html>
 <head>
-  <title> Trasmissione Atti per Conversione </title>
-  <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
-  <script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
-  <script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
-  <script language="JavaScript" src="<%=IWebConstants.JS_DIR%>/controlli.js"></script>
-  <script language="JavaScript" >
-    //============================================================================
-    // Aggiungere qui eventuali funzioni javascript da richiamare nella finestra 
-    //============================================================================
-    function Verify() 
-    { 
-      // Inserire i controlli che non possono essere effettuati dal genvalidator 
-      /* Esempio:
-      if (document.LoadInserisciRichiestaConversione.<%="ICostantiPenaPecuniaria.CAMPO_"%>.value=="" ) { 
-        alert("Inserire il Codice Fiscale o la Partita IVA!"); 
-        document.LoadInserisciRichiestaConversione.<%="ICostantiPenaPecuniaria.CAMPO_"%>.focus(); 
-        return false; 
-      } 
-      */
-   	  //=============================================================
-      // controllo obbligatorietà magistrato
-      //=============================================================
-      if(document.LoadInserisciRichiestaConversione.<%=ICostantiMagistrato.CAMPO_COGNOME %>.value=="")
-      {
-         alert("Il Cognome del Magistrato è obbligatorio");
-         return false;
-      }
-      if(document.LoadInserisciRichiestaConversione.<%=ICostantiMagistrato.CAMPO_NOME %>.value=="")
-      {
-         alert("Il Nome del Magistrato è obbligatorio");
-         return false;
-      }
-       if(document.LoadInserisciRichiestaConversione.<%=ICostantiPenaPecuniaria.CAMPO_COD_SEDE_UDS%>.value=="")
-      {
-         alert("La sede dell'ufficio di sorveglianza è obbligatoria");
-         document.LoadInserisciRichiestaConversione.<%=ICostantiPenaPecuniaria.CAMPO_COD_SEDE_UDS%>.focus();
-         return false;
-      }
-    	
-    	//=============================================================
-      // controllo correttezza campo 'Data Emissione Provvedimento' 
-      //=============================================================
-      var data_to_verify = document.LoadInserisciRichiestaConversione.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value+'/'+ 
-                           document.LoadInserisciRichiestaConversione.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value+'/'+ 
-                           document.LoadInserisciRichiestaConversione.<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>.value; 
-      if (!ControllaData(data_to_verify) && data_to_verify.length>2){ 
-        alert('Data Emissione non corretta'); 
-        document.LoadInserisciRichiestaConversione.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.focus(); 
-        return false; 
-      } 
+<title> Trasmissione Atti per Conversione </title>
+<link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
+<script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
+<script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
+<script language="JavaScript" src="<%=IWebConstants.JS_DIR%>/controlli.js"></script>
+<script language="JavaScript" >
+//============================================================================
+// Aggiungere qui eventuali funzioni javascript da richiamare nella finestra 
+//============================================================================
+function Verify() {
+	// Inserire i controlli che non possono essere effettuati dal genvalidator 
+	<%--       if (document.LoadInserisciRichiestaConversione.<%="ICostantiPenaPecuniaria.CAMPO_"%>.value=="" ) {  --%>
+	//         alert("Inserire il Codice Fiscale o la Partita IVA!"); 
+	<%--         document.LoadInserisciRichiestaConversione.<%="ICostantiPenaPecuniaria.CAMPO_"%>.focus();  --%>
+	//         return false; 
+	//       }
+	//=============================================================
+	// controllo obbligatorietà magistrato
+	//=============================================================
+	if (document.LoadInserisciRichiestaConversione.<%=ICostantiMagistrato.CAMPO_COGNOME %>.value == "") {
+		alert("Il Cognome del Magistrato è obbligatorio");
+		return false;
+	}
+	if (document.LoadInserisciRichiestaConversione.<%=ICostantiMagistrato.CAMPO_NOME %>.value == "") {
+		alert("Il Nome del Magistrato è obbligatorio");
+		return false;
+	}
+	if (document.LoadInserisciRichiestaConversione.<%=ICostantiPenaPecuniaria.CAMPO_COD_SEDE_UDS%>.value == "") {
+		alert("La sede dell'ufficio di sorveglianza è obbligatoria");
+		document.LoadInserisciRichiestaConversione.<%=ICostantiPenaPecuniaria.CAMPO_COD_SEDE_UDS%>.focus();
+		return false;
+ 	}
 
-      //=============================================================
-      // controllo correttezza campo 'Data Trasmissione Provvedimento' 
-      //=============================================================
-      var data_to_verify = document.LoadInserisciRichiestaConversione.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value+'/'+ 
-                           document.LoadInserisciRichiestaConversione.<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>.value+'/'+ 
-                           document.LoadInserisciRichiestaConversione.<%=ICostantiNotifica.CAMPO_ANNO_DATA_INVIO%>.value; 
-      if (!ControllaData(data_to_verify) && data_to_verify.length>2){ 
-        alert('Data Trasmissione non corretta'); 
-        document.LoadInserisciRichiestaConversione.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.focus(); 
-        return false; 
-      } 
+	//=============================================================
+ 	// controllo correttezza campo 'Data Emissione Provvedimento' 
+ 	//=============================================================
+	var data_to_verify = document.LoadInserisciRichiestaConversione.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value+'/'+ 
+		document.LoadInserisciRichiestaConversione.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value+'/'+ 
+		document.LoadInserisciRichiestaConversione.<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>.value; 
+	if (!ControllaData(data_to_verify) && data_to_verify.length>2){ 
+	  	alert('Data Emissione non corretta'); 
+	  	document.LoadInserisciRichiestaConversione.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.focus(); 
+	  	return false; 
+	} 
 
-      return true; 
-    } 
+	//=============================================================
+	// controllo correttezza campo 'Data Trasmissione Provvedimento' 
+	//=============================================================
+	var data_to_verify = document.LoadInserisciRichiestaConversione.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value+'/'+ 
+		document.LoadInserisciRichiestaConversione.<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>.value+'/'+ 
+		document.LoadInserisciRichiestaConversione.<%=ICostantiNotifica.CAMPO_ANNO_DATA_INVIO%>.value; 
+	if (!ControllaData(data_to_verify) && data_to_verify.length>2){ 
+		alert('Data Trasmissione non corretta'); 
+  		document.LoadInserisciRichiestaConversione.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.focus(); 
+    	return false; 
+	} 
+	return true; 
+}
 
     function ListaMagistrati(a_formname)
     {

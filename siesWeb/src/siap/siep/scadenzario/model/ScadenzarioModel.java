@@ -5,6 +5,7 @@ import java.util.Date;
 
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.misurasicurezza.model.FascMsToFascSiepModel;
+import siap.siep.pagoPA.model.BollettinoPagopaModel;
 import f3b.model.GenericModel;
 
 /**
@@ -74,6 +75,9 @@ public class ScadenzarioModel extends GenericModel {
 	// aggiunto campo per la data di scadenza comunicazione
 	private Date mDataScadenzaComunicazione;
 
+	// MEV_2023-33
+	private BollettinoPagopaModel mBollettinoModel = null;
+	
 	// COSTRUTTORE DI DEFAULT
 	public ScadenzarioModel() {
 
@@ -117,6 +121,8 @@ public class ScadenzarioModel extends GenericModel {
 		this.mIdFascicoloSiepOrigine = null;
 		this.mDescrTipoMS = null;
 		this.mDataScadenzaComunicazione = null;
+		// MEV_2023-33
+		this.mBollettinoModel = null;
 	}
 
 	// COSTRUTTORE DI COPIA
@@ -163,6 +169,8 @@ public class ScadenzarioModel extends GenericModel {
 		this.mIdFascicoloSiepOrigine = aModel.mIdFascicoloSiepOrigine;
 		this.mDescrTipoMS = aModel.mDescrTipoMS;
 		this.mDataScadenzaComunicazione = aModel.mDataScadenzaComunicazione;
+    // MEV_2023-33
+    this.mBollettinoModel = aModel.mBollettinoModel;
 	}
 
 	// COSTRUTTORE MODEL
@@ -176,7 +184,10 @@ public class ScadenzarioModel extends GenericModel {
 			BigDecimal aNotIdNotifica, BigDecimal aEveIdEvento, String aCodStatoNotifica,
 			FascMsToFascSiepModel aFascMsToFascSiepMod,
 			// MEV_39
-			BigDecimal aIdFascicoloSiepOrigine, String aDescrTipoMS, Date aDataScadenzaComunicazione) {
+			BigDecimal aIdFascicoloSiepOrigine, String aDescrTipoMS, Date aDataScadenzaComunicazione
+		  // MEV_2023-33
+			, BollettinoPagopaModel aBollettinoModel
+	    ) {
 
 		this.mIdScadenzario = aIdScadenzario;
 		this.mCodTipoScadenzario = aCodTipoScadenzario;
@@ -218,6 +229,8 @@ public class ScadenzarioModel extends GenericModel {
 		this.mIdFascicoloSiepOrigine = aIdFascicoloSiepOrigine;
 		this.mDescrTipoMS = aDescrTipoMS;
 		this.mDataScadenzaComunicazione = aDataScadenzaComunicazione;
+		// MEV_2023-33
+		this.mBollettinoModel = aBollettinoModel;
 	}
 
 	//
@@ -408,6 +421,11 @@ public class ScadenzarioModel extends GenericModel {
 	public Date getDataScadenzaComunicazione() {
 		return mDataScadenzaComunicazione;
 	}
+	
+	//MEV_2023-33
+	public BollettinoPagopaModel getBollettinoModel(){
+	  return mBollettinoModel;
+	}
 
 	//
 	// METODI SET()
@@ -569,7 +587,13 @@ public class ScadenzarioModel extends GenericModel {
 	public void setDataScadenzaComunicazione(Date aValore) {
 		mDataScadenzaComunicazione = aValore;
 	}
-
+	
+	 //MEV_2023-33
+  public void setBollettinoModel (BollettinoPagopaModel aValore){
+    mBollettinoModel = aValore;
+  }
+	
+	
 	public String toString() {
 
 		String lStr = new String();

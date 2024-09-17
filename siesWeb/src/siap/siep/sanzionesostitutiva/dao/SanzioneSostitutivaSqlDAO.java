@@ -3,25 +3,14 @@ package siap.siep.sanzionesostitutiva.dao;
 import java.math.BigDecimal;
 import java.sql.Connection;
 
-import siap.dao.SIAPSqlDAO;
-import siap.siep.sanzionesostitutiva.model.SanzioneSostitutivaModel;
 import f3b.dao.DAOException;
 import f3b.model.GenericModel;
+import siap.dao.SIAPSqlDAO;
+import siap.siep.sanzionesostitutiva.model.SanzioneSostitutivaModel;
 
 /**
- * <p>
- * Title: SanzioneSostitutivaSqlDAO
- * </p>
- * <p>
- * Description: Classe SqlDAO che rappresenta la tabella SanzioneSostitutiva
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ * Classe SqlDAO che rappresenta la tabella SanzioneSostitutiva
+ *
  * @version 1.0
  */
 public class SanzioneSostitutivaSqlDAO extends SIAPSqlDAO {
@@ -34,32 +23,31 @@ public class SanzioneSostitutivaSqlDAO extends SIAPSqlDAO {
 	// METODO RICERCA()
 	//
 
-	public void ricercaSanzioneSostitutiva(SanzioneSostitutivaModel aModel) throws DAOException {
-		String lSql = getSqlQuery();
-
-		lSql += " " + setCondizione(aModel);
-		setStatement(lSql);
-	}
+	// public void ricercaSanzioneSostitutiva(SanzioneSostitutivaModel aModel) throws DAOException {
+	// String lSql = getSqlQuery();
+	// lSql += " " + setCondizione(aModel);
+	// setStatement(lSql);
+	// }
 
 	public void ricercaSanzioneSostitutivaByKey(BigDecimal aKey) throws DAOException {
-		String lSql = getSqlQuery();
 
+		String lSql = getSqlQuery();
 		lSql += " " + setCondizioniByKey(aKey);
 		setStatement(lSql);
 	}
 
 	public void ricercaSanzioneSostitutivaByIdPenaComplessiva(BigDecimal aIdPenaComplessiva)
 			throws DAOException {
-		String lSql = getSqlQuery();
 
+		String lSql = getSqlQuery();
 		lSql += " " + setCondizioniByIdPenaComplessiva(aIdPenaComplessiva);
 
 		setStatement(lSql);
 	}
 
 	protected String getSqlQuery() {
-		String lStatement = new String("");
 
+		String lStatement = new String("");
 		lStatement += " SELECT " + "ID_SANZIONE_SOSTITUTIVA, TIPO_SANZIONE.RV_MEANING DESCR_TIPO_SANZIONE,"
 				+ "COD_TIPO_SANZIONE, " + "NUM_ANNI, " + "NUM_MESI, " + "NUM_GIORNI, "
 				+ "SANZIONE_PECUNIARIA_MULTA, " + "ANNO_REGISTRO, " + "NUM_REGISTRO, "
@@ -80,6 +68,7 @@ public class SanzioneSostitutivaSqlDAO extends SIAPSqlDAO {
 	//
 
 	public GenericModel getModel() throws DAOException {
+
 		SanzioneSostitutivaModel aModel = new SanzioneSostitutivaModel();
 
 		aModel.setIdSanzioneSostitutiva(getBigDecimal("ID_SANZIONE_SOSTITUTIVA"));
@@ -101,7 +90,7 @@ public class SanzioneSostitutivaSqlDAO extends SIAPSqlDAO {
 		// aModel.setDescrUfficioAggiornamento(getString("") );
 		aModel.setPenComIdPenaComplessiva(getBigDecimal("PEN_COM_ID_PENA_COMPLESSIVA"));
 		aModel.setSanzionePecuniariaAmmenda(getBigDecimal("SANZIONE_PECUNIARIA_AMMENDA"));
-		
+
 		// MEV_2023-13
 		aModel.setDescrCategoriaSanzione(getString("DESCR_CATEGORIA_SANZIONE"));
 		// MEV_2023-13 - FINE
@@ -109,19 +98,40 @@ public class SanzioneSostitutivaSqlDAO extends SIAPSqlDAO {
 		return aModel;
 	}
 
-	public String setCondizione(SanzioneSostitutivaModel aModel) {
-		String lCondizioni = new String();
-
-		// boolean lInserito = false;
-		return lCondizioni;
-	}
+	// public String setCondizione(SanzioneSostitutivaModel aModel) {
+	// String lCondizioni = new String();
+	// return lCondizioni;
+	// }
 
 	public String setCondizioniByKey(BigDecimal aKey) {
+
 		return " AND ID_SANZIONE_SOSTITUTIVA = " + aKey;
 	}
 
 	public String setCondizioniByIdPenaComplessiva(BigDecimal aIdPenaComplessiva) {
+
 		return " AND PEN_COM_ID_PENA_COMPLESSIVA = " + aIdPenaComplessiva;
+	}
+
+	/**
+	 * Aggiunto metodo di ricerca pena sostituiva per tipologia (highValue della
+	 * cg_ref_codes.TIPO_SANZIONE_SOSTITUTIVA)
+	 *
+	 * @author sgioggi
+	 * @since MEV_2023-33
+	 *
+	 * @param idPenaComplessiva
+	 * @param highValue
+	 * @throws DAOException
+	 */
+	public void ricercaPenaSostitutivaByIdPenaComplessiva(BigDecimal idPenaComplessiva, String highValue)
+			throws DAOException {
+
+		String lSql = getSqlQuery();
+		lSql += " " + setCondizioniByIdPenaComplessiva(idPenaComplessiva);
+		lSql += " AND TIPO_SANZIONE.RV_HIGH_VALUE in " + highValue;
+
+		setStatement(lSql);
 	}
 
 }

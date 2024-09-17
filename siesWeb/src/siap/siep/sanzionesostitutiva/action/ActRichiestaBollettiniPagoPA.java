@@ -1,7 +1,9 @@
 package siap.siep.sanzionesostitutiva.action;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -16,6 +18,8 @@ import siap.sico.soggetto.model.SoggettoModel;
 import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
+import siap.siep.pagoPA.controller.IBollettinoPagopa;
+import siap.siep.pagoPA.model.BollettinoPagopaModel;
 import siap.siep.rateizzazionepp.controller.IRateizzazionePP;
 import siap.siep.rateizzazionepp.model.EventoRateizzazionePPModel;
 import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
@@ -44,63 +48,143 @@ public class ActRichiestaBollettiniPagoPA extends ActionSiap implements ICostant
 		// controllo obbligatorietà CF
 		ISoggetto is = SICOLookupRemote.getSoggettoRemote();
 		SoggettoModel sm = is.ExRicercaSoggettoByKey(fsm.getSoggetto().getIdSoggetto());
-		if (!Utils.isPresent(sm.getCodFiscale())) {
-			siesLogger
-					.info("Soggetto Privo di Codice Fiscale: reindirizzo alla pagina di modifica soggetto!");
+		if (!Utils.isPresent(sm.getCodFiscale()) && isRequestParameterNullObj("warning")) {
+			// MEV_2023-33: il msg da bloccante diventa warning
+			siesLogger.info("Soggetto Privo di Codice Fiscale: "
+					+ "reindirizzo alla pagina di modifica soggetto solo se lo desidera l'utente! "
+					+ "Altrimenti continuo con la Richiesta di Generazione Bollettini!");
 			// pagina di ritorno
 			RedirectTo rt = new RedirectTo();
 			rt.setPage(IWebConstants.PG_MAIN);
-			setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Attenzione! Impossibile generare la Richiesta "
-					+ "Bollettini poiché il condannato risulta privo di Codice Fiscale.");
+			// setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+			// "Attenzione! Impossibile generare la Richiesta. "
+			// + "Bollettini poiché il condannato risulta privo di Codice Fiscale.");
 			rt.setAction(
 					"siap.sico.soggetto.action.ActLoadModificaSoggetto&IdSoggetto=" + sm.getIdSoggetto());
 			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
-			// return rt.toString();
-			return IWebConstants.PG_MESSAGE;
+			// // return rt.toString();
+			// return IWebConstants.PG_MESSAGE;
+			setRequestAttribute(IWebConstants.ACTION_FIELD, "" + getClass().getName());
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+					"Attenzione! Il condannato risulta privo di Codice Fiscale. "
+							+ "Si vuole procedere comunque alla Richiesta di Generazione Bollettini?");
+			return IWebConstants.PG_WARNING;
 		}
+
+		boolean isUnico = false;
 
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 		Vector<EventoRateizzazionePPModel> listaRichiestaBollettini = irpp
-				.exRicercaEventoRateizzazionePP(idFascicolo);
+				.exRicercaEventoRateizzazionePP(idFascicolo, "ALL", "S");
+		// imposto nella request
 		setRequestAttribute("listaRichiestaBollettini", listaRichiestaBollettini);
-		if (!listaRichiestaBollettini.isEmpty()) {
-			Vector<RateizzazionePPModel> rateizzazioni = listaRichiestaBollettini.firstElement()
-					.getListaRateizzazioniPP();
-			Iterator<RateizzazionePPModel> iter = rateizzazioni.iterator();
-			String testo = "";
-			int cont = 0;
-			while (iter.hasNext()) {
-				RateizzazionePPModel rata = iter.next();
-				if (cont == 0)
-					testo = "Importo da Pagare: " + StringUtils.toEuroFormat(rata.getImportoDaPagare()) + " ";
-				if ("R".equals(rata.getTipoRateizzazione())) { // RATE
-					if (cont == 0) {
-						testo += "in:";
-						testo += "<ul>";
-					}
-					testo += "<li>" + "" + rata.getNumeroRate() + " rate da " + ""
-							+ StringUtils.toEuroFormat(rata.getImportoRata());
-					if (!Utils.isNullObj(rata.getScadenzaGiorni()) && cont == 0)
-						testo += ", termine di pagamento fissato entro " + rata.getScadenzaGiorni().toString()
-								+ " giorni dalla Notifica dell'Avviso di Pagamento" + "</li>";
-					else
-						testo += "</li>";
-					if (cont == rateizzazioni.size() - 1)
-						testo += "</ul>";
-				} else { // UNICA SOLUZIONE
-					testo += " in un'unica soluzione";
-					if (!Utils.isNullObj(rata.getScadenzaGiorni()))
-						testo += ", termine di pagamento fissato entro " + rata.getScadenzaGiorni().toString()
-								+ " giorni dalla Notifica dell'Avviso di Pagamento";
-				}
-				cont++;
-			}
-			setRequestAttribute("modalitaPagamento", testo);
+		Vector<RateizzazionePPModel> listaRateizzazioni = new Vector<>();
+		if (listaRichiestaBollettini.isEmpty()) {
+			listaRateizzazioni = irpp.exRicercaRateizzazioniByIdFasc(idFascicolo);
+			isUnico = !listaRateizzazioni.isEmpty() && listaRateizzazioni.size() == 1
+					&& "U".equals(listaRateizzazioni.get(0).getTipoRateizzazione());
 		}
+
+		List<String> testi = new ArrayList<>();
+
+		if (!listaRichiestaBollettini.isEmpty()) {
+			Iterator<EventoRateizzazionePPModel> iterERPPM = listaRichiestaBollettini.iterator();
+			while (iterERPPM.hasNext()) {
+				EventoRateizzazionePPModel erppm = iterERPPM.next();
+				Vector<RateizzazionePPModel> rateizzazioni = erppm.getListaRateizzazioniPP();
+				Iterator<RateizzazionePPModel> iterRPP = rateizzazioni.iterator();
+				String testo = "";
+				int cont = 0;
+				while (iterRPP.hasNext()) {
+					RateizzazionePPModel rata = iterRPP.next();
+					if (cont == 0)
+						testo = "Importo da Pagare: " + StringUtils.toEuroFormat(rata.getImportoDaPagare())
+								+ " ";
+					if ("R".equals(rata.getTipoRateizzazione())) { // RATE
+						if (cont == 0) {
+							testo += "in:";
+							testo += "<ul>";
+						}
+						testo += "<li>" + "" + rata.getNumeroRate() + " rate da " + ""
+								+ StringUtils.toEuroFormat(rata.getImportoRata());
+						if (!Utils.isNullObj(rata.getScadenzaGiorni()) && cont == 0)
+							// MEV_2023-33: cambiata frase
+							testo += ", termine di pagamento della prima rata fissato entro "
+									+ rata.getScadenzaGiorni().toString()
+									+ " giorni dalla Notifica dell'Avviso di Pagamento" + "</li>";
+						else
+							testo += "</li>";
+						if (cont == rateizzazioni.size() - 1)
+							testo += "</ul>";
+					} else { // UNICA SOLUZIONE
+						testo += " in un'unica soluzione";
+						if (!Utils.isNullObj(rata.getScadenzaGiorni()))
+							testo += ", termine di pagamento fissato entro "
+									+ rata.getScadenzaGiorni().toString()
+									+ " giorni dalla Notifica dell'Avviso di Pagamento";
+						isUnico = true;
+					}
+					cont++;
+				}
+				// aggiungo alla lista
+				testi.add(testo);
+			}
+		}
+
+		// imposto nella request
+		setRequestAttribute("modalitaPagamento", testi);
+
+		// MEV_2023-33: aggiunte impostazioni di attributo
+		List<Boolean> isSoloPrimaRataList = new ArrayList<>();
+		List<Boolean> areRateGiaGenerateList = new ArrayList<>();
+		if (!listaRichiestaBollettini.isEmpty()) {
+			Iterator<EventoRateizzazionePPModel> iterERPPM = listaRichiestaBollettini.iterator();
+			IBollettinoPagopa ibp = SIEPLookupRemote.getBollettinoPagopaRemote();
+			while (iterERPPM.hasNext()) {
+				boolean isSoloPrimaRata = false;
+				boolean areRateGiaGenerate = false;
+				// Ricerca lo stato dei pagamenti per id fascicolo ed id evento
+				EventoRateizzazionePPModel erppm = iterERPPM.next();
+				BigDecimal idEvento = erppm.getEvento().getIdEvento();
+				Vector<BollettinoPagopaModel> elencoStatoPagamenti = ibp
+						.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiepIdEvento(idFascicolo, idEvento);
+				if (!elencoStatoPagamenti.isEmpty()) {
+					isUnico = elencoStatoPagamenti.size() == 1
+							&& "U".equals(elencoStatoPagamenti.get(0).getTipoRateizzazione());
+				}
+				if (!elencoStatoPagamenti.isEmpty() && !isUnico && elencoStatoPagamenti.size() > 1) {
+					// PAGAMENTO RATEALE
+					Iterator<BollettinoPagopaModel> itx = elencoStatoPagamenti.iterator();
+					int contaIUV = 0;
+					while (itx.hasNext()) {
+						BollettinoPagopaModel bpm = itx.next();
+						if (Utils.isPresent(bpm.getIuv()))
+							contaIUV++;
+					}
+					if (contaIUV == 1)
+						isSoloPrimaRata = true;
+					else if (contaIUV > 1)
+						areRateGiaGenerate = true;
+				} else if (!elencoStatoPagamenti.isEmpty() && isUnico) {
+					// PAGAMENTO UNICO
+					BollettinoPagopaModel bpm = elencoStatoPagamenti.firstElement();
+					if (Utils.isPresent(bpm.getIuv()))
+						areRateGiaGenerate = true;
+				}
+				isSoloPrimaRataList.add(isSoloPrimaRata);
+				areRateGiaGenerateList.add(areRateGiaGenerate);
+			}
+		}
+
+		// imposto l'attributo nella request
+		setRequestAttribute("isRateale", !isUnico);
+		setRequestAttribute("isSoloPrimaRata", isSoloPrimaRataList);
+		setRequestAttribute("areRateGiaGenerate", areRateGiaGenerateList);
 
 		// info per il log
 		siesLogger.debug(getClass().getName() + ".processRequest: fine");
 
+		// pagina di ritorno
 		return PG_ELENCO_RICHIESTA_BOLLETTINI;
 	}
 

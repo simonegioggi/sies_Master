@@ -1,4 +1,4 @@
-<%-- MEV_2023-13: aggiunta pagina --%>
+<%-- MEV_2023-33: aggiunta pagina --%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
 <%@ page import="f3b.util.Utils"%>
@@ -14,12 +14,17 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
+<jsp:useBean id="UtenteConnesso" scope="session" class="siap.sico.utente.model.UtenteModel" />
+
 <jsp:useBean id="elencoStatoPagamenti" 	scope="request" class="java.util.Vector<BollettinoPagopaModel>"/>
 <jsp:useBean id="TornaQui"    			scope="request" class="java.lang.String"/>
 <jsp:useBean id="evento"    			scope="request" class="siap.sico.evento.model.EventoModel"/>
 <jsp:useBean id="modalitaPagamento" 	scope="request" class="java.lang.String"/>
 <jsp:useBean id="importoPagato" 		scope="request" class="java.lang.String"/>
 <jsp:useBean id="importoDaPagare" 		scope="request" class="java.lang.String"/>
+<%-- MEV_2023-33: aggiunti useBean --%>
+<jsp:useBean id="dataAvvenutaNotifica" 	scope="request" class="java.lang.String"/>
+<%-- <jsp:useBean id="isSoloPrimaRata"		scope="request" class="java.lang.Boolean"/> --%>
 
 <html>
 <head>
@@ -57,14 +62,21 @@ function tornaIndietro(action) {
 			<font class="campo">Stato Bollettini per Pagamento Pena Pecuniaria</font>
       	</td>
       	<td class="LBG">
+      	         <% if ("90".equals(UtenteConnesso.getUserProfile().getProfileId().toString())) { %>
+          <a href="<%=IWebConstants.PG_MAIN%>?Action=siap.siep.pagoPA.action.ActVerificaErroriPagopa">
+              <img align="middle" src="<%=IWebConstants.IMAGES_DIR%>arrowleft24.gif" alt="ritorna su" width="24" height="24" border="0">
+          </a> 
+          <% } else { %>  
 			<a href="javascript:tornaIndietro('siap.siep.sanzionesostitutiva.action.ActGrigliaBollettiniPagoPA')">
           		<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>arrowleft24.gif" alt="ritorna su" width="24" height="24" border="0">
         	</a>
+          <% } %>
 		</td>
 		<!-- BOTTONE DI STAMPA -->
-<%-- 		<jsp:include page="<%=ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>"> --%>
-<%--        		<jsp:param name="ActionLink" value="<%="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActStampaMassivaBollettini"%>"/> --%>
-<%--       	</jsp:include> --%>
+		<%-- [SG]: MEV_2023-33 aggiunto parametro di passaggio = IdEvento --%>
+		<jsp:include page="<%=ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>">
+       		<jsp:param name="ActionLink" value="<%="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActStampaMassivaBollettini&"+ICostantiEvento.CAMPO_ID_EVENTO+"="+evento.getIdEvento()%>"/>
+      	</jsp:include>
 	</tr>
 </table>
 <br>
@@ -89,7 +101,17 @@ if (elencoStatoPagamenti.size() == 0) {
 		<td class="l" colspan="9">
 			<%=StringUtils.toStringJSP(evento.getDescrTipoProvvedimento())%>&nbsp;
 			<%=StringUtils.toStringJSP(evento.getDescrMotivo())%>&nbsp;del&nbsp;
-			<font class="cViola"><%=StringUtils.toStringJSP(DateUtils.getDateToString(evento.getDataEmissione(), "dd-MM-yyyy"))%></font>
+			<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(evento.getDataEmissione(), "dd-MM-yyyy"))%></font>
+			<%-- MEV_2023-33: aggiunta frase di notifica --%>
+			&nbsp;notificato&nbsp;il:&nbsp;
+			<font class="campo"><%=dataAvvenutaNotifica%></font>
+<%
+	if ("A".equals(evento.getFlagDocumentoRegistrato())) {
+%>
+			<font style="color:red"> (Annullato)</font>
+<%
+	}
+%>
 		</td>
 	</tr>
 	<tr>
@@ -120,6 +142,11 @@ if (elencoStatoPagamenti.size() == 0) {
 	Iterator<BollettinoPagopaModel> itx = elencoStatoPagamenti.iterator();
 	while (itx.hasNext()) {
 		BollettinoPagopaModel bpm = (BollettinoPagopaModel) itx.next();
+// 		// MEV_2023-33: aggiungo gestione numero dei Bollettini da generare
+// 		if ("U".equals(bpm.getTipoRateizzazione())
+// 				|| "R".equals(bpm.getTipoRateizzazione())
+// 				&& (isSoloPrimaRata && bpm.getProgRata() > 1)
+// 				|| !isSoloPrimaRata) {
 %>
 	<tr>
 		<td class="c"><%=StringUtils.toStringJSP(bpm.getProgRata())%></td>
@@ -141,20 +168,35 @@ if (elencoStatoPagamenti.size() == 0) {
       	<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(bpm.getDataScadenza(), "dd/MM/yyyy"), "-")%></td>
 <%
 		String coloreClasse = "cVerde";
-		if ("PN".equals(bpm.getStatoPagamento()))
+		if ("PN".equals(bpm.getStatoPagamento())) {
 			coloreClasse = "cRosso";
+		}
 %>
       	<td class="<%=coloreClasse%>"><%=StringUtils.toStringJSP(bpm.getDescrStatoPagamento())%></td>
       	<td class="c">
-        <%--<a href="javascript:eseguiAzione('Dettaglio', <%=bpm.getIdBollettinoPagopa()%>)"> 
+        	<%--
+        	<a href="javascript:eseguiAzione('Dettaglio', <%=bpm.getIdBollettinoPagopa()%>)"> 
 				<img src="/images/dettagli.gif" width="12" height="12" alt="Dettaglio Bollettino" border="0">
-          	</a>&nbsp;&nbsp;&nbsp;--%>
+          	</a>&nbsp;&nbsp;&nbsp;
+          	--%>
+<%
+		// MEV_2023-33: aggiungo gestione numero dei Bollettini da generare
+		if (!Utils.isNullObj(bpm.getIuv())) {
+%>
       		<a href="javascript:eseguiAzione('Stampa', <%=bpm.getIdBollettinoPagopa()%>)">
 				<img src="/images/print24.gif" alt="Stampa Bollettino" width="12" height="12" border="0">
 			</a>
+<%
+		} else {
+%>
+			&nbsp;
+<%
+		}
+%>
       	</td>
 	</tr>
 <%
+// 		}
 	} // end while su iterator sugli eventi
 } // end else
 %>

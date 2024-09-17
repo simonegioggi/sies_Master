@@ -10,23 +10,12 @@ import siap.dao.SIAPSqlDAO;
 import siap.siep.notifica.model.NotificaModel;
 
 /**
- * <p>
- * Title: NotificaSqlDAO
- * </p>
- * <p>
- * Description: Classe SqlDAO che rappresenta la tabella Notifica
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ * Classe SqlDAO che rappresenta la tabella Notifica
+ *
  * @version 1.0
  */
-
 public class NotificaSqlDAO extends SIAPSqlDAO {
+
 	public NotificaSqlDAO(Connection con) {
 		super(con);
 	}
@@ -35,6 +24,7 @@ public class NotificaSqlDAO extends SIAPSqlDAO {
 	// METODO RICERCA()
 	//
 	public void ricercaNotifica(NotificaModel aModel) throws DAOException {
+
 		String lSql = getSqlQuery();
 
 		lSql += " " + setCondizione(aModel);
@@ -42,6 +32,7 @@ public class NotificaSqlDAO extends SIAPSqlDAO {
 	}
 
 	public void ricercaNotificaAvvocatoNonAvvenuta(NotificaModel aModel) throws DAOException {
+
 		String lSql = getSqlQuery();
 		lSql += " where EVE_ID_EVENTO = " + aModel.getEveIdEvento();
 		lSql += " and COD_TIPO_NOTIFICA = '" + aModel.getCodTipoNotifica() + "'";
@@ -50,6 +41,7 @@ public class NotificaSqlDAO extends SIAPSqlDAO {
 	}
 
 	public void ricercaNotificaByKey(BigDecimal aKey) throws DAOException {
+
 		String lSql = getSqlQuery();
 
 		lSql += " " + setCondizioniByKey(aKey);
@@ -57,6 +49,7 @@ public class NotificaSqlDAO extends SIAPSqlDAO {
 	}
 
 	public void ricercaNotificaByEvento(BigDecimal aKey) throws DAOException {
+
 		String lSql = getSqlQuery();
 
 		lSql += " WHERE EVE_ID_EVENTO = " + aKey;
@@ -66,6 +59,7 @@ public class NotificaSqlDAO extends SIAPSqlDAO {
 	}
 
 	public void ricercaNotificheByEventoNotParti(BigDecimal aKey) throws DAOException {
+
 		String lSql = getSqlQuery();
 
 		lSql += " WHERE EVE_ID_EVENTO = " + aKey;
@@ -76,6 +70,7 @@ public class NotificaSqlDAO extends SIAPSqlDAO {
 	}
 
 	public void ricercaNotificaDataAvvNotificaNullByEvento(BigDecimal aKey) throws DAOException {
+
 		String lSql = getSqlQuery();
 
 		lSql += " WHERE EVE_ID_EVENTO = " + aKey;
@@ -84,6 +79,7 @@ public class NotificaSqlDAO extends SIAPSqlDAO {
 	}
 
 	public void ricercaNotificaEsecuzioneByEventoDataNull(BigDecimal aKey) throws DAOException {
+
 		String lSql = getSqlQuery();
 
 		lSql += " WHERE EVE_ID_EVENTO = " + aKey
@@ -92,6 +88,7 @@ public class NotificaSqlDAO extends SIAPSqlDAO {
 	}
 
 	public void ricercaNotificaEsecuzioneByEvento(BigDecimal aKey) throws DAOException {
+
 		String lSql = getSqlQuery();
 
 		lSql += " WHERE EVE_ID_EVENTO = " + aKey + " AND COD_TIPO_NOTIFICA='E' ";
@@ -99,12 +96,14 @@ public class NotificaSqlDAO extends SIAPSqlDAO {
 	}
 
 	protected String getSqlQuery() {
+
 		String lStatement = getSqlQuerySelect() + getSqlQueryFrom();
 
 		return lStatement;
 	}
 
 	protected String getSqlQuerySelect() {
+
 		String lStatement = new String("");
 
 		lStatement += " SELECT " + " N.ID_NOTIFICA, " + " N.COD_TIPO_NOTIFICA, COD_NOT.RV_MEANING TIP_NOT,"
@@ -117,12 +116,15 @@ public class NotificaSqlDAO extends SIAPSqlDAO {
 				+ " N.AVV_ID_AVVOCATO_FASCICOLO_SIGE," + " N.SOLLECITO, N.CSS_ID_CSSA,"
 				+ " N.UFF_COD_UFFICIO," + " N.CUR_ID_CURATORE," +
 				// modifica relativa al tipo istituto
-				" N.IST_DET_ID_ISTITUTO_DETENZIONE," + " N.ID_PARTE_UDIENZA";
+				" N.IST_DET_ID_ISTITUTO_DETENZIONE," + " N.ID_PARTE_UDIENZA"
+				// MEV_2023-33
+				+ " , N.ID_CIVILMENTE_OBBLIGATO ";
 
 		return lStatement;
 	}
 
 	protected String getSqlQueryFrom() {
+
 		String lStatement = new String("");
 
 		lStatement += " FROM NOTIFICA N join CG_REF_CODES COD_NOT"
@@ -137,6 +139,7 @@ public class NotificaSqlDAO extends SIAPSqlDAO {
 	//
 
 	public GenericModel getModel() throws DAOException {
+
 		NotificaModel aModel = new NotificaModel();
 		// Inserire le opportune set delle descrizioni!
 		aModel.setIdNotifica(getBigDecimal("ID_NOTIFICA"));
@@ -170,31 +173,32 @@ public class NotificaSqlDAO extends SIAPSqlDAO {
 
 		aModel.setIdParteUdienza(getBigDecimal("ID_PARTE_UDIENZA"));
 
+		aModel.setIdCivilmenteObbligato(getBigDecimal("ID_CIVILMENTE_OBBLIGATO"));
+
 		return aModel;
 	}
 
 	public String setCondizione(NotificaModel aModel) {
+
 		String lCondizioni = new String();
 		// boolean lInserito = false;
 		return lCondizioni;
 	}
 
 	public String setCondizioniByKey(BigDecimal aKey) {
+
 		return " WHERE ID_NOTIFICA = " + aKey;
 	}
 
 	/**
-	 * <p>
-	 * Description: metodo di ricerca, restituisce il numero di notifiche legate ad un evento ancora da
-	 * notificare, ovvero con data di avvenuta notifica a null.
-	 * </p>
-	 * 
+	 * metodo di ricerca, restituisce il numero di notifiche legate ad un evento ancora da notificare, ovvero
+	 * con data di avvenuta notifica a null.
+	 *
 	 * @param BigDecimal
 	 *            aIdEve : Identificativo Evento
 	 * @return int : numero di record selezionati
 	 * @throws DAOException
 	 */
-
 	public int getNumNotificheDaNotificareByEve(BigDecimal aIdEve) throws DAOException {
 
 		BigDecimal lCount = null;
@@ -213,17 +217,14 @@ public class NotificaSqlDAO extends SIAPSqlDAO {
 	}
 
 	/**
-	 * <p>
-	 * Description: metodo di ricerca, restituisce il numero di notifiche di tipo N legate ad un evento ancora
-	 * da notificare, ovvero con data di avvenuta notifica a null.
-	 * </p>
-	 * 
+	 * metodo di ricerca, restituisce il numero di notifiche di tipo N legate ad un evento ancora da
+	 * notificare, ovvero con data di avvenuta notifica a null.
+	 *
 	 * @param BigDecimal
 	 *            aIdEve : Identificativo Evento
 	 * @return int : numero di record selezionati
 	 * @throws DAOException
 	 */
-
 	public int getNumNotificheSigeDaNotificareByEve(BigDecimal aIdEve) throws DAOException {
 
 		BigDecimal lCount = null;
@@ -243,18 +244,16 @@ public class NotificaSqlDAO extends SIAPSqlDAO {
 	}
 
 	/**
-	 * <p>
-	 * Description: metodo di ricerca, restituisce la data più recente di un gruppo di notifiche legate ad uno
-	 * stesso evento.
-	 * </p>
-	 * 
+	 * metodo di ricerca, restituisce la data più recente di un gruppo di notifiche legate ad uno stesso
+	 * evento.
+	 *
 	 * @param BigDecimal
 	 *            aIdEve : Identificativo Evento
 	 * @return Date data
 	 * @throws DAOException
 	 */
-
 	public Date SelDataNotificaByEve(BigDecimal aIdEve) throws DAOException {
+
 		// BigDecimal lCount = null;
 		Date retData = null;
 
@@ -270,18 +269,16 @@ public class NotificaSqlDAO extends SIAPSqlDAO {
 	}
 
 	/**
-	 * <p>
-	 * Description: metodo di ricerca, restituisce la data più recente di un gruppo di notifiche legate ad uno
-	 * stesso evento.
-	 * </p>
-	 * 
+	 * metodo di ricerca, restituisce la data più recente di un gruppo di notifiche legate ad uno stesso
+	 * evento.
+	 *
 	 * @param BigDecimal
 	 *            aIdEve : Identificativo Evento
 	 * @return Date data
 	 * @throws DAOException
 	 */
-
 	public Date SelDataNotificaSigeByEve(BigDecimal aIdEve) throws DAOException {
+
 		// BigDecimal lCount = null;
 		Date retData = null;
 
@@ -299,12 +296,14 @@ public class NotificaSqlDAO extends SIAPSqlDAO {
 
 	// Ordinamento per TIPO NOTIFICA
 	private String setOrderTipoNotifica() {
+
 		String lOrder = new String();
 		lOrder = " ORDER BY COD_TIPO_NOTIFICA asc, ID_NOTIFICA asc ";
 		return lOrder;
 	}
 
 	public void ricercaNotificaByIdParteUdienza(BigDecimal aIdParteUdienza) throws DAOException {
+
 		String lSql = getSqlQuery();
 
 		lSql += " WHERE ID_PARTE_UDIENZA = " + aIdParteUdienza;
@@ -315,6 +314,7 @@ public class NotificaSqlDAO extends SIAPSqlDAO {
 
 	public void ricercaNotificaByIdParteUdienzaDifensore(BigDecimal aIdParteUdienza, BigDecimal aIdAvvocato)
 			throws DAOException {
+
 		String lSql = getSqlQuery();
 
 		lSql += " WHERE ID_PARTE_UDIENZA = " + aIdParteUdienza;
@@ -324,6 +324,7 @@ public class NotificaSqlDAO extends SIAPSqlDAO {
 	}
 
 	public void ricercaNotificaByIdSoggetto(BigDecimal aIdParteUdienza) throws DAOException {
+
 		String lSql = getSqlQuery();
 
 		lSql += " WHERE ID_PARTE_UDIENZA = " + aIdParteUdienza;

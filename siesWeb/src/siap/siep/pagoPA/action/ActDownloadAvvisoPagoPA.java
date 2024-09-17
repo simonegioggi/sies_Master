@@ -29,6 +29,12 @@ public class ActDownloadAvvisoPagoPA extends ActionSiap implements ICostantiPago
 		BigDecimal idEvento = getRequestBigDecimalParameter("IdEvento");
 		setRequestAttribute("idEvento", idEvento);
 
+		// MEV_2023-33: aggiungo recupero numero dei Bollettini da generare
+		String numBollettini = "";
+		if (!isRequestParameterNullObj(RADIO_NUMERO_BOLLETTINI))
+			numBollettini = getRequestStringParameter(RADIO_NUMERO_BOLLETTINI);
+		setRequestAttribute("numBollettini", numBollettini);
+
 		// info per il log
 		siesLogger.debug(getClass().getName() + ".processRequest: fine");
 

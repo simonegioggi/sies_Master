@@ -38,6 +38,8 @@ import siap.sico.libertaanticipata.dao.LicenzaLibanticipataDAO;
 import siap.sico.magistrato.dao.MagistratoSqlDAO;
 import siap.sico.magistrato.model.MagistratoModel;
 import siap.sico.misuraalternativa.model.MisuraAlternativaAggregatoModel;
+import siap.sico.residenza.dao.ResidenzaSqlDAO;
+import siap.sico.residenza.model.ResidenzaModel;
 import siap.sico.stampa.controller.IStampa;
 import siap.sico.template.controller.TemplateManager;
 import siap.sico.template.dao.TemplateSqlDAO;
@@ -115,7 +117,7 @@ import siap.sius.udienzaprocedimento.dao.UdienzaProcedimentoSqlDAO;
 import siap.sius.udienzaprocedimento.model.UdienzaProcedimentoUdiModel;
 
 /**
- * Title: EventoController Description: Classe Controller per Evento
+ * EventoController - Classe Controller per Evento
  *
  * @version 1.0
  */
@@ -169,8 +171,7 @@ public class EventoController extends SiapController implements IEvento {
 	}
 
 	/**
-	 * Inserisce Evento Notifica, Autorita Esterne associate e eventuali Campi note aggiuntive.
-	 * <p>
+	 * Inserisce Evento Notifica, Autorita Esterne associate e eventuali Campi note aggiuntive
 	 *
 	 * @param aEvento
 	 * @return
@@ -289,7 +290,6 @@ public class EventoController extends SiapController implements IEvento {
 					count++;
 				}
 			}
-
 		} catch (DAOException daoEx) {
 			throw new F3BException("EventoController.ExInserisciEventoNotifica: " + daoEx);
 		} catch (Exception ex) {
@@ -306,137 +306,135 @@ public class EventoController extends SiapController implements IEvento {
 	}
 
 	/**
-	 * Febbraio 2009 Inserisce Evento Notifica, Autorita Esterne associate e eventuali pena res e Campi note
-	 * aggiuntive.
-	 * <p>
+	 * Inserisce Evento Notifica, Autorita Esterne associate e eventuali pena res e Campi note aggiuntive.
 	 *
 	 * @param aEvento
-	 * @return
+	 * @param aPenaResidua
+	 * @return EventoNotificaModelEventoNotificaModel
 	 * @throws F3BException
 	 */
-
-	public EventoNotificaModel ExInserisciEventoNotifica(EventoNotificaModel aEvento,
-			PenaResiduaModel aPenaResidua) throws F3BException {
-
-		Connection lConn = null;
-		EventoDAO lEveDao = null;
-		EventoSqlDAO lSqlDAO = null;
-		NotificaDAO lNotDao = null;
-		AutoritaEsternaDAO lAutDao = null;
-		PenaResiduaDAO lPenDao = null;
-		// CampoNotaDAO lCampoNotaDao = null;
-
-		EventoNotificaModel lEveRet = new EventoNotificaModel(aEvento);
-
-		try {
-			lConn = getDBTransaction();
-			lEveDao = new EventoDAO(lConn);
-			lEveDao.setDAOFromModel(aEvento.getEvento());
-			BigDecimal lKeyEvento = lEveDao.insert();
-
-			lAutDao = new AutoritaEsternaDAO(lConn);
-			lNotDao = new NotificaDAO(lConn);
-
-			lEveRet.getEvento().setIdEvento(lKeyEvento);
-
-			BigDecimal lKeyAutorita = null;
-			int count = 0;
-
-			if (aEvento != null && aEvento.getNotifiche() != null) {
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-				// LogF3B.getLogger()
-				siesLogger.debug("Presenti " + aEvento.getNotifiche().length + " notifiche");
-
-				while (count < aEvento.getNotifiche().length) {
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-					// LogF3B.getLogger()
-					siesLogger.debug("Notifica[" + count + "] = " + aEvento.getNotifiche()[count]);
-
-					if (aEvento.getNotifiche()[count] != null) {
-
-						if (aEvento.getNotifiche()[count].getAutoritaEsterna() != null) {
-							lAutDao.setRicercaByAutSede(aEvento.getNotifiche()[count].getAutoritaEsterna());
-							AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
-							lAutMod = (AutoritaEsternaModel) lAutDao.getModelByKey();
-
-							if (lAutMod == null) {
-								lAutDao.setDAOFromModel(aEvento.getNotifiche()[count].getAutoritaEsterna());
-								lKeyAutorita = lAutDao.insert();
-								// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger
-								// al posto di LogF3B.getLogger()
-								siesLogger.debug("Inserita AUTORITA con ID = " + lKeyAutorita);
-								aEvento.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
-							} else {
-								lKeyAutorita = lAutMod.getIdAutoritaEsterna();
-								aEvento.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
-							}
-						}
-
-						aEvento.getNotifiche()[count].setEveIdEvento(lKeyEvento);
-
-						lNotDao.setDAOFromModel(aEvento.getNotifiche()[count]);
-						lNotDao.insert();
-						lNotDao.stop();
-
-						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
-						// di LogF3B.getLogger()
-						siesLogger.debug("Inserito evento" + lKeyEvento);
-					}
-					count++;
-				}
-			}
-
-			lPenDao = new PenaResiduaDAO(lConn);
-			// Inserisce Pena Residua
-			PenaResiduaModel lPenMod = aPenaResidua;
-			if (lPenMod != null) {
-				lPenMod.setIdPenaResidua(null);
-				lPenMod.setCodOperatoreAggiornamento(null);
-				lPenMod.setDataAggiornamento(null);
-				lPenMod.setCodUfficioAggiornamento(null);
-
-				lPenMod.setFlagValidato("S");
-				lPenMod.setEveIdEvento(lKeyEvento);
-				lPenMod.setCodOperatoreInserimento(aEvento.getEvento().getCodOperatoreInserimento());
-				lPenMod.setDataInserimento(DateUtils.getSysDate());
-				lPenMod.setCodUfficioInserimento(aEvento.getEvento().getCodUfficioInserimento());
-
-				lPenDao.setDAOFromModel(lPenMod);
-				lPenDao.insert();
-				lPenDao.stop();
-			}
-
-			/*
-			 * // Inserimento delle eventuali note aggiuntive. lCampoNotaDao = new CampoNotaDAO(lConn); if
-			 * (aEvento.getCampoNote() != null) { // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di
-			 * istanza siesLogger al posto di LogF3B.getLogger()
-			 * siesLogger.debug("Inserimento Eventuali Note Aggiuntive Numero note Aggiuntive : " +
-			 * aEvento.getCampoNote().length); count = 0; while (count < aEvento.getCampoNote().length) {
-			 * aEvento.getCampoNote()[count].setEveIdEvento(lKeyEvento);
-			 * aEvento.getCampoNote()[count].setProgressivo(new BigDecimal((double) count + 1));
-			 * lCampoNotaDao.setDAOFromModel(aEvento.getCampoNote()[count]); lCampoNotaDao.insert();
-			 * lCampoNotaDao.stop();
-			 *
-			 * count++; } }
-			 */
-
-			commit(lConn);
-		} catch (DAOException daoEx) {
-			throw new F3BException("EventoController.ExInserisciEventoNotifica: " + daoEx);
-		} catch (Exception ex) {
-			throw new F3BException("EventoController.ExInserisciEventoNotifica: " + ex);
-		} finally {
-			// cleanup(lCampoNotaDao);
-			cleanup(lEveDao);
-			cleanup(lNotDao);
-			cleanup(lAutDao);
-			cleanup(lSqlDAO);
-			cleanup(lPenDao);
-			cleanup(lConn);
-		}
-
-		return lEveRet;
-	}
+	// public EventoNotificaModel ExInserisciEventoNotifica(EventoNotificaModel aEvento,
+	// PenaResiduaModel aPenaResidua) throws F3BException {
+	//
+	// Connection lConn = null;
+	// EventoDAO lEveDao = null;
+	// EventoSqlDAO lSqlDAO = null;
+	// NotificaDAO lNotDao = null;
+	// AutoritaEsternaDAO lAutDao = null;
+	// PenaResiduaDAO lPenDao = null;
+	// // CampoNotaDAO lCampoNotaDao = null;
+	//
+	// EventoNotificaModel lEveRet = new EventoNotificaModel(aEvento);
+	//
+	// try {
+	// lConn = getDBTransaction();
+	// lEveDao = new EventoDAO(lConn);
+	// lEveDao.setDAOFromModel(aEvento.getEvento());
+	// BigDecimal lKeyEvento = lEveDao.insert();
+	//
+	// lAutDao = new AutoritaEsternaDAO(lConn);
+	// lNotDao = new NotificaDAO(lConn);
+	//
+	// lEveRet.getEvento().setIdEvento(lKeyEvento);
+	//
+	// BigDecimal lKeyAutorita = null;
+	// int count = 0;
+	//
+	// if (aEvento != null && aEvento.getNotifiche() != null) {
+	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+	// // LogF3B.getLogger()
+	// siesLogger.debug("Presenti " + aEvento.getNotifiche().length + " notifiche");
+	//
+	// while (count < aEvento.getNotifiche().length) {
+	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+	// // LogF3B.getLogger()
+	// siesLogger.debug("Notifica[" + count + "] = " + aEvento.getNotifiche()[count]);
+	//
+	// if (aEvento.getNotifiche()[count] != null) {
+	//
+	// if (aEvento.getNotifiche()[count].getAutoritaEsterna() != null) {
+	// lAutDao.setRicercaByAutSede(aEvento.getNotifiche()[count].getAutoritaEsterna());
+	// AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
+	// lAutMod = (AutoritaEsternaModel) lAutDao.getModelByKey();
+	//
+	// if (lAutMod == null) {
+	// lAutDao.setDAOFromModel(aEvento.getNotifiche()[count].getAutoritaEsterna());
+	// lKeyAutorita = lAutDao.insert();
+	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger
+	// // al posto di LogF3B.getLogger()
+	// siesLogger.debug("Inserita AUTORITA con ID = " + lKeyAutorita);
+	// aEvento.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
+	// } else {
+	// lKeyAutorita = lAutMod.getIdAutoritaEsterna();
+	// aEvento.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
+	// }
+	// }
+	//
+	// aEvento.getNotifiche()[count].setEveIdEvento(lKeyEvento);
+	//
+	// lNotDao.setDAOFromModel(aEvento.getNotifiche()[count]);
+	// lNotDao.insert();
+	// lNotDao.stop();
+	//
+	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+	// // di LogF3B.getLogger()
+	// siesLogger.debug("Inserito evento" + lKeyEvento);
+	// }
+	// count++;
+	// }
+	// }
+	//
+	// lPenDao = new PenaResiduaDAO(lConn);
+	// // Inserisce Pena Residua
+	// PenaResiduaModel lPenMod = aPenaResidua;
+	// if (lPenMod != null) {
+	// lPenMod.setIdPenaResidua(null);
+	// lPenMod.setCodOperatoreAggiornamento(null);
+	// lPenMod.setDataAggiornamento(null);
+	// lPenMod.setCodUfficioAggiornamento(null);
+	//
+	// lPenMod.setFlagValidato("S");
+	// lPenMod.setEveIdEvento(lKeyEvento);
+	// lPenMod.setCodOperatoreInserimento(aEvento.getEvento().getCodOperatoreInserimento());
+	// lPenMod.setDataInserimento(DateUtils.getSysDate());
+	// lPenMod.setCodUfficioInserimento(aEvento.getEvento().getCodUfficioInserimento());
+	//
+	// lPenDao.setDAOFromModel(lPenMod);
+	// lPenDao.insert();
+	// lPenDao.stop();
+	// }
+	//
+	// /*
+	// * // Inserimento delle eventuali note aggiuntive. lCampoNotaDao = new CampoNotaDAO(lConn); if
+	// * (aEvento.getCampoNote() != null) { // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di
+	// * istanza siesLogger al posto di LogF3B.getLogger()
+	// * siesLogger.debug("Inserimento Eventuali Note Aggiuntive Numero note Aggiuntive : " +
+	// * aEvento.getCampoNote().length); count = 0; while (count < aEvento.getCampoNote().length) {
+	// * aEvento.getCampoNote()[count].setEveIdEvento(lKeyEvento);
+	// * aEvento.getCampoNote()[count].setProgressivo(new BigDecimal((double) count + 1));
+	// * lCampoNotaDao.setDAOFromModel(aEvento.getCampoNote()[count]); lCampoNotaDao.insert();
+	// * lCampoNotaDao.stop();
+	// *
+	// * count++; } }
+	// */
+	//
+	// commit(lConn);
+	// } catch (DAOException daoEx) {
+	// throw new F3BException("EventoController.ExInserisciEventoNotifica: " + daoEx);
+	// } catch (Exception ex) {
+	// throw new F3BException("EventoController.ExInserisciEventoNotifica: " + ex);
+	// } finally {
+	// // cleanup(lCampoNotaDao);
+	// cleanup(lEveDao);
+	// cleanup(lNotDao);
+	// cleanup(lAutDao);
+	// cleanup(lSqlDAO);
+	// cleanup(lPenDao);
+	// cleanup(lConn);
+	// }
+	//
+	// return lEveRet;
+	// }
 
 	/**
 	 * Restituisce l'elenco degli eventi che rispettano le condizioni passate con il model in input ordinati
@@ -726,7 +724,6 @@ public class EventoController extends SiapController implements IEvento {
 				lEventi.add(lAgg);
 			}
 			lEveDao.stop();
-
 		} catch (DAOException daoEx) {
 			throw new F3BException("EventoController.ExRicercaEventiPerMotivoTipoProvv: " + daoEx);
 		} catch (Exception e) {
@@ -995,6 +992,7 @@ public class EventoController extends SiapController implements IEvento {
 
 		// MEV_2023-13
 		CivilmenteObbligatoSqlDAO lCivilmenteObbSqlDao = null;
+		ResidenzaSqlDAO lResidenzaSqlDao = null;
 
 		try {
 			lEveDao = new EventoSqlDAO(lConn);
@@ -1115,10 +1113,20 @@ public class EventoController extends SiapController implements IEvento {
 					lCivilmenteObbSqlDao = new CivilmenteObbligatoSqlDAO(lConn);
 					lCivilmenteObbSqlDao.ricercaCivilmenteObbligatoByKey(
 							lEve.getNotifiche()[count].getIdCivilmenteObbligato());
-					CivilmenteObbligatoModel lObblogatoModel = (CivilmenteObbligatoModel) lCivilmenteObbSqlDao
+					CivilmenteObbligatoModel lObbligatoModel = (CivilmenteObbligatoModel) lCivilmenteObbSqlDao
 							.getModelByKey();
 
-					lEve.getNotifiche()[count].setCivilmenteObbligato(lObblogatoModel);
+					lEve.getNotifiche()[count].setCivilmenteObbligato(lObbligatoModel);
+
+					// 2023.12.11 Aggiungo la residenza
+					if (lObbligatoModel != null) {
+						lResidenzaSqlDao = new ResidenzaSqlDAO(lConn);
+						lResidenzaSqlDao.ricercaDomicilioCorrenteByIdCivilmenteObbligato(
+								lObbligatoModel.getIdCivilmenteObbligato());
+						ResidenzaModel lResidenza = (ResidenzaModel) lResidenzaSqlDao.getModelByKey();
+						if (lResidenza != null)
+							lObbligatoModel.setResidenza(lResidenza);
+					}
 				}
 
 				// Autorita Esterne Delegata
@@ -1172,6 +1180,7 @@ public class EventoController extends SiapController implements IEvento {
 			cleanup(lAvvSigeDao);
 
 			cleanup(lCivilmenteObbSqlDao); // MEV_2023-13
+			cleanup(lResidenzaSqlDao);
 		}
 		return lEve;
 	}
@@ -1332,7 +1341,6 @@ public class EventoController extends SiapController implements IEvento {
 					lEve.getNotifiche()[count].setCurSius(lCuratore);
 				}
 				count++;
-
 			}
 
 			lEve.setNotifiche((NotificaModel[]) lNotifiche.toArray(new NotificaModel[0]));
@@ -1457,14 +1465,12 @@ public class EventoController extends SiapController implements IEvento {
 					lEve.getNotifiche()[count].setIstitutoDetenzione(lIstituto);
 					lIstDao.stop();
 				} // fine modifica relativa al tipo istituto
-
 			}
 
 			// Campi note
 			lCampoNotaSqlDao.ricercaCampoNotaByKeyEvento(aEventoKey);
 			Vector lCampiNote = new Vector(lCampoNotaSqlDao.getModels());
 			lEve.setCampoNote((CampoNotaModel[]) lCampiNote.toArray(new CampoNotaModel[0]));
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"EventoController.ExRicercaEventoNotificaByKeyForRichiestaAtti: Non posso leggere : "
@@ -1565,7 +1571,6 @@ public class EventoController extends SiapController implements IEvento {
 			lNotDao.ricercaNotificaByEvento(aEventoKey);
 			Vector lNotifiche = new Vector(lNotDao.getModels());
 			lEve.setNotifiche((NotificaModel[]) lNotifiche.toArray(new NotificaModel[0]));
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -1616,10 +1621,6 @@ public class EventoController extends SiapController implements IEvento {
 
 			if (lEventi.size() == 0)
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
-
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			// siesLogger.debug("Evento = " + lEve);
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"EventoController.ExRicercaEventoNotificaByFascicoloSiep: Non posso leggere : " + daoEx);
@@ -1660,7 +1661,6 @@ public class EventoController extends SiapController implements IEvento {
 
 			if (lEventi.size() == 0)
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"EventoController.ExRicercaEventoNotificaByFascicoloSiep: Non posso leggere : " + daoEx);
@@ -1692,18 +1692,10 @@ public class EventoController extends SiapController implements IEvento {
 		try {
 			lConn = getDBConnection();
 			lEveDao = new EventoSqlDAO(lConn);
-			// lNotDao = new NotificaAutoritaSqlDAO(lConn);
-
 			lEveDao.ricercaEventoByFascicoloSiepProvvSiusAsc(aFascKey);
-
 			lEventi = new Vector(lEveDao.getModels());
-
 			if (lEventi.size() == 0)
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
-
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			// siesLogger.debug("Evento = " + lEve);
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"EventoController.ExRicercaEventoNotificaByFascicoloSiep: Non posso leggere : " + daoEx);
@@ -1739,14 +1731,10 @@ public class EventoController extends SiapController implements IEvento {
 		try {
 			lConn = getDBConnection();
 			lEveDao = new EventoSqlDAO(lConn);
-
 			lEveDao.ricercaEventoXCFC(aFascKey, aTipoEvento, strCodTipoUfficio);
-
 			lEventi = new Vector(lEveDao.getModels());
-
 			// Individuazione della presenza di documenti allegati
 			lEventi = RicercaNumAllegati(lEventi, lConn, "06");
-
 		} catch (DAOException daoEx) {
 			throw new F3BException("EventoController.ExRicercaEventoXCFC: Non posso leggere : " + daoEx);
 		} catch (SQLException sqe) {
@@ -1778,14 +1766,10 @@ public class EventoController extends SiapController implements IEvento {
 		try {
 			lConn = getDBConnection();
 			lEveDao = new EventoSqlDAO(lConn);
-
 			lEveDao.ricercaEventoByFascicoloSius(aFascKey, aTipoEvento);
-
 			lEventi = new Vector(lEveDao.getModels());
-
 			// Individuazione della presenza di documenti allegati
 			lEventi = RicercaNumAllegati(lEventi, lConn, null);
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"EventoController.ExRicercaEventoByFascicoloSius: Non posso leggere : " + daoEx);
@@ -1815,20 +1799,15 @@ public class EventoController extends SiapController implements IEvento {
 
 		Connection lConn = null;
 		EventoSqlDAO lEveDao = null;
-		// EventoNotificaModel lEve = null;
 		Vector lEventi = null;
 
 		try {
 			lConn = getDBConnection();
 			lEveDao = new EventoSqlDAO(lConn);
-
 			lEveDao.ricercaEventoByFascEsitoParereInamm(aFascKey, aTipoEvento);
-
 			lEventi = new Vector(lEveDao.getModels());
-
 			// Individuazione della presenza di documenti allegati
 			lEventi = RicercaNumAllegati(lEventi, lConn, null);
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"EventoController.ExRicercaEventoByFascEsitoParereInamm: Non posso leggere : " + daoEx);
@@ -1857,20 +1836,13 @@ public class EventoController extends SiapController implements IEvento {
 
 		Connection lConn = null;
 		EventoSqlDAO lEveDao = null;
-		// EventoNotificaModel lEve = null;
 		Vector lEventi = null;
 
 		try {
 			lConn = getDBConnection();
 			lEveDao = new EventoSqlDAO(lConn);
-
 			lEveDao.ricercaAltroEventoByFascicoloSius(aFascKey, aTipoEvento);
-
 			lEventi = new Vector(lEveDao.getModels());
-
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			// siesLogger.debug("Evento = " + lEve);
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -1904,10 +1876,8 @@ public class EventoController extends SiapController implements IEvento {
 		try {
 			lConn = getDBConnection();
 			lEveDao = new EventoSqlDAO(lConn);
-
 			lEveDao.ricercaEvento(aEvento);
 			lEventi = new Vector(lEveDao.getModels());
-
 			// Individuazione della presenza di documenti allegati e della data di deposito
 			lEventi = RicercaNumAllegati(lEventi, lConn, null);
 		} catch (Exception e) {
@@ -2064,9 +2034,7 @@ public class EventoController extends SiapController implements IEvento {
 			cleanup(lStatoSqlDao);
 
 			cleanup(lConn);
-
 		}
-
 	}
 
 	/*
@@ -2258,7 +2226,6 @@ public class EventoController extends SiapController implements IEvento {
 
 			commit(lConn);
 
-			//
 			EventoNotificaModel lEveNotMod = new EventoNotificaModel();
 			lEveNotMod.setEvento(aEvento);
 
@@ -2273,7 +2240,6 @@ public class EventoController extends SiapController implements IEvento {
 			throw new F3BException("EventoController.ExConfermaTrasferisciIstanza: " + ex);
 		} catch (Exception ex) {
 			rollback(lConn);
-
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("Exception: " + ex);
@@ -2304,9 +2270,7 @@ public class EventoController extends SiapController implements IEvento {
 
 		try {
 			lConn = getDBConnection();
-
 			lEveDao = new EventoDAO(lConn);
-
 			lEveDao.setDAOFromModelForUpdate(aEvento);
 			lEveDao.update();
 
@@ -2500,6 +2464,10 @@ public class EventoController extends SiapController implements IEvento {
 				}
 			}
 
+			// MEV_2023-33: aggiunto ricalcolo della pena
+			if ("1312".equals(lEveModel.getCodMotivo()) || "1313".equals(lEveModel.getCodMotivo()))
+				ricalcoloPena(lConn, lEveModel.getFasSieIdFascicoloSiep());
+
 			commit(lConn);
 		} catch (DAOException daoEx) {
 			rollback(lConn);
@@ -2513,6 +2481,33 @@ public class EventoController extends SiapController implements IEvento {
 			cleanup(lConn);
 		}
 		return lEveMod;
+	}
+
+	/**
+	 * @author sgioggi
+	 * @since MEV_2023-33
+	 *
+	 *        Metodo privato che esegue il ricalcolo della pena solo per: 1312 Al Mds per l'esecuzione di pene
+	 *        sostitutive 1313 Al Mds per l'esecuzione di pene sostitutive a seguito restituzione
+	 *
+	 * @param lConn
+	 * @param idFascicoloSiep
+	 * @throws Exception
+	 */
+	private void ricalcoloPena(Connection lConn, BigDecimal idFascicoloSiep) throws Exception {
+
+		PenaResiduaSqlDAO prsdao = null;
+
+		PenaResiduaModel prm = null;
+
+		try {
+			prsdao = new PenaResiduaSqlDAO(lConn);
+			prsdao.ricercaPenaResiduaByIdFascicoloDataDesc(idFascicoloSiep);
+			prm = (PenaResiduaModel) prsdao.getModelByKey();
+			prsdao.inserisciOModificaPenaResidua(prm);
+		} finally {
+			cleanup(prsdao);
+		}
 	}
 
 	/**
@@ -2576,7 +2571,6 @@ public class EventoController extends SiapController implements IEvento {
 
 			if ((lByteArrayOut == null) || (lByteArrayOut.size() == 0))
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Documento Associato");
-
 		} catch (F3BException eF3b) {
 			throw eF3b;
 		} catch (Exception e) {
@@ -2608,7 +2602,6 @@ public class EventoController extends SiapController implements IEvento {
 				throw new F3BException(F3BException.USER_MESSAGE,
 						"Ordine Esecuzione non applicato per il fascicolo");
 			}
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"EventoController.ExRicercaEventoByFascicoloSiepDecretoSospensione: " + daoEx);
@@ -2638,10 +2631,8 @@ public class EventoController extends SiapController implements IEvento {
 			lDao.ricercaOrdineEsecuzioneByIdFascicoloDecretoSospensione(aIdFascicolo);
 			lEvento = (EventoModel) lDao.getModelByKey();
 		} catch (DAOException daoEx) {
-
 			throw new F3BException("EventoController.ExRicercaEventoByFascicoloSiepOESospensione: " + daoEx);
 		} catch (Exception e) {
-
 			throw new F3BException("EventoController.ExRicercaEventoByFascicoloSiepOESospensione: " + e);
 		} finally {
 			cleanup(lDao);
@@ -2673,7 +2664,6 @@ public class EventoController extends SiapController implements IEvento {
 
 			lDao.ricercaEventoTipoMotProvEveDocReg(aModel);
 			lEvento = (EventoModel) lDao.getModelByKey();
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"EventoController.ExRicercaEventoByFascicoloSiepDecretoSospensione: " + daoEx);
@@ -2786,7 +2776,6 @@ public class EventoController extends SiapController implements IEvento {
 			if (lEvento.size() == 0) {
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
 			}
-
 		} catch (DAOException daoEx) {
 			throw new F3BException("EventoController.ExRicercaEsecuzioneByFascicoloSiep: " + daoEx);
 		} catch (F3BException fe) {
@@ -3080,7 +3069,6 @@ public class EventoController extends SiapController implements IEvento {
 			lEveDao = new EventoSqlDAO(lConn);
 			lEveDao.ricercaEventoByDataInserimentoUguale(lEveModel);
 			lEveMod = (EventoModel) lEveDao.getModelByKey();
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"EventoController.ExRicercaEventoByDataInserimentoUguale: Non posso leggere : " + daoEx);
@@ -3317,11 +3305,10 @@ public class EventoController extends SiapController implements IEvento {
 	}
 
 	/**
-	 * Estrae il BLOB dall'EVENTO e lo restituisce come Byte Array.
+	 * Estrae il BLOB dall'EVENTO e lo restituisce come Byte Array
 	 *
 	 * @param aIdEvento
-	 *            ,
-	 * @return byte[].
+	 * @return byte[]
 	 * @throws F3BException
 	 */
 	public byte[] ExGetDocPerTrasferimento(BigDecimal aIdEvento) throws F3BException {
@@ -3346,7 +3333,6 @@ public class EventoController extends SiapController implements IEvento {
 
 			if (lByteArrayOut != null && lByteArrayOut.size() > 0)
 				lDocPerTrasferimento = lByteArrayOut.toByteArray();
-
 		} catch (Exception e) {
 			throw new F3BException(F3BException.EX_OPERATION_FAILED, e.toString());
 		} finally {
@@ -3885,17 +3871,13 @@ public class EventoController extends SiapController implements IEvento {
 
 		try {
 			lConn = getDBConnection();
-
 			lEveDao = new EventoSqlDAO(lConn);
-
 			lEveDao.ricercaEventiNOTAnnullati(aIdFascicolo, aMotivo, aTipoProvv, aTipoEve);
-
 			lEventi = new ArrayList(lEveDao.getModels());
 		} catch (Exception exc) {
 			throw new F3BException("EventoController.ExRicercaEventiNOTAnnullati : " + exc);
 		} finally {
 			cleanup(lEveDao);
-
 			cleanup(lConn);
 		}
 
@@ -4200,25 +4182,18 @@ public class EventoController extends SiapController implements IEvento {
 				}
 			}
 
-			// commit(lConnBlob);
 			commit(lConn);
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
 			rollback(lConn);
-			// rollback(lConnBlob);
-
 			daoEx.printStackTrace();
-
 			throw new F3BException("EventoController.ExUpdateValidaProvvedimento 1 : " + daoEx);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + ex);
 			rollback(lConn);
-			// rollback(lConnBlob);
-
 			ex.printStackTrace();
-
 			throw new F3BException("EventoController.ExUpdateValidaRichiesta : 3 " + ex);
 		} finally {
 			cleanup(lEveDao);
@@ -4231,7 +4206,6 @@ public class EventoController extends SiapController implements IEvento {
 			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
 			cleanup(lEveSqlDao);
 			cleanup(lConn);
-			// cleanup(lConnBlob);
 		}
 
 		return aEvento;
@@ -4517,7 +4491,6 @@ public class EventoController extends SiapController implements IEvento {
 				lUdiProDao.setFlagRinviata("A");
 				lUdiProDao.update();
 				lUdiProDao.stop();
-				// ---//
 
 				// Rilegge il record dell'udienza procedimento appena modificato, al fine di recuperare
 				// l'id procedimento necessario per il recupero del record precedente
@@ -4532,7 +4505,6 @@ public class EventoController extends SiapController implements IEvento {
 					lIdGenPro = lUdiProDao.getGenPridGeneraleProcedimento();
 
 				lUdiProDao.stop();
-				// ---//
 
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
@@ -4595,8 +4567,6 @@ public class EventoController extends SiapController implements IEvento {
 				lGenProDao.setCondizioneUpdate(lIdGenPro);
 				lGenProDao.update();
 				lGenProDao.stop();
-				// ---//
-
 			}
 
 			// Ricerca il documento (Foglio Complementare) allegato all'evento,
@@ -4609,7 +4579,7 @@ public class EventoController extends SiapController implements IEvento {
 					aCampoNota.getEveIdEvento(), "06");
 			DocumentoAllegatoModel lDocAll = (DocumentoAllegatoModel) lDocAllSqlDAO.getModelByKey();
 			if (lDocAll != null) {
-				// TODO setto il campo DATA_ANNULLAMENTO uguale ad sysdate in SiesEsecuzione
+				// TODO setto il campo DATA_ANNULLAMENTO uguale a sysdate in SiesEsecuzione
 				// lDocAll.setDataAnnullamento(DateUtils.getSysDate());
 				lDocAll.setMotivoAnnullamento(aCampoNota.getDescr());
 
@@ -4621,7 +4591,6 @@ public class EventoController extends SiapController implements IEvento {
 				lDocAllDAO.setDAOFromModelForUpdate(lDocAll);
 				lDocAllDAO.setCondizioneUpdate(lDocAll.getIdDocumentoAllegato());
 				lDocAllDAO.update();
-
 			}
 
 			commit(lConn);
@@ -5022,7 +4991,7 @@ public class EventoController extends SiapController implements IEvento {
 	}
 
 	/**
-	 * // intervento per MEV 64- AVVOCATURA (anche in stampa devono apparire solo le ordinanze/decreti
+	 * intervento per MEV 64 - AVVOCATURA (anche in stampa devono apparire solo le ordinanze/decreti
 	 * depositati)
 	 *
 	 * @param aEventi
@@ -5047,7 +5016,6 @@ public class EventoController extends SiapController implements IEvento {
 				lEveDao = new EventoSqlDAO(aConn);
 				int lnum = -1;
 				int lNumValidati = -1;
-				// EventoModel lEventoDep = null;
 
 				// Model Esteso e Nuovo Vector
 				EventoDepositoModel lEventoDep = null;
@@ -5107,7 +5075,7 @@ public class EventoController extends SiapController implements IEvento {
 	 *
 	 * @param aEvento
 	 *            : contiene le condizioni di filtro della Ricerca
-	 * @return Vector lEventi : elenco di EventoDepositoModel.
+	 * @return Vector lEventi : elenco di EventoDepositoModel
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaProvvedimentiConDataDeposito(EventoModel aEvento) throws F3BException {
@@ -5158,6 +5126,95 @@ public class EventoController extends SiapController implements IEvento {
 		} finally {
 			cleanup(lEveDao);
 			cleanup(lConn);
+		}
+	}
+
+	/**
+	 * Aggiunto metodo di modifica evento e notifiche
+	 * 
+	 * @author 	sgioggi
+	 * @since	MEV_2023-33
+	 */
+	@Override
+	public void ExModificaEventoNotifiche(EventoNotificaModel enm) throws F3BException {
+
+		Connection c = null;
+
+		EventoDAO edao = null;
+		NotificaDAO ndao = null;
+		AutoritaEsternaDAO aedao = null;
+
+		try {
+			c = getDBConnection();
+
+			// aggiorno l'evento
+			edao = new EventoDAO(c);
+			edao.setDAOFromModelForUpdate(enm.getEvento());
+			edao.update();
+
+			// prima cancello le notifiche e poi le inserisco nuovamente
+			ndao = new NotificaDAO(c);
+			ndao.setCondizioneEvento(enm.getEvento().getIdEvento());
+			ndao.delete();
+			// ============================================
+			// Inserisco le Notifiche collegate all'evento
+			// ============================================
+			int count = 0;
+			aedao = new AutoritaEsternaDAO(c);
+			BigDecimal idAutorita = null;
+			if (enm != null && enm.getNotifiche() != null) {
+				siesLogger.debug("Presenti " + enm.getNotifiche().length + " notifiche");
+				while (count < enm.getNotifiche().length) {
+					siesLogger.debug("count = " + count);
+					siesLogger.debug("Notifica[" + count + "] = " + enm.getNotifiche()[count]);
+					if (enm.getNotifiche()[count] != null) {
+						// Se è stata specificata anche l'autorità esterna per l'avvocato,
+						// recupero l'id da inserire nella notifica
+						// n.b. se autorità non presente la creo
+						if (enm.getNotifiche()[count].getAutoritaEsterna() != null) {
+							// Provo a verificare se a sistema (tab AUTORITA_ESTERNA) esiste
+							// già l'autorità esterna specificata nella form (dalla form ho solo
+							// codice e sede)
+							aedao.setRicercaByAutSede(
+									enm.getNotifiche()[count].getAutoritaEsterna());
+							AutoritaEsternaModel aem = new AutoritaEsternaModel();
+							aem = (AutoritaEsternaModel) aedao.getModelByKey();
+							if (aem == null) { // non esiste, la inserisco (n.b. ho solo tipo e sede)
+								aedao.setDAOFromModel(
+										enm.getNotifiche()[count].getAutoritaEsterna());
+								idAutorita = aedao.insert();
+								enm.getNotifiche()[count].setAutEstIdAutoritaEsterna(idAutorita);
+							} else {
+								idAutorita = aem.getIdAutoritaEsterna();
+								enm.getNotifiche()[count].setAutEstIdAutoritaEsterna(idAutorita);
+							}
+						}
+						enm.getNotifiche()[count].setEveIdEvento(enm.getEvento().getIdEvento());
+						ndao = new NotificaDAO(c);
+						ndao.setDAOFromModel(enm.getNotifiche()[count]);
+						BigDecimal idNotifica = ndao.insert();
+						ndao.stop();
+						siesLogger.debug("Inserita Notifica con ID = " + idNotifica);
+					}
+					count++;
+				}
+			}
+
+			commit(c);
+		} catch (DAOException ex) {
+			siesLogger.error("EventoController.ExModificaEventoNotifiche --> Eccezione DAO: ", ex);
+			rollback(c);
+			throw new F3BException("EventoController.ExModificaEventoNotifiche: " + ex);
+		} catch (Exception ex) {
+			siesLogger.error("EventoController.ExModificaEventoNotifiche --> Eccezione Generica: ", ex);
+			rollback(c);
+			throw new F3BException("EventoController.ExModificaEventoNotifiche: " + ex);
+		} finally {
+			cleanup(edao);
+			cleanup(ndao);
+			cleanup(aedao);
+
+			cleanup(c);
 		}
 	}
 

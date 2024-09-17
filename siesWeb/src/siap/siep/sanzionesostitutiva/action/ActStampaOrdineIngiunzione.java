@@ -2,6 +2,7 @@ package siap.siep.sanzionesostitutiva.action;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -10,6 +11,8 @@ import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
 import f3b.web.IWebConstants;
+import siap.sico.decodifiche.controller.IDecodifiche;
+import siap.sico.decodifiche.model.DecodificheModel;
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoModel;
@@ -21,6 +24,8 @@ import siap.sico.utente.model.UtenteModel;
 import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
+import siap.siep.posizione.controller.IPosizioneGiuridica;
+import siap.siep.posizione.model.PosizioneGiuridicaLuogoDetenzioneAltraCausaModel;
 import siap.siep.rateizzazionepp.controller.IRateizzazionePP;
 import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 import siap.siep.util.SIEPLookupRemote;
@@ -33,8 +38,9 @@ import siap.siep.util.SIEPLookupRemote;
  */
 public class ActStampaOrdineIngiunzione extends ActionSiap {
 
-	private static Logger siesLogger = Logger.getLogger(LogF3B.WS_PAGO_PA_LOG);
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
+	@SuppressWarnings("unchecked")
 	public String processRequest() throws F3BException {
 
     	// info per il log
@@ -53,6 +59,55 @@ public class ActStampaOrdineIngiunzione extends ActionSiap {
 		IEvento lCtrl = SICOLookupRemote.getEventoRemote();
 		EventoModel lEventoModel = lCtrl.ExRicercaEventoByKey(lIdEvento);
 
+		// MEV33 - Differenziati i template per "LIBERO" e "DETENUTO"
+		// flagTemplate:
+		//  - 0 = rata unica           LIBERO
+		//  - 1 = pagamento rateizzato LIBERO
+		//  - 2 = rata unica           DETENUTO
+		//  - 3 = pagamento rateizzato DETENUTO
+		boolean isLibero = false;
+		// Recupero la POG
+		// Posizione giuridica
+		PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lPos = new PosizioneGiuridicaLuogoDetenzioneAltraCausaModel();
+		IPosizioneGiuridica lPosCtrl = SIEPLookupRemote.getPosizioneGiuridicaRemote();
+		lPos = lPosCtrl.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicolo(
+				lFascicoloModel.getIdFascicoloSiep());		
+		String lCodPG = lPos.getPosizioneGiuridica().getCodPosizioneGiuridica();
+		
+		IDecodifiche lDecodifiche = SICOLookupRemote.getDecodificheRemote();
+		DecodificheModel lModel = new DecodificheModel();
+		lModel.setContesto("POSIZIONE_GIURIDICA");
+		
+		Collection <DecodificheModel> listaPg = lDecodifiche.ExRicercaDecodifiche(lModel);
+		siesLogger.debug("listaPg.size() = "+listaPg.size());
+		
+		for (DecodificheModel docode : listaPg) {
+			if (docode.getCode().equals(lCodPG)) {
+				if ("EI".equals(docode.getCodiceAlt5()))
+					isLibero = false;
+				else
+					isLibero = true;
+
+				siesLogger.debug("isLibero = "+isLibero);
+				
+				break;
+			}
+		}
+		
+		IRateizzazionePP lCtrlRate = SIEPLookupRemote.getRateizzazionePPRemote();
+		Vector<RateizzazionePPModel> listaRateEvento = lCtrlRate.exRicercaRateizzazioniByIdEvento(lIdEvento);
+		String flagTemplate = "0";
+		if ("U".equals(listaRateEvento.elementAt(0).getTipoRateizzazione())) {
+			if (isLibero) flagTemplate = "0";
+			else flagTemplate = "2";
+		}
+		else if ("R".equals(listaRateEvento.elementAt(0).getTipoRateizzazione())) {
+			if (isLibero) flagTemplate = "1";
+			else flagTemplate = "3";
+		}
+
+		
+		/*
 		String flagTemplate = "0"; // 0 = rata unica, 1 = pagamento rateizzato
 		IRateizzazionePP lCtrlRate = SIEPLookupRemote.getRateizzazionePPRemote();
 		Vector<RateizzazionePPModel> listaRateEvento = lCtrlRate.exRicercaRateizzazioniByIdEvento(lIdEvento);
@@ -60,7 +115,9 @@ public class ActStampaOrdineIngiunzione extends ActionSiap {
 			flagTemplate = "0";
 		else if ("R".equals(listaRateEvento.elementAt(0).getTipoRateizzazione()))
 			flagTemplate = "1";
-
+		*/
+		// FINE - MEV33
+		
 		// ==========================================================================
 		// Recupero il template
 		// ==========================================================================

@@ -22,7 +22,7 @@ public class ServiziInvioPagamentiTelematiciBeanServiceLocator extends org.apach
     }
 
     // Use to get a proxy class for ServiziInvioPagamentiTelematiciSOAPPort
-    private java.lang.String ServiziInvioPagamentiTelematiciSOAPPort_address = "http://test-pst/servizi/ServiziInvioPagamentiTelematici";
+    private java.lang.String ServiziInvioPagamentiTelematiciSOAPPort_address = "http://sdm-pst/servizi/ServiziInvioPagamentiTelematici";
 
     public java.lang.String getServiziInvioPagamentiTelematiciSOAPPortAddress() {
         return ServiziInvioPagamentiTelematiciSOAPPort_address;

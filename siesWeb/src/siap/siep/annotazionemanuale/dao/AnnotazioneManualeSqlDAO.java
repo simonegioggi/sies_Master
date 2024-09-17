@@ -4,34 +4,18 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Date;
 
-import org.apache.log4j.Logger;
-
-import siap.siep.annotazionemanuale.model.AnnotazioneManualeModel;
 import f3b.dao.DAOException;
 import f3b.dao.SqlDAO;
-import f3b.log.LogF3B;
 import f3b.model.GenericModel;
 import f3b.util.DateUtils;
+import siap.siep.annotazionemanuale.model.AnnotazioneManualeModel;
 
 /**
- * <p>
- * Title: AnnotazioneManualeSqlDAO
- * </p>
- * <p>
- * Description: Classe SqlDAO che rappresenta la tabella AnnotazioneManuale
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ * Title: AnnotazioneManualeSqlDAO Description: Classe SqlDAO che rappresenta la tabella AnnotazioneManuale
+ *
  * @version 1.0
  */
 public class AnnotazioneManualeSqlDAO extends SqlDAO {
-	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
-	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	public AnnotazioneManualeSqlDAO(Connection con) {
 		super(con);
@@ -60,7 +44,7 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 
 	/**
 	 * Ricerca TUTTE le annotazioni manuali legate al fascicolo indipendentemente dallo stato di validazione
-	 * 
+	 *
 	 * @param aKey
 	 * @throws DAOException
 	 */
@@ -79,7 +63,8 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 	 * @param aKey
 	 * @throws DAOException
 	 */
-	public void ricercaAnnotazioneManualeByIdFascicoloPerStatoEsecuzione(BigDecimal aKey) throws DAOException {
+	public void ricercaAnnotazioneManualeByIdFascicoloPerStatoEsecuzione(BigDecimal aKey)
+			throws DAOException {
 		String lSql = getSqlQuery();
 
 		lSql += " AND FAS_SIE_ID_FASCICOLO_SIEP=" + aKey + " ORDER BY EVE_ID_EVENTO";
@@ -131,7 +116,7 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 	 * passato in input (se specificato) - Presofferto Altro Reato (005-Pena Espiata per lo Stesso Titolo) -
 	 * Fungibilità altro Reato - Misura Cautelare (006-Pena Espiata per Altro Titolo) - Pena Detentiva
 	 * (007-Pena Espiata Senza Titolo) - Altro (014-Altro)
-	 * 
+	 *
 	 * - Computi iscritti RES (evento '0162' di rideterminazione pena con cod tipo annotazione ='-'))
 	 *
 	 * E' possibile specificare anche un solo estremo dell'intervallo.
@@ -148,11 +133,8 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 		// La select va in join con la tabella evento per recuperare solo le
 		// annotazioni associate ad eventi validati (eventualmente non periodo
 		// specificato in input)
-		lStatement += " SELECT "
-				+ " AM.ID_ANNOTAZIONE_MANUALE, "
-				+ " AM.ANNO_ID_ANNOTAZIONE_MANUALE, "
-				+ " AM.COD_TIPO_ANNOTAZIONE,null DESCR_TIPO, "
-				+ " AM.FLAG_PIU_MENO, "
+		lStatement += " SELECT " + " AM.ID_ANNOTAZIONE_MANUALE, " + " AM.ANNO_ID_ANNOTAZIONE_MANUALE, "
+				+ " AM.COD_TIPO_ANNOTAZIONE,null DESCR_TIPO, " + " AM.FLAG_PIU_MENO, "
 				+ " AM.NUM_ANNI_RECLUSIONE, AM.NUM_MESI_RECLUSIONE, AM.NUM_GIORNI_RECLUSIONE, AM.IMPORTO_MULTA, "
 				+ " AM.NUM_ANNI_ARRESTO, AM.NUM_MESI_ARRESTO, AM.NUM_GIORNI_ARRESTO, AM.IMPORTO_AMMENDA, "
 				+ " AM.DATA_ARRESTO_DA, AM.DATA_ARRESTO_A, "
@@ -172,8 +154,7 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 				+ " AM.FLAG_VALIDATO, " + " AM.FLAG_CONFORME, " + " AM.FLAG_APP_PROVVISORIA, "
 				+ " AM.PEN_RES_ID_PENA_RESIDUA, " + " AM.FUN_ID_FUNGIBILITA, " + " AM.DATA_RICHIESTA, "
 				+ " AM.DATA_CC, " + " AM.DATA_GE, "
-				+ " AM.ANNO_SENTENZA_SIAP, AM.NUMERO_SENTENZA_SIAP, AM.DATA_SENTENZA_SIAP, "
-				+
+				+ " AM.ANNO_SENTENZA_SIAP, AM.NUMERO_SENTENZA_SIAP, AM.DATA_SENTENZA_SIAP, " +
 				// 07_2015 MEV29 punto 11 - Anno e Numero procedimento SIGE
 				" AM.ANNO_SIGE, AM.NUMERO_SIGE, " + " AM.FLAG_COMPUTABILE, " + " AM.SEN_ID_SENTENZA, "
 				+ " AM.TEN_ID_TENORE_SIGE, " + " FLAG_SEL_QUANTUM, " + " AM.FLG_BENEFICIO_DETRATTO ";
@@ -202,7 +183,8 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 		// su GENOVA fino a gennaio 2006 hanno utilizzato 04 e non 12
 		// Paolo Cherubini 04/5/2011 aggiungo computo di annotazione da richiesta conversione pena pecuniaria
 		// lStatement +=
-		// "           (evento.COD_TIPO_EVENTO='01' AND evento.COD_TIPO_PROVVEDIMENTO in ('12','04') AND evento.COD_MOTIVO in ('0913','0914','0915','0916')) ";
+		// " (evento.COD_TIPO_EVENTO='01' AND evento.COD_TIPO_PROVVEDIMENTO in ('12','04') AND
+		// evento.COD_MOTIVO in ('0913','0914','0915','0916')) ";
 		lStatement += "           (evento.COD_TIPO_EVENTO='01' AND evento.COD_TIPO_PROVVEDIMENTO in ('12','04') AND evento.COD_MOTIVO in ('0913','0914','0915','0916','0942')) ";
 
 		// Computo Altro Nuovo v4.0 (RV_HIGH_VALUE = RIDPE_UFF o RIDPE_AUFF)
@@ -211,8 +193,8 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 										// 1007 (nuovo)
 		lStatement += "           (evento.COD_TIPO_EVENTO='01' AND evento.COD_TIPO_PROVVEDIMENTO = '25' "
 				+ "AND evento.COD_MOTIVO in ('0948','0949','0950','0951','0952','0953','0954','0955','0956','0957','0958','0959','1007',"
-				+ "'0999','1000','1003','1004','1005','1006', "  // aggiunti da Paolo Cherubini 27/09/2011
-				+ "'0987', '0988'))  "; // aggiunti codici 0987 e 0988 per ticket 20191210013 
+				+ "'0999','1000','1003','1004','1005','1006', " // aggiunti da Paolo Cherubini 27/09/2011
+				+ "'0987', '0988'))  "; // aggiunti codici 0987 e 0988 per ticket 20191210013
 
 		// MEV27 07/2015 computi derivanti da conversione sanzione sostitutiva
 		lStatement += "        OR ";
@@ -238,9 +220,6 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 					+ DateUtils.getDateToString(aDataAl, "dd/MM/yyyy HH:mm:ss")
 					+ "','dd/MM/yyyy hh24:mi:ss')";
 		}
-
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-		siesLogger.debug("lStatement" + lStatement);
 
 		setStatement(lStatement);
 	}
@@ -279,11 +258,8 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 		// ma la comunicazione non viene legata al provvedimento di concessione, (manca eve_id_evento)
 		// per cui per conoscere quando è avvenuta la validazione è possibile
 		// solo lavorare sul provvedimento di concessione.
-		lStatement += " SELECT "
-				+ " AM.ID_ANNOTAZIONE_MANUALE, "
-				+ " AM.ANNO_ID_ANNOTAZIONE_MANUALE, "
-				+ " AM.COD_TIPO_ANNOTAZIONE,null DESCR_TIPO, "
-				+ " AM.FLAG_PIU_MENO, "
+		lStatement += " SELECT " + " AM.ID_ANNOTAZIONE_MANUALE, " + " AM.ANNO_ID_ANNOTAZIONE_MANUALE, "
+				+ " AM.COD_TIPO_ANNOTAZIONE,null DESCR_TIPO, " + " AM.FLAG_PIU_MENO, "
 				+ " AM.NUM_ANNI_RECLUSIONE, AM.NUM_MESI_RECLUSIONE, AM.NUM_GIORNI_RECLUSIONE, AM.IMPORTO_MULTA, "
 				+ " AM.NUM_ANNI_ARRESTO, AM.NUM_MESI_ARRESTO, AM.NUM_GIORNI_ARRESTO, AM.IMPORTO_AMMENDA, "
 				+ " AM.DATA_ARRESTO_DA, AM.DATA_ARRESTO_A, "
@@ -303,8 +279,7 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 				+ " AM.FLAG_VALIDATO, " + " AM.FLAG_CONFORME, " + " AM.FLAG_APP_PROVVISORIA, "
 				+ " AM.PEN_RES_ID_PENA_RESIDUA, " + " AM.FUN_ID_FUNGIBILITA, " + " AM.DATA_RICHIESTA, "
 				+ " AM.DATA_CC, " + " AM.DATA_GE, "
-				+ " AM.ANNO_SENTENZA_SIAP, AM.NUMERO_SENTENZA_SIAP, AM.DATA_SENTENZA_SIAP, "
-				+
+				+ " AM.ANNO_SENTENZA_SIAP, AM.NUMERO_SENTENZA_SIAP, AM.DATA_SENTENZA_SIAP, " +
 				// 07_2015 MEV29 punto 11 - Anno e Numero procedimento SIGE
 				" AM.ANNO_SIGE, AM.NUMERO_SIGE, " + " AM.FLAG_COMPUTABILE, " + " AM.SEN_ID_SENTENZA, "
 				+ " AM.TEN_ID_TENORE_SIGE, " + " AM.FLAG_SEL_QUANTUM, " + " AM.FLG_BENEFICIO_DETRATTO ";
@@ -312,7 +287,7 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 		lStatement += " WHERE AM.FAS_SIE_ID_FASCICOLO_SIEP = " + aKey;
 		lStatement += "   AND AM.EVE_ID_EVENTO = evento.ID_EVENTO "; // join con il provvedimento
 		// MEV 37 - inizio
-		// lStatement += "   AND AM.COD_TIPO_ANNOTAZIONE in ('002','003','004','013') ";
+		// lStatement += " AND AM.COD_TIPO_ANNOTAZIONE in ('002','003','004','013') ";
 		lStatement += "   AND AM.COD_TIPO_ANNOTAZIONE in ('002','003','004','013','017') ";
 		// MEV 37 - Fine
 		lStatement += "   AND AM.FLAG_APP_PROVVISORIA = '-' "; // solo le decisioni
@@ -325,7 +300,7 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 		// legate a una richiesta, ma non bisogna nemmeno considerare le decisioni
 		// altrimenti si revocano due volte.
 		lStatement += "   AND AM.FLAG_COMPUTABILE = 'S' "; //
-		// lStatement += "   AND AM.FLAG_CONFORME not in ('R','I','U') ";
+		// lStatement += " AND AM.FLAG_CONFORME not in ('R','I','U') ";
 		// Attenzione! Verificare se è corretto mettere il filtro sull'evento che
 		// limita la generalità della select è comporta il suo aggiornamento in caso
 		// di modifica/aggiunta dei codici evento
@@ -357,7 +332,8 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 			lStatement += "      ( ";
 			if (aDataDal != null) {
 				// lStatement +=
-				// "      evento.DATA_AGGIORNAMENTO > to_date ('"+DateUtils.getDateToString(aDataDal,"dd/MM/yyyy HH:mm:ss")+"','dd/MM/yyyy hh24:mi:ss')";
+				// " evento.DATA_AGGIORNAMENTO > to_date ('"+DateUtils.getDateToString(aDataDal,"dd/MM/yyyy
+				// HH:mm:ss")+"','dd/MM/yyyy hh24:mi:ss')";
 				lStatement += "      evento.DATA_INSERIMENTO > to_date ('"
 						+ DateUtils.getDateToString(aDataDal, "dd/MM/yyyy HH:mm:ss")
 						+ "','dd/MM/yyyy hh24:mi:ss')";
@@ -367,7 +343,8 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 					lStatement += " AND";
 				}
 				// lStatement +=
-				// "      evento.DATA_AGGIORNAMENTO <= to_date ('"+DateUtils.getDateToString(aDataAl,"dd/MM/yyyy HH:mm:ss")+"','dd/MM/yyyy hh24:mi:ss')";
+				// " evento.DATA_AGGIORNAMENTO <= to_date ('"+DateUtils.getDateToString(aDataAl,"dd/MM/yyyy
+				// HH:mm:ss")+"','dd/MM/yyyy hh24:mi:ss')";
 				lStatement += "      evento.DATA_INSERIMENTO <= to_date ('"
 						+ DateUtils.getDateToString(aDataAl, "dd/MM/yyyy HH:mm:ss")
 						+ "','dd/MM/yyyy hh24:mi:ss')";
@@ -387,14 +364,16 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 			// Aggiungo le condizioni sull'intervallo di validazione
 			if (aDataDal != null) {
 				// lStatement +=
-				// "      AND evento.DATA_AGGIORNAMENTO > to_date ('"+DateUtils.getDateToString(aDataDal,"dd/MM/yyyy HH:mm:ss")+"','dd/MM/yyyy hh24:mi:ss')";
+				// " AND evento.DATA_AGGIORNAMENTO > to_date
+				// ('"+DateUtils.getDateToString(aDataDal,"dd/MM/yyyy HH:mm:ss")+"','dd/MM/yyyy hh24:mi:ss')";
 				lStatement += "      AND evento.DATA_INSERIMENTO > to_date ('"
 						+ DateUtils.getDateToString(aDataDal, "dd/MM/yyyy HH:mm:ss")
 						+ "','dd/MM/yyyy hh24:mi:ss')";
 			}
 			if (aDataAl != null) {// n.b. <= perchè devo beccare anche l'evento corrente
 				// lStatement +=
-				// "      AND evento.DATA_AGGIORNAMENTO <= to_date ('"+DateUtils.getDateToString(aDataAl,"dd/MM/yyyy HH:mm:ss")+"','dd/MM/yyyy hh24:mi:ss')";
+				// " AND evento.DATA_AGGIORNAMENTO <= to_date
+				// ('"+DateUtils.getDateToString(aDataAl,"dd/MM/yyyy HH:mm:ss")+"','dd/MM/yyyy hh24:mi:ss')";
 				lStatement += "      AND evento.DATA_INSERIMENTO <= to_date ('"
 						+ DateUtils.getDateToString(aDataAl, "dd/MM/yyyy HH:mm:ss")
 						+ "','dd/MM/yyyy hh24:mi:ss')";
@@ -402,9 +381,6 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 			lStatement += "   )    "; // and select in join
 			lStatement += "   )    "; // and condizine sulle date
 		}
-
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-		siesLogger.debug("Sql Decisione del GE = " + lStatement);
 
 		setStatement(lStatement);
 	}
@@ -453,17 +429,14 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 				+ " AM.FAS_SIE_ID_FASCICOLO_SIEP, AM.REA_ID_REATO, AM.EVE_ID_EVENTO, AM.FLAG_VALIDATO, "
 				+ " AM.FLAG_CONFORME, AM.FLAG_APP_PROVVISORIA, AM.PEN_RES_ID_PENA_RESIDUA, AM.FUN_ID_FUNGIBILITA, "
 				+ " AM.DATA_RICHIESTA, AM.DATA_CC, AM.DATA_GE, "
-				+ " AM.ANNO_SENTENZA_SIAP, AM.NUMERO_SENTENZA_SIAP, AM.DATA_SENTENZA_SIAP, "
-				+
+				+ " AM.ANNO_SENTENZA_SIAP, AM.NUMERO_SENTENZA_SIAP, AM.DATA_SENTENZA_SIAP, " +
 				// 07_2015 MEV29 punto 11 - Anno e Numero procedimento SIGE
-				" AM.ANNO_SIGE, AM.NUMERO_SIGE, "
-				+ " AM.FLAG_COMPUTABILE, "
-				+ " AM.FLG_BENEFICIO_DETRATTO, "
+				" AM.ANNO_SIGE, AM.NUMERO_SIGE, " + " AM.FLAG_COMPUTABILE, " + " AM.FLG_BENEFICIO_DETRATTO, "
 				+ " AM.SEN_ID_SENTENZA, " + " AM.TEN_ID_TENORE_SIGE, " + " AM.FLAG_SEL_QUANTUM  ";
 		lStatement += " FROM ANNOTAZIONE_MANUALE AM  "; // , EVENTO
 		lStatement += " WHERE AM.FAS_SIE_ID_FASCICOLO_SIEP = " + aKey;
 		// MEV 37 - Inizio
-		// lStatement += "   AND AM.COD_TIPO_ANNOTAZIONE in ('002','003','004','013') ";
+		// lStatement += " AND AM.COD_TIPO_ANNOTAZIONE in ('002','003','004','013') ";
 		lStatement += "   AND AM.COD_TIPO_ANNOTAZIONE in ('002','003','004','013','017') ";
 		// MEV 37 - Fine
 		lStatement += "   AND AM.FLAG_APP_PROVVISORIA = 'A' ";
@@ -478,14 +451,16 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 		// fortuna viene valorizzata con la data validazione
 		if (aDataDal != null) {
 			// lStatement +=
-			// "      AND AM.DATA_AGGIORNAMENTO > to_date ('"+DateUtils.getDateToString(aDataDal,"dd/MM/yyyy HH:mm:ss")+"','dd/MM/yyyy hh24:mi:ss')";
+			// " AND AM.DATA_AGGIORNAMENTO > to_date ('"+DateUtils.getDateToString(aDataDal,"dd/MM/yyyy
+			// HH:mm:ss")+"','dd/MM/yyyy hh24:mi:ss')";
 			lStatement += "      AND AM.DATA_INSERIMENTO > to_date ('"
 					+ DateUtils.getDateToString(aDataDal, "dd/MM/yyyy HH:mm:ss")
 					+ "','dd/MM/yyyy hh24:mi:ss')";
 		}
 		if (aDataAl != null) {// n.b. <= perchè devo beccare anche l'evento corrente
 			// lStatement +=
-			// "      AND AM.DATA_AGGIORNAMENTO <= to_date ('"+DateUtils.getDateToString(aDataAl,"dd/MM/yyyy HH:mm:ss")+"','dd/MM/yyyy hh24:mi:ss')";
+			// " AND AM.DATA_AGGIORNAMENTO <= to_date ('"+DateUtils.getDateToString(aDataAl,"dd/MM/yyyy
+			// HH:mm:ss")+"','dd/MM/yyyy hh24:mi:ss')";
 			lStatement += "      AND AM.DATA_INSERIMENTO <= to_date ('"
 					+ DateUtils.getDateToString(aDataAl, "dd/MM/yyyy HH:mm:ss")
 					+ "','dd/MM/yyyy hh24:mi:ss')";
@@ -500,7 +475,7 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 		lStatement += "                                                  from annotazione_manuale";
 		// MEV 37 - Inizio
 		// lStatement +=
-		// "                                                 where cod_tipo_annotazione IN ('002', '003', '004', '013')";
+		// " where cod_tipo_annotazione IN ('002', '003', '004', '013')";
 		lStatement += "                                          where cod_tipo_annotazione IN ('002', '003', '004', '013', '017')";
 		// MEV 37 - Fine
 		lStatement += "                                                   and flag_app_provvisoria = '-'"; // decisioni
@@ -510,14 +485,16 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 					+ DateUtils.getDateToString(aDataDal, "dd/MM/yyyy HH:mm:ss")
 					+ "','dd/MM/yyyy hh24:mi:ss')";
 			// lStatement +=
-			// "                                                and DATA_AGGIORNAMENTO > to_date ('"+DateUtils.getDateToString(aDataDal,"dd/MM/yyyy HH:mm:ss")+"','dd/MM/yyyy hh24:mi:ss')";
+			// " and DATA_AGGIORNAMENTO > to_date ('"+DateUtils.getDateToString(aDataDal,"dd/MM/yyyy
+			// HH:mm:ss")+"','dd/MM/yyyy hh24:mi:ss')";
 		}
 		if (aDataAl != null) {// n.b. <= perchè devo beccare anche l'evento corrente
 			lStatement += "                                                and DATA_INSERIMENTO <= to_date ('"
 					+ DateUtils.getDateToString(aDataAl, "dd/MM/yyyy HH:mm:ss")
 					+ "','dd/MM/yyyy hh24:mi:ss')";
 			// lStatement +=
-			// "                                                and DATA_AGGIORNAMENTO <= to_date ('"+DateUtils.getDateToString(aDataAl,"dd/MM/yyyy HH:mm:ss")+"','dd/MM/yyyy hh24:mi:ss')";
+			// " and DATA_AGGIORNAMENTO <= to_date ('"+DateUtils.getDateToString(aDataAl,"dd/MM/yyyy
+			// HH:mm:ss")+"','dd/MM/yyyy hh24:mi:ss')";
 		}
 		lStatement += "                                            )";
 		lStatement += "     )";
@@ -525,22 +502,21 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 		// La join con l'evento direttamente collegato con la AM è superflua in quanto
 		// viene validato contestualmente all'inserimento dell'annotazione per cui
 		// non mi fornisce alcuna informazione
-		// lStatement += "   AND AM.EVE_ID_EVENTO = evento.ID_EVENTO ";
-		// lStatement += "   AND evento.FLAG_DOCUMENTO_REGISTRATO = 'S' ";
-		// lStatement += "   AND evento.COD_TIPO_EVENTO='01' " ;
-		// lStatement += "   AND evento.COD_TIPO_PROVVEDIMENTO = '26' ";
-		// lStatement += "   AND evento.COD_MOTIVO in ('0210','0211','0122')  ";
+		// lStatement += " AND AM.EVE_ID_EVENTO = evento.ID_EVENTO ";
+		// lStatement += " AND evento.FLAG_DOCUMENTO_REGISTRATO = 'S' ";
+		// lStatement += " AND evento.COD_TIPO_EVENTO='01' " ;
+		// lStatement += " AND evento.COD_TIPO_PROVVEDIMENTO = '26' ";
+		// lStatement += " AND evento.COD_MOTIVO in ('0210','0211','0122') ";
 		// if (aDataDal!=null){
 		// lStatement +=
-		// "      AND evento.DATA_AGGIORNAMENTO > to_date ('"+DateUtils.getDateToString(aDataDal,"dd/MM/yyyy HH:mm:ss")+"','dd/MM/yyyy hh24:mi:ss')";
+		// " AND evento.DATA_AGGIORNAMENTO > to_date ('"+DateUtils.getDateToString(aDataDal,"dd/MM/yyyy
+		// HH:mm:ss")+"','dd/MM/yyyy hh24:mi:ss')";
 		// }
 		// if (aDataAl!=null){// n.b. <= perchè devo beccare anche l'evento corrente
 		// lStatement +=
-		// "      AND evento.DATA_AGGIORNAMENTO <= to_date ('"+DateUtils.getDateToString(aDataAl,"dd/MM/yyyy HH:mm:ss")+"','dd/MM/yyyy hh24:mi:ss')";
+		// " AND evento.DATA_AGGIORNAMENTO <= to_date ('"+DateUtils.getDateToString(aDataAl,"dd/MM/yyyy
+		// HH:mm:ss")+"','dd/MM/yyyy hh24:mi:ss')";
 		// }
-
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-		siesLogger.debug("Sql Richieste al GE = " + lStatement);
 
 		setStatement(lStatement);
 	}
@@ -548,10 +524,10 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 	/**
 	 * Ricerca tutte le Annotazioni Manuali per un certo fascicolo legate a un Indulto (2006) migrato RES
 	 * validate nel periodo passato in input (se specificato).
-	 * 
+	 *
 	 * Recupera sia le richieste che le decisioni Richieste: 01- (04,26) - 0161 Determinazione pena a seguito
 	 * di applicazione beneficio Decisioni: 01- 04 - 0284 - Applicazione Amnistia / Indulto
-	 * 
+	 *
 	 * E' possibile specificare anche un solo estremo dell'intervallo.
 	 *
 	 * @param aKey
@@ -578,11 +554,8 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 		// ma la comunicazione non viene legata al provvedimento di concessione, (manca eve_id_evento)
 		// per cui per conoscere quando è avvenuta la validazione è possibile
 		// solo lavorare sul provvedimento di concessione.
-		lStatement += " SELECT "
-				+ " AM.ID_ANNOTAZIONE_MANUALE, "
-				+ " AM.ANNO_ID_ANNOTAZIONE_MANUALE, "
-				+ " AM.COD_TIPO_ANNOTAZIONE,null DESCR_TIPO, "
-				+ " AM.FLAG_PIU_MENO, "
+		lStatement += " SELECT " + " AM.ID_ANNOTAZIONE_MANUALE, " + " AM.ANNO_ID_ANNOTAZIONE_MANUALE, "
+				+ " AM.COD_TIPO_ANNOTAZIONE,null DESCR_TIPO, " + " AM.FLAG_PIU_MENO, "
 				+ " AM.NUM_ANNI_RECLUSIONE, AM.NUM_MESI_RECLUSIONE, AM.NUM_GIORNI_RECLUSIONE, AM.IMPORTO_MULTA, "
 				+ " AM.NUM_ANNI_ARRESTO, AM.NUM_MESI_ARRESTO, AM.NUM_GIORNI_ARRESTO, AM.IMPORTO_AMMENDA, "
 				+ " AM.DATA_ARRESTO_DA, AM.DATA_ARRESTO_A, "
@@ -602,8 +575,7 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 				+ " AM.FLAG_VALIDATO, " + " AM.FLAG_CONFORME, " + " AM.FLAG_APP_PROVVISORIA, "
 				+ " AM.PEN_RES_ID_PENA_RESIDUA, " + " AM.FUN_ID_FUNGIBILITA, " + " AM.DATA_RICHIESTA, "
 				+ " AM.DATA_CC, " + " AM.DATA_GE, "
-				+ " AM.ANNO_SENTENZA_SIAP, AM.NUMERO_SENTENZA_SIAP, AM.DATA_SENTENZA_SIAP, "
-				+
+				+ " AM.ANNO_SENTENZA_SIAP, AM.NUMERO_SENTENZA_SIAP, AM.DATA_SENTENZA_SIAP, " +
 				// 07_2015 MEV29 punto 11 - Anno e Numero procedimento SIGE
 				" AM.ANNO_SIGE, AM.NUMERO_SIGE, "
 				+ " AM.FLAG_COMPUTABILE, AM.SEN_ID_SENTENZA, AM.TEN_ID_TENORE_SIGE, "
@@ -612,7 +584,7 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 		lStatement += " WHERE AM.FAS_SIE_ID_FASCICOLO_SIEP = " + aKey;
 		lStatement += "   AND AM.EVE_ID_EVENTO = evento.ID_EVENTO "; // join con il provvedimento
 		lStatement += "   AND AM.COD_TIPO_ANNOTAZIONE = '002' ";
-		// lStatement += "   AND AM.FLAG_APP_PROVVISORIA = '-' "; // n.b. vengono scartati le R
+		// lStatement += " AND AM.FLAG_APP_PROVVISORIA = '-' "; // n.b. vengono scartati le R
 
 		lStatement += "   AND AM.FLAG_APP_PROVVISORIA in ('A','-') "; // n.b. vengono scartati le R
 
@@ -621,7 +593,7 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 		// una decisione. In questo caso fa fede la decisione per cui scarto la richiesta
 		// Se invece non è ancora intervenuta una decisione, ANNO_ID_ANNOTAZIONE_MANUALE = null
 		// e quinid devo computare anche la richiesta.
-		// lStatement += "   AND AM.ANNO_ID_ANNOTAZIONE_MANUALE is null "; // ????
+		// lStatement += " AND AM.ANNO_ID_ANNOTAZIONE_MANUALE is null "; // ????
 		// aggiungo condizione che permette di verificare se la Richiesta è collegata
 		// a una decisione, in questo caso non va considerata.
 		// La richiesta non deve essere collegata ad alcuna decisione (anno_id_annotazione_manuale = null)
@@ -640,14 +612,16 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 					+ DateUtils.getDateToString(aDataDal, "dd/MM/yyyy HH:mm:ss")
 					+ "','dd/MM/yyyy hh24:mi:ss')";
 			// lStatement +=
-			// "                                                and DATA_AGGIORNAMENTO > to_date ('"+DateUtils.getDateToString(aDataDal,"dd/MM/yyyy HH:mm:ss")+"','dd/MM/yyyy hh24:mi:ss')";
+			// " and DATA_AGGIORNAMENTO > to_date ('"+DateUtils.getDateToString(aDataDal,"dd/MM/yyyy
+			// HH:mm:ss")+"','dd/MM/yyyy hh24:mi:ss')";
 		}
 		if (aDataAl != null) {// n.b. <= perchè devo beccare anche l'evento corrente
 			lStatement += "                                                and DATA_INSERIMENTO <= to_date ('"
 					+ DateUtils.getDateToString(aDataAl, "dd/MM/yyyy HH:mm:ss")
 					+ "','dd/MM/yyyy hh24:mi:ss')";
 			// lStatement +=
-			// "                                                and DATA_AGGIORNAMENTO <= to_date ('"+DateUtils.getDateToString(aDataAl,"dd/MM/yyyy HH:mm:ss")+"','dd/MM/yyyy hh24:mi:ss')";
+			// " and DATA_AGGIORNAMENTO <= to_date ('"+DateUtils.getDateToString(aDataAl,"dd/MM/yyyy
+			// HH:mm:ss")+"','dd/MM/yyyy hh24:mi:ss')";
 		}
 		lStatement += "                                                )";
 		lStatement += "     )";
@@ -672,8 +646,8 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 		lStatement += "            )  ";
 		lStatement += "       )  ";
 
-		// lStatement += "   AND evento.COD_TIPO_PROVVEDIMENTO = '04' ";
-		// lStatement += "   AND evento.COD_MOTIVO in ('0161','0284')  ";
+		// lStatement += " AND evento.COD_TIPO_PROVVEDIMENTO = '04' ";
+		// lStatement += " AND evento.COD_MOTIVO in ('0161','0284') ";
 
 		// ==========================================================================
 		// Aggiungo le condizioni sull'intervallo di validazione sul provvedimento
@@ -699,9 +673,6 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 		// Ordino dal più recente
 		lStatement += "ORDER BY evento.DATA_INSERIMENTO DESC ";
 
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-		siesLogger.debug("Sql Indulti RES = " + lStatement);
-
 		setStatement(lStatement);
 	}
 
@@ -715,7 +686,7 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 
 	/**
 	 * Ricerca tutte le annotazioni manuali con FLAG_APP_PROVVISORIA<>A e R associate al reato
-	 * 
+	 *
 	 * @param aKey
 	 *            id del reato
 	 * @throws DAOException
@@ -735,7 +706,7 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 	/**
 	 * Ricerca le annotazioni manuali per codice fascicolo siep, tipo annotazione se specificato,
 	 * eventualmente validate. <b>scartando le richieste al GE</b> ORDER BY DATA_INSERIMENTO
-	 * 
+	 *
 	 * @param aIdFascicolo
 	 * @param aCodTipoAnnotazione
 	 * @param aFlagValidazione
@@ -786,7 +757,7 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 	/**
 	 * Recupera tutte le annotazioni di amnistia e indulto manuali legate a Richieste con ancticipazione ma
 	 * non ancora validate
-	 * 
+	 *
 	 * @param aKey
 	 * @throws DAOException
 	 */
@@ -805,7 +776,7 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 	/**
 	 * Ricerca le annotazioni di tipo Amnistia o Indulto lagate a Richieste senza anticipazione <b>non
 	 * validate</b>
-	 * 
+	 *
 	 * @param aKey
 	 *            idFascicolo
 	 * @throws DAOException
@@ -924,7 +895,7 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 	/**
 	 * Ricerca le Annotazioni Manuali con richiesta al GE: flag_app_provvisoria 'R' o 'A' indipendentemente
 	 * dallo stato (FLAG_VALIDATO) ordinate per data_inserimento desc
-	 * 
+	 *
 	 * @param aIdFascicolo
 	 * @throws DAOException
 	 */
@@ -941,7 +912,7 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 
 	/**
 	 * Ricerca le Annotazioni Manuali legate all'evento passato in input
-	 * 
+	 *
 	 * @param aKeyEvento
 	 * @throws DAOException
 	 */
@@ -961,8 +932,8 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 		setStatement(lSql);
 	}
 
-	public void ricercaAnnotazioneManualeByIdSentenzaIdTenore(BigDecimal aKeySentenza, BigDecimal aKeyIdTenore)
-			throws DAOException {
+	public void ricercaAnnotazioneManualeByIdSentenzaIdTenore(BigDecimal aKeySentenza,
+			BigDecimal aKeyIdTenore) throws DAOException {
 		String lSql = getSqlQuery();
 
 		lSql += " AND SEN_ID_SENTENZA=" + aKeySentenza;
@@ -993,8 +964,7 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 				+ "REA_ID_REATO, " + "EVE_ID_EVENTO, " + "FLAG_VALIDATO, " + "FLAG_CONFORME, "
 				+ "FLAG_APP_PROVVISORIA, " + "PEN_RES_ID_PENA_RESIDUA, " + "FUN_ID_FUNGIBILITA, "
 				+ "DATA_RICHIESTA, " + "DATA_CC, " + "DATA_GE, " + "ANNO_SENTENZA_SIAP, "
-				+ "NUMERO_SENTENZA_SIAP, " + "DATA_SENTENZA_SIAP, "
-				+
+				+ "NUMERO_SENTENZA_SIAP, " + "DATA_SENTENZA_SIAP, " +
 				// 07-2015 MEV29 punto 11 - Anno e Numro Procedimento SIGE
 				"ANNO_SIGE, NUMERO_SIGE, " + "FLAG_COMPUTABILE, " + "FLG_BENEFICIO_DETRATTO, "
 				+ "SEN_ID_SENTENZA, " + "TEN_ID_TENORE_SIGE, " + " FLAG_SEL_QUANTUM ";
@@ -1051,9 +1021,7 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 		aModel.setAnnoSiep(getBigDecimal("ANNO_SIEP"));
 		aModel.setNumeroSiep(getString("NUMERO_SIEP"));
 		aModel.setCodTipoUfficioSiep(getString("COD_TIPO_UFFICIO_SIEP"));
-		// aModel.setDescrTipoUfficioSiep(getString("") );
 		aModel.setCodLuogoUfficioSiep(getString("COD_LUOGO_UFFICIO_SIEP"));
-		// aModel.setDescrLuogoUfficioSiep(getString("") );
 		aModel.setDataIscrizioneSiep(getDate("DATA_ISCRIZIONE_SIEP"));
 		aModel.setCodFonte(getString("COD_FONTE"));
 		aModel.setDescrFonte(getString("DESCR_FONTE"));
@@ -1108,6 +1076,12 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 		aModel.setChiaveAnnoSige(getBigDecimal("ANNO_SIGE"));
 		aModel.setChiaveNumeroSige(getBigDecimal("NUMERO_SIGE"));
 
+		// MEV_2023-33: aggiunta valorizzazione colonne se presenti
+		if (this.findColumn("DESCR_TIPO_UFFICIO"))
+			aModel.setDescrTipoUfficioSiep(getString("DESCR_TIPO_UFFICIO"));
+		if (this.findColumn("DESCR_COMUNE"))
+			aModel.setDescrLuogoUfficioSiep(getString("DESCR_COMUNE"));
+
 		return aModel;
 	}
 
@@ -1131,11 +1105,8 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 	public void ricercaAnnManualeRichiesteGEByIdDecisione(BigDecimal aIdDecisione) throws DAOException {
 		String lStatement = "";
 
-		lStatement += " SELECT "
-				+ " AM.ID_ANNOTAZIONE_MANUALE, "
-				+ " AM.ANNO_ID_ANNOTAZIONE_MANUALE, "
-				+ " AM.COD_TIPO_ANNOTAZIONE,null DESCR_TIPO, "
-				+ " AM.FLAG_PIU_MENO, "
+		lStatement += " SELECT " + " AM.ID_ANNOTAZIONE_MANUALE, " + " AM.ANNO_ID_ANNOTAZIONE_MANUALE, "
+				+ " AM.COD_TIPO_ANNOTAZIONE,null DESCR_TIPO, " + " AM.FLAG_PIU_MENO, "
 				+ " AM.NUM_ANNI_RECLUSIONE, AM.NUM_MESI_RECLUSIONE, AM.NUM_GIORNI_RECLUSIONE, AM.IMPORTO_MULTA, "
 				+ " AM.NUM_ANNI_ARRESTO, AM.NUM_MESI_ARRESTO, AM.NUM_GIORNI_ARRESTO, AM.IMPORTO_AMMENDA, "
 				+ " AM.DATA_ARRESTO_DA, AM.DATA_ARRESTO_A, "
@@ -1155,16 +1126,12 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 				+ " AM.FLAG_VALIDATO, " + " AM.FLAG_CONFORME, " + " AM.FLAG_APP_PROVVISORIA, "
 				+ " AM.PEN_RES_ID_PENA_RESIDUA, " + " AM.FUN_ID_FUNGIBILITA, " + " AM.DATA_RICHIESTA, "
 				+ " AM.DATA_CC, " + " AM.DATA_GE, "
-				+ " AM.ANNO_SENTENZA_SIAP, AM.NUMERO_SENTENZA_SIAP, AM.DATA_SENTENZA_SIAP, "
-				+
+				+ " AM.ANNO_SENTENZA_SIAP, AM.NUMERO_SENTENZA_SIAP, AM.DATA_SENTENZA_SIAP, " +
 				// 07_2015 MEV29 punto 11 - Anno e Numero procedimento SIGE
 				" AM.ANNO_SIGE, AM.NUMERO_SIGE, " + " AM.FLAG_COMPUTABILE, " + " AM.SEN_ID_SENTENZA, "
 				+ " AM.TEN_ID_TENORE_SIGE, " + " AM.FLAG_SEL_QUANTUM, " + " AM.FLG_BENEFICIO_DETRATTO ";
 		lStatement += " FROM ANNOTAZIONE_MANUALE AM  ";
 		lStatement += " WHERE AM.ANNO_ID_ANNOTAZIONE_MANUALE = " + aIdDecisione;
-
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-		siesLogger.debug("Sql Richieste al GE per decisione = " + lStatement);
 
 		setStatement(lStatement);
 	}
@@ -1172,7 +1139,7 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 	/**
 	 * Ricerca le Annotazioni Manuali con richiesta al GE: COD_TIPO_ANNOTAZIONE = '002' (Indulto) o '003'
 	 * (Amnistia) flag_app_provvisoria <> ('R','A') e FLAG_VALIDATO = 'N')
-	 * 
+	 *
 	 * @param aIdEvento
 	 *            identificativo dell'evento
 	 * @throws DAOException
@@ -1195,6 +1162,52 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Aggiunto metodo di ricerca puntuale
+	 *
+	 * @author sgioggi
+	 * @since MEV_2023-33
+	 */
+	public void ricercaAnnotazioneManualeByIdEventoIdFascicolo(BigDecimal idEvento,
+			BigDecimal idFascicoloSiep) {
+
+		String lStatement = "";
+
+		lStatement += "SELECT AM.ID_ANNOTAZIONE_MANUALE, AM.ANNO_ID_ANNOTAZIONE_MANUALE,"
+				+ " AM.COD_TIPO_ANNOTAZIONE, TP.RV_MEANING DESCR_TIPO,"
+				+ " AM.FLAG_PIU_MENO, AM.IMPORTO_MULTA, AM.NUM_ANNI_RECLUSIONE,"
+				+ " AM.NUM_MESI_RECLUSIONE, AM.NUM_GIORNI_RECLUSIONE,"
+				+ " AM.NUM_ANNI_ARRESTO, AM.NUM_MESI_ARRESTO, AM.NUM_GIORNI_ARRESTO, AM.IMPORTO_AMMENDA,"
+				+ " AM.DATA_ARRESTO_DA, AM.DATA_ARRESTO_A, AM.DATA_RECLUSIONE_DA,"
+				+ " AM.DATA_RECLUSIONE_A, AM.DATA_RICEZIONE_DOC, AM.MOTIVAZIONI,"
+				+ " AM.NOTE_RECLUSIONE, AM.ANNO_GE, AM.NUMERO_GE,"
+				+ " AM.ANNO_REGE, AM.NUMERO_REGE, AM.ANNO_MC, AM.NUMERO_MC, AM.ANNO_CDA, AM.NUMERO_CDA,"
+				+ " AM.ANNO_CC, AM.NUMERO_CC, AM.ANNO_SIEP, AM.NUMERO_SIEP, AM.COD_TIPO_UFFICIO_SIEP,"
+				+ " AM.COD_LUOGO_UFFICIO_SIEP, AM.DATA_ISCRIZIONE_SIEP, AM.COD_FONTE, null DESCR_FONTE,"
+				+ " AM.ANNO_FONTE, AM.NUMERO_FONTE, AM.COD_SOTTONUMERAZIONE,"
+				+ " null DESCR_SOTTONUM, AM.COMMA, AM.LETTERA, AM.NUMERO, AM.ARTICOLO,"
+				+ " AM.COD_CAUSALE_COMPUTO, null DESCR_CAUCOMP, AM.COD_DPR, null DESCR_DPR,"
+				+ " AM.COD_OPERATORE_INSERIMENTO, AM.DATA_INSERIMENTO,"
+				+ " AM.COD_UFFICIO_INSERIMENTO, AM.COD_OPERATORE_AGGIORNAMENTO,"
+				+ " AM.DATA_AGGIORNAMENTO, AM.COD_UFFICIO_AGGIORNAMENTO,"
+				+ " AM.FAS_SIE_ID_FASCICOLO_SIEP, AM.REA_ID_REATO,"
+				+ " AM.EVE_ID_EVENTO, AM.FLAG_VALIDATO, AM.FLAG_CONFORME,"
+				+ " AM.FLAG_APP_PROVVISORIA, AM.PEN_RES_ID_PENA_RESIDUA,"
+				+ " AM.FUN_ID_FUNGIBILITA, AM.DATA_RICHIESTA, AM.DATA_CC,"
+				+ " AM.DATA_GE, AM.ANNO_SENTENZA_SIAP, AM.NUMERO_SENTENZA_SIAP,"
+				+ " AM.DATA_SENTENZA_SIAP, AM.ANNO_SIGE, AM.NUMERO_SIGE,"
+				+ " AM.FLAG_COMPUTABILE, AM.SEN_ID_SENTENZA, AM.TEN_ID_TENORE_SIGE, AM.FLAG_SEL_QUANTUM,"
+				+ " AM.FLG_BENEFICIO_DETRATTO, C.DESCRIZIONE DESCR_COMUNE, TU.RV_MEANING DESCR_TIPO_UFFICIO"
+				+ " FROM ANNOTAZIONE_MANUALE AM, CG_REF_CODES TP, CG_REF_CODES TU, COMUNE C"
+				+ " WHERE AM.EVE_ID_EVENTO = " + idEvento + " AND AM.FAS_SIE_ID_FASCICOLO_SIEP = "
+				+ idFascicoloSiep + " AND AM.COD_TIPO_ANNOTAZIONE = TP.RV_LOW_VALUE"
+				+ " AND TP.RV_DOMAIN = 'TIPO_PROVVEDIMENTO'"
+				+ " AND AM.COD_TIPO_UFFICIO_SIEP = TU.RV_LOW_VALUE AND TU.RV_DOMAIN = 'TIPO_UFFICIO'"
+				+ " AND AM.COD_LUOGO_UFFICIO_SIEP = C.COD_COMUNE";
+
+		setStatement(lStatement);
 	}
 
 }

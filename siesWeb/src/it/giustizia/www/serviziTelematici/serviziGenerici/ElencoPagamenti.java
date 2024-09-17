@@ -28,6 +28,10 @@ public class ElencoPagamenti  implements java.io.Serializable {
 
     private int numeroPagina;
 
+    private java.util.Calendar dataRicevutaDa;
+
+    private java.util.Calendar dataRicevutaA;
+
     public ElencoPagamenti() {
     }
 
@@ -41,7 +45,9 @@ public class ElencoPagamenti  implements java.io.Serializable {
            java.util.Calendar dataRichiestaDa,
            java.util.Calendar dataRichiestaA,
            int dimensionePagina,
-           int numeroPagina) {
+           int numeroPagina,
+           java.util.Calendar dataRicevutaDa,
+           java.util.Calendar dataRicevutaA) {
            this.codiceCRS = codiceCRS;
            this.tipologia = tipologia;
            this.codiceFiscale = codiceFiscale;
@@ -52,6 +58,8 @@ public class ElencoPagamenti  implements java.io.Serializable {
            this.dataRichiestaA = dataRichiestaA;
            this.dimensionePagina = dimensionePagina;
            this.numeroPagina = numeroPagina;
+           this.dataRicevutaDa = dataRicevutaDa;
+           this.dataRicevutaA = dataRicevutaA;
     }
 
 
@@ -254,6 +262,46 @@ public class ElencoPagamenti  implements java.io.Serializable {
         this.numeroPagina = numeroPagina;
     }
 
+
+    /**
+     * Gets the dataRicevutaDa value for this ElencoPagamenti.
+     * 
+     * @return dataRicevutaDa
+     */
+    public java.util.Calendar getDataRicevutaDa() {
+        return dataRicevutaDa;
+    }
+
+
+    /**
+     * Sets the dataRicevutaDa value for this ElencoPagamenti.
+     * 
+     * @param dataRicevutaDa
+     */
+    public void setDataRicevutaDa(java.util.Calendar dataRicevutaDa) {
+        this.dataRicevutaDa = dataRicevutaDa;
+    }
+
+
+    /**
+     * Gets the dataRicevutaA value for this ElencoPagamenti.
+     * 
+     * @return dataRicevutaA
+     */
+    public java.util.Calendar getDataRicevutaA() {
+        return dataRicevutaA;
+    }
+
+
+    /**
+     * Sets the dataRicevutaA value for this ElencoPagamenti.
+     * 
+     * @param dataRicevutaA
+     */
+    public void setDataRicevutaA(java.util.Calendar dataRicevutaA) {
+        this.dataRicevutaA = dataRicevutaA;
+    }
+
     private java.lang.Object __equalsCalc = null;
     public synchronized boolean equals(java.lang.Object obj) {
         if (!(obj instanceof ElencoPagamenti)) return false;
@@ -291,7 +339,13 @@ public class ElencoPagamenti  implements java.io.Serializable {
              (this.dataRichiestaA!=null &&
               this.dataRichiestaA.equals(other.getDataRichiestaA()))) &&
             this.dimensionePagina == other.getDimensionePagina() &&
-            this.numeroPagina == other.getNumeroPagina();
+            this.numeroPagina == other.getNumeroPagina() &&
+            ((this.dataRicevutaDa==null && other.getDataRicevutaDa()==null) || 
+             (this.dataRicevutaDa!=null &&
+              this.dataRicevutaDa.equals(other.getDataRicevutaDa()))) &&
+            ((this.dataRicevutaA==null && other.getDataRicevutaA()==null) || 
+             (this.dataRicevutaA!=null &&
+              this.dataRicevutaA.equals(other.getDataRicevutaA())));
         __equalsCalc = null;
         return _equals;
     }
@@ -329,6 +383,12 @@ public class ElencoPagamenti  implements java.io.Serializable {
         }
         _hashCode += getDimensionePagina();
         _hashCode += getNumeroPagina();
+        if (getDataRicevutaDa() != null) {
+            _hashCode += getDataRicevutaDa().hashCode();
+        }
+        if (getDataRicevutaA() != null) {
+            _hashCode += getDataRicevutaA().hashCode();
+        }
         __hashCodeCalc = false;
         return _hashCode;
     }
@@ -405,6 +465,20 @@ public class ElencoPagamenti  implements java.io.Serializable {
         elemField.setFieldName("numeroPagina");
         elemField.setXmlName(new javax.xml.namespace.QName("", "numeroPagina"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("dataRicevutaDa");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "dataRicevutaDa"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "dateTime"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("dataRicevutaA");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "dataRicevutaA"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "dateTime"));
+        elemField.setMinOccurs(0);
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
     }

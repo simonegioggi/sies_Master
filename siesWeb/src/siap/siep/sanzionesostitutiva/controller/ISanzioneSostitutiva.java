@@ -6,31 +6,26 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+
+import f3b.util.F3BException;
 import siap.sico.camponota.model.CampoNotaModel;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
+import siap.sico.ufficio.model.UfficioModel;
 import siap.sico.utente.model.UtenteModel;
+import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.notifica.model.NotificaModel;
 import siap.siep.penaresidua.model.PenaResiduaModel;
+import siap.siep.sanzionesostitutiva.model.RicercaStatoPagamentiModel;
 import siap.siep.sanzionesostitutiva.model.SanzioneSostResiduaModel;
+import siap.siep.scadenzario.model.ScadenzarioModel;
 import siap.siep.sospensione.model.SospensioneModel;
 import siap.siep.verbale.model.VerbaleModel;
-import f3b.util.F3BException;
 
 /**
- * <p>
- * Title: ISanzioneSostitutiva
- * </p>
- * <p>
- * Description: Classe Controller per Le Sanzioni Sostitutive
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ * Classe Controller per Le Sanzioni Sostitutive
+ *
  * @version 1.0
  */
 @SuppressWarnings("rawtypes")
@@ -39,7 +34,7 @@ public interface ISanzioneSostitutiva {
 	/**
 	 * Metodo per registrare l'annotazione dell'avvenuta espulsione. Inserisce un evento Verbale, il verbale e
 	 * l'evento di Comunicazione/Annotazione Inserisce la PENA_RESIDUA il record SOSPENSIONE.
-	 * 
+	 *
 	 * @param aEvVerbale
 	 * @param aEvComunicazione
 	 * @param aVerbale
@@ -56,7 +51,7 @@ public interface ISanzioneSostitutiva {
 
 	/**
 	 * Inserisce Evento Annotazione Mancata Espulsione e Notifiche Comunicazione Sollecito
-	 * 
+	 *
 	 * @param aEvNotModel
 	 * @param aVerbaleMod
 	 *            - Verbale con i dati della nato mancata espulsione
@@ -70,7 +65,7 @@ public interface ISanzioneSostitutiva {
 
 	/**
 	 * Inserisce Evento Richieste Revoca Espulsione e Notifiche al GE
-	 * 
+	 *
 	 * @param aEvNotModel
 	 * @return
 	 * @throws F3BException
@@ -81,7 +76,7 @@ public interface ISanzioneSostitutiva {
 	/**
 	 * Effettua la validazione della Comunicazione Scadenza Termini Espulsione e contestualmente del Verbale
 	 * di Avvenuta Espulsione
-	 * 
+	 *
 	 * @param aEvComunicazione
 	 * @return
 	 * @throws F3BException
@@ -90,7 +85,7 @@ public interface ISanzioneSostitutiva {
 
 	/**
 	 * Effettua la validazione della Annotazione Mancata Espulsione
-	 * 
+	 *
 	 * @param aEvAnnotazione
 	 * @return
 	 * @throws F3BException
@@ -99,7 +94,7 @@ public interface ISanzioneSostitutiva {
 
 	/**
 	 * Effettua la validazione della Richiesta Revoca Espulsione
-	 * 
+	 *
 	 * @param aEvRichiesta
 	 * @return
 	 * @throws F3BException
@@ -108,7 +103,7 @@ public interface ISanzioneSostitutiva {
 
 	/**
 	 * Inserisce la comunicazione per il nuovo residuo pena
-	 * 
+	 *
 	 * @param aEvNotModel
 	 * @return
 	 * @throws F3BException
@@ -118,7 +113,7 @@ public interface ISanzioneSostitutiva {
 
 	/**
 	 * Effettua la validazione della Comunicazione Nuovo Residuo Pena
-	 * 
+	 *
 	 * @param aEvComunicazione
 	 * @return
 	 * @throws F3BException
@@ -128,7 +123,7 @@ public interface ISanzioneSostitutiva {
 
 	/**
 	 * Effettua l'inserimento dell'OE a seguito revoca/conversione SS su fascicolo con cumulo
-	 * 
+	 *
 	 * @param aEvNotModel
 	 * @return
 	 * @throws F3BException
@@ -138,7 +133,7 @@ public interface ISanzioneSostitutiva {
 
 	/**
 	 * Effettua la validazione dell'OE a seguito revoca/conversione SS su fascicolo con cumulo
-	 * 
+	 *
 	 * @param aEventoModel
 	 * @return
 	 * @throws F3BException
@@ -147,7 +142,7 @@ public interface ISanzioneSostitutiva {
 
 	/**
 	 * Restituisce l'ultima Sanzione Sostitutiva Residua per il fascicolo passato in input se esiste
-	 * 
+	 *
 	 * @param aIdFascicoloSiep
 	 * @param aFlagValidata.
 	 *            Se 'S' recupera l'ultima validata, se 'N' l'ultima non validata, se null l'ultima in
@@ -160,7 +155,7 @@ public interface ISanzioneSostitutiva {
 
 	/**
 	 * Restituisce la SS residua collegata alla pena residua passata in input
-	 * 
+	 *
 	 * @param aIdPenaResidua
 	 * @return
 	 * @throws F3BException
@@ -174,7 +169,7 @@ public interface ISanzioneSostitutiva {
 
 	/**
 	 * Produce la stampa per le Sanzioni Sostitutive
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aUtente
 	 * @return
@@ -185,23 +180,57 @@ public interface ISanzioneSostitutiva {
 
 	/**
 	 * exUpdateRichiestaRevocaSS
-	 * 
+	 *
 	 * @param aEvRichiesta
 	 * @return
 	 * @throws F3BException
 	 */
 	public EventoModel exUpdateRichiestaRevocaSS(EventoModel aEvRichiesta) throws F3BException;
 
-	
 	/**
-	 * MEV_2023-13 
+	 * MEV_2023-13
+	 *
 	 * @param aEvNotModel
 	 * @return
 	 * @throws F3BException
 	 */
-   public EventoNotificaModel exInserisciOrdineIngiunzione (EventoNotificaModel aEvNotModel, String[] lArrayIdRate) throws F3BException;
-   public EventoModel exUpdateOrdineIngiunzione (EventoModel aEvento) throws F3BException;
-   public void exAggiornaNotificheOrdineIngiunzione (EventoModel aEvento, Vector <NotificaModel> listaNotDaAggiornare ) throws F3BException;
-   public EventoNotificaModel exModificaOrdineIngiunzione (EventoNotificaModel aEvNotModel, String[] lArrayIdRate) throws F3BException;
-   
+	public EventoNotificaModel exInserisciOrdineIngiunzione(EventoNotificaModel aEvNotModel,
+			String[] lArrayIdRate) throws F3BException;
+
+	public EventoModel exUpdateOrdineIngiunzione(EventoModel aEvento) throws F3BException;
+
+	public void exAggiornaNotificheOrdineIngiunzione(EventoModel aEvento,
+			Vector<NotificaModel> listaNotDaAggiornare) throws F3BException;
+
+	public EventoNotificaModel exModificaOrdineIngiunzione(EventoNotificaModel aEvNotModel,
+			String[] lArrayIdRate) throws F3BException;
+
+	// MEV_2023-33
+	public BigDecimal ExGetCountRicercaFascicoliPerStatoPagamento(FascicoloSiepModel aFasMod,
+			String aTipoRicerca) throws F3BException;
+
+	public Vector ExRicercaFascicoliPerStatoPagamentoPaged(FascicoloSiepModel aFasMod, int aPagina,
+			String aTipoRicera) throws F3BException;
+
+	public void ExCreateExcelStatoPagamenti(Vector<RicercaStatoPagamentiModel> listaStatoPagamenti,
+			HSSFWorkbook wb, UfficioModel ufficio, FascicoloSiepModel aFasMod, String aTipoRicera)
+			throws F3BException;
+
+	public void ExCreateExcelScadenzariPP(Vector<ScadenzarioModel> listaScadenzari, HSSFWorkbook wb,
+			UfficioModel ufficio, ScadenzarioModel aScadMod) throws F3BException;
+
+	public EventoNotificaModel exInserisciNotaTrasmissione(EventoNotificaModel aEvNotModel)
+			throws F3BException;
+
+	public EventoNotificaModel exModificaNotaTrasmissione(EventoNotificaModel aEvNotModel)
+			throws F3BException;
+
+	public EventoModel exUpdateNotaTrasmissione(EventoModel aEvento) throws F3BException;
+
+	public EventoNotificaModel exInserisciProvvedimentoEstinzione(EventoNotificaModel aEvNotModel)
+			throws F3BException;
+
+	public EventoNotificaModel exModificaProvvedimentoEstinzione(EventoNotificaModel aEvNotModel)
+			throws F3BException;
+
 }

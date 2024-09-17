@@ -7,17 +7,13 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-/*
- * <p>Title: DateUtils</p>
- * <p>Description: Classe di utilità per gestione delle date. ( Versione Non stabile ).</p>
- * <p>Copyright: Bull Italia Copyright (c) 2002</p>
- * <p>Company: BULL Italia S.p.A.</p>
+/**
+ * Title: DateUtils Description: Classe di utilità per gestione delle date
  */
 public class DateUtils {
 
 	/**
 	 * Test dei metodi della classe.
-	 * <p>
 	 *
 	 * @param args
 	 */
@@ -58,7 +54,6 @@ public class DateUtils {
 
 	/**
 	 * Ritorna la data di sistema in formato <code>String</code>.
-	 * <p>
 	 *
 	 * @param aPattern
 	 *            formato della data da restituire.
@@ -77,7 +72,6 @@ public class DateUtils {
 
 	/**
 	 * Ritorna la data di sistema in formato <code>Date</code>.
-	 * <p>
 	 *
 	 * @return data di sistema nel formato richiesto.
 	 */
@@ -87,7 +81,6 @@ public class DateUtils {
 
 	/**
 	 * Formattazione di una data passata come parametro.
-	 * <p>
 	 *
 	 * @param aDate
 	 *            Data da ritornare formatta i <code>String</code>
@@ -115,7 +108,6 @@ public class DateUtils {
 
 	/**
 	 * STUB-20021104: Da Rivedere ... Ritorna l'ultimo giorno del mese.
-	 * <p>
 	 *
 	 * @param aYear
 	 *            Anno di riferimento.
@@ -133,7 +125,6 @@ public class DateUtils {
 
 	/**
 	 * STUB-20021104: Da rivedere ...
-	 * <p>
 	 *
 	 * @param aYear
 	 *            Anno di riferimento.
@@ -148,7 +139,6 @@ public class DateUtils {
 
 	/**
 	 * STUB-20021031: Da Rivedere ... -- Con altri metodi, per risoluzione problema oraraio --
-	 * <p>
 	 *
 	 * @param aYear
 	 *            Anno di riferimento
@@ -172,7 +162,6 @@ public class DateUtils {
 
 	/**
 	 * STUB-20021104: Da rivedere .... -- Con altri metodi, per risoluzione problema oraraio --
-	 * <p>
 	 *
 	 * @param aYear
 	 *            Anno di riferimento.
@@ -195,7 +184,6 @@ public class DateUtils {
 
 	/**
 	 * Ritorna la data, passando come parametri Anno e Mese.
-	 * <p>
 	 *
 	 * @param aYear
 	 *            Anno di riferimento in formato <code>int</code>.
@@ -209,7 +197,6 @@ public class DateUtils {
 
 	/**
 	 * Ritorna la data, passando come parametri Anno, Mese, Giorno, Ore, Minuti e Secondi.
-	 * <p>
 	 *
 	 * @param aDay
 	 *            Giorno di riferimento.
@@ -234,7 +221,6 @@ public class DateUtils {
 	/**
 	 * Ritorna la data, passando come parametri Anno, Mese, Giorno, Ore, Minuti e Secondi, in formato
 	 * <code>String</code>.
-	 * <p>
 	 *
 	 * @param aYear
 	 *            Anno di riferimento.
@@ -274,7 +260,6 @@ public class DateUtils {
 	/**
 	 * Ritorna la data passando come parametri data in formato stringa e il relativo pattern di formato (es.:
 	 * gg/MM/yyyy).
-	 * <p>
 	 *
 	 * @param aDate
 	 *            data da convertire
@@ -300,7 +285,6 @@ public class DateUtils {
 	/**
 	 * Ritorna la data passando come parametri tutti gli elementi ( es.: mese, anno, giorno ecc...) in formato
 	 * intero numerico.
-	 * <p>
 	 *
 	 * @param aYear
 	 *            Anno di riferimento
@@ -321,7 +305,6 @@ public class DateUtils {
 	/**
 	 * Ritorna la data passando come parametri tutti gli elementi necessari ( es.: mese, anno, giorno ecc... )
 	 * in formato Stringa.
-	 * <p>
 	 *
 	 * @param aYear
 	 *            anno 4 cifre ( 2000, 2001 ... )
@@ -342,7 +325,6 @@ public class DateUtils {
 	/**
 	 * STUB-20021104: OK !!! da Testare Ritorna la data passando come parametri gli elementi necessari ( es.:
 	 * mese, anno, giorno ) in formato intero numerico.
-	 * <p>
 	 *
 	 * @param aYear
 	 *            Anno di riferimento.
@@ -359,7 +341,6 @@ public class DateUtils {
 	/**
 	 * STUB-20021104: OK !!! Da Testare ... e Rivedere !!!!! Ritorna la data passando come parametri gli
 	 * elementi necessari ( es.: mese, anno, giorno ) in formato <code>String</code>.
-	 * <p>
 	 *
 	 * @param aYear
 	 *            Anno di riferimento.
@@ -376,7 +357,6 @@ public class DateUtils {
 	/**
 	 * Ritorna il campo <code>Calendar</code> di una data come un intero. Es.: Calendar.MONTH - Ritorna il
 	 * mese come un intero.
-	 * <p>
 	 *
 	 * @param aDate
 	 *            Data di riferimento.
@@ -393,7 +373,6 @@ public class DateUtils {
 	/**
 	 * STUB-20021104: Da rivedere .... Utilizzare altri metodi di formattazione. Ritorna la data passata come
 	 * parametro in un intero con il formato <code>yyyyMMdd</code>
-	 * <p>
 	 *
 	 * @param aDate
 	 *            data da convertire in intero.
@@ -406,7 +385,6 @@ public class DateUtils {
 
 	/**
 	 * Ritorna il massimo tra due date.
-	 * <p>
 	 *
 	 * @param aDateOne
 	 *            Prima data da confrontare.
@@ -423,7 +401,6 @@ public class DateUtils {
 
 	/**
 	 * Ritorna il minimo tra due date.
-	 * <p>
 	 *
 	 * @param aDateOne
 	 *            Prima data da confrontare !
@@ -440,7 +417,6 @@ public class DateUtils {
 
 	/**
 	 * Ritorna ritorna la data incrementata di un giorno.
-	 * <p>
 	 *
 	 * @param aDate
 	 *            data di riferimento.
@@ -452,7 +428,6 @@ public class DateUtils {
 
 	/**
 	 * Ritorna la data decrementata di un giorno.
-	 * <p>
 	 *
 	 * @param aDate
 	 *            data di riferimento.
@@ -464,7 +439,6 @@ public class DateUtils {
 
 	/**
 	 * Ritorna la data decrementata di un mese.
-	 * <p>
 	 *
 	 * @param aDate
 	 *            data di riferimento.
@@ -476,7 +450,6 @@ public class DateUtils {
 
 	/**
 	 * Ritorna la data decrementata di un nemero di mesi specificato in input.
-	 * <p>
 	 *
 	 * @param aDate
 	 *            data di riferimento.
@@ -490,7 +463,6 @@ public class DateUtils {
 	/**
 	 * Ritorna la data modificata secondo i parametri passati al metodo. Infatti è possibile, definendo il
 	 * campo di azione e l'incremento di manipolare la data in qualunque campo.
-	 * <p>
 	 *
 	 * @param aDate
 	 *            Data di riferimento.
@@ -521,7 +493,6 @@ public class DateUtils {
 
 	/**
 	 * STUB-20021104: Da rivedere. Ritorna il giorno in formato <code>String</code>.
-	 * <p>
 	 *
 	 * @param aDate
 	 *            Data di riferimento.
@@ -541,7 +512,6 @@ public class DateUtils {
 	/**
 	 * STUB-20021104: Da rivedere ( Bisognerebbe riscriverlo con altri metodi ). Ritorna il mese in formato
 	 * <code>String</code>.
-	 * <p>
 	 *
 	 * @param aDate
 	 *            data di riferimento.
@@ -561,7 +531,6 @@ public class DateUtils {
 	/**
 	 * STUB-20021104: Da rivedere. ( Bisognerebbe riscriverlo con altri metodi ). Ritorna l'anno in formato
 	 * <code>String</code>.
-	 * <p>
 	 *
 	 * @param aDate
 	 *            data di riferimento.
@@ -580,7 +549,6 @@ public class DateUtils {
 
 	/**
 	 * Ritorna l'ultimo giorno desiderato della settimana nel mese.
-	 * <p>
 	 *
 	 * @param aDate
 	 *            Data di riferimento.
@@ -605,7 +573,6 @@ public class DateUtils {
 
 	/**
 	 * Ritorna il primo giorno desiderato della settimena nel mese.
-	 * <p>
 	 *
 	 * @param aDate
 	 *            data di riferimento.
@@ -629,7 +596,6 @@ public class DateUtils {
 
 	/**
 	 * Controlla la validità di una data in formato <code>String</code>.
-	 * <p>
 	 *
 	 * @param aDate
 	 *            data da controllare
@@ -655,7 +621,6 @@ public class DateUtils {
 
 	/**
 	 * Controlla la validità di una data in formato <code>String</code>.
-	 * <p>
 	 *
 	 * @param aDate
 	 *            data da verificare in formato intero primitivo.
@@ -677,7 +642,6 @@ public class DateUtils {
 
 	/**
 	 * Ritorna il numero di mesi compresi tra 2 date, precisamente tra un range di Anno e Mese.
-	 * <p>
 	 *
 	 * @param aFromYear
 	 *            Anno di inizio range.
@@ -710,7 +674,6 @@ public class DateUtils {
 
 	/**
 	 * Ritorna il numero di mesi compresi tra 2 date, precisamente tra un range di Anno e Mese.
-	 * <p>
 	 *
 	 * @param aFromYear
 	 *            Anno di inizio range.
@@ -737,7 +700,6 @@ public class DateUtils {
 
 	/**
 	 * Ritorna la descrizione del mese corrispondente.
-	 * <p>
 	 *
 	 * @param aValue
 	 *            mese in cifre da decodificare .
@@ -791,7 +753,6 @@ public class DateUtils {
 
 	/**
 	 * Ritorna la descrizione del giorno corrispondente.
-	 * <p>
 	 *
 	 * @param aValue
 	 *            giorno in cifre da decodificare.
@@ -968,37 +929,70 @@ public class DateUtils {
 				days += d1.getActualMaximum(java.util.Calendar.DAY_OF_YEAR);
 				// Aggiunge un anno alla data d1 (la minore) clonata
 				d1.add(java.util.Calendar.YEAR, 1);
-			} while (d1.get(java.util.Calendar.YEAR) != y2); // Finchè non sono stati aggiunti tutti gli anni
-																// per cui le date differiscono
+			} while (d1.get(java.util.Calendar.YEAR) != y2);
+			// Finchè non sono stati aggiunti tutti gli anni per cui le date differiscono
 		}
 
 		return days;
 	}
-	
-	   public static Date getDate (Calendar aCalendar) {
-//	        GregorianCalendar lCalendar = new GregorianCalendar(aYear, aMonth - 1, 1, 0, 0, 0);
-//	        lCalendar.add(Calendar.MONTH, 1);
-//	        lCalendar.add(Calendar.SECOND, -1);
 
-	        return (aCalendar.getTime());
-	    }
-	   
-	   public static Date calcolaUtimoDelProxMese (Date data) {
-           Date primoDelMese = DateUtils.getDate(DateUtils.getDateToString(data, "yyyy")
-                   , DateUtils.getDateToString(data, "MM")
-                   , "01");
-           
-           Date primoDelMeseSucc = DateUtils.moveDateTo (primoDelMese, Calendar.MONTH ,1);
-           Calendar myCalendar= Calendar.getInstance();
-           myCalendar.setTime(primoDelMeseSucc);
-           
-           String ultimoGG = (myCalendar.getActualMaximum(Calendar.DAY_OF_MONTH)>9 ? ""+myCalendar.getActualMaximum(Calendar.DAY_OF_MONTH) : "0"+myCalendar.getActualMaximum(Calendar.DAY_OF_MONTH));
-           
-           Date ultimoDelMeseSucc = DateUtils.getDate(DateUtils.getDateToString(primoDelMeseSucc, "yyyy")
-                   , DateUtils.getDateToString(primoDelMeseSucc, "MM")
-                   , ultimoGG);
-	       
-	       return ultimoDelMeseSucc;
-	   }
+	public static Date getDate(Calendar aCalendar) {
+
+		return (aCalendar.getTime());
+	}
+
+	public static Date calcolaUtimoDelProxMese(Date data) {
+		Date primoDelMese = DateUtils.getDate(DateUtils.getDateToString(data, "yyyy"),
+				DateUtils.getDateToString(data, "MM"), "01");
+
+		Date primoDelMeseSucc = DateUtils.moveDateTo(primoDelMese, Calendar.MONTH, 1);
+		Calendar myCalendar = Calendar.getInstance();
+		myCalendar.setTime(primoDelMeseSucc);
+
+		String ultimoGG = (myCalendar.getActualMaximum(Calendar.DAY_OF_MONTH) > 9
+				? "" + myCalendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+				: "0" + myCalendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+
+		Date ultimoDelMeseSucc = DateUtils.getDate(DateUtils.getDateToString(primoDelMeseSucc, "yyyy"),
+				DateUtils.getDateToString(primoDelMeseSucc, "MM"), ultimoGG);
+
+		return ultimoDelMeseSucc;
+	}
+
+	// MEV_2023-33: aggiunto metodo di controllo
+	// public static boolean isEqualsLocalDateTime(Date dataPrimaRata, Date dataRimanentiRate)
+	// throws ParseException {
+	//
+	// DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	//
+	// LocalDateTime date1 = LocalDateTime.parse(getDateToString(dataPrimaRata, "yyyy-MM-dd HH:mm:ss"), dtf);
+	// LocalDateTime date2 = LocalDateTime.parse(getDateToString(dataRimanentiRate, "yyyy-MM-dd HH:mm:ss"),
+	// dtf);
+	//
+	// if (date1.isEqual(date2))
+	// return true;
+	//
+	// return false;
+	// }
+
+	public static String getTempoEsecuzione(Date aDataDal, Date aDataAl) {
+		String lTempoEsecuzione = "";
+
+		long lDifferenzaMs = aDataAl.getTime() - aDataDal.getTime();
+
+		// long millis = lDifferenzaMs % 1000;
+		long x = lDifferenzaMs / 1000;
+		long seconds = x % 60;
+		x /= 60;
+		long minutes = x % 60;
+		x /= 60;
+		long hours = x % 24;
+
+		// lTempoEsecuzione = String.format("%02d:%02d:%02d.%03d", hours, minutes, seconds, millis);
+		lTempoEsecuzione = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+
+		return lTempoEsecuzione;
+	}
+	// FINE MEV_2023-33
 
 }

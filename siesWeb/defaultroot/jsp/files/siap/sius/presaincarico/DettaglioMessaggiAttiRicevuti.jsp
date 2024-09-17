@@ -11,17 +11,17 @@
 <%@ page import="siap.siep.penapecuniaria.model.RichiestaConversioneModel"%>
 <%@ page import="siap.siep.misurasicurezza.model.MisuraSicurezzaModel"%>
 
-<jsp:useBean id="Messaggio" scope="request" class="siap.jms.messaggio.model.MessaggioModel"/>
-<jsp:useBean id="soggetto"  scope="request" class="siap.sico.soggetto.model.SoggettoModel"/>
-<jsp:useBean id="fascicolo" scope="request" class="siap.siep.fascicolo.model.FascicoloSiepModel"/>
-<jsp:useBean id="evento"    scope="request" class="siap.sico.evento.model.EventoNotificaModel"/>
+<jsp:useBean id="Messaggio" 			scope="request" class="siap.jms.messaggio.model.MessaggioModel"/>
+<jsp:useBean id="soggetto"  			scope="request" class="siap.sico.soggetto.model.SoggettoModel"/>
+<jsp:useBean id="fascicolo" 			scope="request" class="siap.siep.fascicolo.model.FascicoloSiepModel"/>
+<jsp:useBean id="evento"    			scope="request" class="siap.sico.evento.model.EventoNotificaModel"/>
 <%-- 2010-04-30 - Modifica per NuovaIstanza --%>
 <jsp:useBean id="nuovaistanza"          scope="request" class="siap.siep.nuovaistanza.model.NuovaIstanzaModel"/>
 <jsp:useBean id="sanzione_sostitutiva"  scope="request" class="siap.siep.sanzionesostitutiva.model.SanzioneSostitutivaModel"/>
 <jsp:useBean id="sanzione_residua"      scope="request" class="siap.siep.sanzionesostitutiva.model.SanzioneSostResiduaModel"/>
 <jsp:useBean id="richiesteConversioni"  scope="request" class="java.util.Vector"/>
 <%-- Trasferimento x richiesta pericolosità sociale misure di sicurezza --%>
-<jsp:useBean id="misureSicurezza"  scope="request" class="java.util.ArrayList" />
+<jsp:useBean id="misureSicurezza"  		scope="request" class="java.util.ArrayList"/>
 
 <html>
 <head>
@@ -52,6 +52,11 @@ if (Messaggio.getCodTipoOperazione().compareTo(ICostantiJMS.TRASFERIMENTO_ISTANZ
 } else if (Messaggio.getCodTipoOperazione().compareTo(ICostantiJMS.TRASFERIMENTO_SANZIONE_SOSTITUTIVA) == 0) {
 	strTitle = "Dettaglio Sanzione Sostitutiva Ricevuta";
 	strObject = "Oggetto della Sanzione";
+} 
+// MEV_2023-33: aggiunto trasferimento pena sostitutiva
+else if (Messaggio.getCodTipoOperazione().compareTo(ICostantiJMS.TRASFERIMENTO_PENA_SOSTITUTIVA) == 0) {
+	strTitle = "Dettaglio Pena Sostitutiva Ricevuta";
+	strObject = "Oggetto della Pena";
 } else if (Messaggio.getCodTipoOperazione().compareTo(ICostantiJMS.TRASFERIMENTO_ATTI_CONVERSIONE) == 0) {
   strTitle = "Dettaglio Richiesta Conversione Pene Pecuniarie Ricevuta";
   strObject = "Oggetto del Provvedimento";
@@ -96,6 +101,11 @@ if (Messaggio.getCodTipoOperazione().compareTo(ICostantiJMS.TRASFERIMENTO_ISTANZ
 } else if (Messaggio.getCodTipoOperazione().compareTo(ICostantiJMS.TRASFERIMENTO_SANZIONE_SOSTITUTIVA) == 0) {
 %>
 		<td colspan="3" class="l"><font class="campo">Richiesta Applicazione Sanzione Sostitutiva&nbsp;</font></td>
+<%-- MEV_2023-33: aggiunto trasferimento pena sostitutiva --%>
+<%
+} else if (Messaggio.getCodTipoOperazione().compareTo(ICostantiJMS.TRASFERIMENTO_PENA_SOSTITUTIVA) == 0) {
+%>
+		<td colspan="3" class="l"><font class="campo">Richiesta Applicazione Pena Sostitutiva&nbsp;</font></td>
 <%
 } else if (Messaggio.getCodTipoOperazione().compareTo(ICostantiJMS.TRASFERIMENTO_RICHIESTA_ACCERTA_PERICOLO_SOCIALE) == 0) {
 %>
@@ -191,7 +201,7 @@ if (soggetto.getDescrComuneNascita() != null
         <td class="L">Anno/Numero</td>
         <td class="l"><font class="campo"><%=StringUtils.toStringJSP(fascicolo.getChiaveAnno())%>/<%=StringUtils.toStringJSP(fascicolo.getChiaveProgr())%></font></td>
 	</tr>
-	<!----------- SANZIONE SOSTITUTIVA DA ESPIARE -------------------->
+	<!----------- SANZIONE/PENA SOSTITUTIVA DA ESPIARE -------------------->
 <%
 if ((sanzione_residua != null && ((sanzione_residua.getNumAnni() != null)
 		|| (sanzione_residua.getNumMesi() != null)
@@ -200,7 +210,7 @@ if ((sanzione_residua != null && ((sanzione_residua.getNumAnni() != null)
 				|| (sanzione_sostitutiva.getNumMesi() != null)
 				|| (sanzione_sostitutiva.getNumGiorni() != null)))) {
 	String Anni = "", Mesi = "", Giorni = "", FlagReadOnly = "", TipoSanzione="";
-    if (sanzione_residua != null && ((sanzione_residua.getNumAnni() != null)
+	if (sanzione_residua != null && ((sanzione_residua.getNumAnni() != null)
     		|| (sanzione_residua.getNumMesi() != null)
     		|| (sanzione_residua.getNumGiorni() != null))) {
 		Anni = StringUtils.toStringJSP(sanzione_residua.getNumAnni(), "0");
@@ -216,13 +226,19 @@ if ((sanzione_residua != null && ((sanzione_residua.getNumAnni() != null)
 		Giorni = StringUtils.toStringJSP(sanzione_sostitutiva.getNumGiorni(), "0");
 		FlagReadOnly = "readonly";
 		TipoSanzione = sanzione_sostitutiva.getCodTipoSanzione();
-     }
-     if (TipoSanzione.compareTo("L") == 0)
+	}
+	// MEV_2023-33: aggiunto trasferimento pena sostitutiva (T,V)
+	if (TipoSanzione.compareTo("L") == 0)
 		TipoSanzione = "Libertà Controllata";
-     else if (TipoSanzione.compareTo("S") == 0 )
+	else if (TipoSanzione.compareTo("S") == 0 )
 		TipoSanzione = "Semidetenzione";
+	else if (TipoSanzione.compareTo("T") == 0)
+ 		TipoSanzione = "Semiliberta' sostitutiva";
+	else if (TipoSanzione.compareTo("V") == 0 )
+ 		TipoSanzione = "Detenzione Domiciliare sostitutiva";
+	String tipo = ("T".equals(TipoSanzione) || "V".equals(TipoSanzione)) ? "Pena" : "Sanzione";
 %>
-	<tr><td class="Titolo" colspan=4>Sanzione Sostitutiva da espiare: </td></tr>
+	<tr><td class="Titolo" colspan=4><%=tipo%> Sostitutiva da espiare: </td></tr>
 	<tr>
         <td class="L">Tipo:&nbsp;<font class="campo"><%=TipoSanzione%></font></td>
         <td class="L">Anni:&nbsp;<font class="campo"><%=Anni%></font></td>

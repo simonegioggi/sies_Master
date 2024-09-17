@@ -44,13 +44,11 @@ public interface ICostantiJMS {
 	public static final String DATA_NASCITA = "DataNascita"; // UEPE
 	public static final String COD_STATO_NASCITA = "CodStatoNascita"; // UEPE
 	public static final String COD_COMUNE_NASCITA = "CodComuneNascita"; // UEPE
-	public static final String CHIAVE_ANNO_FAS_CUMULANTE = "ChiaveAnnoCumulante"; // SIEP - Trasmissione
-																					// Competenza
+	public static final String CHIAVE_ANNO_FAS_CUMULANTE = "ChiaveAnnoCumulante";// SIEP - Trasmissione
 	public static final String CHIAVE_PROGR_FAS_CUMULANTE = "ChiaveProgrCumulante"; // SIEP - Trasmissione
 	public static final String CHIAVE_UFFICIO_FAS_CUMULANTE = "ChiaveUfficioCumulante"; // SIEP - Trasmissione
-	// mev 39: aggiungo costante per trasmissione della data del cumulo																					// Competenza
+	// mev 39: aggiungo costante per trasmissione della data del cumulo // Competenza
 	public static final String DATA_EMISSIONE_CUMULO = "DataEmissioneCumulo";
-	
 	public static final String NOTE = "Note"; // SIEP - Trasmissione Competenza
 
 	public static final String DELIVERY_MODE = "DeliveryMode";
@@ -205,14 +203,12 @@ public interface ICostantiJMS {
 	public static final String RESTITUITO = "01003"; // UEPE + SIEP TRASFERIMENTO COMPETENZA
 	public static final String TRASFERITO = "01004"; // SIEP TRASFERIMENTO COMPETENZA
 	public static final String ISCRITTO_CLASSE_IV = "01005"; // SIEP TRASFERIMENTO COMPETENZA
-	public static final String TRASMESSO = "01006"; // SIEP TRASFERIMENTO COMPETENZA - RICHIESTA RICEVUTA e
-													// TRASMESSA RISPOSTA
-	public static final String RIGETTATO = "01007"; // SIEP TRASFERIMENTO COMPETENZA - RICHIESTA RICEVUTA e
-													// RIGETTATA
-
-	public static final String ASSORBITO_IN_CUMULO = "01009"; // SIEP TRASFERIMENTO COMPETENZA -
-																// Fascicolo/Titolo ASSORBITO IN CUMULO dal
-																// Cumulante
+	// SIEP TRASFERIMENTO COMPETENZA - RICHIESTA RICEVUTA e TRASMESSA RISPOSTA
+	public static final String TRASMESSO = "01006";
+	// SIEP TRASFERIMENTO COMPETENZA - RICHIESTA RICEVUTA e RIGETTATA
+	public static final String RIGETTATO = "01007";
+	// SIEP TRASFERIMENTO COMPETENZA - Fascicolo/Titolo ASSORBITO IN CUMULO dal Cumulante
+	public static final String ASSORBITO_IN_CUMULO = "01009";
 
 	public static final String DESTINAZIONE_NON_RAGGIUNGIBILE = "00100";
 	public static final String POSITIVO = "00000";
@@ -220,7 +216,7 @@ public interface ICostantiJMS {
 	public static final String CONSTRAINT_VIOLATA = "00002"; // STUB 20/04/2005.
 	public static final String NULL_NON_CONSENTITO = "01400";
 	public static final String ERRORE_GENERICO = "33333";
-	//MEV_67
+	// MEV_67
 	public static final String ERRORE_CARICAMENTO = "99999";
 
 	// new MS. Nel caso di MS viene sempre salvata in locale la richiesta (01)
@@ -228,15 +224,19 @@ public interface ICostantiJMS {
 	// il messaggio inviato da quello ricevuto
 	public static final String DELIVERY_MODE_INVIATO = "00001";
 	public static final String DELIVERY_MODE_RICEVUTO = "00002";
-	public static final String DELIVERY_MODE_INOLTRATO = "00003"; // gli invii x inoltro hanno codice 00003
-																	// per distinguerli dagli invii diretti
+	// gli invii x inoltro hanno codice 00003 per distinguerli dagli invii diretti
+	public static final String DELIVERY_MODE_INOLTRATO = "00003";
 	// public static final String ESITO_RICERCA_FASCICOLO = "00030";
 
 	// NUOVA INFRASTRUTTURA: porta broker jms
 	public static final String PORT = "PORT";
-	
-	// 28/05/2019 [EC] -  MEV PROBLEMA CODE INTRODOTTO IN SIES 11.3
-	public static final String ERRORE_DEPLOY   = "11111";
+
+	// 28/05/2019 [EC] - MEV PROBLEMA CODE INTRODOTTO IN SIES 11.3
+	public static final String ERRORE_DEPLOY = "11111";
 	public static final String ESITO_DI_ERRORE = "01110";
+
+	// MEV_2023-33: aggiunto codice x PENA SOSTITUTIVA
+	public static final String TRASFERIMENTO_PENA_SOSTITUTIVA = "00034";
+	public static final String ESITO_TRASFERIMENTO_PENA_SOSTITUTIVA = "00035";
 
 }

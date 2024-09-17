@@ -380,14 +380,27 @@ public class SanzioneSostitutivaModel extends GenericModel {
 			if (this.mNumGiorni.intValue() != 0)
 				lString += " Giorni " + this.mNumGiorni;
 		}
-		if (this.mSanzionePecuniariaMulta != null && this.mSanzionePecuniariaMulta.intValue() != 0) {
-			lString += ": Multa " + StringUtils.toEuroFormat(mSanzionePecuniariaMulta) + " Euro";
-		}
+		
+    // MEV_2023-33: Z = Pena Pecuniaria sostitutiva
+    if ("Z".equals(mCodTipoSanzione)) {
+      if (this.mSanzionePecuniariaMulta != null && this.mSanzionePecuniariaMulta.intValue() != 0) {
+        lString += " Importo " + StringUtils.toEuroFormat(mSanzionePecuniariaMulta) + " Euro";
+      }
+    }
+    else {
+    // MEV_2023-33
+  		if (this.mSanzionePecuniariaMulta != null && this.mSanzionePecuniariaMulta.intValue() != 0) {
+  			lString += ": Multa " + StringUtils.toEuroFormat(mSanzionePecuniariaMulta) + " Euro";
+  		}
+  
+  		if (this.mSanzionePecuniariaAmmenda != null && this.mSanzionePecuniariaAmmenda.intValue() != 0) {
+  			lString += ": Ammenda " + StringUtils.toEuroFormat(mSanzionePecuniariaAmmenda) + " Euro";
+  		}
+    }
 
-		if (this.mSanzionePecuniariaAmmenda != null && this.mSanzionePecuniariaAmmenda.intValue() != 0) {
-			lString += ": Ammenda " + StringUtils.toEuroFormat(mSanzionePecuniariaAmmenda) + " Euro";
-		}
-
+		
+		
+		
 		if (lString.length() > 1)
 			this.mStringaSanzione = lString;
 		else

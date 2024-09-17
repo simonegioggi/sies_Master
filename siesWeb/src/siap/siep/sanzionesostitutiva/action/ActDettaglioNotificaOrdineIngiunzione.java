@@ -1,5 +1,6 @@
 package siap.siep.sanzionesostitutiva.action;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
 import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
+import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
@@ -39,15 +41,19 @@ public class ActDettaglioNotificaOrdineIngiunzione extends ActionSiap
 		// Verifico esistenza Ordine di ingiunzione
 		IEvento eventoCtrl = SICOLookupRemote.getEventoRemote();
 
-		EventoModel lEveRicerca = new EventoModel();
-		lEveRicerca.setCodTipoEvento("01");
-		lEveRicerca.setCodTipoProvvedimento("06");
-		lEveRicerca.setCodMotivo("0622");
+		// MEV_2023-33 - Possono essere presenti più Eventi
+		BigDecimal idEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
+		EventoModel lOrdineIngiunzione = eventoCtrl.ExRicercaEventoByKey(idEvento);
 
-		lEveRicerca.setFasSieIdFascicoloSiep(lFascMod.getIdFascicoloSiep());
-		lEveRicerca.setFlagDocumentoRegistrato("S");
+		// EventoModel lEveRicerca = new EventoModel();
+		// lEveRicerca.setCodTipoEvento("01");
+		// lEveRicerca.setCodTipoProvvedimento("06");
+		// lEveRicerca.setCodMotivo("0622");
+		// lEveRicerca.setFasSieIdFascicoloSiep(lFascMod.getIdFascicoloSiep());
+		// lEveRicerca.setFlagDocumentoRegistrato("S");
+		// EventoModel lOrdineIngiunzione = eventoCtrl.ExRicercaUltimoTipoEventoByIdFascicolo(lEveRicerca);
+		// MEV_2023-33 - FINE
 
-		EventoModel lOrdineIngiunzione = eventoCtrl.ExRicercaUltimoTipoEventoByIdFascicolo(lEveRicerca);
 		if (lOrdineIngiunzione == null || lOrdineIngiunzione.getIdEvento() == null) {
 			RedirectTo lRedirigi = new RedirectTo();
 			lRedirigi.setPage(IWebConstants.PG_MAIN);

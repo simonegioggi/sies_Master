@@ -877,4 +877,68 @@ public class ScadenzarioController extends SiapController implements IScadenzari
 	}
 	// FINE MEV_39
 
+	// MEV_2023-33
+	 public BigDecimal ExGetCountScadenzariPP (ScadenzarioModel aScadenzario) throws F3BException {
+
+	    BigDecimal lCount = new BigDecimal(0);
+	    Connection lConn = null;
+
+	    ScadenzarioSoggettoSqlDAO lScaSqlDao = new ScadenzarioSoggettoSqlDAO(lConn);
+
+	    try {
+	      lConn = getDBConnection();
+
+	      lScaSqlDao = new ScadenzarioSoggettoSqlDAO(lConn);
+	      lScaSqlDao.getCountScadenzariPP(aScadenzario);
+	      lScaSqlDao.start();
+	      lScaSqlDao.next();
+
+	      lCount = lScaSqlDao.getBigDecimal("HowManyRecords");
+	      lScaSqlDao.stop();
+	    } catch (DAOException daoEx) {
+	      throw new SIEPException(SIEPException.USER_MESSAGE,
+	          "ScadenzarioController.ExGetCountScadenzariPP: Non posso leggere : " + daoEx);
+	    } finally {
+	      cleanup(lScaSqlDao);
+	      cleanup(lConn);
+	    }
+
+	    return lCount;
+	  }
+	 
+	 
+	 public Vector ExRicercaScadenzarioPagedPP (ScadenzarioModel aScadenzario, int aPage) throws F3BException {
+
+	    Connection lConn = null;
+
+	    Vector lScadenzari = new Vector();
+
+	    ScadenzarioSoggettoSqlDAO lScaSogSqlDao = null;
+
+	    try {
+	      lConn = getDBConnection();
+
+	      lScaSogSqlDao = new ScadenzarioSoggettoSqlDAO(lConn);
+	      lScaSogSqlDao.ricercaScadenzarioPagedPPCompleta(aScadenzario, aPage);
+	      lScaSogSqlDao.start();
+        while (lScaSogSqlDao.next()) {
+          lScadenzari.add(lScaSogSqlDao.getModelScadePP());
+        }
+        lScaSogSqlDao.stop();
+
+	      if (lScadenzari.size() == 0) {
+	        throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
+	      }
+	    } catch (DAOException daoEx) {
+	      throw new F3BException("ScadenzarioController.ExRicercaScadenzarioPagedPP: " + daoEx);
+	    } finally {
+	      cleanup(lScaSogSqlDao);
+
+	      cleanup(lConn);
+	    }
+
+	    return lScadenzari;
+	  }
+	// MEV_2023-33 - FINE
+	
 } // CHIUDE CLASSE ScadenzarioController

@@ -5,26 +5,16 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.Vector;
 
+import f3b.util.F3BException;
 import siap.siep.penacomplessiva.model.DettaglioPenaComplessivaModel;
 import siap.siep.penacomplessiva.model.PenaComplessivaModel;
 import siap.siep.penacomplessiva.model.PenaComplessivaSanzioneSostitutivaModel;
 import siap.siep.sanzionesostitutiva.model.SanzioneSostitutivaModel;
-import f3b.util.F3BException;
 
 /**
- * <p>
  * Title: PenaComplessivaController
- * </p>
- * <p>
  * Description: Classe Controller per PenaComplessiva
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings("rawtypes")
@@ -82,5 +72,18 @@ public interface IPenaComplessiva {
 			throws F3BException;
 
 	public void ExCancellaPenaComplessivaSige(PenaComplessivaModel aPenaComplessiva) throws F3BException;
+
+	/**
+	 * Aggiunto metodo di ricerca per la Gestione Pene Sostitutive: Semilibertà/Detenzione Domiciliare
+	 * 
+	 * @author 	sgioggi
+	 * @since	MEV_2023-33
+	 * @param 	idFascicoloSiep
+	 * @param 	highValue 
+	 * @return 	PenaComplessivaSanzioneSostitutivaModel
+	 * @throws	F3BException
+	 */
+	public PenaComplessivaSanzioneSostitutivaModel ExRicercaPenaComplessivaPenaSostitutivaByIdFascicoloSiep(
+			BigDecimal idFascicoloSiep, String highValue) throws F3BException;
 
 }

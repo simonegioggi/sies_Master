@@ -435,10 +435,9 @@ if(lSanSos.getSanzionePecuniariaAmmenda() != null && lSanSos.getSanzionePecuniar
 
 <%}      
 %>
-  </table>  
+  </table>
+  <br>
   <table width='100%'>
-   
-<br>
 <tr>
         <td class="l">Data Emissione</td>
         <td class="L">
@@ -510,7 +509,8 @@ if(lSanSos.getSanzionePecuniariaAmmenda() != null && lSanSos.getSanzionePecuniar
        <br><br><INPUT class="bottone" type="submit" name="I" value="Conferma" onClick="javascript:return Verify();">
        </td>
    </tr>
-
+</table>
+</form>
 <script language="JavaScript" type="text/javascript">
   var frmvalidator  = new Validator("LoadInserisciTrasmissioneAttiEsecuzione");
 
@@ -542,8 +542,6 @@ if(lSanSos.getSanzionePecuniariaAmmenda() != null && lSanSos.getSanzionePecuniar
   frmvalidator.addValidation("<%= ICostantiNotifica.CAMPO_ANNO_DATA_INVIO%>","lt=2099");
 
  </script>
-</table>
-</form>
 </body>
 </html>
 	

@@ -10,10 +10,6 @@ package it.giustizia.www.serviziTelematici.serviziGenerici;
 public class DatiVersamento  implements java.io.Serializable {
     private java.math.BigDecimal importoTotale;
 
-    private java.lang.String ibanAddebito;
-
-    private java.lang.String bicAddebito;
-
     private it.giustizia.www.serviziTelematici.serviziGenerici.DatiSingoloVersamento[] datiSingoloVersamento;
 
     public DatiVersamento() {
@@ -21,12 +17,8 @@ public class DatiVersamento  implements java.io.Serializable {
 
     public DatiVersamento(
            java.math.BigDecimal importoTotale,
-           java.lang.String ibanAddebito,
-           java.lang.String bicAddebito,
            it.giustizia.www.serviziTelematici.serviziGenerici.DatiSingoloVersamento[] datiSingoloVersamento) {
            this.importoTotale = importoTotale;
-           this.ibanAddebito = ibanAddebito;
-           this.bicAddebito = bicAddebito;
            this.datiSingoloVersamento = datiSingoloVersamento;
     }
 
@@ -48,46 +40,6 @@ public class DatiVersamento  implements java.io.Serializable {
      */
     public void setImportoTotale(java.math.BigDecimal importoTotale) {
         this.importoTotale = importoTotale;
-    }
-
-
-    /**
-     * Gets the ibanAddebito value for this DatiVersamento.
-     * 
-     * @return ibanAddebito
-     */
-    public java.lang.String getIbanAddebito() {
-        return ibanAddebito;
-    }
-
-
-    /**
-     * Sets the ibanAddebito value for this DatiVersamento.
-     * 
-     * @param ibanAddebito
-     */
-    public void setIbanAddebito(java.lang.String ibanAddebito) {
-        this.ibanAddebito = ibanAddebito;
-    }
-
-
-    /**
-     * Gets the bicAddebito value for this DatiVersamento.
-     * 
-     * @return bicAddebito
-     */
-    public java.lang.String getBicAddebito() {
-        return bicAddebito;
-    }
-
-
-    /**
-     * Sets the bicAddebito value for this DatiVersamento.
-     * 
-     * @param bicAddebito
-     */
-    public void setBicAddebito(java.lang.String bicAddebito) {
-        this.bicAddebito = bicAddebito;
     }
 
 
@@ -133,12 +85,6 @@ public class DatiVersamento  implements java.io.Serializable {
             ((this.importoTotale==null && other.getImportoTotale()==null) || 
              (this.importoTotale!=null &&
               this.importoTotale.equals(other.getImportoTotale()))) &&
-            ((this.ibanAddebito==null && other.getIbanAddebito()==null) || 
-             (this.ibanAddebito!=null &&
-              this.ibanAddebito.equals(other.getIbanAddebito()))) &&
-            ((this.bicAddebito==null && other.getBicAddebito()==null) || 
-             (this.bicAddebito!=null &&
-              this.bicAddebito.equals(other.getBicAddebito()))) &&
             ((this.datiSingoloVersamento==null && other.getDatiSingoloVersamento()==null) || 
              (this.datiSingoloVersamento!=null &&
               java.util.Arrays.equals(this.datiSingoloVersamento, other.getDatiSingoloVersamento())));
@@ -155,12 +101,6 @@ public class DatiVersamento  implements java.io.Serializable {
         int _hashCode = 1;
         if (getImportoTotale() != null) {
             _hashCode += getImportoTotale().hashCode();
-        }
-        if (getIbanAddebito() != null) {
-            _hashCode += getIbanAddebito().hashCode();
-        }
-        if (getBicAddebito() != null) {
-            _hashCode += getBicAddebito().hashCode();
         }
         if (getDatiSingoloVersamento() != null) {
             for (int i=0;
@@ -187,20 +127,6 @@ public class DatiVersamento  implements java.io.Serializable {
         elemField.setFieldName("importoTotale");
         elemField.setXmlName(new javax.xml.namespace.QName("", "importoTotale"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "decimal"));
-        elemField.setNillable(false);
-        typeDesc.addFieldDesc(elemField);
-        elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("ibanAddebito");
-        elemField.setXmlName(new javax.xml.namespace.QName("", "ibanAddebito"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
-        elemField.setMinOccurs(0);
-        elemField.setNillable(false);
-        typeDesc.addFieldDesc(elemField);
-        elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("bicAddebito");
-        elemField.setXmlName(new javax.xml.namespace.QName("", "bicAddebito"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
-        elemField.setMinOccurs(0);
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();

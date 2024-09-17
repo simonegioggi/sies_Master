@@ -816,7 +816,7 @@ public class StatoRichiestaPagamento  implements java.io.Serializable {
           new  org.apache.axis.encoding.ser.BeanDeserializer(
             _javaType, _xmlType, typeDesc);
     }
-    
+
     
     public String toString1() {
         String lStr = new String();
