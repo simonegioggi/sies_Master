@@ -23,3 +23,13 @@ Comprende i seguenti Ticket MAC:
 	Classi modificate:
 	-	LoadInserisciPenaManuale.jsp
 	-	LoadInserisciPenaRideterminata.jsp
+
+3)	Ticket#202409180152 - SIEP - Nuova dicitura
+	Aggiunta una nuova dicitura nei template dell'ordine di ingiunzione in caso di rateizzazione e gestite le parole
+	"condannato" e "nominato" in base al sesso del soggetto in alcuni punti dei template delle pene pecuniarie.
+	Template modificati:
+	-	import\AvvisoCartabia.rtf
+	-	siep\pp\SIEP_PP_OI_PAGAMENTO_RR.rtf
+	-	siep\pp\SIEP_PP_OI_PAGAMENTO_RR_DET.rtf
+	-	siep\pp\SIEP_PP_OI_PAGAMENTO_UN.rtf
+	-	siep\pp\SIEP_PP_OI_PAGAMENTO_UN_DET.rtf
