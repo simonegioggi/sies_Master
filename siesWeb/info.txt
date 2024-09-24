@@ -19,3 +19,5 @@ Gli interventi sono relativi ai sottosistemi SIEP e SIUS.
 5)	in data 14/03/2024 eseguito merge con "RELEASE_12.5.7.0"
 
 6)	in data 18/09/2024 eseguito merge con "RELEASE_12.6.2.0"
+
+7)	in data 24/09/2024 eseguito merge con "MEV_2024-DNA"
