@@ -2,6 +2,10 @@ package siap.siep.jms.action;
 
 import java.math.BigDecimal;
 
+import org.apache.log4j.Logger;
+
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
 import f3b.web.IWebConstants;
 import siap.jms.ICostantiJMS;
 import siap.jms.JMSLookupRemote;
@@ -10,6 +14,7 @@ import siap.jms.messaggio.controller.IMessaggio;
 import siap.jms.messaggio.model.MessaggioModel;
 import siap.jms.util.ParserMessage; // STUB 07/03/2005
 import siap.sico.lock.model.LockModel;
+import siap.sico.jms.model.PresaInCaricoModel;
 import siap.sico.web.ActionSiap;
 import siap.siep.jms.controller.IPresaInCaricoJMS;
 import siap.siep.util.SIEPLookupRemote;
@@ -32,6 +37,8 @@ import siap.siep.util.SIEPLookupRemote;
  * @version 1.0
  */
 public class ActPresaInCaricoFascicoloSiep extends ActionSiap implements ICostantiJMS {
+  private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+  
 	public String processRequest() throws Exception {
 		// Controllo che non si stia lavorando su una entità in modifica ad altri
 		LockModel lck = lockIfNotLocked("caricofascicolo",
@@ -55,11 +62,22 @@ public class ActPresaInCaricoFascicoloSiep extends ActionSiap implements ICostan
 
 		}
 
-		/* UfficioModel lBDI = */this.getUfficioByCodUfficio(this.getCodUfficioUtenteConnesso());
-
+		/* UfficioModel lBDI = */this.getUfficioByCodUfficio(this.getCodUfficioUtenteConnesso());		
+		
 		MessaggioModel lMessReturn = null;
 		IPresaInCaricoJMS lPres = SIEPLookupRemote.getPresaInCarico();
-		lMessReturn = lPres.ExInserisciFascicoloSiep(lMess);
+		
+		// MEV_2024-DNA - Si passano al controller anche le informazione su data utente e ufficio 
+		//                che precede alla presa in carico
+		PresaInCaricoModel lPresaIncaricoModel = new PresaInCaricoModel();
+		lPresaIncaricoModel.setDataPresaInCarico (DateUtils.getSysDate());
+		lPresaIncaricoModel.setCodOperatorePresaInCarico (getCodUtenteConnesso());
+		lPresaIncaricoModel.setCodUfficioPresaInCarico (getCodUfficioUtenteConnesso());
+		
+		//lMessReturn = lPres.ExInserisciFascicoloSiep(lMess);
+		siesLogger.debug(lPresaIncaricoModel);
+		lMessReturn = lPres.ExInserisciFascicoloSiep (lMess, lPresaIncaricoModel);
+		// MEV_2024-DNA - FINE
 
 		// STUB 07/03/2005 Recupero del Fascicolo per il dettaglio Fascicolo SIEP.
 		ParserMessage lParser = null;

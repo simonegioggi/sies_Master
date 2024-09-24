@@ -11,18 +11,7 @@ import siap.sige.provvedimento.model.ProvvedimentoSigeEventoModel;
 import siap.sige.provvedimento.model.ProvvedimentoSigeModel;
 
 /**
- * <p>
- * Title: ProvvedimentoSigeSqlDAO
- * </p>
- * <p>
- * Description: Classe SqlDAO che rappresenta la tabella ProvvedimentoSige
- * </p>
- * <p>
- * Copyright: Copyright (c) 2008
- * </p>
- * <p>
- * Company:
- * </p>
+ * ProvvedimentoSigeSqlDAO - Classe SqlDAO che rappresenta la tabella ProvvedimentoSige
  *
  * @version 1.0
  */
@@ -33,18 +22,17 @@ public class ProvvedimentoSigeSqlDAO extends SIAPSqlDAO {
 	}
 
 	public void ricercaOrdinanzaRinvioUdienzaDaValidareByFascicolo(BigDecimal idFascicolo) {
-		String sql = "select * from provvedimento_sige, evento where " + "fas_id_fascicolo_sige="
-				+ idFascicolo + " and " + "cod_tipo_provvedimento_sige='04' and "
+
+		String sql = "select * from provvedimento_sige, evento where fas_id_fascicolo_sige=" + idFascicolo
+				+ " and cod_tipo_provvedimento_sige='04' and "
 				+ "evento.id_evento=provvedimento_sige.id_evento_generato and "
 				+ "(evento.flag_documento_registrato is NULL or evento.flag_documento_registrato <> 'S')";
 		super.setStatement(sql);
 	}
 
 	/**
-	 * <p>
 	 * Description: metodo di ricerca del Provvedimento definitorio in PROVVEDIMENTO_SIGE collegato a una
 	 * occorrenza di EVENTO
-	 * </p>
 	 *
 	 * @param BigDecimal
 	 *            aKey : Identificativo Fascicolo SIGE
@@ -70,10 +58,8 @@ public class ProvvedimentoSigeSqlDAO extends SIAPSqlDAO {
 	}
 
 	/**
-	 * <p>
 	 * Description: metodo di ricerca dei Provvedimento da depositare in PROVVEDIMENTO_SIGE collegato a una
 	 * occorrenza di EVENTO
-	 * </p>
 	 *
 	 * @param ProvvedimentoSigeModel
 	 *            aProvModel : ProvvedimentoSigeModel con filtri di ricerca.
@@ -104,10 +90,8 @@ public class ProvvedimentoSigeSqlDAO extends SIAPSqlDAO {
 	}
 
 	/**
-	 * <p>
 	 * Description: metodo di ricerca dei Provvedimento da depositare in PROVVEDIMENTO_SIGE collegato a una
 	 * occorrenza di EVENTO
-	 * </p>
 	 *
 	 * @param ProvvedimentoSigeModel
 	 *            aProvModel : ProvvedimentoSigeModel con filtri di ricerca.
@@ -140,18 +124,18 @@ public class ProvvedimentoSigeSqlDAO extends SIAPSqlDAO {
 			String codTipoProvvedimento) throws DAOException {
 		String lStatement = new String("");
 
-		lStatement += " SELECT DISTINCT " + "PROVVEDIMENTO_SIGE.ID_PROVVEDIMENTO_SIGE, "
-				+ "PROVVEDIMENTO_SIGE.FAS_ID_FASCICOLO_SIGE, " + "PROVVEDIMENTO_SIGE.ID_EVENTO_GENERATO, "
-				+ "PROVVEDIMENTO_SIGE.CHIAVE_ANNO, " + "PROVVEDIMENTO_SIGE.CHIAVE_PROGR, "
-				+ "PROVVEDIMENTO_SIGE.CHIAVE_UFFICIO, " + "PROVVEDIMENTO_SIGE.DATA_EMISSIONE, "
-				+ "PROVVEDIMENTO_SIGE.DATA_DEPOSITO, " + "PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO, "
-				+ "PROVVEDIMENTO_SIGE.DEFINITORIO, " + "PROVVEDIMENTO_SIGE.FLAG_ORDINE_TRADUZIONE, "
-				+ "PROVVEDIMENTO_SIGE.LUOGO_SVOLGIMENTO, " + "PROVVEDIMENTO_SIGE.COD_OPERATORE_INSERIMENTO, "
-				+ "PROVVEDIMENTO_SIGE.COD_UFFICIO_INSERIMENTO, " + "PROVVEDIMENTO_SIGE.DATA_INSERIMENTO, "
+		lStatement += "SELECT DISTINCT PROVVEDIMENTO_SIGE.ID_PROVVEDIMENTO_SIGE, "
+				+ "PROVVEDIMENTO_SIGE.FAS_ID_FASCICOLO_SIGE, PROVVEDIMENTO_SIGE.ID_EVENTO_GENERATO, "
+				+ "PROVVEDIMENTO_SIGE.CHIAVE_ANNO, PROVVEDIMENTO_SIGE.CHIAVE_PROGR, "
+				+ "PROVVEDIMENTO_SIGE.CHIAVE_UFFICIO, PROVVEDIMENTO_SIGE.DATA_EMISSIONE, "
+				+ "PROVVEDIMENTO_SIGE.DATA_DEPOSITO, PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO, "
+				+ "PROVVEDIMENTO_SIGE.DEFINITORIO, PROVVEDIMENTO_SIGE.FLAG_ORDINE_TRADUZIONE, "
+				+ "PROVVEDIMENTO_SIGE.LUOGO_SVOLGIMENTO, PROVVEDIMENTO_SIGE.COD_OPERATORE_INSERIMENTO, "
+				+ "PROVVEDIMENTO_SIGE.COD_UFFICIO_INSERIMENTO, PROVVEDIMENTO_SIGE.DATA_INSERIMENTO, "
 				+ "PROVVEDIMENTO_SIGE.COD_OPERATORE_AGGIORNAMENTO, "
-				+ "PROVVEDIMENTO_SIGE.COD_UFFICIO_AGGIORNAMENTO, " + "PROVVEDIMENTO_SIGE.DATA_AGGIORNAMENTO, "
-				+ "PROVVEDIMENTO_SIGE.COL_ID_COLLEGIO, " + "PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO_SIGE, "
-				+ "PROVVEDIMENTO_SIGE.COD_UFFICIO_DESTINATARIO, " + "PROVVEDIMENTO_SIGE.NOTE, "
+				+ "PROVVEDIMENTO_SIGE.COD_UFFICIO_AGGIORNAMENTO, PROVVEDIMENTO_SIGE.DATA_AGGIORNAMENTO, "
+				+ "PROVVEDIMENTO_SIGE.COL_ID_COLLEGIO, PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO_SIGE, "
+				+ "PROVVEDIMENTO_SIGE.COD_UFFICIO_DESTINATARIO, PROVVEDIMENTO_SIGE.NOTE, "
 				+ "PROVVEDIMENTO_SIGE.PROVV_ID_PROVVEDIMENTO_SIGE, "
 				+ "PROVVEDIMENTO_SIGE.UDI_ID_UDIENZA_SIGE, " +
 				// "UFFICIO.COD_TIPO_UFFICIO as Tipo_Ufficio, "+
@@ -168,14 +152,14 @@ public class ProvvedimentoSigeSqlDAO extends SIAPSqlDAO {
 	public void ricercaProvvedimentiSigePerIdFasSige(BigDecimal aIdFasSige) throws DAOException {
 		String lStatement = new String("");
 
-		lStatement += " SELECT " + "ID_PROVVEDIMENTO_SIGE, " + "FAS_ID_FASCICOLO_SIGE, "
-				+ "ID_EVENTO_GENERATO, " + "CHIAVE_ANNO, " + "CHIAVE_PROGR, " + "CHIAVE_UFFICIO, "
-				+ "DATA_EMISSIONE, " + "DATA_DEPOSITO, " + "COD_TIPO_PROVVEDIMENTO, " + "DEFINITORIO, "
-				+ "FLAG_ORDINE_TRADUZIONE, " + "LUOGO_SVOLGIMENTO, " + "COD_OPERATORE_INSERIMENTO, "
-				+ "COD_UFFICIO_INSERIMENTO, " + "DATA_INSERIMENTO, " + "COD_OPERATORE_AGGIORNAMENTO, "
-				+ "COD_UFFICIO_AGGIORNAMENTO, " + "DATA_AGGIORNAMENTO, " + "COL_ID_COLLEGIO, "
-				+ "COD_TIPO_PROVVEDIMENTO_SIGE, " + "COD_UFFICIO_DESTINATARIO, " + "NOTE, "
-				+ "PROVV_ID_PROVVEDIMENTO_SIGE, " + "UDI_ID_UDIENZA_SIGE ";
+		lStatement += " SELECT ID_PROVVEDIMENTO_SIGE, FAS_ID_FASCICOLO_SIGE, "
+				+ "ID_EVENTO_GENERATO, CHIAVE_ANNO, CHIAVE_PROGR, CHIAVE_UFFICIO, "
+				+ "DATA_EMISSIONE, DATA_DEPOSITO, COD_TIPO_PROVVEDIMENTO, DEFINITORIO, "
+				+ "FLAG_ORDINE_TRADUZIONE, LUOGO_SVOLGIMENTO, COD_OPERATORE_INSERIMENTO, "
+				+ "COD_UFFICIO_INSERIMENTO, DATA_INSERIMENTO, COD_OPERATORE_AGGIORNAMENTO, "
+				+ "COD_UFFICIO_AGGIORNAMENTO, DATA_AGGIORNAMENTO, COL_ID_COLLEGIO, "
+				+ "COD_TIPO_PROVVEDIMENTO_SIGE, COD_UFFICIO_DESTINATARIO, NOTE, "
+				+ "PROVV_ID_PROVVEDIMENTO_SIGE, UDI_ID_UDIENZA_SIGE ";
 		lStatement += " FROM PROVVEDIMENTO_SIGE";
 
 		lStatement += " " + setCondizionePerIdFasSige(aIdFasSige);
@@ -186,19 +170,21 @@ public class ProvvedimentoSigeSqlDAO extends SIAPSqlDAO {
 	public void ricercaProvvedimentiSigePerOpposizioni(BigDecimal aIdFasSige) throws DAOException {
 		String lStatement = new String("");
 
-		lStatement += " SELECT " + "ID_PROVVEDIMENTO_SIGE, " + "FAS_ID_FASCICOLO_SIGE, "
-				+ "ID_EVENTO_GENERATO, " + "CHIAVE_ANNO, " + "CHIAVE_PROGR, " + "CHIAVE_UFFICIO, "
-				+ "DATA_EMISSIONE, " + "DATA_DEPOSITO, " + "COD_TIPO_PROVVEDIMENTO, " + "DEFINITORIO, "
-				+ "FLAG_ORDINE_TRADUZIONE, " + "LUOGO_SVOLGIMENTO, " + "COD_OPERATORE_INSERIMENTO, "
-				+ "COD_UFFICIO_INSERIMENTO, " + "DATA_INSERIMENTO, " + "COD_OPERATORE_AGGIORNAMENTO, "
-				+ "COD_UFFICIO_AGGIORNAMENTO, " + "DATA_AGGIORNAMENTO, " + "COL_ID_COLLEGIO, "
-				+ "COD_TIPO_PROVVEDIMENTO_SIGE, " + "COD_UFFICIO_DESTINATARIO, " + "NOTE, "
-				+ "PROVV_ID_PROVVEDIMENTO_SIGE, " + "UDI_ID_UDIENZA_SIGE ";
+		lStatement += " SELECT ID_PROVVEDIMENTO_SIGE, FAS_ID_FASCICOLO_SIGE, "
+				+ "ID_EVENTO_GENERATO, CHIAVE_ANNO, CHIAVE_PROGR, CHIAVE_UFFICIO, "
+				+ "DATA_EMISSIONE, DATA_DEPOSITO, COD_TIPO_PROVVEDIMENTO, DEFINITORIO, "
+				+ "FLAG_ORDINE_TRADUZIONE, LUOGO_SVOLGIMENTO, COD_OPERATORE_INSERIMENTO, "
+				+ "COD_UFFICIO_INSERIMENTO, DATA_INSERIMENTO, COD_OPERATORE_AGGIORNAMENTO, "
+				+ "COD_UFFICIO_AGGIORNAMENTO, DATA_AGGIORNAMENTO, COL_ID_COLLEGIO, "
+				+ "COD_TIPO_PROVVEDIMENTO_SIGE, COD_UFFICIO_DESTINATARIO, NOTE, "
+				+ "PROVV_ID_PROVVEDIMENTO_SIGE, UDI_ID_UDIENZA_SIGE ";
 		lStatement += " FROM PROVVEDIMENTO_SIGE";
 		lStatement += " " + setCondizionePerIdFasSige(aIdFasSige);
 		lStatement += " and COD_TIPO_PROVVEDIMENTO_SIGE IN ('02', '03', '04', '05', '06','07') ";
-		lStatement += " and ID_EVENTO_GENERATO NOT IN (SELECT ID_EVENTO FROM EVENTO WHERE COD_MOTIVO IN ('0600','0601') ) ";
-		lStatement += " and ID_EVENTO_GENERATO NOT IN (SELECT ID_EVENTO FROM EVENTO WHERE DATA_TRASMISSIONE_ATTI IS NULL OR UPPER(FLAG_DOCUMENTO_REGISTRATO)='A') ";
+		lStatement += " and ID_EVENTO_GENERATO NOT IN (SELECT ID_EVENTO FROM EVENTO WHERE COD_MOTIVO IN "
+				+ "('0600','0601')) ";
+		lStatement += " and ID_EVENTO_GENERATO NOT IN (SELECT ID_EVENTO FROM EVENTO WHERE "
+				+ "DATA_TRASMISSIONE_ATTI IS NULL OR UPPER(FLAG_DOCUMENTO_REGISTRATO)='A') ";
 		lStatement += " " + setOrderDataEmissioneInserimentoASC();
 		setStatement(lStatement);
 	}
@@ -210,14 +196,14 @@ public class ProvvedimentoSigeSqlDAO extends SIAPSqlDAO {
 			throws DAOException {
 		String lStatement = new String("");
 
-		lStatement += " SELECT " + "ID_PROVVEDIMENTO_SIGE, " + "FAS_ID_FASCICOLO_SIGE, "
-				+ "ID_EVENTO_GENERATO, " + "CHIAVE_ANNO, " + "CHIAVE_PROGR, " + "CHIAVE_UFFICIO, "
-				+ "DATA_EMISSIONE, " + "DATA_DEPOSITO, " + "COD_TIPO_PROVVEDIMENTO, " + "DEFINITORIO, "
-				+ "FLAG_ORDINE_TRADUZIONE, " + "LUOGO_SVOLGIMENTO, " + "COD_OPERATORE_INSERIMENTO, "
-				+ "COD_UFFICIO_INSERIMENTO, " + "DATA_INSERIMENTO, " + "COD_OPERATORE_AGGIORNAMENTO, "
-				+ "COD_UFFICIO_AGGIORNAMENTO, " + "DATA_AGGIORNAMENTO, " + "COL_ID_COLLEGIO, "
-				+ "COD_TIPO_PROVVEDIMENTO_SIGE, " + "COD_UFFICIO_DESTINATARIO, " + "NOTE, "
-				+ "PROVV_ID_PROVVEDIMENTO_SIGE, " + "UDI_ID_UDIENZA_SIGE ";
+		lStatement += " SELECT ID_PROVVEDIMENTO_SIGE, FAS_ID_FASCICOLO_SIGE, "
+				+ "ID_EVENTO_GENERATO, CHIAVE_ANNO, CHIAVE_PROGR, CHIAVE_UFFICIO, "
+				+ "DATA_EMISSIONE, DATA_DEPOSITO, COD_TIPO_PROVVEDIMENTO, DEFINITORIO, "
+				+ "FLAG_ORDINE_TRADUZIONE, LUOGO_SVOLGIMENTO, COD_OPERATORE_INSERIMENTO, "
+				+ "COD_UFFICIO_INSERIMENTO, DATA_INSERIMENTO, COD_OPERATORE_AGGIORNAMENTO, "
+				+ "COD_UFFICIO_AGGIORNAMENTO, DATA_AGGIORNAMENTO, COL_ID_COLLEGIO, "
+				+ "COD_TIPO_PROVVEDIMENTO_SIGE, COD_UFFICIO_DESTINATARIO, NOTE, "
+				+ "PROVV_ID_PROVVEDIMENTO_SIGE, UDI_ID_UDIENZA_SIGE ";
 		lStatement += " FROM PROVVEDIMENTO_SIGE";
 
 		lStatement += " " + setCondizionePerIdFasSige(aIdFasSige);
@@ -234,14 +220,14 @@ public class ProvvedimentoSigeSqlDAO extends SIAPSqlDAO {
 			String aCodTipoProvvSige) throws DAOException {
 		String lStatement = new String("");
 
-		lStatement += " SELECT " + "ID_PROVVEDIMENTO_SIGE, " + "FAS_ID_FASCICOLO_SIGE, "
-				+ "ID_EVENTO_GENERATO, " + "CHIAVE_ANNO, " + "CHIAVE_PROGR, " + "CHIAVE_UFFICIO, "
-				+ "DATA_EMISSIONE, " + "DATA_DEPOSITO, " + "COD_TIPO_PROVVEDIMENTO, " + "DEFINITORIO, "
-				+ "FLAG_ORDINE_TRADUZIONE, " + "LUOGO_SVOLGIMENTO, " + "COD_OPERATORE_INSERIMENTO, "
-				+ "COD_UFFICIO_INSERIMENTO, " + "DATA_INSERIMENTO, " + "COD_OPERATORE_AGGIORNAMENTO, "
-				+ "COD_UFFICIO_AGGIORNAMENTO, " + "DATA_AGGIORNAMENTO, " + "COL_ID_COLLEGIO, "
-				+ "COD_TIPO_PROVVEDIMENTO_SIGE, " + "COD_UFFICIO_DESTINATARIO, " + "NOTE, "
-				+ "PROVV_ID_PROVVEDIMENTO_SIGE, " + "UDI_ID_UDIENZA_SIGE ";
+		lStatement += " SELECT ID_PROVVEDIMENTO_SIGE, FAS_ID_FASCICOLO_SIGE, "
+				+ "ID_EVENTO_GENERATO, CHIAVE_ANNO, CHIAVE_PROGR, CHIAVE_UFFICIO, "
+				+ "DATA_EMISSIONE, DATA_DEPOSITO, COD_TIPO_PROVVEDIMENTO, DEFINITORIO, "
+				+ "FLAG_ORDINE_TRADUZIONE, LUOGO_SVOLGIMENTO, COD_OPERATORE_INSERIMENTO, "
+				+ "COD_UFFICIO_INSERIMENTO, DATA_INSERIMENTO, COD_OPERATORE_AGGIORNAMENTO, "
+				+ "COD_UFFICIO_AGGIORNAMENTO, DATA_AGGIORNAMENTO, COL_ID_COLLEGIO, "
+				+ "COD_TIPO_PROVVEDIMENTO_SIGE, COD_UFFICIO_DESTINATARIO, NOTE, "
+				+ "PROVV_ID_PROVVEDIMENTO_SIGE, UDI_ID_UDIENZA_SIGE ";
 		lStatement += " FROM PROVVEDIMENTO_SIGE";
 
 		lStatement += " " + setCondizionePerIdFasSige(aIdFasSige);
@@ -255,14 +241,14 @@ public class ProvvedimentoSigeSqlDAO extends SIAPSqlDAO {
 	public void ricercaProvvedimentoSige(ProvvedimentoSigeModel aModel) throws DAOException {
 		String lStatement = new String("");
 
-		lStatement += " SELECT " + "ID_PROVVEDIMENTO_SIGE, " + "FAS_ID_FASCICOLO_SIGE, "
-				+ "ID_EVENTO_GENERATO, " + "CHIAVE_ANNO, " + "CHIAVE_PROGR, " + "CHIAVE_UFFICIO, "
-				+ "DATA_EMISSIONE, " + "DATA_DEPOSITO, " + "COD_TIPO_PROVVEDIMENTO, " + "DEFINITORIO, "
-				+ "FLAG_ORDINE_TRADUZIONE, " + "LUOGO_SVOLGIMENTO, " + "COD_OPERATORE_INSERIMENTO, "
-				+ "COD_UFFICIO_INSERIMENTO, " + "DATA_INSERIMENTO, " + "COD_OPERATORE_AGGIORNAMENTO, "
-				+ "COD_UFFICIO_AGGIORNAMENTO, " + "DATA_AGGIORNAMENTO, " + "COL_ID_COLLEGIO, "
-				+ "COD_TIPO_PROVVEDIMENTO_SIGE, " + "COD_UFFICIO_DESTINATARIO, " + "NOTE, "
-				+ "PROVV_ID_PROVVEDIMENTO_SIGE, " + "UDI_ID_UDIENZA_SIGE ";
+		lStatement += " SELECT ID_PROVVEDIMENTO_SIGE, FAS_ID_FASCICOLO_SIGE, "
+				+ "ID_EVENTO_GENERATO, CHIAVE_ANNO, CHIAVE_PROGR, CHIAVE_UFFICIO, "
+				+ "DATA_EMISSIONE, DATA_DEPOSITO, COD_TIPO_PROVVEDIMENTO, DEFINITORIO, "
+				+ "FLAG_ORDINE_TRADUZIONE, LUOGO_SVOLGIMENTO, COD_OPERATORE_INSERIMENTO, "
+				+ "COD_UFFICIO_INSERIMENTO, DATA_INSERIMENTO, COD_OPERATORE_AGGIORNAMENTO, "
+				+ "COD_UFFICIO_AGGIORNAMENTO, DATA_AGGIORNAMENTO, COL_ID_COLLEGIO, "
+				+ "COD_TIPO_PROVVEDIMENTO_SIGE, COD_UFFICIO_DESTINATARIO, NOTE, "
+				+ "PROVV_ID_PROVVEDIMENTO_SIGE, UDI_ID_UDIENZA_SIGE ";
 		lStatement += " FROM PROVVEDIMENTO_SIGE";
 		lStatement += " WHERE ";
 
@@ -273,14 +259,14 @@ public class ProvvedimentoSigeSqlDAO extends SIAPSqlDAO {
 	public void ricercaProvvedimentoSigeByKey(BigDecimal aKey) throws DAOException {
 		String lStatement = new String("");
 
-		lStatement += " SELECT " + "ID_PROVVEDIMENTO_SIGE, " + "FAS_ID_FASCICOLO_SIGE, "
-				+ "ID_EVENTO_GENERATO, " + "CHIAVE_ANNO, " + "CHIAVE_PROGR, " + "CHIAVE_UFFICIO, "
-				+ "DATA_EMISSIONE, " + "DATA_DEPOSITO, " + "COD_TIPO_PROVVEDIMENTO, " + "DEFINITORIO, "
-				+ "FLAG_ORDINE_TRADUZIONE, " + "LUOGO_SVOLGIMENTO, " + "COD_OPERATORE_INSERIMENTO, "
-				+ "COD_UFFICIO_INSERIMENTO, " + "DATA_INSERIMENTO, " + "COD_OPERATORE_AGGIORNAMENTO, "
-				+ "COD_UFFICIO_AGGIORNAMENTO, " + "DATA_AGGIORNAMENTO, " + "COL_ID_COLLEGIO, "
-				+ "COD_TIPO_PROVVEDIMENTO_SIGE, " + "COD_UFFICIO_DESTINATARIO, " + "NOTE, "
-				+ "PROVV_ID_PROVVEDIMENTO_SIGE, " + "UDI_ID_UDIENZA_SIGE ";
+		lStatement += " SELECT ID_PROVVEDIMENTO_SIGE, FAS_ID_FASCICOLO_SIGE, "
+				+ "ID_EVENTO_GENERATO, CHIAVE_ANNO, CHIAVE_PROGR, CHIAVE_UFFICIO, "
+				+ "DATA_EMISSIONE, DATA_DEPOSITO, COD_TIPO_PROVVEDIMENTO, DEFINITORIO, "
+				+ "FLAG_ORDINE_TRADUZIONE, LUOGO_SVOLGIMENTO, COD_OPERATORE_INSERIMENTO, "
+				+ "COD_UFFICIO_INSERIMENTO, DATA_INSERIMENTO, COD_OPERATORE_AGGIORNAMENTO, "
+				+ "COD_UFFICIO_AGGIORNAMENTO, DATA_AGGIORNAMENTO, COL_ID_COLLEGIO, "
+				+ "COD_TIPO_PROVVEDIMENTO_SIGE, COD_UFFICIO_DESTINATARIO, NOTE, "
+				+ "PROVV_ID_PROVVEDIMENTO_SIGE, UDI_ID_UDIENZA_SIGE ";
 		lStatement += " FROM PROVVEDIMENTO_SIGE";
 		lStatement += " WHERE ";
 
@@ -291,20 +277,21 @@ public class ProvvedimentoSigeSqlDAO extends SIAPSqlDAO {
 	public void ricercaProvvedimentoSigeByKeySospensione(BigDecimal ProvvIdKey) throws DAOException {
 		String lStatement = new String("");
 
-		lStatement += " SELECT " + "ID_PROVVEDIMENTO_SIGE, " + "FAS_ID_FASCICOLO_SIGE, "
-				+ "ID_EVENTO_GENERATO, " + "CHIAVE_ANNO, " + "CHIAVE_PROGR, " + "CHIAVE_UFFICIO, "
-				+ "PROVVEDIMENTO_SIGE.DATA_EMISSIONE, " + "DATA_DEPOSITO, "
-				+ "PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO, " + "DEFINITORIO, " + "FLAG_ORDINE_TRADUZIONE, "
-				+ "LUOGO_SVOLGIMENTO, " + "PROVVEDIMENTO_SIGE.COD_OPERATORE_INSERIMENTO, "
-				+ "PROVVEDIMENTO_SIGE.COD_UFFICIO_INSERIMENTO, " + "PROVVEDIMENTO_SIGE.DATA_INSERIMENTO, "
+		lStatement += " SELECT ID_PROVVEDIMENTO_SIGE, FAS_ID_FASCICOLO_SIGE, "
+				+ "ID_EVENTO_GENERATO, CHIAVE_ANNO, CHIAVE_PROGR, CHIAVE_UFFICIO, "
+				+ "PROVVEDIMENTO_SIGE.DATA_EMISSIONE, DATA_DEPOSITO, "
+				+ "PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO, DEFINITORIO, FLAG_ORDINE_TRADUZIONE, "
+				+ "LUOGO_SVOLGIMENTO, PROVVEDIMENTO_SIGE.COD_OPERATORE_INSERIMENTO, "
+				+ "PROVVEDIMENTO_SIGE.COD_UFFICIO_INSERIMENTO, PROVVEDIMENTO_SIGE.DATA_INSERIMENTO, "
 				+ "PROVVEDIMENTO_SIGE.COD_OPERATORE_AGGIORNAMENTO, "
-				+ "PROVVEDIMENTO_SIGE.COD_UFFICIO_AGGIORNAMENTO, " + "PROVVEDIMENTO_SIGE.DATA_AGGIORNAMENTO, "
-				+ "COL_ID_COLLEGIO, " + "PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO_SIGE, "
-				+ "PROVVEDIMENTO_SIGE.COD_UFFICIO_DESTINATARIO, " + "PROVVEDIMENTO_SIGE.NOTE, "
-				+ "PROVV_ID_PROVVEDIMENTO_SIGE, " + "PROVVEDIMENTO_SIGE.UDI_ID_UDIENZA_SIGE ";
+				+ "PROVVEDIMENTO_SIGE.COD_UFFICIO_AGGIORNAMENTO, PROVVEDIMENTO_SIGE.DATA_AGGIORNAMENTO, "
+				+ "COL_ID_COLLEGIO, PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO_SIGE, "
+				+ "PROVVEDIMENTO_SIGE.COD_UFFICIO_DESTINATARIO, PROVVEDIMENTO_SIGE.NOTE, "
+				+ "PROVV_ID_PROVVEDIMENTO_SIGE, PROVVEDIMENTO_SIGE.UDI_ID_UDIENZA_SIGE ";
 		lStatement += " FROM PROVVEDIMENTO_SIGE";
 		// Aggiunta la join ad evento per evitare la presenza in elenco sospensioni di quelle annullate
-		lStatement += " INNER JOIN EVENTO ON ID_EVENTO = ID_EVENTO_GENERATO AND (FLAG_DOCUMENTO_REGISTRATO <> 'A') ";
+		lStatement += " INNER JOIN EVENTO ON ID_EVENTO = ID_EVENTO_GENERATO AND "
+				+ "(FLAG_DOCUMENTO_REGISTRATO <> 'A') ";
 		lStatement += " WHERE ";
 
 		lStatement += " " + setCondizioneByKeySospensione(ProvvIdKey);
@@ -314,17 +301,18 @@ public class ProvvedimentoSigeSqlDAO extends SIAPSqlDAO {
 	public void ricercaProvvedimentoSigeByKeySospensioneOLD(BigDecimal ProvvIdKey) throws DAOException {
 		String lStatement = new String("");
 
-		lStatement += " SELECT " + "ID_PROVVEDIMENTO_SIGE, " + "FAS_ID_FASCICOLO_SIGE, "
-				+ "ID_EVENTO_GENERATO, " + "CHIAVE_ANNO, " + "CHIAVE_PROGR, " + "CHIAVE_UFFICIO, "
-				+ "DATA_EMISSIONE, " + "DATA_DEPOSITO, " + "COD_TIPO_PROVVEDIMENTO, " + "DEFINITORIO, "
-				+ "FLAG_ORDINE_TRADUZIONE, " + "LUOGO_SVOLGIMENTO, " + "COD_OPERATORE_INSERIMENTO, "
-				+ "COD_UFFICIO_INSERIMENTO, " + "DATA_INSERIMENTO, " + "COD_OPERATORE_AGGIORNAMENTO, "
-				+ "COD_UFFICIO_AGGIORNAMENTO, " + "DATA_AGGIORNAMENTO, " + "COL_ID_COLLEGIO, "
-				+ "COD_TIPO_PROVVEDIMENTO_SIGE, " + "COD_UFFICIO_DESTINATARIO, " + "NOTE, "
-				+ "PROVV_ID_PROVVEDIMENTO_SIGE, " + "UDI_ID_UDIENZA_SIGE ";
+		lStatement += " SELECT ID_PROVVEDIMENTO_SIGE, FAS_ID_FASCICOLO_SIGE, "
+				+ "ID_EVENTO_GENERATO, CHIAVE_ANNO, CHIAVE_PROGR, CHIAVE_UFFICIO, "
+				+ "DATA_EMISSIONE, DATA_DEPOSITO, COD_TIPO_PROVVEDIMENTO, DEFINITORIO, "
+				+ "FLAG_ORDINE_TRADUZIONE, LUOGO_SVOLGIMENTO, COD_OPERATORE_INSERIMENTO, "
+				+ "COD_UFFICIO_INSERIMENTO, DATA_INSERIMENTO, COD_OPERATORE_AGGIORNAMENTO, "
+				+ "COD_UFFICIO_AGGIORNAMENTO, DATA_AGGIORNAMENTO, COL_ID_COLLEGIO, "
+				+ "COD_TIPO_PROVVEDIMENTO_SIGE, COD_UFFICIO_DESTINATARIO, NOTE, "
+				+ "PROVV_ID_PROVVEDIMENTO_SIGE, UDI_ID_UDIENZA_SIGE ";
 		lStatement += " FROM PROVVEDIMENTO_SIGE";
 		// Aggiunta la join ad evento per evitare la presenza in elenco sospensioni di quelle annullate
-		lStatement += " INNER JOIN EVENTO ON ID_EVENTO = ID_EVENTO_GENERATO AND (FLAG_DOCUMENTO_REGISTRATO <> 'A') ";
+		lStatement += " INNER JOIN EVENTO ON ID_EVENTO = ID_EVENTO_GENERATO AND "
+				+ "(FLAG_DOCUMENTO_REGISTRATO <> 'A') ";
 		lStatement += " WHERE ";
 
 		lStatement += " " + setCondizioneByKeySospensione(ProvvIdKey);
@@ -332,10 +320,8 @@ public class ProvvedimentoSigeSqlDAO extends SIAPSqlDAO {
 	}
 
 	/**
-	 * <p>
 	 * Description: metodo di ricerca del Provvedimento definitorio in PROVVEDIMENTO_SIGE collegato a una
 	 * occorrenza di EVENTO
-	 * </p>
 	 *
 	 * @param BigDecimal
 	 *            aKey : Identificativo Fascicolo SIGE
@@ -346,7 +332,8 @@ public class ProvvedimentoSigeSqlDAO extends SIAPSqlDAO {
 
 		lStatement += " SELECT * ";
 		lStatement += " FROM PROVVEDIMENTO_SIGE ";
-		lStatement += " INNER JOIN EVENTO ON ID_EVENTO = ID_EVENTO_GENERATO AND (FLAG_DOCUMENTO_REGISTRATO IS NULL OR FLAG_DOCUMENTO_REGISTRATO <> 'A') ";
+		lStatement += " INNER JOIN EVENTO ON ID_EVENTO = ID_EVENTO_GENERATO AND (FLAG_DOCUMENTO_REGISTRATO "
+				+ "IS NULL OR FLAG_DOCUMENTO_REGISTRATO <> 'A') ";
 		lStatement += " WHERE FAS_ID_FASCICOLO_SIGE ='" + aKey + "'";
 
 		return lStatement;
@@ -362,7 +349,8 @@ public class ProvvedimentoSigeSqlDAO extends SIAPSqlDAO {
 
 		lStatement += " SELECT * ";
 		lStatement += " FROM PROVVEDIMENTO_SIGE ";
-		lStatement += " INNER JOIN EVENTO ON ID_EVENTO = ID_EVENTO_GENERATO AND (FLAG_DOCUMENTO_REGISTRATO IS NULL OR FLAG_DOCUMENTO_REGISTRATO <> 'A') ,FASCICOLO_SIGE F ";
+		lStatement += " INNER JOIN EVENTO ON ID_EVENTO = ID_EVENTO_GENERATO AND (FLAG_DOCUMENTO_REGISTRATO "
+				+ "IS NULL OR FLAG_DOCUMENTO_REGISTRATO <> 'A') ,FASCICOLO_SIGE F ";
 		lStatement += " WHERE FAS_ID_FASCICOLO_SIGE ='" + aKey + "'"
 				+ " AND F.ID_FASCICOLO_SIGE=PROVVEDIMENTO_SIGE.FAS_ID_FASCICOLO_SIGE ";
 
@@ -370,7 +358,7 @@ public class ProvvedimentoSigeSqlDAO extends SIAPSqlDAO {
 	}
 
 	/**
-	 * @return
+	 * @return String
 	 */
 	public String setCondizioneDefinitorio() {
 		String lCondizioni = new String();
@@ -393,7 +381,8 @@ public class ProvvedimentoSigeSqlDAO extends SIAPSqlDAO {
 					+ aModel.getCodTipoProvvedimento() + "'";
 
 		// Ticket#202310120117 aggiunto += era presente solo = e si perdeva le 2 condizioni precedenti
-    //lCondizioni = " AND PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO_SIGE NOT IN ('55', '56', '01', '11') ";
+		// lCondizioni = " AND PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO_SIGE NOT IN ('55', '56', '01', '11')
+		// ";
 		lCondizioni += " AND PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO_SIGE NOT IN ('55', '56', '01', '11') ";
 
 		return lCondizioni;
@@ -407,8 +396,10 @@ public class ProvvedimentoSigeSqlDAO extends SIAPSqlDAO {
 					+ aModel.getCodTipoProvvedimento() + "'";
 		
 		// Ticket#202310120117 aggiunto += era presente solo = e si perdeva le 2 condizioni precedenti
-		//lCondizioni = " AND PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO_SIGE NOT IN ('52', '55', '56', '11', '03','14','18','07','06','04','10','15','16') ";
-    lCondizioni += " AND PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO_SIGE NOT IN ('52', '55', '56', '11', '03','14','18','07','06','04','10','15','16') ";
+		// lCondizioni = " AND PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO_SIGE NOT IN ('52', '55', '56', '11',
+		// '03','14','18','07','06','04','10','15','16') ";
+		lCondizioni += " AND PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO_SIGE NOT IN"
+				+ " ('52', '55', '56', '11', '03','14','18','07','06','04','10','15','16') ";
 
 		return lCondizioni;
 	}
@@ -421,8 +412,10 @@ public class ProvvedimentoSigeSqlDAO extends SIAPSqlDAO {
 					+ aModel.getCodTipoProvvedimento() + "'";
 
 		// Ticket#202310120117 aggiunto += era presente solo = e si perdeva le 2 condizioni precedenti
-		//lCondizioni = " AND PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO_SIGE NOT IN ('52','55', '56', '01', '11','02','05','09','12','17','15','16') ";
-    lCondizioni += " AND PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO_SIGE NOT IN ('52','55', '56', '01', '11','02','05','09','12','17','15','16') ";
+		// lCondizioni = " AND PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO_SIGE NOT IN ('52','55', '56', '01',
+		// '11','02','05','09','12','17','15','16') ";
+		lCondizioni += " AND PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO_SIGE NOT IN "
+				+ "('52','55', '56', '01', '11','02','05','09','12','17','15','16') ";
 		return lCondizioni;
 	}
 
@@ -511,7 +504,8 @@ public class ProvvedimentoSigeSqlDAO extends SIAPSqlDAO {
 				+ " AND FASCICOLO_SIGE.SOG_ID_SOGGETTO IN (SELECT DISTINCT SG.ID_SOGGETTO"
 				+ "  FROM SOGGETTO S, SOGGETTO SG  WHERE S.ID_SOGGETTO = '" + aIdSogSige + "'"
 				+ "  AND S.COGNOME = SG.COGNOME AND S.NOME = SG.NOME AND S.DATA_NASCITA = SG.DATA_NASCITA"
-				+ "  AND S.COD_STATO_NASCITA = SG.COD_STATO_NASCITA AND NVL(S.COD_COMUNE_NASCITA, '0') = NVL(SG.COD_COMUNE_NASCITA, '0')) "
+				+ " AND S.COD_STATO_NASCITA = SG.COD_STATO_NASCITA AND NVL(S.COD_COMUNE_NASCITA, '0')"
+				+ " = NVL(SG.COD_COMUNE_NASCITA, '0')) "
 				+ "  AND PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO = '03'";
 
 		return lCondizioni;
@@ -584,9 +578,7 @@ public class ProvvedimentoSigeSqlDAO extends SIAPSqlDAO {
 	}
 
 	/**
-	 * <p>
 	 * Metodo di ricerca che restituisce il numero di Provvedimenti Depositati relativi ad un Fascicolo SIGE.
-	 * </p>
 	 *
 	 * @param BigDecimal
 	 *            aIdFasSige : Identificativo Fascicolo SIGE
@@ -602,10 +594,14 @@ public class ProvvedimentoSigeSqlDAO extends SIAPSqlDAO {
 		// DATA_TRASMISSIONE_ATTI IS NOT NULL AND FAS_SIU_ID_FASCICOLO_SIUS = " +aIdFasSius;
 		lStatement += " SELECT count(*) as COUNT from PROVVEDIMENTO_SIGE p, EVENTO e ";
 		lStatement += " WHERE p.FAS_ID_FASCICOLO_SIGE = '" + aIdFasSius + "'";
-		lStatement += " AND p.COD_TIPO_PROVVEDIMENTO_SIGE <> '01' "; // dal conteggio vengono esclusi i
-																		// decreti di fissazione udienza
-																		// altrimenti non è possibile
-																		// emmettere un'ordinanza
+		// dal conteggio vengono esclusi i decreti di fissazione udienza
+		// altrimenti non è possibile emmettere un'ordinanza
+		// Ticket#202405240118 - sige 159/2023 Tribunale di Teramo
+		// anche 04 - Ordinanza Rinvio Udienza
+		// e 50 - Rinvio udienza da verbale
+		lStatement += "AND p.COD_TIPO_PROVVEDIMENTO_SIGE not in ("
+				+ ICostantiProvvedimentoSige.TIPI_PROVVEDIMENTI_UDIENZE + ") ";
+		// lStatement += "AND p.COD_TIPO_PROVVEDIMENTO_SIGE <> '01' ";
 		lStatement += " AND p.DATA_DEPOSITO  IS NOT NULL ";
 		lStatement += " AND p.ID_EVENTO_GENERATO = e.ID_EVENTO ";
 		lStatement += " AND e.FLAG_DOCUMENTO_REGISTRATO = 'S' ";
@@ -622,10 +618,8 @@ public class ProvvedimentoSigeSqlDAO extends SIAPSqlDAO {
 	}
 
 	/**
-	 * <p>
 	 * Description: metodo di ricerca dei Provvedimenti per i quali è possibile compilare il Foglio
 	 * Complementare
-	 * </p>
 	 *
 	 * @param aIdFasSige
 	 * @param aTipiProvv
@@ -676,7 +670,8 @@ public class ProvvedimentoSigeSqlDAO extends SIAPSqlDAO {
 
 	public BigDecimal countOpposizioniAccolteByIdProvvedimento(BigDecimal idProvvedimento)
 			throws DAOException {
-		String selectCount = "SELECT count(*) as conteggio " + "FROM IMPUGNAZIONE_SIGE O "
+
+		String selectCount = "SELECT count(*) as conteggio FROM IMPUGNAZIONE_SIGE O "
 				+ " WHERE O.PROVV_ID_PROVVEDIMENTO_SIGE = " + idProvvedimento
 				+ " AND O.COD_TIPO_IMPUGNAZIONE = '04' AND O.COD_TENORE_DECISIONE = '10'";
 

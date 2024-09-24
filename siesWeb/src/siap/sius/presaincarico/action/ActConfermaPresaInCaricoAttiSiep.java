@@ -19,6 +19,7 @@ import siap.jms.messaggio.controller.IMessaggio;
 import siap.jms.messaggio.model.MessaggioModel;
 import siap.jms.util.ParserMessage;
 import siap.sico.evento.model.EventoNotificaModel;
+import siap.sico.jms.model.PresaInCaricoModel;
 import siap.sico.soggetto.model.SoggettoModel;
 import siap.sico.ufficio.model.UfficioModel;
 import siap.sico.web.ActionSiap;
@@ -68,27 +69,51 @@ public class ActConfermaPresaInCaricoAttiSiep extends ActionSiap implements ICos
 		MessaggioModel lMessReturn = new MessaggioModel(lMess);
 
 		try {
+		  
+	    // MEV_2024-DNA - Si passano al controller anche le informazione su data utente e ufficio 
+	    //                che precede alla presa in carico
+	    PresaInCaricoModel lPresaIncaricoModel = new PresaInCaricoModel();
+	    lPresaIncaricoModel.setDataPresaInCarico (DateUtils.getSysDate());
+	    lPresaIncaricoModel.setCodOperatorePresaInCarico (getCodUtenteConnesso());
+	    lPresaIncaricoModel.setCodUfficioPresaInCarico (getCodUfficioUtenteConnesso());
+	    // MEV_2024-DNA
+	    
 			IPresaInCaricoJMS lPres = SIEPLookupRemote.getPresaInCarico();
 			// STUB 08/10/2004 Presa in carico Provvedimento LS va distinto dall'Istanza
 			if (lMessIns.getCodTipoOperazione().compareTo(ICostantiJMS.TRASFERIMENTO_PROVVEDIMENTO) == 0)
-				lMessReturn = lPres.ExInserisciProvvedimentoTrasmesso(lMessIns);
+			  // MEV_2024-DNA
+				//lMessReturn = lPres.ExInserisciProvvedimentoTrasmesso(lMessIns);
+			  lMessReturn = lPres.ExInserisciProvvedimentoTrasmesso (lMessIns, lPresaIncaricoModel);
+		    // MEV_2024-DNA - FINE
 			// STUB 19/20/2008 Presa in carico Provvedimento di Sanzione Sostitutiva
 			else if (lMessIns.getCodTipoOperazione()
 					.compareTo(ICostantiJMS.TRASFERIMENTO_SANZIONE_SOSTITUTIVA) == 0
 					// MEV_2023-33: aggiunto trasferimento pena sostitutiva
 					|| lMessIns.getCodTipoOperazione()
 							.compareTo(ICostantiJMS.TRASFERIMENTO_PENA_SOSTITUTIVA) == 0)
-				lMessReturn = lPres.ExInserisciFascicoloSiep(lMessIns);
+			  // MEV_2024-DNA
+			  //lMessReturn = lPres.ExInserisciFascicoloSiep(lMessIns);
+				lMessReturn = lPres.ExInserisciFascicoloSiep (lMessIns, lPresaIncaricoModel);			
+			  // MEV_2024-DNA - FINE
 			// TRASFERIMENTO per COMPETENZA
 			else if (lMessIns.getCodTipoOperazione().compareTo(ICostantiJMS.TRASFERIMENTO_COMPETENZA) == 0)
-				lMessReturn = lPres.ExInserisciFascicoloSiep(lMessIns);
+			// MEV_2024-DNA
+				// lMessReturn = lPres.ExInserisciFascicoloSiep(lMessIns);
+			  lMessReturn = lPres.ExInserisciFascicoloSiep(lMessIns, lPresaIncaricoModel);
+		    // MEV_2024-DNA - FINE
 			// 16/03/2009 Presa in carico Provvedimento di Conversione Pene Pecuniarie
 			else if (lMessIns.getCodTipoOperazione()
 					.compareTo(ICostantiJMS.TRASFERIMENTO_ATTI_CONVERSIONE) == 0)
-				lMessReturn = lPres.ExInserisciFascicoloSiep(lMessIns);
+			  // MEV_2024-DNA
+				//lMessReturn = lPres.ExInserisciFascicoloSiep(lMessIns);
+			  lMessReturn = lPres.ExInserisciFascicoloSiep(lMessIns, lPresaIncaricoModel);
+		    // MEV_2024-DNA - FINE
 			else
 				// lMessReturn = lPres.ExInserisciIstanzaTrasmessa(lMessIns); // 2010-04-30 sostituito
-				lMessReturn = lPres.ExInserisciNuovaIstanzaTrasmessa(lMessIns);
+			  // MEV_2024-DNA
+				// lMessReturn = lPres.ExInserisciNuovaIstanzaTrasmessa(lMessIns);
+			  lMessReturn = lPres.ExInserisciNuovaIstanzaTrasmessa(lMessIns, lPresaIncaricoModel);
+			  // MEV_2024-DNA - FINE
 		} catch (F3BException ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
