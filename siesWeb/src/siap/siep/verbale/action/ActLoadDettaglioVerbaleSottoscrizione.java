@@ -109,6 +109,11 @@ public class ActLoadDettaglioVerbaleSottoscrizione extends ActSIESDettaglioProvv
 		IMisuraAlternativa lCtrlMisAlt = SICOLookupRemote.getMisuraAlternativaRemote();
 		lMisAltMod = lCtrlMisAlt.ExRicercaMisuraAlternativaByIdEvento(lEveMod.getEveIdEvento());
 
+	  // MEV_9-SIEP mi serve anche l'evento decreto/ord puntato dalla MA per testare l'esito
+		EventoModel provvSorv = lCtrlEve.ExRicercaEventoByKey(lMisAltMod.getEveIdEvento());
+		setRequestAttribute("provvSorv", provvSorv);
+	  // MEV_9-SIEP - FINE
+		
 		// posizione giuridica corrente ???
 		/*PosizioneGiuridicaModel lPosMododel = */getPosizioneGiuridica(lIdEvento, lIdFasc);
 

@@ -33,6 +33,8 @@
 <jsp:useBean id="UtenteConnesso"     scope="session" class="siap.sico.utente.model.UtenteModel" />
 <jsp:useBean id="TornaQui"           scope="request" class="java.lang.String"/>
 
+<jsp:useBean id="isOrdProvvisoria"   scope="request" class="java.lang.String"/>
+
 <%
 /* Estrazione della data udienza  o data iscrizione */
  String data1;
@@ -117,6 +119,11 @@
         	  else
         		  controlloAvvocato = false;
           } // endif Decreto/Ordinanza
+          
+          // MEV_9 (D.lgs. 123/2018) - L'avvocato è obbligatorio
+          if ("SI".equals(isOrdProvvisoria))
+        	  controlloAvvocato = true;
+          
        	  if (controlloAvvocato)
           {
           int numAvvocati = avvocato.size();
@@ -166,7 +173,10 @@
     {
         lAction = new String("siap.sius.depositoordinanzapc.action.ActInserisciEmissioneOrdinanzaUDS");
         lDocumento = new String("ordinanza");
-        lTitolo = new String("Emissione Ordinanza");
+        if ("SI".equals(isOrdProvvisoria))
+        	lTitolo = new String("Emissione Ordinanza Applicazione Provvisoria Misura Alternativa");
+        else
+        	lTitolo = new String("Emissione Ordinanza");
         lActRet = new String("siap.sius.depositoordinanzapc.action.ActLoadEmissioneOrdinanzaUDS");
     }
     else if(flagOrdinanza != null && flagOrdinanza.compareTo("sentenza") == 0)
@@ -249,6 +259,10 @@
   <input type="HIDDEN" name="<%=ICostantiFascicoloSius.CAMPO_COD_OGGETTO%>" value="<%=codOggetti%>">
   <input type="HIDDEN" name="<%=ICostantiFascicoloSius.CAMPO_COD_DETTAGLIO_OGGETTO%>" value="<%=codDettagli%>">
   <input type="HIDDEN" name="<%=IWebConstants.LINK_RITORNO%>" value="<%=TornaQui%>">
+  <input type="HIDDEN" name="isOrdProvvisoria" value="<%=isOrdProvvisoria%>">
+
+
+
 
   </FORM>
   <script language="JavaScript" type="text/javascript">

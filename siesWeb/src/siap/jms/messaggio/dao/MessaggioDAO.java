@@ -12,6 +12,7 @@ import siap.jms.messaggio.model.MessaggioModel;
 import f3b.dao.DAOException;
 import f3b.dao.TableDAO;
 import f3b.model.GenericModel;
+import f3b.util.DateUtils;
 
 /**
 * <p>Title: MessaggioDAO</p>
@@ -386,5 +387,23 @@ public class MessaggioDAO extends TableDAO
   public void setCondizioneUpdate(BigDecimal key)
   {
     setCondition(" ID_MESSAGGIO = " + key );
+  }
+  
+  
+  // MEV_2024-DNA 
+  // Impone la condizione di cancellazione per codufficio mittente o destinatario
+  public void setCondizioneByUfficio(String aCodUfficio, Date aDataInviaDal, Date aDataInviaAl)
+  {
+    String lCondizione = "";
+    lCondizione+="  (   COD_UFFICIO_MITTENTE = '"+aCodUfficio+"'";
+    lCondizione+="   OR COD_UFFICIO_DESTINATARIO = '"+aCodUfficio+"' )";
+    
+    if (aDataInviaDal!=null)
+      lCondizione+=" AND DATA_INVIO >= TO_DATE('"+DateUtils.getDateToString(aDataInviaDal,"dd/MM/yyyy")+"','dd/mm/yyyy') ";
+    
+    if (aDataInviaAl!=null)
+      lCondizione+=" AND DATA_INVIO <= TO_DATE('"+DateUtils.getDateToString(aDataInviaAl,"dd/MM/yyyy")+"','dd/mm/yyyy') ";
+    
+    setCondition(lCondizione);
   }
 }

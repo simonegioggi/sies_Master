@@ -3,23 +3,13 @@ package siap.sius.generaleprocedimento.controller;
 import java.math.BigDecimal;
 import java.util.Vector;
 
-import siap.sius.generaleprocedimento.model.GeneraleProcedimentoModel;
 import f3b.util.F3BException;
+import siap.sius.generaleprocedimento.model.GeneraleProcedimentoModel;
 
 /**
- * <p>
- * Title: GeneraleProcedimentoController
- * </p>
- * <p>
+ * Title: GeneraleProcedimentoController 
  * Description: Classe Controller per GeneraleProcedimento
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings("rawtypes")
@@ -44,5 +34,9 @@ public interface IGeneraleProcedimento {
 
 	public GeneraleProcedimentoModel ExModificaNoteProcedimento(
 			GeneraleProcedimentoModel aGeneraleProcedimento) throws F3BException;
+
+	// MEV_9: aggiunta funzione di aggiornamento
+	public void ExModificaDatiRestituzioneGeneraleProcedimento(GeneraleProcedimentoModel gpm)
+			throws F3BException;
 
 }

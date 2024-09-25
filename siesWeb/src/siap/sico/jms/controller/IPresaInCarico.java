@@ -5,10 +5,13 @@ package siap.sico.jms.controller;
  Superato il test quello verrà sostituito.
 */
 
+import java.math.BigDecimal;
 import java.sql.Connection;
+import java.util.Vector;
 
 import siap.jms.messaggio.model.MessaggioModel;
 import siap.sico.misuraalternativa.model.MisuraAlternativaModel;
+import siap.sico.jms.model.PresaInCaricoModel;
 import f3b.util.F3BException;
 
 
@@ -57,4 +60,10 @@ public interface IPresaInCarico
   public MessaggioModel ExPresaInCaricoDecreto(MessaggioModel aMessaggio, MisuraAlternativaModel aMisAlt)
     throws F3BException;
 */
+  // MEV_2024-DNA
+  public void ExInserisciPresaInCarico (PresaInCaricoModel aPresaInCarico, Connection lConn) throws F3BException;
+  public Vector <PresaInCaricoModel> ExRicercaPresaInCaricoDNA (String aCodUfficioDNA) throws F3BException;
+  public void ExCancellaPreseInCaricoDNAbyIdFascicolo(BigDecimal aIdFascicoloSIEP, String aCodUfficioDNA) throws F3BException;
+  public void ExCancellaFascicoloPresoInCaricoDNAbyIdFascicolo (BigDecimal aIdFascicoloSIEP) throws F3BException;
+  //MEV_2024-DNA - FINE
 }

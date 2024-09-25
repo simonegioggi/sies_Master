@@ -216,4 +216,7 @@ public interface IDepositoOrdinanzaPc {
 			throws F3BException;
 	// ***** FINE INTERVENTO MEV_39 *****//
 
+	// MEV_9
+	public DepositoOrdinanzaPcModel ExAggiornaDataEsecutivitaDepositoOrdinanzaPc(
+			DepositoOrdinanzaPcModel aDepositoOrdinanzaPc) throws F3BException;
 }

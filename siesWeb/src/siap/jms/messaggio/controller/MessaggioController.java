@@ -2341,4 +2341,40 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 		return lListaSolleciti;
 	}
 
+	 /**
+   * Metodo di eliminazione dei messaggi ricevuti o inviati da un certo ufficio in un certo intervallo di date
+   * 
+   * @since MEV_2024-DNA 
+   */
+    public void ExCancellaMessaggioByCodUfficio (String aCodUfficio, Date aDataInviaDal, Date aDataInviaAl) 
+        throws F3BException
+    {  
+        Connection lConn = null;
+        MessaggioDAO lMesDao = null;
+        
+        try {
+            lConn = getDBConnection();
+            
+            lMesDao = new MessaggioDAO(lConn);
+            lMesDao.setCondizioneByUfficio(aCodUfficio, aDataInviaDal, aDataInviaAl);
+            lMesDao.delete();
+            
+            rollback(lConn);
+            //commit(lConn);
+        } catch (DAOException daoEx) {
+            siesLogger.error("ExCancellaMessaggioByCodUfficio ", daoEx);
+            rollback(lConn);
+            throw new F3BException("MessaggioController.ExCancellaMessaggioByCodUfficio: Non posso leggere : "+ daoEx);
+        } catch (Exception oEx) {
+            siesLogger.error("ExCancellaMessaggioByCodUfficio ", oEx);
+            rollback(lConn);
+            throw new F3BException("MessaggioController.ExCancellaMessaggioByCodUfficio: Non posso leggere : "+ oEx);
+        } finally {
+            cleanup(lMesDao);
+            cleanup(lConn);
+        }
+
+        return;
+    }
+  
 }

@@ -185,6 +185,9 @@ public class IspEstrazioneOggettiTribDAO extends TableDAO
 				  lEsito = "Cancellato";
 			  else if (aCodEsito.equalsIgnoreCase("7"))
 				  lEsito = "Unificato";
+			  // MEV9 si aggiunge la decodifica per gli accolti Provvisoriamente 
+			  else if (aCodEsito.equalsIgnoreCase("9"))
+				  lEsito = "Applicato Provvisoriamente";
 			  else
 				  lEsito = "Altro";
 		  }

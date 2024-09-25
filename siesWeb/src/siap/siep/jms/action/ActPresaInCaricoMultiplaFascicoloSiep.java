@@ -12,6 +12,7 @@ import siap.jms.messaggio.model.MessaggioModel;
 import siap.jms.messaggio.model.RootJMSModel;
 import siap.jms.util.ParserMessage;
 import siap.sico.SICOException;
+import siap.sico.jms.model.PresaInCaricoModel;
 import siap.sico.lock.model.LockModel;
 import siap.sico.soggetto.action.ICostantiSoggetto;
 import siap.sico.soggetto.model.SoggettoModel;
@@ -19,6 +20,7 @@ import siap.sico.web.ActionSiap;
 import siap.siep.fascicolo.model.DettaglioFascicoloModel;
 import siap.siep.jms.controller.IPresaInCaricoJMS;
 import siap.siep.util.SIEPLookupRemote;
+import f3b.util.DateUtils;
 import f3b.util.xml.TreeModel;
 import f3b.web.IWebConstants;
 
@@ -96,7 +98,17 @@ public class ActPresaInCaricoMultiplaFascicoloSiep extends ActionSiap implements
 					lMess.setTreeModel(lTreeRoot);
 
 					IPresaInCaricoJMS lPres = SIEPLookupRemote.getPresaInCarico();
-					lMessReturn = lPres.ExInserisciFascicoloSiep(lMess);
+					
+				  // MEV_2024-DNA - Si passano al controller anche le informazione su data utente e ufficio 
+			    //                che precede alla presa in carico
+			    PresaInCaricoModel lPresaIncaricoModel = new PresaInCaricoModel();
+			    lPresaIncaricoModel.setDataPresaInCarico (DateUtils.getSysDate());
+			    lPresaIncaricoModel.setCodOperatorePresaInCarico (getCodUtenteConnesso());
+			    lPresaIncaricoModel.setCodUfficioPresaInCarico (getCodUfficioUtenteConnesso());
+			    
+					// lMessReturn = lPres.ExInserisciFascicoloSiep(lMess);
+					lMessReturn = lPres.ExInserisciFascicoloSiep(lMess, lPresaIncaricoModel);
+				  // MEV_2024-DNA - FINE
 				}
 				fascicoli.add(lDett.getFascicoloSiep());
 				k++;

@@ -12,20 +12,14 @@
 <html>
 <head>
 <title>[S.I.E.S.] - Gestione Avvocato</title>
-<link rel="STYLESHEET" type="text/css"
-	href="<%=IWebConstants.PG_STYLE%>">
+<link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
 <script language="JavaScript" src="/html/conferma.js"></script>
 </head>
 
 <jsp:useBean id="modalita" scope="request" class="java.lang.String" />
-<jsp:useBean id="avvocatoFascSius" scope="request"
-	class="siap.sius.avvocato.model.AvvocatoSiusModel" />
+<jsp:useBean id="avvocatoFascSius" scope="request" class="siap.sius.avvocato.model.AvvocatoSiusModel" />
 <%
-			AvvocatoModel lAvvocato = new AvvocatoModel(avvocatoFascSius
-			.getAvvocato());
-
-	System.out
-			.println(" mi trovo nella JSP Dettaglio Avvocato sentenza ");
+AvvocatoModel lAvvocato = new AvvocatoModel(avvocatoFascSius.getAvvocato());
 %>
 
 <body class="corpo">

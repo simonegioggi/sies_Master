@@ -9,6 +9,10 @@ import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
 import f3b.util.Utils;
+import siap.sico.decodifiche.controller.DecodificheManager;
+import siap.sico.decodifiche.util.DecodificheUtils;
+import siap.sico.evento.controller.IEvento;
+import siap.sico.evento.model.EventoModel;
 import siap.sico.libertaanticipata.controller.ILicenzaPeriodiLibAnticipata;
 import siap.sico.misuraalternativa.controller.IMisuraAlternativa;
 import siap.sico.misuraalternativa.model.MisuraAlternativaModel;
@@ -23,6 +27,8 @@ import siap.siep.penapecuniaria.controller.IRichiestaConversione;
 import siap.siep.penapecuniaria.model.RichiestaConversioneModel;
 import siap.siep.util.SIEPLookupRemote;
 import siap.sius.depositodecreto.action.ICostantiDepositoDecreto;
+import siap.sius.depositoordinanzapc.controller.IDepositoOrdinanzaPc;
+import siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel;
 import siap.sius.depositoordinanzapc.model.OrdinanzaEventoTenoriPrescrizioniModel;
 import siap.sius.esecuzionemisurasicurezza.controller.IEsecuzioneMS;
 import siap.sius.esecuzionemisurasicurezza.model.EsecuzioneMisuraSicurezzaModel;
@@ -34,18 +40,8 @@ import siap.sius.tenore.model.TenoreModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * <p>
  * Title: ActLoadDettaglioOrdinanza
- * </p>
- * <p>
  * Description: Classe Action per la load dettaglio di DepositoOrdinanzaPc
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
  *
  * @version 1.0
  */
@@ -256,7 +252,6 @@ public class ActLoadDettaglioOrdinanza extends ActDettaglioEmissioneOrdinanza
 				try {
 					lUfficio = lUffCtrl
 							.getUfficioByKey(mOrdEveTenPreMod.getOrdinanza().getAutoritaVigilante());
-
 					if (lUfficio != null)
 						// mOrdEveTenPreMod.getOrdinanza().setAutoritaVigilante(lUfficio.getDescrTipoUfficio()+"
 						// di "+lUfficio.getDescrComune());
@@ -264,9 +259,7 @@ public class ActLoadDettaglioOrdinanza extends ActDettaglioEmissioneOrdinanza
 				} catch (Exception e) {
 					// nulla
 				}
-
 			}
-
 		}
 
 		String codOggettoProcedimento = lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento();
@@ -325,8 +318,11 @@ public class ActLoadDettaglioOrdinanza extends ActDettaglioEmissioneOrdinanza
 		}
 
 		/*
-		 * ISSUE MEV : aggiunto codice per gestione oggetto C029 Numero MEV : 39 Autore : Gioggi Data :
-		 * 19/giu/2017 Branch : MEV_39
+		 * ISSUE MEV : aggiunto codice per gestione oggetto C029 
+		 * Numero MEV : 39 
+		 * Autore : Gioggi 
+		 * Data : 19/giu/2017 
+		 * Branch : MEV_39
 		 */
 		if (codOggettoProcedimento.equalsIgnoreCase(OGG_ORD_APPELLO_CONTRO_PROVV_MS)) {
 			// 20191018 [SG]: aggiunto codice
@@ -389,6 +385,38 @@ public class ActLoadDettaglioOrdinanza extends ActDettaglioEmissioneOrdinanza
 			retPage = PG_LOAD_DET_ORDINANZA_APPELLO_CONTRO_PROVV_MS;
 		}
 		// ***** FINE INTERVENTO MEV_39 *****//
+
+		/*
+		 * ISSUE MEV : aggiunta ricerca dati ordinanza applicazione provvisoria da scivere in dettaglio 
+		 * Numero MEV : 9 
+		 * Autore : sgioggi 
+		 * Data : 17 gen 2023 
+		 * Branch : MEV_9
+		 */
+		if (mOrdEveTenPreMod != null && mOrdEveTenPreMod.getOrdinanza() != null
+				&& CONFERMA_DECISIONE_MAGISTRATO_RELATORE
+						.equals(mOrdEveTenPreMod.getOrdinanza().getCodTipoOrdinanza())) {
+			IEvento ie = SICOLookupRemote.getEventoRemote();
+			Vector<?> v = ie.ExRicercaEventoByFascicoloSius(
+					mFasGPMod.getFascicoloSiusModel().getIdFascicoloSius(),	null);
+			BigDecimal idEventoOrdinanza = null;
+			for (int i = 0; i < v.size(); i++) {
+				EventoModel em = (EventoModel) v.elementAt(i);
+				if ("0270".equals(em.getCodEsito()) && "S".equals(em.getFlagDocumentoRegistrato())
+						&& em.getNumAllValidati() > 0) {
+					idEventoOrdinanza = em.getIdEvento();
+					break;
+				}
+			}
+			IDepositoOrdinanzaPc idopc = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
+			DepositoOrdinanzaPcModel dopcm = idopc.ExRicercaDepositoOrdinanzaPcByEvento(idEventoOrdinanza);
+			// dati x l'ordinanza di Applicazione Provvisoria M.A.
+			String descrTipoOrdinanza = (DecodificheUtils.getDescbyCode(
+					DecodificheManager.getInstance().getTipoOrdinanza(), dopcm.getCodTipoOrdinanza()));
+			dopcm.setDescrTipoOrdinanza(descrTipoOrdinanza);
+			setRequestAttribute("dopcm", dopcm);
+		}
+		// ***** FINE INTERVENTO MEV_9 *****//
 
 		// MEV10-s3: aggiunto riferimento all'oggetto "codTipoUfficio"
 		String codTipoUfficio = lFasGPMod.getFascicoloSiusModel().getCodTipoUfficio();

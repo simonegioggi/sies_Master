@@ -5,6 +5,10 @@ import java.sql.Connection;
 import java.util.Date;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.model.GenericModel;
+import f3b.util.DateUtils;
+import f3b.util.StringUtils;
 import siap.dao.SIAPSqlDAO;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.misuraalternativa.model.MisuraAlternativaModel;
@@ -13,10 +17,6 @@ import siap.sius.depositodecreto.model.DecretoEventoTenoriFascicoloSiusModel;
 import siap.sius.depositodecreto.model.DepositoDecretoFascicoloModel;
 import siap.sius.depositodecreto.model.DepositoDecretoModel;
 import siap.sius.fascicolo.model.FascicoloSiusModel;
-import f3b.dao.DAOException;
-import f3b.model.GenericModel;
-import f3b.util.DateUtils;
-import f3b.util.StringUtils;
 
 /**
  * <p>
@@ -31,7 +31,7 @@ import f3b.util.StringUtils;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -40,7 +40,7 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Costruttore di classe con parametro.
 	 * <p>
-	 * 
+	 *
 	 * @param aConn
 	 *            Connessione al dbase.
 	 */
@@ -55,7 +55,7 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Imposta lo statement SQL per la ricerca del Deposito Decreto.
 	 * <p>
-	 * 
+	 *
 	 * @param aModel
 	 *            dati del deposito decreto.
 	 * @throws DAOException
@@ -70,7 +70,7 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Imposta lo statement SQL per la ricerca del Deposito Decreto per il corrispondente id.
 	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            id del record
 	 * @throws DAOException
@@ -86,7 +86,7 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Imposta lo statement SQL per la ricerca del Deposito Decreto per l'id di generale procedimento.
 	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            id generale procedimento,
 	 * @param aCodTipo
@@ -105,7 +105,7 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Imposta lo statement SQL per la ricerca del Deposito Decreto per l'id di generale procedimento.
 	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            id generale procedimento,
 	 * @throws DAOException
@@ -121,7 +121,7 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Imposta lo statement SQL per la ricerca del Deposito Decreto per l'id Evento generato.
 	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            .
 	 * @throws DAOException
@@ -137,7 +137,7 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Imposta lo statement SQL per la ricerca del Deposito Decreto per l'id Evento generato.
 	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            .
 	 * @throws DAOException
@@ -155,8 +155,9 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 	 * Deposito Decreto cui sia collegato una Licenza o un Permesso con NUMERO_GIORNI > 0. La ricerca viene
 	 * effettuata per Soggetto, Tipo di decreto, Ufficio.
 	 * <p>
-	 * 
-	 * @param: BigDecimal aIdSoggetto; String aTipoDecreto, String aCodUfficio.
+	 *
+	 * @param: BigDecimal
+	 *             aIdSoggetto; String aTipoDecreto, String aCodUfficio.
 	 * @return Vector : Elenco di Decreti trovati.
 	 * @throws DAOException
 	 *             propaga errore di eccezione.
@@ -195,8 +196,9 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 	 * Deposito Decreto cui sia collegato una Licenza o un Permesso con NUMERO_GIORNI > 0. La ricerca viene
 	 * effettuata per SuperSoggetto, Tipo di decreto, Ufficio.
 	 * <p>
-	 * 
-	 * @param: BigDecimal SuperSoggetto; String aTipoDecreto, String aCodUfficio.
+	 *
+	 * @param: BigDecimal
+	 *             SuperSoggetto; String aTipoDecreto, String aCodUfficio.
 	 * @return Vector : Elenco di Decreti trovati.
 	 * @throws DAOException
 	 *             propaga errore di eccezione.
@@ -210,7 +212,8 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 		lSql += " FROM SOGGETTO SOGG, DEPOSITO_DECRETO DD   ";
 		// MEV Segnalazione N.7
 		// lSql +=
-		// " INNER JOIN  LICENZA_LIBANTICIPATA LL ON LL.EVE_ID_EVENTO = DD.ID_EVENTO_GENERATO and (LL.NUMERO_GIORNI > 0 or LL.NUMERO_ORE > 0) "
+		// " INNER JOIN LICENZA_LIBANTICIPATA LL ON LL.EVE_ID_EVENTO = DD.ID_EVENTO_GENERATO and
+		// (LL.NUMERO_GIORNI > 0 or LL.NUMERO_ORE > 0) "
 		// ;
 		lSql += " INNER JOIN  LICENZA_LIBANTICIPATA LL ON LL.EVE_ID_EVENTO = DD.ID_EVENTO_GENERATO and ";
 		lSql += "(LL.NUMERO_MESI > 0 or LL.NUMERO_GIORNI > 0 or LL.NUMERO_ORE > 0) ";
@@ -241,7 +244,7 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Esegue la ricerca dei fascicoli in base al super soggetto
-	 * 
+	 *
 	 * @param strCodiceDistrettoUtente
 	 */
 	protected String setCondizioneSuperSoggetto(SoggettoModel aModel) {
@@ -362,8 +365,9 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Effettua la ricerca del Deposito Decreto e del Fascicolo SIUS
 	 * <p>
-	 * 
-	 * @param: BigDecimal aIEvento.
+	 *
+	 * @param: BigDecimal
+	 *             aIEvento.
 	 * @return DepositoDecretoFascicoloModel
 	 * @throws DAOException
 	 *             propaga errore di eccezione.
@@ -394,7 +398,7 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Imposta select count per uso verifica esistenza di un deposito decreto per id generale procedimento.
 	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            id generale procedimento.
 	 */
@@ -410,7 +414,7 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 	 * cod_tipo_decreto. La select conta il numero di decreti legati ad uno specificato Generale_Procedimento,
 	 * di tipo specificato e non annullati.
 	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            : id generale procedimento,
 	 * @param aCod
@@ -428,7 +432,7 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 	 * Imposta select count per uso verifica esistenza di un deposito decreto per id generale procedimento e
 	 * cod_tipo_decreto, quest'ultimo viene passato come array.
 	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            id generale procedimento.
 	 */
@@ -446,7 +450,7 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 	 * Description: metodo di ricerca, restituisce il numero di record in DEPOSITO_DECRETO di tipo decreto di
 	 * relativi ad un generale procedimento e con un record evento collegato con il cod_esito specificato.
 	 * </p>
-	 * 
+	 *
 	 * @param BigDecimal
 	 *            aKey : Identificativo Generale Procedimento
 	 * @param String
@@ -479,7 +483,7 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 	 * relativi ad un generale procedimento e con un record evento collegato con data di emissione
 	 * specificata.
 	 * </p>
-	 * 
+	 *
 	 * @param BigDecimal
 	 *            aKey : Identificativo Generale Procedimento
 	 * @param Date
@@ -514,7 +518,7 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 	 * generale procedimento specificato dalla sua chiave passata come primo argomento e di tipo non presente
 	 * tra quelli passati nella liata secondo argomento della funzione.
 	 * </p>
-	 * 
+	 *
 	 * @param BigDecimal
 	 *            aKey : Identificativo Generale Procedimento
 	 * @param aTipi
@@ -553,7 +557,7 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Crea Query SQL.
 	 * <p>
-	 * 
+	 *
 	 * @return la stringa della quesry sql.
 	 */
 	protected String getSqlQuery() {
@@ -585,7 +589,6 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 		lStatement += "GEN_PRID_GENERALE_PROCEDIMENTO, ";
 		lStatement += "SENTENZE_RIFERIMENTO, ";
 		lStatement += "ID_EVENTO_GENERATO, ";
-
 		// nuovi campi Luigi 17-11-2003
 		lStatement += "COD_UFFICIO_COMP, ";
 		lStatement += "COD_PROCURA_ESECUZIONE, ";
@@ -614,21 +617,22 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 		lStatement += "NUM_GIORNI_REVOCA_LA, ";
 		// DL 92 2014 Violazione CEDU
 		lStatement += "NUM_GIORNI_RIDUZIONE_PENA, SOMMA_RISARC_DANNI, ";
-		//
-		lStatement += "TIPO_CTRL_ES.RV_MEANING AS DESC_TIPO_CONTROLLO_ESECUZIONE ";
-
-		lStatement += " FROM DEPOSITO_DECRETO, CG_REF_CODES TIPO_DECRETO, CG_REF_CODES TIPO_CTRL_ES ";
-		lStatement += " WHERE TIPO_DECRETO.RV_DOMAIN = 'TIPO_DECRETO' AND COD_TIPO_DECRETO = TIPO_DECRETO.RV_LOW_VALUE ";
+		// MEV_9 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
+		lStatement += "DATA_TERMINE_EMISSIONE, NUM_GIORNI_TERMINE_EMISSIONE, ";
+		lStatement += "TIPO_CTRL_ES.RV_MEANING AS DESC_TIPO_CONTROLLO_ESECUZIONE";
+		lStatement += " FROM DEPOSITO_DECRETO, CG_REF_CODES TIPO_DECRETO, CG_REF_CODES TIPO_CTRL_ES";
+		lStatement += " WHERE TIPO_DECRETO.RV_DOMAIN = 'TIPO_DECRETO' AND COD_TIPO_DECRETO = TIPO_DECRETO.RV_LOW_VALUE";
 		// lStatement +=
-		// "   AND TIPO_CTRL_ES.RV_DOMAIN = 'TIPO_CONTROLLO_ESECUZIONE' AND TIPO_CONTROLLO_ESECUZIONE = TIPO_CTRL_ES.RV_LOW_VALUE ";
-		lStatement += "   AND (TIPO_CTRL_ES.RV_DOMAIN = 'TIPO_CONTROLLO_ESECUZIONE' AND NVL (TIPO_CONTROLLO_ESECUZIONE,'-') = TIPO_CTRL_ES.RV_LOW_VALUE) ";
+		// " AND TIPO_CTRL_ES.RV_DOMAIN = 'TIPO_CONTROLLO_ESECUZIONE' AND TIPO_CONTROLLO_ESECUZIONE =
+		// TIPO_CTRL_ES.RV_LOW_VALUE ";
+		lStatement += " AND (TIPO_CTRL_ES.RV_DOMAIN = 'TIPO_CONTROLLO_ESECUZIONE' AND NVL (TIPO_CONTROLLO_ESECUZIONE,'-') = TIPO_CTRL_ES.RV_LOW_VALUE)";
 
 		return lStatement;
 	}
 
 	/**
 	 * Crea Query SQL . getSqlQueryNoDescTipoDecreto
-	 * 
+	 *
 	 * @return la stringa della quesry sql.
 	 */
 	// Svillupata per Siep che non tiene conto del COD_TIPO_DECRETO valorizzato.
@@ -695,7 +699,7 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Ritorna il model popolato con i dati del record corrispondente.
 	 * <p>
-	 * 
+	 *
 	 * @return ritorna il model popolato.
 	 * @throws DAOException
 	 *             propaga l'errore di eccezione.
@@ -746,7 +750,6 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 		aModel.setSospensioneGGSS(getBigDecimal("SOSPENSIONE_GG"));
 		aModel.setSospensioneMMSS(getBigDecimal("SOSPENSIONE_MM"));
 		aModel.setSospensioneAASS(getBigDecimal("SOSPENSIONE_AA"));
-
 		aModel.setFlagNominaComActa(getString("FLAG_NOMINA_COMM_ACTA"));
 		aModel.setDescrCommActa(getString("DESCR_COMM_ACTA"));
 
@@ -759,7 +762,7 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Ritorna il model popolato con i dati del record corrispondente.
 	 * <p>
-	 * 
+	 *
 	 * @return ritorna il model popolato.
 	 * @throws DAOException
 	 *             propaga l'errore di eccezione.
@@ -768,7 +771,6 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 		DepositoDecretoModel aModel = new DepositoDecretoModel();
 
 		// Inserire le opportune set delle descrizioni!
-
 		aModel.setIdDepositoDecreto(getBigDecimal("ID_DEPOSITO_DECRETO"));
 		aModel.setAnnoS72(getBigDecimal("ANNO_S72"));
 		aModel.setNumS72(getBigDecimal("NUM_S72"));
@@ -787,7 +789,6 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 		aModel.setDataSentenzaImpugnazione(getDate("DATA_SENTENZA_IMPUGNAZIONE"));
 		aModel.setTenoreSentenzaImpugnazione(getString("TENORE_SENTENZA_IMPUGNAZIONE"));
 		aModel.setNote(getString("NOTE"));
-
 		aModel.setCodOperatoreInserimento(getString("COD_OPERATORE_INSERIMENTO"));
 		aModel.setDataInserimento(getDate("DATA_INSERIMENTO"));
 		aModel.setCodUfficioInserimento(getString("COD_UFFICIO_INSERIMENTO"));
@@ -797,7 +798,6 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 		aModel.setGenPridGeneraleProcedimento(getBigDecimal("GEN_PRID_GENERALE_PROCEDIMENTO"));
 		aModel.setSentenzeRiferimento(getString("SENTENZE_RIFERIMENTO"));
 		aModel.setIdEventoGenerato(getBigDecimal("ID_EVENTO_GENERATO"));
-
 		aModel.setCodUfficioCompetente(getString("COD_UFFICIO_COMP"));
 		// aModel.setDescrUfficioComp(getString("") );
 		aModel.setCodProcuraEsecuzione(getString("COD_PROCURA_ESECUZIONE"));
@@ -821,12 +821,9 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 		aModel.setSospensioneGGSS(getBigDecimal("SOSPENSIONE_GG"));
 		aModel.setSospensioneMMSS(getBigDecimal("SOSPENSIONE_MM"));
 		aModel.setSospensioneAASS(getBigDecimal("SOSPENSIONE_AA"));
-
 		aModel.setFlagNominaComActa(getString("FLAG_NOMINA_COMM_ACTA"));
 		aModel.setDescrCommActa(getString("DESCR_COMM_ACTA"));
-
 		aModel.setCodTipoControlloEsecuzione(getString("TIPO_CONTROLLO_ESECUZIONE"));
-
 		// if (super.mStatement.indexOf("DESC_TIPO_CONTROLLO_ESECUZIONE")>-1){
 		aModel.setDescrTipoControlloEsecuzione(getString("DESC_TIPO_CONTROLLO_ESECUZIONE"));
 		// }
@@ -834,6 +831,9 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 		// DL 92 2014 Violazione CEDU
 		aModel.setNumeroGiorniRiduzionePena(getBigDecimal("NUM_GIORNI_RIDUZIONE_PENA"));
 		aModel.setSommaRisarcimentoDanni(getBigDecimal("SOMMA_RISARC_DANNI"));
+		// MEV_9 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
+		aModel.setDataTermineEmissione(getDate("DATA_TERMINE_EMISSIONE"));
+		aModel.setNumGiorniTermineEmissione(getBigDecimal("NUM_GIORNI_TERMINE_EMISSIONE"));
 
 		return aModel;
 	}
@@ -841,7 +841,7 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Imposta le condizioni di ricerca
 	 * <p>
-	 * 
+	 *
 	 * @param aModel
 	 *            model con i dati per la ricerca.
 	 * @return ritorna la stringa con le condizioni.
@@ -854,7 +854,7 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Imposta la condizione di ricerca per id.
 	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            id del deposito decreto da ricercare.
 	 * @return la condizione.
@@ -866,7 +866,7 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Imposta la condizione per effettuare la ricerca di un deposito decreto per id generale procedimento.
 	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            id generale procedimento.
 	 * @return la condizione di filtro.
@@ -880,7 +880,7 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 	 * Imposta la condizione per effettuare la ricerca di un deposito decreto per id generale procedimento e
 	 * per il tipo di decreto.
 	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            id generale procedimento,
 	 * @param aCod
@@ -894,7 +894,7 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 		if ("ALL".equals(aCod))
 			lCondizioni += " AND COD_TIPO_DECRETO IN " + all;
 		else
-		lCondizioni += " AND COD_TIPO_DECRETO = '" + aCod + "'";
+			lCondizioni += " AND COD_TIPO_DECRETO = '" + aCod + "'";
 		lCondizioni += " ORDER BY DATA_EMISSIONE DESC ";
 		return lCondizioni;
 	}
@@ -902,7 +902,7 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Imposta la condizione per effettuare la ricerca di un deposito decreto per Evento Generato.
 	 * <p>
-	 * 
+	 *
 	 * @param aIdEveGenerato
 	 * @return la condizione di filtro.
 	 */
@@ -913,7 +913,7 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Imposta la condizione per effettuare la ricerca di un deposito decreto per Evento Generato.
 	 * <p>
-	 * 
+	 *
 	 * @param aIdEveGenerato
 	 * @return la condizione di filtro.
 	 */
@@ -924,7 +924,7 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Calcola il Massimo NUM_S72 relativo ad un certo ufficio e all'anno in corso. Il massimo NUM_S72
 	 * rappresenta l'ultimo NUM_S72 inserito all'interno dell'ufficio trattato.
-	 * 
+	 *
 	 * @param aModel
 	 * @throws DAOException
 	 */
@@ -944,7 +944,7 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 	 * Description: metodo di ricerca, restituisce la DATA_DEPOSITO di record in DEPOSITO_DECRETO selezionato
 	 * tramite ID_EVENTO_GENERATO.
 	 * </p>
-	 * 
+	 *
 	 * @param BigDecimal
 	 *            aKey : Identificativo Evento
 	 * @return Date : Data di deposito Decreto
@@ -963,8 +963,7 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 		}
 		return retData;
 	}
-	
-	
+
 	public void RicercaEventoProvvedimentiDifferimentoSIUSByFascicoloSiep(BigDecimal idFascicoloSiep)
 			throws DAOException {
 
@@ -982,28 +981,24 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 				+ "                ESITO_PROVVEDIMENTO.RV_MEANING  DESCR_ESITO,"
 				+ "                TIPO_PROVVEDIMENTO.RV_MEANING   DESCR_PROVVEDIMENTO,"
 				+ "                NULL							 FLAG_DECISIONE_TRIBUNALE,"
-				+ "                P.LUOGO_SVOLGIMENTO_PROVA," + ""				+ ""
-				+ "                P.Data_Sospensione_Ss,"
-				+ "                P.Data_Scadenza_Sospensione_Ss," + " "
-				+ "                P.SOSPENSIONE_GG,"
-				+ "                P.SOSPENSIONE_MM," + "                P.SOSPENSIONE_AA,"
-				+ "                MA.DATA_SCARCERAZIONE,"
+				+ "                P.LUOGO_SVOLGIMENTO_PROVA," + "" + ""
+				+ "                P.Data_Sospensione_Ss," + "                P.Data_Scadenza_Sospensione_Ss,"
+				+ " " + "                P.SOSPENSIONE_GG," + "                P.SOSPENSIONE_MM,"
+				+ "                P.SOSPENSIONE_AA," + "                MA.DATA_SCARCERAZIONE,"
 				+ "                MA.COD_TIPO_UFFICIO_SCARCERAZIONE,"
 				+ "				   MA.ID_MISURA_ALTERNATIVA," + "				 MA.DATA_INIZIO_MISURA,"
-				+ "				   MA.DATA_FINE_MISURA, "		
+				+ "				   MA.DATA_FINE_MISURA, "
 				// AGGIUNGO PER ESTRAPOLE ANNO_PROTOCOLLO E NUMERO_PROTOCOLLO
 				+ "                P.anno_s72 ANNO_PROTOCOLLO_S, "
 				+ "                P.NUM_S72  NUMERO_PROTOCOLLO_S "
-				//FINE
-				+ "        FROM FASCICOLO_SIUS        FASC,"
-				+ "        EVENTO                EVE," + "       UFFICIO               UFF,"
-				+ "       COMUNE                DESCR_COM_UFF," + "       UFFICIO_DESCR         UFD,"
-				+ "       CG_REF_CODES          MOTIVO_PROVVEDIMENTO,"
+				// FINE
+				+ "        FROM FASCICOLO_SIUS        FASC," + "        EVENTO                EVE,"
+				+ "       UFFICIO               UFF," + "       COMUNE                DESCR_COM_UFF,"
+				+ "       UFFICIO_DESCR         UFD," + "       CG_REF_CODES          MOTIVO_PROVVEDIMENTO,"
 				+ "       CG_REF_CODES          ESITO_PROVVEDIMENTO,"
 				+ "       CG_REF_CODES          TIPO_PROVVEDIMENTO," + "       DEPOSITO_DECRETO P,"
-				+ "       MISURA_ALTERNATIVA    MA ,"
-				+ "       FASCICOLO_SIEP FS "		
-				
+				+ "       MISURA_ALTERNATIVA    MA ," + "       FASCICOLO_SIEP FS "
+
 				+ " WHERE FASC.FAS_SIE_ID_FASCICOLO_SIEP = " + idFascicoloSiep
 				+ "   AND EVE.FAS_SIE_ID_FASCICOLO_SIEP = " + idFascicoloSiep
 				+ "   AND EVE.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS"
@@ -1015,7 +1010,8 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 				// '2554', '2555', '2610', '2611')"
 				// + " AND MOTIVO_PROVVEDIMENTO.rv_alt2_value in ('1148','1138','1139')" in alternativa
 				"   AND MOTIVO_PROVVEDIMENTO.rv_high_value in ('C036','U077','U082')"
-				+ "   AND EVE.COD_ESITO IN" + " ('0002', '0003', '0004', '0005', '0035', '0119', '0145', '0360')"
+				+ "   AND EVE.COD_ESITO IN"
+				+ " ('0002', '0003', '0004', '0005', '0035', '0119', '0145', '0360')"
 				+ "   AND UFF.COD_UFFICIO = FASC.CHIAVE_UFFICIO"
 				+ "   AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE"
 				+ "   AND UFF.COD_UFFICIO = UFD.COD_UFFICIO"
@@ -1026,7 +1022,6 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 				+ "   AND ESITO_PROVVEDIMENTO.RV_DOMAIN = 'ESITO_PROVVEDIMENTO'"
 				+ "   AND ESITO_PROVVEDIMENTO.RV_LOW_VALUE = EVE.COD_ESITO"
 
-				   
 				+ "   AND MA.FAS_SIE_ID_FASCICOLO_SIEP(+) =  " + idFascicoloSiep
 				+ "	AND MA.EVE_ID_EVENTO(+) = EVE.ID_EVENTO "
 				+ "    AND FS.ID_FASCICOLO_SIEP=FASC.FAS_SIE_ID_FASCICOLO_SIEP  AND FS.ID_FASCICOLO_SIEP NOT IN("
@@ -1036,9 +1031,7 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 
 		setStatement(lSql);
 	}
-	
-	
-	
+
 	public void RicercaEventoProvvDiffSIUSByFascSiepEFascSius(BigDecimal idFascicoloSiep,
 			BigDecimal idFascSius, BigDecimal idEveFascSius, BigDecimal idEvento) throws DAOException {
 
@@ -1056,17 +1049,15 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 				+ "                ESITO_PROVVEDIMENTO.RV_MEANING  DESCR_ESITO,"
 				+ "                TIPO_PROVVEDIMENTO.RV_MEANING   DESCR_PROVVEDIMENTO,"
 				+ "                NULL							 FLAG_DECISIONE_TRIBUNALE,"
-				
+
 				+ "                P.LUOGO_SVOLGIMENTO_PROVA," + " "
-				+ "                P.Data_Sospensione_Ss,"
-				+ "                P.Data_Scadenza_Sospensione_Ss," + " "
-				+ "                P.SOSPENSIONE_GG,"
-				+ "                P.SOSPENSIONE_MM," + " "
+				+ "                P.Data_Sospensione_Ss," + "                P.Data_Scadenza_Sospensione_Ss,"
+				+ " " + "                P.SOSPENSIONE_GG," + "                P.SOSPENSIONE_MM," + " "
 				+ "                P.SOSPENSIONE_AA,"
 				// AGGIUNGO PER ESTRAPOLE ANNO_PROTOCOLLO E NUMERO_PROTOCOLLO
 				+ "                P.anno_s72 ANNO_PROTOCOLLO_S, "
 				+ "                P.NUM_S72  NUMERO_PROTOCOLLO_S, "
-				//FINE
+				// FINE
 				+ "                MA.DATA_SCARCERAZIONE,"
 				+ "                MA.COD_TIPO_UFFICIO_SCARCERAZIONE,"
 				+ "				   MA.ID_MISURA_ALTERNATIVA," + "                MA.DATA_INIZIO_MISURA,"
@@ -1076,10 +1067,9 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 				+ "       CG_REF_CODES          MOTIVO_PROVVEDIMENTO,"
 				+ "       CG_REF_CODES          ESITO_PROVVEDIMENTO,"
 				+ "       CG_REF_CODES          TIPO_PROVVEDIMENTO," + " "
-			
-				
+
 				+ "      DEPOSITO_DECRETO P,"
-						
+
 				+ "       MISURA_ALTERNATIVA    MA" + " WHERE FASC.FAS_SIE_ID_FASCICOLO_SIEP = "
 				+ idFascicoloSiep + "   AND EVE.FAS_SIE_ID_FASCICOLO_SIEP = " + idFascicoloSiep
 				+ "	AND FASC.ID_FASCICOLO_SIUS = " + idFascSius;
@@ -1088,11 +1078,11 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 		lSql = lSql + "   AND EVE.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS"
 				+ "   AND EVE.ID_EVENTO = P.ID_EVENTO_GENERATO(+)"
 				+ "   AND EVE.COD_TIPO_PROVVEDIMENTO IN ('02')"
-				
+
 				+ "   AND MOTIVO_PROVVEDIMENTO.rv_high_value in ('C036','U077','U082')"
-				+ "   AND EVE.COD_ESITO IN" +
-				 " ('0002', '0003', '0004', '0005', '0035', '0119', '0145', '0360')" +
-				"   AND UFF.COD_UFFICIO = FASC.CHIAVE_UFFICIO"
+				+ "   AND EVE.COD_ESITO IN"
+				+ " ('0002', '0003', '0004', '0005', '0035', '0119', '0145', '0360')"
+				+ "   AND UFF.COD_UFFICIO = FASC.CHIAVE_UFFICIO"
 				+ "   AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE"
 				+ "   AND UFF.COD_UFFICIO = UFD.COD_UFFICIO"
 				+ "   AND TIPO_PROVVEDIMENTO.RV_DOMAIN = 'TIPO_PROVVEDIMENTO'"
@@ -1106,12 +1096,11 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 
 		setStatement(lSql);
 	}
-	
-	
+
 	public GenericModel getModelEsitoDiffMisSic() throws DAOException {
 
 		DecretoEventoTenoriFascicoloSiusModel aModel = new DecretoEventoTenoriFascicoloSiusModel();
-        
+
 		FascicoloSiusModel lFas = new FascicoloSiusModel();
 		lFas.setIdFascicoloSius(getBigDecimal("ID_FASCICOLO_SIUS"));
 		lFas.setChiaveAnno(getBigDecimal("CHIAVE_ANNO"));

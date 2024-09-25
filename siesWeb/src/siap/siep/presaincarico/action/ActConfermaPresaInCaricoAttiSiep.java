@@ -18,6 +18,7 @@ import siap.jms.manage.ManageSeguitoAtti;
 import siap.jms.messaggio.action.ICostantiMessaggio;
 import siap.jms.messaggio.controller.IMessaggio;
 import siap.jms.messaggio.model.MessaggioModel;
+import siap.sico.jms.model.PresaInCaricoModel;
 import siap.sico.ufficio.model.UfficioModel;
 import siap.sico.utente.model.DatiOperazioneModel;
 import siap.sico.web.ActionSiap;
@@ -112,8 +113,17 @@ public class ActConfermaPresaInCaricoAttiSiep extends ActionSiap implements ICos
       try {
         MessaggioModel lMessIns =  new MessaggioModel(lMess);
         IPresaInCaricoJMS lPres = SIEPLookupRemote.getPresaInCarico();
-        lMessReturn = lPres.ExInserisciFascicoloSiep (lMessIns);  
         
+        // MEV_2024-DNA - Si passano al controller anche le informazione su data utente e ufficio 
+        //                che precede alla presa in carico
+        PresaInCaricoModel lPresaIncaricoModel = new PresaInCaricoModel();
+        lPresaIncaricoModel.setDataPresaInCarico (DateUtils.getSysDate());
+        lPresaIncaricoModel.setCodOperatorePresaInCarico (getCodUtenteConnesso());
+        lPresaIncaricoModel.setCodUfficioPresaInCarico (getCodUfficioUtenteConnesso());
+        
+        // lMessReturn = lPres.ExInserisciFascicoloSiep (lMessIns);  
+        lMessReturn = lPres.ExInserisciFascicoloSiep (lMessIns, lPresaIncaricoModel); 
+        // MEV_2024-DNA - FINE 
         // n.b. l'esito dell'acquisizione viene registrato in lMessReturn.getRapportoEsito();
       }
       catch (F3BException ex) {

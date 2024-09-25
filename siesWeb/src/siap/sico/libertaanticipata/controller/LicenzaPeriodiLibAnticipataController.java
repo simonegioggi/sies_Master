@@ -131,8 +131,6 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController
 						aLicenze[i].getPeriodi()[j] = lPerMod;
 					}
 				} else {
-					System.out.println(
-							"LicenzaPeriodiLibAnticipataController.ExInserisciLicenzeLibanticipata: mancano periodi");
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// LogF3B.getLogger()
 					siesLogger.debug(

@@ -5,10 +5,13 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.web.html.Option;
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.magistrato.controller.IMagistrato;
 import siap.sico.magistrato.model.MagistratoModel;
 import siap.sico.template.action.ICostantiTemplate;
+import siap.sico.template.model.TemplateModel;
 import siap.sico.template.util.UtilTemplate;
 import siap.sico.ufficio.controller.IUfficio;
 import siap.sico.ufficio.model.UfficioModel;
@@ -28,30 +31,17 @@ import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.magistratorelatore.model.MagistratoRelatoreModel;
 import siap.sius.misurasicurezza.controller.IPeriodoAltraMisura;
 import siap.sius.misurasicurezza.model.PeriodoAltraMisuraModel;
-import siap.sius.prescrizione.model.PrescrizioneModel;
 import siap.sius.util.SIUSLookupRemote;
-import f3b.log.LogF3B;
-import f3b.web.html.Option;
 
 /**
- * <p>
  * Title: ActLoadDettaglioEmissioneOrdinanza
- * </p>
- * <p>
  * Description: Classe Action per la load dettaglio di DepositoOrdinanzaPc
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ *
  * @version 1.0
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
-public class ActDettaglioEmissioneOrdinanza extends ActionSius implements ICostantiDepositoOrdinanzaPc,
-		ICostantiTemplate {
+@SuppressWarnings({ "rawtypes", "unchecked" })
+public class ActDettaglioEmissioneOrdinanza extends ActionSius
+		implements ICostantiDepositoOrdinanzaPc, ICostantiTemplate {
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
@@ -84,16 +74,16 @@ public class ActDettaglioEmissioneOrdinanza extends ActionSius implements ICosta
 		// Se l'Ordinanza è revocata si cercano i dati relativi all?Ordinanza di Revoca
 		if (mOrdEveTenPreMod != null && mOrdEveTenPreMod.getEvento() != null
 				&& mOrdEveTenPreMod.getEvento().getEveIdEventoRevoca() != null) {
-			OrdinanzaEventoTenoriPrescrizioniModel lOrdinanzaDiRevoca = ricercaOrdinanza(mOrdEveTenPreMod
-					.getEvento().getEveIdEventoRevoca());
+			OrdinanzaEventoTenoriPrescrizioniModel lOrdinanzaDiRevoca = ricercaOrdinanza(
+					mOrdEveTenPreMod.getEvento().getEveIdEventoRevoca());
 			if (lOrdinanzaDiRevoca != null) {
 				// L'Ordinanza di Revoca viene passata nella request
 				setRequestAttribute("OrdinanzaDiRevoca", lOrdinanzaDiRevoca);
 				// Ricerca del Fascicolo relativo all'Ordinanza di revoca
 				if (lOrdinanzaDiRevoca.getEvento() != null
 						&& lOrdinanzaDiRevoca.getEvento().getFasSiuIdFascicoloSius() != null) {
-					FascicoloGPModel lFascicoloSius = ricercaFascicoloSIUS(lOrdinanzaDiRevoca.getEvento()
-							.getFasSiuIdFascicoloSius());
+					FascicoloGPModel lFascicoloSius = ricercaFascicoloSIUS(
+							lOrdinanzaDiRevoca.getEvento().getFasSiuIdFascicoloSius());
 					// Fascicolo SIUS dell'Ordinanza di Revoca viene passata nella request
 					setRequestAttribute("FascicoloDiRevoca", lFascicoloSius);
 				}
@@ -127,7 +117,8 @@ public class ActDettaglioEmissioneOrdinanza extends ActionSius implements ICosta
 		// Valorizzazione eventuale bottone di ritorno
 		if (!this.isRequestParameterNullObj("acdest")) {
 			setRequestAttribute("acdest", getRequestStringParameter("acdest"));
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug(getRequestStringParameter("acdest"));
 		}
 
@@ -145,13 +136,14 @@ public class ActDettaglioEmissioneOrdinanza extends ActionSius implements ICosta
 			// 29/03/2007 Nel caso di Sospensione Esecutiva Ordinanza occorre valorizzare il CodiceTipoUfficio
 			// (TdS o UdS).
 			IUfficio lUffCtrl = SICOLookupRemote.getUfficioRemote();
-			UfficioModel lUfficio = lUffCtrl.getUfficioByKey(mOrdEveTenPreMod.getOrdinanza()
-					.getCodUffTdsConcessoRiduzione());
+			UfficioModel lUfficio = lUffCtrl
+					.getUfficioByKey(mOrdEveTenPreMod.getOrdinanza().getCodUffTdsConcessoRiduzione());
 
 			if (lUfficio != null)
 				setRequestAttribute("ufficioConcessoRiduzione", lUfficio);
 
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("Effettuata ricerca Ufficio Concesso Riduzione");
 		}
 
@@ -168,7 +160,6 @@ public class ActDettaglioEmissioneOrdinanza extends ActionSius implements ICosta
 			// INotifica lCtrlNot = SIEPLookupRemote.getNotificaRemote();
 			// Vector lVect = lCtrlNot.ExRicercaEstesaNotificaByKeyEvento (mIdEvento);
 			// setRequestAttribute("notifiche", lVect );
-
 			IMisuraSicurezza lCtrlMis = SIEPLookupRemote.getMisuraSicurezzaRemote();
 			MisuraSicurezzaModel aMisuraSicurezza = new MisuraSicurezzaModel();
 			aMisuraSicurezza.setFasSiuIdFascicoloSius(mFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
@@ -176,13 +167,13 @@ public class ActDettaglioEmissioneOrdinanza extends ActionSius implements ICosta
 			setRequestAttribute("misuresicurezza", lVectMisure);
 
 			if (lVectMisure.size() > 0) {
-				setRequestAttribute("misuraSicurezza", ((MisuraSicurezzaModel) lVectMisure.get(0)));
+				setRequestAttribute("misuraSicurezza", (lVectMisure.get(0)));
 			} else {
 				setRequestAttribute("misuraSicurezza", null);
 			}
 		}
 
-		// TODO carmela verificare lunedì INIZIO ***************************
+		// TODO carmela verificare INIZIO ***************************
 		int lSize = mOrdEveTenPreMod.getTenori().length;
 		String unificazione = "";
 		for (int x = 0; x < lSize; x++) {
@@ -197,10 +188,9 @@ public class ActDettaglioEmissioneOrdinanza extends ActionSius implements ICosta
 		// Nel caso di Ordinanza di Esecuzione Misure Sicurezza con Trasformazione occorre caricare le misure
 		// prima e dopo la trasformazione
 		if (mOrdEveTenPreMod != null
-				&& mOrdEveTenPreMod.getOrdinanza() != null
-				&& mOrdEveTenPreMod.getOrdinanza().getCodTipoOrdinanza()
-						.compareTo(TRASFORMA_MISURA_SICUREZZA) == 0 && unificazione.equals("")) {
-
+				&& mOrdEveTenPreMod.getOrdinanza() != null && mOrdEveTenPreMod.getOrdinanza()
+						.getCodTipoOrdinanza().compareTo(TRASFORMA_MISURA_SICUREZZA) == 0
+				&& unificazione.equals("")) {
 			IEsecuzioneMS lCtrlEMS = SIUSLookupRemote.getEsecuzioneMSRemote();
 			EsecuzioneMisuraSicurezzaModel aEMSOldMod = new EsecuzioneMisuraSicurezzaModel();
 			EsecuzioneMisuraSicurezzaModel aEMSNewMod = new EsecuzioneMisuraSicurezzaModel();
@@ -208,38 +198,38 @@ public class ActDettaglioEmissioneOrdinanza extends ActionSius implements ICosta
 
 			if (mFasSiusCtrl == null)
 				mFasSiusCtrl = SIUSLookupRemote.getFascicoloSiusRemote();
-			lFascicoloPadreEMS = mFasSiusCtrl.ExRicercaFascicoloByAnnoProgrCodUfficio(mFasGPMod
-					.getGeneraleProcedimentoModel().getAnnoS1(), mFasGPMod.getGeneraleProcedimentoModel()
-					.getProgrS1(), mFasGPMod.getGeneraleProcedimentoModel().getCodUfficioInserimento());
+			lFascicoloPadreEMS = mFasSiusCtrl.ExRicercaFascicoloByAnnoProgrCodUfficio(
+					mFasGPMod.getGeneraleProcedimentoModel().getAnnoS1(),
+					mFasGPMod.getGeneraleProcedimentoModel().getProgrS1(),
+					mFasGPMod.getGeneraleProcedimentoModel().getCodUfficioInserimento());
 
 			// aEMSOldMod =
 			// lCtrlEMS.ExRicercaEsecuzioneMisuraSicurezzaByIdFascicolo(mFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
 			if (lFascicoloPadreEMS != null && lFascicoloPadreEMS.getFascicoloSiusModel() != null
 					&& lFascicoloPadreEMS.getFascicoloSiusModel().getIdFascicoloSius() != null)
-				aEMSOldMod = lCtrlEMS.ExRicercaEsecuzioneMisuraSicurezzaByIdFascicolo(lFascicoloPadreEMS
-						.getFascicoloSiusModel().getIdFascicoloSius());
-			aEMSNewMod = lCtrlEMS.ExRicercaEsecuzioneMisuraSicurezzaByIdOrdinanza(mOrdEveTenPreMod
-					.getOrdinanza().getIdDepositoOrdinanzaPc());
+				aEMSOldMod = lCtrlEMS.ExRicercaEsecuzioneMisuraSicurezzaByIdFascicolo(
+						lFascicoloPadreEMS.getFascicoloSiusModel().getIdFascicoloSius());
+			aEMSNewMod = lCtrlEMS.ExRicercaEsecuzioneMisuraSicurezzaByIdOrdinanza(
+					mOrdEveTenPreMod.getOrdinanza().getIdDepositoOrdinanzaPc());
 
 			setRequestAttribute("precedenteMisuraSicurezza", aEMSOldMod);
 			setRequestAttribute("attualeMisuraSicurezza", aEMSNewMod);
 		}
 
 		// TODO carmela INIZIO ***************************
-
 		// Nel caso di Ordinanza di Esecuzione Misure Sicurezza con Trasformazione occorre caricare
 		// le misure rideterminate a seguito unificazione
 		if (mOrdEveTenPreMod != null
-				&& mOrdEveTenPreMod.getOrdinanza() != null
-				&& mOrdEveTenPreMod.getOrdinanza().getCodTipoOrdinanza()
-						.compareTo(TRASFORMA_MISURA_SICUREZZA) == 0 && unificazione.equals("SI")) {
+				&& mOrdEveTenPreMod.getOrdinanza() != null && mOrdEveTenPreMod.getOrdinanza()
+						.getCodTipoOrdinanza().compareTo(TRASFORMA_MISURA_SICUREZZA) == 0
+				&& unificazione.equals("SI")) {
 
 			// Misure di Sicurezza Rideterminate a seguito Unificazione
 			IEsecuzioneMS lCtrlEMS = SIUSLookupRemote.getEsecuzioneMSRemote();
-//			EsecuzioneMisuraSicurezzaModel aEMSRideterminate = new EsecuzioneMisuraSicurezzaModel();
+			// EsecuzioneMisuraSicurezzaModel aEMSRideterminate = new EsecuzioneMisuraSicurezzaModel();
 
-			Vector lVectMisureSicRid = lCtrlEMS.ExRicercaEsecuzioneMisureSicRidByIdOrdinanza(mOrdEveTenPreMod
-					.getOrdinanza().getIdDepositoOrdinanzaPc());
+			Vector lVectMisureSicRid = lCtrlEMS.ExRicercaEsecuzioneMisureSicRidByIdOrdinanza(
+					mOrdEveTenPreMod.getOrdinanza().getIdDepositoOrdinanzaPc());
 
 			if (lVectMisureSicRid.size() > 0) {
 				setRequestAttribute("misureSicurezzaRideterminate", lVectMisureSicRid);
@@ -261,33 +251,57 @@ public class ActDettaglioEmissioneOrdinanza extends ActionSius implements ICosta
 
 			if (mFasSiusCtrl == null)
 				mFasSiusCtrl = SIUSLookupRemote.getFascicoloSiusRemote();
-			lFascicoloPadreEMS = mFasSiusCtrl.ExRicercaFascicoloByAnnoProgrCodUfficio(mFasGPMod
-					.getGeneraleProcedimentoModel().getAnnoS1(), mFasGPMod.getGeneraleProcedimentoModel()
-					.getProgrS1(), mFasGPMod.getGeneraleProcedimentoModel().getCodUfficioInserimento());
+			lFascicoloPadreEMS = mFasSiusCtrl.ExRicercaFascicoloByAnnoProgrCodUfficio(
+					mFasGPMod.getGeneraleProcedimentoModel().getAnnoS1(),
+					mFasGPMod.getGeneraleProcedimentoModel().getProgrS1(),
+					mFasGPMod.getGeneraleProcedimentoModel().getCodUfficioInserimento());
 
 			if (lFascicoloPadreEMS != null && lFascicoloPadreEMS.getFascicoloSiusModel() != null
 					&& lFascicoloPadreEMS.getFascicoloSiusModel().getIdFascicoloSius() != null)
-				aEMSOldMod = lCtrlEMS.ExRicercaEsecuzioneMisuraSicurezzaByIdFascicolo(lFascicoloPadreEMS
-						.getFascicoloSiusModel().getIdFascicoloSius());
+				aEMSOldMod = lCtrlEMS.ExRicercaEsecuzioneMisuraSicurezzaByIdFascicolo(
+						lFascicoloPadreEMS.getFascicoloSiusModel().getIdFascicoloSius());
 			// aEMSNewMod =
 			// lCtrlEMS.ExRicercaEsecuzioneMisuraSicurezzaByIdOrdinanza(mOrdEveTenPreMod.getOrdinanza().getIdDepositoOrdinanzaPc());
 
 			setRequestAttribute("precedenteMisuraSicurezza", aEMSOldMod);
 			setRequestAttribute("attualeMisuraSicurezza", null);
 		}
-
 		// TODO carmela FINE ***************************
 
-		if (mOrdEveTenPreMod.getEvento() != null
-				&& mOrdEveTenPreMod.getEvento().getCodMotivo() != null
+		if (mOrdEveTenPreMod.getEvento() != null && mOrdEveTenPreMod.getEvento().getCodMotivo() != null
 				&& (mOrdEveTenPreMod.getEvento().getCodMotivo().equals("2410")
-						|| mOrdEveTenPreMod.getEvento().getCodMotivo().equals("2411") || mOrdEveTenPreMod
-						.getEvento().getCodMotivo().equals("2412"))) {
+						|| mOrdEveTenPreMod.getEvento().getCodMotivo().equals("2411")
+						|| mOrdEveTenPreMod.getEvento().getCodMotivo().equals("2412"))) {
 			// Sospensione Esecuzione Misura Sicurezza
 			gestioneTemplate(mOrdEveTenPreMod.getEvento().getIdEvento());
 			ricercaPeriodoAltraMisura();
 			// return PG_DETTAGLIO_ORD_SOSPENSIONE_EMS;
 		}
+
+		// INIZIO: MEV_9 (D.lgs. 123/2018)
+		if (mOrdEveTenPreMod != null && mOrdEveTenPreMod.getOrdinanza() != null
+				&& MISURA_ALTERNATIVA_AMMISSIONE_PROVVISORIA
+						.equals(mOrdEveTenPreMod.getOrdinanza().getCodTipoOrdinanza())) {
+			// Nuovo caricamento combo Template
+			siesLogger.debug("Ordinanza di ammissione provvisoria filtro i template");
+
+			TemplateModel tempaletRicerca = new TemplateModel();
+			tempaletRicerca.setCodTipoEvento(mOrdEveTenPreMod.getEvento().getCodTipoEvento());
+			tempaletRicerca.setCodTipoProvvedimento(mOrdEveTenPreMod.getEvento().getCodTipoProvvedimento());
+			tempaletRicerca.setCodMotivo(mOrdEveTenPreMod.getEvento().getCodMotivo());
+			tempaletRicerca.setCodOggettoProcedimento(
+					mFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento());
+			tempaletRicerca.setFlagTemplate("1"); // presente solo per le provvisorie che hanno gli stessi
+													// codice dalle ordinarie
+
+			Option lOptTemplate = null;
+			lOptTemplate = UtilTemplate.listaCbxTemplate(tempaletRicerca);
+			setRequestAttribute(CAMPO_COMBO_TEMPLATE, "" + lOptTemplate);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("ElencoTemplate -> " + lOptTemplate);
+		}
+		// FINE: MEV_9
 
 		ricercaFascicoloOrigine();
 
@@ -300,14 +314,16 @@ public class ActDettaglioEmissioneOrdinanza extends ActionSius implements ICosta
 		Option lOptTemplate = null;
 		lOptTemplate = UtilTemplate.listaCbxTemplate(alIdEvento);
 		setRequestAttribute(CAMPO_COMBO_TEMPLATE, "" + lOptTemplate);
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug("ElencoTemplate -> " + lOptTemplate);
 
 		// template di default
 		String[] lSelected = lOptTemplate.getSelecteds();
 		if (lSelected != null && lSelected.length > 0) {
 			setRequestAttribute(CAMPO_DEFAULT_TEMPLATE, lSelected[0]);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("TemplateDiDefault -> " + lSelected[0]);
 		}
 		return;
@@ -316,18 +332,20 @@ public class ActDettaglioEmissioneOrdinanza extends ActionSius implements ICosta
 	// Ricerca Periodo Altra Misura
 	private void ricercaPeriodoAltraMisura() throws Exception {
 
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug("ricercaPeriodoAltraMisura: inizio");
 
 		// Ricerca il Periodo Altra Misura tramite l'ID dell'evento
 		IPeriodoAltraMisura lCtrlPAM = SIUSLookupRemote.getPeriodoAltraMisuraRemote();
-		PeriodoAltraMisuraModel mPerAlMisu = lCtrlPAM.ExRicercaMisuraSicurezzaByIdEvento(mOrdEveTenPreMod
-				.getEvento().getIdEvento());
+		PeriodoAltraMisuraModel mPerAlMisu = lCtrlPAM
+				.ExRicercaMisuraSicurezzaByIdEvento(mOrdEveTenPreMod.getEvento().getIdEvento());
 
 		// Passa i dati trovati del Periodo Altra Misura alla JSP
 		setRequestAttribute("PeriodoAltraMisura", mPerAlMisu);
 
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug("ricercaPeriodoAltraMisura: fine");
 	}
 
@@ -391,7 +409,8 @@ public class ActDettaglioEmissioneOrdinanza extends ActionSius implements ICosta
 
 			lFasGPModOrigine = ricercaFascicoloSIUS(lIdFascicoloOrigine);
 			setRequestAttribute("fascicolo_origine", lFasGPModOrigine);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("Effettuata ricerca Fascicolo Origine");
 		}
 	}
@@ -408,14 +427,15 @@ public class ActDettaglioEmissioneOrdinanza extends ActionSius implements ICosta
 
 	/**
 	 * Funzione di ricerca dei dati relativi all'Ordinanza.
-	 * 
+	 *
 	 * @param lIdEvento
 	 * @throws Exception
 	 */
 	public OrdinanzaEventoTenoriPrescrizioniModel ricercaOrdinanza(BigDecimal aIdEvento) throws Exception {
 
 		// Lettura dell'Ordinanza di Revoca.
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug("Ricerca Ordinanza");
 		OrdinanzaEventoTenoriPrescrizioniModel lOrdEveTenPreMod = null;
 
@@ -427,7 +447,8 @@ public class ActDettaglioEmissioneOrdinanza extends ActionSius implements ICosta
 
 			if (lOrdEveTenPreMod == null
 					|| lOrdEveTenPreMod.getOrdinanza().getIdDepositoOrdinanzaPc() == null)
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.info("Ordinanza non trovata !");
 		}
 		return lOrdEveTenPreMod;
@@ -440,11 +461,10 @@ public class ActDettaglioEmissioneOrdinanza extends ActionSius implements ICosta
 		if (mOrdEveTenPreMod.getPrescrizioni().length > 0) {
 			lPrescrizioni = new Vector();
 			for (int i = 0; i < mOrdEveTenPreMod.getPrescrizioni().length; i++) {
-				lPrescrizioni.add((PrescrizioneModel) mOrdEveTenPreMod.getPrescrizioni()[i]);
+				lPrescrizioni.add(mOrdEveTenPreMod.getPrescrizioni()[i]);
 			}
 			setRequestAttribute("prescrizioni", lPrescrizioni);
 		}
-
 	}
 
 }

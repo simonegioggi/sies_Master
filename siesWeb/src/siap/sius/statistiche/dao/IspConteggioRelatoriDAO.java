@@ -36,6 +36,7 @@ public class IspConteggioRelatoriDAO extends TableDAO
 		setField("NUM_DEF_ESITO4", BIG_DECIMAL);
 		setField("NUM_DEF_ESITO5", BIG_DECIMAL);
 		setField("NUM_DEF_ESITO6", BIG_DECIMAL);
+		setField("NUM_APP_PROVV", BIG_DECIMAL); //MEV9
 		setField("NUM_DEF_ISC_ERR", BIG_DECIMAL);
 		setField("NUM_PENDENTI_FINE", BIG_DECIMAL);
 		setField("NUM_CANCELLATI", BIG_DECIMAL);
@@ -62,7 +63,9 @@ public class IspConteggioRelatoriDAO extends TableDAO
 	public String 			getFasSiuChiaveUfficio() 		throws DAOException	 { return getString("FAS_SIU_CHIAVE_UFFICIO"); } 
 	public BigDecimal 		getNumCancellati() 	throws DAOException	 { return getBigDecimal("NUM_CANCELLATI"); }
 	public BigDecimal 		getNumUnificati() 	throws DAOException	 { return getBigDecimal("NUM_UNIFICATI"); } 
-	
+	// MEV9
+	public BigDecimal 		getNumAppProvv() 		throws DAOException	 { return getBigDecimal("NUM_APP_PROVV"); } 
+
   //
   // METODI SET()
   //
@@ -82,7 +85,9 @@ public class IspConteggioRelatoriDAO extends TableDAO
 	public void  	 setFasSiuChiaveUfficio(String aValore ) 			 { setString("FAS_SIU_CHIAVE_UFFICIO", aValore); }
 	public void  	 setNumCancellati(BigDecimal aValore ) 			 { setBigDecimal("NUM_CANCELLATI", aValore); }
 	public void  	 setNumUnificati(BigDecimal aValore ) 			 { setBigDecimal("NUM_UNIFICATI", aValore); }
-	
+	// MEV9
+	public void  	 setNumAppProvv(BigDecimal aValore ) 			 { setBigDecimal("NUM_APP_PROVV", aValore); } 
+
 	public GenericModel getModel() throws DAOException
  	{ 
 		return new IspConteggioRelatoriModel(  
@@ -100,7 +105,8 @@ public class IspConteggioRelatoriDAO extends TableDAO
 					getNumPendentiFine(),
 					getFasSiuChiaveUfficio(),
 					getNumCancellati(),
-					getNumUnificati()
+					getNumUnificati(),
+					getNumAppProvv()  // MEV9
 				);
 	}
 
@@ -122,6 +128,10 @@ public class IspConteggioRelatoriDAO extends TableDAO
 		setFasSiuChiaveUfficio( aModel.getFasSiuChiaveUfficio() );
 		setNumCancellati( aModel.getNumCancellati() );
 		setNumUnificati( aModel.getNumUnificati() );
+		
+		// MEV9
+		setNumAppProvv(aModel.getNumAppProvv() );
+		
 	}
 
 

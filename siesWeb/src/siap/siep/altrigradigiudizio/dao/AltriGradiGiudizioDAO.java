@@ -255,5 +255,11 @@ public class AltriGradiGiudizioDAO extends TableDAO
  			 {
 	 setCondition(" ID_ALTRIGRADIGIUDIZIO = " + key ); 
 		 }
+	
+  // MEV_2024-DNA
+  public void setCondizioneByIdSentenza(BigDecimal aIdSentenza) 
+  {
+       setCondition(" SEN_ID_SENTENZA = " + aIdSentenza);
+  }
 
 }

@@ -104,38 +104,43 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 
 		lRow = lSheet.createRow(lRowCounter++);
 
-		lSheet.setColumnWidth(0, 40 * 256); // Magistrato
-		lSheet.setColumnWidth(1, 15 * 256); // Pendenti Inizio Periodo
-		lSheet.setColumnWidth(2, 15 * 256); // Sopravvenuti
-		lSheet.setColumnWidth(3, 15 * 256); // Accolti
-		lSheet.setColumnWidth(4, 15 * 256); // Rigettati
-		lSheet.setColumnWidth(5, 15 * 256); // Inammissibilità
-		lSheet.setColumnWidth(6, 15 * 256); // NLP/NDP
-		lSheet.setColumnWidth(7, 15 * 256); // Incompetenza
-		lSheet.setColumnWidth(8, 15 * 256); // Iscritti per Errore
-		lSheet.setColumnWidth(9, 15 * 256); // Unificati
-		lSheet.setColumnWidth(10, 15 * 256); // Cancellati
-		lSheet.setColumnWidth(11, 15 * 256); // Altro
-		lSheet.setColumnWidth(12, 15 * 256); // Pendenti Fine Periodo
+		int numCol = 0;
+		lSheet.setColumnWidth(numCol++, 40 * 256); // Magistrato
+		lSheet.setColumnWidth(numCol++, 15 * 256); // Pendenti Inizio Periodo
+		lSheet.setColumnWidth(numCol++, 15 * 256); // Sopravvenuti
+		lSheet.setColumnWidth(numCol++, 15 * 256); // Accolti
+		lSheet.setColumnWidth(numCol++, 15 * 256); // Accolti Provvisoriamente MEV9
+		lSheet.setColumnWidth(numCol++, 15 * 256); // Rigettati
+		lSheet.setColumnWidth(numCol++, 15 * 256); // Inammissibilità
+		lSheet.setColumnWidth(numCol++, 15 * 256); // NLP/NDP
+		lSheet.setColumnWidth(numCol++, 15 * 256); // Incompetenza
+		lSheet.setColumnWidth(numCol++, 15 * 256); // Iscritti per Errore
+		lSheet.setColumnWidth(numCol++, 15 * 256); // Unificati
+		lSheet.setColumnWidth(numCol++, 15 * 256); // Cancellati
+		lSheet.setColumnWidth(numCol++, 15 * 256); // Altro
+		lSheet.setColumnWidth(numCol++, 15 * 256); // Pendenti Fine Periodo
 
 		// Intestazione colonne
-		setCell(lRow, 0, "Magistrato", lCellStyleCenter);
-		setCell(lRow, 1, "Pendenti Inizio Periodo", lCellStyleCenter);
-		setCell(lRow, 2, "Sopravvenuti", lCellStyleCenter);
-		setCell(lRow, 3, "Accolti", lCellStyleCenter);
-		setCell(lRow, 4, "Rigettati", lCellStyleCenter);
-		setCell(lRow, 5, "Inammissibilità", lCellStyleCenter);
-		setCell(lRow, 6, "NLP/NDP", lCellStyleCenter);
-		setCell(lRow, 7, "Incompetenza", lCellStyleCenter);
-		setCell(lRow, 8, "Iscritti per Errore", lCellStyleCenter);
-		setCell(lRow, 9, "Unificati", lCellStyleCenter);
-		setCell(lRow, 10, "Cancellati", lCellStyleCenter);
-		setCell(lRow, 11, "Altro", lCellStyleCenter);
-		setCell(lRow, 12, "Pendenti Fine Periodo", lCellStyleCenter);
+		numCol = 0;
+		setCell(lRow, numCol++, "Magistrato", lCellStyleCenter);
+		setCell(lRow, numCol++, "Pendenti Inizio Periodo", lCellStyleCenter);
+		setCell(lRow, numCol++, "Sopravvenuti", lCellStyleCenter);
+		setCell(lRow, numCol++, "Accolti", lCellStyleCenter);
+		setCell(lRow, numCol++, "Accolti Provvisoriamente", lCellStyleCenter); // MEV9
+		setCell(lRow, numCol++, "Rigettati", lCellStyleCenter);
+		setCell(lRow, numCol++, "Inammissibilità", lCellStyleCenter);
+		setCell(lRow, numCol++, "NLP/NDP", lCellStyleCenter);
+		setCell(lRow, numCol++, "Incompetenza", lCellStyleCenter);
+		setCell(lRow, numCol++, "Iscritti per Errore", lCellStyleCenter);
+		setCell(lRow, numCol++, "Unificati", lCellStyleCenter);
+		setCell(lRow, numCol++, "Cancellati", lCellStyleCenter);
+		setCell(lRow, numCol++, "Altro", lCellStyleCenter);
+		setCell(lRow, numCol++, "Pendenti Fine Periodo", lCellStyleCenter);
 
 		BigDecimal totalePendentiInizio = new BigDecimal("0");
 		BigDecimal totaleSopravvenuti = new BigDecimal("0");
 		BigDecimal totaleAccolti = new BigDecimal("0");
+		BigDecimal totaleAccoltiProvv = new BigDecimal("0"); // MEV9
 		BigDecimal totaleRigettati = new BigDecimal("0");
 		BigDecimal totaleInammissibilita = new BigDecimal("0");
 		BigDecimal totaleNLPNDP = new BigDecimal("0");
@@ -156,6 +161,7 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 			totalePendentiInizio = totalePendentiInizio.add(lModel.getNumPendentiInizio());
 			totaleSopravvenuti = totaleSopravvenuti.add(lModel.getNumSopravvenuti());
 			totaleAccolti = totaleAccolti.add(lModel.getNumDefEsito1());
+			totaleAccoltiProvv = totaleAccoltiProvv.add(lModel.getNumAppProvv()); // MEV9
 			totaleRigettati = totaleRigettati.add(lModel.getNumDefEsito2());
 			totaleInammissibilita = totaleInammissibilita.add(lModel.getNumDefEsito3());
 			totaleNLPNDP = totaleNLPNDP.add(lModel.getNumDefEsito4());
@@ -174,38 +180,41 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 			} else {
 				lBuffer = "";
 			}
-			setCell(lRow, 0, lBuffer, lCellStyleCenter);
-			setCell(lRow, 1, StringUtils.cStrForJS("" + lModel.getNumPendentiInizio()), lCellStyleCenter);
-			setCell(lRow, 2, StringUtils.cStrForJS("" + lModel.getNumSopravvenuti()), lCellStyleCenter);
-			setCell(lRow, 3, StringUtils.cStrForJS("" + lModel.getNumDefEsito1()), lCellStyleCenter);
-			setCell(lRow, 4, StringUtils.cStrForJS("" + lModel.getNumDefEsito2()), lCellStyleCenter);
-			setCell(lRow, 5, StringUtils.cStrForJS("" + lModel.getNumDefEsito3()), lCellStyleCenter);
-			setCell(lRow, 6, StringUtils.cStrForJS("" + lModel.getNumDefEsito4()), lCellStyleCenter);
-			setCell(lRow, 7, StringUtils.cStrForJS("" + lModel.getNumDefEsito5()), lCellStyleCenter);
-			setCell(lRow, 8, StringUtils.cStrForJS("" + lModel.getNumDefIscErr()), lCellStyleCenter);
-			setCell(lRow, 9, StringUtils.cStrForJS("" + lModel.getNumUnificati()), lCellStyleCenter);
-			setCell(lRow, 10, StringUtils.cStrForJS("" + lModel.getNumCancellati()), lCellStyleCenter);
-			setCell(lRow, 11, StringUtils.cStrForJS("" + lModel.getNumDefEsito6()), lCellStyleCenter);
-			setCell(lRow, 12, StringUtils.cStrForJS("" + lModel.getNumPendentiFine()), lCellStyleCenter);
+			numCol = 0;
+			setCell(lRow, numCol++, lBuffer, lCellStyleCenter);
+			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumPendentiInizio()), lCellStyleCenter);
+			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumSopravvenuti()), lCellStyleCenter);
+			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumDefEsito1()), lCellStyleCenter);
+			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumAppProvv()), lCellStyleCenter); // MEV9
+			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumDefEsito2()), lCellStyleCenter);
+			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumDefEsito3()), lCellStyleCenter);
+			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumDefEsito4()), lCellStyleCenter);
+			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumDefEsito5()), lCellStyleCenter);
+			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumDefIscErr()), lCellStyleCenter);
+			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumUnificati()), lCellStyleCenter);
+			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumCancellati()), lCellStyleCenter);
+			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumDefEsito6()), lCellStyleCenter);
+			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumPendentiFine()), lCellStyleCenter);
 		}
 
 		lRowCounter++;
 		lRow = lSheet.createRow(lRowCounter++);
-
-		setCell(lRow, 0, "TOTALI", lCellStyleCenter);
-		setCell(lRow, 1, StringUtils.cStrForJS("" + totalePendentiInizio), lCellStyleCenter);
-		setCell(lRow, 2, StringUtils.cStrForJS("" + totaleSopravvenuti), lCellStyleCenter);
-		setCell(lRow, 3, StringUtils.cStrForJS("" + totaleAccolti), lCellStyleCenter);
-		setCell(lRow, 4, StringUtils.cStrForJS("" + totaleRigettati), lCellStyleCenter);
-		setCell(lRow, 5, StringUtils.cStrForJS("" + totaleInammissibilita), lCellStyleCenter);
-		setCell(lRow, 6, StringUtils.cStrForJS("" + totaleNLPNDP), lCellStyleCenter);
-		setCell(lRow, 7, StringUtils.cStrForJS("" + totaleIncompetenza), lCellStyleCenter);
-		setCell(lRow, 8, StringUtils.cStrForJS("" + totalePerErrore), lCellStyleCenter);
-		setCell(lRow, 9, StringUtils.cStrForJS("" + totaleUnificati), lCellStyleCenter);
-		setCell(lRow, 10, StringUtils.cStrForJS("" + totaleCancellati), lCellStyleCenter);
-		setCell(lRow, 11, StringUtils.cStrForJS("" + totaleAltro), lCellStyleCenter);
-		setCell(lRow, 12, StringUtils.cStrForJS("" + totalePendentiFine), lCellStyleCenter);
-
+		
+		numCol = 0;
+		setCell(lRow, numCol++, "TOTALI", lCellStyleCenter);
+		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totalePendentiInizio), lCellStyleCenter);
+		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totaleSopravvenuti), lCellStyleCenter);
+		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totaleAccolti), lCellStyleCenter);
+		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totaleAccoltiProvv), lCellStyleCenter); // MEV9
+		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totaleRigettati), lCellStyleCenter);
+		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totaleInammissibilita), lCellStyleCenter);
+		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totaleNLPNDP), lCellStyleCenter);
+		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totaleIncompetenza), lCellStyleCenter);
+		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totalePerErrore), lCellStyleCenter);
+		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totaleUnificati), lCellStyleCenter);
+		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totaleCancellati), lCellStyleCenter);
+		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totaleAltro), lCellStyleCenter);
+		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totalePendentiFine), lCellStyleCenter);
 	}
 
 	protected void creaStatisticaComparataMagistratiOggettiExcel(HSSFWorkbook aWb,
@@ -285,40 +294,45 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 
 		lRow = lSheet.createRow(lRowCounter++);
 
-		lSheet.setColumnWidth(0, 15 * 256); // Contenuto
-		lSheet.setColumnWidth(1, 40 * 256); // Oggetto
-		lSheet.setColumnWidth(2, 10 * 256); // Pendenti Inizio Periodo
-		lSheet.setColumnWidth(3, 10 * 256); // Sopravvenuti
-		lSheet.setColumnWidth(4, 10 * 256); // Accolti
-		lSheet.setColumnWidth(5, 10 * 256); // Rigettati
-		lSheet.setColumnWidth(6, 10 * 256); // Inammissibilità
-		lSheet.setColumnWidth(7, 10 * 256); // NLP/NDP
-		lSheet.setColumnWidth(8, 10 * 256); // Incompetenza
-		lSheet.setColumnWidth(9, 10 * 256); // Iscritti per Errore
-		lSheet.setColumnWidth(10, 10 * 256); // Unificati
-		lSheet.setColumnWidth(11, 10 * 256); // Cancellati
-		lSheet.setColumnWidth(12, 10 * 256); // Altro
-		lSheet.setColumnWidth(13, 10 * 256); // Pendenti Fine Periodo
+		int numCol = 0;
+		lSheet.setColumnWidth(numCol++, 15 * 256); // Contenuto
+		lSheet.setColumnWidth(numCol++, 40 * 256); // Oggetto
+		lSheet.setColumnWidth(numCol++, 10 * 256); // Pendenti Inizio Periodo
+		lSheet.setColumnWidth(numCol++, 10 * 256); // Sopravvenuti
+		lSheet.setColumnWidth(numCol++, 10 * 256); // Accolti
+		lSheet.setColumnWidth(numCol++, 10 * 256); // Accolti Provvisoriamente MEV9
+		lSheet.setColumnWidth(numCol++, 10 * 256); // Rigettati
+		lSheet.setColumnWidth(numCol++, 10 * 256); // Inammissibilità
+		lSheet.setColumnWidth(numCol++, 10 * 256); // NLP/NDP
+		lSheet.setColumnWidth(numCol++, 10 * 256); // Incompetenza
+		lSheet.setColumnWidth(numCol++, 10 * 256); // Iscritti per Errore
+		lSheet.setColumnWidth(numCol++, 10 * 256); // Unificati
+		lSheet.setColumnWidth(numCol++, 10 * 256); // Cancellati
+		lSheet.setColumnWidth(numCol++, 10 * 256); // Altro
+		lSheet.setColumnWidth(numCol++, 10 * 256); // Pendenti Fine Periodo
 
 		// Intestazione colonne
-		setCell(lRow, 0, "Contenuto", lCellStyleCenter);
-		setCell(lRow, 1, "Oggetto", lCellStyleCenter);
-		setCell(lRow, 2, "Pendenti Inizio Periodo", lCellStyleCenter);
-		setCell(lRow, 3, "Sopravvenuti", lCellStyleCenter);
-		setCell(lRow, 4, "Accolti", lCellStyleCenter);
-		setCell(lRow, 5, "Rigettati", lCellStyleCenter);
-		setCell(lRow, 6, "Inammissibilità", lCellStyleCenter);
-		setCell(lRow, 7, "NLP/NDP", lCellStyleCenter);
-		setCell(lRow, 8, "Incompetenza", lCellStyleCenter);
-		setCell(lRow, 9, "Iscritti per Errore", lCellStyleCenter);
-		setCell(lRow, 10, "Unificati", lCellStyleCenter);
-		setCell(lRow, 11, "Cancellati", lCellStyleCenter);
-		setCell(lRow, 12, "Altro", lCellStyleCenter);
-		setCell(lRow, 13, "Pendenti Fine Periodo", lCellStyleCenter);
+		numCol = 0;
+		setCell(lRow, numCol++, "Contenuto", lCellStyleCenter);
+		setCell(lRow, numCol++, "Oggetto", lCellStyleCenter);
+		setCell(lRow, numCol++, "Pendenti Inizio Periodo", lCellStyleCenter);
+		setCell(lRow, numCol++, "Sopravvenuti", lCellStyleCenter);
+		setCell(lRow, numCol++, "Accolti", lCellStyleCenter);
+		setCell(lRow, numCol++, "Accolti Provvisoriamente", lCellStyleCenter); // MEV9
+		setCell(lRow, numCol++, "Rigettati", lCellStyleCenter);
+		setCell(lRow, numCol++, "Inammissibilità", lCellStyleCenter);
+		setCell(lRow, numCol++, "NLP/NDP", lCellStyleCenter);
+		setCell(lRow, numCol++, "Incompetenza", lCellStyleCenter);
+		setCell(lRow, numCol++, "Iscritti per Errore", lCellStyleCenter);
+		setCell(lRow, numCol++, "Unificati", lCellStyleCenter);
+		setCell(lRow, numCol++, "Cancellati", lCellStyleCenter);
+		setCell(lRow, numCol++, "Altro", lCellStyleCenter);
+		setCell(lRow, numCol++, "Pendenti Fine Periodo", lCellStyleCenter);
 
 		BigDecimal totalePendentiInizio = new BigDecimal("0");
 		BigDecimal totaleSopravvenuti = new BigDecimal("0");
 		BigDecimal totaleAccolti = new BigDecimal("0");
+		BigDecimal totaleAccoltiProvv = new BigDecimal("0"); // MEV 9		
 		BigDecimal totaleRigettati = new BigDecimal("0");
 		BigDecimal totaleInammissibilita = new BigDecimal("0");
 		BigDecimal totaleNLPNDP = new BigDecimal("0");
@@ -333,25 +347,28 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 		while (lItx.hasNext()) {
 			lModel = lItx.next();
 			lRow = lSheet.createRow(lRowCounter++);
-
-			setCell(lRow, 0, StringUtils.cStrForJS("" + lModel.getDescContenutoStatis()), lCellStyleCenter);
-			setCell(lRow, 1, StringUtils.cStrForJS("" + lModel.getDescOggetto()), lCellStyleCenter);
-			setCell(lRow, 2, StringUtils.cStrForJS("" + lModel.getNumPendentiInizio()), lCellStyleCenter);
-			setCell(lRow, 3, StringUtils.cStrForJS("" + lModel.getNumSopravvenuti()), lCellStyleCenter);
-			setCell(lRow, 4, StringUtils.cStrForJS("" + lModel.getNumDefEsito1()), lCellStyleCenter);
-			setCell(lRow, 5, StringUtils.cStrForJS("" + lModel.getNumDefEsito2()), lCellStyleCenter);
-			setCell(lRow, 6, StringUtils.cStrForJS("" + lModel.getNumDefEsito3()), lCellStyleCenter);
-			setCell(lRow, 7, StringUtils.cStrForJS("" + lModel.getNumDefEsito4()), lCellStyleCenter);
-			setCell(lRow, 8, StringUtils.cStrForJS("" + lModel.getNumDefEsito5()), lCellStyleCenter);
-			setCell(lRow, 9, StringUtils.cStrForJS("" + lModel.getNumDefIscErr()), lCellStyleCenter);
-			setCell(lRow, 10, StringUtils.cStrForJS("" + lModel.getNumUnificati()), lCellStyleCenter);
-			setCell(lRow, 11, StringUtils.cStrForJS("" + lModel.getNumCancellati()), lCellStyleCenter);
-			setCell(lRow, 12, StringUtils.cStrForJS("" + lModel.getNumDefEsito6()), lCellStyleCenter);
-			setCell(lRow, 13, StringUtils.cStrForJS("" + lModel.getNumPendentiFine()), lCellStyleCenter);
+			
+			numCol = 0;
+			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getDescContenutoStatis()), lCellStyleCenter);
+			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getDescOggetto()), lCellStyleCenter);
+			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumPendentiInizio()), lCellStyleCenter);
+			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumSopravvenuti()), lCellStyleCenter);
+			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumDefEsito1()), lCellStyleCenter);
+			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumAccoltiProvv()), lCellStyleCenter); // MEV 9
+			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumDefEsito2()), lCellStyleCenter);
+			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumDefEsito3()), lCellStyleCenter);
+			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumDefEsito4()), lCellStyleCenter);
+			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumDefEsito5()), lCellStyleCenter);
+			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumDefIscErr()), lCellStyleCenter);
+			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumUnificati()), lCellStyleCenter);
+			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumCancellati()), lCellStyleCenter);
+			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumDefEsito6()), lCellStyleCenter);
+			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumPendentiFine()), lCellStyleCenter);
 
 			totalePendentiInizio = totalePendentiInizio.add(lModel.getNumPendentiInizio());
 			totaleSopravvenuti = totaleSopravvenuti.add(lModel.getNumSopravvenuti());
-			totaleAccolti = totaleAccolti.add(lModel.getNumDefEsito1());
+			totaleAccolti = totaleAccolti.add(lModel.getNumDefEsito1());			
+			totaleAccoltiProvv = totaleAccoltiProvv.add(lModel.getNumAccoltiProvv()); // NEV9
 			totaleRigettati = totaleRigettati.add(lModel.getNumDefEsito2());
 			totaleInammissibilita = totaleInammissibilita.add(lModel.getNumDefEsito3());
 			totaleNLPNDP = totaleNLPNDP.add(lModel.getNumDefEsito4());
@@ -367,19 +384,21 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 		lRowCounter++;
 		lRow = lSheet.createRow(lRowCounter++);
 
-		setCell(lRow, 1, "TOTALI", lCellStyleCenter);
-		setCell(lRow, 2, StringUtils.cStrForJS("" + totalePendentiInizio), lCellStyleCenter);
-		setCell(lRow, 3, StringUtils.cStrForJS("" + totaleSopravvenuti), lCellStyleCenter);
-		setCell(lRow, 4, StringUtils.cStrForJS("" + totaleAccolti), lCellStyleCenter);
-		setCell(lRow, 5, StringUtils.cStrForJS("" + totaleRigettati), lCellStyleCenter);
-		setCell(lRow, 6, StringUtils.cStrForJS("" + totaleInammissibilita), lCellStyleCenter);
-		setCell(lRow, 7, StringUtils.cStrForJS("" + totaleNLPNDP), lCellStyleCenter);
-		setCell(lRow, 8, StringUtils.cStrForJS("" + totaleIncompetenza), lCellStyleCenter);
-		setCell(lRow, 9, StringUtils.cStrForJS("" + totalePerErrore), lCellStyleCenter);
-		setCell(lRow, 10, StringUtils.cStrForJS("" + totaleUnificati), lCellStyleCenter);
-		setCell(lRow, 11, StringUtils.cStrForJS("" + totaleCancellati), lCellStyleCenter);
-		setCell(lRow, 12, StringUtils.cStrForJS("" + totaleAltro), lCellStyleCenter);
-		setCell(lRow, 13, StringUtils.cStrForJS("" + totalePendentiFine), lCellStyleCenter);
+		numCol = 1;
+		setCell(lRow, numCol++, "TOTALI", lCellStyleCenter);
+		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totalePendentiInizio), lCellStyleCenter);
+		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totaleSopravvenuti), lCellStyleCenter);
+		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totaleAccolti), lCellStyleCenter);
+		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totaleAccoltiProvv), lCellStyleCenter);
+		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totaleRigettati), lCellStyleCenter);
+		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totaleInammissibilita), lCellStyleCenter);
+		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totaleNLPNDP), lCellStyleCenter);
+		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totaleIncompetenza), lCellStyleCenter);
+		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totalePerErrore), lCellStyleCenter);
+		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totaleUnificati), lCellStyleCenter);
+		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totaleCancellati), lCellStyleCenter);
+		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totaleAltro), lCellStyleCenter);
+		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totalePendentiFine), lCellStyleCenter);
 
 	}
 

@@ -225,4 +225,10 @@ public class SentenzaRiunitaDAO extends SIAPTableDAO
  			 {
 						setCondition(" ID_SENTENZA_RIUNITA = " + key);
 			 }
+	
+	// MEV_2024-DNA
+	 public void setCondizioneByIdSentenza(BigDecimal aIdSentenza) 
+	 {
+	      setCondition(" SEN_ID_SENTENZA = " + aIdSentenza);
+   }
 }

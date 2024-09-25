@@ -101,7 +101,11 @@ public interface IEventoSimeone {
 
 	public EventoModel ExRicercaEventoByEveIdEventoTipoProvCodMotivo(BigDecimal aEventoKey,
 			String aTipoEvento, String aTipoProvv, String aMotivo) throws F3BException;
-
+	
+	// MEV_9
+	public EventoModel ExRicercaEventoByEveIdEventoTipoProvCodMotivo(BigDecimal aEventoKey,
+			String aTipoEvento, String aTipoProvv, String aMotivo, String flagDocRegistrato) throws F3BException;
+	
 	public EventoModel ExRicercaEventoByFascicoloSiepDesc(BigDecimal aKey) throws F3BException;
 
 	public EventoModel ExRicercaEventoByFascicoloSiepDescUfficioConnesso(BigDecimal aKey, String aCodUfficio)

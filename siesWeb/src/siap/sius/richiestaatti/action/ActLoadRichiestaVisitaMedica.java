@@ -6,6 +6,9 @@ import java.util.Date;
 import f3b.util.DateUtils;
 import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
+import siap.sico.evento.controller.IEvento;
+import siap.sico.evento.model.EventoModel;
+import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 
@@ -34,6 +37,13 @@ public class ActLoadRichiestaVisitaMedica extends ActionSiap implements ICostant
 		Option lOption2 = new Option(lTipoIstituto, 30);
 		setRequestAttribute("TipiIstituti2", "" + lOption2);
 
+		// INIZIO: MEV_9 (D.lgs. 123/2018)
+		IEvento lEveCtrl = SICOLookupRemote.getEventoRemote();
+		EventoModel lUltimoEventoRichAtti = lEveCtrl.ricercaUltimoEventoRichiestaAttiIsruttoriByIdFasc (((FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"))
+				.getFascicoloSiusModel().getIdFascicoloSius());
+		setRequestAttribute("ultimoEventoRichAtti", lUltimoEventoRichAtti);
+		// FINE: MEV_9 (D.lgs. 123/2018)
+		
 		return PG_LOAD_RICHIESTAVISITAMEDICA; // restituisce la jsp di VIEW
 	}
 
