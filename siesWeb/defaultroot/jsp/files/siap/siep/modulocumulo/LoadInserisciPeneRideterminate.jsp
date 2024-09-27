@@ -697,8 +697,10 @@ if (lPenaRideterminataCumulo.getIdPenaRideterminataCumulo()!=null) {
              <%=lPenaRideterminataCumulo.getImportoMulta()!=null?"checked":""%>
              >&nbsp;Multa
     </td>
+    <%-- Ticket#202409100121 - siep Procura Generale di Napoli --%>
+    <%-- aumentate le size a 14 ovunque per multa e ammenda --%>
     <td class="l" colspan=1 >
-      <input type="text" Title="Multa" size="8" maxlength="16"  style="text-align:right"
+      <input type="text" Title="Multa" size="14" maxlength="14"  style="text-align:right"
              name="<%= ICostantiPenaRideterminataCumulo.CAMPO_IMPORTO_MULTA%>INT" 
              value="<%=StringUtils.getParteIntera(lPenaRideterminataCumulo.getImportoMulta()) %>"
              onkeypress="return TicTabNumField(this,event)">
@@ -743,7 +745,7 @@ if (lPenaRideterminataCumulo.getIdPenaRideterminataCumulo()!=null) {
              >&nbsp;Ammenda            
     </td>
     <td class="l" colspan="1">
-      <input type="text" Title="Ammenda" size=8 maxlength=16  style="text-align:right"
+      <input type="text" Title="Ammenda" size="14" maxlength="14"  style="text-align:right"
              value="<%=StringUtils.getParteIntera(lPenaRideterminataCumulo.getImportoAmmenda()) %>"
              name="<%= ICostantiPenaRideterminataCumulo.CAMPO_IMPORTO_AMMENDA%>INT"       
              onkeypress="return TicTabNumField(this,event)">
@@ -1069,6 +1071,7 @@ while (day<=4){
                id="<%=ICostantiDatiFinaliUlterioriSanzioni.CAMPO_LPU_CHECK_ORARIO_DAY%>_<%=dayCol1%>"
                value="<%=dayCol1%>" 
                <%=lUltSan_SanSos_LPU.checkTipologiaOrario(dayCol1)%>
+               tipolOra="S"
                title="Check per selezionare la giornata" 
                onClick="Javascript:checkAbilitaDisabilitaCampi(this);">
         <%=StringUtils.toStringJSP(lUltSan_SanSos_LPU.getTipologiaOrarioGiorno(dayCol1))%>

@@ -125,6 +125,7 @@ public class IspProcIntervalliDAO extends TableDAO
 			public void  	 setTempoFissazione2Deposito(BigDecimal aValore ) 			 { setBigDecimal("TEMPO_FISSAZIONE2_DEPOSITO", aValore); } 
 			public void  	 setTempoRicezioneDeposito(BigDecimal aValore ) 			 { setBigDecimal("TEMPO_RICEZIONE_DEPOSITO", aValore); } 
 
+			/*
 	public GenericModel getModel() throws DAOException
   			 { 
  				 return new IspProcIntervalliModel(  
@@ -138,7 +139,10 @@ public class IspProcIntervalliDAO extends TableDAO
 								 getCodOggettoTenore() , 
 								 DecodificheUtils.getDescbyCode(DecodificheManager.getInstance().getMotivoProvvedimento(), getCodOggettoTenore()),
 								 getCodEsitoTenore() , 
-								 DecodificheUtils.getDescbyCode(DecodificheManager.getInstance().getEsitoTenore(), getCodEsitoTenore()),
+								 // TICKET#202409020116 - si decodifaca dal dominio ESITO_PROVVEDIMENTO e non ESITO_TENORE
+								  DecodificheUtils.getDescbyCode(DecodificheManager.getInstance().getEsitoTenore(), getCodEsitoTenore()),
+							   //DecodificheUtils.getDescbyCode(DecodificheManager.getInstance().getEsitoProvvedimento(), getCodEsitoTenore()),
+								 // TICKET#202409020116 - FINE
 								 getCodMagistrato() , 
 								 "",
 								 getGenPridGeneraleProcedimento() , 
@@ -160,7 +164,51 @@ public class IspProcIntervalliDAO extends TableDAO
 								 getTempoRicezioneDeposito()  
 								);
 		}
-
+*/
+	 // TICKET#202409020116 si riscrive la getModel per gestire l'eccezione rilanciata dal metodo	getEsitoProvvedimento
+	 public GenericModel getModel() throws DAOException
+   { 
+	   IspProcIntervalliModel lProcIntervalliModel = new IspProcIntervalliModel();	   
+	   
+	   lProcIntervalliModel.setFasSiuIdFascicoloSius(getFasSiuIdFascicoloSius());
+	   lProcIntervalliModel.setFasSiuChiaveAnno(getFasSiuChiaveAnno() );
+	   lProcIntervalliModel.setFasSiuChiaveUfficio(getFasSiuChiaveUfficio());
+	   lProcIntervalliModel.setFasSiuChiaveProgr(getFasSiuChiaveProgr());
+	   lProcIntervalliModel.setFasSiuCodStatoFascicolo(getFasSiuCodStatoFascicolo());
+	   lProcIntervalliModel.setFasSiuDataIscrizione(getFasSiuDataIscrizione() );
+	   lProcIntervalliModel.setFasSiuDataDefinizione(getFasSiuDataDefinizione());
+	   lProcIntervalliModel.setCodOggettoTenore(getCodOggettoTenore()); 
+	   lProcIntervalliModel.setDescrOggettoTenore (DecodificheUtils.getDescbyCode(DecodificheManager.getInstance().getMotivoProvvedimento(), getCodOggettoTenore()));
+	   lProcIntervalliModel.setCodEsitoTenore(getCodEsitoTenore());
+	   // TICKET#202409020116 - si decodifica dal dominio ESITO_PROVVEDIMENTO e non ESITO_TENORE
+	   try {
+	     lProcIntervalliModel.setDescrEsitoTenore(DecodificheUtils.getDescbyCode(DecodificheManager.getInstance().getEsitoProvvedimento(), getCodEsitoTenore()));
+	   } catch (Exception e) {
+	     lProcIntervalliModel.setDescrEsitoTenore("");
+	   }
+	   // TICKET#202409020116 - FINE
+	   lProcIntervalliModel.setCodMagistrato(getCodMagistrato() );
+	   lProcIntervalliModel.setDescrMagistrato("");
+	   lProcIntervalliModel.setGenPridGeneraleProcedimento(getGenPridGeneraleProcedimento());
+	   lProcIntervalliModel.setDepOpidDepositoOrdinanzaPc(getDepOpidDepositoOrdinanzaPc());
+	   lProcIntervalliModel.setDepDecIdDepositoDecreto(getDepDecIdDepositoDecreto());
+	   lProcIntervalliModel.setTenData(getTenData());
+	   lProcIntervalliModel.setTenDataFine(getTenDataFine());
+	   lProcIntervalliModel.setCodEsitoStatistica(getCodEsitoStatistica());
+	   lProcIntervalliModel.setDescrEsitoStatistica("");
+	   lProcIntervalliModel.setDescContenutoStatis(getDescContenutoStatis());
+	   lProcIntervalliModel.setDataRicezione(getDataRicezione());
+	   lProcIntervalliModel.setDataPrimaUdienza(getDataPrimaUdienza()); 
+	   lProcIntervalliModel.setDataUltimaUdienza(getDataUltimaUdienza());
+	   lProcIntervalliModel.setDataDecisione(getDataDecisione());
+	   lProcIntervalliModel.setDataDeposito(getDataDeposito());
+	   lProcIntervalliModel.setTempoDecisioneDeposito(getTempoDecisioneDeposito());
+	   lProcIntervalliModel.setTepoRicezioneFissazione1(getTepoRicezioneFissazione1()); 
+	   lProcIntervalliModel.setTempoFissazione2Deposito(getTempoFissazione2Deposito() );
+	   lProcIntervalliModel.setTempoRicezioneDeposito(getTempoRicezioneDeposito());
+	   
+	   return lProcIntervalliModel;
+   }
 
 	 public void 	 setDAOFromModel(IspProcIntervalliModel aModel) throws DAOException
   		{

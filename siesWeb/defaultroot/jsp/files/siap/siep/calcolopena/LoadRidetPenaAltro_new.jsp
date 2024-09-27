@@ -934,7 +934,7 @@ while (lIter.hasNext()) {
           </td>
           <td class="c">
             <font class="label">Multa</font><br>
-            <input style="align:right" type="text" name="Multa_<%=i%>"   id="Multa_<%=i%>" maxlength="8" size="6" value="" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
+            <input style="align:right" type="text" name="Multa_<%=i%>"   id="Multa_<%=i%>" maxlength="9" size="9" value="" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
             ,
             <input style="align:right" type="text" name="Mul_dec_<%=i%>" id="Mul_dec_<%=i%>" maxlength="2" size="2" value="" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
           </td>
@@ -949,7 +949,7 @@ while (lIter.hasNext()) {
           </td>
           <td class="c">
             <font class="label">Ammenda</font><br>
-            <input style="align:right" type="text" name="Ammenda_<%=i%>" id="Ammenda_<%=i%>" maxlength="8" size="6" value="" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
+            <input style="align:right" type="text" name="Ammenda_<%=i%>" id="Ammenda_<%=i%>" maxlength="9" size="9" value="" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
             ,
             <input style="align:right" type="text" name="Amm_dec_<%=i%>" id="Amm_dec_<%=i%>" maxlength="2" size="2" value="" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
           </td>
