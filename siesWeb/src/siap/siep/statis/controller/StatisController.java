@@ -540,8 +540,11 @@ public class StatisController extends GenericController {
 					lIspDao = new IspAttivitaMagistratiSqlDAO(lConn);
 					lIspDao.ricercaAttivitaMagistrato(aAnno, modMag.getCodMagistrato());
 					lIspDao.start();
+					String nome = "";
 					while (lIspDao.next()) {
-						lVect.add(lIspDao.getModelAttivitaCodMag(modMag.getCognome() + " " + modMag.getNome(),
+						if (Utils.isPresent(modMag.getNome()))
+							nome = modMag.getNome();
+						lVect.add(lIspDao.getModelAttivitaCodMag(modMag.getCognome() + " " + nome,
 								modMag.getCodMagistrato()));
 					}
 				} catch (DAOException daoEx) {
