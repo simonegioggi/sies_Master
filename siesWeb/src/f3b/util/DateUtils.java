@@ -85,7 +85,7 @@ public class DateUtils {
 	 * @param aDate
 	 *            Data da ritornare formatta i <code>String</code>
 	 * @param aPattern
-	 *            Pattern di formattazione ( Es.: gg/MM/yyyy ).
+	 *            Pattern di formattazione ( Es.: dd/MM/yyyy ).
 	 * @return la data in formato <code>String</code>.
 	 */
 	public static String getDateToString(Date aDate, String aPattern) {
