@@ -547,7 +547,11 @@ if (!documentiSius.isEmpty()) {
         // poichè non individua i codici TDSM e UDSM
         String lUfficio = StringUtils.toStringJSP(eventoModel.getCodTipoUfficioEmittente(), "-");
         // MEV_9-SIEP: aggiunto controllo per escludere dalla visualizzazione
-        if (!"AMMISSIONE_PROVVISORIA".equals(NaturaMA)) {
+        if (   !"AMMISSIONE_PROVVISORIA".equals(NaturaMA)
+            && !"CONCESSIONE_SOSPENSIONE".equals(NaturaMA)
+            && !"CONCESSIONE_SOSPENSIONE678".equals(NaturaMA)          
+           ) 
+        {
 			if ((("TDS".equals(lUfficio)
 					&& ("0680".equals(misuraModel.getCodTipoMisura())					// AFFIDAMENTO
 							|| "0681".equals(misuraModel.getCodTipoMisura())			// AFFIDAMENTO
@@ -569,6 +573,11 @@ if (!documentiSius.isEmpty()) {
         if ("CONCESSIONE_SOSPENSIONE678".equals(NaturaMA)) {  
         	if (!"0270".equals(eventoModel.getCodEsito()))
         		continue;
+        }
+        
+        if ("CONCESSIONE_SOSPENSIONE".equals(NaturaMA)) {  
+          if ("0270".equals(eventoModel.getCodEsito()))
+            continue;
         }
         
         
