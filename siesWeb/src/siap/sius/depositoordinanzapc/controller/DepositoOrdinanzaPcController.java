@@ -98,7 +98,7 @@ import siap.sius.tenore.model.TenoreModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * Title: DepositoOrdinanzaPcController Description: Classe Controller per DepositoOrdinanzaPc
+ * DepositoOrdinanzaPcController - Classe Controller per DepositoOrdinanzaPc
  *
  * @version 1.0
  */
@@ -711,7 +711,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			 * Numero MEV : 9 
 			 * Autore : sgioggi 
 			 * Data : 17 gen 2023 
-			 * Branch : MEV_9
+			 * Branch : MEV_2019-09
 			 */
 			if (!"CM".equals(lGProcOrdEveTenori.getOrdinanza().getCodTipoOrdinanza())) {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -731,7 +731,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 				lTenoreDao.update();
 				lTenoreDao.stop();
 			}
-			// ***** FINE INTERVENTO MEV_9 *****//
+			// ***** FINE INTERVENTO MEV_2019-09 *****//
 
 			// Insert dei tenori.
 			TenoreModel[] lTenori = lGProcOrdEveTenori.getTenori();
@@ -919,7 +919,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 	
 	/**
 	 * Aggiorna il Deposito e anche il record MA per consentire a SIEP di vedere l'ordinanza
-	 * MEV_9 02.2024
+	 * MEV_2019-09 02.2024
 	 */
 	public DepositoOrdinanzaPcModel ExAggiornaDataEsecutivitaDepositoOrdinanzaPc(
 			DepositoOrdinanzaPcModel aDepositoOrdinanzaPc) throws F3BException {
@@ -1018,7 +1018,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			 * Numero MEV : 9 
 			 * Autore : sgioggi 
 			 * Data : 18 gen 2023 
-			 * Branch : MEV_9
+			 * Branch : MEV_2019-09
 			 */
 			if (!"CM".equals(aDepOrd.getCodTipoOrdinanza())) {
 				// update Tenori collegati
@@ -1027,7 +1027,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 				// delete Tenori collegati
 				lTenDao.delete();
 			}
-			// ***** FINE INTERVENTO MEV_9 *****//
+			// ***** FINE INTERVENTO MEV_2019-09 *****//
 
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -2044,13 +2044,14 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			if (lEveMod.getCodEsito().compareTo("0603") != 0) {
 				lFasSiusDao = new FascicoloSiusDAO(lConn);
 				lFasSiusDao.setDAOFromModelForUpdate(aFasGPMod.getFascicoloSiusModel());
-
-				// INIZIO: MEV_9 (D.lgs. 123/2018)
+				// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 				if (lEveMod.getCodEsito().compareTo("0605") != 0) {
-					// INIZIO: MEV_9 (D.lgs. 123/2018)
+					// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 					if (lEveMod.getCodEsito().compareTo("0270") == 0) {
-						lFasSiusDao.setCodStatoFascicolo("24");
-					} // FINE: MEV_9
+						// MEV_2024-092: non più utilizzato; al suo posto 07 = COD_EMESSO_PROVVEDIMENTO
+						// ICostantiFascicoloSius.COD_EMESSA_ORDINANZA_APPLICAZIONE_PROVVISORIA
+						lFasSiusDao.setCodStatoFascicolo("07");
+					} // FINE: MEV_2019-09
 					else
 						lFasSiusDao.setCodStatoFascicolo("07");
 				} else if (aFasGPMod.getFascicoloSiusModel().getCodStatoFascicolo().compareTo("07") != 0)

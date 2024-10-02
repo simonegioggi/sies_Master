@@ -55,7 +55,7 @@
 <jsp:useBean id="comboTipoProvvSorv"    scope="request" class="java.lang.String"/>
 <jsp:useBean id="filtroMinorenni"     scope="request" class="java.lang.String"/>
 
-<%-- MEV_9 per gestire la modifica --%>
+<%-- MEV_2019-09 per gestire la modifica --%>
 <jsp:useBean id="tipoOperazione"  scope="request" class="java.lang.String"/>
 <jsp:useBean id="eventonotifica"  scope="request" class="siap.sico.evento.model.EventoNotificaModel"/>
 <jsp:useBean id="misuraalternativaToChange"     scope="request" class="siap.sico.misuraalternativa.model.MisuraAlternativaModel"/>
@@ -68,7 +68,7 @@
 <jsp:useBean id="DestTribunaleSorv" scope="request" class="siap.sico.ufficio.model.UfficioModel"/>
 <jsp:useBean id="DestUfficioSorv"   scope="request" class="siap.sico.ufficio.model.UfficioModel"/>
 
-<%-- MEV_9 per modifica --%>
+<%-- MEV_2019-09 per modifica --%>
 <%
 FascicoloSiepModel lFascicoloAssociato = (FascicoloSiepModel)session.getAttribute("fascicolo");
 PosizioneGiuridicaModel lPosizione = posizioneluogoaltra.getPosizioneGiuridica();
@@ -509,7 +509,7 @@ function Verifica() {
   }
 <% } %>
 
-  <%-- MEV_9 Si aggiunge la data di esecutività --%>
+  <%-- MEV_2019-09 Si aggiunge la data di esecutività --%>
   if (   document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA%>.value != ""
       || document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_ESECUTIVITA%>.value != ""
       || document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA%>.value != "") 

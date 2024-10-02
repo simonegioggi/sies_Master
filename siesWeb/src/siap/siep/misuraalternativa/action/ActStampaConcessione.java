@@ -151,7 +151,7 @@ public class ActStampaConcessione extends ActConcessione {
 		if (flagTemplate != null && lEventoModel != null && lEventoModel.getCodTipoEvento() != null
 				&& lEventoModel.getCodMotivo() != null && !lEventoModel.getCodMotivo().equals("0000")
 				&& lMisMod != null && lMisMod.getCodTipoMisura() != null) {
-			// MEV_9-SIEP: imposto flag_template e codTipoMisura e codTipoProvvedimento
+			// MEV_2019-09-SIEP: imposto flag_template e codTipoMisura e codTipoProvvedimento
 			// if ("0680".equals(lMotivo) || "0681".equals(lMotivo) // AFFIDAMENTO
 			// || "0690".equals(lMotivo) || "0691".equals(lMotivo) || "0692".equals(lMotivo) // AFFIDAMENTO
 			// || "0682".equals(lMotivo) || "0693".equals(lMotivo) // DETENZIONE DOMICILIARE

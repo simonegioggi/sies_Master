@@ -135,7 +135,7 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 		IEvento lCtrlEvento = SICOLookupRemote.getEventoRemote();
 		EventoNotificaModel lEveMod = new EventoNotificaModel();
 
-		// MEV_9-SIEP: aggiunta impostazione parametro
+		// MEV_2019-09-SIEP: aggiunta impostazione parametro
 		String tipoOperazione = "";
 
 		MisuraAlternativaModel lMisAlModConcessa = new MisuraAlternativaModel();
@@ -146,7 +146,7 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 				lMisAlModConcessa = lMisAltCtrl.ExRicercaMisuraAlternativaByKey(lIdMisuraAlternativa);
 				setRequestAttribute("misuraalternativa", lMisAlModConcessa);
 
-				// MEV_9-SIEP: aggiunta impostazione parametro
+				// MEV_2019-09-SIEP: aggiunta impostazione parametro
 				if (!isRequestParameterNullObj("tipoOperazione")) {
 					tipoOperazione = getRequestStringParameter("tipoOperazione");
 					setRequestAttribute("tipoOperazione", tipoOperazione);
@@ -156,8 +156,8 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 				if (!(lMisAlModConcessa.getCodTipoMisura().equals("0001")
 						|| lMisAlModConcessa.getCodTipoMisura().equals("0002")
 						|| lMisAlModConcessa.getCodTipoMisura().equals("0003"))
-						|| "MODIFICA".equals(tipoOperazione)) { // MEV_9-SIEP: aggiunta OR condition
-					// MEV_9-SIEP: aggiunto controllo per diversificare la ricerca
+						|| "MODIFICA".equals(tipoOperazione)) { // MEV_2019-09-SIEP: aggiunta OR condition
+					// MEV_2019-09-SIEP: aggiunto controllo per diversificare la ricerca
 					if ("MODIFICA".equals(tipoOperazione)) {
 						if (!isRequestParameterNullObj(ICostantiEvento.CAMPO_ID_EVENTO))
 							lEveMod = lCtrlEvento.ExRicercaEventoNotificaByKey(
@@ -203,7 +203,7 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 				lUffEmiMod = lCtrlUffEmi.getUfficioByKey(lMisAlModConcessa.getChiaveUfficioFascicoloSius());
 
 				setRequestAttribute("sedeUfficioEmittente", lUffEmiMod);
-				// MEV_9-SIEP: aggiunto controllo per diversificare la setRequestAttribute
+				// MEV_2019-09-SIEP: aggiunto controllo per diversificare la setRequestAttribute
 				if ("MODIFICA".equals(tipoOperazione)) {
 					Collection<DecodificheModel> c = DecodificheManager.getInstance()
 							.getTipoUfficioSiepTDSMUDSM();
@@ -228,7 +228,7 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 		IMagistratoCompetente imc = SICOLookupRemote.getMagistratoCompetenteRemote();
 		MagistratoCompetenteMagistratoModel mcmm = imc
 				.ExRicercaMagistratoCompetenteByFascicolo(lFascMod.getIdFascicoloSiep());
-		// MEV_9-SIEP: per la modifica (se non esiste il MAGISTRATO nel fascicolo ma solo nell'evento)
+		// MEV_2019-09-SIEP: per la modifica (se non esiste il MAGISTRATO nel fascicolo ma solo nell'evento)
 		// oppure se siamo in modifica
 		if (Utils.isNullObj(mcmm) || "MODIFICA".equals(tipoOperazione)) {
 			if (!Utils.isNullObj(lEveMod) && !Utils.isNullObj(lEveMod.getEvento())
@@ -294,7 +294,7 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 		// Cssa
 		if (lTable.get("NotCssa") != null) {
 			setRequestAttribute("daticssa", ((NotificaModel) lTable.get("NotCssa")).getCSSA());
-			// MEV_9-SIEP: aggiunto controllo per diversificare la setRequestAttribute
+			// MEV_2019-09-SIEP: aggiunto controllo per diversificare la setRequestAttribute
 			if ("MODIFICA".equals(tipoOperazione)) {
 				Collection<DecodificheModel> c = DecodificheManager.getInstance()
 						.getTipoUffEsePenEstSerSocMin();
@@ -325,7 +325,7 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 		if (lTable.get("UffTDS") != null) {
 			UffTDS = ((NotificaModel) lTable.get("UffTDS")).getUfficio().getDescrComune();
 			setRequestAttribute("UffTDS", UffTDS);
-			// MEV_9-SIEP: aggiunto controllo per diversificare la setRequestAttribute
+			// MEV_2019-09-SIEP: aggiunto controllo per diversificare la setRequestAttribute
 			if ("MODIFICA".equals(tipoOperazione)) {
 				Collection<DecodificheModel> c = new Vector<>();
 				c.add(new DecodificheModel("-", "-", "-", "-", "-", "", "", "", ""));
@@ -338,7 +338,7 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 						((NotificaModel) lTable.get("UffTDS")).getUfficio().getCodTipoUfficio());
 				setRequestAttribute("comboTribunaleTrattinoModif", "" + o);
 			}
-			// FINE MEV_9-SIEP
+			// FINE MEV_2019-09-SIEP
 		}
 
 		// Ufficio UDS
@@ -346,7 +346,7 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 		if (lTable.get("UffUDS") != null) {
 			UffUDS = ((NotificaModel) lTable.get("UffUDS")).getUfficio().getDescrComune();
 			setRequestAttribute("UffUDS", UffUDS);
-			// MEV_9-SIEP: aggiunto controllo per diversificare la setRequestAttribute
+			// MEV_2019-09-SIEP: aggiunto controllo per diversificare la setRequestAttribute
 			if ("MODIFICA".equals(tipoOperazione)) {
 				Collection<DecodificheModel> c = new Vector<>();
 				c.add(new DecodificheModel("-", "-", "-", "-", "-", "", "", "", ""));
@@ -357,7 +357,7 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 						((NotificaModel) lTable.get("UffUDS")).getUfficio().getCodTipoUfficio());
 				setRequestAttribute("comboMagistratoTrattinoModif", "" + o);
 			}
-			// FINE MEV_9-SIEP
+			// FINE MEV_2019-09-SIEP
 		}
 
 		// istituto
@@ -373,7 +373,7 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 			setRequestAttribute("LuogoIstituto", LuogoIstituto);
 		}
 
-		// MEV_9-SIEP: aggiunto controllo per diversificare la setRequestAttribute
+		// MEV_2019-09-SIEP: aggiunto controllo per diversificare la setRequestAttribute
 		Option lOption = null;
 		if (lAutN != null && lAutN.getCodTipoAutorita() != null)
 			lOption = new Option(DecodificheManager.getInstance().getTipoAutorita(),
@@ -484,7 +484,7 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 				lEve.getEvento().setCodTipoProvvedimento("12");
 		}
 
-		// MEV_9-SIEP: aggiunte casistiche
+		// MEV_2019-09-SIEP: aggiunte casistiche
 		if ("0720".equals(aMotivo))
 			lEve.getEvento().setCodMotivo("5460");
 		else if ("0721".equals(aMotivo))
@@ -523,7 +523,7 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 		if ("0720".equals(aMotivo) || "0721".equals(aMotivo) || "0730".equals(aMotivo)
 				|| "0731".equals(aMotivo) || "0732".equals(aMotivo))
 			lEve.getEvento().setCodTipoProvvedimento("12");
-		// FINE MEV_9-SIEP
+		// FINE MEV_2019-09-SIEP
 
 		// model di ritorno
 		return lEve;
@@ -626,7 +626,7 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 		if (aTipo != null && aTipo.equals("PROC")) // da scarcerare
 			lEveNot.getEvento().setCodTipoProvvedimento("06");
 
-		// MEV_9-SIEP: aggiunte casistiche
+		// MEV_2019-09-SIEP: aggiunte casistiche
 		if ("0722".equals(aMotivo))
 			lEveNot.getEvento().setCodMotivo("5465");
 		else if ("0733".equals(aMotivo))
@@ -639,12 +639,12 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 		// aggiunto controllo per codici tipo misura
 		if ("0722".equals(aMotivo) || "0733".equals(aMotivo))
 			lEveNot.getEvento().setCodTipoProvvedimento("12");
-		// FINE MEV_9-SIEP
+		// FINE MEV_2019-09-SIEP
 
 		return lEveNot;
 	}
 
-	// MEV_9-SIEP: cambiata firma al metodo aggiunto codMotivo
+	// MEV_2019-09-SIEP: cambiata firma al metodo aggiunto codMotivo
 	protected EventoNotificaModel getProvvedimentoMotivoSemiliberta(String aPosizione, String aFlagAffi,
 			String aMotivo) {
 
@@ -697,7 +697,7 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 			lEve.getEvento().setCodMotivo("0373");
 		}
 
-		// MEV_9-SIEP: aggiunte casistiche
+		// MEV_2019-09-SIEP: aggiunte casistiche
 		if ("0723".equals(aMotivo))
 			lEve.getEvento().setCodMotivo("5467");
 		else if ("0734".equals(aMotivo))
@@ -710,7 +710,7 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 		// aggiunto controllo per codici tipo misura
 		if ("0723".equals(aMotivo) || "0734".equals(aMotivo))
 			lEve.getEvento().setCodTipoProvvedimento("12");
-		// FINE MEV_9-SIEP
+		// FINE MEV_2019-09-SIEP
 
 		return lEve;
 	}
@@ -995,7 +995,7 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 				break;
 			}
 			case 3: // Espiazione Pena in Regime Carcerario
-				// MEV_9-SIEP: aggiunta gestione codice
+				// MEV_2019-09-SIEP: aggiunta gestione codice
 			case 14:// Espiazione Pena in Regime di Semiliberta'
 			{
 				FlagTemplate = "2";

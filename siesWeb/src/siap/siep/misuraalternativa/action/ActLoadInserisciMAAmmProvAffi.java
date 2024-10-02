@@ -99,7 +99,7 @@ public class ActLoadInserisciMAAmmProvAffi extends ActAmmissioneProvvisoria {
 			}
 		}
 
-		// MEV_9 si aggiunge la possibilita' di modificare i dati
+		// MEV_2019-09 si aggiunge la possibilita' di modificare i dati
 		String tipoOperazione = "INSERIMENTO";
 		if (!isRequestParameterNullObj("tipoOperazione"))
 			tipoOperazione = getRequestStringParameter("tipoOperazione");
@@ -186,7 +186,7 @@ public class ActLoadInserisciMAAmmProvAffi extends ActAmmissioneProvvisoria {
 			EventoModel lEveVer = new EventoModel();
 			IEventoSimeone lCtrlEven = SICOLookupRemote.getEventoSimeoneRemote();
 			lEveVer = lCtrlEven.ExRicercaEventoByEveIdEventoTipoProvCodMotivo(
-					lMisAlModToChange.getEveIdEvento(), "07", "18", "0314", "S"); // MEV_9 mi interessano i
+					lMisAlModToChange.getEveIdEvento(), "07", "18", "0314", "S"); // MEV_2019-09 mi interessano i
 																					// validati!!!
 
 			IVerbale lCtrlVe = SIEPLookupRemote.getVerbaleRemote();
@@ -199,7 +199,7 @@ public class ActLoadInserisciMAAmmProvAffi extends ActAmmissioneProvvisoria {
 			}
 		}
 		// =======================================================================================
-		// MEV_9 - FINE
+		// MEV_2019-09 - FINE
 
 		// Controllo esistenza almeno un avvocato per fascicolo
 		IAvvocato lAvv = SIEPLookupRemote.getAvvocatoRemote();
@@ -259,7 +259,7 @@ public class ActLoadInserisciMAAmmProvAffi extends ActAmmissioneProvvisoria {
 		setRequestAttribute("comboTipoProvvSorv", "" + lOptionTipoProvvSorv);
 
 		// setto il campo codice motivo
-		// MEV_9
+		// MEV_2019-09
 		// Option lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvAffi());
 		Option lOptionMotivo = null;
 		// if (isUfficioMinorenni())
@@ -304,7 +304,7 @@ public class ActLoadInserisciMAAmmProvAffi extends ActAmmissioneProvvisoria {
 		// lOptionMotivo = new Option(nuovaColl);
 		lOptionMotivo = new Option(ordinaByDesc(nuovaColl));
 
-		// MEV_9 - FINE
+		// MEV_2019-09 - FINE
 		if (lEveSorv != null)
 			lOptionMotivo.setSelected(lEveSorv.getCodMotivo());
 

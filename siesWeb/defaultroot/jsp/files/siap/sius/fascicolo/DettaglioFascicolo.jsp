@@ -72,7 +72,7 @@
 <jsp:useBean id="etichettaEta" 				scope="request" class="java.lang.String"/>
 <jsp:useBean id="oscuraEta" 				scope="request" class="java.lang.String"/>
 <jsp:useBean id="esperto" 					scope="request" class="siap.sius.esperto.model.EspertoModel"/>
-<%-- MEV_9: aggiunto useBean --%>
+<%-- MEV_2019-09: aggiunto useBean --%>
 <jsp:useBean id="dataRestituzioneStr" 		scope="request" class="java.lang.String"/>
 <%
 String isVALIGN = "top";
@@ -1304,7 +1304,7 @@ if (elencoNote != null && elencoNote.size() > 0) {
 </table>
 
 <%
-// MEV_9: aggiunta riga per RESTITUZIONE ATTI AL PRESIDENTE
+// MEV_2019-09: aggiunta riga per RESTITUZIONE ATTI AL PRESIDENTE
 if (Utils.isPresent(dataRestituzioneStr)) {
 %>
 <table cellspacing="1" cellpadding="1" style="width: 100%;" border=<%=isBorder%>>
@@ -1319,7 +1319,7 @@ if (Utils.isPresent(dataRestituzioneStr)) {
 </table>
 <%
 }
-// FINE MEV_9
+// FINE MEV_2019-09
 %>
 
 <%

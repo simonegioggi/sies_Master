@@ -96,7 +96,7 @@ public interface ICostantiStatistiche {
 	public static final String CAMPO_MESE_FINALE = "MeseFine";
 	public static final String CAMPO_ANNO_FINALE = "AnnoFine";
 
-	// MEV 9 
+	// MEV_2019-09 
 	public static final String CAMPO_GIORNO_DATA_RESTITUZIONE_INI = "GiornoDataRestituzioneIni";
 	public static final String CAMPO_MESE_DATA_RESTITUZIONE_INI = "MeseDataRestituzioneIni";
 	public static final String CAMPO_ANNO_DATA_RESTITUZIONE_INI = "AnnoDataRestituzioneIni";
@@ -104,7 +104,7 @@ public interface ICostantiStatistiche {
 	public static final String CAMPO_GIORNO_DATA_RESTITUZIONE_FINE = "GiornoDataRestituzioneFin";
 	public static final String CAMPO_MESE_DATA_RESTITUZIONE_FINE = "MeseDataRestituzioneFin";
 	public static final String CAMPO_ANNO_DATA_RESTITUZIONE_FINE = "AnnoDataRestituzioneFin";
-	// MEV 9 - FINE
+	// MEV_2019-09 - FINE
 	
 	public static final String PG_LOAD_ESTRAZIONE_OGGETTI = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/statistiche/LoadEstrazioneOggetti.jsp";
@@ -165,12 +165,12 @@ public interface ICostantiStatistiche {
 	public static final String PG_RICERCA_PROC_PROVV_NO_VALIDATI_NO_DEP = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/statistiche/RicercaProcedimentiPerProvvNoValidatiNoDepositati.jsp";
 
-	// MEV9
+	// MEV_2019-09
 	public static final String PG_LOAD_ATTI_ISTRUTTORI_DATA_REST = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/statistiche/LoadRicercaAttiIstruttoriDataRest.jsp";
 	public static final String PG_RICERCA_ATTI_ISTRUTTORI_DATA_REST = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/statistiche/RicercaAttiIstruttoriDataRest.jsp";
-	// MEV9 - FINE
+	// MEV_2019-09 - FINE
 	
 	// FR015, FA016 - Ricerca procedimenti con provvedimento emesso
 	public static final String RADIO_RICERCA_PER_STATO_PROVVEDIMENTO = "RicercaPerStatoProvvedimento";
@@ -278,7 +278,7 @@ public interface ICostantiStatistiche {
 	public static final String PG_LOAD_RICERCHE_DLGS_123_2018 = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/statistiche/LoadRicercaProcDlgs123_2018.jsp";
 
-	// MEV_9: aggiunta costante
+	// MEV_2019-09: aggiunta costante
 	public static final String PG_LOAD_RICERCA_STATISTICA_MISURE_ALTER_678C1TERCPP = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/statistiche/LoadRicercaStatisticaMisureAlter678c1tercpp.jsp";
 	public static final String RADIO_RICERCA_STATISTICA_MA = "RicercaProcedimentiMisureAlternative";
@@ -289,6 +289,6 @@ public interface ICostantiStatistiche {
 	public static final String VALUE_RICERCA_PROCEDIMENTI_PRIVI_PROVVEDIMENTI = "4";
 	public static final String PG_RICERCA_STATISTICA_MISURE_ALTER_678C1TERCPP = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/statistiche/RicercaStatisticaMisureAlter678c1tercpp.jsp";
-	// FINE MEV_9
+	// FINE MEV_2019-09
 
 }

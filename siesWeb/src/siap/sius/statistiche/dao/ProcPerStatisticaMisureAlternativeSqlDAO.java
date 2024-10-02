@@ -14,7 +14,7 @@ import siap.sius.generaleprocedimento.model.GeneraleProcedimentoModel;
 import siap.sius.statistiche.model.EveFasGepSogProvModel;
 import siap.sius.statistiche.model.RicercaProcedimentoModel;
 
-// MEV_9: aggiunta classe per le statistiche di Misure Alternative
+// MEV_2019-09: aggiunta classe per le statistiche di Misure Alternative
 public class ProcPerStatisticaMisureAlternativeSqlDAO extends SIAPSqlDAO {
 
 	public ProcPerStatisticaMisureAlternativeSqlDAO(Connection aCon) {
@@ -187,7 +187,10 @@ public class ProcPerStatisticaMisureAlternativeSqlDAO extends SIAPSqlDAO {
 				+ "CG_REF_CODES CODOGGPROC, CG_REF_CODES CODSTA, SOGGETTO SOG, "
 				+ "CG_REF_CODES CODESI, CG_REF_CODES CODTIPPRO, cg_ref_codes CODMOT, "
 				+ "GENERALE_PROCEDIMENTO GP, DEPOSITO_ORDINANZA_PC DO WHERE " + getCondizione(rpm)
-				+ "AND fasc.COD_STATO_FASCICOLO = '24' "
+				// MEV_2024-092: non esiste piu' il 24 = COD_EMESSA_ORDINANZA_APPLICAZIONE_PROVVISORIA
+				// ma 07 = EMESSO PROVVEDIMENTO
+				// + "AND fasc.COD_STATO_FASCICOLO = '24' "
+				+ "AND fasc.COD_STATO_FASCICOLO = '07' "
 				+ "AND GP.FAS_SIU_ID_FASCICOLO_SIUS = fasc.ID_FASCICOLO_SIUS "
 				+ "AND GP.COD_OGGETTO_PROCEDIMENTO IN ('C050', 'C051') "
 				+ "AND (GP.COD_OGGETTO_PROCEDIMENTO = CODOGGPROC.RV_LOW_VALUE "

@@ -80,7 +80,7 @@ public class ActRicercaFSPuntuale extends ActionSius implements ICostantiFascico
 		 * Numero MEV : 9 
 		 * Autore : Gioggi 
 		 * Data : 12 nov 2020 
-		 * Branch : MEV_9
+		 * Branch : MEV_2019-09
 		 */
 		if (mFasGPMod != null && mFasGPMod.getGeneraleProcedimentoModel() != null
 				&& mFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento() != null) {
@@ -118,10 +118,11 @@ public class ActRicercaFSPuntuale extends ActionSius implements ICostantiFascico
 					}
 				}
 				if (existOrdinanzaApplicazioneProvvisoria && isFissazione)
+					// MEV_2024-092: cambio messaggio da Provvisoria M.A. a Misure Alternative Dl 123/2018
 					throw new SIUSException(SIUSException.USER_MESSAGE,
 							"Operazione NON consentita poiché sul Procedimento è già stata emessa "
-									+ "un'ordinanza di Applicazione Provvisoria M.A. Utilizzare la funzione"
-									+ " di Prefissazione Udienza!");
+									+ "un'ordinanza di Applicazione Misure Alternative Dl 123/2018. "
+									+ "Utilizzare la funzione di Prefissazione Udienza!");
 				IDepositoOrdinanzaPc idopc = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
 				// DepositoOrdinanzaPcModel dopcm = idopc.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd(
 				// fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), "AM");
@@ -137,8 +138,9 @@ public class ActRicercaFSPuntuale extends ActionSius implements ICostantiFascico
 						setRequestAttribute(IWebConstants.ACTION_FIELD,
 								"siap.sius.fascicolo.action.ActRicercaFSPuntuale");
 						setRequestAttribute(IWebConstants.MESSAGE_TEXT,
-								"L'Ordinanza di Applicazione Provvisoria &egrave; priva della Data Esecutivit&agrave;."
-										+ " Si vuole procedere con la prefissazione Udienza?");
+								"L'Ordinanza di Applicazione Misure Alternative Dl 123/2018 &egrave; priva "
+										+ "della Data Esecutivit&agrave;. "
+										+ "Si vuole procedere con la prefissazione Udienza?");
 						// pagina di ritorno
 						return IWebConstants.PG_WARNING;
 					} else
@@ -147,7 +149,7 @@ public class ActRicercaFSPuntuale extends ActionSius implements ICostantiFascico
 				}
 			}
 		}
-		// ***** FINE INTERVENTO MEV_9 *****//
+		// ***** FINE INTERVENTO MEV_2019-09 *****//
 
 		// 30/04/2007 Si Consente alla fase di "Richiesta atti" di operare con i Procedimenti di ESECUZIONE
 		// MISURE ALTERNATIVE.

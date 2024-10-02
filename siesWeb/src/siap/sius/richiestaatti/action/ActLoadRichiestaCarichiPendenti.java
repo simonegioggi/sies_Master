@@ -44,7 +44,7 @@ public class ActLoadRichiestaCarichiPendenti extends ActionSiap implements ICost
 		lOption.setFilter(new String[] { "PM", "PMM" });
 		setRequestAttribute("uffici", "" + lOption);
 
-		// INIZIO: MEV_9 (D.lgs. 123/2018)
+		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 		IEvento lEveCtrl = SICOLookupRemote.getEventoRemote();
 		EventoModel lUltimoEventoRichAtti = lEveCtrl.ricercaUltimoEventoRichiestaAttiIsruttoriByIdFasc (((FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"))
 				.getFascicoloSiusModel().getIdFascicoloSius());

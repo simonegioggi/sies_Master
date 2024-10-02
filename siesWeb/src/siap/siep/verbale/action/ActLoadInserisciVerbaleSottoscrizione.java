@@ -131,16 +131,16 @@ public class ActLoadInserisciVerbaleSottoscrizione extends ActionSiap
 																	// Prova - Affidamento Terapeutico
 						|| lEveMod.getCodMotivo().equals("2008") // Ammissione provvisoria ad Affidamento in
 																	// Prova - new DL146 2013
-						// MEV_9 - SIEP - Si gestiscono anche i codici della semiliberta
+						// MEV_2019-09 - SIEP - Si gestiscono anche i codici della semiliberta
 						|| lEveMod.getCodMotivo().equals("2007") // Ammissione provvisoria a Semiliberta'
 						|| lEveMod.getCodMotivo().equals("0683") // Semiliberta' (Art. 50 comma 1 O.P. - Art.
 																	// 678 comma 1-ter c.p.p.)
 						|| lEveMod.getCodMotivo().equals("0694") // Semiliberta' (art. 7 d.lgs. 121/2018, art.
 																	// 678 comma 1 ter cp.p.)
-						// MEV_9 - SIEP - Fine Semiliberta
-						// MEV_9 - SIEP Si gestiscono gli ulteriori codici AFFIDAMENTO
+						// MEV_2019-09 - SIEP - Fine Semiliberta
+						// MEV_2019-09 - SIEP Si gestiscono gli ulteriori codici AFFIDAMENTO
 						|| codiciAffidamentoSorvNew.contains(lEveMod.getCodMotivo())
-						// MEV_9 - SIEP Si gestiscono gli ulteriori codici DETENZIONE DOMICILIARE
+						// MEV_2019-09 - SIEP Si gestiscono gli ulteriori codici DETENZIONE DOMICILIARE
 						|| codiciDetenzioneSorvNew.contains(lEveMod.getCodMotivo())
 						// 20191120 [SG]: aggiunto codice per gestione ticket
 						// Ticket#20191114019 — SIES - mancata registrazione data inizio misura

@@ -1,5 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%-- MEV_9: aggiunta pagina per le statistiche --%>
+<%-- MEV_2019-09: aggiunta pagina per le statistiche --%>
 <%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="siap.sico.soggetto.action.ICostantiSoggetto"%>
 <%@ page import="siap.sius.statistiche.action.ICostantiStatistiche"%>
@@ -109,24 +109,26 @@ function Verify() {
         </td>
 	</tr>
  	<tr>
+ 		<%-- MEV_2024-092: cambio messaggio da Provvisoria a Misure Alternative Dl 123/2018 ed eliminata l'ultima voce 
+ 		VALUE_RICERCA_ORD_APPLICAZIONE_PROVVISORIA_EMESSE_NO_DECISIONE_COLLEGIO --%>
 		<td class="l">
-			Ordinanze Applicazione Provvisoria Emesse ma prive di Data di Esecutivita&#768;
+			Ordinanze Applicazione Misure Alternative Dl 123/2018 Emesse ma prive di Data di Esecutivita&#768;
 		</td>
 		<td class="l">
         	<input type="radio" name="<%=ICostantiStatistiche.RADIO_RICERCA_STATISTICA_MA%>" value="<%=ICostantiStatistiche.VALUE_RICERCA_ORD_APPLICAZIONE_PROVVISORIA_EMESSE_NO_DATA_ESECUTIVITA%>"/>
         </td>
 	</tr>
- 	<tr>
-		<td class="l">
-			Ordinanze Emesse con Data Esecutività Inserita ma Prive di Decisione del Collegio
-		</td>
-		<td class="l">
-        	<input type="radio" name="<%=ICostantiStatistiche.RADIO_RICERCA_STATISTICA_MA%>" value="<%=ICostantiStatistiche.VALUE_RICERCA_ORD_APPLICAZIONE_PROVVISORIA_EMESSE_NO_DECISIONE_COLLEGIO%>"/>
-        </td>
-   	</tr>
+<!--  	<tr> -->
+<!-- 		<td class="l"> -->
+<!-- 			Ordinanze Emesse con Data Esecutività Inserita ma Prive di Decisione del Collegio -->
+<!-- 		</td> -->
+<!-- 		<td class="l"> -->
+<%--         	<input type="radio" name="<%=ICostantiStatistiche.RADIO_RICERCA_STATISTICA_MA%>" value="<%=ICostantiStatistiche.VALUE_RICERCA_ORD_APPLICAZIONE_PROVVISORIA_EMESSE_NO_DECISIONE_COLLEGIO%>"/> --%>
+<!--         </td> -->
+<!--    	</tr> -->
 </table>
 <br>
-<table cellspacing=2 cellpadding=2>
+<table cellspacing="2" cellpadding="2">
 	<tr><td>&nbsp;</td></tr>
    	<tr>
 		<td>

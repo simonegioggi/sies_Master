@@ -46,7 +46,7 @@ import siap.web.ISIAPCostantiWeb;
  * La Action viene richiamata sia dalla griglia delle sospensioni che dalla ActInserimento dopo la
  * registrazione/selezione del provvedimento della SORVEGLIANZA
  *
- * @since MEV_9 - SIEP 03.2024
+ * @since MEV_2019-09 - SIEP 03.2024
  */
 public class ActLoadInserisciSospensioneDecisioniSorv678 extends ActionSiap implements ICostantiSospensione {
 

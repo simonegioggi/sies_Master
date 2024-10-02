@@ -617,7 +617,7 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 		lStatement += "NUM_GIORNI_REVOCA_LA, ";
 		// DL 92 2014 Violazione CEDU
 		lStatement += "NUM_GIORNI_RIDUZIONE_PENA, SOMMA_RISARC_DANNI, ";
-		// MEV_9 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
+		// MEV_2019-09 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
 		lStatement += "DATA_TERMINE_EMISSIONE, NUM_GIORNI_TERMINE_EMISSIONE, ";
 		lStatement += "TIPO_CTRL_ES.RV_MEANING AS DESC_TIPO_CONTROLLO_ESECUZIONE";
 		lStatement += " FROM DEPOSITO_DECRETO, CG_REF_CODES TIPO_DECRETO, CG_REF_CODES TIPO_CTRL_ES";
@@ -831,7 +831,7 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 		// DL 92 2014 Violazione CEDU
 		aModel.setNumeroGiorniRiduzionePena(getBigDecimal("NUM_GIORNI_RIDUZIONE_PENA"));
 		aModel.setSommaRisarcimentoDanni(getBigDecimal("SOMMA_RISARC_DANNI"));
-		// MEV_9 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
+		// MEV_2019-09 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
 		aModel.setDataTermineEmissione(getDate("DATA_TERMINE_EMISSIONE"));
 		aModel.setNumGiorniTermineEmissione(getBigDecimal("NUM_GIORNI_TERMINE_EMISSIONE"));
 

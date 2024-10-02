@@ -3545,7 +3545,7 @@ public class EventoController extends SiapController implements IEvento {
 			 * Numero MEV : 9 
 			 * Autore : Gioggi 
 			 * Data : 2 dic 2020 
-			 * Branch : MEV_9
+			 * Branch : MEV_2019-09
 			 */
 			if (lNumProv < 1) {
 				FascicoloSiusSqlDAO fssDAO = new FascicoloSiusSqlDAO(lConn);
@@ -3555,9 +3555,11 @@ public class EventoController extends SiapController implements IEvento {
 				if (ICostantiFascicoloSius.COD_EMESSO_PROVVEDIMENTO.equals(codStatoFascicolo)
 						|| "13".equals(codStatoFascicolo)
 						|| ICostantiFascicoloSius.COD_EMESSO_DECRETO_DESIGNAZIONE.equals(codStatoFascicolo)
-						// d.f.
-						|| ICostantiFascicoloSius.COD_EMESSA_ORDINANZA_APPLICAZIONE_PROVVISORIA
-								.equals(codStatoFascicolo)) {
+				// MEV_2024-092: non più utilizzato
+				/*
+				 * || ICostantiFascicoloSius.COD_EMESSA_ORDINANZA_APPLICAZIONE_PROVVISORIA
+				 * .equals(codStatoFascicolo)
+				 */) {
 					FascicoloSiusDAO lFasSiusDao = new FascicoloSiusDAO(lConn);
 					lFasSiusDao.setCodStatoFascicolo(ICostantiFascicoloSius.COD_ISCRITTO);
 					lFasSiusDao.setDataAggiornamento(aCampoNota.getDataInserimento());
@@ -3571,13 +3573,21 @@ public class EventoController extends SiapController implements IEvento {
 						// Aggiorno il fascicolo a stato_fascicolo = 02 se lo stato attuale e' 13 (cioe'
 						// sospeso)
 						lFasSiusDao.setCondizioneUpdateStatoFascicolo(lEve.getFasSiuIdFascicoloSius(), "13");
-					else if (ICostantiFascicoloSius.COD_EMESSA_ORDINANZA_APPLICAZIONE_PROVVISORIA
-							.equals(codStatoFascicolo)) { // d.f
+					// MEV_2024-092: non più utilizzato; al suo posto 07 = COD_EMESSO_PROVVEDIMENTO
+					/*
+					 * else if (ICostantiFascicoloSius.COD_EMESSA_ORDINANZA_APPLICAZIONE_PROVVISORIA
+					 * .equals(codStatoFascicolo)) { // Aggiorno il fascicolo a stato_fascicolo = 22 se lo
+					 * stato attuale e' 24 lFasSiusDao
+					 * .setCodStatoFascicolo(ICostantiFascicoloSius.COD_EMESSO_DECRETO_DESIGNAZIONE);
+					 * lFasSiusDao.setCondizioneUpdateStatoFascicolo(lEve.getFasSiuIdFascicoloSius(),
+					 * ICostantiFascicoloSius.COD_EMESSA_ORDINANZA_APPLICAZIONE_PROVVISORIA); }
+					 */
+					else if (ICostantiFascicoloSius.COD_EMESSO_PROVVEDIMENTO.equals(codStatoFascicolo)) {
 						// Aggiorno il fascicolo a stato_fascicolo = 22 se lo stato attuale e' 24
 						lFasSiusDao
 								.setCodStatoFascicolo(ICostantiFascicoloSius.COD_EMESSO_DECRETO_DESIGNAZIONE);
 						lFasSiusDao.setCondizioneUpdateStatoFascicolo(lEve.getFasSiuIdFascicoloSius(),
-								ICostantiFascicoloSius.COD_EMESSA_ORDINANZA_APPLICAZIONE_PROVVISORIA);
+								ICostantiFascicoloSius.COD_EMESSO_PROVVEDIMENTO);
 					} else
 						// Aggiorno il fascicolo a stato_fascicolo = "02" (iscritto) se lo stato attuale e'
 						// "22"
@@ -3596,8 +3606,10 @@ public class EventoController extends SiapController implements IEvento {
 			// applicazione provvisoria di MA
 			if ("0271".equals(lEve.getCodEsito())) {
 				FascicoloSiusDAO fsdao = new FascicoloSiusDAO(lConn);
-				fsdao.setCodStatoFascicolo(
-						ICostantiFascicoloSius.COD_EMESSA_ORDINANZA_APPLICAZIONE_PROVVISORIA);
+				// MEV_2024-092: non più utilizzato; al suo posto 07 = COD_EMESSO_PROVVEDIMENTO
+				// fsdao.setCodStatoFascicolo(
+				// ICostantiFascicoloSius.COD_EMESSA_ORDINANZA_APPLICAZIONE_PROVVISORIA);
+				fsdao.setCodStatoFascicolo(ICostantiFascicoloSius.COD_EMESSO_PROVVEDIMENTO);
 				fsdao.setDataAggiornamento(aCampoNota.getDataInserimento());
 				fsdao.setCodOperatoreAggiornamento(aCampoNota.getCodOperatoreInserimento());
 				fsdao.setCodUfficioAggiornamento(aCampoNota.getCodUfficioInserimento());
@@ -3641,7 +3653,7 @@ public class EventoController extends SiapController implements IEvento {
 								+ " ed IdDepositoOrdinanzaPc = " + dopm.getIdDepositoOrdinanzaPc());
 				cleanup(tdao);
 			}
-			// ***** FINE INTERVENTO MEV_9 *****//
+			// ***** FINE INTERVENTO MEV_2019-09 *****//
 
 			// ------------------------------------------------------------------------
 			// Gestione Aggiornamnto Udienza Procedimento
@@ -5131,9 +5143,9 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * Aggiunto metodo di modifica evento e notifiche
-	 * 
-	 * @author 	sgioggi
-	 * @since	MEV_2023-33
+	 *
+	 * @author sgioggi
+	 * @since MEV_2023-33
 	 */
 	@Override
 	public void ExModificaEventoNotifiche(EventoNotificaModel enm) throws F3BException {
@@ -5175,13 +5187,11 @@ public class EventoController extends SiapController implements IEvento {
 							// Provo a verificare se a sistema (tab AUTORITA_ESTERNA) esiste
 							// già l'autorità esterna specificata nella form (dalla form ho solo
 							// codice e sede)
-							aedao.setRicercaByAutSede(
-									enm.getNotifiche()[count].getAutoritaEsterna());
+							aedao.setRicercaByAutSede(enm.getNotifiche()[count].getAutoritaEsterna());
 							AutoritaEsternaModel aem = new AutoritaEsternaModel();
 							aem = (AutoritaEsternaModel) aedao.getModelByKey();
 							if (aem == null) { // non esiste, la inserisco (n.b. ho solo tipo e sede)
-								aedao.setDAOFromModel(
-										enm.getNotifiche()[count].getAutoritaEsterna());
+								aedao.setDAOFromModel(enm.getNotifiche()[count].getAutoritaEsterna());
 								idAutorita = aedao.insert();
 								enm.getNotifiche()[count].setAutEstIdAutoritaEsterna(idAutorita);
 							} else {
@@ -5219,7 +5229,7 @@ public class EventoController extends SiapController implements IEvento {
 	}
 
 	/**
-	 * MEV_9 (D.lgs. 123/2018). Ricerca ultimo evento di Fase istruttoria » Richiesta Atti in cui è
+	 * MEV_2019-09 (D.lgs. 123/2018). Ricerca ultimo evento di Fase istruttoria » Richiesta Atti in cui è
 	 * valorizzata la DATA_RESTITUZIONE_AI per poterla precaricare nelle successive richieste dove prevista
 	 *
 	 * @param aIdFascicoloSius

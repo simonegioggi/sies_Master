@@ -770,7 +770,7 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 
 			// Aggiornamento COD_STATO_FASCICOLO.
 			lFasSiuDAO = new FascicoloSiusDAO(lConn);
-			// @since MEV_9: aggiunto metodo
+			// @since MEV_2019-09: aggiunto metodo
 			String codStatoFascicolo = analsiStatoFascicolo(aGenProc.getFasSiuIdFascicoloSius());
 			lFasSiuDAO.setCodStatoFascicolo(codStatoFascicolo);
 			lFasSiuDAO.setDataAggiornamento(aGenProc.getDataAggiornamento());
@@ -799,10 +799,10 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 	}
 
 	/**
-	 * aggiunto metodo per impostazione stato fascicolo quando si prefissa un'udoenza
+	 * aggiunto metodo per impostazione stato fascicolo quando si prefissa un'udienza
 	 * 
 	 * @author sgioggi
-	 * @since MEV_9
+	 * @since MEV_2019-09
 	 * 
 	 * @param 	idFascicoloSius
 	 * @return 	String
@@ -825,7 +825,11 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 				if ("0610".equals(edm.getCodEsito()))
 					ret = ICostantiFascicoloSius.COD_EMESSO_DECRETO_DESIGNAZIONE;
 				else if ("0270".equals(edm.getCodEsito()) || "0271".equals(edm.getCodEsito()))
-					ret = ICostantiFascicoloSius.COD_EMESSA_ORDINANZA_APPLICAZIONE_PROVVISORIA;
+					// MEV_2024-092: non più utilizzato; al suo posto 07 = COD_EMESSO_PROVVEDIMENTO
+					// ESITO_PROVVEDIMENTO	0271	CO		Conferma Decisione del Magistrato Relatore
+					// ESITO_PROVVEDIMENTO	0270	AP		Applica ex art. 678 comma 1 ter cpp
+					// ret = ICostantiFascicoloSius.COD_EMESSA_ORDINANZA_APPLICAZIONE_PROVVISORIA;
+					ret = ICostantiFascicoloSius.COD_EMESSO_PROVVEDIMENTO;
 				break;
 			}
 		}

@@ -22,7 +22,7 @@ import siap.sius.statistiche.model.RicercaProcedimentoModel;
 import siap.sius.util.SIUSLookupRemote;
 import siap.util.excel.SIAPExcelProducer;
 
-// MEV_9: aggiunta classe per le statistiche
+// MEV_2019-09: aggiunta classe per le statistiche
 public class ProcPerStatisticaMisureAlternativeExcel extends SIAPExcelProducer {
 
 	@SuppressWarnings("rawtypes")
@@ -74,7 +74,8 @@ public class ProcPerStatisticaMisureAlternativeExcel extends SIAPExcelProducer {
 				buffer = "Procedimenti con Magistrato Designato - Ordinanze Non Emesse";
 				break;
 			case 2:
-				buffer = "Ordinanze Applicazione Provvisoria Emesse ma prive di Data di Esecutività";
+				// MEV_2024-092: cambio messaggio da Provvisoria a Misure Alternative Dl 123/2018
+				buffer = "Ordinanze Applicazione Misure Alternative Dl 123/2018 Emesse ma prive di Data di Esecutività";
 				break;
 			case 3:
 				buffer = "Ordinanze Emesse con Data Esecutività Inserita ma Prive di Decisione del Collegio";

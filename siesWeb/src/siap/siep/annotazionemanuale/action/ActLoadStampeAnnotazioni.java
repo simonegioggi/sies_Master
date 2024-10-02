@@ -68,7 +68,7 @@ public class ActLoadStampeAnnotazioni extends ActionSiap
     setRequestAttribute("lFlagPage", lFlagPage);
     setRequestAttribute("lPageGE", lFlagPage);
     
-    // MEV 9 -- Devo passare la posozione Giuridica per non fare uscire O.S in caso di LIBERO nella form successiva
+    // MEV_2019-09 -- Devo passare la posozione Giuridica per non fare uscire O.S in caso di LIBERO nella form successiva
     // Esistenza posizione giuridica
     IPosizioneGiuridica lPG = SIEPLookupRemote.getPosizioneGiuridicaRemote();
     PosizioneGiuridicaModel PGMod = new PosizioneGiuridicaModel();

@@ -115,7 +115,7 @@ public class ActDettaglioConcessione extends ActMisuraAlternativa implements ICo
 			if (lMisAlModConcessa.getCodTipoMisura().equals("0005")
 					|| lMisAlModConcessa.getCodTipoMisura().equals("0010")
 					|| lMisAlModConcessa.getCodTipoMisura().equals("0013")
-					// MEV_9-SIEP: aggiunti codici tipo misura x DETENZIONE
+					// MEV_2019-09-SIEP: aggiunti codici tipo misura x DETENZIONE
 					|| "0682".equals(lMisAlModConcessa.getCodTipoMisura())
 					|| "0693".equals(lMisAlModConcessa.getCodTipoMisura())
 					|| "0722".equals(lMisAlModConcessa.getCodTipoMisura())
@@ -126,13 +126,13 @@ public class ActDettaglioConcessione extends ActMisuraAlternativa implements ICo
 					|| lMisAlModConcessa.getCodTipoMisura().equals("0002")
 					|| lMisAlModConcessa.getCodTipoMisura().equals("0003")
 					|| lMisAlModConcessa.getCodTipoMisura().equals("0030")
-					// MEV_9: aggiunti codici tipo misura
+					// MEV_2019-09: aggiunti codici tipo misura
 					|| lMisAlModConcessa.getCodTipoMisura().equals("0680")
 					|| lMisAlModConcessa.getCodTipoMisura().equals("0681")
 					|| lMisAlModConcessa.getCodTipoMisura().equals("0690")
 					|| lMisAlModConcessa.getCodTipoMisura().equals("0691")
 					|| lMisAlModConcessa.getCodTipoMisura().equals("0692")
-					// MEV_9-SIEP: aggiunti codici tipo misura x AFFIDAMENTO
+					// MEV_2019-09-SIEP: aggiunti codici tipo misura x AFFIDAMENTO
 					|| lMisAlModConcessa.getCodTipoMisura().equals("0720")
 					|| lMisAlModConcessa.getCodTipoMisura().equals("0721")
 					|| lMisAlModConcessa.getCodTipoMisura().equals("0730")
@@ -141,7 +141,7 @@ public class ActDettaglioConcessione extends ActMisuraAlternativa implements ICo
 				setRequestAttribute("tipoMisura", "AFFIDAMENTO");
 				lTipoProvvVerbale = "18";
 			} else if (lMisAlModConcessa.getCodTipoMisura().equals("0004")
-					// MEV_9-SIEP: aggiunti codici tipo misura x SEMILIBERTA'
+					// MEV_2019-09-SIEP: aggiunti codici tipo misura x SEMILIBERTA'
 					|| "0683".equals(lMisAlModConcessa.getCodTipoMisura())
 					|| "0694".equals(lMisAlModConcessa.getCodTipoMisura())
 					|| "0723".equals(lMisAlModConcessa.getCodTipoMisura())

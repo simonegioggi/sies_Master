@@ -53,7 +53,7 @@
 <jsp:useBean id="comboTipoProvvSorv"   	scope="request" class="java.lang.String"/>
 <jsp:useBean id="filtroMinorenni" 		scope="request" class="java.lang.String"/>
 
-<%-- MEV_9 per gestire la modifica --%>
+<%-- MEV_2019-09 per gestire la modifica --%>
 <jsp:useBean id="tipoOperazione" 	scope="request" class="java.lang.String"/>
 <jsp:useBean id="eventonotifica"  scope="request" class="siap.sico.evento.model.EventoNotificaModel"/>
 <jsp:useBean id="misuraalternativaToChange"    	scope="request" class="siap.sico.misuraalternativa.model.MisuraAlternativaModel"/>
@@ -66,7 +66,7 @@
 <jsp:useBean id="DestTribunaleSorv" scope="request" class="siap.sico.ufficio.model.UfficioModel"/>
 <jsp:useBean id="DestUfficioSorv" 	scope="request" class="siap.sico.ufficio.model.UfficioModel"/>
 
-<%-- MEV_9 per modifica --%>
+<%-- MEV_2019-09 per modifica --%>
 <%
 // jsp utilizzata sia per l'inserimento del provvedimento si esecuzione
 // dell'ordinanza, sia per l'eventuale Ordine di scarcerazione successivo
@@ -311,7 +311,7 @@ if (!lPosizione.isLibero()
 			return false;
 		}
 <%
-// MEV_9 diventa selezionabile anche per la detenzione il tipo di provvedimento
+// MEV_2019-09 diventa selezionabile anche per la detenzione il tipo di provvedimento
 //if (tipomisura.equals("AFFIDAMENTO")) {
 %>
 		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_COD_TIPO_DECISIONE%>.value == "-") {
@@ -402,7 +402,7 @@ if ((tipomisura.equals("AFFIDAMENTO") || tipomisura.equals("DETENZIONE"))
 } // chiude AFFIDAMENTO o DETENZIONE
 %> 
 
-<%-- MEV_9 Si aggiunge la data di esecutività --%>
+<%-- MEV_2019-09 Si aggiunge la data di esecutività --%>
 if (   document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA%>.value != ""
     || document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_ESECUTIVITA%>.value != ""
     || document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA%>.value != "") 
@@ -1661,7 +1661,7 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
        		</font>
       	</td>
     </tr>
-    <%-- MEV_9 si prevede la scelta decreto/Ordinanza anche per Detenzione Domiciliare
+    <%-- MEV_2019-09 si prevede la scelta decreto/Ordinanza anche per Detenzione Domiciliare
     <tr>
       	<td class="l">Tipo Provvedimento <font class=ob>(*)</font></td>
       	<td class="l" colspan="3">
@@ -1675,7 +1675,7 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
 	}
 %>
 
-<%-- MEV_9 si prevede la scelta decreto/Ordinanza anche per Detenzione Domiciliare --%>
+<%-- MEV_2019-09 si prevede la scelta decreto/Ordinanza anche per Detenzione Domiciliare --%>
     <tr>
       <td class="l">Tipo Provvedimento <font class=ob>(*)</font></td>
       <td class="l" colspan="3">
@@ -1684,11 +1684,11 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
         </select>
       </td>
     </tr>  
-<%-- MEV_9 FINE --%>
+<%-- MEV_2019-09 FINE --%>
 
     <tr>
     
-    <%-- MEV_9 si prevede la scelta decreto/Ordinanza anche per Detenzione Domiciliare, si modifica etichetta--%>
+    <%-- MEV_2019-09 si prevede la scelta decreto/Ordinanza anche per Detenzione Domiciliare, si modifica etichetta--%>
     <td class="l">Oggetto Decisione</td>
     <%-- 
 <%
@@ -1711,7 +1711,7 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
      	</td>
 	</tr>
     <tr>
- <%-- MEV_9 si prevede la scelta decreto/Ordinanza anche per Detenzione Domiciliare, si modifica etichetta--%>
+ <%-- MEV_2019-09 si prevede la scelta decreto/Ordinanza anche per Detenzione Domiciliare, si modifica etichetta--%>
  <td class="l">Data Emissione</td>   
  <%--
 <%
@@ -1740,7 +1740,7 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
       </td>
     </tr>
     
-<%-- MEV_9 si aggiunge la data esecutivita' --%>    
+<%-- MEV_2019-09 si aggiunge la data esecutivita' --%>    
 <tr>
   <td class="l">Data Esecutivita' <font class=ob id="dataEsecObbl" style="display:none;">(*)</font></td>
   <td class="l" colspan="3">
@@ -1751,7 +1751,7 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
     </font>
   </td>
 </tr>
-<%-- MEV_9 - FINE --%>   
+<%-- MEV_2019-09 - FINE --%>   
   
     <tr>
 <%
@@ -1767,7 +1767,7 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
 %>
       	<td class="l" colspan="3">
         	<font class="campo">
-          		<input Title="Luogo svolgimento della prova" size=35 type="text" <%-- onChange="pulisciId();" MEV 9 --%>
+          		<input Title="Luogo svolgimento della prova" size=35 type="text" <%-- onChange="pulisciId();" MEV_2019-09 --%>
                      value="<%=StringUtils.toStringJSP(misuraalternativaToChange.getDescrLuogoProva())%>" 
                      name="<%=ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA%>" >
         	</font>
@@ -2047,7 +2047,7 @@ if ("UDS".equals(sedeUfficioEmittente.getCodTipoUfficio())) {
 	lSedeUfficioTDS = sedeUfficioEmittente.getDescrComune();
 }
 
-// MEV_9 in caso di modifica ricarico i dati
+// MEV_2019-09 in caso di modifica ricarico i dati
 if (DestTribunaleSorv.getCodUfficio().length()>0)
   lSedeUfficioTDS = DestTribunaleSorv.getDescrComune();
 if (DestUfficioSorv.getCodUfficio().length()>0)

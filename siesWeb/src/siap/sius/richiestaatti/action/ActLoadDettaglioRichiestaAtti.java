@@ -68,7 +68,7 @@ public class ActLoadDettaglioRichiestaAtti extends ActionSius implements ICostan
 
 		setRequestAttribute("eventoNotifica", lEveNot);
 
-		// MEV_9 Se provengo dalle statistiche devo caricare in sessione il fascicolo legato all'evento
+		// MEV_2019-09 Se provengo dalle statistiche devo caricare in sessione il fascicolo legato all'evento
 		//
 		IFascicoloSius lFascicoloCtrl = SIUSLookupRemote.getFascicoloSiusRemote();
 		FascicoloGPModel fgpm = lFascicoloCtrl.ExRicercaFascicoloByKey(lEveNot.getEvento().getFasSiuIdFascicoloSius());
@@ -84,7 +84,7 @@ public class ActLoadDettaglioRichiestaAtti extends ActionSius implements ICostan
 		TreeModel lTreeDati = lCtrlSta.ExPrelevaDatiVideo(lEveNot.getEvento().getFasSiuIdFascicoloSius(), aTipoDati);
 		ParserMessageRec lParser = new ParserMessageRec(lTreeDati);
 		setSessionAttribute("fascicolo", lParser.getFascicolo());
-		// MEV_9 - FINE
+		// MEV_2019-09 - FINE
 		
 		// si ricava l'eventuale Action di ritorno dalla jsp
 		if (!isRequestParameterNullObj("CAMPO_ACTION_RET"))

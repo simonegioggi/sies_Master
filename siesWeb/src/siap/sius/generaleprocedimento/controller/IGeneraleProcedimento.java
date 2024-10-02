@@ -35,7 +35,7 @@ public interface IGeneraleProcedimento {
 	public GeneraleProcedimentoModel ExModificaNoteProcedimento(
 			GeneraleProcedimentoModel aGeneraleProcedimento) throws F3BException;
 
-	// MEV_9: aggiunta funzione di aggiornamento
+	// MEV_2019-09: aggiunta funzione di aggiornamento
 	public void ExModificaDatiRestituzioneGeneraleProcedimento(GeneraleProcedimentoModel gpm)
 			throws F3BException;
 

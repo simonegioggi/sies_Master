@@ -1,5 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%-- MEV_9: aggiunta pagina per le statistiche --%>
+<%-- MEV_2019-09: aggiunta pagina per le statistiche --%>
 <%@ page import="java.util.Iterator"%>
 
 <%@ page import="f3b.web.IWebConstants"%>
@@ -140,8 +140,9 @@ if (ricercaProcedimenti != null) {
 <%
 	} else if (ricercaProcedimenti.getStatoProcedimento() == 2) {
 %>
+	<%-- MEV_2024-092: cambio messaggio da Provvisoria a Misure Alternative Dl 123/2018 --%>
 	<tr>
-	 	<td class="lVerdeNB">Ordinanze Applicazione Provvisoria Emesse ma prive di Data di Esecutivita&#768;</td>
+	 	<td class="lVerdeNB">Ordinanze Applicazione Misure Alternative Dl 123/2018 Emesse ma prive di Data di Esecutivita&#768;</td>
 	</tr>
 <%
 	} else if (ricercaProcedimenti.getStatoProcedimento() == 3) {

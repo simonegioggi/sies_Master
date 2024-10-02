@@ -17,7 +17,7 @@
 
 
 <%
-//INIZIO: MEV_9 (D.lgs. 123/2018)
+//INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 FascicoloGPModel mFasGPMod = (FascicoloGPModel) session.getAttribute("fascicoloSiusGP");
 GeneraleProcedimentoModel mGeneraleProcedimentoModel = mFasGPMod.getGeneraleProcedimentoModel();
 
@@ -25,7 +25,7 @@ boolean is678 = false;
 if (ICostantiDepositoOrdinanzaPc.MISURA_ALTERNATIVA_AMMISSIONE_PROVVISORIA.equals(datiOrdinanza.getOrdinanza().getCodTipoOrdinanza())) {
 	is678 = true;
 }
-//FINE: MEV_9
+//FINE: MEV_2019-09
 %>
 <table cellspacing="2" cellpadding="2">
 

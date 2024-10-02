@@ -30,7 +30,7 @@ public class ActInserisciDesignazioneMagistratoRelatore extends ActionSius
 		implements ICostantiDepositoDecreto {
 
 	/**
-	 * MEV_9: aggiunta action di inserimento dati
+	 * MEV_2019-09: aggiunta action di inserimento dati
 	 *
 	 * @author Gioggi
 	 */

@@ -12,14 +12,14 @@
 <jsp:useBean id="TipoUfficioS1" 			scope="request" class="java.lang.String"/>
 <jsp:useBean id="TipoUfficioS2" 			scope="request" class="java.lang.String"/>
 
-<%-- MEV_9 (D.lgs. 123/2018) --%>
+<%-- MEV_2019-09 (D.lgs. 123/2018) --%>
 <jsp:useBean id="ultimoEventoRichAtti"   scope="request" class="siap.sico.evento.model.EventoModel"/>
 
 <%
   // Azione da chiamare per l'inserimento dei dati.
   String lAzione = "siap.sius.richiestaatti.action.ActInserisciConfermaDisponibilitaSERT";
 
-  //MEV_9 (D.lgs. 123/2018)
+  //MEV_2019-09 (D.lgs. 123/2018)
   Date lUltimaDataRestitAttiIstruttori = ultimoEventoRichAtti.getDataRestituzioneAi();
 %>
 
@@ -41,7 +41,7 @@
     <script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
     <script language="JavaScript">
     
-    <%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
+    <%-- INIZIO: MEV_2019-09 (D.lgs. 123/2018) --%>
     function abilitaCampiDataRestituzione() {
     	if (document.LoadInserisciConfermaDisponibilitaSERT.<%=ICostantiRichiestaAtti.CHECK_DATA_RESTITUZIONE%>.checked){
 	   		document.LoadInserisciConfermaDisponibilitaSERT.<%=ICostantiRichiestaAtti.CAMPO_GIORNO_DATA_RESTITUZIONE%>.disabled = false;
@@ -54,7 +54,7 @@
 	   		document.LoadInserisciConfermaDisponibilitaSERT.<%=ICostantiRichiestaAtti.CAMPO_ANNO_DATA_RESTITUZIONE%>.disabled = true;
     	}    	
    	}
-    <%-- FINE: MEV_9 (D.lgs. 123/2018) --%>
+    <%-- FINE: MEV_2019-09 (D.lgs. 123/2018) --%>
     
     function Verify()
     {
@@ -88,7 +88,7 @@
         return false;
       }
 
-      <%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
+      <%-- INIZIO: MEV_2019-09 (D.lgs. 123/2018) --%>
       if (document.LoadInserisciConfermaDisponibilitaSERT.<%=ICostantiRichiestaAtti.CHECK_DATA_RESTITUZIONE%>.checked){
 	      var data_restituzione = document.LoadInserisciConfermaDisponibilitaSERT.<%=ICostantiRichiestaAtti.CAMPO_GIORNO_DATA_RESTITUZIONE%>.value
 	                        +'/'+ document.LoadInserisciConfermaDisponibilitaSERT.<%=ICostantiRichiestaAtti.CAMPO_MESE_DATA_RESTITUZIONE%>.value
@@ -105,7 +105,7 @@
 	        return false;
 	      } 
       }
-      <%-- FINE: MEV_9 (D.lgs. 123/2018) --%>
+      <%-- FINE: MEV_2019-09 (D.lgs. 123/2018) --%>
       
 	  // Controlla che le coppie di campi Destinatario/Sede siano riempiti
       // Destinatario 1
@@ -167,7 +167,7 @@
           <input Title="Anno"   value="<%=DateUtils.getSysDate("yyyy")%>" type="text" size="4" maxlength="4" name="<%= ICostantiRichiestaAtti.CAMPO_ANNO_DATA_EMISSIONE %>"  onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillYear(value)" >
         </td>
         
-        <%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
+        <%-- INIZIO: MEV_2019-09 (D.lgs. 123/2018) --%>
         <td class="l"><input value="S" type="checkbox" name="<%=ICostantiRichiestaAtti.CHECK_DATA_RESTITUZIONE%>" 
                              onClick="abilitaCampiDataRestituzione()"
                              >  Atti da restituire entro il </font></td>
@@ -188,7 +188,7 @@
           		 onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  
           		 onBlur="javascript:value=FillYear(value)" disabled>
         </td>    
-        <%-- FINE: MEV_9 (D.lgs. 123/2018) --%>  
+        <%-- FINE: MEV_2019-09 (D.lgs. 123/2018) --%>  
         
       </tr>
       <!-- 1° destinatario + luogo -->

@@ -91,7 +91,7 @@ public class EventoDAO extends SIAPTableDAO {
     setField("ISTR_ID_ISTRUTTORIA_CUMULO", BIG_DECIMAL);
     setField("ESTREMI_SOGG_RICH_ISTR", STRING);
     
-    // MEV_9 (D.lgs. 123/2018)
+    // MEV_2019-09 (D.lgs. 123/2018)
     setField("DATA_RESTITUZIONE_AI", DATE);
    }
 
@@ -298,7 +298,7 @@ public class EventoDAO extends SIAPTableDAO {
 		return getDate("DATA_INVIO_ATTI");
 	}
   
-	// MEV_9 (D.lgs. 123/2018)
+	// MEV_2019-09 (D.lgs. 123/2018)
 	public Date getDataRestituzioneAi() throws DAOException {
 		return getDate("DATA_RESTITUZIONE_AI");
 	}
@@ -508,7 +508,7 @@ public class EventoDAO extends SIAPTableDAO {
 		setString("ESTREMI_SOGG_RICH_ISTR", aValore); 
 	}  
   
-	// MEV_9 (D.lgs. 123/2018)
+	// MEV_2019-09 (D.lgs. 123/2018)
 	public void setDataRestituzioneAi (Date aValore) throws DAOException {
 		setDate("DATA_RESTITUZIONE_AI",aValore);
 	}
@@ -570,7 +570,7 @@ public class EventoDAO extends SIAPTableDAO {
 	lEveMod.setIstruidIstruttoriaCumulo(getIstruIdIstruttoriaCumulo());
 	lEveMod.setEstremiSoggRichIstr(getEstremiSoggRichIstr());
 	
-	// MEV_9 (D.lgs. 123/2018)
+	// MEV_2019-09 (D.lgs. 123/2018)
 	lEveMod.setDataRestituzioneAi(getDataRestituzioneAi());
 	
     return lEveMod;
@@ -631,7 +631,7 @@ public class EventoDAO extends SIAPTableDAO {
     this.setCodTipologiaInvioAtti(aModel.getCodTipologiaInvioAtti());
     this.setDescrizioneTipologiaInvioAtti(aModel.getDescrizioneInvioAtti());
     
-    // MEV_9 (D.lgs. 123/2018)
+    // MEV_2019-09 (D.lgs. 123/2018)
     setDataRestituzioneAi(aModel.getDataRestituzioneAi());
   }
 
@@ -685,7 +685,7 @@ public class EventoDAO extends SIAPTableDAO {
 	
     selCondizioneUpdate(aModel.getIdEvento());
     
-    // MEV_9 (D.lgs. 123/2018)
+    // MEV_2019-09 (D.lgs. 123/2018)
     //setDataRestituzioneAi(aModel.getDataRestituzioneAi());
   }
 

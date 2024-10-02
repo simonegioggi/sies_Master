@@ -46,7 +46,7 @@ import siap.sius.util.SIUSLookupRemote;
  * Aggiunta classe action di caricamento dati
  *
  * @author Gioggi
- * @since MEV_9
+ * @since MEV_2019-09
  * @version 1.0
  */
 public class ActLoadRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends ActionSius
@@ -79,8 +79,9 @@ public class ActLoadRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Ac
 			fascicoloInSessione = true;
 		}
 		if (fgpm.getTenori() == null || fgpm.getTenori().length == 0) {
+			// MEV_2024-092: cambio messaggio da Provvisoria M.A. a Misure Alternative Dl 123/2018
 			throw new SIUSException(SIUSException.USER_MESSAGE,
-					"Esecutivita' Ordinanza Applicazione Provvisoria M.A. non consentita con campo Oggetto vuoto!");
+					"Esecutivita' Ordinanza Applicazione Misure Alternative Dl 123/2018 non consentita con campo Oggetto vuoto!");
 		}
 
 		retPage = analisiStatoFascicolo(fgpm);
@@ -125,7 +126,7 @@ public class ActLoadRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Ac
 	 * sono: 1) STATO = COD_UNIFICATO, COD_EMESSO_PROVVEDIMENTO : viene lanciata un'eccezione, l'operazione
 	 * non può essere eseguita. 2) STATO = COD_DEFINITO : il fascicolo è già in stato definito, viene
 	 * visualizzato il dettaglio della definizione. 3) Negli altri casi viene preparata la form di input per
-	 * la Esecutivita' Ordinanza Applicazione Provvisoria M.A. del procedimento.
+	 * la Esecutivita' Ordinanza Applicazione Misure Alternative Dl 123/2018 (ex Provvisoria M.A.) del procedimento.
 	 *
 	 * @param fgpm
 	 * @return String pagina di input o di dettaglio
@@ -162,9 +163,10 @@ public class ActLoadRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Ac
 			}
 		}
 		if (!existOrdinanzaApplicazioneProvvisoria)
+			// MEV_2024-092: cambio messaggio da Provvisoria M.A. a Misure Alternative Dl 123/2018
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Operazione consentita solo se sul Procedimento sia stata emessa un'ordinanza di "
-							+ "Applicazione Provvisoria M.A. con esito 'Applica provvisoriamente' "
+							+ "Applicazione Misure Alternative Dl 123/2018 con esito 'Applica provvisoriamente' "
 							+ "depositata e validata!");
 
 		if (fgpm.getFascicoloSiusModel().getCodStatoFascicolo().equalsIgnoreCase(COD_UNIFICATO))
@@ -185,7 +187,7 @@ public class ActLoadRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Ac
 		DepositoOrdinanzaPcModel dopm = idopc.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd(
 				fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), "AM");
 
-		// MEV_9-SIEP: aggiunto controllo altrimenti faceva un finto inserimento
+		// MEV_2019-09-SIEP: aggiunto controllo altrimenti faceva un finto inserimento
 		// boolean existConfermaDecisioneMR = false;
 		// DepositoOrdinanzaPcModel dopcmCM = idopc.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd(
 		// fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), "CM");
@@ -199,7 +201,7 @@ public class ActLoadRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Ac
 		// existConfermaDecisioneMR)
 		// throw new SIUSException(SIUSException.USER_MESSAGE,
 		// "Operazione consentita solo se sul Procedimento NON sia stata emessa un'ordinanza di "
-		// + "'Conferma Applicazione Provvisoria M.A.' con esito "
+		// + "'Conferma Applicazione Misure Alternative Dl 123/2018 (ex Provvisoria M.A.)' con esito "
 		// + "'Conferma Decisione del Magistrato Relatore'!");
 		// FINE MEV-9-SIEP
 

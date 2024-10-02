@@ -39,10 +39,10 @@ public class RicercaProcedimentoModel extends GenericModel {
 	private Date mDataEmissioneInizio = null;
 	private Date mDataEmissioneFine = null;
 
-	// MEV 9
+	// MEV_2019-09
 	private Date mDataRestituzioneInizio = null;
 	private Date mDataRestituzioneFine = null;
-	// MEV 9 - FINE
+	// MEV_2019-09 - FINE
 	
 
 	// Utilizzata da FR034 - FA035
@@ -103,10 +103,10 @@ public class RicercaProcedimentoModel extends GenericModel {
 		setCodMagistrati(aModel.mCodMagistrati);
 		setCodMotivi(aModel.mCodMotivi);
 
-		// MEV9
+		// MEV_2019-09
 		setDataRestituzioneInizio(aModel.getDataRestituzioneInizio()) ;
 		setDataRestituzioneFine (aModel.getDataRestituzioneFine()) ;
-		// MEV9 - FINE		
+		// MEV_2019-09 - FINE		
 	}
 
 	// setter and otter
@@ -375,7 +375,7 @@ public class RicercaProcedimentoModel extends GenericModel {
 		mCodMagistrati = aCodMagistrati;
 	}
 
-	// MEV9
+	// MEV_2019-09
 	public Date getDataRestituzioneInizio() {
 		return mDataRestituzioneInizio;
 	}
@@ -391,5 +391,5 @@ public class RicercaProcedimentoModel extends GenericModel {
 	public void setDataRestituzioneFine(Date mDataRestituzioneFine) {
 		this.mDataRestituzioneFine = mDataRestituzioneFine;
 	}
-	// MEV9 - FINE
+	// MEV_2019-09 - FINE
 }

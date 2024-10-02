@@ -538,9 +538,9 @@ public class VerbaleController extends SiapController implements IVerbale {
 							|| lEveMod.getCodMotivo().equals("2630") // 29/09/2010 Espiazione Pena presso
 																		// Domicilio
 							|| lEveMod.getCodMotivo().equals("0011")
-							|| codiciAffidamentoSorvNew.contains(lEveMod.getCodMotivo()) // MEV_9-SIEP
-							|| codiciDetenzioneSorvNew.contains(lEveMod.getCodMotivo())  // MEV_9-SIEP		
-							|| codiciSemilibertaSorvNew.contains(lEveMod.getCodMotivo()) // MEV_9-SIEP			
+							|| codiciAffidamentoSorvNew.contains(lEveMod.getCodMotivo()) // MEV_2019-09-SIEP
+							|| codiciDetenzioneSorvNew.contains(lEveMod.getCodMotivo())  // MEV_2019-09-SIEP		
+							|| codiciSemilibertaSorvNew.contains(lEveMod.getCodMotivo()) // MEV_2019-09-SIEP			
 							// 20191120 [SG]: aggiunto codice per gestione ticket
 							// Ticket#20191114019 — SIES - mancata registrazione data inizio misura
 							// Ticket#20191112019 — 2019/11 Ancona Procura Minori non fa caricare inizio
@@ -554,7 +554,7 @@ public class VerbaleController extends SiapController implements IVerbale {
 				if (lEveMod.getCodMotivo().equals("0005") || lEveMod.getCodMotivo().equals("0010")
 						|| lEveMod.getCodMotivo().equals("0013") 
 						|| lEveMod.getCodMotivo().equals("0004") // semilibertà
-						|| codiciSemilibertaSorvNew.contains(lEveMod.getCodMotivo()) // MEV_9-SIEP	
+						|| codiciSemilibertaSorvNew.contains(lEveMod.getCodMotivo()) // MEV_2019-09-SIEP	
 						|| lEveMod.getCodMotivo().equals("0011")) {
 					lEventoDao.setCodTipoProvvedimento("16");
 				} else {
@@ -651,7 +651,7 @@ public class VerbaleController extends SiapController implements IVerbale {
 					lPosDao.setCodPosizioneGiuridica("13");
 				}
 				if (lEveMod.getCodMotivo().equals("0004")
-						|| codiciSemilibertaSorvNew.contains(lEveMod.getCodMotivo()) // MEV_9-SIEP	
+						|| codiciSemilibertaSorvNew.contains(lEveMod.getCodMotivo()) // MEV_2019-09-SIEP	
 						) 
 			  {
 					lPosDao.setCodPosizioneGiuridica("14");
@@ -670,7 +670,7 @@ public class VerbaleController extends SiapController implements IVerbale {
 					lPosDao.setCodPosizioneGiuridica("50");
 				}
 				
-				//MEV_9-SIEP si aggiungono i nuovi codici
+				//MEV_2019-09-SIEP si aggiungono i nuovi codici
 //				if (lEveMod.getCodMotivo().equals("2005") ) {
 			  if (lEveMod.getCodMotivo().equals("2005") 
 			  		|| (codiciDetenzioneSorvNew.contains(lEveMod.getCodMotivo()) 
@@ -678,7 +678,7 @@ public class VerbaleController extends SiapController implements IVerbale {
 					lPosDao.setCodPosizioneGiuridica("29"); // Detenzione domiciliare provvisoria
 				}
 			  
-			  //MEV_9-SIEP si aggiungono i nuovi codici
+			  //MEV_2019-09-SIEP si aggiungono i nuovi codici
 				//if (lEveMod.getCodMotivo().equals("2006") || lEveMod.getCodMotivo().equals("2008")  ) {
 			  if (lEveMod.getCodMotivo().equals("2006") || lEveMod.getCodMotivo().equals("2008") 
 			  		|| (   codiciAffidamentoSorvNew.contains(lEveMod.getCodMotivo())      

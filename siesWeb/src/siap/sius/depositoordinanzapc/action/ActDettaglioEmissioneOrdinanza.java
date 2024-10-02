@@ -278,7 +278,7 @@ public class ActDettaglioEmissioneOrdinanza extends ActionSius
 			// return PG_DETTAGLIO_ORD_SOSPENSIONE_EMS;
 		}
 
-		// INIZIO: MEV_9 (D.lgs. 123/2018)
+		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 		if (mOrdEveTenPreMod != null && mOrdEveTenPreMod.getOrdinanza() != null
 				&& MISURA_ALTERNATIVA_AMMISSIONE_PROVVISORIA
 						.equals(mOrdEveTenPreMod.getOrdinanza().getCodTipoOrdinanza())) {
@@ -301,7 +301,7 @@ public class ActDettaglioEmissioneOrdinanza extends ActionSius
 			// LogF3B.getLogger()
 			siesLogger.debug("ElencoTemplate -> " + lOptTemplate);
 		}
-		// FINE: MEV_9
+		// FINE: MEV_2019-09
 
 		ricercaFascicoloOrigine();
 

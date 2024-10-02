@@ -200,7 +200,7 @@ public class ActDettaglioMAAmmProvvisoria extends ActMisuraAlternativa implement
 		 * setRequestAttribute("luogodetenzione", lLuoMod);
 		 */
 
-		// MEV_9 Si gestiscono i nuovi codici
+		// MEV_2019-09 Si gestiscono i nuovi codici
 		Set<String> codiciAffidamento = new HashSet<String>(Arrays.asList(new String[]{"2006","2008","0680","0681","0690","0691","0692"}));
 		Set<String> codiciDetenzione  = new HashSet<String>(Arrays.asList(new String[]{"2005","0682","0693"}));
 		if (lDecreto != null) {
@@ -220,7 +220,7 @@ public class ActDettaglioMAAmmProvvisoria extends ActMisuraAlternativa implement
 			)
 				setRequestAttribute("tipoMisura", "AFFIDAMENTO");
 		}*/
-		// MEV_9 - FINE
+		// MEV_2019-09 - FINE
 		return PG_LOAD_DETTAGLIO_MA_AMM_PROVVISORIA;
 	}
 }

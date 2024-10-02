@@ -823,7 +823,7 @@ public class AnnotazioneManualeSqlDAO extends SqlDAO {
 			lSql += " AND FLAG_VALIDATO='" + aModel.getFlagValidato() + "'";
 		}
 
-		// MEV 9 - inseridco order by
+		// MEV_2019-09 - inseridco order by
 		lSql += " ORDER BY ID_ANNOTAZIONE_MANUALE ";
 
 		setStatement(lSql);

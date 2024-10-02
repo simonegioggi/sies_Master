@@ -280,7 +280,7 @@ public interface ICostantiFascicoloSius {
 	 * Numero MEV : 9
 	 * Autore    : sgioggi
 	 * Data      : 22 nov 2022
-	 * Branch    : MEV_9
+	 * Branch    : MEV_2019-09
 	 */
 	public static final String PG_LOAD_GESTIONE_RESTITUZIONE_ATTI_PRESIDENTE = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/fascicolo/LoadGestioneRestituzioneAttiPresidente.jsp";
@@ -290,7 +290,8 @@ public interface ICostantiFascicoloSius {
 	public static final String CAMPO_ANNO_DATA_RESTITUZIONE = "AnnoDataRestituzione";
 	public static final String COD_EMESSO_DECRETO_DESIGNAZIONE = "22";
 	public static final String COD_ATTI_RESTITUITI_PRESIDENTE = "23";
-	public static final String COD_EMESSA_ORDINANZA_APPLICAZIONE_PROVVISORIA = "24";
+	// MEV_2024-092: non più utilizzato
+	// public static final String COD_EMESSA_ORDINANZA_APPLICAZIONE_PROVVISORIA = "24";
 	public static final String PG_LOAD_ESECUTIVITA_ORDINANZA_APPLICAZIONE_PROVVISORIA_MA = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/fascicolo/LoadEsecutivitaOrdinanzaApplicazioneProvvisoriaMA.jsp";
 	public static final String CAMPO_GIORNO_DATA_ESECUTIVITA = "GiornoDataEsecutivita";
@@ -298,6 +299,6 @@ public interface ICostantiFascicoloSius {
 	public static final String CAMPO_ANNO_DATA_ESECUTIVITA = "AnnoDataEsecutivita";
 	public static final String PG_DETTAGLIO_ESECUTIVITA_ORDINANZA_APPLICAZIONE_PROVVISORIA_MA = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/fascicolo/DettaglioEsecutivitaOrdinanzaApplicazioneProvvisoriaMA.jsp";
-	//***** FINE INTERVENTO MEV_9 *****//
+	//***** FINE INTERVENTO MEV_2019-09 *****//
 
 }

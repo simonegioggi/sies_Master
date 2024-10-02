@@ -634,7 +634,7 @@ BigDecimal LADaConcedere = (BigDecimal) request.getAttribute("LADaConcedere");
     <input type="HIDDEN" name="<%=ICostantiAnnotazioneManuale.CAMPO_COD_TIPO_ANNOTAZIONE%>" value="003">
     <%-- MEV NUOVA INFRASTRUTTURA: refactoring --%>
     <%-- input type="HIDDEN" name="<%=ICostantiAnnotazioneManuale.CAMPO_ID_ANNOTAZIONE_MANUALE%>" value="<%=StringUtils.toStringJSP(OrdinanzaGEAnn.getIdAnnotazioneManuale())%>"--%>
-  <!--  MEV 9 - Id Annotazione della richiesta iniziale -->
+  <!--  MEV_2019-09 - Id Annotazione della richiesta iniziale -->
     <input type="HIDDEN" name="<%=ICostantiAnnotazioneManuale.CAMPO_ID_ANNOTAZIONE_MANUALE%>" value="<%=StringUtils.toStringJSP(lAnnRichMod.getIdAnnotazioneManuale())%>">
 
   <table>

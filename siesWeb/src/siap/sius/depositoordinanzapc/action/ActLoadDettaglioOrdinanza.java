@@ -391,7 +391,7 @@ public class ActLoadDettaglioOrdinanza extends ActDettaglioEmissioneOrdinanza
 		 * Numero MEV : 9 
 		 * Autore : sgioggi 
 		 * Data : 17 gen 2023 
-		 * Branch : MEV_9
+		 * Branch : MEV_2019-09
 		 */
 		if (mOrdEveTenPreMod != null && mOrdEveTenPreMod.getOrdinanza() != null
 				&& CONFERMA_DECISIONE_MAGISTRATO_RELATORE
@@ -410,13 +410,13 @@ public class ActLoadDettaglioOrdinanza extends ActDettaglioEmissioneOrdinanza
 			}
 			IDepositoOrdinanzaPc idopc = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
 			DepositoOrdinanzaPcModel dopcm = idopc.ExRicercaDepositoOrdinanzaPcByEvento(idEventoOrdinanza);
-			// dati x l'ordinanza di Applicazione Provvisoria M.A.
+			// dati x l'ordinanza di Applicazione Misure Alternative Dl 123/2018 (ex Provvisoria M.A.)
 			String descrTipoOrdinanza = (DecodificheUtils.getDescbyCode(
 					DecodificheManager.getInstance().getTipoOrdinanza(), dopcm.getCodTipoOrdinanza()));
 			dopcm.setDescrTipoOrdinanza(descrTipoOrdinanza);
 			setRequestAttribute("dopcm", dopcm);
 		}
-		// ***** FINE INTERVENTO MEV_9 *****//
+		// ***** FINE INTERVENTO MEV_2019-09 *****//
 
 		// MEV10-s3: aggiunto riferimento all'oggetto "codTipoUfficio"
 		String codTipoUfficio = lFasGPMod.getFascicoloSiusModel().getCodTipoUfficio();

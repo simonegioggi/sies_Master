@@ -69,7 +69,7 @@ public class ActInserisciMAAmmProvvisoria extends ActMisuraAlternativa implement
 		FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 
 		
-		// MEV_9
+		// MEV_2019-09
 		String tipoOperazione = null;
 		if (!isRequestParameterNullObj("tipoOperazione"))
 			tipoOperazione = getRequestStringParameter("tipoOperazione");
@@ -84,7 +84,7 @@ public class ActInserisciMAAmmProvvisoria extends ActMisuraAlternativa implement
 			lCtrl.ExCancellaEventoConStoreProcedure(lEveModRic);
 			siesLogger.debug("Evento cancellato proseguo con un nuovo inserimento");
 		}
-	  // MEV_9 - FINE
+	  // MEV_2019-09 - FINE
 		
 		IPenaResidua lPenResCtrl = SIEPLookupRemote.getPenaResiduaRemote();
 		lPenaResiduaModel = lPenResCtrl
@@ -178,7 +178,7 @@ public class ActInserisciMAAmmProvvisoria extends ActMisuraAlternativa implement
 			// new! DL 146 L'AFFIDAMENTO può essere concesso anche con Ordinanza per cui
 			// devo recuperare il tipo Provvedimento dalla FORM
 			String lTipoProvvedimento = "";
-			// MEV_9 anche per la DET DOM sui può emettere una ordinanza
+			// MEV_2019-09 anche per la DET DOM sui può emettere una ordinanza
 			//if (tipoMisura.equals("AFFIDAMENTO")) {
 				if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_TIPO_DECISIONE)) {
 					lTipoProvvedimento = getRequestStringParameter(
@@ -213,7 +213,7 @@ public class ActInserisciMAAmmProvvisoria extends ActMisuraAlternativa implement
 			Set<String> codiciAffidamentoSorvNew = new HashSet<String>(Arrays.asList(new String[]{"0680","0681","0690","0691","0692"}));
 			Set<String> codiciDetenzioneSorvNew  = new HashSet<String>(Arrays.asList(new String[]{"0682","0693"}));
 			
-			// MEV_9-SIEP - Per l'ammissione provvisoria dei nuovi codici 678 va scritto l'esito anche 
+			// MEV_2019-09-SIEP - Per l'ammissione provvisoria dei nuovi codici 678 va scritto l'esito anche 
 			//              sull'evento e sul tenore l'esito e 0270 e non 0001 (vedi SIUS)
 			if (   codiciAffidamentoSorvNew.contains(lEveMod.getEvento().getCodMotivo())
 					|| codiciDetenzioneSorvNew.contains(lEveMod.getEvento().getCodMotivo())
@@ -222,7 +222,7 @@ public class ActInserisciMAAmmProvvisoria extends ActMisuraAlternativa implement
 				lEveMod.getEvento().setCodEsito("0270"); //Applica provvisoriamente 
 				lTenMod.setCodEsitoTenore("0270");
 			}
-		  // MEV_9-SIEP - FINE
+		  // MEV_2019-09-SIEP - FINE
 			
 			lMisMod = setMisuraAlternativa(lTipoProvvedimento, "CO", lCodiceUffEmi,
 					getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO), lUffScar);
@@ -302,7 +302,7 @@ public class ActInserisciMAAmmProvvisoria extends ActMisuraAlternativa implement
 					lEveNot.getEvento().setCodMotivo("5420");
 				else if ("2008".equals(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO)))
 					lEveNot.getEvento().setCodMotivo("5421");
-				// MEV_9 si rimappano i nuovi codici SIUS in caso di richiesta verbale sottoscrizione agli obblighi
+				// MEV_2019-09 si rimappano i nuovi codici SIUS in caso di richiesta verbale sottoscrizione agli obblighi
 				else if ("0680".equals(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO)))
 					lEveNot.getEvento().setCodMotivo("5422");
 				else if ("0681".equals(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO)))
@@ -313,12 +313,12 @@ public class ActInserisciMAAmmProvvisoria extends ActMisuraAlternativa implement
 					lEveNot.getEvento().setCodMotivo("5425");
 				else if ("0692".equals(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO)))
 					lEveNot.getEvento().setCodMotivo("5426");
-				// MEV_9 - FINE				
+				// MEV_2019-09 - FINE				
 				else
 					lEveNot.getEvento()
 							.setCodMotivo(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO));
 			} else {
-				// MEV_9 Si rimappano tutti i codici sius dell'Applicazione Provvisoria su nuovi codici SIEP per evere una descizione
+				// MEV_2019-09 Si rimappano tutti i codici sius dell'Applicazione Provvisoria su nuovi codici SIEP per evere una descizione
 				// più parlante anche se non trattasi di richiesta verbale
 				if ("0680".equals(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO)))
 					lEveNot.getEvento().setCodMotivo("1400");
@@ -335,7 +335,7 @@ public class ActInserisciMAAmmProvvisoria extends ActMisuraAlternativa implement
 				else if ("0693".equals(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO)))
 					lEveNot.getEvento().setCodMotivo("1413");
 				else
-				// MEV_9 - FINE				
+				// MEV_2019-09 - FINE				
 					lEveNot.getEvento().setCodMotivo(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO));
 			}
 			
@@ -397,7 +397,7 @@ public class ActInserisciMAAmmProvvisoria extends ActMisuraAlternativa implement
 			lMisAlModAMM.setCodOperatoreAggiornamento(lCodiceOperatore);
 			lMisAlModAMM.setDataAggiornamento(DateUtils.getSysDate());
 			
-			//MEV_9 - Non salvava/aggiornava i dati delle NOTE editabili in form
+			//MEV_2019-09 - Non salvava/aggiornava i dati delle NOTE editabili in form
 			siesLogger.debug("Carico le note");
 			siesLogger.debug("Prima lMisAlModAMM.getNote() = "+lMisAlModAMM.getNote());
 			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE)) {
@@ -412,12 +412,12 @@ public class ActInserisciMAAmmProvvisoria extends ActMisuraAlternativa implement
 				// non sto registrando la data inizio misura dal verbale.
 				// Entro quì perchè ho selezionato l'ordinanza dalla lista
 
-				// MEV_9: la modifica del luogo della prova è sempre consentita e non determina la duplicazione del
+				// MEV_2019-09: la modifica del luogo della prova è sempre consentita e non determina la duplicazione del
 				//        provvedimento SIUS ma devo aggiornare il campo su MA
 				if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA))
 					lMisAlModAMM.setDescrLuogoProva(
 							getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA));
-				// MEV_9 - FINE
+				// MEV_2019-09 - FINE
 				
 				// prendo la data scarcerazione o inizio misura dalla maschera se è stata digitata
 				if (!this
@@ -482,7 +482,7 @@ public class ActInserisciMAAmmProvvisoria extends ActMisuraAlternativa implement
 					lEve.getEvento().setCodMotivo("5420");
 				else if ("2008".equals(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO)))
 					lEve.getEvento().setCodMotivo("5421");
-				// MEV_9 si rimappano i nuovi codici SIUS in caso di richiesta verbale sottoscrizione agli obblighi
+				// MEV_2019-09 si rimappano i nuovi codici SIUS in caso di richiesta verbale sottoscrizione agli obblighi
 				else if ("0680".equals(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO)))
 					lEve.getEvento().setCodMotivo("5422");
 				else if ("0681".equals(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO)))
@@ -493,11 +493,11 @@ public class ActInserisciMAAmmProvvisoria extends ActMisuraAlternativa implement
 					lEve.getEvento().setCodMotivo("5425");
 				else if ("0692".equals(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO)))
 					lEve.getEvento().setCodMotivo("5426");
-				// MEV_9 - FINE
+				// MEV_2019-09 - FINE
 				else
 					lEve.getEvento().setCodMotivo(lMisAlModAMM.getCodTipoMisura());
 			} else {
-				// MEV_9 Si rimappano tutti i codici sius dell'Applicazione Provvisoria su nuovi codici SIEP per evere una descizione
+				// MEV_2019-09 Si rimappano tutti i codici sius dell'Applicazione Provvisoria su nuovi codici SIEP per evere una descizione
 				// più parlante anche se non trattasi di richiesta verbale
 				if ("0680".equals(lMisAlModAMM.getCodTipoMisura()))
 					lEve.getEvento().setCodMotivo("1400");
@@ -514,7 +514,7 @@ public class ActInserisciMAAmmProvvisoria extends ActMisuraAlternativa implement
 				else if ("0693".equals(lMisAlModAMM.getCodTipoMisura()))
 					lEve.getEvento().setCodMotivo("1413");
 				else
-				// MEV_9 - FINE	
+				// MEV_2019-09 - FINE	
 					lEve.getEvento().setCodMotivo(lMisAlModAMM.getCodTipoMisura());
 			}
 			// lEve.getEvento().setCodMotivo(lMisAlModAMM.getCodTipoMisura());

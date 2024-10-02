@@ -96,7 +96,7 @@ public class DepositoDecretoModel extends GenericModel {
 	private BigDecimal mSommaRisarcimentoDanni;
 	// 02/2015 Mis.Sic
 	private String mFlagElaborato;
-	// MEV_9 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
+	// MEV_2019-09 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
 	private Date mDataTermineEmissione;
 	private BigDecimal mNumGiorniTermineEmissione;
 
@@ -172,7 +172,7 @@ public class DepositoDecretoModel extends GenericModel {
 		this.mSommaRisarcimentoDanni = null;
 		// 02/2015
 		this.mFlagElaborato = "";
-		// MEV_9 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
+		// MEV_2019-09 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
 		this.mDataTermineEmissione = null;
 		this.mNumGiorniTermineEmissione = null;
 	}
@@ -247,7 +247,7 @@ public class DepositoDecretoModel extends GenericModel {
 		this.mSommaRisarcimentoDanni = aModel.mSommaRisarcimentoDanni;
 		// 02/2015 Mis.Sic.
 		this.mFlagElaborato = aModel.mFlagElaborato;
-		// MEV_9 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
+		// MEV_2019-09 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
 		this.mDataTermineEmissione = aModel.mDataTermineEmissione;
 		this.mNumGiorniTermineEmissione = aModel.mNumGiorniTermineEmissione;
 	}
@@ -282,7 +282,7 @@ public class DepositoDecretoModel extends GenericModel {
 			BigDecimal aNumGiorniRiduzionePena, BigDecimal aSommaRisarcimentoDanni,
 			// 02/2015 Mis.Sic.
 			String aFlagElaborato,
-			// MEV_9 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
+			// MEV_2019-09 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
 			Date aDataTermineEmissione, BigDecimal aNumGiorniTermineEmissione) {
 
 		this.mIdDepositoDecreto = aIdDepositoDecreto;
@@ -352,7 +352,7 @@ public class DepositoDecretoModel extends GenericModel {
 		this.mSommaRisarcimentoDanni = aSommaRisarcimentoDanni;
 		// 02/2015 Mis.Sic.
 		this.mFlagElaborato = aFlagElaborato;
-		// MEV_9 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
+		// MEV_2019-09 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
 		this.mDataTermineEmissione = aDataTermineEmissione;
 		this.mNumGiorniTermineEmissione = aNumGiorniTermineEmissione;
 	}
@@ -625,12 +625,12 @@ public class DepositoDecretoModel extends GenericModel {
 		return mFlagElaborato;
 	}
 
-	// MEV_9 aggiunto campo DATA_TERMINE_EMISSIONE
+	// MEV_2019-09 aggiunto campo DATA_TERMINE_EMISSIONE
 	public Date getDataTermineEmissione() {
 		return mDataTermineEmissione;
 	}
 
-	// MEV_9 aggiunto campo NUM_GIORNI_TERMINE_EMISSIONE
+	// MEV_2019-09 aggiunto campo NUM_GIORNI_TERMINE_EMISSIONE
 	public BigDecimal getNumGiorniTermineEmissione() {
 		return mNumGiorniTermineEmissione;
 	}
@@ -887,12 +887,12 @@ public class DepositoDecretoModel extends GenericModel {
 		mFlagElaborato = aValore;
 	}
 
-	// MEV_9 aggiunto campo DATA_TERMINE_EMISSIONE
+	// MEV_2019-09 aggiunto campo DATA_TERMINE_EMISSIONE
 	public void setDataTermineEmissione(Date aValore) {
 		mDataTermineEmissione = aValore;
 	}
 
-	// MEV_9 aggiunto campo NUM_GIORNI_TERMINE_EMISSIONE
+	// MEV_2019-09 aggiunto campo NUM_GIORNI_TERMINE_EMISSIONE
 	public void setNumGiorniTermineEmissione(BigDecimal aValore) {
 		mNumGiorniTermineEmissione = aValore;
 	}
@@ -925,7 +925,7 @@ public class DepositoDecretoModel extends GenericModel {
 				+ mCodTipoControlloEsecuzione + " - " + mDescrTipoControlloEsecuzione + " - "
 				+ mNumGiorniRevocaLA + " - " + mNumGiorniRiduzionePena + " - " + mSommaRisarcimentoDanni
 				+ " - " + mFlagElaborato // 02/2015 Mis.Sic.
-				// MEV_9 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
+				// MEV_2019-09 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
 				+ " - " + mDataTermineEmissione + " - " + mNumGiorniTermineEmissione;
 
 		if (this.mUfficioCompetente != null)

@@ -41,7 +41,7 @@ public class IspConteggioRelatoriModel extends GenericModel {
 	private String mFasSiuChiaveUfficio;
 	private BigDecimal mNumCancellati;
 	private BigDecimal mNumUnificati;
-	private BigDecimal mNumAppProvv; // MEV9
+	private BigDecimal mNumAppProvv; // MEV_2019-09
 
 	// COSTRUTTORE DI DEFAULT
 	public IspConteggioRelatoriModel() {
@@ -60,7 +60,7 @@ public class IspConteggioRelatoriModel extends GenericModel {
 		mFasSiuChiaveUfficio = "";
 		mNumCancellati = null;
 		mNumUnificati = null;
-		mNumAppProvv = null; //MEV9
+		mNumAppProvv = null; //MEV_2019-09
 	}
 
 	// COSTRUTTORE DI COPIA
@@ -80,7 +80,7 @@ public class IspConteggioRelatoriModel extends GenericModel {
 		mFasSiuChiaveUfficio = aModel.mFasSiuChiaveUfficio;
 		mNumCancellati = aModel.mNumCancellati;
 		mNumUnificati = aModel.mNumUnificati; 
-		mNumAppProvv = aModel.mNumAppProvv; //MEV9
+		mNumAppProvv = aModel.mNumAppProvv; //MEV_2019-09
 	}
 
 	// COSTRUTTORE MODEL
@@ -90,7 +90,7 @@ public class IspConteggioRelatoriModel extends GenericModel {
 			BigDecimal aNumDefEsito5, BigDecimal aNumDefEsito6, BigDecimal aNumDefIscErr,
 			BigDecimal aNumPendentiFine, String aFasSiuChiaveUfficio, BigDecimal aNumCancellati,
 			BigDecimal aNumUnificati,
-			BigDecimal aNumAppProvv // MEV9
+			BigDecimal aNumAppProvv // MEV_2019-09
 			) {
 		mCodRelatore = aCodRelatore;
 		mDescContenutoStatis = aDescContenutoStatis;
@@ -107,7 +107,7 @@ public class IspConteggioRelatoriModel extends GenericModel {
 		mFasSiuChiaveUfficio = aFasSiuChiaveUfficio;
 		mNumCancellati = aNumCancellati;
 		mNumUnificati = aNumUnificati;
-		mNumAppProvv = aNumAppProvv; // MEV9
+		mNumAppProvv = aNumAppProvv; // MEV_2019-09
 	}
 
 	//
@@ -174,7 +174,7 @@ public class IspConteggioRelatoriModel extends GenericModel {
 		return mNumUnificati;
 	}
 	
-	// MEV9
+	// MEV_2019-09
 	public BigDecimal getNumAppProvv() {
 		return mNumAppProvv;
 	}
@@ -243,7 +243,7 @@ public class IspConteggioRelatoriModel extends GenericModel {
 		mNumUnificati = aValore;
 	}
 
-	// MEV9
+	// MEV_2019-09
 	public void setNumAppProvv(BigDecimal aValore) {
 		mNumAppProvv = aValore;
 	}
@@ -273,7 +273,7 @@ public class IspConteggioRelatoriModel extends GenericModel {
 				lAppoggioMod.setNumPendentiFine(mNumPendentiFine.add(aModel.getNumPendentiFine()));
 				lAppoggioMod.setNumCancellati(mNumCancellati.add(aModel.getNumCancellati()));
 				lAppoggioMod.setNumUnificati(mNumUnificati.add(aModel.getNumUnificati()));
-				// MEV9
+				// MEV_2019-09
 				lAppoggioMod.setNumAppProvv(mNumAppProvv.add(aModel.getNumAppProvv()));
 			} else
 				throw new F3BException(F3BException.USER_MESSAGE,

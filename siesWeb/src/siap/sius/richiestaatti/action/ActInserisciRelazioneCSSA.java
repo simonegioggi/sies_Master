@@ -65,14 +65,14 @@ public class ActInserisciRelazioneCSSA extends ActInserisciRicAtti implements IC
 		lEveNot.getEvento().setCodTipoUfficioDestinatario("-");
 		lEveNot.getEvento().setFasSiuIdFascicoloSius(lFasSius.getIdFascicoloSius());
 
-		// INIZIO: MEV_9 (D.lgs. 123/2018)
+		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 		if (!isRequestParameterNullObj(CAMPO_ANNO_DATA_RESTITUZIONE)) {
 			Date lDataRestituzioneAtti = getRequestDateParameter(CAMPO_ANNO_DATA_RESTITUZIONE
 					                                           , CAMPO_MESE_DATA_RESTITUZIONE
 				                                               , CAMPO_GIORNO_DATA_RESTITUZIONE  );
 			lEveNot.getEvento().setDataRestituzioneAi(lDataRestituzioneAtti);
 		}
-		// FINE: MEV_9 (D.lgs. 123/2018)
+		// FINE: MEV_2019-09 (D.lgs. 123/2018)
 		
 		// Imposta i dati necessari per la gestione delle Notifica
 		NotificaModel lNotifica = new NotificaModel();

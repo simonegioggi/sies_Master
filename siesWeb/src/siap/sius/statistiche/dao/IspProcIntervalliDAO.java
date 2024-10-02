@@ -275,7 +275,7 @@ public class IspProcIntervalliDAO extends TableDAO {
 		setBigDecimal("TEMPO_RICEZIONE_DEPOSITO", aValore);
 	}
 
-	// MEV_9: modificato metodo getModel(); poi commentato poichè prendo per buono il TICKET#202409020116
+	// MEV_2019-09: modificato metodo getModel(); poi commentato poichè prendo per buono il TICKET#202409020116
 	// public GenericModel getModel() throws DAOException {
 	//
 	// return new IspProcIntervalliModel(getFasSiuIdFascicoloSius(), getFasSiuChiaveAnno(),
@@ -284,11 +284,11 @@ public class IspProcIntervalliDAO extends TableDAO {
 	// DecodificheUtils.getDescbyCode(DecodificheManager.getInstance().getMotivoProvvedimento(),
 	// getCodOggettoTenore()),
 	// getCodEsitoTenore(),
-	// // MEV_9: cambiato dominio di estrazione
+	// // MEV_2019-09: cambiato dominio di estrazione
 	// // DecodificheUtils.getDescbyCode(DecodificheManager.getInstance().getEsitoTenore(),
 	// // getCodEsitoTenore()),
 	// calcolaEsitoProvvedimento(getCodEsitoTenore()),
-	// // FINE MEV_9
+	// // FINE MEV_2019-09
 	// getCodMagistrato(), "", getGenPridGeneraleProcedimento(), getDepOpidDepositoOrdinanzaPc(),
 	// getDepDecIdDepositoDecreto(), getTenData(), getTenDataFine(), getCodEsitoStatistica(), "",
 	// getDescContenutoStatis(), getDataRicezione(), getDataPrimaUdienza(), getDataUltimaUdienza(),
@@ -297,7 +297,7 @@ public class IspProcIntervalliDAO extends TableDAO {
 	// }
 
 	/*
-	 * MEV_9: aggiunto metodo di estrazione codice esito provvedimento
+	 * MEV_2019-09: aggiunto metodo di estrazione codice esito provvedimento
 	 */
 	// private String calcolaEsitoProvvedimento(String codEsitoTenore) throws DAOException {
 	//
@@ -310,7 +310,7 @@ public class IspProcIntervalliDAO extends TableDAO {
 	// throw new DAOException(e.getMessage());
 	// }
 	// }
-	// ***** FINE INTERVENTO MEV_9 *****//
+	// ***** FINE INTERVENTO MEV_2019-09 *****//
 
 	/*
 	 * public GenericModel getModel() throws DAOException { return new IspProcIntervalliModel(
@@ -331,7 +331,7 @@ public class IspProcIntervalliDAO extends TableDAO {
 	 */
 
 	// TICKET#202409020116 si riscrive la getModel per gestire l'eccezione rilanciata dal metodo
-	// getEsitoProvvedimento sovrascrivendo anche quanto fatto con la MEV_9 (conflitto nel MERGE)
+	// getEsitoProvvedimento sovrascrivendo anche quanto fatto con la MEV_2019-09 (conflitto nel MERGE)
 	public GenericModel getModel() throws DAOException {
 
 		IspProcIntervalliModel lProcIntervalliModel = new IspProcIntervalliModel();

@@ -72,7 +72,7 @@ if (lAltraCausa == null)
 			<font class="campo">Dettaglio Sospensione dell'esecuzione della pena</font>
 		</td>
 <%
-// MEV_9-SIEP: ottimizzato il codice ed aggiunti pulsanti di modifica e validazione diretta
+// MEV_2019-09-SIEP: ottimizzato il codice ed aggiunti pulsanti di modifica e validazione diretta
 if ((Utils.isPresent(eventonotifica.getEvento().getFlagDocumentoRegistrato())
 		&& "N".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato()))
 		|| Utils.isNullObj(eventonotifica.getEvento().getFlagDocumentoRegistrato())) {
@@ -361,7 +361,7 @@ if (("PM".equals(codiceTipoUfficio)
    		</td>
 	</tr>
 <%
-// MEV_9-SIEP: aggiunte etichette (x2)
+// MEV_2019-09-SIEP: aggiunte etichette (x2)
 if (!Utils.isNullObj(misuraalternativa.getAnnoRegistroMaAt())) {
 %>
 	<tr>
@@ -378,7 +378,7 @@ if (!Utils.isNullObj(misuraalternativa.getAnnoRegistroMaAt())) {
 	</tr>
 <%
 }
-// FINE MEV_9-SIEP
+// FINE MEV_2019-09-SIEP
 if (misuraalternativa != null && misuraalternativa.getNote() != null) {
 %>
 	<tr>

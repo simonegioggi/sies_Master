@@ -100,7 +100,7 @@
       </td>
     </tr>
     
-    <%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
+    <%-- INIZIO: MEV_2019-09 (D.lgs. 123/2018) --%>
     <% if (eventoNotifica.getEvento().getDataRestituzioneAi()!=null) {%>
     <tr>
       <td class="l">Atti da restituire entro il </td>
@@ -109,7 +109,7 @@
       </td>
     </tr>
     <% } %>
-    <%-- FINE: MEV_9 (D.lgs. 123/2018) --%>
+    <%-- FINE: MEV_2019-09 (D.lgs. 123/2018) --%>
 
   <%
     int lSizeNotifiche = eventoNotifica.getNotifiche().length;

@@ -514,7 +514,7 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 		return lAnnMod;
 	}
 
-	// MEV 9
+	// MEV_2019-09
 	public AnnotazioneManualeModel ExInserisciAnnotazioneManualeEventoUpd(
 			AnnotazioneManualeModel aAnnotazioneManuale, EventoModel aEvento,
 			BigDecimal aIdAnnotazioneRichiesta, BigDecimal aIdAnnotazioneManuale) throws F3BException {
@@ -623,7 +623,7 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 			lAnnDao.update();
 			lAnnDao.stop();
 
-			// MEV9 -- Lego l'ANNMAN della Richiesta all'ANNMAN del provvedimento con UPDATE
+			// MEV_2019-09 -- Lego l'ANNMAN della Richiesta all'ANNMAN del provvedimento con UPDATE
 
 			lAnnRichDao = new AnnotazioneManualeDAO(lConn);
 
@@ -663,7 +663,7 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 
 		return lAnnMod;
 	}
-	// End MEV 9
+	// End MEV_2019-09
 
 	/**
 	 * Inserisce l'annotazione Manuale, l'Evento e le notifiche

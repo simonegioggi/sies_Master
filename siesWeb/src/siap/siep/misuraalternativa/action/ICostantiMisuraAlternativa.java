@@ -153,11 +153,11 @@ public interface ICostantiMisuraAlternativa {
 
 	public static final String CAMPO_COD_LUOGO_EMITTENTE = "CodLuogoEmittente";
 
-	// MEV_9
+	// MEV_2019-09
 	public static final String CAMPO_GIORNO_DATA_ESECUTIVITA = "GiornoDataEsecutivita";
 	public static final String CAMPO_MESE_DATA_ESECUTIVITA = "MeseDataEsecutivita";
 	public static final String CAMPO_ANNO_DATA_ESECUTIVITA = "AnnoDataEsecutivita";
-	// FINE MEV_9
+	// FINE MEV_2019-09
 
 	public static final String PG_LOAD_INSERISCI_MA_CONCESSIONE = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/misuraalternativa/LoadInserisciConcessione.jsp";
@@ -330,12 +330,12 @@ public interface ICostantiMisuraAlternativa {
 	public static final String PG_BUTTONS_SORVEGLIANZA = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/misuraalternativa/buttonsSorveglianza.jsp";
 
-	// MEV_9-SIEP
+	// MEV_2019-09-SIEP
 	public static final String PG_LOAD_INSERISCI_MA_AMM_PROVV_SEMILIBERTA = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/misuraalternativa/LoadInserisciMAAmmProvvSemiliberta.jsp";
 	public static final String PG_LOAD_DETTAGLIO_MA_AMM_PROVV_SEMILIBERTA = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/misuraalternativa/DettaglioMAAmmProvvSemiliberta.jsp";
-	// MEV_9-SIEP - FINE
+	// MEV_2019-09-SIEP - FINE
 
 	// TEMPLATE VUOTO
 	public static final String TEMPLATE_VUOTO = "SIEP_VUOTO";
@@ -390,9 +390,9 @@ public interface ICostantiMisuraAlternativa {
 	public static final String PROSECUZIONE_51BIS_CUMULO = "PROSECUZIONE_51BIS_CUMULO";
 	public static final String PROSECUZIONE_PROVVISORIA_CUMULO = "PROSECUZIONE_PROVVISORIA_CUMULO";
 	public static final String CONCESSIONE_SOSPENSIONE = "CONCESSIONE_SOSPENSIONE";
-	// MEV_9-SIEP
+	// MEV_2019-09-SIEP
 	public static final String CONCESSIONE_SOSPENSIONE678 = "CONCESSIONE_SOSPENSIONE678";
-	// MEV_9-SIEP - FINE
+	// MEV_2019-09-SIEP - FINE
 	public static final String AFFIDAMENTO_IN_PROVA = "AFFIDAMENTO_IN_PROVA";
 	public static final String DETENZIONE_DOMICILIARE = "DETENZIONE_DOMICILIARE";
 	public static final String SEMILIBERTA = "SEMILIBERTA";

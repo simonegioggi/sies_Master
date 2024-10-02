@@ -1539,7 +1539,7 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 	}
 
 	
-	// MEV_9 si evvettua l'override per aggiungere il parametro per filtrare solo gli eventi validati
+	// MEV_2019-09 si evvettua l'override per aggiungere il parametro per filtrare solo gli eventi validati
 	public EventoModel ExRicercaEventoByEveIdEventoTipoProvCodMotivo(BigDecimal aEventoKey,
 			String aTipoEvento, String aTipoProvv, String aMotivo) throws F3BException {
 		return ExRicercaEventoByEveIdEventoTipoProvCodMotivo (aEventoKey, aTipoEvento, aTipoProvv, aMotivo, null);

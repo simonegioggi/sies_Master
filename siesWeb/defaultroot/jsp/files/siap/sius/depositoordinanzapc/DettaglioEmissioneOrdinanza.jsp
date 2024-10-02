@@ -47,7 +47,7 @@
 <jsp:useBean id="misuraSicurezza"      	scope="request" class="siap.siep.misurasicurezza.model.MisuraSicurezzaModel"/>
 <jsp:useBean id="misuraAlternativa"		scope="request" class="siap.sico.misuraalternativa.model.MisuraAlternativaModel"/>
 <jsp:useBean id="LicenzePeriodi"      	scope="request" class="java.util.Vector"/>
-<%-- MEV_9: aggiunto useBean --%>
+<%-- MEV_2019-09: aggiunto useBean --%>
 <jsp:useBean id="dopcm"					scope="request" class="siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel"/>
 
 <%
@@ -716,7 +716,7 @@ if (!modificaOrdinanza) {
     </tr>
 </table>
 
-<%-- MEV_9: aggiunta tabella x dati ORDINANZA APPLICAZIONE PROVVISORIA M.A --%>
+<%-- MEV_2019-09: aggiunta tabella x dati ORDINANZA APPLICAZIONE PROVVISORIA M.A --%>
 <%
 if (ICostantiDepositoOrdinanzaPc.CONFERMA_DECISIONE_MAGISTRATO_RELATORE.equals(codice)
 		&& !Utils.isNullObj(dopcm) && Utils.isPresent(dopcm.getAnnoS3())) {
@@ -751,7 +751,7 @@ if (ICostantiDepositoOrdinanzaPc.CONFERMA_DECISIONE_MAGISTRATO_RELATORE.equals(c
 <%
 }
 %>
-<%-- FINE MEV_9 --%>
+<%-- FINE MEV_2019-09 --%>
 
 <%
 // Controllo su tipo Ordinanza per determinare se visualizzare le Misure Sicurezza
@@ -948,7 +948,7 @@ if (!modificaOrdinanza) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_MA%>"/>
 <% 
-// INIZIO: MEV_9 (D.lgs. 123/2018) gestito il caso di tipo ordinanza AM Si aggancia per ora lo stesso dettaglio della MA
+// INIZIO: MEV_2019-09 (D.lgs. 123/2018) gestito il caso di tipo ordinanza AM Si aggancia per ora lo stesso dettaglio della MA
 		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.MISURA_ALTERNATIVA_AMMISSIONE_PROVVISORIA) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_MA%>"/>

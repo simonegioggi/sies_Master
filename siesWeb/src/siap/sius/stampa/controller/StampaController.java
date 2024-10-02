@@ -348,7 +348,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 			lTreeFasSIUS.add(lTreeEventoNotifiche);
 
-			// INIZIO: MEV_9 (D.lgs. 123/2018)
+			// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 			// Si aggiungono al treemodel tutti gli altri eventi e depositi sia decreti che ordinanza
 			siesLogger.debug("Procedo alla ricerca precedenti eventi 02,03");
 			IEvento mCtrl = SICOLookupRemote.getEventoRemote();
@@ -376,7 +376,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 				} else
 					siesLogger.debug("ulterioreEvento scartato: e' l'evento corrente");
 			}
-			// FINE: MEV_9
+			// FINE: MEV_2019-09
 
 			lRoot.add(lTreeFasSIUS);
 			lRoot.add(lTreeGenProc);

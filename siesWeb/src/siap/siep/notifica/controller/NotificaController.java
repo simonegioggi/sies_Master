@@ -1368,7 +1368,7 @@ public class NotificaController extends SiapController implements INotifica {
 	 * Numero MEV : 9
 	 * Autore    : sgioggi
 	 * Data      : 18 apr 2023
-	 * Branch    : MEV_9
+	 * Branch    : MEV_2019-09
 	 */
 	@Override
 	public void ExModificaNotifiche(Vector<NotificaModel> notifiche, String[] check) throws F3BException {
@@ -1446,6 +1446,6 @@ public class NotificaController extends SiapController implements INotifica {
 			cleanup(c);
 		}
 	}
-	//***** FINE INTERVENTO MEV_9 *****//
+	//***** FINE INTERVENTO MEV_2019-09 *****//
 
 }

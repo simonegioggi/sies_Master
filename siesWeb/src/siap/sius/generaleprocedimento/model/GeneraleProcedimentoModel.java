@@ -75,11 +75,11 @@ public class GeneraleProcedimentoModel extends GenericModel {
 	 * Numero MEV : 9
 	 * Autore    : sgioggi
 	 * Data      : 22 nov 2022
-	 * Branch    : MEV_9
+	 * Branch    : MEV_2019-09
 	 */
 	private Date mDataRestituzione;
 	private String mDescrRestituzione;
-	//***** FINE INTERVENTO MEV_9 *****//
+	//***** FINE INTERVENTO MEV_2019-09 *****//
 
 	// COSTRUTTORE DI DEFAULT
 	public GeneraleProcedimentoModel() {

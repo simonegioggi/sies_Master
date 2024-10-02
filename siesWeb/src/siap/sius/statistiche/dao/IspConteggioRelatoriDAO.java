@@ -36,7 +36,7 @@ public class IspConteggioRelatoriDAO extends TableDAO
 		setField("NUM_DEF_ESITO4", BIG_DECIMAL);
 		setField("NUM_DEF_ESITO5", BIG_DECIMAL);
 		setField("NUM_DEF_ESITO6", BIG_DECIMAL);
-		setField("NUM_APP_PROVV", BIG_DECIMAL); //MEV9
+		setField("NUM_APP_PROVV", BIG_DECIMAL); //MEV_2019-09
 		setField("NUM_DEF_ISC_ERR", BIG_DECIMAL);
 		setField("NUM_PENDENTI_FINE", BIG_DECIMAL);
 		setField("NUM_CANCELLATI", BIG_DECIMAL);
@@ -63,7 +63,7 @@ public class IspConteggioRelatoriDAO extends TableDAO
 	public String 			getFasSiuChiaveUfficio() 		throws DAOException	 { return getString("FAS_SIU_CHIAVE_UFFICIO"); } 
 	public BigDecimal 		getNumCancellati() 	throws DAOException	 { return getBigDecimal("NUM_CANCELLATI"); }
 	public BigDecimal 		getNumUnificati() 	throws DAOException	 { return getBigDecimal("NUM_UNIFICATI"); } 
-	// MEV9
+	// MEV_2019-09
 	public BigDecimal 		getNumAppProvv() 		throws DAOException	 { return getBigDecimal("NUM_APP_PROVV"); } 
 
   //
@@ -85,7 +85,7 @@ public class IspConteggioRelatoriDAO extends TableDAO
 	public void  	 setFasSiuChiaveUfficio(String aValore ) 			 { setString("FAS_SIU_CHIAVE_UFFICIO", aValore); }
 	public void  	 setNumCancellati(BigDecimal aValore ) 			 { setBigDecimal("NUM_CANCELLATI", aValore); }
 	public void  	 setNumUnificati(BigDecimal aValore ) 			 { setBigDecimal("NUM_UNIFICATI", aValore); }
-	// MEV9
+	// MEV_2019-09
 	public void  	 setNumAppProvv(BigDecimal aValore ) 			 { setBigDecimal("NUM_APP_PROVV", aValore); } 
 
 	public GenericModel getModel() throws DAOException
@@ -106,7 +106,7 @@ public class IspConteggioRelatoriDAO extends TableDAO
 					getFasSiuChiaveUfficio(),
 					getNumCancellati(),
 					getNumUnificati(),
-					getNumAppProvv()  // MEV9
+					getNumAppProvv()  // MEV_2019-09
 				);
 	}
 
@@ -129,7 +129,7 @@ public class IspConteggioRelatoriDAO extends TableDAO
 		setNumCancellati( aModel.getNumCancellati() );
 		setNumUnificati( aModel.getNumUnificati() );
 		
-		// MEV9
+		// MEV_2019-09
 		setNumAppProvv(aModel.getNumAppProvv() );
 		
 	}

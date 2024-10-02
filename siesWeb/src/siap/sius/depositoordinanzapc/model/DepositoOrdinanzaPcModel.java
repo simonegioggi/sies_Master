@@ -96,10 +96,10 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 	// 10102014 - D.L. 92 2014 Violazione CEDU
 	private BigDecimal mSommaRisarcimento;
 
-	// INIZIO: MEV_9 (D.lgs. 123/2018)
+	// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 	private Date mDataEsecutivita;
 	private String mNoteDataEsecutivita;
-	// FINE: MEV_9
+	// FINE: MEV_2019-09
 
 	// COSTRUTTORE DI DEFAULT
 	public DepositoOrdinanzaPcModel() {
@@ -173,10 +173,10 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 		this.mDescrTipoControlloEsecuzione = null;
 		// 10102014 - D.L. 92 2014 Violazione CEDU
 		this.mSommaRisarcimento = null;
-		// INIZIO: MEV_9 (D.lgs. 123/2018)
+		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 		this.mDataEsecutivita = null;
 		this.mNoteDataEsecutivita = "";
-		// FINE: MEV_9
+		// FINE: MEV_2019-09
 	}
 
 	// COSTRUTTORE DI COPIA
@@ -252,10 +252,10 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 		this.mDescrTipoControlloEsecuzione = aModel.mDescrTipoControlloEsecuzione;
 		// 10102014 - D.L. 92 2014 Violazione CEDU
 		this.mSommaRisarcimento = aModel.mSommaRisarcimento;
-		// INIZIO: MEV_9 (D.lgs. 123/2018)
+		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 		this.mDataEsecutivita = aModel.mDataEsecutivita;
 		this.mNoteDataEsecutivita = aModel.mNoteDataEsecutivita;
-		// FINE: MEV_9
+		// FINE: MEV_2019-09
 	}
 
 	// COSTRUTTORE MODEL
@@ -356,10 +356,10 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 		this.mDescrTipoControlloEsecuzione = aDescrTipoControlloEsecuzione;
 		// 10102014 - D.L. 92 2014 Violazione CEDU
 		this.mSommaRisarcimento = aSommaRisarcimento;
-		// INIZIO: MEV_9 (D.lgs. 123/2018)
+		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 		this.mDataEsecutivita = aDataEsecutivita;
 		this.mNoteDataEsecutivita = aNoteDataEsecutivita;
-		// FINE: MEV_9
+		// FINE: MEV_2019-09
 	}
 
 	//
@@ -656,7 +656,7 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 			return new BigDecimal(0);
 	}
 
-	// INIZIO: MEV_9 (D.lgs. 123/2018)
+	// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 	public Date getDataEsecutivita() {
 		return mDataEsecutivita;
 	}
@@ -664,7 +664,7 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 	public String getNoteDataEsecutivita() {
 		return mNoteDataEsecutivita;
 	}
-	// FINE: MEV_9
+	// FINE: MEV_2019-09
 
 	//
 	// METODI SET()
@@ -948,7 +948,7 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 		mSommaRisarcimento = aValore;
 	}
 
-	// INIZIO: MEV_9 (D.lgs. 123/2018)
+	// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 	public void setDataEsecutivita(Date mDataEsecutivita) {
 		this.mDataEsecutivita = mDataEsecutivita;
 	}
@@ -956,7 +956,7 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 	public void setNoteDataEsecutivita(String mNoteDataEsecutivita) {
 		this.mNoteDataEsecutivita = mNoteDataEsecutivita;
 	}
-	// FINE: MEV_9
+	// FINE: MEV_2019-09
 
 	// Metodo toString()
 	public String toString() {
@@ -991,7 +991,7 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 				mCodTipoControlloEsecuzione + " - " + mDescrTipoControlloEsecuzione + " - " +
 				// 10102014 - D.L. 92 2014 Violazione CEDU
 				mSommaRisarcimento + " - " +
-				// MEV_9 (D.lgs. 123/2018)
+				// MEV_2019-09 (D.lgs. 123/2018)
 				mDataEsecutivita + " - " + mNoteDataEsecutivita;
 
 		return lStr;

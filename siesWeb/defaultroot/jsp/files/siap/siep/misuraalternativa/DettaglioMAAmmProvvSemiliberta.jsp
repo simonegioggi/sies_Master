@@ -81,7 +81,7 @@ if(lAltraCausa == null)
   <script language="JavaScript" src="<%=ISIAPCostantiWeb.JS_CONTROL_UPLOAD%>"></script>
 
   <script language="JavaScript">
-  <%-- MEV_9 si aggiunge il tasto di modifica --%>
+  <%-- MEV_2019-09 si aggiunge il tasto di modifica --%>
     function modifica() {
       document.modifica.submit();
     }
@@ -102,7 +102,7 @@ if (   "N".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato())
    )
 {
 %>  
-  <%-- MEV_9 si aggiunge il tasto di modifica --%>
+  <%-- MEV_2019-09 si aggiunge il tasto di modifica --%>
   <td class="LBG">
     <a href="Javascript:modifica()">
       <img  align="middle" src="<%=IWebConstants.IMAGES_DIR%>modifica24.gif" alt="Modifica" width="24" height="24" border="0">
@@ -132,7 +132,7 @@ if (   "N".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato())
 <jsp:include page="/jsp/files/siap/siep/fascicolo/DettaglioSoggettoSentenza.jsp"/>
 
 <%
-// MEV_9 si aggiunge il tasto di modifica
+// MEV_2019-09 si aggiunge il tasto di modifica
 if (   eventonotifica.getEvento().getFlagDocumentoRegistrato() == null
     || "N".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato())
    )

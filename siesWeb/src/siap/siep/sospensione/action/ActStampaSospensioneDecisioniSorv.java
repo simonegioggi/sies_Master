@@ -100,7 +100,7 @@ public class ActStampaSospensioneDecisioniSorv extends ActionSiap implements ICo
 
 		ITemplate lCtrlTem = SICOLookupRemote.getTemplateRemote();
 		TemplateModel lTemMod = new TemplateModel();
-		// MEV_9-SIEP: imposto flag_template e codTipoMisura e codTipoProvvedimento
+		// MEV_2019-09-SIEP: imposto flag_template e codTipoMisura e codTipoProvvedimento
 		if ("5469".equals(lMotivo) || "5496".equals(lMotivo))
 			lTemMod = lCtrlTem.ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplate(
 					lEventoModel.getCodTipoEvento(), "12", lMotivo, "1");

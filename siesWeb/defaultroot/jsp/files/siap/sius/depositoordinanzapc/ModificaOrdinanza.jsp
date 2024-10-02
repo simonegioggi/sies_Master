@@ -28,7 +28,7 @@
 <jsp:useBean id="depositoDecretoMotivazioni" 	scope="request" class="siap.sius.depositodecreto.model.DepositoDecretoEventoMotivazioniModel"/>
 <jsp:useBean id="tenori" 						scope="request" class="java.util.Vector"/>
 <jsp:useBean id="misuraSicurezza" 				scope="request" class="siap.siep.misurasicurezza.model.MisuraSicurezzaModel"/>
-<%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
+<%-- INIZIO: MEV_2019-09 (D.lgs. 123/2018) --%>
 <jsp:useBean id="dataDecretoDesignazione" 		scope="request" class="java.lang.String"/>
   
 <%
@@ -103,7 +103,7 @@ if (data_deposito != null)
 else
  	data2 = DateUtils.getSysDate("dd/MM/yyyy");
 
-// INIZIO: MEV_9 (D.lgs. 123/2018)
+// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 String contenuto = "";
 contenuto = fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento();
 boolean is678 = false;
@@ -111,7 +111,7 @@ boolean is678 = false;
 if (ICostantiDepositoOrdinanzaPc.MISURA_ALTERNATIVA_AMMISSIONE_PROVVISORIA.equals(datiOrdinanza.getOrdinanza().getCodTipoOrdinanza())) {
 	is678 = true;
 }
-// FINE: MEV_9
+// FINE: MEV_2019-09
 %>
 <html>
 <head>
@@ -120,7 +120,7 @@ if (ICostantiDepositoOrdinanzaPc.MISURA_ALTERNATIVA_AMMISSIONE_PROVVISORIA.equal
 <script language="JavaScript">
 function Verify() {
 	var flagDate = VerificaDate();
-<%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
+<%-- INIZIO: MEV_2019-09 (D.lgs. 123/2018) --%>
 <%
 if (is678) {
 %>
@@ -142,7 +142,7 @@ if (is678) {
 <%
 }
 %>
-<%-- FINE: MEV_9 (D.lgs. 123/2018) --%>
+<%-- FINE: MEV_2019-09 (D.lgs. 123/2018) --%>
 
 // MEV_39: aggiunto controllo
 <%
@@ -206,7 +206,7 @@ function VerificaDate() {
 	var ritorno = true;
 	var data_camera = '<%=data1%>';
 	var data_deposito = '<%=data2%>';
-	var dataDecretoDesignazione = '<%=dataDecretoDesignazione%>'; <%-- MEV_9 (D.lgs. 123/2018) --%>
+	var dataDecretoDesignazione = '<%=dataDecretoDesignazione%>'; <%-- MEV_2019-09 (D.lgs. 123/2018) --%>
 	var data_emissione = document.ModificaOrdinanza.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>.value;
 	var data_decorrenza;
 	var nodeDataDec;
@@ -225,7 +225,7 @@ function VerificaDate() {
         alert("La data di emissione non può essere maggiore della data di deposito o in assenza di essa, della data di Sistema!");
         ritorno =  false;
 	}
-<%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
+<%-- INIZIO: MEV_2019-09 (D.lgs. 123/2018) --%>
 <%
 if (is678) {
 %>		      	
@@ -245,7 +245,7 @@ if (ICostantiDepositoOrdinanzaPc.CONFERMA_DECISIONE_MAGISTRATO_RELATORE.equals(d
 <%
 }
 %>
-<%-- FINE: MEV_9 (D.lgs. 123/2018) --%>
+<%-- FINE: MEV_2019-09 (D.lgs. 123/2018) --%>
    	// Controllo della data deposito <= data camera di consiglio
    	else if (data_camera != null && !CompareDate(data_camera, data_emissione)) {
 		alert("La data di emissione non può essere minore della Data Udienza!");
@@ -511,7 +511,7 @@ if ("42".equals(tipo) || "MS".equals(tipo)) {
 %>
 }
    
-<%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
+<%-- INIZIO: MEV_2019-09 (D.lgs. 123/2018) --%>
 <%
 if (is678) {
 %>
@@ -542,7 +542,7 @@ function checkEsiti() {
 <%
 }
 %>
-<%-- FINE: MEV_9 --%>
+<%-- FINE: MEV_2019-09 --%>
 </script>
 </head>
 <body class="corpo" onload="visualizza_data_decorrenza()">
@@ -613,7 +613,7 @@ for (int i = 0; i < lTenori.length; i++) {
 	<tr><td>&nbsp;</td></tr>
 </table>
 
-<%-- MEV_9: aggiunta tabella x "Ulteriore descrizione della decisione" --%>
+<%-- MEV_2019-09: aggiunta tabella x "Ulteriore descrizione della decisione" --%>
 <%
 if (ICostantiDepositoOrdinanzaPc.CONFERMA_DECISIONE_MAGISTRATO_RELATORE.equals(datiOrdinanza.getOrdinanza().getCodTipoOrdinanza())) {
 %>
@@ -628,7 +628,7 @@ if (ICostantiDepositoOrdinanzaPc.CONFERMA_DECISIONE_MAGISTRATO_RELATORE.equals(d
 <%
 }
 %>
-<%-- FINE MEV_9 --%>
+<%-- FINE MEV_2019-09 --%>
 
 <table id="tableInForma" style="visibility:hidden" width="95%" cellspacing="2" cellpadding="2">
 	<tr>
@@ -776,7 +776,7 @@ if ("42".equals(tipo) || "MS".equals(tipo)) {
 abilitaModificaEsito();
 <%-- MEV_39: aggiunta chiamata a nuova funzione js --%>
 AbilitaCampiEsiti();
-<%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
+<%-- INIZIO: MEV_2019-09 (D.lgs. 123/2018) --%>
 <%
 if (is678) {
 %>
@@ -784,7 +784,7 @@ checkEsiti();
 <%
 }
 %>
-<%-- FINE: MEV_9  --%>
+<%-- FINE: MEV_2019-09  --%>
 
 var frmvalidator  = new Validator("ModificaOrdinanza");
 

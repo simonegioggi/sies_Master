@@ -17,7 +17,7 @@ import siap.sius.util.SIUSLookupRemote;
  *
  * @version 1.0
  */
-// MEV_9: aggiunta classe per le statistiche
+// MEV_2019-09: aggiunta classe per le statistiche
 public class ActRicercaStatisticaMisureAlter678c1tercpp extends ActionSius implements ICostantiStatistiche {
 
 	public String processRequest() throws Exception {

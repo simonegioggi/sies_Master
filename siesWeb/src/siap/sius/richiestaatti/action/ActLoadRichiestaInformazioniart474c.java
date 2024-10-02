@@ -44,12 +44,12 @@ public class ActLoadRichiestaInformazioniart474c extends ActionSiap implements I
 		lOption2.setFilter(lStringFilter2);
 		setRequestAttribute("TipiIstituti2", "" + lOption2);
 		
-		// INIZIO: MEV_9 (D.lgs. 123/2018)
+		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 		IEvento lEveCtrl = SICOLookupRemote.getEventoRemote();
 		EventoModel lUltimoEventoRichAtti = lEveCtrl.ricercaUltimoEventoRichiestaAttiIsruttoriByIdFasc (((FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"))
 				.getFascicoloSiusModel().getIdFascicoloSius());
 		setRequestAttribute("ultimoEventoRichAtti", lUltimoEventoRichAtti);
-		// FINE: MEV_9 (D.lgs. 123/2018)
+		// FINE: MEV_2019-09 (D.lgs. 123/2018)
 
 		return PG_LOAD_RICHIESTAINFORMAZIONIART474C; // restituisce la jsp di VIEW
 	}

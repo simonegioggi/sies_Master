@@ -330,7 +330,7 @@ public class EventoSimeoneSqlDAO extends SIAPSqlDAO {
 		lStatement += " AND COD_MOTIVO = '" + aMotivo + "'";
 		lStatement += " AND EVE_ID_EVENTO = " + aKey;
 		
-		// MEV_9
+		// MEV_2019-09
 		if ("S".equals(flagDocRegistrato) )
 			lStatement += " AND FLAG_DOCUMENTO_REGISTRATO = 'S' ";		
 		

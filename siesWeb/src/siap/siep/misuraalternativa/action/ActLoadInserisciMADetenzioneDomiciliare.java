@@ -40,12 +40,12 @@ public class ActLoadInserisciMADetenzioneDomiciliare extends ActConcessione {
 
 		// setto il campo codice motivo
 		Option lOption = null;
-		// MEV_9-SIEP: si differenzia per PM e PMM
+		// MEV_2019-09-SIEP: si differenzia per PM e PMM
 		if (isUfficioMinorenni())
 			lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoMADDomMinor());
 		else
 			lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoMADDom());
-		// FINE MEV_9-SIEP
+		// FINE MEV_2019-09-SIEP
 		setRequestAttribute("motivoProvv", "" + lOption);
 
 		setRequestAttribute("tipoMisura", "DETENZIONE");
@@ -54,7 +54,7 @@ public class ActLoadInserisciMADetenzioneDomiciliare extends ActConcessione {
 		// Instanzia il model dell'evento
 		EventoModel lEvent = new EventoModel();
 
-		// MEV_9-SIEP: aggiunta nuova gestione per modifica
+		// MEV_2019-09-SIEP: aggiunta nuova gestione per modifica
 		IEvento ie = SICOLookupRemote.getEventoRemote();
 		EventoModel lEve = null;
 		String tipoOperazione = "";
@@ -89,7 +89,7 @@ public class ActLoadInserisciMADetenzioneDomiciliare extends ActConcessione {
 			// setta la risposta della ricerca nella request
 			setRequestAttribute("maammissioneprovvisoria", mam);
 
-			// MEV_9-SIEP: aggiunta impostazione per il campo codice motivo
+			// MEV_2019-09-SIEP: aggiunta impostazione per il campo codice motivo
 			if (!Utils.isNullObj(mam)) {
 				lOption.setSelected(mam.getCodTipoMisura());
 				setRequestAttribute("motivoProvv", "" + lOption);

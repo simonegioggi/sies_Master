@@ -36,7 +36,7 @@ import siap.sius.udienza.model.UdienzaModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * MEV_9: aggiunta action di caricamento dati
+ * MEV_2019-09: aggiunta action di caricamento dati
  *
  * @author Gioggi
  */
@@ -90,9 +90,10 @@ public class ActLoadInserisciConfermaDecisioneMagistratoRelatore extends ActRice
 			}
 		}
 		if (!existOrdinanzaApplicazioneProvvisoria)
+			// MEV_2024-092: cambio messaggio da Provvisoria M.A. a Misure Alternative Dl 123/2018
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Operazione consentita solo se sul Procedimento sia stata emessa un'ordinanza di "
-							+ "Applicazione Provvisoria M.A. con esito 'Applica provvisoriamente' "
+							+ "Applicazione Misure Alternative Dl 123/2018 con esito 'Applica provvisoriamente' "
 							+ "depositata e validata!");
 
 		IDepositoOrdinanzaPc idopc = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
@@ -106,8 +107,8 @@ public class ActLoadInserisciConfermaDecisioneMagistratoRelatore extends ActRice
 			// "L'Ordinanza di Applicazione Provvisoria è priva della Data Esecutività!");
 			setRequestAttribute(IWebConstants.ACTION_FIELD, "" + getClass().getName());
 			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
-					"L'Ordinanza di Applicazione Provvisoria &egrave; priva della Data Esecutivit&agrave;."
-							+ " Si vuole procedere con la Ratifica?");
+					"L'Ordinanza di Applicazione Misure Alternative Dl 123/2018 &egrave; priva della Data "
+					+ "Esecutivit&agrave;. Si vuole procedere con la Ratifica?");
 			// pagina di ritorno
 			return IWebConstants.PG_WARNING;
 		}
@@ -124,7 +125,7 @@ public class ActLoadInserisciConfermaDecisioneMagistratoRelatore extends ActRice
 		}
 
 		setRequestAttribute("dataUdienzaStr", DateUtils.getDateToString(um.getDataUdienza(), "dd/MM/yyyy"));
-		// dati x l'ordinanza di Applicazione Provvisoria M.A.
+		// dati x l'ordinanza di Applicazione Misure Alternative Dl 123/2018 (ex Provvisoria M.A.)
 		String descrTipoOrdinanza = (dopcm.getCodTipoOrdinanza() != null)
 				? (DecodificheUtils.getDescbyCode(DecodificheManager.getInstance().getTipoOrdinanza(),
 						dopcm.getCodTipoOrdinanza()))
@@ -169,7 +170,7 @@ public class ActLoadInserisciConfermaDecisioneMagistratoRelatore extends ActRice
 				DecodificheManager.getInstance().getOggettoProcedimento(), codOggettoProcedimento);
 		setRequestAttribute("descContenuto", descContenuto);
 
-		// cerco i tenori dell'ordinanza di applicazione provvisoria M.A.
+		// cerco i tenori dell'ordinanza di applicazione Misure Alternative Dl 123/2018 (ex provvisoria M.A.)
 		ITenore it = SIUSLookupRemote.getTenoreRemote();
 		Vector<?> tenoriOrdinanza = it.ExRicercaTenoreByOrdinanza(dopcm.getIdDepositoOrdinanzaPc());
 		int dimFinale = 0;

@@ -796,7 +796,7 @@ public class ActLoadDettaglioFascicolo extends ActionSiap implements ICostantiFa
 		setRequestAttribute("continuazioni", lRCtrl.getTableContinuazioni(lReatiVect));
 
 		setRequestAttribute("dettagliofascicolo", lDettaglio);
-		// MEV_9-SIEP
+		// MEV_2019-09-SIEP
 		// in caso di PG - 14 = Espiazione Pena in Regime di Semiliberta'
 		// provo a capire se trattasi della provvisoria a partire dell'evento che la ha generata
 		// o meglio all'ordinanza collegata all'evento
@@ -845,7 +845,7 @@ public class ActLoadDettaglioFascicolo extends ActionSiap implements ICostantiFa
 				}
 			}
 		}
-		// MEV_9-SIEP - FINE
+		// MEV_2019-09-SIEP - FINE
 
 		// setRequestAttribute("flagDettaglio", flagDettaglio);
 

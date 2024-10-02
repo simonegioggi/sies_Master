@@ -1844,7 +1844,7 @@ public class MisuraAlternativaIndultinoController extends SiapController
 			boolean lCambioPos = false;
 			if (lMisModelOrder.getCodTipoUfficioScarcerazione().equals("SORV")) {
 				lCambioPos = true;
-				// MEV_9 - Gestiti i nuovi codici
+				// MEV_2019-09 - Gestiti i nuovi codici
 //				if ("2006".equals(lMisModelOrder.getCodTipoMisura()) || "2008".equals(lMisModelOrder.getCodTipoMisura()) // dl 146 2013
 //				) // Per Tipo Misura "AFFIDAMENTO"
 				if (codiciAffidamentoSorv.contains(lMisModelOrder.getCodTipoMisura()))
@@ -1852,7 +1852,7 @@ public class MisuraAlternativaIndultinoController extends SiapController
 					lPosizioneDiArrivo = "54"; // Affidamento in Prova Provvisorio - Cambio da 51 a 54
 				}
 
-			  // MEV_9 - Gestiti i nuovi codici
+			  // MEV_2019-09 - Gestiti i nuovi codici
 				//if ("2005".equals(lMisModelOrder.getCodTipoMisura())) // Per Tipo Misura "DETENZIONE"
 				if (codiciDetenzioneSorv.contains(lMisModelOrder.getCodTipoMisura()))
 				{
@@ -1884,7 +1884,7 @@ public class MisuraAlternativaIndultinoController extends SiapController
 									|| lCodTipoPosGiuridicaAltraCausa.equals("76")
 									|| lCodTipoPosGiuridicaAltraCausa.equals("77"))))) {
 				lCambioPos = true;
-				// MEV_9 - Gestiti i nuovi codici
+				// MEV_2019-09 - Gestiti i nuovi codici
 				//if (("2006".equals(lMisModelOrder.getCodTipoMisura()) || "2008".equals(lMisModelOrder.getCodTipoMisura()))
 				if (   codiciAffidamentoSorv.contains(lMisModelOrder.getCodTipoMisura())					
 						&& !"54".equals(lPosMod.getCodPosizioneGiuridica())) // Per Tipo Misura "AFFIDAMENTO"
@@ -1892,7 +1892,7 @@ public class MisuraAlternativaIndultinoController extends SiapController
 					lPosizioneDiArrivo = "54"; // Affidamento in Prova Provvisorio - Cambio da 51 a 54
 				}
 
-				// MEV_9 - Gestiti i nuovi codici
+				// MEV_2019-09 - Gestiti i nuovi codici
 				//if ("2005".equals(lMisModelOrder.getCodTipoMisura())
 				if (   codiciDetenzioneSorv.contains(lMisModelOrder.getCodTipoMisura())	
 						&& !"29".equals(lPosMod.getCodPosizioneGiuridica())) // Per Tipo Misura "DETENZIONE"
@@ -1923,7 +1923,7 @@ public class MisuraAlternativaIndultinoController extends SiapController
 			// SETTA LO STATO PROCEDIMENTO
 			String lStato = null;
 
-			// MEV_9 - si aggiungono gli ulteriori codici
+			// MEV_2019-09 - si aggiungono gli ulteriori codici
 			//if ("2006".equals(lMisModelOrder.getCodTipoMisura()) || "2008".equals(lMisModelOrder.getCodTipoMisura())) {
 			if (codiciAffidamentoSorv.contains(lMisModelOrder.getCodTipoMisura())) {
 				// Per Tipo Misura "AFFIDAMENTO"
@@ -1931,7 +1931,7 @@ public class MisuraAlternativaIndultinoController extends SiapController
 					lStato = "0522"; // Richiesto Verbale per codice 2006 (affidamento Terapeutica)
 				else if (lEveModel.getCodMotivo().equals("5421"))
 					lStato = "0523"; // Richiesto Verbale per codice 2008 ()				
-				// MEV_9 - nuovi codici		
+				// MEV_2019-09 - nuovi codici		
 				else if (lEveModel.getCodMotivo().equals("1400"))
 					lStato = "0560"; 
 				else if (lEveModel.getCodMotivo().equals("1401"))
@@ -1953,7 +1953,7 @@ public class MisuraAlternativaIndultinoController extends SiapController
 					lStato = "0568";
 				else if (lEveModel.getCodMotivo().equals("5426"))
 					lStato = "0569";				
-				// MEV_9 - FINE
+				// MEV_2019-09 - FINE
 				else if ("2006".equals(lMisModelOrder.getCodTipoMisura()))
 					lStato = "0520"; // Tutti gli altri eventi
 				else if ("2008".equals(lMisModelOrder.getCodTipoMisura()))
@@ -2521,7 +2521,7 @@ public class MisuraAlternativaIndultinoController extends SiapController
 	/**
 	 * Metodo di validazione dei provvdimenti legati all'applicazione provvosiria della semilibertà
 	 * 
-	 * @since MEV_9-SIEP
+	 * @since MEV_2019-09-SIEP
 	 */
   public EventoModel ExUpdateValidaMAAmmProvSemiliberta (EventoModel aEvento, FascicoloSiepModel aFascicolo)
       throws F3BException {

@@ -16,10 +16,10 @@
 <%@ page import="siap.siep.misuraalternativa.action.ICostantiMisuraAlternativa"%>
 
 <jsp:useBean id="documentiSius" scope="request" class="java.util.ArrayList"/>
-<%-- MEV_9-SIEP --%>
+<%-- MEV_2019-09-SIEP --%>
 <jsp:useBean id="TipoMA"   		scope="request" class="java.lang.String"/>
 <jsp:useBean id="NaturaMA" 		scope="request" class="java.lang.String"/>
-<%-- FINE MEV_9-SIEP --%>
+<%-- FINE MEV_2019-09-SIEP --%>
 
 <html>
 <head>
@@ -80,11 +80,11 @@ function insertIT(
 		anniMisura,
 		flagDecisioneTribunale,
 		sedeTdsCompetente,
-		<%-- MEV_9 (x3) --%>
+		<%-- MEV_2019-09 (x3) --%>
 		giornoEsecutivita, 
 		meseEsecutivita,
 		annoEsecutivita,
-		<%-- MEV_9-SIEP (x7) --%>
+		<%-- MEV_2019-09-SIEP (x7) --%>
 		giornoDecisione, 
 		meseDecisione,
 		annoDecisione,
@@ -160,7 +160,7 @@ function insertIT(
   			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_COD_TIPO_DECISIONE%>.value = "";
 	} catch (err) { }
 
-	// MEV_9 si aggiunge la data esecutivita
+	// MEV_2019-09 si aggiunge la data esecutivita
 	try {
     	if (giornoEsecutivita != '-')
       		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA%>.value = giornoEsecutivita;
@@ -178,7 +178,7 @@ function insertIT(
   			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA%>.value = "";
 	} catch (err) { }
 
-	// MEV_9-SIEP: aggiunti campi in estrazione
+	// MEV_2019-09-SIEP: aggiunti campi in estrazione
 	try {
     	if (giornoDecisione != '-')
       		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value = giornoDecisione;
@@ -226,7 +226,7 @@ function insertIT(
 			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>.disabled = true;
 	  	}
 	} catch (err) { }
-	// FINE MEV_9-SIEP
+	// FINE MEV_2019-09-SIEP
 
 	// PP = PROSECUZIONE_PROVVISORIA
 	// PC = PROSECUZIONE_PROVVISORIA_CUMULO
@@ -332,7 +332,7 @@ function insertIT(
 	if (natura != '-' && natura == 'CO'
 			&& (oggetto == '2010' || oggetto == '2011' || oggetto == '0030' || oggetto == '0031' || oggetto == '0032'
 					|| oggetto == '0033' || oggetto == '0201' || oggetto == '0202' || oggetto == '2140'
-					<%-- MEV_9-SIEP: aggiunti nuovi oggetti ed aggiunto try..catch x AFFIDAMENTO --%>
+					<%-- MEV_2019-09-SIEP: aggiunti nuovi oggetti ed aggiunto try..catch x AFFIDAMENTO --%>
 					|| oggetto == '0720' || oggetto == '0721' || oggetto == '0730' || oggetto == '0731' || oggetto == '0732')) {
 		try {
 	  		// Quantum di differimento
@@ -353,7 +353,7 @@ function insertIT(
 		} catch (err) { }
 
 	 	if (oggetto != '2140') {
-	 		// MEV_9-SIEP: aggiunta gestione errore
+	 		// MEV_2019-09-SIEP: aggiunta gestione errore
 	 		try {
 	  			if (giornoInizioMisura != '-')
 	    			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.value = giornoInizioMisura;
@@ -526,7 +526,7 @@ if (!documentiSius.isEmpty()) {
 		<td class="int">Anno/Numero Sius</td>
 		<td class="int">Autorità Emittente</td>
 		<td class="int">Oggetto</td>
-		<td class="int">Anno/Numero Ordinanza Provvisoria</td>	<%-- MEV_9-SIEP: aggiunta colonna --%>
+		<td class="int">Anno/Numero Ordinanza Provvisoria</td>	<%-- MEV_2019-09-SIEP: aggiunta colonna --%>
 		<td class="int" width=5%>Azioni</td>
     </tr>
 <%
@@ -546,7 +546,7 @@ if (!documentiSius.isEmpty()) {
         // Il codice precedente ribalta in modo non corretto l'Autorità Emittente,
         // poichè non individua i codici TDSM e UDSM
         String lUfficio = StringUtils.toStringJSP(eventoModel.getCodTipoUfficioEmittente(), "-");
-        // MEV_9-SIEP: aggiunto controllo per escludere dalla visualizzazione
+        // MEV_2019-09-SIEP: aggiunto controllo per escludere dalla visualizzazione
         if (!"AMMISSIONE_PROVVISORIA".equals(NaturaMA)) {
 			if ((("TDS".equals(lUfficio)
 					&& ("0680".equals(misuraModel.getCodTipoMisura())					// AFFIDAMENTO
@@ -565,7 +565,7 @@ if (!documentiSius.isEmpty()) {
 				continue;
 		}
 
-        // MEV_9-SIEP per le sospe 678 provvisorie prendo solo quelle con esito 0270 Applica provvisoriamente 
+        // MEV_2019-09-SIEP per le sospe 678 provvisorie prendo solo quelle con esito 0270 Applica provvisoriamente 
         if ("CONCESSIONE_SOSPENSIONE678".equals(NaturaMA)) {  
         	if (!"0270".equals(eventoModel.getCodEsito()))
         		continue;
@@ -604,7 +604,7 @@ if (!documentiSius.isEmpty()) {
 			<%=StringUtils.toStringJSP(misuraModel.getDescrTipoDecisione(), "-")%>
 <%
 		}
-		// MEV_9-SIEP: aggiunto controllo x varie tipologie
+		// MEV_2019-09-SIEP: aggiunto controllo x varie tipologie
 		if (("0680".equals(misuraModel.getCodTipoMisura())			// AFFIDAMENTO
 				|| "0681".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
 				|| "0682".equals(misuraModel.getCodTipoMisura())	// DETENZIONE DOMICILIARE
@@ -625,7 +625,7 @@ if (!documentiSius.isEmpty()) {
 			<%=StringUtils.toStringJSP(eventoModel.getDescrMotivo(), "-")%>
 		</td>
 <%
-		// MEV_9-SIEP: aggiunti campi in estrazione
+		// MEV_2019-09-SIEP: aggiunti campi in estrazione
 		boolean isOrdinanzaProvvisoria = false;
 		String descrLuogoProva = misuraModel.getDescrLuogoProva();
 		// "0271".equals(eventoModel.getCodEsito()) && // 'CO' - Conferma Decisione del Magistrato Relatore
@@ -732,11 +732,11 @@ if (!documentiSius.isEmpty()) {
                                          '<%=StringUtils.toStringJSP(misuraModel.getNumAnniMisura(), "-")%>',
                                          '<%=StringUtils.toStringJSP(misuraModel.getFlagDecisioneTribunale(), "-")%>',
                                          '<%=StringUtils.cStrForJS(misuraModel.getDescSedeTdsCompetente())%>',
-                                         <%-- MEV_9 --%>
+                                         <%-- MEV_2019-09 --%>
                                          '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataEsecutivita(), "dd"), "-")%>',
                                          '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataEsecutivita(), "MM"), "-")%>',
                                          '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataEsecutivita(), "yyyy"), "-")%>',
-                                         <%-- MEV_9-SIEP: aggiunti campi in estrazione: ID + anno/numero ordinanza provvisoria + data emissione provvedimento --%>
+                                         <%-- MEV_2019-09-SIEP: aggiunti campi in estrazione: ID + anno/numero ordinanza provvisoria + data emissione provvedimento --%>
                                          '<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataOrdinanzaProvvisoria, "dd"), "-")%>',
                                          '<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataOrdinanzaProvvisoria, "MM"), "-")%>',
                                          '<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataOrdinanzaProvvisoria, "yyyy"), "-")%>',
@@ -791,11 +791,11 @@ if (!documentiSius.isEmpty()) {
                                          '<%=StringUtils.toStringJSP(misuraModel.getNumAnniMisura(), "-")%>',
                                          '<%=StringUtils.toStringJSP(misuraModel.getFlagDecisioneTribunale(), "-")%>',
                                          '<%=StringUtils.cStrForJS(misuraModel.getDescSedeTdsCompetente())%>',
-                                         <%-- MEV_9 --%>
+                                         <%-- MEV_2019-09 --%>
                                          '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataEsecutivita(), "dd"), "-")%>',
                                          '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataEsecutivita(), "MM"), "-")%>',
                                          '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataEsecutivita(), "yyyy"), "-")%>',
-                                         <%-- MEV_9-SIEP: aggiunti campi in estrazione: ID + anno/numero ordinanza provvisoria + data emissione provvedimento --%>
+                                         <%-- MEV_2019-09-SIEP: aggiunti campi in estrazione: ID + anno/numero ordinanza provvisoria + data emissione provvedimento --%>
                                          '',
                                          '',
                                          '',

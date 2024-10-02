@@ -273,7 +273,7 @@ public class ActLoadModificaOrdinanza extends ActDettaglioEmissioneOrdinanza {
 		}
 		// ***** FINE INTERVENTO MEV_39 *****//
 
-		// INIZIO: MEV_9 (D.lgs. 123/2018)
+		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 		if (mOrdEveTenPreMod.getOrdinanza().getCodTipoOrdinanza()
 				.compareTo(MISURA_ALTERNATIVA_AMMISSIONE_PROVVISORIA) == 0) {
 			// Recupera la data emissione del decreto di designazione per i controlli in form
@@ -291,14 +291,14 @@ public class ActLoadModificaOrdinanza extends ActDettaglioEmissioneOrdinanza {
 			String dataDecretoDesignazione = DateUtils.getDateToString(lDataEmissioneDecreto, "dd/MM/yyyy");
 			setRequestAttribute("dataDecretoDesignazione", dataDecretoDesignazione);
 		}
-		// FINE: MEV_9 (D.lgs. 123/2018)
+		// FINE: MEV_2019-09 (D.lgs. 123/2018)
 
 		/*
 		 * ISSUE MEV : aggiunta ricerca dati ordinanza applicazione provvisoria da scivere in dettaglio 
 		 * Numero MEV : 9 
 		 * Autore : sgioggi 
 		 * Data : 17 gen 2023 
-		 * Branch : MEV_9
+		 * Branch : MEV_2019-09
 		 */
 		if (mOrdEveTenPreMod != null && mOrdEveTenPreMod.getOrdinanza() != null
 				&& CONFERMA_DECISIONE_MAGISTRATO_RELATORE
@@ -317,13 +317,13 @@ public class ActLoadModificaOrdinanza extends ActDettaglioEmissioneOrdinanza {
 			}
 			IDepositoOrdinanzaPc idopc = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
 			DepositoOrdinanzaPcModel dopcm = idopc.ExRicercaDepositoOrdinanzaPcByEvento(idEventoOrdinanza);
-			// dati x l'ordinanza di Applicazione Provvisoria M.A.
+			// dati x l'ordinanza di Applicazione Misure Alternative Dl 123/2018 (ex Provvisoria M.A.)
 			String descrTipoOrdinanza = (DecodificheUtils.getDescbyCode(
 					DecodificheManager.getInstance().getTipoOrdinanza(), dopcm.getCodTipoOrdinanza()));
 			dopcm.setDescrTipoOrdinanza(descrTipoOrdinanza);
 			setRequestAttribute("dopcm", dopcm);
 		}
-		// ***** FINE INTERVENTO MEV_9 *****//
+		// ***** FINE INTERVENTO MEV_2019-09 *****//
 
 		IMisuraSicurezza lCtrl = SIEPLookupRemote.getMisuraSicurezzaRemote();
 		List<MisuraSicurezzaModel> lMisureSicurezza = lCtrl.ExRicercaMisuraSicurezzaByIdFascicoloSIUS(
@@ -366,7 +366,7 @@ public class ActLoadModificaOrdinanza extends ActDettaglioEmissioneOrdinanza {
 		 * Numero MEV : 9
 		 * Autore    : sgioggi
 		 * Data      : 24 gen 2023
-		 * Branch    : MEV_9
+		 * Branch    : MEV_2019-09
 		 */
 		if ("0271".equals(acodAltEsitoSelezionato)) {
 			Iterator<?> i = lColl.iterator();
@@ -376,7 +376,7 @@ public class ActLoadModificaOrdinanza extends ActDettaglioEmissioneOrdinanza {
 					i.remove();
 			}
 		}
-		//***** FINE INTERVENTO MEV_9 *****//
+		//***** FINE INTERVENTO MEV_2019-09 *****//
 		String lCodEsitoSelezionato = DecodificheUtils.getCodebyCodAlt(lColl, acodAltEsitoSelezionato);
 		Option lOption = new Option(lColl, lCodEsitoSelezionato);
 		if (lCodEsitoSelezionato != null)

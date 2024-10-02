@@ -31,12 +31,12 @@ if (fascicoloSiusGP.getGeneraleProcedimentoModel().getDataCameraConsiglio() != n
 else
 	data1 = DateUtils.getDateToString(fascicoloSiusGP.getFascicoloSiusModel().getDataIscrizione(), "dd/MM/yyyy");
 
-//INIZIO: MEV_9 (D.lgs. 123/2018)
+//INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 boolean is678 = false;
 if (ICostantiDepositoOrdinanzaPc.COD_OGGETTO_CONCESSIONE_MISURE_ALTERNATIVA_678.equals(contenuto)
 		|| ICostantiDepositoOrdinanzaPc.COD_OGGETTO_CONCESSIONE_MISURE_ALTERNATIVA_678_MINORI.equals(contenuto))
 	is678 = true;
-//FINE: MEV_9
+//FINE: MEV_2019-09
 %>
 
 <html>
@@ -60,7 +60,7 @@ function Verify() {
     if (typeof (lTenori[0]) == "undefined") {
 		if (((lTenori.value in {'0001':1, '0002':1, '0003':1, '0005':1, '0010':1, '0012':1, '0013':1, '0195':1, '0361':1, '0362':1, '0610':1})
 				&& lEsiti.value == '0001')
-				// MEV_9: aggiunti 6 (3+3) motivi provvedimento per nuovi contenuti C050 e C051
+				// MEV_2019-09: aggiunti 6 (3+3) motivi provvedimento per nuovi contenuti C050 e C051
 				|| ((lTenori.value in {'0680':1, '0681':1, '0682':1}) && (lEsiti.value in {'0680':1, '0685':1}))
 				|| ((lTenori.value in {'0690':1, '0691':1, '0692':1}) && (lEsiti.value in {'0690':1, '0695':1}))) {
 			if (document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_LUOGO_SVOLGIMENTO_PROVA%>.value == "") {
@@ -80,7 +80,7 @@ function Verify() {
           		}
         	}
     	}
-		// MEV_9: aggiunti 6 (3+3) motivi provvedimento per nuovi contenuti C050 e C051
+		// MEV_2019-09: aggiunti 6 (3+3) motivi provvedimento per nuovi contenuti C050 e C051
 		else if (lTenori[jTenori].value in {'0680':1, '0681':1, '0682':1}) {
      	  	for (jEsiti = 0; jEsiti < lEsiti[jTenori].length ; jEsiti++) {
 				if ((lEsiti[jTenori][jEsiti].selected) && (lEsiti[jTenori][jEsiti].value in {'0680':1, '0685':1})) {
@@ -177,7 +177,7 @@ function enableForma() {
 	}
 }
 
-<%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
+<%-- INIZIO: MEV_2019-09 (D.lgs. 123/2018) --%>
 function checkEsiti() {
 	var listComboEsiti = document.getElementsByName('<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>');
 	if (typeof (listComboEsiti[1]) == "undefined") {

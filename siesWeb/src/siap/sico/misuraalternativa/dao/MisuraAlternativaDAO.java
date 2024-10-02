@@ -99,7 +99,7 @@ public class MisuraAlternativaDAO extends TableDAO {
 		setField("FL_FORMA_MISURA", BIG_DECIMAL);
 		setField("DESCRIZIONE_COMUNITA", STRING);
 
-		// MEV_9
+		// MEV_2019-09
 		setField("DATA_ESECUTIVITA", DATE);
 	}
 
@@ -342,7 +342,7 @@ public class MisuraAlternativaDAO extends TableDAO {
 		return getString("DESCRIZIONE_COMUNITA");
 	}
 
-	// MEV_9
+	// MEV_2019-09
 	public Date getDataEsecutivita() throws DAOException {
 		return getDate("DATA_ESECUTIVITA");
 	}
@@ -586,7 +586,7 @@ public class MisuraAlternativaDAO extends TableDAO {
 		setString("DESCRIZIONE_COMUNITA", aValore);
 	}
 
-	// MEV_9
+	// MEV_2019-09
 	public void setDataEsecutivita(Date aValore) {
 		setDate("DATA_ESECUTIVITA", aValore);
 	}
@@ -612,7 +612,7 @@ public class MisuraAlternativaDAO extends TableDAO {
 				getChiaveProgrFascicoloSiusMaAt(), getChiaveUfficioFascicoloSiusMaAt(), "",
 				getAnnoRegistroMaAt(), getNumeroRegistroMaAt(), getFlFormaMisura(),
 				getDescrizioneComunita(),
-				// MEV_9
+				// MEV_2019-09
 				getDataEsecutivita());
 	}
 
@@ -677,7 +677,7 @@ public class MisuraAlternativaDAO extends TableDAO {
 		setNumeroRegistroMaAt(aModel.getNumeroRegistroMaAt());
 		setFlFormaMisura(aModel.getFlFormaMisura());
 		setDescrizioneComunita(aModel.getDescrizioneComunita());
-		// MEV_9
+		// MEV_2019-09
 		setDataEsecutivita(aModel.getDataEsecutivita());
 	}
 
@@ -738,7 +738,7 @@ public class MisuraAlternativaDAO extends TableDAO {
 		setChiaveUfficioFascicoloSiusMaAt(aModel.getChiaveUfficioFascicoloSiusMaAt());
 		setAnnoRegistroMaAt(aModel.getAnnoRegistroMaAt());
 		setNumeroRegistroMaAt(aModel.getNumeroRegistroMaAt());
-		// MEV_9
+		// MEV_2019-09
 		setDataEsecutivita(aModel.getDataEsecutivita());
 	}
 

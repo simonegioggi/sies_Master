@@ -39,12 +39,12 @@ public class ActLoadInserisciMAAffidamentoInProva extends ActConcessione {
 
 		// setto il campo codice motivo
 		Option lOption = null;
-		// MEV_9-SIEP: si differenzia per PM e PMM
+		// MEV_2019-09-SIEP: si differenzia per PM e PMM
 		if (isUfficioMinorenni())
 			lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoMAffPMinor());
 		else
 			lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoMAffP());
-		// FINE MEV_9-SIEP
+		// FINE MEV_2019-09-SIEP
 		setRequestAttribute("motivoProvv", "" + lOption);
 
 		setRequestAttribute("tipoMisura", "AFFIDAMENTO");
@@ -65,7 +65,7 @@ public class ActLoadInserisciMAAffidamentoInProva extends ActConcessione {
 		// since marzo 2015 MEV29. Prima cercava solo l'affidamento provvisorio
 		// ==========================================================================
 
-		// MEV_9-SIEP: aggiunta nuova gestione per modifica
+		// MEV_2019-09-SIEP: aggiunta nuova gestione per modifica
 		IEvento ie = SICOLookupRemote.getEventoRemote();
 		EventoModel lEve = null;
 		String tipoOperazione = "";
@@ -115,7 +115,7 @@ public class ActLoadInserisciMAAffidamentoInProva extends ActConcessione {
 			// setta la risposta della ricerca nella request
 			setRequestAttribute("maammissioneprovvisoria", mam);
 
-			// MEV_9-SIEP: aggiunta impostazione per il campo codice motivo
+			// MEV_2019-09-SIEP: aggiunta impostazione per il campo codice motivo
 			if (!Utils.isNullObj(mam)) {
 				lOption.setSelected(mam.getCodTipoMisura());
 				setRequestAttribute("motivoProvv", "" + lOption);

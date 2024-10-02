@@ -80,7 +80,7 @@ public class ActLoadInserisciMAAmmProvDetDom extends ActAmmissioneProvvisoria {
 			}
 		}
 
-		// MEV_9 si aggiunge la possibilita' di modificare i dati
+		// MEV_2019-09 si aggiunge la possibilita' di modificare i dati
 		String tipoOperazione = "INSERIMENTO";
 		if (!isRequestParameterNullObj("tipoOperazione"))
 			tipoOperazione = getRequestStringParameter("tipoOperazione");
@@ -165,7 +165,7 @@ public class ActLoadInserisciMAAmmProvDetDom extends ActAmmissioneProvvisoria {
 			EventoModel lEveVer = new EventoModel();
 			IEventoSimeone lCtrlEven = SICOLookupRemote.getEventoSimeoneRemote();
 			lEveVer = lCtrlEven.ExRicercaEventoByEveIdEventoTipoProvCodMotivo(
-					lMisAlModToChange.getEveIdEvento(), "07", "18", "0314", "S"); // MEV_9 mi interessano i
+					lMisAlModToChange.getEveIdEvento(), "07", "18", "0314", "S"); // MEV_2019-09 mi interessano i
 																					// validati!!!
 
 			IVerbale lCtrlVe = SIEPLookupRemote.getVerbaleRemote();
@@ -178,7 +178,7 @@ public class ActLoadInserisciMAAmmProvDetDom extends ActAmmissioneProvvisoria {
 			}
 		}
 		// =======================================================================================
-		// MEV_9 - FINE
+		// MEV_2019-09 - FINE
 
 		// Controllo esistenza almeno un avvocato per fascicolo.
 		IAvvocato lAvv = SIEPLookupRemote.getAvvocatoRemote();
@@ -202,18 +202,18 @@ public class ActLoadInserisciMAAmmProvDetDom extends ActAmmissioneProvvisoria {
 
 		// Autorità esterna E
 		Option lOptionAutoritaE = new Option(DecodificheManager.getInstance().getTipoAutorita());
-		// MEV_9 in caso di modifica preselezione l'autorità esterrna
+		// MEV_2019-09 in caso di modifica preselezione l'autorità esterrna
 		if (lAutEsternaE != null) {
 			lOptionAutoritaE.setSelected(lAutEsternaE.getCodTipoAutorita());
 			setRequestAttribute("autoritaEsternaE", lAutEsternaE);
 		}
 		setRequestAttribute("codiceAutoritaE", "" + lOptionAutoritaE);
 
-		// MEV_9 x modifica
+		// MEV_2019-09 x modifica
 		if (lCssa != null)
 			setRequestAttribute("daticssa", lCssa);
 
-		// MEV_9 si precarca eventualmente in caso di modifica il tipo uff SORV nella combo
+		// MEV_2019-09 si precarca eventualmente in caso di modifica il tipo uff SORV nella combo
 		Option lOptionUffSIUS = new Option(DecodificheManager.getInstance().getTipoUfficioSIUS());
 		if (lUffEmittente != null)
 			lOptionUffSIUS.setSelected(lUffEmittente.getCodTipoUfficio());
@@ -222,7 +222,7 @@ public class ActLoadInserisciMAAmmProvDetDom extends ActAmmissioneProvvisoria {
 		lOptionUffSIUS.setAddBlankItem(Option.BLANK_ITEM);
 		setRequestAttribute("comboTipoUfficioSIUS", "" + lOptionUffSIUS);
 
-		// MEV_9 - Si caricano i dati per la combo decreto/ordinaza
+		// MEV_2019-09 - Si caricano i dati per la combo decreto/ordinaza
 		Vector<DecodificheModel> lTipoProvvSorv = new Vector<>();
 		lTipoProvvSorv.add(new DecodificheModel("-", "-", "", "", "", "", "", "", ""));
 		lTipoProvvSorv.add(new DecodificheModel("02", "Decreto", "", "", "", "", "", "", ""));
@@ -233,10 +233,10 @@ public class ActLoadInserisciMAAmmProvDetDom extends ActAmmissioneProvvisoria {
 		else
 			lOptionTipoProvvSorv.setSelected("-");
 		setRequestAttribute("comboTipoProvvSorv", "" + lOptionTipoProvvSorv);
-		// MEV_9 - FINE
+		// MEV_2019-09 - FINE
 
 		// setto il campo codice motivo
-		// MEV_9
+		// MEV_2019-09
 		// Option lOption = new
 		// Option(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvDetDom());
 		/*
@@ -244,7 +244,7 @@ public class ActLoadInserisciMAAmmProvDetDom extends ActAmmissioneProvvisoria {
 		 * Option(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvDetDomPmm()); else lOption =
 		 * new Option(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvDetDom());
 		 */
-		// MEV_9 - FINE
+		// MEV_2019-09 - FINE
 
 		Collection lMotiviColl = null;
 		if (isUfficioMinorenni())
