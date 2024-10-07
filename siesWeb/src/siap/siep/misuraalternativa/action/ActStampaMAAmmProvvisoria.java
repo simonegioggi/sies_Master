@@ -2,6 +2,7 @@ package siap.siep.misuraalternativa.action;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
+import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
@@ -113,7 +114,7 @@ public class ActStampaMAAmmProvvisoria extends ActionSiap implements ICostantiMi
 							|| lPosizioneGiu.equals("44"))
 						flagTemplate = "6"; // Detenzione Domiciliari (anche provvisoria 51bis)
 					else if (lPosizioneGiu.equals("54"))
-						// 54 - In Ammissione Provvisoria ovvero dopo la registrazione del verbale inizio
+						// 54 - In Ammissione Provvisoria ovvero dopo la registrazione del le inizio
 						// misura
 						// Sto stampando la 'Comunicazione' decorrenza/scadenza
 						flagTemplate = "0";
@@ -143,7 +144,42 @@ public class ActStampaMAAmmProvvisoria extends ActionSiap implements ICostantiMi
 					|| lEventoModel.getCodMotivo().equals("5426")) {
 				flagTemplate = "4";
 			}
-			else if (lEventoModel.getCodMotivo().equals("1400") || lEventoModel.getCodMotivo().equals("1401")
+//			else if (lEventoModel.getCodMotivo().equals("1400") || lEventoModel.getCodMotivo().equals("1401")
+//					|| lEventoModel.getCodMotivo().equals("1410")
+//					|| lEventoModel.getCodMotivo().equals("1411")
+//					|| lEventoModel.getCodMotivo().equals("1412")) {
+//				if (lEventoModel.getCodTipoProvvedimento().equals("12"))
+//					flagTemplate = "0";
+//				else
+//					flagTemplate = "5";
+//			}
+			// 2024.10.07 - Affidamento
+			else if (   lEventoModel.getCodMotivo().equals("1400") 
+					     || lEventoModel.getCodMotivo().equals("1401")
+					    )
+			{
+			  //
+				if (lEventoModel.getCodTipoProvvedimento().equals("12")){
+					// Libero esegue PROC dopo Verbale o Detenuto esegue SORV
+					// Per entrambi viene emesso 12-1400/1401 ma i template 
+					// da stampare sono differenti
+					if (lflagScarcerato.equals("SORV"))
+						flagTemplate = "1";
+					else
+						flagTemplate = "0";
+				}
+				else if (lEventoModel.getCodTipoProvvedimento().equals("04")){
+					// Libero esegue Sorv
+					flagTemplate = "5";
+				}
+				else if (lEventoModel.getCodTipoProvvedimento().equals("09")){
+					// detenuto esegue procura
+					flagTemplate = "1";
+				}
+			}
+		  // 2024.10.07 - FINE
+			else if (lEventoModel.getCodMotivo().equals("1400") 
+					|| lEventoModel.getCodMotivo().equals("1401")
 					|| lEventoModel.getCodMotivo().equals("1410")
 					|| lEventoModel.getCodMotivo().equals("1411")
 					|| lEventoModel.getCodMotivo().equals("1412")) {
@@ -151,7 +187,7 @@ public class ActStampaMAAmmProvvisoria extends ActionSiap implements ICostantiMi
 					flagTemplate = "0";
 				else
 					flagTemplate = "5";
-			}
+			}			 
 		  // MEV_9-SIEP - FINE
 			else if (lEventoModel.getCodMotivo().equals("2006")) { // Vecchia gestione per il codice 2006
 																		// affidamento Terapeutico
@@ -190,7 +226,39 @@ public class ActStampaMAAmmProvvisoria extends ActionSiap implements ICostantiMi
 		} else if (lTipoMisura.equals("DETENZIONE")) {
 		  // MEV_9-SIEP si aggiungono gli ulteriori codici
 			if (lEventoModel.getCodMotivo().equals("1402") || lEventoModel.getCodMotivo().equals("1413")) {
-				if (lflagScarcerato.equals("PROC"))
+				// 2024.10.07 "Libero esegue PROC dopo verbale" e "Detenuto esegue PROC"
+				// hanno lo stesso evento 09-1402 ma stampe differenti (flag_template)
+				// Devo vedere se esiste il verbale per capire se mi trovo nel primo caso
+				IEvento lCtrlEven = SICOLookupRemote.getEventoRemote();
+				EventoModel lEveRicerca = new EventoModel();
+				lEveRicerca.setFasSieIdFascicoloSiep(lEventoModel.getFasSieIdFascicoloSiep());
+				lEveRicerca.setEveIdEvento(lEventoModel.getEveIdEvento());
+				// Recupero gli eventi collegati all'ordinanza
+				Vector<EventoModel> lListEventi = lCtrlEven.ExRicercaEvento(lEveRicerca);
+				boolean isVerbale = false;
+				for (EventoModel lEveCollegato : lListEventi ){
+					if ("18".equals(lEveCollegato.getCodTipoProvvedimento())){
+						// 18 = verbale
+						isVerbale = true;
+						break;
+					}
+				}
+				
+				// 2024.10.07 solo per 1402 si modifica la logica
+				if (lEventoModel.getCodMotivo().equals("1402")){
+					if (lflagScarcerato.equals("PROC") && isVerbale)
+						flagTemplate = "3";
+					else if (lflagScarcerato.equals("PROC") && !isVerbale)
+						flagTemplate = "0";
+					else if (lflagScarcerato.equals("SORV") 
+							&& lEventoModel.getCodTipoProvvedimento().equals("04"))
+						flagTemplate = "5";
+					else if (lflagScarcerato.equals("SORV") 
+							&& lEventoModel.getCodTipoProvvedimento().equals("12"))
+						flagTemplate = "1";						
+				}
+				// 2024.10.07 - FINE
+				else if (lflagScarcerato.equals("PROC") )
 					flagTemplate = "3";
 				else if (lflagScarcerato.equals("SORV"))
 					flagTemplate = "5";
