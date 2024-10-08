@@ -161,7 +161,7 @@ public class ActStampaMAAmmProvvisoria extends ActionSiap implements ICostantiMi
 					// Per entrambi viene emesso 12-1400/1401 ma i template
 					// da stampare sono differenti
 					if (lflagScarcerato.equals("SORV"))
-						flagTemplate = "1";
+						flagTemplate = "3"; // 2024.10.07: era "1"
 					else
 						flagTemplate = "0";
 				} else if (lEventoModel.getCodTipoProvvedimento().equals("04")) {
