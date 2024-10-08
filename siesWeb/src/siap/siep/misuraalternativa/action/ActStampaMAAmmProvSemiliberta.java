@@ -117,31 +117,24 @@ public class ActStampaMAAmmProvSemiliberta extends ActConcessione implements ICo
 		} else {
 			// per tutti gli altri codici vale solo chi esegue
 			// 07.10.2024
-			if (   lflagScarcerato.equals("PROC")   
-					&& lEventoModel.getCodMotivo().equals("1403")
-					&& lEventoModel.getCodTipoProvvedimento().equals("12")
-				 )
-			{ // Esegue procura  Detenuto (12) 
+			if (lflagScarcerato.equals("PROC") && lEventoModel.getCodMotivo().equals("1403")
+					&& lEventoModel.getCodTipoProvvedimento().equals("12")) { // Esegue procura Detenuto (12)
 				flagTemplate = "2";
-			}
-			else if (   lflagScarcerato.equals("SORV")   
-					&& lEventoModel.getCodMotivo().equals("1403")
-					&& lEventoModel.getCodTipoProvvedimento().equals("04")
-					&& !lPosGiu.isLibero()
-				 )
-			{ // Esegue Sorv Detenuto (nb. det e lib hanno lo  stesso evento 04-1403
+			} else if (lflagScarcerato.equals("SORV") && lEventoModel.getCodMotivo().equals("1403")
+					&& lEventoModel.getCodTipoProvvedimento().equals("04") && !lPosGiu.isLibero()) {
+				// Esegue Sorv Detenuto (nb. det e lib hanno lo stesso evento 04-1403
 				flagTemplate = "4";
 			}
-		  // 07.10.2024 FINE
+			// 07.10.2024 FINE
 			else if (lflagScarcerato.equals("PROC"))
 				flagTemplate = "0";
 			else if (lflagScarcerato.equals("SORV"))
 				flagTemplate = "1";
 		}
-		
-		siesLogger.debug("flagTemplate = " + flagTemplate);		
+
+		siesLogger.debug("flagTemplate = " + flagTemplate);
 		siesLogger.debug("lMotivo = " + lEventoModel.getCodMotivo());
-		
+
 		if (flagTemplate != null && lEventoModel.getCodMotivo() != null
 				&& !lEventoModel.getCodMotivo().equals("0000")) {
 			ITemplate lCtrlTem = SICOLookupRemote.getTemplateRemote();
@@ -162,4 +155,5 @@ public class ActStampaMAAmmProvSemiliberta extends ActConcessione implements ICo
 
 		return IWebConstants.PG_DOWNLOAD;
 	}
+
 }
