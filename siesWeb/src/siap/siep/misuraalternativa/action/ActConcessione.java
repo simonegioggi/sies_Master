@@ -706,6 +706,8 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 			lEve.getEvento().setCodMotivo(aMotivo);
 		else if ("0694".equals(aMotivo))
 			lEve.getEvento().setCodMotivo(aMotivo);
+		else if ("0004".equals(aMotivo)) // semiliberta'
+			lEve.getEvento().setCodMotivo(aMotivo);
 
 		// aggiunto controllo per codici tipo misura
 		if ("0723".equals(aMotivo) || "0734".equals(aMotivo))
