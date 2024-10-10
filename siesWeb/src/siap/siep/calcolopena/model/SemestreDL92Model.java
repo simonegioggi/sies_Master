@@ -18,11 +18,12 @@ public class SemestreDL92Model extends GenericModel {
 	
 	// SemestriDL92Model: {progressivo, ResiduoAA, ResiduoMM, ResiduoGG, LAApplicata, DataMaturazioneLA, DataScadenzaPena}
 	private BigDecimal mProgressivo; // Progressivo semestre
-	
+	private BigDecimal mNumSemestriMaturati; // default 1 tranne per il record del presofferto
 	private BigDecimal mResiduoNumAnni;
 	private BigDecimal mResiduoNumMesi;
 	private BigDecimal mResiduoNumGiorni;
 	private BigDecimal mLAApplicate;
+	private String mIsPresofferto; // indica se il record si riferisce al presofferto
 	
 	private Date mDataMaturazioneLA;
 	private Date mNuovaDataScadenzaPena; // Fine pena rideterminato avendo applicato i gg di LA
@@ -39,6 +40,8 @@ public class SemestreDL92Model extends GenericModel {
   public Date       getDataMaturazioneLA()        { return mDataMaturazioneLA;  }
   public Date       getNuovaDataScadenzaPena()    { return mNuovaDataScadenzaPena;  }
   public BigDecimal getGiorniResiduiPresofferto() { return mGiorniResiduiPresofferto;  }
+  public BigDecimal getNumSemestriMaturati()      { return mNumSemestriMaturati;  }
+  public String     getIsPresofferto()            { return mIsPresofferto;  }
   
   
   // Metodi Setter
@@ -50,5 +53,7 @@ public class SemestreDL92Model extends GenericModel {
   public void setDataMaturazioneLA        (Date mDataMaturazioneLA)     { this.mDataMaturazioneLA = mDataMaturazioneLA; }
   public void setNuovaDataScadenzaPena    (Date mNuovaDataScadenzaPena) { this.mNuovaDataScadenzaPena = mNuovaDataScadenzaPena; }
   public void setGiorniResiduiPresofferto (BigDecimal mGiorniResiduiPresofferto) { this.mGiorniResiduiPresofferto = mGiorniResiduiPresofferto; }
-	
+  public void setNumSemestriMaturati      (BigDecimal mNumSemestriMaturati)  { this.mNumSemestriMaturati = mNumSemestriMaturati; }
+  public void setIsPresofferto            (String mIsPresofferto)            { this.mIsPresofferto = mIsPresofferto; }
+  
 }

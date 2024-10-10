@@ -65,7 +65,7 @@ totMCComputabili = lCalcoloPenaMod.getMisureCautelariReclusioneInSentenza();
   
   <script language="JavaScript">
     function Verify()
-    {
+    {      
       // Verifica la correttezza della data di decorrenza
       if (document.CalcoloPenaDL92.PosizioneGiuridica[1].checked) {
         if (document.CalcoloPenaDL92.<%=ICostantiPenaResidua.CAMPO_GIORNO_DATA_DECORRENZA_PENA%>.value.length<2 && document.CalcoloPenaDL92.<%=ICostantiPenaResidua.CAMPO_GIORNO_DATA_DECORRENZA_PENA%>.value.length!=0)
@@ -96,8 +96,31 @@ totMCComputabili = lCalcoloPenaMod.getMisureCautelariReclusioneInSentenza();
     }
     
     function pulisciMaschera(){
-      document.CalcoloPenaDL92.<%=IWebConstants.ACTION_FIELD%>.value="siap.siep.calcolopena.action.ActLoadCalcoloPenaDL92";
-      document.CalcoloPenaDL92.submit();
+        document.CalcoloPenaDL92.<%=ICostantiPenaComplessiva.CAMPO_NUM_ANNI_RECLUSIONE%>.value = '';
+        document.CalcoloPenaDL92.<%=ICostantiPenaComplessiva.CAMPO_NUM_MESI_RECLUSIONE%>.value = '';
+        document.CalcoloPenaDL92.<%=ICostantiPenaComplessiva.CAMPO_NUM_GIORNI_RECLUSIONE%>.value = '';
+
+        document.CalcoloPenaDL92.<%=ICostantiPenaComplessiva.CAMPO_INTERO_IMPORTO_MULTA%>.value = '';
+        document.CalcoloPenaDL92.<%=ICostantiPenaComplessiva.CAMPO_DECIMALE_IMPORTO_MULTA%>.value = '';
+
+        document.CalcoloPenaDL92.<%=ICostantiPenaComplessiva.CAMPO_NUM_ANNI_ARRESTO%>.value = '';
+        document.CalcoloPenaDL92.<%=ICostantiPenaComplessiva.CAMPO_NUM_MESI_ARRESTO%>.value = '';
+        document.CalcoloPenaDL92.<%=ICostantiPenaComplessiva.CAMPO_NUM_GIORNI_ARRESTO%>.value = '';
+
+        document.CalcoloPenaDL92.<%=ICostantiPenaComplessiva.CAMPO_INTERO_IMPORTO_AMMENDA%>.value = '';
+        document.CalcoloPenaDL92.<%=ICostantiPenaComplessiva.CAMPO_DECIMALE_IMPORTO_AMMENDA%>.value = '';
+
+        document.CalcoloPenaDL92.<%=ICostantiCalcoloPena.CAMPO_NUM_ANNI_PRESOFFERTO%>.value = '';
+        document.CalcoloPenaDL92.<%=ICostantiCalcoloPena.CAMPO_NUM_MESI_PRESOFFERTO%>.value = '';
+        document.CalcoloPenaDL92.<%=ICostantiCalcoloPena.CAMPO_NUM_GIORNI_PRESOFFERTO%>.value = '';
+        
+        document.CalcoloPenaDL92.PosizioneGiuridica[0].checked = true;
+
+        document.CalcoloPenaDL92.<%=ICostantiPenaResidua.CAMPO_GIORNO_DATA_DECORRENZA_PENA%>.value = '';
+        document.CalcoloPenaDL92.<%=ICostantiPenaResidua.CAMPO_MESE_DATA_DECORRENZA_PENA%>.value = ''; 
+        document.CalcoloPenaDL92.<%=ICostantiPenaResidua.CAMPO_ANNO_DATA_DECORRENZA_PENA%> .value = '';    
+        
+        radio();
     }
     
     function inizializza(){
@@ -120,6 +143,29 @@ totMCComputabili = lCalcoloPenaMod.getMisureCautelariReclusioneInSentenza();
         document.CalcoloPenaDL92.<%=ICostantiPenaResidua.CAMPO_ANNO_DATA_DECORRENZA_PENA%>.disabled = false;
       }
     }
+    
+    function calcolaDL92() {    	
+    	document.CalcoloPenaDL92.tipoOutput.value = "dettaglio";
+    }
+    
+    function stampaSiep()
+    {
+	  if (Verify()) {
+        document.CalcoloPenaDL92.tipoOutput.value = "stampaTemplate";
+        document.CalcoloPenaDL92.submit();
+        document.CalcoloPenaDL92.tipoOutput.value = "dettaglio";
+      }
+    }
+    
+    function stampaSiepXls()
+    {
+      if (Verify()) {
+        document.CalcoloPenaDL92.tipoOutput.value = "stampaExcel";
+        document.CalcoloPenaDL92.submit();
+        document.CalcoloPenaDL92.tipoOutput.value = "dettaglio";
+      }
+    }  
+    
   </script>
 </head>
 
@@ -130,6 +176,17 @@ totMCComputabili = lCalcoloPenaMod.getMisureCautelariReclusioneInSentenza();
         <font class="label">Funzione :</font>&nbsp;&nbsp;
         <font class="campo">Calcolo pena ipotetica con detrazioni DL. 92/2024</font>
       </td>
+      <!-- BOTTONE DI STAMPA -->
+      <td class="LBG">
+        <a href="Javascript:stampaSiep()" >
+          <img  align="middle" src="/images/print24.gif" alt="Generazione Stampa" width="24" height="24" border="0">
+        </a>
+      </td> 
+      <td class="LBG">
+        <a href="Javascript:stampaSiepXls()" >
+          <img  align="middle" src="/images/xls.jpg" alt="Generazione Stampa" width="24" height="24" border="0">
+        </a>
+      </td>        
       <td class="LBG">
         <a href="Javascript:history.go(-1);">
           <img align="middle" src="<%=IWebConstants.IMAGES_DIR%>arrowleft24.gif" alt="ritorna su" width="24" height="24" border="0">
@@ -151,6 +208,8 @@ totMCComputabili = lCalcoloPenaMod.getMisureCautelariReclusioneInSentenza();
   <!-- ===================================================================== -->
   <form method="POST" action="/jsp/Main.jsp" name="CalcoloPenaDL92">
     <input type="hidden" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.calcolopena.action.ActCalcoloPenaDL92">
+    <input type="hidden" name="tipoOutput" value="dettaglio">
+    
     
     <table cellspacing="4" cellpadding="4">
       <tr>
@@ -181,7 +240,7 @@ totMCComputabili = lCalcoloPenaMod.getMisureCautelariReclusioneInSentenza();
           ,
           <input Title="Multa" size="2" maxlength="2" value="<%=StringUtils.getParteDecimale (lPenaDaEspiare.getImportoMulta())%>" type="text" name="<%=ICostantiPenaComplessiva.CAMPO_DECIMALE_IMPORTO_MULTA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
           <% } else { %>
-          <input Title="Multa" size="14" maxlength="14" value="" type="text" name="<%=ICostantiPenaComplessiva.CAMPO_INTERO_IMPORTO_MULTA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
+          <input Title="Multa" size="14" maxlength="14" value="" type="text" style="text-align: right;" name="<%=ICostantiPenaComplessiva.CAMPO_INTERO_IMPORTO_MULTA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
           ,
           <input Title="Multa" size="2" maxlength="2" value="" type="text" name="<%=ICostantiPenaComplessiva.CAMPO_DECIMALE_IMPORTO_MULTA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
           <% } %>
@@ -210,7 +269,7 @@ totMCComputabili = lCalcoloPenaMod.getMisureCautelariReclusioneInSentenza();
           ,
           <input Title="Ammenda" size="2" maxlength="2" value="<%=StringUtils.getParteDecimale (lPenaDaEspiare.getImportoAmmenda())%>" type="text" name="<%=ICostantiPenaComplessiva.CAMPO_DECIMALE_IMPORTO_AMMENDA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
           <% } else { %>
-          <input Title="Ammenda" size="14" maxlength="14" value="" type="text" name="<%=ICostantiPenaComplessiva.CAMPO_INTERO_IMPORTO_AMMENDA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
+          <input Title="Ammenda" size="14" maxlength="14" value="" type="text" style="text-align: right;" name="<%=ICostantiPenaComplessiva.CAMPO_INTERO_IMPORTO_AMMENDA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
           ,
           <input Title="Ammenda" size="2" maxlength="2" value="" type="text" name="<%=ICostantiPenaComplessiva.CAMPO_DECIMALE_IMPORTO_AMMENDA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
           <% } %>
@@ -223,13 +282,13 @@ totMCComputabili = lCalcoloPenaMod.getMisureCautelariReclusioneInSentenza();
         <td class="l">Presofferto</td>
         <td class="l">
           <% if ( !totMCComputabili.isQuantumZero() ) { %>
-            Anni&nbsp;  <input Title="Anni Arresto"   value="<%= totMCComputabili.getNumAnni()  %>" type="text" name="<%=ICostantiCalcoloPena.CAMPO_NUM_ANNI_PRESOFFERTO%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
-            Mesi&nbsp;  <input Title="Mesi Arresto"   value="<%= totMCComputabili.getNumMesi()  %>" type="text" name="<%=ICostantiCalcoloPena.CAMPO_NUM_MESI_PRESOFFERTO%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
-            Giorni&nbsp;<input Title="Giorni Arresto" value="<%= totMCComputabili.getNumGiorni()%>" type="text" name="<%=ICostantiCalcoloPena.CAMPO_NUM_GIORNI_PRESOFFERTO%>" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
+            Anni&nbsp;  <input Title="Anni Presofferto"   value="<%= totMCComputabili.getNumAnni()  %>" type="text" name="<%=ICostantiCalcoloPena.CAMPO_NUM_ANNI_PRESOFFERTO%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
+            Mesi&nbsp;  <input Title="Mesi Presofferto"   value="<%= totMCComputabili.getNumMesi()  %>" type="text" name="<%=ICostantiCalcoloPena.CAMPO_NUM_MESI_PRESOFFERTO%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
+            Giorni&nbsp;<input Title="Giorni Presofferto" value="<%= totMCComputabili.getNumGiorni()%>" type="text" name="<%=ICostantiCalcoloPena.CAMPO_NUM_GIORNI_PRESOFFERTO%>" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
           <% } else { %>
-            Anni&nbsp;  <input Title="Anni Arresto"   value="" type="text" name="<%=ICostantiCalcoloPena.CAMPO_NUM_ANNI_PRESOFFERTO%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
-            Mesi&nbsp;  <input Title="Mesi Arresto"   value="" type="text" name="<%=ICostantiCalcoloPena.CAMPO_NUM_MESI_PRESOFFERTO%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
-            Giorni&nbsp;<input Title="Giorni Arresto" value="" type="text" name="<%=ICostantiCalcoloPena.CAMPO_NUM_GIORNI_PRESOFFERTO%>" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
+            Anni&nbsp;  <input Title="Anni Presofferto"   value="" type="text" name="<%=ICostantiCalcoloPena.CAMPO_NUM_ANNI_PRESOFFERTO%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
+            Mesi&nbsp;  <input Title="Mesi Presofferto"   value="" type="text" name="<%=ICostantiCalcoloPena.CAMPO_NUM_MESI_PRESOFFERTO%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
+            Giorni&nbsp;<input Title="Giorni Presofferto" value="" type="text" name="<%=ICostantiCalcoloPena.CAMPO_NUM_GIORNI_PRESOFFERTO%>" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
           <% } %>
         </td>
         <td class="l" colspan="2">&nbsp;</td>
@@ -271,7 +330,7 @@ totMCComputabili = lCalcoloPenaMod.getMisureCautelariReclusioneInSentenza();
       <tr>
         <td colspan="3">
           <input class="bottone" type="submit" name="INSERISCI" value="Conferma"
-               onClick1="javascript:Verify_Dati();">
+               onClick="javascript:calcolaDL92();">
           &nbsp;
           <input class="bottone" type="button" name="PULISCI" value="Pulisci Dati" 
                  title="Pulisce i dati in maschera per un nuovo calcolo" 

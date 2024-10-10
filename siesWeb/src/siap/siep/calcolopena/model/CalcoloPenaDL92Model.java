@@ -32,10 +32,12 @@ public class CalcoloPenaDL92Model extends GenericModel {
 	private BigDecimal mNumAnniReclusione;
 	private BigDecimal mNumMesiReclusione;
 	private BigDecimal mNumGiorniReclusione;
+	private BigDecimal mImportoMulta;
 	
 	private BigDecimal mNumAnniArresto;
 	private BigDecimal mNumMesiArresto;
 	private BigDecimal mNumGiorniArresto;
+	private BigDecimal mImportoAmmenda;
 
 	private BigDecimal mNumAnniPresofferto;
 	private BigDecimal mNumMesiPresofferto;
@@ -72,9 +74,12 @@ public class CalcoloPenaDL92Model extends GenericModel {
   public BigDecimal getNumAnniReclusione()   { return mNumAnniReclusione;    }
   public BigDecimal getNumMesiReclusione()   { return mNumMesiReclusione;    }
   public BigDecimal getNumGiorniReclusione() { return mNumGiorniReclusione;  }
+  public BigDecimal getImportoMulta()        { return mImportoMulta;         }
+  
   public BigDecimal getNumAnniArresto()      { return mNumAnniArresto;       }
   public BigDecimal getNumMesiArresto()      { return mNumMesiArresto;       }
   public BigDecimal getNumGiorniArresto()    { return mNumGiorniArresto;     }
+	public BigDecimal getImportoAmmenda()      { return mImportoAmmenda;       }
   
   public BigDecimal getNumAnniPresofferto()   { return mNumAnniPresofferto; }
   public BigDecimal getNumMesiPresofferto()   { return mNumMesiPresofferto; }
@@ -105,6 +110,9 @@ public class CalcoloPenaDL92Model extends GenericModel {
   public void setNumGiorniReclusione(BigDecimal mNumGiorniReclusione) {
     this.mNumGiorniReclusione = mNumGiorniReclusione;
   }
+	public void setImportoMulta(BigDecimal aValore) {
+		mImportoMulta = aValore;
+	}
   public void setNumAnniArresto(BigDecimal mNumAnniArresto) {
     this.mNumAnniArresto = mNumAnniArresto;
   }
@@ -114,6 +122,9 @@ public class CalcoloPenaDL92Model extends GenericModel {
   public void setNumGiorniArresto(BigDecimal mNumGiorniArresto) {
     this.mNumGiorniArresto = mNumGiorniArresto;
   }
+	public void setImportoAmmenda(BigDecimal aValore) {
+		mImportoAmmenda = aValore;
+	}
     
   public void setNumAnniPresofferto(BigDecimal mNumAnniPresofferto) {
     this.mNumAnniPresofferto = mNumAnniPresofferto;
@@ -202,6 +213,8 @@ public class CalcoloPenaDL92Model extends GenericModel {
 		// Il presofferto posso calcolarlo fuori ciclo sia per Detenuto che libero
 		int lGiorniResiduiPresofferto = 0;
 		mSemestrePresofferto = new SemestreDL92Model ();
+		mSemestrePresofferto.setIsPresofferto("S");
+		mSemestrePresofferto.setProgressivo(new BigDecimal(0));
 		if (!lCalUtil.isZero(lCalModPresofferto)) {
 			// Devo calcolare i semetri Utili, e le LA totali
 			siesLogger.debug("Calcolo Semestri utili Presofferto e LA maturate");	
@@ -225,7 +238,7 @@ public class CalcoloPenaDL92Model extends GenericModel {
 			siesLogger.debug("Giorni residui presofferto = "+lGiorniResiduiPresofferto);
 			
 			
-			mSemestrePresofferto.setProgressivo      (new BigDecimal(lSemestriUtiliPresofferto));
+			mSemestrePresofferto.setNumSemestriMaturati(new BigDecimal(lSemestriUtiliPresofferto));			
 			mSemestrePresofferto.setLAApplicate      (new BigDecimal(lTotLAPresofferto));
 			mSemestrePresofferto.setResiduoNumAnni   (new BigDecimal (lCalModTot.getNumAnni()));
 			mSemestrePresofferto.setResiduoNumMesi   (new BigDecimal (lCalModTot.getNumMesi()));
@@ -233,7 +246,7 @@ public class CalcoloPenaDL92Model extends GenericModel {
 			mSemestrePresofferto.setGiorniResiduiPresofferto(new BigDecimal (lGiorniResiduiPresofferto));
 		}
 		else {
-			mSemestrePresofferto.setProgressivo      (new BigDecimal (0));
+			mSemestrePresofferto.setNumSemestriMaturati (new BigDecimal (0));
 			mSemestrePresofferto.setLAApplicate      (new BigDecimal (0));
 			mSemestrePresofferto.setResiduoNumAnni   (new BigDecimal (lCalModTot.getNumAnni()));
 			mSemestrePresofferto.setResiduoNumMesi   (new BigDecimal (lCalModTot.getNumMesi()));
@@ -290,11 +303,12 @@ public class CalcoloPenaDL92Model extends GenericModel {
   			
   			lProgSemestre++;
 				SemestreDL92Model lSemetreUtile = new SemestreDL92Model();
-				lSemetreUtile.setProgressivo      (new BigDecimal (lProgSemestre));
-				lSemetreUtile.setResiduoNumAnni   (new BigDecimal (lCalModTot.getNumAnni()));
-				lSemetreUtile.setResiduoNumMesi   (new BigDecimal (lCalModTot.getNumMesi()));
-				lSemetreUtile.setResiduoNumGiorni (new BigDecimal (lCalModTot.getNumGiorni()));
-				lSemetreUtile.setLAApplicate      (lLaApplicate);
+				lSemetreUtile.setProgressivo         (new BigDecimal (lProgSemestre));
+				lSemetreUtile.setNumSemestriMaturati (new BigDecimal (1));
+				lSemetreUtile.setResiduoNumAnni      (new BigDecimal (lCalModTot.getNumAnni()));
+				lSemetreUtile.setResiduoNumMesi      (new BigDecimal (lCalModTot.getNumMesi()));
+				lSemetreUtile.setResiduoNumGiorni    (new BigDecimal (lCalModTot.getNumGiorni()));
+				lSemetreUtile.setLAApplicate         (lLaApplicate);
 				
 				mListaSemetri.add(lSemetreUtile);
   		}
@@ -403,11 +417,12 @@ public class CalcoloPenaDL92Model extends GenericModel {
   			// Aggiungo il semestre
   			lProgSemestre++;
 				SemestreDL92Model lSemetreUtile = new SemestreDL92Model();
-				lSemetreUtile.setProgressivo      (new BigDecimal (lProgSemestre));
-				lSemetreUtile.setResiduoNumAnni   (new BigDecimal (lCalModTot.getNumAnni()));
-				lSemetreUtile.setResiduoNumMesi   (new BigDecimal (lCalModTot.getNumMesi()));
-				lSemetreUtile.setResiduoNumGiorni (new BigDecimal (lCalModTot.getNumGiorni()));
-				lSemetreUtile.setLAApplicate      (lLaApplicate);
+				lSemetreUtile.setProgressivo         (new BigDecimal (lProgSemestre));
+				lSemetreUtile.setNumSemestriMaturati (new BigDecimal (1));
+				lSemetreUtile.setResiduoNumAnni      (new BigDecimal (lCalModTot.getNumAnni()));
+				lSemetreUtile.setResiduoNumMesi      (new BigDecimal (lCalModTot.getNumMesi()));
+				lSemetreUtile.setResiduoNumGiorni    (new BigDecimal (lCalModTot.getNumGiorni()));
+				lSemetreUtile.setLAApplicate         (lLaApplicate);
 				
 				lSemetreUtile.setDataMaturazioneLA     (lDataMaturazioneSemestre);
 				lSemetreUtile.setNuovaDataScadenzaPena (lNuovaDataFinePena);				
@@ -420,8 +435,9 @@ public class CalcoloPenaDL92Model extends GenericModel {
     siesLogger.debug("Totale semestri calcolati: "+mListaSemetri.size());  
   }
   
+
   /**
-   * Somme reclusione earresti e restituisce un calenda con la pena totale
+   * Somma reclusione e arresti e restituisce un calendar con la pena totale
    * @return
    */
   public CalendarModel getTotaleDaEseguire () {
@@ -433,7 +449,7 @@ public class CalcoloPenaDL92Model extends GenericModel {
 		lCalModRec.setNumMesi   (this.mNumMesiReclusione);
 		lCalModRec.setNumGiorni (this.mNumGiorniReclusione);
 		
-		siesLogger.debug("Reclusione: "+lCalModRec);
+		//siesLogger.debug("Reclusione: "+lCalModRec);
 		
 	  // Arresti
 		CalendarModel lCalModArr = new CalendarModel();
@@ -441,14 +457,20 @@ public class CalcoloPenaDL92Model extends GenericModel {
 		lCalModArr.setNumMesi   (this.mNumMesiArresto);
 		lCalModArr.setNumGiorni (this.mNumGiorniArresto);
 		
-		siesLogger.debug("Arresto: "+lCalModArr);
+		//siesLogger.debug("Arresto: "+lCalModArr);
 		
 		
 		CalendarModel lCalModTot = new CalendarModel();
 		lCalModTot = lCalUtil.sommaGiornieValute(lCalModRec, lCalModArr);
-		siesLogger.debug("Totale: "+lCalModTot);
+		//siesLogger.debug("Totale: "+lCalModTot);
 		return lCalModTot;
   }
+  
+  
+  //===================================================================================
+  // Metodi get che calcolano i dati da visualizzare. 
+  // Comodi nel caso delle stampe per evitare di fare i calcoli nei template 
+  //===================================================================================
   
   /**
    * Ritorna il totale della LA maturate come prodotto del numero di semestri utili per 45gg
@@ -496,6 +518,58 @@ public class CalcoloPenaDL92Model extends GenericModel {
   }
   
   /**
+   * 
+   * @return
+   */
+  public BigDecimal getNumGiorniLAMaturataInPenaresidua () {
+
+  	int numGiorniLAMaturataInPenaresidua = this.getLAApplicate().intValue() - getSemestrePresofferto().getLAApplicate().intValue();
+  	
+  	return new BigDecimal(numGiorniLAMaturataInPenaresidua);
+  }
+  
+  public BigDecimal getSemestriUtili () {
+
+  	int semestriUtili = getListaSemetri().size();
+  	
+  	return new BigDecimal(semestriUtili);
+  }
+  
+  /**
+   * Ritorna il totale dei semestri utili, quelli del presofferto più quelli delle detentiva
+   * @return
+   */
+  public BigDecimal getSemestriUtiliPenaScontata () {
+  	
+  	int semestriUtili = this.getSemestrePresofferto().getNumSemestriMaturati().intValue()+this.getListaSemetri().size();
+  	
+  	return new BigDecimal(semestriUtili);
+  }
+  
+  
+  // Totale da espiare: Reclusione + arresto
+  public BigDecimal getNumAnniDaEspiare () {
+  	return new BigDecimal(this.getTotaleDaEseguire().getNumAnni());
+  }
+  public BigDecimal getNumMesiDaEspiare () {
+  	return new BigDecimal(this.getTotaleDaEseguire().getNumMesi());
+  }
+  public BigDecimal getNumGiorniDaEspiare () {
+  	return new BigDecimal(this.getTotaleDaEseguire().getNumGiorni());
+  }
+  
+  // Tena Ipotetica
+  public BigDecimal getNumAnniPenaIpotetica () {
+  	return new BigDecimal(this.getPenaIpotetica().getNumAnni());
+  }
+  public BigDecimal getNumMesiPenaIpotetica () {
+  	return new BigDecimal(this.getPenaIpotetica().getNumMesi());
+  }
+  public BigDecimal getNumGiorniPenaIpotetica () {
+  	return new BigDecimal(this.getPenaIpotetica().getNumGiorni());
+  }
+  
+  /**
    * Restituisce il calendar ottentuto dalla Pena al netto del presofferto alla quale vanno sotrratti i GG di LA applicati
    * @return
    */
@@ -513,7 +587,6 @@ public class CalcoloPenaDL92Model extends GenericModel {
   
   // Metodo per il dump del contenuto del model
 	public void stampaCalcolo() {
-		String str = "";
 		// Implementare il Dump
 		siesLogger.debug("=============================================================");
 		siesLogger.debug("== ==");
