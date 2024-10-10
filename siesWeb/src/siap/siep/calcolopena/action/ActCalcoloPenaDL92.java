@@ -333,7 +333,7 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		HSSFCellStyle csTitolo1 = getBordo4Lati(wb);
 		csTitolo1.setAlignment(HSSFCellStyle.ALIGN_CENTER);
 		csTitolo1.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		csTitolo1.setFillForegroundColor(HSSFColor.GREY_50_PERCENT.index);
+		csTitolo1.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
 		csTitolo1.setFont(fontBold);
 		
 		// Stile delle celle grigie allineata a destre 
@@ -363,14 +363,15 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		csVerdeCentro.setFillForegroundColor(HSSFColor.GREEN.index);
 		
 		// Impostare opportunamente la larghezza della prima riga
-		sheetRiepilogo.setColumnWidth(0, (18 * 256));
+		sheetRiepilogo.setColumnWidth(0, (35 * 256)); // Larghezza prima colonna
+		sheetRiepilogo.setColumnWidth(1, (11 * 256)); // Larghezza seconda colonna
 		
 		int nRow = 0;
 
 		//==================================================================
 		// Sezione con i dati del presofferto (dati input)
 		//==================================================================
-		nRow++;
+		//nRow++;
 		HSSFRow row = sheetRiepilogo.createRow(nRow);
 		setCell(row, 0, "Custodia cautelare (presofferto)", csTitolo1);
 		sheetRiepilogo.addMergedRegion(new CellRangeAddress(nRow, nRow, 0, 1)); //su 2 colonne
@@ -525,8 +526,11 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		
 		nRow++;
 		row = sheetRiepilogo.createRow(nRow);
-		setCell(row, 0, "data scarcerazione con LA concessi (data fine pena calcolata SENZA fungibilita'):", csGrigioDestra);
-		setCell(row, 1, StringUtils.toStringJSP(DateUtils.getDateToString (lCalcoloDL92Model.getDataScarcerazionePenultimoSemestre(), "dd/MM/yyyy")), csGrigioCentro);	
+		setCell(row, 0, "data scarcerazione senza applicare l'ultimo semestre (nei soli casi in cui ci sarebbe un credito di L.A.):", csGrigioDestra);
+		if (lCalcoloDL92Model.getLAFungibili().intValue()>0) 
+			setCell(row, 1, StringUtils.toStringJSP(DateUtils.getDateToString (lCalcoloDL92Model.getDataScarcerazionePenultimoSemestre(), "dd/MM/yyyy")), csGrigioCentro);	
+		else 
+			setCell(row, 1, "non applicabile", csGrigioCentro);	
 	}
 	
 	
@@ -538,14 +542,18 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		HSSFCellStyle cs = getBordo4Lati(wb);
 		
 		// Impostare opportunamente la larghezza della prima riga
-		sheetLibero.setColumnWidth(0, (18 * 256));
+		sheetLibero.setColumnWidth(0, (5 * 256));  // Progressivo
+		sheetLibero.setColumnWidth(1, (11 * 256)); // Desc Semestre
+		sheetLibero.setColumnWidth(2, (11 * 256)); // LA APPLICATA
+		sheetLibero.setColumnWidth(3, (11 * 256)); // Residuao Pena
+		sheetLibero.setColumnWidth(4, (20 * 256)); // Colonna riepilogo
 		
 		int nRow = 0;
 
 		//==================================================================
 		// Sezione con i dati del presofferto (dati input)
 		//==================================================================
-		nRow++;
+		//nRow++;
 		HSSFRow row = sheetLibero.createRow(nRow);
 		setCell(row, 0, " ", cs);
 		setCell(row, 1, " ", cs);
@@ -557,9 +565,9 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		// Prima Riga Presofferto 
 		//==================================================================
 		SemestreDL92Model lCalcoloPresofferto = lCalcoloDL92Model.getSemestrePresofferto(); 
-		String lStringResiduo =   lCalcoloPresofferto.getResiduoNumAnni()+" anni"
-		                        + lCalcoloPresofferto.getResiduoNumAnni()+" mesi" 
-				                    + lCalcoloPresofferto.getResiduoNumAnni()+" giorni" ; 
+		String lStringResiduo =   lCalcoloPresofferto.getResiduoNumAnni()+" anni "
+		                        + lCalcoloPresofferto.getResiduoNumMesi()+" mesi " 
+				                    + lCalcoloPresofferto.getResiduoNumGiorni()+" giorni" ; 
 		nRow++;
 		row = sheetLibero.createRow(nRow);
 		setCell(row, 0, StringUtils.toStringJSP(lCalcoloPresofferto.getNumSemestriMaturati(),"0"), cs);
@@ -585,7 +593,7 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
     	
   		nRow++;
   		row = sheetLibero.createRow(nRow);
-  		setCell(row, 0, StringUtils.toStringJSP(lSemestreUtile.getNumSemestriMaturati())+"°", cs);
+  		setCell(row, 0, StringUtils.toStringJSP(lSemestreUtile.getProgressivo())+"°", cs);
   		setCell(row, 1, "semestre utile per L.A. ", cs);
   		setCell(row, 2, StringUtils.toStringJSP(lSemestreUtile.getLAApplicate(),"0"), cs);
   		setCell(row, 3, lPenaStr, cs); 
@@ -630,14 +638,22 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		HSSFCellStyle cs = getBordo4Lati(wb);
 		
 		// Impostare opportunamente la larghezza della prima riga
-		sheetDetenuto.setColumnWidth(0, (18 * 256));
+		sheetDetenuto.setColumnWidth(0, (11 * 256)); // Larghezza prima colonna
+		sheetDetenuto.setColumnWidth(1, (11 * 256)); // Larghezza seconda colonna
+		sheetDetenuto.setColumnWidth(2, (8 * 256));  // LA APPLICATA
+		sheetDetenuto.setColumnWidth(3, (11 * 256)); // Larghezza quarta colonna
+		sheetDetenuto.setColumnWidth(4, (11 * 256)); // Larghezza quinta colonna		
+		sheetDetenuto.setColumnWidth(5, (8 * 256)); // ANNI RESIDUI	
+		sheetDetenuto.setColumnWidth(6, (8 * 256)); // MESI RESIDUI			
+		sheetDetenuto.setColumnWidth(7, (8 * 256)); // GIORNI RESIDUI		
+		sheetDetenuto.setColumnWidth(8, (11 * 256)); //SURPLUS	
 		
 		int nRow = 0;		
 		
 		//==================================================================
 		// Prima Riga INTESTAZIONE 
 		//==================================================================
-		nRow++;
+		//nRow++;
 		HSSFRow row = sheetDetenuto.createRow(nRow);
 		setCell(row, 0, "DATA DECORRENZA", cs);
 		setCell(row, 1, DateUtils.getDateToString  (lCalcoloDL92Model.getDataInizioPena(),"dd/MM/yyyy"), cs);
