@@ -342,7 +342,7 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		HSSFCellStyle csGrigioCentro = getBordo4Lati(wb);
 		csGrigioCentro.setAlignment(HSSFCellStyle.ALIGN_CENTER);
 		csGrigioCentro.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		csGrigioCentro.setFillForegroundColor(HSSFColor.GREY_50_PERCENT.index);
+		csGrigioCentro.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
 		csGrigioCentro.setFont(fontBold);
 
 		// Stile delle celle Verdi
@@ -392,7 +392,8 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		nRow++;
 		row = sheetRiepilogo.createRow(nRow);
 		setCell(row, 0, "Semestri utili di custodia cautelare per erogazione L.A.:", csGrigioDestra);
-		setCell(row, 1, StringUtils.toStringJSP(lCalcoloPresofferto.getProgressivo(), ""), csGrigioCentro);
+		setCell(row, 1, StringUtils.toStringJSP(lCalcoloPresofferto.getNumSemestriMaturati(), ""),
+				csGrigioCentro);
 
 		nRow++;
 		row = sheetRiepilogo.createRow(nRow);
