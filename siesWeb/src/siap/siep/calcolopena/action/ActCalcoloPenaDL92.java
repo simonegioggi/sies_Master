@@ -14,6 +14,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFColor;
 
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
@@ -23,6 +24,9 @@ import f3b.util.report.ReportGenerator;
 import f3b.util.xml.TreeModel;
 import f3b.web.IWebConstants;
 import siap.sico.calendar.model.CalendarModel;
+import siap.sico.evento.model.XModel;
+import siap.sico.soggetto.model.SoggettoModel;
+import siap.sico.ufficio.model.UfficioModel;
 import siap.sico.utente.model.UtenteModel;
 import siap.sico.util.CalendarUtil;
 import siap.sico.web.ActionSiap;
@@ -32,6 +36,7 @@ import siap.siep.fascicolo.controller.IFascicoloSiepStampa;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.penacomplessiva.action.ICostantiPenaComplessiva;
 import siap.siep.penaresidua.action.ICostantiPenaResidua;
+import siap.siep.sentenza.model.SentenzaModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
@@ -172,11 +177,63 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 	private ByteArrayOutputStream stampaDocumento(CalcoloPenaDL92Model lCalcoloDL92Model)
 			throws F3BException {
 
-		FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
-		// UfficioModel lUfficio = getUfficioByCodUfficio(lFascicoloModel.getChiaveUfficio());
-		// String descrTipoUff = lFascicoloModel.getDescrTipoUfficio();
+		FascicoloSiepModel lFascicoloModel = null; 
+		TreeModel lTreeRoot = null;
+		
+		if (!isSessionAttributeNullObj("fascicolo")) {
+			lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
+			
+			UtenteModel lUtente = getUtenteConnesso();
+			
+			IFascicoloSiepStampa lCtrStam = SIEPLookupRemote.getFascicoloSiepStampaRemote();
+			lTreeRoot = lCtrStam.prelevaDatiStampaFascicolo(lFascicoloModel, lUtente);
 
-		UtenteModel lUtente = getUtenteConnesso();
+		}
+		else {
+			XModel lStampa = new XModel();		
+
+			UfficioModel lUffMod = null;
+			UtenteModel lUtente = getUtenteConnesso(); 
+			String descrTipoUff = null;
+			if (lUtente.getUfficioUtente() !=null) 
+			{
+			  lUffMod = lUtente.getUfficioUtente();
+			  
+			  descrTipoUff = lUffMod.getDescrTipoUfficio();
+			  		
+				lStampa.setUfficio (lUffMod.getDescrComune()); 
+				lStampa.setTipoUfficio (lUffMod.getDescrTipoUfficio()); 
+				lStampa.setDataElaborazione (DateUtils.getSysDate());
+			  lStampa.setCap (lUffMod.getCap()); 
+			  lStampa.setFax (lUffMod.getFax());
+			  lStampa.setIndirizzo (lUffMod.getIndirizzo()); 
+			  lStampa.setTelefono  (lUffMod.getTelefono());
+			  lStampa.setEMail (lUffMod.getEMail()); 
+			}
+
+			if (descrTipoUff != null) { 
+			  if (descrTipoUff.indexOf("PRESSO") > 1) {
+			    lStampa.setTipoUfficioT1(descrTipoUff.substring(0, descrTipoUff.indexOf("PRESSO")));
+			    lStampa.setTipoUfficioT2(descrTipoUff.substring(descrTipoUff.indexOf("PRESSO"))); 
+			  } else
+			    lStampa.setTipoUfficioT1(descrTipoUff); 
+			}
+
+			if (descrTipoUff.indexOf("GENERALE") > 0) { 
+			  lStampa.setFirmatario("Il Procuratore Generale"); }
+			else { 
+			  lStampa.setFirmatario("Il Pubblico Ministero"); 
+			}
+
+			lTreeRoot = new TreeModel(lStampa); 
+			TreeModel lTreeFasMod = new TreeModel(new FascicoloSiepModel()); 
+			TreeModel lTreeSoggetto = new TreeModel(new SoggettoModel());
+			TreeModel lTreeSentenza = new TreeModel(new SentenzaModel());
+			lTreeRoot.add(lTreeFasMod);
+			lTreeRoot.add(lTreeSoggetto);
+			lTreeRoot.add(lTreeSentenza);
+		}
+
 
 		String lNomeTemplate = "";
 
@@ -185,49 +242,9 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		else
 			lNomeTemplate = "/var/SIES/template/siep/altri/SIEP_DL92-24_DET.rtf";
 
-		/*
-		 * EventoNotificaModel lEveMod = new EventoNotificaModel(); lEveMod.getEvento().setIdEvento(null);
-		 * lEveMod.getEvento().setFasSieIdFascicoloSiep (lFascicoloModel.getIdFascicoloSiep());
-		 *
-		 * lEveMod.getEvento().setDescrLuogoEmittente(lUfficio.getDescrComune());
-		 * lEveMod.getEvento().setDescrUfficioEmittente(lUfficio.getDescrTipoUfficio());
-		 * lEveMod.setNomeTemplate (lNomeTemplate);
-		 */
-
-		// IStampa lStampa = SICOLookupRemote.getStampaRemote();
-		// TreeModel lTreeRoot = lStampa.prelevaDatiEventoSiep(lEveMod, lUtente);
-
-		IFascicoloSiepStampa lCtrStam = SIEPLookupRemote.getFascicoloSiepStampaRemote();
-		TreeModel lTreeRoot = lCtrStam.prelevaDatiStampaFascicolo(lFascicoloModel, lUtente);
 		siesLogger.info("NOME TEMPLATE >>>" + lNomeTemplate);
 
-		/*
-		 *
-		 * XModel lStampa = new XModel();
-		 *
-		 * lStampa.setUfficio (lUfficio.getDescrComune()); lStampa.setTipoUfficio
-		 * (lUfficio.getDescrTipoUfficio()); lStampa.setDataElaborazione (DateUtils.getSysDate());
-		 *
-		 * UtenteModel lUtente = getUtenteConnesso(); if (lUtente != null && lUtente.getUfficioUtente() !=
-		 * null) { UfficioModel lUffMod = lUtente.getUfficioUtente();
-		 *
-		 * lStampa.setCap(lUffMod.getCap()); lStampa.setFax(lUffMod.getFax());
-		 * lStampa.setIndirizzo(lUffMod.getIndirizzo()); lStampa.setTelefono(lUffMod.getTelefono());
-		 * lStampa.setEMail(lUffMod.getEMail()); }
-		 *
-		 * if (descrTipoUff != null) { if (descrTipoUff.indexOf("PRESSO") > 1) {
-		 * lStampa.setTipoUfficioT1(descrTipoUff.substring(0, descrTipoUff.indexOf("PRESSO")));
-		 * lStampa.setTipoUfficioT2(descrTipoUff.substring(descrTipoUff.indexOf("PRESSO"))); } else
-		 * lStampa.setTipoUfficioT1(descrTipoUff); }
-		 *
-		 * if (descrTipoUff.indexOf("GENERALE") > 0) { lStampa.setFirmatario("Il Procuratore Generale"); }
-		 * else { lStampa.setFirmatario("Il Pubblico Ministero"); }
-		 *
-		 * TreeModel lTreeRoot = new TreeModel(lStampa); TreeModel lTreeFasMod = new
-		 * TreeModel(lFascicoloModel); TreeModel lTreeSoggetto = new TreeModel(lFascicoloModel.getSoggetto());
-		 * TreeModel lTreeSentenza = new TreeModel(lFascicoloModel.getSentenza());
-		 *
-		 */
+
 		TreeModel lTreeCalcoloDL92 = new TreeModel(lCalcoloDL92Model);
 
 		lTreeCalcoloDL92.add(new TreeModel(lCalcoloDL92Model.getSemestrePresofferto()));
@@ -238,26 +255,11 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 			lTreeCalcoloDL92.add(new TreeModel(lSemestre));
 		}
 
-		// lTreeRoot.add(lTreeFasMod);
-		// lTreeRoot.add(lTreeSoggetto);
-		// lTreeRoot.add(lTreeSentenza);
 		lTreeRoot.add(lTreeCalcoloDL92);
-
-		// Per test si aggancia la copertina
-		// TemplateModel lTemMod = new TemplateModel();
-		// ITemplate lCtrlTem = SICOLookupRemote.getTemplateRemote();
-
-		// lTemMod = lCtrlTem.ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplate(null, null, "0302",null);
-
-		// String lNomeTemplate = "C:\\template\\siep\\altri\\SIEP_COPERTINA.rtf";
-		// String lNomeTemplate = TemplateManager.getInstance().getTemplateName(lTemMod.getIdTemplate());
-
 		ReportGenerator lReport = new ReportGenerator();
 		ByteArrayOutputStream lByteArrayOut = (ByteArrayOutputStream) lReport.generateDocument(lTreeRoot,
 				lNomeTemplate);
 
-		// IStampa lStampa = SICOLookupRemote.getStampaRemote();
-		// TreeModel lTree = lStampa.prelevaDatiEventoSiep(lEveMod, aUtente);
 		return lByteArrayOut;
 	}
 
@@ -302,7 +304,7 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		// Font
 		HSSFFont fontBold = wb.createFont();
 		fontBold.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
-
+		
 		// Stili
 		// HSSFCellStyle csNull = wb.createCellStyle();
 
@@ -313,47 +315,43 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		HSSFCellStyle csBold = getBordo4Lati(wb);
 		csBold.setFont(fontBold);
 
-		// stile per celle col bordo con carattere grassetto centrato
-		HSSFCellStyle csBoldCenter = getBordo4Lati(wb);
-		csBoldCenter.setFont(fontBold);
-		csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-
 		// Titolo 1 -
 		HSSFCellStyle csTitolo1 = getBordo4Lati(wb);
 		csTitolo1.setAlignment(HSSFCellStyle.ALIGN_CENTER);
 		csTitolo1.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		csTitolo1.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+		csTitolo1.setFillForegroundColor(HSSFColor.LIGHT_GREEN.index);
 		csTitolo1.setFont(fontBold);
 
-		// Stile delle celle grigie allineata a destre
+		// Stile delle celle grigie allineata a destra
 		HSSFCellStyle csGrigioDestra = getBordo4Lati(wb);
 		csGrigioDestra.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
-		csGrigioDestra.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		csGrigioDestra.setFillForegroundColor(HSSFColor.GREY_50_PERCENT.index);
+		//csGrigioDestra.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		csGrigioDestra.setWrapText(true); // testo a capo		
+		//csGrigioDestra.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
 
 		// Stile delle celle gialle con i dati allineate al centro (dati di input)
-		HSSFCellStyle csGialloCentro = getBordo4Lati(wb);
-		csGialloCentro.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csGialloCentro.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		csGialloCentro.setFillForegroundColor(HSSFColor.YELLOW.index);
-		csGialloCentro.setFont(fontBold);
+		HSSFCellStyle csDatiInput = getBordo4Lati(wb);
+		csDatiInput.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csDatiInput.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		csDatiInput.setFillForegroundColor(HSSFColor.YELLOW.index);
+		csDatiInput.setFont(fontBold);
 
 		// Stile delle celle grigie con i dati allineate al centro (dati calcolati)
-		HSSFCellStyle csGrigioCentro = getBordo4Lati(wb);
-		csGrigioCentro.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csGrigioCentro.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		csGrigioCentro.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
-		csGrigioCentro.setFont(fontBold);
+		HSSFCellStyle csDatiCalcolati = getBordo4Lati(wb);
+		csDatiCalcolati.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csDatiCalcolati.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		csDatiCalcolati.setFillForegroundColor(HSSFColor.LIGHT_ORANGE.index);
+		csDatiCalcolati.setFont(fontBold);
 
-		// Stile delle celle Verdi
+		// Stile delle celle Verdi (dati calcolati)
 		HSSFCellStyle csVerdeCentro = getBordo4Lati(wb);
 		csVerdeCentro.setAlignment(HSSFCellStyle.ALIGN_CENTER);
 		csVerdeCentro.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
 		csVerdeCentro.setFillForegroundColor(HSSFColor.GREEN.index);
 
 		// Impostare opportunamente la larghezza della prima riga
-		sheetRiepilogo.setColumnWidth(0, (35 * 256)); // Larghezza prima colonna
-		sheetRiepilogo.setColumnWidth(1, (11 * 256)); // Larghezza seconda colonna
+		sheetRiepilogo.setColumnWidth(0, (105 * 256)); // Larghezza prima colonna
+		sheetRiepilogo.setColumnWidth(1, (30 * 256)); // Larghezza seconda colonna
 
 		int nRow = 0;
 
@@ -363,25 +361,26 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		// nRow++;
 		HSSFRow row = sheetRiepilogo.createRow(nRow);
 		setCell(row, 0, "Custodia cautelare (presofferto)", csTitolo1);
+		setCell(row, 1, "", csTitolo1);
 		sheetRiepilogo.addMergedRegion(new CellRangeAddress(nRow, nRow, 0, 1)); // su 2 colonne
 
 		nRow++;
 		row = sheetRiepilogo.createRow(nRow);
 		setCell(row, 0, "Anni di custodia cautelare -->", csGrigioDestra);
 		setCell(row, 1, StringUtils.toStringJSP(lCalcoloDL92Model.getNumAnniPresofferto(), " "),
-				csGialloCentro);
+				csDatiInput);
 
 		nRow++;
 		row = sheetRiepilogo.createRow(nRow);
 		setCell(row, 0, "Mesi di custodia cautelare -->", csGrigioDestra);
 		setCell(row, 1, StringUtils.toStringJSP(lCalcoloDL92Model.getNumMesiPresofferto(), " "),
-				csGialloCentro);
+				csDatiInput);
 
 		nRow++;
 		row = sheetRiepilogo.createRow(nRow);
 		setCell(row, 0, "Giorni di custodia cautelare -->", csGrigioDestra);
 		setCell(row, 1, StringUtils.toStringJSP(lCalcoloDL92Model.getNumGiorniPresofferto(), " "),
-				csGialloCentro);
+				csDatiInput);
 
 		nRow++; // riga vuota
 
@@ -393,12 +392,12 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		row = sheetRiepilogo.createRow(nRow);
 		setCell(row, 0, "Semestri utili di custodia cautelare per erogazione L.A.:", csGrigioDestra);
 		setCell(row, 1, StringUtils.toStringJSP(lCalcoloPresofferto.getNumSemestriMaturati(), ""),
-				csGrigioCentro);
+				csDatiCalcolati);
 
 		nRow++;
 		row = sheetRiepilogo.createRow(nRow);
 		setCell(row, 0, "Giorni di L.A. maturati in custodia cautelare:", csGrigioDestra);
-		setCell(row, 1, StringUtils.toStringJSP(lCalcoloPresofferto.getLAApplicate(), ""), csGrigioCentro);
+		setCell(row, 1, StringUtils.toStringJSP(lCalcoloPresofferto.getLAApplicate(), ""), csDatiCalcolati);
 
 		nRow++;
 		row = sheetRiepilogo.createRow(nRow);
@@ -406,7 +405,7 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 				"Giorni di custodia cautelare eccedenti i semestri utili per erogazione L.A. (verranno conteggiati per anticipare il primo semestre utile nell'esecuzione pena):",
 				csGrigioDestra);
 		setCell(row, 1, StringUtils.toStringJSP(lCalcoloPresofferto.getGiorniResiduiPresofferto(), ""),
-				csGrigioCentro);
+				csDatiCalcolati);
 
 		nRow++; // riga vuota
 
@@ -416,25 +415,26 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		nRow++;
 		row = sheetRiepilogo.createRow(nRow);
 		setCell(row, 0, "Pena da espiare al netto della custodia cautelare (presofferto)", csTitolo1);
+		setCell(row, 1, "", csTitolo1);
 		sheetRiepilogo.addMergedRegion(new CellRangeAddress(nRow, nRow, 0, 1)); // su 2 colonne
 
 		nRow++;
 		row = sheetRiepilogo.createRow(nRow);
 		setCell(row, 0, "Anni pena al netto della custodia cautelare:", csGrigioDestra);
 		setCell(row, 1, StringUtils.toStringJSP(lCalcoloDL92Model.getTotaleDaEseguire().getNumAnni(), ""),
-				csGialloCentro);
+				csDatiInput);
 
 		nRow++;
 		row = sheetRiepilogo.createRow(nRow);
 		setCell(row, 0, "Mesi pena al netto della custodia cautelare:", csGrigioDestra);
 		setCell(row, 1, StringUtils.toStringJSP(lCalcoloDL92Model.getTotaleDaEseguire().getNumMesi(), ""),
-				csGialloCentro);
+				csDatiInput);
 
 		nRow++;
 		row = sheetRiepilogo.createRow(nRow);
 		setCell(row, 0, "Giorni pena al netto della custodia cautelare:", csGrigioDestra);
 		setCell(row, 1, StringUtils.toStringJSP(lCalcoloDL92Model.getTotaleDaEseguire().getNumGiorni(), ""),
-				csGialloCentro);
+				csDatiInput);
 
 		nRow++; // riga vuota
 
@@ -444,19 +444,19 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		nRow++;
 		row = sheetRiepilogo.createRow(nRow);
 		setCell(row, 0, "Semestri utili di pena ipotetica per erogazione L.A.:", csGrigioDestra);
-		setCell(row, 1, StringUtils.toStringJSP(lCalcoloDL92Model.getSemestriUtili(), ""), csGialloCentro);
+		setCell(row, 1, StringUtils.toStringJSP(lCalcoloDL92Model.getSemestriUtili(), ""), csDatiCalcolati);
 
 		nRow++;
 		row = sheetRiepilogo.createRow(nRow);
 		setCell(row, 0, "Giorni di L.A. maturabili e usufruibili in pena ipotetica:", csGrigioDestra);
 		setCell(row, 1, StringUtils.toStringJSP(lCalcoloDL92Model.getNumGiorniLAMaturataInPenaresidua(), ""),
-				csGialloCentro);
+				csDatiCalcolati);
 
 		nRow++;
 		row = sheetRiepilogo.createRow(nRow);
 		setCell(row, 0, "Giorni di L.A. maturabili e non usufruibili in pena ipotetica:", csGrigioDestra);
 		setCell(row, 1, StringUtils.toStringJSP(lCalcoloDL92Model.getLAFungibili().intValue(), ""),
-				csGialloCentro);
+				csDatiCalcolati);
 
 		nRow++; // riga vuota
 
@@ -466,10 +466,9 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		// @TODO da formattare in verde
 		nRow++;
 		row = sheetRiepilogo.createRow(nRow);
-		setCell(row, 0, "Dati da indicare nei provvedimenti di esecuzione:", csTitolo1);
+		setCell(row, 0, "Dati da indicare nei provvedimenti di esecuzione", csTitolo1);
+		setCell(row, 1, "", csTitolo1);
 		sheetRiepilogo.addMergedRegion(new CellRangeAddress(nRow, nRow, 0, 1)); // su 2 colonne
-
-		nRow++;
 
 		nRow++;
 		String strPena = "";
@@ -481,25 +480,25 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		row = sheetRiepilogo.createRow(nRow);
 		setCell(row, 0, "Pena ipotetica ad esito delle detrazioni dei soli giorni di L.A. usufruibili:",
 				csGrigioDestra);
-		setCell(row, 1, strPena, csGrigioCentro);
+		setCell(row, 1, strPena, csDatiCalcolati);
 
 		nRow++;
 		row = sheetRiepilogo.createRow(nRow);
 		setCell(row, 0, "Semestri utili di pena scontata:", csGrigioDestra);
 		setCell(row, 1, StringUtils.toStringJSP(lCalcoloDL92Model.getSemestriUtiliPenaScontata(), ""),
-				csGrigioCentro);
+				csDatiCalcolati);
 
 		nRow++;
 		row = sheetRiepilogo.createRow(nRow);
 		setCell(row, 0, "Giorni di liberazione anticipata concedibili:", csGrigioDestra);
 		setCell(row, 1, StringUtils.toStringJSP(lCalcoloDL92Model.getLAMaturate().intValue(), ""),
-				csGrigioCentro);
+				csDatiCalcolati);
 
 		nRow++;
 		row = sheetRiepilogo.createRow(nRow);
 		setCell(row, 0, "Giorni di liberazione anticipata usufruibili:", csGrigioDestra);
 		setCell(row, 1, StringUtils.toStringJSP(lCalcoloDL92Model.getLAApplicate().intValue(), ""),
-				csGrigioCentro);
+				csDatiCalcolati);
 
 		nRow++;
 		// ==================================================================
@@ -507,7 +506,8 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		// ==================================================================
 		nRow++;
 		row = sheetRiepilogo.createRow(nRow);
-		setCell(row, 0, "CALCOLI CON DATA ESECUZIONE:", csTitolo1);
+		setCell(row, 0, "CALCOLI CON DATA ESECUZIONE", csTitolo1);
+		setCell(row, 1, "", csTitolo1);
 		sheetRiepilogo.addMergedRegion(new CellRangeAddress(nRow, nRow, 0, 1)); // su 2 colonne
 
 		nRow++;
@@ -516,7 +516,7 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		setCell(row, 1,
 				StringUtils.toStringJSP(
 						DateUtils.getDateToString(lCalcoloDL92Model.getDataInizioPena(), "dd/MM/yyyy")),
-				csGrigioCentro);
+				csDatiInput);
 
 		nRow++;
 		row = sheetRiepilogo.createRow(nRow);
@@ -524,7 +524,7 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		setCell(row, 1,
 				StringUtils.toStringJSP(DateUtils
 						.getDateToString(lCalcoloDL92Model.getDataScarcerazioneNoLA(), "dd/MM/yyyy")),
-				csGrigioCentro);
+				csDatiCalcolati);
 
 		nRow++;
 		row = sheetRiepilogo.createRow(nRow);
@@ -533,7 +533,7 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		setCell(row, 1,
 				StringUtils.toStringJSP(DateUtils
 						.getDateToString(lCalcoloDL92Model.getDataScarcerazioneLAFung(), "dd/MM/yyyy")),
-				csGrigioCentro);
+				csDatiCalcolati);
 
 		nRow++;
 		row = sheetRiepilogo.createRow(nRow);
@@ -542,7 +542,7 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		setCell(row, 1,
 				StringUtils.toStringJSP(DateUtils
 						.getDateToString(lCalcoloDL92Model.getDataScarcerazioneLANoFung(), "dd/MM/yyyy")),
-				csGrigioCentro);
+				csDatiCalcolati);
 
 		nRow++;
 		row = sheetRiepilogo.createRow(nRow);
@@ -553,9 +553,9 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 			setCell(row, 1,
 					StringUtils.toStringJSP(DateUtils.getDateToString(
 							lCalcoloDL92Model.getDataScarcerazionePenultimoSemestre(), "dd/MM/yyyy")),
-					csGrigioCentro);
+					csDatiCalcolati);
 		else
-			setCell(row, 1, "non applicabile", csGrigioCentro);
+			setCell(row, 1, "non applicabile", csDatiCalcolati);
 	}
 
 	private void creaFoglioLibero(HSSFWorkbook wb, CalcoloPenaDL92Model lCalcoloDL92Model) {
@@ -563,28 +563,72 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		// foglio Libero
 		HSSFSheet sheetLibero = wb.createSheet("LIBERO");
 
-		// stile per celle col bordo
+		// Font
+		HSSFFont fontBold = wb.createFont();
+		fontBold.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		
+		HSSFFont fontBoldRed = wb.createFont();
+		fontBoldRed.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		fontBoldRed.setColor(HSSFFont.COLOR_RED);
+		
+		// Colore celle RGB
+		//XSSFColor myGreen  = new XSSFColor (new java.awt.Color(146,208,80));
+		//XSSFColor myOrange = new XSSFColor (new java.awt.Color(255,192,0));
+		
+		// stile per celle col bordo (allineamento a sinistra)
 		HSSFCellStyle cs = getBordo4Lati(wb);
 
+		HSSFCellStyle csBoldCenterRed = getBordo4Lati(wb);
+		csBoldCenterRed.setFont(fontBoldRed);
+		csBoldCenterRed.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		
+		// stile per celle col bordo centrata
+		HSSFCellStyle csCenter = getBordo4Lati(wb);
+		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		
+		// stile per celle col bordo allineamento da desta
+		HSSFCellStyle csRight = getBordo4Lati(wb);
+		csRight.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+		
+		// Stile intestazione: bold centrato e sfondo grigio
+		HSSFCellStyle csIntestazione = getBordo4Lati(wb);
+		csIntestazione.setFont(fontBold);
+		csIntestazione.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		csIntestazione.setFillForegroundColor(HSSFColor.LIGHT_GREEN.index);
+		//csIntestazione.setFillForegroundColor(myGreen.getIndexed());
+		csIntestazione.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csIntestazione.setWrapText(true); // testo a capo		
+		csIntestazione.setVerticalAlignment(HSSFCellStyle.VERTICAL_BOTTOM);
+		
+		HSSFCellStyle csRiepilogo = getBordo4Lati(wb);
+		csRiepilogo.setFont(fontBold);
+		csRiepilogo.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		csRiepilogo.setFillForegroundColor(HSSFColor.LIGHT_ORANGE.index);
+		//csRiepilogo.setFillForegroundColor(myOrange.getIndexed());
+		csRiepilogo.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		
 		// Impostare opportunamente la larghezza della prima riga
-		sheetLibero.setColumnWidth(0, (5 * 256)); // Progressivo
-		sheetLibero.setColumnWidth(1, (11 * 256)); // Desc Semestre
-		sheetLibero.setColumnWidth(2, (11 * 256)); // LA APPLICATA
-		sheetLibero.setColumnWidth(3, (11 * 256)); // Residuao Pena
-		sheetLibero.setColumnWidth(4, (20 * 256)); // Colonna riepilogo
+		sheetLibero.setColumnWidth (0, (5  * 256)); // Progressivo
+		sheetLibero.setColumnWidth (1, (30 * 256)); // Desc Semestre
+		sheetLibero.setColumnWidth (2, (20 * 256)); // LA APPLICATA
+		sheetLibero.setColumnWidth (3, (17 * 256)); // ANNI RESIDUI
+		sheetLibero.setColumnWidth (4, (17 * 256)); // MESI RESIDUI
+		sheetLibero.setColumnWidth (5, (17 * 256)); // GIORNI RESIDUI
+		sheetLibero.setColumnWidth (6, (65 * 256)); // Colonna riepilogo
 
 		int nRow = 0;
 
 		// ==================================================================
-		// Sezione con i dati del presofferto (dati input)
+		// Riga Interstazioni
 		// ==================================================================
 		// nRow++;
 		HSSFRow row = sheetLibero.createRow(nRow);
-		setCell(row, 0, " ", cs);
-		setCell(row, 1, " ", cs);
-		setCell(row, 2, "L.A. APPLICATA", cs);
-		setCell(row, 3, "RESIDUO ANNI PENA", cs);
-		setCell(row, 4, "L.A. MATURATA MA NON APPLICATA / PENA ESPIATA IN ECCESSO", cs);
+		setCell(row, 0, " ", csIntestazione);
+		setCell(row, 1, " ", csIntestazione);
+		setCell(row, 2, "L.A. APPLICATA", csIntestazione);
+		setCell(row, 3, "ANNI RESIDUI", csIntestazione);
+		setCell(row, 4, "MESI RESIDUI", csIntestazione);
+		setCell(row, 5, "GIORNI RESIDUI", csIntestazione);
 
 		// ==================================================================
 		// Prima Riga Presofferto
@@ -595,11 +639,12 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 				+ lCalcoloPresofferto.getResiduoNumGiorni() + " giorni";
 		nRow++;
 		row = sheetLibero.createRow(nRow);
-		setCell(row, 0, StringUtils.toStringJSP(lCalcoloPresofferto.getNumSemestriMaturati(), "0"), cs);
-		setCell(row, 1, "SEMESTRI ESPIATI IN C.C. ", cs);
-		setCell(row, 2, StringUtils.toStringJSP(lCalcoloPresofferto.getLAApplicate(), "0"), cs);
-		setCell(row, 3, lStringResiduo, cs);
-		setCell(row, 4, StringUtils.toStringJSP(lCalcoloDL92Model.getLAFungibili().intValue(), "0"), cs);
+		setCell(row, 0, StringUtils.toStringJSP(lCalcoloPresofferto.getNumSemestriMaturati(), "0"), csCenter);
+		setCell(row, 1, "SEMESTRI ESPIATI IN C.C. ", csCenter);
+		setCell(row, 2, StringUtils.toStringJSP(lCalcoloPresofferto.getLAApplicate(), "0"), csCenter);
+		setCell(row, 3, StringUtils.toStringJSP(lCalcoloPresofferto.getResiduoNumAnni().intValue(), "0"), csCenter);
+		setCell(row, 4, StringUtils.toStringJSP(lCalcoloPresofferto.getResiduoNumMesi().intValue(), "0"), csCenter);
+		setCell(row, 5, StringUtils.toStringJSP(lCalcoloPresofferto.getResiduoNumGiorni().intValue(), "0"), csCenter);
 
 		// ==================================================================
 		// Ciclo sui semestri
@@ -611,47 +656,45 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 					+ lSemestreUtile.getResiduoNumMesi() + " mesi - " + lSemestreUtile.getResiduoNumGiorni()
 					+ " giorni ";
 
-			// String lColorLastSem = "";
-			// if (lSemestreUtile.getLAApplicate().intValue() < 45)
-			// lColorLastSem = "style='color=red'";
-
 			nRow++;
 			row = sheetLibero.createRow(nRow);
-			setCell(row, 0, StringUtils.toStringJSP(lSemestreUtile.getProgressivo()) + "°", cs);
-			setCell(row, 1, "semestre utile per L.A. ", cs);
-			setCell(row, 2, StringUtils.toStringJSP(lSemestreUtile.getLAApplicate(), "0"), cs);
-			setCell(row, 3, lPenaStr, cs);
-
-			if (nRow == 2) {
-				setCell(row, 4, "GIORNI L.A. CONCESSI", cs);
-			} else if (nRow == 3) {
-				setCell(row, 4, StringUtils.toStringJSP(lCalcoloDL92Model.getLAMaturate().intValue(), "0"),
-						cs);
+			setCell(row, 0, StringUtils.toStringJSP(lSemestreUtile.getProgressivo()) + "°", csCenter);
+			setCell(row, 1, "semestre utile per L.A. ", csCenter);
+			
+			if (lSemestreUtile.getLAApplicate().intValue() < 45) {
+				setCell(row, 2, StringUtils.toStringJSP(lSemestreUtile.getLAApplicate(), "0"), csBoldCenterRed);
+				setCell(row, 3, StringUtils.toStringJSP(lSemestreUtile.getResiduoNumAnni().intValue(), "0"), csBoldCenterRed);
+				setCell(row, 4, StringUtils.toStringJSP(lSemestreUtile.getResiduoNumMesi().intValue(), "0"), csBoldCenterRed);
+				setCell(row, 5, StringUtils.toStringJSP(lSemestreUtile.getResiduoNumGiorni().intValue(), "0"), csBoldCenterRed);
+			}
+			else {
+				setCell(row, 2, StringUtils.toStringJSP(lSemestreUtile.getLAApplicate(), "0"), csCenter);
+				setCell(row, 3, StringUtils.toStringJSP(lSemestreUtile.getResiduoNumAnni().intValue(), "0"), csCenter);
+				setCell(row, 4, StringUtils.toStringJSP(lSemestreUtile.getResiduoNumMesi().intValue(), "0"), csCenter);
+				setCell(row, 5, StringUtils.toStringJSP(lSemestreUtile.getResiduoNumGiorni().intValue(), "0"), csCenter);
 			}
 		}
 
-		// Se esco dal ciclo con pochi semestri devo comunque aggiungere il rigo 3 e 4 del foglioexcel (col 5)
-		if (nRow == 1) {
-			// non ho nemmeno 1 semestre devo aggiungere la riga 3
+		// Mi servono min 4 righe per la colonna del riepilogo, se non create le devo generare
+		while (nRow < 4) {
 			nRow++;
 			row = sheetLibero.createRow(nRow);
-			setCell(row, 0, "", cs);
-			setCell(row, 1, "", cs);
-			setCell(row, 2, "", cs);
-			setCell(row, 3, "", cs);
-			setCell(row, 4, "GIORNI L.A. CONCESSI", cs);
-		}
-
-		if (nRow == 2) {
-			// 0 o 1 solo semestre utile devo aggiungere una riga
-			nRow++;
-			row = sheetLibero.createRow(nRow);
-			setCell(row, 0, "", cs);
-			setCell(row, 1, "", cs);
-			setCell(row, 2, "", cs);
-			setCell(row, 3, "", cs);
-			setCell(row, 4, StringUtils.toStringJSP(lCalcoloDL92Model.getLAMaturate().intValue(), "0"), cs);
-		}
+			setCell(row, 0, "", csCenter);
+			setCell(row, 1, "", csCenter);
+			setCell(row, 2, "", csCenter);
+			setCell(row, 3, "", csCenter);
+			setCell(row, 4, "", csCenter);
+			setCell(row, 5, "", csCenter);
+		}		
+		
+		// Riepilogo
+		setCell(sheetLibero.getRow(1), 6, "L.A. MATURATA MA NON APPLICATA / PENA ESPIATA IN ECCESSO", csRiepilogo);
+		if (lCalcoloDL92Model.getLAFungibili().intValue() > 0) 
+			setCell(sheetLibero.getRow(2), 6, StringUtils.toStringJSP(lCalcoloDL92Model.getLAFungibili().intValue(), "0"), csBoldCenterRed);
+		else 
+			setCell(sheetLibero.getRow(2), 6, StringUtils.toStringJSP(lCalcoloDL92Model.getLAFungibili().intValue(), "0"), csCenter);
+		setCell(sheetLibero.getRow(3), 6, "GIORNI L.A. CONCESSI", csRiepilogo);
+		setCell(sheetLibero.getRow(4), 6, StringUtils.toStringJSP(lCalcoloDL92Model.getLAMaturate().intValue(), "0"), csCenter);
 	}
 
 	private void creaFoglioDetenuto(HSSFWorkbook wb, CalcoloPenaDL92Model lCalcoloDL92Model) {
@@ -659,20 +702,61 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		// foglio dettaglio
 		HSSFSheet sheetDetenuto = wb.createSheet("DETENUTO");
 
+		// Font
+		HSSFFont fontBold = wb.createFont();
+		fontBold.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		
 		// stile per celle col bordo
 		HSSFCellStyle cs = getBordo4Lati(wb);
 
-		// Impostare opportunamente la larghezza della prima riga
-		sheetDetenuto.setColumnWidth(0, (11 * 256)); // Larghezza prima colonna
-		sheetDetenuto.setColumnWidth(1, (11 * 256)); // Larghezza seconda colonna
-		sheetDetenuto.setColumnWidth(2, (8 * 256)); // LA APPLICATA
-		sheetDetenuto.setColumnWidth(3, (11 * 256)); // Larghezza quarta colonna
-		sheetDetenuto.setColumnWidth(4, (11 * 256)); // Larghezza quinta colonna
-		sheetDetenuto.setColumnWidth(5, (8 * 256)); // ANNI RESIDUI
-		sheetDetenuto.setColumnWidth(6, (8 * 256)); // MESI RESIDUI
-		sheetDetenuto.setColumnWidth(7, (8 * 256)); // GIORNI RESIDUI
-		sheetDetenuto.setColumnWidth(8, (11 * 256)); // SURPLUS
+		HSSFFont fontBoldRed = wb.createFont();
+		fontBoldRed.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		fontBoldRed.setColor(HSSFFont.COLOR_RED);
+		
+		HSSFCellStyle csBoldCenter = getBordo4Lati(wb);
+		csBoldCenter.setFont(fontBold);
+		csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
 
+		HSSFCellStyle csBoldCenterRed = getBordo4Lati(wb);
+		csBoldCenterRed.setFont(fontBoldRed);
+		csBoldCenterRed.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		
+		// stile per celle col bordo centrata
+		HSSFCellStyle csCenter = getBordo4Lati(wb);
+		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		
+		// stile per celle col bordo allineamento da desta
+		HSSFCellStyle csRight = getBordo4Lati(wb);
+		csRight.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+		
+		// Stile intestazione: bold centrato e sfondo grigio
+		HSSFCellStyle csIntestazione = getBordo4Lati(wb);
+		csIntestazione.setFont(fontBold);
+		csIntestazione.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		csIntestazione.setFillForegroundColor(HSSFColor.LIGHT_GREEN.index);
+		csIntestazione.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csIntestazione.setWrapText(true); // testo a capo		
+		csIntestazione.setVerticalAlignment(HSSFCellStyle.VERTICAL_BOTTOM);
+		
+		HSSFCellStyle csRiepilogo = getBordo4Lati(wb);
+		csRiepilogo.setFont(fontBold);
+		csRiepilogo.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		csRiepilogo.setFillForegroundColor(HSSFColor.LIGHT_ORANGE.index);
+		csRiepilogo.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+
+		
+		// Impostare opportunamente la larghezza delle righe
+		sheetDetenuto.setColumnWidth(0, (6 * 256)); // Larghezza prima colonna
+		sheetDetenuto.setColumnWidth(1, (28 * 256)); // Larghezza seconda colonna
+		sheetDetenuto.setColumnWidth(2, (17 * 256)); // LA APPLICATA
+		sheetDetenuto.setColumnWidth(3, (17 * 256)); // Data In cui maturo LA
+		sheetDetenuto.setColumnWidth(4, (32 * 256)); // Nuova Data Scadenza
+		sheetDetenuto.setColumnWidth(5, (17 * 256)); // ANNI RESIDUI
+		sheetDetenuto.setColumnWidth(6, (17 * 256)); // MESI RESIDUI
+		sheetDetenuto.setColumnWidth(7, (17 * 256)); // GIORNI RESIDUI
+		sheetDetenuto.setColumnWidth(8, (22 * 256)); // SURPLUS
+		sheetDetenuto.setColumnWidth(9, (23 * 256)); // RIEPILOGO
+		
 		int nRow = 0;
 
 		// ==================================================================
@@ -680,16 +764,17 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		// ==================================================================
 		// nRow++;
 		HSSFRow row = sheetDetenuto.createRow(nRow);
-		setCell(row, 0, "DATA DECORRENZA", cs);
-		setCell(row, 1, DateUtils.getDateToString(lCalcoloDL92Model.getDataInizioPena(), "dd/MM/yyyy"), cs);
-		setCell(row, 2, "L.A. APPLICATA", cs);
-		setCell(row, 3, "DATA IN CUI MATURO L.A.", cs);
-		setCell(row, 4, "NUOVA DATA SCADENZA APPLCANDO LE CONCESSIONI DI 45GG PER INTERO", cs);
-		setCell(row, 5, "ANNI RESIDUI", cs);
-		setCell(row, 6, "MESI RESIDUI", cs);
-		setCell(row, 7, "GIORNI RESIDUI", cs);
-		setCell(row, 8, "SURPLUS DETENZIONE (GIORNI DI FUNGIBILITA)", cs);
-		// setCell(row, 9, "SURPLUS DETENZIONE", cs);
+		//row.setHeight (altezzaIntestazione);
+		setCell(row, 0, "", csIntestazione);
+		setCell(row, 1, "", csIntestazione);
+		setCell(row, 2, "L.A. APPLICATA", csIntestazione);
+		setCell(row, 3, "DATA IN CUI MATURO L.A.", csIntestazione);
+		setCell(row, 4, "NUOVA DATA SCADENZA APPLCANDO LE CONCESSIONI DI 45GG PER INTERO", csIntestazione);
+		setCell(row, 5, "ANNI RESIDUI", csIntestazione);
+		setCell(row, 6, "MESI RESIDUI", csIntestazione);
+		setCell(row, 7, "GIORNI RESIDUI", csIntestazione);
+		setCell(row, 8, "SURPLUS DETENZIONE (GIORNI DI FUNGIBILITA)", csIntestazione);
+		setCell(row, 9, "RIEPILOGO", csIntestazione);
 
 		// ==================================================================
 		// Prima Riga Presofferto
@@ -698,18 +783,16 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 
 		nRow++;
 		row = sheetDetenuto.createRow(nRow);
-		setCell(row, 0, StringUtils.toStringJSP(lCalcoloPresofferto.getNumSemestriMaturati(), "0"), cs);
-		setCell(row, 1, "SEMESTRI ESPIATI IN C.C. ", cs);
-		setCell(row, 2, StringUtils.toStringJSP(lCalcoloPresofferto.getLAApplicate(), "0"), cs);
-		setCell(row, 3, "", cs);
-		setCell(row, 4,
-				DateUtils.getDateToString(lCalcoloPresofferto.getNuovaDataScadenzaPena(), "dd/MM/yyyy"), cs);
-		setCell(row, 5, StringUtils.toStringJSP(lCalcoloPresofferto.getResiduoNumAnni().intValue(), "0"), cs);
-		setCell(row, 6, StringUtils.toStringJSP(lCalcoloPresofferto.getResiduoNumMesi().intValue(), "0"), cs);
-		setCell(row, 7, StringUtils.toStringJSP(lCalcoloPresofferto.getResiduoNumGiorni().intValue(), "0"),
-				cs);
-		setCell(row, 8, "", cs); // SURPLUS solo ultimo semestre. Sicuramente NON presente su presofferto
-		// surpl
+		setCell(row, 0, StringUtils.toStringJSP(lCalcoloPresofferto.getNumSemestriMaturati(), "0"), csCenter);
+		setCell(row, 1, "SEMESTRI ESPIATI IN C.C. ", csCenter);
+		setCell(row, 2, StringUtils.toStringJSP(lCalcoloPresofferto.getLAApplicate(), "0"), csCenter);
+		setCell(row, 3, "", csCenter);
+		setCell(row, 4, DateUtils.getDateToString(lCalcoloPresofferto.getNuovaDataScadenzaPena(), "dd/MM/yyyy"), csCenter);
+		setCell(row, 5, StringUtils.toStringJSP(lCalcoloPresofferto.getResiduoNumAnni().intValue(), "0"), csCenter);
+		setCell(row, 6, StringUtils.toStringJSP(lCalcoloPresofferto.getResiduoNumMesi().intValue(), "0"), csCenter);
+		setCell(row, 7, StringUtils.toStringJSP(lCalcoloPresofferto.getResiduoNumGiorni().intValue(), "0"), csCenter);
+		setCell(row, 8, "", csCenter); // SURPLUS solo ultimo semestre. Sicuramente NON presente su presofferto
+		
 
 		// ==================================================================
 		// Ciclo sui semestri
@@ -721,24 +804,56 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 			nRow++;
 			row = sheetDetenuto.createRow(nRow);
 
-			setCell(row, 0, StringUtils.toStringJSP(lSemestreUtile.getProgressivo(), "0"), cs);
+			HSSFCellStyle lastCellStyle = csCenter;
+			
+			if (i == (mListaSemetri.size() - 1) && lCalcoloDL92Model.getLAFungibili().intValue()>0)
+				lastCellStyle = csBoldCenterRed;
+			
+			setCell(row, 0, StringUtils.toStringJSP(lSemestreUtile.getProgressivo(), "0"), csCenter);
 			setCell(row, 1, "semestre maturato per L.A. ", cs);
-			setCell(row, 2, StringUtils.toStringJSP(lSemestreUtile.getLAApplicate(), "0"), cs);
-			setCell(row, 3, DateUtils.getDateToString(lSemestreUtile.getDataMaturazioneLA(), "dd/MM/yyyy"),
-					cs);
-			setCell(row, 4,
-					DateUtils.getDateToString(lSemestreUtile.getNuovaDataScadenzaPena(), "dd/MM/yyyy"), cs);
-			setCell(row, 5, StringUtils.toStringJSP(lSemestreUtile.getResiduoNumAnni().intValue(), "0"), cs);
-			setCell(row, 6, StringUtils.toStringJSP(lSemestreUtile.getResiduoNumMesi().intValue(), "0"), cs);
-			setCell(row, 7, StringUtils.toStringJSP(lSemestreUtile.getResiduoNumGiorni().intValue(), "0"),
-					cs);
-			// SURPLUS solo ultimo semestre
-			if (i == (mListaSemetri.size() - 1))
-				setCell(row, 8, StringUtils.toStringJSP(lCalcoloDL92Model.getLAFungibili().intValue(), "0"),
-						cs); // Ultimo RIgo
+			
+			if ( lSemestreUtile.getLAApplicate().intValue()<45 ) 
+				setCell(row, 2, StringUtils.toStringJSP(lSemestreUtile.getLAApplicate(), "0"), csBoldCenterRed);
 			else
-				setCell(row, 8, "", cs);
+				setCell(row, 2, StringUtils.toStringJSP(lSemestreUtile.getLAApplicate(), "0"), csCenter);
+
+			setCell(row, 3, DateUtils.getDateToString(lSemestreUtile.getDataMaturazioneLA(), "dd/MM/yyyy"), csCenter);
+			setCell(row, 4,	DateUtils.getDateToString(lSemestreUtile.getNuovaDataScadenzaPena(), "dd/MM/yyyy"), lastCellStyle);
+			setCell(row, 5, StringUtils.toStringJSP(lSemestreUtile.getResiduoNumAnni().intValue(), "0"), lastCellStyle);
+			setCell(row, 6, StringUtils.toStringJSP(lSemestreUtile.getResiduoNumMesi().intValue(), "0"), lastCellStyle);
+			setCell(row, 7, StringUtils.toStringJSP(lSemestreUtile.getResiduoNumGiorni().intValue(), "0"), lastCellStyle);
+
+			// SURPLUS solo ultimo semestre
+			if (i == (mListaSemetri.size() - 1) && lCalcoloDL92Model.getLAFungibili().intValue()==0)
+				setCell(row, 8, "",csCenter);
+			else if (i == (mListaSemetri.size() - 1) && lCalcoloDL92Model.getLAFungibili().intValue()>0)
+				setCell(row, 8, StringUtils.toStringJSP(lCalcoloDL92Model.getLAFungibili().intValue(), "0"),csBoldCenterRed);
+			else
+				setCell(row, 8, "", csCenter);
 		}
+
+		// Mi servono min 7 righe per la colonna del riepilogo, se non create le devo generare
+		while (nRow < 6) {
+			nRow++;
+			row = sheetDetenuto.createRow(nRow);
+			setCell(row, 0, "", csCenter);
+			setCell(row, 1, "", csCenter);
+			setCell(row, 2, "", csCenter);
+			setCell(row, 3, "", csCenter);
+			setCell(row, 4, "", csCenter);
+			setCell(row, 5, "", csCenter);
+			setCell(row, 6, "", csCenter);
+			setCell(row, 7, "", csCenter);
+			setCell(row, 8, "", csCenter);
+		}
+			
+		// Data Decorrenza
+		setCell(sheetDetenuto.getRow(1), 9, "DATA DECORRENZA", csRiepilogo);
+		setCell(sheetDetenuto.getRow(2), 9, DateUtils.getDateToString(lCalcoloDL92Model.getDataInizioPena(), "dd/MM/yyyy")  , csCenter);
+		setCell(sheetDetenuto.getRow(3), 9, "DATA SCARCERAZIONE", csRiepilogo);
+		setCell(sheetDetenuto.getRow(4), 9, DateUtils.getDateToString(lCalcoloDL92Model.getDataScarcerazioneLAFung(), "dd/MM/yyyy"), csCenter);
+		setCell(sheetDetenuto.getRow(5), 9, "GIORNI L.A. CONCESSI", csRiepilogo);
+		setCell(sheetDetenuto.getRow(6), 9, StringUtils.toStringJSP(lCalcoloDL92Model.getLAMaturate().intValue(), "0"), csCenter);
 	}
 
 	/**
@@ -774,4 +889,134 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		return cs;
 	}
 
+	private void creaFoglioLiberoBCK (HSSFWorkbook wb, CalcoloPenaDL92Model lCalcoloDL92Model) {
+
+		// foglio Libero
+		HSSFSheet sheetLibero = wb.createSheet("LIBERO");
+
+		// Font
+		HSSFFont fontBold = wb.createFont();
+		fontBold.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		
+		HSSFFont fontBoldRed = wb.createFont();
+		fontBoldRed.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		fontBoldRed.setColor(HSSFFont.COLOR_RED);
+		
+		// Colore celle RGB
+		//XSSFColor myGreen  = new XSSFColor (new java.awt.Color(146,208,80));
+		//XSSFColor myOrange = new XSSFColor (new java.awt.Color(255,192,0));
+		
+		// stile per celle col bordo (allineamento a sinistra)
+		HSSFCellStyle cs = getBordo4Lati(wb);
+
+		HSSFCellStyle csBoldCenterRed = getBordo4Lati(wb);
+		csBoldCenterRed.setFont(fontBoldRed);
+		csBoldCenterRed.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		
+		// stile per celle col bordo centrata
+		HSSFCellStyle csCenter = getBordo4Lati(wb);
+		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		
+		// stile per celle col bordo allineamento da desta
+		HSSFCellStyle csRight = getBordo4Lati(wb);
+		csRight.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+		
+		// Stile intestazione: bold centrato e sfondo grigio
+		HSSFCellStyle csIntestazione = getBordo4Lati(wb);
+		csIntestazione.setFont(fontBold);
+		csIntestazione.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		csIntestazione.setFillForegroundColor(HSSFColor.LIGHT_GREEN.index);
+		//csIntestazione.setFillForegroundColor(myGreen.getIndexed());
+		csIntestazione.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csIntestazione.setWrapText(true); // testo a capo		
+		csIntestazione.setVerticalAlignment(HSSFCellStyle.VERTICAL_BOTTOM);
+		
+		HSSFCellStyle csRiepilogo = getBordo4Lati(wb);
+		csRiepilogo.setFont(fontBold);
+		csRiepilogo.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		csRiepilogo.setFillForegroundColor(HSSFColor.LIGHT_ORANGE.index);
+		//csRiepilogo.setFillForegroundColor(myOrange.getIndexed());
+		csRiepilogo.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		
+		// Impostare opportunamente la larghezza della prima riga
+		sheetLibero.setColumnWidth (0, (5  * 256)); // Progressivo
+		sheetLibero.setColumnWidth (1, (30 * 256)); // Desc Semestre
+		sheetLibero.setColumnWidth (2, (20 * 256)); // LA APPLICATA
+		sheetLibero.setColumnWidth (3, (25 * 256)); // Residuao Pena
+		sheetLibero.setColumnWidth (4, (65 * 256)); // Colonna riepilogo
+
+		int nRow = 0;
+
+		// ==================================================================
+		// Riga Interstazioni
+		// ==================================================================
+		// nRow++;
+		HSSFRow row = sheetLibero.createRow(nRow);
+		setCell(row, 0, " ", csIntestazione);
+		setCell(row, 1, " ", csIntestazione);
+		setCell(row, 2, "L.A. APPLICATA", csIntestazione);
+		setCell(row, 3, "RESIDUO ANNI PENA", csIntestazione);
+
+		// ==================================================================
+		// Prima Riga Presofferto
+		// ==================================================================
+		SemestreDL92Model lCalcoloPresofferto = lCalcoloDL92Model.getSemestrePresofferto();
+		String lStringResiduo = lCalcoloPresofferto.getResiduoNumAnni() + " anni "
+				+ lCalcoloPresofferto.getResiduoNumMesi() + " mesi "
+				+ lCalcoloPresofferto.getResiduoNumGiorni() + " giorni";
+		nRow++;
+		row = sheetLibero.createRow(nRow);
+		setCell(row, 0, StringUtils.toStringJSP(lCalcoloPresofferto.getNumSemestriMaturati(), "0"), csCenter);
+		setCell(row, 1, "SEMESTRI ESPIATI IN C.C. ", csCenter);
+		setCell(row, 2, StringUtils.toStringJSP(lCalcoloPresofferto.getLAApplicate(), "0"), csCenter);
+		setCell(row, 3, lStringResiduo, csCenter);
+
+		// ==================================================================
+		// Ciclo sui semestri
+		// ==================================================================
+		Vector<SemestreDL92Model> mListaSemetri = lCalcoloDL92Model.getListaSemetri();
+		for (int i = 0; i < mListaSemetri.size(); i++) {
+			SemestreDL92Model lSemestreUtile = mListaSemetri.elementAt(i);
+			String lPenaStr = lSemestreUtile.getResiduoNumAnni() + " anni - "
+					+ lSemestreUtile.getResiduoNumMesi() + " mesi - " + lSemestreUtile.getResiduoNumGiorni()
+					+ " giorni ";
+
+			// String lColorLastSem = "";
+			// if (lSemestreUtile.getLAApplicate().intValue() < 45)
+			// lColorLastSem = "style='color=red'";
+
+			nRow++;
+			row = sheetLibero.createRow(nRow);
+			setCell(row, 0, StringUtils.toStringJSP(lSemestreUtile.getProgressivo()) + "°", csCenter);
+			setCell(row, 1, "semestre utile per L.A. ", csCenter);
+			
+			if (lSemestreUtile.getLAApplicate().intValue() < 45) {
+				setCell(row, 2, StringUtils.toStringJSP(lSemestreUtile.getLAApplicate(), "0"), csBoldCenterRed);
+				setCell(row, 3, lPenaStr, csBoldCenterRed);
+			}
+			else {
+				setCell(row, 2, StringUtils.toStringJSP(lSemestreUtile.getLAApplicate(), "0"), csCenter);
+			  setCell(row, 3, lPenaStr, csCenter);
+			}
+		}
+
+		// Mi servono min 4 righe per la colonna del riepilogo, se non create le devo generare
+		while (nRow < 4) {
+			nRow++;
+			row = sheetLibero.createRow(nRow);
+			setCell(row, 0, "", csCenter);
+			setCell(row, 1, "", csCenter);
+			setCell(row, 2, "", csCenter);
+			setCell(row, 3, "", csCenter);
+		}		
+		
+		// Riepilogo
+		setCell(sheetLibero.getRow(1), 4, "L.A. MATURATA MA NON APPLICATA / PENA ESPIATA IN ECCESSO", csRiepilogo);
+		if (lCalcoloDL92Model.getLAFungibili().intValue() > 0) 
+			setCell(sheetLibero.getRow(2), 4, StringUtils.toStringJSP(lCalcoloDL92Model.getLAFungibili().intValue(), "0"), csBoldCenterRed);
+		else 
+			setCell(sheetLibero.getRow(2), 4, StringUtils.toStringJSP(lCalcoloDL92Model.getLAFungibili().intValue(), "0"), csCenter);
+		setCell(sheetLibero.getRow(3), 4, "GIORNI L.A. CONCESSI", csRiepilogo);
+		setCell(sheetLibero.getRow(4), 4, StringUtils.toStringJSP(lCalcoloDL92Model.getLAMaturate().intValue(), "0"), csCenter);
+	}
 }
