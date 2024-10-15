@@ -180,6 +180,19 @@ public class ActInserisciConcessione extends ActConcessione {
 			lFlagAffi = "S";
 		}
 
+		// 2024.10.15 DF - Attenzione. Nel giro nomale flagaffi = S vuol dire che ho un condannato precedentemente libero 
+		// poi passato in misura. Questo si verifica se si effettua una concessione da libero e si registra il verbale sottoposizione.
+		// Il verbale modifica la PG in "misura" e dal dettaglio si ha il tasto per l'emissione del provvedimento.
+		// In questo caso in form viene precaricata l'unica ordinanza di concessione non modificabile. 
+		// La data inizio misura la ha registrata sempre il verbale. Per cui la MA ha la data inizio misura e non va ricalcolata
+		// ovvero flag affi = S
+		// Nel caso di ratifica invece se è stata eseguita la provvisoria da libero (caso non previsto dalla concessione)
+		// il soggetto è passato in misura, ma la ratifica è un nuovo provvedimento della sorv per cui sulla MA non è presente la data inizio
+		// che va ricalcolata. lFlagAffi = "S";
+		// Nel codice successiovo si forza flag affi= N seratifica
+
+		
+		
 		IMisuraAlternativa lMisAltCtrl = SICOLookupRemote.getMisuraAlternativaRemote();
 		MisuraAlternativaModel lMisAlModConcessa = null;
 		BigDecimal lIdOrdinanza = getRequestBigDecimalParameter(
@@ -225,6 +238,11 @@ public class ActInserisciConcessione extends ActConcessione {
 			// fine composizione delle tabelle per la misura alternativa simulata da SIEP
 			// --------------------------------------------
 
+			// 2024.10.15 DF
+			// In caso di ratifia forzo il flag affi a N per recuperare la data inizio misura
+			if ("0723".equals(lMisMod.getCodTipoMisura()))
+				lFlagAffi = "N";
+			
 			Date lDataInizio = SettaDataInizioMisura(lPosMod, lFlagAffi, lFlagSan, tipoMisura);
 
 			if (lDataInizio != null)
@@ -255,6 +273,7 @@ public class ActInserisciConcessione extends ActConcessione {
 						ICostantiPenaResidua.CAMPO_MESE_DATA_FINE,
 						ICostantiPenaResidua.CAMPO_GIORNO_DATA_FINE));
 
+			siesLogger.debug("TEST 1");
 			if (!lPosMod.isLibero())
 				lMisMod = SettaReclusioneArresto(lPenaResMod, lMisMod);
 
@@ -327,9 +346,16 @@ public class ActInserisciConcessione extends ActConcessione {
 			// setto la misura alternativa che deve essere modificata
 			EventoNotificaModel lRetModel = new EventoNotificaModel();
 
+			// 2024.10.15 DF
+			// In caso di ratifia forzo il flag affi a N per recuperare la data inizio misura
+			if ("0723".equals(lMisAlModConcessa.getCodTipoMisura()))
+				lFlagAffi = "N";
+			
 			Date lDataInizio = SettaDataInizioMisura(lPosMod, lFlagAffi, lFlagSan, tipoMisura);
 			if (lDataInizio != null)
 				lMisAlModConcessa.setDataInizioMisura(lDataInizio);
+			
+			siesLogger.debug("TEST 2");
 			if (!lPosMod.isLibero())
 				lMisAlModConcessa = SettaReclusioneArresto(lPenaResMod, lMisAlModConcessa);
 
