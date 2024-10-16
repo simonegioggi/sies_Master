@@ -180,6 +180,18 @@ public class ActInserisciConcessione extends ActConcessione {
 			lFlagAffi = "S";
 		}
 
+		// 2024.10.15 DF - Attenzione. Nel giro nomale lFlagAffi = S vuol dire che ho un condannato
+		// precedentemente libero poi passato in misura.
+		// Questo si verifica se si effettua una concessione da libero e si registra il verbale
+		// sottoscrizione. Il verbale modifica la PG in "misura" e dal dettaglio si ha il tasto per
+		// l'emissione del provvedimento.
+		// In questo caso in form viene precaricata l'unica ordinanza di concessione non modificabile.
+		// La data inizio misura la ha registrata sempre il verbale. Per cui la MA ha la data inizio misura e
+		// non va ricalcolata ovvero lFlagAffi = S.
+		// Nel caso di ratifica invece se è stata eseguita la provvisoria da libero (caso non previsto dalla
+		// concessione) il soggetto è passato in misura, ma la ratifica è un nuovo provvedimento della sorv
+		// per cui sulla MA non è presente la data inizio che va ricalcolata. lFlagAffi = "S";
+		// Nel codice successiovo si forza lFlagAffi = N se ratifica.
 		IMisuraAlternativa lMisAltCtrl = SICOLookupRemote.getMisuraAlternativaRemote();
 		MisuraAlternativaModel lMisAlModConcessa = null;
 		BigDecimal lIdOrdinanza = getRequestBigDecimalParameter(
@@ -224,6 +236,11 @@ public class ActInserisciConcessione extends ActConcessione {
 
 			// fine composizione delle tabelle per la misura alternativa simulata da SIEP
 			// --------------------------------------------
+
+			// 2024.10.15 DF
+			// In caso di ratifica forzo il lFlagAffi a N per recuperare la data inizio misura
+			if ("0723".equals(lMisMod.getCodTipoMisura()))
+				lFlagAffi = "N";
 
 			Date lDataInizio = SettaDataInizioMisura(lPosMod, lFlagAffi, lFlagSan, tipoMisura);
 
@@ -327,9 +344,15 @@ public class ActInserisciConcessione extends ActConcessione {
 			// setto la misura alternativa che deve essere modificata
 			EventoNotificaModel lRetModel = new EventoNotificaModel();
 
+			// 2024.10.15 DF
+			// In caso di ratifica forzo il lFlagAffi a N per recuperare la data inizio misura
+			if ("0723".equals(lMisAlModConcessa.getCodTipoMisura()))
+				lFlagAffi = "N";
+
 			Date lDataInizio = SettaDataInizioMisura(lPosMod, lFlagAffi, lFlagSan, tipoMisura);
 			if (lDataInizio != null)
 				lMisAlModConcessa.setDataInizioMisura(lDataInizio);
+
 			if (!lPosMod.isLibero())
 				lMisAlModConcessa = SettaReclusioneArresto(lPenaResMod, lMisAlModConcessa);
 
