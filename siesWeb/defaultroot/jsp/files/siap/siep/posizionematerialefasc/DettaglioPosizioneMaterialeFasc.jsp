@@ -114,8 +114,8 @@
 %>
     <tr>
       <td class=c><%=lPosMatFasc.getCodPosizioneMateriale()%></td>
-      <td class=c><%=lPosMatFasc.getDescrPosizioneMateriale()%></td>
-      <td class=c><%=lPosMatFasc.getDescrStatoProcedimento()%></td>
+      <td class=c><%=StringUtils.cStrForJS(lPosMatFasc.getDescrPosizioneMateriale())%></td>
+      <td class=c><%=StringUtils.cStrForJS(lPosMatFasc.getDescrStatoProcedimento())%></td>
       <td class=c><%=DateUtils.getDateToString(lPosMatFasc.getDataInizio(),"dd-MM-yyyy")%></td>
       <td class=c><%=StringUtils.toStringJSP(DateUtils.getDateToString(lPosMatFasc.getDataFine(),"dd-MM-yyyy"), "-")%></td>
      <td class=c>
@@ -143,7 +143,10 @@
         </jsp:include>
 <%   }
      bottone = false;
-  } %>
+  } else {%>
+			&nbsp;
+<%   }
+%>
       </td>
     </tr>
 <%
