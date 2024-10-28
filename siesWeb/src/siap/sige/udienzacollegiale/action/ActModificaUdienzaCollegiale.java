@@ -34,18 +34,8 @@ import siap.sige.udienzaprocedimento.model.ProcedimentixUdienzaModel;
 import siap.sige.util.SIGELookupRemote;
 
 /**
- * <p>
  * Title: ActModificaUdienzaCollegiale
- * </p>
- * <p>
  * Description: Classe Action per la modifica di UdienzaCollegialeSige
- * </p>
- * <p>
- * Copyright: Copyright (c) 2008
- * </p>
- * <p>
- * Company: Eutelia S.p.A.
- * </p>
  *
  * @version 1.0
  */
@@ -447,8 +437,10 @@ public class ActModificaUdienzaCollegiale extends ActUdienzaCollegiale
 					Map.Entry entry = (Map.Entry) it.next();
 
 					// Stampa a schermo la coppia chiave-valore;
-					System.out.println("Key = " + entry.getKey());
-					System.out.println("Value = " + entry.getValue());
+					// System.out.println("Key = " + entry.getKey());
+					// System.out.println("Value = " + entry.getValue());
+					siesLogger.debug("Key = " + entry.getKey());
+					siesLogger.debug("Value = " + entry.getValue());
 
 					MagistratoAssegnatarioModel lMagistratoCorrente = lCtrl
 							.ExRicercaEstesaMagAssCorrenteXFascicolo(

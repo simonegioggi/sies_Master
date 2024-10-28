@@ -2,6 +2,6 @@ BRANCH DEVELOP
 
 Allineato al:
 
-BRANCH SIES VERSIONE 12.6.4.0
+BRANCH SIES VERSIONE 12.6.4.0-MEV_2024_092
 
-Questa release è stata rilasciata il 27/09/2024 (Patch mese di Luglio, Agosto e Settembre 2024)
+Questa release è stata rilasciata il 25/10/2024

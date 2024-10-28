@@ -93,7 +93,6 @@ else {
 
         $('#tabEstremiProvv select').each(
             function(index){
-              //console.log(index+":"+$( this ).text());
               this.selectedIndex=0;
             }
         );
