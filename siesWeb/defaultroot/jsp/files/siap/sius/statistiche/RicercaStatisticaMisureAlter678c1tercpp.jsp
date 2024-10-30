@@ -140,9 +140,9 @@ if (ricercaProcedimenti != null) {
 <%
 	} else if (ricercaProcedimenti.getStatoProcedimento() == 2) {
 %>
-	<%-- MEV_2024-092: cambio messaggio da Provvisoria a Misure Alternative Dl 123/2018 --%>
+	<%-- MEV_2024-092: cambio messaggio da Provvisoria a Misure Alternative DL 123/2018 --%>
 	<tr>
-	 	<td class="lVerdeNB">Ordinanze Applicazione Misure Alternative Dl 123/2018 Emesse ma prive di Data di Esecutivita&#768;</td>
+	 	<td class="lVerdeNB">Ordinanze Applicazione Misure Alternative DL 123/2018 Emesse ma prive di Data di Esecutivita&#768;</td>
 	</tr>
 <%
 	} else if (ricercaProcedimenti.getStatoProcedimento() == 3) {

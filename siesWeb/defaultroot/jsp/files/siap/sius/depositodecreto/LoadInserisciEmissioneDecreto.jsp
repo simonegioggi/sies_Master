@@ -160,8 +160,8 @@ if (flagOrdinanza != null && flagOrdinanza.compareTo("ordinanza") == 0) {
     lDocumento = new String("ordinanza");
     if ("SI".equals(isOrdProvvisoria))
     	// MEV_2024-092: modificata etichetta
-    	// lTitolo = new String("Emissione Ordinanza Applicazione Provvisoria Misura Alternativa");
-    	lTitolo = new String("Emissione Ordinanza Applicazione Misure Alternative Dl 123/2018");
+    	// lTitolo = new String("Emissione Ordinanza Applicazione ex art. 678 comma 1 ter cpp Misura Alternativa");
+    	lTitolo = new String("Emissione Ordinanza Applicazione Misure Alternative DL 123/2018");
     else
     	lTitolo = new String("Emissione Ordinanza");
     lActRet = new String("siap.sius.depositoordinanzapc.action.ActLoadEmissioneOrdinanzaUDS");

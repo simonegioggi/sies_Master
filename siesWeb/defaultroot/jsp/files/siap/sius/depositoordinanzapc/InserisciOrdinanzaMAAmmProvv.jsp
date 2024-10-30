@@ -270,8 +270,8 @@ String lAction = "siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaUDS"
     	<td class=LBG>
 			<font class="label">Funzione : </font>
 			<%-- MEV_2024-092: modificata etichetta --%>
-			<%-- <font class="campo">Emissione Ordinanza Applicazione Provvisoria Misura Alternativa</font> --%>
-			<font class="campo">Emissione Ordinanza Applicazione Misure Alternative Dl 123/2018</font>
+			<%-- <font class="campo">Emissione Ordinanza Applicazione ex art. 678 comma 1 ter cpp Misura Alternativa</font> --%>
+			<font class="campo">Emissione Ordinanza Applicazione Misure Alternative DL 123/2018</font>
     	</td>
   	</tr>
 	  <tr>

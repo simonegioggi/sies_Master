@@ -294,7 +294,7 @@ public class ActLoadModificaOrdinanza extends ActDettaglioEmissioneOrdinanza {
 		// FINE: MEV_2019-09 (D.lgs. 123/2018)
 
 		/*
-		 * ISSUE MEV : aggiunta ricerca dati ordinanza applicazione provvisoria da scivere in dettaglio 
+		 * ISSUE MEV : aggiunta ricerca dati Ordinanza Applicazione ex art. 678 comma 1 ter cpp da scivere in dettaglio 
 		 * Numero MEV : 9 
 		 * Autore : sgioggi 
 		 * Data : 17 gen 2023 
@@ -317,7 +317,7 @@ public class ActLoadModificaOrdinanza extends ActDettaglioEmissioneOrdinanza {
 			}
 			IDepositoOrdinanzaPc idopc = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
 			DepositoOrdinanzaPcModel dopcm = idopc.ExRicercaDepositoOrdinanzaPcByEvento(idEventoOrdinanza);
-			// dati x l'ordinanza di Applicazione Misure Alternative Dl 123/2018 (ex Provvisoria M.A.)
+			// dati x l'ordinanza di Applicazione Misure Alternative DL 123/2018 (ex Provvisoria M.A.)
 			String descrTipoOrdinanza = (DecodificheUtils.getDescbyCode(
 					DecodificheManager.getInstance().getTipoOrdinanza(), dopcm.getCodTipoOrdinanza()));
 			dopcm.setDescrTipoOrdinanza(descrTipoOrdinanza);

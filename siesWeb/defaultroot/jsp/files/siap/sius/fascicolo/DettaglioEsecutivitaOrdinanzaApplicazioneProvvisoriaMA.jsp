@@ -30,8 +30,8 @@ String actionCancella = "siap.sius.fascicolo.action.ActRegistrazioneEsecutivitaA
 <html>
 <head>
 <%-- MEV_2024-092: modificata etichetta x2 --%>
-<!-- <title>[S.I.E.S.] - Dettaglio Esecutivita&#768; Ordinanza Applicazione Provvisoria M.A.</title> -->
-<title>[S.I.E.S.] - Dettaglio Esecutivita&#768; Ordinanza Applicazione Misure Alternative Dl 123/2018</title>
+<!-- <title>[S.I.E.S.] - Dettaglio Esecutivita&#768; Ordinanza Applicazione ex art. 678 comma 1 ter cpp M.A.</title> -->
+<title>[S.I.E.S.] - Dettaglio Esecutivita&#768; Ordinanza Applicazione Misure Alternative DL 123/2018</title>
 <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
 <script language="JavaScript" src="<%=IWebConstants.JS_CONFIRM%>"></script>
 </head>
@@ -45,7 +45,7 @@ String actionCancella = "siap.sius.fascicolo.action.ActRegistrazioneEsecutivitaA
 			</a>
 		</td>
 		<td class="LBG">
-			<font class="label">Funzione : Dettaglio Esecutivita&#768; Ordinanza Applicazione Misure Alternative Dl 123/2018</font>
+			<font class="label">Funzione : Dettaglio Esecutivita&#768; Ordinanza Applicazione Misure Alternative DL 123/2018</font>
 			<input type="HIDDEN" name="ListaTemplate" value="<%=ListaTemplate%>">
 		</td>
 		<!-- BOTTONE DI STAMPA -->

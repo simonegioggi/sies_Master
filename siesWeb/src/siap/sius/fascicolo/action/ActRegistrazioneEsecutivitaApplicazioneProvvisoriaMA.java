@@ -104,10 +104,10 @@ public class ActRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Action
 			}
 		}
 		if (!existOrdinanzaApplicazioneProvvisoria)
-			// MEV_2024-092: cambio messaggio da Provvisoria M.A. a Misure Alternative Dl 123/2018
+			// MEV_2024-092: cambio messaggio da Provvisoria M.A. a Misure Alternative DL 123/2018
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Operazione consentita solo se sul Procedimento sia stata emessa un'ordinanza di "
-							+ "Applicazione Misure Alternative Dl 123/2018 con esito 'Applica provvisoriamente' "
+							+ "Applicazione Misure Alternative DL 123/2018 con esito 'Applica provvisoriamente' "
 							+ "depositata e validata!");
 
 		// aggiorno dati sulla tabella "deposito_ordinanza_pc" (colonne "DATA_ESECUTIVITA" e "NOTE_ATTI")

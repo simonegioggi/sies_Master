@@ -716,7 +716,7 @@ if (!modificaOrdinanza) {
     </tr>
 </table>
 
-<%-- MEV_2019-09: aggiunta tabella x dati ORDINANZA APPLICAZIONE PROVVISORIA M.A --%>
+<%-- MEV_2019-09: aggiunta tabella x dati Ordinanza Applicazione ex art. 678 comma 1 ter cpp M.A --%>
 <%
 if (ICostantiDepositoOrdinanzaPc.CONFERMA_DECISIONE_MAGISTRATO_RELATORE.equals(codice)
 		&& !Utils.isNullObj(dopcm) && Utils.isPresent(dopcm.getAnnoS3())) {

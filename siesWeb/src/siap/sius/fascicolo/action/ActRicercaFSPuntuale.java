@@ -111,17 +111,17 @@ public class ActRicercaFSPuntuale extends ActionSius implements ICostantiFascico
 				for (int i = 0; i < v.size(); i++) {
 					EventoModel em = (EventoModel) v.elementAt(i);
 					if ("0270".equals(em.getCodEsito()) && !"A".equals(em.getFlagDocumentoRegistrato())) {
-						// Ordinanza Applicazione Provvisoria deve esistere ma NON annullata
+						// Ordinanza Applicazione ex art. 678 comma 1 ter cpp deve esistere ma NON annullata
 						existOrdinanzaApplicazioneProvvisoria = true;
 						idEventoOrdinanza = em.getIdEvento();
 						break;
 					}
 				}
 				if (existOrdinanzaApplicazioneProvvisoria && isFissazione)
-					// MEV_2024-092: cambio messaggio da Provvisoria M.A. a Misure Alternative Dl 123/2018
+					// MEV_2024-092: cambio messaggio da Provvisoria M.A. a Misure Alternative DL 123/2018
 					throw new SIUSException(SIUSException.USER_MESSAGE,
 							"Operazione NON consentita poiché sul Procedimento è già stata emessa "
-									+ "un'ordinanza di Applicazione Misure Alternative Dl 123/2018. "
+									+ "un'ordinanza di Applicazione Misure Alternative DL 123/2018. "
 									+ "Utilizzare la funzione di Prefissazione Udienza!");
 				IDepositoOrdinanzaPc idopc = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
 				// DepositoOrdinanzaPcModel dopcm = idopc.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd(
@@ -138,7 +138,7 @@ public class ActRicercaFSPuntuale extends ActionSius implements ICostantiFascico
 						setRequestAttribute(IWebConstants.ACTION_FIELD,
 								"siap.sius.fascicolo.action.ActRicercaFSPuntuale");
 						setRequestAttribute(IWebConstants.MESSAGE_TEXT,
-								"L'Ordinanza di Applicazione Misure Alternative Dl 123/2018 &egrave; priva "
+								"L'Ordinanza di Applicazione Misure Alternative DL 123/2018 &egrave; priva "
 										+ "della Data Esecutivit&agrave;. "
 										+ "Si vuole procedere con la prefissazione Udienza?");
 						// pagina di ritorno

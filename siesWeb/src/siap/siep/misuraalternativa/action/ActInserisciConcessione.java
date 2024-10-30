@@ -507,7 +507,7 @@ public class ActInserisciConcessione extends ActConcessione {
 		// mantengo la stessa data inizio misura della detenzione domiciliare provvisoria (precedentemente
 		// caricata in maschera)
 		if ((aPosMod.getCodPosizioneGiuridica().equals("29") && atipoMisura.equals("DETENZIONE"))
-				// MEV_2019-09-SIEP: aggiunta or condition per gestione ordinanza applicazione provvisoria
+				// MEV_2019-09-SIEP: aggiunta or condition per gestione Ordinanza Applicazione ex art. 678 comma 1 ter cpp
 				|| (aPosMod.isLibero() && atipoMisura.equals("AFFIDAMENTO"))) {
 			if (!isRequestParameterNullEmptyObj(ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA))
 				aDataInizio = getRequestDateParameter(
@@ -525,7 +525,7 @@ public class ActInserisciConcessione extends ActConcessione {
 		// maschera)
 		else if (atipoMisura.equals("AFFIDAMENTO")
 				&& (!isRequestParameterNullEmptyObj(ICostantiEvento.CAMPO_ID_EVENTO)
-						// MEV_2019-09-SIEP: aggiunta or condition per gestione ordinanza applicazione provvisoria
+						// MEV_2019-09-SIEP: aggiunta or condition per gestione Ordinanza Applicazione ex art. 678 comma 1 ter cpp
 						|| !isRequestParameterNullEmptyObj(ICostantiMisuraAlternativa.CAMPO_EVE_ID_EVENTO))
 				&& (aPosMod.getCodPosizioneGiuridica().equals("13") // Affidamento in prova
 						|| aPosMod.getCodPosizioneGiuridica().equals("54") // Affidamento Provvisorio

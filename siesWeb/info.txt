@@ -6,4 +6,4 @@ In data 30/09/2024 eseguito merge col branch 12.6.4.0
 
 In data 16/10/2024 eseguito merge col branch MEV_2019-009
 
-Questa release verrà rilasciata il 25/10/2024
+Questa release verrà rilasciata il ??/??/202?

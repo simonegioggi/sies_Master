@@ -815,7 +815,7 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 		IEvento ie = SICOLookupRemote.getEventoRemote();
 		Vector<?> v = ie.ExRicercaEventoByFascicoloSius(idFascicoloSius, null);
 		// STATO_FASCICOLO 22 Emesso Decreto Designazione
-		// STATO_FASCICOLO 24 Emessa Ordinanza Applicazione Provvisoria
+		// STATO_FASCICOLO 24 Emessa Ordinanza Applicazione ex art. 678 comma 1 ter cpp
 		// ESITO_PROVVEDIMENTO 0270 Applica provvisoriamente
 		// ESITO_PROVVEDIMENTO 0271 Conferma Decisione del Magistrato Relatore
 		// ESITO_PROVVEDIMENTO 0610 Designa Magistrato art. 678 1-ter

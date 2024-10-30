@@ -109,10 +109,10 @@ function Verify() {
         </td>
 	</tr>
  	<tr>
- 		<%-- MEV_2024-092: cambio messaggio da Provvisoria a Misure Alternative Dl 123/2018 ed eliminata l'ultima voce 
+ 		<%-- MEV_2024-092: cambio messaggio da Provvisoria a Misure Alternative DL 123/2018 ed eliminata l'ultima voce 
  		VALUE_RICERCA_ORD_APPLICAZIONE_PROVVISORIA_EMESSE_NO_DECISIONE_COLLEGIO --%>
 		<td class="l">
-			Ordinanze Applicazione Misure Alternative Dl 123/2018 Emesse ma prive di Data di Esecutivita&#768;
+			Ordinanze Applicazione Misure Alternative DL 123/2018 Emesse ma prive di Data di Esecutivita&#768;
 		</td>
 		<td class="l">
         	<input type="radio" name="<%=ICostantiStatistiche.RADIO_RICERCA_STATISTICA_MA%>" value="<%=ICostantiStatistiche.VALUE_RICERCA_ORD_APPLICAZIONE_PROVVISORIA_EMESSE_NO_DATA_ESECUTIVITA%>"/>

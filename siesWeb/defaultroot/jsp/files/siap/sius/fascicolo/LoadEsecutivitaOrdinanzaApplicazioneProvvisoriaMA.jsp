@@ -50,9 +50,9 @@ String action = "siap.sius.fascicolo.action.ActRegistrazioneEsecutivitaApplicazi
 
 <html>
 <head>
-<%-- MEV_2024-092: modificata etichetta x2 da Provvisoria M.A. a Misure Alternative Dl 123/2018 --%>
-<!-- <title>[S.I.E.S.] - Load Esecutivita&#768; Ordinanza Applicazione Provvisoria M.A.</title> -->
-<title>[S.I.E.S.] - Load Esecutivita&#768; Ordinanza Applicazione Misure Alternative Dl 123/2018</title>
+<%-- MEV_2024-092: modificata etichetta x2 da Provvisoria M.A. a Misure Alternative DL 123/2018 --%>
+<!-- <title>[S.I.E.S.] - Load Esecutivita&#768; Ordinanza Applicazione ex art. 678 comma 1 ter cpp M.A.</title> -->
+<title>[S.I.E.S.] - Load Esecutivita&#768; Ordinanza Applicazione Misure Alternative DL 123/2018</title>
 <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
 <script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
 <script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
@@ -104,7 +104,7 @@ function Verifica() {
 				<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0>
 			</a>
 		</td>
-		<td class="LBG"><font class="label">Funzione : Esecutivita&#768; Ordinanza Applicazione Misure Alternative Dl 123/2018</font></td>
+		<td class="LBG"><font class="label">Funzione : Esecutivita&#768; Ordinanza Applicazione Misure Alternative DL 123/2018</font></td>
 		<jsp:include page="<%=IWebConstants.PG_RETURN_BUTTON%>"/>
 	</tr>
     <tr>

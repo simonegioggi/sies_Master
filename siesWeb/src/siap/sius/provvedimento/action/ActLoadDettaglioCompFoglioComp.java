@@ -95,7 +95,7 @@ public class ActLoadDettaglioCompFoglioComp extends ActionSiap implements ICosta
 				if (!Utils.isNullObj(dopcm) && Utils.isNullObj(dopcm.getDataEsecutivita()))
 					throw new SIUSException(F3BException.USER_MESSAGE,
 							"Non è possibile emettere il Foglio Complementare per un provvedimento di "
-							+ "Applicazione Misure Alternative Dl 123/2018 senza Data di Esecutivit&agrave; "
+							+ "Applicazione Misure Alternative DL 123/2018 senza Data di Esecutivit&agrave; "
 							+ "valorizzata!");
 			}
 

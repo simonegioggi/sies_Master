@@ -74,8 +74,8 @@ public class ProcPerStatisticaMisureAlternativeExcel extends SIAPExcelProducer {
 				buffer = "Procedimenti con Magistrato Designato - Ordinanze Non Emesse";
 				break;
 			case 2:
-				// MEV_2024-092: cambio messaggio da Provvisoria a Misure Alternative Dl 123/2018
-				buffer = "Ordinanze Applicazione Misure Alternative Dl 123/2018 Emesse ma prive di Data di Esecutività";
+				// MEV_2024-092: cambio messaggio da Provvisoria a Misure Alternative DL 123/2018
+				buffer = "Ordinanze Applicazione Misure Alternative DL 123/2018 Emesse ma prive di Data di Esecutività";
 				break;
 			case 3:
 				buffer = "Ordinanze Emesse con Data Esecutività Inserita ma Prive di Decisione del Collegio";

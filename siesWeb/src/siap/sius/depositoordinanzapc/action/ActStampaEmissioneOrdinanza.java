@@ -72,7 +72,7 @@ public class ActStampaEmissioneOrdinanza extends ActionSiap implements ICostanti
 			// LogF3B.getLogger()
 			siesLogger.info("Nome del template di stampa ordinanza assente");
 
-		// MEV_2019-09: se stampo dal "Dettaglio Esecutivita' Ordinanza Applicazione Misure Alternative Dl 123/2018
+		// MEV_2019-09: se stampo dal "Dettaglio Esecutivita' Ordinanza Applicazione Misure Alternative DL 123/2018
 		// (ex Provvisoria M.A.)"
 		// allora non devo svalidare!
 		if ("SIUS_OR_0270".equals(enm.getNomeTemplate()))

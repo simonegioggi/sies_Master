@@ -66,9 +66,9 @@ public class ActLoadEmissioneApplicazioneProvvisoriaMA extends ActLoadEmissioneD
 						"Per il procedimento indicato non è stato emesso il provvedimento di designazione Magistrato Relatore!");
 
 			if (!"22".equals(lFascicoloGPModel.getFascicoloSiusModel().getCodStatoFascicolo()))
-				// MEV_2024-092: cambio messaggio da Provvisoria M.A. a Misure Alternative Dl 123/2018
+				// MEV_2024-092: cambio messaggio da Provvisoria M.A. a Misure Alternative DL 123/2018
 				throw new SIUSException(SIUSException.USER_MESSAGE,
-						"Stato Procedimento non coerente con l'emissione dell'Applicazione Misure Alternative Dl 123/2018!");
+						"Stato Procedimento non coerente con l'emissione dell'Applicazione Misure Alternative DL 123/2018!");
 		} else {
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Per il procedimento indicato non è stato emesso il provvedimento di designazione Magistrato Relatore!");

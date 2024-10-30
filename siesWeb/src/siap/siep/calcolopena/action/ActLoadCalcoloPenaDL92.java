@@ -14,21 +14,20 @@ import siap.siep.penacomplessiva.model.PenaComplessivaModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * 
  * Action pa la load della jsp dei calcoli della pena virtuale del nuovo decreto Nordio
- * 
+ *
  * @since MEV_2024-092
  */
 public class ActLoadCalcoloPenaDL92 extends ActCalcoloPenaMain implements ICostantiCalcoloPena {
-	public String processRequest() throws Exception {
-		
-		// @TODO
-		// Verifico se ho il fascicolo in sessione in questo caso precarico i dati della pena
 
+	@SuppressWarnings("rawtypes")
+	public String processRequest() throws Exception {
+
+		// Verifico se ho il fascicolo in sessione in questo caso precarico i dati della pena
 		if (!this.isSessionAttributeNullObj("fascicolo")) {
 			BigDecimal lFascID = ((FascicoloSiepModel) getSessionAttribute("fascicolo")).getIdFascicoloSiep();
 			BigDecimal lIdEvento = null;
-			
+
 			// ==========================================================================
 			// Recupero la PENA COMPLESSIVA per verificare se trattasi di ergastolo
 			// ==========================================================================
@@ -51,7 +50,7 @@ public class ActLoadCalcoloPenaDL92 extends ActCalcoloPenaMain implements ICosta
 			lPenComplMod = (PenaComplessivaModel) (lPComples.get(0));
 
 			setRequestAttribute("lPenComplMod", lPenComplMod);
-			
+
 			// ==========================================================================
 			// Recupero i dati della pena
 			// ==========================================================================
@@ -63,7 +62,8 @@ public class ActLoadCalcoloPenaDL92 extends ActCalcoloPenaMain implements ICosta
 			setRequestAttribute("lCalcoloPenaMod", lCalcoloPenaMod);
 			setRequestAttribute("lDataInizioPena", lDataInizioPena);
 		}
-		
+
 		return PG_LOAD_CALCOLOPENA_DL92;
 	}
+
 }
