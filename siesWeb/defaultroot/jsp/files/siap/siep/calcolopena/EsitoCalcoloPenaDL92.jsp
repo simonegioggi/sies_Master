@@ -234,23 +234,23 @@
         </td>
       </tr>  
       <tr>
-        <td class="r"><font class="label">data decorrenza pena:</font></td>
-        <td class="r" colspan="3"><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString (EsitoCalcolo.getDataInizioPena(), "dd/MM/yyyy")) %></font></td>
+        <td class="r"><font class="label">Data decorrenza pena:</font></td>
+        <td class="r" colspan="3"><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString (EsitoCalcolo.getDataInizioPena(), "dd/MM/yyyy")) %></font>&nbsp;</td>
       </tr> 
       <tr>
-        <td class="r"><font class="label">data scarcerazione senza L.A.:</font></td>
-        <td class="r" colspan="3"><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString (EsitoCalcolo.getDataScarcerazioneNoLA(), "dd/MM/yyyy")) %></font></td>
+        <td class="r"><font class="label">Data scarcerazione senza calcolare la liberazione anticipata:</font></td>
+        <td class="r" colspan="3"><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString (EsitoCalcolo.getDataScarcerazioneNoLA(), "dd/MM/yyyy")) %></font>&nbsp;</td>
       </tr>
       <tr>
-        <td class="r"><font class="label">data scarcerazione con L.A. applicati (data fine pena calcolata CON fungibilita'):</font></td>
-        <td class="r" colspan="3"><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString (EsitoCalcolo.getDataScarcerazioneLAFung(), "dd/MM/yyyy")) %></font></td>
+        <td class="r"><font class="label">Data scarcerazione con giorni Liberazione Anticipata applicata per intero (data fine pena calcolata con giorni non usufruibili):</font></td>
+        <td class="r" colspan="3"><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString (EsitoCalcolo.getDataScarcerazioneLAFung(), "dd/MM/yyyy")) %></font>&nbsp;</td>
       </tr>
       <tr>
-        <td class="r"><font class="label">data scarcerazione con L.A. concessi (data fine pena calcolata SENZA fungibilita'):</font></td>
-        <td class="r" colspan="3"><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString (EsitoCalcolo.getDataScarcerazioneLANoFung(), "dd/MM/yyyy")) %></font></td>
+        <td class="r"><font class="label">Data scarcerazione con giorni Liberazione Anticipata concessi (data fine pena calcolata con giorni di fungibilita'):</font></td>
+        <td class="r" colspan="3"><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString (EsitoCalcolo.getDataScarcerazioneLANoFung(), "dd/MM/yyyy")) %></font>&nbsp;</td>
       </tr>
       <tr>
-        <td class="r"><font class="label">data scarcerazione senza applicare l'ultimo semestre (nei soli casi in cui ci sarebbe un credito di L.A.):</font></td>
+        <td class="r"><font class="label">Data scarcerazione senza applicare l'ultimo semestre di Liberazione:</font></td>
         <% if (EsitoCalcolo.getLAFungibili().intValue()>0) { %>
         <td class="r" colspan="3"><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString (EsitoCalcolo.getDataScarcerazionePenultimoSemestre(), "dd/MM/yyyy")) %></font></td>
         <% } else { %>

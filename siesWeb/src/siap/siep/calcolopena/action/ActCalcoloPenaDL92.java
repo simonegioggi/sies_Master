@@ -505,7 +505,7 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 
 		nRow++;
 		row = sheetRiepilogo.createRow(nRow);
-		setCell(row, 0, "data decorrenza pena:", csGrigioDestra);
+		setCell(row, 0, "Data decorrenza pena:", csGrigioDestra);
 		setCell(row, 1,
 				StringUtils.toStringJSP(
 						DateUtils.getDateToString(lCalcoloDL92Model.getDataInizioPena(), "dd/MM/yyyy")),
@@ -513,7 +513,7 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 
 		nRow++;
 		row = sheetRiepilogo.createRow(nRow);
-		setCell(row, 0, "data scarcerazione senza LA:", csGrigioDestra);
+		setCell(row, 0, "Data scarcerazione senza calcolare la liberazione anticipata:", csGrigioDestra);
 		setCell(row, 1,
 				StringUtils.toStringJSP(DateUtils
 						.getDateToString(lCalcoloDL92Model.getDataScarcerazioneNoLA(), "dd/MM/yyyy")),
@@ -521,7 +521,7 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 
 		nRow++;
 		row = sheetRiepilogo.createRow(nRow);
-		setCell(row, 0, "data scarcerazione con LA applicati (data fine pena calcolata CON fungibilita'):",
+		setCell(row, 0, "Data scarcerazione con giorni Liberazione Anticipata applicata per intero (data fine pena calcolata con giorni non usufruibili):",
 				csGrigioDestra);
 		setCell(row, 1,
 				StringUtils.toStringJSP(DateUtils
@@ -530,7 +530,7 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 
 		nRow++;
 		row = sheetRiepilogo.createRow(nRow);
-		setCell(row, 0, "data scarcerazione con LA concessi (data fine pena calcolata SENZA fungibilita'):",
+		setCell(row, 0, "Data scarcerazione con giorni Liberazione Anticipata concessi (data fine pena calcolata con giorni di fungibilita'):",
 				csGrigioDestra);
 		setCell(row, 1,
 				StringUtils.toStringJSP(DateUtils
@@ -540,7 +540,7 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		nRow++;
 		row = sheetRiepilogo.createRow(nRow);
 		setCell(row, 0,
-				"data scarcerazione senza applicare l'ultimo semestre (nei soli casi in cui ci sarebbe un credito di L.A.):",
+				"Data scarcerazione senza applicare l'ultimo semestre di Liberazione:",
 				csGrigioDestra);
 		if (lCalcoloDL92Model.getLAFungibili().intValue() > 0)
 			setCell(row, 1,

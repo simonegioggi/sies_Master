@@ -284,16 +284,17 @@ public class ActLoadInserisciMAAmmProvAffi extends ActAmmissioneProvvisoria {
 			lDecodeNew.setCode(lDecode.getCode());
 
 			// AFFIDAMENTO
+			// MEV_2024-092: rework - Si modificano le etichette da "Applicazione Provvisoria" ad "Applicazione"
 			if ("0680".equals(lDecode.getCode()))
-				lDecodeNew.setDescription("Applicazione Provvisoria " + lDecode.getDescription());
+				lDecodeNew.setDescription("Applicazione " + lDecode.getDescription());
 			else if ("0681".equals(lDecode.getCode()))
-				lDecodeNew.setDescription("Applicazione Provvisoria " + lDecode.getDescription());
+				lDecodeNew.setDescription("Applicazione " + lDecode.getDescription());
 			else if ("0690".equals(lDecode.getCode()))
-				lDecodeNew.setDescription("Applicazione Provvisoria " + lDecode.getDescription());
+				lDecodeNew.setDescription("Applicazione " + lDecode.getDescription());
 			else if ("0691".equals(lDecode.getCode()))
-				lDecodeNew.setDescription("Applicazione Provvisoria " + lDecode.getDescription());
+				lDecodeNew.setDescription("Applicazione " + lDecode.getDescription());
 			else if ("0692".equals(lDecode.getCode()))
-				lDecodeNew.setDescription("Applicazione Provvisoria " + lDecode.getDescription());
+				lDecodeNew.setDescription("Applicazione " + lDecode.getDescription());
 			else
 				lDecodeNew.setDescription(lDecode.getDescription());
 

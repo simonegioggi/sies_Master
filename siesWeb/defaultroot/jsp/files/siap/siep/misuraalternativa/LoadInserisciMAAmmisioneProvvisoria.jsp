@@ -403,6 +403,7 @@ if ((tipomisura.equals("AFFIDAMENTO") || tipomisura.equals("DETENZIONE"))
 %> 
 
 <%-- MEV_2019-09 Si aggiunge la data di esecutività --%>
+<%-- MEV_2024-092: rework - si elimina la gestione della data esecutività
 if (   document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA%>.value != ""
     || document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_ESECUTIVITA%>.value != ""
     || document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA%>.value != "") 
@@ -435,7 +436,8 @@ else {
 	    return false;
 		}
 } 
-
+MEV_2024-092: rework - FINE
+--%>
 
 	if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMagistrato.CAMPO_COGNOME %>.value == ""
 			&& document.LoadInserisciMisuraAlternativa.<%=ICostantiMagistrato.CAMPO_NOME %>.value == "") {
@@ -1075,6 +1077,7 @@ function caricaCombo() {
   <% } %>
 }
 
+<%-- MEV_2024-092: rework. Si elimina la data esecutività
 function checkDataEsecutObbl() {
 	  var codMotivo = document.LoadInserisciMisuraAlternativa.<%=ICostantiEvento.CAMPO_COD_MOTIVO%>.value;
 	  if (   codMotivo == '0680' || codMotivo == '0681' || codMotivo == '0690' || codMotivo == '0691' || codMotivo == '0692'
@@ -1085,11 +1088,49 @@ function checkDataEsecutObbl() {
 	  }
 	  else $('#dataEsecObbl').hide();
 }
+MEV_2024-092: rework - FINE
+--%>
+
+<%-- MEV_2024-092: rework. Si gestisce la visualiazzazione dei radi Eseguita da procura/SOrev in funzione dell'oggetto e della posizione giuridica --%>
+function gestisciRadio() {
+	var isLibero = <%=lPosizione.isLibero() %>;
+	var codMotivo = document.LoadInserisciMisuraAlternativa.<%=ICostantiEvento.CAMPO_COD_MOTIVO%>.value;
+	if (   codMotivo == '0680' || codMotivo == '0681' || codMotivo == '0690' || codMotivo == '0691' || codMotivo == '0692'
+	    || codMotivo == '0682' || codMotivo == '0693'
+	 ) 
+	{
+	  if (isLibero) {
+		  $('#divRadio').hide();
+		  
+		  document.LoadInserisciMisuraAlternativa.tipo[0].checked = true;
+		  document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE%>.value = "";
+		  document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_SCARCERAZIONE%>.value = "";
+		  document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_SCARCERAZIONE%>.value = "";
+	  }
+	  else {
+		  $('#divRadio').show();
+		  $('#labelPROC').html("Da Scarcerare");
+		  $('#labelSORV').html("Scarcerato");
+		  $('#labelDATA').html("Data Scarcerazione");
+	  }
+	}
+	else { 
+		$('#divRadio').show();	
+		$('#labelPROC').html("Eseguita da Procura");
+		<% if (tipomisura.equals("AFFIDAMENTO")) { %>
+			$('#labelSORV').html("Eseguita dalla Sorveglianza");
+		<% } else {%>
+			$('#labelSORV').html("Eseguita da Magistrato di Sorveglianza");
+		<% } %>
+		$('#labelDATA').html("Data Inizio Misura");
+	}
+}
+
 </script>
 <jsp:include page="/jsp/files/siap/siep/misuraalternativa/MinorScript.jsp"/>
 </head>
 
-<body class="corpo" onload="radio();caricaCombo();">
+<body class="corpo" onload="radio();caricaCombo();gestisciRadio();">
 <table>	
 	<tr>
 		<td class="LBG">
@@ -1108,11 +1149,11 @@ if ("MODIFICA".equals(tipoOperazione))
 
 if (tipomisura.equals("DETENZIONE")) {
 %>
-      		<font class="campo"><%=tipoOperazioneView%> AMMISSIONE/APPLICAZIONE PROVVISORIA A DETENZIONE DOMICILIARE</font>
+      		<font class="campo"><%=tipoOperazioneView%> AMMISSIONE PROVVISORIA/APPLICAZIONE A DETENZIONE DOMICILIARE</font>
 <%
 } else {
 %>
-      		<font class="campo"><%=tipoOperazioneView%> AMMISSIONE/APPLICAZIONE AD AFFIDAMENTO IN PROVA</font>
+      		<font class="campo"><%=tipoOperazioneView%> AMMISSIONE PROVVISORIA/APPLICAZIONE AD AFFIDAMENTO IN PROVA</font>
 <%
 }
 %>
@@ -1704,7 +1745,8 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
 %>
 --%>
       	<td class="L" colspan="3">
-        	<select Title="Codice Motivo" name="<%=ICostantiEvento.CAMPO_COD_MOTIVO%>" onChange="pulisciId();checkDataEsecutObbl();">
+      	    <%-- MEV_2024-092:rework <select Title="Codice Motivo" name="<%=ICostantiEvento.CAMPO_COD_MOTIVO%>" onChange="pulisciId();checkDataEsecutObbl();">  --%>
+        	<select Title="Codice Motivo" name="<%=ICostantiEvento.CAMPO_COD_MOTIVO%>" onChange="pulisciId();gestisciRadio();">
           		<option value="-">-
           		<%=motivoProvv%>
         	</select>
@@ -1741,6 +1783,7 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
     </tr>
     
 <%-- MEV_2019-09 si aggiunge la data esecutivita' --%>    
+<%-- MEV_2024-092: rework. Si elimina la data esecutività
 <tr>
   <td class="l">Data Esecutivita' <font class=ob id="dataEsecObbl" style="display:none;">(*)</font></td>
   <td class="l" colspan="3">
@@ -1751,6 +1794,8 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
     </font>
   </td>
 </tr>
+MEV_2024-092: rework - FINE
+--%>    
 <%-- MEV_2019-09 - FINE --%>   
   
     <tr>
@@ -1794,34 +1839,56 @@ if ((tipomisura.equals("AFFIDAMENTO") || tipomisura.equals("DETENZIONE")) && (mi
     radioProcura = "";
     radioSorv = "checked";
   }  
+  
+  // MEV_2024-092 si aggirnge anche la modifica delle etichette 
+  // Libero - AMMISSIONE: resta "Eseguita da Procura/Eseguita dalla Sorveglianza o Eseguita da Magistrato di Sorveglianza" + Data Inizio Misura
+  //        - APPLICAZIONE scompaioni i check
+  // Detenuto - AMMISSIONE resta come prima
+  //            APPLICAZIONE diventa "Da scarcerare"/"Scarcerato" + "Data Scarcerazione"
+  String labelRadioProcura = "Eseguita da Procura";
+  String labelRadioSorveglianza = "Eseguita dalla Sorveglianza";
+  String labelDataScarcerazione = "Data Inizio Misura";
+  
+  if (tipomisura.equals("AFFIDAMENTO")) 
+	  labelRadioSorveglianza = "Eseguita dalla Sorveglianza";
+  else 
+	  labelRadioSorveglianza = "Eseguita da Magistrato di Sorveglianz";
+  
+  if (!lPosizione.isLibero()) {
+	  labelRadioProcura = "Da Scarcerare";
+	  labelRadioSorveglianza = "Scarcerato";
+	  labelDataScarcerazione = "Data Scarcerazione";
+  }
+  // MEV_2024-092 - FINE
+  
+    
 %>
+<div id="divRadio"> <%-- MEV_2024-092: rework la visibilità della sezione viene gestita --%>
 <table width="100%">
   	<tr>
-		<td class="l">Eseguita da Procura&nbsp;
+		<td class="l"><font class="label" id="labelPROC"><%=labelRadioProcura %></font> <%--Eseguita da Procura&nbsp;--%>  
 			<input type="radio" name="tipo" value="procura" <%=radioProcura%> onClick="javascript:radio();">&nbsp;&nbsp;
-<%
-	if (tipomisura.equals("AFFIDAMENTO")) {
-%>
+<font class="label" id="labelSORV"><%=labelRadioSorveglianza %></font>
+<%--
+<% 	if (tipomisura.equals("AFFIDAMENTO")) { %>
 			Eseguita dalla Sorveglianza&nbsp;
-<%
-	} else {
-%>
+<% 	} else { %>
 			Eseguita da Magistrato di Sorveglianza&nbsp;
-<%
-	}
-%>          
+<%	}  %> 
+--%>         
 			<input type="radio" name="tipo" value="mds" onClick="javascript:radio();" <%=radioSorv%>>
 		</td>
 		<td>
 			<input type="HIDDEN" name="flagistitutoDet" value="">
 		</td>
-		<td class="l">Data Inizio Misura &nbsp; 
+		<td class="l"><font class="label" id="labelDATA"><%=labelDataScarcerazione %></font>&nbsp; <%--Data Inizio Misura &nbsp; --%>  
 			<input type="text" size="2" maxlength="2" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativaToChange.getDataInizioMisura(),"dd"))%>" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> -
 			<input type="text" size="2" maxlength="2" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativaToChange.getDataInizioMisura(),"MM"))%>" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_SCARCERAZIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> -
 			<input type="text" size="4" maxlength="4" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativaToChange.getDataInizioMisura(),"yyyy"))%>" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_SCARCERAZIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
 		</td>
   	</tr>
 </table>
+</div>
 <%
 }
 %>
