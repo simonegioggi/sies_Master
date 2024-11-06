@@ -7,29 +7,18 @@ import java.util.Locale;
 import java.util.StringTokenizer;
 
 /**
- * <p>
- * Title: StringUtils.java
- * </p>
- * <p>
- * Description: Classe di utilità per la gestione delle Stringhe.
- * </p>
- * <p>
- * Copyright: Bull Italia Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull Italia
- * </p>
+ * StringUtils.java - Classe di utilità per la gestione delle Stringhe.
  */
 public class StringUtils {
 
 	/**
 	 * Verifica la validità di un campo di tipo String
-	 * <p>
 	 *
 	 * @param value
-	 * @return
+	 * @return boolean
 	 */
 	public static boolean checkValidValue(String value) {
+
 		boolean ret = false;
 		if (value != null && !"".equals(value.trim())) {
 			ret = true;
@@ -39,13 +28,13 @@ public class StringUtils {
 
 	/**
 	 * Normalizza una stringa per lo statement SQL.
-	 * <p>
 	 *
 	 * @param aValue
 	 *            valore da normalizzare.
 	 * @return la stringa normalizzata.
 	 */
 	public static String convertSqlString(String aValue) {
+
 		if (aValue == null)
 			return (null);
 
@@ -72,7 +61,6 @@ public class StringUtils {
 
 	/**
 	 * Replica una stringa (n) volte.
-	 * <p>
 	 *
 	 * @param aValue
 	 *            valore da replicare.
@@ -81,6 +69,7 @@ public class StringUtils {
 	 * @return ritorna la stringa replicata.
 	 */
 	public static String replicate(String aValue, int aCounts) {
+
 		String lRet = "";
 
 		if (aValue == null || aCounts == 0)
@@ -94,7 +83,6 @@ public class StringUtils {
 
 	/**
 	 * Adeguamento object per JSP, se l'oggetto è 0 ritorna il valore di default passato come paramentro.
-	 * <p>
 	 *
 	 * @param aObj
 	 *            Valore controllare.
@@ -103,6 +91,7 @@ public class StringUtils {
 	 * @return valore normalizzato.
 	 */
 	public static String toZerotoStringaVuota(String aObj, String aDefaultValue) {
+
 		if (aObj.equals("0"))
 			return aDefaultValue;
 
@@ -119,6 +108,7 @@ public class StringUtils {
 	 * @return valore normalizzato.
 	 */
 	public static String intZerotoString(int aInt, String aDefaultValue) {
+
 		if (aInt == 0)
 			return aDefaultValue;
 
@@ -133,6 +123,7 @@ public class StringUtils {
 	 * @return valore normalizzato.
 	 */
 	public static String intZerotoString(int aInt) {
+
 		if (aInt == 0)
 			return "";
 
@@ -141,7 +132,6 @@ public class StringUtils {
 
 	/**
 	 * Adeguamento object per JSP, se l'oggetto è null ritorna il valore di default passato come paramentro.
-	 * <p>
 	 *
 	 * @param aObj
 	 *            Valore controllare.
@@ -150,6 +140,7 @@ public class StringUtils {
 	 * @return valore normalizzato.
 	 */
 	public static String toStringJSP(Object aObj, String aDefaultValue) {
+
 		if (aObj == null)
 			return aDefaultValue;
 
@@ -158,26 +149,27 @@ public class StringUtils {
 
 	/**
 	 * Se l'oggetto passato e null ritorna uno spazio vuoto.
-	 * <p>
 	 *
 	 * @param aObj
 	 *            oggetto da normalizzara
 	 * @return valore normalizzato.
 	 */
 	public static String toStringJSP(Object aObj) {
+
 		return toStringJSP(aObj, "");
 	}
 
 	/**
 	 * Normalizzazione di una stringa da utilizzare per istruzioni JavaScripts.
-	 * <p>
 	 *
 	 * @param aValue
 	 *            stringa da normalizzare.
 	 * @return stringa normalizzata.
 	 */
 	public static String cStrForJS(String aValue) {
-		if (aValue == null || aValue == "")
+
+		// if (aValue == null || aValue == "")
+		if (!Utils.isPresent(aValue))
 			return ("-");
 
 		String lStringRitorno = aValue;
@@ -210,13 +202,13 @@ public class StringUtils {
 
 	/**
 	 * Ritorna valore Zero se l'oggetto è Null.
-	 * <p>
 	 *
 	 * @param aObj
 	 *            oggetto da verificare.
 	 * @return valore oggetto in formato stringa.
 	 */
 	public static String zeroIfNull(Object aObj) {
+
 		if (aObj == null)
 			return ("0");
 
@@ -225,7 +217,6 @@ public class StringUtils {
 
 	/**
 	 * Effettua il replace da una Stringa sorgente di un determinato pattern di string con quella desiderata.
-	 * <p>
 	 *
 	 * @param aSource
 	 *            Stringa Sorgente.
@@ -236,6 +227,7 @@ public class StringUtils {
 	 * @return la stringa manipolata.
 	 */
 	public static String replace(String aSource, String aPattern, String aReplace) {
+
 		StringTokenizer lStrToken = new StringTokenizer(aSource, aPattern);
 		String lReturn = new String();
 
@@ -249,13 +241,13 @@ public class StringUtils {
 
 	/**
 	 * Effettua una formattazione di un numero BigDecimal, in valuta Euro.
-	 * <p>
 	 *
 	 * @param aValue
 	 *            valore da formattare.
 	 * @return ritorna la formattazione in valuta Euro.
 	 */
 	public static String toEuroFormat(BigDecimal aValue) {
+
 		if (aValue != null) {
 			DecimalFormat lFormat = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(Locale.ITALY));
 
@@ -271,12 +263,12 @@ public class StringUtils {
 	/**
 	 * Effettua la codifica di una stringa affinche il browser WEB non interpreti i caratteri speciali in essa
 	 * contenuti.
-	 * <p>
 	 *
 	 * @strIn stringa da codificare.
 	 * @return ritorna la stringa codificata.
 	 */
 	public static String urlEncode(String strIn) {
+
 		StringBuffer strOut = new StringBuffer(strIn.length());
 		for (int i = 0; i < strIn.length(); i++) {
 			char ch = strIn.charAt(i);
@@ -303,13 +295,13 @@ public class StringUtils {
 
 	/**
 	 * Effettua la pulizia del campo migrato comune nascita estero se necessario
-	 * <p>
 	 *
 	 * @strIn stringa da pulire.
 	 * @strConfronto stringa da confrontare.
 	 * @return ritorna una stringa.
 	 */
 	public static String pulisciCampo(String strIn, String strConfronto) {
+
 		String lNazione = null;
 		String strOut = null;
 
@@ -330,13 +322,13 @@ public class StringUtils {
 	 * Restituisce la parte intera di un campo big decimal. Utile nella visualizzazione degli importi nelle
 	 * pagine jsp quando si deve separare la parte intera da quella decimale per caricarle in due input fields
 	 * separati. es: aValue = 100,01 return = 100 es: aValue = 0,01 return = 0
-	 * <p>
 	 *
 	 * @param aValue
 	 *            valore da formattare.
 	 * @return ritorna parte intera o una stringa vuota se il campo in input è null
 	 ****************************************************************************/
 	public static String getParteIntera(BigDecimal aValue) {
+
 		String strValue = "";
 		String strValueInt = "";
 		String strValueDec = "";
@@ -363,13 +355,13 @@ public class StringUtils {
 	 * Restituisce la parte decimale di un campo big decimal. Utile nella visualizzazione degli importi nelle
 	 * pagine jsp quando si deve separare la parte intera da quella decimale per caricarle in due input fields
 	 * separati
-	 * <p>
 	 *
 	 * @param aValue
 	 *            valore da formattare.
 	 * @return ritorna la parte decimale.
 	 ****************************************************************************/
 	public static String getParteDecimale(BigDecimal aValue) {
+
 		String strValue = "";
 		// String strValueInt = "";
 		String strValueDec = "";
@@ -382,7 +374,7 @@ public class StringUtils {
 
 			/*
 			 * strValue = aValue.toString();
-			 * 
+			 *
 			 * if (!strValue.equals("")) { if (strValue.indexOf(".") > 0) { // strValueInt =
 			 * strValue.substring(0, strValue.indexOf(".")); strValueDec =
 			 * strValue.substring(strValue.indexOf(".") + 1); if (strValueDec.length() == 1) strValueDec =
@@ -411,19 +403,14 @@ public class StringUtils {
 	}
 
 	/**
-	 * <p>
 	 * Capitalizes all the delimiter separated words in a String. Only the first letter of each word is
 	 * changed.
 	 *
-	 * <p>
 	 * The delimiters represent a set of characters understood to separate words. The first string character
 	 * and the first non-delimiter character after a delimiter will be capitalized.
-	 * </p>
 	 *
-	 * <p>
 	 * A <code>null</code> input String returns <code>null</code>. Capitalization uses the unicode title case,
 	 * normally equivalent to upper case.
-	 * </p>
 	 *
 	 * @param str
 	 *            the String to capitalize, may be null
@@ -432,6 +419,7 @@ public class StringUtils {
 	 * @return capitalized String, <code>null</code> if null String input
 	 */
 	public static String capitalize(String str, char[] delimiters) {
+
 		int delimLen = (delimiters == null ? -1 : delimiters.length);
 		if (str == null || str.length() == 0 || delimLen == 0) {
 			return str;
@@ -456,6 +444,7 @@ public class StringUtils {
 	}
 
 	public static boolean isNullOrWhiteSpace(String str) {
+
 		boolean flag = false;
 		if (str == null || "".equals(str))
 			flag = true;
@@ -485,10 +474,10 @@ public class StringUtils {
 	}
 
 	public static String encodeHTMLAll(String s) {
-		// System.out.println(s);
-		if (s == null) {
+
+		if (s == null)
 			return "";
-		}
+
 		StringBuffer out = new StringBuffer();
 		for (int i = 0; i < s.length(); i++) {
 			char c = s.charAt(i);
@@ -502,16 +491,13 @@ public class StringUtils {
 	}
 
 	public static String encodeHTML(String s) {
-		if (s == null) {
+
+		if (s == null)
 			return "";
-		}
-		// System.out.println("s = "+s);
+
 		StringBuffer out = new StringBuffer();
 		for (int i = 0; i < s.length(); i++) {
 			char c = s.charAt(i);
-
-			// System.out.println(c+" "+(int)c);
-
 			if (c == '#' || c == '&' || c == ';' || c == '\'' || c == '\'' || c == '"' || c == '|' || c == '*'
 					|| c == '?' || c == '~' || c == '<' || c == '>' || c == '^' || c == '(' || c == ')'
 					|| c == '[' || c == ']' || c == '{' || c == '}' || c == '$' || c == '\\'
@@ -530,7 +516,7 @@ public class StringUtils {
 	 * tale metodo per bonificare il nome del foglio soprattutto nei casi in cui viene creato dinamicamente es
 	 * con il nominativo magistrato
 	 * https://poi.apache.org/apidocs/dev/org/apache/poi/hssf/usermodel/HSSFWorkbook.html#createSheet-java.lang.String-
-	 * 
+	 *
 	 * POI's SpreadsheetAPI silently truncates the input argument to 31 characters.
 	 *
 	 * @param sheetName

@@ -28,8 +28,7 @@ import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * Title: ActLoadCancellaProvvedimento 
- * Description: Classe Action per la load di cancellazione evento
+ * ActLoadCancellaProvvedimento - Classe Action per la load di cancellazione evento
  *
  * @version 1.0
  */
