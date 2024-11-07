@@ -727,7 +727,9 @@ if (tipomisura.equals("DETENZIONE") && (verbale.getIdVerbale() == null)) {
 	} // Chiudo else if posizione Giur =! IsLibero
 } // Chiudo if DETENZIONE e Prima Volta
 if (tipomisura.equals("DETENZIONE") && (verbale.getIdVerbale() != null)) {
-	if ((lPosizione.isLibero()) || ("29".equals(lPosizione.getCodPosizioneGiuridica()))) {
+	if (lPosizione.isLibero() || "29".equals(lPosizione.getCodPosizioneGiuridica())   
+			// MEV_2024-092: rework può arrivara anche in 12 se "Applicazione" e non "AmmProvv"
+            || lPosizione.getCodPosizioneGiuridica().equals("12") ) {
 %> 
 	nodeautoritaE.style.display = 'block';
     nodecssa.style.display = 'block';
@@ -970,7 +972,9 @@ if (tipomisura.equals("AFFIDAMENTO") && (verbale.getIdVerbale() == null)) {
 
 // verbale.getIdVerbale() != null se ho registrato il verbale di sottomissione agli obblighi
 if (tipomisura.equals("AFFIDAMENTO") && (verbale.getIdVerbale() != null)) { 
-	if (lPosizione.isLibero() || lPosizione.getCodPosizioneGiuridica().equals("54")) {
+	if (lPosizione.isLibero() || lPosizione.getCodPosizioneGiuridica().equals("54")
+			// MEV_2024-092: rework può arrivara anche in 13 se "Applicazione" e non "AmmProvv"
+			|| lPosizione.getCodPosizioneGiuridica().equals("13")) {
 		// Entra se è libero o in Affidamento in prova provvisorio - 
 		// AMBROSINO - Cambiato da 51 a 54
 %>
@@ -1020,7 +1024,10 @@ if (tipomisura.equals("AFFIDAMENTO") && (verbale.getIdVerbale() != null)) {
 	document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_NOTE_POL_C%>.disabled = true;
 <%
 	} // Chiude posGiu = 04,02,82,83,84,70,71,72
-	else if (!lPosizione.isLibero() && !lPosizione.getCodPosizioneGiuridica().equals("54")) {
+	else if (!lPosizione.isLibero() && !lPosizione.getCodPosizioneGiuridica().equals("54")
+			// MEV_2024-092: rework può arrivara anche in 13 se "Applicazione" e non "AmmProvv"
+			&& !lPosizione.getCodPosizioneGiuridica().equals("13")
+			) {
 		// AMBROSINO - Affidamento in prova provvisorio - Cambiato da 51 a 54
 %>
     nodeautoritaE.style.display = 'none';

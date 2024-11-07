@@ -1838,7 +1838,11 @@ public class MisuraAlternativaIndultinoController extends SiapController
 			// MEV-9 si aggiungono gli ulteriori codici motivo (sorveglianza)
 			Set<String> codiciAffidamentoSorv = new HashSet<String>(Arrays.asList(new String[]{"2006","2008","0680","0681","0690","0691","0692"}));
 			Set<String> codiciDetenzioneSorv  = new HashSet<String>(Arrays.asList(new String[]{"2005","0682","0693"}));
-			
+			// MEV_2024-092: rework. L'applicazione non è più provvisoria per cui la PG di arrivo va differenziata
+			// tra ammissione provvisoria e applicazione
+			Set<String> codiciAffidamentoAppl = new HashSet<String>(Arrays.asList(new String[]{"0680","0681","0690","0691","0692"}));
+			Set<String> codiciDetenzioneAppl  = new HashSet<String>(Arrays.asList(new String[]{"2005","0682","0693"}));
+			// MEV_2024-092: rework - FINE
 			// se la misura è eseguita da SORV cambio sempre la posizione giuridica
 			String lPosizioneDiArrivo = null;
 			boolean lCambioPos = false;
@@ -1849,14 +1853,22 @@ public class MisuraAlternativaIndultinoController extends SiapController
 //				) // Per Tipo Misura "AFFIDAMENTO"
 				if (codiciAffidamentoSorv.contains(lMisModelOrder.getCodTipoMisura()))
 				{
-					lPosizioneDiArrivo = "54"; // Affidamento in Prova Provvisorio - Cambio da 51 a 54
+					// MEV_2024-092: rework. si distingue tra provvisoria e definitiva
+					if (codiciAffidamentoAppl.contains(lMisModelOrder.getCodTipoMisura()))
+						lPosizioneDiArrivo = "13"; // Espiazione Pena in Regime di Affidamento in Prova
+					else
+						lPosizioneDiArrivo = "54"; // Affidamento in Prova Provvisorio - Cambio da 51 a 54
 				}
 
 			  // MEV_2019-09 - Gestiti i nuovi codici
 				//if ("2005".equals(lMisModelOrder.getCodTipoMisura())) // Per Tipo Misura "DETENZIONE"
 				if (codiciDetenzioneSorv.contains(lMisModelOrder.getCodTipoMisura()))
 				{
-					lPosizioneDiArrivo = "29"; // Detenzione Domiciliare Provvisoria
+					// MEV_2024-092: rework. si distingue tra provvisoria e definitiva
+					if (codiciDetenzioneAppl.contains(lMisModelOrder.getCodTipoMisura()))
+						lPosizioneDiArrivo = "12"; // Espiazione Pena in Regime di Detenzione Domiciliare
+					else
+						lPosizioneDiArrivo = "29"; // Detenzione Domiciliare Provvisoria
 				}
 			}
 
@@ -1889,7 +1901,11 @@ public class MisuraAlternativaIndultinoController extends SiapController
 				if (   codiciAffidamentoSorv.contains(lMisModelOrder.getCodTipoMisura())					
 						&& !"54".equals(lPosMod.getCodPosizioneGiuridica())) // Per Tipo Misura "AFFIDAMENTO"
 				{
-					lPosizioneDiArrivo = "54"; // Affidamento in Prova Provvisorio - Cambio da 51 a 54
+					// MEV_2024-092: rework. si distingue tra provvisoria e definitiva
+					if (codiciAffidamentoAppl.contains(lMisModelOrder.getCodTipoMisura()))
+						lPosizioneDiArrivo = "13"; // Espiazione Pena in Regime di Affidamento in Prova
+					else					
+						lPosizioneDiArrivo = "54"; // Affidamento in Prova Provvisorio - Cambio da 51 a 54
 				}
 
 				// MEV_2019-09 - Gestiti i nuovi codici
@@ -1897,7 +1913,11 @@ public class MisuraAlternativaIndultinoController extends SiapController
 				if (   codiciDetenzioneSorv.contains(lMisModelOrder.getCodTipoMisura())	
 						&& !"29".equals(lPosMod.getCodPosizioneGiuridica())) // Per Tipo Misura "DETENZIONE"
 				{
-					lPosizioneDiArrivo = "29"; // Detenzione Domiciliare Provvisoria
+					// MEV_2024-092: rework. si distingue tra provvisoria e definitiva
+					if (codiciDetenzioneAppl.contains(lMisModelOrder.getCodTipoMisura()))
+						lPosizioneDiArrivo = "12"; // Espiazione Pena in Regime di Detenzione Domiciliare
+					else
+						lPosizioneDiArrivo = "29"; // Detenzione Domiciliare Provvisoria
 				}
 			}
 

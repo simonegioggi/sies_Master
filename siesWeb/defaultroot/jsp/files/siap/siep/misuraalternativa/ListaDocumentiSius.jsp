@@ -131,6 +131,12 @@ function insertIT(
 	else
   		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiEvento.CAMPO_COD_MOTIVO%>.value = "";
 
+  	<%-- MEV_2024-092: rework. FAccio scattare l'onchange sulla combo --%>
+	try {
+		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiEvento.CAMPO_COD_MOTIVO%>.onchange();
+	} catch (err) { }
+  		
+  		
 	if (giorno != '-')
   		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>.value = giorno;
 	else

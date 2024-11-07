@@ -236,21 +236,22 @@ Set<String> codiciSemilibertaSorvNew = new HashSet<String>(Arrays.asList(new Str
        if(misuraalternativa.getCodTipoMisura().equals("0011"))
        {%>
          <td class="l" colspan=2>Concessione Detenzione Domiciliare a Termine</td>
+         <%-- MEV_2024-092: rework le applicazione non sono più provvisorie, si eliminala dicitura --%>
       <% } else if(codiciAffidamentoSorvNew.contains(misuraalternativa.getCodTipoMisura())) { %> <%--// MEV_2019-09 --%>
            <% if ("0270".equals(provvSorv.getCodEsito())) {%>
-          <td class="l" colspan=2>Applicazione Provvisoria ad Affidamento in Prova - Art. 678 comma 1-ter c.p.p.</td> 
+          <td class="l" colspan=2>Applicazione <!--Provvisoria--> Affidamento in Prova - Art. 678 comma 1-ter c.p.p.</td> 
           <% } else { %>
           <td class="l" colspan=2>Concessione Affidamento in Prova - Art. 678 comma 1-ter c.p.p.</td>
           <% } %>
       <% } else if(codiciDetenzioneSorvNew.contains(misuraalternativa.getCodTipoMisura())) { %> <%--// MEV_2019-09 --%>
            <% if ("0270".equals(provvSorv.getCodEsito())) {%>
-          <td class="l" colspan=2>Applicazione Provvisoria a Detenzione Domiciliare - Art. 678 comma 1-ter c.p.p.</td> 
+          <td class="l" colspan=2>Applicazione <!-- Provvisoria--> Detenzione Domiciliare - Art. 678 comma 1-ter c.p.p.</td> 
           <% } else { %>
           <td class="l" colspan=2>Concessione Detenzione Domiciliare - Art. 678 comma 1-ter c.p.p.</td>
           <% } %>      
        <% } else if(codiciSemilibertaSorvNew.contains(misuraalternativa.getCodTipoMisura())) { %> <%--// MEV_2019-09 --%>
           <% if ("0270".equals(provvSorv.getCodEsito())) {%>
-          <td class="l" colspan=2>Applicazione Provvisoria a Semiliberta' - Art. 678 comma 1-ter c.p.p.</td> 
+          <td class="l" colspan=2>Applicazione <!-- Provvisoria--> Semiliberta' - Art. 678 comma 1-ter c.p.p.</td> 
           <% } else { %>
           <td class="l" colspan=2>Concessione Semiliberta' - Art. 678 comma 1-ter c.p.p.</td>
           <% } %>

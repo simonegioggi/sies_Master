@@ -608,7 +608,9 @@ public class ActInserisciMAAmmProvvisoria extends ActMisuraAlternativa implement
 					|| PosizioneGiu.equals("13") || PosizioneGiu.equals("04") || PosizioneGiu.equals("12")
 					|| PosizioneGiu.equals("54") || // AMBROSINO 01/2011 -chanege codice da 51 a 54
 					PosizioneGiu.equals("29"))) {
-				if ("S".equals(flagverbale) && PosizioneGiu.equals("54")) {
+				// MEV_2024-092: rework Potrei entrare con 13 se ho emesso una applicazione (non porvvisoria)
+				// if ("S".equals(flagverbale) && PosizioneGiu.equals("54")) {
+				if ("S".equals(flagverbale) && (PosizioneGiu.equals("54") || PosizioneGiu.equals("13") )) {
 					// Sto registrando il provvedimento successivo al verbale
 					aCodTipoProvedimento = "12";
 				} else if (("PROC").equals(aMisMod.getCodTipoUfficioScarcerazione())) {
