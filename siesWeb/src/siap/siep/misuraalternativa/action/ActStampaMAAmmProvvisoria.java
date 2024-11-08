@@ -2,6 +2,9 @@ package siap.siep.misuraalternativa.action;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -33,8 +36,9 @@ import siap.siep.util.SIEPLookupRemote;
  *
  * @version 1.0
  */
-public class ActStampaMAAmmProvvisoria extends ActionSiap implements ICostantiMisuraAlternativa {
-
+//public class ActStampaMAAmmProvvisoria extends ActionSiap implements ICostantiMisuraAlternativa {
+public class ActStampaMAAmmProvvisoria extends ActConcessione implements ICostantiMisuraAlternativa {	
+	
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
@@ -93,6 +97,37 @@ public class ActStampaMAAmmProvvisoria extends ActionSiap implements ICostantiMi
 		TemplateModel lTemMod = new TemplateModel();
 		String flagTemplate = null;
 
+		
+		// MEV_2024-092: rework. 
+		// Per i codici dell'applicazione si agganciano gli stessi flag della concessione quindi sinterroga i metodi
+		//   getFlagTemplateAffidamento
+		// 
+		siesLogger.debug("Test getFlagTemplateAffidamento... ");
+		// n.b. AFFIDAMENTO rimappai i codici SIUS sia per la richiest a verbale ceh epr gli altri provv
+		//      DETENZIONE rimappa i codici ma non è prevista la richiesta verbale
+		// AFFIDAMENTO richiesta verbale "5422","5423","5424","5425","5426"
+		// AFFIDAMENTO ALTRO "1400","1401","1410","1411","1412"
+		// DETENZIONE "1402","1413"
+		Set<String> codiciAffidamentoSorvNew = new HashSet<String>(Arrays.asList(new String[]{"1400","1401","1410","1411","1412"}));
+		Set<String> codiciDetenzioneSorvNew  = new HashSet<String>(Arrays.asList(new String[]{"1402","1413"}));
+		
+		PosizioneGiuridicaModel lPosPrec = new PosizioneGiuridicaModel();
+		lPosPrec = lPosCtrl	.ExRicercaPosizioneGiuridicaPrecedenteByIdFascicolo(lFascicoloModel.getIdFascicoloSiep());
+		
+		String IdEveAPF = ""; //@TODO verificare il caso  //getRequestStringParameter("IdEventoAmmProvvAff");
+		
+		if (lTipoMisura.equals("AFFIDAMENTO") && codiciAffidamentoSorvNew.contains(lEventoModel.getCodMotivo()) ) {
+		  siesLogger.debug("Ricerco flagTemplateNew AFFIDAMENTO...");
+          flagTemplate = getFlagTemplateAffidamento (lPosPrec, lPosizioneGiu, lMisAlModConcessa, IdEveAPF);
+	    } else if (lTipoMisura.equals("DETENZIONE") && codiciDetenzioneSorvNew.contains(lEventoModel.getCodMotivo())) {
+	      siesLogger.debug("Ricerco flagTemplateNew DETENZIONE...");
+		  flagTemplate = getFlagTemplateDetDom (lPosPrec, lPosizioneGiu, lMisAlModConcessa);
+	    }
+		siesLogger.debug("flagTemplateNew = "+flagTemplate);
+		// MEV_2024-092: rework. - FINE
+
+		// MEV_2024-092: rework. Scelgo lo vecchia modalità di calcolo "flagTemplate" sono se non già calcolato
+		if (flagTemplate==null) {
 		if (lTipoMisura.equals("AFFIDAMENTO")) {
 			if (lEventoModel.getCodMotivo().equals("2008")) {
 				if (lflagScarcerato.equals("PROC")) {
@@ -300,6 +335,7 @@ public class ActStampaMAAmmProvvisoria extends ActionSiap implements ICostantiMi
 				flagTemplate = "5";
 			}
 		}
+		} // end if flagTemplate!=null
 
 		// Tutti i template sono registrati come COD_TIPO_PROVVEDIMENTO = '03' indipendentemente
 		// dall'effettivo tipo provvedimento dell'evento SIEP.
