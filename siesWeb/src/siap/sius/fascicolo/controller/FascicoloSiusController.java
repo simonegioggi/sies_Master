@@ -1867,7 +1867,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 			if (   aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U004")
 			    || aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U019")
 			    // MEV_2023-35 - si gestisce ance il COD U126 per esecuzione Pena Sospese
-			    || aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U026")
+			    || aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U126")
 				|| aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U024")) {
 				// Caso di Inserimento ESECUZIONE_MISURA_ALTERNATIVA - U004
 				// Caso di Inserimento ESECUZIONE_SANZIONE_SOSTITUTIVA - U019
