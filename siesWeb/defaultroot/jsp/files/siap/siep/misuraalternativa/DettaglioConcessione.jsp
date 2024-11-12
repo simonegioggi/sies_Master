@@ -482,23 +482,25 @@ if (misuraalternativa.getDescrLuogoProva() != null) {
 <%
 }
 // MEV_2019-09-SIEP: aggiunte etichette x tre tipo misura
-if ((tipoMisura.equals("AFFIDAMENTO") || tipoMisura.equals("DETENZIONE") || tipoMisura.equals("SEMILIBERTA"))
-		&&!Utils.isNullObj(misuraalternativa.getAnnoRegistroMaAt())) {
+// MEV_2024-092: rimosse le etichette x tre tipo misura
+// if ((tipoMisura.equals("AFFIDAMENTO") || tipoMisura.equals("DETENZIONE") || tipoMisura.equals("SEMILIBERTA"))
+// 		&&!Utils.isNullObj(misuraalternativa.getAnnoRegistroMaAt())) {
 %>
-	<tr>
-		<td class="l">Anno / Numero Ordinanza Provvisoria</td>
-		<td class="l" colspan="3">
-			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistroMaAt())%>&nbsp;/&nbsp;<%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistroMaAt())%></font>
-		</td>
-	</tr>
-	<tr>
-	  	<td class="l">Data Emissione Ordinanza Provvisoria</td>
-	  	<td class="L" colspan="3">
-			<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "dd-MM-yyyy"))%></font>
-		</td>
-	</tr>
+<!-- 	<tr> -->
+<!-- 		<td class="l">Anno / Numero Ordinanza Provvisoria</td> -->
+<!-- 		<td class="l" colspan="3"> -->
+<%-- 			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistroMaAt())%>&nbsp;/&nbsp;<%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistroMaAt())%></font> --%>
+<!-- 		</td> -->
+<!-- 	</tr> -->
+<!-- 	<tr> -->
+<!-- 	  	<td class="l">Data Emissione Ordinanza Provvisoria</td> -->
+<!-- 	  	<td class="L" colspan="3"> -->
+<%-- 			<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "dd-MM-yyyy"))%></font> --%>
+<!-- 		</td> -->
+<!-- 	</tr> -->
 <%
-}
+// }
+// FINE MEV_2024-092
 // FINE MEV_2019-09-SIEP
 if (verbale.getDataEmissione() != null) {
 %>
@@ -516,26 +518,27 @@ if (verbale.getDataEmissione() != null) {
 <%
 	if (misuraalternativa.getDataInizioMisura() != null) {
 		// MEV_2019-09-SIEP: aggiunta diversificazione dell'etichetta
+		// MEV_2024-092: rimossa diversificazione dell'etichetta
 		boolean testDataFineMisura = misuraalternativa.getDataFineMisura() == null;
-		if (tipoMisura.equals("AFFIDAMENTO")) {
+// 		if (tipoMisura.equals("AFFIDAMENTO")) {
 %>
-		<td class="l">Data Applicazione Provvisoria</td>
+<!-- 		<td class="l">Data Applicazione Provvisoria</td> -->
 <%
-		} else {
+// 		} else {
 %>
 		<td class="l">Data Inizio Misura</td>
 <%
-		}
+// 		}
 %>
 		<td class="l" <%if (testDataFineMisura){%>colspan="3"<%}%>>
-			<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataInizioMisura(),"dd-MM-yyyy"))%></font>
+			<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataInizioMisura(), "dd-MM-yyyy"))%></font>
 		</td>
 <%
 	}
 	if (misuraalternativa.getDataFineMisura() != null) {
 %>
 		<td class="l">Data Fine Misura</td>
-		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataFineMisura(),"dd-MM-yyyy"))%></font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataFineMisura(), "dd-MM-yyyy"))%></font></td>
 <%
 	}
 %>

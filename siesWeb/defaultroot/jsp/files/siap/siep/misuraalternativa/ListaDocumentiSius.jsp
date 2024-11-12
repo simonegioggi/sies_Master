@@ -532,7 +532,8 @@ if (!documentiSius.isEmpty()) {
 		<td class="int">Anno/Numero Sius</td>
 		<td class="int">Autorità Emittente</td>
 		<td class="int">Oggetto</td>
-		<td class="int">Anno/Numero Ordinanza Provvisoria</td>	<%-- MEV_9-SIEP: aggiunta colonna --%>
+		<%-- MEV_2024-092: rimossa colonna --%>
+<%-- 		<td class="int">Anno/Numero Ordinanza Provvisoria</td>	MEV_9-SIEP: aggiunta colonna --%>
 		<td class="int" width=5%>Azioni</td>
     </tr>
 <%
@@ -553,11 +554,9 @@ if (!documentiSius.isEmpty()) {
         // poichè non individua i codici TDSM e UDSM
         String lUfficio = StringUtils.toStringJSP(eventoModel.getCodTipoUfficioEmittente(), "-");
         // MEV_9-SIEP: aggiunto controllo per escludere dalla visualizzazione
-        if (   !"AMMISSIONE_PROVVISORIA".equals(NaturaMA)
-            && !"CONCESSIONE_SOSPENSIONE".equals(NaturaMA)
-            && !"CONCESSIONE_SOSPENSIONE678".equals(NaturaMA)          
-           ) 
-        {
+        if (!"AMMISSIONE_PROVVISORIA".equals(NaturaMA)
+        		&& !"CONCESSIONE_SOSPENSIONE".equals(NaturaMA)
+        		&& !"CONCESSIONE_SOSPENSIONE678".equals(NaturaMA)) {
 			if ((("TDS".equals(lUfficio)
 					&& ("0680".equals(misuraModel.getCodTipoMisura())					// AFFIDAMENTO
 							|| "0681".equals(misuraModel.getCodTipoMisura())			// AFFIDAMENTO
@@ -571,22 +570,20 @@ if (!documentiSius.isEmpty()) {
 									|| "0693".equals(misuraModel.getCodTipoMisura())	// DETENZIONE DOMICILIARE
 									|| "0694".equals(misuraModel.getCodTipoMisura())	// SEMILIBERTA'
 									|| "0695".equals(misuraModel.getCodTipoMisura()))))	// SOSPENSIONE
-					&& "0270".equals(eventoModel.getCodEsito()))
+					&& "0270".equals(eventoModel.getCodEsito())) {
 				continue;
+			}
 		}
 
         // MEV_9-SIEP per le sospe 678 provvisorie prendo solo quelle con esito 0270 Applica provvisoriamente 
-        if ("CONCESSIONE_SOSPENSIONE678".equals(NaturaMA)) {  
+        if ("CONCESSIONE_SOSPENSIONE678".equals(NaturaMA)) {
         	if (!"0270".equals(eventoModel.getCodEsito()))
         		continue;
         }
-        
-        if ("CONCESSIONE_SOSPENSIONE".equals(NaturaMA)) {  
-          if ("0270".equals(eventoModel.getCodEsito()))
-            continue;
+        if ("CONCESSIONE_SOSPENSIONE".equals(NaturaMA)) {
+			if ("0270".equals(eventoModel.getCodEsito()))
+            	continue;
         }
-        
-        
 %>
 	<tr>
 		<td class="c">
@@ -702,11 +699,12 @@ if (!documentiSius.isEmpty()) {
 				}
 			}
 %>
-		<td class="c">
-			<%=StringUtils.toStringJSP(annoOrdinanzaProvvisoria, "-")%>
-			/
-			<%=StringUtils.toStringJSP(numeroOrdinanzaProvvisoria, "-")%>
-		</td>
+<%-- MEV_2024-092: rimossa colonna --%>
+<!-- 		<td class="c"> -->
+<%-- 			<%=StringUtils.toStringJSP(annoOrdinanzaProvvisoria, "-")%> --%>
+<!-- 			/ -->
+<%-- 			<%=StringUtils.toStringJSP(numeroOrdinanzaProvvisoria, "-")%> --%>
+<!-- 		</td> -->
 		<td class="c">
 			<a href="Javascript:insertIT('<%=StringUtils.toStringJSP(eventoModel.getIdEvento(), "-")%>',
                                          '<%=StringUtils.toStringJSP(misuraModel.getChiaveAnnoFascicoloSius(), "-")%>',
