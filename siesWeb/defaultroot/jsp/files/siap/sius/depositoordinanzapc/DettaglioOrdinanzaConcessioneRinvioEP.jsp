@@ -40,17 +40,6 @@ if (Utils.isPresent(gpm.getCodOggettoProcedimento()))
     <tr>
         <td class="Titolo" colspan="2"> Concessione Rinvio Esecuzione della Pena <td>
     </tr>
-	<tr>
-    	<td class="Titolo" colspan="2"> Estremi decreto Magistrato Sorveglianza: <td>
-  	</tr>
-    <tr>
-      	<td class="l">Data Emissione</td>
-      	<td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(datiOrdinanza.getOrdinanza().getDataTrasmissione(), "dd/MM/yyyy"), "-")%></font></td>
-    </tr>
-    <tr>
-      	<td class="l"><%=labelUfficio%></td>
-      	<td class="l"><font class="campo"><%=StringUtils.toStringJSP(datiOrdinanza.getOrdinanza().getDescrUfficioMagistratoComp(), "-")%></font></td>
-    </tr>
 <%
 // MEV_2023-35: aggiunto importo della pena pecuniaria convertita
 if ("C065".equals(codOggettoProcedimento)) {
@@ -66,7 +55,7 @@ if ("C065".equals(codOggettoProcedimento)) {
 }
 // FINE MEV_2023-35
 %>
-   	<tr><td>&nbsp;</td></tr>
+    <tr><td>&nbsp;</td></tr>
 	<tr>
 		<td class="l">Data Inizio Periodo</td>
 		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(datiOrdinanza.getOrdinanza().getDataInizioPeriodo(), "dd/MM/yyyy"), "-")%></font></td>
@@ -82,6 +71,18 @@ if ("C065".equals(codOggettoProcedimento)) {
 		   		<%=StringUtils.toStringJSP(datiOrdinanza.getOrdinanza().getNumAnniDetenzioneDom())%> - <%=StringUtils.toStringJSP( datiOrdinanza.getOrdinanza().getNumMesiDetenzioneDom())%> - <%=StringUtils.toStringJSP( datiOrdinanza.getOrdinanza().getNumGiorniDetenzioneDom())%>
 			</font>
 		</td>
+    </tr>
+    <tr><td>&nbsp;</td></tr>
+	<tr>
+    	<td class="Titolo" colspan="2"> Estremi decreto Magistrato Sorveglianza: <td>
+  	</tr>
+    <tr>
+      	<td class="l">Data Emissione</td>
+      	<td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(datiOrdinanza.getOrdinanza().getDataTrasmissione(), "dd/MM/yyyy"), "-")%></font></td>
+    </tr>
+    <tr>
+      	<td class="l"><%=labelUfficio%></td>
+      	<td class="l"><font class="campo"><%=StringUtils.toStringJSP(datiOrdinanza.getOrdinanza().getDescrUfficioMagistratoComp(), "-")%></font></td>
     </tr>
     <tr><td>&nbsp;</td></tr>
 </table>
