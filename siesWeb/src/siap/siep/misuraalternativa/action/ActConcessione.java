@@ -1,8 +1,10 @@
 package siap.siep.misuraalternativa.action;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -60,7 +62,7 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
+		siesLogger.debug(getClass().getName() + ".getConcessione: inizio");
 
 		if (isSessionAttributeNullObj("fascicolo"))
 			return ICostantiFascicoloSiep.REDIRECT_FASCICOLO_RICERCATO + getClass().getName();
@@ -384,7 +386,7 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getName() + ".processRequest: fine");
+		siesLogger.debug(getClass().getName() + ".getConcessione: fine");
 
 		return "";
 	}
@@ -495,28 +497,34 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 			lEve.getEvento().setCodMotivo("5463");
 		else if ("0732".equals(aMotivo))
 			lEve.getEvento().setCodMotivo("5464");
-		else if ("0680".equals(aMotivo))
-			lEve.getEvento().setCodMotivo(aMotivo);
-		else if ("0681".equals(aMotivo))
-			lEve.getEvento().setCodMotivo(aMotivo);
-		else if ("0690".equals(aMotivo))
-			lEve.getEvento().setCodMotivo(aMotivo);
-		else if ("0691".equals(aMotivo))
-			lEve.getEvento().setCodMotivo(aMotivo);
-		else if ("0692".equals(aMotivo))
-			lEve.getEvento().setCodMotivo(aMotivo);
-		// '26' - RICHIESTA
-		if ("26".equals(lEve.getEvento().getCodTipoProvvedimento())) {
+
+		// MEV_2024-092: richiesta valida solo se soggetto libero
+		List<String> posizioniLibero = Arrays.asList("7", "10", "16", "17", "20", "26", "30", "46", "47");
+		if (posizioniLibero.contains(aPosizione)) {
+			// '26' - RICHIESTA
+			if ("26".equals(lEve.getEvento().getCodTipoProvvedimento())) {
+				if ("0680".equals(aMotivo))
+					lEve.getEvento().setCodMotivo("5443");
+				else if ("0681".equals(aMotivo))
+					lEve.getEvento().setCodMotivo("5444");
+				else if ("0690".equals(aMotivo))
+					lEve.getEvento().setCodMotivo("5445");
+				else if ("0691".equals(aMotivo))
+					lEve.getEvento().setCodMotivo("5446");
+				else if ("0692".equals(aMotivo))
+					lEve.getEvento().setCodMotivo("5447");
+			}
+		} else {
 			if ("0680".equals(aMotivo))
-				lEve.getEvento().setCodMotivo("5443");
+				lEve.getEvento().setCodMotivo("1416");
 			else if ("0681".equals(aMotivo))
-				lEve.getEvento().setCodMotivo("5444");
+				lEve.getEvento().setCodMotivo("1417");
 			else if ("0690".equals(aMotivo))
-				lEve.getEvento().setCodMotivo("5445");
+				lEve.getEvento().setCodMotivo("1421");
 			else if ("0691".equals(aMotivo))
-				lEve.getEvento().setCodMotivo("5446");
+				lEve.getEvento().setCodMotivo("1422");
 			else if ("0692".equals(aMotivo))
-				lEve.getEvento().setCodMotivo("5447");
+				lEve.getEvento().setCodMotivo("1423");
 		}
 
 		// aggiunto controllo per codici tipo misura - COMUNICAZIONE ('12')

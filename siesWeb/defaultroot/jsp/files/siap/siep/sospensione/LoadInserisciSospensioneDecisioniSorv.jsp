@@ -171,39 +171,41 @@ if (nuovapenaresidua != null && nuovapenaresidua.getIdPenaResidua() != null) {
 			return false;
 		}
    		// MEV_2019-09-SIEP: aggiunti controlli per determinati codici di SOSPENSIONE
-		if (codMotivo == "0724" || codMotivo == "0735") {
-			if (document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>.value == ""
-					|| document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT%>.value == "") {
-				alert('Anno e Numero Ordinanza Provvisoria obbligatori!');
-				document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>.focus();
-				return false;
-			}
-			if (document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value == ""
-					&& document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.value == ""
-					&& document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>.value == "") {
-				alert('Data Emissione Ordinanza Provvisoria obbligatoria!');
-				document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.focus();
-				return false;
-			}
-		}
-		if (document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value != ""
-			|| document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.value != ""
-			|| document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>.value != "") {
-			if (document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value.length == 1)
-				document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value = '0' +
-				document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value;
-			if (document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.value.length == 1)
-				document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.value = '0' +
-				document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.value;
-			var data_to_verify = document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value + '-' +
-				document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.value + '-' +
-				document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>.value;
-			if (!ControllaData(data_to_verify)) {
-				alert('Data Emissione Ordinanza Provvisoria non valida');
-				document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.focus();
-				return false;
-			}
-		}
+   		// MEV_2024-092: rimossi i controlli
+// 		if (codMotivo == "0724" || codMotivo == "0735") {
+<%-- 			if (document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>.value == "" --%>
+<%-- 					|| document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT%>.value == "") { --%>
+// 				alert('Anno e Numero Ordinanza Provvisoria obbligatori!');
+<%-- 				document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>.focus(); --%>
+// 				return false;
+// 			}
+<%-- 			if (document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value == "" --%>
+<%-- 					&& document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.value == "" --%>
+<%-- 					&& document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>.value == "") { --%>
+// 				alert('Data Emissione Ordinanza Provvisoria obbligatoria!');
+<%-- 				document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.focus(); --%>
+// 				return false;
+// 			}
+// 		}
+<%-- 		if (document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value != "" --%>
+<%-- 			|| document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.value != "" --%>
+<%-- 			|| document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>.value != "") { --%>
+<%-- 			if (document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value.length == 1) --%>
+<%-- 				document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value = '0' + --%>
+<%-- 				document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value; --%>
+<%-- 			if (document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.value.length == 1) --%>
+<%-- 				document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.value = '0' + --%>
+<%-- 				document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.value; --%>
+<%-- 			var data_to_verify = document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value + '-' + --%>
+<%-- 				document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.value + '-' + --%>
+<%-- 				document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>.value; --%>
+// 			if (!ControllaData(data_to_verify)) {
+// 				alert('Data Emissione Ordinanza Provvisoria non valida');
+<%-- 				document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.focus(); --%>
+// 				return false;
+// 			}
+// 		}
+		// FINE MEV_2024-092
 		// FINE MEV_2019-09-SIEP
 		if (document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiSospensione.CAMPO_GIORNO_DATA_INIZIO%>.value == ""
 				|| document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiSospensione.CAMPO_MESE_DATA_INIZIO%>.value == ""
@@ -411,8 +413,9 @@ if (misuraalternativa!= null && misuraalternativa.getIdMisuraAlternativa() != nu
 	  		</a>
 	  	</td>
 	  	<%-- MEV_2019-09-SIEP: modificato nome funzione --%>
+	  	<%-- MEV_2024-092: rimodificato nome funzione (/ Ratifica) --%>
 	    <td class="LBG"><font class="label">Funzione :</font>&nbsp;&nbsp;
-	   		<font class="campo">Concessione / Ratifica Sospensione dell'esecuzione della pena</font>
+	   		<font class="campo">Concessione Sospensione dell'esecuzione della pena</font>
 	  	</td>
 	</tr>
 </table>
@@ -724,22 +727,24 @@ if (nuovapenaresidua != null && nuovapenaresidua.getIdPenaResidua() != null) {
     	</td>
 	</tr>
 	<%-- MEV_2019-09-SIEP: aggiunte due nuove sezioni x SOSPENSIONE --%>
-	<tr>
-		<td class="l" width="20%">Anno / Numero Ordinanza Provvisoria</td>
-		<td class="l" colspan="3">
-			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistroMaAt())%>&nbsp;/&nbsp;<%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistroMaAt())%></font>
-			<input type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_EVE_ID_EVENTO%>" value="<%=StringUtils.toStringJSP(misuraalternativa.getEveIdEvento())%>">
-	 	</td>
-	</tr>
-	<tr>
-	  	<td class="l">Data Emissione Ordinanza Provvisoria</td>
-	  	<td class="l" colspan="3">
-			<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "dd-MM-yyyy"), "-")%></font>
-			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getDayToString(misuraalternativa.getDataDecisioneMaAt()))%>">
-			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getMonthToString(misuraalternativa.getDataDecisioneMaAt()))%>">
-			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getYearToString(misuraalternativa.getDataDecisioneMaAt()))%>">
-	  	</td>
-	</tr>
+	<%-- MEV_2024-092: rimosse le due nuove sezioni x SOSPENSIONE --%>
+<!-- 	<tr> -->
+<!-- 		<td class="l" width="20%">Anno / Numero Ordinanza Provvisoria</td> -->
+<!-- 		<td class="l" colspan="3"> -->
+<%-- 			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistroMaAt())%>&nbsp;/&nbsp;<%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistroMaAt())%></font> --%>
+<%-- 			<input type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_EVE_ID_EVENTO%>" value="<%=StringUtils.toStringJSP(misuraalternativa.getEveIdEvento())%>"> --%>
+<!-- 	 	</td> -->
+<!-- 	</tr> -->
+<!-- 	<tr> -->
+<!-- 	  	<td class="l">Data Emissione Ordinanza Provvisoria</td> -->
+<!-- 	  	<td class="l" colspan="3"> -->
+<%-- 			<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "dd-MM-yyyy"), "-")%></font> --%>
+<%-- 			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getDayToString(misuraalternativa.getDataDecisioneMaAt()))%>"> --%>
+<%-- 			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getMonthToString(misuraalternativa.getDataDecisioneMaAt()))%>"> --%>
+<%-- 			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getYearToString(misuraalternativa.getDataDecisioneMaAt()))%>"> --%>
+<!-- 	  	</td> -->
+<!-- 	</tr> -->
+	<%-- FINE MEV_2024-092 --%>
 	<%-- FINE MEV_2019-09-SIEP --%>
 	<tr>
 	  	<td class="l">Motivazioni</td>
@@ -845,33 +850,35 @@ if (nuovapenaresidua != null && nuovapenaresidua.getIdPenaResidua() != null) {
       	</td>
     </tr>
 	<%-- MEV_2019-09-SIEP: aggiunte due nuove sezioni x SOSPENSIONE --%>
-	<tr>
-		<td class="l" width="20%">Anno / Numero Ordinanza Provvisoria</td>
-		<td class="l" colspan="3">
-			<input Title="Anno Ordinanza Provvisoria" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>" type="text" size="4" maxlength="4" 
-				onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)" onChange="pulisciId();"
-				value="<%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistroMaAt())%>">
-			/
-			<input Title="Numero Ordinanza Provvisoria" name="<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT%>" type="text" size="6" maxlength="6"
-				onkeypress="return TicTabNumField(this,event)" onChange="pulisciId();"
-				value="<%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistroMaAt())%>">
-			<input type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_EVE_ID_EVENTO%>" value="<%if (isModifica) {%><%=StringUtils.toStringJSP(misuraalternativa.getEveIdEvento())%><%}%>">
-		</td>
-	</tr>
-	<tr>
-	  	<td class="l">Data Emissione Ordinanza Provvisoria</td>
-	  	<td class="l" colspan="3">
-	    	<input title="Giorno Data Emissione Ordinanza Provvisoria" type="text" size="2" maxlength="2" 
-	    		name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>" <%=IWebConstants.UTIL_DATA%> onChange="pulisciId();"
-	    		value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "dd"))%>"> -
-			<input title="Mese Data Emissione Ordinanza Provvisoria" type="text" size="2" maxlength="2" 
-				name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>" <%=IWebConstants.UTIL_DATA%> onChange="pulisciId();"
-				value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "MM"))%>"> -
-			<input title="Anno Data Emissione Ordinanza Provvisoria" type="text" size="4" maxlength="4" 
-				name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>" <%=IWebConstants.UTIL_DATA_ANNO%> onChange="pulisciId();"
-				value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "yyyy"))%>">
-	  	</td>
-	</tr>
+	<%-- MEV_2024-092: rimosse le due nuove sezioni x SOSPENSIONE --%>
+<!-- 	<tr> -->
+<!-- 		<td class="l" width="20%">Anno / Numero Ordinanza Provvisoria</td> -->
+<!-- 		<td class="l" colspan="3"> -->
+<%-- 			<input Title="Anno Ordinanza Provvisoria" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>" type="text" size="4" maxlength="4"  --%>
+<!-- 				onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)" onChange="pulisciId();" -->
+<%-- 				value="<%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistroMaAt())%>"> --%>
+<!-- 			/ -->
+<%-- 			<input Title="Numero Ordinanza Provvisoria" name="<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT%>" type="text" size="6" maxlength="6" --%>
+<!-- 				onkeypress="return TicTabNumField(this,event)" onChange="pulisciId();" -->
+<%-- 				value="<%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistroMaAt())%>"> --%>
+<%-- 			<input type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_EVE_ID_EVENTO%>" value="<%if (isModifica) {%><%=StringUtils.toStringJSP(misuraalternativa.getEveIdEvento())%><%}%>"> --%>
+<!-- 		</td> -->
+<!-- 	</tr> -->
+<!-- 	<tr> -->
+<!-- 	  	<td class="l">Data Emissione Ordinanza Provvisoria</td> -->
+<!-- 	  	<td class="l" colspan="3"> -->
+<!-- 	    	<input title="Giorno Data Emissione Ordinanza Provvisoria" type="text" size="2" maxlength="2"  -->
+<%-- 	    		name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>" <%=IWebConstants.UTIL_DATA%> onChange="pulisciId();" --%>
+<%-- 	    		value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "dd"))%>"> - --%>
+<!-- 			<input title="Mese Data Emissione Ordinanza Provvisoria" type="text" size="2" maxlength="2"  -->
+<%-- 				name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>" <%=IWebConstants.UTIL_DATA%> onChange="pulisciId();" --%>
+<%-- 				value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "MM"))%>"> - --%>
+<!-- 			<input title="Anno Data Emissione Ordinanza Provvisoria" type="text" size="4" maxlength="4"  -->
+<%-- 				name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>" <%=IWebConstants.UTIL_DATA_ANNO%> onChange="pulisciId();" --%>
+<%-- 				value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "yyyy"))%>"> --%>
+<!-- 	  	</td> -->
+<!-- 	</tr> -->
+	<%-- FINE MEV_2024-092 --%>
 	<%-- FINE MEV_2019-09-SIEP --%>
     <tr>
      	<td class="l">Motivazioni</td>
@@ -1283,19 +1290,21 @@ if (misuraalternativa == null || misuraalternativa.getIdMisuraAlternativa() == n
 	}
 %>
 	// MEV_2019-09-SIEP: aggiunti controlli
-	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>","numeric");
-	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>","gt=1900");
-	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>","lt=2099");
-	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT%>","numeric");
-	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>","numeric");
-	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>","gt=1");
-	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>","lt=31");
-	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>","numeric");
-	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>","gt=1");
-	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>","lt=12");
-	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>","numeric");
-	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>","gt=1900");
-	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>","lt=2099");
+	// MEV_2024-092: rimossi i controlli
+<%-- 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>","numeric"); --%>
+<%-- 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>","gt=1900"); --%>
+<%-- 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>","lt=2099"); --%>
+<%-- 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT%>","numeric"); --%>
+<%-- 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>","numeric"); --%>
+<%-- 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>","gt=1"); --%>
+<%-- 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>","lt=31"); --%>
+<%-- 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>","numeric"); --%>
+<%-- 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>","gt=1"); --%>
+<%-- 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>","lt=12"); --%>
+<%-- 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>","numeric"); --%>
+<%-- 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>","gt=1900"); --%>
+<%-- 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>","lt=2099"); --%>
+	// FINE MEV_2024-092
 	// FINE MEV_2019-09-SIEP
 <%
 }

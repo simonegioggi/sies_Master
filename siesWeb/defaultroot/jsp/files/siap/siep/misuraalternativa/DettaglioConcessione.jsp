@@ -97,11 +97,11 @@ if (tipoMisura.equals("AFFIDAMENTO")) {
 <%
 } else if (tipoMisura.equals("SEMILIBERTA")) {
 %>
-			<font class="campo">Dettaglio Concessione Semilibertà</font>
+			<font class="campo">Dettaglio Concessione Semilibert&agrave;</font>
 <%
 } else if (tipoMisura.equals("INDULTINO")) {
 %>
-			<font class="campo">Dettaglio Concessione L:207/2003</font>
+			<font class="campo">Dettaglio Concessione L.207/2003</font>
 <%
 } else if (tipoMisura.equals(ICostantiMisuraAlternativa.ESP_PRESSO_DOM)) {
 %>
@@ -111,10 +111,13 @@ if (tipoMisura.equals("AFFIDAMENTO")) {
 %>
 		</td>
 <%
-if ((eventonotifica.getEvento().getFlagDocumentoRegistrato() != null
+if (((eventonotifica.getEvento().getFlagDocumentoRegistrato() != null
 		&& eventonotifica.getEvento().getFlagDocumentoRegistrato().compareTo("N") == 0)
-		|| eventonotifica.getEvento().getFlagDocumentoRegistrato() == null) {
-	// MEV_2019-09-SIEP: aggiunto pulsante di modifica diversificato per tipo misura
+		|| eventonotifica.getEvento().getFlagDocumentoRegistrato() == null)
+		// MEV_2019-09-SIEP: aggiunto pulsante di modifica diversificato per tipo misura
+		&& (tipoMisura.equals("DETENZIONE")
+				|| tipoMisura.equals("SEMILIBERTA")
+				|| tipoMisura.equals("AFFIDAMENTO"))) {
 	String action = "ActLoadInserisciMAAffidamentoInProva";
 	if (tipoMisura.equals("DETENZIONE"))
 		action = "ActLoadInserisciMADetenzioneDomiciliare";
@@ -143,15 +146,16 @@ if ((eventonotifica.getEvento().getFlagDocumentoRegistrato() != null
 <%
 // MEV_2019-09-SIEP: stava dentro if (eventonotifica.getEvento().getFlagDocumentoRegistrato() != null) quindi era dead code
 // if (eventonotifica.getEvento().getFlagDocumentoRegistrato() == null)
+// spostato nel ramo else
+} else {
+%>
+		<!-- BOTTONE DI STAMPA -->
+   		<jsp:include page="<%=ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>">
+     		<jsp:param name="ActionLink" value="<%="/jsp/Main.jsp?Action=siap.siep.misuraalternativa.action.ActStampaConcessione&IdEvento="+eventonotifica.getEvento().getIdEvento()+"&tipoMisura="+tipoMisura+"&IdEventoAmmProvvAff="+StringUtils.toStringJSP(lEventoAmmProvvAff.getIdEvento())%>"/>
+   		</jsp:include>
+<%
 }
 %>
-<%-- 		<!-- BOTTONE DI STAMPA --> --%>
-<%--    		<jsp:include page="<%=ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>"> --%>
-<%--      		<jsp:param name="ActionLink" value="<%="/jsp/Main.jsp?Action=siap.siep.misuraalternativa.action.ActStampaConcessione&IdEvento="+eventonotifica.getEvento().getIdEvento()+"&tipoMisura="+tipoMisura+"&IdEventoAmmProvvAff="+StringUtils.toStringJSP(lEventoAmmProvvAff.getIdEvento())%>"/> --%>
-<%--    		</jsp:include> --%>
-<%-- <% --%>
-<%-- } --%>
-<%-- %> --%>
 	</tr>
 </table>
 <br>

@@ -1205,6 +1205,8 @@ else {
 MisuraAlternativaModel lModel = new MisuraAlternativaModel();
 String lAzione = new String();
 String flagMis = new String();
+// MEV_2019-09-SIEP: aggiunta gestione modifica
+boolean isModifica = "MODIFICA".equals(tipoOperazione);
 %>
 			<%-- MEV_2019-09-SIEP: aggiunta dicitura / Ratifica (x3) --%>
 			<%-- MEV_2024-092: rimossa la dicitura / Ratifica (x3) --%>
@@ -1212,11 +1214,11 @@ String flagMis = new String();
 <%
 if (tipoMisura.equals("AFFIDAMENTO")) {
 %>
-    			Concessione Affidamento In Prova
+    			<%if (isModifica) {%>Modifica <%}%>Concessione Affidamento In Prova
 <%
 } else if (tipoMisura.equals("DETENZIONE")) {
 %>
-   				Concessione Detenzione Domiciliare
+   				<%if (isModifica) {%>Modifica <%}%>Concessione Detenzione Domiciliare
 <%
 }
 if (tipoMisura.equals("ESP_PRESSO_DOM")) {
@@ -1225,7 +1227,7 @@ if (tipoMisura.equals("ESP_PRESSO_DOM")) {
 <%
 } else if (tipoMisura.equals("SEMILIBERTA")) {
 %>
-    			Concessione Semiliberta'
+    			<%if (isModifica) {%>Modifica <%}%>Concessione Semilibert&agrave;
 <%
 } else if (tipoMisura.equals("INDULTINO")) {
 %>
@@ -1251,9 +1253,6 @@ if (tipoMisura.equals("ESP_PRESSO_DOM")) {
 <%-- MEV_2019-09-SIEP: aggiunta impostazione campo nascosto --%>
 <INPUT type="HIDDEN" name="tipoOperazione" value="<%=tipoOperazione%>">
 <%
-// MEV_2019-09-SIEP: aggiunta gestione modifica
-boolean isModifica = "MODIFICA".equals(tipoOperazione);
-
 if (tipoMisura.equals("AFFIDAMENTO")) {
 %>
 <input type="HIDDEN" name="tipomisura" value="AFFIDAMENTO">
