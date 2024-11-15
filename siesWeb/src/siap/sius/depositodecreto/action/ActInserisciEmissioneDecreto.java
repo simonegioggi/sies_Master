@@ -366,7 +366,9 @@ public class ActInserisciEmissioneDecreto extends ActionSius implements ICostant
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("Autorizzazione Corrispondenza Telefonica " + lCodTipoDec);
-		} else if (lCodTipoDec.compareTo(RINVIO_ESECUZIONE_PENA) == 0) {
+		} else if (lCodTipoDec.compareTo(RINVIO_ESECUZIONE_PENA) == 0
+				// MEV_2023-35 - aggiunto codice
+				|| lCodTipoDec.compareTo(RINVIO_ESECUZIONE_PENA_SOST_DERIVANTE_CONVERSIONE) == 0) {
 			// Esecuzione decreto Rinvio Esecuzione Pena
 			mRetPage = PG_INSERISCI_RINVIO_ESECUZIONE_PENA;
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di

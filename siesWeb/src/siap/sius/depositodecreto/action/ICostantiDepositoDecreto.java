@@ -409,7 +409,10 @@ public interface ICostantiDepositoDecreto {
 	public static final String RINVIO_ESECUZIONE_MS = "42";
 
 	// MEV_2023-35 - Revoca Autorizzazioni pene sostitutive
-	public static final String REVOCA_AUTORIZZAZIONE_PS = "AR"; // AR = RV_ABBREVIATION dell'oggetto U130
+	// AR = RV_ABBREVIATION dell'oggetto U130
+	public static final String REVOCA_AUTORIZZAZIONE_PS = "AR";
+	// 44 = RV_ABBREVIATION dell'oggetto U139
+	public static final String RINVIO_ESECUZIONE_PENA_SOST_DERIVANTE_CONVERSIONE = "44";
 
 	public static final String CAMPO_ID_NOTIFICA = "id_notifica";
 	public static final String PG_WARNING = IWebConstants.ROOT_DIR

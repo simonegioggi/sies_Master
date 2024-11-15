@@ -261,7 +261,9 @@ public class ActLoadDettaglioDecretoDeposito extends ActionSius
 			// Decreto di tipo Autorizzazione Corrispondenza Telefonica
 			lRetPage = PG_DETTAGLIO_AUTORIZ_CORRIS_TELEFONICA;
 			gestioneTemplate(lIdEvento);
-		} else if (lTipoDecreto.compareTo(RINVIO_ESECUZIONE_PENA) == 0) {
+		} else if (lTipoDecreto.compareTo(RINVIO_ESECUZIONE_PENA) == 0
+				// MEV_2023-35 - aggiunto codice
+				|| lTipoDecreto.compareTo(RINVIO_ESECUZIONE_PENA_SOST_DERIVANTE_CONVERSIONE) == 0) {
 			// Decreto di tipo Rinvio Esecuzione Pena
 			lRetPage = PG_DETTAGLIO_RINVIO_ESECUZIONE_PENA;
 			gestioneTemplate(lIdEvento);
