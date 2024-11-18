@@ -177,7 +177,7 @@ if (!lPosizione.isLibero() || ("S".equals(lFascicoloAssociato.getFlagAltraCausa(
 	}
 }
 %>
-	// Data Trasmissione
+	<%-- Data Trasmissione --%>
 	if (document.LoadInserisciMisuraAlternativa.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value.length == 1)
 		document.LoadInserisciMisuraAlternativa.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value = '0' +
 		document.LoadInserisciMisuraAlternativa.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value;
@@ -192,9 +192,9 @@ if (!lPosizione.isLibero() || ("S".equals(lFascicoloAssociato.getFlagAltraCausa(
 	    return false;
   	}
 	var campo = document.LoadInserisciMisuraAlternativa.<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>.value;
-	// MEV_2019-09-SIEP: aggiunta variabile
-	var codMotivo = document.LoadInserisciMisuraAlternativa.<%=ICostantiEvento.CAMPO_COD_MOTIVO%>.value;
-	// Controllo sui campi dell'ordinanza
+	<%-- MEV_2019-09-SIEP: aggiunta variabile --%>
+<%-- 	var codMotivo = document.LoadInserisciMisuraAlternativa.<%=ICostantiEvento.CAMPO_COD_MOTIVO%>.value; --%>
+	<%-- Controllo sui campi dell'ordinanza --%>
 	if (document.LoadInserisciMisuraAlternativa.flagmisura.value == "N") {
   		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>.value.length == 1)
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>.value = '0' +
@@ -214,24 +214,24 @@ if (!lPosizione.isLibero() || ("S".equals(lFascicoloAssociato.getFlagAltraCausa(
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_SEDE_TDS_EMITT%>.focus();
 			return false;
   		}
-		// MEV_2019-09-SIEP: aggiunti controlli per determinati codici di AFFIDAMENTO + DETENZIONE + SEMILIBERTA'
-		// MEV_2024-092: rimossi i controlli per determinati codici di AFFIDAMENTO + DETENZIONE + SEMILIBERTA'
-// 		if (codMotivo == "0720" || codMotivo == "0721" || codMotivo == "0722" || codMotivo == "0723" || codMotivo == "0730"
-// 				|| codMotivo == "0731" || codMotivo == "0732" || codMotivo == "0733" || codMotivo == "0734") {
+<%-- MEV_2019-09-SIEP: aggiunti controlli per determinati codici di AFFIDAMENTO + DETENZIONE + SEMILIBERTA'
+<%-- MEV_2024-092: rimossi i controlli per determinati codici di AFFIDAMENTO + DETENZIONE + SEMILIBERTA'
+<%-- 		if (codMotivo == "0720" || codMotivo == "0721" || codMotivo == "0722" || codMotivo == "0723" || codMotivo == "0730"
+<%-- 				|| codMotivo == "0731" || codMotivo == "0732" || codMotivo == "0733" || codMotivo == "0734") {
 <%-- 			if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>.value == "" --%>
 <%-- 					|| document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT%>.value == "") { --%>
-// 				alert('Anno e Numero Ordinanza Provvisoria obbligatori!');
+<%-- 				alert('Anno e Numero Ordinanza Provvisoria obbligatori!');
 <%-- 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>.focus(); --%>
-// 				return false;
-// 			}
+<%-- 				return false;
+<%-- 			}
 <%-- 			if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value == "" --%>
 <%-- 					&& document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.value == "" --%>
 <%-- 					&& document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>.value == "") { --%>
-// 				alert('Data Emissione Ordinanza Provvisoria obbligatoria!');
+<%-- 				alert('Data Emissione Ordinanza Provvisoria obbligatoria!');
 <%-- 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.focus(); --%>
-// 				return false;
-// 			}
-// 		}
+<%-- 				return false;
+<%-- 			}
+<%-- 		}
 <%-- 		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value != "" --%>
 <%-- 			|| document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.value != "" --%>
 <%-- 			|| document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>.value != "") { --%>
@@ -244,15 +244,15 @@ if (!lPosizione.isLibero() || ("S".equals(lFascicoloAssociato.getFlagAltraCausa(
 <%-- 			var data_to_verify = document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value + '-' + --%>
 <%-- 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.value + '-' + --%>
 <%-- 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>.value; --%>
-// 			if (!ControllaData(data_to_verify)) {
-// 				alert('Data Emissione Ordinanza Provvisoria non valida');
+<%-- 			if (!ControllaData(data_to_verify)) {
+<%-- 				alert('Data Emissione Ordinanza Provvisoria non valida');
 <%-- 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.focus(); --%>
-// 				return false;
-// 			}
-// 		}
-		// FINE MEV_2024-092
-		// FINE MEV_2019-09-SIEP
-	} // fine if (document.LoadInserisciMisuraAlternativa.flagmisura.value == "N")
+<%-- 				return false;
+<%-- 			}
+<%-- 		}
+<%-- FINE MEV_2024-092
+<%-- FINE MEV_2019-09-SIEP --%>
+	} <%-- fine if (document.LoadInserisciMisuraAlternativa.flagmisura.value == "N") --%>
 <%
 // AMBROSINO   - 23-12-2010
 //============================================================================
@@ -262,17 +262,17 @@ if (!lPosizione.isLibero() || ("S".equals(lFascicoloAssociato.getFlagAltraCausa(
 // if (lPosizione.isLibero() || tipoMisura.equals("SEMILIBERTA")) {
 if (lPosizione.isLibero() && tipoMisura.equals("AFFIDAMENTO")) {
 %>
-		// MEV_2019-09-SIEP: aggiunti controlli
-		// MEV_2024-092: rimossi i controlli
-// 		if (codMotivo == "0720" || codMotivo == "0721" || codMotivo == "0730" || codMotivo == "0731" || codMotivo == "0732") {
+<%-- MEV_2019-09-SIEP: aggiunti controlli --%>
+<%-- MEV_2024-092: rimossi i controlli --%>
+<%-- 		if (codMotivo == "0720" || codMotivo == "0721" || codMotivo == "0730" || codMotivo == "0731" || codMotivo == "0732") {
 <%-- 			if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.value == "" --%>
 <%-- 					&& document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>.value == "" --%>
 <%-- 					&& document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>.value == "") { --%>
-// 				alert('Data Applicazione Provvisoria obbligatoria');
+<%-- 				alert('Data Applicazione Provvisoria obbligatoria');
 <%-- 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.focus(); --%>
-// 				return false;
-// 			}
-// 		}
+<%-- 				return false;
+<%-- 			}
+<%-- 		}
 <%-- 		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.value != "" --%>
 <%-- 				|| document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>.value != "" --%>
 <%-- 				|| document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>.value != "") { --%>
@@ -285,14 +285,14 @@ if (lPosizione.isLibero() && tipoMisura.equals("AFFIDAMENTO")) {
 <%-- 			var data_to_verify = document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.value + '-' + --%>
 <%-- 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>.value + '-' + --%>
 <%-- 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>.value; --%>
-// 			if (!ControllaData(data_to_verify)) {
-// 				alert('Data Applicazione Provvisoria non valida');
+<%-- 			if (!ControllaData(data_to_verify)) {
+<%-- 				alert('Data Applicazione Provvisoria non valida');
 <%-- 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.focus(); --%>
-// 				return false;
-// 			}
-// 		}
-// FINE MEV_2024-092
-// FINE MEV_2019-09-SIEP
+<%-- 				return false;
+<%-- 			}
+<%-- 		}
+<%-- FINE MEV_2024-092
+<%-- FINE MEV_2019-09-SIEP --%>
 <%
 } else if (lPosizione.isDetenuto()
 				|| lPosizione.getCodPosizioneGiuridica().equals("14") // Espiazione Pena in Regime di Semilibertà
@@ -324,7 +324,7 @@ if (lPosizione.isLibero() && tipoMisura.equals("AFFIDAMENTO")) {
   		}
 	}
 <%
-} // chiude if (!lPosizione.isDetenuto() && !tipoMisura.equals("SEMILIBERTA")   
+} // chiude if (!lPosizione.isDetenuto() && !tipoMisura.equals("SEMILIBERTA")
 else if (lPosizione.getCodPosizioneGiuridica().equals("29")) { // Detenzione Domiciliare Provvisoria (29)
 %>
 	if (document.LoadInserisciMisuraAlternativa.tipomisura.value == 'DETENZIONE'
@@ -362,17 +362,17 @@ else if (lPosizione.getCodPosizioneGiuridica().equals("29")) { // Detenzione Dom
 			+ '-' + document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>.value
 			+ '-' +	document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>.value;
 		if (!ControllaData(data_to_verify)) {
-<%
-// 				if (tipoMisura.equals("AFFIDAMENTO")) {
-%>
-// 					    alert('Data Applicazione Provvisoria non valida');
-<%
-// 				} else {
-%>
-						alert('Data Ammissione Provvisoria a Detenzione Domiciliare non valida');
-<%
-// 				}
-%>
+<%--
+<%-- 				if (tipoMisura.equals("AFFIDAMENTO")) {
+--%>
+<%-- 					alert('Data Applicazione Provvisoria non valida'); --%>
+<%--
+<%--				} else {
+--%>
+			alert('Data Ammissione Provvisoria a Detenzione Domiciliare non valida');
+<%--
+<%-- 				}
+--%>
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.focus();
 		    return false;
 		}
@@ -447,14 +447,6 @@ if (lPosizione.isLibero() && (verbale == null || verbale.getIdVerbale() == null)
 		    return false;
   		}
 	}
-<%--
-	// MEV10-s3: aggiunto controllo preventivo
-	if (document.getElementById('<%=MinorMask.ComboCSSAId%>').value != undefined &&
-		document.getElementById('<%=MinorMask.ComboCSSAId%>').value == "-") { 
-		alert("L'UEPE/USSM e' obbligatorio");
-		return false;
-	}
---%>
 	if (!document.LoadInserisciMisuraAlternativa.<%=ICostantiCSSA.CAMPO_ID_CSSA%>.disabled) {
 		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiCSSA.CAMPO_ID_CSSA%>.value == ""
 				|| document.LoadInserisciMisuraAlternativa.<%=ICostantiCSSA.CAMPO_ID_CSSA%>.value == "-"
@@ -468,7 +460,6 @@ if (lPosizione.isLibero() && (verbale == null || verbale.getIdVerbale() == null)
 	if (document.getElementById('divsor') && document.getElementById('divsor').style.visibility != 'hidden'
 			&& !document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_COD_UDS%>.disabled) {
 		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_COD_UDS%>.value == "") {
- 			// MEV10-s3: modificato msg
 			alert ("L'Ufficio / Magistrato di Sorveglianza e' obbligatorio");
 			return false;
   		}
@@ -481,7 +472,6 @@ if (!tipoMisura.equals("INDULTINO") && !tipoMisura.equals("ESP_PRESSO_DOM")) {
 	if (document.getElementById('divsor') && document.getElementById('divsor').style.visibility != 'hidden'
 			&& !document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_SEDE_TDS%>.disabled) {
 		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_SEDE_TDS%>.value == "") {
-			// MEV10-s3: modificato msg
 	     	alert("Il Tribunale di Sorveglianza e' obbligatorio");
 	     	return false;
    		}

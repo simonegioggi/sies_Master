@@ -300,6 +300,11 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 			if ("MODIFICA".equals(tipoOperazione)) {
 				Collection<DecodificheModel> c = DecodificheManager.getInstance()
 						.getTipoUffEsePenEstSerSocMin();
+				for (int i = 0; i < c.size(); i++) {
+					DecodificheModel dm = (DecodificheModel) c.toArray()[i];
+					if ("UEPESS".equals(dm.getCode()) || "USSMSS".equals(dm.getCode()))
+						c.remove(dm);
+				}
 				Object[] dms = c.toArray();
 				for (int i = 0; i < dms.length; i++) {
 					DecodificheModel dm = (DecodificheModel) dms[i];
@@ -307,17 +312,13 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 						dm.setDescription("UEPE");
 					else if ("USSM".equals(dm.getCode()))
 						dm.setDescription("USSM");
-					else if ("UEPESS".equals(dm.getCode()))
-						dm.setDescription("UEPESS");
-					else if ("USSMSS".equals(dm.getCode()))
-						dm.setDescription("USSMSS");
 				}
-				Option o = new Option(c, ((NotificaModel) lTable.get("NotCssa")).getCSSA().getTipo());
-				String[] lFiltro = new String[3];
-				lFiltro[0] = "-";
-				lFiltro[1] = "UEPE";
-				lFiltro[2] = "USSM";
-				o.setFilter(lFiltro);
+				String tipo = ((NotificaModel) lTable.get("NotCssa")).getCSSA().getTipo();
+				if ("UEPESS".equals(tipo))
+					tipo = "UEPE";
+				else if ("USSMSS".equals(tipo))
+					tipo = "USSM";
+				Option o = new Option(c, tipo);
 				setRequestAttribute("comboCSSATrattinoModif", "" + o);
 			}
 		}
@@ -639,10 +640,11 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 			lEveNot.getEvento().setCodMotivo("5465");
 		else if ("0733".equals(aMotivo))
 			lEveNot.getEvento().setCodMotivo("5466");
+		// MEV_2024-092: nuova gestione Cod_Motivo Richiesta per ogni PG
 		else if ("0682".equals(aMotivo))
-			lEveNot.getEvento().setCodMotivo(aMotivo);
+			lEveNot.getEvento().setCodMotivo("1418");
 		else if ("0693".equals(aMotivo))
-			lEveNot.getEvento().setCodMotivo(aMotivo);
+			lEveNot.getEvento().setCodMotivo("1424");
 
 		// aggiunto controllo per codici tipo misura
 		if ("0722".equals(aMotivo) || "0733".equals(aMotivo))
