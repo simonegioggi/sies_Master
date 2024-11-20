@@ -193,7 +193,7 @@ if (!lPosizione.isLibero() || ("S".equals(lFascicoloAssociato.getFlagAltraCausa(
   	}
 	var campo = document.LoadInserisciMisuraAlternativa.<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>.value;
 	<%-- MEV_2019-09-SIEP: aggiunta variabile --%>
-<%-- 	var codMotivo = document.LoadInserisciMisuraAlternativa.<%=ICostantiEvento.CAMPO_COD_MOTIVO%>.value; --%>
+	<%-- var codMotivo = document.LoadInserisciMisuraAlternativa.<%=ICostantiEvento.CAMPO_COD_MOTIVO%>.value; --%>
 	<%-- Controllo sui campi dell'ordinanza --%>
 	if (document.LoadInserisciMisuraAlternativa.flagmisura.value == "N") {
   		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>.value.length == 1)
@@ -324,7 +324,7 @@ if (lPosizione.isLibero() && tipoMisura.equals("AFFIDAMENTO")) {
   		}
 	}
 <%
-} // chiude if (!lPosizione.isDetenuto() && !tipoMisura.equals("SEMILIBERTA")
+} // chiude if (lPosizione.isDetenuto() || ...
 else if (lPosizione.getCodPosizioneGiuridica().equals("29")) { // Detenzione Domiciliare Provvisoria (29)
 %>
 	if (document.LoadInserisciMisuraAlternativa.tipomisura.value == 'DETENZIONE'
@@ -384,30 +384,32 @@ else if (lPosizione.getCodPosizioneGiuridica().equals("29")) { // Detenzione Dom
 	// nulla
 } else { // per le altre posizioni giuridiche
 %>
-	if (document.LoadInserisciMisuraAlternativa.tipo[1].checked == true) {
+	<%-- MEV_2024-092: aggiunto controllo preventivo --%>
+	if (document.getElementById('tipo') && document.LoadInserisciMisuraAlternativa.tipo[1]
+			&& document.LoadInserisciMisuraAlternativa.tipo[1].checked == true) {
   		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE%>.value == "") {
 			alert("La data di Scarcerazione e' obbligatoria")
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE%>.focus();
 			return false;
-  		}      
-	}
-	if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE%>.value != ""
-			|| document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_SCARCERAZIONE%>.value != ""
-			|| document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_SCARCERAZIONE%>.value != "") {
-  		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE%>.value.length == 1)
-			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE%>.value = '0' +
-			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE%>.value;
-		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_SCARCERAZIONE%>.value.length == 1)
-			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_SCARCERAZIONE%>.value = '0' +
-			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_SCARCERAZIONE%>.value;
-		var data_to_verify = document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE%>.value
-			+ '-' + document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_SCARCERAZIONE%>.value
-			+ '-' + document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_SCARCERAZIONE%>.value;
-		if (!ControllaData(data_to_verify)) {
-			alert('Data Scarcerazione non valida');
-			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE%>.focus();
-			return false;
   		}
+  		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE%>.value != ""
+				|| document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_SCARCERAZIONE%>.value != ""
+				|| document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_SCARCERAZIONE%>.value != "") {
+	  		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE%>.value.length == 1)
+				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE%>.value = '0' +
+				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE%>.value;
+			if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_SCARCERAZIONE%>.value.length == 1)
+				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_SCARCERAZIONE%>.value = '0' +
+				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_SCARCERAZIONE%>.value;
+			var data_to_verify = document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE%>.value
+				+ '-' + document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_SCARCERAZIONE%>.value
+				+ '-' + document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_SCARCERAZIONE%>.value;
+			if (!ControllaData(data_to_verify)) {
+				alert('Data Scarcerazione non valida');
+				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE%>.focus();
+				return false;
+	  		}
+		}
 	}
 <%
 }
@@ -2094,7 +2096,8 @@ if (lPosizione.isLibero()) {
 	</tr>
 <%
 } else if (lPosizione.isDetenuto()
-		|| lPosizione.getCodPosizioneGiuridica().equals("14") // Espiazione Pena in Regime di Semilibertà
+		// MEV_2024-092: elimino PG 14
+		// || lPosizione.getCodPosizioneGiuridica().equals("14") // Espiazione Pena in Regime di Semilibertà
 		// Espiazione Pena in Regime di Semilibertà in Prosec.Provv. 51 Bis
 		|| lPosizione.getCodPosizioneGiuridica().equals("43")) {
 		// Paolo Cherubini 24/03/2011 vedi commento sopra	|| lPosizione.getCodPosizioneGiuridica().equals("04") // Arresti Domiciliari ex art. 656/10

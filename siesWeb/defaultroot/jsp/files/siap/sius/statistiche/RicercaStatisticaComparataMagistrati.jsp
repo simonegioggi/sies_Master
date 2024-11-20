@@ -116,7 +116,8 @@
       <td class="int">Pendenti Inizio Periodo</td>
       <td class="int">Sopravvenuti</td>
       <td class="int">Accolti</td>
-      <td class="int">Accolti Provvisoriamente</td>  <%-- MEV_2019-09 --%>    
+      <%-- MEV_2024-092: modificata la dicitura da "Accolti Provvisoriamente" a "Accolti ex art.678 c.1 ter c.p.p." --%>
+      <td class="int">Accolti ex art.678 c.1 ter c.p.p</td>  <%-- MEV_2019-09 --%>
       <td class="int">Rigettati</td>
       <td class="int">Inammissibilità</td>
       <td class="int">NLP/NDP</td>

@@ -712,12 +712,13 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 			lEve.getEvento().setCodMotivo("5467");
 		else if ("0734".equals(aMotivo))
 			lEve.getEvento().setCodMotivo("5468");
+		// MEV_2024_092: modificate le impostazioni per 0683 e 0694, commentata quella per 0004!
 		else if ("0683".equals(aMotivo))
-			lEve.getEvento().setCodMotivo(aMotivo);
+			lEve.getEvento().setCodMotivo("1419");
 		else if ("0694".equals(aMotivo))
-			lEve.getEvento().setCodMotivo(aMotivo);
-		else if ("0004".equals(aMotivo)) // semiliberta'
-			lEve.getEvento().setCodMotivo(aMotivo);
+			lEve.getEvento().setCodMotivo("1425");
+		// else if ("0004".equals(aMotivo)) // semiliberta'
+		// lEve.getEvento().setCodMotivo(aMotivo);
 
 		// aggiunto controllo per codici tipo misura
 		if ("0723".equals(aMotivo) || "0734".equals(aMotivo))
