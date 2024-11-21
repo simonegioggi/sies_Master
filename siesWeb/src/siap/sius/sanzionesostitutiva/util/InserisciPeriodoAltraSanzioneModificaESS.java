@@ -222,12 +222,18 @@ public class InserisciPeriodoAltraSanzioneModificaESS extends ActionSiap impleme
 						if (DateUtils.isLower(lDataScadenza, lEssM.getDataTermineAttuale())) {
 							lPerAltSanMod.setDataScadenza(lDataScadenza);
 						} else {
-							throw new SIUSException(SIUSException.USER_MESSAGE,
-									"Attenzione! La Data 'Fino al' ("
-											+ DateUtils.getDateToString(lDataScadenza, "dd/MM/yyyy")
-											+ ") deve essere minore della Data Termine Attuale ("
-											+ DateUtils.getDateToString(lDataDecorrenzaSanzSost, "dd/MM/yyyy")
-											+ ").");
+							// MEV_2023-35: richiesta durante il collaudo la possibilità di inserire oltre
+							// la Data Termine Attuale
+							if (!"U137".equals(
+									mFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento())) {
+								throw new SIUSException(SIUSException.USER_MESSAGE,
+										"Attenzione! La Data 'Fino al' ("
+												+ DateUtils.getDateToString(lDataScadenza, "dd/MM/yyyy")
+												+ ") deve essere minore della Data Termine Attuale ("
+												+ DateUtils.getDateToString(lDataDecorrenzaSanzSost,
+														"dd/MM/yyyy")
+												+ ").");
+							}
 						}
 					}
 

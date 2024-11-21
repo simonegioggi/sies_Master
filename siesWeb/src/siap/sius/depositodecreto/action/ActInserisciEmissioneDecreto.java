@@ -452,13 +452,13 @@ public class ActInserisciEmissioneDecreto extends ActionSius implements ICostant
 			// LogF3B.getLogger()
 			siesLogger.debug("Revoca Permesso " + lCodTipoDec);
 		} else if (lCodTipoDec.compareTo(ESCLUSIONE_COMPUTO) == 0) {
-			// Escusione Scomputo
+			// Esclusione Scomputo
 			// Viene effettuata la Ricerca del decreto Permesso da revocare
 			ricercaDecretiDaRevocare(PERMESSO, "PP");
 			mRetPage = PG_INSERISCI_ESCLUSIONE_COMPUTO;
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("Escusione Scomputo " + lCodTipoDec);
+			siesLogger.debug("Esclusione Scomputo " + lCodTipoDec);
 		} else if (lCodTipoDec.compareTo(AUTORIZZAZIONE_MA) == 0) {
 			// Autorizzazione su Misura Alternativa
 			mRetPage = PG_INSERISCI_AUTORIZZAZIONE_MA;
@@ -466,7 +466,7 @@ public class ActInserisciEmissioneDecreto extends ActionSius implements ICostant
 			// LogF3B.getLogger()
 			siesLogger.debug("Decreto Autorizzazione su MA " + lCodTipoDec);
 		} else if (lCodTipoDec.compareTo(ESCLUSIONE_COMPUTO_LICENZA) == 0) {
-			// Escusione Scomputo Licenza
+			// Esclusione Scomputo Licenza
 			// Viene effettuata la Ricerca del decreto Licenza dal quale escludere computo
 			// 20110524 - PM Commentato per sostituzione.
 			// ricercaDecretiDaRevocare(LICENZA, "LC");
@@ -485,7 +485,7 @@ public class ActInserisciEmissioneDecreto extends ActionSius implements ICostant
 			mRetPage = PG_INSERISCI_ESCLUSIONE_COMPUTO;
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("Escusione Scomputo Licenza" + lCodTipoDec);
+			siesLogger.debug("Esclusione Scomputo Licenza" + lCodTipoDec);
 		} else if (lCodTipoDec.compareTo(REVOCA_LICENZA) == 0) {
 			// Revoca licenza
 			// Viene effettuata la Ricerca del decreto Licenza da revocare

@@ -145,23 +145,38 @@ function Verify() {
 		return false;
 	}
 
-	// Controlla che non venga inserito il "Periodo Sospensione" e la Data "Fino al"" 			
+<%
+// MEV_2023-35: richiesta durante il collaudo la possibilità di inserire solo il periodo
+if (!("U141".equals(contenuto) || "C066".equals(contenuto))) {
+%>
+	// Controlla che non venga inserito il "Periodo Sospensione" e la Data "Fino al""
 	if (chk_valore_data_fine == true && chk_valore_periodo > 0) {
 		alert('Inserire solo il "Periodo Sospensione" o solo la Data "Fino al"');
 		return false;
 	}
-
-	// Controlla che per inserire il "Periodo Sospensione" ci sia la "Data Decorrenza Sospensione" 			
+<%
+}
+// MEV_2023-35: richiesta durante il collaudo la possibilità di inserire solo il periodo
+if (!("U137".equals(contenuto) || "U141".equals(contenuto) || "C066".equals(contenuto))) {
+%>
+	// Controlla che per inserire il "Periodo Sospensione" ci sia la "Data Decorrenza Sospensione"
 	if (chk_valore_data_inizio == false && chk_valore_periodo > 0) {
 		alert('Per impostare il "Periodo Sospensione" è necessario impostare la "Data Decorrenza Sospensione"');
 		return false;
 	}
-
+<%
+}
+// MEV_2023-35: richiesta durante il collaudo la possibilità di inserire solo il periodo
+if (!("U141".equals(contenuto) || "C066".equals(contenuto))) {
+%>
 	// Controlla che per inserire la data "Fino al" ci sia la "Data Decorrenza Sospensione" 			
 	if (chk_valore_data_fine == true && chk_valore_data_inizio == false) {
 		alert('Per impostare la Data "Fino al" è necessario impostare la "Data Decorrenza Sospensione"');
 		return false;
 	}
+<%
+}
+%>
 	
 	// Controllo validità Data Fino al
 	if (! ControllaDataPassaVuota(data_fine)) {

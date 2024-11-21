@@ -710,7 +710,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("Fase di chiusura per il Tenore");
+			siesLogger.debug("Fase di apertura per il Tenore");
 			TenoreModel lTenore = new TenoreModel();
 			// Valorizzazione dei campi da aggiornare + update
 			lTenore.setCodOperatoreAggiornamento(
@@ -787,7 +787,9 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 		} catch (Exception e) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("Exception: " + e);
+			siesLogger.error("Exception: " + e);
+			// MEV_2023-35: aggiunto rilancio di eccezione
+			throw new SIUSException("DepositoOrdinanzaPcController.ExInserisciOrdinanza:" + e);
 		} finally {
 			cleanup(lGenProcDao);
 			cleanup(lTenoreDao);

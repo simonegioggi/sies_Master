@@ -162,7 +162,7 @@ if (fascicoloSiusGP != null && fascicoloSiusGP.getFascicoloSiusModel() != null &
 		<td colspan="3">
 			<table cellspacing="1" cellpadding="1" width="<%=lWidth%>" style="border: 0;">
 				<tr>
-					<td class="L" width=29%>
+					<td class="L" width="29%">
 						<font class="label">Numero </font>
 						<font class="campo">
 							<%=fascicoloSiusGP.getFascicoloSiusModel().getChiaveAnno()%>/<%=fascicoloSiusGP.getFascicoloSiusModel().getChiaveProgr()%>
@@ -175,7 +175,7 @@ if (!(UtenteConnesso.getUfficioUtente().getCodUfficio().compareTo(fascicoloSiusG
 %>
 						</font>
 					</td>
-					<td class="L" width=24%>
+					<td class="L">
 						<font class="label">Data Iscrizione:</font>&nbsp;
 						<font class="campo">
 <%
@@ -197,7 +197,7 @@ if (posizione_materiale != null && posizione_materiale.getDescrPosizioneMaterial
 		&& posizione_materiale.getDescrPosizioneMateriale().length() > 0) {
 %>
 				<tr>
-					<td class="L" width=14%>
+					<td class="L" colspan="2">
 						<font class="label">Posizione Materiale:</font>&nbsp;
 						<font class="cRosso"><%=posizione_materiale.getDescrPosizioneMateriale()%></font>
 					</td>
@@ -206,15 +206,10 @@ if (posizione_materiale != null && posizione_materiale.getDescrPosizioneMaterial
 }
 %>
 				<tr>
-					<td class="L" width=14%>
+					<td class="L" colspan="2">
 						<font class="cRosso"><%=collaboratore%></font>
 					</td>
 				</tr>
-				<tr>
-					<td class="L" width=14%>
-						<font class="label">Stato:</font>&nbsp;
-						<font class="cRosso"><%=fascicoloSiusGP.getFascicoloSiusModel().getDescrStatoFascicolo()%></font>
-					</td>
 <%
 String lDescrLink = "";
 RedirectTo lRedir = new RedirectTo();
@@ -276,9 +271,19 @@ if (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento().c
 		}
 	}
 }
-if (lDescrLink.length() > 1) {
+boolean testDescrLink = false;
+if (lDescrLink.length() > 1)
+	testDescrLink = true;
 %>
-					<td class="L" width=14%>
+				<tr>
+					<td class="L" <%if (!testDescrLink) {%> colspan="2" <%}%>>
+						<font class="label">Stato:</font>&nbsp;
+						<font class="cRosso"><%=fascicoloSiusGP.getFascicoloSiusModel().getDescrStatoFascicolo()%></font>
+					</td>
+<%
+if (testDescrLink) {
+%>
+					<td class="L">
 						<font class="cRosso">
 							<a class="cliccabile" href="<%=lRedir%>"><%=lDescrLink%></a>
 						</font>
@@ -299,11 +304,11 @@ if (fascicoloSiusGP.getGeneraleProcedimentoModel().getTipoDefinizione() != null
 		lTipoDefinizione += " - " + fascicoloSiusGP.getGeneraleProcedimentoModel().getDescrDefinizione();
 	}
 %>
-					<td class="L" width=86%>
+					<td class="L" nowrap>
 						<font class="label">Tipo definizione:</font>&nbsp;
 						<font class="campo"><%=lTipoDefinizione%></font>
 					</td>
-					<td class="L" width=34%>
+					<td class="L">
 						<font class="label">Data di definizione:</font>&nbsp;
 						<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(fascicoloSiusGP.getGeneraleProcedimentoModel().getDataDefinizione(),"dd-MM-yyyy"), "-")%></font>
 					</td>
@@ -314,7 +319,7 @@ if (fascicoloSiusGP.getGeneraleProcedimentoModel().getTipoDefinizione() != null
 if (fascicoloUnificante != null && fascicoloUnificante.getFascicoloSiusModel() != null
 		&& fascicoloUnificante.getFascicoloSiusModel().getIdFascicoloSius() != null) {
 %>
-					<td>
+					<td colspan="2">
 						<font class="label"> al </font>
 						<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>=<%=fascicoloUnificante.getFascicoloSiusModel().getIdFascicoloSius()%>&TornaQui=<%=TornaQui%>">
 						<%=fascicoloUnificante.getFascicoloSiusModel().getChiaveAnno()%>
@@ -346,7 +351,7 @@ if (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodTipoRegistro() != null)
 %>
 				</tr>
 				<tr>
-					<td class="L" colspan="3" width="100%">
+					<td class="L" colspan="2">
 						<font class="cVerde">Numero Procedimento&nbsp;<%=lTipoEsecuzione%>&nbsp;-&nbsp;&nbsp;
 							<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=<%=lAzioneDiEsecuzione%>&<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_ANNO%>=<%=fascicoloSiusGP.getGeneraleProcedimentoModel().getAnnoS1()%>&<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_PROGR%>=<%=fascicoloSiusGP.getGeneraleProcedimentoModel().getProgrS1()%>&<%=ICostantiFascicoloSius.CAMPO_CHIAVE_UFFICIO%>=<%=fascicoloSiusGP.getFascicoloSiusModel().getChiaveUfficio()%>&TornaQui=<%=TornaQui%>">
 								<%=fascicoloSiusGP.getGeneraleProcedimentoModel().getAnnoS1() %>/<%=fascicoloSiusGP.getGeneraleProcedimentoModel().getProgrS1()%>
@@ -1461,7 +1466,6 @@ if (ulterioriistanze != null && ulterioriistanze.size() > 0) {
 	</table>
 	<br>
 </div>
-<br>
 <table cellspacing="1" cellpadding="1" width="100%" border=<%=isBorder%>>
 	<tr>
 		<td class="label" width="15%" colspan="2">
