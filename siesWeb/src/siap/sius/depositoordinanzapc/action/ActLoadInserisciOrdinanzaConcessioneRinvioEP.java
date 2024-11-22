@@ -69,7 +69,10 @@ public class ActLoadInserisciOrdinanzaConcessioneRinvioEP extends ActionSiap
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
 				siesLogger.debug("ID del Generale Procedimento ->" + lGenProc1.getIdGeneraleProcedimento());
-				lDepDecMod = RicercaDecreto(lGenProc1.getIdGeneraleProcedimento());
+				// MEV_2023-035: intervento pro collaudo, aggiunto parametro di passaggio x diversificare la
+				// ricerca del decreto di origine
+				String codOggettoProc = lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento();
+				lDepDecMod = RicercaDecreto(lGenProc1.getIdGeneraleProcedimento(), codOggettoProc);
 				// Ricerca del Decreto
 				if (lDepDecMod != null)
 					setRequestAttribute("decreto", lDepDecMod);
@@ -97,7 +100,8 @@ public class ActLoadInserisciOrdinanzaConcessioneRinvioEP extends ActionSiap
 	}
 
 	// Ricerca del decreto emesso dall' Ufficio di Sorveglianza
-	private DepositoDecretoModel RicercaDecreto(BigDecimal aIdGenProc) throws Exception {
+	private DepositoDecretoModel RicercaDecreto(BigDecimal aIdGenProc, String codOggettoProc)
+			throws Exception {
 
 		IDepositoDecreto lDepDecCtrl = null;
 		DepositoDecretoModel lDepDecMod = null;
@@ -106,8 +110,14 @@ public class ActLoadInserisciOrdinanzaConcessioneRinvioEP extends ActionSiap
 		String lCodUff = null;
 
 		lDepDecCtrl = SIUSLookupRemote.getDepositoDecretoRemote();
-		lDepDecMod = lDepDecCtrl.ExRicercaDepositoDecretoByGenProc(aIdGenProc,
-				ICostantiDepositoDecreto.RINVIO_ESECUZIONE_PENA);
+		// MEV_2023-035: intervento pro collaudo, aggiunto controllo x diversificare la
+		// ricerca del decreto di origine
+		if ("C065".equals(codOggettoProc))
+			lDepDecMod = lDepDecCtrl.ExRicercaDepositoDecretoByGenProc(aIdGenProc,
+					ICostantiDepositoDecreto.RINVIO_ESECUZIONE_PENA_SOST_DERIVANTE_CONVERSIONE);
+		else
+			lDepDecMod = lDepDecCtrl.ExRicercaDepositoDecretoByGenProc(aIdGenProc,
+					ICostantiDepositoDecreto.RINVIO_ESECUZIONE_PENA);
 		if (lDepDecMod != null) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()

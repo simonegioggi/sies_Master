@@ -4,6 +4,7 @@
 <%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
+<%@ page import="f3b.util.Utils"%>
 
 <%@ page import="siap.sius.fascicolo.action.ICostantiFascicoloSius"%>
 <%@ page import="siap.sius.tenore.action.ICostantiTenore"%>
@@ -220,9 +221,16 @@ for (int i = 0; i < tenori.length; i++) {
 		<td class="l" width="20%"><%=labelUfficio%></td>
 		<td class="l">
 		  	<input readonly="<%=isReadOnly%>" title="<%=labelUfficio%>" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP%>" value="" size="35">
+<%
+// MEV_2023-035: aggiunto controllo se siamo in sola lettura
+if (!Utils.isPresent(isReadOnly)) {
+%>
 			<a href="Javascript:ListaUDS('InserisciOrdinanzaConcessioneRinvioEP','<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP%>','<%=codUff%>');">
 		  		<img src="/images/filefolder.gif" border="0">
 		  	</a>
+<%
+}
+%>
 		</td>
     </tr>
 <%
