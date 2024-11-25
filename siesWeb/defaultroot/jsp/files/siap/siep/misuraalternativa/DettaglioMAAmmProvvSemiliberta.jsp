@@ -93,7 +93,7 @@ if(lAltraCausa == null)
   <tr>
     <td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
     <td class="LBG"><font class="label">Funzione :</font>&nbsp;&nbsp;
-      <font class="campo">Dettaglio Ammissone/Applicazione Provvisoria Semilibertà</font>
+      <font class="campo">Dettaglio Ammissone Provvisoria/Applicazione Semilibertà</font>
     </td>
 
 <%
@@ -359,10 +359,12 @@ else if("03".equals(misuraalternativa.getCodTipoDecisione() )) {
   <td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisione(),"dd-MM-yyyy"))%></font></td>
 </tr>
 
+<%-- 
 <tr>
   <td class="l">Data Esecutivita'</td>
   <td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataEsecutivita(),"dd-MM-yyyy"),"&nbsp;")%></font></td>
 </tr>
+--%>
 
 <%if(verbale.getDataEmissione()!= null) {%>
 <tr>

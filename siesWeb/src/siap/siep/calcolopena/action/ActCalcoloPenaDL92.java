@@ -3,6 +3,7 @@ package siap.siep.calcolopena.action;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -134,7 +135,19 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 							ICostantiPenaResidua.CAMPO_GIORNO_DATA_DECORRENZA_PENA));
 		}
 
-		siesLogger.debug("Modelprima del calcolo");
+		// new se ho provengo dalla form di calcolo recupero i check per l'esclusione dei periodi
+		Hashtable <String, String> listaIsCompresa = new Hashtable <String, String>();
+		if ( !isRequestParameterNullEmptyObj("numSemestriElaborati")) {
+			int numSemestriElaborati = getRequestIntParameter("numSemestriElaborati");
+			for  (int i=1; i<=numSemestriElaborati; i++) {
+				String idSemestre = "prgSemestre_"+i;
+				String isCompreso = getRequestStringParameter(idSemestre);
+				listaIsCompresa.put (idSemestre, isCompreso);
+			}
+		}
+		lCalcoloModel.setListaIsCompresa(listaIsCompresa);
+		
+		siesLogger.debug("Model prima del calcolo");
 		lCalcoloModel.stampaCalcolo();
 
 		lCalcoloModel.calcolaPenaVirtuale();

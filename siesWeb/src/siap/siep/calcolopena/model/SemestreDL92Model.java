@@ -31,6 +31,8 @@ public class SemestreDL92Model extends GenericModel {
 	// datao calcolato sono i gg del presofferto che non maturano LA
 	private BigDecimal mGiorniResiduiPresofferto;
 	
+	private String mIsCompreso = "S"; // S/N indica se il semestre va consideratoai fini delle LA
+	
   // Metodi Getter
   public BigDecimal getProgressivo()              { return mProgressivo;  }
   public BigDecimal getResiduoNumAnni()           { return mResiduoNumAnni; }
@@ -43,6 +45,7 @@ public class SemestreDL92Model extends GenericModel {
   public BigDecimal getNumSemestriMaturati()      { return mNumSemestriMaturati;  }
   public String     getIsPresofferto()            { return mIsPresofferto;  }
   
+  public String     getIsCompreso()               { return mIsCompreso;  }
   
   // Metodi Setter
   public void setProgressivo              (BigDecimal mProgressivo)     { this.mProgressivo = mProgressivo; }
@@ -56,4 +59,5 @@ public class SemestreDL92Model extends GenericModel {
   public void setNumSemestriMaturati      (BigDecimal mNumSemestriMaturati)  { this.mNumSemestriMaturati = mNumSemestriMaturati; }
   public void setIsPresofferto            (String mIsPresofferto)            { this.mIsPresofferto = mIsPresofferto; }
   
+  public void setIsCompreso               (String mIsCompreso)               { this.mIsCompreso = mIsCompreso;  }
 }

@@ -262,12 +262,17 @@ public class ActLoadInserisciMAAmmProvSemiliberta extends ActAmmissioneProvvisor
 			DecodeModel lDecodeNew = new DecodeModel();
 			lDecodeNew.setCode(lDecode.getCode());
 
-			// AFFIDAMENTO
+			/* MEV092 rework
 			if ("0683".equals(lDecode.getCode()))
 				lDecodeNew.setDescription("Applicazione Provvisoria " + lDecode.getDescription());
 			else if ("0694".equals(lDecode.getCode()))
 				lDecodeNew.setDescription("Applicazione Provvisoria " + lDecode.getDescription());
-			else
+			else */
+			if ("0683".equals(lDecode.getCode()))
+				lDecodeNew.setDescription("Applicazione " + lDecode.getDescription());
+			else if ("0694".equals(lDecode.getCode()))
+				lDecodeNew.setDescription("Applicazione " + lDecode.getDescription());
+			else 
 				lDecodeNew.setDescription(lDecode.getDescription());
 
 			lMotiviCollSIEP.add(lDecodeNew);

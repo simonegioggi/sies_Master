@@ -619,8 +619,10 @@ if ("MODIFICA".equals(tipoOperazione))
   tipoOperazioneView = tipoOperazione + " " + eventonotifica.getEvento().getDescrTipoProvvedimento();
 %>
 
-
+<%-- 
 <body class="corpo" onload="radio();caricaCombo();VisualizzaAvvocati();">
+--%>
+<body class="corpo" onload="caricaCombo();VisualizzaAvvocati();">
 	<table> 
 	  <tr>
 	    <td class="LBG">
@@ -630,7 +632,7 @@ if ("MODIFICA".equals(tipoOperazione))
 	    </td>
 	    <td class="LBG">
 	      <font class="label">Funzione :</font>&nbsp;&nbsp;          
-	      <font class="campo"><%=tipoOperazioneView%> AMMISSIONE/APPLICAZIONE PROVVISORIA SEMILIBERTA' (ART 678 C.1 TER C.P.P.)</font>
+	      <font class="campo"><%=tipoOperazioneView%> AMMISSIONE PROVVISORIA/APPLICAZIONE SEMILIBERTA' (ART 678 C.1 TER C.P.P.)</font>
 	    </td>
 	  </tr>
 	</table>
@@ -971,6 +973,8 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
       <INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getYearToString(misuraalternativa.getDataDecisione()))%>">
     </td>
   </tr>
+<%--
+MEV092 Rework
   <tr>
     <td class="l">Data Esecutivita'</td>
     <td class="l" colspan="3">
@@ -979,7 +983,7 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
       </font>
     </td>
   </tr>
-
+--%> 
   
 <% if (verbale.getDataEmissione() != null) { %>
   <tr>
@@ -1107,7 +1111,8 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
       </font>
     </td>
   </tr>
-    
+<%-- 
+MEV092 rework   
   <tr>
     <td class="l">Data Esecutivita' <font class=ob id="dataEsecObbl" style="display:none;">(*)</font></td>
     <td class="l" colspan="3">
@@ -1118,7 +1123,7 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
       </font>
     </td>
   </tr>
- 
+--%> 
   <tr>
     <td class="l">Note</td>
     <td class="L" colspan="3">
@@ -1130,6 +1135,8 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
 %>
 </table>
 
+<%-- 
+MEV092 - Rework
 <%
 if (misuraalternativa.getIdMisuraAlternativa() == null) 
 {  
@@ -1160,6 +1167,7 @@ if (misuraalternativa.getIdMisuraAlternativa() == null)
 <%
 }
 %>
+--%>
 
 <table width="100%">
   <tr>
