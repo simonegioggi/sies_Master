@@ -294,9 +294,11 @@ if (lPosizione.isLibero() && tipoMisura.equals("AFFIDAMENTO")) {
 <%-- FINE MEV_2024-092
 <%-- FINE MEV_2019-09-SIEP --%>
 <%
-} else if (lPosizione.isDetenuto()
-				|| lPosizione.getCodPosizioneGiuridica().equals("14") // Espiazione Pena in Regime di Semilibertà
-        		|| lPosizione.getCodPosizioneGiuridica().equals("04")) { // Arresti Domiciliari ex art. 656/10
+// MEV_2024-092: elimino controllo x isDetenuto && 14 && 04
+/*lPosizione.isDetenuto()
+		|| lPosizione.getCodPosizioneGiuridica().equals("14") // Espiazione Pena in Regime di Semilibertà
+  		|| lPosizione.getCodPosizioneGiuridica().equals("04")*/ // Arresti Domiciliari ex art. 656/10
+} else if (lPosizione.getCodPosizioneGiuridica().equals("43")) { // Espiazione Pena in Regime di Semilibertà in Prosec.Provv. 51 Bis
 %>
 	if (document.LoadInserisciMisuraAlternativa.tipo[1].checked == true) {
   		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE%>.value == "") {
@@ -2095,8 +2097,11 @@ if (lPosizione.isLibero()) {
 		</td>
 	</tr>
 <%
+// MEV_2024-092: se PG 14 || isDetenuto non faccio nulla
+} else if (lPosizione.isDetenuto() || lPosizione.getCodPosizioneGiuridica().equals("14")) {
+	// do Nothing
 } else if (lPosizione.getCodPosizioneGiuridica().equals("43")) { // Espiazione Pena in Regime di Semilibertà in Prosec.Provv. 51 Bis
-	// MEV_2024-092: elimino PG 14 & isDetenuto
+	// MEV_2024-092: elimino PG 14 && isDetenuto
 	// lPosizione.isDetenuto()
 	// || lPosizione.getCodPosizioneGiuridica().equals("14") // Espiazione Pena in Regime di Semilibertà
 	// || lPosizione.getCodPosizioneGiuridica().equals("04") // Arresti Domiciliari ex art. 656/10
