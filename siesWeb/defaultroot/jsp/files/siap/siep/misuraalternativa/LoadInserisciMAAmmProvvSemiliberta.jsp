@@ -137,7 +137,6 @@ function pulisciComune() {
 }
 
 function radio() {      
-	//return;
   <%
   if (verbale.getIdVerbale() == null) // non provengo dal verbale
   {
@@ -509,7 +508,7 @@ function Verifica() {
   }
 <% } %>
 
-  <%-- MEV_2019-09 Si aggiunge la data di esecutività --%>
+  <%-- MEV_2019-09 Si aggiunge la data di esecutività 
   if (   document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA%>.value != ""
       || document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_ESECUTIVITA%>.value != ""
       || document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA%>.value != "") 
@@ -531,6 +530,7 @@ function Verifica() {
       return false;
     }
   }
+  --%>
 
 
   if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMagistrato.CAMPO_COGNOME %>.value == ""
@@ -619,10 +619,8 @@ if ("MODIFICA".equals(tipoOperazione))
   tipoOperazioneView = tipoOperazione + " " + eventonotifica.getEvento().getDescrTipoProvvedimento();
 %>
 
-<%-- 
+
 <body class="corpo" onload="radio();caricaCombo();VisualizzaAvvocati();">
---%>
-<body class="corpo" onload="caricaCombo();VisualizzaAvvocati();">
 	<table> 
 	  <tr>
 	    <td class="LBG">
@@ -1135,8 +1133,7 @@ MEV092 rework
 %>
 </table>
 
-<%-- 
-MEV092 - Rework
+
 <%
 if (misuraalternativa.getIdMisuraAlternativa() == null) 
 {  
@@ -1150,7 +1147,10 @@ if (misuraalternativa.getIdMisuraAlternativa() == null)
     dataInizioMisura = misuraalternativaToChange.getDataInizioMisura();
   }  
 %>
-<table width="100%">
+<%-- 
+MEV092 - Rework - Fisso check su esegue procura e si nasconde la tabella
+--%>
+<table width="100%" style="display:none">
   <tr>
     <td class="l">Eseguita da Procura&nbsp;
       <input type="radio" name="tipo" value="procura" <%=radioProcura%> onClick="javascript:radio();">&nbsp;&nbsp;
@@ -1167,7 +1167,7 @@ if (misuraalternativa.getIdMisuraAlternativa() == null)
 <%
 }
 %>
---%>
+
 
 <table width="100%">
   <tr>

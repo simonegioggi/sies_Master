@@ -616,11 +616,12 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		// Impostare opportunamente la larghezza della prima riga
 		sheetLibero.setColumnWidth(0, (5 * 256)); // Progressivo
 		sheetLibero.setColumnWidth(1, (30 * 256)); // Desc Semestre
-		sheetLibero.setColumnWidth(2, (20 * 256)); // LA APPLICATA
-		sheetLibero.setColumnWidth(3, (17 * 256)); // ANNI RESIDUI
-		sheetLibero.setColumnWidth(4, (17 * 256)); // MESI RESIDUI
-		sheetLibero.setColumnWidth(5, (17 * 256)); // GIORNI RESIDUI
-		sheetLibero.setColumnWidth(6, (65 * 256)); // Colonna riepilogo
+		sheetLibero.setColumnWidth(2, (13 * 256)); // Larghezza colonna COMPLETO/ESCLUSO
+		sheetLibero.setColumnWidth(3, (20 * 256)); // LA APPLICATA
+		sheetLibero.setColumnWidth(4, (17 * 256)); // ANNI RESIDUI
+		sheetLibero.setColumnWidth(5, (17 * 256)); // MESI RESIDUI
+		sheetLibero.setColumnWidth(6, (17 * 256)); // GIORNI RESIDUI
+		sheetLibero.setColumnWidth(7, (65 * 256)); // Colonna riepilogo
 
 		int nRow = 0;
 
@@ -631,10 +632,11 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		HSSFRow row = sheetLibero.createRow(nRow);
 		setCell(row, 0, " ", csIntestazione);
 		setCell(row, 1, " ", csIntestazione);
-		setCell(row, 2, "L.A. APPLICATA", csIntestazione);
-		setCell(row, 3, "ANNI RESIDUI", csIntestazione);
-		setCell(row, 4, "MESI RESIDUI", csIntestazione);
-		setCell(row, 5, "GIORNI RESIDUI", csIntestazione);
+		setCell(row, 2, " ", csIntestazione);
+		setCell(row, 3, "L.A. APPLICATA", csIntestazione);
+		setCell(row, 4, "ANNI RESIDUI", csIntestazione);
+		setCell(row, 5, "MESI RESIDUI", csIntestazione);
+		setCell(row, 6, "GIORNI RESIDUI", csIntestazione);
 
 		// ==================================================================
 		// Prima Riga Presofferto
@@ -647,12 +649,13 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		row = sheetLibero.createRow(nRow);
 		setCell(row, 0, StringUtils.toStringJSP(lCalcoloPresofferto.getNumSemestriMaturati(), "0"), csCenter);
 		setCell(row, 1, "SEMESTRI ESPIATI IN C.C. ", csCenter);
-		setCell(row, 2, StringUtils.toStringJSP(lCalcoloPresofferto.getLAApplicate(), "0"), csCenter);
-		setCell(row, 3, StringUtils.toStringJSP(lCalcoloPresofferto.getResiduoNumAnni().intValue(), "0"),
+		setCell(row, 2, "COMPRESO", csCenter);
+		setCell(row, 3, StringUtils.toStringJSP(lCalcoloPresofferto.getLAApplicate(), "0"), csCenter);
+		setCell(row, 4, StringUtils.toStringJSP(lCalcoloPresofferto.getResiduoNumAnni().intValue(), "0"),
 				csCenter);
-		setCell(row, 4, StringUtils.toStringJSP(lCalcoloPresofferto.getResiduoNumMesi().intValue(), "0"),
+		setCell(row, 5, StringUtils.toStringJSP(lCalcoloPresofferto.getResiduoNumMesi().intValue(), "0"),
 				csCenter);
-		setCell(row, 5, StringUtils.toStringJSP(lCalcoloPresofferto.getResiduoNumGiorni().intValue(), "0"),
+		setCell(row, 6, StringUtils.toStringJSP(lCalcoloPresofferto.getResiduoNumGiorni().intValue(), "0"),
 				csCenter);
 
 		// ==================================================================
@@ -670,22 +673,27 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 			setCell(row, 0, StringUtils.toStringJSP(lSemestreUtile.getProgressivo()) + "°", csCenter);
 			setCell(row, 1, "semestre utile per L.A. ", csCenter);
 
+			if ("S".equals(lSemestreUtile.getIsCompreso()))
+				setCell(row, 2, "COMPRESO", csCenter);
+			else
+				setCell(row, 2, "ESCLUSO", csBoldCenterRed);
+			
 			if (lSemestreUtile.getLAApplicate().intValue() < 45) {
-				setCell(row, 2, StringUtils.toStringJSP(lSemestreUtile.getLAApplicate(), "0"),
+				setCell(row, 3, StringUtils.toStringJSP(lSemestreUtile.getLAApplicate(), "0"),
 						csBoldCenterRed);
-				setCell(row, 3, StringUtils.toStringJSP(lSemestreUtile.getResiduoNumAnni().intValue(), "0"),
+				setCell(row, 4, StringUtils.toStringJSP(lSemestreUtile.getResiduoNumAnni().intValue(), "0"),
 						csBoldCenterRed);
-				setCell(row, 4, StringUtils.toStringJSP(lSemestreUtile.getResiduoNumMesi().intValue(), "0"),
+				setCell(row, 5, StringUtils.toStringJSP(lSemestreUtile.getResiduoNumMesi().intValue(), "0"),
 						csBoldCenterRed);
-				setCell(row, 5, StringUtils.toStringJSP(lSemestreUtile.getResiduoNumGiorni().intValue(), "0"),
+				setCell(row, 6, StringUtils.toStringJSP(lSemestreUtile.getResiduoNumGiorni().intValue(), "0"),
 						csBoldCenterRed);
 			} else {
-				setCell(row, 2, StringUtils.toStringJSP(lSemestreUtile.getLAApplicate(), "0"), csCenter);
-				setCell(row, 3, StringUtils.toStringJSP(lSemestreUtile.getResiduoNumAnni().intValue(), "0"),
+				setCell(row, 3, StringUtils.toStringJSP(lSemestreUtile.getLAApplicate(), "0"), csCenter);
+				setCell(row, 4, StringUtils.toStringJSP(lSemestreUtile.getResiduoNumAnni().intValue(), "0"),
 						csCenter);
-				setCell(row, 4, StringUtils.toStringJSP(lSemestreUtile.getResiduoNumMesi().intValue(), "0"),
+				setCell(row, 5, StringUtils.toStringJSP(lSemestreUtile.getResiduoNumMesi().intValue(), "0"),
 						csCenter);
-				setCell(row, 5, StringUtils.toStringJSP(lSemestreUtile.getResiduoNumGiorni().intValue(), "0"),
+				setCell(row, 6, StringUtils.toStringJSP(lSemestreUtile.getResiduoNumGiorni().intValue(), "0"),
 						csCenter);
 			}
 		}
@@ -700,20 +708,21 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 			setCell(row, 3, "", csCenter);
 			setCell(row, 4, "", csCenter);
 			setCell(row, 5, "", csCenter);
+			setCell(row, 6, "", csCenter);
 		}
 
 		// Riepilogo
-		setCell(sheetLibero.getRow(1), 6, "L.A. MATURATA MA NON APPLICATA / PENA ESPIATA IN ECCESSO",
+		setCell(sheetLibero.getRow(1), 7, "L.A. MATURATA MA NON APPLICATA / PENA ESPIATA IN ECCESSO",
 				csRiepilogo);
 		if (lCalcoloDL92Model.getLAFungibili().intValue() > 0)
-			setCell(sheetLibero.getRow(2), 6,
+			setCell(sheetLibero.getRow(2), 7,
 					StringUtils.toStringJSP(lCalcoloDL92Model.getLAFungibili().intValue(), "0"),
 					csBoldCenterRed);
 		else
-			setCell(sheetLibero.getRow(2), 6,
+			setCell(sheetLibero.getRow(2), 7,
 					StringUtils.toStringJSP(lCalcoloDL92Model.getLAFungibili().intValue(), "0"), csCenter);
-		setCell(sheetLibero.getRow(3), 6, "GIORNI L.A. CONCESSI", csRiepilogo);
-		setCell(sheetLibero.getRow(4), 6,
+		setCell(sheetLibero.getRow(3), 7, "GIORNI L.A. CONCESSI", csRiepilogo);
+		setCell(sheetLibero.getRow(4), 7,
 				StringUtils.toStringJSP(lCalcoloDL92Model.getLAMaturate().intValue(), "0"), csCenter);
 	}
 
@@ -767,14 +776,15 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		// Impostare opportunamente la larghezza delle righe
 		sheetDetenuto.setColumnWidth(0, (6 * 256)); // Larghezza prima colonna
 		sheetDetenuto.setColumnWidth(1, (28 * 256)); // Larghezza seconda colonna
-		sheetDetenuto.setColumnWidth(2, (17 * 256)); // LA APPLICATA
-		sheetDetenuto.setColumnWidth(3, (17 * 256)); // Data In cui maturo LA
-		sheetDetenuto.setColumnWidth(4, (32 * 256)); // Nuova Data Scadenza
-		sheetDetenuto.setColumnWidth(5, (17 * 256)); // ANNI RESIDUI
-		sheetDetenuto.setColumnWidth(6, (17 * 256)); // MESI RESIDUI
-		sheetDetenuto.setColumnWidth(7, (17 * 256)); // GIORNI RESIDUI
-		sheetDetenuto.setColumnWidth(8, (22 * 256)); // SURPLUS
-		sheetDetenuto.setColumnWidth(9, (23 * 256)); // RIEPILOGO
+		sheetDetenuto.setColumnWidth(2, (13 * 256)); // Larghezza colonna COMPLETO/ESCLUSO
+		sheetDetenuto.setColumnWidth(3, (17 * 256)); // LA APPLICATA
+		sheetDetenuto.setColumnWidth(4, (17 * 256)); // Data In cui maturo LA
+		sheetDetenuto.setColumnWidth(5, (32 * 256)); // Nuova Data Scadenza
+		sheetDetenuto.setColumnWidth(6, (17 * 256)); // ANNI RESIDUI
+		sheetDetenuto.setColumnWidth(7, (17 * 256)); // MESI RESIDUI
+		sheetDetenuto.setColumnWidth(8, (17 * 256)); // GIORNI RESIDUI
+		sheetDetenuto.setColumnWidth(9, (22 * 256)); // SURPLUS
+		sheetDetenuto.setColumnWidth(10, (23 * 256)); // RIEPILOGO
 
 		int nRow = 0;
 
@@ -786,14 +796,15 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		// row.setHeight (altezzaIntestazione);
 		setCell(row, 0, "", csIntestazione);
 		setCell(row, 1, "", csIntestazione);
-		setCell(row, 2, "L.A. APPLICATA", csIntestazione);
-		setCell(row, 3, "DATA IN CUI MATURO L.A.", csIntestazione);
-		setCell(row, 4, "NUOVA DATA SCADENZA APPLCANDO LE CONCESSIONI DI 45GG PER INTERO", csIntestazione);
-		setCell(row, 5, "ANNI RESIDUI", csIntestazione);
-		setCell(row, 6, "MESI RESIDUI", csIntestazione);
-		setCell(row, 7, "GIORNI RESIDUI", csIntestazione);
-		setCell(row, 8, "SURPLUS DETENZIONE (GIORNI DI FUNGIBILITA)", csIntestazione);
-		setCell(row, 9, "RIEPILOGO", csIntestazione);
+		setCell(row, 2, "", csIntestazione);
+		setCell(row, 3, "L.A. APPLICATA", csIntestazione);
+		setCell(row, 4, "DATA IN CUI MATURO L.A.", csIntestazione);
+		setCell(row, 5, "NUOVA DATA SCADENZA APPLCANDO LE CONCESSIONI DI 45GG PER INTERO", csIntestazione);
+		setCell(row, 6, "ANNI RESIDUI", csIntestazione);
+		setCell(row, 7, "MESI RESIDUI", csIntestazione);
+		setCell(row, 8, "GIORNI RESIDUI", csIntestazione);
+		setCell(row, 9, "SURPLUS DETENZIONE (GIORNI DI FUNGIBILITA)", csIntestazione);
+		setCell(row, 10, "RIEPILOGO", csIntestazione);
 
 		// ==================================================================
 		// Prima Riga Presofferto
@@ -804,18 +815,19 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		row = sheetDetenuto.createRow(nRow);
 		setCell(row, 0, StringUtils.toStringJSP(lCalcoloPresofferto.getNumSemestriMaturati(), "0"), csCenter);
 		setCell(row, 1, "SEMESTRI ESPIATI IN C.C. ", csCenter);
-		setCell(row, 2, StringUtils.toStringJSP(lCalcoloPresofferto.getLAApplicate(), "0"), csCenter);
-		setCell(row, 3, "", csCenter);
-		setCell(row, 4,
+		setCell(row, 2, "COMPLETO", csCenter);
+		setCell(row, 3, StringUtils.toStringJSP(lCalcoloPresofferto.getLAApplicate(), "0"), csCenter);
+		setCell(row, 4, "", csCenter);
+		setCell(row, 5,
 				DateUtils.getDateToString(lCalcoloPresofferto.getNuovaDataScadenzaPena(), "dd/MM/yyyy"),
 				csCenter);
-		setCell(row, 5, StringUtils.toStringJSP(lCalcoloPresofferto.getResiduoNumAnni().intValue(), "0"),
+		setCell(row, 6, StringUtils.toStringJSP(lCalcoloPresofferto.getResiduoNumAnni().intValue(), "0"),
 				csCenter);
-		setCell(row, 6, StringUtils.toStringJSP(lCalcoloPresofferto.getResiduoNumMesi().intValue(), "0"),
+		setCell(row, 7, StringUtils.toStringJSP(lCalcoloPresofferto.getResiduoNumMesi().intValue(), "0"),
 				csCenter);
-		setCell(row, 7, StringUtils.toStringJSP(lCalcoloPresofferto.getResiduoNumGiorni().intValue(), "0"),
+		setCell(row, 8, StringUtils.toStringJSP(lCalcoloPresofferto.getResiduoNumGiorni().intValue(), "0"),
 				csCenter);
-		setCell(row, 8, "", csCenter); // SURPLUS solo ultimo semestre. Sicuramente NON presente su
+		setCell(row, 9, "", csCenter); // SURPLUS solo ultimo semestre. Sicuramente NON presente su
 										// presofferto
 
 		// ==================================================================
@@ -834,34 +846,40 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 				lastCellStyle = csBoldCenterRed;
 
 			setCell(row, 0, StringUtils.toStringJSP(lSemestreUtile.getProgressivo(), "0"), csCenter);
+			
 			setCell(row, 1, "semestre maturato per L.A. ", cs);
+			
+			if ("S".equals(lSemestreUtile.getIsCompreso()))
+				setCell(row, 2, "COMPRESO", cs);
+			else
+				setCell(row, 2, "ESCLUSO", csBoldCenterRed);			
 
 			if (lSemestreUtile.getLAApplicate().intValue() < 45)
-				setCell(row, 2, StringUtils.toStringJSP(lSemestreUtile.getLAApplicate(), "0"),
+				setCell(row, 3, StringUtils.toStringJSP(lSemestreUtile.getLAApplicate(), "0"),
 						csBoldCenterRed);
 			else
-				setCell(row, 2, StringUtils.toStringJSP(lSemestreUtile.getLAApplicate(), "0"), csCenter);
+				setCell(row, 3, StringUtils.toStringJSP(lSemestreUtile.getLAApplicate(), "0"), csCenter);
 
-			setCell(row, 3, DateUtils.getDateToString(lSemestreUtile.getDataMaturazioneLA(), "dd/MM/yyyy"),
+			setCell(row, 4, DateUtils.getDateToString(lSemestreUtile.getDataMaturazioneLA(), "dd/MM/yyyy"),
 					csCenter);
-			setCell(row, 4,
+			setCell(row, 5,
 					DateUtils.getDateToString(lSemestreUtile.getNuovaDataScadenzaPena(), "dd/MM/yyyy"),
 					lastCellStyle);
-			setCell(row, 5, StringUtils.toStringJSP(lSemestreUtile.getResiduoNumAnni().intValue(), "0"),
+			setCell(row, 6, StringUtils.toStringJSP(lSemestreUtile.getResiduoNumAnni().intValue(), "0"),
 					lastCellStyle);
-			setCell(row, 6, StringUtils.toStringJSP(lSemestreUtile.getResiduoNumMesi().intValue(), "0"),
+			setCell(row, 7, StringUtils.toStringJSP(lSemestreUtile.getResiduoNumMesi().intValue(), "0"),
 					lastCellStyle);
-			setCell(row, 7, StringUtils.toStringJSP(lSemestreUtile.getResiduoNumGiorni().intValue(), "0"),
+			setCell(row, 8, StringUtils.toStringJSP(lSemestreUtile.getResiduoNumGiorni().intValue(), "0"),
 					lastCellStyle);
 
 			// SURPLUS solo ultimo semestre
 			if (i == (mListaSemetri.size() - 1) && lCalcoloDL92Model.getLAFungibili().intValue() == 0)
-				setCell(row, 8, "", csCenter);
+				setCell(row, 9, "", csCenter);
 			else if (i == (mListaSemetri.size() - 1) && lCalcoloDL92Model.getLAFungibili().intValue() > 0)
-				setCell(row, 8, StringUtils.toStringJSP(lCalcoloDL92Model.getLAFungibili().intValue(), "0"),
+				setCell(row, 9, StringUtils.toStringJSP(lCalcoloDL92Model.getLAFungibili().intValue(), "0"),
 						csBoldCenterRed);
 			else
-				setCell(row, 8, "", csCenter);
+				setCell(row, 9, "", csCenter);
 		}
 
 		// Mi servono min 7 righe per la colonna del riepilogo, se non create le devo generare
@@ -877,18 +895,19 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 			setCell(row, 6, "", csCenter);
 			setCell(row, 7, "", csCenter);
 			setCell(row, 8, "", csCenter);
+			setCell(row, 9, "", csCenter);
 		}
 
 		// Data Decorrenza
-		setCell(sheetDetenuto.getRow(1), 9, "DATA DECORRENZA", csRiepilogo);
-		setCell(sheetDetenuto.getRow(2), 9,
+		setCell(sheetDetenuto.getRow(1), 10, "DATA DECORRENZA", csRiepilogo);
+		setCell(sheetDetenuto.getRow(2), 10,
 				DateUtils.getDateToString(lCalcoloDL92Model.getDataInizioPena(), "dd/MM/yyyy"), csCenter);
-		setCell(sheetDetenuto.getRow(3), 9, "DATA SCARCERAZIONE", csRiepilogo);
-		setCell(sheetDetenuto.getRow(4), 9,
+		setCell(sheetDetenuto.getRow(3), 10, "DATA SCARCERAZIONE", csRiepilogo);
+		setCell(sheetDetenuto.getRow(4), 10,
 				DateUtils.getDateToString(lCalcoloDL92Model.getDataScarcerazioneLAFung(), "dd/MM/yyyy"),
 				csCenter);
-		setCell(sheetDetenuto.getRow(5), 9, "GIORNI L.A. CONCESSI", csRiepilogo);
-		setCell(sheetDetenuto.getRow(6), 9,
+		setCell(sheetDetenuto.getRow(5), 10, "GIORNI L.A. CONCESSI", csRiepilogo);
+		setCell(sheetDetenuto.getRow(6), 10,
 				StringUtils.toStringJSP(lCalcoloDL92Model.getLAMaturate().intValue(), "0"), csCenter);
 	}
 

@@ -818,8 +818,8 @@ public class ActLoadDettaglioFascicolo extends ActionSiap implements ICostantiFa
 						&& "0270".equals(lEveOrd.getCodEsito())
 						&& ("2007".equals(lEveOrd.getCodMotivo())
 						|| "0683".equals(lEveOrd.getCodMotivo()) || "0694".equals(lEveOrd.getCodMotivo()))) {
-					String descrPGNew = lDettaglio.getPosizioneGiuridica().getDescrPosizioneGiuridica()
-							+ " (a seguito Applicazione/Ammissione Provvisoria)";
+					String descrPGNew = lDettaglio.getPosizioneGiuridica().getDescrPosizioneGiuridica();
+						//	+ " (a seguito Applicazione/Ammissione Provvisoria)";
 					lDettaglio.getPosizioneGiuridica().setDescrPosizioneGiuridica(descrPGNew);
 				}
 			}
@@ -839,8 +839,8 @@ public class ActLoadDettaglioFascicolo extends ActionSiap implements ICostantiFa
 				if (lEveOrd != null
 						&& "0270".equals(lEveOrd.getCodEsito())
 						&& ("0684".equals(lEveOrd.getCodMotivo()) || "0695".equals(lEveOrd.getCodMotivo()))) {
-					String descrPGNew = lDettaglio.getPosizioneGiuridica().getDescrPosizioneGiuridica()
-							+ " (a seguito Applicazione/Ammissione Provvisoria)";
+					String descrPGNew = lDettaglio.getPosizioneGiuridica().getDescrPosizioneGiuridica();
+							// + " (a seguito Applicazione/Ammissione Provvisoria)";
 					lDettaglio.getPosizioneGiuridica().setDescrPosizioneGiuridica(descrPGNew);
 				}
 			}
