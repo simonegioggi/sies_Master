@@ -458,10 +458,14 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		lStatement += "AND (RV_HIGH_VALUE = 'X001' OR RV_HIGH_VALUE = 'U071' ";
 		// Ticket#20211006019 - FINE
 		// MEV_2019-09-SIEP: aggiunta condizione di estrazione x SOSPENSIONE ESECUZIONE PENA ed ordinamento
+		// MEV_2024-092: rimuovo 0724 & 0735 (Conferma appl. provv. Sospensione dell'Esecuzione della Pena
+		// (Art. 90 DPR 309/90 - Art. 678 comma 1-ter c.p.p.))
 		if ("PMM".equals(aCodTipoUfficio))
-			lStatement += "OR RV_LOW_VALUE = '0695' OR RV_LOW_VALUE = '0735') ";
+			// lStatement += "OR RV_LOW_VALUE = '0695' OR RV_LOW_VALUE = '0735') ";
+			lStatement += "OR RV_LOW_VALUE = '0695') ";
 		else
-			lStatement += "OR RV_LOW_VALUE = '0684' OR RV_LOW_VALUE = '0724') ";
+			// lStatement += "OR RV_LOW_VALUE = '0684' OR RV_LOW_VALUE = '0724') ";
+			lStatement += "OR RV_LOW_VALUE = '0684') ";
 		lStatement += "ORDER BY RV_MEANING";
 
 		setStatement(lStatement);
@@ -950,8 +954,8 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		 * RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE // " // + lStatement =
 		 * "SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' "; if
 		 * (aTipo.equals("AMMISSIONE_PROV_DET_DOM")) lStatement += " AND (RV_LOW_VALUE = '2005') "; else if
-		 * (aTipo.equals("AMMISSIONE_PROV_AFFI")) lStatement += " AND (RV_LOW_VALUE in ('2006','2008')) ";
-		 * // lStatement += " AND (RV_LOW_VALUE = '2006') "; //mod d.f.
+		 * (aTipo.equals("AMMISSIONE_PROV_AFFI")) lStatement += " AND (RV_LOW_VALUE in ('2006','2008')) "; //
+		 * lStatement += " AND (RV_LOW_VALUE = '2006') "; //mod d.f.
 		 *
 		 */
 		// MEV_2019-09: si differenziano i codici per PM e PMM aggiungendo i nuovi codici
@@ -1450,8 +1454,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// "SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES " +
 		String lStatement = "SELECT * FROM CG_REF_CODES "
 				+ " JOIN INCARICO_ATTIVITA ON INCARICO_ATTIVITA.RV_ATTIVITA = CG_REF_CODES.RV_LOW_VALUE AND"
-				+ " INCARICO_ATTIVITA.RV_INCARICO = '"
-				+ aCodIncarico + "'";
+				+ " INCARICO_ATTIVITA.RV_INCARICO = '" + aCodIncarico + "'";
 		// lStatement += "WHERE RV_DOMAIN = 'ATTIVITA'" ;
 
 		setStatement(lStatement);

@@ -1,13 +1,5 @@
 package siap.siep.posizione.model;
 
-/**
-* <p>Title: PosizioneGiuridicaModel</p>
-* <p>Description: Classe Model che rappresenta il PosizioneGiuridica</p>
-* <p>Copyright: Copyright (c) 2002</p>
-* <p>Company: Bull</p>
-* @version 1.0
-*/
-
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Date;
@@ -16,12 +8,19 @@ import f3b.model.GenericModel;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.util.DecodificheUtils;
 
+/**
+ * PosizioneGiuridicaModel - Classe Model che rappresenta il PosizioneGiuridica
+ *
+ * @version 1.0
+ */
 @SuppressWarnings("rawtypes")
 public class PosizioneGiuridicaModel extends GenericModel {
+
 	/**
-	 *
+	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = -4983166343252905715L;
+
 	private BigDecimal mIdPosizioneGiuridica;
 	private String mCodPosizioneGiuridica;
 	private String mDescrPosizioneGiuridica;
@@ -44,7 +43,6 @@ public class PosizioneGiuridicaModel extends GenericModel {
 	private BigDecimal mIdEventoRiferimento;
 	// modifica per integrazione REGE-SIES
 	private String mFlagIsDetenuto;
-
 	private String mLuogoEspiazione;
 	private String mAutoritaCompetente;
 	private String mAutoritaCompetenteSede;
@@ -52,15 +50,12 @@ public class PosizioneGiuridicaModel extends GenericModel {
 	private String mAutoritaCompetenteIndirizzo;
 	private String mCodMaschera;
 	private BigDecimal mAltCauIdAltraCausa;
-	
-	// MEV_2023_33 - Aggiunta decodifica COD_MASCHERA prelevata dalla CG.RV_ALT5_VALUE 
+	// MEV_2023_33 - Aggiunta decodifica COD_MASCHERA prelevata dalla CG.RV_ALT5_VALUE
 	private String mCodMascheraCG;
-	
-
-	// private boolean mPrimaPosizione;
 
 	// COSTRUTTORE DI DEFAULT
 	public PosizioneGiuridicaModel() {
+
 		this.mIdPosizioneGiuridica = null;
 		this.mCodPosizioneGiuridica = "";
 		this.mDescrPosizioneGiuridica = "";
@@ -81,8 +76,6 @@ public class PosizioneGiuridicaModel extends GenericModel {
 		this.mDescrUfficioAggiornamento = "";
 		this.mFasSieIdFascicoloSiep = null;
 		this.mIdEventoRiferimento = null;
-		// this.mPrimaPosizione = false;
-		// rege-sies
 		this.mFlagIsDetenuto = "";
 		this.mLuogoEspiazione = "";
 		this.mAutoritaCompetente = "";
@@ -96,6 +89,7 @@ public class PosizioneGiuridicaModel extends GenericModel {
 
 	// COSTRUTTORE DI COPIA
 	public PosizioneGiuridicaModel(PosizioneGiuridicaModel aModel) {
+
 		this.mIdPosizioneGiuridica = aModel.mIdPosizioneGiuridica;
 		this.mCodPosizioneGiuridica = aModel.mCodPosizioneGiuridica;
 		this.mDescrPosizioneGiuridica = aModel.mDescrPosizioneGiuridica;
@@ -116,10 +110,7 @@ public class PosizioneGiuridicaModel extends GenericModel {
 		this.mDescrUfficioAggiornamento = aModel.mDescrUfficioAggiornamento;
 		this.mFasSieIdFascicoloSiep = aModel.mFasSieIdFascicoloSiep;
 		this.mIdEventoRiferimento = aModel.mIdEventoRiferimento;
-		// rege-sies
 		this.mFlagIsDetenuto = aModel.mFlagIsDetenuto;
-
-		// this.mPrimaPosizione = aModel.mPrimaPosizione;
 		this.mLuogoEspiazione = aModel.mLuogoEspiazione;
 		this.mAutoritaCompetente = aModel.mAutoritaCompetente;
 		this.mAutoritaCompetenteSede = aModel.mAutoritaCompetenteSede;
@@ -142,6 +133,7 @@ public class PosizioneGiuridicaModel extends GenericModel {
 			BigDecimal aIdEventoRiferimento, String aFlagIsDetenuto, String aLuogoEspiazione,
 			String aAutoritaCompetente, String aAutoritaCompetenteSede, String aAutoritaCompetenteIndirizzo,
 			String aCodMaschera, BigDecimal aAltCauIdAltraCausa) {
+
 		this.mIdPosizioneGiuridica = aIdPosizioneGiuridica;
 		this.mCodPosizioneGiuridica = aCodPosizioneGiuridica;
 		this.mDescrPosizioneGiuridica = aDescrPosizioneGiuridica;
@@ -162,10 +154,7 @@ public class PosizioneGiuridicaModel extends GenericModel {
 		this.mDescrUfficioAggiornamento = aDescrUfficioAggiornamento;
 		this.mFasSieIdFascicoloSiep = aFasSieIdFascicoloSiep;
 		this.mIdEventoRiferimento = aIdEventoRiferimento;
-		// rege-sies
 		this.mFlagIsDetenuto = aFlagIsDetenuto;
-
-		// this.mPrimaPosizione = false;
 		this.mLuogoEspiazione = aLuogoEspiazione;
 		this.mAutoritaCompetente = aAutoritaCompetente;
 		this.mAutoritaCompetenteSede = aAutoritaCompetenteSede;
@@ -289,13 +278,12 @@ public class PosizioneGiuridicaModel extends GenericModel {
 	public BigDecimal getAltCauIdAltraCausa() {
 		return mAltCauIdAltraCausa;
 	}
-	
-	//MEV_2023_33
+
+	// MEV_2023_33
 	public String getCodMascheraCG() {
-	  return mCodMascheraCG;
+		return mCodMascheraCG;
 	}
-	
-	// public boolean isPrimaPosizione() { return mPrimaPosizione; }
+
 	//
 	// METODI SET()
 	//
@@ -411,15 +399,14 @@ public class PosizioneGiuridicaModel extends GenericModel {
 	public void setAltCauIdAltraCausa(BigDecimal aValore) {
 		mAltCauIdAltraCausa = aValore;
 	}
-	
-  // MEV_2023-33
+
+	// MEV_2023-33
 	public void setCodMascheraCG(String aValore) {
-	    mCodMascheraCG = aValore;
+		mCodMascheraCG = aValore;
 	}
-	
-	// public void setPrimaPosizione(boolean aValore ) { mPrimaPosizione = aValore; }
 
 	public boolean isMisAlt() {
+
 		// L'Array contiene i codice corrispondenti
 		// all'rv_abbreviation 'MIS_ALT' del dominio POSIZIONE_GIURIDICA
 		// della CG_REF_CODES
@@ -436,6 +423,7 @@ public class PosizioneGiuridicaModel extends GenericModel {
 	}
 
 	public boolean isLibero() {
+
 		if (mCodPosizioneGiuridica != null && (mCodPosizioneGiuridica.equals("07") // LIBERO
 				|| mCodPosizioneGiuridica.equals("10") // LIBERO
 				|| mCodPosizioneGiuridica.equals("16") // LIBERO IN DIFFERIMENTO PENA
@@ -453,6 +441,7 @@ public class PosizioneGiuridicaModel extends GenericModel {
 
 	// 12-2010 AMBROSINO - Creazione di isDetenuto() usata in LoadInserisciConcessione
 	public boolean isDetenuto() {
+
 		if (mCodPosizioneGiuridica != null && (mCodPosizioneGiuridica.equals("01") // Custodia Cautelare per
 																					// Questa Causa in Regime
 																					// di Detenzione
@@ -462,7 +451,6 @@ public class PosizioneGiuridicaModel extends GenericModel {
 				|| mCodPosizioneGiuridica.equals("19") // Espiazione Pena Sostitutiva (Semidetenzione)
 				|| mCodPosizioneGiuridica.equals("22") // Custodia Cautelare in Regime di Detenzione
 				|| mCodPosizioneGiuridica.equals("24") // Espiazione Pena Definitiva in Carcere
-
 		)) {
 			return true;
 		} else
@@ -470,6 +458,7 @@ public class PosizioneGiuridicaModel extends GenericModel {
 	}
 
 	public boolean isMisSosp() {
+
 		if (mCodPosizioneGiuridica != null && (mCodPosizioneGiuridica.equals("27") // Sospensione Pena Ex L.
 																					// 207/03
 				|| mCodPosizioneGiuridica.equals("31") // Sospensione Cautelativa 51 Ter (di Det. Domiciliare)
@@ -495,6 +484,7 @@ public class PosizioneGiuridicaModel extends GenericModel {
 	}
 
 	public boolean isMisuraAlternativa() {
+
 		if (mCodPosizioneGiuridica != null && (mCodPosizioneGiuridica.equals("11") // Espiazione Pena in
 																					// Regime di Liberazione
 																					// Condizionale
@@ -529,6 +519,7 @@ public class PosizioneGiuridicaModel extends GenericModel {
 
 	@Override
 	public String toString() {
+
 		String lStr = new String();
 
 		lStr = "" + mIdPosizioneGiuridica + " - " + mCodPosizioneGiuridica + " - " + mDescrPosizioneGiuridica
@@ -543,4 +534,5 @@ public class PosizioneGiuridicaModel extends GenericModel {
 
 		return lStr;
 	}
+
 }

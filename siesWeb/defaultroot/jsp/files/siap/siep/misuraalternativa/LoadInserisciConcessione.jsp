@@ -2095,15 +2095,14 @@ if (lPosizione.isLibero()) {
 		</td>
 	</tr>
 <%
-} else if (lPosizione.isDetenuto()
-		// MEV_2024-092: elimino PG 14
-		// || lPosizione.getCodPosizioneGiuridica().equals("14") // Espiazione Pena in Regime di Semilibertà
-		// Espiazione Pena in Regime di Semilibertà in Prosec.Provv. 51 Bis
-		|| lPosizione.getCodPosizioneGiuridica().equals("43")) {
-		// Paolo Cherubini 24/03/2011 vedi commento sopra	|| lPosizione.getCodPosizioneGiuridica().equals("04") // Arresti Domiciliari ex art. 656/10
-		// || lPosizione.getCodPosizioneGiuridica().equals("12") // Espiazione Pena in Regime di Detenzione Domiciliare
-		// || lPosizione.getCodPosizioneGiuridica().equals("50") // Esecuzione presso domicilio della pena detentiva
-		// || lPosizione.getCodPosizioneGiuridica().equals("53") //  Arresti domiciliari - Esecuzione presso domicilio della pena detentiva
+} else if (lPosizione.getCodPosizioneGiuridica().equals("43")) { // Espiazione Pena in Regime di Semilibertà in Prosec.Provv. 51 Bis
+	// MEV_2024-092: elimino PG 14 & isDetenuto
+	// lPosizione.isDetenuto()
+	// || lPosizione.getCodPosizioneGiuridica().equals("14") // Espiazione Pena in Regime di Semilibertà
+	// || lPosizione.getCodPosizioneGiuridica().equals("04") // Arresti Domiciliari ex art. 656/10
+	// || lPosizione.getCodPosizioneGiuridica().equals("12") // Espiazione Pena in Regime di Detenzione Domiciliare
+	// || lPosizione.getCodPosizioneGiuridica().equals("50") // Esecuzione presso domicilio della pena detentiva
+	// || lPosizione.getCodPosizioneGiuridica().equals("53") //  Arresti domiciliari - Esecuzione presso domicilio della pena detentiva
 %>
 	<tr>
         <td class="l" width="25%">
