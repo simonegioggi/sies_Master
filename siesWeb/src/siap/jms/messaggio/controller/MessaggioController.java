@@ -2359,8 +2359,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
             lMesDao.setCondizioneByUfficio(aCodUfficio, aDataInviaDal, aDataInviaAl);
             lMesDao.delete();
             
-            rollback(lConn);
-            //commit(lConn);
+            commit(lConn);
         } catch (DAOException daoEx) {
             siesLogger.error("ExCancellaMessaggioByCodUfficio ", daoEx);
             rollback(lConn);
