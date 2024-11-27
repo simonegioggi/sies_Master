@@ -82,7 +82,7 @@
     <td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
     <td class="LBG">
       <font class="label">Funzione :</font>&nbsp;&nbsp;
-      <font class="campo">Dettaglio Applicazione Provvisoria (ART.678 C.1 TER C.P.P.) - Sospensione dell'esecuzione della pena</font>
+      <font class="campo">Dettaglio Applicazione Sospensione dell'esecuzione della pena (ART.678 C.1 TER C.P.P.)</font>
     </td>
     <%if (   eventonotifica.getEvento().getFlagDocumentoRegistrato()==null
           || "N".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato())

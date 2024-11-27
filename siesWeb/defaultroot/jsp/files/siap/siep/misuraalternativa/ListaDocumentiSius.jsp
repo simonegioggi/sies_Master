@@ -630,7 +630,7 @@ if (!documentiSius.isEmpty()) {
 				|| "0695".equals(misuraModel.getCodTipoMisura()))	// SOSPENSIONE
 				&& "0270".equals(eventoModel.getCodEsito())) {
 %>
-			Applicazione Provvisoria 
+			Applicazione 
 <%
 		}
 %>

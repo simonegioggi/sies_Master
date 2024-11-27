@@ -95,6 +95,7 @@ public class ActStampaMAAmmProvSemiliberta extends ActConcessione implements ICo
 		// flagTemplate = getFlagTemplateSemiliberta(lPosPrec, lPosGiu.getCodPosizioneGiuridica(),
 		// lMisAlModConcessa);
 
+		/*
 		String lflagScarcerato = lMisAlModConcessa.getCodTipoUfficioScarcerazione();
 
 		if ("2007".equals(lEventoModel.getCodMotivo())) {
@@ -131,7 +132,17 @@ public class ActStampaMAAmmProvSemiliberta extends ActConcessione implements ICo
 			else if (lflagScarcerato.equals("SORV"))
 				flagTemplate = "1";
 		}
+*/
+		
+		// Rework per le stame ci si adegua alla concessione
+		// ricerca posizione precedente
+		PosizioneGiuridicaModel lPosPrec = new PosizioneGiuridicaModel();
+		lPosPrec = lPosCtrl
+				.ExRicercaPosizioneGiuridicaPrecedenteByIdFascicolo(lFascicoloModel.getIdFascicoloSiep());
 
+		flagTemplate = getFlagTemplateSemiliberta (lPosPrec, lPosGiu.getCodPosizioneGiuridica(), lMisAlModConcessa);
+		// rework - FINE
+		
 		siesLogger.debug("flagTemplate = " + flagTemplate);
 		siesLogger.debug("lMotivo = " + lEventoModel.getCodMotivo());
 
@@ -154,6 +165,55 @@ public class ActStampaMAAmmProvSemiliberta extends ActConcessione implements ICo
 		setRequestAttribute("report", lReport);
 
 		return IWebConstants.PG_DOWNLOAD;
+	}
+	
+	
+	protected String getFlagTemplateSemiliberta(PosizioneGiuridicaModel aPosPrec, String aPosizioneGiu,
+			MisuraAlternativaModel aMisMod) {
+
+		String FlagTemplate = null;
+
+		// libero
+		if (aPosPrec != null && aPosPrec.getCodPosizioneGiuridica() != null && aPosPrec.isLibero()
+				&& aMisMod.getDataInizioMisura() != null && aPosizioneGiu.equals("14")) {
+			FlagTemplate = "1";
+		} else {
+			switch (Integer.parseInt(aPosizioneGiu)) {
+			case 7: // LIBERO
+			case 10: // LIBERO
+			case 16: // LIBERO IN DIFFERIMENTO PENA
+			case 17: // LIBERO IN DIFFERIMENTO PENA (PROVVISORIA)
+			case 20: // EVASO
+			case 26: // ESPULSO
+			case 30: // ESTRADATO
+			case 46: // LIBERO in Sospensione
+			case 47: // LIBERO in Sospensione
+			{
+				FlagTemplate = "0";
+				break;
+			}
+			case 3: // Espiazione Pena in Regime Carcerario
+				// MEV_2019-09-SIEP: aggiunta gestione codice
+			case 14:// Espiazione Pena in Regime di Semiliberta'
+			{
+				FlagTemplate = "2";
+				break;
+			}
+			case 4: // Arresti Domiciliari Ex Art. 656/10
+			case 82: // Permanenza in Casa ex art. 656/10 - ex art. 656 comma 10 cpp
+			case 83: // Collocamento in Comunita' ex art. 656 comma 10 cpp
+			case 84: // Arresti Domiciliare ex art 89 dpr 309/90 - ex art. 656 comma 10 cpp
+			case 85: // Permanenza domiciliare - Esecuzione presso domicilio della pena detentiva
+			case 86: // Collocamento in comunita' - Esecuzione presso domicilio della pena detentiva
+			case 87: // Arresti domiciliare ex art. 89 dpr 309/90 - Esecuzione presso domicilio della pena
+						// detentiva
+			{
+				FlagTemplate = "3";
+				break;
+			}
+			}
+		}
+		return FlagTemplate;
 	}
 
 }

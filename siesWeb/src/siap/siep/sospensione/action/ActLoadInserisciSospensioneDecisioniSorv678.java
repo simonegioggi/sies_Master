@@ -260,7 +260,8 @@ public class ActLoadInserisciSospensioneDecisioniSorv678 extends ActionSiap impl
 			DecodeModel lDecode = iterMot.next();
 			DecodeModel lDecodeNew = new DecodeModel();
 			lDecodeNew.setCode(lDecode.getCode());
-			lDecodeNew.setDescription("Applicazione Provvisoria " + lDecode.getDescription());
+			//lDecodeNew.setDescription("Applicazione Provvisoria " + lDecode.getDescription());
+			lDecodeNew.setDescription("Applicazione " + lDecode.getDescription());
 			lMotiviCollSIEP.add(lDecodeNew);
 		}
 		Option lOptionOggetto = new Option(lMotiviCollSIEP);
