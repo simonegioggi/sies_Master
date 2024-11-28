@@ -587,16 +587,18 @@ public class CalcoloPenaDL92Model extends GenericModel {
   
   /**
    * Ritorna il totale della LA maturate come prodotto del numero di semestri utili per 45gg
-	 *
+   * Nota solo le LA sulla solo pena da sconare quindi non conteggiano le LA sul presofferto
    * @return
    */
   public BigDecimal getLAMaturate () {
   	int lTotLAMaturata = 0;
   	
-  	if (mSemestrePresofferto!=null && mSemestrePresofferto.getLAApplicate()!=null)
-  		lTotLAMaturata = mSemestrePresofferto.getLAApplicate().intValue();
+  	//if (mSemestrePresofferto!=null && mSemestrePresofferto.getLAApplicate()!=null)
+  	//	lTotLAMaturata = mSemestrePresofferto.getLAApplicate().intValue();
   	
-  	lTotLAMaturata += mListaSemetri.size()*45;
+  	// lTotLAMaturata += mListaSemetri.size()*45;
+  	lTotLAMaturata +=getSemestriUtiliPenaScontata().intValue()*45;
+  	
   	return new BigDecimal(lTotLAMaturata);
   }
   
@@ -638,7 +640,7 @@ public class CalcoloPenaDL92Model extends GenericModel {
   /**
    * Ritorna le LA non fruibili (fungibili) come differenza tra quelle maturate e quelle applicate
    * escludendo comunque i semestri non concessi
-	 *
+   *
    * @return
    */
   public BigDecimal getLAFungibili () {
@@ -648,7 +650,7 @@ public class CalcoloPenaDL92Model extends GenericModel {
   	lTotLAFungibile= getLAMaturate().subtract(getLAApplicate());
   	
   	// Le LA non concesso non sono ovviamente fungibili
-  	lTotLAFungibile = lTotLAFungibile.subtract(getLANonConcesse());
+  	//lTotLAFungibile = lTotLAFungibile.subtract(getLANonConcesse());
   	
   	return lTotLAFungibile;
   }
@@ -672,22 +674,34 @@ public class CalcoloPenaDL92Model extends GenericModel {
    */
   public BigDecimal getSemestriUtili () {
 
-  	int semestriUtili = getListaSemetri().size();
+  	int semestriUtili = 0; //getListaSemetri().size();
+  	
+  	Vector <SemestreDL92Model> listaSemestri = getListaSemetri();
+  	for (int i = 0 ; i< listaSemestri.size(); i++) {  		
+  		if ("S".equals(listaSemestri.elementAt(i).getIsCompreso()))
+  			semestriUtili++;
+  	}  	
   	
   	return new BigDecimal(semestriUtili);
   }
   
   /**
    * Ritorna il totale dei semestri utili, quelli del presofferto più quelli delle detentiva
-	 *
-	 * @return BigDecimal
+   * a meno dei semestri scartati
+   * @return BigDecimal
    */
   public BigDecimal getSemestriUtiliPenaScontata () {
   	
-		int semestriUtili = this.getSemestrePresofferto().getNumSemestriMaturati().intValue()
-				+ this.getListaSemetri().size();
-  	
-  	return new BigDecimal(semestriUtili);
+	  	int semestriUtili = this.getSemestrePresofferto().getNumSemestriMaturati().intValue();
+		//		+ this.getListaSemetri().size();
+	  	
+		Vector <SemestreDL92Model> listaSemestri = getListaSemetri();
+		for (int i = 0 ; i< listaSemestri.size(); i++) {  		
+			if ("S".equals(listaSemestri.elementAt(i).getIsCompreso()))
+				semestriUtili++;
+		}
+
+		return new BigDecimal(semestriUtili);
   }
   
   // Totale da espiare: Reclusione + arresto

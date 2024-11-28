@@ -816,9 +816,12 @@ public class ActLoadDettaglioFascicolo extends ActionSiap implements ICostantiFa
 				EventoModel lEveOrd = lCtrlEvento.ExRicercaEventoByKey(lEveSemilib.getEveIdEvento());
 				if (lEveOrd != null 
 						&& "0270".equals(lEveOrd.getCodEsito())
-						&& ("2007".equals(lEveOrd.getCodMotivo())
-						|| "0683".equals(lEveOrd.getCodMotivo()) || "0694".equals(lEveOrd.getCodMotivo()))) {
-					String descrPGNew = lDettaglio.getPosizioneGiuridica().getDescrPosizioneGiuridica();
+						&& ( "2007".equals(lEveOrd.getCodMotivo())
+						 //|| "0683".equals(lEveOrd.getCodMotivo()) || "0694".equals(lEveOrd.getCodMotivo())
+						  )
+						) {
+					String descrPGNew = lDettaglio.getPosizioneGiuridica().getDescrPosizioneGiuridica()
+							+ " (a seguito Ammissione Provvisoria)";
 						//	+ " (a seguito Applicazione/Ammissione Provvisoria)";
 					lDettaglio.getPosizioneGiuridica().setDescrPosizioneGiuridica(descrPGNew);
 				}

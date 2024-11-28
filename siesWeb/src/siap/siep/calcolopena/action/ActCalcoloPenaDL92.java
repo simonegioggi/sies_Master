@@ -616,7 +616,7 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		// Impostare opportunamente la larghezza della prima riga
 		sheetLibero.setColumnWidth(0, (5 * 256)); // Progressivo
 		sheetLibero.setColumnWidth(1, (30 * 256)); // Desc Semestre
-		sheetLibero.setColumnWidth(2, (13 * 256)); // Larghezza colonna COMPLETO/ESCLUSO
+		sheetLibero.setColumnWidth(2, (13 * 256)); // Larghezza colonna COMPRESO/ESCLUSO
 		sheetLibero.setColumnWidth(3, (20 * 256)); // LA APPLICATA
 		sheetLibero.setColumnWidth(4, (17 * 256)); // ANNI RESIDUI
 		sheetLibero.setColumnWidth(5, (17 * 256)); // MESI RESIDUI
@@ -776,7 +776,7 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		// Impostare opportunamente la larghezza delle righe
 		sheetDetenuto.setColumnWidth(0, (6 * 256)); // Larghezza prima colonna
 		sheetDetenuto.setColumnWidth(1, (28 * 256)); // Larghezza seconda colonna
-		sheetDetenuto.setColumnWidth(2, (13 * 256)); // Larghezza colonna COMPLETO/ESCLUSO
+		sheetDetenuto.setColumnWidth(2, (13 * 256)); // Larghezza colonna COMPRESO/ESCLUSO
 		sheetDetenuto.setColumnWidth(3, (17 * 256)); // LA APPLICATA
 		sheetDetenuto.setColumnWidth(4, (17 * 256)); // Data In cui maturo LA
 		sheetDetenuto.setColumnWidth(5, (32 * 256)); // Nuova Data Scadenza
@@ -815,7 +815,7 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		row = sheetDetenuto.createRow(nRow);
 		setCell(row, 0, StringUtils.toStringJSP(lCalcoloPresofferto.getNumSemestriMaturati(), "0"), csCenter);
 		setCell(row, 1, "SEMESTRI ESPIATI IN C.C. ", csCenter);
-		setCell(row, 2, "COMPLETO", csCenter);
+		setCell(row, 2, "COMPRESO", csCenter);
 		setCell(row, 3, StringUtils.toStringJSP(lCalcoloPresofferto.getLAApplicate(), "0"), csCenter);
 		setCell(row, 4, "", csCenter);
 		setCell(row, 5,
@@ -850,7 +850,7 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 			setCell(row, 1, "semestre maturato per L.A. ", cs);
 			
 			if ("S".equals(lSemestreUtile.getIsCompreso()))
-				setCell(row, 2, "COMPRESO", cs);
+				setCell(row, 2, "COMPRESO", csCenter);
 			else
 				setCell(row, 2, "ESCLUSO", csBoldCenterRed);			
 
