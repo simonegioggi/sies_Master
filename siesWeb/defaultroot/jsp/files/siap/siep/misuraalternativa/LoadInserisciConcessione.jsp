@@ -591,7 +591,6 @@ if (lPosizione.isMisuraAlternativa() || lPosizione.getCodPosizioneGiuridica().eq
 	AbilitaAvvocato();
 <%
 }
-boolean isGiaDetenzione = false;
 if (tipoMisura.equals("SEMILIBERTA")) {
 %>
 	document.LoadInserisciMisuraAlternativa.cssaE.disabled = true;
@@ -893,7 +892,7 @@ else {
 				if (document.LoadInserisciMisuraAlternativa.UDSE)
 					document.LoadInserisciMisuraAlternativa.UDSE.disabled = true;
 				document.LoadInserisciMisuraAlternativa.notificaSemiliberta.disabled = true;
-   			} <%-- Chiude if (document.LoadInserisciMisuraAlternativa.tipo[0].checked) --%>
+    			} <%-- Chiude if (document.LoadInserisciMisuraAlternativa.tipo[0].checked) --%>
 		} else {
 			if (document.getElementById('tipo')) {
 				if (document.LoadInserisciMisuraAlternativa.tipo[0].checked) {
@@ -1011,7 +1010,6 @@ else {
    			else {
 <%
 	if (tipoMisura.equals("DETENZIONE")) {
-		isGiaDetenzione = true;
 %>
 				nodeautoritaE.style.visibility = 'visible';
 				nodecssa.style.visibility = 'visible';
@@ -1043,7 +1041,7 @@ else {
 	}
 %>
 			}
-		} <%--- fine ELSE di else if ((pos == "03") ||(flagsanzione == "S" && pos=="19") || (pos == "14" && (tipomisuraJS != "INDULTINO" && tipomisuraJS != "ESP_PRESSO_DOM"))) --%>
+			} <%--- fine ELSE di else if ((pos == "03") ||(flagsanzione == "S" && pos=="19") || (pos == "14" && (tipomisuraJS != "INDULTINO" && tipomisuraJS != "ESP_PRESSO_DOM"))) --%>
 		// Paolo Cherubini aggiungo controllo poiche da pos semiliberta se concedo AFFIDAMENTO
 		// si sovrappone l'istituto con l'autorita competente
 		if (pos == "14" && tipomisuraJS == "AFFIDAMENTO" && lEveAmmProvAff == null
@@ -1155,14 +1153,9 @@ else {
    					DisabilitaAvvocato();
 				} // chiusura (document.LoadInserisciMisuraAlternativa.tipo[1].checked)
 			} // d.f. chiusura (typeof)
-			else {
-				if (tipomisuraJS == "DETENZIONE" && (<%=!isGiaDetenzione%> || pos == "14" || pos == "03")) {
-					nodebottone.style.top = '-460px';
-				}
-			}
 		} // chiusura (pos != "13" && tipomisuraJS != "AFFIDAMENTO" && lEveAmmProvAff == null)
 		<%-- 20170908: [SG] aggiunta impostazione --%>
-		else if ((pos == "13" || pos == "14" || pos == "06" || pos == "03") && tipomisuraJS == "AFFIDAMENTO" && lEveAmmProvAff == null) {
+		else if ((pos == "13" || pos == "14") && tipomisuraJS == "AFFIDAMENTO" && lEveAmmProvAff == null) {
 			nodebottone.style.top = '-460px';
 		}
 <%
@@ -1180,12 +1173,12 @@ else {
 		} else if (pos == "04"
 					&& document.getElementById('tipo') && document.LoadInserisciMisuraAlternativa.tipo[1]
 					&& document.LoadInserisciMisuraAlternativa.tipo[1].checked) {
-				nodeautoritaE.style.visibility = 'visible';
-				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E%>.disabled = false;
+					nodeautoritaE.style.visibility = 'visible';
+  					document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E%>.disabled = false;
 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_SEDE_POL_E%>.disabled = false;
 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_NOTE_POL_E%>.disabled = false;
 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_COD_UDS%>.disabled = false;
-		}
+			}
 <%
 	}
 %>
@@ -2110,17 +2103,16 @@ if (lPosizione.isLibero()) {
 		</td>
 	</tr>
 <%
-// MEV_2024-092: se PG 14 || isDetenuto non faccio nulla
-} else if (lPosizione.isDetenuto() || lPosizione.getCodPosizioneGiuridica().equals("14")) {
+// MEV_2024-092: se PG 14 || isDetenuto non faccio nulla per semilibertà
+} else if (tipoMisura.equals("SEMILIBERTA") && (lPosizione.isDetenuto() || lPosizione.getCodPosizioneGiuridica().equals("14"))) {
 	// do Nothing
-} else if (lPosizione.getCodPosizioneGiuridica().equals("43")) { // Espiazione Pena in Regime di Semiliberta in Prosec.Provv. 51 Bis
-	// MEV_2024-092: elimino PG 14 && isDetenuto
-	// lPosizione.isDetenuto()
-	// || lPosizione.getCodPosizioneGiuridica().equals("14") // Espiazione Pena in Regime di Semiliberta
-	// || lPosizione.getCodPosizioneGiuridica().equals("04") // Arresti Domiciliari ex art. 656/10
-	// || lPosizione.getCodPosizioneGiuridica().equals("12") // Espiazione Pena in Regime di Detenzione Domiciliare
-	// || lPosizione.getCodPosizioneGiuridica().equals("50") // Esecuzione presso domicilio della pena detentiva
-	// || lPosizione.getCodPosizioneGiuridica().equals("53") //  Arresti domiciliari - Esecuzione presso domicilio della pena detentiva
+} else if (lPosizione.isDetenuto() || lPosizione.getCodPosizioneGiuridica().equals("14")
+		// Espiazione Pena in Regime di Semiliberta in Prosec.Provv. 51 Bis
+		|| lPosizione.getCodPosizioneGiuridica().equals("43")) {
+		// || lPosizione.getCodPosizioneGiuridica().equals("04") // Arresti Domiciliari ex art. 656/10
+		// || lPosizione.getCodPosizioneGiuridica().equals("12") // Espiazione Pena in Regime di Detenzione Domiciliare
+		// || lPosizione.getCodPosizioneGiuridica().equals("50") // Esecuzione presso domicilio della pena detentiva
+		// || lPosizione.getCodPosizioneGiuridica().equals("53") //  Arresti domiciliari - Esecuzione presso domicilio della pena detentiva
 %>
 	<tr>
         <td class="l" width="25%">
