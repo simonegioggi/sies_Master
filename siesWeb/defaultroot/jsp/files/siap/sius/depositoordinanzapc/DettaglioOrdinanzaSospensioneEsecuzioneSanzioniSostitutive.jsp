@@ -63,7 +63,8 @@ if (ICostantiDepositoOrdinanzaPc.COD_OGGETTO_SOSPENSIONE_ESECUZIONE_PENE_ACCESSO
   	</tr>
 <%
 }
-if (!Utils.isNullObj(datiOrdinanza.getOrdinanza().getDataSospensioneSS())) {
+// MEV_2023-35: richiesta durante il collaudo la possibilità di visualizzare sempre!
+// if (!Utils.isNullObj(datiOrdinanza.getOrdinanza().getDataSospensioneSS())) {
 %>
 	<tr><td>&nbsp;</td></tr>
     <tr>
@@ -74,38 +75,38 @@ if (!Utils.isNullObj(datiOrdinanza.getOrdinanza().getDataSospensioneSS())) {
     	<td class="l"><font class="campo"><%=StringUtils.toStringJSP(datiOrdinanza.getOrdinanza().getCodNaturaProvvedimento(), "-")%></font></td>
   	</tr>
 <%
-	if (!Utils.isNullObj(datiOrdinanza.getOrdinanza().getDescrUffTdsConcessoRiduzione())) {
 %>
   	<tr>
 	    <td class="l"><%=labelUfficio%> Competente</td>
-	    <td class="l"><font class="campo"><%=StringUtils.toStringJSP(datiOrdinanza.getOrdinanza().getDescrUffTdsConcessoRiduzione())%></font></td>
+	    <td class="l"><font class="campo"><%=StringUtils.toStringJSP(datiOrdinanza.getOrdinanza().getDescrUffTdsConcessoRiduzione(), "-")%></font></td>
 	</tr>
 <%
-	}
+// 	if (datiOrdinanza.getOrdinanza().getDataSospensioneSS() != null) {
 %>
 	<tr>
 	    <td class="l">Data Decorrenza Sospensione</td>
 	    <td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(datiOrdinanza.getOrdinanza().getDataSospensioneSS(), "dd/MM/yyyy"), "-")%></font></td>
   	</tr>
 <%
-	if (datiOrdinanza.getOrdinanza().getSospensioneAASS().compareTo(new BigDecimal(0)) != 0
-			|| datiOrdinanza.getOrdinanza().getSospensioneMMSS().compareTo(new BigDecimal(0)) != 0
-			|| datiOrdinanza.getOrdinanza().getSospensioneGGSS().compareTo(new BigDecimal(0)) != 0) {
+// 	}
+// 	if (datiOrdinanza.getOrdinanza().getSospensioneAASS().compareTo(new BigDecimal(0)) != 0
+// 			|| datiOrdinanza.getOrdinanza().getSospensioneMMSS().compareTo(new BigDecimal(0)) != 0
+// 			|| datiOrdinanza.getOrdinanza().getSospensioneGGSS().compareTo(new BigDecimal(0)) != 0) {
 %>
   	<tr>
 	    <td class="l">Periodo Sospensione</td>
 	    <td class="l"><font class="campo">ANNI <%=datiOrdinanza.getOrdinanza().getSospensioneAASS()%> MESI <%=datiOrdinanza.getOrdinanza().getSospensioneMMSS()%> GIORNI <%=datiOrdinanza.getOrdinanza().getSospensioneGGSS()%></font></td>
   	</tr>
 <%
-	}
-	if (datiOrdinanza.getOrdinanza().getDataScadenzaSospensioneSS() != null) {
+// 	}
+// 	if (datiOrdinanza.getOrdinanza().getDataScadenzaSospensioneSS() != null) {
 %>
    	<tr>
 	    <td class="l">Fino al</td>
-	    <td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(datiOrdinanza.getOrdinanza().getDataScadenzaSospensioneSS(),"dd/MM/yyyy"))%></font></td>
+	    <td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(datiOrdinanza.getOrdinanza().getDataScadenzaSospensioneSS(),"dd/MM/yyyy"), "-")%></font></td>
   	</tr>
 <%
-	}
+// 	}
 	// Controllo per visualizzazione campo "Giorni da recuperare"
 	if (datiOrdinanza.getOrdinanza().getFlagRecuperoSS() != null
 			&& datiOrdinanza.getOrdinanza().getFlagRecuperoSS().equals("S")) {
@@ -128,7 +129,7 @@ if (!Utils.isNullObj(datiOrdinanza.getOrdinanza().getDataSospensioneSS())) {
   	</tr>
 <%
 	}
-}
+// }
 %>
 </table>
 <br>

@@ -145,9 +145,17 @@ function Verify() {
 		return false;
 	}
 
+	// MEV_2023-35: proposta durante il collaudo la necessità di inserire almeno un valore
+// 	if (chk_valore_data_inizio == false && chk_valore_periodo == 0 && chk_valore_data_fine == false) {
+// 		alert('Inserire "Data Decorrenza Sospensione" o "Periodo Sospensione" o "Fino al"');
+// 		return false;
+// 	}
 <%
-// MEV_2023-35: richiesta durante il collaudo la possibilità di inserire solo il periodo
-if (!("U141".equals(contenuto) || "C066".equals(contenuto))) {
+// MEV_2023-35: richiesta durante il collaudo la possibilità di inserire anche solo il periodo
+// U137	- Sospensione lavoro di pubblica utilita' sostitutivo (art. 69 c. 2 L. 689/81)
+// U141	- Sospensione esecuzione pene accessorie (art. 51-quater O.P.)
+// C066	- Sospensione esecuzione pene accessorie (art. 51-quater O.P.)
+if (!("U141".equals(contenuto) || "C066".equals(contenuto) || "U137".equals(contenuto))) {
 %>
 	// Controlla che non venga inserito il "Periodo Sospensione" e la Data "Fino al""
 	if (chk_valore_data_fine == true && chk_valore_periodo > 0) {
@@ -156,8 +164,8 @@ if (!("U141".equals(contenuto) || "C066".equals(contenuto))) {
 	}
 <%
 }
-// MEV_2023-35: richiesta durante il collaudo la possibilità di inserire solo il periodo
-if (!("U137".equals(contenuto) || "U141".equals(contenuto) || "C066".equals(contenuto))) {
+// MEV_2023-35: richiesta durante il collaudo la possibilità di inserire anche solo il periodo
+if (!("U141".equals(contenuto) || "C066".equals(contenuto) || "U137".equals(contenuto))) {
 %>
 	// Controlla che per inserire il "Periodo Sospensione" ci sia la "Data Decorrenza Sospensione"
 	if (chk_valore_data_inizio == false && chk_valore_periodo > 0) {
@@ -166,8 +174,8 @@ if (!("U137".equals(contenuto) || "U141".equals(contenuto) || "C066".equals(cont
 	}
 <%
 }
-// MEV_2023-35: richiesta durante il collaudo la possibilità di inserire solo il periodo
-if (!("U141".equals(contenuto) || "C066".equals(contenuto))) {
+// MEV_2023-35: richiesta durante il collaudo la possibilità di inserire anche solo il periodo
+if (!("U141".equals(contenuto) || "C066".equals(contenuto) || "U137".equals(contenuto))) {
 %>
 	// Controlla che per inserire la data "Fino al" ci sia la "Data Decorrenza Sospensione" 			
 	if (chk_valore_data_fine == true && chk_valore_data_inizio == false) {
@@ -177,13 +185,12 @@ if (!("U141".equals(contenuto) || "C066".equals(contenuto))) {
 <%
 }
 %>
-	
 	// Controllo validità Data Fino al
 	if (! ControllaDataPassaVuota(data_fine)) {
 		alert('Data Fino al non valida');
 		return false;
 	}
-	
+
 	// Controlla che la Data "Fino al" si maggiore della "Data Decorrenza Sospensione" 
 	if (CompareDate(data_fine,data_inizio)) {
 		alert('La data "Fino al" deve essere maggiore della "Data Decorrenza Sospensione"');
