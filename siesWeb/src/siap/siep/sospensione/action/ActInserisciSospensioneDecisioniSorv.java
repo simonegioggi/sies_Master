@@ -7,7 +7,6 @@ import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
-import f3b.util.F3BException;
 import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import siap.sico.calendar.model.CalendarModel;
@@ -299,7 +298,8 @@ public class ActInserisciSospensioneDecisioniSorv extends ActMisuraAlternativa
 			lMisMod.setDataScarcerazione(lDataSospensione);
 
 			// MEV_2019-09-SIEP: aggiunto metodo
-			settaDatiOrdinanzaProvvisoria(lMisMod);
+			// MEV_2024-092: rimosso metodo
+			// settaDatiOrdinanzaProvvisoria(lMisMod);
 
 			/*
 			 * nel momento in cui inserisco la misura alternativa e calcolo la pena richiamo la maschera
@@ -346,7 +346,8 @@ public class ActInserisciSospensioneDecisioniSorv extends ActMisuraAlternativa
 				lSospensione.setNote(getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE));
 
 			// MEV_2019-09-SIEP: aggiunto metodo ed impostazione della data scarcerazione
-			settaDatiOrdinanzaProvvisoria(lSospensione);
+			// MEV_2024-092: rimosso metodo
+			// settaDatiOrdinanzaProvvisoria(lSospensione);
 			if (Utils.isNullObj(lDataSospensione)) {
 				if (!isRequestParameterNullEmptyObj(
 						ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE)
@@ -394,10 +395,11 @@ public class ActInserisciSospensioneDecisioniSorv extends ActMisuraAlternativa
 					lEve.getEvento().setCodMotivo("5469");
 				else if ("0735".equals(codiceMotivo))
 					lEve.getEvento().setCodMotivo("5496");
+				// MEV_2024-092: aggiunte impostazioni di motivo 1420 & 1426
 				else if (codiceMotivo.equals("0684"))
-			        lEve.getEvento().setCodMotivo(codiceMotivo);
-			      else if (codiceMotivo.equals("0695"))
-			        lEve.getEvento().setCodMotivo(codiceMotivo);
+					lEve.getEvento().setCodMotivo("1420");
+				else if (codiceMotivo.equals("0695"))
+					lEve.getEvento().setCodMotivo("1426");
 
 				lEve.setEvento(setEventoProvvedimentoMisuraAlternativa(lEve.getEvento()));
 				lEve.getMagistrato().setCodMagistrato(calcolaMagistrato());
@@ -441,21 +443,22 @@ public class ActInserisciSospensioneDecisioniSorv extends ActMisuraAlternativa
 	}
 
 	// MEV_2019-09-SIEP: aggiunto metodo
-	private void settaDatiOrdinanzaProvvisoria(MisuraAlternativaModel mam) throws F3BException {
-
-		if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT))
-			mam.setAnnoRegistroMaAt(
-					getRequestBigDecimalParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT));
-		if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT))
-			mam.setNumeroRegistroMaAt(
-					getRequestBigDecimalParameter(ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT));
-		if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT)
-				&& !isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT)
-				&& !isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT))
-			mam.setDataDecisioneMaAt(
-					getRequestDateParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT,
-							ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT,
-							ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT));
-	}
+	// MEV_2024-092: rimosso metodo
+	// private void settaDatiOrdinanzaProvvisoria(MisuraAlternativaModel mam) throws F3BException {
+	//
+	// if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT))
+	// mam.setAnnoRegistroMaAt(
+	// getRequestBigDecimalParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT));
+	// if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT))
+	// mam.setNumeroRegistroMaAt(
+	// getRequestBigDecimalParameter(ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT));
+	// if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT)
+	// && !isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT)
+	// && !isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT))
+	// mam.setDataDecisioneMaAt(
+	// getRequestDateParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT,
+	// ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT,
+	// ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT));
+	// }
 
 }

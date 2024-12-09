@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
+import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoModel;
@@ -97,6 +98,17 @@ public class ActStampaSospensioneDecisioniSorv extends ActionSiap implements ICo
 				}
 			}
 		}
+
+		// MEV_2024-092: per questi codici cerco il cod_motivo per eve_id_evento
+		if ("1420".equals(lMotivo) || "1426".equals(lMotivo)) {
+			EventoModel em = new EventoModel();
+			if (!Utils.isNullObj(lEventoModel) && !Utils.isNullObj(lEventoModel.getEveIdEvento())) {
+				em = lCtrl.ExRicercaEventoByKey(lEventoModel.getEveIdEvento());
+				if (!Utils.isNullObj(em.getCodMotivo()))
+					lMotivo = em.getCodMotivo();
+			}
+		}
+		// FINE MEV_2024-092
 
 		ITemplate lCtrlTem = SICOLookupRemote.getTemplateRemote();
 		TemplateModel lTemMod = new TemplateModel();

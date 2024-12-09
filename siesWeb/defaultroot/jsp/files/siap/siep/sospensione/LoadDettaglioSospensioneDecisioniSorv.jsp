@@ -102,7 +102,7 @@ if ((Utils.isPresent(eventonotifica.getEvento().getFlagDocumentoRegistrato())
 </table>
 <br>
 <jsp:include page="/jsp/files/siap/siep/fascicolo/DettaglioSoggettoSentenza.jsp"/>
-<table>
+<table cellspacing="0" cellpadding="0" width="95%">
 <%
 if (flagmisura.equals("N")) {
 %>
@@ -189,7 +189,7 @@ if (penaresidua.getDataInizio() != null) {
 %>
 	<tr>
 		<td class="l">Data Decorrenza Pena</td>
-		<td class="L">
+		<td class="L" colspan="5">
 			<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(penaresidua.getDataInizio(),"dd-MM-yyyy"))%></font>
 		</td>
 	</tr>
@@ -200,14 +200,14 @@ if (penaresidua.getFlagErgastolo() != null) {
 %>
 	<tr>
 		<td class="l">Pena Detentiva</td>
-		<td class="L"><font class="campo">ERGASTOLO</font></td>
+		<td class="L" colspan="5"><font class="campo">ERGASTOLO</font></td>
 	</tr>
 <%
 	} else if (penaresidua.getFlagErgastolo().equals("D")) {
 %>
 	<tr>
 		<td class="l">Pena Detentiva</td>
-		<td class="L"><font class="campo">ERGASTOLO CON ISOLAMENTO DIURNO</font></td>
+		<td class="L" colspan="5"><font class="campo">ERGASTOLO CON ISOLAMENTO DIURNO</font></td>
 	</tr>
 <%
 	}
@@ -221,14 +221,14 @@ if (((penaresidua.getFlagErgastolo() == null) || (penaresidua.getFlagErgastolo()
 	if (penaresidua.getDataFine().equals(penaresidua.getDataFinePresunta())) {
 %>
 		<td class="l">Data Fine Pena</td>
-		<td class="L" >
+		<td class="L" colspan="5">
 			<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(penaresidua.getDataFine(),"dd-MM-yyyy"))%></font>
 		</td>
 <%
 	} else {
 %>
 		<td class="l">Data Fine Pena</td>
-		<td class="lRosso" >
+		<td class="lRosso" colspan="5">
 			<font class="lRosso"><%=StringUtils.toStringJSP(DateUtils.getDateToString(penaresidua.getDataFine(),"dd-MM-yyyy"))%></font>
 		</td>
 <%
@@ -330,7 +330,7 @@ if (misuraalternativa.getAnnoRegistro() != null) {
  	</tr>
  	<tr>
 	    <td class="l">Tipo Provvedimento</td>
-	    <td class="l">
+	    <td class="l" colspan="5">
 	    	<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getDescrTipoDecisione())%></font>
 	    </td>
  	</tr>
@@ -346,7 +346,7 @@ if (("PM".equals(codiceTipoUfficio)
 	descrTipoUfficio = "Magistrato di Sorveglianza per i Minorenni";
 }
 %>
-		<td class="l">
+		<td class="l" colspan="5">
 			<font class="campo"><%=descrTipoUfficio%>&nbsp;di&nbsp;<%=StringUtils.toStringJSP(sedeUfficioEmittente.getDescProvincia())%></font>
 		</td>
 	</tr>
@@ -360,30 +360,34 @@ if (("PM".equals(codiceTipoUfficio)
     		<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisione(), "dd-MM-yyyy"))%></font>
    		</td>
 	</tr>
-<%
+<%--
 // MEV_2019-09-SIEP: aggiunte etichette (x2)
-if (!Utils.isNullObj(misuraalternativa.getAnnoRegistroMaAt())) {
-%>
-	<tr>
-		<td class="l">Anno / Numero Ordinanza Provvisoria</td>
-		<td class="l" colspan="3">
-			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistroMaAt())%>&nbsp;/&nbsp;<%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistroMaAt())%></font>
-		</td>
-	</tr>
-	<tr>
-	  	<td class="l">Data Emissione Ordinanza Provvisoria</td>
-	  	<td class="L" colspan="3">
-			<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "dd-MM-yyyy"))%></font>
-		</td>
-	</tr>
-<%
+// MEV_2024-092: rimosse le etichette (x2)
+// if (!Utils.isNullObj(misuraalternativa.getAnnoRegistroMaAt())) {
+--%>
+<!-- 	<tr> -->
+<!-- 		<td class="l">Anno / Numero Ordinanza Provvisoria</td> -->
+<!-- 		<td class="l" colspan="3"> -->
+<%-- 			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistroMaAt())%>&nbsp;/&nbsp;<%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistroMaAt())%></font> --%>
+<!-- 		</td> -->
+<!-- 	</tr> -->
+<!-- 	<tr> -->
+<!-- 	  	<td class="l">Data Emissione Ordinanza Provvisoria</td> -->
+<!-- 	  	<td class="L" colspan="3"> -->
+<%-- 			<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "dd-MM-yyyy"))%></font> --%>
+<!-- 		</td> -->
+<!-- 	</tr> -->
+<%--
 }
+// FINE MEV_2024-092
 // FINE MEV_2019-09-SIEP
+--%>
+<%
 if (misuraalternativa != null && misuraalternativa.getNote() != null) {
 %>
 	<tr>
 		<td class="l">Motivazioni</td>
-	    <td class="l">
+	    <td class="l" colspan="5">
 			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getNote())%></font>
 	    <td>
 	</tr>
@@ -401,11 +405,11 @@ if (misuraalternativa != null && misuraalternativa.getDataScarcerazione() != nul
 if (misuraalternativa != null && misuraalternativa.getCodTipoUfficioScarcerazione() != null) {
 	if (misuraalternativa.getCodTipoUfficioScarcerazione().equals("PROC")) {
 %>
-		<td class="l">Da Scarcerare</td>
+		<td class="l" colspan="2">Da Scarcerare</td>
 <%
 	} else {
 %>
-		<td class="l">Libero per avvenuta Scarcerazione</td>
+		<td class="l" colspan="2">Libero per avvenuta Scarcerazione</td>
 <%
 	}
 }
@@ -420,7 +424,7 @@ if (sospensione.getNumAnniPenaEspiata().intValue() != 0
 		<td class="l">
 			<font class="label">Pena Espiata</font>
 		</td>
-		<td class="l">
+		<td class="l" colspan="5">
 			<font class="label">Anni</font>
 			<font class="Campo"><%=StringUtils.toStringJSP(sospensione.getNumAnniPenaEspiata(), "0")%></font>
 			<font class="label">Mesi</font>
@@ -457,7 +461,7 @@ if (penaresidua.getFlagErgastolo().equals("N")
 		<td class="l">
 			<font class="label">Pena Residua</font>
 		</td>
-		<td class="l">
+		<td class="l" colspan="5">
 <%
 	if (penaresidua.getFlagErgastolo().equals("N")
 			&& (sospensione.getNumAnniPenaResiduaReclus().intValue() != 0
@@ -518,7 +522,7 @@ if (penaresidua.getFlagErgastolo().equals("S")) {
 		<td class="l">
 			<font class="label">Pena Complessiva</font>
 		</td>
-		<td class="l">
+		<td class="l" colspan="5">
 			<font class="campo">ERGASTOLO</font>
 		</td>
 	</tr>
@@ -529,7 +533,7 @@ if (penaresidua.getFlagErgastolo().equals("S")) {
 		<td class="l">
 			<font class="label">Pena Complessiva</font>
 		</td>
-		<td class="l">
+		<td class="l" colspan="5">
 			<font class="campo">ERGASTOLO CON ISOLAMENTO DIURNO</font>
 		</td>
 	</tr>
@@ -539,7 +543,7 @@ if (nuovapenaresidua != null && nuovapenaresidua.getDataInizio() != null) {
 %>
 	<tr>
   		<td class="l">Data Decorrenza Pena</td>
-  		<td class="l" colspan="3">
+  		<td class="l" colspan="5">
   			<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(nuovapenaresidua.getDataInizio(),"dd-MM-yyyy"))%></font>
   		</td>
   	</tr>
@@ -549,7 +553,7 @@ if (nuovapenaresidua != null && nuovapenaresidua.getDataFine() == null && nuovap
 %>
 	<tr>
 		<td class="l">Data Fine Pena</td>
-		<td class="L" colspan="2">
+		<td class="L" colspan="5">
 			<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(nuovapenaresidua.getDataFinePresunta(), "dd"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiPenaResidua.CAMPO_GIORNO_DATA_FINE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
 			-
 			<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(nuovapenaresidua.getDataFinePresunta(), "MM"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiPenaResidua.CAMPO_MESE_DATA_FINE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
@@ -563,7 +567,7 @@ if (nuovapenaresidua != null && nuovapenaresidua.getDataFine() == null && nuovap
 %>
 	<tr>
 		<td class="l">Data Fine Pena</td>
-		<td class="L" colspan="2">
+		<td class="L" colspan="5">
 			<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(nuovapenaresidua.getDataFine(), "dd-MM-yyyy"))%></font>
 			<input type="hidden" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(nuovapenaresidua.getDataFine(), "dd"))%>" name="<%=ICostantiPenaResidua.CAMPO_GIORNO_DATA_FINE%>">
 			<input type="hidden" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(nuovapenaresidua.getDataFine(), "MM"))%>" name="<%=ICostantiPenaResidua.CAMPO_MESE_DATA_FINE%>">
@@ -575,7 +579,7 @@ if (nuovapenaresidua != null && nuovapenaresidua.getDataFine() == null && nuovap
 %>
 	<tr>
 		<td class="l">Data Fine Pena</td>
-		<td class="lRosso" colspan="2">
+		<td class="lRosso" colspan="5">
 			<font class="lRosso"><%=StringUtils.toStringJSP(DateUtils.getDateToString(nuovapenaresidua.getDataFine(), "dd-MM-yyyy"))%></font>
 			<input type="hidden" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(nuovapenaresidua.getDataFine(), "dd"))%>" name="<%=ICostantiPenaResidua.CAMPO_GIORNO_DATA_FINE%>">
 			<input type="hidden" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(nuovapenaresidua.getDataFine(), "MM"))%>" name="<%=ICostantiPenaResidua.CAMPO_MESE_DATA_FINE%>">
@@ -589,7 +593,7 @@ if (magistrato != null) {
 %>
 	<tr>
 		<td class="l">Magistrato Firmatario
-		<td class="L">
+		<td class="L" colspan="5">
 			<font class="campo"><%=StringUtils.toStringJSP(magistrato.getCognome())%></font>&nbsp;<font class="campo"><%=StringUtils.toStringJSP(magistrato.getNome())%></font>
 		</td>
 	</tr>
@@ -599,7 +603,7 @@ if (lIstMod != null && lIstMod.getIdIstitutoDetenzione() != null && !lIstMod.get
 %>
 	<tr>
 		<td class="l">Istituto Detenzione</td>
-	    <td class="l">
+	    <td class="l" colspan="5">
 	       <font class="campo"><%=StringUtils.toStringJSP(lIstMod.getDescrTipoIstituto())%></font>&nbsp;di&nbsp;<font class="campo"><%=StringUtils.toStringJSP(lIstMod.getDescrComune())%></font>
 		</td>
 	</tr>
@@ -609,7 +613,7 @@ if (lIstMod != null && lIstMod.getIdIstitutoDetenzione() != null && !lIstMod.get
 if (daticssa != null && daticssa.getComune() != null && !daticssa.getIndirizzo().equals("")) { %>
 	<tr>
 		<td class="l"><%=StringUtils.toStringJSP(daticssa.getTipoDesc())%> Competente</td>
-		<td class="l">
+		<td class="l" colspan="5">
         	<font class="campo"><%=StringUtils.toStringJSP(daticssa.getComune())%>-<%=StringUtils.toStringJSP(daticssa.getIndirizzo())%></font>
       	</td>
   	</tr>
@@ -619,7 +623,7 @@ if (UffTDS != null && !UffTDS.equals("")) {
 %>
 	<tr>
 		<td class="l">Destinatario</td >
-		<td class="L">
+		<td class="L" colspan="5">
 			<font class="campo"><%=StringUtils.toStringJSP(descrTipoUfficioTDS)%></font> di <font class="campo"><%=StringUtils.toStringJSP(UffUDS)%></font>
      	</td>
 	</tr>
@@ -637,7 +641,7 @@ if (UffUDS != null && !UffUDS.equals("")) {
 	    		descTipoUfficioUDS = "Magistrato di Sorveglianza per i Minorenni";
 	    	}
 	    %>
-      	<td class="L">
+      	<td class="L" colspan="5">
       		<font class="campo"><%=descTipoUfficioUDS%></font>&nbsp;di&nbsp;<font class="campo"><%=StringUtils.toStringJSP(UffUDS)%></font>
       	</td>
 	</tr>
@@ -647,7 +651,7 @@ if (autoritaEsternaC != null && autoritaEsternaC.getCodTipoAutorita() != null &&
 %>
 	<tr>
     	<td class="l">Autorità di Polizia Competente per territorio</td>
-    	<td class="L">
+    	<td class="L" colspan="5">
       		<font class="campo"><%=StringUtils.toStringJSP(autoritaEsternaC.getDescrTipoAutorita())%></font>
 <%
 	if (autoritaEsternaC != null && !autoritaEsternaC.getDescrSede().equals("-")) {
@@ -663,7 +667,7 @@ if (autoritaEsternaC != null && autoritaEsternaC.getCodTipoAutorita() != null &&
 %>
 	<tr>
 		<td class="l">Indirizzo</td>
-		<td class="L">
+		<td class="L" colspan="5">
 			<font class="campo"><%=NoteAutC%></font>
 		</td>
 	</tr>
