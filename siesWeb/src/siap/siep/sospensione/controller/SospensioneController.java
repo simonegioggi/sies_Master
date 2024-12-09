@@ -2616,8 +2616,12 @@ public class SospensioneController extends SiapController implements ISospension
 					|| motivo.equals("0724") || motivo.equals("0735")
 					|| motivo.equals("0684") || motivo.equals("0695")
 					// MEV_2024-092: aggiunte impostazioni di motivo 1420 & 1426
-					|| motivo.equals("1420") || motivo.equals("1426"))
-				lStatoProcMod = "0583";
+					|| motivo.equals("1420") || motivo.equals("1426")) {
+				if (motivo.equals("1420") || motivo.equals("1426"))
+					lStatoProcMod = "0575";
+				else
+					lStatoProcMod = "0583";
+			}
 
 			InserimentoCancellazioneStatoProcedimento(lConn, aFascicolo.getIdFascicoloSiep(), lEveModel,
 					lStatoProcMod);
