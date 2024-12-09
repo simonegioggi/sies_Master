@@ -2596,7 +2596,9 @@ public class SospensioneController extends SiapController implements ISospension
 			// MEV_2019-09-SIEP: gestione nuovi codici tipo misura
 			else if (motivo.equals("5469") || motivo.equals("5496")
 					|| motivo.equals("0724") || motivo.equals("0735")
-					|| motivo.equals("0684") || motivo.equals("0695")) 
+					|| motivo.equals("0684") || motivo.equals("0695")
+					// MEV_2024-092: aggiunte impostazioni di motivo 1420 & 1426
+					|| motivo.equals("1420") || motivo.equals("1426"))
 				lNomProvvDAO.setCodNomeProvvedimento("NP105");
 
 			lNomProvvDAO.setEveIdEvento(lEveModel.getIdEvento());
@@ -2612,7 +2614,9 @@ public class SospensioneController extends SiapController implements ISospension
 			// MEV_2019-09-SIEP: gestione nuovi codici tipo misura
 			else if (motivo.equals("5469") || motivo.equals("5496")
 					|| motivo.equals("0724") || motivo.equals("0735")
-					|| motivo.equals("0684") || motivo.equals("0695"))
+					|| motivo.equals("0684") || motivo.equals("0695")
+					// MEV_2024-092: aggiunte impostazioni di motivo 1420 & 1426
+					|| motivo.equals("1420") || motivo.equals("1426"))
 				lStatoProcMod = "0583";
 
 			InserimentoCancellazioneStatoProcedimento(lConn, aFascicolo.getIdFascicoloSiep(), lEveModel,
@@ -2632,7 +2636,9 @@ public class SospensioneController extends SiapController implements ISospension
 			// MEV_2019-09-SIEP: gestione nuovi codici tipo misura
 			else if (motivo.equals("5469") || motivo.equals("5496")
 					|| motivo.equals("0724") || motivo.equals("0735")
-					|| motivo.equals("0684") || motivo.equals("0695"))
+					|| motivo.equals("0684") || motivo.equals("0695")
+					// MEV_2024-092: aggiunte impostazioni di motivo 1420 & 1426
+					|| motivo.equals("1420") || motivo.equals("1426"))
 				lPosizione = "47";
 
 			Date lData = lEveModel.getDataEmissione();
