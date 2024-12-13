@@ -1909,22 +1909,6 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 	}
 
 	/**
-	 * findColumn
-	 * <p>
-	 * 
-	 * @param aValue
-	 * @return
-	 */
-	private boolean findColumn(String aValue) {
-		try {
-			mRs.findColumn(aValue);
-		} catch (Exception sqex) {
-			return false;
-		}
-		return true;
-	}
-
-	/**
 	 * Imposta la query per la ricerca dei messaggi ricevuti (02 - Esito) da un certo ufficio in relazione al
 	 * messaggio inviato
 	 * 

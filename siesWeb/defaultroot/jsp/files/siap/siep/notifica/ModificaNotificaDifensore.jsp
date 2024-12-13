@@ -189,8 +189,8 @@ if (lNot.size() > 0)
       	document.DettaglioNotifica.<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>.readOnly=true;
       	document.DettaglioNotifica.<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>.readOnly=true;
       	document.DettaglioNotifica.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>.value='-';
-	  	document.DettaglioNotifica.<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>.value='';;
-	  	document.DettaglioNotifica.<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>.value='';;
+	  	document.DettaglioNotifica.<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>.value='';
+	  	document.DettaglioNotifica.<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>.value='';
       	var node = document.getElementById('divAvv');
       	node.style.display='none';
    	}

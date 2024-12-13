@@ -36,6 +36,14 @@ public interface ICostantiEsecuzioneSS
   public static final String CAMPO_MESE_TERMINE_ATTUALE = "MeseTermineAttuale";
   public static final String CAMPO_ANNO_TERMINE_ATTUALE = "AnnoTermineAttuale";
   public static final String CAMPO_LUOGO_ESECUZIONE_SANZIONE = "LuogoEsecuzioneSanzione";
+  
+  // MEV_2023-35
+  public static final String CAMPO_COD_TIPO_SANZIONE  = "CodTipoSanzione";
+  public static final String CAMPO_NUM_GIORNI_SANZIONE = "NumGiorniSanzione";
+  public static final String CAMPO_NUM_MESI_SANZIONE   = "NumMesiSanzione";
+  public static final String CAMPO_NUM_ANNI_SANZIONE   = "NumAnniSanzione";
+  // MEV_2023-35 - FINE
+  
 
   public static final String PG_BUTTONS_ESS = IWebConstants.ROOT_DIR + "files/siap/sius/esecuzionesanzionesostitutiva/buttonsESS.jsp";
   public static final String PG_LOAD_RICERCA_ESECUZIONE_SS = IWebConstants.ROOT_DIR + "files/siap/sius/esecuzionesanzionesostitutiva/LoadRicercaEsecuzioneSS.jsp";

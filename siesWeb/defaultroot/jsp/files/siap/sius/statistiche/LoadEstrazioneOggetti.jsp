@@ -38,7 +38,7 @@
 
     var data_inizio=document.c.<%=ICostantiStatistiche.CAMPO_GIORNO_INIZIALE%>.value+'/'+document.c.<%=ICostantiStatistiche.CAMPO_MESE_INIZIALE%>.value+'/'+document.c.<%=ICostantiStatistiche.CAMPO_ANNO_INIZIALE%>.value;
     var data_fine=document.c.<%=ICostantiStatistiche.CAMPO_GIORNO_FINALE%>.value+'/'+document.c.<%=ICostantiStatistiche.CAMPO_MESE_FINALE%>.value+'/'+document.c.<%=ICostantiStatistiche.CAMPO_ANNO_FINALE%>.value;
-	var data_sistema='<%=DateUtils.getSysDate("dd/MM/yyyy")%>';;
+	var data_sistema='<%=DateUtils.getSysDate("dd/MM/yyyy")%>';
 
       if(!ControllaDataPassaVuota(data_inizio))
       {

@@ -195,7 +195,7 @@ else
         	UfficioModel lUfficioOrigine = lProcedimentoCumulatoModel.getUfficioOrigine();
 
         	NumAutoritaSiep = lProcedimentoCumulatoModel.getChiaveAnnoFasCumulato() +"/"+ lProcedimentoCumulatoModel.getChiaveProgrOrigine();
-        	NumAutoritaSiep += " "+StringUtils.toStringJSP(lProcedimentoCumulatoModel.getCodTipoUfficioFasCumulato())+" di "+StringUtils.toStringJSP(lProcedimentoCumulatoModel.getDescrLuogoUfficioFasCumulato());;
+        	NumAutoritaSiep += " "+StringUtils.toStringJSP(lProcedimentoCumulatoModel.getCodTipoUfficioFasCumulato())+" di "+StringUtils.toStringJSP(lProcedimentoCumulatoModel.getDescrLuogoUfficioFasCumulato());
         	NumAutoritaSiep += "<br> <font class=\"cRosso\">(Ex "+lUfficioOrigine.getCodTipoUfficio()+" di "+lUfficioOrigine.getDescrComune()+")</font>"; 
        	}
        	else {

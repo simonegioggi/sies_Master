@@ -102,6 +102,16 @@ public class ActLoadInsFascicoloDaSoggettoUDSManuale extends ActionSiap implemen
 			lOption.setFilter(lFilter);
 			setRequestAttribute("contenutoEsecuzione", "" + lOption);
 		}
+		
+	    // MEV_2023-35  Differenziato filtro sui contenuti per "S30" Pene Sospese
+        if (idFascicoloSius != null && idFascicoloSius.length() > 1 
+            && lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U126") == 0) 
+        {
+            lFilter = lFascicoloUtils.filtraContenutiPS(strCodTipoUfficio);
+            lOption.setFilter(lFilter);
+            setRequestAttribute("contenutoEsecuzione", "" + lOption);
+        }
+        // MEV_2023-35 - FINE
 
 		// Imposta la Collection Contenuto.
 		// MEV_66: distinguo per ufficio minorile

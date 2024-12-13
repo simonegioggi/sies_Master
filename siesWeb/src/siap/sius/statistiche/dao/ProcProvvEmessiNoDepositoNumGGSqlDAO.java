@@ -191,7 +191,7 @@ public class ProcProvvEmessiNoDepositoNumGGSqlDAO extends SIAPSqlDAO {
         lModel.getGeneraleProcedimento().setDescrOggettoProcedimento(getString("DESCR_PROCEDIMENTO"));
         
         lModel.setEvento(new EventoModel());
-        lModel.getEvento().setIdEvento(getBigDecimal("ID_EVENTO"));;
+        lModel.getEvento().setIdEvento(getBigDecimal("ID_EVENTO"));
         lModel.getEvento().setDataEmissione(getDate("EV_DATA_EMISSIONE"));
         
         lModel.setMagistrato(new MagistratoModel() );

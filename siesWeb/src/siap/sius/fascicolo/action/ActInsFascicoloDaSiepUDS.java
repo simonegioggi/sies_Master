@@ -79,22 +79,40 @@ public class ActInsFascicoloDaSiepUDS extends ActionSiap implements ICostantiFas
 		// Recupero del Procedimento di Esecuzione della misura alternativa, nel caso fosse impostato nella
 		// form di inserimento.
 		// N.B. Se non esiste, il controller solleva un errore di eccezione sull'esistenza del procedimento.
-		if ((getRequestBigDecimalParameter(CAMPO_CHIAVE_ANNO_S22) != null)
-				&& (getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO) != null)
-				&& (((getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S22") == 0) && (getRequestStringParameter(
-						CAMPO_COD_CONTENUTO).compareTo("U004") != 0)) || ((getRequestStringParameter(
-						CAMPO_COD_TIPO_REGISTRO).compareTo("S12") == 0) && (getRequestStringParameter(
-						CAMPO_COD_CONTENUTO).compareTo("U019") != 0)))) {
-			String lCodContenuto = ((getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S22") == 0) ? "U004"
-					: "U019");
-			IFascicoloSiusUDS lCtrl = SIUSLookupRemote.getFascicoloSiusUDSRemote();
-			/* boolean esiste = */lCtrl.ExistProcedimentoEsecuzione(
-					getRequestBigDecimalParameter(CAMPO_CHIAVE_ANNO_S22),
-					getRequestBigDecimalParameter(CAMPO_CHIAVE_PROGR_S22), lCodContenuto,
-					getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO), getCodUfficioUtenteConnesso(),
-					lFasSiepMod.getSoggetto().getIdSoggetto());
-		}
-
+		if (   getRequestBigDecimalParameter(CAMPO_CHIAVE_ANNO_S22) != null
+		    && getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO) != null
+		    && (   (   getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S22") == 0
+		            && getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U004") != 0) 
+		        || (   getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S12") == 0 
+		            && getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U019") != 0)  
+		           // MEV_2023-35 Si gestisce anche il codice U126
+		        || (   getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S30") == 0 
+		            && getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U126") != 0) 
+		           // MEV_2023-35                
+		       )
+		   ) 
+		{
+		  //String lCodContenuto = ((getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S22") == 0) ? "U004"
+		  //    : "U019");
+		      
+		  String lCodContenuto = "";
+		  if (getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S22") == 0)
+		    lCodContenuto = "U004";
+		  else if (getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S12") == 0)
+		    lCodContenuto = "U019";
+		  // MEV_2023-35 - si aggiunge il provvedimento di esecuzione pene sospese      
+		  else if (getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO).compareTo("S30") == 0)
+		    lCodContenuto = "U126";
+		  // MEV_2023-35 - FINE
+		      
+		  IFascicoloSiusUDS lCtrl = SIUSLookupRemote.getFascicoloSiusUDSRemote();
+		  /* boolean esiste = */lCtrl.ExistProcedimentoEsecuzione(
+		      getRequestBigDecimalParameter(CAMPO_CHIAVE_ANNO_S22),
+		      getRequestBigDecimalParameter(CAMPO_CHIAVE_PROGR_S22), lCodContenuto,
+		      getRequestStringParameter(CAMPO_COD_TIPO_REGISTRO), getCodUfficioUtenteConnesso(),
+		      lFasSiepMod.getSoggetto().getIdSoggetto());
+		}		
+		
 		// Istanzio il Model che incapsula il FascicoloSIUS e il GeneraleProcedimento
 		FascicoloGPModel lFasGPMod = new FascicoloGPModel();
 
@@ -197,8 +215,10 @@ public class ActInsFascicoloDaSiepUDS extends ActionSiap implements ICostantiFas
 		// Impostazione dell'Ufficio Mittente (anche in caso di ESS U019), Utilizzando in appoggio il campo
 		// DescrDefinizione.
 		String aCodUfficioMittente = "";
-		if (getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U004") == 0
-				|| getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U019") == 0) {
+		if (   getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U004") == 0
+			|| getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U019") == 0
+			// MEV_2023-35
+			|| getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U126") == 0) {
 			aDescrUfficioMittente = DecodificheUtils.getDescbyCode(DecodificheManager.getInstance()
 					.getMittenteAtto(), getRequestStringParameter(CAMPO_COD_MITTENTE_ATTO));
 			aCodUfficioMittente = getCodUfficioByCodTipoUfficioDescrComune(DecodificheUtils.getCodebyDesc(

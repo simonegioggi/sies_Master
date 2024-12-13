@@ -82,13 +82,13 @@
     <td class="c"><font class="campo"><%=StringUtils.toStringJSP(criteriRicerca.getChiaveAnnoIniziale(),"____")%>/<%=StringUtils.toStringJSP(criteriRicerca.getChiaveProgrIniziale(),"______")%></font></td>
   </tr>
 	<tr>
-	  <td class="l" width1="15%">Tutti</td>
-	  <td class="c" width1="15%">
+	  <td class="l" width="15%">Tutti</td>
+	  <td class="c" width="15%">
 	  	<% if ("Tutti".equals(criteriRicerca.getTipoRic())) { %>
 	  	<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>V.gif" border="0">
 	  	<% } else {%>&nbsp;<% } %>
 	  </td>
-	  <td class="l" width1="70%" colspan=2></td>
+	  <td class="l" width="70%" colspan=2></td>
 	</tr>
 	<tr>
 	  <td class="l">In scadenza</td>
@@ -97,7 +97,7 @@
 	  	<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>V.gif" border="0">
 	  	<% } else {%>&nbsp;<% } %>
 	  </td>
-	  <td class="L" width1="10%">entro:
+	  <td class="L" width="10%">entro:
 	    Anni <font class="campo"><%=StringUtils.toStringJSP(criteriRicerca.getNumAnni(),"__")%></font>
 	    Mesi <font class="campo"><%=StringUtils.toStringJSP(criteriRicerca.getNumMesi(),"__")%></font>
 	    Giorni <font class="campo"><%=StringUtils.toStringJSP(criteriRicerca.getNumGiorni(),"__")%></font>

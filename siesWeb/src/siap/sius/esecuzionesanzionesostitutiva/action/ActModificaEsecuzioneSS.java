@@ -83,16 +83,22 @@ public class ActModificaEsecuzioneSS extends ActionSiap implements ICostantiEsec
 
 		// Aggiornamento Esecuzione Sanzione Sostitutiva.
 		lESSMod = lESSCtrl.ExModificaEsecuzioneSanzioneSostitutiva(lESSMod);
-
+		
+        // MEV_2023-35 Recupero GP per determinare il contenuto e passarlo al CTRL
+        String lCodContenuto = "";
+	    if (!lESSMod.getGenPridGeneraleProcedimento().equals(null)) {
+            IFascicoloSius lFasCtrl = SIUSLookupRemote.getFascicoloSiusRemote();
+            FascicoloGPModel lFasGPModel = lFasCtrl
+                    .ExRicercaFascicoloByGenProc(lESSMod.getGenPridGeneraleProcedimento());
+            setRequestAttribute("sanzioneUno", lFasGPModel);
+            lCodContenuto = lFasGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento();
+        }
+	      
+	    // MEV_2023-35 si aggiunge il parametro lCodContenuto alla chiamata
 		Vector lVect = lESSCtrl.ExRicercaDettaglioEsecuzioneSS(
 				getRequestBigDecimalParameter(CAMPO_ID_ESECUZIONE_SS),
-				lFasGPMod.getFascicoloSiusModel().getSogIdSoggetto(), this.getCodUfficioUtenteConnesso());
-		if (!lESSMod.getGenPridGeneraleProcedimento().equals(null)) {
-			IFascicoloSius lFasCtrl = SIUSLookupRemote.getFascicoloSiusRemote();
-			FascicoloGPModel lFasGPModel = lFasCtrl
-					.ExRicercaFascicoloByGenProc(lESSMod.getGenPridGeneraleProcedimento());
-			setRequestAttribute("sanzioneUno", lFasGPModel);
-		}
+				lFasGPMod.getFascicoloSiusModel().getSogIdSoggetto(), this.getCodUfficioUtenteConnesso(), lCodContenuto);
+
 
 		setRequestAttribute("sanzioni", lVect);
 

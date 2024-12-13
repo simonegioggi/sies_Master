@@ -4,6 +4,10 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Date;
 
+import f3b.dao.DAOException;
+import f3b.model.GenericModel;
+import f3b.util.DateUtils;
+import f3b.util.StringUtils;
 import siap.dao.SIAPSqlDAO;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.libertaanticipata.model.LicenzaLibAnticipataModel;
@@ -16,24 +20,10 @@ import siap.sius.permesso.model.DepositoDecretoMotivazioniLicenzaModel;
 import siap.sius.permesso.model.LicenzaModel;
 import siap.sius.permesso.model.PermessoModel;
 import siap.sius.permesso.model.ProvvedimentoPermessoLicenzaModel;
-import f3b.dao.DAOException;
-import f3b.model.GenericModel;
-import f3b.util.DateUtils;
-import f3b.util.StringUtils;
 
 /**
- * <p>
- * Title: PermessoSqlDAO
- * </p>
- * <p>
- * Description: Realizza Sql DAO del Fascicolo Sius relativi a permessi.
- * <p>
- * Copyright: Copyright (c) 2004
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ * PermessoSqlDAO - Realizza Sql DAO del Fascicolo Sius relativi a permessi
+ *
  * @version 1.0
  */
 public class PermessoSqlDAO extends SIAPSqlDAO {
@@ -147,7 +137,7 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Settaggio della condizione sul Soggetto
-	 * 
+	 *
 	 * @param aSm
 	 * @return lCondizioni
 	 */
@@ -217,7 +207,7 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Carica i dati dei Fascicoli relativi a permessi.
-	 * 
+	 *
 	 * @return Il Model dei dati selezionati
 	 * @throws DAOException
 	 */
@@ -267,8 +257,7 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Metodo per la ricerca Permessi del soggetto.
-	 * <p>
-	 * 
+	 *
 	 * @param aModel
 	 * @param strCodUfficioUtenteConnesso
 	 * @param strCodUffOTrib
@@ -299,7 +288,7 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Esegue la ricerca dei fascicoli in base al super soggetto
-	 * 
+	 *
 	 * @param soggetto
 	 *            model
 	 */
@@ -418,8 +407,7 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Ritorna query SQL, per la ricerca dei permessi del Soggetto.
-	 * <p>
-	 * 
+	 *
 	 * @param aModel
 	 * @param strCodUfficioUtenteConnesso
 	 * @param strCodUffOTrib
@@ -527,8 +515,7 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Metodo che imposta lo statement per la ricerca dei permessi depositati.
-	 * <p>
-	 * 
+	 *
 	 * @param aIdFascicoloSius
 	 *            IDFascicoloSius
 	 */
@@ -546,19 +533,20 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Metodo che imposta lo statement per la ricerca delle licenze depositate.
-	 * <p>
-	 * 
+	 *
 	 * @param aIdFascicoloSius
 	 *            IDFascicoloSius
 	 */
 	public void ricercaLicenzaDepositata(BigDecimal aIdFascicoloSius) {
+
 		String lStatement = new String();
 
 		lStatement += this.getPermessoLicenzaSqlQuery();
 		lStatement += this.setPermessoLicenzaByIdFasSius(aIdFascicoloSius);
 		// 20110524 - PM : Inclusione codici : 2450-2451-2452-2460-2461 per licenza internati
-
-		lStatement += this.setPermessoLicenzaCodMotivo("'2025','2450','2451','2452','2460','2461'");
+		// MEV_2023-35: aggiungo per Licenza pene sostitutive (LP) i codici 3130, 3150 e 3151
+		lStatement += this.setPermessoLicenzaCodMotivo(
+				"'2025','2450','2451','2452','2460','2461','3130','3150','3151'");
 		lStatement += this.setPermessoLicenzaCondComune();
 
 		setStatement(lStatement);
@@ -566,8 +554,7 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Metodo che imposta statement per ricerca dei Permessi / Licenze Depositati.
-	 * <p>
-	 * 
+	 *
 	 * @param aIdLicLibAnt
 	 *            IDLicLibAnt.
 	 */
@@ -586,8 +573,7 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 	 * impostata è senza decodifica dei codici, praticamente è ridotta all'osso ed è utilizzata solo per
 	 * individuare permesso/licenza depositati e ricavare le info solo del tipo e il relativo id. Il metodo è
 	 * utilizzato nel dettaglio del fascisolo sius.
-	 * <p>
-	 * 
+	 *
 	 * @param aIdFascicoloSius
 	 *            id Fascicolo Sius.
 	 * @return LicenzaLibAnticipataModel.
@@ -596,6 +582,7 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 	 */
 	public LicenzaLibAnticipataModel getTipoPermessoLicenzaDepositata(BigDecimal aIdFascicoloSius)
 			throws DAOException {
+
 		String lStatement = " SELECT " + " LL.ID_LICENZA_LIBANTICIPATA, " + " LL.COD_TIPO_LICENZA "
 				+ " FROM LICENZA_LIBANTICIPATA LL "
 				+ " INNER JOIN EVENTO EV ON EV.ID_EVENTO = LL.EVE_ID_EVENTO "
@@ -604,8 +591,9 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 		lStatement += this.setPermessoLicenzaByIdFasSius(aIdFascicoloSius);
 		// 20110524 PM - Aggiunto codice : "2680", per Permessi Internati
 		// 20110524 PM - Aggiunti codici : "2450,2451,2452,2460,2461", per Licenze per interati.
+		// MEV_2023-35: aggiungo per Licenza pene sostitutive (LP) i codici 3130, 3150 e 3151
 		lStatement += this.setPermessoLicenzaCodMotivo(
-				"'2020','2021','2025','2680','2450'," + "'2451','2452','2460','2461'");
+				"'2020','2021','2025','2680','2450','2451','2452','2460','2461','3130','3150','3151'");
 		lStatement += this.setPermessoLicenzaCondComune();
 
 		setStatement(lStatement);
@@ -649,8 +637,7 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Ritorna select sql per interrogazione Permesso Licenza.
-	 * <p>
-	 * 
+	 *
 	 * @return ritorna la stringa
 	 */
 	protected String getProvvPermessoLicenzaSqlQuery() {
@@ -683,14 +670,14 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Metodo per la ricerca dei provvedimenti permessi e licenze
-	 * <p>
-	 * 
+	 *
 	 * @param aDataIniziale
 	 * @param aDataFinale
 	 * @param aCodMotivo
 	 */
 	public void ricercaProvvedimentiPermessiLicenze(Date aDataIniziale, Date aDataFinale, String aCodMotivo,
 			String aCodUfficio) {
+
 		String lStatement = new String();
 
 		lStatement += this.getProvvPermessoLicenzaSqlQuery();
@@ -707,8 +694,7 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Ritorna il numero di provvedimenti di permessi / licenze
-	 * <p>
-	 * 
+	 *
 	 * @param aDataIniziale
 	 * @param aDataFinale
 	 * @param aCodMotivo
@@ -723,8 +709,7 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Imposta filtro su Codici Motivo.
-	 * <p>
-	 * 
+	 *
 	 * @param aCodici
 	 * @return
 	 */
@@ -734,8 +719,7 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Imposta filtro su IDFascisoloSius presente sull'evento.
-	 * <p>
-	 * 
+	 *
 	 * @param aIdFascicoloSius
 	 * @return
 	 */
@@ -744,9 +728,8 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 	}
 
 	/**
-	 * 
-	 * <p>
-	 * 
+	 * Imposta il Permesso/Licenza per IdLicLibAnt
+	 *
 	 * @param aIdLicLibAnt
 	 * @return
 	 */
@@ -755,21 +738,26 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 	}
 
 	/**
-	 * 
-	 * <p>
-	 * 
+	 * Imposta il Permesso/Licenza valido per tutti
+	 *
 	 * @return
 	 */
 	public String setPermessoLicenzaCondComune() {
-		return " AND EV.COD_TIPO_EVENTO = '01' " + " AND EV.COD_TIPO_PROVVEDIMENTO = '02' "
-				+ " AND EV.COD_ESITO = '0001' " + " AND EV.FLAG_DOCUMENTO_REGISTRATO = 'S' "
-				+ " AND DD.DATA_DEPOSITO IS NOT NULL ";
+
+		return " AND EV.COD_TIPO_EVENTO = '01' AND EV.COD_TIPO_PROVVEDIMENTO = '02' AND "
+				// MEV_2023-35: aggiungo per Licenza pene sostitutive (LP) i codici 3150 e 3151
+				// gli esiti '0006' or '0013'
+				// + "AND EV.COD_ESITO = '0001' "
+				+ "(EV.COD_ESITO IN case when EV.COD_MOTIVO IN ('3150', '3151') then '0006' "
+				+ "else '0001' end OR EV.COD_ESITO IN case "
+				+ "when EV.COD_MOTIVO IN ('3150', '3151') then '0013' else '0001' end) "
+				// FINE MEV_2023-35
+				+ "AND EV.FLAG_DOCUMENTO_REGISTRATO = 'S' AND DD.DATA_DEPOSITO IS NOT NULL ";
 	}
 
 	/**
 	 * Imposta il range di data deposito per condizione di filtro.
-	 * <p>
-	 * 
+	 *
 	 * @param aDataIniziale
 	 *            data iniziale di ricerca.
 	 * @param aDataFinale
@@ -789,7 +777,7 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public String setOrderByDataDeposito() {
@@ -797,7 +785,7 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public String setOrderByDataDepositoChiaveFascicolo() {
@@ -890,9 +878,8 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 	}
 
 	/**
-	 * 
-	 * <p>
-	 * 
+	 * Recupera il modello Permesso/Licenza per provvedimento
+	 *
 	 * @return Il Model di Permesso
 	 * @throws DAOException
 	 */
@@ -944,6 +931,7 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 	public void ricercaLicenzeBySoggetto(SoggettoModel aModel, String strCodUfficioUtenteConnesso,
 			String strCodUffOTrib, String lCodDistretto, String lIncludeRigettati, String lCodLicenza,
 			Date dataDalInCanc, Date dataAlInCanc) {
+
 		String strQuery = "";
 
 		// Costruzione della query parametrizzata.
@@ -960,89 +948,96 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 	protected String getLicenzeBySoggettoSqlQuery(SoggettoModel aModel, String strCodUfficioUtenteConnesso,
 			String strCodUffOTrib, String lCodDistretto, String lIncludeRigettati, String lCodLicenza,
 			Date dataDalInCanc, Date dataAlInCanc) {
+
 		String lStatement = new String();
 
-		lStatement += " SELECT  count(*) NUM_FASCICOLI, SOGG.COGNOME COGNOME, SOGG.NOME NOME, SOGG.DATA_NASCITA DATA_NASCITA, SOGG.DESC_COMUNE_NASCITA_ESTERO DESC_COMUNE_NASCITA_ESTERO,";
-		lStatement += " SOGG.COD_COMUNE_NASCITA COD_COMUNE_NASCITA, DESCR_COM_NASCITA.DESCRIZIONE DESCR_COMUNE_NASCITA, SOGG.COD_PROVINCIA_NASCITA COD_PROVINCIA_NASCITA";
+		lStatement += "SELECT count(*) NUM_FASCICOLI, SOGG.COGNOME COGNOME, SOGG.NOME NOME, "
+				+ "SOGG.DATA_NASCITA DATA_NASCITA, SOGG.DESC_COMUNE_NASCITA_ESTERO DESC_COMUNE_NASCITA_ESTERO, ";
+		lStatement += "SOGG.COD_COMUNE_NASCITA COD_COMUNE_NASCITA, DESCR_COM_NASCITA.DESCRIZIONE "
+				+ "DESCR_COMUNE_NASCITA, SOGG.COD_PROVINCIA_NASCITA COD_PROVINCIA_NASCITA ";
 
 		// paolo cherubini allineo modifiche x supersoggetto 14 settembre 2010
 		// lStatement += " FASC.SOG_ID_SOGGETTO SOG_ID_SOGGETTO, ";
-		lStatement += " ,1 SOG_ID_SOGGETTO ";
-
+		lStatement += ",1 SOG_ID_SOGGETTO";
 		String lSuperSogg = new String();
-		lSuperSogg = ", sogg.COD_FISCALE, sogg.COD_CS, sogg.COD_AFIS, sogg.ANNO_NASCITA, sogg.DATA_NASCITA_PRESUNTA";
-		lSuperSogg += ", sogg.COD_STATO_NASCITA, sogg.NAZIONALITA, sogg.PATERNITA, sogg.COGNOME_MADRE, sogg.NOME_MADRE";
+		lSuperSogg = ", sogg.COD_FISCALE, sogg.COD_CS, sogg.COD_AFIS, sogg.ANNO_NASCITA, "
+				+ "sogg.DATA_NASCITA_PRESUNTA";
+		lSuperSogg += ", sogg.COD_STATO_NASCITA, sogg.NAZIONALITA, sogg.PATERNITA, sogg.COGNOME_MADRE, "
+				+ "sogg.NOME_MADRE";
 		// MERGE v10 COLLAUDO: aggiunta estrazione campi eta' presunta
-		lSuperSogg += ", sogg.SESSO, sogg.ATTO_NASCITA, sogg.MESE_NASCITA, sogg.ETA_PRESUNTA_ANNI, sogg.ETA_PRESUNTA_MESI ";
+		lSuperSogg += ", sogg.SESSO, sogg.ATTO_NASCITA, sogg.MESE_NASCITA, sogg.ETA_PRESUNTA_ANNI, "
+				+ "sogg.ETA_PRESUNTA_MESI ";
 		lStatement += lSuperSogg;
 		// fine
 
-		lStatement += " FROM FASCICOLO_SIUS FASC, SOGGETTO  SOGG, GENERALE_PROCEDIMENTO GP, EVENTO EV, LICENZA_LIBANTICIPATA LLA,";
-		lStatement += " CG_REF_CODES DESCR_OGGETTO_PROCEDIMENTO,UFFICIO UFF,";
-		lStatement += " COMUNE DESCR_COM_UFF, COMUNE DESCR_COM_NASCITA";
-		lStatement += " WHERE FASC.SOG_ID_SOGGETTO = SOGG.ID_SOGGETTO";
-		lStatement += " AND FASC.ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS";
-		lStatement += " AND FASC.ID_FASCICOLO_SIUS = EV.FAS_SIU_ID_FASCICOLO_SIUS";
-		lStatement += " AND EV.ID_EVENTO = LLA.EVE_ID_EVENTO";
-		lStatement += " AND DESCR_OGGETTO_PROCEDIMENTO.RV_DOMAIN = 'OGGETTO_PROCEDIMENTO'";
-		lStatement += " AND GP.COD_OGGETTO_PROCEDIMENTO = DESCR_OGGETTO_PROCEDIMENTO.RV_LOW_VALUE";
-		lStatement += " AND UFF.COD_UFFICIO = FASC.CHIAVE_UFFICIO";
-		lStatement += " AND EV.FLAG_DOCUMENTO_REGISTRATO <> 'A' ";
+		lStatement += "FROM FASCICOLO_SIUS FASC, SOGGETTO  SOGG, GENERALE_PROCEDIMENTO GP, EVENTO EV, "
+				+ "LICENZA_LIBANTICIPATA LLA, ";
+		lStatement += "CG_REF_CODES DESCR_OGGETTO_PROCEDIMENTO,UFFICIO UFF, ";
+		lStatement += "COMUNE DESCR_COM_UFF, COMUNE DESCR_COM_NASCITA ";
+		lStatement += "WHERE FASC.SOG_ID_SOGGETTO = SOGG.ID_SOGGETTO ";
+		lStatement += "AND FASC.ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS ";
+		lStatement += "AND FASC.ID_FASCICOLO_SIUS = EV.FAS_SIU_ID_FASCICOLO_SIUS ";
+		lStatement += "AND EV.ID_EVENTO = LLA.EVE_ID_EVENTO ";
+		lStatement += "AND DESCR_OGGETTO_PROCEDIMENTO.RV_DOMAIN = 'OGGETTO_PROCEDIMENTO' ";
+		lStatement += "AND GP.COD_OGGETTO_PROCEDIMENTO = DESCR_OGGETTO_PROCEDIMENTO.RV_LOW_VALUE ";
+		lStatement += "AND UFF.COD_UFFICIO = FASC.CHIAVE_UFFICIO ";
+		lStatement += "AND EV.FLAG_DOCUMENTO_REGISTRATO <> 'A' ";
 
 		if (lIncludeRigettati.equals("")) {
-			lStatement += " AND (EV.COD_ESITO = '0001' ";
-			lStatement += "   or EV.COD_ESITO = '0013' ";
-			lStatement += "   or EV.COD_ESITO = '0006' )";
+			lStatement += "AND (EV.COD_ESITO = '0001' ";
+			lStatement += "or EV.COD_ESITO = '0013' ";
+			lStatement += "or EV.COD_ESITO = '0006') ";
 		}
 
 		// 20110520 - Commentato - PM
 		/*
-		 * if(lCodLicenza.equals("LC")) { lStatement += " AND (EV.COD_MOTIVO = '2025' "; lStatement +=
-		 * "   or EV.COD_MOTIVO = '2002' "; lStatement += "   or EV.COD_MOTIVO = '2185')"; }
-		 * if(lCodLicenza.equals("RL")) lStatement += " AND EV.COD_MOTIVO = '2002' ";
-		 * if(lCodLicenza.equals("EL")) lStatement += " AND EV.COD_MOTIVO = '2185' ";
+		 * if(lCodLicenza.equals("LC")) { lStatement += "AND (EV.COD_MOTIVO = '2025' "; lStatement +=
+		 * "  or EV.COD_MOTIVO = '2002' "; lStatement += "  or EV.COD_MOTIVO = '2185')"; }
+		 * if(lCodLicenza.equals("RL")) lStatement += "AND EV.COD_MOTIVO = '2002' ";
+		 * if(lCodLicenza.equals("EL")) lStatement += "AND EV.COD_MOTIVO = '2185' ";
 		 */
 
 		// Filtri per Codice Licenza
 		if (lCodLicenza.equals("LC")) { // Inclusione dei COD_MOTIVO per LC (Licenza)
-			lStatement += " AND (EV.COD_MOTIVO = '2025' ";
-			lStatement += "  OR  EV.COD_MOTIVO = '2002' ";
-			lStatement += "  OR  EV.COD_MOTIVO = '2185')";
+			lStatement += "AND (EV.COD_MOTIVO = '2025' ";
+			lStatement += "OR EV.COD_MOTIVO = '2002' ";
+			lStatement += "OR EV.COD_MOTIVO = '2185') ";
 		} else if (lCodLicenza.equals("LI")) { // Inclusione dei COD_MOTIVO per LI (Licenza Internati)
-			lStatement += " AND (EV.COD_MOTIVO = '2450' ";
-			lStatement += "  OR  EV.COD_MOTIVO = '2451' ";
-			lStatement += "  OR  EV.COD_MOTIVO = '2452' ";
-			lStatement += "  OR  EV.COD_MOTIVO = '2460' ";
-			lStatement += "  OR  EV.COD_MOTIVO = '2461')";
-		} else if (lCodLicenza.equals("RL")) { // Inclusione dei COD_MOTIVO per RL (Revoca Licenza) ( Servirà
-												// ? )
-			lStatement += " AND EV.COD_MOTIVO = '2002' ";
+			lStatement += "AND (EV.COD_MOTIVO = '2450' ";
+			lStatement += "OR EV.COD_MOTIVO = '2451' ";
+			lStatement += "OR EV.COD_MOTIVO = '2452' ";
+			lStatement += "OR EV.COD_MOTIVO = '2460' ";
+			lStatement += "OR EV.COD_MOTIVO = '2461') ";
+		} else if (lCodLicenza.equals("RL")) { // Inclusione dei COD_MOTIVO per RL (Revoca Licenza)
+			lStatement += "AND EV.COD_MOTIVO = '2002' ";
 		} else if (lCodLicenza.equals("EL")) { // Inclusione dei COD_MOTIVO per EL (Esclusione Computo)
-												// (Servirà ? )
-			lStatement += " AND EV.COD_MOTIVO = '2185' ";
+			lStatement += "AND EV.COD_MOTIVO = '2185' ";
+		} else if (lCodLicenza.equals("LP")) {
+			// MEV_2023-35: aggiungo Licenza pene sostitutive (LP)
+			lStatement += "AND ((EV.COD_MOTIVO = '3130' AND EV.COD_ESITO = '0001') OR "
+					+ "(EV.COD_MOTIVO in ('3150','3151') AND EV.COD_ESITO in ('0006','0013'))) ";
 		}
 
 		if (dataDalInCanc != null) {
-			lStatement += " AND EV.DATA_EMISSIONE >= TO_DATE('"
+			lStatement += "AND EV.DATA_EMISSIONE >= TO_DATE('"
 					+ DateUtils.getDateToString(dataDalInCanc, "ddMMyyyy") + "', 'DDMMYYYY') ";
 		}
 		if (dataAlInCanc != null) {
-			lStatement += " AND EV.DATA_EMISSIONE <= TO_DATE('"
+			lStatement += "AND EV.DATA_EMISSIONE <= TO_DATE('"
 					+ DateUtils.getDateToString(dataAlInCanc, "ddMMyyyy") + "', 'DDMMYYYY') ";
 		}
 		if (lCodDistretto.length() > 1) {
-			lStatement += " AND FASC.CHIAVE_UFFICIO in (select uff.cod_ufficio from ufficio where uff.COD_DISTRETTO='"
-					+ lCodDistretto + "')";
+			lStatement += "AND FASC.CHIAVE_UFFICIO in (select uff.cod_ufficio from ufficio where "
+					+ "uff.COD_DISTRETTO = '" + lCodDistretto + "') ";
 		} else if (!strCodUffOTrib.equals("")) {
-			lStatement += " AND FASC.CHIAVE_UFFICIO in ('" + strCodUffOTrib + "','"
-					+ strCodUfficioUtenteConnesso + "')";
-		} else if (lCodDistretto.length() != 1) // Nella ricerca per tutto il DB viene passato
-												// lCodDistretto="3"
-		{
-			lStatement += " AND FASC.CHIAVE_UFFICIO ='" + strCodUfficioUtenteConnesso + "'";
+			lStatement += "AND FASC.CHIAVE_UFFICIO in ('" + strCodUffOTrib + "', '"
+					+ strCodUfficioUtenteConnesso + "') ";
+		} else if (lCodDistretto.length() != 1) {
+			// Nella ricerca per tutto il DB viene passato lCodDistretto="3"
+			lStatement += "AND FASC.CHIAVE_UFFICIO = '" + strCodUfficioUtenteConnesso + "' ";
 		}
-		lStatement += " AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE";
-		lStatement += " AND SOGG.COD_COMUNE_NASCITA = DESCR_COM_NASCITA.COD_COMUNE ";
+		lStatement += "AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE ";
+		lStatement += "AND SOGG.COD_COMUNE_NASCITA = DESCR_COM_NASCITA.COD_COMUNE";
 
 		return lStatement;
 	}
@@ -1135,12 +1130,14 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 			lStatement += "  OR  EV.COD_MOTIVO = '2452' ";
 			lStatement += "  OR  EV.COD_MOTIVO = '2460' ";
 			lStatement += "  OR  EV.COD_MOTIVO = '2461')";
-		} else if (lCodLicenza.equals("RL")) { // Inclusione dei COD_MOTIVO per RL (Revoca Licenza) ( Servirà
-												// ? )
+		} else if (lCodLicenza.equals("RL")) { // Inclusione dei COD_MOTIVO per RL (Revoca Licenza)
 			lStatement += " AND EV.COD_MOTIVO = '2002' ";
 		} else if (lCodLicenza.equals("EL")) { // Inclusione dei COD_MOTIVO per EL (Esclusione Computo)
-												// (Servirà ? )
 			lStatement += " AND EV.COD_MOTIVO = '2185' ";
+		} else if (lCodLicenza.equals("LP")) {
+			// MEV_2023-35: aggiungo Licenza pene sostitutive (LP)
+			lStatement += "AND ((EV.COD_MOTIVO = '3130' AND EV.COD_ESITO = '0001') OR "
+					+ "(EV.COD_MOTIVO in ('3150','3151') AND EV.COD_ESITO in ('0006','0013'))) ";
 		}
 
 		if (dataDalInCanc != null) {

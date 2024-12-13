@@ -269,13 +269,12 @@ if (!isTitoliEsecutivi.equalsIgnoreCase("true")) {
 </div>
 </div>
   <br>
-	<table style="width: 95%;">
-   <tr>
-      <td class="l" width="60%" >Ulteriore descrizione della decisione  </td>
-      <td class="l">
+<table style="width: 95%;">
+   	<tr>
+		<td class="l" width="60%" >Ulteriore descrizione della decisione  </td>
+      	<td class="l">
         <td class="l"><Textarea title="Note" name="<%=ICostantiTenoreSige.CAMPO_NOTE%>"   cols=88 rows=3><%=lNote%></Textarea></td>
-      </td>
-    </tr>
+	</tr>
 </table>
 <% if (dati != null && dati.size() > 0) {%>
   <br>

@@ -7,6 +7,7 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
 import siap.sige.fascicolo.action.ICostantiFascicoloSige;
 import siap.sige.fascicolo.controller.IFascicoloSige;
 import siap.sige.fascicolo.model.FascicoloSigeEstesoModel;
@@ -19,21 +20,15 @@ import siap.sige.provvedimento.model.ProvvedimentoSigeEventoModel;
 import siap.sige.provvedimento.model.ProvvedimentoSigeModel;
 import siap.sige.util.SIGELookupRemote;
 import siap.sige.web.ActionSige;
-import f3b.log.LogF3B;
 
 /**
- * <p>
- * Title: ActRicercaProvvedimentii
- * </p>
- * <p>
- * Description: Azione specializzazione per la ricerca dei Provvedimenti legati al fascicolo SIGE.
- * <p>
- * Copyright: Copyright (c) 2009
- * </p>
- * <p>
- * Company:
- * </p>
- * 
+ * ActRicercaProvvedimenti - Azione specializzata per la ricerca dei Provvedimenti legati al fascicolo SIGE
+ * <<<<<<< HEAD
+ *
+ * =======
+ *
+ * >>>>>>> MEV_2024_092_FASE-1
+ *
  * @version 1.0
  */
 public class ActRicercaProvvedimenti extends ActionSige implements ICostantiProvvedimentoSige {
@@ -63,7 +58,6 @@ public class ActRicercaProvvedimenti extends ActionSige implements ICostantiProv
 			siesLogger.debug("Ricerca Provvedimendi da ID FASCICOLO->" + lIdFascicolo);
 			IFascicoloSige lCtrlFas = SIGELookupRemote.getFascicoloSigeRemote();
 			lFasEsteso = lCtrlFas.ExRicercaEstesaFascicoloSigeByKey(lIdFascicolo);
-
 		} else {
 			lFasEsteso = this.getFascicoloSigeEstesoInSessione();
 			lIdFascicolo = lFasEsteso.getFascicoloSige().getIdFascicoloSige();
@@ -82,14 +76,12 @@ public class ActRicercaProvvedimenti extends ActionSige implements ICostantiProv
 		setRequestAttribute("provvedimenti", lVect);
 
 		// Ricerca dell'eventuale prima impugnazione valida per ciascun provvedimento
-
 		IImpugnazioneSige ctrIS = SIGELookupRemote.getImpugnazioneSigeRemote();
-		Vector<ImpugnazioneSigeModel> impugnazioniProvvedimento = new Vector<ImpugnazioneSigeModel>();
-		Vector<ImpugnazioneSigeModel> impugnazioniProvvedimenti = new Vector<ImpugnazioneSigeModel>();
+		Vector<ImpugnazioneSigeModel> impugnazioniProvvedimento = new Vector<>();
+		Vector<ImpugnazioneSigeModel> impugnazioniProvvedimenti = new Vector<>();
 		for (ProvvedimentoSigeEventoModel lProvEve : lVect) {
-
-			impugnazioniProvvedimento = ctrIS.ExRicercaImpugnazioniProvvedimentoSige(lProvEve
-					.getProvvedimento().getIdProvvedimentoSige());
+			impugnazioniProvvedimento = ctrIS.ExRicercaImpugnazioniProvvedimentoSige(
+					lProvEve.getProvvedimento().getIdProvvedimentoSige());
 			if (impugnazioniProvvedimento != null && impugnazioniProvvedimento.size() > 0)
 				impugnazioniProvvedimenti.addElement(impugnazioniProvvedimento.firstElement());
 		}
@@ -97,15 +89,15 @@ public class ActRicercaProvvedimenti extends ActionSige implements ICostantiProv
 		// fine Ricerca
 
 		// Controlla se il fascicolo e' modificabile (in questo contesto la modificabilità va impostata per
-		// tutti
-		// i fascicoli di competenza, tranne quelli con provvedimento definitorio con deposito validato).
+		// tutti i fascicoli di competenza, tranne quelli con provvedimento definitorio con deposito
+		// validato).
 		String lModificabile = "NO";
 		boolean isFascModificabile = false;
 
 		FascicoloSigeUtils lFasUtil = new FascicoloSigeUtils();
 
-		if (getCodUfficioUtenteConnesso().equalsIgnoreCase(lFasEsteso.getFascicoloSige().getChiaveUfficio())) {
-
+		if (getCodUfficioUtenteConnesso()
+				.equalsIgnoreCase(lFasEsteso.getFascicoloSige().getChiaveUfficio())) {
 			// @emma - inizio 10/11/2016 introdotto nuovo controllo per rendere modificabile il fascicolo
 			// viene richiesto che se per il provvedimento definitorio esiste un'opposizione/ricorso con esito
 			// uguale ad Accoglie (Fissa udienza) (COD_TENORE_DECISIONE = 10)
@@ -118,11 +110,11 @@ public class ActRicercaProvvedimenti extends ActionSige implements ICostantiProv
 				List<ImpugnazioneSigeModel> impugn = provvDefin.getImpugnazioni();
 				for (Iterator iterator = impugn.iterator(); iterator.hasNext();) {
 					ImpugnazioneSigeModel impugnazioneSigeModel = (ImpugnazioneSigeModel) iterator.next();
-					if (impugnazioneSigeModel.getCodTenoreDecisione() != null
-							&& (impugnazioneSigeModel.getCodTenoreDecisione().equals(
-									ICostantiImpugnazioneSige.COD_ESITO_ACCOGLIE_FISSA_UDIENZA) || impugnazioneSigeModel
-									.getCodTenoreDecisione()
-									.equals(ICostantiImpugnazioneSige.COD_ESITO_CONVERTE_RICORSO_IN_OPPOSIZIONE))) {
+					if (impugnazioneSigeModel.getCodTenoreDecisione() != null && (impugnazioneSigeModel
+							.getCodTenoreDecisione()
+							.equals(ICostantiImpugnazioneSige.COD_ESITO_ACCOGLIE_FISSA_UDIENZA)
+							|| impugnazioneSigeModel.getCodTenoreDecisione().equals(
+									ICostantiImpugnazioneSige.COD_ESITO_CONVERTE_RICORSO_IN_OPPOSIZIONE))) {
 						isFascModificabile = true;
 					}
 				}
@@ -134,14 +126,14 @@ public class ActRicercaProvvedimenti extends ActionSige implements ICostantiProv
 				lModificabile = "NO";
 			else
 				lModificabile = "SI";
-
 		}
-
 		setRequestAttribute("isModificabile", lModificabile);
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("ActRicercaProvvedimenti : fine");
+
+		// pagina di ritorno
 		return PG_ELENCOPROVVEDIMENTI;
 	}
 

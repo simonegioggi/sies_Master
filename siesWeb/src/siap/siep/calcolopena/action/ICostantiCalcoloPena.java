@@ -59,6 +59,15 @@ public interface ICostantiCalcoloPena {
   public static final String CAMPO_MESE_DATA_FINE_INT = "mmAlINT";
   public static final String CAMPO_ANNO_DATA_FINE_INT = "aaAlINT";
   
+  //MEV_2024-092
+  public static final String CAMPO_NUM_ANNI_PRESOFFERTO   = "NumAnniPresofferto";
+  public static final String CAMPO_NUM_MESI_PRESOFFERTO   = "NumMesiPresofferto";
+  public static final String CAMPO_NUM_GIORNI_PRESOFFERTO = "NumGiorniPresofferto";
+  
+  public static final String CAMPO_POSIZIONE_GIURIDICA = "PosizioneGiuridica";
+  public static final String POSIZIONE_GIURIDICA_LIBERO = "L";
+  public static final String POSIZIONE_GIURIDICA_DETENUTO = "D";
+  //MEV_2024-092 - FINE
   
   public static final String PG_F5 = IWebConstants.ROOT_DIR + "files/siap/siep/calcolopena/LoadF5.jsp";
   
@@ -82,4 +91,8 @@ public interface ICostantiCalcoloPena {
   public static final String PG_LOAD_INS_OS_NUOVO_RES_PENA_RIDET_PENA_RIDIM_LA = IWebConstants.ROOT_DIR + "files/siap/siep/calcolopena/LoadInsOSNuovoResPenaRidetPenaRidimLA.jsp";
   public static final String PG_LOAD_DETT_OS_NUOVO_RES_PENA_RIDET_PENA_RIDIM_LA = IWebConstants.ROOT_DIR + "files/siap/siep/calcolopena/DettOSNuovoResPenaRidetPenaRidimLA.jsp";
   
+  // MEV_2024-092
+  public static final String PG_LOAD_CALCOLOPENA_DL92 = IWebConstants.ROOT_DIR + "files/siap/siep/calcolopena/LoadCalcoloPenaDL92.jsp";
+  public static final String PG_CALCOLOPENA_DL92      = IWebConstants.ROOT_DIR + "files/siap/siep/calcolopena/EsitoCalcoloPenaDL92.jsp";
+  // MEV_2024-092 - FINE
 }

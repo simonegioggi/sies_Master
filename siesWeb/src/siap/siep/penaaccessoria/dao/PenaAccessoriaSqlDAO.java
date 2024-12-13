@@ -13,18 +13,7 @@ import siap.siep.penaaccessoria.model.PenaAccessoriaModel;
 import siap.sige.penaaccessoria.model.PenaAccSigeModel;
 
 /**
- * <p>
- * Title: PenaAccessoriaSqlDAO
- * </p>
- * <p>
- * Description: Classe SqlDAO che rappresenta la tabella PenaAccessoria
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * PenaAccessoriaSqlDAO - Classe SqlDAO che rappresenta la tabella PenaAccessoria
  * 
  * @version 1.0
  */

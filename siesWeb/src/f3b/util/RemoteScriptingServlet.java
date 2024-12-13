@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  * <pre>
  * public class RSExample extends RemoteScriptingServlet {
  * 	public static String getSubcategories(String catstr) throws Exception {
- * 		String retval = &quot;&quot;;
+ * 		String retval = &quot;&quot;
  * 		// ... implementation details
  * 		return retval;
  * 	}

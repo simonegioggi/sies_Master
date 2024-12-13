@@ -6,103 +6,108 @@
 <%@ page import="siap.sico.libertaanticipata.model.LicenzaLibAnticipataModel"%>
 <%@ page import="siap.sius.depositodecreto.model.DepositoDecretoModel"%>
 
-<%--jsp:useBean id="permessoDepDecr"	scope="request" class="siap.sius.permesso.model.PermessoDepositoDecretoModel"/--%>
 <jsp:useBean id="permessoDepDecr"	scope="request" class="siap.sius.permesso.model.DepositoDecretoMotivazioniLicenzaModel"/>
 
 <%
-	String lDescrizione = "",lCodTipoLicenza = "", lDescrMotivo = "";
-	lCodTipoLicenza = permessoDepDecr.getLicenza().getCodTipoLicenza();
-	lDescrMotivo = permessoDepDecr.getEvento().getDescrMotivo();
-	if( lCodTipoLicenza.equalsIgnoreCase(ICostantiLicenzaLibanticipata.LICENZA) )
-	  lDescrizione = lDescrMotivo + " concessa con:";
-	else if( lCodTipoLicenza.equalsIgnoreCase(ICostantiLicenzaLibanticipata.PERMESSO_PREMIO) )
-	  lDescrizione = lDescrMotivo + " concesso con:";  
+String lDescrizione = "", lCodTipoLicenza = "", lDescrMotivo = "";
+lCodTipoLicenza = permessoDepDecr.getLicenza().getCodTipoLicenza();
+lDescrMotivo = permessoDepDecr.getEvento().getDescrMotivo();
+// MEV_2023-35: aggiungo Licenza pene sostitutive (LP)
+if (lCodTipoLicenza.equalsIgnoreCase(ICostantiLicenzaLibanticipata.LICENZA)
+		|| lCodTipoLicenza.equalsIgnoreCase(ICostantiLicenzaLibanticipata.LICENZA_INTERNATO)
+		|| lCodTipoLicenza.equalsIgnoreCase(ICostantiLicenzaLibanticipata.LICENZA_PENE_SOSTITUTIVE))
+	lDescrizione = lDescrMotivo + " concessa con:";
+else if (lCodTipoLicenza.equalsIgnoreCase(ICostantiLicenzaLibanticipata.PERMESSO_PREMIO)
+		|| lCodTipoLicenza.equalsIgnoreCase(ICostantiLicenzaLibanticipata.PERMESSO_INTERNATO))
+	lDescrizione = lDescrMotivo + " concesso con:";  
 %>	
-
-	<table cellspacing=2 cellpadding=2 width="95%">
+<table cellspacing="2" cellpadding="2" width="95%">
   	<tr>
-  		<td class="Titolo" colspan=6><%=lDescrizione%></td>
+  		<td class="Titolo" colspan="6"><%=lDescrizione%></td>
   	</tr>
 <%
-//    LicenzaLibAnticipataModel lLic = permessoDepDecr.getLicenzaLibAnticipata();
-		LicenzaLibAnticipataModel lLic = permessoDepDecr.getLicenza();
-//		DepositoDecretoModel lDep = permessoDepDecr.getDepositoDecretoMotivazioni().getDepositoDecreto();
-		DepositoDecretoModel lDep = permessoDepDecr.getDepositoDecreto();
+// LicenzaLibAnticipataModel lLic = permessoDepDecr.getLicenzaLibAnticipata();
+LicenzaLibAnticipataModel lLic = permessoDepDecr.getLicenza();
+// DepositoDecretoModel lDep = permessoDepDecr.getDepositoDecretoMotivazioni().getDepositoDecreto();
+DepositoDecretoModel lDep = permessoDepDecr.getDepositoDecreto();
 %>
     <tr>
-    	<td class="l">DECRETO N.</td>
-      <td class="l">
-      	<font class="campo"><%=StringUtils.toStringJSP(lDep.getAnnoS72() + "/" + lDep.getNumS72())%></font>
-      </td>
+		<td class="l" width="20%">DECRETO N.</td>
+      	<td class="l">
+      		<font class="campo"><%=StringUtils.toStringJSP(lDep.getAnnoS72() + "/" + lDep.getNumS72())%></font>
+      	</td>
     </tr>
-          
     <tr>
-      <td class="l">Data Emissione </td>
-      <td class="l">
-      	<font class="campo"><%=DateUtils.getDateToString(lDep.getDataEmissione(), "dd/MM/yyyy")%></font>
-      </td>
+      	<td class="l">Data Emissione </td>
+      	<td class="l">
+      		<font class="campo"><%=DateUtils.getDateToString(lDep.getDataEmissione(), "dd/MM/yyyy")%></font>
+      	</td>
     </tr>
-          
     <tr>
-      <td class="l">Data Deposito </td>
-      <td class="l">
-      	<font class="campo"><%=DateUtils.getDateToString(lDep.getDataDeposito(), "dd/MM/yyyy")%></font>
-      </td>
+      	<td class="l">Data Deposito </td>
+      	<td class="l">
+      		<font class="campo"><%=DateUtils.getDateToString(lDep.getDataDeposito(), "dd/MM/yyyy")%></font>
+      	</td>
     </tr>
-
     <tr>
     	<td class="l">Durata</td>
-      <td class="l">
-      	<% if(lLic.getNumeroGiorni() != null) {%> giorni <font class="campo"><%=StringUtils.toStringJSP(lLic.getNumeroGiorni(),"-") + " "%> </font> <% } if(lLic.getNumeroOre() != null) {%> ore <font class="campo"> <%=" " + StringUtils.toStringJSP(lLic.getNumeroOre(),"-")%> </font> <%}%>
-      </td>
-    </tr>
-
-    <tr>
-<% 
-		if( lCodTipoLicenza.equalsIgnoreCase(ICostantiLicenzaLibanticipata.LICENZA) )
-		{
-%>
-			<td class="l">Luogo Licenza</td>
+      	<td class="l">
 <%
-		}
-		else if( lCodTipoLicenza.equalsIgnoreCase(ICostantiLicenzaLibanticipata.PERMESSO_PREMIO) )
-		{
+if (lLic.getNumeroGiorni() != null) {
 %>
-			<td class="l">Luogo Permesso</td>
+			Giorni <font class="campo"><%=StringUtils.toStringJSP(lLic.getNumeroGiorni(),"-") + " "%></font> 
+<%
+}
+if (lLic.getNumeroOre() != null) {
+%>
+			Ore <font class="campo"> <%=" " + StringUtils.toStringJSP(lLic.getNumeroOre(),"-")%></font> 
+<%
+}
+%>
+      	</td>
+    </tr>
+    <tr>
+<%
+// MEV_2023-35: aggiungo Licenza pene sostitutive (LP)
+if (lCodTipoLicenza.equalsIgnoreCase(ICostantiLicenzaLibanticipata.LICENZA)
+		|| lCodTipoLicenza.equalsIgnoreCase(ICostantiLicenzaLibanticipata.LICENZA_INTERNATO)
+		|| lCodTipoLicenza.equalsIgnoreCase(ICostantiLicenzaLibanticipata.LICENZA_PENE_SOSTITUTIVE)) {
+%>
+		<td class="l">Luogo Licenza</td>
+<%
+} else if (lCodTipoLicenza.equalsIgnoreCase(ICostantiLicenzaLibanticipata.PERMESSO_PREMIO)
+		|| lCodTipoLicenza.equalsIgnoreCase(ICostantiLicenzaLibanticipata.PERMESSO_INTERNATO)) {
+%>
+		<td class="l">Luogo Permesso</td>
 <% 
-		}
+}
 %>		
-      <td class="l"> 
-      	<font class="campo"><%=StringUtils.toStringJSP(lLic.getLuogoSvolgimentoProva(),"-")%></font>
-      </td>
+      	<td class="l"> 
+      		<font class="campo"><%=StringUtils.toStringJSP(lLic.getLuogoSvolgimentoProva(),"-")%></font>
+      	</td>
    	</tr>
-    
     <tr>
-      <td class="l">Presenza Scorta</td>
+      	<td class="l">Presenza Scorta</td>
 <%         
-					if (lLic.getFlagScorta().toUpperCase().compareTo("N") == 0)
-          {
+if (lLic.getFlagScorta().toUpperCase().compareTo("N") == 0) {
 %>							
-						<td class="l">
-							<font class="campo">No</font>
-						</td>
+		<td class="l">
+			<font class="campo">No</font>
+		</td>
 <%
-          }
-          else
-          {
+} else {
 %>
-           	<td class="l">
-           		<font class="campo">Si</font>
-           	</td>
+       	<td class="l">
+       		<font class="campo">Si</font>
+       	</td>
 <%
-					}
+}
 %>
     </tr>
-
     <tr>
-      <td class="l">Motivazione provvedimento</td>
-      <td class="l">
-      	<font class="campo"><%=StringUtils.toStringJSP(lDep.getNote(),"-")%></font>
-      </td>
-    </tr>
- </table>  
+      	<td class="l">Motivazione provvedimento</td>
+      	<td class="l">
+      		<font class="campo"><%=StringUtils.toStringJSP(lDep.getNote(), "-")%></font>
+      	</td>
+	</tr>
+ </table>

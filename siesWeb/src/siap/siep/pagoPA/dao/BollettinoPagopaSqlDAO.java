@@ -52,7 +52,6 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 				+ " WHERE 1 = 1"
 				+ "	AND BP.RAT_ID_RATEIZZAZIONE_PP = R.ID_RATEIZZAZIONE_PP"
 				+ "	AND R.EVE_ID_EVENTO = E.ID_EVENTO ";  
-				//+ "	AND E.FLAG_DOCUMENTO_REGISTRATO <> 'A'";
 
 		// valore di ritorno
 		return s;

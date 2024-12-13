@@ -11,17 +11,16 @@
 <%@ page import="siap.sius.titoloesecutivo.action.ICostantiTitoloEsecutivo"%>
 <%@ page import="siap.sico.ufficio.model.UfficioAccorpatoModel"%>
 
-<jsp:useBean id="fascicolo" scope="session" class="siap.siep.fascicolo.model.FascicoloSiepModel"/>
-<jsp:useBean id="AutoritaCompetente" scope="request" class="java.lang.String"/>
-
-<jsp:useBean id="modalita" scope="request" class="java.lang.String"/>
-<jsp:useBean id="autoritaConv" scope="request" class="java.lang.String"/>
-<jsp:useBean id="ufficiAccorpati" scope="request" class="java.util.Vector"/>
-<jsp:useBean id="FascSiepTrovato" scope="request" class="siap.siep.fascicolo.model.FascicoloSiepModel"/>
-<jsp:useBean id="LuogoUtenteConnesso" scope="request" class="java.lang.String"/>
-<%-- MAC20191202018-MG-13/12/2019: modificato il tipo oggetto da String a BigDecimale --%>
-<jsp:useBean id="multaResidua" scope="request" class="java.math.BigDecimal"/>
-<jsp:useBean id="ammendaResidua" scope="request" class="java.math.BigDecimal"/>
+<jsp:useBean id="fascicolo" 			scope="session" class="siap.siep.fascicolo.model.FascicoloSiepModel"/>
+<jsp:useBean id="AutoritaCompetente" 	scope="request" class="java.lang.String"/>
+<jsp:useBean id="modalita" 				scope="request" class="java.lang.String"/>
+<jsp:useBean id="autoritaConv" 			scope="request" class="java.lang.String"/>
+<jsp:useBean id="ufficiAccorpati" 		scope="request" class="java.util.Vector"/>
+<jsp:useBean id="FascSiepTrovato" 		scope="request" class="siap.siep.fascicolo.model.FascicoloSiepModel"/>
+<jsp:useBean id="LuogoUtenteConnesso" 	scope="request" class="java.lang.String"/>
+<%-- MAC20191202018-MG-13/12/2019: modificato il tipo oggetto da String a BigDecimal --%>
+<jsp:useBean id="multaResidua" 			scope="request" class="java.math.BigDecimal"/>
+<jsp:useBean id="ammendaResidua" 		scope="request" class="java.math.BigDecimal"/>
 <%-- FINE MAC20191129017-MG-04/12/2019: aggiunti oggetti --%>
 <%
 //==============================================================================
@@ -32,8 +31,8 @@
 
 // 30/01/2015 MEV023 Conversioni Pene Pecuniarie
 int lFasPro = 0;
-if (fascicolo!=null && fascicolo.getChiaveProgr()!=null)
-		lFasPro = fascicolo.getChiaveProgr().intValue();
+if (fascicolo!=null && fascicolo.getChiaveProgr() != null)
+	lFasPro = fascicolo.getChiaveProgr().intValue();
 
 String aIdFascicolo = "";
 String aChiaveAnno = "";
@@ -126,7 +125,7 @@ function ChoosePopup() {
 	var indiceTipoUfficio = selectTipoUfficio.options.selectedIndex;
 	var codTipoUfficio = selectTipoUfficio[indiceTipoUfficio].value;
 	if (codTipoUfficio == 'PM' || codTipoUfficio == 'PMM'){
-	 ListaUffici('LoadInserisciRichiestaConversione','<%=ICostantiTitoloEsecutivo.CAMPO_SEDE_UFF_FASCICOLO_SIEP%>');
+		ListaUffici('LoadInserisciRichiestaConversione','<%=ICostantiTitoloEsecutivo.CAMPO_SEDE_UFF_FASCICOLO_SIEP%>');
 	} else if (codTipoUfficio == 'PGCAP'){
 		ListaDistretti('LoadInserisciRichiestaConversione','<%=ICostantiTitoloEsecutivo.CAMPO_SEDE_UFF_FASCICOLO_SIEP%>');
 	}
@@ -166,77 +165,70 @@ function onload() {
     	document.LoadInserisciRichiestaConversione.<%=IWebConstants.ACTION_FIELD%>.value="siap.siep.penapecuniaria.action.ActInserisciRichiestaConversione";		  
   	}
 }
-
-
   
-//30/01/2015 Controllo campi Fascicolo SIEP collegato
+// 30/01/2015 Controllo campi Fascicolo SIEP collegato
 function VerifyRicerca() {
-  var fasPro = <%=lFasPro%>;
+	var fasPro = <%=lFasPro%>;
 	if (fasPro > 70000 && fasPro < 80000) {
-    // Impostazione action di ricerca.
-    document.LoadInserisciRichiestaConversione.<%=IWebConstants.ACTION_FIELD%>.value="siap.siep.penapecuniaria.action.ActRicercaFascicoloSiep";
-	if (document.LoadInserisciRichiestaConversione.<%=ICostantiTitoloEsecutivo.CAMPO_ANNO_FASCICOLO_SIEP%>.value.length < 4
-			|| document.LoadInserisciRichiestaConversione.<%=ICostantiTitoloEsecutivo.CAMPO_ANNO_FASCICOLO_SIEP%>.value < 1900
-			|| isNaN(document.LoadInserisciRichiestaConversione.<%=ICostantiTitoloEsecutivo.CAMPO_ANNO_FASCICOLO_SIEP%>.value)) {
-      alert ("Anno Fascicolo SIEP Non Valido");
-      document.LoadInserisciRichiestaConversione.<%=ICostantiTitoloEsecutivo.CAMPO_ANNO_FASCICOLO_SIEP%>.focus();
-      document.LoadInserisciRichiestaConversione.CONFERMA.disabled=true;
-      return false;
-    }
-	if (document.LoadInserisciRichiestaConversione.<%=ICostantiTitoloEsecutivo.CAMPO_PROGR_FASCICOLO_SIEP_ORIGIN%>.value.length <= 0
-			|| document.LoadInserisciRichiestaConversione.<%=ICostantiTitoloEsecutivo.CAMPO_PROGR_FASCICOLO_SIEP_ORIGIN%>.value < 0
-			|| isNaN(document.LoadInserisciRichiestaConversione.<%=ICostantiTitoloEsecutivo.CAMPO_PROGR_FASCICOLO_SIEP_ORIGIN%>.value)) {
-      alert ("Numero Fascicolo SIEP Non Valido");
-      document.LoadInserisciRichiestaConversione.<%=ICostantiTitoloEsecutivo.CAMPO_PROGR_FASCICOLO_SIEP_ORIGIN%>.focus();
-      document.LoadInserisciRichiestaConversione.CONFERMA.disabled=true;
-      return false;
-    }
-    // Controllo obbligatorietà autorità Competente ed Emittente.
-    codUfficio = document.LoadInserisciRichiestaConversione.<%=ICostantiTitoloEsecutivo.CAMPO_COD_TIPO_UFF_FASCICOLO_SIEP%>.value;
-	if (codUfficio == "-") {
-      alert("Il tipo autorità competente è un campo obbligatorio");
-      document.LoadInserisciRichiestaConversione.<%=ICostantiTitoloEsecutivo.CAMPO_COD_TIPO_UFF_FASCICOLO_SIEP%>.focus();
-      document.LoadInserisciRichiestaConversione.CONFERMA.disabled=true;
-      return false;
-    }
-	if (document.LoadInserisciRichiestaConversione.<%=ICostantiTitoloEsecutivo.CAMPO_SEDE_UFF_FASCICOLO_SIEP%>.value == "") {
-      alert("Il luogo per l'autorità competente è un campo obbligatorio");
-      document.LoadInserisciRichiestaConversione.<%=ICostantiTitoloEsecutivo.CAMPO_SEDE_UFF_FASCICOLO_SIEP%>.focus();
-      document.LoadInserisciRichiestaConversione.CONFERMA.disabled=true;
-      return false;
-    }
-  }
-  return true;
+	    // Impostazione action di ricerca.
+	    document.LoadInserisciRichiestaConversione.<%=IWebConstants.ACTION_FIELD%>.value="siap.siep.penapecuniaria.action.ActRicercaFascicoloSiep";
+		if (document.LoadInserisciRichiestaConversione.<%=ICostantiTitoloEsecutivo.CAMPO_ANNO_FASCICOLO_SIEP%>.value.length < 4
+				|| document.LoadInserisciRichiestaConversione.<%=ICostantiTitoloEsecutivo.CAMPO_ANNO_FASCICOLO_SIEP%>.value < 1900
+				|| isNaN(document.LoadInserisciRichiestaConversione.<%=ICostantiTitoloEsecutivo.CAMPO_ANNO_FASCICOLO_SIEP%>.value)) {
+			alert ("Anno Fascicolo SIEP Non Valido");
+			document.LoadInserisciRichiestaConversione.<%=ICostantiTitoloEsecutivo.CAMPO_ANNO_FASCICOLO_SIEP%>.focus();
+			document.LoadInserisciRichiestaConversione.CONFERMA.disabled=true;
+			return false;
+	    }
+		if (document.LoadInserisciRichiestaConversione.<%=ICostantiTitoloEsecutivo.CAMPO_PROGR_FASCICOLO_SIEP_ORIGIN%>.value.length <= 0
+				|| document.LoadInserisciRichiestaConversione.<%=ICostantiTitoloEsecutivo.CAMPO_PROGR_FASCICOLO_SIEP_ORIGIN%>.value < 0
+				|| isNaN(document.LoadInserisciRichiestaConversione.<%=ICostantiTitoloEsecutivo.CAMPO_PROGR_FASCICOLO_SIEP_ORIGIN%>.value)) {
+			alert ("Numero Fascicolo SIEP Non Valido");
+			document.LoadInserisciRichiestaConversione.<%=ICostantiTitoloEsecutivo.CAMPO_PROGR_FASCICOLO_SIEP_ORIGIN%>.focus();
+			document.LoadInserisciRichiestaConversione.CONFERMA.disabled=true;
+			return false;
+	    }
+	    // Controllo obbligatorietà autorità Competente ed Emittente.
+	    codUfficio = document.LoadInserisciRichiestaConversione.<%=ICostantiTitoloEsecutivo.CAMPO_COD_TIPO_UFF_FASCICOLO_SIEP%>.value;
+		if (codUfficio == "-") {
+			alert("Il tipo autorità competente è un campo obbligatorio");
+			document.LoadInserisciRichiestaConversione.<%=ICostantiTitoloEsecutivo.CAMPO_COD_TIPO_UFF_FASCICOLO_SIEP%>.focus();
+			document.LoadInserisciRichiestaConversione.CONFERMA.disabled=true;
+			return false;
+	    }
+		if (document.LoadInserisciRichiestaConversione.<%=ICostantiTitoloEsecutivo.CAMPO_SEDE_UFF_FASCICOLO_SIEP%>.value == "") {
+			alert("Il luogo per l'autorità competente è un campo obbligatorio");
+			document.LoadInserisciRichiestaConversione.<%=ICostantiTitoloEsecutivo.CAMPO_SEDE_UFF_FASCICOLO_SIEP%>.focus();
+			document.LoadInserisciRichiestaConversione.CONFERMA.disabled=true;
+			return false;
+	    }
+	}
+  	return true;
 } 
     
 function radioClasseI() {
     var nodeDatiClasseI;
-
-    nodeDatiClasseI=document.getElementById('divDatiClasseI');
+    nodeDatiClasseI = document.getElementById('divDatiClasseI');
 	if (document.LoadInserisciRichiestaConversione.tipo[0].checked) {
-  	  nodeDatiClasseI.style.display='block';
-        document.LoadInserisciRichiestaConversione.valoreRadio.value='0';
-        document.LoadInserisciRichiestaConversione.CONFERMA.disabled=true;
+		nodeDatiClasseI.style.display='block';
+        document.LoadInserisciRichiestaConversione.valoreRadio.value = '0';
+        document.LoadInserisciRichiestaConversione.CONFERMA.disabled = true;
  	} else if (document.LoadInserisciRichiestaConversione.tipo[1].checked) {
-  	  nodeDatiClasseI.style.display='none';
-        document.LoadInserisciRichiestaConversione.valoreRadio.value='1';    	  
-        document.LoadInserisciRichiestaConversione.CONFERMA.disabled=false;
+  	  	nodeDatiClasseI.style.display='none';
+        document.LoadInserisciRichiestaConversione.valoreRadio.value = '1';    	  
+        document.LoadInserisciRichiestaConversione.CONFERMA.disabled = false;
     }
-  }   
-	 
+}
 	
-	//Funzione utile per impostare la data corrente.
-	function impostaDataOdierna(campo_giorno, campo_mese,campo_anno, dataOdierna) {		
-	day=dataOdierna.substring(0,2);
-	month=dataOdierna.substring(3,5);
-	year=dataOdierna.substring(6,10);
+// Funzione utile per impostare la data corrente.
+function impostaDataOdierna(campo_giorno, campo_mese,campo_anno, dataOdierna) {		
+	day = dataOdierna.substring(0,2);
+	month = dataOdierna.substring(3,5);
+	year = dataOdierna.substring(6,10);
 	document.getElementsByName(campo_giorno).item(0).value = day;
 	document.getElementsByName(campo_mese).item(0).value = month;
 	document.getElementsByName(campo_anno).item(0).value = year;      
-	}
-	
-	
-	 
+}
 
 function Verify() {
 	// 30/01/2015 Controllo campi Fascicolo SIEP collegato
@@ -353,7 +345,7 @@ function Verify() {
 	if (!ControllaData(data_to_verify) && data_to_verify.length > 2) { 
 		alert('Data Prescrizione Multa non corretta'); 
 		document.LoadInserisciRichiestaConversione.<%=ICostantiPenaPecuniaria.CAMPO_GIORNO_DATA_PRESCRIZIONE_MULTA%>.focus(); 
-   	  return false; 
+		return false; 
    	}
 	//--------------------------------------------------------
 	// se multa = vuoto and (data o flag presenti errore)
@@ -447,143 +439,145 @@ function Verify() {
 	document.LoadInserisciRichiestaConversione.<%=IWebConstants.ACTION_FIELD%>.value = "siap.siep.penapecuniaria.action.ActInserisciRichiestaConversione";
    	return true; 
 }
-
-	
 </script>
 </head>
 
 <body class="corpo" onload ="onload();">
 <table>
 	<tr>
-		<td class="LBG"><a href="Javascript:window.print();">
-			<img align="middle"
-			src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif"
-			alt="Stampa questa videata" border=0> </a></td>
+		<td class="LBG">
+			<a href="Javascript:window.print();">
+				<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif"	alt="Stampa questa videata" border="0">
+			</a>
+		</td>
 		<td class="LBG"><font class="label">Funzione:</font>&nbsp;&nbsp;
 		<font class="campo">Iscrizione Richiesta Conversione</font></td>
 	</tr>
 </table>
-
 <FORM method="POST" action="<%=IWebConstants.PG_MAIN%>" name='LoadInserisciRichiestaConversione'>
-
 <jsp:include page="/jsp/files/siap/siep/fascicolo/DettaglioSoggettoSentenza.jsp"/>
 <table>
-<%-- MAC20191202018-MG-13/12/2019: per gli attributi multaResidua e ammendaResidua è stato modificato il tipo oggetto da String a BigDecimale--%>
+<%-- MAC20191202018-MG-13/12/2019: per gli attributi multaResidua e ammendaResidua è stato modificato il tipo oggetto da String a BigDecimal --%>
 <%
 String sMultaResidua = (multaResidua != null ) ? multaResidua.toString() : "";
 String sAmmendaResidua = (ammendaResidua != null ) ? ammendaResidua.toString() : "";
 if (sMultaResidua.length() < 2)
-	sMultaResidua="";
-	if(sAmmendaResidua.length()<2) 
-		sAmmendaResidua="";
+	sMultaResidua = "";
+if (sAmmendaResidua.length() < 2) 
+	sAmmendaResidua = "";
 if (sMultaResidua.length() > 1 || sAmmendaResidua.length() > 1) {
 %>
 	<tr>
 		<td class="l" colspan="2">Sanzione Pecuniaria Residua : </td>
-		<% if (sMultaResidua.length()>1) {%>
-			<td class="l">Multa :
-			<font class="campo"><%=sMultaResidua%>&nbsp;&nbsp;&nbsp;</font> </td>
-  		<%} else {%>
-			<td class="nobord" colspan="2">&nbsp;</td>
-  		<%}%>
-		<% if (sAmmendaResidua.length()>1) {%>
-			<td class="l">Ammenda :  </td>
-			<td class="campo"><%=sAmmendaResidua%>&nbsp;&nbsp;&nbsp;</td>
-  		<%} else {%>
-			<td class="nobord" colspan="2">&nbsp;</td>
-  		<%}%>
+<%
+	if (sMultaResidua.length() > 1) {
+%>
+		<td class="l">Multa : <font class="campo"><%=sMultaResidua%></font></td>
+<%
+	} else {
+%>
+		<td class="nobord" colspan="2">&nbsp;</td>
+<%
+	}
+	if (sAmmendaResidua.length() > 1) {
+%>
+		<td class="l">Ammenda : <font class="campo"><%=sAmmendaResidua%></font></td>
+<%
+	} else {
+%>
+		<td class="nobord" colspan="2">&nbsp;</td>
+<%
+	}
+%>
 	</tr>
-  <%}%>
-  <%-- FINE MAC20191129017-MG-04/12/2019: aggiunti oggetti --%>
+<%
+}
+%>
+<%-- FINE MAC20191129017-MG-04/12/2019: aggiunti oggetti --%>
 </table>
 
-	<!-- 28/01/2015 MEV23 Se si sta iscrivendo la richiesta per classe VII bisogna inserire gli estremi del fascicolo di classe I a cui va collegato -->
-<%  if (lFasPro > 70000 && lFasPro < 80000)
-    {%>
+<!-- 28/01/2015 MEV23 Se si sta iscrivendo la richiesta per classe VII bisogna inserire gli estremi del fascicolo di classe I a cui va collegato -->
+<%
+if (lFasPro > 70000 && lFasPro < 80000) {
+%>
 
 <table>
-     <tr><td>&nbsp;</td></tr>
-     <tr>
-       <td class="l" colspan="3">Inserimento Estremi del Fascicolo di Classe I </td>
-       <td class="l"><input type="radio" name="tipo" value="0" checked onClick="radioClasseI();"> &nbsp;&nbsp;Si&nbsp;&nbsp; </td>
-	   <td class="l"colspan="2"><input type="radio" name="tipo" value="1" onClick="radioClasseI();"> &nbsp;&nbsp;No&nbsp;&nbsp;</td>
-     </tr>
+	<tr><td>&nbsp;</td></tr>
+	<tr>
+		<td class="l" colspan="3">Inserimento Estremi del Fascicolo di Classe I </td>
+		<td class="l"><input type="radio" name="tipo" value="0" checked onClick="radioClasseI();"> &nbsp;&nbsp;Si&nbsp;&nbsp; </td>
+		<td class="l"colspan="2"><input type="radio" name="tipo" value="1" onClick="radioClasseI();"> &nbsp;&nbsp;No&nbsp;&nbsp;</td>
+	</tr>
 </table>    
-	<div id="divDatiClasseI" style="display:none; float:left; position:relative; ">
-  	  <table width="70%">
-	    <tr>
-	      <td class="LBG" colspan="6" >
-	        <font class="label">Estremi del Fascicolo di classe I </font>&nbsp;
-	      </td>
-	    </tr>
-	
-	    <tr>
-	      <td class="l" colspan="2">Anno/Numero SIEP <font class=ob>(*) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font></td>
-	      <td class="l" colspan="4">
-	        <input type="text" name="<%=ICostantiTitoloEsecutivo.CAMPO_ANNO_FASCICOLO_SIEP%>" value ="<%=aChiaveAnno%>" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onchange="javascript:document.LoadInserisciRichiestaConversione.CONFERMA.disabled=true;">
-	        /<input type="text" name="<%=ICostantiTitoloEsecutivo.CAMPO_PROGR_FASCICOLO_SIEP_ORIGIN%>" value ="<%=aChiaveProgr%>" maxlength="14" size="14" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onchange="javascript:document.LoadInserisciRichiestaConversione.CONFERMA.disabled=true;">
-	        <input type="hidden" name="<%=ICostantiTitoloEsecutivo.CAMPO_PROGR_FASCICOLO_SIEP%>" value="<%=StringUtils.toStringJSP(aChiaveProgr,"")%>">
-	        <input type="hidden" name="idFascicoloClasseI" value="<%=StringUtils.toStringJSP(aIdFascicolo,"")%>">
-	         &nbsp;&nbsp;<a href="Javascript:TrasformaRes('LoadInserisciRichiestaConversione','<%=ICostantiTitoloEsecutivo.CAMPO_ANNO_FASCICOLO_SIEP%>','<%=ICostantiTitoloEsecutivo.CAMPO_PROGR_FASCICOLO_SIEP_ORIGIN%>');">
-	         R.E.S.<img src="/images/filefolder.gif" border=0></a>&nbsp;&nbsp;
-	         <a href="Javascript:TrasformaPret('LoadInserisciRichiestaConversione','<%=ICostantiTitoloEsecutivo.CAMPO_ANNO_FASCICOLO_SIEP%>','<%=ICostantiTitoloEsecutivo.CAMPO_PROGR_FASCICOLO_SIEP_ORIGIN%>');">
-	         P.T.<img src="/images/filefolder.gif" border=0></a>
-	      </td>
-	    </tr>
-	
-	    <tr>
-	      <td class="l" colspan="2">Autorità <font class=ob>(*)</font></td>
-	      <td class="L" colspan="4">
-	        <select class=medium name="<%=ICostantiTitoloEsecutivo.CAMPO_COD_TIPO_UFF_FASCICOLO_SIEP%>" onchange="javascript:resetField();">
-	          <%= AutoritaCompetente%>
-	        </select>
-	      </td>
-	    </tr>
-	
-	    <tr>
-	      <td class="l" colspan="2">Luogo <font class=ob>(*)</font></td>
-	      <td class="l" colspan="4">
-	        <input name="<%=ICostantiTitoloEsecutivo.CAMPO_SEDE_UFF_FASCICOLO_SIEP%>" value ="<%=aSedeUfficio%>" type="text" maxlength="35" size="35" onchange="javascript:document.LoadInserisciRichiestaConversione.CONFERMA.disabled=true;" readonly="readonly">
-	        <!-- a href="Javascript:ListaComuni('LoadInserisciRichiestaConversione','<%=ICostantiTitoloEsecutivo.CAMPO_SEDE_UFF_FASCICOLO_SIEP%>' , document.LoadInserisciRichiestaConversione.<%=ICostantiTitoloEsecutivo.CAMPO_COD_TIPO_UFF_FASCICOLO_SIEP%>[document.LoadInserisciRichiestaConversione.<%=ICostantiTitoloEsecutivo.CAMPO_COD_TIPO_UFF_FASCICOLO_SIEP%>.selectedIndex].value);" -->
-	        <a href="Javascript:ChoosePopup();">
-	        <img src="/images/filefolder.gif" border=0> </a>
-	      </td>
-	    </tr>
-	
-	    <tr>
-	      <td class="l" colspan="2">Ufficio Accorpato</td>
-	      <td class="l" colspan="4">
-	         	<select name="<%=ICostantiTitoloEsecutivo.CAMPO_SEDE_UFF_ACCORPATO%>">
-	         	<option value="0" >-</option>
-	         	</select>
-	      </td>
-	    </tr>
-	
-	    <tr>
-	      <td>
-        	<input class="bottone" type="submit" name="Ricerca" value="Ricerca" onClick="javascript:return VerifyRicerca();">
-	      </td>
-	    </tr>
-<%  	if (lFasPro > 70000 && lFasPro < 80000	&&
-			aChiaveAnno != "")
-		{%>    
-			<tr>
-      			<td class="Label"  colspan="6">
-        			<font class="label">N.B. Procedimento di Classe I individuato: procedere con i dati di Richiesta Conversione</font>&nbsp;
-      			</td>
-    		</tr>
-			<tr><td><br></td></tr>
-   	  <%}%>
-    </table>
- </div>
-    <%}%>
-
+<div id="divDatiClasseI" style="display:none; float:left; position:relative; ">
 <table width="70%">
 	<tr>
-		<td>&nbsp;</td>
+	  	<td class="LBG" colspan="6" >
+	    	<font class="label">Estremi del Fascicolo di classe I </font>&nbsp;
+	  	</td>
 	</tr>
+	<tr>
+		<td class="l" colspan="2">Anno/Numero SIEP <font class=ob>(*) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font></td>
+		<td class="l" colspan="4">
+			<input type="text" name="<%=ICostantiTitoloEsecutivo.CAMPO_ANNO_FASCICOLO_SIEP%>" value ="<%=aChiaveAnno%>" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onchange="javascript:document.LoadInserisciRichiestaConversione.CONFERMA.disabled=true;">
+			/<input type="text" name="<%=ICostantiTitoloEsecutivo.CAMPO_PROGR_FASCICOLO_SIEP_ORIGIN%>" value ="<%=aChiaveProgr%>" maxlength="14" size="14" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onchange="javascript:document.LoadInserisciRichiestaConversione.CONFERMA.disabled=true;">
+			<input type="hidden" name="<%=ICostantiTitoloEsecutivo.CAMPO_PROGR_FASCICOLO_SIEP%>" value="<%=StringUtils.toStringJSP(aChiaveProgr,"")%>">
+			<input type="hidden" name="idFascicoloClasseI" value="<%=StringUtils.toStringJSP(aIdFascicolo,"")%>">
+			&nbsp;&nbsp;<a href="Javascript:TrasformaRes('LoadInserisciRichiestaConversione','<%=ICostantiTitoloEsecutivo.CAMPO_ANNO_FASCICOLO_SIEP%>','<%=ICostantiTitoloEsecutivo.CAMPO_PROGR_FASCICOLO_SIEP_ORIGIN%>');">
+			R.E.S.<img src="/images/filefolder.gif" border=0></a>&nbsp;&nbsp;
+			<a href="Javascript:TrasformaPret('LoadInserisciRichiestaConversione','<%=ICostantiTitoloEsecutivo.CAMPO_ANNO_FASCICOLO_SIEP%>','<%=ICostantiTitoloEsecutivo.CAMPO_PROGR_FASCICOLO_SIEP_ORIGIN%>');">
+			P.T.<img src="/images/filefolder.gif" border=0></a>
+		</td>
+	</tr>
+	<tr>
+		<td class="l" colspan="2">Autorità <font class=ob>(*)</font></td>
+		<td class="L" colspan="4">
+		  	<select class=medium name="<%=ICostantiTitoloEsecutivo.CAMPO_COD_TIPO_UFF_FASCICOLO_SIEP%>" onchange="javascript:resetField();">
+				<%=AutoritaCompetente%>
+		    </select>
+		</td>
+	</tr>
+	<tr>
+		<td class="l" colspan="2">Luogo <font class=ob>(*)</font></td>
+		<td class="l" colspan="4">
+			<input name="<%=ICostantiTitoloEsecutivo.CAMPO_SEDE_UFF_FASCICOLO_SIEP%>" value ="<%=aSedeUfficio%>" type="text" maxlength="35" size="35" onchange="javascript:document.LoadInserisciRichiestaConversione.CONFERMA.disabled=true;" readonly="readonly">
+			<!-- a href="Javascript:ListaComuni('LoadInserisciRichiestaConversione','<%=ICostantiTitoloEsecutivo.CAMPO_SEDE_UFF_FASCICOLO_SIEP%>' , document.LoadInserisciRichiestaConversione.<%=ICostantiTitoloEsecutivo.CAMPO_COD_TIPO_UFF_FASCICOLO_SIEP%>[document.LoadInserisciRichiestaConversione.<%=ICostantiTitoloEsecutivo.CAMPO_COD_TIPO_UFF_FASCICOLO_SIEP%>.selectedIndex].value);" -->
+			<a href="Javascript:ChoosePopup();">
+				<img src="/images/filefolder.gif" border="0">
+			</a>
+		</td>
+	</tr>
+	<tr>
+		<td class="l" colspan="2">Ufficio Accorpato</td>
+		<td class="l" colspan="4">
+		   	<select name="<%=ICostantiTitoloEsecutivo.CAMPO_SEDE_UFF_ACCORPATO%>">
+		 		<option value="0" >-</option>
+		 	</select>
+		</td>
+	</tr>
+    <tr>
+		<td>
+        	<input class="bottone" type="submit" name="Ricerca" value="Ricerca" onClick="javascript:return VerifyRicerca();">
+		</td>
+	</tr>
+<%
+	if (lFasPro > 70000 && lFasPro < 80000 && aChiaveAnno != "") {
+%>    
+	<tr>
+		<td class="Label"  colspan="6">
+			<font class="label">N.B. Procedimento di Classe I individuato: procedere con i dati di Richiesta Conversione</font>
+		</td>
+	</tr>
+	<tr><td><br></td></tr>
+<%
+	}
+%>
 </table>
-
+</div>
+<%
+}
+%>
+<br>
 <table width="70%">
 	<tr>
 		<td class="Titolo" colspan=6>Dati Richiesta Conversione</td>
@@ -598,10 +592,11 @@ if (sMultaResidua.length() > 1 || sAmmendaResidua.length() > 1) {
 	</tr>
 	<tr>
 		<td class="l" colspan="2">Autorità<font class="ob">(*)</font></td>
-		<td class="L" colspan="4"><select Title="Autorità"
-			name="<%=ICostantiPenaPecuniaria.CAMPO_COD_TIPO_AUTORITA_EMITTENTE%>">
-			<%=autoritaConv%>
-		</select></td>
+		<td class="L" colspan="4">
+			<select Title="Autorità" name="<%=ICostantiPenaPecuniaria.CAMPO_COD_TIPO_AUTORITA_EMITTENTE%>">
+				<%=autoritaConv%>
+			</select>
+		</td>
 	</tr>
 	<tr>
 		<td class="l" colspan="2">Sede <font class=ob>(*)</font></td>
@@ -633,8 +628,7 @@ if (sMultaResidua.length() > 1 || sAmmendaResidua.length() > 1) {
 		</td>
 	</tr>
 	<tr>
-		<td class="l" colspan="2">Data Richiesta Impossibilità Esazione <font
-			class=ob>(*)</font></td>
+		<td class="l" colspan="2">Data Richiesta Impossibilità Esazione <font class=ob>(*)</font></td>
 		<td class="l" colspan="4">
 			<input type="text" size="2" maxlength="2" name="<%=ICostantiPenaPecuniaria.CAMPO_GIORNO_DATA_ESAZIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">&nbsp;/&nbsp;
 			<input type="text" size="2" maxlength="2" name="<%=ICostantiPenaPecuniaria.CAMPO_MESE_DATA_ESAZIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">&nbsp;/&nbsp;
@@ -671,8 +665,8 @@ if (sMultaResidua.length() > 1 || sAmmendaResidua.length() > 1) {
 			<input type="text" size="4" maxlength="4" name="<%=ICostantiPenaPecuniaria.CAMPO_ANNO_DATA_PRESCRIZIONE_AMMENDA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
 		</td>
 		<td class="l">Imprescrittibile</td>
-		<td class="l"><input type="checkbox"
-			name="<%=ICostantiPenaPecuniaria.CAMPO_FLAG_IMPRESCRITTIBILE_AMMENDA%>">
+		<td class="l">
+			<input type="checkbox" name="<%=ICostantiPenaPecuniaria.CAMPO_FLAG_IMPRESCRITTIBILE_AMMENDA%>">
 		</td>
 	</tr>
 	<tr>
@@ -680,15 +674,12 @@ if (sMultaResidua.length() > 1 || sAmmendaResidua.length() > 1) {
 			<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="<%=lAction%>" >
     		<input type="HIDDEN" name="valoreRadio" value="">
 		</td>
-		
 	</tr>
 	<tr>
 		<td class="lNoBord" colspan="2">
-		  <input class="bottone" type="submit" name="CONFERMA" value="Conferma" onClick="javascript:return Verify();">
-		  
+		  	<input class="bottone" type="submit" name="CONFERMA" value="Conferma" onClick="javascript:return Verify();">
 		</td>
 	</tr>
-
 </table>
 </form>
 
@@ -744,7 +735,6 @@ frmvalidator.setAddnlValidationFunction("Verify");
 <%
 }
 %>
-
 var ufficiAccorpatiArray = new Array();
 <%
 Iterator uaIter = ufficiAccorpati.iterator();
@@ -783,7 +773,6 @@ function transCoding(cod) {
 }
 
 function loadUfficiAccorpati(codUfficio) {
-	  //alert('loadUfficiAccorpati');
 	var i = 0;
 	var ufficioAccorpatoSelect = document.LoadInserisciRichiestaConversione.<%=ICostantiTitoloEsecutivo.CAMPO_SEDE_UFF_ACCORPATO%>;
 	ufficioAccorpatoSelect.options.length = 0;

@@ -4,18 +4,27 @@
 <%@ page import="siap.sius.fascicolo.action.ICostantiFascicoloSius"%>
 <%@ page import="siap.sico.decodifiche.action.ICostantiComune"%>
 
-<jsp:useBean id="nazioni" scope="request" class="java.lang.String" />
+<jsp:useBean id="nazioni" scope="request" class="java.lang.String"/>
 <jsp:useBean id="contenuto" scope="request" class="java.lang.String" />
-<jsp:useBean id="TipoUfficioConnesso" scope="request"
-	class="java.lang.String" />
-<jsp:useBean id="CodUDSTDS" scope="request" class="java.lang.String" />
+<jsp:useBean id="TipoUfficioConnesso" scope="request" class="java.lang.String"/>
+<jsp:useBean id="CodUDSTDS" scope="request" class="java.lang.String"/>
+
+<%-- MEV_2023-35 si aggiunge il codContenuto per gestire sia U019 che U126 --%>
+<jsp:useBean id="ContenutoES" scope="request" class="java.lang.String"/>
+
+<%
+// MEV_2023-35 si parametrizza il titolo funzione
+String strTitoloFunzione = "";
+if ("U019".equals(ContenutoES))
+  strTitoloFunzione = "Ricerca Soggetti con Procedimenti di Esecuzione Sanzioni Sostitutive";
+else if ("U126".equals(ContenutoES))
+  strTitoloFunzione = "Ricerca Soggetti con Procedimenti di Esecuzione Pene Sostitutive";
+%>
 
 <html>
 <head>
-<title>[S.I.E.S.] - Ricerca Soggetti con Procedimenti di
-	Esecuzione Sanzioni Sostitutive -</title>
-<link rel="STYLESHEET" type="text/css"
-	href="<%=IWebConstants.PG_STYLE%>">
+  <title> [S.I.E.S.] - Ricerca Soggetti con Procedimenti di Esecuzione Sanzioni Sostitutive - </title>
+  <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
 <script language="JavaScript" src="/html/gen_validatorv2.js"></script>
 <script language="JavaScript" src="/html/ControllaData.js"></script>
 <script language="JavaScript">
@@ -48,19 +57,13 @@
 </head>
 
 <body class="corpo">
-	<FORM method="POST" action="<%=IWebConstants.PG_MAIN%>"
-		name="LoadRicercaSoggettiConProcDiEsecuzioneSS">
+  <FORM method="POST" action="<%=IWebConstants.PG_MAIN%>" name="LoadRicercaSoggettiConProcDiEsecuzioneSS">
 		<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.sius.fascicolo.action.ActRicercaSoggettiConProcDiEsecuzioneSS">
 		<input type="HIDDEN" name="<%=ICostantiComune.CAMPO_COD_COMUNE_REALE%>" value="">
 		<table>
-			<tr>
-				<td class="LBG"><a href="Javascript:window.print();"><img
-						align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif"
-						alt="Stampa questa videata" border=0></a></td>
-				<td class="LBG"><font class="label">Funzione :</font> <font
-					class="campo">Ricerca Soggetti con Procedimenti di
-						Esecuzione Sanzioni Sostitutive</font></td>
-			</tr>
+			<tr><td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
+        <td class="LBG"><font class="label">Funzione :</font> <font class="campo"><%=strTitoloFunzione %></font></td>
+      </tr>
 		</table>
 
 		<br>
@@ -68,16 +71,12 @@
 		<table cellspacing=2 cellpadding=2>
 			<tr>
 				<td class="l">Cognome</td>
-				<td class="l"><input title="Cognome Soggetto" type="text"
-					name="<%=ICostantiSoggetto.CAMPO_COGNOME%>" value="" size="30"
-					maxlength="30"></td>
+        <td class="l"><input title="Cognome Soggetto" type="text" name="<%=ICostantiSoggetto.CAMPO_COGNOME%>" value="" size="30" maxlength="30"></td>
 			</tr>
 
 			<tr>
 				<td class="l">Nome</td>
-				<td class="l"><input title="Nome Soggetto" type="text"
-					name="<%=ICostantiSoggetto.CAMPO_NOME%>" value="" size="30"
-					maxlength="30"></td>
+        <td class="l"><input title="Nome Soggetto"  type="text" name="<%=ICostantiSoggetto.CAMPO_NOME%>" value="" size="30" maxlength="30"></td>
 			</tr>
 
 			<tr>
@@ -94,42 +93,31 @@
 
 			<tr>
 				<td class="l">Stato di Nascita</td>
-				<td class="L"><select title="Stato di Nascita"
-					name="<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>">
+        <td class="L">
+          <select  title="Stato di Nascita" name="<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>">
 						<%= nazioni %>
-				</select></td>
+         </select>
+         </td>
 			</tr>
 
 			<tr>
 				<td class="l">Data di nascita</td>
-				<td class="l"><input title="Data di nascita" type="text"
-					name="<%= ICostantiSoggetto.CAMPO_GIORNO_DATA_NASCITA%>"
-					maxlength="2" size="2" onFocus="javascript:textboxSelect(this)"
-					onkeypress="return TicTabNumField(this,event)"
-					onBlur="javascript:value=FillDM(value)">/ <input
-					title="Data di nascita" type="text"
-					name="<%= ICostantiSoggetto.CAMPO_MESE_DATA_NASCITA %>"
-					maxlength="2" size="2" onFocus="javascript:textboxSelect(this)"
-					onkeypress="return TicTabNumField(this,event)"
-					onBlur="javascript:value=FillDM(value)">/ <input
-					title="Data di nascita" type="text"
-					name="<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>"
-					maxlength="4" size="4" onFocus="javascript:textboxSelect(this)"
-					onkeypress="return TicTabNumField(this,event)"
-					onBlur="javascript:value=FillYear(value)"></td>
+        <td class="l">
+          <input title="Data di nascita" type="text" name="<%= ICostantiSoggetto.CAMPO_GIORNO_DATA_NASCITA%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)">/
+          <input title="Data di nascita" type="text" name="<%= ICostantiSoggetto.CAMPO_MESE_DATA_NASCITA %>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)" >/
+          <input title="Data di nascita" type="text" name="<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>"maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillYear(value)">
+        </td>
 			</tr>
 
 			<tr>
 				<td class="l">Paternità</td>
-				<td class="l"><input title="Paternita" type="text"
-					name="<%= ICostantiSoggetto.CAMPO_PATERNITA%>" size="30"
-					maxlength="30"></td>
+          <td class="l"><input title="Paternita" type="text" name="<%= ICostantiSoggetto.CAMPO_PATERNITA%>" size="30" maxlength="30"></td>
 			</tr>
 
 			<tr>
 				<td class="l">Codice CUI</td>
-				<td class="L"><input title="Codice CUI" type="text"
-					name="<%=ICostantiSoggetto.CAMPO_COD_CS%>" maxlength="6" size="6">
+        <td class="L">
+          <input title="Codice CUI" type="text" name="<%=ICostantiSoggetto.CAMPO_COD_CS%>" maxlength="6" size="6">
 				</td>
 			</tr>
 
@@ -139,10 +127,9 @@
 
 		<table cellspacing=2 cellpadding=2>
 			<tr>
-				<td class="lVerdeNB">N.B.: Di norma vengono visualizzati i
-					soggetti con procedimenti pendenti di competenza dell'ufficio senza
-					limitazione del periodo di pervenimento in cancelleria. Per variare
-					i criteri selezionare una o più delle seguenti opzioni:</td>
+        <td class="lVerdeNB" >
+          N.B.: Di norma vengono visualizzati i soggetti con procedimenti pendenti di competenza dell'ufficio senza limitazione del periodo di pervenimento in cancelleria. Per variare i criteri selezionare una o più delle seguenti opzioni:
+        </td>
 			</tr>
 		</table>
 
@@ -151,39 +138,37 @@
 		<table cellspacing=2 cellpadding=2>
 
 			<tr>
-				<td class="Cliccabile">Modifica competenza territoriale dei
-					procedimenti visualizzati</td>
+        <td class="Cliccabile">
+          Modifica competenza territoriale dei procedimenti visualizzati
+        </td>
 			</tr>
 
 			<tr>
 				<td class="label">Visualizza solo i procedimenti dell'Ufficio</td>
-				<td class="label"><input type=radio
-					name="<%=ICostantiFascicoloSius.CAMPO_INCLUDE_UFFICIO%>" value=0
-					CHECKED></td>
+        <td class="label" >
+          <input type=radio name="<%=ICostantiFascicoloSius.CAMPO_INCLUDE_UFFICIO%>" value=0 CHECKED ></td>
 				</td>
 			</tr>
 
 			<tr>
-				<td class="label">Visualizza i procedimenti dell'intero
-					Distretto &nbsp;&nbsp;&nbsp;</td>
-				<td class="label"><input type=radio
-					name="<%=ICostantiFascicoloSius.CAMPO_INCLUDE_UFFICIO%>" value=2></td>
+        <td class="label">
+            Visualizza i procedimenti dell'intero Distretto &nbsp;&nbsp;&nbsp;
+        </td>
+        <td class="label">
+          <input type=radio name="<%=ICostantiFascicoloSius.CAMPO_INCLUDE_UFFICIO%>" value=2></td>
 				</td>
 			</tr>
 
+      <tr><td>&nbsp;</td></tr>
 			<tr>
-				<td>&nbsp;</td>
-			</tr>
-			<tr>
-				<td class="Cliccabile">Modifica Tipologia dei procedimenti
-					visualizzati&nbsp;&nbsp;</td>
+        <td class="Cliccabile">Modifica Tipologia dei procedimenti visualizzati&nbsp;&nbsp;</td>
 			</tr>
 
 			<tr>
-				<td class="label">Visualizza anche i procedimenti definiti
-					&nbsp;</td>
-				<td class="label"><input type=checkbox
-					name="<%=ICostantiFascicoloSius.CAMPO_INCLUDE_ARCHIVIATI%>" value=1></td>
+        <td class="label">Visualizza anche i procedimenti definiti &nbsp;
+        </td>
+        <td class="label">
+          <input type=checkbox name="<%=ICostantiFascicoloSius.CAMPO_INCLUDE_ARCHIVIATI%>" value=1></td>
 				</td>
 			</tr>
 
@@ -192,64 +177,37 @@
 		<table cellspacing=2 cellpadding=2>
 
 			<tr>
-				<td class="label">Visualizza solo i procedimenti relativi a
-					&nbsp;&nbsp; <select title="contenuto" class=small
-					name="<%=ICostantiFascicoloSius.CAMPO_COD_CONTENUTO%>">
+        <td class="label">Visualizza solo i procedimenti relativi a &nbsp;&nbsp;
+          <select title="contenuto" class=small name="<%=ICostantiFascicoloSius.CAMPO_COD_CONTENUTO%>" >
 						<%= contenuto %>
 				</select>
 				</td>
 			</tr>
 
-			<tr>
-				<td>&nbsp;</td>
-			</tr>
+      <tr><td>&nbsp;</td></tr>
 
 			<tr>
-				<td class="Cliccabile">Seleziona il Periodo di arrivo in
-					cancellaria dei procedimenti visualizzati&nbsp;&nbsp;</td>
+        <td class="Cliccabile">Seleziona il Periodo di arrivo in cancellaria dei procedimenti visualizzati&nbsp;&nbsp;</td>
 			</tr>
 
 			<!--br><br-->
 
 			<tr>
-				<td class="label">Visualizza i procedimenti pervenuti in
-					cancelleria dal&nbsp; <input Title="dalla Data" type="text"
-					name="<%= ICostantiFascicoloSius.CAMPO_GIORNO_DATA_INSERIMENTO %>"
-					maxlength="2" size="2" onFocus="javascript:textboxSelect(this)"
-					onkeypress="return TicTabNumField(this,event)"
-					onBlur="javascript:value=FillDM(value)">/ <input
-					Title="dalla Data" type="text"
-					name="<%= ICostantiFascicoloSius.CAMPO_MESE_DATA_INSERIMENTO %>"
-					maxlength="2" size="2" onFocus="javascript:textboxSelect(this)"
-					onkeypress="return TicTabNumField(this,event)"
-					onBlur="javascript:value=FillDM(value)">/ <input
-					Title="dalla Data" type="text"
-					name="<%= ICostantiFascicoloSius.CAMPO_ANNO_DATA_INSERIMENTO %>"
-					maxlength="4" size="4" onFocus="javascript:textboxSelect(this)"
-					onkeypress="return TicTabNumField(this,event)"
-					onBlur="javascript:value=FillYear(value)"> &nbsp;&nbsp; al
-					&nbsp;&nbsp; <input Title="alla Data" type="text"
-					name="<%= ICostantiFascicoloSius.CAMPO_GIORNO_DATA_AGGIORNAMENTO %>"
-					maxlength="2" size="2" onFocus="javascript:textboxSelect(this)"
-					onkeypress="return TicTabNumField(this,event)"
-					onBlur="javascript:value=FillDM(value)">/ <input
-					Title="alla Data" type="text"
-					name="<%= ICostantiFascicoloSius.CAMPO_MESE_DATA_AGGIORNAMENTO %>"
-					maxlength="2" size="2" onFocus="javascript:textboxSelect(this)"
-					onkeypress="return TicTabNumField(this,event)"
-					onBlur="javascript:value=FillDM(value)">/ <input
-					Title="alla Data" type="text"
-					name="<%= ICostantiFascicoloSius.CAMPO_ANNO_DATA_AGGIORNAMENTO %>"
-					maxlength="4" size="4" onFocus="javascript:textboxSelect(this)"
-					onkeypress="return TicTabNumField(this,event)"
-					onBlur="javascript:value=FillYear(value)">
+        <td class="label">Visualizza i procedimenti pervenuti in cancelleria dal&nbsp;
+          <input Title="dalla Data" type="text" name="<%= ICostantiFascicoloSius.CAMPO_GIORNO_DATA_INSERIMENTO %>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)">/
+          <input Title="dalla Data" type="text" name="<%= ICostantiFascicoloSius.CAMPO_MESE_DATA_INSERIMENTO %>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)" >/
+          <input Title="dalla Data" type="text" name="<%= ICostantiFascicoloSius.CAMPO_ANNO_DATA_INSERIMENTO %>" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillYear(value)">
+          &nbsp;&nbsp; al &nbsp;&nbsp;
+          <input Title="alla Data" type="text" name="<%= ICostantiFascicoloSius.CAMPO_GIORNO_DATA_AGGIORNAMENTO %>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)">/
+          <input Title="alla Data" type="text" name="<%= ICostantiFascicoloSius.CAMPO_MESE_DATA_AGGIORNAMENTO %>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)">/
+          <input Title="alla Data" type="text" name="<%= ICostantiFascicoloSius.CAMPO_ANNO_DATA_AGGIORNAMENTO %>" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillYear(value)">
 				</td>
 			</tr>
 
 			<tr>
-				<td><br>
-				<br> <INPUT onclick="Javascript:return Verify();"
-					class="bottone" type="submit" name="RICERCA" value="Ricerca">
+        <td>
+        <br><br>
+          <INPUT onclick="Javascript:return Verify();" class="bottone" type="submit"  name="RICERCA" value="Ricerca">
 				</td>
 			</tr>
 

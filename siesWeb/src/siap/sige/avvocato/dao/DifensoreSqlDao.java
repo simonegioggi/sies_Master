@@ -470,13 +470,4 @@ public class DifensoreSqlDao extends SIAPSqlDAO {
 		setStatement(lStatement);
 	}
 
-	private boolean findColumn(String aValue) {
-		try {
-			mRs.findColumn(aValue);
-		} catch (Exception sqex) {
-			return false;
-		}
-		return true;
-	}
-
 }

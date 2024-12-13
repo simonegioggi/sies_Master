@@ -25,30 +25,28 @@ public class RateizzazionePPDAO extends SIAPTableDAO {
 	 *            connessione
 	 ****************************************************************************/
 	public RateizzazionePPDAO(Connection con) {
+
 		super(con);
 		setTable("RATEIZZAZIONE_PP");
 
 		// Settare la Sequence e i campi chiave e commentare il setField del campo chiave
 		setSequenceField("ID_RATEIZZAZIONE_PP", "RAT_PEN_SEQ");
 
-		// setField("ID_RATEIZZAZIONE_PP", BIG_DECIMAL);
-
 		setField("IMPORTO_DA_PAGARE", BIG_DECIMAL);
 		setField("IMPORTO_RATA", BIG_DECIMAL);
 		setField("NUMERO_RATE", BIG_DECIMAL);
 		setField("TIPO_RATEIZZAZIONE", STRING);
 		setField("SCADENZA_GIORNI", BIG_DECIMAL);
-
 		setField("FAS_SIE_ID_FASCICOLO_SIEP", BIG_DECIMAL);
 		setField("EVE_ID_EVENTO", BIG_DECIMAL);
 		setField("PROGRESSIVO_RATA", BIG_DECIMAL);
-
 		setField("COD_OPERATORE_INSERIMENTO", STRING);
 		setField("DATA_INSERIMENTO", DATE);
 		setField("COD_UFFICIO_INSERIMENTO", STRING);
 		setField("COD_OPERATORE_AGGIORNAMENTO", STRING);
 		setField("DATA_AGGIORNAMENTO", DATE);
 		setField("COD_UFFICIO_AGGIORNAMENTO", STRING);
+		setField("FAS_SIU_ID_FASCICOLO_SIUS", BIG_DECIMAL); // MEV_2023-35
 	}
 
 	// ============================================================================
@@ -114,6 +112,10 @@ public class RateizzazionePPDAO extends SIAPTableDAO {
 		return getString("COD_UFFICIO_AGGIORNAMENTO");
 	}
 
+	public BigDecimal getFasSiuIdFascicoloSius() throws DAOException {
+		return getBigDecimal("FAS_SIU_ID_FASCICOLO_SIUS");
+	}
+
 	// ============================================================================
 	// Metodi set utilizzati per impostare i campi delle query
 	// ============================================================================
@@ -177,6 +179,10 @@ public class RateizzazionePPDAO extends SIAPTableDAO {
 		setString("COD_UFFICIO_AGGIORNAMENTO", aValore);
 	}
 
+	public void setFasSiuIdFascicoloSius(BigDecimal aValore) {
+		setBigDecimal("FAS_SIU_ID_FASCICOLO_SIUS", aValore);
+	}
+
 	/*****************************************************************************
 	 * Metodo che recupera i dati della select e carica il model in output
 	 *
@@ -185,6 +191,7 @@ public class RateizzazionePPDAO extends SIAPTableDAO {
 	 ****************************************************************************/
 
 	public GenericModel getModel() throws DAOException {
+
 		RateizzazionePPModel lModel = new RateizzazionePPModel();
 
 		lModel.setIdRateizzazionePP(getIdRateizzazionePP());
@@ -194,17 +201,15 @@ public class RateizzazionePPDAO extends SIAPTableDAO {
 		lModel.setTipoRateizzazione(getTipoRateizzazione());
 		lModel.setScadenzaGiorni(getScadenzaGiorni());
 		lModel.setProgressivoRata(getProgressivoRata());
-
 		lModel.setFasSieIdFascicoloSiep(getFasSieIdFascicoloSiep());
 		lModel.setEveIdEvento(getEveIdEvento());
-
 		lModel.setCodOperatoreInserimento(getCodOperatoreInserimento());
 		lModel.setDataInserimento(getDataInserimento());
 		lModel.setCodUfficioInserimento(getCodUfficioInserimento());
-
 		lModel.setCodOperatoreAggiornamento(getCodOperatoreAggiornamento());
 		lModel.setDataAggiornamento(getDataAggiornamento());
 		lModel.setCodUfficioAggiornamento(getCodUfficioAggiornamento());
+		lModel.setFasSiuIdFascicoloSius(getFasSiuIdFascicoloSius());
 
 		return lModel;
 	}
@@ -217,6 +222,7 @@ public class RateizzazionePPDAO extends SIAPTableDAO {
 	 * @throws DAOException
 	 */
 	public void setDAOFromModel(RateizzazionePPModel aModel) throws DAOException {
+
 		setIdRateizzazionePP(aModel.getIdRateizzazionePP());
 		setImportoDaPagare(aModel.getImportoDaPagare());
 		setImportoRata(aModel.getImportoRata());
@@ -224,17 +230,15 @@ public class RateizzazionePPDAO extends SIAPTableDAO {
 		setTipoRateizzazione(aModel.getTipoRateizzazione());
 		setScadenzaGiorni(aModel.getScadenzaGiorni());
 		setProgressivoRata(aModel.getProgressivoRata());
-
 		setFasSieIdFascicoloSiep(aModel.getFasSieIdFascicoloSiep());
 		setEveIdEvento(aModel.getEveIdEvento());
-
 		setCodOperatoreInserimento(aModel.getCodOperatoreInserimento());
 		setDataInserimento(aModel.getDataInserimento());
 		setCodUfficioInserimento(aModel.getCodUfficioInserimento());
 		setCodOperatoreAggiornamento(aModel.getCodOperatoreAggiornamento());
 		setDataAggiornamento(aModel.getDataAggiornamento());
 		setCodUfficioAggiornamento(aModel.getCodUfficioAggiornamento());
-
+		setFasSiuIdFascicoloSius(aModel.getFasSiuIdFascicoloSius());
 	}
 
 	/**
@@ -244,9 +248,9 @@ public class RateizzazionePPDAO extends SIAPTableDAO {
 	 * @throws DAOException
 	 */
 	public void setDAOFromModelForUpdate(RateizzazionePPModel aModel) throws DAOException {
+
 		if (aModel.getIdRateizzazionePP() != null)
 			setIdRateizzazionePP(aModel.getIdRateizzazionePP());
-
 		if (aModel.getImportoDaPagare() != null)
 			setImportoDaPagare(aModel.getImportoDaPagare());
 		if (aModel.getImportoRata() != null)
@@ -259,7 +263,6 @@ public class RateizzazionePPDAO extends SIAPTableDAO {
 			setScadenzaGiorni(aModel.getScadenzaGiorni());
 		if (aModel.getProgressivoRata() != null)
 			setProgressivoRata(aModel.getProgressivoRata());
-
 		if (aModel.getCodOperatoreAggiornamento() != null
 				&& aModel.getCodOperatoreAggiornamento().length() > 1)
 			setCodOperatoreAggiornamento(aModel.getCodOperatoreAggiornamento());
@@ -267,7 +270,6 @@ public class RateizzazionePPDAO extends SIAPTableDAO {
 			setDataAggiornamento(aModel.getDataAggiornamento());
 		if (aModel.getCodUfficioAggiornamento() != null && aModel.getCodUfficioAggiornamento().length() > 1)
 			setCodUfficioAggiornamento(aModel.getCodUfficioAggiornamento());
-
 		if (aModel.getEveIdEvento() != null)
 			setEveIdEvento(aModel.getEveIdEvento());
 	}
@@ -279,6 +281,7 @@ public class RateizzazionePPDAO extends SIAPTableDAO {
 	 * @return
 	 ****************************************************************************/
 	public void setCondizioni(RateizzazionePPModel aModel) {
+
 		String lCondizioni = new String();
 
 		if (aModel.getIdRateizzazionePP() != null) {
@@ -299,15 +302,15 @@ public class RateizzazionePPDAO extends SIAPTableDAO {
 		if (aModel.getProgressivoRata() != null) {
 			lCondizioni += " and PROGRESSIVO_RATA = '" + aModel.getProgressivoRata() + "' ";
 		}
-
 		if (aModel.getFasSieIdFascicoloSiep() != null) {
 			lCondizioni += " and FAS_SIE_ID_FASCICOLO_SIEP = " + aModel.getFasSieIdFascicoloSiep() + "";
 		}
-
 		if (aModel.getEveIdEvento() != null) {
 			lCondizioni += " and EVE_ID_EVENTO = " + aModel.getEveIdEvento() + "";
 		}
-
+		if (aModel.getFasSiuIdFascicoloSius() != null) {
+			lCondizioni += " and FAS_SIU_ID_FASCICOLO_SIUS = " + aModel.getFasSiuIdFascicoloSius() + "";
+		}
 		// Elimino il primo and
 		if (lCondizioni.length() > 0) {
 			lCondizioni = lCondizioni.substring(4);
@@ -322,6 +325,7 @@ public class RateizzazionePPDAO extends SIAPTableDAO {
 	 * @param key
 	 */
 	public void selCondizioneUpdate(BigDecimal aIdRateizzazionePP) {
+
 		String lCondizioni = new String();
 
 		lCondizioni += " ID_RATEIZZAZIONE_PP = " + aIdRateizzazionePP;
@@ -332,12 +336,43 @@ public class RateizzazionePPDAO extends SIAPTableDAO {
 	/**
 	 * Imposta la condizione where per FAS_SIE_ID_FASCICOLO_SIEP.
 	 *
-	 * @param aIdFasSius
+	 * @param aIdFasSiep
 	 */
 	public void selCondizioneByIdFasSiep(BigDecimal aIdFasSiep) {
+
 		String lCondizioni = new String();
 
 		lCondizioni += " FAS_SIE_ID_FASCICOLO_SIEP = " + aIdFasSiep;
+
+		setCondition(lCondizioni);
+	}
+
+	/**
+	 * Imposta la condizione where per FAS_SIU_ID_FASCICOLO_SIUS.
+	 *
+	 * @param aIdFasSius
+	 */
+	public void selCondizioneByIdFasSius(BigDecimal aIdFasSius) {
+
+		String lCondizioni = new String();
+
+		lCondizioni += " FAS_SIU_ID_FASCICOLO_SIUS = " + aIdFasSius;
+
+		setCondition(lCondizioni);
+	}
+
+	/**
+	 * Imposta la condizione where per FAS_SIE_ID_FASCICOLO_SIEP ed EVE_ID_EVENTO.
+	 *
+	 * @param aIdFasSiep
+	 * @param aIdEvento
+	 */
+	public void selCondizioneByIdFasSiepIdEvento(BigDecimal aIdFasSiep, BigDecimal aIdEvento) {
+
+		String lCondizioni = new String();
+
+		lCondizioni += " FAS_SIE_ID_FASCICOLO_SIEP = " + aIdFasSiep;
+		lCondizioni += " and EVE_ID_EVENTO = " + aIdEvento;
 
 		setCondition(lCondizioni);
 	}
@@ -348,10 +383,11 @@ public class RateizzazionePPDAO extends SIAPTableDAO {
 	 * @param aIdFasSius
 	 * @param aIdEvento
 	 */
-	public void selCondizioneByIdFasSiepIdEvento(BigDecimal aIdFasSiep, BigDecimal aIdEvento) {
+	public void selCondizioneByIdFasSiusIdEvento(BigDecimal aIdFasSius, BigDecimal aIdEvento) {
+
 		String lCondizioni = new String();
 
-		lCondizioni += " FAS_SIE_ID_FASCICOLO_SIEP = " + aIdFasSiep;
+		lCondizioni += " FAS_SIU_ID_FASCICOLO_SIUS = " + aIdFasSius;
 		lCondizioni += " and EVE_ID_EVENTO = " + aIdEvento;
 
 		setCondition(lCondizioni);
@@ -375,6 +411,7 @@ public class RateizzazionePPDAO extends SIAPTableDAO {
 	 *
 	 */
 	public void setOrderBy() {
+
 		String orderBy = "";
 		// =======================================================================
 		// Lasciare orderBy="" se non si vuole scegliere un ordinamento,

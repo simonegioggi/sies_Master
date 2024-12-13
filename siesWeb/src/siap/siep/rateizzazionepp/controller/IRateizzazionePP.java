@@ -46,9 +46,10 @@ public interface IRateizzazionePP {
 
 	public Vector<RateizzazionePPModel> exRicercaRateizzazioniLibereByIdFasc(BigDecimal aIdFasc)
 			throws F3BException;
-//2023.11.09 metodo non più richiamato
-//	public Vector<EventoRateizzazionePPModel> exRicercaEventoRateizzazionePP(BigDecimal idFascicolo,
-//			String motivo, String validato) throws F3BException;
+
+	// 2023.11.09 metodo non più richiamato
+	// public Vector<EventoRateizzazionePPModel> exRicercaEventoRateizzazionePP(BigDecimal idFascicolo,
+	// String motivo, String validato) throws F3BException;
 
 	public Vector<EventoRateizzazionePPModel> exRicercaEventiRateizzazionePP(BigDecimal idFascicolo,
 			String[] motivi, boolean soloValidati) throws F3BException;
@@ -91,5 +92,14 @@ public interface IRateizzazionePP {
 
 	public Vector<RateizzazionePPModel> exRicercaMancatiPagamentiUnicaSoluzione(BigDecimal idFascicoloSiep)
 			throws F3BException;
+
+	// MEV_2023-35: aggiunto metodo di ricerca per id fasc sius
+	public Vector<RateizzazionePPModel> exRicercaRateizzazioniByIdFascicoloSius(BigDecimal idFascicoloSius)
+			throws F3BException;
+	// MEV_2023-35: aggiunto metodo di modifica per rate ed id fasc sius
+	public void exModificaRateizzazioniByIdFascicoloSius(Vector<RateizzazionePPModel> rate,
+			BigDecimal idFascicoloSius) throws F3BException;
+	// MEV_2023-35: aggiunto metodo di cancellazione per rate ed id fasc sius
+	public void exCancellaRateizzazioniByIdFascicoloSius(BigDecimal idFascicoloSius) throws F3BException;
 
 }

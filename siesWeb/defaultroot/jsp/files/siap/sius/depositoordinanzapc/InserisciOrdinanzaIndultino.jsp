@@ -154,8 +154,8 @@
   <FORM method="POST" action="<%=IWebConstants.PG_MAIN%>" name="InserisciOrdinanzaIndultino">
     <table width=35%>
    <tr>
-     <td class="l" width==30%> Data Emissione</td>
-     <td class="l" width==70%> <%=DateUtils.getDateToString(data_emissione,"dd/MM/yyyy")%></td>
+     <td class="l" width="30%"> Data Emissione</td>
+     <td class="l" width="70%"> <%=DateUtils.getDateToString(data_emissione,"dd/MM/yyyy")%></td>
    </tr>
     </table>
 

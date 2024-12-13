@@ -66,7 +66,7 @@ if (modo != null && modo.equalsIgnoreCase("SIGE"))
              else
              {
                lParteInteraMulta = StringUtils.toStringJSP(penacomplessiva.getImportoMulta()).substring(0,lIndexMulta);
-               lParteDecimaleMulta = StringUtils.toStringJSP(penacomplessiva.getImportoMulta()).substring(lIndexMulta+1);;
+               lParteDecimaleMulta = StringUtils.toStringJSP(penacomplessiva.getImportoMulta()).substring(lIndexMulta+1);
              }
   
          
@@ -81,7 +81,7 @@ if (modo != null && modo.equalsIgnoreCase("SIGE"))
              else
              {
                lParteInteraAmmenda = StringUtils.toStringJSP(penacomplessiva.getImportoAmmenda()).substring(0,lIndexAmmenda);
-               lParteDecimaleAmmenda = StringUtils.toStringJSP(penacomplessiva.getImportoAmmenda()).substring(lIndexAmmenda+1);;
+               lParteDecimaleAmmenda = StringUtils.toStringJSP(penacomplessiva.getImportoAmmenda()).substring(lIndexAmmenda+1);
              }            
    
 %>

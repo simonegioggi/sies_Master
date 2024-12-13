@@ -103,18 +103,7 @@ import siap.sius.tenore.model.TenoreModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * <p>
- * Title: DepositoDecretoController
- * </p>
- * <p>
- * Description: Classe Controller per DepositoDecreto
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * DepositoDecretoController - Classe Controller per DepositoDecreto
  *
  * @version 1.0
  */
@@ -126,7 +115,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Effettua l'inserimento di un Deposito Decreto.
-	 * <p>
 	 *
 	 * @param aDepositoDecreto
 	 *            Model con i dati da inserire.
@@ -167,7 +155,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Effettua la ricerca di depositi decreti.
-	 * <p>
 	 *
 	 * @param aDepositoDecreto
 	 *            model deposito decreto con i dati utili per la ricerca.
@@ -200,7 +187,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Effettua la ricerca di un singolo record di deposito decreto.
-	 * <p>
 	 *
 	 * @param aKey
 	 *            l'id del deposito decreto da ricercare.
@@ -238,7 +224,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Ricerca deposito decreto attraverso l'id generato.
-	 * <p>
 	 *
 	 * @param aIdEvento
 	 *            l'id dell'evento.
@@ -276,7 +261,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Ricerca Deposito Decreto Inammissibilità e Motivazioni attraverso l'id generato.
-	 * <p>
 	 *
 	 * @param aIdEvento
 	 *            l'id dell'evento.
@@ -348,7 +332,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 	/**
 	 * Ricerca Deposito Decreto Incompetenza e Motivazioni attraverso l'id generato, inoltre preleva dalla
 	 * tabella evento il flag di stato del documento registrato.
-	 * <p>
 	 *
 	 * @param aIdEvento
 	 *            l'id dell'evento.
@@ -416,7 +399,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Ricerca Deposito Decreto, Evento, Fascicolo SIUS a partire dall'ID Soggetto.
-	 * <p>
 	 * Nota: del Fascicolo vengono valorizzati solo ID, Anno e Progressivo e non gli altri campi.
 	 *
 	 * @param aIdSoggetto
@@ -464,7 +446,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Ricerca Deposito Decreto, Fascicolo SIUS a partire dall'ID Evento Generato.
-	 * <p>
 	 * Nota: del Fascicolo vengono valorizzati solo ID, Anno e Progressivo e non gli altri campi.
 	 *
 	 * @param aIdSoggetto
@@ -496,7 +477,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Verifica l'esistenza di un deposito decreto per l'id di generale procedimento.
-	 * <p>
 	 *
 	 * @param aKey
 	 *            id di generale procedimento.
@@ -536,7 +516,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Verifica l'esistenza di un deposito decreto per l'id di generale procedimento e di un tipo specificato.
-	 * <p>
 	 *
 	 * @param aKey
 	 *            id di generale procedimento,
@@ -580,7 +559,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Verifica l'esistenza di un deposito decreto per l'id di generale procedimento e di un tipo specificato.
-	 * <p>
 	 *
 	 * @param aKey
 	 *            id di generale procedimento,
@@ -625,7 +603,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 	/**
 	 * Verifica l'esistenza di un deposito decreto per l'id di generale procedimento e per cod_esito
 	 * nell'evento collegato.
-	 * <p>
 	 *
 	 * @param aKey
 	 *            : id di generale procedimento,
@@ -664,7 +641,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 	/**
 	 * Verifica l'esistenza di un deposito decreto per l'id di generale procedimento e per Data Emissione
 	 * nell'evento collegato.
-	 * <p>
 	 *
 	 * @param aKey
 	 *            : id di generale procedimento,
@@ -704,7 +680,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 	 * La funzione verifica l'esistenza di almeno un decreto emesso per uno specifico Generale Procedimento
 	 * individuato dal suo id e che sia di un tipo decreto non compreso tra quelli nella lista definita nella
 	 * funzione stessa.
-	 * <p>
 	 *
 	 * @param aKey
 	 *            : id di generale procedimento,
@@ -739,7 +714,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Esegue la modifica di un determinato record di deposito decreto.
-	 * <p>
 	 *
 	 * @param aDepositoDecreto
 	 *            contine i dati con cui modificare il record già esistente.
@@ -778,7 +752,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Esegue la cancellazione di un record del deposito decreto.
-	 * <p>
 	 *
 	 * @param aKeyDepDec
 	 *            : chiave del record
@@ -821,7 +794,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Esegue la cancellazione di un record del deposito decreto.
-	 * <p>
 	 *
 	 * @param aDepDec
 	 *            : model DepositoDecreto in cui siano valorizzati almeno i campi IDDepositoDecreto e
@@ -897,7 +869,7 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 			PeriodoAltraSanzioneModel lPASMod = (PeriodoAltraSanzioneModel) lPASSqlDao.getModelByKey();
 
 			if (lPASMod != null && lPASMod.getFasSiuIdFascicoloSius() != null
-					&& aDepDec.getFlagRecuperoSS().equals("S")) {
+					&& "S".equals(aDepDec.getFlagRecuperoSS())) {
 				// ---- Ricerca in Esecuzione Sanzione Sostitutiva con l'ID del Fascicolo SIUS (PADRE) trovato
 				// ----
 				lESSSqlDao = new EsecuzioneSanzioneSostitutivaSqlDAO(aConn);
@@ -1046,7 +1018,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Esegue l'inserimento del Emissione Decreto Incompetenza.
-	 * <p>
 	 *
 	 * @param aGPTenoreModel
 	 * @param aDepDecrEveModel
@@ -1146,7 +1117,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 	 */
 	/**
 	 * Esegue l'inserimento del Emissione Decreto Incompetenza.
-	 * <p>
 	 *
 	 * @param aGPTenoreModel
 	 * @param aDepDecrEveModel
@@ -1281,17 +1251,11 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Esegue l'inserimento del Emissione Decreto.
-	 * <p>
 	 * Description: Funzione per l'inserimento dell'Emissione di un decreto generico.
-	 * </p>
 	 * Le tabelle coinvolte sono:
-	 * <p>
 	 * DEPOSITO_DECRETO : viene inserito il nuovo record decreto;
-	 * <p>
 	 * EVENTO : viene inserito un nuovo record;
-	 * <p>
 	 * TENORE : vengono chiusi i tenori attivi (data_fine) ed inseriti i nuovi tenori;
-	 * <p>
 	 * GENERALE_PROCEDIMENTO : update del contenuto del procemimento.
 	 *
 	 * @param aGPTenoreModel
@@ -1323,7 +1287,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 	/**
 	 * Metodo che esegue l'inseriemento di un decreto, tale metodo chiama il metodo private ExInserisciDecreto
 	 * appartente a questa classe
-	 * <p>
 	 *
 	 * @param aGPTenoreModel
 	 * @param aDepDecrEveModel
@@ -1387,9 +1350,7 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * 30/08/2007 Inserimento Decreto Licenza o Permesso Transazionale.
-	 * <p>
 	 * Description: Funzione per l'inserimento del decreto di Concessione Licenza/Permesso.
-	 * </p>
 	 *
 	 * @param aGPTenoreModel
 	 * @param aDepDecrEveModel
@@ -1433,10 +1394,8 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 	}
 
 	/**
-	 * <p>
 	 * Description: Funzione per l'inserimento del decreto di Procedimento di Sospensione e Periodo Altra
 	 * Sanzione.
-	 * </p>
 	 *
 	 * @param aGPTenoreModel
 	 * @param aDepDecrEveModel
@@ -1677,7 +1636,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Esegue la stampa decreto.
-	 * <p>
 	 *
 	 * @param aEvento
 	 *            id evento
@@ -1752,7 +1710,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Preleva i dati del decreto.
-	 * <p>
 	 *
 	 * @param aEvento
 	 *            Evento model.
@@ -2352,7 +2309,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 	/**
 	 * STUB: 20030926 - Temporanea per problema riferito al fascicolo siep inestitente a fronte di un fasciclo
 	 * SIUS.
-	 * <p>
 	 * Crea la root del Documento
 	 *
 	 * @param aEveModel
@@ -2384,7 +2340,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 	/**
 	 * STUB: 20031014 - Recupero dei destinatari con impipamento dei dati nel formato TIPO DESTINATARIO | SEDE
 	 * | COD_UFFICIO .
-	 * <p>
 	 *
 	 * @param aIdDepositoDecreto
 	 * @return lStampa
@@ -2481,7 +2436,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Esegue la ricerca del deposito ordinanza per l'id di Evento.
-	 * <p>
 	 *
 	 * @param aEveKey
 	 *            id Evento.
@@ -2518,7 +2472,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Esegue la ricerca del deposito ordinanza per l'id di Evento.
-	 * <p>
 	 *
 	 * @param aEveKey
 	 *            id Evento.
@@ -2763,7 +2716,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Esecuzione stampa Emissione Decreto
-	 * <p>
 	 *
 	 * @param aModel
 	 * @return ByteArrayOutputStream
@@ -2827,7 +2779,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Esecuzione stampa Foglio Complementare
-	 * <p>
 	 *
 	 * @param aModel
 	 * @return ByteArrayOutputStream
@@ -3123,10 +3074,8 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 	}
 
 	/**
-	 * <p>
 	 * Description: Funzione per l'inserimento del decreto di Procedimento di Sospensione e Periodo Altra
 	 * Misura
-	 * </p>
 	 *
 	 * @param aGPTenoreModel
 	 * @param aDepDecrEveModel
@@ -3258,9 +3207,7 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * 07/2014 Inserimento Decreto Revoca liberazione Anticipata.
-	 * <p>
 	 * Description: Funzione per l'inserimento del decreto di Revoca liberazione Anticipata ,
-	 * </p>
 	 * Inserimento Decreto Violazione art 3 CEDU,
 	 *
 	 * @param aGPTenoreModel
