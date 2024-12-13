@@ -16,6 +16,14 @@ MEV_21 (Interazione col Registro Generale degli Indirizzi Elettronici - ReGIndE)
 
 8)	in data 22/02/2024 eseguito merge con versione 12.5.6.0
 
-9)	in data 10/04/2024 eseguito merge con Branch MEV_2023-33
+9)	in data 10/04/2024 eseguito merge con Branch MEV_2023-033
 
 10) in data 18/09/2024 eseguito merge con versione 12.6.2.0
+
+11)	in data 13/12/2024 eseguito merge con versione 12.6.3.0
+
+12)	in data 13/12/2024 eseguito merge con versione 12.6.4.0
+
+13)	in data 13/12/2024 eseguito merge con Branch MEV_2023-035
+
+14)	in data 13/12/2024 eseguito merge con Branch MEV_2024-092_FASE-1
