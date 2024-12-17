@@ -459,6 +459,8 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 		}
 		}
 
+		
+		
 		// vecchio affidamento in prova provvisorio
 		if ((aFlagAffi != null && aFlagAffi.equals("S"))
 				|| (aPosizione.equals("13")
@@ -500,7 +502,7 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 			lEve.getEvento().setCodMotivo("5464");
 
 		// MEV_2024-092: richiesta valida solo se soggetto libero
-		List<String> posizioniLibero = Arrays.asList("7", "10", "16", "17", "20", "26", "30", "46", "47");
+		List<String> posizioniLibero = Arrays.asList("07", "10", "16", "17", "20", "26", "30", "46", "47");
 		if (posizioniLibero.contains(aPosizione)) {
 			// '26' - RICHIESTA
 			if ("26".equals(lEve.getEvento().getCodTipoProvvedimento())) {

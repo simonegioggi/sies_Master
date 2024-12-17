@@ -326,7 +326,21 @@ if (!lPosizione.isLibero()
 			alert("Selezionare l'Oggetto della Decisione");
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiEvento.CAMPO_COD_MOTIVO%>.focus();
 			return false;
-  		}  
+  		} 
+		
+	  	<%-- 2024.12 Si aggiunge obbligatorietà campo Luogo della prova per affidamento in prova--%>
+		<% if (tipomisura.equals("AFFIDAMENTO") || tipomisura.equals("DETENZIONE")   ) { %>
+		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA%>.value == "") {
+			<% if (tipomisura.equals("AFFIDAMENTO")) { %>
+			alert("Il campo Luogo della Prova e' obbligatoria");
+			<% } else if (tipomisura.equals("DETENZIONE") ) { %>
+			alert("Il campo Luogo della Detenzione e' obbligatorio");
+			<% } %>
+			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA%>.focus();
+			return false;
+  		}
+		<% } %>
+		<%-- 2024.12 - FINE --%>
 	}
 <%
 // Check su Data Inizio Misura

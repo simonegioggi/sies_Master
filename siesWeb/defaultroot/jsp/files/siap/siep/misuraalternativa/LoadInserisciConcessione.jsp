@@ -214,6 +214,22 @@ if (!lPosizione.isLibero() || ("S".equals(lFascicoloAssociato.getFlagAltraCausa(
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_SEDE_TDS_EMITT%>.focus();
 			return false;
   		}
+		
+		<%-- 2024.12 Si aggiunge obbligatorietà campo Luogo della prova per affidamento in prova--%>
+		<% if (tipoMisura.equals("AFFIDAMENTO")  || tipoMisura.equals("DETENZIONE")   ) { %>
+		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA%>.value == "") {
+			<% if (tipoMisura.equals("AFFIDAMENTO")) { %>		
+			alert("Il campo Luogo della Prova e' obbligatorio");
+			<% } else if (tipoMisura.equals("DETENZIONE") ) { %>
+			alert("Il campo Luogo della Detenzione Domiciliare e' obbligatorio");
+			<% } %>
+			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA%>.focus();
+			return false;
+  		}
+		<% } %>
+		<%-- 2024.12 - FINE --%>
+		
+		
 <%-- MEV_2019-09-SIEP: aggiunti controlli per determinati codici di AFFIDAMENTO + DETENZIONE + SEMILIBERTA
 <%-- MEV_2024-092: rimossi i controlli per determinati codici di AFFIDAMENTO + DETENZIONE + SEMILIBERTA
 <%-- 		if (codMotivo == "0720" || codMotivo == "0721" || codMotivo == "0722" || codMotivo == "0723" || codMotivo == "0730"
