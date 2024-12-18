@@ -2339,16 +2339,31 @@ if (eventonotifica != null && eventonotifica.getNotifiche() != null && eventonot
 if (posizioneluogoaltra != null &&  posizioneluogoaltra .getLuogoDetenzione()!= null
 		&& posizioneluogoaltra .getLuogoDetenzione().getIstitutoDetenzione() != null) {
 %>
-			<input readonly Title="Istituto" name="Comune" value="<%=StringUtils.toStringJSP(posizioneluogoaltra.getLuogoDetenzione().getIstitutoDetenzione().getDescrTipoIstituto())%> di <%=StringUtils.toStringJSP(posizioneluogoaltra.getLuogoDetenzione().getIstitutoDetenzione().getDescrComune())%>" size=50>
-			<input type="hidden" Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="<%=posizioneluogoaltra.getLuogoDetenzione().getIstDetIdIstitutoDetenzione()%>" size=50>
+			<input readonly Title="Istituto" name="Comune" value="<%=StringUtils.toStringJSP(posizioneluogoaltra.getLuogoDetenzione().getIstitutoDetenzione().getDescrTipoIstituto())%> di <%=StringUtils.toStringJSP(posizioneluogoaltra.getLuogoDetenzione().getIstitutoDetenzione().getDescrComune())%>" size="50">
+			<input type="hidden" Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="<%=posizioneluogoaltra.getLuogoDetenzione().getIstDetIdIstitutoDetenzione()%>">
 			<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciMisuraAlternativa','<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
 				<img src="/images/filefolder.gif" border=0>
 			</a>
 <%
+// MEV_2024-092: aggiunto ramo elseif con ciclo sulle notifiche come nel dettaglioConcessione.jsp
+} else if (eventonotifica != null && eventonotifica.getNotifiche() != null && eventonotifica.getNotifiche().length > 0) {
+	for (int n = 0; n < eventonotifica.getNotifiche().length; n++) {
+		if (eventonotifica.getNotifiche()[n].getCodTipoNotifica().equals("E")
+				&& eventonotifica.getNotifiche()[n].getIstitutoDetenzione() != null) {
+%>
+			<input readonly Title="Istituto" name="Comune" value="<%=StringUtils.toStringJSP(eventonotifica.getNotifiche()[n].getIstitutoDetenzione().getDescrTipoIstituto())%>&nbsp;di&nbsp;<%=StringUtils.toStringJSP(eventonotifica.getNotifiche()[n].getIstitutoDetenzione().getDescrComune())%>" size="50">
+			<input type="hidden" Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="<%=eventonotifica.getNotifiche()[n].getIstitutoDetenzione().getIdIstitutoDetenzione()%>">
+			<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciMisuraAlternativa','<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
+				<img src="/images/filefolder.gif" border=0>
+			</a>
+<%
+			break;
+		}
+	}
 } else {
 %>
-			<input readonly Title="Istituto" name="Comune" value="" size=50>
-			<input type="hidden" Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="" size=35>
+			<input readonly Title="Istituto" name="Comune" value="" size="50">
+			<input type="hidden" Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="">
 			<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciMisuraAlternativa','<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
 				<img src="/images/filefolder.gif" border=0>
 			</a>
