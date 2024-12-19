@@ -2,6 +2,7 @@ package siap.sius.avvocato.action;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -29,7 +30,7 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 	public String processRequest() throws F3BException {
 
 		AvvocatoModel am = new AvvocatoModel();
-		List v = null;
+		List listaAvvocati = null;
 		am.setCognome(getRequestStringParameter(CAMPO_COGNOME));
 		am.setNome(getRequestStringParameter(CAMPO_NOME));
 		am.setForo(getRequestStringParameter(CAMPO_FORO));
@@ -83,9 +84,19 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 				siesLogger.debug("Totale Soggetti (avvocati) trovati: " + listaSoggetti.length);
 
 			if (listaSoggetti != null && listaSoggetti.length > 0) {
-				v = new ArrayList(Arrays.asList(listaSoggetti));
-				siesLogger.debug("Elementi trovati: " + v.size());
-				if (v.size() > 200) // max 200 avvocati
+				listaAvvocati = new ArrayList(Arrays.asList(listaSoggetti));
+
+				siesLogger.debug("Avvocati trovati prima del ciclo: " + listaAvvocati.size());
+				Iterator<Soggetto> avvocati = listaAvvocati.iterator();
+				while (avvocati.hasNext()) {
+					Soggetto avvocato = avvocati.next();
+					if (!Utils.isNullObj(avvocato.getSoggetto())
+							&& Utils.isNullObj(avvocato.getSoggetto().getDataNascita()))
+						avvocati.remove();
+				}
+				siesLogger.debug("Avvocati trovati dopo del ciclo: " + listaAvvocati.size());
+
+				if (listaAvvocati.size() > 200) // max 200 avvocati
 					throw new SearchLimitException();
 			} else
 				siesLogger.debug("Nessun Avvocato trovato!");
@@ -105,7 +116,7 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 		}
 
 		setRequestAttribute("formname", getRequestStringParameter("formname"));
-		setRequestAttribute("avvocato", v);
+		setRequestAttribute("avvocato", listaAvvocati);
 
 		return PG_RICERCA_AVVOCATO_REGINDE;
 	}

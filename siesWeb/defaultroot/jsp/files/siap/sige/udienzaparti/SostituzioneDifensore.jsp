@@ -42,13 +42,13 @@ AvvocatoModel lAvv = avvocato.getAvvocato();
   var desktop;
 
 //Enable ComboBox
-  function EnableCombo() {
-  	document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>.disabled = false;
-  	document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_FORO%>.disabled = false;
-  	document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA%>.disabled = false;
-  }
+function EnableCombo() {
+	document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>.disabled = false;
+	document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_FORO%>.disabled = false;
+	document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA%>.disabled = false;
+}
   
-  function Inserisci() {
+function Inserisci() {
 	// MEV_21 - Aggiunti controlli per inserimento avvocato non certificato.
 		if (document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_COGNOME%>.value.length==0 ) {
 			alert('Il Cognome è obbligatorio');
@@ -85,11 +85,11 @@ AvvocatoModel lAvv = avvocato.getAvvocato();
 		if (document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>.value.length==1)
 			document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>.value='0'+document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>.value;
 
-		var data_to_verify=document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>.value+'/'+document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>.value+'/'+document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA%>.value;
-		if (! ControllaData(data_to_verify)) {
-			alert('Data di nascita non valida');
-			return false;
-		}
+<%-- 		var data_to_verify=document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>.value+'/'+document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>.value+'/'+document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA%>.value; --%>
+// 		if (! ControllaData(data_to_verify)) {
+// 			alert('Data di nascita non valida');
+// 			return false;
+// 		}
 
 		if (document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_COD_TIPO%>.value == "-") {
 			alert('Il tipo difensore è obbligatorio');

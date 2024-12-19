@@ -114,11 +114,11 @@
 		if (document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>.value.length==1)
 			document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>.value='0'+document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>.value;
 	
-		var data_to_verify=document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>.value+'/'+document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>.value+'/'+document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA%>.value;
-		if (! ControllaData(data_to_verify)) {
-			alert('Data di nascita non valida');
-			return false;
-		}
+<%-- 		var data_to_verify=document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>.value+'/'+document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>.value+'/'+document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA%>.value; --%>
+// 		if (! ControllaData(data_to_verify)) {
+// 			alert('Data di nascita non valida');
+// 			return false;
+// 		}
 	
 		if (document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_COD_TIPO%>.value == "-") {
 			alert('Il tipo difensore è obbligatorio');
@@ -128,9 +128,8 @@
 
   	// 20210812 MEV_21 - Controlli per inserimento manuale avvocato presentante solo se check depositata.
 	var lTipoInsP = document.LoadInserisciSentenza.lTipoInserimentoP.value;
-	if ((document.LoadInserisciSentenza.<%=ICostantiNuovaIstanza.CAMPO_FLAG_PRESDEP %>[0].checked == true)	&& 
-	    (lTipoInsP == 'manuale' ) )
-	{
+	if ((document.LoadInserisciSentenza.<%=ICostantiNuovaIstanza.CAMPO_FLAG_PRESDEP %>[0].checked == true)
+			&& (lTipoInsP == 'manuale')) {
 		if (document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_COGNOME_P%>.value.length==0 ) {
 			alert('Il Cognome è obbligatorio');
 			document.LoadInserisciSentenza.<%= ICostantiAvvocato.CAMPO_COGNOME_P %>.focus;
@@ -166,11 +165,11 @@
 		if (document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA_P%>.value.length==1)
 			document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA_P%>.value='0'+document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA_P%>.value;
 
-		var data_to_verify=document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA_P%>.value+'/'+document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA_P%>.value+'/'+document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA_P%>.value;
-		if (! ControllaData(data_to_verify)) {
-			alert('Data di nascita non valida');
-			return false;
-		}
+<%-- 		var data_to_verify=document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA_P%>.value+'/'+document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA_P%>.value+'/'+document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA_P%>.value; --%>
+// 		if (! ControllaData(data_to_verify)) {
+// 			alert('Data di nascita non valida');
+// 			return false;
+// 		}
 	}
 	
    }

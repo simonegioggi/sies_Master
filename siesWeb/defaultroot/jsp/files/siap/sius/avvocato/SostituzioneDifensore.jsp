@@ -96,11 +96,11 @@ AvvocatoSiusModel avvocato = new AvvocatoSiusModel();
     if (document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>.value.length==1)
       document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>.value='0'+document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>.value;
 
-    var data_to_verify=document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>.value+'/'+document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>.value+'/'+document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA%>.value;
-    if (! ControllaData(data_to_verify)) {
-      alert('Data di nascita non valida');
-      return false;
-    }   
+<%--     var data_to_verify=document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>.value+'/'+document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>.value+'/'+document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA%>.value; --%>
+//     if (! ControllaData(data_to_verify)) {
+//       alert('Data di nascita non valida');
+//       return false;
+//     }   
  
     if (Verify()) {
       document.LoadModificaAvvocato.<%=IWebConstants.ACTION_FIELD%>.value="siap.sius.avvocato.action.ActSostituzioneDifensore";

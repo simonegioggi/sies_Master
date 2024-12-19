@@ -249,9 +249,9 @@ if (avvocato.size() > 0 && avvocato.size() < 201) {
 				'<%=StringUtils.cStrForJS(fax)%>','<%=StringUtils.cStrForJS(email)%>',
 				'<%=StringUtils.cStrForJS(si.getPec())%>','<%=StringUtils.cStrForJS(si.getCodFisc())%>',
 				'<%=StringUtils.cStrForJS(si.getLuogoNascita())%>','<%=StringUtils.cStrForJS(nazione)%>',
-				'<%=StringUtils.cStrForJS(DateUtils.getDateToString(si.getDataNascita().getTime(),"dd"))%>',
-				'<%=StringUtils.cStrForJS(DateUtils.getDateToString(si.getDataNascita().getTime(),"MM"))%>',
-				'<%=StringUtils.cStrForJS(DateUtils.getDateToString(si.getDataNascita().getTime(),"yyyy"))%>',
+				'<%=StringUtils.cStrForJS(DateUtils.getDateToString(dn, "dd"))%>',
+				'<%=StringUtils.cStrForJS(DateUtils.getDateToString(dn, "MM"))%>',
+				'<%=StringUtils.cStrForJS(DateUtils.getDateToString(dn, "yyyy"))%>',
 				'<%=StringUtils.cStrForJS(comune)%>','<%=StringUtils.cStrForJS(statoAvv)%>');">
 				<img align="middle" src="/images/fileselected.gif" border="0" style="vertical-align: super;" alt="Inserisci">
 			</a>

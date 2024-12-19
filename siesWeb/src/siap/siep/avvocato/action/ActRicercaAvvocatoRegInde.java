@@ -2,6 +2,7 @@ package siap.siep.avvocato.action;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -74,10 +75,25 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 			else
 				listaSoggetti = port.ricercaSoggettoComplete(am.getCognome() != null ? am.getCognome() : "",
 						am.getNome() != null ? am.getNome() : "", null, null, foro, null, null);
-			siesLogger.debug("Totale Soggetti (avvocati) trovati: " + listaSoggetti.length);
+
+			if (listaSoggetti == null)
+				siesLogger.debug("Totale Soggetti (avvocati) trovati: null");
+			else
+				siesLogger.debug("Totale Soggetti (avvocati) trovati: " + listaSoggetti.length);
+
 			if (listaSoggetti != null && listaSoggetti.length > 0) {
 				listaAvvocati = new ArrayList(Arrays.asList(listaSoggetti));
-				siesLogger.debug("Elementi trovati: " + listaAvvocati.size());
+
+				siesLogger.debug("Avvocati trovati prima del ciclo: " + listaAvvocati.size());
+				Iterator<Soggetto> avvocati = listaAvvocati.iterator();
+				while (avvocati.hasNext()) {
+					Soggetto avvocato = avvocati.next();
+					if (!Utils.isNullObj(avvocato.getSoggetto())
+							&& Utils.isNullObj(avvocato.getSoggetto().getDataNascita()))
+						avvocati.remove();
+				}
+				siesLogger.debug("Avvocati trovati dopo del ciclo: " + listaAvvocati.size());
+
 				if (listaAvvocati.size() > 200) // max 200 avvocati
 					throw new SearchLimitException();
 			} else
@@ -98,9 +114,10 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 		setRequestAttribute("formname", getRequestStringParameter("formname"));
 		setRequestAttribute("avvocato", listaAvvocati);
 
-		//202110810 Controllo parametro per la diversificazione della destinazione della ricerca (Avvocato presentante Istanza).
-		if (!isRequestParameterNullObj("formFiltra")		&&
-		   ("FiltraInsAvvReginde".equals(getRequestStringParameter("formFiltra"))) )
+		// 202110810 Controllo parametro per la diversificazione della destinazione della ricerca (Avvocato
+		// presentante Istanza).
+		if (!isRequestParameterNullObj("formFiltra")
+				&& ("FiltraInsAvvReginde".equals(getRequestStringParameter("formFiltra"))))
 			return PG_RICERCA_INSAVV_REGINDE;
 		else
 			return PG_RICERCA_AVVOCATO_REGINDE;
