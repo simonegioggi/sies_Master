@@ -17,6 +17,7 @@ import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
+import f3b.util.Utils;
 import siap.controller.SiapController;
 import siap.sico.cssa.dao.CSSASqlDAO;
 import siap.sico.decodifiche.dao.DecodificheDAO;
@@ -46,6 +47,9 @@ import siap.siep.notifica.controller.INotifica;
 import siap.siep.notifica.dao.NotificaDAO;
 import siap.siep.penapecuniaria.dao.RichiestaConversioneDAO;
 import siap.siep.penapecuniaria.model.RichiestaConversioneModel;
+import siap.siep.rateizzazionepp.controller.IRateizzazionePP;
+import siap.siep.rateizzazionepp.dao.RateizzazionePPDAO;
+import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 import siap.siep.scambiosanzione.dao.ScambioSanzioneDAO;
 import siap.siep.scambiosanzione.dao.ScambioSanzioneSqlDAO;
 import siap.siep.scambiosanzione.model.ScambioSanzioneModel;
@@ -77,8 +81,10 @@ import siap.sius.esecuzionesanzionesostitutiva.model.EsecuzioneSanzioneSostituti
 import siap.sius.fascicolo.dao.FascicoloGPSqlDAO;
 import siap.sius.fascicolo.dao.FascicoloSiusDAO;
 import siap.sius.fascicolo.model.FascicoloGPModel;
+import siap.sius.generaleprocedimento.controller.IGeneraleProcedimento;
 import siap.sius.generaleprocedimento.dao.GeneraleProcedimentoDAO;
 import siap.sius.generaleprocedimento.model.GPTenoreModel;
+import siap.sius.generaleprocedimento.model.GeneraleProcedimentoModel;
 import siap.sius.misurasicurezza.dao.PeriodoAltraMisuraDAO;
 import siap.sius.misurasicurezza.dao.PeriodoAltraMisuraSqlDAO;
 import siap.sius.misurasicurezza.model.PeriodoAltraMisuraModel;
@@ -98,18 +104,7 @@ import siap.sius.tenore.model.TenoreModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * <p>
- * Title: DepositoOrdinanzaPcController
- * </p>
- * <p>
- * Description: Classe Controller per DepositoOrdinanzaPc
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * DepositoOrdinanzaPcController - Classe Controller per DepositoOrdinanzaPc
  *
  * @version 1.0
  */
@@ -121,7 +116,6 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 
 	/**
 	 * Esegue l'inserimento dell'Evento, DepositoOrdinanza e tenori.
-	 * <p>
 	 *
 	 * @param aModel
 	 * @return lModel
@@ -265,7 +259,6 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 
 	/**
 	 * Metodo che preleva il deposito ordinanza + tenori per id GenProc.
-	 * <p>
 	 *
 	 * @param aKey
 	 *            generale procedimento id
@@ -319,19 +312,10 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 	}
 
 	/**
-	 * Esegue l'inserimento del Emissione Ordinanza.
-	 * <p>
-	 * Description: Funzione per l'inserimento dell'Emissione di un'ordinanza generico.
-	 * </p>
-	 * Le tabelle coinvolte sono:
-	 * <p>
-	 * DEPOSITO_ORDINANZAPC : viene inserito il nuovo record decreto;
-	 * <p>
-	 * EVENTO : viene inserito un nuovo record;
-	 * <p>
-	 * TENORE : vengono chiusi i tenori attivi (data_fine) ed inseriti i nuovi tenori;
-	 * <p>
-	 * GENERALE_PROCEDIMENTO : update del contenuto del procemimento.
+	 * Esegue l'inserimento del Emissione Ordinanza. Funzione per l'inserimento dell'Emissione di un'ordinanza
+	 * generico. Le tabelle coinvolte sono: DEPOSITO_ORDINANZAPC : viene inserito il nuovo record decreto;
+	 * EVENTO : viene inserito un nuovo record; TENORE : vengono chiusi i tenori attivi (data_fine) ed
+	 * inseriti i nuovi tenori; GENERALE_PROCEDIMENTO : update del contenuto del procemimento.
 	 *
 	 * @param OrdinanzaEventoTenoriGProcModel
 	 * @throws F3BException
@@ -387,18 +371,9 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 
 	/**
 	 * Esegue l'inserimento del Emissione Ordinanza e l'aggiornamento del Fascicolo SIUS origine collegato al
-	 * Fascicolo SIUS.
-	 * <p>
-	 * Description: Funzione per l'inserimento dell'Emissione di un'ordinanza generico.
-	 * </p>
-	 * Le tabelle coinvolte sono:
-	 * <p>
-	 * DEPOSITO_ORDINANZAPC : viene inserito il nuovo record decreto;
-	 * <p>
-	 * EVENTO : viene inserito un nuovo record;
-	 * <p>
-	 * TENORE : vengono chiusi i tenori attivi (data_fine) ed inseriti i nuovi tenori;
-	 * <p>
+	 * Fascicolo SIUS. Funzione per l'inserimento dell'Emissione di un'ordinanza generico. Le tabelle
+	 * coinvolte sono: DEPOSITO_ORDINANZAPC : viene inserito il nuovo record decreto; EVENTO : viene inserito
+	 * un nuovo record; TENORE : vengono chiusi i tenori attivi (data_fine) ed inseriti i nuovi tenori;
 	 * GENERALE_PROCEDIMENTO : update del contenuto del procemimento. FASCICOLO_SIUS : update del ID FASCICOLO
 	 * ORIGINE.
 	 *
@@ -444,8 +419,6 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 
 	/**
 	 * Esegue l'inserimento del Ordinanza di Liberazione Anticipata.
-	 *
-	 * <p>
 	 */
 	public OrdinanzaEventoTenoriGProcModel ExInserisciOrdinanzaLibAnt(
 			OrdinanzaEventoTenoriGProcModel aGProcOrdEveTenori, LicenzaPeriodiLibAnticipataModel[] aLicenze)
@@ -737,7 +710,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("Fase di chiusura per il Tenore");
+			siesLogger.debug("Fase di apertura per il Tenore");
 			TenoreModel lTenore = new TenoreModel();
 			// Valorizzazione dei campi da aggiornare + update
 			lTenore.setCodOperatoreAggiornamento(
@@ -814,7 +787,9 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 		} catch (Exception e) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("Exception: " + e);
+			siesLogger.error("Exception: " + e);
+			// MEV_2023-35: aggiunto rilancio di eccezione
+			throw new SIUSException("DepositoOrdinanzaPcController.ExInserisciOrdinanza:" + e);
 		} finally {
 			cleanup(lGenProcDao);
 			cleanup(lTenoreDao);
@@ -926,7 +901,8 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + ex);
-			throw new F3BException("DepositoOrdinanzaPcController.ExModifica: Non posso inserire: " + ex);
+			throw new F3BException("DepositoOrdinanzaPcController.ExModificaDepositoOrdinanzaPc: Non posso "
+					+ "inserire: " + ex);
 		} finally {
 			cleanup(lDepDao);
 			cleanup(lConn);
@@ -1012,7 +988,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			PeriodoAltraSanzioneModel lPASMod = (PeriodoAltraSanzioneModel) lPASSqlDao.getModelByKey();
 
 			if (lPASMod != null && lPASMod.getFasSiuIdFascicoloSius() != null
-					&& aDepOrd.getFlagRecuperoSS().equals("S")) {
+					&& "S".equals(aDepOrd.getFlagRecuperoSS())) {
 				// ---- Ricerca in Esecuzione Sanzione Sostitutiva con l'ID del Fascicolo SIUS (PADRE) trovato
 				// ----
 				lESSSqlDao = new EsecuzioneSanzioneSostitutivaSqlDAO(aConn);
@@ -1039,7 +1015,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// LogF3B.getLogger()
 					siesLogger.debug(
-							">>>> Modificata Esecuzione Sanzione Sostitutiva collegata a DepOrdinanzaPC"
+							">>>> Modificata Esecuzione Sanzione Sostitutiva collegata a DepOrdinanzaPC "
 									+ lIdDepOrd);
 				}
 			}
@@ -1051,7 +1027,8 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			lPASDao.delete();
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug(">>>> Cancellata Periodo Altra Sanzione collegata a DepOrdinanzaPC" + lIdDepOrd);
+			siesLogger
+					.debug(">>>> Cancellata Periodo Altra Sanzione collegata a DepOrdinanzaPC " + lIdDepOrd);
 
 			// 06-03-2009 Modifica di eventuali Richieste Conversioni Pene Pecuniarie (Con Azzeramento dati di
 			// Ordinanza).
@@ -1076,14 +1053,64 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 				lRCDao.update();
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
-				siesLogger.debug(">>>> Aggiornate le Richieste Conv. Pene Pec. collegata a DepOrdinanzaPC"
+				siesLogger.debug(">>>> Aggiornate le Richieste Conv. Pene Pec. collegata a DepOrdinanzaPC "
 						+ lIdDepOrd);
 			}
 
-			// Per le Ordinanze di Applicazione Misure Sicurezza, se l'Ordinanza stessa ha trasformato la
-			// misura
-			// occorre cancellare la misura generata dall' Ordinanza
+			// MEV_2023-35 - Revoca e Conversione Pena Pecuniaria Sostitutiva
+			// Il record RICHIESTA_CONVERSIONE con i dati dell'ordinanza punta l'evento.
+			// Va eliminato prima di eliminare l'evento
+			if (aDepOrd.getCodTipoOrdinanza()
+					.compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_REVOCA_PENA_SOST) == 0) {
+				lRCDao = new RichiestaConversioneDAO(aConn);
+				lRCDao.selCondizioneByIdEvento(aDepOrd.getIdEventoGenerato());
+				lRCDao.delete();
+				siesLogger.debug(">>>> Elimino il record Richieste Conv collegato all'evento "
+						+ aDepOrd.getIdEventoGenerato());
+			}
 
+			// MEV_2023-35 - Revoca e Conversione Pena Sostitutiva
+			// anche x RECLAMO_AVVERSO_REVOCA_PENA_SOSTITUTIVA
+			// Il record ESECUZIONE_SANZ_SOST con i dati dell'ordinanza punta il deposito ordinanza
+			// Va eliminato prima di eliminare l'evento!
+			if (aDepOrd.getCodTipoOrdinanza()
+					.compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_PENA_SOSTITUTIVA) == 0
+					|| aDepOrd.getCodTipoOrdinanza().compareTo(
+							ICostantiDepositoOrdinanzaPc.RECLAMO_AVVERSO_REVOCA_PENA_SOSTITUTIVA) == 0) {
+				lESSDao = new EsecuzioneSanzioneSostitutivaDAO(aConn);
+				lESSDao.setCondizioneDeleteByGP(lIdDepOrd);
+				lESSDao.delete();
+				siesLogger.debug(
+						">>>> Elimino il record ESECUZIONE_SANZ_SOST collegate al deposito " + lIdDepOrd);
+			}
+
+			// MEV_2023-35 - Conversione pene pecuniarie principali per mancato pagamento
+			// (artt. 102 - 103 L. 689/81 - 55 d. lgs. 274/00)
+			// Il record di rateizzazione_pp va eliminato prima di eliminare l'evento!
+			// U142 S33 SR Conversione pene pecuniarie principali per mancato pagamento
+			if (aDepOrd.getCodTipoOrdinanza().compareTo(
+					ICostantiDepositoOrdinanzaPc.CONVERSIONE_PENE_PECUNIARIE_MANCATO_PAGAMENTO) == 0) {
+				IGeneraleProcedimento igp = SIUSLookupRemote.getGeneraleProcedimentoRemote();
+				GeneraleProcedimentoModel gpm = new GeneraleProcedimentoModel();
+				gpm.setIdGeneraleProcedimento(aDepOrd.getGenPridGeneraleProcedimento());
+				Vector vGP = igp.ExRicercaGeneraleProcedimento(gpm);
+				if (!Utils.isNullObj(vGP) && !vGP.isEmpty()) {
+					GeneraleProcedimentoModel gpmFS = (GeneraleProcedimentoModel) vGP.firstElement();
+					if (!Utils.isNullObj(gpmFS) && !Utils.isNullObj(gpmFS.getFasSiuIdFascicoloSius())) {
+						IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
+						Vector<RateizzazionePPModel> rate = irpp.exRicercaRateizzazioniByIdFascicoloSius(
+								gpmFS.getFasSiuIdFascicoloSius());
+						if (!Utils.isNullObj(rate) && !rate.isEmpty()) {
+							irpp.exCancellaRateizzazioniByIdFascicoloSius(gpmFS.getFasSiuIdFascicoloSius());
+							siesLogger.debug(">>>> Elimino i record RateizzazionePP al fascicolo SIUS "
+									+ gpmFS.getFasSiuIdFascicoloSius());
+						}
+					}
+				}
+			}
+
+			// Per le Ordinanze di Applicazione Misure Sicurezza, se l'Ordinanza stessa ha trasformato la
+			// misura occorre cancellare la misura generata dall' Ordinanza
 			// 13/02/2015 La Misura di Sicurezza va cancellata se CodTipoOrdinanza rientra in uno specifico
 			// gruppo di valori.
 			// if (aDepOrd.getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.MISURA_SICUREZZA)==0)
@@ -1134,12 +1161,8 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			PeriodoAltraMisuraModel lPAMMod = (PeriodoAltraMisuraModel) lPAMSqlDao.getModelByKey();
 
 			if (lPAMMod != null && lPAMMod.getFasSiuIdFascicoloSius() != null
-					&& aDepOrd.getFlagRecuperoSS() != null && aDepOrd.getFlagRecuperoSS().equals("S")) // Al
-																										// momento
-																										// il
-																										// Flag
-																										// Recupero
-			{ // non e' utilizzato per
+					&& aDepOrd.getFlagRecuperoSS() != null && aDepOrd.getFlagRecuperoSS().equals("S")) {
+				// Al momento il Flag Recupero non e' utilizzato per
 				// ---- Ricerca in Esecuzione Misura Sicurezza con l'ID del Fascicolo SIUS (PADRE) trovato
 				// ---- // le Misure di Sicurezza
 				lEMSSqlDao = new EsecuzioneMisuraSicurezzaSqlDAO(aConn); // (24/5/2011)
@@ -1451,7 +1474,6 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 
 	/**
 	 * Esecuzione stampa Emissione Ordinanza
-	 * <p>
 	 *
 	 * @param aModel
 	 * @return ByteArrayOutputStream
@@ -1543,7 +1565,6 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 
 	/**
 	 * Esegue la ricerca del deposito ordinanza per l'id di generale procedimento.
-	 * <p>
 	 *
 	 * @param aGenProcKey
 	 *            id generale procedimento.
@@ -1579,7 +1600,6 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 
 	/**
 	 * Esegue la ricerca del deposito ordinanza per l'id di generale procedimento e per tipo ordinanza.
-	 * <p>
 	 *
 	 * @param aGenProcKey
 	 *            id generale procedimento,
@@ -1618,7 +1638,6 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 	/**
 	 * Inserisce la data di deposito dell'ordinanza, aggiorna l'evento e inserisce una notifica per ogni
 	 * destinatario.
-	 * <p>
 	 *
 	 * @param aFasGPMod
 	 *            dati del fasciclo GP Model.
@@ -1953,6 +1972,10 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			// nella tabella SCAMBIO_SANZIONE.
 			if (lDepMod.getCodTipoOrdinanza()
 					.compareTo(ICostantiDepositoOrdinanzaPc.APPLICAZIONE_SANZIONI_SOSTITUTIVE) == 0
+					// MEV_2023-35 - Per scivere su SCAMBIO_SANZIONE
+					|| lDepMod.getCodTipoOrdinanza()
+							.compareTo(ICostantiDepositoOrdinanzaPc.APPLICAZIONE_PENE_SOSTITUTIVE) == 0
+					// MEV_2023-35 - FINE
 					|| lDepMod.getCodTipoOrdinanza()
 							.compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_SANZIONI_SOSTITUTIVE) == 0
 					|| lDepMod.getCodTipoOrdinanza()
@@ -2151,7 +2174,6 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 
 	/**
 	 * Verifica l'esistenza di un deposito decreto per l'id di generale procedimento.
-	 * <p>
 	 *
 	 * @param aKey
 	 *            id di generale procedimento.
@@ -2192,7 +2214,6 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 	 * La funzione verifica l'esistenza di almeno un'ordinanza emesso per uno specifico Generale Procedimento
 	 * individuato dal suo id e che sia di un tipo decreto non compreso tra quelli nella lista definita nella
 	 * funzione stessa.
-	 * <p>
 	 *
 	 * @param aKey
 	 *            : id di generale procedimento,
@@ -2228,7 +2249,6 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 	/**
 	 * Esegue la ricerca di una Ordinanza aggregando dati : Evento, Prescrizioni e Tenori, per la chiave
 	 * idEvento.
-	 * <p>
 	 *
 	 * @param aIdEvento
 	 *            id evento per ricerca ordinanza.
@@ -2262,8 +2282,11 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			DepositoOrdinanzaPcModel lDepOrdMod = new DepositoOrdinanzaPcModel();
 
 			/*
-			 * ISSUE MEV : eseguito merge tra 15 MEV: interpretazione con codice commentato Numero MEV : SIES
-			 * v10 Autore : gioggi Data : 27/gen/2016 Branch : MEV_SIES v10
+			 * ISSUE MEV : eseguito merge tra 15 MEV: interpretazione con codice commentato 
+			 * Numero MEV : SIES v10 
+			 * Autore : gioggi 
+			 * Data : 27/gen/2016 
+			 * Branch : MEV_SIES v10
 			 */
 			// lDepOrdSqlDao.ricercaDepositoOrdinanzaPcByIdEveGenerato( aIdEvento );
 			lDepOrdSqlDao.ricercaDepositoOrdinanzaCssaUssmPcByIdEveGenerato(aIdEvento);
@@ -2319,7 +2342,6 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 	/**
 	 * STUB: 20031014 - Recupero dei destinatari con impipamento dei dati nel formato TIPO DESTINATARIO | SEDE
 	 * | COD_UFFICIO .
-	 * <p>
 	 *
 	 * @param aIdDepositoOrdinanzaPc
 	 * @return lStampa
@@ -2418,7 +2440,6 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 
 	/**
 	 * Esecuzione stampa Foglio Complementare
-	 * <p>
 	 *
 	 * @param aModel
 	 * @return ByteArrayOutputStream
@@ -2489,7 +2510,6 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 
 	/**
 	 * Esegue la ricerca del deposito ordinanza per l'id di Evento.
-	 * <p>
 	 *
 	 * @param aEveKey
 	 *            id Evento.
@@ -2509,8 +2529,11 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			lDepDao = new DepositoOrdinanzaPcSqlDAO(lConn);
 
 			/*
-			 * ISSUE MEV : eseguito merge tra 15 MEV: interpretazione con codice commentato Numero MEV : SIES
-			 * v10 Autore : gioggi Data : 27/gen/2016 Branch : MEV_SIES v10
+			 * ISSUE MEV : eseguito merge tra 15 MEV: interpretazione con codice commentato 
+			 * Numero MEV : SIES v10 
+			 * Autore : gioggi 
+			 * Data : 27/gen/2016 
+			 * Branch : MEV_SIES v10
 			 */
 			// lDepDao.ricercaDepositoOrdinanzaPcByIdEveGenerato(aEveKey);
 			lDepDao.ricercaDepositoOrdinanzaCssaUssmPcByIdEveGenerato(aEveKey);
@@ -2539,8 +2562,6 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 	 * di Esito sulla Richiesta di Accertamento Pericolosita' Sociale; L'interrogazione cerca nel
 	 * FASCICOLO_SIUS.FAS_SIE_ID_FASCICOLO_SIEP il procedimento SIEP Corrente e nel
 	 * EVENTO.FAS_SIE_ID_FASCICOLO_SIEP il procedimento SIEP Corrente
-	 *
-	 * <p>
 	 *
 	 * @param aFascSiepKey
 	 *            id FASCICLO_SIEP
@@ -2594,8 +2615,6 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 	/**
 	 * Query usata nella Gestione MISURE SICUREZZA dalla parte SIEP. Esegue la ricerca dei provvedimenti di
 	 * Archiviazione lato SIUS elencati nella popup di elenco
-	 *
-	 * <p>
 	 *
 	 * @param aFascSiepKey
 	 *            id FASCICLO_SIEP
@@ -3312,22 +3331,12 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 
 	/**
 	 * Esegue l'inserimento dell'Emissione Ordinanza, del Periodo Altra Sanzione e modifica l'Esecuzione
-	 * Sanzione Sostitutiva .
-	 * <p>
-	 * Description: Funzione per l'inserimento dell'Emissione di un'ordinanza generico, di Periodo Altra
-	 * Sanzione e Esecuzione Sanzione Sostitutiva
-	 * </p>
-	 * Le tabelle coinvolte sono:
-	 * <p>
-	 * DEPOSITO_ORDINANZAPC : viene inserito il nuovo record decreto;
-	 * <p>
-	 * EVENTO : viene inserito un nuovo record;
-	 * <p>
-	 * TENORE : vengono chiusi i tenori attivi (data_fine) ed inseriti i nuovi tenori;
-	 * <p>
-	 * GENERALE_PROCEDIMENTO : update del contenuto del procedimento. PERIODO_ALTRA_SANZIONE: viene inserito
-	 * un nuovo record. ESECUZIONE_SANZIONE_SOST: update della data_termine_attuale e dei dati di
-	 * aggiornamento
+	 * Sanzione Sostitutiva . Funzione per l'inserimento dell'Emissione di un'ordinanza generico, di Periodo
+	 * Altra Sanzione e Esecuzione Sanzione Sostitutiva Le tabelle coinvolte sono: DEPOSITO_ORDINANZAPC :
+	 * viene inserito il nuovo record decreto; EVENTO : viene inserito un nuovo record; TENORE : vengono
+	 * chiusi i tenori attivi (data_fine) ed inseriti i nuovi tenori; GENERALE_PROCEDIMENTO : update del
+	 * contenuto del procedimento. PERIODO_ALTRA_SANZIONE: viene inserito un nuovo record.
+	 * ESECUZIONE_SANZIONE_SOST: update della data_termine_attuale e dei dati di aggiornamento
 	 *
 	 * @param OrdinanzaEventoTenoriGProcModel
 	 *            , aPeriodoAltraSanzioneModel, aEsecuzioneSanzioneSostitutivaModel
@@ -3400,21 +3409,12 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 
 	/**
 	 * Esegue l'inserimento dell'Emissione Ordinanza, di SCAMBIO_SANZIONE e modifica le RICHIESTA_CONVERSIONE
-	 * collegate al Procedimento.
-	 * <p>
-	 * Description: Funzione per l'inserimento dell'Emissione di un'ordinanza generica, di SCAMBIO_SANZIONE e
-	 * modifica di RICHIESTA_CONVERSIONE
-	 * </p>
-	 * Le tabelle coinvolte sono:
-	 * <p>
-	 * DEPOSITO_ORDINANZAPC : viene inserito il nuovo record decreto;
-	 * <p>
-	 * EVENTO : viene inserito un nuovo record;
-	 * <p>
-	 * TENORE : vengono chiusi i tenori attivi (data_fine) ed inseriti i nuovi tenori;
-	 * <p>
-	 * GENERALE_PROCEDIMENTO : update del contenuto del procedimento. SCAMBIO_SANZIONE: viene inserito un
-	 * nuovo record. RICHIESTA_CONVERSIONE: update dei dati immessi in fase di emissione ordinanza
+	 * collegate al Procedimento. Funzione per l'inserimento dell'Emissione di un'ordinanza generica, di
+	 * SCAMBIO_SANZIONE e modifica di RICHIESTA_CONVERSIONE Le tabelle coinvolte sono: DEPOSITO_ORDINANZAPC :
+	 * viene inserito il nuovo record decreto; EVENTO : viene inserito un nuovo record; TENORE : vengono
+	 * chiusi i tenori attivi (data_fine) ed inseriti i nuovi tenori; GENERALE_PROCEDIMENTO : update del
+	 * contenuto del procedimento. SCAMBIO_SANZIONE: viene inserito un nuovo record. RICHIESTA_CONVERSIONE:
+	 * update dei dati immessi in fase di emissione ordinanza
 	 *
 	 * @param OrdinanzaEventoTenoriGProcModel
 	 * @throws F3BException
@@ -3422,7 +3422,9 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 	 */
 	public OrdinanzaEventoTenoriGProcModel ExInserisciOrdinanzaConversioneRateizzazionePP(
 			OrdinanzaEventoTenoriGProcModel aGProcOrdEveTenori,
-			RichiesteConversioniPerOrdinanzaModel aRicConvMod) throws F3BException {
+			RichiesteConversioniPerOrdinanzaModel aRicConvMod,
+			// MEV_2023-35: aggiunti parametri di passaggio
+			Vector<RateizzazionePPModel> aListaRate, DepositoOrdinanzaPcModel dopm) throws F3BException {
 
 		Connection lConn = null;
 		// model di ritorno
@@ -3431,51 +3433,81 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 		// Dao per inserimento
 		// ScambioSanzioneDAO lScaSanDAO = null;
 		RichiestaConversioneDAO lRicConvDAO = null;
+		// MEV_2023-35: aggiunti DAO per le rate e deposito ordinanza
+		RateizzazionePPDAO rppdao = null;
+		DepositoOrdinanzaPcDAO dopdao = null;
 
 		try {
 			lConn = getDBTransaction();
 			lModRet = ExInserisciOrdinanza(aGProcOrdEveTenori, lConn);
 
-			// Ciclo di Aggiornamento delle RICHIESTA_CONVERSIONE.
-			for (int j = 0; j < aRicConvMod.getIdRichiestaConversione().length; j++) {
-				lRicConvDAO = new RichiestaConversioneDAO(lConn);
-				RichiestaConversioneModel lRicConv = new RichiestaConversioneModel();
+			// MEV_2023-35: aggiunto controllo di consistenza
+			if (Utils.isPresent(aRicConvMod.getIdRichiestaConversione())) {
+				// Ciclo di Aggiornamento delle RICHIESTA_CONVERSIONE
+				for (int j = 0; j < aRicConvMod.getIdRichiestaConversione().length; j++) {
+					lRicConvDAO = new RichiestaConversioneDAO(lConn);
+					RichiestaConversioneModel lRicConv = new RichiestaConversioneModel();
+					lRicConv.setIdRichiestaConversione(
+							new BigDecimal(aRicConvMod.getIdRichiestaConversione()[j]));
+					lRicConv.setCodTipoSanzione(aRicConvMod.getCodTipoSanzione()[j]);
+					if (aRicConvMod.getCodTipoRichiesta()[j].trim()
+							.compareTo(ICostantiDepositoOrdinanzaPc.TIPO_CONV_CONVERSIONE) == 0) {
+						if ((aRicConvMod.getNumGiorniDurataEsito()[j]).length() != 0)
+							lRicConv.setDurataEsitoGiorni(
+									new BigDecimal(aRicConvMod.getNumGiorniDurataEsito()[j]));
+						if ((aRicConvMod.getNumMesiDurataEsito()[j]).length() != 0)
+							lRicConv.setDurataEsitoMesi(
+									new BigDecimal(aRicConvMod.getNumMesiDurataEsito()[j]));
+						if ((aRicConvMod.getNumAnniDurataEsito()[j]).length() != 0)
+							lRicConv.setDurataEsitoAnni(
+									new BigDecimal(aRicConvMod.getNumAnniDurataEsito()[j]));
+					}
+					if (aRicConvMod.getCodTipoRichiesta()[j].trim()
+							.compareTo(ICostantiDepositoOrdinanzaPc.TIPO_CONV_RATEIZZAZIONE) == 0) {
+						if ((aRicConvMod.getNumeroRate()[j]).length() != 0)
+							lRicConv.setNumeroRate(new BigDecimal(aRicConvMod.getNumeroRate()[j]));
+						if ((aRicConvMod.getValoreRata()[j]) != null)
+							lRicConv.setValoreRata(aRicConvMod.getValoreRata()[j]);
+						if ((aRicConvMod.getValoreUltimaRata()[j]) != null)
+							lRicConv.setValoreUltimaRata(aRicConvMod.getValoreUltimaRata()[j]);
+						if ((aRicConvMod.getDataInizioPagamento()) != null)
+							lRicConv.setDataInizioPagamento(aRicConvMod.getDataInizioPagamento());
+						if ((aRicConvMod.getNumGiorniInizioPagamento()) != null)
+							lRicConv.setNumeroGiorniInizioPagamento(
+									aRicConvMod.getNumGiorniInizioPagamento());
+					}
+					// 14/08/2015 lRicConv.setEveIdEvento(lModRet.getEvento().getIdEvento());
+					lRicConv.setCodOperatoreAggiornamento(lModRet.getEvento().getCodOperatoreInserimento());
+					lRicConv.setCodUfficioAggiornamento(lModRet.getEvento().getCodUfficioInserimento());
+					lRicConv.setDataAggiornamento(lModRet.getEvento().getDataInserimento());
 
-				lRicConv.setIdRichiestaConversione(
-						new BigDecimal(aRicConvMod.getIdRichiestaConversione()[j]));
-				lRicConv.setCodTipoSanzione(aRicConvMod.getCodTipoSanzione()[j]);
-
-				if (aRicConvMod.getCodTipoRichiesta()[j].trim()
-						.compareTo(ICostantiDepositoOrdinanzaPc.TIPO_CONV_CONVERSIONE) == 0) {
-					if ((aRicConvMod.getNumGiorniDurataEsito()[j]).length() != 0)
-						lRicConv.setDurataEsitoGiorni(
-								new BigDecimal(aRicConvMod.getNumGiorniDurataEsito()[j]));
-					if ((aRicConvMod.getNumMesiDurataEsito()[j]).length() != 0)
-						lRicConv.setDurataEsitoMesi(new BigDecimal(aRicConvMod.getNumMesiDurataEsito()[j]));
-					if ((aRicConvMod.getNumAnniDurataEsito()[j]).length() != 0)
-						lRicConv.setDurataEsitoAnni(new BigDecimal(aRicConvMod.getNumAnniDurataEsito()[j]));
+					lRicConvDAO.setDAOFromModelForUpdate(lRicConv);
+					lRicConvDAO.selCondizioneUpdate(lRicConv.getIdRichiestaConversione());
+					lRicConvDAO.update();
 				}
-				if (aRicConvMod.getCodTipoRichiesta()[j].trim()
-						.compareTo(ICostantiDepositoOrdinanzaPc.TIPO_CONV_RATEIZZAZIONE) == 0) {
-					if ((aRicConvMod.getNumeroRate()[j]).length() != 0)
-						lRicConv.setNumeroRate(new BigDecimal(aRicConvMod.getNumeroRate()[j]));
-					if ((aRicConvMod.getValoreRata()[j]) != null)
-						lRicConv.setValoreRata(aRicConvMod.getValoreRata()[j]);
-					if ((aRicConvMod.getValoreUltimaRata()[j]) != null)
-						lRicConv.setValoreUltimaRata(aRicConvMod.getValoreUltimaRata()[j]);
-					if ((aRicConvMod.getDataInizioPagamento()) != null)
-						lRicConv.setDataInizioPagamento(aRicConvMod.getDataInizioPagamento());
-					if ((aRicConvMod.getNumGiorniInizioPagamento()) != null)
-						lRicConv.setNumeroGiorniInizioPagamento(aRicConvMod.getNumGiorniInizioPagamento());
-				}
-				// 14/08/2015 lRicConv.setEveIdEvento(lModRet.getEvento().getIdEvento());
-				lRicConv.setCodOperatoreAggiornamento(lModRet.getEvento().getCodOperatoreInserimento());
-				lRicConv.setCodUfficioAggiornamento(lModRet.getEvento().getCodUfficioInserimento());
-				lRicConv.setDataAggiornamento(lModRet.getEvento().getDataInserimento());
+			}
 
-				lRicConvDAO.setDAOFromModelForUpdate(lRicConv);
-				lRicConvDAO.selCondizioneUpdate(lRicConv.getIdRichiestaConversione());
-				lRicConvDAO.update();
+			// MEV_2023-35: aggiunta gestione rate ed aggiornamento Deposito Ordinanza
+			siesLogger.debug("Ciclo caricamento rate SIUS. Num rate = " + aListaRate.size());
+			for (int i = 0; i < aListaRate.size(); i++) {
+				rppdao = new RateizzazionePPDAO(lConn);
+				RateizzazionePPModel rppm = aListaRate.elementAt(i);
+				rppdao.setDAOFromModel(rppm);
+				rppdao.insert();
+			}
+			if (!Utils.isNullObj(dopm) && Utils.isPresent(dopm.getCodTipoSanzione())) {
+				dopdao = new DepositoOrdinanzaPcDAO(lConn);
+				dopdao.setSommaRisarcimento(dopm.getSommaRisarcimento());
+				dopdao.setNumGiorniDetenzioneDom(dopm.getNumGiorniDetenzioneDom());
+				dopdao.setNumMesiDetenzioneDom(dopm.getNumMesiDetenzioneDom());
+				dopdao.setNumAnniDetenzioneDom(dopm.getNumAnniDetenzioneDom());
+				dopdao.setCodOperatoreAggiornamento(dopm.getCodOperatoreAggiornamento());
+				dopdao.setCodUfficioAggiornamento(dopm.getCodUfficioAggiornamento());
+				dopdao.setDataAggiornamento(dopm.getDataAggiornamento());
+				dopdao.setCodTipoSanzione(dopm.getCodTipoSanzione());
+				// dopdao.setIdEventoGenerato(lModRet.getEvento().getIdEvento());
+				dopdao.setCondizioneUpdate(lModRet.getOrdinanza().getIdDepositoOrdinanzaPc());
+				dopdao.update();
 			}
 
 			commit(lConn);
@@ -3503,8 +3535,14 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			throw new SIUSException(
 					"DepositoOrdinanzaPcController.ExInserisciOrdinanzaConversioneRateizzazionePP : " + e);
 		} finally {
-			// cleanup(lScaSanDAO);
 			cleanup(lRicConvDAO);
+
+			// MEV_2023-35: aggiunta pulizia
+			if (rppdao != null)
+				cleanup(rppdao);
+			if (dopdao != null)
+				cleanup(dopdao);
+
 			cleanup(lConn);
 		}
 		return lModRet;
@@ -3512,22 +3550,12 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 
 	/**
 	 * Esegue l'inserimento dell'Emissione Ordinanza, del Periodo Altra Misura e modifica l'Esecuzione Misura
-	 * Sicurezza .
-	 * <p>
-	 * Description: Funzione per l'inserimento dell'Emissione di un'ordinanza generico, di Periodo Altra
-	 * Misura e Esecuzione Misura Sicurezza
-	 * </p>
-	 * Le tabelle coinvolte sono:
-	 * <p>
-	 * DEPOSITO_ORDINANZAPC : viene inserito il nuovo record decreto;
-	 * <p>
-	 * EVENTO : viene inserito un nuovo record;
-	 * <p>
-	 * TENORE : vengono chiusi i tenori attivi (data_fine) ed inseriti i nuovi tenori;
-	 * <p>
-	 * GENERALE_PROCEDIMENTO : update del contenuto del procedimento. PERIODO_ALTRA_MISURA: viene inserito un
-	 * nuovo record. ESECUZIONE_MISURA_SICUREZZA: update della data_termine_attuale e dei dati di
-	 * aggiornamento
+	 * Sicurezza . Funzione per l'inserimento dell'Emissione di un'ordinanza generico, di Periodo Altra Misura
+	 * e Esecuzione Misura Sicurezza Le tabelle coinvolte sono: DEPOSITO_ORDINANZAPC : viene inserito il nuovo
+	 * record decreto; EVENTO : viene inserito un nuovo record; TENORE : vengono chiusi i tenori attivi
+	 * (data_fine) ed inseriti i nuovi tenori; GENERALE_PROCEDIMENTO : update del contenuto del procedimento.
+	 * PERIODO_ALTRA_MISURA: viene inserito un nuovo record. ESECUZIONE_MISURA_SICUREZZA: update della
+	 * data_termine_attuale e dei dati di aggiornamento
 	 *
 	 * @param OrdinanzaEventoTenoriGProcModel
 	 *            , aPeriodoAltraMisuraModel, aEsecuzioneMisuraSicurezzaModel
@@ -3867,8 +3895,11 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 	}
 
 	/*
-	 * ISSUE MEV : aggiunti metodi di ricerca provvedimenti differimento SIUS Numero MEV : 39 Autore : Gioggi
-	 * Data : 24/feb/2017 Branch : MEV_39
+	 * ISSUE MEV : aggiunti metodi di ricerca provvedimenti differimento SIUS 
+	 * Numero MEV : 39 
+	 * Autore : Gioggi
+	 * Data : 24/feb/2017 
+	 * Branch : MEV_39
 	 */
 	public Vector ExRicercaEventoProvvedimentiDifferimentoSIUSByFascicoloSiep(BigDecimal idFascicoloSiep)
 			throws F3BException {
@@ -3932,4 +3963,110 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 	}
 	// ***** FINE INTERVENTO MEV_39 *****//
 
+	/*
+	 * Inserimento del'ordinanza di Revoca e Conversione Pena Pecuniaria Sostitutiva
+	 *
+	 * @since MEV_2023-35
+	 */
+	public OrdinanzaEventoTenoriGProcModel ExInserisciOrdinanzaRevocaConversionePPS(
+			OrdinanzaEventoTenoriGProcModel aGProcOrdEveTenori, RichiestaConversioneModel aRicConvMod)
+			throws F3BException {
+		Connection lConn = null;
+		OrdinanzaEventoTenoriGProcModel lModRet = null;
+		RichiestaConversioneDAO lRicConvDAO = null;
+
+		try {
+			lConn = getDBTransaction();
+
+			// Inserimento DepositoOrdinanza, Tenore, Evento...
+			lModRet = ExInserisciOrdinanza(aGProcOrdEveTenori, lConn);
+
+			// Inserimento della RICHIESTA_CONVERSIONE
+			lRicConvDAO = new RichiestaConversioneDAO(lConn);
+
+			// Aggancio la richieta al fascicolo SIUS e all'ordinanza??
+			aRicConvMod.setFasSiuIdFascicoloSius(lModRet.getEvento().getFasSiuIdFascicoloSius());
+			aRicConvMod.setEveIdEvento(lModRet.getEvento().getIdEvento());
+
+			aRicConvMod.setCodOperatoreAggiornamento(lModRet.getEvento().getCodOperatoreInserimento());
+			aRicConvMod.setCodUfficioAggiornamento(lModRet.getEvento().getCodUfficioInserimento());
+			aRicConvMod.setDataAggiornamento(lModRet.getEvento().getDataInserimento());
+
+			lRicConvDAO.setDAOFromModel(aRicConvMod);
+			lRicConvDAO.insert();
+
+			commit(lConn);
+		} catch (DAOException daoEx) {
+			rollback(lConn);
+			siesLogger.debug("DAOException: ", daoEx);
+			throw new SIUSException(
+					"DepositoOrdinanzaPcController.ExInserisciOrdinanzaRevocaConversionePPS : " + daoEx);
+		} catch (SQLException sqlEx) {
+			rollback(lConn);
+			siesLogger.debug("SQLException: ", sqlEx);
+			throw new SIUSException(
+					"DepositoOrdinanzaPcController.ExInserisciOrdinanzaRevocaConversionePPS : " + sqlEx);
+		} catch (Exception e) {
+			rollback(lConn);
+			siesLogger.debug("Exception: ", e);
+			throw new SIUSException(
+					"DepositoOrdinanzaPcController.ExInserisciOrdinanzaRevocaConversionePPS : " + e);
+		} finally {
+			cleanup(lRicConvDAO);
+			cleanup(lConn);
+		}
+		return lModRet;
+	}
+
+	/*
+	 * Inserimento del'ordinanza di Revoca e Conversione Pena Pecuniaria Sostitutiva
+	 *
+	 * @since MEV_2023-35
+	 */
+	public OrdinanzaEventoTenoriGProcModel ExInserisciOrdinanzaRevocaPS(
+			OrdinanzaEventoTenoriGProcModel aGProcOrdEveTenori,
+			EsecuzioneSanzioneSostitutivaModel aEsecSenSostMod) throws F3BException {
+
+		Connection lConn = null;
+		OrdinanzaEventoTenoriGProcModel lModRet = null;
+		EsecuzioneSanzioneSostitutivaDAO lEsecSanSostDAO = null;
+
+		try {
+			lConn = getDBTransaction();
+
+			// Inserimento DepositoOrdinanza, Tenore, Evento...
+			lModRet = ExInserisciOrdinanza(aGProcOrdEveTenori, lConn);
+
+			if (aEsecSenSostMod != null) {
+				// Inserimento Esecuzione
+				lEsecSanSostDAO = new EsecuzioneSanzioneSostitutivaDAO(lConn);
+				aEsecSenSostMod
+						.setDepOpidDepositoOrdinanzaPc(lModRet.getOrdinanza().getIdDepositoOrdinanzaPc());
+
+				aEsecSenSostMod.setCodOperatoreInserimento(lModRet.getEvento().getCodOperatoreInserimento());
+				aEsecSenSostMod.setCodUfficioInserimento(lModRet.getEvento().getCodUfficioInserimento());
+				aEsecSenSostMod.setDataInserimento(lModRet.getEvento().getDataInserimento());
+
+				lEsecSanSostDAO.setDAOFromModel(aEsecSenSostMod);
+				lEsecSanSostDAO.insert();
+			}
+			commit(lConn);
+		} catch (DAOException daoEx) {
+			rollback(lConn);
+			siesLogger.error("DAOException: ", daoEx);
+			throw new SIUSException("DepositoOrdinanzaPcController.ExInserisciOrdinanzaRevocaPS : " + daoEx);
+		} catch (SQLException sqlEx) {
+			rollback(lConn);
+			siesLogger.error("SQLException: ", sqlEx);
+			throw new SIUSException("DepositoOrdinanzaPcController.ExInserisciOrdinanzaRevocaPS : " + sqlEx);
+		} catch (Exception e) {
+			rollback(lConn);
+			siesLogger.error("Exception: ", e);
+			throw new SIUSException("DepositoOrdinanzaPcController.ExInserisciOrdinanzaRevocaPS : " + e);
+		} finally {
+			cleanup(lEsecSanSostDAO);
+			cleanup(lConn);
+		}
+		return lModRet;
+	}
 }

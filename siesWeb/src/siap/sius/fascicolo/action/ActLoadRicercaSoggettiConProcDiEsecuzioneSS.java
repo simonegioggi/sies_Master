@@ -29,6 +29,10 @@ public class ActLoadRicercaSoggettiConProcDiEsecuzioneSS extends ActionSiap impl
     lOption = new Option( DecodificheManager.getInstance().getOggettoProcedimento(), 75);
     lOption.setFilter("U019");
     setRequestAttribute("contenuto", "" + lOption );
+    
+    // MEV_2023-35 si passa il cotenuto alla form per parametrizzare le etichette
+    // essendo la jsp utilizzata anche per EPS (U126)
+    setRequestAttribute("ContenutoES","U019");
 
     return PG_LOAD_RICERCASOGGETTICONPROCDIESECUZIONESS; //restituisce la jsp di VIEW
   }

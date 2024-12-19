@@ -1,4 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page import="f3b.util.Utils"%>
 <%@ page import="java.util.Iterator"%>
 <%@ page import="java.util.Vector"%>
 
@@ -23,6 +24,10 @@
 <%@ page import="siap.sico.utente.model.UtenteModel" %>
 <%@ page import="siap.sico.ufficio.model.UfficioModel" %>
 <%@ page import="siap.sius.avvocatura.action.ICostantiAvvisiAvvocato" %>
+
+
+<%@ page import="siap.sius.fascicolo.model.FascicoloGPModel" %>
+<%@ page import="siap.sius.generaleprocedimento.model.GeneraleProcedimentoModel" %>
 
 <jsp:useBean id="istitutodetenzione"           scope="request" class="siap.siep.istitutodetenzione.model.IstitutoDetenzioneModel"/>
 <jsp:useBean id="depositoDecretoMotivazioni" scope="request" class="siap.sius.depositodecreto.model.DepositoDecretoEventoMotivazioniModel"/>
@@ -53,13 +58,28 @@
 		labelUfficioTrib = "Tribunale di Sorveglianza";
 		labelUfficioProc = "Procura";
 	}
+	
+	
+    // MEV_2023-35
+    String codOggettoProcedimento = "";
+    FascicoloGPModel fgpm = (FascicoloGPModel) session.getAttribute("fascicoloSiusGP");
+    GeneraleProcedimentoModel gpm = new GeneraleProcedimentoModel();
+    if (!Utils.isNullObj(fgpm.getGeneraleProcedimentoModel()))
+        gpm = fgpm.getGeneraleProcedimentoModel();
+    if (Utils.isPresent(gpm.getCodOggettoProcedimento()))
+        codOggettoProcedimento = gpm.getCodOggettoProcedimento();
+    String lSuffissoFunctionName = "";
+    if ("U140".equals(codOggettoProcedimento))
+      lSuffissoFunctionName = " - PENE SOSTITUTIVE ";
+    // MEV_2023-35 - FINE
+	
 %>	
   <body class="corpo">
   <form name="dettaglio">
     <table>
       <tr><td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
         <td class="LBG"><font class="label">Funzione : </font>
-          <font class="campo">Dettaglio Decreto Sopravvenienza Nuovo Titolo</font>&nbsp;
+          <font class="campo">Dettaglio Decreto Sopravvenienza Nuovo Titolo <%=lSuffissoFunctionName%></font>&nbsp;
         </td>
         <jsp:include page="<%=ICostantiDepositoDecreto.BOTTONI_DETTAGLIO_DECRETO%>"/>
       </tr>

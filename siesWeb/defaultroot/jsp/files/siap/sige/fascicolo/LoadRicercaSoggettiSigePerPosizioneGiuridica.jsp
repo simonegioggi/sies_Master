@@ -37,7 +37,7 @@ function visualizzaDataPendenza(val) {
 		document.getElementById("pendenza").style.display = 'none';
 		document.lrssppg.<%=ICostantiFascicoloSige.CAMPO_GIORNO_FINE_PENDENZA%>.value = "";
 		document.lrssppg.<%=ICostantiFascicoloSige.CAMPO_MESE_FINE_PENDENZA%>.value = "";
-		document.lrssppg.<%=ICostantiFascicoloSige.CAMPO_ANNO_FINE_PENDENZA%>.value = "";;
+		document.lrssppg.<%=ICostantiFascicoloSige.CAMPO_ANNO_FINE_PENDENZA%>.value = "";
 	} else
 		document.getElementById("pendenza").style.display = 'block';
 }

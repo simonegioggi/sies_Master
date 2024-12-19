@@ -17,11 +17,13 @@ import siap.sius.permesso.util.PermessoUtils;
 import siap.sius.util.SIUSLookupRemote;
 
 public class ActRelazioneTrimestralePermessoLicenza extends ActionSius implements ICostantiPermesso {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	@SuppressWarnings("rawtypes")
 	public String processRequest() throws Exception {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("inizio");
@@ -85,10 +87,13 @@ public class ActRelazioneTrimestralePermessoLicenza extends ActionSius implement
 	}
 
 	private String getDescrTipoRicerca(String aValue) {
+
 		return PermessoUtils.getDescrTipoRicerca(aValue);
 	}
 
 	private String getCodMotivo(String aValue) {
+
 		return PermessoUtils.getCodMotivo(aValue);
 	}
+
 }

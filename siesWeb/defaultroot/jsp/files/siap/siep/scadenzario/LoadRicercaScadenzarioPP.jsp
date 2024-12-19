@@ -96,10 +96,10 @@ ScadenzarioModel lScaModel = new ScadenzarioModel();
 
     <table cellspacing=2 cellpadding=2 width="60%">
       <tr>
-        <td colspan="3" class="Titolo" width1="100%">Consultazione Scadenzario Stato Pagamenti Pena Pecuniaria</td>
+        <td colspan="3" class="Titolo" width="100%">Consultazione Scadenzario Stato Pagamenti Pena Pecuniaria</td>
       </tr>
       <tr>
-        <td class="l" width1="15%">Solo il procedimento (Anno/Numero)</td>
+        <td class="l" width="15%">Solo il procedimento (Anno/Numero)</td>
         <td class="l">
           <input type="text" title="Anno" value="" name="<%=ICostantiFascicoloSiep.CAMPO_CHIAVE_ANNO%>" maxlength="4" size="4"
                  onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
@@ -115,14 +115,14 @@ ScadenzarioModel lScaModel = new ScadenzarioModel();
       </tr>  
       <tr><td><br></td></tr>    
       <tr>
-        <td class="l" width1="15%">Tutti</td>
-        <td class="l" width1="15%"><input type="radio" name="tipo" value="Tutti" checked onclick="javascript:inScadenza()"></td>
-        <td class="l" width1="70%" colspan=2></td>
+        <td class="l" width="15%">Tutti</td>
+        <td class="l" width="15%"><input type="radio" name="tipo" value="Tutti" checked onclick="javascript:inScadenza()"></td>
+        <td class="l" width="70%" colspan=2></td>
       </tr>
       <tr>
         <td class="l">In scadenza</td>
         <td class="l"><input type="radio" name="tipo" value="sette" onclick="javascript:inScadenza()" ></td>
-        <td class="L" width1="10%">entro:
+        <td class="L" width="10%">entro:
           Anni
           <input type="text" title="Anni" size=2 maxlength=2 disabled
                  value="<%=StringUtils.toStringJSP(lScaModel.getNumAnni()) %>" 

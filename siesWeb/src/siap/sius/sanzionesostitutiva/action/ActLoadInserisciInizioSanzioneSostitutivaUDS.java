@@ -3,11 +3,14 @@ package siap.sius.sanzionesostitutiva.action;
 import java.math.BigDecimal;
 import java.util.List;
 
+import f3b.util.Utils;
 import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sius.SIUSException;
 import siap.sius.esecuzionesanzionesostitutiva.controller.IEsecuzioneSS;
 import siap.sius.esecuzionesanzionesostitutiva.model.EsecuzioneSanzioneSostitutivaModel;
+import siap.sius.fascicolo.model.FascicoloGPModel;
+import siap.sius.generaleprocedimento.model.GeneraleProcedimentoModel;
 import siap.sius.sanzionesostitutiva.controller.IPeriodoAltraSanzione;
 import siap.sius.sanzionesostitutiva.model.PeriodoAltraSanzioneModel;
 import siap.sius.util.SIUSLookupRemote;
@@ -28,7 +31,7 @@ public class ActLoadInserisciInizioSanzioneSostitutivaUDS extends ActSanzioneSos
 		 * comunicazione di data inizio sanzione sostitutiva per questo fascicolo. Queste sono necessarie per
 		 * il controllo della giusta cronologia delle date (DATA_INIZIO_ESECUZIONE e DATA_SCADENZA) e per le
 		 * comunicazioni successive alla prima il campo della maschera "Note" diventerà obbligatorio
-		 * 
+		 *
 		 */
 		// ricerca del fascicolo
 		BigDecimal lIdFasSius = recuperoIdFascicolo();
@@ -44,11 +47,21 @@ public class ActLoadInserisciInizioSanzioneSostitutivaUDS extends ActSanzioneSos
 		List lListaSanzioniSius = lCtrl1.ExRicercaSanzioneSostitutivaByIdFascicolo(lIdFasSius);
 		setRequestAttribute("listaSanzioniSius", lListaSanzioniSius);
 
+		// MEV_2023-35: cambio nome etichetta in un caso particolare (U126)
+		// MEV_2023-35: recupero info sul fascicolo per oggetto procedimento
+		String codOggettoProcedimento = "", tipoSostituzione = "Sanzione";
+		FascicoloGPModel fgpm = (FascicoloGPModel) getSessionAttribute("fascicoloSiusGP");
+		GeneraleProcedimentoModel gpm = new GeneraleProcedimentoModel();
+		if (!Utils.isNullObj(fgpm.getGeneraleProcedimentoModel()))
+			gpm = fgpm.getGeneraleProcedimentoModel();
+		if (!Utils.isNullObj(gpm.getCodOggettoProcedimento()))
+			codOggettoProcedimento = gpm.getCodOggettoProcedimento();
+		if ("U126".equals(codOggettoProcedimento))
+			tipoSostituzione = "Pena";
+
 		PeriodoAltraSanzioneModel lPerMod = new PeriodoAltraSanzioneModel();
 		if (lListaSanzioniSius != null && lListaSanzioniSius.size() > 0) {
-
 			lPerMod = (PeriodoAltraSanzioneModel) lListaSanzioniSius.get(lListaSanzioniSius.size() - 1);
-
 			// 01 Inizio
 			// 02 Sospensione
 			// 03 Ripresa
@@ -57,7 +70,7 @@ public class ActLoadInserisciInizioSanzioneSostitutivaUDS extends ActSanzioneSos
 			if ((lPerMod.getFlagMotivo().equals("01") || lPerMod.getFlagMotivo().equals("02"))
 					&& lPerMod.getDataScadenza() != null) {
 				throw new SIUSException(SIUSException.USER_MESSAGE,
-						"Attenzione! Ripresa non attivabile la sanzione non risulta sospesa!");
+						"Attenzione! Ripresa non attivabile la " + tipoSostituzione + " non risulta sospesa!");
 			}
 			if (lPerMod.getFlagMotivo().equals("03") && lPerMod.getDataScadenza() == null) {
 				throw new SIUSException(SIUSException.USER_MESSAGE,
@@ -84,12 +97,14 @@ public class ActLoadInserisciInizioSanzioneSostitutivaUDS extends ActSanzioneSos
 				.ExRicercaEsecuzioneSanzioneSostitutivaByIdFascicolo(lIdFasSius);
 		if (lESSModel == null || lESSModel.getIdEsecuzioneSanzioneSost().equals(null))
 			throw new SIUSException(SIUSException.USER_MESSAGE,
-					"Attenzione! ESECUZIONE SANZIONE SOSTITUTIVA Assente!");
+					"Attenzione! ESECUZIONE " + tipoSostituzione.toUpperCase() + " SOSTITUTIVA Assente!");
 		setRequestAttribute("lESSModel", lESSModel);
 
+		// pagina di ritorno
 		String lRetPage = PG_LOADINSERISCIINIZIOSANZIONESOSTITUTIVA;
 
-		return lRetPage; // restituisce la jsp di VIEW
+		// restituisce la jsp di VIEW
+		return lRetPage;
 	}
 
 }

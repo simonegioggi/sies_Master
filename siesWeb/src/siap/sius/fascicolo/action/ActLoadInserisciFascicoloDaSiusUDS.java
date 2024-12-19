@@ -40,9 +40,10 @@ public class ActLoadInserisciFascicoloDaSiusUDS extends ActionSiap implements IC
 		// consentire l'impostazione dei campi non modificabili.
 		// 01/08/2007 Se il Procedimento SIUS Origine è di ESS, si Passa nella Request come
 		// fascicoloEsecuzione per consentire l'impostazione dei campi non modificabili.
-		if (lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U004") == 0
-				|| lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
-						.compareTo("U019") == 0)
+		if (   lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U004") == 0
+			|| lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U019") == 0
+			// MEV_2023-35
+			|| lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U126") == 0)
 			setRequestAttribute("fascicoloEsecuzione", lFasGPOrigine);
 
 		// Si passa l'Id del fascicolo origine nella request.
@@ -90,6 +91,13 @@ public class ActLoadInserisciFascicoloDaSiusUDS extends ActionSiap implements IC
 			setRequestAttribute("contenutoEsecuzione", "" + lOption);
 		}
 
+		// MEV_2023-35 - aggiunto filtro per i codFiglio di EPS
+	    if (lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U126") == 0) {
+            lFilter = lFascicoloUtils.filtraContenutiPS(strCodTipoUfficio);
+            lOption.setFilter(lFilter);
+            setRequestAttribute("contenutoEsecuzione", "" + lOption);
+        }
+	      
 		// Imposta la Collection Contenuto.
 		// MEV_66: distinguo per ufficio minorile
 		Collection lCol;
@@ -113,9 +121,10 @@ public class ActLoadInserisciFascicoloDaSiusUDS extends ActionSiap implements IC
 		// lOption = new Option(lMagCtrl.ExElencoCbxMagistratiByCodUfficio(lCodUfficio));
 		lOption = new Option(lMagCtrl.ExElencoCbxMagistratiValidiByCodUfficio(lCodUfficio));
 
-		if (lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U004") == 0
-				|| lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
-						.compareTo("U019") == 0) {
+		if (   lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U004") == 0
+			|| lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U019") == 0
+			// MEV_2023-35 aggiunta gestione cod U126 EPS
+			|| lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U126") == 0) {
 			lOption.setSelected(lFasGPOrigine.getGeneraleProcedimentoModel().getCodAutoritaDelegata());
 		}
 		setRequestAttribute("magistrato", "" + lOption);
@@ -131,9 +140,10 @@ public class ActLoadInserisciFascicoloDaSiusUDS extends ActionSiap implements IC
 		lPosizioneGiuridica.addAll(lCollPosGiuEsecuzione);
 		lPosizioneGiuridica.addAll(lCollPosGiuAltra);
 		lOption = new Option(lPosizioneGiuridica, 66);
-		if (lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U004") == 0
-				|| lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
-						.compareTo("U019") == 0) {
+		if (   lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U004") == 0
+			|| lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U019") == 0
+			// MEV_2023-35 - Aggiunta Gestione U126 EPS
+			|| lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U126") == 0) {
 			if ((lFasGPOrigine.getGeneraleProcedimentoModel().getCodPosGiuridica() != null))
 				lOption.setSelected(lFasGPOrigine.getGeneraleProcedimentoModel().getCodPosGiuridica());
 		}
@@ -204,7 +214,10 @@ public class ActLoadInserisciFascicoloDaSiusUDS extends ActionSiap implements IC
 						&& (lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
 								.compareTo("U004") != 0)
 						&& (lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
-								.compareTo("U019") != 0))
+								.compareTo("U019") != 0)
+						// MEV_2023-35 Aggiunta gestione codice U126 EPS
+						&& (lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
+                                .compareTo("U126") != 0))
 					dataFinePena = lDettaglio.getPenaResidua().getDataFine();
 
 				setRequestAttribute("dataFinePena", dataFinePena);
@@ -213,7 +226,10 @@ public class ActLoadInserisciFascicoloDaSiusUDS extends ActionSiap implements IC
 						&& (lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
 								.compareTo("U004") != 0)
 						&& (lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
-								.compareTo("U019") != 0)) {
+								.compareTo("U019") != 0)
+						// MEV_2023-35 Aggiunta gestione codice U126 EPS
+						&& (lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
+                                .compareTo("U126") != 0)) {
 					posGiuridica = lDettaglio.getPosizioneGiuridica().getCodPosizioneGiuridica();
 					lOption = new Option(lPosizioneGiuridica,
 							lDettaglio.getPosizioneGiuridica().getCodPosizioneGiuridica(), 66);
@@ -265,9 +281,10 @@ public class ActLoadInserisciFascicoloDaSiusUDS extends ActionSiap implements IC
 		// I Procedimenti Collegati ad un EMA-ESS ereditano Posizione Giuridica, Fine Pena, Luogo Detenzione
 		// Residenza, Domicilio, Collaboratore
 
-		if (lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U004") == 0
-				|| lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
-						.compareTo("U019") == 0) {
+		if (   lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U004") == 0
+			|| lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U019") == 0
+			 // MEV_2023-35 Aggiunta gestione codice U126 EPS
+			|| lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U126") == 0) {
 			LuogoDetenzioneModel luoDetMod;
 
 			ILuogoDetenzione lCtrl = SIEPLookupRemote.getLuogoDetenzioneRemote();
@@ -303,10 +320,10 @@ public class ActLoadInserisciFascicoloDaSiusUDS extends ActionSiap implements IC
 			// IM = Inserimento Procedimento di Esecuzione Misura.
 			// 10/10/2007 Se il Procedimento SIUS Origine è di EMM o di ESS, si Imposta un diverso
 			// inserimento.
-			if (lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
-					.compareTo("U004") == 0
-					|| lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
-							.compareTo("U019") == 0) {
+			if (   lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U004") == 0
+				|| lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U019") == 0
+				// MEV_2023-35 Aggiunta gestione codice U126 EPS
+				|| lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U126") == 0) {
 				setRequestAttribute("modalita", "IM");
 				return PG_LOAD_INSERISCIFASCICOLOSIUSUDS;
 			} else {
@@ -318,10 +335,10 @@ public class ActLoadInserisciFascicoloDaSiusUDS extends ActionSiap implements IC
 			// IE = Inserimento Procedimento di Esecuzione.
 			// 10/10/2007 Se il Procedimento SIUS Origine è di EMM o di ESS, si Imposta un diverso
 			// inserimento.
-			if (lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
-					.compareTo("U004") == 0
-					|| lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
-							.compareTo("U019") == 0)
+			if (   lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U004") == 0
+				|| lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U019") == 0
+				 // MEV_2023-35 Aggiunta gestione codice U126 EPS
+				|| lFasGPOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U126") == 0)
 				// setRequestAttribute("modalita", "IE");
 				// Se il SIUS Origine è di EMM o di ESS eredito comunque dall'origine
 				setRequestAttribute("modalita", "IM");

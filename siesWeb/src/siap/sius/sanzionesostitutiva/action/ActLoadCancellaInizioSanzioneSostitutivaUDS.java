@@ -7,6 +7,7 @@ import java.util.List;
 
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
+import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
 import siap.sico.evento.controller.IEvento;
@@ -14,6 +15,8 @@ import siap.sico.util.SICOLookupRemote;
 import siap.sius.esecuzionesanzionesostitutiva.controller.IEsecuzioneSS;
 import siap.sius.esecuzionesanzionesostitutiva.model.EsecuzioneSanzioneSostitutivaModel;
 import siap.sius.fascicolo.action.ICostantiFascicoloSius;
+import siap.sius.fascicolo.controller.IFascicoloSius;
+import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.sanzionesostitutiva.controller.IPeriodoAltraSanzione;
 import siap.sius.sanzionesostitutiva.model.PeriodoAltraSanzioneModel;
 import siap.sius.scadenzario.controller.IScadenzarioSius;
@@ -78,10 +81,8 @@ public class ActLoadCancellaInizioSanzioneSostitutivaUDS extends ActSanzioneSost
 				AA = lPerMod.getDaRecuperareAA().intValue();
 			int giorniDaRecuperare = DateUtils.getIntervallo(DateUtils.getDate(0, 0, 0),
 					DateUtils.getDate(AA, MM, GG));
-
 			Date lDataTermineAttuale = DateUtils.moveDateTo(lESSModel.getDataTermineAttuale(),
 					Calendar.DAY_OF_MONTH, giorniDaRecuperare);
-
 			lESSModel.setDataTermineAttuale(lDataTermineAttuale);
 		}
 
@@ -103,6 +104,22 @@ public class ActLoadCancellaInizioSanzioneSostitutivaUDS extends ActSanzioneSost
 		// periodi per riaggiornare lo scadenzario
 		IPeriodoAltraSanzione lCtrllst = SIUSLookupRemote.getPeriodoAltraSanzioneRemote();
 		List lListaSanzioniSius = lCtrllst.ExRicercaSanzioneSostitutivaByIdFascicolo(lIdFasSius);
+
+		// MEV_2023-35: aggiunto controllo se la cancellazione si fa dal procedimento figlio piuttosto che dal
+		// padre
+		if (lListaSanzioniSius.isEmpty()) {
+			BigDecimal idFascicoloSiusPadre = new BigDecimal(0);
+			if (!Utils.isNullObj(lESSModel) && !Utils.isNullObj(lESSModel.getGenPridGeneraleProcedimento())) {
+				IFascicoloSius ifs = SIUSLookupRemote.getFascicoloSiusRemote();
+				FascicoloGPModel fgpm = ifs
+						.ExRicercaFascicoloByGenProc(lESSModel.getGenPridGeneraleProcedimento());
+				if (!Utils.isNullObj(fgpm) && !Utils.isNullObj(fgpm.getFascicoloSiusModel()))
+					idFascicoloSiusPadre = fgpm.getFascicoloSiusModel().getIdFascicoloSius();
+			}
+			lListaSanzioniSius = lCtrllst.ExRicercaSanzioneSostitutivaByIdFascicolo(idFascicoloSiusPadre);
+			lPerMod.setFasSiuIdFascicoloSius(idFascicoloSiusPadre);
+		}
+		// FINE MEV_2023-35
 		ScadenzarioSiusModel lScaMod80 = null;
 
 		if (FlagMotivo.equals("01")) {
@@ -187,13 +204,11 @@ public class ActLoadCancellaInizioSanzioneSostitutivaUDS extends ActSanzioneSost
 				lScaMod81c = lCtrl
 						.ExRicercaScadenzarioSiusByIdFascicoloTipo(lPerMod.getFasSiuIdFascicoloSius(), "81");
 				lCtrl1.ExCancellaPeriodoAltraSanzione(lScaMod81c, null, lScaMod80, IdPerCanc, lESSModel);
-
 			} else {
 				// se cancello una sospensione:
 				// (termine differimento) scadenzario 81 -> ripristino al precedente
 				// (termine sanzione sostitutiva) scadenzario 80 -> ripristino la Data Termine Attuale
 				// qualora fossero stati sommati dei gg da recuperare
-
 				lScaMod80 = lCtrl
 						.ExRicercaScadenzarioSiusByIdFascicoloTipo(lPerMod.getFasSiuIdFascicoloSius(), "80");
 				lPerMod = (PeriodoAltraSanzioneModel) lListaSanzioniSius.get(lListaSanzioniSius.size() - 2);

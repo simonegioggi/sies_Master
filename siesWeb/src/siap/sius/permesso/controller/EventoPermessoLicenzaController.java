@@ -15,18 +15,7 @@ import siap.sius.permesso.dao.EventoPermessoLicenzaSqlDAO;
 import siap.sius.permesso.model.EventoPermessoLicenzaModel;
 
 /**
- * <p>
- * Title: EventoPermessoLicenzaController
- * </p>
- * <p>
- * Description: Classe Controller per EventoPermessoLicenza
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * EventoPermessoLicenzaController - Classe Controller per EventoPermessoLicenza
  *
  * @version 1.0
  */

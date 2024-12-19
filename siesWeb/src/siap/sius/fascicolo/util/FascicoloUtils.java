@@ -131,7 +131,7 @@ public class FascicoloUtils {
 	 */
 	public String[] filtraContenutiSS(String strCodTipoUfficio) {
 
-		// generazione del filtro sui contenuti per le Misure alternative.
+		// generazione del filtro sui contenuti per le Sanzioni Sostitutive.
 		Collection lOggetti = null;
 		// MEV_66: aggiunto parametro di passaggio
 		if ("UDSM".equals(strCodTipoUfficio))
@@ -156,6 +156,42 @@ public class FascicoloUtils {
 		// Viene restituito il filtro.
 		return lFilter;
 	}
+	
+	
+	 /**
+     * MEV_2023-35 Funzione filtraContenutiPS().
+     *
+     * @return String [] Filtro da applicare alla classe Option. Descrizione: La funzione consente di filtrare
+     *         tra gli OggettoProcedimentoUDS (caratterizzati dal codice = "U%", fatta eccezione per U126,
+     *         solo quelli che hanno il valore RV_HIGH_VALUE (= filtro di DecodificheModel) pari a "S30" ).
+     * @version 1.0
+     *
+     */
+    public String[] filtraContenutiPS (String strCodTipoUfficio) {
+
+        // generazione del filtro sui contenuti per le Pene Sospese.
+        Collection lOggetti = null;
+        if ("UDSM".equals(strCodTipoUfficio))
+            lOggetti = DecodificheUtils.getDecodesWithoutCode(
+                    DecodificheManager.getInstance().getOggettoProcedimentoUDSM(), "U126");
+        else
+            lOggetti = DecodificheUtils.getDecodesWithoutCode(
+                    DecodificheManager.getInstance().getOggettoProcedimentoUDS(), "U126");
+        String[] lFilter = new String[lOggetti.size() + 1];
+
+        Iterator itx = lOggetti.iterator();
+        int i = 0;
+        while (itx.hasNext()) {
+            DecodificheModel lDecodeOggetto = (DecodificheModel) itx.next();
+            if (lDecodeOggetto.getFiltro() != null && lDecodeOggetto.getFiltro().compareTo("S30") == 0) {
+                lFilter[i++] = new String(lDecodeOggetto.getCode());
+            } else
+                lFilter[i++] = new String("00");
+        }
+        lFilter[i++] = new String("00");
+
+        return lFilter;
+    }
 
 	/**
 	 * STUB 30/07/2007 Funzione filtraContenutiMS().

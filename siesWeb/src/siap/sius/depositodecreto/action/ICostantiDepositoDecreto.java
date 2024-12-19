@@ -3,19 +3,8 @@ package siap.sius.depositodecreto.action;
 import f3b.web.IWebConstants;
 
 /**
- * <p>
- * Title: ICostantiDepositoDecreto
- * </p>
- * <p>
- * Description: Classe di costanti di DepositoDecreto
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ * ICostantiDepositoDecreto - Classe di costanti di DepositoDecreto
+ *
  * @version 1.0
  */
 public interface ICostantiDepositoDecreto {
@@ -84,7 +73,6 @@ public interface ICostantiDepositoDecreto {
 	public static final String CAMPO_CK_WARNING = "WarningDecreto";
 	// 20140603 - P.M. ( SIUS - implemntazione per il D.L. 146 )
 	public static final String CAMPO_CK_TIPO_CONTROLLO_ESECUZIONE = "CheckTipoControlloEsecuzione";
-	//
 	// New Fields 20061116
 	public static final String CAMPO_NUOVA_SCADENZA_LIM_CTRL = "NuovaScadenzaLimCtrl";
 	public static final String CAMPO_DURATA_PROROGA = "DurataProroga";
@@ -113,11 +101,15 @@ public interface ICostantiDepositoDecreto {
 	public static final String CAMPO_FLAG_NOMINA_COMM_ACTA = "FlagNominaCommActa";
 	public static final String CAMPO_DESCR_COMM_ACTA = "DescCommActa";
 
-	// TRASMISSIONE.
+	// MEV_2023-35: aggiunto importo della pena pecuniaria convertita
+	public static final String CAMPO_INTERO_PENA_PECUNIARIA_CONVERTITA = "InteroPenaPecuniariaConvertita";
+	public static final String CAMPO_DECIMALE_PENA_PECUNIARIA_CONVERTITA = "DecimalePenaPecuniariaConvertita";
+
+	// TRASMISSIONE
 	public static final String PG_DETTAGLIO_MESSAGGIO_RICEVUTO = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/depositodecreto/DettaglioDecretoRicevuto.jsp";
 
-	// TEMPLATE.
+	// TEMPLATE
 	public static final String TEMPLATE_DECRETO_INAMMISSIBILITA = "SIUS_DE_002";
 	public static final String TEMPLATE_DECRETO_CITAZIONE = "SIUS_DE_003";
 	public static final String TEMPLATE_DECRETO_INCOMPETENZA = "SIUS_DE_004";
@@ -351,6 +343,15 @@ public interface ICostantiDepositoDecreto {
 	public static final String PG_LOAD_INSERISCI_DECRETO_RICHIESTA_OTTEMPERANZA = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/depositodecreto/InserisciDecretoRichiestaOttemperanza.jsp";
 
+	// MEV_2023-35
+	// Inserisci Revoca Autorizzazione Pena Sostitutiva
+	public static final String PG_INSERISCI_REVOCA_AUTORIZZAZIONE_PENA_SOSTITUTIVA = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/depositodecreto/InserisciDecretoRevocaAutorizzazionePenaSostitutiva.jsp";
+	// Dettaglio Revoca Autorizzazione Pena Sostitutiva
+	public static final String PG_DETTAGLIO_REVOCA_AUTORIZZAZIONE_PENA_SOSTITUTIVA = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/depositodecreto/DettaglioDecretoRevocaAutorizzazionePenaSostitutiva.jsp";
+	// MEV_2023-35 - FINE
+
 	// Tipi di decreto
 	public static final String CITAZIONE = "01";
 	public static final String IRREPERIBILITA = "02";
@@ -374,6 +375,8 @@ public interface ICostantiDepositoDecreto {
 	public static final String INOSSERVANZA_OBBLIGHI = "20";
 	public static final String PROPOSTA_DECLAR_ESITO_PROVA = "21";
 	public static final String GENERICO = "22";
+	// MEV_2023-35 si aggiunge un nuovo codice per il decreto generico
+	public static final String GENERICO2 = "GE";
 	public static final String LICENZA = "23";
 	public static final String ESCLUSIONE_COMPUTO = "24";
 	public static final String REVOCA_PERMESSO = "25";
@@ -404,6 +407,12 @@ public interface ICostantiDepositoDecreto {
 	public static final String DEC_INOSSERVANZA_OBBLIGHI_MS = "40";
 	// MEV_39: aggiunta costante per contenuto U082
 	public static final String RINVIO_ESECUZIONE_MS = "42";
+
+	// MEV_2023-35 - Revoca Autorizzazioni pene sostitutive
+	// AR = RV_ABBREVIATION dell'oggetto U130
+	public static final String REVOCA_AUTORIZZAZIONE_PS = "AR";
+	// 44 = RV_ABBREVIATION dell'oggetto U139
+	public static final String RINVIO_ESECUZIONE_PENA_SOST_DERIVANTE_CONVERSIONE = "44";
 
 	public static final String CAMPO_ID_NOTIFICA = "id_notifica";
 	public static final String PG_WARNING = IWebConstants.ROOT_DIR

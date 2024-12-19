@@ -13,6 +13,23 @@
 
 <jsp:useBean id="TornaQui"     scope="request" class="java.lang.String"/>
 
+<%-- MEV_2023-35 Si aggiunge il codContenuto per gestire sia ESS che ESP --%>
+<jsp:useBean id="CodContenutoES" scope="request" class="java.lang.String"/>
+
+<%
+// MEV_2023-35 si parametrizza lìoggetto per le tooltip
+String strToolTip1 = "";
+String strToolTip2 = "";
+if ("U126".equals(CodContenutoES)) {
+  strToolTip1 = "Elenco dei Procedimenti relativi all'Esecuzione della Pena Sostitutiva";
+  strToolTip2 = "Iscrizione Procedimento di Esecuzione P.S.";
+}
+else {
+  strToolTip1 = "Elenco dei Procedimenti relativi all'Esecuzione della Sanzione Sostitutiva";
+  strToolTip2 = "Iscrizione Procedimento di Esecuzione S.S.";
+}
+%>
+
   <table>
     <tr>
 <%
@@ -37,7 +54,7 @@
 %>
               <td>
                 <a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=<%=lFun.getNameAction()%>&<%=request.getParameter(ICostantiSecurity.CAMPO_ID_ENTITA)%>=<%=request.getParameter(ICostantiSecurity.VALORE_ID_ENTITA)%>&<%=ICostantiEsecuzioneSS.CAMPO_ID_SOGGETTO%>=<%=idSoggetto%>&<%=ICostantiEsecuzioneSS.CAMPO_ID_FASCICOLO_SIEP%>=<%=idFascicoloSIEP%>&<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>=<%=idFascicoloSIUS%>&TornaQui=<%=TornaQui%>">
-                  <img src="/images/dettagli.gif" width="12" height="12" alt="Elenco dei Procedimenti relativi all'Esecuzione della Sanzione Sostitutiva " border="0">
+                  <img src="/images/dettagli.gif" width="12" height="12" alt="<%=strToolTip1%>" border="0">
                 </a>
               </td>
 <%
@@ -48,7 +65,7 @@
 %>
               <td>
                 <a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=<%=lFun.getNameAction()%>&<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>=<%=idFascicoloSIUS%>&TornaQui=<%=TornaQui%> ">
-                  <img src="/images/new24.gif" width="12" height="12" alt="Iscrizione Procedimento di Esecuzione S.S." border="0">
+                  <img src="/images/new24.gif" width="12" height="12" alt="<%=strToolTip2 %>" border="0">
                 </a>
               </td>
 <%
@@ -59,7 +76,7 @@
 %>
               <td>
                 <a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=<%=lFun.getNameAction()%>&<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>=<%=idFascicoloSIUS%>&<%=ICostantiSoggetto.CAMPO_ID_SOGGETTO%>=<%=idSoggetto%>&TornaQui=<%=TornaQui%> ">
-                  <img src="/images/new24.gif" width="12" height="12" alt="Iscrizione Procedimento di Esecuzione S.S." border="0">
+                  <img src="/images/new24.gif" width="12" height="12" alt="<%=strToolTip2%>" border="0">
                 </a>
               </td>
 <%

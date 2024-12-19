@@ -33,6 +33,7 @@ import siap.siep.misurasicurezza.action.ICostantiMisuraSicurezza;
 import siap.siep.misurasicurezza.controller.IMisuraSicurezza;
 import siap.siep.misurasicurezza.controller.MisuraSicurezzaController;
 import siap.siep.misurasicurezza.model.MisuraSicurezzaModel;
+import siap.siep.penaaccessoria.action.ICostantiPenaAccessoria;
 import siap.siep.util.SIEPLookupRemote;
 import siap.sius.ActionSius;
 import siap.sius.SIUSException;
@@ -118,7 +119,6 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 		// i Procedimenti con contenuto "Applicazione Misura di Sicurezza" (U023)
 		if (!isRequestParameterNullObj(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
 				&& getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO).equals("U023")) {
-
 			MisuraSicurezzaModel aMisuraSicurezza = new MisuraSicurezzaModel();
 			aMisuraSicurezza.setFasSiuIdFascicoloSius(mFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
 			MisuraSicurezzaController lCtrl = new MisuraSicurezzaController();
@@ -661,19 +661,25 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 			// "Proposta di aggravamento della libertà vigilata per persone in stato di
 			// infermità psichica (art.232 c.p.)" ed esito "Sostituisce la libertà vigilata
 			// con la casa di cura e custodia"
-			
+
 			// Ticket#20220415019 — cancellazione/pagina errore
-			// In caso di Revoca misura alternativa (C002) veniva inserito un record MISURA_SICUREZZA senza alcun
-			// motivo a causa della presenza dei campi AnnoDataDecorrenza ecc. In fase di cancellazione si verificava
+			// In caso di Revoca misura alternativa (C002) veniva inserito un record MISURA_SICUREZZA senza
+			// alcun
+			// motivo a causa della presenza dei campi AnnoDataDecorrenza ecc. In fase di cancellazione si
+			// verificava
 			// una violazione di integrità. Si escludono le revoche MA
-			if (   !isRequestParameterNullObj(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
-				&& getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO).equals("C002")) 
-			{
-   			    // non faccio nulla
+			if (!isRequestParameterNullObj(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
+					&& getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO).equals("C002")) {
+				// non faccio nulla
 				siesLogger.debug("Revoca MA non gestisco l'inserimento MS ");
-			} 
-			else 
-			{
+				// MEV_2023-35 aggiungo anche la revoca PS che scrivono sul campo deposito.data_decorrenza
+			} else if (!isRequestParameterNullObj(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
+					&& (getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO).equals("U131")
+							|| getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
+									.equals("U132"))) {
+				// non faccio nulla
+				siesLogger.debug("Revoca Pene sostitutive non gestisco l'inserimento MS ");
+			} else {
 				Date dataDecorrenzaMS = null;
 				if (!isRequestParameterNullObj(ICostantiSiusMisuraSicurezza.CAMPO_ANNO_DATA_DECORRENZA))
 					dataDecorrenzaMS = getRequestDateParameter(
@@ -681,8 +687,8 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 							ICostantiSiusMisuraSicurezza.CAMPO_MESE_DATA_DECORRENZA,
 							ICostantiSiusMisuraSicurezza.CAMPO_GIORNO_DATA_DECORRENZA);
 				// MERGE v10: aggiunta porzione di codice per gestire la data
-				if (!Utils.isPresent(dataDecorrenzaMS)
-						&& !isRequestParameterNullObj(ICostantiDepositoOrdinanzaPc.CAMPO_ANNO_DATA_DECORRENZA))
+				if (!Utils.isPresent(dataDecorrenzaMS) && !isRequestParameterNullObj(
+						ICostantiDepositoOrdinanzaPc.CAMPO_ANNO_DATA_DECORRENZA))
 					dataDecorrenzaMS = getRequestDateParameter(
 							ICostantiDepositoOrdinanzaPc.CAMPO_ANNO_DATA_DECORRENZA,
 							ICostantiDepositoOrdinanzaPc.CAMPO_MESE_DATA_DECORRENZA,
@@ -699,12 +705,13 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 					// BigDecimal idFascicoloSius = mFasGPMod.getFascicoloSiusModel().getIdFascicoloSius();
 					if (idFascicoloSius != null) {
 						IMisuraSicurezza lCtrl = SIEPLookupRemote.getMisuraSicurezzaRemote();
-						List lMisureSicurezza = lCtrl.ExRicercaMisuraSicurezzaByIdFascicoloSIUS(idFascicoloSius);
+						List lMisureSicurezza = lCtrl
+								.ExRicercaMisuraSicurezzaByIdFascicoloSIUS(idFascicoloSius);
 						// non esiste la misura di sicurezza associata al fascicolo Sius corrente
 						// pertanto devo inserirla
 						if (lMisureSicurezza.size() == 0) {
 							MisuraSicurezzaModel lNuovaMisura = new MisuraSicurezzaModel();
-	
+
 							lNuovaMisura.setCodOperatoreInserimento(getCodUtenteConnesso());
 							lNuovaMisura.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
 							lNuovaMisura.setDataInserimento(DateUtils.getSysDate());
@@ -722,7 +729,6 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 							lNuovaMisura.setNumAnni(getAnniMisuraParameter());
 							lNuovaMisura.setNumMesi(getMesiMisuraParameter());
 							lNuovaMisura.setNumGiorni(getGiorniMisuraParameter());
-	
 							// Effettuo l'Inserimento della Misura di Sicurezza
 							lNuovaMisura = lCtrl.ExInserisciMisuraSicurezza(lNuovaMisura);
 						} else {
@@ -730,25 +736,25 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 							Iterator itxMis = lMisureSicurezza.iterator();
 							while (itxMis.hasNext()) {
 								MisuraSicurezzaModel lMisSicuSius = (MisuraSicurezzaModel) itxMis.next();
-	
 								lMisSicuSius.setCodOperatoreAggiornamento(getCodUtenteConnesso());
 								lMisSicuSius.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
 								lMisSicuSius.setDataAggiornamento(DateUtils.getSysDate());
 								lMisSicuSius.setEveIdEvento(lOrdEveTenGP.getEvento().getIdEvento());
 								lMisSicuSius.setDataDecorrenza(dataDecorrenzaMS);
-	
 								// Effettuo la Modifica della Misura di Sicurezza
 								lCtrl.ExModificaMisuraSicurezza(lMisSicuSius);
 							}
 						}
 					} // if(idFascicoloSius != null){
 				} // if(dataDecorrenzaMS != null){
-
 			} // Ticket#20220415019 - FINE
-			
+
 			/*
-			 * ISSUE MEV : aggiunto codice per gestione oggetto C029 Numero MEV : 39 Autore : Gioggi Data :
-			 * 19/giu/2017 Branch : MEV_39
+			 * ISSUE MEV : aggiunto codice per gestione oggetto C029 
+			 * Numero MEV : 39 
+			 * Autore : Gioggi 
+			 * Data : 19/giu/2017 
+			 * Branch : MEV_39
 			 */
 			if (codOggettoProcedimento.equalsIgnoreCase(OGG_ORD_APPELLO_CONTRO_PROVV_MS)) {
 				TenoreModel tenori[] = lOrdEveTenGP.getTenori();
@@ -852,6 +858,21 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 					lRedirectTo.setParameter(ICostantiEvento.CAMPO_ID_EVENTO,
 							lOrdEveTenGP.getEvento().getIdEvento().toString());
 
+					// Action successiva
+					lRedirectTo.setParameter("nextaction",
+							"siap.sius.depositoordinanzapc.action.ActLoadDettaglioOrdinanza");
+
+					lRetPage = lRedirectTo.toString();
+				} else if (!isRequestParameterNullObj(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
+						&& getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
+								.equals("U125")) {
+					siesLogger.debug("Prescrizioni SP: ");
+
+					RedirectTo lRedirectTo = new RedirectTo();
+					lRedirectTo.setPage(IWebConstants.PG_MAIN);
+					lRedirectTo.setAction("siap.sius.prescrizione.action.ActLoadInserisciPrescrizioneNew");
+					lRedirectTo.setParameter(ICostantiEvento.CAMPO_ID_EVENTO,
+							lOrdEveTenGP.getEvento().getIdEvento().toString());
 					// Action successiva
 					lRedirectTo.setParameter("nextaction",
 							"siap.sius.depositoordinanzapc.action.ActLoadDettaglioOrdinanza");
@@ -1019,6 +1040,24 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 			lDepOrdModel.setDescrUfficioMagistratoComp(
 					getRequestStringParameter(CAMPO_COD_UFFICIO_MAGISTRATO_COMP_RECLA));
 		}
+
+		// MEV_2023-35: aggiunto recupero dell'importo della pena pecuniaria convertita
+		if (getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO).equals("C065")) {
+			if (!isRequestParameterNullObj(CAMPO_INTERO_PENA_PECUNIARIA_CONVERTITA)
+					&& ((getRequestStringParameter(CAMPO_INTERO_PENA_PECUNIARIA_CONVERTITA) != null
+							&& !(getRequestStringParameter(CAMPO_INTERO_PENA_PECUNIARIA_CONVERTITA))
+									.equals(""))
+							|| (getRequestStringParameter(CAMPO_DECIMALE_PENA_PECUNIARIA_CONVERTITA) != null
+									&& !(getRequestStringParameter(CAMPO_DECIMALE_PENA_PECUNIARIA_CONVERTITA))
+											.equals("")))) {
+				lDepOrdModel.setSommaRisarcimento((new BigDecimal(
+						getRequestStringParameter(CAMPO_INTERO_PENA_PECUNIARIA_CONVERTITA) + "."
+								+ getRequestStringParameter(CAMPO_DECIMALE_PENA_PECUNIARIA_CONVERTITA))));
+			}
+		} else if (getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO).equals("U142")) {
+			lDepOrdModel.setCodTipoOrdinanza("SR");
+		}
+		// FINE MEV_2023-35
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
@@ -1244,7 +1283,6 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 					lDepOrdModel.setCodUfficioMagistratoComp("-");
 			}
 		}
-		// ===============================
 
 		// Data Decorrenza Sospensione
 		if (!isRequestParameterNullObj(ICostantiDepositoDecreto.CAMPO_GIORNO_SOSPENSIONE_SS)
@@ -1298,6 +1336,21 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 			lDepOrdModel.setSospensioneGGSS(
 					getRequestBigDecimalParameter(ICostantiDepositoDecreto.CAMPO_SOSPENSIONE_GG_SS));
 
+		// MEV_2023-35: aggiungo controllo per Data "Fino al"
+		if ((!isRequestParameterNullObj(ICostantiDepositoDecreto.CAMPO_GIORNO_SCADENZA_SOSPENSIONE_SS)
+				&& getRequestStringParameter(ICostantiDepositoDecreto.CAMPO_GIORNO_SCADENZA_SOSPENSIONE_SS)
+						.length() > 0)
+				&& (!isRequestParameterNullObj(ICostantiDepositoDecreto.CAMPO_MESE_SCADENZA_SOSPENSIONE_SS)
+						&& getRequestStringParameter(
+								ICostantiDepositoDecreto.CAMPO_MESE_SCADENZA_SOSPENSIONE_SS).length() > 0)
+				&& (!isRequestParameterNullObj(ICostantiDepositoDecreto.CAMPO_ANNO_SCADENZA_SOSPENSIONE_SS)
+						&& getRequestStringParameter(
+								ICostantiDepositoDecreto.CAMPO_ANNO_SCADENZA_SOSPENSIONE_SS).length() > 0))
+			lDepOrdModel.setDataScadenzaSospensioneSS(
+					getRequestDateParameter(ICostantiDepositoDecreto.CAMPO_ANNO_SCADENZA_SOSPENSIONE_SS,
+							ICostantiDepositoDecreto.CAMPO_MESE_SCADENZA_SOSPENSIONE_SS,
+							ICostantiDepositoDecreto.CAMPO_GIORNO_SCADENZA_SOSPENSIONE_SS));
+
 		if (!isRequestParameterNullObj(ICostantiDepositoDecreto.CAMPO_COD_TIPO_DECRETO))
 			lDepOrdModel = leggiDatiDecreto(lDepOrdModel);
 
@@ -1322,6 +1375,25 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 				lDepOrdModel.setCodUfficioMagistratoComp("-");
 		}
 
+		// MEV_2023-35: gestione Sospensione esecuzione pene accessorie
+		String codOggettoProcedimento = mFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento();
+		if (COD_OGGETTO_SOSPENSIONE_ESECUZIONE_PENE_ACCESSORIE_TDS.equals(codOggettoProcedimento)
+				|| COD_OGGETTO_SOSPENSIONE_ESECUZIONE_PENE_ACCESSORIE_UDS.equals(codOggettoProcedimento)) {
+			lDepOrdModel.setCodTipoPenaAccessoria(
+					getRequestStringParameter(ICostantiPenaAccessoria.CAMPO_COD_TIPO_PENA_ACCESSORIA));
+			if (!isRequestParameterNullEmptyObj(ICostantiPenaAccessoria.CAMPO_DURATA))
+				lDepOrdModel.setDurata(getRequestStringParameter(ICostantiPenaAccessoria.CAMPO_DURATA));
+			if (!isRequestParameterNullEmptyObj(ICostantiPenaAccessoria.CAMPO_NUM_ANNI))
+				lDepOrdModel
+						.setNumAnni(getRequestBigDecimalParameter(ICostantiPenaAccessoria.CAMPO_NUM_ANNI));
+			if (!isRequestParameterNullEmptyObj(ICostantiPenaAccessoria.CAMPO_NUM_MESI))
+				lDepOrdModel
+						.setNumMesi(getRequestBigDecimalParameter(ICostantiPenaAccessoria.CAMPO_NUM_MESI));
+			if (!isRequestParameterNullEmptyObj(ICostantiPenaAccessoria.CAMPO_NUM_GIORNI))
+				lDepOrdModel.setNumGiorni(
+						getRequestBigDecimalParameter(ICostantiPenaAccessoria.CAMPO_NUM_GIORNI));
+		}
+
 		// Aggiornamento Ordinanza effettuato
 		aModel.setOrdinanza(lDepOrdModel);
 
@@ -1344,9 +1416,8 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 				lEvento.setTemIdTemplate(TEMPLATE_ORDINANZA_RIGETTO_GENERICO);
 			else if (getRequestStringParameter(CAMPO_TIPO_ORDINANZA_DA_PRODURRE).equals("04"))
 				lEvento.setTemIdTemplate(TEMPLATE_ORDINANZA_NLP_GENERICO);
-			else if (getRequestStringParameter(CAMPO_TIPO_ORDINANZA_DA_PRODURRE).equals("01"))
-			// generazione automantica
-			{
+			else if (getRequestStringParameter(CAMPO_TIPO_ORDINANZA_DA_PRODURRE).equals("01")) {
+				// generazione automantica
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
 				siesLogger.debug(">>>> Chiama la logica Decisionale per il template  ...");

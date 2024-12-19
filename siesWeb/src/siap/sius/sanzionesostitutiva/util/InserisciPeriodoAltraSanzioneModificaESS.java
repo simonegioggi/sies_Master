@@ -7,6 +7,9 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
 import siap.sico.calendar.model.CalendarModel;
 import siap.sico.util.CalendarUtil;
 import siap.sico.web.ActionSiap;
@@ -23,19 +26,11 @@ import siap.sius.sanzionesostitutiva.model.PeriodoAltraSanzioneModel;
 import siap.sius.scadenzario.controller.IScadenzarioSius;
 import siap.sius.scadenzario.model.ScadenzarioSiusModel;
 import siap.sius.util.SIUSLookupRemote;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
 
 /**
- * <p>
- * Title: InserisciPeriodoAltraSanzioneModificaESS
- * </p>
- * <p>
- * Description: Classe di Util per il controllo dei dati e i calcoli della pena per il Periodo Altra Sanzione
- * e Esecuzione Sanzione Sostitutiva
- * </p>
- * 
+ * InserisciPeriodoAltraSanzioneModificaESS - Classe di Util per il controllo dei dati e i calcoli della pena
+ * per il Periodo Altra Sanzione e Esecuzione Sanzione Sostitutiva
+ *
  * @version 1.0
  */
 public class InserisciPeriodoAltraSanzioneModificaESS extends ActionSiap implements ICostantiDepositoDecreto {
@@ -64,8 +59,7 @@ public class InserisciPeriodoAltraSanzioneModificaESS extends ActionSiap impleme
 	/**
 	 * Legge i dati inputati in maschera li carica nel model lPerAltSanMod, cerca l'Esecuzione Sanzione
 	 * Sostitutiva per effettuare le modifiche ed esegue i calcoli sul quantum pena.
-	 * <p>
-	 * 
+	 *
 	 * @param mFasGPMod
 	 *            : Model del fascicolo corrente,
 	 * @return lPerAltSanMod: Model dell Periodo Altra Sanzione.
@@ -85,12 +79,12 @@ public class InserisciPeriodoAltraSanzioneModificaESS extends ActionSiap impleme
 		// Controlla Data Decorrenza Sospensione per inserire il nuovo record nella tabella
 		// PERIODO_ALTRA_SANZIONE
 		// e modificare il record nella tabella ESECUZIONE_SANZIONE_SOST
-		if ((!isRequestParameterNullObj(CAMPO_GIORNO_SOSPENSIONE_SS) && getRequestStringParameter(
-				CAMPO_GIORNO_SOSPENSIONE_SS).length() > 0)
-				&& (!isRequestParameterNullObj(CAMPO_MESE_SOSPENSIONE_SS) && getRequestStringParameter(
-						CAMPO_MESE_SOSPENSIONE_SS).length() > 0)
-				&& (!isRequestParameterNullObj(CAMPO_ANNO_SOSPENSIONE_SS) && getRequestStringParameter(
-						CAMPO_ANNO_SOSPENSIONE_SS).length() > 0)) {
+		if ((!isRequestParameterNullObj(CAMPO_GIORNO_SOSPENSIONE_SS)
+				&& getRequestStringParameter(CAMPO_GIORNO_SOSPENSIONE_SS).length() > 0)
+				&& (!isRequestParameterNullObj(CAMPO_MESE_SOSPENSIONE_SS)
+						&& getRequestStringParameter(CAMPO_MESE_SOSPENSIONE_SS).length() > 0)
+				&& (!isRequestParameterNullObj(CAMPO_ANNO_SOSPENSIONE_SS)
+						&& getRequestStringParameter(CAMPO_ANNO_SOSPENSIONE_SS).length() > 0)) {
 			BigDecimal lGiorniRecupero = null;
 
 			Date lDataScadenza = null;
@@ -164,8 +158,8 @@ public class InserisciPeriodoAltraSanzioneModificaESS extends ActionSiap impleme
 			// Cerca ID Fascicolo Padre
 			IFascicoloSius lCtrlFS = SIUSLookupRemote.getFascicoloSiusRemote();
 			FascicoloGPModel IFascicoloSiusMod = lCtrlFS.ExRicercaFascicoloByAnnoProgrCodUfficioNoControl(
-					mFasGPMod.getGeneraleProcedimentoModel().getAnnoS1(), mFasGPMod
-							.getGeneraleProcedimentoModel().getProgrS1(), getCodUfficioUtenteConnesso());
+					mFasGPMod.getGeneraleProcedimentoModel().getAnnoS1(),
+					mFasGPMod.getGeneraleProcedimentoModel().getProgrS1(), getCodUfficioUtenteConnesso());
 
 			BigDecimal aIdFascicoloSius = IFascicoloSiusMod.getFascicoloSiusModel().getIdFascicoloSius();
 
@@ -184,11 +178,18 @@ public class InserisciPeriodoAltraSanzioneModificaESS extends ActionSiap impleme
 				}
 				if (lPeriodoAltraSanzioneModel.getFlagMotivo().equals("03")) {
 					throw new SIUSException(SIUSException.USER_MESSAGE,
-							"Attenzione! La sanzione risulta già sospesa!");
+							"Attenzione! La sanzione risulta già sospesa.");
 				}
 				if (lDataDecorrenzaSanzSost.before(lPeriodoAltraSanzioneModel.getDataInizioEsecuzione())) {
+					// MEV_2023-35: aggiunte date esplicative
 					throw new SIUSException(SIUSException.USER_MESSAGE,
-							"Attenzione! La Data Decorrenza non puo essere minore della data Inizio/Ripresa Sanzione!");
+							"Attenzione! La Data Decorrenza ("
+									+ DateUtils.getDateToString(lDataDecorrenzaSanzSost, "dd/MM/yyyy")
+									+ ") non puo essere minore della data Inizio/Ripresa Sanzione ("
+									+ DateUtils.getDateToString(
+											lPeriodoAltraSanzioneModel.getDataInizioEsecuzione(),
+											"dd/MM/yyyy")
+									+ ").");
 				}
 			} else {
 				throw new SIUSException(SIUSException.USER_MESSAGE, "Inserire prima Inizio Sanzione.");
@@ -205,12 +206,14 @@ public class InserisciPeriodoAltraSanzioneModificaESS extends ActionSiap impleme
 					lDataTermineIniziale = lEssM.getDataTermineAttuale();
 
 					// Controllo per Data "Fino al"
-					if ((!isRequestParameterNullObj(CAMPO_GIORNO_SCADENZA_SOSPENSIONE_SS) && getRequestStringParameter(
-							CAMPO_GIORNO_SCADENZA_SOSPENSIONE_SS).length() > 0)
-							&& (!isRequestParameterNullObj(CAMPO_MESE_SCADENZA_SOSPENSIONE_SS) && getRequestStringParameter(
-									CAMPO_MESE_SCADENZA_SOSPENSIONE_SS).length() > 0)
-							&& (!isRequestParameterNullObj(CAMPO_ANNO_SCADENZA_SOSPENSIONE_SS) && getRequestStringParameter(
-									CAMPO_ANNO_SCADENZA_SOSPENSIONE_SS).length() > 0)) {
+					if ((!isRequestParameterNullObj(CAMPO_GIORNO_SCADENZA_SOSPENSIONE_SS)
+							&& getRequestStringParameter(CAMPO_GIORNO_SCADENZA_SOSPENSIONE_SS).length() > 0)
+							&& (!isRequestParameterNullObj(CAMPO_MESE_SCADENZA_SOSPENSIONE_SS)
+									&& getRequestStringParameter(CAMPO_MESE_SCADENZA_SOSPENSIONE_SS)
+											.length() > 0)
+							&& (!isRequestParameterNullObj(CAMPO_ANNO_SCADENZA_SOSPENSIONE_SS)
+									&& getRequestStringParameter(CAMPO_ANNO_SCADENZA_SOSPENSIONE_SS)
+											.length() > 0)) {
 						lDataScadenza = getRequestDateParameter(CAMPO_ANNO_SCADENZA_SOSPENSIONE_SS,
 								CAMPO_MESE_SCADENZA_SOSPENSIONE_SS, CAMPO_GIORNO_SCADENZA_SOSPENSIONE_SS);
 
@@ -219,8 +222,18 @@ public class InserisciPeriodoAltraSanzioneModificaESS extends ActionSiap impleme
 						if (DateUtils.isLower(lDataScadenza, lEssM.getDataTermineAttuale())) {
 							lPerAltSanMod.setDataScadenza(lDataScadenza);
 						} else {
-							throw new SIUSException(SIUSException.USER_MESSAGE,
-									"Attenzione! La Data 'Fino al' deve essere minore della Data Termine Attuale.");
+							// MEV_2023-35: richiesta durante il collaudo la possibilità di inserire oltre
+							// la Data Termine Attuale
+							if (!"U137".equals(
+									mFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento())) {
+								throw new SIUSException(SIUSException.USER_MESSAGE,
+										"Attenzione! La Data 'Fino al' ("
+												+ DateUtils.getDateToString(lDataScadenza, "dd/MM/yyyy")
+												+ ") deve essere minore della Data Termine Attuale ("
+												+ DateUtils.getDateToString(lDataDecorrenzaSanzSost,
+														"dd/MM/yyyy")
+												+ ").");
+							}
 						}
 					}
 
@@ -242,7 +255,12 @@ public class InserisciPeriodoAltraSanzioneModificaESS extends ActionSiap impleme
 							lPerAltSanMod.setDataScadenza(lDataScadenza);
 						} else {
 							throw new SIUSException(SIUSException.USER_MESSAGE,
-									"Attenzione! il 'Periodo Sospensione' deve essere minore della Data Termine Attuale.");
+									"Attenzione! il 'Periodo Sospensione' ("
+											+ DateUtils.getDateToString(lDataScadenza, "dd/MM/yyyy")
+											+ ") deve essere minore della Data Termine Attuale ("
+											+ DateUtils.getDateToString(lEssM.getDataTermineAttuale(),
+													"dd/MM/yyyy")
+											+ ").");
 						}
 					}
 
@@ -343,10 +361,13 @@ public class InserisciPeriodoAltraSanzioneModificaESS extends ActionSiap impleme
 					lPerAltSanMod.setResiduaGG(new BigDecimal(lCalModRes.getNumGiorni()));
 					lPerAltSanMod.setResiduaMM(new BigDecimal(lCalModRes.getNumMesi()));
 					lPerAltSanMod.setResiduaAA(new BigDecimal(lCalModRes.getNumAnni()));
-
 				} else {
 					throw new SIUSException(SIUSException.USER_MESSAGE,
-							"Attenzione! La Data Decorrenza Sospensione deve essere minore della Data Termine Attuale.");
+							"Attenzione! La Data Decorrenza Sospensione ("
+									+ DateUtils.getDateToString(lDataDecorrenzaSanzSost, "dd/MM/yyyy")
+									+ ") deve essere minore della Data Termine Attuale ("
+									+ DateUtils.getDateToString(lEssM.getDataTermineAttuale(), "dd/MM/yyyy")
+									+ ").");
 				}
 			} else {
 				throw new SIUSException(SIUSException.USER_MESSAGE,
@@ -363,7 +384,6 @@ public class InserisciPeriodoAltraSanzioneModificaESS extends ActionSiap impleme
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("caricaPeriodoAltraSanzioneModESS: Fine");
-
 		}
 
 		return lPerAltSanMod;
@@ -372,8 +392,7 @@ public class InserisciPeriodoAltraSanzioneModificaESS extends ActionSiap impleme
 	/**
 	 * Effetua una ricerca del Periodo Altra Sanzione, dell'Esecuzione Sanzione Sostitutiva e Scrive lo
 	 * Scadenzario.
-	 * <p>
-	 * 
+	 *
 	 * @param mFasGPMod
 	 *            : Model del fascicolo corrente,
 	 * @param lIdEveDecOrd
@@ -395,8 +414,8 @@ public class InserisciPeriodoAltraSanzioneModificaESS extends ActionSiap impleme
 		// Cerca ID Fascicolo Padre
 		IFascicoloSius lCtrlFS = SIUSLookupRemote.getFascicoloSiusRemote();
 		FascicoloGPModel IFascicoloSiusMod = lCtrlFS.ExRicercaFascicoloByAnnoProgrCodUfficioNoControl(
-				mFasGPMod.getGeneraleProcedimentoModel().getAnnoS1(), mFasGPMod
-						.getGeneraleProcedimentoModel().getProgrS1(), getCodUfficioUtenteConnesso());
+				mFasGPMod.getGeneraleProcedimentoModel().getAnnoS1(),
+				mFasGPMod.getGeneraleProcedimentoModel().getProgrS1(), getCodUfficioUtenteConnesso());
 
 		BigDecimal aIdFascicoloSius = IFascicoloSiusMod.getFascicoloSiusModel().getIdFascicoloSius();
 
@@ -415,13 +434,11 @@ public class InserisciPeriodoAltraSanzioneModificaESS extends ActionSiap impleme
 
 		// Controllo esitenza Scadenzario Principale
 		if (lScadenzarioSiusModPrincipal != null) {
-
 			// Controlla Esitenza Periodo Altra Sanzione
 			if (IPASMod != null && IPASMod.getDataInizioEsecuzione() != null) {
 				// Ricerca Scadenzario Secondario
 				lScadenzarioSiusModSecond = lCtrlSca.ExRicercaScadenzarioSiusByIdFascicoloTipo(
 						aIdFascicoloSius, lCodTipoScadenzarioSecond);
-
 				if (lScadenzarioSiusModSecond == null) {
 					lScadenzarioSiusModSecond = new ScadenzarioSiusModel();
 				}
@@ -435,9 +452,9 @@ public class InserisciPeriodoAltraSanzioneModificaESS extends ActionSiap impleme
 				// Scrive la Data Fine dello Scadenzario Secondario
 				if (IPASMod.getDataScadenza() != null) {
 					lScadenzarioSiusModSecond.setDataFineScadenza(IPASMod.getDataScadenza());
-				} else // Se non trova la Data Scadenza del Periodo Altra Sanzione inserisce la Data Termine
-						// Attuale dell'Esec. Sanz. Sostit.
-				{
+				} else {
+					// Se non trova la Data Scadenza del Periodo Altra Sanzione inserisce la Data Termine
+					// Attuale dell'Esec. Sanz. Sostit.
 					lScadenzarioSiusModSecond.setDataFineScadenza(lEssM.getDataTermineAttuale());
 				}
 
@@ -447,8 +464,7 @@ public class InserisciPeriodoAltraSanzioneModificaESS extends ActionSiap impleme
 					lScadenzarioSiusModSecond.setCodOperatoreAggiornamento(getCodUtenteConnesso());
 					lScadenzarioSiusModSecond.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
 					lScadenzarioSiusModSecond.setDataAggiornamento(lDatacorrente);
-				} else //
-				{
+				} else {
 					// Scrive il Codice Tipo
 					lScadenzarioSiusModSecond.setCodTipoScadenzario(lCodTipoScadenzarioSecond);
 
@@ -466,14 +482,12 @@ public class InserisciPeriodoAltraSanzioneModificaESS extends ActionSiap impleme
 					// Modifica la Data Fine Scadenza dello Scadenzario Principale
 					// con la Data Termine Attuale dell'Esecuzione Sanzione Sostituttiva
 					lScadenzarioSiusModPrincipal.setDataFineScadenza(lEssM.getDataTermineAttuale());
-
 					// Scrive Codice Operatore, Codice Ufficio e Data aggiornamento
 					lScadenzarioSiusModPrincipal.setCodOperatoreAggiornamento(getCodUtenteConnesso());
 					lScadenzarioSiusModPrincipal.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
 					lScadenzarioSiusModPrincipal.setDataAggiornamento(lDatacorrente);
 				}
-
-			}// FINE -- Controlla Esitenza Periodo Altra Sanzione
+			} // FINE -- Controlla Esitenza Periodo Altra Sanzione
 		} else {
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Attenzione! Lo Scadenzario Principale non Esiste.");

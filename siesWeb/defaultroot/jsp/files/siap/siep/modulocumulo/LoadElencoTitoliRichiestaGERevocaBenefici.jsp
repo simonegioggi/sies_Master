@@ -151,7 +151,7 @@ int TotTitoli = ListaTitoli.size();
 			          	else if(CodBen == 2)
 			          	{	 
 			            	ValCodice2 = document.eleRicGERevoBen.<%=ICostantiBeneficiCumulo.CAMPO_COD_TIPO_BENEFICIO %>[j].value;
-			            	document.eleRicGERevoBen.<%=ICostantiRichiestePmInCumulo.CAMPO_ID_BENEFICIO_CUM_SEL_2 %>.value = document.eleRicGERevoBen.<%=ICostantiBeneficiCumulo.CAMPO_ID_BENEFICIO_CUMULO%>[j].value;;
+			            	document.eleRicGERevoBen.<%=ICostantiRichiestePmInCumulo.CAMPO_ID_BENEFICIO_CUM_SEL_2 %>.value = document.eleRicGERevoBen.<%=ICostantiBeneficiCumulo.CAMPO_ID_BENEFICIO_CUMULO%>[j].value;
 			          	}
 		      	   	 }
 		       	     else if(document.eleRicGERevoBen.<%=ICostantiStatoEsecTitoloCumulato.CAMPO_ID_STATO_ESEC_TITOLO_CUMULATO  %>[j].value != '' )

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
 import siap.sico.ufficio.controller.IUfficio;
 import siap.sico.ufficio.model.UfficioModel;
 import siap.sico.util.SICOLookupRemote;
@@ -16,32 +17,23 @@ import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.generaleprocedimento.controller.IGeneraleProcedimento;
 import siap.sius.generaleprocedimento.model.GeneraleProcedimentoModel;
 import siap.sius.util.SIUSLookupRemote;
-import f3b.log.LogF3B;
 
 /**
- * <p>
- * Title: ActLoadInserisciOrdinanzaConcessioneRinvioEP
- * </p>
- * <p>
- * Description: Classe Action per la load inserisci di Emissione Ordinanza Concessione Rinvio Esecuzione Pena
- * </p>
- * <p>
- * La Action effettua la ricerca preliminare del decreto emesso dall'Ufficio di Sorveglianza.
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ * ActLoadInserisciOrdinanzaConcessioneRinvioEP - Classe Action per la load inserisci di Emissione Ordinanza
+ * Concessione Rinvio Esecuzione Pena La Action effettua la ricerca preliminare del decreto emesso
+ * dall'Ufficio di Sorveglianza.
+ *
  * @version 1.0
  */
-public class ActLoadInserisciOrdinanzaConcessioneRinvioEP extends ActionSiap implements
-		ICostantiDepositoOrdinanzaPc {
+public class ActLoadInserisciOrdinanzaConcessioneRinvioEP extends ActionSiap
+		implements ICostantiDepositoOrdinanzaPc {
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 	IGeneraleProcedimento mGenProcCtrl = null;
 
 	public String processRequest() throws Exception {
+
 		FascicoloGPModel lFasGPMod = null;
 		BigDecimal lIdFasOrigine = null;
 		// Generale Procedimento del Fascicolo Origine
@@ -55,12 +47,12 @@ public class ActLoadInserisciOrdinanzaConcessioneRinvioEP extends ActionSiap imp
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger
-				.debug("ActLoadInserisciOrdinanzaConcessioneRinvioEP: Inizio ricerca dei procedimenti di riferimento");
+		siesLogger.debug(
+				"ActLoadInserisciOrdinanzaConcessioneRinvioEP: Inizio ricerca dei procedimenti di riferimento");
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug("ID del Fascicolo corrente ->"
-				+ lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
+		siesLogger.debug(
+				"ID del Fascicolo corrente ->" + lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
 		// Se esiste il Fascicolo SIUS Origine si effettua la ricerca
 		// dei provvedimenti di riferimento.
 		// Il Fascicolo Origine rappresenta il procedimento emesso dal
@@ -77,7 +69,10 @@ public class ActLoadInserisciOrdinanzaConcessioneRinvioEP extends ActionSiap imp
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
 				siesLogger.debug("ID del Generale Procedimento ->" + lGenProc1.getIdGeneraleProcedimento());
-				lDepDecMod = RicercaDecreto(lGenProc1.getIdGeneraleProcedimento());
+				// MEV_2023-035: intervento pro collaudo, aggiunto parametro di passaggio x diversificare la
+				// ricerca del decreto di origine
+				String codOggettoProc = lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento();
+				lDepDecMod = RicercaDecreto(lGenProc1.getIdGeneraleProcedimento(), codOggettoProc);
 				// Ricerca del Decreto
 				if (lDepDecMod != null)
 					setRequestAttribute("decreto", lDepDecMod);
@@ -98,14 +93,16 @@ public class ActLoadInserisciOrdinanzaConcessioneRinvioEP extends ActionSiap imp
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger
-				.debug("ActLoadInserisciOrdinanzaConcessioneRinvioEP: Fine ricerca dei procedimenti di riferimento");
+		siesLogger.debug(
+				"ActLoadInserisciOrdinanzaConcessioneRinvioEP: Fine ricerca dei procedimenti di riferimento");
 
 		return PG_LOAD_INSERISCI_ORDINANZA_CONC_RINVIO_EP;
 	}
 
 	// Ricerca del decreto emesso dall' Ufficio di Sorveglianza
-	private DepositoDecretoModel RicercaDecreto(BigDecimal aIdGenProc) throws Exception {
+	private DepositoDecretoModel RicercaDecreto(BigDecimal aIdGenProc, String codOggettoProc)
+			throws Exception {
+
 		IDepositoDecreto lDepDecCtrl = null;
 		DepositoDecretoModel lDepDecMod = null;
 		IUfficio lUffCtrl = null;
@@ -113,8 +110,14 @@ public class ActLoadInserisciOrdinanzaConcessioneRinvioEP extends ActionSiap imp
 		String lCodUff = null;
 
 		lDepDecCtrl = SIUSLookupRemote.getDepositoDecretoRemote();
-		lDepDecMod = lDepDecCtrl.ExRicercaDepositoDecretoByGenProc(aIdGenProc,
-				ICostantiDepositoDecreto.RINVIO_ESECUZIONE_PENA);
+		// MEV_2023-035: intervento pro collaudo, aggiunto controllo x diversificare la
+		// ricerca del decreto di origine
+		if ("C065".equals(codOggettoProc))
+			lDepDecMod = lDepDecCtrl.ExRicercaDepositoDecretoByGenProc(aIdGenProc,
+					ICostantiDepositoDecreto.RINVIO_ESECUZIONE_PENA_SOST_DERIVANTE_CONVERSIONE);
+		else
+			lDepDecMod = lDepDecCtrl.ExRicercaDepositoDecretoByGenProc(aIdGenProc,
+					ICostantiDepositoDecreto.RINVIO_ESECUZIONE_PENA);
 		if (lDepDecMod != null) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()

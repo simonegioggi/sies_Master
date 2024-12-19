@@ -2413,8 +2413,8 @@ if (dettagliofascicolo.getPosizioneMateriale() != null) {
 %>
 	<tr>
 	  	<td class="L">
-		    <font class="label">Posizione Materiale :  </font>
-		    <font class="campo"><%=dettagliofascicolo.getPosizioneMateriale().getDescrPosizioneMateriale() %> </font>
+		    <font class="label">Posizione Materiale :</font>&nbsp;
+		    <font class="campo"><%=StringUtils.toStringJSP(dettagliofascicolo.getPosizioneMateriale().getDescrPosizioneMateriale())%></font>
 	  	</td>
 	</tr>
 <%

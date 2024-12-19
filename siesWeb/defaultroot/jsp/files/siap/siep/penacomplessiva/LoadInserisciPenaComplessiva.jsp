@@ -760,7 +760,7 @@ if (lIndexMulta == -1) {
 	lParteDecimaleMulta = "";
 } else {
 	lParteInteraMulta = lImportoMulta.substring(0,lIndexMulta);
-	lParteDecimaleMulta = lImportoMulta.substring(lIndexMulta+1);;
+	lParteDecimaleMulta = lImportoMulta.substring(lIndexMulta+1);
 }
 %>
 			<input Title="Multa" size="14" maxlength="14" value="<%=StringUtils.toZerotoStringaVuota(lParteInteraMulta,"")%>" type="text" name="<%=ICostantiPenaComplessiva.CAMPO_INTERO_IMPORTO_MULTA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">,
@@ -789,7 +789,7 @@ if (lIndexAmmenda == -1) {
 	lParteDecimaleAmmenda = "";
 } else {
 	lParteInteraAmmenda = lImportoAmmenda.substring(0, lIndexAmmenda);
-	lParteDecimaleAmmenda = lImportoAmmenda.substring(lIndexAmmenda+1);;
+	lParteDecimaleAmmenda = lImportoAmmenda.substring(lIndexAmmenda+1);
 }
 %>
 			<input Title="Ammenda" size="14" maxlength="14" value="<%=StringUtils.toZerotoStringaVuota(lParteInteraAmmenda,"")%>" type="text" name="<%=ICostantiPenaComplessiva.CAMPO_INTERO_IMPORTO_AMMENDA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">,

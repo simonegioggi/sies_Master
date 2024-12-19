@@ -85,10 +85,11 @@ public class DateUtils {
 	 * @param aDate
 	 *            Data da ritornare formatta i <code>String</code>
 	 * @param aPattern
-	 *            Pattern di formattazione ( Es.: gg/MM/yyyy ).
+	 *            Pattern di formattazione ( Es.: dd/MM/yyyy ).
 	 * @return la data in formato <code>String</code>.
 	 */
 	public static String getDateToString(Date aDate, String aPattern) {
+
 		if (aDate == null)
 			return null;
 
@@ -498,6 +499,9 @@ public class DateUtils {
 	 * @return
 	 */
 	public static String getDayToString(Date aDate) {
+
+		if (aDate == null)
+			return null;
 		GregorianCalendar lGC = new GregorianCalendar();
 		lGC.setTime(aDate);
 		String lDay = (new Integer(lGC.get(Calendar.DAY_OF_MONTH))).toString();
@@ -514,6 +518,9 @@ public class DateUtils {
 	 * @return il mese della data di riferimento.
 	 */
 	public static String getMonthToString(Date aDate) {
+
+		if (aDate == null)
+			return null;
 		GregorianCalendar lGC = new GregorianCalendar();
 		lGC.setTime(aDate);
 		String lMonth = (new Integer(lGC.get(Calendar.MONTH) + 1)).toString();
@@ -530,6 +537,9 @@ public class DateUtils {
 	 * @return l'anno della data di riferimento.
 	 */
 	public static String getYearToString(Date aDate) {
+
+		if (aDate == null)
+			return null;
 		GregorianCalendar lGC = new GregorianCalendar();
 		lGC.setTime(aDate);
 		String lYear = (new Integer(lGC.get(Calendar.YEAR))).toString();

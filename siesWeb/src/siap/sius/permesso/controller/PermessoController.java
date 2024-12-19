@@ -33,18 +33,7 @@ import siap.sius.tenore.model.TenoreModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * <p>
- * Title: PermessoController
- * </p>
- * <p>
- * Description: Classe Controller per Permesso
- * </p>
- * <p>
- * Copyright: Copyright (c) 2004
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * PermessoController - Classe Controller per Permesso
  *
  * @version 1.0
  */
@@ -64,8 +53,7 @@ public class PermessoController extends SiapController implements IPermesso {
 	 * @param lCodPermesso
 	 * @param dataDalInCanc
 	 * @param dataAlInCanc
-	 * @param aPageNum
-	 *            : numero pagina > 0
+	 * @param aPageNum: numero pagina > 0
 	 * @return Vettore di FascicoloSiusModel
 	 * @throws F3BException
 	 */
@@ -319,7 +307,6 @@ public class PermessoController extends SiapController implements IPermesso {
 
 	/**
 	 * Ricerca Licenze Paginata per Soggetto, e filtri aggiuntivi.
-	 * <p>
 	 *
 	 * @param aSogModel
 	 * @param strCodUffOTrib
@@ -420,7 +407,6 @@ public class PermessoController extends SiapController implements IPermesso {
 
 	/**
 	 * Ricerca Fascicoli relativi a licenze di un Soggetto in base ai parametri di ricerca selezionati.
-	 * <p>
 	 *
 	 * @param aSogModel
 	 * @param strCodUfficioUtenteConnesso
@@ -775,7 +761,8 @@ public class PermessoController extends SiapController implements IPermesso {
 		PermessoSqlDAO lPermSqlDao = null;
 		TotaliPermessiLicenzeModel lTotali = null;
 
-		int lNum = 0;
+		// MEV_2023-35: aggiungo due contatori
+		int lNum = 0, li = 0, lp = 0;
 
 		try {
 			lConn = getDBConnection();
@@ -799,8 +786,18 @@ public class PermessoController extends SiapController implements IPermesso {
 					lTotali.setNumPI(lNum);
 				else if (lCodMotivo.equals("2025")) // Licenza
 					lTotali.setNumLC(lNum);
-				else if (lCodMotivo.indexOf("2450,2451,2452,2460,2461") > -1) // Licenza Internati
-					lTotali.setNumLI(lNum);
+				// else if (lCodMotivo.indexOf("2450,2451,2452,2460,2461") > -1) // Licenza Internati
+				else if ("2450,2451,2452,2460,2461".contains(lCodMotivo)) { // Licenza Internati
+					li += lNum;
+					lTotali.setNumLI(li);
+				}
+				// MEV_2023-35: aggiungo Licenza pene sostitutive (LP)
+				// sostituisco indexOf con contains
+				// else if (lCodMotivo.indexOf("3130,3150,3151") > -1)
+				else if ("3130,3150,3151".contains(lCodMotivo)) {
+					lp += lNum;
+					lTotali.setNumLP(lp);
+				}
 			}
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -824,7 +821,6 @@ public class PermessoController extends SiapController implements IPermesso {
 	/**
 	 * Metodo che si occccupa della produzione della stampa elenco provvedimenti con permessi o licenze
 	 * concessi.
-	 * <p>
 	 *
 	 * @param aDataIniziale
 	 *            Data deposito iniziale.

@@ -2,11 +2,10 @@ package siap.sius.depositodecreto.action;
 
 import siap.sius.fascicolo.action.ActLoadRicercaFSPuntuale;
 
-public class ActLoadFPSEmissioneDecreto extends ActLoadRicercaFSPuntuale
-//implements ICostantiDepositoOrdinanzaPc
-{
-	public String processRequest() throws Exception
-	{
+public class ActLoadFPSEmissioneDecreto extends ActLoadRicercaFSPuntuale {
+
+	public String processRequest() throws Exception {
+
 		// Imposta alla JSP il nome della funzione e l'azione
 		// da chiamare alla conferma.
 		setRequestAttribute("functionName", "Emissione Decreto");
@@ -15,4 +14,5 @@ public class ActLoadFPSEmissioneDecreto extends ActLoadRicercaFSPuntuale
 		String lPage = super.processRequest();
 		return lPage;
 	}
+
 }

@@ -107,7 +107,7 @@ public class CancelleriaAssegnatariaSqlDAO extends SIAPSqlDAO
       if(aModel.getCodCancelleriaAssegnataria() != null && aModel.getCodCancelleriaAssegnataria().trim().length() > 0)
       {
                  lInserito = true;
-                 lCondizioni = " COD_CANCELLERIA_ASSEGNATARIA = '" + aModel.getCodCancelleriaAssegnataria().trim() + "'";;
+                 lCondizioni = " COD_CANCELLERIA_ASSEGNATARIA = '" + aModel.getCodCancelleriaAssegnataria().trim() + "'";
       }
       if(aModel.getCodUfficio() != null && aModel.getCodUfficio().trim().length() > 0)
       {
@@ -115,7 +115,7 @@ public class CancelleriaAssegnatariaSqlDAO extends SIAPSqlDAO
             lCondizioni += " AND";
 
          lInserito = true;
-         lCondizioni += " CA.COD_UFFICIO = '" + aModel.getCodUfficio().trim() + "'";;
+         lCondizioni += " CA.COD_UFFICIO = '" + aModel.getCodUfficio().trim() + "'";
       }
       if(aModel.getDescCancelleriaAssegnataria() != null && aModel.getDescCancelleriaAssegnataria().trim().length() > 0)
       {
