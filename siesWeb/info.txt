@@ -1,13 +1,20 @@
-Branch MEV_2023-35: nato dal branch 12.5.6.0 in data 24/04/2024
-				   merge del branch 12.6.1.0 in data 09/05/2024
-				   merge del branch 12.6.2.0 in data 22/05/2024
-				   merge del branch 12.6.4.0-MEV_2024_092_FASE-1 in data 06/11/2024
+Ticket#202412190132 - SIUS UDS GENOVA - IMPOSSIBILE VALIDARE PROVVEDIMENTO
 
-Nell'ambito del sistema SIES, sottosistema SIUS, al fine di soddisfare i requisiti espressi dall'Amministrazione 
-in relazione alla richiesta di adeguamento normativo del Sistema, nella sua interezza, al d.lgs. 10 ottobre 2022, 
-n. 150 cd Riforma Cartabia, alla Riforma Cartabia.
-L'intervento in oggetto è stato richiesto con comunicazione m_dg.DOG07AR.04/05/2023.0000747.U.
-Interventi attinenti alle funzioni da prevedere nel sistema in base alle novità normative della cd Riforma Cartabia 
-(maggiorenni e minorenni).
-Con lo scopo di rendere l'intervento coerente ed auto consistente gli interventi dovranno tener conto dell'integrazione 
-con gli altri sottosistemi (SIEP e SIGE).
+Errore in fase di apertura del dettaglio delle ordinanze di richiesta conversione 
+Pene Pecuniarie.
+
+Problema legato al fatto che la jsp DettaglioOrdinanzaConversione.jsp (inclusa nel dettaglio ordinanza),
+ha un bean con un vettore tipizzato. Se il bean viene passato a null (o non viene passato),
+jboss non riesce ad inizializzare il bean
+
+Corretta la classe 
+ActLoadDettaglioOrdinanza.java
+per istanziare un bean vuoto invece che nulla anche nel caso di conversione PP.
+
+Per sicurezza è stata modificata anche la DettaglioOrdinanzaConversionePP.jsp per 
+gestire il bean a mano con la getAttribute visto che veniva referenziata anche da
+un'altra jsp.
+
+
+
+

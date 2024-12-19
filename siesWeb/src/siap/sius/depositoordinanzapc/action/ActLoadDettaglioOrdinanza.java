@@ -159,6 +159,14 @@ public class ActLoadDettaglioOrdinanza extends ActDettaglioEmissioneOrdinanza
 					.compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_PENE_PECUNIARIE) == 0) {
 				lFasGPMod = new FascicoloGPModel((FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"));
 				BigDecimal lIdFascicoloSius = lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius();
+				
+		        // Ticket#202412190132 - Va passata alla JSP un bean "rate" vuoto altrimenti va in errore 
+		        // non riuscendo ad istanziare il bean- Vedi anche il caso CONVERSIONE_PENE_PECUNIARIE_MANCATO_PAGAMENTO
+				// dove il bean viene valorizzato
+		        Vector<RateizzazionePPModel> rate = new Vector<RateizzazionePPModel>();
+		        setRequestAttribute("rate", rate);
+		        // Ticket#202412190132 - FINE
+				
 				if (lIdFascicoloSius != null) {
 					// Caricamento delle Richieste Conversioni
 					RichiestaConversioneModel aRichiestaConversione = new RichiestaConversioneModel();
