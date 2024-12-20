@@ -1,13 +1,7 @@
-BRANCH SIES VERSIONE 12.7.0.0
+BRANCH SIES VERSIONE 12.7.1.0
 
-Nasce dal branch 12.6.4.0 in data 19/12/2024
+Nasce dal branch 12.7.0.0 in data 19/12/2024
 In data 19/12/2024 merge col:
-	Branch MEV_2023-35: nato dal branch 12.5.6.0 in data 24/04/2024
-	   	merge del branch 12.6.1.0 in data 09/05/2024
-	   	merge del branch 12.6.2.0 in data 22/05/2024
-	   	merge del branch 12.6.4.0-MEV_2024_092_FASE-1 in data 06/11/2024
-
-Merge col:
 	Ticket#202412190132 - SIUS UDS GENOVA - IMPOSSIBILE VALIDARE PROVVEDIMENTO
 	Errore in fase di apertura del dettaglio delle ordinanze di richiesta conversione 
 	Pene Pecuniarie.
