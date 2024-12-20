@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.util.F3BException;
+import f3b.util.Utils;
 import siap.controller.SiapController;
 import siap.sius.SIUSException;
 import siap.sius.esecuzionesanzionesostitutiva.dao.EsecuzioneSanzioneSostitutivaDAO;
@@ -20,18 +21,7 @@ import siap.sius.tenore.dao.TenoreSqlDAO;
 import siap.sius.tenore.model.TenoreModel;
 
 /**
- * <p>
- * Title: EsecuzioneSSController
- * </p>
- * <p>
- * Description: Classe Controller per EsecuzioneSanzioneSostitutiva
- * </p>
- * <p>
- * Copyright: Copyright (c) 2007
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * EsecuzioneSSController - Classe Controller per EsecuzioneSanzioneSostitutiva
  *
  * @version 1.0
  */
@@ -182,6 +172,12 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 			lEseDao = new EsecuzioneSanzioneSostitutivaSqlDAO(lConn);
 			lEseDao.ricercaEsecuzioneSanzioneSostitutivaByIdFascicolo(aKey);
 			lEseMod = (EsecuzioneSanzioneSostitutivaModel) lEseDao.getModelByKey();
+			// MEV_2023-35: aggiunto controllo se la cancellazione si fa dal procedimento figlio piuttosto che
+			// dal padre
+			if (Utils.isNullObj(lEseMod)) {
+				lEseDao.ricercaEsecuzioneSanzioneSostitutivaByIdFascicoloFiglio(aKey);
+				lEseMod = (EsecuzioneSanzioneSostitutivaModel) lEseDao.getModelByKey();
+			}
 		} catch (DAOException daoEx) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -340,7 +336,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 	 */
 	public Vector ExRicercaEsecuzioneSanzioniSostitutive(String lAnno, String lProgr, String lAnnoIniziale,
 			String lProgrIniziale, String lAnnoFinale, String lProgrFinale, String lUfficioUtenteConnesso,
-			int aPageNum) throws F3BException {
+			int aPageNum, String lCodContenuto) throws F3BException {
 
 		Connection lConn = null;
 		Vector lEsecuzioneSS = new Vector();
@@ -350,8 +346,9 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 		try {
 			lConn = getDBConnection();
 			lEseSSSqlDao = new EsecuzioneSanzioneSostitutivaSqlDAO(lConn);
+			// MEV_2023_35 si aggiunge un ulteriore parametro lCodContenuto
 			lEseSSSqlDao.ricercaEsecuzioneSanzioniSostitutive(lAnno, lProgr, lAnnoIniziale, lProgrIniziale,
-					lAnnoFinale, lProgrFinale, lUfficioUtenteConnesso);
+					lAnnoFinale, lProgrFinale, lUfficioUtenteConnesso, lCodContenuto);
 			lEseSSSqlDao.startPage(aPageNum);
 
 			ESSFascGPModel lEMaFascGP = null;
@@ -361,9 +358,16 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 			}
 			lEseSSSqlDao.stop();
 
-			if (lEsecuzioneSS.isEmpty())
-				throw new SIUSException(F3BException.USER_MESSAGE,
-						"Esecuzione Sanzione Sostitutiva non trovata");
+			if (lEsecuzioneSS.isEmpty()) {
+				if ("U019".equals(lCodContenuto))
+					throw new SIUSException(F3BException.USER_MESSAGE,
+							"Esecuzione Sanzione Sostitutiva non trovata");
+				else if ("U126".equals(lCodContenuto))
+					throw new SIUSException(F3BException.USER_MESSAGE,
+							"Esecuzione Pena Sostitutiva non trovata");
+				else
+					throw new SIUSException(F3BException.USER_MESSAGE, "Esecuzione non trovata");
+			}
 		} catch (DAOException daoEx) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -399,7 +403,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 	 */
 	public BigDecimal ExGetNumRicercaEsecuzioneSanzioniSostitutive(String lAnno, String lProgr,
 			String lAnnoIniziale, String lProgrIniziale, String lAnnoFinale, String lProgrFinale,
-			String lUfficioUtenteConnesso) throws F3BException {
+			String lUfficioUtenteConnesso, String lCodContenuto) throws F3BException {
 
 		Connection lConn = null;
 		EsecuzioneSanzioneSostitutivaSqlDAO lEseSSSqlDao = null;
@@ -408,8 +412,9 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 		try {
 			lConn = getDBConnection();
 			lEseSSSqlDao = new EsecuzioneSanzioneSostitutivaSqlDAO(lConn);
+			// MEV_2023_35 si aggiunge un ulteriore parametro lCodContenuto
 			lEseSSSqlDao.ricercaEsecuzioneSanzioniSostitutive(lAnno, lProgr, lAnnoIniziale, lProgrIniziale,
-					lAnnoFinale, lProgrFinale, lUfficioUtenteConnesso);
+					lAnnoFinale, lProgrFinale, lUfficioUtenteConnesso, lCodContenuto);
 			lCont = lEseSSSqlDao.getNumRowsSelected();
 		} catch (DAOException daoEx) {
 			rollback(lConn);
@@ -440,8 +445,9 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 	 * @return Vettore di FascicoloGPModel
 	 * @throws F3BException
 	 */
+	// MEV_2023-35 si parametrizza il lCodContenutoper gestire anche le EPS
 	public Vector ExRicercaDettaglioEsecuzioneSS(BigDecimal aEseSSKey, BigDecimal aIdSoggetto,
-			String lUfficioUtenteConnesso) throws F3BException {
+			String lUfficioUtenteConnesso, String lCodContenuto) throws F3BException {
 
 		Connection lConn = null;
 		Vector lSanzioni = new Vector();
@@ -461,7 +467,8 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 			// SoggettoModel aSogModel = (SoggettoModel) lSogDao.getModelByKey();
 
 			lEseSSSqlDao = new EsecuzioneSanzioneSostitutivaSqlDAO(lConn);
-			lEseSSSqlDao.ricercaDettaglioEsecuzioneSS(aEseSSKey, lUfficioUtenteConnesso);
+			// MEV_2023-35 si parametrizza il lCodContenutoper gestire anche le EPS
+			lEseSSSqlDao.ricercaDettaglioEsecuzioneSS(aEseSSKey, lUfficioUtenteConnesso, lCodContenuto);
 			lEseSSSqlDao.start();
 
 			FascicoloGPModel lFascicolo = null;
@@ -521,8 +528,10 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 	 * @return Vettore di FascicoloGPModel
 	 * @throws F3BException
 	 */
+	// FIXME probabilmente mai richiamato
+	// MEV_2023-35 si parametrizza il lCodContenuto per gestire anche le EPS
 	public Vector ExRicercaDettaglioEsecuzioneSS(BigDecimal aEseSSKey, BigDecimal aIdSoggetto,
-			String lUfficioUtenteConnesso, Connection aConn) throws F3BException {
+			String lUfficioUtenteConnesso, Connection aConn, String lCodContenuto) throws F3BException {
 
 		Vector lSanzioni = new Vector();
 		EsecuzioneSanzioneSostitutivaSqlDAO lEseSSSqlDao = null;
@@ -539,7 +548,8 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 			// SoggettoModel aSogModel = (SoggettoModel) lSogDao.getModelByKey();
 
 			lEseSSSqlDao = new EsecuzioneSanzioneSostitutivaSqlDAO(aConn);
-			lEseSSSqlDao.ricercaDettaglioEsecuzioneSS(aEseSSKey, lUfficioUtenteConnesso);
+			// MEV_2023-35 si parametrizza il lCodContenuto per gestire anche le EPS
+			lEseSSSqlDao.ricercaDettaglioEsecuzioneSS(aEseSSKey, lUfficioUtenteConnesso, lCodContenuto);
 			lEseSSSqlDao.start();
 
 			FascicoloGPModel lFascicolo = null;
@@ -595,8 +605,9 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 	 * @return Coppia di Vettori di FascicoloGPModel
 	 * @throws F3BException
 	 */
+	// MEV_2023-35 si parametrizza il lCodContenutoper gestire anche le EPS
 	public Vector[] ExRicercaDettaglioESSeCorrelati(BigDecimal aEseSSKey, BigDecimal aIdSoggetto,
-			String lUfficioUtenteConnesso) throws F3BException {
+			String lUfficioUtenteConnesso, String lCodContenuto) throws F3BException {
 
 		Connection lConn = null;
 		Vector[] lSanzioniECorrelati = new Vector[2];
@@ -619,7 +630,8 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 			// SoggettoModel aSogModel = (SoggettoModel) lSogDao.getModelByKey();
 
 			lEseSSSqlDao = new EsecuzioneSanzioneSostitutivaSqlDAO(lConn);
-			lEseSSSqlDao.ricercaDettaglioEsecuzioneSS(aEseSSKey, lUfficioUtenteConnesso);
+			// MEV_2023-35 si parametrizza il lCodContenutoper gestire anche le EPS
+			lEseSSSqlDao.ricercaDettaglioEsecuzioneSS(aEseSSKey, lUfficioUtenteConnesso, lCodContenuto);
 			lEseSSSqlDao.start();
 
 			FascicoloGPModel lFascicolo = null;
@@ -695,9 +707,12 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 	 * @param aIdSoggetto
 	 * @return Vettore di FascicoloGPModel
 	 * @throws F3BException
+	 * @deprecated 05.2024 il metodo non viene mai chiamato (MEV_2023-35)
 	 */
+	// FIXME verificare se tale metodo viene richiamato. NO era commentato anche nell'interfaccia
+	// MEV_2023-35 si parametrizza il lCodContenuto per gestire anche le EPS.
 	public Vector ExRicercaDettaglioEsecuzioneSSbyFascicolo(BigDecimal aIdFascicolo, BigDecimal aIdSoggetto,
-			String lUfficioUtenteConnesso) throws F3BException {
+			String lUfficioUtenteConnesso, String lCodContenuto) throws F3BException {
 
 		Connection lConn = null;
 		Vector lSanzioni = new Vector();
@@ -716,8 +731,10 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 			// lSogDao.ricercaSoggettoByKey( aIdSoggetto );
 			// SoggettoModel aSogModel = (SoggettoModel) lSogDao.getModelByKey();
 
+			// MEV_2023-35 si parametrizza il lCodContenuto per gestire anche le EPS.
 			lEseSSSqlDao = new EsecuzioneSanzioneSostitutivaSqlDAO(lConn);
-			lEseSSSqlDao.ricercaDettaglioEsecuzioneSSbyFascicolo(aIdFascicolo, lUfficioUtenteConnesso);
+			lEseSSSqlDao.ricercaDettaglioEsecuzioneSSbyFascicolo(aIdFascicolo, lUfficioUtenteConnesso,
+					lCodContenuto);
 			lEseSSSqlDao.start();
 
 			FascicoloGPModel lFascicolo = null;
@@ -768,6 +785,50 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 		}
 
 		return lSanzioni;
+	}
+
+	/**
+	 * Recupero l'eventuale record ESECUZIONE_SANZIONE_SOST collegato al deposito
+	 *
+	 * @since MEV_2023-35
+	 */
+	public EsecuzioneSanzioneSostitutivaModel ExRicercaEsecuzioneSanzioneSostitutivaByIdDepositoOrd(
+			BigDecimal aIdDepositoOrdinanza) throws F3BException {
+
+		Connection lConn = null;
+		EsecuzioneSanzioneSostitutivaSqlDAO lEseSSSqlDao = null;
+		EsecuzioneSanzioneSostitutivaModel lEsecuzioneModel = null;
+
+		siesLogger.debug("ExRicercaEsecuzioneSanzioneSostitutivaByIdDepositoOrd = " + aIdDepositoOrdinanza);
+
+		try {
+			lConn = getDBConnection();
+
+			// MEV_2023-35 si parametrizza il lCodContenuto per gestire anche le EPS.
+			lEseSSSqlDao = new EsecuzioneSanzioneSostitutivaSqlDAO(lConn);
+			lEseSSSqlDao.ricercaEsecuzioneSanzioneSostitutivaByIdDepositoOrd(aIdDepositoOrdinanza);
+			lEseSSSqlDao.start();
+			lEsecuzioneModel = (EsecuzioneSanzioneSostitutivaModel) lEseSSSqlDao.getModelByKey();
+
+			lEseSSSqlDao.stop();
+		} catch (DAOException daoEx) {
+			rollback(lConn);
+			siesLogger.error(
+					"EsecuzioneSSController.ExRicercaEsecuzioneSanzioneSostitutivaByIdDepositoOrd, DAOException: ",
+					daoEx);
+			throw new SIUSException(F3BException.USER_MESSAGE,
+					"EsecuzioneSSController.ExRicercaEsecuzioneSanzioneSostitutivaByIdDepositoOrd: " + daoEx);
+		} catch (Exception e) {
+			rollback(lConn);
+			siesLogger.error(
+					"EsecuzioneSSController.ExRicercaEsecuzioneSanzioneSostitutivaByIdDepositoOrd: Exception ",
+					e);
+			throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
+		} finally {
+			cleanup(lEseSSSqlDao);
+			cleanup(lConn);
+		}
+		return lEsecuzioneModel;
 	}
 
 }

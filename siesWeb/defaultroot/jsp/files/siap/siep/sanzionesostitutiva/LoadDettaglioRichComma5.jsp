@@ -97,7 +97,7 @@
 <br>
  
 <% if (rinnovo.getCodTipoRinnovo().equals("D")) { %>
-<table width1="30%">
+<table width="30%">
     <tr>
       <td class="l" width=25%>Avvocato</td>
       <td class="l">

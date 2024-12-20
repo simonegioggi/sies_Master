@@ -10,18 +10,7 @@ import f3b.util.F3BException;
 import f3b.web.IWebConstants;
 
 /**
- * <p>
- * Title: ActCancellaEmissioneOrdinanza
- * </p>
- * <p>
- * Description: Classe Action per cancellare l'emissione di un'ordinanza
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * ActCancellaEmissioneOrdinanza - Classe Action per cancellare l'emissione di un'ordinanza
  * 
  * @version 1.0
  */

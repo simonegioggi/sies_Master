@@ -49,10 +49,12 @@ public class ActLoadModificaFascicolo extends ActionSius implements ICostantiFas
 		setSessionAttribute("fascicoloSiusGP", lFasGPMod);
 
 		// 01/08/2007 La modificabilità non viene testata per i fascicoli di E.M.A. e di E.S.S. e di E.M.S.
-		if (lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U004") != 0
-				&& lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U019") != 0
-				&& lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
-						.compareTo("U024") != 0) {
+		if (   lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U004") != 0
+            && lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U019") != 0
+            && lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U024") != 0
+            //MEV_2023-35 si aggiunge il fascicolo E.P.S.
+            && lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U126") != 0
+            ) {
 			if (this.IsFascicoloSiusModificabile() == false)
 				throw new SIUSException(SIUSException.USER_MESSAGE,
 						ICostantiFascicoloSius.MSG_NON_MODIFICABILE);
@@ -115,6 +117,7 @@ public class ActLoadModificaFascicolo extends ActionSius implements ICostantiFas
 						lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento(), 75);
 			// MEV_66: aggiunta impostazione del contenuto
 			setRequestAttribute("contenuto", "" + lOption);
+			
 			if (lFasGPMod.getGeneraleProcedimentoModel().getCodTipoRegistro().equals("S22") && lFasGPMod
 					.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U004") != 0) {
 				// STUB 01/07/2004 Realizzazione filtro sui contenuti per "S22"
@@ -142,7 +145,17 @@ public class ActLoadModificaFascicolo extends ActionSius implements ICostantiFas
 				lOption.setFilter(lFilter);
 				setRequestAttribute("contenutoEsecuzione", "" + lOption);
 			}
-
+			
+            // MEV_2023-35 Realizzazione filtro sui contenuti per "S30" - PENE SOSPESE
+            if (   lFasGPMod.getGeneraleProcedimentoModel().getCodTipoRegistro().equals("S30") 
+                && lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U126") != 0) 
+            {
+                FascicoloUtils lFascicoloUtils = new FascicoloUtils();
+                String[] lFilter = lFascicoloUtils.filtraContenutiPS(strCodTipoUfficio);
+                lOption.setFilter(lFilter);
+                setRequestAttribute("contenutoEsecuzione", "" + lOption);
+            }
+            
 			// Imposta la Collection Contenuto.
 			// MEV_66: distinguo per ufficio minorile
 			Collection lCol;
@@ -225,14 +238,47 @@ public class ActLoadModificaFascicolo extends ActionSius implements ICostantiFas
 					setRequestAttribute("sanzioneSostitutiva", lESSModel);
 
 				// Occorre segnalare la presenza di provvedimenti di E.S.S. (figli).
+				// MEV_2023-35 si aggiunge il parametro sul contenuto alla chiamata del CTRL
+				String lCodContenuto = lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento();
+				
 				Vector lVect = lESSCtrl.ExRicercaDettaglioEsecuzioneSS(
 						lESSModel.getIdEsecuzioneSanzioneSost(),
 						lFasGPMod.getFascicoloSiusModel().getSogIdSoggetto(),
-						this.getCodUfficioUtenteConnesso());
+						this.getCodUfficioUtenteConnesso()
+						, lCodContenuto); 
 				if (!lVect.isEmpty())
 					setRequestAttribute("figliEsecuzione", "S");
 
 			}
+			
+	        // MEV_2023-35 Se il Procedimento è di E.P.S. (U126) viene effettuata la lettura dell'E.P.S.
+            if (lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U126") == 0) {
+                IEsecuzioneSS lESSCtrl = SIUSLookupRemote.getEsecuzioneSSRemote();
+                EsecuzioneSanzioneSostitutivaModel lESSModel = lESSCtrl
+                        .ExRicercaEsecuzioneSanzioneSostitutivaByIdFascicolo(
+                                lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
+
+                if (lESSModel == null || lESSModel.getIdEsecuzioneSanzioneSost().equals(null))
+                    throw new SIUSException(SIUSException.USER_MESSAGE,
+                            "Attenzione! ESECUZIONE PENA SOSTITUTIVA Assente!");
+                else
+                    setRequestAttribute("sanzioneSostitutiva", lESSModel);
+
+                // Occorre segnalare la presenza di provvedimenti di E.P.S. (figli).
+                // MEV_2023-35 si aggiunge il parametro sul contenuto alla chiamata del CTRL
+                String lCodContenuto = lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento();
+                
+                Vector lVect = lESSCtrl.ExRicercaDettaglioEsecuzioneSS(
+                        lESSModel.getIdEsecuzioneSanzioneSost(),
+                        lFasGPMod.getFascicoloSiusModel().getSogIdSoggetto(),
+                        this.getCodUfficioUtenteConnesso()
+                        , lCodContenuto); 
+                if (!lVect.isEmpty())
+                    setRequestAttribute("figliEsecuzione", "S");
+
+            }
+            // MEV_2023-35 - FINE
+			
 			// STUB 28/04/2011 Se il Procedimento è di E.M.S. (U024) viene effettuata la lettura dell'E.M.S.
 			if (lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U024") == 0) {
 				IEsecuzioneMS lEMSCtrl = SIUSLookupRemote.getEsecuzioneMSRemote();

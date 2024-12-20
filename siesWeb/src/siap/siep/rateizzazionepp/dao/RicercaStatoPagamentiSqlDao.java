@@ -35,10 +35,8 @@ public class RicercaStatoPagamentiSqlDao extends SIAPSqlDAO {
 		lModel.setChiaveProgr(getBigDecimal("CHIAVE_PROGR"));
 		// lModel.setChiaveUfficio (getString(""));
 		lModel.setDataIscrizione(getDate("DATA_ISCRIZIONE"));
-
 		lModel.setCognome(getString("NOME"));
 		lModel.setNome(getString("COGNOME"));
-
 		lModel.setTipoRateizzazione(getString("TIPO_RATEIZZAZIONE"));
 		lModel.setImportoDaPagare(getBigDecimal("importoDaPagare"));
 		lModel.setImportoPagato(getBigDecimal("importoPagato"));

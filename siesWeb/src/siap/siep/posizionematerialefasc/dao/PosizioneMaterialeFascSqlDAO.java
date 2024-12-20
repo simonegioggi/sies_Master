@@ -61,7 +61,7 @@ public class PosizioneMaterialeFascSqlDAO extends SqlDAO
     String lSql = getSqlQueryFascicoli();
 
     lSql += " AND PF.COD_POSIZIONE_MATERIALE = '" + aCodPosizioneMateriale + "'";
-    lSql += " AND PF.COD_UFFICIO = '" + aCodUfficio + "'";;
+    lSql += " AND PF.COD_UFFICIO = '" + aCodUfficio + "'";
     lSql += " AND PF.DATA_FINE IS NULL";
 
     setStatement(lSql);
@@ -74,7 +74,7 @@ public class PosizioneMaterialeFascSqlDAO extends SqlDAO
     String lSql = getSqlQueryFascicoliSius();
 
     lSql += " AND PF.COD_POSIZIONE_MATERIALE = '" + aCodPosizioneMateriale + "'";
-    lSql += " AND PF.COD_UFFICIO = '" + aCodUfficio + "'";;
+    lSql += " AND PF.COD_UFFICIO = '" + aCodUfficio + "'";
     lSql += " AND PF.DATA_FINE IS NULL";
 
     setStatement(lSql);

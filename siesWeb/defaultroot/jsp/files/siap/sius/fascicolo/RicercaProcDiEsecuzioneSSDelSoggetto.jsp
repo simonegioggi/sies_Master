@@ -26,6 +26,20 @@
 <jsp:useBean id="dataDalInCancelleria" scope="request" class="java.lang.String" />
 <jsp:useBean id="dataAlInCancelleria" scope="request" class="java.lang.String" />
 
+
+<%
+//MEV_2023-35 si parametrizza il titolo funzione
+String strTitoloFunzione = "";
+String strTestoNB = "";
+if ("U019".equals(codContenuto)) {
+  strTitoloFunzione = "Elenco Procedimenti di Esecuzione Sanzioni Sostitutive per Soggetto";
+  strTestoNB = "sanzione sostitutiva";
+}
+else if ("U126".equals(codContenuto))
+  strTitoloFunzione = "Elenco Procedimenti di Esecuzione Pene Sostitutive per Soggetto";
+  strTestoNB = "pena sostitutiva";
+%>
+
 <html>
   <head>
     <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
@@ -38,7 +52,7 @@
   <FORM method="POST" name="elenco" action="<%=IWebConstants.PG_MAIN%>">
   <table>
     <tr><td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
-      <td class="LBG"><font class=label>Funzione :</font>&nbsp;<font class="campo"> Elenco Procedimenti di Esecuzione Sanzioni Sostitutive per Soggetto </font></td>
+      <td class="LBG"><font class=label>Funzione :</font>&nbsp;<font class="campo"><%=strTitoloFunzione %></font></td>
 
 
 <%
@@ -188,7 +202,7 @@
     </tr>
     <tr>
       <td class="lVerdeNB" >
-        N.B.: Per richiedere l'elenco di tutti i procedimenti relativi all'esecuzione di una sanzione sostitutiva, selezionare l'icona : </td>
+        N.B.: Per richiedere l'elenco di tutti i procedimenti relativi all'esecuzione di una <%=strTestoNB%>, selezionare l'icona : </td>
       <td><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>dettagli.gif" width="12" height="12" border="0"> </td>
     </tr>
   </table>

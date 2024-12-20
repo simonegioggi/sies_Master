@@ -41,7 +41,7 @@ public class CalendarUtil {
 	/*****************************************************************************
 	 * Valorizza aModel.mGG , mMM, mAA a partire da data inizio e data fine conteggiando nel quantum anche il
 	 * giorno di inizio.
-	 * 
+	 *
 	 * Come il metodo CalcolaNumGiorniMesiAnni con lEscludiDiesaquo = false
 	 *
 	 * @param aModel
@@ -57,7 +57,7 @@ public class CalendarUtil {
 	 * METODO PRIVATO : Valorizza aModel.mGG , mMM, mAA a partire da data inizio e data fine (considera nel
 	 * quantum anche il gg iniziale) (USE CASE SIEP-UC-014-LV-AA) Il quantum restituito non è necessariamente
 	 * normalizzato vale a dire che può valere 30 giorni, 3 mesi e 2anni opure anche 31 giorni 2mesi e un anno
-	 * 
+	 *
 	 */
 	private CalendarModel contagiorniclassic(CalendarModel aModel) {
 
@@ -85,17 +85,15 @@ public class CalendarUtil {
 		// - ggI>ggF
 		// - ggI<=ggF
 		// ==========================================================================
-		if (ggI > ggF) { // Calcolo il numero di giorni ad arrivare alla
-			// fine del mese di inizio (+1 dies a quo) + i giorni ad arrivare al
-			// giorno fine
+		if (ggI > ggF) {
+			// Calcolo il numero di giorni ad arrivare alla
+			// fine del mese di inizio (+1 dies a quo) + i giorni ad arrivare al giorno fine
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
 			// posto di LogF3B.getLogger()
 			siesLogger.debug("ggI>ggF");
-
 			int lNrGiorni = Integer.parseInt(DateUtils.getDayToString(DateUtils.getEndOfMonth(aaI, mmI)))
 					- ggI + ggF + 1; // +1 per considerare anche il gg iniziale
 			lModRet.setNumGiorni(lNrGiorni);
-
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("NumGiorni 1 : " + lModRet.getNumGiorni());
@@ -104,7 +102,8 @@ public class CalendarUtil {
 			// espresso solo in anni
 			if (lModRet.getNumGiorni() == Integer
 					.parseInt(DateUtils.getDayToString(DateUtils.getEndOfMonth(aaI, mmI))) && mmI == mmF
-					&& aaI != aaF) { // vera se ggF=ggI-1
+					&& aaI != aaF) {
+				// vera se ggF=ggI-1
 				// es 15/04/2001 14/04/2002 ==> quantum (0,0,1) lNrGiorni=30
 				// es 15/03/2001 14/03/2002 ==> quantum (0,0,1) lNrGiorni=31
 				// es 15/02/2001 14/02/2002 ==> quantum (0,0,1) lNrGiorni=28
@@ -112,7 +111,8 @@ public class CalendarUtil {
 				lModRet.setNumGiorni(0);
 				lModRet.setNumMesi(0);
 				lModRet.setNumAnni(aaF - aaI);
-			} else { // =====================================================================
+			} else {
+				// =====================================================================
 				// lNrGiorni può essere compreso tra 2 e 31 ma non viene normalizzato.
 				// Esistono due casi particolari in cui invece di restituire il lNrGiorni
 				// calcolato questo viene convertito in 1 mese e 0 giorni. Ciò accade
@@ -155,7 +155,6 @@ public class CalendarUtil {
 					// lNrGiorni = lNrGiorni - 29; // cioè 0
 					// lModRet.setNumGiorni(lNrGiorni);
 					// }
-					//
 					// // è false la prima if per cui può essere solo 28, se anno non bisestile
 					// // allora vuol dire ancora ggI=ggF+1, es 26/02/2001 25/02/2002
 					// // n.b. potrebbe essere 28 di un bisestile, in questo caso ggI=ggF+2
@@ -170,14 +169,12 @@ public class CalendarUtil {
 					if (mmI > mmF) {
 						lModRet.setNumMesi(12 - mmI + mmF);
 						lModRet.setNumAnni(aaF - (aaI + 1));
-
 						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
 						// di LogF3B.getLogger()
 						siesLogger.debug("lModRet 1 : " + lModRet);
 					} else {
 						lModRet.setNumMesi(mmF - mmI);
 						lModRet.setNumAnni(aaF - aaI);
-
 						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
 						// di LogF3B.getLogger()
 						siesLogger.debug("lModRet 3 : " + lModRet);
@@ -195,7 +192,6 @@ public class CalendarUtil {
 			}
 		} else { // ggI<=ggF
 			lModRet.setNumGiorni(ggF - ggI + 1); // +1 per considerare anche il gg iniziale
-
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("ggI<=ggF Qgg= " + lModRet.getNumGiorni());
@@ -209,8 +205,8 @@ public class CalendarUtil {
 				if (Integer.parseInt(DateUtils.getDayToString(DateUtils.getEndOfMonth(aaI, mmI))) == lModRet
 						.getNumGiorni()) {
 					// Il numero di GG calcolati coincide con il numero di gg del mese di partenza.
-					// In questo caso considero come se avessi scontato un mese intero, per
-					// cui porto i giorni a 0 e sommo 1 al mese
+					// In questo caso considero come se avessi scontato un mese intero, per cui porto i
+					// giorni a 0 e sommo 1 al mese
 					// n.b. questa situazione è vera in genere se ggI=01 e ggF=ultimo del mese
 					// di inizio ma anche se ggI>01
 					// es 01/02/2003 28/03/2004 Qgg=28=giorni di febbraio 2003
@@ -232,12 +228,11 @@ public class CalendarUtil {
 					}
 				} else
 					lModRet.setNumAnni(aaF - aaI);
-			} else {
-				// mmI > mmF
+			} else { // mmI > mmF
 				if (Integer.parseInt(DateUtils.getDayToString(DateUtils.getEndOfMonth(aaI, mmI))) == lModRet
 						.getNumGiorni()) {
-					// Il numero di GG calcolati coincide con il numero di gg del mese di
-					// partenza. Vero solo se il ggI=01 e ggF=ultimo del mese di inizio.
+					// Il numero di GG calcolati coincide con il numero di gg del mese di partenza.
+					// Vero solo se il ggI=01 e ggF=ultimo del mese di inizio.
 					// In questo caso considero come se avessi scontato un mese intero, per
 					// cui porto i giorni a 0 e sommo 1 al mese
 					// n.b. i gg calcolati potrebbero anche essere >utimo giorno del mese
@@ -305,13 +300,11 @@ public class CalendarUtil {
 				lModRet.setNumGiorni(0);
 				lModRet.setNumMesi(0);
 				lModRet.setNumAnni(aaF - aaI);
-
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
 				siesLogger.debug("lModRet 1 : " + lModRet);
 			} else {
-				if (mmI == 2 && lNrGiorni >= 28) // Se Febbraio e nrgiorni >= 28
-				{
+				if (mmI == 2 && lNrGiorni >= 28) { // Se Febbraio e nrgiorni >= 28
 					if (lNrGiorni > 28 && Integer
 							.parseInt(DateUtils.getDayToString(DateUtils.getEndOfMonth(aaI, mmI))) == 29) {
 						lNrGiorni = lNrGiorni - 29;
@@ -332,7 +325,6 @@ public class CalendarUtil {
 					} else {
 						lModRet.setNumMesi(mmF - mmI);
 						lModRet.setNumAnni(aaF - aaI);
-
 						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
 						// di LogF3B.getLogger()
 						siesLogger.debug("lModRet 3 : " + lModRet);
@@ -342,14 +334,12 @@ public class CalendarUtil {
 					if (mmI > mmF) {
 						lModRet.setNumMesi(12 - mmI + mmF);
 						lModRet.setNumAnni(aaF - (aaI + 1));
-
 						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
 						// di LogF3B.getLogger()
 						siesLogger.debug("lModRet 4 : " + lModRet);
 					} else {
 						lModRet.setNumMesi(mmF - mmI);
 						lModRet.setNumAnni(aaF - aaI);
-
 						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
 						// di LogF3B.getLogger()
 						siesLogger.debug("lModRet 5 : " + lModRet);
@@ -366,7 +356,6 @@ public class CalendarUtil {
 						lModRet.setNumGiorni(0);
 						lModRet.setNumMesi(0);
 						lModRet.setNumAnni(aaF + 1 - aaI);
-
 						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
 						// di LogF3B.getLogger()
 						siesLogger.debug("lModRet 6 : " + lModRet);
@@ -374,14 +363,12 @@ public class CalendarUtil {
 						lModRet.setNumGiorni(0);
 						lModRet.setNumMesi(lModRet.getNumMesi() + 1);
 						lModRet.setNumAnni(aaF - aaI);
-
 						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
 						// di LogF3B.getLogger()
 						siesLogger.debug("lModRet 7 : " + lModRet);
 					}
 				} else {
 					lModRet.setNumAnni(aaF - aaI);
-
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// LogF3B.getLogger()
 					siesLogger.debug("lModRet 8 : " + lModRet);
@@ -391,20 +378,17 @@ public class CalendarUtil {
 						.getNumGiorni()) {
 					lModRet.setNumGiorni(0);
 					lModRet.setNumMesi(12 - mmI + mmF + 1);
-
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// LogF3B.getLogger()
 					siesLogger.debug("lModRet 9 : " + lModRet);
 				} else {
 					lModRet.setNumMesi(12 - mmI + mmF);
-
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// LogF3B.getLogger()
 					siesLogger.debug("lModRet 10 : " + lModRet);
 				}
 
 				lModRet.setNumAnni(aaF - (aaI + 1));
-
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
 				siesLogger.debug("lModRet 11 : " + lModRet);
@@ -472,6 +456,7 @@ public class CalendarUtil {
 	 * Valorizza mGG , mMM, mAA del aModel, sommando a questi i gg,mm,aa passati a parametro.
 	 */
 	public CalendarModel sommaGiorni(CalendarModel aModel, int gg, int mm, int aa) {
+
 		int ggOld = aModel.getNumGiorni();
 		int mmOld = aModel.getNumMesi();
 		int aaOld = aModel.getNumAnni();
@@ -615,7 +600,7 @@ public class CalendarUtil {
 	 * <b>normalizzato</b>, anche se la differenza porta a un quantum negativo. I risultati ottenutosono del
 	 * tutto equivalenti. Es: aModelA = (10gg, 2mm, 2aa) < aModelB = (15gg, 2mm, 2aa) La sottraiGiorni
 	 * restituisce (25gg, 11mm, -1aa ) mentre questo metodo restituisce (-5gg, 0mm, 0aa)
-	 * 
+	 *
 	 */
 	public CalendarModel sottraiGiornieValute(CalendarModel aModelA, CalendarModel aModelB) {
 
@@ -719,19 +704,16 @@ public class CalendarUtil {
 		aaB = aModelB.getNumAnni();
 
 		// normalizzo A in modo che gg>0, mm>0 se possibile
-		if (ggA == 0 && mmA == 0) {
-			// es:(aa,mm,gg)=(2,0,0) >> (1,11,30)
+		if (ggA == 0 && mmA == 0) { // es:(aa,mm,gg)=(2,0,0) >> (1,11,30)
 			ggA = 30;
 			mmA = 11;
 			aaA--;
 		}
-		if (ggA == 0 && mmA > 0) {
-			// es:(aa,mm,gg)=(2,3,0) >> (2,2,30)
+		if (ggA == 0 && mmA > 0) { // es:(aa,mm,gg)=(2,3,0) >> (2,2,30)
 			ggA = 30;
 			mmA--;
 		}
-		if (ggA > 0 && mmA == 0 && aaA > 0) {
-			// es:(aa,mm,gg)=(2,0,11) >> (1,11,41)
+		if (ggA > 0 && mmA == 0 && aaA > 0) { // es:(aa,mm,gg)=(2,0,11) >> (1,11,41)
 			ggA = ggA + 30;
 			mmA = 11;
 			aaA--;
@@ -910,7 +892,6 @@ public class CalendarUtil {
 		CalendarModel lModRet = new CalendarModel();
 
 		lModRet = sottraiGiorniNew(aModelA, aModelB);
-
 		lModRet.setImportoMulta(aModelA.getImportoMulta() - aModelB.getImportoMulta());
 		lModRet.setImportoAmmenda(aModelA.getImportoAmmenda() - aModelB.getImportoAmmenda());
 
@@ -925,6 +906,7 @@ public class CalendarUtil {
 	 * @return
 	 */
 	public static int getTotGiorni(CalendarModel aModelA) {
+
 		int ggA = aModelA.getNumGiorni();
 		int mmA = aModelA.getNumMesi();
 		int aaA = aModelA.getNumAnni();
@@ -941,6 +923,7 @@ public class CalendarUtil {
 	 * @return
 	 */
 	public CalendarModel abs(CalendarModel aCalModel) {
+
 		CalendarModel lCalModel = new CalendarModel();
 
 		lCalModel.setNumAnni(Math.abs(aCalModel.getNumAnni()));

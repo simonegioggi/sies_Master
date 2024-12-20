@@ -2,6 +2,6 @@ BRANCH MASTER
 
 Allineato al:
 
-BRANCH SIES VERSIONE 12.6.4.0-MEV_2024_092
+BRANCH SIES VERSIONE 12.7.0.0-MEV_2023_035
 
-Questa release è stata rilasciata il 25/10/2024
+Questa release è stata rilasciata il 19/12/2024

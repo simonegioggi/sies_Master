@@ -42,7 +42,7 @@ public class EsecuzioneSanzioneSostitutivaSqlDAO extends SIAPSqlDAO {
 		lSql += " " + setCondizione(aModel);
 		setStatement(lSql);
 	}
-
+	
 	public void ricercaEsecuzioneSanzioneSostitutivaByKey(BigDecimal aKey) throws DAOException {
 		String lSql = getSqlQuery();
 		lSql += " " + setCondizioniByKey(aKey);
@@ -247,10 +247,14 @@ public class EsecuzioneSanzioneSostitutivaSqlDAO extends SIAPSqlDAO {
 	 * @return lCondizioni
 	 */
 	public void ricercaEsecuzioneSanzioniSostitutive(String lAnno, String lProgr, String lAnnoIniziale,
-			String lProgrIniziale, String lAnnoFinale, String lProgrFinale, String lUfficioUtenteConnesso) {
+			String lProgrIniziale, String lAnnoFinale, String lProgrFinale, String lUfficioUtenteConnesso, String lCodContenuto) {
 		String EsecuzioneSanzioneSostitutiva = "";
 
 		EsecuzioneSanzioneSostitutiva += getEsecuzioneSanzioneSostitutiva();
+		
+		// MEV_2023_35 si parametrizza la ricerca per lCodContenuto
+		EsecuzioneSanzioneSostitutiva += " AND GP.COD_OGGETTO_PROCEDIMENTO = '"+lCodContenuto+"' ";
+		//
 		EsecuzioneSanzioneSostitutiva += setCondizioneEsecuzioneSanzioneSostitutiva(lAnno, lProgr,
 				lAnnoIniziale, lProgrIniziale, lAnnoFinale, lProgrFinale, lUfficioUtenteConnesso);
 		EsecuzioneSanzioneSostitutiva += setOrderAnnoProgr();
@@ -258,32 +262,34 @@ public class EsecuzioneSanzioneSostitutivaSqlDAO extends SIAPSqlDAO {
 		setStatement(EsecuzioneSanzioneSostitutiva);
 	}
 
+	// MEV_2023-35 si parametrizza il lCodContenuto per gestire anche le EPS
 	public void ricercaDettaglioEsecuzioneSSbyFascicolo(BigDecimal lIdFascicolo,
-			String lUfficioUtenteConnesso) {
+			String lUfficioUtenteConnesso, String lCodContenuto) {
 		String lStatement = "";
 
 		// Si costruisce la query relativa ai Fascicoli SIUS Con Provvedimenti.
-		lStatement += getFascicoliFigliConProvvedimenti(lIdFascicolo, lUfficioUtenteConnesso);
+		lStatement += getFascicoliFigliConProvvedimenti(lIdFascicolo, lUfficioUtenteConnesso, lCodContenuto);
 
 		lStatement += " UNION ";
 
 		// Si costruisce la query relativa ai Fascicoli SIUS Senza Provvedimenti.
-		lStatement += getFascicoliFigliSenzaProvvedimenti(lIdFascicolo, lUfficioUtenteConnesso);
+		lStatement += getFascicoliFigliSenzaProvvedimenti(lIdFascicolo, lUfficioUtenteConnesso, lCodContenuto);
 
 		// settaggio della stringa SQL appena costruita prima della query.
 		setStatement(lStatement);
 	}
 
-	public void ricercaDettaglioEsecuzioneSS(BigDecimal aEseSSKey, String lUfficioUtenteConnesso) {
+	// MEV_2023-35 si parametrizza il lCodContenuto per gestire anche le EPS
+	public void ricercaDettaglioEsecuzioneSS(BigDecimal aEseSSKey, String lUfficioUtenteConnesso, String lCodContenuto) {
 		String lStatement = "";
 
 		// Si costruisce la query relativa ai Fascicoli SIUS Con Provvedimenti.
-		lStatement += getFascicoliConProvvedimentiDellaSanzione(aEseSSKey, lUfficioUtenteConnesso);
+		lStatement += getFascicoliConProvvedimentiDellaSanzione(aEseSSKey, lUfficioUtenteConnesso,lCodContenuto);
 		// lStatement += setCondizione(aModel);
 
 		lStatement += " UNION ";
 		// Si costruisce la query relativa ai Fascicoli SIUS Senza Provvedimenti.
-		lStatement += getFascicoliSenzaProvvedimentiDellaSanzione(aEseSSKey, lUfficioUtenteConnesso);
+		lStatement += getFascicoliSenzaProvvedimentiDellaSanzione(aEseSSKey, lUfficioUtenteConnesso,lCodContenuto);
 		// lStatement += setCondizione(aModel);
 
 		// lStatement += setOrderAnnoProgr();
@@ -326,7 +332,8 @@ public class EsecuzioneSanzioneSostitutivaSqlDAO extends SIAPSqlDAO {
 		lStatement += " COMUNE DESCR_COM_UFF, COMUNE DESCR_COM_NASCITA, ESECUZIONE_SANZIONE_SOST ESS,";
 		lStatement += " COMUNE COMUNE_AUT, UFFICIO UFFICIO_AUT, CG_REF_CODES DESCR_TIPO_AUT";
 		lStatement += " WHERE FASC.SOG_ID_SOGGETTO = SOGG.ID_SOGGETTO";
-		lStatement += " AND GP.COD_OGGETTO_PROCEDIMENTO = 'U019'";
+		// MEV_2023_35 Filtro sul COD_OGGETTO_PROCEDIMENTO impostato nella chiamate
+//lStatement += " AND GP.COD_OGGETTO_PROCEDIMENTO = 'U019'";
 		lStatement += " AND FASC.FAS_SIE_ID_FASCICOLO_SIEP = FASC_SIEP.ID_FASCICOLO_SIEP(+)";
 		// 20190723 [SG]: aggiunto controllo nvl
 		lStatement += " AND UFFICIO_AUT.COD_UFFICIO = nvl(ESS.COD_AUTORITA_EMITT_ORD, '-')";
@@ -587,8 +594,9 @@ public class EsecuzioneSanzioneSostitutivaSqlDAO extends SIAPSqlDAO {
 		return lFascicolo;
 	}
 
+	// MEV_2023-35 si parametrizza il codContenuto per gestire anche le EPS
 	protected String getFascicoliConProvvedimentiDellaSanzione(BigDecimal aEseSSKey,
-			String lUfficioUtenteConnesso) {
+			String lUfficioUtenteConnesso, String lCodContenuto) {
 		String lStatement = new String();
 
 		lStatement += "SELECT FASC.ID_FASCICOLO_SIUS ID_FASCICOLO_SIUS, FASC.CHIAVE_ANNO CHIAVE_ANNO, FASC.DATA_ISCRIZIONE DATA_ISCRIZIONE, SOGG.ID_SOGGETTO ID_SOGGETTO,";
@@ -616,8 +624,11 @@ public class EsecuzioneSanzioneSostitutivaSqlDAO extends SIAPSqlDAO {
 		lStatement += " AND FASC_PADRE.ID_FASCICOLO_SIUS = GP_PADRE.FAS_SIU_ID_FASCICOLO_SIUS ";
 		lStatement += " AND FASC.ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS ";
 		lStatement += " AND GP_PADRE.ANNO_S1 = GP.ANNO_S1";
-		lStatement += " AND GP_PADRE.PROGR_S1 = GP.PROGR_S1";
-		lStatement += " AND GP.COD_OGGETTO_PROCEDIMENTO != 'U019'";
+		lStatement += " AND GP_PADRE.PROGR_S1 = GP.PROGR_S1";		
+        // MEV_2023-35 si parametrizza il codContenuto per gestire anche le EPS
+        //lStatement += " AND GP.COD_OGGETTO_PROCEDIMENTO != 'U019'";
+        lStatement += " AND GP.COD_OGGETTO_PROCEDIMENTO != '"+lCodContenuto+"' ";
+        // MEV_2023-35 - FINE   
 		lStatement += " AND FASC.CHIAVE_UFFICIO ='" + lUfficioUtenteConnesso + "'";
 		lStatement += " AND FASC_PADRE.CHIAVE_UFFICIO = FASC.CHIAVE_UFFICIO";
 		lStatement += " AND FASC.SOG_ID_SOGGETTO = SOGG.ID_SOGGETTO";
@@ -647,9 +658,10 @@ public class EsecuzioneSanzioneSostitutivaSqlDAO extends SIAPSqlDAO {
 		lStatement += " AND FASC_FIGLIO.ID_FASCICOLO_SIUS_ORIGINE(+) = FASC.ID_FASCICOLO_SIUS";
 		return lStatement;
 	}
-
+	
+	// MEV_2023-35 si parametrizza il codContenuto per gestire anche le EPS
 	protected String getFascicoliSenzaProvvedimentiDellaSanzione(BigDecimal aEseSSKey,
-			String lUfficioUtenteConnesso) {
+			String lUfficioUtenteConnesso, String lCodContenuto) {
 		String lStatement = new String();
 
 		lStatement += "SELECT FASC.ID_FASCICOLO_SIUS ID_FASCICOLO_SIUS, FASC.CHIAVE_ANNO CHIAVE_ANNO, FASC.DATA_ISCRIZIONE DATA_ISCRIZIONE, SOGG.ID_SOGGETTO ID_SOGGETTO, ";
@@ -669,8 +681,11 @@ public class EsecuzioneSanzioneSostitutivaSqlDAO extends SIAPSqlDAO {
 		lStatement += " AND FASC_PADRE.ID_FASCICOLO_SIUS = GP_PADRE.FAS_SIU_ID_FASCICOLO_SIUS ";
 		lStatement += " AND FASC.ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS ";
 		lStatement += " AND GP_PADRE.ANNO_S1 = GP.ANNO_S1";
-		lStatement += " AND GP_PADRE.PROGR_S1 = GP.PROGR_S1";
-		lStatement += " AND GP.COD_OGGETTO_PROCEDIMENTO != 'U019'";
+		lStatement += " AND GP_PADRE.PROGR_S1 = GP.PROGR_S1";		
+        // MEV_2023-35 si parametrizza il codContenuto per gestire anche le EPS
+        //lStatement += " AND GP.COD_OGGETTO_PROCEDIMENTO != 'U019'";
+        lStatement += " AND GP.COD_OGGETTO_PROCEDIMENTO != '"+lCodContenuto+"' ";
+        // MEV_2023-35 - FINE		
 		lStatement += " AND FASC_PADRE.CHIAVE_UFFICIO = FASC.CHIAVE_UFFICIO";
 		lStatement += " AND FASC.SOG_ID_SOGGETTO = SOGG.ID_SOGGETTO";
 		lStatement += " AND FASC.ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS";
@@ -696,9 +711,10 @@ public class EsecuzioneSanzioneSostitutivaSqlDAO extends SIAPSqlDAO {
 		lStatement += " ) ";
 		return lStatement;
 	}
-
+	
+	// MEV_2023-35 si parametrizza il lCodContenuto per gestire anche le EPS
 	protected String getFascicoliFigliConProvvedimenti(BigDecimal aIdFascicolo,
-			String lUfficioUtenteConnesso) {
+			String lUfficioUtenteConnesso, String lCodContenuto) {
 		String lStatement = new String();
 
 		lStatement += "SELECT FASC.ID_FASCICOLO_SIUS ID_FASCICOLO_SIUS, FASC.CHIAVE_ANNO CHIAVE_ANNO, FASC.DATA_ISCRIZIONE DATA_ISCRIZIONE, SOGG.ID_SOGGETTO ID_SOGGETTO,";
@@ -721,7 +737,10 @@ public class EsecuzioneSanzioneSostitutivaSqlDAO extends SIAPSqlDAO {
 		lStatement += " AND FASC.ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS ";
 		lStatement += " AND GP_PADRE.ANNO_S1 = GP.ANNO_S1";
 		lStatement += " AND GP_PADRE.PROGR_S1 = GP.PROGR_S1";
-		lStatement += " AND GP.COD_OGGETTO_PROCEDIMENTO != 'U019'";
+		// MEV_2023-35 si parametrizza il codContenuto per gestire anche le EPS
+		//lStatement += " AND GP.COD_OGGETTO_PROCEDIMENTO != 'U019'";
+		lStatement += " AND GP.COD_OGGETTO_PROCEDIMENTO != '"+lCodContenuto+"' ";
+		// MEV_2023-35 - FINE
 		lStatement += " AND FASC.CHIAVE_UFFICIO ='" + lUfficioUtenteConnesso + "'";
 		lStatement += " AND FASC_PADRE.CHIAVE_UFFICIO = FASC.CHIAVE_UFFICIO";
 		lStatement += " AND FASC.SOG_ID_SOGGETTO = SOGG.ID_SOGGETTO";
@@ -752,8 +771,9 @@ public class EsecuzioneSanzioneSostitutivaSqlDAO extends SIAPSqlDAO {
 		return lStatement;
 	}
 
+	// MEV_2023-35 si parametrizza il lCodContenuto per gestire anche le EPS
 	protected String getFascicoliFigliSenzaProvvedimenti(BigDecimal aIdFascicolo,
-			String lUfficioUtenteConnesso) {
+			String lUfficioUtenteConnesso, String lCodContenuto) {
 		String lStatement = new String();
 
 		lStatement += "SELECT FASC.ID_FASCICOLO_SIUS ID_FASCICOLO_SIUS, FASC.CHIAVE_ANNO CHIAVE_ANNO, FASC.DATA_ISCRIZIONE DATA_ISCRIZIONE, SOGG.ID_SOGGETTO ID_SOGGETTO, ";
@@ -772,8 +792,11 @@ public class EsecuzioneSanzioneSostitutivaSqlDAO extends SIAPSqlDAO {
 		lStatement += " AND FASC_PADRE.ID_FASCICOLO_SIUS = GP_PADRE.FAS_SIU_ID_FASCICOLO_SIUS ";
 		lStatement += " AND FASC.ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS ";
 		lStatement += " AND GP_PADRE.ANNO_S1 = GP.ANNO_S1";
-		lStatement += " AND GP_PADRE.PROGR_S1 = GP.PROGR_S1";
-		lStatement += " AND GP.COD_OGGETTO_PROCEDIMENTO != 'U019'";
+		lStatement += " AND GP_PADRE.PROGR_S1 = GP.PROGR_S1";		
+        // MEV_2023-35 si parametrizza il codContenuto per gestire anche le EPS
+        //lStatement += " AND GP.COD_OGGETTO_PROCEDIMENTO != 'U019'";
+        lStatement += " AND GP.COD_OGGETTO_PROCEDIMENTO != '"+lCodContenuto+"' ";
+        // MEV_2023-35 - FINE
 		lStatement += " AND FASC_PADRE.CHIAVE_UFFICIO = FASC.CHIAVE_UFFICIO";
 		lStatement += " AND FASC.SOG_ID_SOGGETTO = SOGG.ID_SOGGETTO";
 		lStatement += " AND FASC.ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS";
@@ -887,4 +910,14 @@ public class EsecuzioneSanzioneSostitutivaSqlDAO extends SIAPSqlDAO {
 		return lStatement;
 	}
 
+	// MEV_2023-35 - si aggiunge la ricerca per idDeposito
+	public void ricercaEsecuzioneSanzioneSostitutivaByIdDepositoOrd (BigDecimal aIdDepositoOrd)
+           throws DAOException {
+       String lSql = getSqlQuery();
+       lSql += " AND DEP_OPID_DEPOSITO_ORDINANZA_PC = " + aIdDepositoOrd +" ";
+       setStatement(lSql);
+   }
+
+   
+   
 }

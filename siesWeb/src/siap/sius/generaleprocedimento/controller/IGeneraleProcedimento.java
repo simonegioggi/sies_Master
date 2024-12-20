@@ -3,23 +3,12 @@ package siap.sius.generaleprocedimento.controller;
 import java.math.BigDecimal;
 import java.util.Vector;
 
-import siap.sius.generaleprocedimento.model.GeneraleProcedimentoModel;
 import f3b.util.F3BException;
+import siap.sius.generaleprocedimento.model.GeneraleProcedimentoModel;
 
 /**
- * <p>
- * Title: GeneraleProcedimentoController
- * </p>
- * <p>
- * Description: Classe Controller per GeneraleProcedimento
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ * GeneraleProcedimentoController - Classe Controller per GeneraleProcedimento
+ *
  * @version 1.0
  */
 @SuppressWarnings("rawtypes")

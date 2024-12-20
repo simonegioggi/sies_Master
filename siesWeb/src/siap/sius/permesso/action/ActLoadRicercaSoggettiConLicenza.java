@@ -1,26 +1,17 @@
 package siap.sius.permesso.action;
 
+import f3b.util.F3BException;
+import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.ufficio.controller.IUfficio;
 import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
-import f3b.util.F3BException;
-import f3b.web.html.Option;
 
 /**
- * <p>
- * Title: ActLoadRicercaSoggettiConLicenza
- * </p>
- * <p>
- * Description: Azione di caricamento della form di ricerca dei Soggetti con Procedimenti di sorveglianza
- * relativi a Licenza
- * </p>
- * <p>
- * Copyright: Bull Italia Copyright (c) 2005
- * </p>
- * <p>
- * Company: Bull Italia
- * </p>
+ * ActLoadRicercaSoggettiConLicenza - Azione di caricamento della form di ricerca dei Soggetti con
+ * Procedimenti di sorveglianza relativi a Licenza
+ * 
+ * @version 1.0
  */
 public class ActLoadRicercaSoggettiConLicenza extends ActionSiap implements ICostantiPermesso {
 
@@ -61,11 +52,13 @@ public class ActLoadRicercaSoggettiConLicenza extends ActionSiap implements ICos
 		// Imposta Tipo Licenza.
 		lOption = new Option(DecodificheManager.getInstance().getTipoLicenza(), "LC", 75);
 		// 20110520 PM - S'impostano solo : Licenza, Licenza Internati.
-		String[] lTipoLicenze = { "LC", "LI" };
+		// MEV_2023-35: aggiungo Licenza pene sostitutive (LP)
+		String[] lTipoLicenze = { "LC", "LI", "LP" };
 		lOption.setFilter(lTipoLicenze);
 		setRequestAttribute("licenza", "" + lOption);
 
-		return PG_LOAD_RICERCASOGGETTICONLICENZA; // restituisce la jsp di VIEW
+		// restituisce la jsp di VIEW
+		return PG_LOAD_RICERCASOGGETTICONLICENZA;
 	}
 
 }

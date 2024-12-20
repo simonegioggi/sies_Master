@@ -83,6 +83,9 @@ public class ActInserisciPrescrizioneNew extends ActionSiap implements ICostanti
 		// Controllo Sanzioni Sostitutive / Conv. Pene Pecuniarie
 		if (mCodOggettoProc.equals(ICostantiDepositoOrdinanzaPc.OGG_AUTO_SANZ_SOSTITUTIVE)
 				|| mCodOggettoProc.equals(ICostantiDepositoOrdinanzaPc.OGG_APPL_SANZ_SOSTITUTIVE)
+				// MEV_2023-35 si aggiunge un nuovo codice 
+				|| mCodOggettoProc.equals(ICostantiDepositoOrdinanzaPc.OGG_APPL_PENE_SOSTITUTIVE)
+				// MEV_2023-35 - FINE
 				|| mCodOggettoProc.equals(ICostantiDepositoOrdinanzaPc.OGG_CONV_PENE_PECUNIARIE)) {
 			FiltroPrescrizione = "ESS";
 		}

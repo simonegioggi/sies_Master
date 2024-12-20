@@ -14,7 +14,11 @@ import siap.sige.util.SIGELookupRemote;
 
 /**
  * ActRicercaDepositoOrdinanza - Classe Action per la Ricerca delle Ordinanze Emesse per un Procedimento SIGE
+<<<<<<< HEAD
+ *
+=======
  * 
+>>>>>>> MEV_2024_092_FASE-1
  * @version 1.0
  */
 public class ActRicercaDepositoOrdinanza extends ActRicercaFSigePuntuale
@@ -63,7 +67,6 @@ public class ActRicercaDepositoOrdinanza extends ActRicercaFSigePuntuale
 							lProvSigeEvento.getProvvedimento().getIdEventoGenerato().toString());
 					this.setRequestAttribute("ordinanza", lVect.get(0));
 					lRetPage = lPage.toString();
-
 				} else {
 					// Si passa al deposito dell' ordinanza
 					RedirectTo lPage = new RedirectTo();
@@ -100,7 +103,6 @@ public class ActRicercaDepositoOrdinanza extends ActRicercaFSigePuntuale
 			setRequestAttribute("Modificabile", lModificabile);
 			setRequestAttribute("Stampabile", lStampabile);
 			setRequestAttribute("Trasferibile", lTrasferibile);
-
 		} catch (F3BException fex) {
 			if (fex.getErrorCode() == F3BException.USER_MESSAGE)
 				throw new F3BException(F3BException.USER_MESSAGE,

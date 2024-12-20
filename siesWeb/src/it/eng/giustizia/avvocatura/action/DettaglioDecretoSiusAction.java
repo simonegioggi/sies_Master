@@ -205,8 +205,9 @@ public class DettaglioDecretoSiusAction extends ActionSius implements ICostantiD
 
 		// Ricerca delle notifiche (destinatari)
 		INotifica iNotifica = SIEPLookupRemote.getNotificaRemote();
-
-		if (GENERICO.equals(tipoDecreto)
+		
+		// MEV_2023-35 si aggiunge un nuovo codice per il decreto generico (GENERICO2=GE)
+		if (GENERICO.equals(tipoDecreto) || GENERICO2.equals(tipoDecreto)
 				|| ICostantiDepositoOrdinanzaPc.RICHIESTA_OTTEMPERANZA.equals(tipoDecreto)
 				|| LIMITAZIONI_CONTROLLI_CORRISPONDENZA.equals(tipoDecreto)
 				|| APPLICAZIONE_PROVVISORIA_MA.equals(tipoDecreto)

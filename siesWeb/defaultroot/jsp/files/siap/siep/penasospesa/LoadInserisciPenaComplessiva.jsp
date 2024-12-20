@@ -691,7 +691,7 @@ function prosegui()
             else
             {
               lParteInteraMulta = lImportoMulta.substring(0,lIndexMulta);
-              lParteDecimaleMulta = lImportoMulta.substring(lIndexMulta+1);;
+              lParteDecimaleMulta = lImportoMulta.substring(lIndexMulta+1);
             }
 %>
             <input Title="Multa" size="8" maxlength="16" value="<%=StringUtils.toZerotoStringaVuota(lParteInteraMulta,"")%>" type="text" name="<%=ICostantiPenaComplessiva.CAMPO_INTERO_IMPORTO_MULTA%>" 
@@ -730,7 +730,7 @@ function prosegui()
             else
             {
               lParteInteraAmmenda = lImportoAmmenda.substring(0, lIndexAmmenda);
-              lParteDecimaleAmmenda = lImportoAmmenda.substring(lIndexAmmenda+1);;
+              lParteDecimaleAmmenda = lImportoAmmenda.substring(lIndexAmmenda+1);
             }
 %>
             <input Title="Ammenda" size="8" maxlength="16" value="<%=StringUtils.toZerotoStringaVuota(lParteInteraAmmenda,"")%>" type="text" name="<%=ICostantiPenaComplessiva.CAMPO_INTERO_IMPORTO_AMMENDA%>"
@@ -831,7 +831,7 @@ function prosegui()
             else
             {
               lParteInteraPenaPecSost = lImportoPenaPecSost.substring(0, lIndexPenaPecSost);
-              lParteDecimalePenaPecSost = lImportoPenaPecSost.substring(lIndexPenaPecSost+1);;
+              lParteDecimalePenaPecSost = lImportoPenaPecSost.substring(lIndexPenaPecSost+1);
             }
 %>
             <input Title="Pena Pecuniaria Sostitutiva" size="8" maxlength="16" value="<%=lParteInteraPenaPecSost%>" type="text" name="<%=ICostantiSanzioneSostitutiva.CAMPO_INTERO_SANZIONE_PECUNIARIA_MULTA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
@@ -865,7 +865,7 @@ function prosegui()
             else
             {
               lParteInteraPenaPecSostA = lImportoPenaPecSostA.substring(0, lIndexPenaPecSostA);
-              lParteDecimalePenaPecSostA = lImportoPenaPecSostA.substring(lIndexPenaPecSostA+1);;
+              lParteDecimalePenaPecSostA = lImportoPenaPecSostA.substring(lIndexPenaPecSostA+1);
             }
 %>
             <input Title="Pena Pecuniaria Sostitutiva" size="8" maxlength="16" value="<%=lParteInteraPenaPecSostA%>" type="text" name="<%=ICostantiSanzioneSostitutiva.CAMPO_INTERO_SANZIONE_PECUNIARIA_AMMENDA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
