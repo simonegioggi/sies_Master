@@ -3,8 +3,6 @@
 <%@ page import="f3b.util.StringUtils"%>
 <%@ page import="f3b.util.DateUtils"%>
 
-<%@ page import="java.util.Vector"%>
-
 <%@ page import="siap.siep.penapecuniaria.model.RichiestaConversioneEstesaModel"%>
 <%@ page import="siap.siep.rateizzazionepp.model.RateizzazionePPModel"%>
 <%@ page import="siap.sius.depositoordinanzapc.action.ICostantiDepositoOrdinanzaPc"%>
@@ -17,23 +15,11 @@
 <jsp:useBean id="richiesteconversioni" 	scope="request" class="java.util.Vector"/>
 <jsp:useBean id="datiOrdinanza" 		scope="request" class="siap.sius.depositoordinanzapc.model.OrdinanzaEventoTenoriPrescrizioniModel"/>
 <%-- MEV_2023-35: aggiunti useBean e gestiti nella pagina --%>
-<%-- Ticket#202412190132 si carica direttamente con la getAttribute perche' se non 
-     passato dalla action, jboss non riesce ad istanziare il bean
 <jsp:useBean id="rate" 					scope="request" class="java.util.Vector<siap.siep.rateizzazionepp.model.RateizzazionePPModel>"/>
---%>
 <jsp:useBean id="dopm" 					scope="request" class="siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel"/>
 
 <table cellspacing="2" cellpadding="2" width="90%">
 <%
-// Ticket#202412190132 si carica direttamente con la getAttribute perche' se non 
-// passato dalla action, jboss non riesce ad istanziare il bean
-Vector <RateizzazionePPModel> rate = null;
-if (request.getAttribute("rate")!=null)
-  rate = (Vector <RateizzazionePPModel>) request.getAttribute("rate");
-else
-  rate = new Vector <RateizzazionePPModel>();
-// Ticket#202412190132 - FINE
-
 TenoreModel[] tenori = datiOrdinanza.getTenori(); 
 Iterator itx = richiesteconversioni.iterator();
 while (itx.hasNext()) {
