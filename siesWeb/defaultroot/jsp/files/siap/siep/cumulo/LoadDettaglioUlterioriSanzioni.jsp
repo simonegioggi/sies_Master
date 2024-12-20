@@ -104,7 +104,7 @@
 				      else
 				      {
 				        lParteInterSanzionePenaPec = lImportoSanzionePenaPec.substring(0, lIndexPenaPecSost);
-				        lParteDecimaleSanzionePenaPec = lImportoSanzionePenaPec.substring(lIndexPenaPecSost+1);;
+				        lParteDecimaleSanzionePenaPec = lImportoSanzionePenaPec.substring(lIndexPenaPecSost+1);
 				      }
 				 }			
 %>			

@@ -7,25 +7,14 @@ import siap.sico.web.ActionSiap;
 import siap.sius.SIUSException;
 import siap.sius.esecuzionesanzionesostitutiva.controller.IEsecuzioneSS;
 import siap.sius.esecuzionesanzionesostitutiva.model.ESSFascGPModel;
+import siap.sius.fascicolo.action.ICostantiFascicoloSius;
 import siap.sius.util.SIUSLookupRemote;
 import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
 
 /**
- * <p>
- * Title: ActRicercaEsecuzioneSS
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2007
- * </p>
- * <p>
- * Company:
- * </p>
+ * ActRicercaEsecuzioneSS - Classe per la ricerca dei procedimenti di esecuzione sanzioni sostituive
  * 
- * @author unascribed
  * @version 1.0
  */
 public class ActRicercaEsecuzioneSS extends ActionSiap implements ICostantiEsecuzioneSS {
@@ -70,14 +59,22 @@ public class ActRicercaEsecuzioneSS extends ActionSiap implements ICostantiEsecu
 		if (!isRequestParameterNullObj(CAMPO_CHIAVE_UFFICIO))
 			lCodUfficio = getRequestStringParameter(CAMPO_CHIAVE_UFFICIO);
 
+		// MEV_2023-35 - Si aggiunge il tipo di Fascicolo di esecuzione da ricercare 
+		// U019 o U126
+		String lCodContenuto = null;
+		if (!isRequestParameterNullObj(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO))
+		  lCodContenuto = getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO);
+		setRequestAttribute("CodContenutoES", lCodContenuto);
+		
 		String lReturnPage = "";
 		IEsecuzioneSS lEseSSCtrl = SIUSLookupRemote.getEsecuzioneSSRemote();
 
 		// Paginazione
 		BigDecimal CountRisultati;
 		if (isRequestParameterNullObj("CountRisultati")) {
+		    // MEV_2023-35 si aggiunge il parametro lCodContenuto
 			CountRisultati = lEseSSCtrl.ExGetNumRicercaEsecuzioneSanzioniSostitutive(lAnno, lProgr,
-					lAnnoIniziale, lProgrIniziale, lAnnoFinale, lProgrFinale, lCodUfficio);
+					lAnnoIniziale, lProgrIniziale, lAnnoFinale, lProgrFinale, lCodUfficio, lCodContenuto);
 		} else
 			CountRisultati = getRequestBigDecimalParameter("CountRisultati");
 
@@ -85,8 +82,9 @@ public class ActRicercaEsecuzioneSS extends ActionSiap implements ICostantiEsecu
 		setRequestAttribute(IWebConstants.NUM_PAGE, lPagina);
 		setRequestAttribute(IWebConstants.REQUEST_FOR_PAGING, getCompleteRequestURL());
 
+		// MEV_2023-35 si aggiunge il parametro lCodContenuto
 		Vector lVect = lEseSSCtrl.ExRicercaEsecuzioneSanzioniSostitutive(lAnno, lProgr, lAnnoIniziale,
-				lProgrIniziale, lAnnoFinale, lProgrFinale, lCodUfficio, Integer.parseInt(lPagina));
+				lProgrIniziale, lAnnoFinale, lProgrFinale, lCodUfficio, Integer.parseInt(lPagina), lCodContenuto);
 
 		if (lVect.size() == 1 && lAnno.length() > 1) {
 			// Gestione del punto di ritorno

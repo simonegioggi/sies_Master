@@ -4,39 +4,28 @@ import java.sql.Connection;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.model.GenericModel;
+import f3b.util.DateUtils;
 import siap.sius.impugnazione.model.ImpugnazioneModel;
 import siap.sius.statistiche.action.ICostantiStatistiche;
 import siap.sius.statistiche.model.EveFasGepSogModel;
 import siap.sius.statistiche.model.EveFasGepSogProvModel;
 import siap.sius.statistiche.model.RicercaOrdinanzaModel;
 import siap.sius.statistiche.model.RicercaProvvedimentoModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.model.GenericModel;
-import f3b.util.DateUtils;
 
 /**
- * <p>
- * Title: EveFasGepSogImpSqlDAO
- * </p>
- * <p>
- * Description: Classe SqlDAO estensione della EveFasGepSogSqlDAO che aggiunge alla JOIN di tabelle già
- * rappresentate dall'Ancestor anche la tabella IMPUGNAZIONE.
- * </p>
- * *
- * <p>
- * Copyright: Copyright (c) 2007
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ * EveFasGepSogImpSqlDAO - Classe SqlDAO estensione della EveFasGepSogSqlDAO che aggiunge alla JOIN di tabelle
+ * già rappresentate dall'Ancestor anche la tabella IMPUGNAZIONE.
+ *
  * @version 1.0
  */
-
 public class EveFasGepSogImpSqlDAO extends EveFasGepSogSqlDAO {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+
 	public EveFasGepSogImpSqlDAO(Connection con) {
 		super(con);
 	}
@@ -74,7 +63,7 @@ public class EveFasGepSogImpSqlDAO extends EveFasGepSogSqlDAO {
 		EveFasGepSogModel lAncestorModel = (EveFasGepSogModel) super.getModelNoDocAll();
 		EveFasGepSogProvModel lModel = new EveFasGepSogProvModel(lAncestorModel, getImpugnazioneModel());
 		return lModel;
-	};
+	}
 
 	private ImpugnazioneModel getImpugnazioneModel() throws DAOException {
 		// Lettura dei campi dalla tabella DEPOSITO_ORDINANZA_PC
@@ -100,7 +89,7 @@ public class EveFasGepSogImpSqlDAO extends EveFasGepSogSqlDAO {
 
 	/**
 	 * Il metodo restituisce la parte dello statement di select che elenca i campi della tabella IMPUGNAZIONE.
-	 * 
+	 *
 	 * @return
 	 */
 	protected String getSqlQueryImpugnazione() {
@@ -118,7 +107,7 @@ public class EveFasGepSogImpSqlDAO extends EveFasGepSogSqlDAO {
 	 * Il metodo prepara le condizioni di ricerca nello statement in preparazione in base al contenuto del
 	 * model di ricerca passato come argomento. La ricerca può essere di 2 tipi: per estremi dell'impugnazione
 	 * espressi in intervallo di ANNOS7/PROGRS7; per intervallo di DATA_ARRIVO_CANCELLERIA dell'Ordinanza.
-	 * 
+	 *
 	 * @param aModel
 	 * @return
 	 */
@@ -226,12 +215,13 @@ public class EveFasGepSogImpSqlDAO extends EveFasGepSogSqlDAO {
 	/**
 	 * Il metodo prepara lo statment sql che effettua la ricerca in base alle condizioni espresse dal model di
 	 * ricerca passato come argomento.
-	 * 
+	 *
 	 * @param aModel
 	 * @throws DAOException
 	 */
 	public void ricercaProcSiusXProvvedimenti(RicercaOrdinanzaModel aModel) throws DAOException {
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug("" + getClass().getName() + " .ricercaProcSiusXImpugnazione(): inizio ");
 
 		String lStatement = getSqlQuery();
@@ -240,7 +230,8 @@ public class EveFasGepSogImpSqlDAO extends EveFasGepSogSqlDAO {
 		lStatement += setOrderbyAnnoNum();
 
 		// lStatement += setOrder();
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug("" + getClass().getName() + " .ricercaProcSiusXImpugnazione(): fine ");
 
 		setStatement(lStatement);
@@ -255,7 +246,7 @@ public class EveFasGepSogImpSqlDAO extends EveFasGepSogSqlDAO {
 
 	/**
 	 * Valorizza le condizioni di filtro in base al contenuto del model ImpugnazioneModel passato.
-	 * 
+	 *
 	 * @param aModel
 	 */
 	public String setCondizioneImpEve(ImpugnazioneModel aModel) {
@@ -279,7 +270,8 @@ public class EveFasGepSogImpSqlDAO extends EveFasGepSogSqlDAO {
 
 			// Aggiunto IM su COD_UFFICIO_INSERIMENTO perchè sulle nuove versioni
 			// Oracle rilancia nome colonna ambiguo
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("Condizione -> " + lCondizioni);
 
 			// Infine la WHERE
@@ -292,13 +284,14 @@ public class EveFasGepSogImpSqlDAO extends EveFasGepSogSqlDAO {
 
 	/**
 	 * Prepara lo statement per la query di ricerca Impugnazione in join con Evento.
-	 * 
+	 *
 	 * @param aModel
 	 * @throws DAOException
 	 */
 
 	public void ricercaImpugnazioneEvento(ImpugnazioneModel aModel) throws DAOException {
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug("" + getClass().getName() + " .ricercaImpugnazioneEvento(): inizio ");
 
 		String lStatement = getSqlQueryImpEve();
@@ -306,7 +299,8 @@ public class EveFasGepSogImpSqlDAO extends EveFasGepSogSqlDAO {
 		lStatement += setCondizioneImpEve(aModel);
 
 		// lStatement += setOrder();
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug("" + getClass().getName() + " .ricercaImpugnazioneEvento(): fine ");
 
 		setStatement(lStatement);
@@ -314,7 +308,7 @@ public class EveFasGepSogImpSqlDAO extends EveFasGepSogSqlDAO {
 
 	/**
 	 * Restituisce EveFasGepSogProvModel in cui vengono valorizzati l'Evento e l'Impugnazione.
-	 * 
+	 *
 	 * @return
 	 * @throws DAOException
 	 */
@@ -325,25 +319,17 @@ public class EveFasGepSogImpSqlDAO extends EveFasGepSogSqlDAO {
 		EveFasGepSogProvModel lModel = new EveFasGepSogProvModel(lAncestorModel, getImpugnazioneModel());
 
 		return lModel;
-	};
-
-	private boolean findColumn(String aValue) {
-		try {
-			mRs.findColumn(aValue);
-		} catch (Exception sqex) {
-			return false;
-		}
-		return true;
 	}
 
 	/**
 	 * MEV10-s3: aggiunto metodo
-	 * 
+	 *
 	 * @param aModel
 	 * @throws DAOException
 	 */
 	public void ricercaProcSiusXProvvedimenti(RicercaProvvedimentoModel aModel) throws DAOException {
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug("" + getClass().getName() + " .ricercaProcSiusXProvvedimenti(): inizio ");
 
 		String lStatement = getSqlQuery();
@@ -351,7 +337,8 @@ public class EveFasGepSogImpSqlDAO extends EveFasGepSogSqlDAO {
 		lStatement += setCondizioni(aModel);
 		lStatement += setOrderbyAnnoNum();
 
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug("" + getClass().getName() + " .ricercaProcSiusXProvvedimenti(): fine ");
 
 		setStatement(lStatement);
@@ -359,7 +346,7 @@ public class EveFasGepSogImpSqlDAO extends EveFasGepSogSqlDAO {
 
 	/**
 	 * MEV10-s3: aggiunto metodo
-	 * 
+	 *
 	 * @param aModel
 	 * @return String
 	 */
@@ -403,7 +390,7 @@ public class EveFasGepSogImpSqlDAO extends EveFasGepSogSqlDAO {
 
 	/**
 	 * MEV10-s3: aggiunto metodo
-	 * 
+	 *
 	 * @param aModel
 	 * @return String
 	 */

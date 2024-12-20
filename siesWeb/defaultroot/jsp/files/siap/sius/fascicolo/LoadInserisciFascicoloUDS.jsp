@@ -81,254 +81,309 @@ while (itx.hasNext()) {
         desktop = window.open(aLink, "Lista_Oggetti","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=760,height=500");
 	}
 
-	var resultS22;
-	function TestS22(Code) {
-        // Ripulisce i codici Oggetto, il TextBox con la descrizione degli oggetti e i campi S22.
+var resultS22;
+function TestS22(Code) {
+// Ripulisce i codici Oggetto, il TextBox con la descrizione degli oggetti e i campi S22.
 <%--    STUB 21/04/2004 document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_COD_OGGETTO%>.value=''; --%>
 <%--    STUB 21/04/2004 document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_DESCR_OGGETTO%>.value=''; --%>
 <%--    document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.value=''; --%>
 <%--    document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.value=''; --%>
+// Se Code = LowValue[i]!='U004' && HighValue[i]='S22' Occorre far visualizzare i Campi nascosti.
+	if (typeof (Code) == "undefined")
+		alert('selezionare il contenuto');
+	else {
+       	// Il tag div S22 viene nascosto per default e visualizzato alla condizione HighValue = S22.
+       	S22_a.style.visibility = 'hidden';
+       	S22_aa.style.visibility = 'hidden'; //19/07/2007
+       	S22_ems.style.visibility = 'hidden'; //29/047/2011
+       	S22_ab.style.visibility = 'hidden';
+       	S22_b.style.visibility = 'hidden';
+       	S22_EPS.style.visibility = 'hidden'; // MEV_2023-35
+       	resultS22 = '';
+       	for (i = 0; i < document.FormTestS22.LowValue.length; i++) {
+           	if (Code == document.FormTestS22.LowValue[i].value) {
+           		// Imposta il Tipo Registro (da utilizzare in fase di inserimento).
+           		document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_COD_TIPO_REGISTRO%>.value=document.FormTestS22.HighValue[i].value;
+           		// STUB 30/03/2004 if(document.FormTestS22.LowValue[i].value != 'U004'   &&
+           		if (document.FormTestS22.HighValue[i].value =='S22') {
+             		if (document.FormTestS22.LowValue[i].value == 'U004') {
+						S22_ab.style.visibility = 'visible';
+						S22_ab.style.top = '-20px';
+						S22_a.style.visibility = 'hidden';
+						S22_aa.style.visibility = 'hidden'; // 19/07/2007
+						S22_EPS.style.visibility = 'hidden'; // MEV_2023-35
+						S22_ems.style.visibility = 'hidden';
+						resultS22 = 'U004';
+             		} else {
+						S22_a.style.visibility = 'visible';
+						S22_a.style.top = '+4px';
+						S22_aa.style.visibility = 'hidden'; // 19/07/2007
+						S22_EPS.style.visibility = 'hidden'; // MEV_2023-35
+						S22_ems.style.visibility = 'hidden';
+						S22_ab.style.visibility = 'hidden';
+						resultS22 = 'S22';
+              		}
+              		S22_b.style.visibility = 'visible';
+              		break;
+           		}
+           		// 18/07/2007 SANZIONI SOSTITUTIVE
+           		if (document.FormTestS22.HighValue[i].value =='S12') {
+             		if (document.FormTestS22.LowValue[i].value == 'U019') {
+						S22_ab.style.visibility = 'visible';
+						S22_ab.style.top = '-20px';
+						S22_a.style.visibility = 'hidden';
+						S22_aa.style.visibility = 'hidden';
+						S22_ems.style.visibility = 'hidden';
+						S22_EPS.style.visibility = 'hidden'; // MEV_2023-35
+						resultS22 = 'U019';
+           			} else {
+						S22_a.style.visibility = 'hidden';
+						S22_ab.style.visibility = 'hidden';
+						S22_aa.style.visibility = 'visible';
+						S22_ems.style.visibility = 'hidden';
+						S22_EPS.style.visibility = 'hidden'; // MEV_2023-35
+						resultS22 = 'S12';
+              		}
+              		S22_b.style.visibility = 'visible';
+              		break;
+           		}
+           	  	// MEV_2023-35 - 05/2024 PENE SOSTITUTIVE
+				if (document.FormTestS22.HighValue[i].value =='S30') {
+                    if (document.FormTestS22.LowValue[i].value == 'U126') {
+                  	  	S22_a.style.visibility = 'hidden';
+						S22_ab.style.visibility = 'visible';
+						S22_ab.style.top = '-20px';
+						S22_aa.style.visibility = 'hidden';
+						S22_ems.style.visibility = 'hidden';
+						S22_EPS.style.visibility = 'hidden';
+						resultS22 = 'U126';
+		            } else {
+						S22_a.style.visibility = 'hidden';
+						S22_aa.style.visibility = 'hidden';
+						S22_ab.style.visibility = 'hidden';
+						S22_ems.style.visibility = 'hidden';
+						S22_EPS.style.visibility = 'visible'; // MEV_2023-35
+						resultS22 = 'S30';
+                    }
+					S22_b.style.visibility = 'visible';
+					break;
+				}
+               	// MEV_2023-35 - 05/2024 PENE SOSTITUTIVE - FINE
 
-        // Se Code = LowValue[i]!='U004' && HighValue[i]='S22' Occorre far visualizzare i Campi nascosti.
-        if (typeof (Code) == "undefined")
-			alert('selezionare il contenuto');
-        else {
-          	// Il tag div S22 viene nascosto per default e visualizzato alla condizione HighValue = S22.
-          	S22_a.style.visibility='hidden';
-          	S22_aa.style.visibility='hidden'; //19/07/2007
-          	S22_ems.style.visibility='hidden'; //29/047/2011
-          	S22_ab.style.visibility='hidden';
-          	S22_b.style.visibility='hidden';
-          	resultS22 = '';
-          	for (i = 0; i < document.FormTestS22.LowValue.length; i++) {
-            	if (Code == document.FormTestS22.LowValue[i].value) {
-              		// Imposta il Tipo Registro (da utilizzare in fase di inserimento).
-             		document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_COD_TIPO_REGISTRO%>.value=document.FormTestS22.HighValue[i].value;
-              		// STUB 30/03/2004 if(document.FormTestS22.LowValue[i].value != 'U004'   &&
-              		if (document.FormTestS22.HighValue[i].value =='S22') {
-                		if (document.FormTestS22.LowValue[i].value == 'U004') {
-							S22_ab.style.visibility='visible';
-							S22_ab.style.top='-20px';
-							S22_a.style.visibility='hidden';
-							S22_aa.style.visibility='hidden'; // 19/07/2007
-							S22_ems.style.visibility='hidden';
-							resultS22='U004';
-                		} else {
-							S22_a.style.visibility='visible';
-							S22_a.style.top='+4px';
-							S22_aa.style.visibility='hidden'; // 19/07/2007
-							S22_ems.style.visibility='hidden';
-							S22_ab.style.visibility='hidden';
-							resultS22='S22';
-                		}
-                		S22_b.style.visibility='visible';
-                		break;
-              		}
-              		// 18/07/2007 SANZIONI SOSTITUTIVE
-              		if (document.FormTestS22.HighValue[i].value =='S12') {
-                		if (document.FormTestS22.LowValue[i].value == 'U019') {
-							S22_ab.style.visibility='visible';
-							S22_ab.style.top='-20px';
-							S22_a.style.visibility='hidden';
-							S22_aa.style.visibility='hidden';
-							S22_ems.style.visibility='hidden';
-							resultS22='U019';
-               			} else {
-							S22_a.style.visibility='hidden';
-							S22_ab.style.visibility='hidden';
-							S22_aa.style.visibility='visible';
-							S22_ems.style.visibility='hidden';
-							resultS22='S12';
-                		}
-                		S22_b.style.visibility='visible';
-                		break;
-              		}
-              		// 29/04/2011 MISURE SICUREZZA
-              		if (document.FormTestS22.HighValue[i].value =='S09') {
-                		if (document.FormTestS22.LowValue[i].value == 'U024') {
-							S22_ab.style.visibility='visible';
-							S22_ab.style.top='-20px';
-							S22_a.style.visibility='hidden';
-							S22_aa.style.visibility='hidden';
-							S22_ems.style.visibility='hidden';
-							resultS22='U024';
-                		} else {
-							S22_a.style.visibility='hidden';
-							S22_ab.style.visibility='hidden';
-							S22_aa.style.visibility='hidden';
-							S22_ems.style.visibility='visible';
-							resultS22='S09';
-                		}
-                		S22_b.style.visibility='visible';
-                		break;
-              		}
-            	}
-          	}
-		}
+           		// 29/04/2011 MISURE SICUREZZA
+           		if (document.FormTestS22.HighValue[i].value =='S09') {
+             		if (document.FormTestS22.LowValue[i].value == 'U024') {
+						S22_ab.style.visibility = 'visible';
+						S22_ab.style.top = '-20px';
+						S22_a.style.visibility = 'hidden';
+						S22_aa.style.visibility = 'hidden';
+						S22_ems.style.visibility = 'hidden';
+						S22_EPS.style.visibility = 'hidden'; // MEV_2023-35
+						resultS22 = 'U024';
+             		} else {
+						S22_a.style.visibility = 'hidden';
+						S22_ab.style.visibility = 'hidden';
+						S22_aa.style.visibility = 'hidden';
+						S22_ems.style.visibility = 'visible';
+						S22_EPS.style.visibility = 'hidden'; // MEV_2023-35
+						resultS22 = 'S09';
+               		}
+               		S22_b.style.visibility = 'visible';
+               		break;
+           		}
+           	}
+       	}
+	}
+}
+
+function Verify() {
+     if (document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_GIORNO_DATA_ARRIVO%>.value.length==1)
+         document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_GIORNO_DATA_ARRIVO%>.value='0'+document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_GIORNO_DATA_ARRIVO%>.value;
+     if (document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_MESE_DATA_ARRIVO%>.value.length==1)
+         document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_MESE_DATA_ARRIVO%>.value='0'+document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_MESE_DATA_ARRIVO%>.value;
+
+     if (document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_GIORNO_FINE_PENA%>.value.length==1)
+         document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_GIORNO_FINE_PENA%>.value='0'+document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_GIORNO_FINE_PENA%>.value;
+     if (document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_MESE_FINE_PENA%>.value.length==1)
+         document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_MESE_FINE_PENA%>.value='0'+document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_MESE_FINE_PENA%>.value;
+
+     // Controllo obbligatorietà campi S22.
+     var progrS22=document.LoadInserisciFascicoloUDS.<%= ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.value;
+     var annoS22=document.LoadInserisciFascicoloUDS.<%= ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.value;
+
+     if (resultS22 == 'S22' && annoS22 == "") {
+       	alert("Campo Anno del Procedimento di Esecuzione della Misura Alternativa Obbligatorio");
+       	document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.focus();
+       	return false;
+     }
+     if (resultS22 == 'U004' && annoS22 == "") {
+       	alert("Campo Anno dell'ordinanza Obbligatorio");
+      	document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.focus();
+       	return false;
+     }
+
+     // 19/07/2007 Controlli Sanzioni Sostitutive
+     if (resultS22 == 'S12' && annoS22 == "") {
+       	alert("Campo Anno del Procedimento di Esecuzione della Sanzione Sostitutiva Obbligatorio");
+       	document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.focus();
+       	return false;
+     }
+     if (resultS22 == 'U019' && annoS22 == "") {
+       	alert("Campo Anno dell'Ordinanza Obbligatorio");
+       	document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.focus();
+       	return false;
+     }
+     
+     // MEV_2023-35 - 05/2024 PENE SOSTITUTIVE
+     if (resultS22 == 'S30' && annoS22 == "") {
+         alert("Campo Anno del Procedimento di Esecuzione della Pena Sostitutiva Obbligatorio");
+         document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.focus();
+         return false;
+     }
+     if (resultS22 == 'U126' && annoS22 == "") {
+         alert("Campo Anno dell'Ordinanza Obbligatorio");
+         document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.focus();
+         return false;
+     }
+     // MEV_2023-35 - 05/2024 PENE SOSTITUTIVE - FINE
+     
+     // 29/04/2011 Controlli Misure Sicurezza
+     if (resultS22 == 'S09' && annoS22 == "") {
+       	alert("Campo Anno del Procedimento di Esecuzione della Misura Sicurezza Obbligatorio");
+       	document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.focus();
+       	return false;
+     }
+     if (resultS22 == 'U024' && annoS22 == "") {
+       	alert("Campo Anno dell'Ordinanza Obbligatorio");
+       	document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.focus();
+       	return false;
+     }
+
+     frmvalidator.addValidation("<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>","maxlen=4","La lunghezza massima per l'Anno Fascicolo è di 4 caratteri");
+     frmvalidator.addValidation("<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>","minlen=4","La lunghezza minima per l'Anno Fascicolo è di 4 caratteri");
+     frmvalidator.addValidation("<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>","numeric");
+
+     if (resultS22 == 'S22' && progrS22 == "") {
+       	alert("Campo Progressivo del Procedimento di Esecuzione della Misura Alternativa Obbligatorio");
+       	document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.focus();
+       	return false;
+     }
+     if (resultS22 == 'U004' && progrS22 == "") {
+       	alert("Campo Progressivo dell'Ordinanza Obbligatorio");
+       	document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.focus();
+       	return false;
+     }
+
+     // 19/07/2007 Controlli Sanzioni Sostitutive
+     if (resultS22 == 'S12' && progrS22 == "") {
+       	alert("Campo Progressivo del Procedimento di Esecuzione della Sanzione Sostitutiva Obbligatorio");
+      	document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.focus();
+       	return false;
+     }
+     if (resultS22 == 'U019' && progrS22 == "") {
+       	alert("Campo Progressivo dell'Ordinanza Obbligatorio");
+       	document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.focus();
+       	return false;
+     }
+
+     // MEV_2023-35 - 05/2024 PENE SOSTITUTIVE
+     if (resultS22 == 'S30' && progrS22 == "") {
+         alert("Campo Progressivo del Procedimento di Esecuzione della Pena Sostitutiva Obbligatorio");
+         document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.focus();
+         return false;
+     }
+     if (resultS22 == 'U126' && progrS22 == "") {
+         alert("Campo Progressivo dell'Ordinanza Obbligatorio");
+         document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.focus();
+         return false;
+     }     
+     // MEV_2023-35 - 05/2024 PENE SOSTITUTIVE - FINE
+     
+     // 24/04/2011 Controlli Misure Sicurezza
+     if (resultS22 == 'S09' && progrS22 == "") {
+       	alert("Campo Progressivo del Procedimento di Esecuzione della Misura Sicurezza Obbligatorio");
+       	document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.focus();
+       	return false;
+     }
+     if (resultS22 == 'U024' && progrS22 == "") {
+       	alert("Campo Progressivo dell'Ordinanza Obbligatorio");
+       	document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.focus();
+       	return false;
+     }
+
+     frmvalidator.addValidation("<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>","maxlen=6","La lunghezza massima per il Numero Fascicolo è di 6 caratteri");
+     frmvalidator.addValidation("<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>","numeric");
+
+     // Controllo obbligatorietà tipo atto.
+     var tipoAtto=document.LoadInserisciFascicoloUDS.<%= ICostantiFascicoloSius.CAMPO_COD_TIPO_ATTO%>[document.LoadInserisciFascicoloUDS.<%= ICostantiFascicoloSius.CAMPO_COD_TIPO_ATTO%>.selectedIndex].value;
+     var modalita='<%=modalita%>';
+     if (tipoAtto == '-' && modalita != 'M') {
+       	alert("Il Campo Tipo Atto è obbligatorio");
+       	return false;
+     }
+
+     // Controllo della data atto solo se valorizzata.
+     var data_atto=document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_GIORNO_DATA_ATTO%>.value+'/'+document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_MESE_DATA_ATTO%>.value+'/'+document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_ANNO_DATA_ATTO%>.value;
+     var data_sistema='<%=DateUtils.getSysDate("dd/MM/yyyy")%>'
+     if (data_atto != '//') {
+     	if (!ControllaData(data_atto)) {
+          alert('Data atto non valida');
+          return false;
+       	}
+    		// Controllo della data atto <= data di sistema
+       	if (!CompareDate(data_atto, data_sistema)) {
+          alert('Data atto > della data odierna');
+          return false;
+       	}
 	}
 
-	function Verify() {
-        if (document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_GIORNO_DATA_ARRIVO%>.value.length==1)
-            document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_GIORNO_DATA_ARRIVO%>.value='0'+document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_GIORNO_DATA_ARRIVO%>.value;
-        if (document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_MESE_DATA_ARRIVO%>.value.length==1)
-            document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_MESE_DATA_ARRIVO%>.value='0'+document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_MESE_DATA_ARRIVO%>.value;
-
-        if (document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_GIORNO_FINE_PENA%>.value.length==1)
-            document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_GIORNO_FINE_PENA%>.value='0'+document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_GIORNO_FINE_PENA%>.value;
-        if (document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_MESE_FINE_PENA%>.value.length==1)
-            document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_MESE_FINE_PENA%>.value='0'+document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_MESE_FINE_PENA%>.value;
-
-        // Controllo obbligatorietà campi S22.
-        var progrS22=document.LoadInserisciFascicoloUDS.<%= ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.value;
-        var annoS22=document.LoadInserisciFascicoloUDS.<%= ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.value;
-
-        if (resultS22 == 'S22' && annoS22 == "") {
-          	alert("Campo Anno del Procedimento di Esecuzione della Misura Alternativa Obbligatorio");
-          	document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.focus();
-          	return false;
-        }
-        if (resultS22 == 'U004' && annoS22 == "") {
-          	alert("Campo Anno dell'ordinanza Obbligatorio");
-         	document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.focus();
-          	return false;
-        }
-
-        // 19/07/2007 Controlli Sanzioni Sostitutive
-        if (resultS22 == 'S12' && annoS22 == "") {
-          	alert("Campo Anno del Procedimento di Esecuzione della Sanzione Sostitutiva Obbligatorio");
-          	document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.focus();
-          	return false;
-        }
-        if (resultS22 == 'U019' && annoS22 == "") {
-          	alert("Campo Anno dell'Ordinanza Obbligatorio");
-          	document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.focus();
-          	return false;
-        }
-
-        // 29/04/2011 Controlli Misure Sicurezza
-        if (resultS22 == 'S09' && annoS22 == "") {
-          	alert("Campo Anno del Procedimento di Esecuzione della Misura Sicurezza Obbligatorio");
-          	document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.focus();
-          	return false;
-        }
-        if (resultS22 == 'U024' && annoS22 == "") {
-          	alert("Campo Anno dell'Ordinanza Obbligatorio");
-          	document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.focus();
-          	return false;
-        }
-
-        frmvalidator.addValidation("<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>","maxlen=4","La lunghezza massima per l'Anno Fascicolo è di 4 caratteri");
-        frmvalidator.addValidation("<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>","minlen=4","La lunghezza minima per l'Anno Fascicolo è di 4 caratteri");
-        frmvalidator.addValidation("<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>","numeric");
-
-        if (resultS22 == 'S22' && progrS22 == "") {
-          	alert("Campo Progressivo del Procedimento di Esecuzione della Misura Alternativa Obbligatorio");
-          	document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.focus();
-          	return false;
-        }
-        if (resultS22 == 'U004' && progrS22 == "") {
-          	alert("Campo Progressivo dell'Ordinanza Obbligatorio");
-          	document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.focus();
-          	return false;
-        }
-
-        // 19/07/2007 Controlli Sanzioni Sostitutive
-        if (resultS22 == 'S12' && progrS22 == "") {
-          	alert("Campo Progressivo del Procedimento di Esecuzione della Sanzione Sostitutiva Obbligatorio");
-         	document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.focus();
-          	return false;
-        }
-        if (resultS22 == 'U019' && progrS22 == "") {
-          	alert("Campo Progressivo dell'Ordinanza Obbligatorio");
-          	document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.focus();
-          	return false;
-        }
-
-        // 24/04/2011 Controlli Misure Sicurezza
-        if (resultS22 == 'S09' && progrS22 == "") {
-          	alert("Campo Progressivo del Procedimento di Esecuzione della Misura Sicurezza Obbligatorio");
-          	document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.focus();
-          	return false;
-        }
-        if (resultS22 == 'U024' && progrS22 == "") {
-          	alert("Campo Progressivo dell'Ordinanza Obbligatorio");
-          	document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.focus();
-          	return false;
-        }
-
-        frmvalidator.addValidation("<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>","maxlen=6","La lunghezza massima per il Numero Fascicolo è di 6 caratteri");
-        frmvalidator.addValidation("<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>","numeric");
-
-        // Controllo obbligatorietà tipo atto.
-        var tipoAtto=document.LoadInserisciFascicoloUDS.<%= ICostantiFascicoloSius.CAMPO_COD_TIPO_ATTO%>[document.LoadInserisciFascicoloUDS.<%= ICostantiFascicoloSius.CAMPO_COD_TIPO_ATTO%>.selectedIndex].value;
-        var modalita='<%=modalita%>';
-        if (tipoAtto == '-' && modalita != 'M') {
-          	alert("Il Campo Tipo Atto è obbligatorio");
-          	return false;
-        }
-
-        // Controllo della data atto solo se valorizzata.
-        var data_atto=document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_GIORNO_DATA_ATTO%>.value+'/'+document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_MESE_DATA_ATTO%>.value+'/'+document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_ANNO_DATA_ATTO%>.value;
-        var data_sistema='<%=DateUtils.getSysDate("dd/MM/yyyy")%>'
-        if (data_atto != '//') {
-        	if (!ControllaData(data_atto)) {
-	            alert('Data atto non valida');
-	            return false;
-          	}
-       		// Controllo della data atto <= data di sistema
-          	if (!CompareDate(data_atto, data_sistema)) {
-	            alert('Data atto > della data odierna');
-	            return false;
-          	}
-		}
-
-        // Controllo della data fine pena solo se valorizzata.
-        var data_finepena=document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_GIORNO_FINE_PENA%>.value+'/'+document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_MESE_FINE_PENA%>.value+'/'+document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_ANNO_FINE_PENA%>.value;
-        if (data_finepena != '//') {
-        	if (!ControllaData(data_finepena)) {
-	            alert('Data fine pena non valida');
-	            return false;
-          	}
-          	// Controllo della data fine pena => data di sistema
-          	// STUB 17/01/2005 aggiunta richiesta di proseguimento.
-          	if (!CompareDate( data_sistema, data_finepena)) {
-            	if (!confirm("Data fine pena < Data odierna! Si vuole continuare?"))
-            		return false;
-          	}
-		}
-
-        // Controllo obbligatorietà contenuto.
-        var contenuto=document.LoadInserisciFascicoloUDS.<%= ICostantiFascicoloSius.CAMPO_COD_CONTENUTO%>[document.LoadInserisciFascicoloUDS.<%= ICostantiFascicoloSius.CAMPO_COD_CONTENUTO%>.selectedIndex].value;
-
-        if (contenuto =="-") {
-          	alert("Il Campo Contenuto è obbligatorio");
-          	return false;
-        }
-
-        // Controllo della data arrivo solo se valorizzata.
-        var data_arrivo=document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_GIORNO_DATA_ARRIVO%>.value+'/'+document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_MESE_DATA_ARRIVO%>.value+'/'+document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_ANNO_DATA_ARRIVO%>.value;
-        if (data_arrivo != '//') {
-          	// Controllo di validità della data arrivo.
-          	if (!ControllaData(data_arrivo)) {
-	            alert('Data di arrivo in cancelleria non valida');
-	            return false;
-          	}
-          	// Controllo della data arrivo <= data di sistema
-          	if (!CompareDate(data_arrivo, data_sistema)) {
-	            alert('Data di arrivo > della data odierna');
-	            return false;
-          	}
-          	// Controllo della data atto <= data arrivo
-          	if (data_atto != '//') {
-            	if (!CompareDate(data_atto, data_arrivo)) {
-					alert('Data atto > data arrivo in cancelleria');
-					return false;
-            	}
-          	}
-		}
-      	return true;
+       // Controllo della data fine pena solo se valorizzata.
+       var data_finepena=document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_GIORNO_FINE_PENA%>.value+'/'+document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_MESE_FINE_PENA%>.value+'/'+document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_ANNO_FINE_PENA%>.value;
+       if (data_finepena != '//') {
+       	if (!ControllaData(data_finepena)) {
+            alert('Data fine pena non valida');
+            return false;
+         	}
+         	// Controllo della data fine pena => data di sistema
+         	// STUB 17/01/2005 aggiunta richiesta di proseguimento.
+         	if (!CompareDate( data_sistema, data_finepena)) {
+           	if (!confirm("Data fine pena < Data odierna! Si vuole continuare?"))
+           		return false;
+         	}
 	}
-	</script>
+
+       // Controllo obbligatorietà contenuto.
+       var contenuto=document.LoadInserisciFascicoloUDS.<%= ICostantiFascicoloSius.CAMPO_COD_CONTENUTO%>[document.LoadInserisciFascicoloUDS.<%= ICostantiFascicoloSius.CAMPO_COD_CONTENUTO%>.selectedIndex].value;
+
+       if (contenuto =="-") {
+         	alert("Il Campo Contenuto è obbligatorio");
+         	return false;
+       }
+
+       // Controllo della data arrivo solo se valorizzata.
+       var data_arrivo=document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_GIORNO_DATA_ARRIVO%>.value+'/'+document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_MESE_DATA_ARRIVO%>.value+'/'+document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_ANNO_DATA_ARRIVO%>.value;
+       if (data_arrivo != '//') {
+         	// Controllo di validità della data arrivo.
+         	if (!ControllaData(data_arrivo)) {
+            alert('Data di arrivo in cancelleria non valida');
+            return false;
+         	}
+         	// Controllo della data arrivo <= data di sistema
+         	if (!CompareDate(data_arrivo, data_sistema)) {
+            alert('Data di arrivo > della data odierna');
+            return false;
+         	}
+         	// Controllo della data atto <= data arrivo
+         	if (data_atto != '//') {
+           	if (!CompareDate(data_atto, data_arrivo)) {
+				alert('Data atto > data arrivo in cancelleria');
+				return false;
+           	}
+       	}
+	}
+   	return true;
+}
+</script>
 </head>
 
 <body class="corpo" onload="Javascript:TestS22(document.LoadInserisciFascicoloUDS.<%=ICostantiFascicoloSius.CAMPO_COD_CONTENUTO%>.value );">
@@ -676,6 +731,12 @@ if (modalita.equals("IE") || modalita.equals("IM")) {
 	        		Anno/Progressivo del Procedimento di Esecuzione della Sanzione Sostitutiva
 	        		<font class=ob>(*)</font>
 	      		</div>
+	      		<%-- MEV_2023-35 --%>
+	      		<div id=S22_EPS style="visibility:hidden; position:absolute; top:+256px;" >
+              Anno/Progressivo del Procedimento di Esecuzione della Pena Sostitutiva
+              <font class=ob>(*)</font>
+            </div>
+            <%-- MEV_2023-35 - FINE --%>
 	      		<div id=S22_ems style="visibility:hidden; position:absolute; top:+256px;" >
 	        		Anno/Progressivo del Procedimento di Esecuzione della Misura Sicurezza
 	        		<font class=ob>(*)</font>
@@ -686,7 +747,7 @@ if (modalita.equals("IE") || modalita.equals("IM")) {
 	      		</div>
 	   		</td>
 	    	<td class="label">
-	      		<div id=S22_b style="visibility='hidden';">
+	      		<div id=S22_b style="visibility = 'hidden';">
 	        		<input Title="Anno" type="text" name="<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>" maxlength="4" size="4"
 	        		onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillYear(value)"
 <%

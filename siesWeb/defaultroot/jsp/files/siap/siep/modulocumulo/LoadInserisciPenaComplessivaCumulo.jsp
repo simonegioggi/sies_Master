@@ -714,7 +714,7 @@
             else
             {
                 lParteInteraMulta = lImportoMulta.substring(0,lIndexMulta);
-                lParteDecimaleMulta = lImportoMulta.substring(lIndexMulta+1);;
+                lParteDecimaleMulta = lImportoMulta.substring(lIndexMulta+1);
             }
 %>
 
@@ -750,7 +750,7 @@
             else
             {
                 lParteInteraAmmenda = lImportoAmmenda.substring(0, lIndexAmmenda);
-                lParteDecimaleAmmenda = lImportoAmmenda.substring(lIndexAmmenda+1);;
+                lParteDecimaleAmmenda = lImportoAmmenda.substring(lIndexAmmenda+1);
             }
 %>
                 <input Title="Ammenda" size=8 maxlength=16 value="<%=StringUtils.toZerotoStringaVuota(lParteInteraAmmenda,"")%>" type="text" name="<%=ICostantiPenaComplessivaCumulo.CAMPO_INTERO_IMPORTO_AMMENDA%>" onkeypress="return TicTabNumField(this,event)">
@@ -860,7 +860,7 @@
             else
             {
                 lParteInteraPenaPecSost = lImportoPenaPecSost.substring(0, lIndexPenaPecSost);
-                lParteDecimalePenaPecSost = lImportoPenaPecSost.substring(lIndexPenaPecSost+1);;
+                lParteDecimalePenaPecSost = lImportoPenaPecSost.substring(lIndexPenaPecSost+1);
             }
 %>
                 <input Title="Pena Pecuniaria Sostitutiva" size=8 maxlength=16 value="<%=lParteInteraPenaPecSost%>" type="text" name="<%=ICostantiSanzioneSostitutivaCumulo.CAMPO_INTERO_SANZIONE_PECUNIARIA_MULTA%>" onkeypress="return TicTabNumField(this,event)">
@@ -891,7 +891,7 @@
             else
             {
                 lParteInteraPenaPecSostA = lImportoPenaPecSostA.substring(0, lIndexPenaPecSostA);
-                lParteDecimalePenaPecSostA = lImportoPenaPecSostA.substring(lIndexPenaPecSostA+1);;
+                lParteDecimalePenaPecSostA = lImportoPenaPecSostA.substring(lIndexPenaPecSostA+1);
             }
 %>
                 <input Title="Pena Pecuniaria Sostitutiva" size=8 maxlength=16 value="<%=lParteInteraPenaPecSostA%>" type="text" name="<%=ICostantiSanzioneSostitutivaCumulo.CAMPO_INTERO_SANZIONE_PECUNIARIA_AMMENDA%>" onkeypress="return TicTabNumField(this,event)">

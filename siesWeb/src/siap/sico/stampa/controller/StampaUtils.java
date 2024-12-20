@@ -86,10 +86,10 @@ public class StampaUtils extends SiapController
 		int a = Integer.parseInt(aStr); 
 		
 		if(a>0 && a<27)
-			decStr = Character.toString((char)(a+64));;
+			decStr = Character.toString((char)(a+64));
 		
 		if(a>30 && a<40)
-			decStr = Character.toString((char)(a+18));;
+			decStr = Character.toString((char)(a+18));
 		
 		/* switch (a) {
 		 	//stringhe

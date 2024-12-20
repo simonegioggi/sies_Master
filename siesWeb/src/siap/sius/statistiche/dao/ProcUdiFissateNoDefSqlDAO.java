@@ -179,7 +179,7 @@ public class ProcUdiFissateNoDefSqlDAO extends SIAPSqlDAO {
         aModel.getFascicoloSius().getSoggetto().setCognome(getString("COGNOME"));
         aModel.getFascicoloSius().getSoggetto().setNome(getString("NOME"));
         aModel.getFascicoloSius().getSoggetto().setDataNascita(getDate("DATA_NASCITA"));
-        aModel.getFascicoloSius().getSoggetto().setDescrComuneNascita(getString("DESCR_COMUNE_NASCITA"));;
+        aModel.getFascicoloSius().getSoggetto().setDescrComuneNascita(getString("DESCR_COMUNE_NASCITA"));
         aModel.getFascicoloSius().getSoggetto().setCodProvinciaNascita(getString("COD_PROVINCIA_NASCITA"));
         
         //aModel.setPosizioneGiuridica(new PosizioneGiuridicaModel());

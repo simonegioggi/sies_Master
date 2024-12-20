@@ -151,7 +151,7 @@ if(lUltModPenaPec!= null && lUltModPenaPec.getSanzione()!= null)
      else
      {
        lParteInterSanzionePenaPec = lImportoSanzionePenaPec.substring(0, lIndexPenaPecSost);
-       lParteDecimaleSanzionePenaPec = lImportoSanzionePenaPec.substring(lIndexPenaPecSost+1);;
+       lParteDecimaleSanzionePenaPec = lImportoSanzionePenaPec.substring(lIndexPenaPecSost+1);
      }
 }
 if(lUltModMilitare!= null && lUltModMilitare.getSanzione()!= null)
@@ -167,7 +167,7 @@ if(lUltModMilitare!= null && lUltModMilitare.getSanzione()!= null)
    else
   {
      lParteInterMultaMilitare = lImportoMultaMilitare.substring(0, lIndexPenaMultaMilitare);
-     lParteDecimaleMultaMilitare = lImportoMultaMilitare.substring(lIndexPenaMultaMilitare+1);;
+     lParteDecimaleMultaMilitare = lImportoMultaMilitare.substring(lIndexPenaMultaMilitare+1);
   }
 
 }

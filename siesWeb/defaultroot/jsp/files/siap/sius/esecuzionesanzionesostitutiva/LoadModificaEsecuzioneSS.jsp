@@ -24,6 +24,34 @@
 
   DettaglioFascicoloModel dettaglioFascSiep = (DettaglioFascicoloModel )request.getAttribute("dettaglioFascSiep");
   String lStrOrdDec = (fascicoloEsecuzione.getGeneraleProcedimentoModel().getCodTipoAtto().compareTo("04")==0 ) ? "Ordinanza N.ro : " : "Decreto N.ro : ";
+
+  // MEV_2023-35
+  String codContenuto = fascicoloEsecuzione.getGeneraleProcedimentoModel().getCodOggettoProcedimento();
+  
+  String strTitoloFunzione = "";
+  String strIntestazioneTabella1 = "";
+  String strNumeroProcedimento = "";
+  String strIntestazioneTabella2 = "";
+  String strPeriodo = "";
+  String strLuogo = "";
+  
+  if ("U019".equals(codContenuto)) {
+    strTitoloFunzione = "Modifica dell'Esecuzione Sanzione Sostitutiva";
+    strIntestazioneTabella1 = "Dati di dettaglio attuale dell'Esecuzione Sanzione Sostitutiva ";
+    strNumeroProcedimento = "N.ro Procedimento E.S.S.";
+    strIntestazioneTabella2 = "Dati dell'Esecuzione Sanzione Sostitutiva in modifica ";
+    strPeriodo = "Periodo sanzione";
+    strLuogo = "Luogo esecuzione sanzione";  
+  }
+  else if ("U126".equals(codContenuto)) {
+    strTitoloFunzione = "Modifica dell'Esecuzione Pena Sostitutiva";
+    strIntestazioneTabella1 = "Dati di dettaglio attuale dell'Esecuzione Pena Sostitutiva ";
+    strNumeroProcedimento = "N.ro Procedimento E.P.S.";
+    strIntestazioneTabella2 = "Dati dell'Esecuzione Pena Sostitutiva in modifica ";
+    strPeriodo = "Periodo pena";
+    strLuogo = "Luogo esecuzione pena";      
+  }
+
 %>
 <html>
   <head>
@@ -39,7 +67,7 @@
   <FORM method="POST" name="elenco" action="<%=IWebConstants.PG_MAIN%>" >
   <table>
     <tr><td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
-      <td class="LBG"><font class=label>Funzione :</font>&nbsp;<font class="campo"> Modifica dell'Esecuzione Sanzione Sostitutiva </font></td>
+      <td class="LBG"><font class=label>Funzione :</font>&nbsp;<font class="campo"> <%=strTitoloFunzione %> </font></td>
 
       <!-- BOTTONE DI RITORNO -->
       <jsp:include page="<%=IWebConstants.PG_RETURN_BUTTON%>"/>
@@ -48,10 +76,10 @@
     <table>
       <br>
       <tr>
-        <td class="Titolo" colspan="3">Dati di dettaglio attuale dell'Esecuzione Sanzione Sostitutiva </td>
+        <td class="Titolo" colspan="3"><%=strIntestazioneTabella1 %> </td>
       </tr>
       <tr>
-        <td class="cVerde">N.ro Procedimento E.S.S. : <font class="cVerde"><%=fascicoloEsecuzione.getFascicoloSiusModel().getChiaveAnno()%>/<%=fascicoloEsecuzione.getFascicoloSiusModel().getChiaveProgr()%></font></td>
+        <td class="cVerde"><%=strNumeroProcedimento%> : <font class="cVerde"><%=fascicoloEsecuzione.getFascicoloSiusModel().getChiaveAnno()%>/<%=fascicoloEsecuzione.getFascicoloSiusModel().getChiaveProgr()%></font></td>
         <td class="c" colspan="2">  relativo a: <font class="campo"><%=sanzioneSostitutiva.getDescrTipoSanzione() %></font></td>
       </tr>
       <tr>
@@ -139,12 +167,12 @@
 
   <table cellspacing=0 cellpadding=0>
       <tr>
-        <td class="Titolo" colspan="2">Dati dell'Esecuzione Sanzione Sostitutiva in modifica </td>
+        <td class="Titolo" colspan="2"><%=strIntestazioneTabella2 %> </td>
       </tr>
       <tr>
       	<%if (listaSanzioniSius.size() <=0)
       	{%>
-			<td class="L" width="40%">Periodo sanzione:</td>
+			<td class="L" width="40%"><%=strPeriodo %>:</td>
 			<td class="L" >Anni 
 				<input title="Anni" size="2" maxlength="2" type="text"
 					<%if (sanzioneSostitutiva.getNumAnniSanzione() !=null){%>
@@ -165,7 +193,7 @@
 					name="<%= ICostantiEsecuzioneSS.CAMPO_GIORNO_TERMINE_ATTUALE%>">
 			</td>
 		<%}else{%>
-			<td class="L" width="40%">Periodo sanzione:</td>
+			<td class="L" width="40%"><%=strPeriodo %>:</td>
 			<td class="c">Anni 
 				<%if (sanzioneSostitutiva.getNumAnniSanzione() !=null){%>		
 	        		<font class="campo"><%=sanzioneSostitutiva.getNumAnniSanzione()%>
@@ -202,9 +230,9 @@
 		<%}%>
 	   </tr>
       <tr>
-        <td class="l">Luogo esecuzione sanzione </td>
+        <td class="l"><%=strLuogo %> </td>
         <td class="L">
-          <input name="<%=ICostantiEsecuzioneSS.CAMPO_LUOGO_ESECUZIONE_SANZIONE%>"type="text" maxlength="200" size="50" Title="Luogo Esecuzione Sanzione"
+          <input name="<%=ICostantiEsecuzioneSS.CAMPO_LUOGO_ESECUZIONE_SANZIONE%>"type="text" maxlength="200" size="50" Title="<%=strLuogo %>"
 <%          if ( sanzioneSostitutiva.getLuogoEsecuzioneSanzione() !=null )
             {
 %>            value="<%=sanzioneSostitutiva.getLuogoEsecuzioneSanzione()%>"

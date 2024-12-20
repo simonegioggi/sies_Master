@@ -75,8 +75,8 @@
   <table cellspacing="2" cellpadding="2" style="width: 90%;">
     <tr>
    <tr>
-     <td class="l" width==30%> Data Emissione</td>
-     <td class="l" width==70%><font class="campo"> <%=DateUtils.getDateToString(data_emissione,"dd/MM/yyyy")%></font></td>
+     <td class="l" width="30%"> Data Emissione</td>
+     <td class="l" width="70%"><font class="campo"> <%=DateUtils.getDateToString(data_emissione,"dd/MM/yyyy")%></font></td>
    </tr>
 
    </tr>

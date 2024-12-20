@@ -22,7 +22,7 @@
 
       function  Verify()
       {
-        return true;;
+        return true;
       }
 
     </script>

@@ -103,6 +103,7 @@ Date dataFinePena = (Date)request.getAttribute("dataFinePena");
           S22_ems.style.visibility='hidden';
           S22_ab.style.visibility='hidden';
           S22_b.style.visibility='hidden';
+          S22_EPS.style.visibility='hidden'; // MEV_2023-35
           //alert('Code ='+Code);
           resultS22='';
           for (i = 0; i < document.FormTestS22.LowValue.length ; i++ )
@@ -125,6 +126,7 @@ Date dataFinePena = (Date)request.getAttribute("dataFinePena");
                   S22_a.style.visibility='hidden';
                   S22_aa.style.visibility='hidden'; // 25/07/2007
                   S22_ems.style.visibility='hidden';
+                  S22_EPS.style.visibility='hidden'; // MEV_2023-35
                   resultS22='U004';
                 }
                 else
@@ -134,6 +136,7 @@ Date dataFinePena = (Date)request.getAttribute("dataFinePena");
                   S22_aa.style.visibility='hidden'; // 25/07/2007
                   S22_ems.style.visibility='hidden';
                   S22_ab.style.visibility='hidden';
+                  S22_EPS.style.visibility='hidden'; // MEV_2023-35
                   resultS22='S22';
                 }
                 S22_b.style.visibility='visible';
@@ -149,6 +152,7 @@ Date dataFinePena = (Date)request.getAttribute("dataFinePena");
                   S22_a.style.visibility='hidden';
                   S22_aa.style.visibility='hidden';
                   S22_ems.style.visibility='hidden';
+                  S22_EPS.style.visibility='hidden'; // MEV_2023-35
                   resultS22='U019';
                 }
                 else
@@ -158,11 +162,33 @@ Date dataFinePena = (Date)request.getAttribute("dataFinePena");
                   S22_ab.style.visibility='hidden';
                   S22_aa.style.visibility='visible';
                   S22_ems.style.visibility='hidden';
+                  S22_EPS.style.visibility='hidden'; // MEV_2023-35
                   resultS22='S12';
                 }
                 S22_b.style.visibility='visible';
                 break;
               }
+              // MEV_2023-35 - 05/2024 PENE SOSTITUTIVE
+              if (document.FormTestS22.HighValue[i].value =='S30') {
+                if (document.FormTestS22.LowValue[i].value == 'U126') {
+                    S22_ab.style.visibility='visible';
+                    S22_ab.style.top='-20px';
+                    S22_a.style.visibility='hidden';
+                    S22_aa.style.visibility='hidden';
+                    S22_ems.style.visibility='hidden';
+                    S22_EPS.style.visibility='hidden';
+                    resultS22='U126';
+                } else {
+                    S22_a.style.visibility='hidden';
+                    S22_ab.style.visibility='hidden';
+                    S22_aa.style.visibility='hidden';
+                    S22_ems.style.visibility='hidden';
+                    S22_EPS.style.visibility='visible';
+                    resultS22='S30';
+                }
+                S22_b.style.visibility='visible';
+                break;
+              }              
               // 29/04/2011 MISURE SICUREZZA
               if (document.FormTestS22.HighValue[i].value =='S09')
               {
@@ -173,6 +199,7 @@ Date dataFinePena = (Date)request.getAttribute("dataFinePena");
                   S22_a.style.visibility='hidden';
                   S22_aa.style.visibility='hidden';
                   S22_ems.style.visibility='hidden';
+                  S22_EPS.style.visibility='hidden'; // MEV_2023-35
                   resultS22='U024';
                 }
                 else
@@ -182,6 +209,7 @@ Date dataFinePena = (Date)request.getAttribute("dataFinePena");
                   S22_ab.style.visibility='hidden';
                   S22_aa.style.visibility='hidden';
                   S22_ems.style.visibility='visible';
+                  S22_EPS.style.visibility='hidden'; // MEV_2023-35
                   resultS22='S09';
                 }
                 S22_b.style.visibility='visible';
@@ -260,7 +288,18 @@ Date dataFinePena = (Date)request.getAttribute("dataFinePena");
           document.LoadInserisciFascicoloUDSManuale.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.focus();
           return false;
         }
-        
+        // MEV_2023-35 - 05/2024 PENE SOSTITUTIVE
+        if (resultS22 == 'S30' && annoS22 == "") {
+            alert("Campo Anno del Procedimento di Esecuzione della Pena Sostitutiva Obbligatorio");
+            document.LoadInserisciFascicoloUDSManuale.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.focus();
+            return false;
+        }
+        if (resultS22 == 'U126' && annoS22 == "") {
+            alert("Campo Anno dell'Ordinanza Obbligatorio");
+            document.LoadInserisciFascicoloUDSManuale.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>.focus();
+            return false;
+        }
+        // MEV_2023-35 - 05/2024 PENE SOSTITUTIVE - FINE    
         // 29/04/2011 Controlli Misure Sicurezza
         if(resultS22=='S09' &&
             annoS22 =="" )
@@ -311,7 +350,17 @@ Date dataFinePena = (Date)request.getAttribute("dataFinePena");
           document.LoadInserisciFascicoloUDSManuale.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.focus();
           return false;
         }
-
+        // MEV_2023-35 - 05/2024 PENE SOSTITUTIVE
+        if (resultS22 == 'S30' && progrS22 == "") {
+            alert("Campo Progressivo del Procedimento di Esecuzione della Pena Sostitutiva Obbligatorio");
+            document.LoadInserisciFascicoloUDSManuale.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.focus();
+            return false;
+        }
+        if (resultS22 == 'U126' && progrS22 == "") {
+            alert("Campo Progressivo dell'Ordinanza Obbligatorio");
+            document.LoadInserisciFascicoloUDSManuale.<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>.focus();
+            return false;
+        } 
         // 29/04/2011 Controlli Misure Sicurezza
         if(resultS22=='S09' &&
             progrS22 =="" )
@@ -661,7 +710,13 @@ Date dataFinePena = (Date)request.getAttribute("dataFinePena");
   	      Anno/Progressivo del Procedimento di Esecuzione della Sanzione Sostitutiva
     	    <font class=ob>(*)</font>
       	</div>
-	      <div id=S22_ems style="visibility:hidden; position:absolute; top:+256px;" >
+        <%-- MEV_2023-35 --%>
+        <div id=S22_EPS style="visibility:hidden; position:absolute; top:+256px;" >
+            Anno/Progressivo del Procedimento di Esecuzione della Pena Sostitutiva
+            <font class=ob>(*)</font>
+        </div>
+          <%-- MEV_2023-35 - FINE --%>        	
+	     <div id=S22_ems style="visibility:hidden; position:absolute; top:+256px;" >
   	      Anno/Progressivo del Procedimento di Esecuzione della Misura Sicurezza
     	    <font class=ob>(*)</font>
       	</div>

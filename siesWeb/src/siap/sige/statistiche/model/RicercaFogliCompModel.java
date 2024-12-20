@@ -75,9 +75,9 @@ public class RicercaFogliCompModel extends GenericModel implements ICostantiStat
 	// Numero totale dei procedimenti risultato della ricerca
 	private 	BigDecimal	mNumTotali = new BigDecimal(0);
 	// Numero totale dei procedimenti risultato della ricerca Annullati
-	private 	BigDecimal	mNumAnnullati = new BigDecimal(0);;
+	private 	BigDecimal	mNumAnnullati = new BigDecimal(0);
 	// Numero totale dei procedimenti risultato della ricerca Non Validati
-	private 	BigDecimal	mNumNonValidati = new BigDecimal(0);;
+	private 	BigDecimal	mNumNonValidati = new BigDecimal(0);
 	// Contiene resoconto dei calcoli statistici sulla ricerca effettuata
 	private String mDescCalcoli = "";
 	

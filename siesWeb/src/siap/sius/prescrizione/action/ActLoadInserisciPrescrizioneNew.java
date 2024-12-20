@@ -29,7 +29,7 @@ import siap.sius.fascicolo.model.FascicoloGPModel;
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ActLoadInserisciPrescrizioneNew extends ActionSiap implements ICostantiPrescrizione {
-
+   
 	public String processRequest() throws Exception {
 
 		FascicoloGPModel lFasGPMod = (FascicoloGPModel) getSessionAttribute("fascicoloSiusGP");
@@ -46,6 +46,9 @@ public class ActLoadInserisciPrescrizioneNew extends ActionSiap implements ICost
 		// In caso di Sanzioni Sostitutive o Conversione Pene pecuniarie.
 		if (mCodOggettoProc.equals(ICostantiDepositoOrdinanzaPc.OGG_AUTO_SANZ_SOSTITUTIVE)
 				|| mCodOggettoProc.equals(ICostantiDepositoOrdinanzaPc.OGG_APPL_SANZ_SOSTITUTIVE)
+				// MEV_2023-35 si aggiunge un nuovo codice 
+				|| mCodOggettoProc.equals(ICostantiDepositoOrdinanzaPc.OGG_APPL_PENE_SOSTITUTIVE)
+				// MEV_2023-35 - FINE
 				|| mCodOggettoProc.equals(ICostantiDepositoOrdinanzaPc.OGG_CONV_PENE_PECUNIARIE)) {
 			FiltroPrescrizione = "ESS";
 		}

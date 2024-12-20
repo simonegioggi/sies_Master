@@ -428,7 +428,7 @@ public class StatisticheMSSqlDAO extends SqlDAO {
 				// dataFinaleTemp = "31/12/" + rangeAnni[i];
 				// }
 				// else{
-				// dataInizialeTemp = "01/01/" + rangeAnni[i];;
+				// dataInizialeTemp = "01/01/" + rangeAnni[i];
 				// dataFinaleTemp = dataFinale;
 				// }
 				if (i == 0) {

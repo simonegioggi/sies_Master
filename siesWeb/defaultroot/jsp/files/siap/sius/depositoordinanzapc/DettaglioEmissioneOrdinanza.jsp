@@ -19,7 +19,8 @@
 <%@ page import="siap.sius.depositoordinanzapc.action.ICostantiDepositoOrdinanzaPc"%>
 <%@ page import="siap.sius.depositodecreto.action.ICostantiDepositoDecreto"%>
 <%@ page import="siap.sius.provvedimento.action.ICostantiProvvedimento"%>
-
+<%@ page import="siap.sius.generaleprocedimento.model.GeneraleProcedimentoModel"%>
+<%@ page import="siap.sius.fascicolo.model.FascicoloGPModel"%>
 <%@ page import="siap.sius.magistratorelatore.action.ICostantiMagistratoRelatore"%>
 <%@ page import="siap.sico.template.action.ICostantiTemplate"%>
 <%@ page import="siap.sius.prescrizione.action.ICostantiPrescrizione"%>
@@ -54,7 +55,7 @@
 // Modifica Ordinanza
 //==============================================================================
 BigDecimal IdEvento = (BigDecimal) request.getAttribute("IdEvento");
-UtenteModel lUteMod = (UtenteModel)session.getAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO);
+UtenteModel lUteMod = (UtenteModel) session.getAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO);
 UfficioModel lUffMod = lUteMod.getUfficioUtente();
 String CodUff = new String(lUffMod.getCodTipoUfficio());
 boolean retFlag = false;
@@ -68,12 +69,25 @@ if (modalita != null && modalita.trim().equalsIgnoreCase("M"))
 String titolo = "Dettaglio Ordinanza";
 if (modificaOrdinanza)
 	titolo = "Modifica Ordinanza";
-String UlterioreTitolo="";
-if (datiOrdinanza != null && datiOrdinanza.getOrdinanza() != null
-		&& datiOrdinanza.getOrdinanza().getCodTipoOrdinanza() != null
-		&& datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo("VC") == 0) {
-	UlterioreTitolo = " Rimedi Risarcitori Violazione Art.3 CEDU";
+
+// MEV_2023-35: recupero info sul fascicolo per oggetto procedimento
+String codOggettoProcedimento = "", codice = "";
+if (datiOrdinanza != null && datiOrdinanza.getOrdinanza() != null && datiOrdinanza.getOrdinanza().getCodTipoOrdinanza() != null)
+	codice = datiOrdinanza.getOrdinanza().getCodTipoOrdinanza();
+if (datiOrdinanza != null && datiOrdinanza.getOrdinanza() != null && datiOrdinanza.getOrdinanza().getOggettoProcedimento() != null)
+	codOggettoProcedimento = datiOrdinanza.getOrdinanza().getOggettoProcedimento();
+if (!Utils.isPresent(codOggettoProcedimento)) {
+	FascicoloGPModel fgpm = (FascicoloGPModel) session.getAttribute("fascicoloSiusGP");
+	GeneraleProcedimentoModel gpm = new GeneraleProcedimentoModel();
+	if (!Utils.isNullObj(fgpm.getGeneraleProcedimentoModel()))
+		gpm = fgpm.getGeneraleProcedimentoModel();
+	if (Utils.isPresent(gpm.getCodOggettoProcedimento()))
+		codOggettoProcedimento = gpm.getCodOggettoProcedimento();
 }
+
+String UlterioreTitolo="";
+if (codice.compareTo("VC") == 0)
+	UlterioreTitolo = " Rimedi Risarcitori Violazione Art.3 CEDU";
 if (UlterioreTitolo.compareTo("") != 0)
 	titolo += UlterioreTitolo;
 %>
@@ -140,8 +154,7 @@ if (Modificabile.compareTo("SI") == 0)  {
 <%
 }
 boolean rimessioneAtti = false;
-if ((datiOrdinanza.getOrdinanza() != null) && (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza() != null)
-		&& (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RIMESSIONE_ATTI) == 0))
+if (codice.compareTo(ICostantiDepositoOrdinanzaPc.RIMESSIONE_ATTI) == 0)
 	rimessioneAtti = true;
 if ((Modificabile.compareTo("SI") == 0) && (!rimessioneAtti)) {
 %>
@@ -178,8 +191,7 @@ if ((Modificabile.compareTo("SI") == 0) && (rimessioneAtti)) {
     </tr>
 </table>
 <%
-if ((datiOrdinanza != null && datiOrdinanza.getOrdinanza() != null && datiOrdinanza.getOrdinanza().getCodTipoOrdinanza() != null
-		&& datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_ORDINANZA) != 0 )
+if (codice.compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_ORDINANZA) != 0
 		|| OrdinanzaRevocata == null || OrdinanzaRevocata.getOrdinanza() == null
 		|| OrdinanzaRevocata.getOrdinanza().getIdDepositoOrdinanzaPc() == null) {
 %>
@@ -190,22 +202,37 @@ if ((datiOrdinanza != null && datiOrdinanza.getOrdinanza() != null && datiOrdina
 <table cellspacing="4" cellpadding="4" width="95%">
 	<tr>
       	<td>
-      		<input Title="Id Evento" type="hidden" name="<%= ICostantiEvento.CAMPO_ID_EVENTO %>" value="<%=IdEvento%>">
+      		<input type="hidden" name="<%= ICostantiEvento.CAMPO_ID_EVENTO %>" value="<%=IdEvento%>">
    		</td>
     </tr>
 	<tr>
     	<td class="l">Tipo di Ordinanza</td>
 <%
-String codice = datiOrdinanza.getOrdinanza().getCodTipoOrdinanza();
-if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RINVIO_ESECUZIONE_MSIC) == 0)
+// MEV_2023-35: aggiunto controllo per gestione codice Oggetto Procedimento
+String tipoOrdinanza = "";
+if (Utils.isPresent(codice))
+	tipoOrdinanza = DecodificheUtils.getDescbyCode(DecodificheManager.getInstance().getTipoOrdinanza(), codice);
+
+if ("U134".equals(codOggettoProcedimento) || "U126".equals(codOggettoProcedimento))
+	tipoOrdinanza = tipoOrdinanza.replace("Sanzioni", "Pene");
+else if ("C064".equals(codOggettoProcedimento))
+	tipoOrdinanza += " Sostitutiva";
+else if ("C065".equals(codOggettoProcedimento))
+	tipoOrdinanza += " Sostitutiva Derivante da Conversione Pene Pecuniarie";
+else if  ("U143".equals(codOggettoProcedimento))
+	tipoOrdinanza = "Ordinanza Conversione Pene Pecuniarie irrogate dal GdP";
+else if ("U145".equals(codOggettoProcedimento))
+	tipoOrdinanza = "Ordinanza Rateizzazione Pena Pecuniaria Sostitutiva";
+else if ("U140".equals(codOggettoProcedimento))
+  tipoOrdinanza += " - Pene Sostitutive ";
+else if ("U146".equals(codOggettoProcedimento))
+  tipoOrdinanza = " Ordinanza Revoca pena sostitutiva conseguente alla conversione pena pecuniaria per avvenuto pagamento";
+// FINE MEV_2023-35
+
+if (codice.compareTo(ICostantiDepositoOrdinanzaPc.RINVIO_ESECUZIONE_MSIC) == 0)
 	codice = "42";
 %>
-    	<td class="l">
-    		<font class="campo">
-    			<%=(datiOrdinanza != null &&  datiOrdinanza.getOrdinanza() != null && datiOrdinanza.getOrdinanza().getCodTipoOrdinanza()!= null) ?
-    					(DecodificheUtils.getDescbyCode(DecodificheManager.getInstance().getTipoOrdinanza(), codice)) : ""%>
-			</font>
-		</td>
+    	<td class="l"><font class="campo"><%=tipoOrdinanza%></font></td>
 <%
 if (!modificaOrdinanza) {
 %>
@@ -271,19 +298,19 @@ if (datiOrdinanza.getEvento().getEveIdEventoRevoca() != null) {
 	</tr>
 <%
 }
-if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza() != null) {
-	if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.LIBERAZIONE_ANTICIPATA) == 0
-			|| datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.LICENZA) == 0
-			|| datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RECLAMO_LIBERAZIONE_ANTICIPATA) == 0
-			|| datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_LIBERAZIONE_ANTICIPATA) == 0) {
+if (codice != null) {
+	if (codice.compareTo(ICostantiDepositoOrdinanzaPc.LIBERAZIONE_ANTICIPATA) == 0
+			|| codice.compareTo(ICostantiDepositoOrdinanzaPc.LICENZA) == 0
+			|| codice.compareTo(ICostantiDepositoOrdinanzaPc.RECLAMO_LIBERAZIONE_ANTICIPATA) == 0
+			|| codice.compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_LIBERAZIONE_ANTICIPATA) == 0) {
 %>
 	<tr>
       	<td class="L"><font class="label">Totale giorni concessi</font></td>
       	<td class="L"><font class="campo"><%=StringUtils.toStringJSP(datiOrdinanza.getOrdinanza().getNumGiorniLibanticipata(), "-")%></font></td>
     </tr>
 <%
-	} else if(datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.VIOLAZIONE_CEDU) == 0
-			|| datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RECLAMI_CEDU) == 0) {
+	} else if(codice.compareTo(ICostantiDepositoOrdinanzaPc.VIOLAZIONE_CEDU) == 0
+			|| codice.compareTo(ICostantiDepositoOrdinanzaPc.RECLAMI_CEDU) == 0) {
 		if (datiOrdinanza.getOrdinanza().getNumGiorniRiduzionePena() != null
 				&& datiOrdinanza.getOrdinanza().getNumGiorniRiduzionePena().intValue() > 0) {
 %>
@@ -313,7 +340,7 @@ if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza() != null) {
 	</tr>
 <%
 		}
-	} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.GENERICA) == 0 ) {
+	} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.GENERICA) == 0 ) {
 %>
 	<tr>
       	<td class="L"><font class="label">Dispositivo</font></td>
@@ -324,7 +351,7 @@ if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza() != null) {
       	<td class="l"><font class="campo"> <%=StringUtils.toStringJSP( datiOrdinanza.getOrdinanza().getUlterioreDescrizione(), "-")%></font></td>
     </tr>
 <%
-	} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RICHIESTA_OTTEMPERANZA) == 0 ) {
+	} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.RICHIESTA_OTTEMPERANZA) == 0 ) {
 %>
     <tr>
       	<td class="L"><font class="label">Dispositivo</font></td>
@@ -355,7 +382,7 @@ if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza() != null) {
       	<td class="l"><font class="campo"><%=StringUtils.toStringJSP(datiOrdinanza.getOrdinanza().getDescrCommActa(), "-")%></font></td>
     </tr>
 <%
-	} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.REMISSIONE_DEBITO) == 0) {
+	} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.REMISSIONE_DEBITO) == 0) {
 %>
     <tr>
       	<td class="L"><font class="label">Dispositivo</font></td>
@@ -366,20 +393,20 @@ if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza() != null) {
       	<td class="l"><font class="campo"><%=StringUtils.toStringJSP( datiOrdinanza.getOrdinanza().getUlterioreDescrizione(), "-")%></font></td>
     </tr>
 <%
-	} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_ORDINANZA) == 0
-			|| datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_SANZIONE_SOSTITUTIVA) == 0) {
+	} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_ORDINANZA) == 0
+			|| codice.compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_SANZIONE_SOSTITUTIVA) == 0) {
 %>
     <tr>
       	<td class="l">Ulteriore descrizione della decisione</td>
       	<td class="l"><font class="campo"> <%=StringUtils.toStringJSP(datiOrdinanza.getOrdinanza().getUlterioreDescrizione(), "-")%></font></td>
     </tr>
 <%
-	} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.MISURA_SICUREZZA) == 0
-			|| datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.TRASFORMA_MISURA_SICUREZZA) == 0
-			|| datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.ORD_SOSPENSIONE_ESECUZIONE_MS) == 0
+	} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.MISURA_SICUREZZA) == 0
+			|| codice.compareTo(ICostantiDepositoOrdinanzaPc.TRASFORMA_MISURA_SICUREZZA) == 0
+			|| codice.compareTo(ICostantiDepositoOrdinanzaPc.ORD_SOSPENSIONE_ESECUZIONE_MS) == 0
         	// MEV_39: aggiunto codice 42
-        	|| (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RINVIO_ESECUZIONE_MS) == 0
-        	|| datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RINVIO_ESECUZIONE_MSIC) == 0)) {
+        	|| (codice.compareTo(ICostantiDepositoOrdinanzaPc.RINVIO_ESECUZIONE_MS) == 0
+        	|| codice.compareTo(ICostantiDepositoOrdinanzaPc.RINVIO_ESECUZIONE_MSIC) == 0)) {
 		if (datiOrdinanza.getEvento().getCodMotivo() != null && (datiOrdinanza.getEvento().getCodMotivo().equals("2670")
 				|| datiOrdinanza.getEvento().getCodMotivo().equals("2440") || datiOrdinanza.getEvento().getCodMotivo().equals("2441")
 				|| datiOrdinanza.getEvento().getCodMotivo().equals("2442"))
@@ -395,13 +422,13 @@ if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza() != null) {
 				&& (datiOrdinanza.getEvento().getCodMotivo().equals("2610")
 						|| datiOrdinanza.getEvento().getCodMotivo().equals("2611")
 						// MEV_39: aggiunto codice 42
-        				|| (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RINVIO_ESECUZIONE_MS) == 0
-       		        	|| datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RINVIO_ESECUZIONE_MSIC) == 0))) {
+        				|| (codice.compareTo(ICostantiDepositoOrdinanzaPc.RINVIO_ESECUZIONE_MS) == 0
+       		        	|| codice.compareTo(ICostantiDepositoOrdinanzaPc.RINVIO_ESECUZIONE_MSIC) == 0))) {
         	if (datiOrdinanza.getOrdinanza().getDataInizioPeriodo() != null) {
 %>
 	<tr>
 <%
-				if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RINVIO_ESECUZIONE_MSIC) == 0) {
+				if (codice.compareTo(ICostantiDepositoOrdinanzaPc.RINVIO_ESECUZIONE_MSIC) == 0) {
 %>
 		<td class="l">Data Decorrenza Differimento Esecuzione</td>
 <%
@@ -440,8 +467,8 @@ if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza() != null) {
 <%
 			}
         	// MEV_39: aggiunto codice 42
-        	if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RINVIO_ESECUZIONE_MS) == 0
-        		|| datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RINVIO_ESECUZIONE_MSIC) == 0) {
+        	if (codice.compareTo(ICostantiDepositoOrdinanzaPc.RINVIO_ESECUZIONE_MS) == 0
+        		|| codice.compareTo(ICostantiDepositoOrdinanzaPc.RINVIO_ESECUZIONE_MSIC) == 0) {
         		if (Utils.isPresent(datiOrdinanza.getOrdinanza().getLuogoSvolgimentoProva())) {
 %>
 	<tr>
@@ -545,8 +572,8 @@ if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza() != null) {
 	}
 }
 if (!modificaOrdinanza) {
-	if ((datiOrdinanza.getOrdinanza().getCodTipoOrdinanza() != null)
-			&& (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RIMESSIONE_ATTI) == 0)
+	if ((codice != null)
+			&& (codice.compareTo(ICostantiDepositoOrdinanzaPc.RIMESSIONE_ATTI) == 0)
 			&& (datiOrdinanza.getOrdinanza().getCodNaturaProvvedimento() != null)) {
 %>
 	<tr>
@@ -557,8 +584,8 @@ if (!modificaOrdinanza) {
 	</tr>
 <%
 	}
-   	if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza() != null
-   			&& datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.MISURA_SICUREZZA ) == 0) {
+   	if (codice != null
+   			&& codice.compareTo(ICostantiDepositoOrdinanzaPc.MISURA_SICUREZZA ) == 0) {
    		if (misuraSicurezza != null && misuraSicurezza.getDataDecorrenza() != null) {
 %>
 	<tr>
@@ -572,8 +599,8 @@ if (!modificaOrdinanza) {
    	}
 	// MERGE v10: aggiunte or condition
  		if (datiOrdinanza.getTenori() != null && datiOrdinanza.getTenori().length > 0) {
-   		if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza() != null
-   				&& datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().equals(ICostantiDepositoOrdinanzaPc.TRASFORMA_MISURA_SICUREZZA)
+   		if (codice != null
+   				&& codice.equals(ICostantiDepositoOrdinanzaPc.TRASFORMA_MISURA_SICUREZZA)
    				&& ("0133".equals(datiOrdinanza.getTenori()[0].getCodEsitoTenore())
    						|| "0134".equals(datiOrdinanza.getTenori()[0].getCodEsitoTenore())
    						|| "0053".equals(datiOrdinanza.getTenori()[0].getCodEsitoTenore()))) {
@@ -697,8 +724,8 @@ if (!modificaOrdinanza) {
 		}
         // Inserimento del Destinatario nel caso della Rimessione Atti 
         if ((datiOrdinanza.getOrdinanza() != null)
-        		&& (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza() != null)
-        		&& (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RIMESSIONE_ATTI)) == 0) {
+        		&& (codice != null)
+        		&& (codice.compareTo(ICostantiDepositoOrdinanzaPc.RIMESSIONE_ATTI)) == 0) {
 %>
 		<td class="l" width=30% ><%=datiOrdinanza.getOrdinanza().getOggettoProcedimento()%></td>
 <%
@@ -715,8 +742,8 @@ if (!modificaOrdinanza) {
 </table>
 <%
 // Controllo su tipo Ordinanza per determinare se visualizzare le Misure Sicurezza
-if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza() != null
-		&& datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.MISURA_SICUREZZA) == 0) {
+if (codice != null
+		&& codice.compareTo(ICostantiDepositoOrdinanzaPc.MISURA_SICUREZZA) == 0) {
 %>
 <jsp:include page="<%=ICostantiSiusMisuraSicurezza.PG_INCLUDE_ELENCO_MISURE%>">
 	<jsp:param name="EveIdEvento" value="<%=IdEvento%>"/>
@@ -725,8 +752,8 @@ if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza() != null
 <%
 }
 // Controllo su tipo Ordinanza per determinare se visualizzare le Esecuzioni Misure Sicurezza
-if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza() != null
-		&& datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.TRASFORMA_MISURA_SICUREZZA) == 0) {
+if (codice != null
+		&& codice.compareTo(ICostantiDepositoOrdinanzaPc.TRASFORMA_MISURA_SICUREZZA) == 0) {
 %>
 <jsp:include page="<%=ICostantiEsecuzioneMS.PG_ELENCO_ESECUZIONI_MS%>"/>
 <%
@@ -748,37 +775,42 @@ if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza() != null
 	}
 }
 // Controllo su tipo Ordinanza per determinare se visualizzare le Prescrizioni
-if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza() != null
-		&& datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_MA) != 0
- 		&& datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RICOVERO_OPG) != 0
- 		&& datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.ESTINZIONE_PENA) != 0
-		&& datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_LC) != 0
-		&& datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.EST_PENA_LIB_CONDIZIONALE) != 0
-		&& datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.CONC_RINVIO_EP) != 0
-		&& datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.PROROGA_DETENZIONE_SPECIALE) != 0
-		&& datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.PROROGA_DETENZIONE_DOMICILIARE) != 0
-		&& datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.SOSPENSIONE_ESECUTIVA_ORDINANZA) != 0
-		&& datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RECLAMO_PERMESSO) != 0
-		&& datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RECLAMO_LICENZA) != 0
-		&& datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RECLAMO_SCOMPUTO) != 0
-		&& datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RECLAMO_REVOCA_LICENZA_PERMESSO) != 0
-		&& datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.LIBERAZIONE_ANTICIPATA) != 0
-		&& datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_ORDINANZA) != 0
-		&& datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoDecreto.RICOVERO_OPG_OSS_PSICHE) != 0
-		&& datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoDecreto.DECLARATORIA_ESTINZIONE_SS) != 0
-		&& datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoDecreto.MODIFICA_PERMANENTE_SS) != 0
-		&& datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoDecreto.SOSPENSIONE_ESECUZIONE_SS) != 0
-		&& datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_SANZIONE_SOSTITUTIVA) != 0
-		&& datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_SANZIONI_SOSTITUTIVE) != 0
-		&& datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RINVIO_SANZIONI_SOSTITUTIVE) != 0
-		&& datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RIMESSIONE_ATTI) != 0
-		&& datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.VIOLAZIONE_CEDU) != 0
-		&& datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RECLAMI_CEDU) != 0) {
+if (codice != null
+		&& codice.compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_MA) != 0
+ 		&& codice.compareTo(ICostantiDepositoOrdinanzaPc.RICOVERO_OPG) != 0
+ 		&& codice.compareTo(ICostantiDepositoOrdinanzaPc.ESTINZIONE_PENA) != 0
+		&& codice.compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_LC) != 0
+		&& codice.compareTo(ICostantiDepositoOrdinanzaPc.EST_PENA_LIB_CONDIZIONALE) != 0
+		&& codice.compareTo(ICostantiDepositoOrdinanzaPc.CONC_RINVIO_EP) != 0
+		&& codice.compareTo(ICostantiDepositoOrdinanzaPc.PROROGA_DETENZIONE_SPECIALE) != 0
+		&& codice.compareTo(ICostantiDepositoOrdinanzaPc.PROROGA_DETENZIONE_DOMICILIARE) != 0
+		&& codice.compareTo(ICostantiDepositoOrdinanzaPc.SOSPENSIONE_ESECUTIVA_ORDINANZA) != 0
+		&& codice.compareTo(ICostantiDepositoOrdinanzaPc.RECLAMO_PERMESSO) != 0
+		&& codice.compareTo(ICostantiDepositoOrdinanzaPc.RECLAMO_LICENZA) != 0
+		&& codice.compareTo(ICostantiDepositoOrdinanzaPc.RECLAMO_SCOMPUTO) != 0
+		&& codice.compareTo(ICostantiDepositoOrdinanzaPc.RECLAMO_REVOCA_LICENZA_PERMESSO) != 0
+		&& codice.compareTo(ICostantiDepositoOrdinanzaPc.LIBERAZIONE_ANTICIPATA) != 0
+		&& codice.compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_ORDINANZA) != 0
+		&& codice.compareTo(ICostantiDepositoDecreto.RICOVERO_OPG_OSS_PSICHE) != 0
+		&& codice.compareTo(ICostantiDepositoDecreto.DECLARATORIA_ESTINZIONE_SS) != 0
+		&& codice.compareTo(ICostantiDepositoDecreto.MODIFICA_PERMANENTE_SS) != 0
+		&& codice.compareTo(ICostantiDepositoDecreto.SOSPENSIONE_ESECUZIONE_SS) != 0
+		&& codice.compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_SANZIONE_SOSTITUTIVA) != 0
+		&& codice.compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_SANZIONI_SOSTITUTIVE) != 0
+		&& codice.compareTo(ICostantiDepositoOrdinanzaPc.RINVIO_SANZIONI_SOSTITUTIVE) != 0
+		&& codice.compareTo(ICostantiDepositoOrdinanzaPc.RIMESSIONE_ATTI) != 0
+		&& codice.compareTo(ICostantiDepositoOrdinanzaPc.VIOLAZIONE_CEDU) != 0
+		&& codice.compareTo(ICostantiDepositoOrdinanzaPc.RECLAMI_CEDU) != 0) {
 	// 12-03-2009 Caso Applicazione Sanzione Sostitutiva o Conversione Pene Pecuniarie (Tipo di Prescrizioni diverso)
 	// 08-04-2011 Stessa gestione per Applicazione Misure Sicurezza
-   	if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.APPLICAZIONE_SANZIONI_SOSTITUTIVE) == 0
-   			|| datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_PENE_PECUNIARIE) == 0
-   			|| datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.MISURA_SICUREZZA) == 0) {
+   	if (codice.compareTo(ICostantiDepositoOrdinanzaPc.APPLICAZIONE_SANZIONI_SOSTITUTIVE) == 0
+   	    	// MEV_2023-35 - Si aggiungono le PENE SOSTITUTIVE
+   	    	|| codice.compareTo(ICostantiDepositoOrdinanzaPc.APPLICAZIONE_PENE_SOSTITUTIVE) == 0
+   	    	// MEV_2023-35 - FINE
+   			|| codice.compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_PENE_PECUNIARIE) == 0
+   			|| codice.compareTo(ICostantiDepositoOrdinanzaPc.MISURA_SICUREZZA) == 0
+			// MEV_2023-35: aggiunto codice per 'SR' (U142,U143,U145)
+			|| codice.compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_PENE_PECUNIARIE_MANCATO_PAGAMENTO) == 0) {
 %>
 <jsp:include page="<%=ICostantiPrescrizione.PG_INCLUDE_PRESCRIZIONI%>">
 	<jsp:param name="EveIdEvento" value="<%=IdEvento%>" />
@@ -861,8 +893,8 @@ if (!modificaOrdinanza) {
 %>
 <form name="dettaglio">
 <%
-	if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza() != null) {
-  		if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.LIBERAZIONE_ANTICIPATA) == 0) {
+	if (codice != null) {
+  		if (codice.compareTo(ICostantiDepositoOrdinanzaPc.LIBERAZIONE_ANTICIPATA) == 0) {
 			if (datiOrdinanza.getOrdinanza().getDescrUfficioMagistratoComp() != null && datiOrdinanza.getOrdinanza().getDescrUfficioMagistratoComp().length() > 0) {
 %>
 <table cellspacing="4" cellpadding="4">
@@ -896,80 +928,80 @@ if (!modificaOrdinanza) {
 </table>  
 <jsp:include page="<%=ICostantiLibertaAnticipata.PG_DETTAGLIO_LIBANTICIPATA%>"/>
 <%
-		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.LICENZA) == 0) {
+		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.LICENZA) == 0) {
 %>
 <jsp:include page="<%=ICostantiLicenzaLibanticipata.PG_LOAD_DETTAGLIOLICENZALIBANTICIPATA%>"/>
 <%
-   		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.INDULTINO) == 0) {
+   		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.INDULTINO) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_INDULTINO%>"/>
 <%
-		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.MISURA_ALTERNATIVA) == 0) {
+		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.MISURA_ALTERNATIVA) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_MA%>"/>
 <%
-   		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_MA) == 0) {
+   		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_MA) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_REVOCA_MA%>"/>
 <%
-   		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RICOVERO_OPG) == 0) {
+   		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.RICOVERO_OPG) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_RICOVERO_OPG%>"/>
 <%
-   		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.ESTINZIONE_PENA) == 0) {
+   		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.ESTINZIONE_PENA) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_ESTINZIONE_PENA%>"/>
 <%
-   		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_LC) == 0) {
+   		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_LC) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_REVOCA_LC%>"/>
 <%
-	   	} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.EST_PENA_LIB_CONDIZIONALE) == 0) {
+	   	} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.EST_PENA_LIB_CONDIZIONALE) == 0) {
 %>
       	 	<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_EST_PENA_LIB_CONDIZIONALE%>"/>
 <%
-   		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.CONC_RINVIO_EP) == 0) {
+   		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.CONC_RINVIO_EP) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_CONC_RINVIO_EP%>"/>	
 <%
-   		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.PROROGA_DETENZIONE_SPECIALE) == 0) {
+   		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.PROROGA_DETENZIONE_SPECIALE) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_PROROGA_DETENZIONE_SPE%>"/>
 <%
-   		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.PROROGA_DETENZIONE_DOMICILIARE) == 0) {
+   		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.PROROGA_DETENZIONE_DOMICILIARE) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_PROROGA_DETENZIONE_DOM%>"/>
 <%
-   		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.SOSPENSIONE_ESECUTIVA_ORDINANZA) == 0) {
+   		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.SOSPENSIONE_ESECUTIVA_ORDINANZA) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_SOSP_ESEC_ORD%>"/>
 <%
-   		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RECLAMO_PERMESSO) == 0
-   				|| datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RECLAMO_LICENZA) == 0
-   				|| datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RECLAMI_CEDU) == 0) {
+   		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.RECLAMO_PERMESSO) == 0
+   				|| codice.compareTo(ICostantiDepositoOrdinanzaPc.RECLAMO_LICENZA) == 0
+   				|| codice.compareTo(ICostantiDepositoOrdinanzaPc.RECLAMI_CEDU) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_RECLAMO_PERMESSO%>"/>
 <jsp:include page="<%=ICostantiLicenzaLibanticipata.PG_LOAD_DETTAGLIOPERMESSO%>"/>
 <!-- MERGE v10: aggiunta pagina di inclusione che era messa in fondo ma in un "else if" mai raggiungibile -->
 <%
-			if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RECLAMI_CEDU) == 0) {
+			if (codice.compareTo(ICostantiDepositoOrdinanzaPc.RECLAMI_CEDU) == 0) {
 %>
 <br />
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_DETTAGLIO_ORDINANZA_RECLAMI_VIOLAZIONE_CEDU %>"/>
 <%
 			}
-   		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RECLAMO_SCOMPUTO) == 0
-   				|| datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RECLAMO_REVOCA_LICENZA_PERMESSO) == 0) {
+   		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.RECLAMO_SCOMPUTO) == 0
+   				|| codice.compareTo(ICostantiDepositoOrdinanzaPc.RECLAMO_REVOCA_LICENZA_PERMESSO) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_RECLAMO_PERMESSO%>"/>
 <jsp:include page="<%=ICostantiLicenzaLibanticipata.PG_LOAD_DETTAGLIOSCOMPUTO%>"/>
 <%
-   		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RECLAMO_LIBERAZIONE_ANTICIPATA) == 0
-   				|| datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_LIBERAZIONE_ANTICIPATA) == 0) {
+   		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.RECLAMO_LIBERAZIONE_ANTICIPATA) == 0
+   				|| codice.compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_LIBERAZIONE_ANTICIPATA) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_RECLAMATA%>"/>
 <%
-			if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_LIBERAZIONE_ANTICIPATA) == 0) {
+			if (codice.compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_LIBERAZIONE_ANTICIPATA) == 0) {
 %>
 <jsp:include page="<%=ICostantiLibertaAnticipata.PG_DETTAGLIO_REVOCA_LIBANTICIPATA%>"/>
 <%
@@ -978,59 +1010,80 @@ if (!modificaOrdinanza) {
 <jsp:include page="<%=ICostantiLibertaAnticipata.PG_DETTAGLIO_LIBANTICIPATA%>"/>
 <%
 			}
-   		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoDecreto.SOPRAVVENIENZA_NT) == 0) {
+   		} else if (codice.compareTo(ICostantiDepositoDecreto.SOPRAVVENIENZA_NT) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_SOPRAVVENIENZA_NT%>"/>
 <%
-   		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoDecreto.RICOVERI) == 0) {
+   		} else if (codice.compareTo(ICostantiDepositoDecreto.RICOVERI) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_RICOVERI%>"/>
 <%
-   		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_ORDINANZA) == 0) {
+   		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_ORDINANZA) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_REVOCA%>"/>
 <%
-   		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.APPLICAZIONE_SANZIONI_SOSTITUTIVE) == 0) {
+   		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.APPLICAZIONE_SANZIONI_SOSTITUTIVE) == 0) {
 %>
-<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_APPLICAZIONE_SS %>"/>
-<%
-   		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoDecreto.RICOVERO_OPG_OSS_PSICHE) == 0) {
+<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_APPLICAZIONE_SS%>"/>
+<% // MEV_2023-35 
+      } else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.APPLICAZIONE_PENE_SOSTITUTIVE) == 0) {
+%>
+<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_APPLICAZIONE_SP%>"/>
+<% 
+      } else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_PENA_SOSTITUTIVA) == 0) {
+%>
+<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_REVOCA_PENA_SOSTITUTIVA%>"/>
+<% 
+      } else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.RECLAMO_AVVERSO_REVOCA_PENA_SOSTITUTIVA) == 0) {
+%>
+<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_RECLAMO_AVVERSO_REVOCA_PENA_SOSTITUTIVA%>"/>
+<% // MEV_2023-35 - FINE
+   		} else if (codice.compareTo(ICostantiDepositoDecreto.RICOVERO_OPG_OSS_PSICHE) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_RICOVERO_OPG_OSS_PSICHE%>"/>
 <%
-   		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoDecreto.DECLARATORIA_ESTINZIONE_SS) == 0) {
+   		} else if (codice.compareTo(ICostantiDepositoDecreto.DECLARATORIA_ESTINZIONE_SS) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_DECLARATORIA_ESTINZIONE_SS%>"/>
 <%
-   		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoDecreto.MODIFICA_PERMANENTE_SS) == 0) {
+   		} else if (codice.compareTo(ICostantiDepositoDecreto.MODIFICA_PERMANENTE_SS) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_MODIFICA_PERMANENTE_SS%>"/>	
 <%
-   		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoDecreto.SOSPENSIONE_ESECUZIONE_SS) == 0) {
+   		} else if (codice.compareTo(ICostantiDepositoDecreto.SOSPENSIONE_ESECUZIONE_SS) == 0
+   			// MEV_2023-35: aggiunto codice per 'PA' (U141 e C066)
+			|| codice.compareTo(ICostantiDepositoOrdinanzaPc.SOSPENSIONE_ESECUZIONE_PENE_ACCESSORIE) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_SOSPENSIONE_ESECUZIONE_SANZIONI_SOSTITUTIVE%>"/>
 <%
-   		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_SANZIONI_SOSTITUTIVE) == 0) {
+   		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_SANZIONI_SOSTITUTIVE) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_CONVERSIONE_SS%>"/>
 <%
-   		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RINVIO_SANZIONI_SOSTITUTIVE) == 0) {
+   		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.RINVIO_SANZIONI_SOSTITUTIVE) == 0) {
 %>
-<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_RINVIO_SS %>"/>
+<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_RINVIO_SS%>"/>
 <%
-   		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_PENE_PECUNIARIE) == 0) {
+   		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_PENE_PECUNIARIE) == 0
+   				// MEV_2023-35: aggiunto codice per 'SR' (U142,U143,U145)
+   				|| codice.compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_PENE_PECUNIARIE_MANCATO_PAGAMENTO) == 0) {
 %>
-<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_CONVERSIONE_PP %>"/>
+<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_CONVERSIONE_PP%>"/>
 <%
-   		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RIMESSIONE_ATTI) == 0) {
+   		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.RIMESSIONE_ATTI) == 0) {
 %>
-<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_RIMESSIONE_ATTI %>"/>
+<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_RIMESSIONE_ATTI%>"/>
 <%
-   		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.ESEC_PRESSO_DOMICILIO) == 0) {
+   		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.ESEC_PRESSO_DOMICILIO) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_ESEC_PRESSO_DOMICILIO%>"/>	
 <%
-   		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.VIOLAZIONE_CEDU) == 0) { // DL 92/2014 : Violazione CEDU
+// MEV_2023-35 - Revoca e Conversione Pena Pecuniaria Sostitutiva
+        } else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_REVOCA_PENA_SOST) == 0) {
+%>
+<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_REV_CONV_PPS%>"/>
+<%
+   		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.VIOLAZIONE_CEDU) == 0) { // DL 92/2014 : Violazione CEDU
 %>
 <table cellspacing="4" cellpadding="4">
    	<tr>
@@ -1064,7 +1117,7 @@ if (!modificaOrdinanza) {
 <br/>
 <%
 		}
-  		if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().trim().length() > 1) {
+  		if (codice.trim().length() > 1) {
    			// Combo template di stampa solo sulle Emissioni di Ordinanza Nuove
    			// E se non esiste il template predefinito.
      		if (datiOrdinanza.getEvento().getTemIdTemplate() == null || datiOrdinanza.getEvento().getTemIdTemplate().trim().length() < 2) {
@@ -1085,8 +1138,8 @@ if (!modificaOrdinanza) {
        			<td class="L">
 		            <input  class=bottone  type="submit" value="Conferma">
 		            <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.sico.evento.action.ActUploadDocument">
-		            <input type="HIDDEN" name="IdEvento"  value="<%= IdEvento%>">
-		            <input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_AZIONE_DETTAGLIO%>"  value="siap.sius.depositoordinanzapc.action.ActLoadDettaglioOrdinanza">
+		            <input type="HIDDEN" name="IdEvento" value="<%= IdEvento%>">
+		            <input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_AZIONE_DETTAGLIO%>" value="siap.sius.depositoordinanzapc.action.ActLoadDettaglioOrdinanza">
        				<input type="HIDDEN" name="FlagAvvocatura" value="<%=ICostantiAvvisiAvvocato.EMISSIONE_ORDINANZA%>">
        			</td>
        		</tr>
@@ -1099,9 +1152,9 @@ else {
   	//===========================
   	// Sono in modifica
   	//===========================
-	if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.LIBERAZIONE_ANTICIPATA) == 0
-  			|| datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RECLAMO_LIBERAZIONE_ANTICIPATA ) == 0
-      		|| datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_LIBERAZIONE_ANTICIPATA ) == 0) {
+	if (codice.compareTo(ICostantiDepositoOrdinanzaPc.LIBERAZIONE_ANTICIPATA) == 0
+  			|| codice.compareTo(ICostantiDepositoOrdinanzaPc.RECLAMO_LIBERAZIONE_ANTICIPATA ) == 0
+      		|| codice.compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_LIBERAZIONE_ANTICIPATA ) == 0) {
 		if (datiOrdinanza.getOrdinanza().getDescrUfficioMagistratoComp() != null && datiOrdinanza.getOrdinanza().getDescrUfficioMagistratoComp().length() > 0) {
 %>
 <table cellspacing="4" cellpadding="4">
@@ -1135,15 +1188,15 @@ else {
 </table> 
 <% // Nuova Ordinanza L.A - Decreto 146  %>
 <%
-		if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.LIBERAZIONE_ANTICIPATA) == 0) {
+		if (codice.compareTo(ICostantiDepositoOrdinanzaPc.LIBERAZIONE_ANTICIPATA) == 0) {
 %>     
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_MODIFICA_ORDINANZA_LIBERAZIONE_ANTICIPATA%>"/>
 <%
-		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RECLAMO_LIBERAZIONE_ANTICIPATA) == 0) {
+		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.RECLAMO_LIBERAZIONE_ANTICIPATA) == 0) {
 %>    
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_MODIFICA_ORDINANZA_RECLAMO_LIBERAZIONE_ANTICIPATA%>"/>
 <%
-		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_LIBERAZIONE_ANTICIPATA) == 0) {
+		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_LIBERAZIONE_ANTICIPATA) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_MODIFICA_ORDINANZA_REVOCA_LA%>"/>
 <%
@@ -1151,21 +1204,21 @@ else {
  		// End Decreto 146
 	}
   	// DL 92/2014 . Violazione Cedu
-    else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.VIOLAZIONE_CEDU) == 0) {
+    else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.VIOLAZIONE_CEDU) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_MODIFICA_ORDINANZA_RISARCIMENTO_VIOLAZIONE_CEDU%>"/>
 <%
-	} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RECLAMI_CEDU) == 0) {
+	} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.RECLAMI_CEDU) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_MODIFICA_ORDINANZA_RECLAMI_VIOLAZIONE_CEDU%>"/>
 <%
-	} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RIMESSIONE_ATTI) != 0) {
+	} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.RIMESSIONE_ATTI) == 0) {
 %>
-<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_MODIFICA_ORDINANZA%>"/>
+<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_MODIFICA_RIMESSIONE_ATTI%>"/>
 <%
 	} else { 
 %>
-<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_MODIFICA_RIMESSIONE_ATTI%>"/>
+<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_MODIFICA_ORDINANZA%>"/>
 <%
 	}
 } // end else --> if(!modificaOrdinanza)

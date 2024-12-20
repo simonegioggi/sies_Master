@@ -8,6 +8,18 @@
 <jsp:useBean id="TipoUfficioConnesso" scope="request" class="java.lang.String"/>
 <jsp:useBean id="CodUDSTDS" scope="request" class="java.lang.String"/>
 
+<%-- MEV_2023-35 si aggiunge il codContenuto per gestire sia U019 che U126 --%>
+<jsp:useBean id="ContenutoES" scope="request" class="java.lang.String"/>
+
+<%
+// MEV_2023-35 si parametrizza il titolo funzione
+String strTitoloFunzione = "";
+if ("U019".equals(ContenutoES))
+  strTitoloFunzione = "Ricerca Soggetti con Procedimenti di Esecuzione Sanzioni Sostitutive";
+else if ("U126".equals(ContenutoES))
+  strTitoloFunzione = "Ricerca Soggetti con Procedimenti di Esecuzione Pene Sostitutive";
+%>
+
 <html>
 <head>
   <title> [S.I.E.S.] - Ricerca Soggetti con Procedimenti di Esecuzione Sanzioni Sostitutive - </title>
@@ -41,7 +53,7 @@
     <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.sius.fascicolo.action.ActRicercaSoggettiConProcDiEsecuzioneSS">
     <table>
       <tr><td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
-        <td class="LBG"><font class="label">Funzione :</font> <font class="campo">Ricerca Soggetti con Procedimenti di Esecuzione Sanzioni Sostitutive</font></td>
+        <td class="LBG"><font class="label">Funzione :</font> <font class="campo"><%=strTitoloFunzione %></font></td>
       </tr>
     </table>
 

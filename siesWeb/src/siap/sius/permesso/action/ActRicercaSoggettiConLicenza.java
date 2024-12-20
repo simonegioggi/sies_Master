@@ -6,6 +6,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.web.IWebConstants;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.model.ComuneModel; // STUB 11/07/2005 Correzione codice comune.
 import siap.sico.decodifiche.util.DecodificheUtils;
@@ -18,27 +22,16 @@ import siap.sius.fascicolo.action.ICostantiFascicoloSius;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.permesso.controller.IPermesso;
 import siap.sius.util.SIUSLookupRemote;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.web.IWebConstants;
 
 /**
- * <p>
- * Title: ActRicercaSoggettiConLicenza
- * </p>
- * <p>
- * Description: Azione di ricerca dei Soggetti con Procedimenti di sorveglianza relativi a Permessi
- * </p>
- * <p>
- * Copyright: Bull Italia Copyright (c) 2004
- * </p>
- * <p>
- * Company: Bull Italia
- * </p>
+ * ActRicercaSoggettiConLicenza - Azione di ricerca dei Soggetti con Procedimenti di sorveglianza relativi a
+ * Permessi
+ * 
+ * @version 1.0
  */
-public class ActRicercaSoggettiConLicenza extends ActionSiap implements ICostantiFascicoloSius,
-		ICostantiPermesso {
+public class ActRicercaSoggettiConLicenza extends ActionSiap
+		implements ICostantiFascicoloSius, ICostantiPermesso {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
@@ -58,8 +51,8 @@ public class ActRicercaSoggettiConLicenza extends ActionSiap implements ICostant
 		// lSogMod.setCodComuneNascita(getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA));
 		if (!this.isRequestParameterNullObj(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)
 				&& getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA).length() > 1) {
-			ComuneModel lComMod = new ComuneModel(
-					getCodComuneByDescr(getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)));
+			ComuneModel lComMod = new ComuneModel(getCodComuneByDescr(
+					getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)));
 			lSogMod.setCodComuneNascita(lComMod.getCodComune());
 		}
 
@@ -73,8 +66,8 @@ public class ActRicercaSoggettiConLicenza extends ActionSiap implements ICostant
 		lSogMod.setPaternita(getRequestStringParameter(ICostantiSoggetto.CAMPO_PATERNITA));
 		lSogMod.setCodCs(getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_CS));
 
-//		UtenteModel lUtenteMod = new UtenteModel(
-//				(UtenteModel) getSessionAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO));
+		// UtenteModel lUtenteMod = new UtenteModel(
+		// (UtenteModel) getSessionAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO));
 
 		// Recupero informazioni per i filtri di ricerca.
 		String strCodUfficioUtenteConnesso = getUfficioUtenteConnesso().getCodUfficio();
@@ -118,8 +111,8 @@ public class ActRicercaSoggettiConLicenza extends ActionSiap implements ICostant
 			lIncludeRigettati = "S";
 
 		String lCodLicenza = getRequestStringParameter(CAMPO_COD_LICENZA);
-		String lDescrLicenza = DecodificheUtils.getDescbyCode(DecodificheManager.getInstance()
-				.getTipoLicenza(), lCodLicenza);
+		String lDescrLicenza = DecodificheUtils
+				.getDescbyCode(DecodificheManager.getInstance().getTipoLicenza(), lCodLicenza);
 
 		Date dataDalInCancelleria = (getRequestDateParameter(CAMPO_ANNO_DATA_INSERIMENTO,
 				CAMPO_MESE_DATA_INSERIMENTO, CAMPO_GIORNO_DATA_INSERIMENTO));
@@ -162,7 +155,8 @@ public class ActRicercaSoggettiConLicenza extends ActionSiap implements ICostant
 			CountRisultati = lPermCtrl.ExGetNumRicercaLicenzeBySoggetto(lSogMod, strCodUfficioUtenteConnesso,
 					strCodUfficioOTribunale, lCodDistretto, lIncludeRigettati, lCodLicenza,
 					dataDalInCancelleria, dataAlInCancelleria);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.warn("CountRisultati: " + CountRisultati);
 		} else
 			CountRisultati = getRequestBigDecimalParameter("CountRisultati");
@@ -175,10 +169,12 @@ public class ActRicercaSoggettiConLicenza extends ActionSiap implements ICostant
 		setRequestAttribute("fascicoli", lLicenzeSoggetti);
 
 		lReturnPage = ICostantiPermesso.PG_RICERCA_SOGGETTICONLICENZA;
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.warn(" lReturnPage = " + lReturnPage);
 
-		return lReturnPage; // restituisce la jsp di VIEW
+		// restituisce la jsp di VIEW
+		return lReturnPage;
 	}
 
 }
