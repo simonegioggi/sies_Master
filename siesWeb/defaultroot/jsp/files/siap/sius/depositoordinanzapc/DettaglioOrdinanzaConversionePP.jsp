@@ -17,7 +17,7 @@
 <jsp:useBean id="richiesteconversioni" 	scope="request" class="java.util.Vector"/>
 <jsp:useBean id="datiOrdinanza" 		scope="request" class="siap.sius.depositoordinanzapc.model.OrdinanzaEventoTenoriPrescrizioniModel"/>
 <%-- MEV_2023-35: aggiunti useBean e gestiti nella pagina --%>
-<%-- Ticket#202412190132 si carica direttamente con la getAttribute perche' se non 
+<%-- Ticket#202412190123 si carica direttamente con la getAttribute perche' se non 
      passato dalla action, jboss non riesce ad istanziare il bean
 <jsp:useBean id="rate" 					scope="request" class="java.util.Vector<siap.siep.rateizzazionepp.model.RateizzazionePPModel>"/>
 --%>
@@ -25,14 +25,14 @@
 
 <table cellspacing="2" cellpadding="2" width="90%">
 <%
-// Ticket#202412190132 si carica direttamente con la getAttribute perche' se non 
+// Ticket#202412190123 si carica direttamente con la getAttribute perche' se non 
 // passato dalla action, jboss non riesce ad istanziare il bean
 Vector <RateizzazionePPModel> rate = null;
 if (request.getAttribute("rate")!=null)
   rate = (Vector <RateizzazionePPModel>) request.getAttribute("rate");
 else
   rate = new Vector <RateizzazionePPModel>();
-// Ticket#202412190132 - FINE
+// Ticket#202412190123 - FINE
 
 TenoreModel[] tenori = datiOrdinanza.getTenori(); 
 Iterator itx = richiesteconversioni.iterator();

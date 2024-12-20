@@ -160,12 +160,12 @@ public class ActLoadDettaglioOrdinanza extends ActDettaglioEmissioneOrdinanza
 				lFasGPMod = new FascicoloGPModel((FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"));
 				BigDecimal lIdFascicoloSius = lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius();
 				
-		        // Ticket#202412190132 - Va passata alla JSP un bean "rate" vuoto altrimenti va in errore 
+		        // Ticket#202412190123 - Va passata alla JSP un bean "rate" vuoto altrimenti va in errore 
 		        // non riuscendo ad istanziare il bean- Vedi anche il caso CONVERSIONE_PENE_PECUNIARIE_MANCATO_PAGAMENTO
 				// dove il bean viene valorizzato
 		        Vector<RateizzazionePPModel> rate = new Vector<RateizzazionePPModel>();
 		        setRequestAttribute("rate", rate);
-		        // Ticket#202412190132 - FINE
+		        // Ticket#202412190123 - FINE
 				
 				if (lIdFascicoloSius != null) {
 					// Caricamento delle Richieste Conversioni
