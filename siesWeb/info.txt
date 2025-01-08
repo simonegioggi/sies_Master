@@ -1,15 +1,9 @@
 BRANCH SIES VERSIONE 12.7.1.0
 
 Nasce dal branch 12.7.0.0 in data 19/12/2024
-In data 19/12/2024 merge col branch mac-otrs-202412190132:
-	Ticket#202412190123 - SIUS UDS GENOVA - IMPOSSIBILE VALIDARE PROVVEDIMENTO
-	Errore in fase di apertura del dettaglio delle ordinanze di richiesta conversione 
-	Pene Pecuniarie.
-	Problema legato al fatto che la jsp DettaglioOrdinanzaConversione.jsp (inclusa nel dettaglio ordinanza),
-	ha un bean con un vettore tipizzato. Se il bean viene passato a null (o non viene passato),
-	jboss non riesce ad inizializzare il bean
-	Corrette la classi:
-	-	ActLoadDettaglioOrdinanza.java
-	per istanziare un bean vuoto invece che nulla anche nel caso di conversione PP.
-	Per sicurezza è stata modificata anche la DettaglioOrdinanzaConversionePP.jsp per gestire
-	il bean a mano con la getAttribute visto che veniva referenziata anche da un'altra jsp.
+
+Questa release verrà rilasciata il 24/01/2025 (Patch mese di Gennaio 2025)
+
+Comprende i seguenti Ticket MAC:
+
+1)	
