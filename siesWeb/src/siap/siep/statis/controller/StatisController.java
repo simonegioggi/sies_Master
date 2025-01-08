@@ -3967,9 +3967,9 @@ public class StatisController extends GenericController {
 					: "-";
 			// COLLAUDO 11.3 (TERZA SESSIONE): INTEGRO LA STRING 'ESPERTO' SE TRATTASI DI UN MAGISTRATO
 			// ESPERTO
-			if (lCodMagistrato != null && lProcEstrModel.getCodMagistrato().contains("ESPERTO")) {
+			if (lProcEstrModel.getCodMagistrato() != null
+					&& lProcEstrModel.getCodMagistrato().contains("ESPERTO"))
 				lCodMagistrato = lCodMagistrato + " (ESPERTO) ";
-			}
 
 			// Esito
 			lEsito = (lProcEstrModel.getDescrEsitoTenore() != null)
