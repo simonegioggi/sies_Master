@@ -663,10 +663,10 @@ LicenzaLibAnticipataModel lLicenzaModel = lLicenzaPeriodiModel.getLicenza();
         <a href="Javascript:ListaMagistrati('LoadInserisciOrdineScarcerazione');">
           <img src="/images/filefolder.gif" border=0>
         </a>
-      </td>
-      <input type="HIDDEN" title="Codice Magistrato" value="<%=StringUtils.toStringJSP(magistratocompetente.getMagistrato().getCodMagistrato() )%>" type="text" name="<%= ICostantiEvento.CAMPO_COD_MAGISTRATO %>"  maxlength="35" size="35" >
-    </tr>
-  </table>
+      		<input type="HIDDEN" title="Codice Magistrato" value="<%=StringUtils.toStringJSP(magistratocompetente.getMagistrato().getCodMagistrato() )%>" type="text" name="<%= ICostantiEvento.CAMPO_COD_MAGISTRATO %>"  maxlength="35" size="35" >
+		</td>
+	</tr>
+</table>
 
   <table style="width: 95%;">
     <tr><td class="Titolo" colspan=6>Destinatari</td></tr>
@@ -762,7 +762,7 @@ LicenzaLibAnticipataModel lLicenzaModel = lLicenzaPeriodiModel.getLicenza();
     %> 
     <% if( "TDS".equals(UfficioSIUS.getCodTipoUfficio()) ) { %>
     <tr>
-      <td class="L">Tribunale di Sorveglianza <font class=ob>(*)</font></td>
+      <td class="L">Tribunale di Sorveglianza <font class=ob>(*)</font>
         <input type="hidden" value="TDS" name="<%=ICostantiMisuraAlternativa.CAMPO_COD_TRIBUNALE%>">
         <input type="hidden" name="tds" value="S">
       </td>
@@ -777,7 +777,7 @@ LicenzaLibAnticipataModel lLicenzaModel = lLicenzaPeriodiModel.getLicenza();
     </tr>
     <% } else { %>
     <tr>
-        <td class="L">Ufficio di Sorveglianza <font class=ob>(*)</font></td>
+        <td class="L">Ufficio di Sorveglianza <font class=ob>(*)</font>
           <input type="hidden" value="UDS" name="<%=ICostantiMisuraAlternativa.CAMPO_COD_UDS%>">
           <input type="hidden" name="uds" value="S">
         </td>
@@ -813,10 +813,10 @@ LicenzaLibAnticipataModel lLicenzaModel = lLicenzaPeriodiModel.getLicenza();
               <font class="campo">
                 <%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescrTipo())%>
               </font>
-            </td>
-            <input type="HIDDEN" title="Codice Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep())%>" type="text" name="<%= ICostantiAvvocato.CAMPO_ID_AVVOCATO %>"  maxlength="35" size="35">
-          </tr>
-          <tr>
+			<input type="HIDDEN" title="Codice Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep())%>" type="text" name="<%= ICostantiAvvocato.CAMPO_ID_AVVOCATO %>"  maxlength="35" size="35">
+		</td>
+	</tr>
+	<tr>
             <td class="l">Autorità Destinazione </td >
             <td class="L" colspan=3>
               <select Title="Autorita Esterna" class="small" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>" >
@@ -829,11 +829,13 @@ LicenzaLibAnticipataModel lLicenzaModel = lLicenzaPeriodiModel.getLicenza();
               <input title="Sede Foro Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocato().getForo())%>" type="text" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>" maxlength="35" size="35">
               <% if(avvocati.size() > 1){ %>
                 <a href="Javascript:ListaComuni('LoadInserisciOrdineScarcerazione','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>[<%=lIdxAvv%>]');">
+                <img src="/images/filefolder.gif" border=0>
+            </a>
               <% } else { %>
                 <a href="Javascript:ListaComuni('LoadInserisciOrdineScarcerazione','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>');">
-              <% } %>
-              <img src="/images/filefolder.gif" border=0>
+                <img src="/images/filefolder.gif" border=0>
             </a>
+              <% } %>
           </td>
           <td class="l">Note</td>
           <td class="L">

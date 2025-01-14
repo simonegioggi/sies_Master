@@ -325,8 +325,7 @@ while(IteLic.hasNext())
 <%
         }
 %>
-   <input type="HIDDEN" title="Codice Posizione" value="<%=StringUtils.toStringJSP(lPosizione.getCodPosizioneGiuridica())%>" type="text" name="<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>"  maxlength="6" size="6" >
-
+	<tr><td><input type="HIDDEN" value="<%=StringUtils.toStringJSP(lPosizione.getCodPosizioneGiuridica())%>" name="<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>"></td></tr>
 <% // Nel Caso di Posizione Giuridica ARRESTI DOMICILIARI ( 02, 04)
         if(lPosizione.getCodPosizioneGiuridica() != null && (lPosizione.getCodPosizioneGiuridica().equals("02") || lPosizione.getCodPosizioneGiuridica().equals("04")) )
         {
@@ -754,7 +753,7 @@ while(IteLic.hasNext())
     if(liberazione.getDescrLuogoEmittente()!= null)
     {
 %>
-      <td class="L">Tribunale di Sorveglianza <font class=ob>(*)</font></td>
+      <td class="L">Tribunale di Sorveglianza <font class=ob>(*)</font>
         <input type="hidden" value="TDS" name="<%=ICostantiMisuraAlternativa.CAMPO_COD_TRIBUNALE%>">
         <input type="hidden" name="tds" value="S">
       </td>
@@ -769,7 +768,7 @@ while(IteLic.hasNext())
     else
     {
 %>
-      <td class="L">Tribunale di Sorveglianza <font class=ob>(*)</font></td>
+      <td class="L">Tribunale di Sorveglianza <font class=ob>(*)</font>
         <input type="hidden" value="TDS" name="<%=ICostantiMisuraAlternativa.CAMPO_COD_TRIBUNALE%>">
         <input type="hidden" name="tds" value="S">
       </td>
@@ -793,7 +792,7 @@ while(IteLic.hasNext())
       if(liberazione.getDescrLuogoEmittente()!= null)
       {
 %>
-        <td class="L">Ufficio di Sorveglianza <font class=ob>(*)</font></td>
+        <td class="L">Ufficio di Sorveglianza <font class=ob>(*)</font>
           <input type="hidden" value="UDS" name="<%=ICostantiMisuraAlternativa.CAMPO_COD_UDS%>">
           <input type="hidden" name="uds" value="S">
         </td>
@@ -808,7 +807,7 @@ while(IteLic.hasNext())
     else
     {
 %>
-      <td class="L">Ufficio di Sorveglianza <font class=ob>(*)</font></td>
+      <td class="L">Ufficio di Sorveglianza <font class=ob>(*)</font>
         <input type="hidden" value="UDS" name="<%=ICostantiMisuraAlternativa.CAMPO_COD_UDS%>">
         <input type="hidden" name="uds" value="S">
       </td>
@@ -849,8 +848,8 @@ while(IteLic.hasNext())
               <font class="campo">
                 <%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescrTipo())%>
               </font>
-            </td>
             <input type="HIDDEN" title="Codice Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep())%>" type="text" name="<%= ICostantiAvvocato.CAMPO_ID_AVVOCATO %>"  maxlength="35" size="35">
+           </td>
           </tr>
         </table>
          <table style="width: 95%;">
@@ -869,17 +868,19 @@ while(IteLic.hasNext())
         {
 %>
           <a href="Javascript:ListaComuni('LoadInserisciComunicazioneErgastolo','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>[<%=lIdxAvv%>]');">
+                    <img src="/images/filefolder.gif" border=0>
+        </a>
 <%
         }
         else
         {
 %>
           <a href="Javascript:ListaComuni('LoadInserisciComunicazioneErgastolo','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>');">
+                    <img src="/images/filefolder.gif" border=0>
+        </a>
 <%
         }
 %>
-          <img src="/images/filefolder.gif" border=0>
-        </a>
       </td>
         <td class="l">Note</td>
        <td class="L">

@@ -567,7 +567,7 @@ if (avvocati.size() >1) {
      </tr>
 
 		<tr><td class="Titolo" colspan=6>Notifica al Condannato </td></tr>
-
+	<tr>
 		<td class="l" width="20%">Autorità Destinazione <font class=ob>(*)</font></td>
 			<%if(lPosizione.getCodPosizioneGiuridica().equals("07") || lPosizione.getCodPosizioneGiuridica().equals("10") ||
       		 	 lPosizione.getCodPosizioneGiuridica().equals("02") || lPosizione.getCodPosizioneGiuridica().equals("04") ||
@@ -576,12 +576,12 @@ if (avvocati.size() >1) {
      			 lPosizione.getCodPosizioneGiuridica().equals("70")	|| lPosizione.getCodPosizioneGiuridica().equals("71") ||
      			 lPosizione.getCodPosizioneGiuridica().equals("72") )
 			{ %>
- 				<td class="L" colspan="3">
+		<td class="L" colspan="3">
        		<select  Title="Autorita Esterna" class="small" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>">
         		<%=autoritaEsternaE%>
        		</select>
       	</td>
-    	</tr>
+	</tr>
     <tr>
       <td class="l">Sede <font class=ob>(*)</font></td>
       <td class="L">
@@ -616,11 +616,9 @@ if (avvocati.size() >1) {
       <td class="L">
         <TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>"  cols=35></textarea>
       </td>
-		<tr><td>&nbsp;</td></tr>
    <%}%>
-
-		</tr>
   	</tr>
+  	<tr><td>&nbsp;</td></tr>
     <tr>
       <td class="Titolo" colspan=6>Notifica al Difensore</td></tr>
 <%
@@ -667,15 +665,17 @@ if (avvocati.size() >1) {
 				if( lNumAvvocati < 2 )
 				{ %>
         	<a href="Javascript:ListaComuni('LoadInserisciOrdineEsecuzione','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>');">
+        	          <img src="/images/filefolder.gif" border=0>
+        </a>
 <%
 				}else{
 %>
         	<a href="Javascript:ListaComuni('LoadInserisciOrdineEsecuzione','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>[<%=lIdxAvv%>]');">
+        	          <img src="/images/filefolder.gif" border=0>
+        </a>
 <%
 				}
 %>
-          <img src="/images/filefolder.gif" border=0>
-        </a>
       </td>
        <td class="l">Note</td>
        <td class="L">
@@ -712,9 +712,7 @@ if (avvocati.size() >1) {
     <td class="L">
     	<TEXTAREA title="Note" name="<%= ICostantiOrdineEsecuzione.CAMPO_NOTE_UDS %>"  cols=35></textarea>
     </td>
-  </tr>
-
-
+		<td>
 	<%if(istanza!=null && istanza.getIdEvento()!=null)
 	{
       FlagIstanza="S";
@@ -725,7 +723,9 @@ if (avvocati.size() >1) {
       FlagIstanza="N";
 		}%>
 		<input type="hidden" name="istanza" value="<%=FlagIstanza%>">
-
+	</td>
+	</tr>
+	<tr>
     <td class="lNoBord" colspan="2">
       <br><INPUT class="bottone" type="submit" name="I" value="Conferma" onClick="javascript:return Verify();">
     </td>

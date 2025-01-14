@@ -188,7 +188,6 @@ function Verify()
         <%=tipoAutoritaPolizia%>
       </select>
     </td>
-    </td>
     <td class="l">Indirizzo</td>
     <td class="L">
       <TEXTAREA title="Indirizzo" name="<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>"  cols="30"></textarea>
@@ -264,11 +263,11 @@ function Verify()
               <font class="campo">
                 <%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescrTipo())%>
               </font>
-            </td>
             <input type="HIDDEN" title="Codice Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep())%>" type="text" name="<%= ICostantiAvvocato.CAMPO_ID_AVVOCATO %>"  maxlength="35" size="35">
-          </tr>
-        </table>
-   <table style="width: 95%;">
+		</td>
+	</tr>
+</table>
+<table style="width: 95%;">
      <tr>
 		      <td class="L" width=5%>
      <td class="l">Autorità Destinazione </td >
@@ -287,17 +286,19 @@ function Verify()
         {
 %>
           <a href="Javascript:ListaComuni('LoadInserisciRichiestaAdempObblighi','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_C %>[<%=lIdxAvv%>]');">
+                    <img src="/images/filefolder.gif" border=0>
+        </a>
 <%
         }
         else
         {
 %>
           <a href="Javascript:ListaComuni('LoadInserisciRichiestaAdempObblighi','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_C %>');">
+                    <img src="/images/filefolder.gif" border=0>
+        </a>
 <%
         }
 %>
-          <img src="/images/filefolder.gif" border=0>
-        </a>
       </td>
         <td class="l">Note</td>
        <td class="L">

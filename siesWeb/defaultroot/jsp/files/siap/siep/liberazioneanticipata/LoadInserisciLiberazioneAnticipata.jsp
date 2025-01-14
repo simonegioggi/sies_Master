@@ -25,851 +25,632 @@
 <jsp:useBean id="penaresidua"             scope="request" class="siap.siep.penaresidua.model.PenaResiduaModel"/>
 <jsp:useBean id="FlagLicenzeNonElaborate" scope="request" class="java.lang.String"/>
 <jsp:useBean id="filtroMinorenni" scope="request" class="java.lang.String"/>
-
-
 <%
-  String lAction = new String();
+String lAction = new String();
 
-  lAction = "siap.sico.libertaanticipata.action.ActInserisciLiberazioneAnticipata";
+lAction = "siap.sico.libertaanticipata.action.ActInserisciLiberazioneAnticipata";
 
-  int NumColonne = ICostantiLibertaAnticipata.NUM_COLONNE_SEMESTRI;
-  int NumRighe = ICostantiLibertaAnticipata.NUM_RIGHE_SEMESTRI;
-  int NumTotale = ICostantiLibertaAnticipata.NUM_TOTALE_SEMESTRI;
-  int NumDate = ICostantiLibertaAnticipata.NUM_PERIODI;
-
-  int NumTotaleSemestri = NumRighe*NumColonne;
-  int NumCheck = 4 + NumTotaleSemestri;         /* numero complessivo dei check box */
+int NumColonne = ICostantiLibertaAnticipata.NUM_COLONNE_SEMESTRI;
+int NumRighe = ICostantiLibertaAnticipata.NUM_RIGHE_SEMESTRI;
+int NumTotale = ICostantiLibertaAnticipata.NUM_TOTALE_SEMESTRI;
+int NumDate = ICostantiLibertaAnticipata.NUM_PERIODI;
+int NumTotaleSemestri = NumRighe*NumColonne;
+int NumCheck = 4 + NumTotaleSemestri;         /* numero complessivo dei check box */
 //***  int NumCheck = 1 + NumTotaleSemestri;         /* numero complessivo dei check box */
-
-  int IndPer =  NumTotaleSemestri;     /* indice del check box relativo al Periodo unico */
-
-  int IndRig = 1 + NumTotaleSemestri;  /* indice del check box relativo a Periodi rigettati */
-  int IndIna = 2 + NumTotaleSemestri;  /* indice del check box relativo a Periodi inammissibili */
-  int IndNlp = 3 + NumTotaleSemestri;  /* indice del check box relativo a Periodi NLP */
+int IndPer =  NumTotaleSemestri;     /* indice del check box relativo al Periodo unico */
+int IndRig = 1 + NumTotaleSemestri;  /* indice del check box relativo a Periodi rigettati */
+int IndIna = 2 + NumTotaleSemestri;  /* indice del check box relativo a Periodi inammissibili */
+int IndNlp = 3 + NumTotaleSemestri;  /* indice del check box relativo a Periodi NLP */
 %>
 
 <html>
-  <head>
-    <title>[S.I.E.S.] - Liberazione Anticipata</title>
-    <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
-    <script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
-    <script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
-    <script language="JavaScript" src="<%=IWebConstants.JS_CONFIRM%>"></script>
+<head>
+<title>[S.I.E.S.] - Liberazione Anticipata</title>
+<link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
+<script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
+<script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
+<script language="JavaScript" src="<%=IWebConstants.JS_CONFIRM%>"></script>
 
-    <script language="JavaScript">
+ <script language="JavaScript">
+var NumRighe = <%=NumRighe%>;             /* numero di righe gruppo semestri */
+var NumColonne = <%=NumColonne%>;         /* numero di colonne gruppo semestri */
+var NumTotale = <%=NumTotaleSemestri%>;   /* numero complessivo semestri  */
+var NumDate = <%=NumDate%>;               /* numero totale gruppo di date  */
+var giorni = new Array(NumTotale);        /* Array dei giorni concessi per semestre  */
+var giorni_spe = new Array(NumTotale);	  /* 				totali concessi per L.A. SPECIALE	*/
+var giorni_int = new Array(NumTotale);	  /* 				totali concessi per INTEGRAZIONE L.A.	*/
+var NumCheck = <%=NumCheck%>;             /* numero complessivo dei check box */
+var IndPer = <%=IndPer%>;
+var IndRig = <%=IndRig%>;
+var IndIna = <%=IndIna%>;
+var IndNlp = <%=IndNlp%>;
+var node;
+var GioniConcessi = 0;
+var GioniConcessi_spe = 0;
+var GioniConcessi_int = 0;
+var ColoreLA = "BLU";
+var ColoreLS = "BLU";
+var ColoreLI = "BLU";
+var modalita = 'S' ;	/* modalità di scelat. S : Semestr C: periodo Complessivo */
 
-    var NumRighe = <%=NumRighe%>;             /* numero di righe gruppo semestri */
-    var NumColonne = <%=NumColonne%>;         /* numero di colonne gruppo semestri */
-    var NumTotale = <%=NumTotaleSemestri%>;   /* numero complessivo semestri  */
-    var NumDate = <%=NumDate%>;               /* numero totale gruppo di date  */
-//    
-    var giorni = new Array(NumTotale);        /* Array dei giorni concessi per semestre  */
-    var giorni_spe = new Array(NumTotale);	  /* 				totali concessi per L.A. SPECIALE	*/
-    var giorni_int = new Array(NumTotale);	  /* 				totali concessi per INTEGRAZIONE L.A.	*/
-//    
-    var NumCheck = <%=NumCheck%>;             /* numero complessivo dei check box */
-    var IndPer = <%=IndPer%>;
-    var IndRig = <%=IndRig%>;
-    var IndIna = <%=IndIna%>;
-    var IndNlp = <%=IndNlp%>;
-    var node;
-//
-    var GioniConcessi = 0;
-    var GioniConcessi_spe = 0;
-    var GioniConcessi_int = 0;
-//
-	var ColoreLA = "BLU";
-	var ColoreLS = "BLU";
-	var ColoreLI = "BLU";
-//
-    var modalita = 'S' ;            /* modalità di scelat. S : Semestr C: periodo Complessivo */
-
-	function init()
-   	{
-<%	      if( "S".equals(FlagLicenzeNonElaborate) )
-	      {
-	%>
-	        	alert('Attenzione vi sono ordinanze di Liberazione Anticipata già caricate e non elaborate. Premere su "Seleziona dalla lista" per verificarle');
-	<%     }%>
-	      
-		//alert("init");
-
-		  var i=0;
-	      for (i=0; i<NumTotale; i++)
-	     		giorni[i] = 0;
-	      for (i=0; i<NumCheck; i++)
-	         	uncheckDate(i);
-	      
-	      for (i=0; i<NumTotale; i++)
-	     		giorni_spe[i] = 0;
-	      for (i=0; i<NumCheck; i++)
-	         	uncheckDate_spe(i);
-	      
-	      for (i=0; i<NumTotale; i++)
-	     		giorni_int[i] = 0;
-	      for (i=0; i<NumCheck; i++)
-	         	uncheckDate_int(i);
-	   
-	   
-	   // Allinizio la Form è PreImpostata sull'OGGETTO 'Liberazione Anticipata' (COD. 2130)
-	   
-		   DisabilitaLA_INT();
-		   DisabilitaLA_SPE();
-		   AbilitaLA();
-			
-		   document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA %>.value = 0;
-		   document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE %>[0].checked = true;
-		   document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 0;
-   	}
-
-// 05/2014	--- >  Decreto Legge 2013/146	- Inserimento Ulteriori Oggetti : L.A. SPECIALE (Cod 2131) e INTEGRAZIONE L.A. (Cod 2132)
-
-	/* Abilita la modalità di selezione periodi concessi a seconda di L.A., L.A. speciale, Integrazione L.A.  */
-	function QualeLiberazioneConcede(cod)
-	{
-	//		alert("QualeLiberazioneConcede - Codice Scelto = "+cod);
-			
-			if(cod == 2130)		//  E' stato selezionato il Radio Button L.A. NORMALE, quindi .....		
-			{
-				// ... Controllo i Totali di L.A. INTEGRAZIONE inseriti e ne disabilito le DIV
-				var totLI = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_INT %>.value;
-				var dateInseriteLI = 0;
-			    for (var TI = 0; TI <NumCheck*NumDate; TI ++)
-			    {
-				      if(document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO_INT %>[TI].value !=""
-				      && document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_INIZIO_INT %>[TI].value !=""
-				      && document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_INIZIO_INT %>[TI].value !="")
-				      {
-				        	dateInseriteLI ++;
-				      }
-				      
-				      if(dateInseriteLI != 0)
-				        	break;
-
-			    }
-			    if(ColoreLI == "BLU" && dateInseriteLI == 0 && totLI == 0)
-				{
-					DisabilitaLA_INT();
-				}
-			    else if(ColoreLI == "BLU")	
-				{	
-				    if(dateInseriteLI == 0)
-				    {
-					      	alert('Inserire periodo di Integrazione L.A.;  Impossibile procedere');
-					      	document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[2].checked = true;
-					      	document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 2;
-					        return false;
-				    }
+function init() {
+<%
+if ("S".equals(FlagLicenzeNonElaborate)) {
+%>
+	alert('Attenzione vi sono ordinanze di Liberazione Anticipata già caricate e non elaborate. Premere su "Seleziona dalla lista" per verificarle');
+<%
+}
+%>
+	var i=0;
+	for (i=0; i<NumTotale; i++)
+		giorni[i] = 0;
+	for (i=0; i<NumCheck; i++)
+	   	uncheckDate(i);
 	
-				    if (dateInseriteLI != 0 &&
-				    	totLI == 0 	      	&& 
-				    	document.getElementById('SL_INT' + IndPer).style.color == 'red' )
-					{
-						  alert('Totale Giorni Concessi Integrazione L.A.\n non può essere uguale a zero!\n Impossibile procedere');
-						  document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_INT %>.focus();
-						  document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[2].checked = true;
-						  document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 2;
-						  return false;
-					}
-				    
-				    var ctr="KO";
-				    if(	(document.getElementById('SL_INT' + IndRig).style.color == 'red' || 
-				    	 document.getElementById('SL_INT' + IndIna).style.color == 'red' ||
-				    	 document.getElementById('SL_INT' + IndNlp).style.color == 'red' )	&& 
-				    	(totLI != 0 )	      &&
-				    	(document.getElementById('SL_INT' + IndPer).style.color != 'red' )	)
-				    {
-
-				    		for(var kg = 0; kg < 12; kg++)
-				    		{	
-					    		if(document.getElementById('SL_INT' + kg).style.color == 'red' )
-					    		{
-					    			ctr="OK";
-					    			break;
-					    		}
-				    		}
-
-				    		if(ctr == "KO")
-				    		{	
-					    		alert('Azzerare Totale Giorni Concessi o \n Inserire periodi di Concessione Integrazione L.A.');
-								document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_INT %>.focus();
-								document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[2].checked = true;
-								document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 2;
-								return false;				    			
-				    		}
-				    }
-				    // Tutto OK! quindi disabilito L.A. Integrazione
-				    node=document.getElementById('LI');
-					node.style.color="Red";
-					ColoreLI = "RED";
-					DisabilitaLA_INT();
-				    
-				}
-			    else
-			    {	
-					node=document.getElementById('LI');
-					node.style.color="Red";
-					ColoreLI = "RED";
-					DisabilitaLA_INT();
-			    }	
-//
-		// ... Controllo i Totali di L.A. SPECIALE inseriti e ne disabilito le DIV
-				var totLS = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_SPE %>.value;
-				var dateInseriteLS = 0;
-			    for (var TS = 0; TS <NumCheck*NumDate; TS ++)
-			    {
-				      if(document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO_SPE %>[TS].value !=""
-				      && document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_INIZIO_SPE %>[TS].value !=""
-				      && document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_INIZIO_SPE %>[TS].value !="")
-				      {
-				        	dateInseriteLS ++;
-				      }
-				      
-				      if(dateInseriteLS != 0)
-				        	break;
-
-			    }
-			    if(ColoreLS == "BLU" && dateInseriteLS == 0 && totLS == 0)
-				{
-					DisabilitaLA_SPE();
-				}
-			    else if(ColoreLS == "BLU")	
-				{	
-				    if(dateInseriteLS == 0)
-				    {
-					      	alert('Inserire periodo di L.A. Speciale;  Impossibile procedere');
-					      	document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[1].checked = true;
-					      	document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 1;
-					        return false;
-				    }
+	for (i=0; i<NumTotale; i++)
+		giorni_spe[i] = 0;
+	for (i=0; i<NumCheck; i++)
+	   	uncheckDate_spe(i);
 	
-				    if (dateInseriteLS != 0 &&
-				    	totLS == 0 	      && 
-				    	document.getElementById('SL_SPE' + IndPer).style.color == 'red' )
-					{
-						  alert('Totale Giorni Concessi L.A. Speciale\n non può essere uguale a zero!\n Impossibile procedere');
-						  document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_SPE %>.focus();
-						  document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[1].checked = true;
-						  document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 1;
-						  return false;
-					}
-				    
-				    var ctr="KO";
-				    if(	(document.getElementById('SL_SPE' + IndRig).style.color == 'red' || 
-				    	 document.getElementById('SL_SPE' + IndIna).style.color == 'red' ||
-				    	 document.getElementById('SL_SPE' + IndNlp).style.color == 'red' )	&& 
-				    	(totLS != 0 )	      &&
-				    	(document.getElementById('SL_SPE' + IndPer).style.color != 'red' )	)
-				    {
+	for (i=0; i<NumTotale; i++)
+		giorni_int[i] = 0;
+	for (i=0; i<NumCheck; i++)
+	   	uncheckDate_int(i);
+	// All'inizio la Form è PreImpostata sull'OGGETTO 'Liberazione Anticipata' (COD. 2130)
+	DisabilitaLA_INT();
+	DisabilitaLA_SPE();
+	AbilitaLA();
+	document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA %>.value = 0;
+	document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE %>[0].checked = true;
+	document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 0;
+}
 
-				    		for(var kg = 0; kg < 12; kg++)
-				    		{	
-					    		if(document.getElementById('SL_SPE' + kg).style.color == 'red' )
-					    		{
-					    			ctr="OK";
-					    			break;
-					    		}
-				    		}
+// 05/2014 --> Decreto Legge 2013/146 - Inserimento Ulteriori Oggetti : L.A. SPECIALE (Cod 2131) e INTEGRAZIONE L.A. (Cod 2132)
 
-				    		if(ctr == "KO")
-				    		{	
-					    		alert('Azzerare Totale Giorni Concessi o \n Inserire periodi di Concessione L.A. Speciale');
-								document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_SPE %>.focus();
-								document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[1].checked = true;
-								document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 1;
-								return false;				    			
-				    		}
-				    }
-				    
-				 // Tutto OK! quindi disabilito L.A. Speciale
-				    node=document.getElementById('LS');
-					node.style.color="Red";
-					ColoreLS = "RED";
-					DisabilitaLA_SPE();
-				    
-				}
-			    else
-			    {	
-					node=document.getElementById('LS');
-					node.style.color="Red";
-					ColoreLS = "RED";
-					DisabilitaLA_SPE();
-			    }	
-//				
-				AbilitaLA();
-				document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 0;
-				node=document.getElementById('LA');
-				node.style.color="Navy";
-				ColoreLA = "BLU";
-			
-			}	// chiude if(cod == 2130)	
-			
-			if(cod == 2131)		//  E' stato selezionato il Radio Button L.A. SPECIALE, quindi .....				
-			{
-	// ... Controllo i Totali di L.A. NORMALE inseriti e ne disbilito de DIV 
-				var totLA = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA %>.value;
-				var dateInserite = 0;
-			    for (var T=0; T<NumCheck*NumDate; T++)
-			    {
-				      if(document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO%>[T].value !=""
-				      && document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_INIZIO%>[T].value !=""
-				      && document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_INIZIO%>[T].value !="")
-				      {
-				        	dateInserite++;
-				      }
-				      
-				      if(dateInserite!= 0)
-				        	break;
-
-			    }
-			    
-				if(ColoreLA == "BLU" && dateInserite == 0 && totLA == 0)
-				{
-					DisabilitaLA();
-				}	
-				else if(ColoreLA == "BLU")
-				{	
-				    if(dateInserite == 0)
-				    {
-					      	alert('Inserire periodo di L.A.; Impossibile procedere');
-					      	document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[0].checked = true;
-					      	document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 0;
-					        return false;
-				    }
-	
-				    if (dateInserite != 0 &&
-				    	totLA == 0 	      && 
-				    	document.getElementById('SL' + IndPer).style.color == 'red' )
-					{
-						  alert('Totale Giorni Concessi L.A. non può essere uguale a zero!\n Impossibile procedere');
-						  document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA %>.focus();
-						  document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[0].checked = true;
-						  document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 0;
-						  return false;
-					}
-				    
-				    var ctr="KO";
-				    if(	(document.getElementById('SL' + IndRig).style.color == 'red' || 
-				    	 document.getElementById('SL' + IndIna).style.color == 'red' ||
-				    	 document.getElementById('SL' + IndNlp).style.color == 'red' )	&& 
-				    	(totLA != 0 )	      &&
-				    	(document.getElementById('SL' + IndPer).style.color != 'red' )	)
-				    {
-				    		for(var kg = 0; kg < 12; kg++)
-				    		{	
-					    		if(document.getElementById('SL' + kg).style.color == 'red' )
-					    		{
-					    			ctr="OK";
-					    			break;
-					    		}
-				    		}
-
-				    		if(ctr == "KO")
-				    		{	
-					    		alert('Azzerare Totale Giorni Concessi o \n Inserire periodi di Concessione L.A.');
-								document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA %>.focus();
-								document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[0].checked = true;
-								document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 0;
-								return false;				    			
-				    		}
-
-				    }
-				 // Tutto OK! quindi disabilito L.A. Integrazione
-				    node=document.getElementById('LA');
-					node.style.color="Red";
-					ColoreLA = "RED";
-					DisabilitaLA();
-				    
-				}
-				else 
-				{	
-					node=document.getElementById('LA');
-					node.style.color="Red";
-					ColoreLA = "RED";
-					DisabilitaLA();
-				}	
-//				
-				// ... Controllo i Totali di L.A. INTEGRAZIONE inseriti e ne disabilito le DIV
-				var totLI = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_INT %>.value;
-				var dateInseriteLI = 0;
-			    for (var TI = 0; TI <NumCheck*NumDate; TI ++)
-			    {
-				      if(document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO_INT %>[TI].value !=""
-				      && document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_INIZIO_INT %>[TI].value !=""
-				      && document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_INIZIO_INT %>[TI].value !="")
-				      {
-				        	dateInseriteLI ++;
-				      }
-				      
-				      if(dateInseriteLI != 0)
-				        	break;
-
-			    }
-			    if(ColoreLI == "BLU" && dateInseriteLI == 0 && totLI == 0)
-				{
-					DisabilitaLA_INT();
-				}
-			    else if(ColoreLI == "BLU")	
-				{	
-				    if(dateInseriteLI == 0)
-				    {
-					      	alert('Inserire periodo di Integrazione L.A.;  Impossibile procedere');
-					      	document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[2].checked = true;
-					      	document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 2;
-					        return false;
-				    }
-	
-				    if (dateInseriteLI != 0 &&
-				    	totLI == 0 	      	&& 
-				    	document.getElementById('SL_INT' + IndPer).style.color == 'red' )
-					{
-						  alert('Totale Giorni Concessi Integrazione L.A.\n non può essere uguale a zero!\n Impossibile procedere');
-						  document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_INT %>.focus();
-						  document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[2].checked = true;
-						  document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 2;
-						  return false;
-					}
-				    
-				    var ctr="KO";
-				    if(	(document.getElementById('SL_INT' + IndRig).style.color == 'red' || 
-				    	 document.getElementById('SL_INT' + IndIna).style.color == 'red' ||
-				    	 document.getElementById('SL_INT' + IndNlp).style.color == 'red' )	&& 
-				    	(totLI != 0 )	      &&
-				    	(document.getElementById('SL_INT' + IndPer).style.color != 'red' )	)
-				    {
-
-				    		for(var kg = 0; kg < 12; kg++)
-				    		{	
-					    		if(document.getElementById('SL_INT' + kg).style.color == 'red' )
-					    		{
-					    			ctr="OK";
-					    			break;
-					    		}
-				    		}
-
-				    		if(ctr == "KO")
-				    		{	
-					    		alert('Azzerare Totale Giorni Concessi o \n Inserire periodi di Concessione Integrazione L.A.');
-								document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_INT %>.focus();
-								document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[2].checked = true;
-								document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 2;
-								return false;				    			
-				    		}
-				    }				    
-				    // Tutto OK! quindi disabilito L.A. Integrazione
-				    node=document.getElementById('LI');
-					node.style.color="Red";
-					ColoreLI = "RED";
-					DisabilitaLA_INT();
-				    
-				}
-			    else
-			    {	
-					node=document.getElementById('LI');
-					node.style.color="Red";
-					ColoreLI = "RED";
-					DisabilitaLA_INT();
-			    }	
-//			
-				AbilitaLA_SPE();
-				document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 1;
-				node=document.getElementById('LS');
-				node.style.color="Navy";
-				ColoreLS = "BLU";
-			
-			} // Chiudo if(cod == 2131)
-//			
-			if(cod == 2132)		//  E' stato selezionato il Radio Button INTEGRAZIONE L.A. , quindi .....	
-			{
-				// ... Controllo i Totali di L.A. NORMALE inseriti e ne disbilito de DIV 
-				var totLA = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA %>.value;
-				var dateInserite = 0;
-			    for (var T=0; T<NumCheck*NumDate; T++)
-			    {
-				      if(document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO%>[T].value !=""
-				      && document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_INIZIO%>[T].value !=""
-				      && document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_INIZIO%>[T].value !="")
-				      {
-				        	dateInserite++;
-				      }
-				      
-				      if(dateInserite!= 0)
-				        	break;
-
-			    }
-			    
-				if(ColoreLA == "BLU" && dateInserite == 0 && totLA == 0)
-				{
-					DisabilitaLA();
-				}	
-				else if(ColoreLA == "BLU")
-				{	
-				    if(dateInserite == 0)
-				    {
-					      	alert('Inserire periodo di L.A.; Impossibile procedere');
-					      	document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[0].checked = true;
-					      	document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 0;
-					        return false;
-				    }
-	
-				    if (dateInserite != 0 &&
-				    	totLA == 0 	      && 
-				    	document.getElementById('SL' + IndPer).style.color == 'red' )
-					{
-						  alert('Totale Giorni Concessi L.A. non può essere uguale a zero!\n Impossibile procedere');
-						  document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA %>.focus();
-						  document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[0].checked = true;
-						  document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 0;
-						  return false;
-					}
-				    
-				    var ctr="KO";
-				    if(	(document.getElementById('SL' + IndRig).style.color == 'red' || 
-				    	 document.getElementById('SL' + IndIna).style.color == 'red' ||
-				    	 document.getElementById('SL' + IndNlp).style.color == 'red' )	&& 
-				    	(totLA != 0 )	      &&
-				    	(document.getElementById('SL' + IndPer).style.color != 'red' )	)
-				    {
-				    		for(var kg = 0; kg < 12; kg++)
-				    		{	
-					    		if(document.getElementById('SL' + kg).style.color == 'red' )
-					    		{
-					    			ctr="OK";
-					    			break;
-					    		}
-				    		}
-
-				    		if(ctr == "KO")
-				    		{	
-					    		alert('Azzerare Totale Giorni Concessi o \n Inserire periodi di Concessione L.A.');
-								document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA %>.focus();
-								document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[0].checked = true;
-								document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 0;
-								return false;				    			
-				    		}
-
-				    }
-
-				    // Tutto OK! quindi disabilito L.A. Normale
-				    node=document.getElementById('LA');
-					node.style.color="Red";
-					ColoreLA = "RED";
-					DisabilitaLA();
-				}
-				else 
-				{	
-					node=document.getElementById('LA');
-					node.style.color="Red";
-					ColoreLA = "RED";
-					DisabilitaLA();
-				}	
-//				
-		// ... Controllo i Totali di L.A. SPECIALE inseriti e ne disabilito le DIV
-				var totLS = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_SPE %>.value;
-				var dateInseriteLS = 0;
-			    for (var TS = 0; TS <NumCheck*NumDate; TS ++)
-			    {
-				      if(document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO_SPE %>[TS].value !=""
-				      && document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_INIZIO_SPE %>[TS].value !=""
-				      && document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_INIZIO_SPE %>[TS].value !="")
-				      {
-				        	dateInseriteLS ++;
-				      }
-				      
-				      if(dateInseriteLS != 0)
-				        	break;
-
-			    }
-			    if(ColoreLS == "BLU" && dateInseriteLS == 0 && totLS == 0)
-				{
-					DisabilitaLA_SPE();
-				}
-			    else if(ColoreLS == "BLU")	
-				{	
-				    if(dateInseriteLS == 0)
-				    {
-					      	alert('Inserire periodo di L.A. Speciale;  Impossibile procedere');
-					      	document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[1].checked = true;
-					      	document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 1;
-					        return false;
-				    }
-	
-				    if (dateInseriteLS != 0 &&
-				    	totLS == 0 	      && 
-				    	document.getElementById('SL_SPE' + IndPer).style.color == 'red' )
-					{
-						  alert('Totale Giorni Concessi L.A. Speciale\n non può essere uguale a zero!\n Impossibile procedere');
-						  document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_SPE %>.focus();
-						  document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[1].checked = true;
-						  document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 1;
-						  return false;
-					}
-				    
-				    var ctr="KO";
-				    if(	(document.getElementById('SL_SPE' + IndRig).style.color == 'red' || 
-				    	 document.getElementById('SL_SPE' + IndIna).style.color == 'red' ||
-				    	 document.getElementById('SL_SPE' + IndNlp).style.color == 'red' )	&& 
-				    	(totLS != 0 )	      &&
-				    	(document.getElementById('SL_SPE' + IndPer).style.color != 'red' )	)
-				    {
-
-				    		for(var kg = 0; kg < 12; kg++)
-				    		{	
-					    		if(document.getElementById('SL_SPE' + kg).style.color == 'red' )
-					    		{
-					    			ctr="OK";
-					    			break;
-					    		}
-				    		}
-
-				    		if(ctr == "KO")
-				    		{	
-					    		alert('Azzerare Totale Giorni Concessi o \n Inserire periodi di Concessione L.A. Speciale');
-								document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_SPE %>.focus();
-								document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[1].checked = true;
-								document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 1;
-								return false;				    			
-				    		}
-				    }
-
-				 // Tutto OK! quindi disabilito L.A. Speciale
-				    node=document.getElementById('LS');
-					node.style.color="Red";
-					ColoreLS = "RED";
-					DisabilitaLA_SPE();
-				}
-			    else
-			    {	
-					node=document.getElementById('LS');
-					node.style.color="Red";
-					ColoreLS = "RED";
-					DisabilitaLA_SPE();
-			    }	
-//
-				AbilitaLA_INT();
+/* Abilita la modalità di selezione periodi concessi a seconda di L.A., L.A. speciale, Integrazione L.A. */
+function QualeLiberazioneConcede(cod) {
+	if (cod == 2130) { // E' stato selezionato il Radio Button L.A. NORMALE, quindi ...
+		// ... Controllo i Totali di L.A. INTEGRAZIONE inseriti e ne disabilito le DIV
+		var totLI = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_INT %>.value;
+		var dateInseriteLI = 0;
+		for (var TI = 0; TI <NumCheck*NumDate; TI ++) {
+			if (document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO_INT %>[TI].value != ""
+				      && document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_INIZIO_INT %>[TI].value != ""
+				      && document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_INIZIO_INT %>[TI].value != "") {
+				dateInseriteLI ++;
+			}
+			if (dateInseriteLI != 0)
+				break;
+		}
+		if (ColoreLI == "BLU" && dateInseriteLI == 0 && totLI == 0) {
+			DisabilitaLA_INT();
+		} else if (ColoreLI == "BLU") {
+			if (dateInseriteLI == 0) {
+				alert('Inserire periodo di Integrazione L.A.;  Impossibile procedere');
+				document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[2].checked = true;
 				document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 2;
-				node=document.getElementById('LI');
-				node.style.color="Navy";
-				ColoreLI = "BLU";
-				
-			}	// Chiude if(cod == 2132)	
-			
-	}	// Chiudo function QualeliberazioneConcede()
+				return false;
+			}
+		    if (dateInseriteLI != 0
+		    		&& totLI == 0
+		    		&& document.getElementById('SL_INT' + IndPer).style.color == 'red') {
+				alert('Totale Giorni Concessi Integrazione L.A.\n non può essere uguale a zero!\n Impossibile procedere');
+				document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_INT %>.focus();
+				document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[2].checked = true;
+				document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 2;
+				return false;
+			}
+		    var ctr = "KO";
+			if ((document.getElementById('SL_INT' + IndRig).style.color == 'red'
+					|| document.getElementById('SL_INT' + IndIna).style.color == 'red'
+					|| document.getElementById('SL_INT' + IndNlp).style.color == 'red')
+					&& (totLI != 0)
+					&& (document.getElementById('SL_INT' + IndPer).style.color != 'red')) {
+				for (var kg = 0; kg < 12; kg++) {
+					if (document.getElementById('SL_INT' + kg).style.color == 'red') {
+						ctr = "OK";
+						break;
+					}
+				}
+	    		if (ctr == "KO") {
+					alert('Azzerare Totale Giorni Concessi o \n Inserire periodi di Concessione Integrazione L.A.');
+					document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_INT %>.focus();
+					document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[2].checked = true;
+					document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 2;
+					return false;
+				}
+			}
+			// Tutto OK! quindi disabilito L.A. Integrazione
+			node = document.getElementById('LI');
+			node.style.color = "Red";
+			ColoreLI = "RED";
+			DisabilitaLA_INT();
+		} else {
+			node = document.getElementById('LI');
+			node.style.color = "Red";
+			ColoreLI = "RED";
+			DisabilitaLA_INT();
+		}	
+		// ... Controllo i Totali di L.A. SPECIALE inseriti e ne disabilito le DIV
+		var totLS = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_SPE %>.value;
+		var dateInseriteLS = 0;
+	    for (var TS = 0; TS <NumCheck*NumDate; TS ++) {
+			if (document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO_SPE %>[TS].value != ""
+					&& document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_INIZIO_SPE %>[TS].value != ""
+					&& document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_INIZIO_SPE %>[TS].value != "") {
+				dateInseriteLS ++;
+			}
+			if (dateInseriteLS != 0)
+				break;
+	    }
+	    if (ColoreLS == "BLU" && dateInseriteLS == 0 && totLS == 0) {
+			DisabilitaLA_SPE();
+		} else if (ColoreLS == "BLU") {
+			if (dateInseriteLS == 0) {
+				alert('Inserire periodo di L.A. Speciale;  Impossibile procedere');
+				document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[1].checked = true;
+				document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 1;
+				return false;
+			}
+		    if (dateInseriteLS != 0 && totLS == 0
+		    		&& document.getElementById('SL_SPE' + IndPer).style.color == 'red') {
+				alert('Totale Giorni Concessi L.A. Speciale\n non può essere uguale a zero!\n Impossibile procedere');
+				document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_SPE %>.focus();
+				document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[1].checked = true;
+				document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 1;
+				return false;
+			}
+		    var ctr = "KO";
+	    	if ((document.getElementById('SL_SPE' + IndRig).style.color == 'red'
+	    			|| document.getElementById('SL_SPE' + IndIna).style.color == 'red'
+	    			|| document.getElementById('SL_SPE' + IndNlp).style.color == 'red')
+	    			&& (totLS != 0)
+	    			&& (document.getElementById('SL_SPE' + IndPer).style.color != 'red')) {
+	    		for (var kg = 0; kg < 12; kg++) {
+	    			if (document.getElementById('SL_SPE' + kg).style.color == 'red') {
+		    			ctr = "OK";
+						break;
+					}
+				}
+	    		if (ctr == "KO") {
+					alert('Azzerare Totale Giorni Concessi o \n Inserire periodi di Concessione L.A. Speciale');
+					document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_SPE %>.focus();
+					document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[1].checked = true;
+					document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 1;
+					return false;				    			
+    			}
+			}
+			// Tutto OK! quindi disabilito L.A. Speciale
+			node = document.getElementById('LS');
+			node.style.color = "Red";
+			ColoreLS = "RED";
+			DisabilitaLA_SPE();
+		} else {
+			node = document.getElementById('LS');
+			node.style.color = "Red";
+			ColoreLS = "RED";
+			DisabilitaLA_SPE();
+		}	
+		AbilitaLA();
+		document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 0;
+		node = document.getElementById('LA');
+		node.style.color = "Navy";
+		ColoreLA = "BLU";
+	} // chiude if (cod == 2130)	
+	if (cod == 2131) { //  E' stato selezionato il Radio Button L.A. SPECIALE, quindi ...
+		// ... Controllo i Totali di L.A. NORMALE inseriti e ne disbilito de DIV 
+		var totLA = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA %>.value;
+		var dateInserite = 0;
+		for (var T=0; T<NumCheck*NumDate; T++) {
+			if (document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO%>[T].value != ""
+					&& document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_INIZIO%>[T].value != ""
+					&& document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_INIZIO%>[T].value != "") {
+				dateInserite++;
+			}
+			if (dateInserite != 0)
+				break;
+		}
+		if (ColoreLA == "BLU" && dateInserite == 0 && totLA == 0) {
+			DisabilitaLA();
+		} else if (ColoreLA == "BLU") {
+			if (dateInserite == 0) {
+				alert('Inserire periodo di L.A.; Impossibile procedere');
+				document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[0].checked = true;
+				document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 0;
+				return false;
+			}
+		    if (dateInserite != 0 && totLA == 0
+		    		&& document.getElementById('SL' + IndPer).style.color == 'red') {
+				alert('Totale Giorni Concessi L.A. non può essere uguale a zero!\n Impossibile procedere');
+				document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA %>.focus();
+				document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[0].checked = true;
+				document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 0;
+				return false;
+			}
+		    var ctr = "KO";
+			if ((document.getElementById('SL' + IndRig).style.color == 'red'
+					|| document.getElementById('SL' + IndIna).style.color == 'red'
+					|| document.getElementById('SL' + IndNlp).style.color == 'red')
+					&& (totLA != 0)
+					&& (document.getElementById('SL' + IndPer).style.color != 'red')) {
+				for (var kg = 0; kg < 12; kg++) {
+					if (document.getElementById('SL' + kg).style.color == 'red') {
+						ctr = "OK";
+						break;
+					}
+				}
+	    		if (ctr == "KO") {
+					alert('Azzerare Totale Giorni Concessi o \n Inserire periodi di Concessione L.A.');
+					document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA %>.focus();
+					document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[0].checked = true;
+					document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 0;
+					return false;
+	   			}
+			}
+			// Tutto OK! quindi disabilito L.A. Integrazione
+			node = document.getElementById('LA');
+			node.style.color = "Red";
+			ColoreLA = "RED";
+			DisabilitaLA();
+		} else {	
+			node = document.getElementById('LA');
+			node.style.color = "Red";
+			ColoreLA = "RED";
+			DisabilitaLA();
+		}	
+		// ... Controllo i Totali di L.A. INTEGRAZIONE inseriti e ne disabilito le DIV
+		var totLI = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_INT %>.value;
+		var dateInseriteLI = 0;
+		for (var TI = 0; TI < NumCheck*NumDate; TI ++) {
+			if (document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO_INT %>[TI].value != ""
+					&& document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_INIZIO_INT %>[TI].value != ""
+					&& document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_INIZIO_INT %>[TI].value != "") {
+				dateInseriteLI ++;
+			}
+			if (dateInseriteLI != 0)
+				break;
+		}
+		if (ColoreLI == "BLU" && dateInseriteLI == 0 && totLI == 0) {
+			DisabilitaLA_INT();
+		} else if (ColoreLI == "BLU") {
+			if (dateInseriteLI == 0) {
+				alert('Inserire periodo di Integrazione L.A.;  Impossibile procedere');
+				document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[2].checked = true;
+				document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 2;
+				return false;
+			}
+		    if (dateInseriteLI != 0 && totLI == 0
+		    		&& document.getElementById('SL_INT' + IndPer).style.color == 'red') {
+				alert('Totale Giorni Concessi Integrazione L.A.\n non può essere uguale a zero!\n Impossibile procedere');
+				document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_INT %>.focus();
+				document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[2].checked = true;
+				document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 2;
+				return false;
+			}
+		    var ctr = "KO";
+		    if ((document.getElementById('SL_INT' + IndRig).style.color == 'red'
+		    		|| document.getElementById('SL_INT' + IndIna).style.color == 'red'
+		    		|| document.getElementById('SL_INT' + IndNlp).style.color == 'red')
+		    		&& (totLI != 0)
+		    		&& (document.getElementById('SL_INT' + IndPer).style.color != 'red')) {
+				for (var kg = 0; kg < 12; kg++) {
+					if (document.getElementById('SL_INT' + kg).style.color == 'red') {
+						ctr = "OK";
+						break;
+					}
+				}
+	    		if (ctr == "KO") {
+					alert('Azzerare Totale Giorni Concessi o \n Inserire periodi di Concessione Integrazione L.A.');
+					document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_INT %>.focus();
+					document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[2].checked = true;
+					document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 2;
+					return false;
+				}
+			}				    
+			// Tutto OK! quindi disabilito L.A. Integrazione
+			node = document.getElementById('LI');
+			node.style.color = "Red";
+			ColoreLI = "RED";
+			DisabilitaLA_INT();
+		} else {
+			node = document.getElementById('LI');
+			node.style.color = "Red";
+			ColoreLI = "RED";
+			DisabilitaLA_INT();
+		}
+		AbilitaLA_SPE();
+		document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 1;
+		node = document.getElementById('LS');
+		node.style.color = "Navy";
+		ColoreLS = "BLU";
+	} // Chiudo if (cod == 2131)
+	if (cod == 2132) { // E' stato selezionato il Radio Button INTEGRAZIONE L.A., quindi ...
+		// ... Controllo i Totali di L.A. NORMALE inseriti e ne disbilito de DIV
+		var totLA = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA %>.value;
+		var dateInserite = 0;
+		for (var T = 0; T< NumCheck * NumDate; T++) {
+			if (document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO%>[T].value != ""
+					&& document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_INIZIO%>[T].value != ""
+					&& document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_INIZIO%>[T].value != "") {
+				dateInserite++;
+			}
+			if (dateInserite != 0)
+				break;
+		}
+		if (ColoreLA == "BLU" && dateInserite == 0 && totLA == 0) {
+			DisabilitaLA();
+		} else if (ColoreLA == "BLU") {
+			if (dateInserite == 0) {
+				alert('Inserire periodo di L.A.; Impossibile procedere');
+				document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[0].checked = true;
+				document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 0;
+				return false;
+			}
+		    if (dateInserite != 0 && totLA == 0
+		    		&& document.getElementById('SL' + IndPer).style.color == 'red') {
+				alert('Totale Giorni Concessi L.A. non può essere uguale a zero!\n Impossibile procedere');
+				document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA %>.focus();
+				document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[0].checked = true;
+				document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 0;
+				return false;
+			}
+		    var ctr = "KO";
+			if ((document.getElementById('SL' + IndRig).style.color == 'red'
+					|| document.getElementById('SL' + IndIna).style.color == 'red'
+					|| document.getElementById('SL' + IndNlp).style.color == 'red')
+					&& (totLA != 0)
+					&& (document.getElementById('SL' + IndPer).style.color != 'red')) {
+				for (var kg = 0; kg < 12; kg++) {
+					if (document.getElementById('SL' + kg).style.color == 'red') {
+		    			ctr = "OK";
+		    			break;
+					}
+				}
+	    		if (ctr == "KO") {
+					alert('Azzerare Totale Giorni Concessi o \n Inserire periodi di Concessione L.A.');
+					document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA %>.focus();
+					document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[0].checked = true;
+					document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 0;
+					return false;
+				}
+			}
+		    // Tutto OK! quindi disabilito L.A. Normale
+			node = document.getElementById('LA');
+			node.style.color = "Red";
+			ColoreLA = "RED";
+			DisabilitaLA();
+		} else {	
+			node = document.getElementById('LA');
+			node.style.color = "Red";
+			ColoreLA = "RED";
+			DisabilitaLA();
+		}	
+		// ... Controllo i Totali di L.A. SPECIALE inseriti e ne disabilito le DIV
+		var totLS = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_SPE %>.value;
+		var dateInseriteLS = 0;
+	    for (var TS = 0; TS <NumCheck*NumDate; TS ++) {
+			if (document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO_SPE %>[TS].value != ""
+					&& document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_INIZIO_SPE %>[TS].value != ""
+					&& document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_INIZIO_SPE %>[TS].value != "") {
+				dateInseriteLS ++;
+			}
+			if (dateInseriteLS != 0)
+				break;
+	    }
+		if (ColoreLS == "BLU" && dateInseriteLS == 0 && totLS == 0) {
+			DisabilitaLA_SPE();
+		} else if (ColoreLS == "BLU") {	
+			if (dateInseriteLS == 0) {
+				alert('Inserire periodo di L.A. Speciale;  Impossibile procedere');
+				document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[1].checked = true;
+				document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 1;
+				return false;
+			}
+		    if (dateInseriteLS != 0 && totLS == 0
+		    		&& document.getElementById('SL_SPE' + IndPer).style.color == 'red')	{
+				alert('Totale Giorni Concessi L.A. Speciale\n non può essere uguale a zero!\n Impossibile procedere');
+				document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_SPE %>.focus();
+				document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[1].checked = true;
+				document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 1;
+				return false;
+			}
+		    var ctr = "KO";
+	   		if ((document.getElementById('SL_SPE' + IndRig).style.color == 'red'
+	   				|| document.getElementById('SL_SPE' + IndIna).style.color == 'red'
+	   				|| document.getElementById('SL_SPE' + IndNlp).style.color == 'red')
+	   				&& (totLS != 0)
+	   				&& (document.getElementById('SL_SPE' + IndPer).style.color != 'red')) {
+				for (var kg = 0; kg < 12; kg++) {
+					if (document.getElementById('SL_SPE' + kg).style.color == 'red') {
+						ctr = "OK";
+						break;
+		    		}
+	    		}
+	    		if (ctr == "KO") {
+					alert('Azzerare Totale Giorni Concessi o \n Inserire periodi di Concessione L.A. Speciale');
+					document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_SPE %>.focus();
+					document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>[1].checked = true;
+					document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 1;
+					return false;
+				}
+			}
+			// Tutto OK! quindi disabilito L.A. Speciale
+			node = document.getElementById('LS');
+			node.style.color = "Red";
+			ColoreLS = "RED";
+			DisabilitaLA_SPE();
+		} else {	
+			node = document.getElementById('LS');
+			node.style.color = "Red";
+			ColoreLS = "RED";
+			DisabilitaLA_SPE();
+	    }
+		AbilitaLA_INT();
+		document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value = 2;
+		node = document.getElementById('LI');
+		node.style.color = "Navy";
+		ColoreLI = "BLU";
+	} // Chiude if (cod == 2132)
+} // Chiudo function QualeliberazioneConcede()
 
-	// Oggetto : L.A.(Liberazione Anticipata)
-	function AbilitaLA()
-	{
-	//alert("AbilitaLA");
-        node=document.getElementById("tipoconcessione");
-        node.style.display='block';
+// Oggetto : L.A.(Liberazione Anticipata)
+function AbilitaLA() {
+	node = document.getElementById("tipoconcessione");
+	node.style.display = 'block';
+	AbilitaPeriodo();
+	AbilitaSemestri();
+	if (document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE%>[1].checked)
+		AbilitaPeriodo();
+	node = document.getElementById("resto");
+	node.style.display = 'block';
+	var valoreLA = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_SALVA_GIORNI_LA%>.value;
+	if (valoreLA == "")
+		valoreLA="0";
+	document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA%>.value = valoreLA;
+/*
+	if (document.InserisciOrdinanzaLiberazioneAnticipata.< %=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE%>[1].checked)
+		document.InserisciOrdinanzaLiberazioneAnticipata.< %=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA%>.readOnly = false;
+	else
+		document.InserisciOrdinanzaLiberazioneAnticipata.< %=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA%>.readOnly = true;
+*/	
+}
 
-        AbilitaPeriodo();
-        AbilitaSemestri();
-        if(document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE%>[1].checked)
-        	AbilitaPeriodo();
-		
-        node=document.getElementById("resto");
-  	  	node.style.display='block';
-  	  	
-        var valoreLA = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_SALVA_GIORNI_LA%>.value;
-        if(valoreLA=="")
-        	valoreLA="0";
-        
-        document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA%>.value = valoreLA;
-       
-      /*  if(document.InserisciOrdinanzaLiberazioneAnticipata.< %=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE%>[1].checked)
-        	 document.InserisciOrdinanzaLiberazioneAnticipata.< %=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA%>.readOnly = false;
-        else
-        	document.InserisciOrdinanzaLiberazioneAnticipata.< %=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA%>.readOnly = true;
-		*/	
-	}
-     
-	function DisabilitaLA()
-	{
-	//	alert("Disabilita LA");
-		var valLA = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA%>.value;
-		document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_SALVA_GIORNI_LA%>.value = valLA;
-
-        node=document.getElementById("tipoconcessione");
-        node.style.display='none';
-        node=document.getElementById("comune");
-        node.style.display='none';
-        node=document.getElementById("semestri");
-        node.style.display='none';
-        node=document.getElementById("periodo");
-        node.style.display='none';
-        node=document.getElementById("resto");
-        node.style.display='none';
-	}
+function DisabilitaLA() {
+	var valLA = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA%>.value;
+	document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_SALVA_GIORNI_LA%>.value = valLA;
+	node = document.getElementById("tipoconcessione");
+	node.style.display = 'none';
+	node = document.getElementById("comune");
+	node.style.display = 'none';
+	node = document.getElementById("semestri");
+	node.style.display = 'none';
+	node = document.getElementById("periodo");
+	node.style.display = 'none';
+	node = document.getElementById("resto");
+	node.style.display = 'none';
+}
 	
 // Oggetto : L.A.S.(Liberazione Anticipata Speciale)
-	function AbilitaLA_SPE()
-	{
-		//alert("AbilitaLA_SPE");
-        node=document.getElementById("tipoconcessione_spe");
-        node.style.display='block';
-        
-        AbilitaPeriodo_SPE();
-        AbilitaSemestri_SPE();  
-        if(document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE_SPE%>[1].checked)
-        	AbilitaPeriodo_SPE();
-        
-        node=document.getElementById("resto_spe");
-  	  	node.style.display='block';
-        
-        var valoreSPE=document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_SALVA_GIORNI_LA_SPE%>.value;
-        if(valoreSPE=="")
-        	valoreSPE="0";
+function AbilitaLA_SPE() {
+	node = document.getElementById("tipoconcessione_spe");
+	node.style.display = 'block';
+	AbilitaPeriodo_SPE();
+	AbilitaSemestri_SPE();  
+	if (document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE_SPE%>[1].checked)
+		AbilitaPeriodo_SPE();
+	node = document.getElementById("resto_spe");
+	node.style.display = 'block';
+	var valoreSPE = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_SALVA_GIORNI_LA_SPE%>.value;
+	if (valoreSPE == "")
+		valoreSPE = "0";
+	document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_SPE%>.value = valoreSPE;
+/*
+	if (document.InserisciOrdinanzaLiberazioneAnticipata.< %=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE_SPE%>[1].checked)
+	 	document.InserisciOrdinanzaLiberazioneAnticipata.< %=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_SPE%>.readOnly = false;
+	else
+		document.InserisciOrdinanzaLiberazioneAnticipata.< %=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_SPE%>.readOnly = true;
+*/
+}
 
-        document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_SPE%>.value = valoreSPE;
-        
-   /*     if(document.InserisciOrdinanzaLiberazioneAnticipata.< %=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE_SPE%>[1].checked)
-       	 	document.InserisciOrdinanzaLiberazioneAnticipata.< %=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_SPE%>.readOnly = false;
-        else
-        	document.InserisciOrdinanzaLiberazioneAnticipata.< %=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_SPE%>.readOnly = true;
-	*/
-	}
-     
-	function DisabilitaLA_SPE()
-	{
-	//	alert("Disabilita LA_SPE");
-		var valSPE = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_SPE%>.value;
-		document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_SALVA_GIORNI_LA_SPE%>.value = valSPE;
-		
-        node=document.getElementById("tipoconcessione_spe");
-        node.style.display='none';
-        node=document.getElementById("comune_spe");
-        node.style.display='none';
-        node=document.getElementById("semestri_spe");
-        node.style.display='none';
-        node=document.getElementById("periodo_spe");
-        node.style.display='none';	
-        node=document.getElementById("resto_spe");
-        node.style.display='none';
-	}
+function DisabilitaLA_SPE() {
+	var valSPE = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_SPE%>.value;
+	document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_SALVA_GIORNI_LA_SPE%>.value = valSPE;
+	node = document.getElementById("tipoconcessione_spe");
+	node.style.display = 'none';
+	node = document.getElementById("comune_spe");
+	node.style.display = 'none';
+	node = document.getElementById("semestri_spe");
+	node.style.display = 'none';
+	node = document.getElementById("periodo_spe");
+	node.style.display = 'none';	
+	node = document.getElementById("resto_spe");
+	node.style.display = 'none';
+}
 
-	// Oggetto : L.A.I.(Liberazione Anticipata Integrazione)
-	function AbilitaLA_INT()
-	{
-		// alert("AbilitaLA_INT");
-        node=document.getElementById("tipoconcessione_int");
-        node.style.display='block';
-        
-        AbilitaPeriodo_INT();
-        AbilitaSemestri_INT();
-        if(document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE_INT%>[1].checked)
-        	AbilitaPeriodo_INT(); 
+// Oggetto : L.A.I.(Liberazione Anticipata Integrazione)
+function AbilitaLA_INT() {
+	node = document.getElementById("tipoconcessione_int");
+	node.style.display = 'block';
+	AbilitaPeriodo_INT();
+	AbilitaSemestri_INT();
+	if (document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE_INT%>[1].checked)
+		AbilitaPeriodo_INT(); 
+	node = document.getElementById("resto_int");
+	node.style.display = 'block';        
+	var valoreLA_INT = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_SALVA_GIORNI_LA_INT%>.value;
+	if (valoreLA_INT == "")
+		valoreLA_INT = "0";
+	document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_INT%>.value = valoreLA_INT;
+/*
+	if (document.InserisciOrdinanzaLiberazioneAnticipata.< %=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE_INT%>[1].checked)
+   	 	document.InserisciOrdinanzaLiberazioneAnticipata.< %=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_INT%>.readOnly = false;
+    else
+    	document.InserisciOrdinanzaLiberazioneAnticipata.< %=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_INT%>.readOnly = true;
+*/
+}
 
-        node=document.getElementById("resto_int");
-        node.style.display='block';        
-
-        var valoreLA_INT = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_SALVA_GIORNI_LA_INT%>.value;
-        if(valoreLA_INT=="")
-        	valoreLA_INT="0";
-        
-        document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_INT%>.value = valoreLA_INT;
-        
- /*       if(document.InserisciOrdinanzaLiberazioneAnticipata.< %=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE_INT%>[1].checked)
-       	 	document.InserisciOrdinanzaLiberazioneAnticipata.< %=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_INT%>.readOnly = false;
-        else
-        	document.InserisciOrdinanzaLiberazioneAnticipata.< %=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_INT%>.readOnly = true;
- */	
-	}
-     
-	function DisabilitaLA_INT()
-	{
-		//alert("Disabilita LA_INT");
-		var valLA_INT = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_INT %>.value;
-		document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_SALVA_GIORNI_LA_INT %>.value = valLA_INT;
-
-        node=document.getElementById("tipoconcessione_int");
-        node.style.display='none';
-        node=document.getElementById("comune_int");
-        node.style.display='none';
-        node=document.getElementById("semestri_int");
-        node.style.display='none';
-        node=document.getElementById("periodo_int");
-        node.style.display='none';
-        node=document.getElementById("resto_int");
-        node.style.display='none';
- 	}
+function DisabilitaLA_INT() {
+	var valLA_INT = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_INT %>.value;
+	document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_SALVA_GIORNI_LA_INT %>.value = valLA_INT;
+	node = document.getElementById("tipoconcessione_int");
+	node.style.display = 'none';
+	node = document.getElementById("comune_int");
+	node.style.display = 'none';
+	node = document.getElementById("semestri_int");
+	node.style.display = 'none';
+	node = document.getElementById("periodo_int");
+	node.style.display = 'none';
+	node = document.getElementById("resto_int");
+	node.style.display = 'none';
+}
 	
-	
-    // Chiusura dell'eventuale blocco aperto
-    function Chiusura()
-    {
-    	//alert("Chiusura - Inizio");
-	      var retValue = true;
-	      for (var i=0; i < NumCheck; i++)
-	      {
-		        if (document.InserisciOrdinanzaLiberazioneAnticipata.gg[i].checked)
-		        {
-		          document.InserisciOrdinanzaLiberazioneAnticipata.gg[i].checked = false;
-		          retValue = ViewLayer(i);
-		        }
-		        
-		        if (document.InserisciOrdinanzaLiberazioneAnticipata.gg_SPE[i].checked)
-		        {
-			          document.InserisciOrdinanzaLiberazioneAnticipata.gg_SPE[i].checked = false;
-			          retValue = ViewLayer_SPE(i);
-		        }
-		        
-		        if (document.InserisciOrdinanzaLiberazioneAnticipata.gg_INT[i].checked)
-		        {
-			          document.InserisciOrdinanzaLiberazioneAnticipata.gg_INT[i].checked = false;
-			          retValue = ViewLayer_INT(i);
-		        }
-	      }
-	      
-		    //alert("Chiusura - Fine");
-	      return retValue;
-    }
+// Chiusura dell'eventuale blocco aperto
+function Chiusura() {
+	var retValue = true;
+	for (var i = 0; i < NumCheck; i++) {
+		if (document.InserisciOrdinanzaLiberazioneAnticipata.gg[i].checked) {
+		  	document.InserisciOrdinanzaLiberazioneAnticipata.gg[i].checked = false;
+			retValue = ViewLayer(i);
+		}
+		if (document.InserisciOrdinanzaLiberazioneAnticipata.gg_SPE[i].checked) {
+		   	document.InserisciOrdinanzaLiberazioneAnticipata.gg_SPE[i].checked = false;
+		   	retValue = ViewLayer_SPE(i);
+		}
+		if (document.InserisciOrdinanzaLiberazioneAnticipata.gg_INT[i].checked) {
+		   	document.InserisciOrdinanzaLiberazioneAnticipata.gg_INT[i].checked = false;
+		   	retValue = ViewLayer_INT(i);
+		}
+	}
+	return retValue;
+}
 
-//	-	-	-	 L.A. NORMALE	-	-	-	 L.A. NORMALE	-	-	-	 L.A. NORMALE	-	-	-	 L.A. NORMALE
-
-    // Disabilita i blocchi date vuoti e quelli della modalità non selezionata (Semestri/Periodo)
-    function DisabilitaDate()
-    {
-     // alert("DisabilitaDate: inizio");
-      var i=0;
-      for (i=0; i < NumCheck; i++)
-      {
-       // Vengono disabilitati tutti i blocchi periodi vuoti
-        if(!IsCheckedDate(i))
-        {
-           // alert("disabilito L" + i);
-           node=document.getElementById('L'+i);
-           node.disabled = true;
-           //alert("disabilitato L" + i);
+// L.A. NORMALE
+// Disabilita i blocchi date vuoti e quelli della modalità non selezionata (Semestri/Periodo)
+function DisabilitaDate() {
+	var i = 0;
+	for (i = 0; i < NumCheck; i++) {
+		// Vengono disabilitati tutti i blocchi periodi vuoti
+        if (!IsCheckedDate(i)) {
+           	node = document.getElementById('L'+i);
+           	node.disabled = true;
         }
-      }
-
-      if(!document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE%>[0].checked)
-      {
-        for (i=0; i < NumTotale; i++)
-        {
-          node=document.getElementById('L'+i);
-          node.disabled = true;
-          // alert("disabilitato L" + i);
+	}
+	if (!document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE%>[0].checked) {
+		for (i = 0; i < NumTotale; i++) {
+          	node = document.getElementById('L'+i);
+          	node.disabled = true;
         }
-      }
-      else
-      {
-        node=document.getElementById('L'+ IndPer);
+	} else {
+		node = document.getElementById('L'+ IndPer);
         node.disabled = true;
-        //alert("disabilitato L" + IndPer);
-      }
+	}
+}
 
-    // alert("DisabilitaDate: fine");
-    }
+var DataFine;
+var DataIni;
 
-   var DataFine;
-   var DataIni;
-   
-   /* Controllo  e conteggio date */
-   function conteggioDate (id)
-   {
-	 //  alert("conteggioDate - id = "+id);
+/* Controllo  e conteggio date */
+function conteggioDate (id) {
        var retValue = true;
        var elem = 0;
        var periodo = 0;
@@ -902,11 +683,10 @@
             }
          }
        }
-      // alert ("giorni = " + periodo);
        if (periodo != 0)
        {
 /*
-          if (periodo != 180 )
+          if (periodo != 180)
           {
              retValue = confirm("Le date inserite individuano un periodo di " + periodo +" giorni e non di 180. Confermi comunque la concessione del semestre?");
           }
@@ -930,12 +710,12 @@
          retValue = Chiusura();
          if (retValue)
          {
-        	   node=document.getElementById("comune");
-	           node.style.display='block';
-	           node=document.getElementById("semestri");
-	           node.style.display='block';
-	           node=document.getElementById("periodo");
-	           node.style.display='none';
+        	   node = document.getElementById("comune");
+	           node.style.display = 'block';
+	           node = document.getElementById("semestri");
+	           node.style.display = 'block';
+	           node = document.getElementById("periodo");
+	           node.style.display = 'none';
 	           // Salvataggio dei giorni concessi per il periodo unico
 	           GioniConcessi = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA%>.value;
 	           // Ripristino dei giorni concessi per semestre
@@ -964,12 +744,12 @@
          retValue = Chiusura();
          if (retValue)
          {
-	      	   node=document.getElementById("comune");
-	           node.style.display='block';        	 
-	           node=document.getElementById("semestri");
-	           node.style.display='none';
-	           node=document.getElementById("periodo");
-	           node.style.display='block';
+	      	   node = document.getElementById("comune");
+	           node.style.display = 'block';        	 
+	           node = document.getElementById("semestri");
+	           node.style.display = 'none';
+	           node = document.getElementById("periodo");
+	           node.style.display = 'block';
 	           // Ripristino dei giorni concessi per periodo unico
 	           modalita = 'C';
 	           document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA%>.value = GioniConcessi;
@@ -1043,7 +823,7 @@
         /* OK Date presenti */
         DataIni = new Date(aa0, mm0-1, gg0);
         DataFine  = new Date(aa1, mm1-1, gg1);
-        if(DataIni == null && DataFine == null)
+        if (DataIni == null && DataFine == null)
         {
         	//alert ("fffffffffffffffffffff");
         	return false;
@@ -1179,14 +959,14 @@
       // Apertura o chiusura del campo date e controllo correttezza date in chiusura */
       for (var i=0; i<NumCheck; i++)
       {
-         node=document.getElementById('L'+i);
+         node = document.getElementById('L'+i);
          if (i == id && document.InserisciOrdinanzaLiberazioneAnticipata.gg[id].checked)
          {
            // apertura
            //alert ("Sto aprendo " + i);
            // node.enabled = true;
 
-           node.style.display='block';
+           node.style.display = 'block';
          }
          else
          {
@@ -1232,12 +1012,12 @@
 				}
             }
 
-            node.style.display='none';
+            node.style.display = 'none';
          }
        }
        // Colore dei check
        var blue=true;
-       node=document.getElementById('SL'+id);
+       node = document.getElementById('SL'+id);
        var elem = 0;
        elem=id*NumDate;
        for (var j=0; j<NumDate; j++, elem++)
@@ -1248,13 +1028,13 @@
        if (blue)
        {
          //alert ("blue");
-         node.style.color="Navy";
+         node.style.color = "Navy";
          uncheckDate(id);
        }
        else
        {
          //alert ("red");
-         node.style.color="Red";
+         node.style.color = "Red";
          checkDate(id);
        }
 
@@ -1275,11 +1055,11 @@
 		elem=id*NumDate;
 		for (var j=0; j<NumDate; j++, elem++)
 		{
-			if(j==0)
+			if (j==0)
 			{
 				var gg0 = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO%>[elem].value;
 
-				if(gg0 != '')
+				if (gg0 != '')
 				{
 					riga = true;
 				}
@@ -1288,7 +1068,7 @@
 			{
 				var gg0 = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO%>[elem].value;
 				var gg0rigaprima = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO%>[elem-1].value;
-				if(gg0 != '')
+				if (gg0 != '')
 				{
 					riga = true;
 				}
@@ -1297,7 +1077,7 @@
 					riga = false
 				}
 
-				if(gg0rigaprima != '')
+				if (gg0rigaprima != '')
 				{
 					rigaprima = true;
 				}
@@ -1305,7 +1085,7 @@
 					rigaprima = false
 				}
 
-				if(rigaprima == false && riga == true){
+				if (rigaprima == false && riga == true){
 					returnchkDC = false;
 				}
 			}
@@ -1361,7 +1141,7 @@
        if (periodo != 0)
        {
 /*
-          if (periodo != 180 )
+          if (periodo != 180)
           {
              retValue = confirm("Le date inserite individuano un periodo di " + periodo +" giorni e non di 180. Confermi comunque la concessione del semestre?");
           }
@@ -1475,12 +1255,12 @@
 		         retValue = Chiusura();
 		         if (retValue)
 		         {
-		        	   node=document.getElementById("comune_spe");
-			           node.style.display='block';
-			           node=document.getElementById("semestri_spe");
-			           node.style.display='block';
-			           node=document.getElementById("periodo_spe");
-			           node.style.display='none';
+		        	   node = document.getElementById("comune_spe");
+			           node.style.display = 'block';
+			           node = document.getElementById("semestri_spe");
+			           node.style.display = 'block';
+			           node = document.getElementById("periodo_spe");
+			           node.style.display = 'none';
 			           // Salvataggio dei giorni concessi per il periodo unico
 			           GioniConcessi_spe = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_SPE %>.value;
 			           // Ripristino dei giorni concessi per semestre
@@ -1508,12 +1288,12 @@
 		         retValue = Chiusura();
 		         if (retValue)
 		         {
-			      	   node=document.getElementById("comune_spe");
-			           node.style.display='block';        	 
-			           node=document.getElementById("semestri_spe");
-			           node.style.display='none';
-			           node=document.getElementById("periodo_spe");
-			           node.style.display='block';
+			      	   node = document.getElementById("comune_spe");
+			           node.style.display = 'block';        	 
+			           node = document.getElementById("semestri_spe");
+			           node.style.display = 'none';
+			           node = document.getElementById("periodo_spe");
+			           node.style.display = 'block';
 			           // Ripristino dei giorni concessi per periodo unico
 			           modalita = 'C';
 			           document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_SPE %>.value = GioniConcessi_spe;
@@ -1541,27 +1321,27 @@
 	      for (i=0; i < NumCheck; i++)
 	      {
 		       // Vengono disabilitati tutti i blocchi periodi vuoti
-		        if(!IsCheckedDate_spe(i))
+		        if (!IsCheckedDate_spe(i))
 		        {
 		           // alert("disabilito L" + i);
-		           node=document.getElementById('L_SPE'+i);
+		           node = document.getElementById('L_SPE'+i);
 		           node.disabled = true;
 		           //alert("disabilitato L" + i);
 		        }
 	      }
 	
-	      if(!document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE_SPE %>[0].checked)
+	      if (!document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE_SPE %>[0].checked)
 	      {
 		        for (i=0; i < NumTotale; i++)
 		        {
-		          node=document.getElementById('L_SPE'+i);
+		          node = document.getElementById('L_SPE'+i);
 		          node.disabled = true;
 		          // alert("disabilitato L" + i);
 		        }
 	      }
 	      else
 	      {
-		        node=document.getElementById('L_SPE'+ IndPer);
+		        node = document.getElementById('L_SPE'+ IndPer);
 		        node.disabled = true;
 		        //alert("disabilitato L" + IndPer);
 	      }
@@ -1605,14 +1385,14 @@
       // Apertura o chiusura del campo date e controllo correttezza date in chiusura */
       for (var i=0; i<NumCheck; i++)
       {
-	         node=document.getElementById('L_SPE'+i);
+	         node = document.getElementById('L_SPE'+i);
 	         if (i == id && document.InserisciOrdinanzaLiberazioneAnticipata.gg_SPE[id].checked)
 	         {
 	           // apertura
 	           //alert ("Sto aprendo " + i);
 	           // node.enabled = true;
 	
-	           node.style.display='block';
+	           node.style.display = 'block';
 	         }
          	 else
          	 {
@@ -1661,7 +1441,7 @@
 						
             	}	// chiude if (i == id)
 
-           		node.style.display='none';
+           		node.style.display = 'none';
            		 
          	}	// Chiude la Else di if (i == id && document.InserisciOrdinanzaLiberazioneAnticipata.gg[id].checked)
          		
@@ -1669,7 +1449,7 @@
       
        // Colore dei check
        var blue=true;
-       node=document.getElementById('SL_SPE'+id);
+       node = document.getElementById('SL_SPE'+id);
        var elem = 0;
        elem=id*NumDate;
        for (var j=0; j<NumDate; j++, elem++)
@@ -1680,13 +1460,13 @@
        if (blue)
        {
          //alert ("blue");
-         node.style.color="Navy";
+         node.style.color = "Navy";
          uncheckDate_spe(id);
        }
        else
        {
          //alert ("red");
-         node.style.color="Red";
+         node.style.color = "Red";
          checkDate_spe(id);
        }
 
@@ -1751,7 +1531,7 @@
         /* OK Date presenti */
         DataIni = new Date(aa0, mm0-1, gg0);
         DataFine  = new Date(aa1, mm1-1, gg1);
-        if(DataIni == null && DataFine == null)
+        if (DataIni == null && DataFine == null)
         {
         	//alert ("fffffffffffffffffffff");
         	return false;
@@ -1774,11 +1554,11 @@
 		elem=id*NumDate;
 		for (var j=0; j<NumDate; j++, elem++)
 		{
-			if(j==0)
+			if (j==0)
 			{
 				var gg0 = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO_SPE %>[elem].value;
 
-				if(gg0 != '')
+				if (gg0 != '')
 				{
 					riga = true;
 				}
@@ -1787,7 +1567,7 @@
 			{
 				var gg0 = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO_SPE %>[elem].value;
 				var gg0rigaprima = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO_SPE %>[elem-1].value;
-				if(gg0 != '')
+				if (gg0 != '')
 				{
 					riga = true;
 				}
@@ -1796,7 +1576,7 @@
 					riga = false
 				}
 
-				if(gg0rigaprima != '')
+				if (gg0rigaprima != '')
 				{
 					rigaprima = true;
 				}
@@ -1804,7 +1584,7 @@
 					rigaprima = false
 				}
 
-				if(rigaprima == false && riga == true){
+				if (rigaprima == false && riga == true){
 					returnchkDC = false;
 				}
 			}
@@ -1862,7 +1642,7 @@
        if (periodo != 0)
        {
 /*
-          if (periodo != 180 )
+          if (periodo != 180)
           {
              retValue = confirm("Le date inserite individuano un periodo di " + periodo +" giorni e non di 180. Confermi comunque la concessione del semestre?");
           }
@@ -1976,12 +1756,12 @@
 		         retValue = Chiusura();
 		         if (retValue)
 		         {
-		        	   node=document.getElementById("comune_int");
-			           node.style.display='block';
-			           node=document.getElementById("semestri_int");
-			           node.style.display='block';
-			           node=document.getElementById("periodo_int");
-			           node.style.display='none';
+		        	   node = document.getElementById("comune_int");
+			           node.style.display = 'block';
+			           node = document.getElementById("semestri_int");
+			           node.style.display = 'block';
+			           node = document.getElementById("periodo_int");
+			           node.style.display = 'none';
 			           // Salvataggio dei giorni concessi per il periodo unico
 			           GioniConcessi_int = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_INT %>.value;
 			           // Ripristino dei giorni concessi per semestre
@@ -2009,12 +1789,12 @@
 		         retValue = Chiusura();
 		         if (retValue)
 		         {
-			      	   node=document.getElementById("comune_int");
-			           node.style.display='block';        	 
-			           node=document.getElementById("semestri_int");
-			           node.style.display='none';
-			           node=document.getElementById("periodo_int");
-			           node.style.display='block';
+			      	   node = document.getElementById("comune_int");
+			           node.style.display = 'block';        	 
+			           node = document.getElementById("semestri_int");
+			           node.style.display = 'none';
+			           node = document.getElementById("periodo_int");
+			           node.style.display = 'block';
 			           // Ripristino dei giorni concessi per periodo unico
 			           modalita = 'C';
 			           document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_INT %>.value = GioniConcessi_int;
@@ -2042,27 +1822,27 @@
 	      for (i=0; i < NumCheck; i++)
 	      {
 		       // Vengono disabilitati tutti i blocchi periodi vuoti
-		        if(!IsCheckedDate_int(i))
+		        if (!IsCheckedDate_int(i))
 		        {
 			           // alert("disabilito L_INT"+i);
-			           node=document.getElementById('L_INT'+i);
+			           node = document.getElementById('L_INT'+i);
 			           node.disabled = true;
 			           //alert("disabilitato L_INT" + i);
 		        }
 	      }
 	
-	      if(!document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE_INT %>[0].checked)
+	      if (!document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE_INT %>[0].checked)
 	      {
 		        for (i=0; i < NumTotale; i++)
 		        {
-			          node=document.getElementById('L_INT'+i);
+			          node = document.getElementById('L_INT'+i);
 			          node.disabled = true;
 			          // alert("disabilitato L_INT"+i);
 		        }
 	      }
 	      else
 	      {
-		        node=document.getElementById('L_INT'+IndPer);
+		        node = document.getElementById('L_INT'+IndPer);
 		        node.disabled = true;
 		        //alert("disabilitato L_INT"+IndPer);
 	      }
@@ -2107,12 +1887,12 @@
       // Apertura o chiusura del campo date e controllo correttezza date in chiusura */
       for (var i=0; i<NumCheck; i++)
       {
-	         node=document.getElementById('L_INT'+i);
+	         node = document.getElementById('L_INT'+i);
 	         if (i == id && document.InserisciOrdinanzaLiberazioneAnticipata.gg_INT[id].checked)
 	         {
 		           // apertura
 		           //alert ("Sto aprendo INT " + i);
-		           node.style.display='block';
+		           node.style.display = 'block';
 	         }
          	 else
          	 {
@@ -2161,7 +1941,7 @@
 						
             	}	// chiude if (i == id)
 
-           		node.style.display='none';
+           		node.style.display = 'none';
            		 
          	}	// Chiude la Else di if (i == id && document.InserisciOrdinanzaLiberazioneAnticipata.gg[id].checked)
          		
@@ -2169,7 +1949,7 @@
       
        // Colore dei check
        var blue=true;
-       node=document.getElementById('SL_INT'+id);
+       node = document.getElementById('SL_INT'+id);
        var elem = 0;
        elem = id*NumDate;
        for (var j=0; j<NumDate; j++, elem++)
@@ -2180,13 +1960,13 @@
        if (blue)
        {
 	         //alert ("blue");
-	         node.style.color="Navy";
+	         node.style.color = "Navy";
 	         uncheckDate_int(id);
        }
        else
        {
 	         //alert ("red");
-	         node.style.color="Red";
+	         node.style.color = "Red";
 	         checkDate_int(id);
        }
 
@@ -2251,7 +2031,7 @@
 		        /* OK Date presenti */
 		        DataIni = new Date(aa0, mm0-1, gg0);
 		        DataFine  = new Date(aa1, mm1-1, gg1);
-		        if(DataIni == null && DataFine == null)
+		        if (DataIni == null && DataFine == null)
 		        {
 		        	//alert ("fffffffffffffffffffff");
 		        	return false;
@@ -2276,11 +2056,11 @@
 		elem = id*NumDate;
 		for (var j=0; j<NumDate; j++, elem++)
 		{
-			if(j==0)
+			if (j==0)
 			{
 				var gg0 = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO_INT %>[elem].value;
 
-				if(gg0 != '')
+				if (gg0 != '')
 				{
 					riga = true;
 				}
@@ -2289,7 +2069,7 @@
 			{
 				var gg0 = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO_INT %>[elem].value;
 				var gg0rigaprima = document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO_INT %>[elem-1].value;
-				if(gg0 != '')
+				if (gg0 != '')
 				{
 					riga = true;
 				}
@@ -2298,7 +2078,7 @@
 					riga = false
 				}
 
-				if(gg0rigaprima != '')
+				if (gg0rigaprima != '')
 				{
 					rigaprima = true;
 				}
@@ -2306,7 +2086,7 @@
 					rigaprima = false
 				}
 
-				if(rigaprima == false && riga == true)
+				if (rigaprima == false && riga == true)
 				{
 					returnchkDC = false;
 				}
@@ -2369,23 +2149,23 @@
 		var indiceChekato = document.InserisciOrdinanzaLiberazioneAnticipata.<%= ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO %>.value;
 //  Se al <CONFERMA> è selezionato OGGETTO L.A. di indice[0] (COD 2130)....	
 
-		if(indiceChekato == 0)
+		if (indiceChekato == 0)
 		{	
 			var dateInserite = 0;	
 		    for (var T=0; T<NumCheck*NumDate; T++)
 		    {
-			      if(document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO%>[T].value !=""
-			      && document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_INIZIO%>[T].value !=""
-			      && document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_INIZIO%>[T].value !="")
+			      if (document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO%>[T].value != ""
+			      && document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_INIZIO%>[T].value != ""
+			      && document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_INIZIO%>[T].value != "")
 			      {
 			        	dateInserite++;
 			      }
 			      
-			      if(dateInserite!= 0)
+			      if (dateInserite!= 0)
 			        	break;
 		    }
 	
-		    if(dateInserite == 0)
+		    if (dateInserite == 0)
 		    {
 		      	alert('Inserire periodo di L.A.; Impossibile procedere');
 		        return false;
@@ -2417,23 +2197,23 @@
 			
 		}
 		//  Se al <CONFERMA> è selezionato OGGETTO L.A. SPECIALE di indice[1] (COD 2131)....	
-		else if(indiceChekato == 1)		
+		else if (indiceChekato == 1)		
 		{	
 			var dateInseriteLS = 0;	
 		    for (var TS = 0; TS < NumCheck*NumDate; TS ++)
 		    {
-			      if(document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO_SPE %>[TS].value !=""
-			      && document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_INIZIO_SPE %>[TS].value !=""
-			      && document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_INIZIO_SPE %>[TS].value !="")
+			      if (document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO_SPE %>[TS].value != ""
+			      && document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_INIZIO_SPE %>[TS].value != ""
+			      && document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_INIZIO_SPE %>[TS].value != "")
 			      {
 			        	dateInseriteLS ++;
 			      }
 			      
-			      if(dateInseriteLS != 0)
+			      if (dateInseriteLS != 0)
 			        	break;
 		    }
 	
-		    if(dateInseriteLS == 0)
+		    if (dateInseriteLS == 0)
 		    {
 		      	alert('Inserire periodo di L.A.SPECIALE; Impossibile procedere');
 		        return false;
@@ -2458,7 +2238,7 @@
 			
 			if ( dateInseriteLS != 0
 			    && document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_SPE %>.value == 0
-			    && document.getElementById('SL_SPE' + IndPer).style.color == 'red' )	
+			    && document.getElementById('SL_SPE' + IndPer).style.color == 'red')	
 			{
 					alert('Giorni Concessi L.A.SPECIALE non può essere uguale a zero!\n Impossibile procedere');
 				  	return false;
@@ -2466,23 +2246,23 @@
 			
 		}
 		//  Se al <CONFERMA> è selezionato OGGETTO L.A. INTEGRAZIONE di indice[2] (COD 2132)....	
-		else if(indiceChekato == 2)		
+		else if (indiceChekato == 2)		
 		{	
 			var dateInseriteLI = 0;	
 		    for (var TI = 0; TI < NumCheck*NumDate; TI ++)
 		    {
-			      if(document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO_INT %>[TI].value !=""
-			      && document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_INIZIO_INT %>[TI].value !=""
-			      && document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_INIZIO_INT %>[TI].value !="")
+			      if (document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO_INT %>[TI].value != ""
+			      && document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_INIZIO_INT %>[TI].value != ""
+			      && document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_INIZIO_INT %>[TI].value != "")
 			      {
 			        	dateInseriteLI ++;
 			      }
 			      
-			      if(dateInseriteLI != 0)
+			      if (dateInseriteLI != 0)
 			        	break;
 		    }
 	
-		    if(dateInseriteLI == 0)
+		    if (dateInseriteLI == 0)
 		    {
 		      	alert('Inserire periodo di INTEGRAZIONE L.A.; Impossibile procedere');
 		        return false;
@@ -2506,7 +2286,7 @@
 			
 			if ( dateInseriteLI != 0
 			    && document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_INT %>.value == 0
-			    && document.getElementById('SL_INT' + IndPer).style.color == 'red' )	
+			    && document.getElementById('SL_INT' + IndPer).style.color == 'red')	
 			{
 					alert('Giorni Concessi di INTEGRAZIONE L.A. non può essere uguale a zero!\n Impossibile procedere');
 				  	return false;
@@ -2569,8 +2349,8 @@
       </td>
     </tr>
     <tr>
-      <input type="hidden" value="" name="<%=ICostantiLicenzaLibanticipata.CAMPO_ID_LICENZA_LIBANTICIPATA%>">
       <td class="l" colspan="2">
+      <input type="hidden" value="" name="<%=ICostantiLicenzaLibanticipata.CAMPO_ID_LICENZA_LIBANTICIPATA%>">
         <a href="Javascript:ListaLicenzeAnticipate('InserisciOrdinanzaLiberazioneAnticipata');">
           Seleziona provvedimento di Sorveglianza dalla lista <img src="/images/filefolder.gif" border=0>
         </a>
@@ -3205,7 +2985,7 @@ for (int i=0; i<NumCheck; i++)
 		for (int x=0; x< NumDate; x++)
    		{
 			// Costruzione dei messaggi di errore in base alla sezione Semestri o Periodi
-			if(i<12)
+			if (i<12)
 			{
 				mex ="Semestri Concessi: sezione "+ (i+1) +"\\n\\n";
 			}
