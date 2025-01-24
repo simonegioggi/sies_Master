@@ -31,14 +31,14 @@ if (filtroPosizioneGiuridica != null && filtroPosizioneGiuridica.length() > 0)  
   <% } else {%>
     <tr><td>&nbsp;</td></tr>
       <tr><td class="Titolo" >Posizione giuridica</td></tr>
-<tr><td>
+<tr>
 <table width="60%">
 	<tr><td class="l">Tutti </td> <td class="c"><input type="radio" name="<%=ICostantiStatistiche.FILTRO_POSIZIONE_GIURIDICA%>" value="tutti" checked  ></td></tr>
 	<tr><td class="l">Solo procedimenti collegati a soggetti Liberi </td> <td class="c"><input type="radio" name="<%=ICostantiStatistiche.FILTRO_POSIZIONE_GIURIDICA%>" value="Libero" ></td></tr>
 	<tr><td class="l">Solo procedimenti collegati soggetti Detenuti </td> <td class="c"> <input type="radio" name="<%=ICostantiStatistiche.FILTRO_POSIZIONE_GIURIDICA%>" value="Detenuto" ></td></tr>
  <tr><td>&nbsp;</td></tr>	 
   </table> 
-  </td></tr>
+  </tr>
   </table> 
 <% } 
  if (flagSecondo) { 

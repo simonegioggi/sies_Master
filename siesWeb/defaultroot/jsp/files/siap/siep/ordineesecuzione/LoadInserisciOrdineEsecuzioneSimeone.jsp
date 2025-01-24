@@ -811,10 +811,16 @@
         <TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>"  cols=35></textarea>
       </td>
 <%}%>
-</tr>
+
+
 <tr><td>&nbsp;</td></tr>
+
+
+    </tr>
+
+
 <%}else{%>
-    <tr>
+    <!--tr-->
     <%if(lPosizione.getCodPosizioneGiuridica().equals("74") || lPosizione.getCodPosizioneGiuridica().equals("75") 
     		|| lPosizione.getCodPosizioneGiuridica().equals("76") || lPosizione.getCodPosizioneGiuridica().equals("77"))
 	{%>
@@ -873,13 +879,17 @@
 
 
        <%}%>
-      	<td class="l">Note</td>
-      	<td class="L">
-        	<TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>"  cols=35></textarea>
-		</td>
-	</tr>
+
+      <td class="l">Note</td>
+      <td class="L">
+        <TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>"  cols=35></textarea>
+      </td>
 <tr><td>&nbsp;</td></tr>
    <%}%>
+
+
+
+    </tr>
 <%}%>
 <%-- MEV NUOVA INFRASTRUTTURA: refactoring --%>
 <%--td class="L">
@@ -952,19 +962,17 @@
 				{
 %>
         	<a href="Javascript:ListaComuni('LoadInserisciOrdineEsecuzione','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>');">
-        	          <img src="/images/filefolder.gif" border=0>
-        </a>
 <%
 				}
 				else
 				{
 %>
         	<a href="Javascript:ListaComuni('LoadInserisciOrdineEsecuzione','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>[<%=lIdxAvv%>]');">
-        	          <img src="/images/filefolder.gif" border=0>
-        </a>
 <%
 				}
 %>
+          <img src="/images/filefolder.gif" border=0>
+        </a>
       </td>
        <td class="l">Note</td>
        <td class="L">
@@ -1039,19 +1047,22 @@
         </td>
    </tr>
   <%}%>
-	<tr>
-		<td>
-<%if(istanza!=null && istanza.getIdEvento()!=null) {
+
+
+<%if(istanza!=null && istanza.getIdEvento()!=null)
+{
       FlagIstanza="S";%>
-      		<input type="hidden" name="IdIstanza" value="<%=istanza.getIdEvento()%>">
+      <input type="hidden" name="IdIstanza" value="<%=istanza.getIdEvento()%>">
 <%
-} else {
+}
+else
+{
       FlagIstanza="N";
 }
 %>
-			<input type="hidden" name="istanza" value="<%=FlagIstanza%>">
-		</td>
-	</tr>
+<input type="hidden" name="istanza" value="<%=FlagIstanza%>">
+
+
      <%if(((istanza != null) && (istanza.getIdEvento()!=null))||(lPosizione.getCodPosizioneGiuridica().equals("04")) || (lPosizione.getCodPosizioneGiuridica().equals("02")) || (lPosizione.getCodPosizioneGiuridica().equals("70"))|| (lPosizione.getCodPosizioneGiuridica().equals("71"))|| (lPosizione.getCodPosizioneGiuridica().equals("72")))
    {
    %>
@@ -1086,14 +1097,13 @@
      </tr>
 
    <% }%>
-	<tr>
-		<td class="lNoBord" colspan="2">
-			<br>
-			<INPUT class="bottone" type="submit" name="I" value="Conferma" onClick="javascript:return Verify();">
-		</td>
-	</tr>
-</table>
-</form>
+    		<td class="lNoBord" colspan="2">
+      			<br>
+      			<INPUT class="bottone" type="submit" name="I" value="Conferma" onClick="javascript:return Verify();">
+    		</td>
+  		</tr>
+	</table>
+	</form>
 	<script language="JavaScript" type="text/javascript">
   	var frmvalidator  = new Validator("LoadInserisciOrdineEsecuzione");
 <%

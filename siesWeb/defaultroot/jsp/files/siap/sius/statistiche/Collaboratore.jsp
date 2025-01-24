@@ -29,14 +29,14 @@ if (filtroCollaboratore != null && filtroCollaboratore.length() > 0)  {
   <% } else {%>
     <tr><td>&nbsp;</td></tr>
       <tr><td class="Titolo" >Tipo di Procedimento</td></tr>
-<tr><td>
+<tr>
 <table width="60%">
 	<tr><td class="l">Tutti </td> <td class="c"><input type="radio" name="<%=ICostantiStatistiche.FILTRO_COLLABORATORE%>" value="tutti" checked  ></td></tr>
 	<tr><td class="l">Procedimenti collegati a Collaboratore </td> <td class="c"><input type="radio" name="<%=ICostantiStatistiche.FILTRO_COLLABORATORE%>" value="SI" ></td></tr>
 	<tr><td class="l">Procedimenti non collegati a Collaboratore </td> <td class="c"> <input type="radio" name="<%=ICostantiStatistiche.FILTRO_COLLABORATORE%>" value="NO" ></td></tr>
  <tr><td>&nbsp;</td></tr>	 
   </table> 
-  </td></tr>
+  </tr>
   </table> 
 <% } 
  if (flagSecondo) { 

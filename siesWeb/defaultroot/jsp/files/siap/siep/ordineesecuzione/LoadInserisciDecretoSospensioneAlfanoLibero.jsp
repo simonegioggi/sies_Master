@@ -437,10 +437,10 @@
 <%
         }
 %>
-        	</font>
-        	<input type="HIDDEN" title="Codice Posizione" value="<%=StringUtils.toStringJSP(lPosizione.getCodPosizioneGiuridica())%>" type="text" name="<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>"  maxlength="6" size="6" >
-		</td>
-	</tr>
+        </font>
+        </td>
+        <input type="HIDDEN" title="Codice Posizione" value="<%=StringUtils.toStringJSP(lPosizione.getCodPosizioneGiuridica())%>" type="text" name="<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>"  maxlength="6" size="6" >
+      </tr>
 <%
         if(lFascicoloAssociato.getFlagAltraCausa()!=null && lFascicoloAssociato.getFlagAltraCausa().equals("S"))
         {
@@ -692,7 +692,7 @@
      	</td>
     </tr>
     <tr>
-   	  <td><input type="HIDDEN" value="<%=StringUtils.toStringJSP(penaresidua.getIdPenaResidua())%>" name="<%=ICostantiPenaResidua.CAMPO_ID_PENA_RESIDUA%>"></td>
+   	  <input type="HIDDEN" title="Id Pena Residua" value="<%=StringUtils.toStringJSP(penaresidua.getIdPenaResidua())%>" type="text" name="<%= ICostantiPenaResidua.CAMPO_ID_PENA_RESIDUA %>">
     </tr>
   </table>
   <table width="100%">
@@ -761,17 +761,18 @@
 					<TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>"  cols=35></textarea>
 				</td>
 		<%}%>
+
+		<tr><td>&nbsp;</td></tr>
 	</tr>
-<tr><td>&nbsp;</td></tr>
-<tr>
+
+
 <%}else{%>
 		<td class="l" width="20%">Autorità Destinazione <font class=ob>(*)</font></td>
-<%
-if (lPosizione.getCodPosizioneGiuridica().equals("07") || lPosizione.getCodPosizioneGiuridica().equals("10")
-		|| lPosizione.getCodPosizioneGiuridica().equals("02") || lPosizione.getCodPosizioneGiuridica().equals("04")
-		|| lPosizione.getCodPosizioneGiuridica().equals("16") || lPosizione.getCodPosizioneGiuridica().equals("20")
-		|| lPosizione.getCodPosizioneGiuridica().equals("46") || lPosizione.getCodPosizioneGiuridica().equals("47")) {
-%>
+			<%if(lPosizione.getCodPosizioneGiuridica().equals("07") || lPosizione.getCodPosizioneGiuridica().equals("10") ||
+      		 lPosizione.getCodPosizioneGiuridica().equals("02") || lPosizione.getCodPosizioneGiuridica().equals("04") ||
+      		 lPosizione.getCodPosizioneGiuridica().equals("16") || lPosizione.getCodPosizioneGiuridica().equals("20") || 
+     			 lPosizione.getCodPosizioneGiuridica().equals("46")	|| lPosizione.getCodPosizioneGiuridica().equals("47") )
+			{%>
  				<td class="L" colspan="3">
        		<select  Title="Autorita Esterna" class="small" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>">
         		<%=autoritaEsternaE%>
@@ -790,6 +791,7 @@ if (lPosizione.getCodPosizioneGiuridica().equals("07") || lPosizione.getCodPosiz
       <td class="L">
         <TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>"  cols=30 ></textarea>
       </td>
+
 	<%}else{
 			//modifica relativa al tipo istituto
 		  if(lLuogoDetenzione != null && lLuogoDetenzione.getIstitutoDetenzione() != null)
@@ -811,10 +813,13 @@ if (lPosizione.getCodPosizioneGiuridica().equals("07") || lPosizione.getCodPosiz
       <td class="L">
         <TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>"  cols=35></textarea>
       </td>
+		<tr><td>&nbsp;</td></tr>
    <%}%>
+
+		</tr>
 <%}%>
+
   	</tr>
-  	<tr><td>&nbsp;</td></tr>
     <tr>
       <td class="Titolo" colspan=6>Notifica al Difensore</td></tr>
 <%
@@ -842,11 +847,11 @@ if (lPosizione.getCodPosizioneGiuridica().equals("07") || lPosizione.getCodPosiz
               <font class="campo">
                 <%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescrTipo())%>
               </font>
+            </td>
             <input type="HIDDEN" title="Codice Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep())%>" type="text" name="<%= ICostantiAvvocato.CAMPO_ID_AVVOCATO %>"  maxlength="35" size="35">
-          </td>
-	</tr>
-</table>
-<table width=100%>
+          </tr>
+        </table>
+         <table width=100%>
           <tr><td class="l">Autorità Destinazione </td >
           <td class="L" colspan=3>
              <select Title="Autorita Esterna" class="small" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>" >
@@ -861,17 +866,15 @@ if (lPosizione.getCodPosizioneGiuridica().equals("07") || lPosizione.getCodPosiz
 				if( lNumAvvocati < 2 )
 				{%>
         	<a href="Javascript:ListaComuni('LoadInserisciDecretoSospensioneAlfanoLibero','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>');">
-        	          <img src="/images/filefolder.gif" border=0>
-        </a>
 <%
 				}else{
 %>
         	<a href="Javascript:ListaComuni('LoadInserisciDecretoSospensioneAlfanoLibero','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>[<%=lIdxAvv%>]');">
-        	          <img src="/images/filefolder.gif" border=0>
-        </a>
 <%
 				}
 %>
+          <img src="/images/filefolder.gif" border=0>
+        </a>
       </td>
        <td class="l">Note</td>
        <td class="L">
@@ -974,6 +977,9 @@ if (lPosizione.getCodPosizioneGiuridica().equals("07") || lPosizione.getCodPosiz
 	    </tr>
 	  </table>
 	</div>
+	</td>
+	</tr>
+
 	<%if(istanza!=null && istanza.getIdEvento()!=null)
 	{
       FlagIstanza="S";
@@ -984,13 +990,16 @@ if (lPosizione.getCodPosizioneGiuridica().equals("07") || lPosizione.getCodPosiz
       FlagIstanza="N";
 		}%>
 		<input type="hidden" name="istanza" value="<%=FlagIstanza%>">
-	</td>
-	</tr>
-	<tr>
-	    <td class="lNoBord" colspan="2">
-	      	<br><INPUT class="bottone" type="submit" name="I" value="Conferma" onClick="javascript:return Verify();">
-	    </td>
-	</tr>
+
+
+    <td class="lNoBord" colspan="2">
+      <br><INPUT class="bottone" type="submit" name="I" value="Conferma" onClick="javascript:return Verify();">
+    </td>
+  </tr>
+
+
+
+
 </table>
 </form> 
 <script language="JavaScript" type="text/javascript">

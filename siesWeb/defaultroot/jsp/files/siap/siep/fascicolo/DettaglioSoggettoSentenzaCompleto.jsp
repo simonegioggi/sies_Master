@@ -474,18 +474,16 @@ if (fascicolo != null && fascicolo.getChiaveProgr() != null
 %>    
 			<font class="campo">
 				<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sentenza.action.ActLoadDettaglioDatiProvvedimentoMSFuoriSent&<%=ICostantiSentenza.CAMPO_ID_SENTENZA%>=<%=sentenza.getIdSentenza()%>" title="Sentenza">
-					<%=StringUtils.toStringJSP(sentenza.getAnnoSentenza())%> / <%=StringUtils.toStringJSP(sentenza.getNumeroSentenza())%>
-          		</a>&nbsp;
 <%
 } else {
 %>
         	<font class="campo">
         		<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sentenza.action.ActLoadDettaglioSentenza&<%=ICostantiSentenza.CAMPO_ID_SENTENZA%>=<%=sentenza.getIdSentenza()%>" title="Sentenza">
-        			<%=StringUtils.toStringJSP(sentenza.getAnnoSentenza())%> / <%=StringUtils.toStringJSP(sentenza.getNumeroSentenza())%>
-          		</a>&nbsp;
 <%
 }
 %>        	
+          			<%=StringUtils.toStringJSP(sentenza.getAnnoSentenza())%> / <%=StringUtils.toStringJSP(sentenza.getNumeroSentenza())%>
+          		</a>&nbsp;
           	</font>
           	<font class="label">del</font>&nbsp;
             	<%=DateUtils.getDateToString(sentenza.getDataProvvedimento(), "dd-MM-yyyy")%>
@@ -854,6 +852,9 @@ elencoPosGiurAltraCausa.add("81");
 //==============================================================================
 if (dettagliofascicolo.getPosizioneGiuridica() != null) {
 %>
+	<tr>
+    	<td class="L">
+      		<font class="label">Posizione Giuridica : </font>&nbsp;
 <%
 	// Se detenuto altra causa, visualizzo Istituito di detenzione o Indirizzo
 	if (fascicolo.getFlagAltraCausa() != null && fascicolo.getFlagAltraCausa().equals("S")
@@ -862,12 +863,7 @@ if (dettagliofascicolo.getPosizioneGiuridica() != null) {
 			// libero - altra causa
 			|| elencoPosGiurAltraCausa.contains(dettagliofascicolo.getPosizioneGiuridica().getCodPosizioneGiuridica()))) {
 %>
-	<tr>
-    	<td class="L">
-      		<font class="label">Posizione Giuridica : </font>&nbsp;
 			<font color=red><%=StringUtils.toStringJSP(dettagliofascicolo.getPosizioneGiuridica().getDescrPosizioneGiuridica())%></font>
-		</td>
-	</tr>
 <%
 		if (dettagliofascicolo.getAltraCausa() != null) {
 			if (dettagliofascicolo.getAltraCausa().getIstDetIdIstitutoDetenzione() != null) {
@@ -902,12 +898,7 @@ if (dettagliofascicolo.getPosizioneGiuridica() != null) {
         // Non detenuto altra causa
         //===================================
 %>
-	<tr>
-    	<td class="L">
-      		<font class="label">Posizione Giuridica : </font>&nbsp;
 			<font color=red><%=StringUtils.toStringJSP(dettagliofascicolo.getPosizioneGiuridica().getDescrPosizioneGiuridica())%></font>
-		</td>
-	</tr>
 <%
 		if (dettagliofascicolo.getLuogoDetenzione() != null) {
 			if (dettagliofascicolo.getLuogoDetenzione().getIstDetIdIstitutoDetenzione() != null
@@ -940,6 +931,7 @@ if (dettagliofascicolo.getPosizioneGiuridica() != null) {
 		}
 	}
 } // end if (dettagliofascicolo.getPosizioneGiuridica() != null)
+
 if (fascicolo.getCodTipoPosLibero().equals("I")) {
 %>
 	<tr>

@@ -502,6 +502,8 @@
   {%>
    <input type="HIDDEN" name="flagmisura" value="S">
 <%}%>
+
+
     <table width='100%'>
       <tr>
         <td class="l">Posizione Giuridica </td>
@@ -522,8 +524,8 @@
         }
 %>
         </font>
+        </td>
         <input type="HIDDEN" title="Codice Posizione" value="<%=StringUtils.toStringJSP(lPosizione.getCodPosizioneGiuridica())%>" type="text" name="<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>"  maxlength="6" size="6" >
-       </td>
       </tr>
 <%
         if(lFascicoloAssociato.getFlagAltraCausa()!=null && lFascicoloAssociato.getFlagAltraCausa().equals("S"))
@@ -726,9 +728,7 @@ if(!lPosizione.isLibero() || (lFascicoloAssociato.getFlagAltraCausa()!=null &&  
     </td>
   </tr>
   <tr>
-  <td>
     <input type="HIDDEN" title="Id Pena Residua" value="<%=StringUtils.toStringJSP(penaresidua.getIdPenaResidua())%>" type="text" name="<%= ICostantiPenaResidua.CAMPO_ID_PENA_RESIDUA %>">
-  </td>
   </tr>
 </table>
 
@@ -820,6 +820,7 @@ if(!lPosizione.isLibero() || (lFascicoloAssociato.getFlagAltraCausa()!=null &&  
 </table>
 </div>
 
+
 <div id="revocapm" style="visibility:hidden; position:relative; " >
   <table width ="100%">
     <tr>
@@ -839,9 +840,8 @@ if(!lPosizione.isLibero() || (lFascicoloAssociato.getFlagAltraCausa()!=null &&  
 </tr>
 </table>
 </div>
-
 <div id="magistrato" style="visibility:visible; position:relative; " >
-<table width="100%">
+     <table width="100%">
      <tr><td class="Titolo" colspan=6> Magistrato </td></tr>
      <tr>
      <td class="l" width='30%'>Magistrato</td>
@@ -860,7 +860,7 @@ if(!lPosizione.isLibero() || (lFascicoloAssociato.getFlagAltraCausa()!=null &&  
 </div>
 
 <div id="istituto" style="visibility:hidden; position:relative; " >
-<table width="100%">
+     <table width="100%">
    <tr><td class="Titolo" colspan=6>Destinatari</td></tr>
    <tr>
     <td class="l" width='30%'>Istituto Detenzione <font class=ob>(*)</font></td>
@@ -894,7 +894,7 @@ if(!lPosizione.isLibero() || (lFascicoloAssociato.getFlagAltraCausa()!=null &&  
 </div>
 
 <div id="autorita" style="visibility:hidden; position:relative; " >
-<table width="100%">
+     <table width="100%">
    <tr><td class="Titolo" colspan=6>Destinatari</td></tr>
     <tr>
      <td class="l" width='30%'>Autorità di polizia competente per territorio <font class=ob>(*)</font></td>
@@ -919,9 +919,8 @@ if(!lPosizione.isLibero() || (lFascicoloAssociato.getFlagAltraCausa()!=null &&  
     </tr>
 </table>
 </div>
-
 <div id="tribunale" style="visibility:hidden; position:relative; " >
-<table width="100%">
+     <table width="100%">
    <tr>
          <td class="l" width ="30%">Tribunale di Sorveglianza</td>
          <td class="l"  colspan="3">
@@ -933,9 +932,8 @@ if(!lPosizione.isLibero() || (lFascicoloAssociato.getFlagAltraCausa()!=null &&  
      </tr>
 </table>
 </div>
-
 <div id="difensore" style="visibility:visible; position:relative; " >
-<table width="100%">
+     <table width="100%">
     <tr><td class="Titolo" colspan=6>Notifica al Difensore</td></tr>
 <%
       int lIdxAvv = 0;
@@ -945,9 +943,8 @@ if(!lPosizione.isLibero() || (lFascicoloAssociato.getFlagAltraCausa()!=null &&  
       {
         AvvocatoSiepModel lAvv =  (AvvocatoSiepModel)lItxAvv.next();
 %>
-</table>
-
-<table width='100%'>
+        </table>
+        <table width='100%'>
           <tr>
             <td class="l" width="20%">Per Avvocato </td>
             <td class="L">
@@ -962,12 +959,11 @@ if(!lPosizione.isLibero() || (lFascicoloAssociato.getFlagAltraCausa()!=null &&  
               <font class="campo">
                 <%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescrTipo())%>
               </font>
+            </td>
             <input type="HIDDEN" title="Codice Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep())%>" type="text" name="<%= ICostantiAvvocato.CAMPO_ID_AVVOCATO %>"  maxlength="35" size="35">
-           </td>
           </tr>
-</table>
-        
-<table width='100%'>
+        </table>
+         <table width='100%'>
           <tr><td class="l" width="20%">Autorità Destinazione </td>
           <td class="L" colspan='3'>
              <select Title="Autorita Esterna" class="small" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>" >
@@ -983,19 +979,17 @@ if(!lPosizione.isLibero() || (lFascicoloAssociato.getFlagAltraCausa()!=null &&  
         {
 %>
           <a href="Javascript:ListaComuni('LoadInserisciRevocaSospensioneAlfano','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>');">
-                    <img src="/images/filefolder.gif" border=0>
-        </a>
 <%
         }
         else
         {
 %>
           <a href="Javascript:ListaComuni('LoadInserisciRevocaSospensioneAlfano','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>[<%=lIdxAvv%>]');">
-                    <img src="/images/filefolder.gif" border=0>
-        </a>
 <%
         }
 %>
+          <img src="/images/filefolder.gif" border=0>
+        </a>
       </td>
       <td  class="l">Note</td>
        <td  class="L">
@@ -1007,7 +1001,6 @@ if(!lPosizione.isLibero() || (lFascicoloAssociato.getFlagAltraCausa()!=null &&  
     lIdxAvv++;
   }
 %>
-</table>
 
 <table width='100%'>
 <%
@@ -1026,9 +1019,7 @@ if(!lPosizione.isLibero() || (lFascicoloAssociato.getFlagAltraCausa()!=null &&  
 <%}%>
 </table>
 
-<table>
-	<tr>
-   		<td class="lNoBord" colspan="2">
+   <td class="lNoBord" colspan="2">
    <%if(decreto.getDataEmissione()==null)
 {%>
       <input type="hidden" name="datadecreto" value="N">
@@ -1039,8 +1030,8 @@ if(!lPosizione.isLibero() || (lFascicoloAssociato.getFlagAltraCausa()!=null &&  
      
 
       <br><INPUT class="bottone" type="submit" name="I" value="Conferma" onClick="javascript:return Verify();">
-    	</td>
-	</tr>
+    </td>
+  </tr>
 </table>
 </div>
 </form>

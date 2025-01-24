@@ -230,8 +230,6 @@ if (lUdienzaSige.getCollegio() != null) {
                   	'<%=lUdienzaSige.getCollegio().getCodCollegio()%>',
                    	'<%=DateUtils.getDateToString(dataUdienza, "dd/MM/yyyy")%>',
                    	'<%=codMagis%>', '<%=StringUtils.toStringJSP(idSezione)%>', '<%=lTipoRito%>', '<%=lUdienzaSige.getListaIdUdienze()%>');">
-                  	<img src="/images/fileselected.gif" border="0">
-          		</a>
 <%
 			} else {
 %>
@@ -244,11 +242,11 @@ if (lUdienzaSige.getCollegio() != null) {
                   	'null',
                    	'<%=DateUtils.getDateToString(dataUdienza, "dd/MM/yyyy")%>',
                    	'<%=codMagis%>', '<%=StringUtils.toStringJSP(idSezione)%>', '<%=lTipoRito%>' , '<%=lUdienzaSige.getListaIdUdienze()%>');">
-          			<img src="/images/fileselected.gif" border="0">
-          		</a>
 <%
 			}
 %>
+          			<img src="/images/fileselected.gif" border="0">
+          		</a>
 	        	<input type="HIDDEN" name='IdUdi' value='<%=lUdienzaSige.getIdUdienzaSige()%>'>
         	</td>
       	</tr>
@@ -257,6 +255,6 @@ if (lUdienzaSige.getCollegio() != null) {
 	}
 }
 %>
-</table>
-</body>
+	</table>
+	</body>
 </html>

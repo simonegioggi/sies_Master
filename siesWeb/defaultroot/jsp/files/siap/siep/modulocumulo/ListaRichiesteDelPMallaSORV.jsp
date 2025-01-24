@@ -262,7 +262,7 @@
 %>  
   <tr>
     <td class="c">
-<%--       			<a href="javascript:visualizzaNote('rec_<%=id_record%>')" title="Note "> --%>
+      			<a href="javascript:visualizzaNote('rec_<%=id_record%>')" title="Note ">
       <a href="javascript:visualizzaRecord('rec_<%=id_record%>','img_<%=id_record%>')"> 
         <img src="/images/expand.gif" width="16" height="16" alt="Dettaglio Richieste" border="0" id="img_<%=id_record%>" >
       </a>

@@ -55,6 +55,8 @@
       <td class="LBG">
       <font class="label">Funzione :</font>
       <font class="campo"> Elenco numero procedimenti per magistrato relatore e per udienza</font></td>
+
+     </td>
     <jsp:include page="<%=IWebConstants.PG_RETURN_BUTTON%>"/>
     </tr>
   </table>
@@ -66,9 +68,11 @@
 	</tr>
 	</table>
 	<table>
-    <tr>  			
-		<td class="bottone">
-  			<a href="<%=lRet%>">&nbsp;&nbsp; <%=lMessaggioUdienza%> &nbsp;&nbsp;</a>
+    <tr>
+  			<a href="<%=lRet%>">
+  			<td class="bottone">&nbsp;&nbsp; <%=lMessaggioUdienza%> &nbsp;&nbsp;
+  			</td>
+  			</a>
     	</td>
     </tr>
  	</table>
@@ -194,5 +198,7 @@
 <% } else{%>
  <font class="campo"> Nessun elemento trovato </font>
 <% }%>
-</body>
+  </form>
+  <br>
+  </body>
 </html>

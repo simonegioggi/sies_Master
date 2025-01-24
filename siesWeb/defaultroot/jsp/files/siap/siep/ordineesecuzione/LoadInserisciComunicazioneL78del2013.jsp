@@ -458,6 +458,7 @@ function Verify()
   <br>
   <FORM method="POST" name="LoadInserisciComunicazione78" action="<%= IWebConstants.PG_MAIN%>">
   <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.ordineesecuzione.action.ActInserisciComunicazioneL78del2013">
+
     <table>
       <tr>
         <td class="l">Posizione Giuridica </td>
@@ -465,8 +466,8 @@ function Verify()
           <font class="campo">
           <%=lPosizione.getDescrPosizioneGiuridica()%>
         </font>
-        <input type="HIDDEN" value="<%=StringUtils.toStringJSP(lPosizione.getCodPosizioneGiuridica())%>" name="<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>">
-      </td>
+        </td>
+        <input type="HIDDEN" title="Codice Posizione" value="<%=StringUtils.toStringJSP(lPosizione.getCodPosizioneGiuridica())%>" type="text" name="<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>"  maxlength="6" size="6" >
       </tr>
 <%
       if(lLuogoDetenzione.getIstitutoDetenzione() != null)
@@ -673,7 +674,9 @@ function Verify()
 		}
 %>
 	</table>
+
    	  <input type="HIDDEN" title="Id Pena Residua" value="<%=StringUtils.toStringJSP(penaresidua.getIdPenaResidua())%>" type="text" name="<%= ICostantiPenaResidua.CAMPO_ID_PENA_RESIDUA %>">
+
   <table width="100%">
      <tr><td class="Titolo" colspan=6> Magistrato </td></tr>
      <tr>
@@ -690,9 +693,11 @@ function Verify()
       </td>
      </tr>
     <tr>
-</table>
-<!--Notifica per l'Ente di Sorveglianza -->
-<table width="100%">
+ </table> 
+ 
+ <!--Notifica per l'Ente di Sorveglianza -->
+  
+    <table width="100%">
   	<tr>
 		<td class="Titolo" colspan=6> Notifica Sorveglianza</td></tr>
   	<tr>
@@ -703,6 +708,7 @@ function Verify()
            	</select>
         </td>               
   	</tr>
+
   	<tr>
   		<td class="L">Sede <font class=ob>(*)</font></td>
   		<td class="L">
@@ -718,15 +724,18 @@ function Verify()
   	</tr>
  <!--Notifica per l'Ente di Controllo -->
 <%--  <% // (solo se Posizione Giuridica Vale 02/70/71/72) %> --%>
+	
 	<%if(lPosizione.getCodPosizioneGiuridica().equals("02") ||
 		 lPosizione.getCodPosizioneGiuridica().equals("70") ||
 		 lPosizione.getCodPosizioneGiuridica().equals("71") ||
 		 lPosizione.getCodPosizioneGiuridica().equals("72")
 	     )
 	{	%>
+	
 		<tr>
 			<td class="Titolo" colspan=6> Notifica Autorità Preposta al Controllo</td></tr>
 	  	<tr>
+	
 			<td class="l">Autorità Preposta al Controllo</td>
 	  		<td class="L" colspan="3">
 	       		<select  Title="Autorita Controllo" class="small" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_C%>">
@@ -734,6 +743,7 @@ function Verify()
 	       		</select>
 	      	</td>
 	    </tr>  	
+	
 	  	<tr>
 	  		<td class="L">Sede <font class=ob>(*)</font></td>
 	  		<td class="L">
@@ -747,10 +757,12 @@ function Verify()
 	    		<TEXTAREA title="Note Autorità di Controllo" name="<%= ICostantiNotifica.CAMPO_NOTE_C %>"  cols=35></textarea>
 	    	</td>
 	  	</tr>
+	
 <%  } %>
-</table>
+   
 <!--Notifica per Difensore e condannato  -->    
-<table width="100%">
+    
+    <table width="100%">
     	<tr> 
     		<td class="l" colspan=3>
       			<input type="checkbox" name="Difesa" onclick="Javascript:Difensor();">Notifiche Atti al Difensore &nbsp;&nbsp;
@@ -761,7 +773,7 @@ function Verify()
     <div id="divq" style="visibility:hidden; position:relative;  width: 100%;" > 
 	<table width="100%">
 		<tr><td class="Titolo" colspan=6>Notifica al Condannato </td></tr>
-	<tr>
+
 		<td class="l" width="20%">Autorità Destinazione <font class=ob>(*)</font></td>
 			<%if(lPosizione.getCodPosizioneGiuridica().equals("07") || lPosizione.getCodPosizioneGiuridica().equals("10") ||
       		     lPosizione.getCodPosizioneGiuridica().equals("02") || lPosizione.getCodPosizioneGiuridica().equals("04") ||
@@ -789,6 +801,7 @@ function Verify()
       <td class="L">
         <TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>"  cols=30 ></textarea>
       </td>
+
 	<%}else{
 			//modifica relativa al tipo istituto
 		  if(lLuogoDetenzione != null && lLuogoDetenzione.getIstitutoDetenzione() != null)
@@ -798,6 +811,7 @@ function Verify()
 		     <input type="hidden"  Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="<%=lLuogoDetenzione.getIstDetIdIstitutoDetenzione()%>" size=50>
 		     <a href="Javascript:ListaIstitutoDetenzione('LoadInserisciComunicazione78','<%= ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
 		     <img src="/images/filefolder.gif" border=0></a></td>
+
 	  <%}else{ %>
          <td class="l">
          <input readonly Title="Istituto" name="Comune" value="" size=50>
@@ -809,9 +823,11 @@ function Verify()
       <td class="L">
         <TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>"  cols=35></textarea>
       </td>
+		<tr><td>&nbsp;</td></tr>
    <%}%>
-	</tr>
-  	<tr><td>&nbsp;</td></tr>
+
+		</tr>
+  	</tr>
 <%
 	int lNumAvvocati = avvocati.size();
 	if( lNumAvvocati > 0 )
@@ -831,9 +847,8 @@ function Verify()
         AvvocatoSiepModel lAvv =  (AvvocatoSiepModel)lItxAvv.next();
 %>
           <tr>
-            <td class="l" width="20%" >Per Avvocato 
+            <td class="l" width="20%" >Per Avvocato </td>
               <input type="hidden" name="indexAvvocati" value="<%=lIdxAvv%>">
-            </td>
             <td>
               <font class="campo" >
                 <%=StringUtils.toStringJSP(lAvv.getAvvocato().getCognome())%>&nbsp;<%=StringUtils.toStringJSP(lAvv.getAvvocato().getNome())%>
@@ -846,8 +861,8 @@ function Verify()
               <font class="campo">
                 <%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescrTipo())%>
               </font>
-            <input type="HIDDEN" value="<%=StringUtils.toStringJSP(lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep())%>" name="<%=ICostantiAvvocato.CAMPO_ID_AVVOCATO%>">
-          </td>
+            </td>
+            <input type="HIDDEN" title="Codice Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep())%>" type="text" name="<%= ICostantiAvvocato.CAMPO_ID_AVVOCATO %>"  maxlength="35" size="35">
           </tr>
         
           <tr><td class="l">Autorità Destinazione <font class=ob>(*)</font></td >
@@ -865,17 +880,15 @@ function Verify()
 				if( lNumAvvocati < 2 )
 				{ %>
         	<a href="Javascript:ListaComuni('LoadInserisciComunicazione78','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>');">
-        	          <img src="/images/filefolder.gif" border=0>
-        </a>
 <%
 				}else{
 %>
         	<a href="Javascript:ListaComuni('LoadInserisciComunicazione78','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>[<%=lIdxAvv%>]');">
-        	          <img src="/images/filefolder.gif" border=0>
-        </a>
 <%
 				}
 %>
+          <img src="/images/filefolder.gif" border=0>
+        </a>
       </td>
        <td class="l">Note</td>
        <td class="L">
@@ -915,6 +928,7 @@ function Verify()
 		  		</tr>
 			</table>
 			</div>
+	
 </form> 
 <script language="JavaScript" type="text/javascript">
   var frmvalidator  = new Validator("LoadInserisciComunicazione78");
@@ -961,6 +975,7 @@ function Verify()
 	<%}
  }
 %>
+
 </script>
 </body>
 </html>

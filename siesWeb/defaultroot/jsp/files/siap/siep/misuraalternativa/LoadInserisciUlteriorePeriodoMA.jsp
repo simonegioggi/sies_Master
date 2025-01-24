@@ -423,7 +423,7 @@ if(flagmisura.equals("N"))
           </tr>
 <%
         }%>
-<tr><td><input type="HIDDEN" value="<%=StringUtils.toStringJSP(lPosizione.getCodPosizioneGiuridica())%>" name="<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>"></td></tr>
+   <input type="HIDDEN" title="Codice Posizione" value="<%=StringUtils.toStringJSP(lPosizione.getCodPosizioneGiuridica())%>" type="text" name="<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>"  maxlength="6" size="6" >
   <% // Nel Caso di Posizione Giuridica ARRESTI DOMICILIARI ( 02, 04)
         if(lPosizione.getCodPosizioneGiuridica() != null && (lPosizione.getCodPosizioneGiuridica().equals("02") || lPosizione.getCodPosizioneGiuridica().equals("04")) )
         {
@@ -565,9 +565,9 @@ if(flagmisura.equals("N"))
 %>
 
 
-		<td><input type="HIDDEN" value="<%=StringUtils.toStringJSP(penaresidua.getIdPenaResidua())%>" name="<%=ICostantiPenaResidua.CAMPO_ID_PENA_RESIDUA%>"></td>
-	</tr>
-	<tr>
+        <input type="HIDDEN" title="Id Pena Residua" value="<%=StringUtils.toStringJSP(penaresidua.getIdPenaResidua())%>" type="text" name="<%= ICostantiPenaResidua.CAMPO_ID_PENA_RESIDUA %>">
+       </tr>
+<tr>
         <td class="l">Data Emissione</td>
           <td class="L" >
           <input value="<%=DateUtils.getSysDate("dd")%>"   type="text" size="2" maxlength="2" name="<%= ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE %>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)" > -
@@ -591,19 +591,21 @@ if(flagmisura.equals("N"))
   <%if(misuraalternativa == null || misuraalternativa.getIdMisuraAlternativa()== null)
      {%>
     <td class="l"><input Title="Anno Fascicolo Sius" value="<%=StringUtils.toStringJSP(misuraalternativa.getChiaveAnnoFascicoloSius())%>" name="<%=ICostantiMisuraAlternativa.CAMPO_CHIAVE_ANNO_FASCICOLO_SIUS%>" type="text" size="4" maxlength="4"> /
+
   <%}else
      {%>
+
     <td class="l"><font class="campo"> <%=StringUtils.toStringJSP(misuraalternativa.getChiaveAnnoFascicoloSius())%> /</font>
     <%}%>
    <%
       if(misuraalternativa== null ||  misuraalternativa.getIdMisuraAlternativa()== null)
      {%>
     <input Title="Numero Sius" value="<%=StringUtils.toStringJSP(misuraalternativa.getChiaveProgrFascicoloSius())%>" name="<%=ICostantiMisuraAlternativa.CAMPO_CHIAVE_PROGR_FASCICOLO_SIUS%>" type="text" size="6" maxlength="6">
+    </td>
   <%}else
      {%>
-     <font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getChiaveProgrFascicoloSius())%></font>
+     <font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getChiaveProgrFascicoloSius())%></font></td>
    <%}%>
-   </td>
   </tr>
 <tr>
      <td class="l"> Anno / Numero Ordinanza  <font class=ob>(*)</font></td>
@@ -622,13 +624,12 @@ if(flagmisura.equals("N"))
    <%
      if(misuraalternativa == null ||  misuraalternativa.getIdMisuraAlternativa()== null)
      {%>
-             <input Title="Numero Ordinanza" value="<%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistro())%>" name="<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO%>" type="text" size="6" maxlength="6">
+             <input Title="Numero Ordinanza" value="<%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistro())%>" name="<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO%>" type="text" size="6" maxlength="6"></td>
    <%}else
      {%>
-          <font class="campo"> <%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistro())%></font>
+          <font class="campo"> <%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistro())%></font></td>
 
    <%}%>
-   </td>
   </tr>
  <tr>
       <td class="l">Ufficio Emittente  <font class=ob>(*)</font> </td>
@@ -736,11 +737,11 @@ if(misuraalternativa.getDataInizioMisura() != null ){
   <td class="l">Data Inizio Misura</td>
 
        <td class="l"><font class="campo">
-          <%=StringUtils.toStringJSP(DateUtils.getDateToString(MisuraConcessaPrec.getDataInizioMisura(),"dd-MM-yyyy"))%></font>
+          <%=StringUtils.toStringJSP(DateUtils.getDateToString(MisuraConcessaPrec.getDataInizioMisura(),"dd-MM-yyyy"))%></font></td>
       <INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDayToString(MisuraConcessaPrec.getDataInizioMisura()))%>">
       <INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getMonthToString(MisuraConcessaPrec.getDataInizioMisura()))%>">
       <INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getYearToString(MisuraConcessaPrec.getDataInizioMisura()))%>">
-</td>
+
 <%}%>
 </tr>
 <tr>
@@ -765,43 +766,50 @@ if(penaresidua.getDataFine()!= null){
 
  <td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataFineMisura(),"dd-MM-yyyy"))%></font></td>
 <%}%>
-	</tr>
-	<tr>
- 		<td class="l">UEPE Preposto al controllo</td>
-		<td class="l">
+
+</tr>
+<tr>
+ <td class="l">UEPE Preposto al controllo</td>
+         <td class="l">
+
 <%if(misuraalternativa!= null && misuraalternativa.getIdMisuraAlternativa() != null){%>
-			<font class="campo"><%=StringUtils.toStringJSP(ComuneCssa)%>-<%=StringUtils.toStringJSP(IndirizzoCssa)%></font>
- 			<input type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_CSS_ID_CSSA %>" value="<%=StringUtils.toStringJSP(CssaModel.getIdCSSA())%>">
+<font class="campo"><%=StringUtils.toStringJSP(ComuneCssa)%>-<%=StringUtils.toStringJSP(IndirizzoCssa)%></font></td>
+ <input type="hidden" Title="UEPE preposto al controllo" name="<%=ICostantiMisuraAlternativa.CAMPO_CSS_ID_CSSA %>" value="<%=StringUtils.toStringJSP(CssaModel.getIdCSSA())%>" size=35 >
 <%}else{%>
-        	<input readonly Title="UEPE preposto al controllo" name="Indirizzo_controllo" value="<%=StringUtils.toStringJSP(ComuneCssa)%>-<%=StringUtils.toStringJSP(IndirizzoCssa)%>" size=60 >
-        	<input type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_CSS_ID_CSSA %>" value="<%=StringUtils.toStringJSP(CssaModel.getIdCSSA())%>">
-       		<a href="Javascript:ListaCSSA('LoadInserisciMisuraAlternativa','<%=ICostantiMisuraAlternativa.CAMPO_CSS_ID_CSSA%>','Indirizzo_controllo');">
-        		<img src="/images/filefolder.gif" border=0>
-     		</a>
+        <input readonly Title="UEPE preposto al controllo" name="Indirizzo_controllo" value="<%=StringUtils.toStringJSP(ComuneCssa)%>-<%=StringUtils.toStringJSP(IndirizzoCssa)%>" size=60 >
+        <input type="hidden" Title="UEPE preposto al controllo" name="<%=ICostantiMisuraAlternativa.CAMPO_CSS_ID_CSSA %>" value="<%=StringUtils.toStringJSP(CssaModel.getIdCSSA())%>" size=35 >
+       <a href="Javascript:ListaCSSA('LoadInserisciMisuraAlternativa','<%=ICostantiMisuraAlternativa.CAMPO_CSS_ID_CSSA%>','Indirizzo_controllo');">
+        <img src="/images/filefolder.gif" border=0>
+     </a>
+     </td>
 <%}%>
-		</td>
-	</tr>
-	<tr>
- 		<td  class="l">Note</td>
-		<td  class="L">
-		  	<TEXTAREA title="Note" name="<%=ICostantiMisuraAlternativa.CAMPO_NOTE %>" cols=40 rows=2 ><%= StringUtils.toStringJSP(misuraalternativa.getNote())%></textarea>
-		</td>
-	</tr>
-	<tr>
-	  	<td class="Titolo" colspan=8> Magistrato Assegnatario </td>
-	</tr>
-	<tr>
-		<td class="l">Magistrato Assegnatario
-		<td class="L">
-        	<input type="HIDDEN" title="CodiceMagistratoNuovo" value="<%=StringUtils.toStringJSP(magistratocompetente.getMagistrato().getCodMagistrato() )%>" type="text" name="<%=ICostantiMagistrato.CAMPO_COD_MAGISTRATO %>"  maxlength="35" size="35" >
-       		<input readonly title="Cognome Magistrato" value="<%=StringUtils.toStringJSP(magistratocompetente.getMagistrato().getCognome() )%>" type="text" name="<%= ICostantiMagistrato.CAMPO_COGNOME %>" maxlength="35" size="25">
-       		<input readonly title= "Nome Magistrato"    value="<%=StringUtils.toStringJSP(magistratocompetente.getMagistrato().getNome() )%>" type="text" name="<%= ICostantiMagistrato.CAMPO_NOME %>"   maxlength="35" size="25">
-       		<a href="Javascript:ListaMagistrati('LoadInserisciMisuraAlternativa','<%=ICostantiMagistrato.CAMPO_COD_MAGISTRATO%>','<%= ICostantiMagistrato.CAMPO_COGNOME %>','<%= ICostantiMagistrato.CAMPO_NOME %>');">
-        		<img src="/images/filefolder.gif" border=0>
-        	</a>
-		</td>
-  	</tr>
-	<tr><td>&nbsp;</td></tr>
+</tr>
+<tr>
+ <td  class="l">Note</td>
+           <td  class="L">
+             <TEXTAREA title="Note" name="<%=ICostantiMisuraAlternativa.CAMPO_NOTE %>" cols=40 rows=2 ><%= StringUtils.toStringJSP(misuraalternativa.getNote())%></textarea>
+            </td>
+
+</tr>
+
+   <tr>
+     <td class="Titolo" colspan=8> Magistrato Assegnatario </td>
+   </tr>
+  <tr>
+   <td class="l">Magistrato Assegnatario
+   <td class="L">
+        <input type="HIDDEN" title="CodiceMagistratoNuovo" value="<%=StringUtils.toStringJSP(magistratocompetente.getMagistrato().getCodMagistrato() )%>" type="text" name="<%=ICostantiMagistrato.CAMPO_COD_MAGISTRATO %>"  maxlength="35" size="35" >
+       <input readonly title="Cognome Magistrato" value="<%=StringUtils.toStringJSP(magistratocompetente.getMagistrato().getCognome() )%>" type="text" name="<%= ICostantiMagistrato.CAMPO_COGNOME %>" maxlength="35" size="25">
+       <input readonly title= "Nome Magistrato"    value="<%=StringUtils.toStringJSP(magistratocompetente.getMagistrato().getNome() )%>" type="text" name="<%= ICostantiMagistrato.CAMPO_NOME %>"   maxlength="35" size="25">
+        <a href="Javascript:ListaMagistrati('LoadInserisciMisuraAlternativa','<%=ICostantiMagistrato.CAMPO_COD_MAGISTRATO%>','<%= ICostantiMagistrato.CAMPO_COGNOME %>','<%= ICostantiMagistrato.CAMPO_NOME %>');">
+        <img src="/images/filefolder.gif" border=0>
+        </a>
+      </td>
+      <td>
+      </td>
+  </tr>
+<tr><td>&nbsp;</td></tr>
+
 </table>
 <table>
 <tr> <td class="Titolo" colspan=6>Destinatario per l'esecuzione</td></tr>
@@ -885,42 +893,53 @@ if(penaresidua.getDataFine()!= null){
 
 <tr><td>&nbsp;<td></tr>
 
-   	<tr>
-      	<td class="Titolo" colspan=6>Tribunale di Sorveglianza che ha emesso l'Ordinanza</td>
-   	</tr>
-	<tr>
-		<td class="l">Destinatario</td >
-		<td class="L">TRIBUNALE DI SORVEGLIANZA
-         	<input type="hidden" value="TDS" name="<%=ICostantiMisuraAlternativa.CAMPO_COD_TRIBUNALE%>">
+   <tr>
+      <td class="Titolo" colspan=6>Tribunale di Sorveglianza che ha emesso l'Ordinanza</td>
+   </tr>
+
+   <tr>
+         <td class="l">Destinatario</td >
+          <td class="L">TRIBUNALE DI SORVEGLIANZA
+         </td>
+         <input type="hidden" value="TDS" name="<%=ICostantiMisuraAlternativa.CAMPO_COD_TRIBUNALE%>">
             <input type="hidden" name="tds" value="S">
-        </td>
-        <td rowspan=2 class="l">Note</td>
-		<td rowspan=2 class="L">
-			<TEXTAREA title="Note" name="<%= ICostantiMisuraAlternativa.CAMPO_NOTE_TDS %>" cols=20 rows=5 ></textarea>
-          	<input type="hidden" name="notificaTribunale" value="C">
-		</td>
-	</tr>
-	<tr>
+
+         <td rowspan=2 class="l">Note</td>
+         <td rowspan=2 class="L">
+          <TEXTAREA title="Note" name="<%= ICostantiMisuraAlternativa.CAMPO_NOTE_TDS %>"  cols=20 rows=5 ></textarea>
+          <input type="hidden" name="notificaTribunale" value="C">
+
+         </td>
+   </tr>
+<tr>
          <td class="l">Sede <font class=ob>(*)</font></td><td class="L">
+
          <input title="Sede Tribunale Sorveglianza" value="<%=StringUtils.toStringJSP(sedeUfficioEmittente.getDescrComune())%>" type="text" name="<%= ICostantiMisuraAlternativa.CAMPO_SEDE_TDS %>"  maxlength="35" size="35">
+
          <a href="Javascript:ListaComuniTds('LoadInserisciMisuraAlternativa','<%= ICostantiMisuraAlternativa.CAMPO_SEDE_TDS %>');">
          <img src="/images/filefolder.gif" border=0></a></td>
+
      </tr>
+
+
    <tr>
       <td class="Titolo" colspan=6>Autorità di polizia competente per territorio</td>
    </tr>
+
  <tr>
           <td class="l">Autorità Destinazione </td>
           <td class="L">
           <input type="hidden" name="autoritaC" value="S">
             <select  Title="Autorita Esterna"  class="small" name="<%=ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_C%>">
              <%=codiceAutoritaC%>
+
              </select>
            </td>
            <td rowspan=2 class="l">Note</td>
            <td rowspan=2 class="L">
               <TEXTAREA title="Note" name="<%= ICostantiMisuraAlternativa.CAMPO_NOTE_POL_C %>"  cols=20 rows=5 ></textarea>
              <input type="hidden" name="notificaPolizia" value="C">
+
             </td>
            </tr>
     <tr>
@@ -930,12 +949,14 @@ if(penaresidua.getDataFine()!= null){
         <input title="Sede Autorita Esterna" value="<%=StringUtils.toStringJSP(autoritaEsternaC.getDescrSede()) %>" type="text" name="<%= ICostantiMisuraAlternativa.CAMPO_SEDE_POL_C %>"  maxlength="35" size="35">
 <%}else{%>
         <input title="Sede Autorita Esterna" value="" type="text" name="<%= ICostantiMisuraAlternativa.CAMPO_SEDE_POL_C %>"  maxlength="35" size="35">
+
 <%}%>
     <a href="Javascript:ListaComuni('LoadInserisciMisuraAlternativa','<%=ICostantiMisuraAlternativa.CAMPO_SEDE_POL_C%>');">
           <img src="/images/filefolder.gif" border=0>
         </a>
       </td>
     </tr>
+
     <tr>
       <td class="Titolo" colspan=6>Destinatario per Notifica </td></tr>
 <%
@@ -960,8 +981,8 @@ if(penaresidua.getDataFine()!= null){
               <font class="campo">
                 <%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescrTipo())%>
               </font>
+            </td>
             <input type="HIDDEN" title="Codice Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep())%>" type="text" name="<%= ICostantiAvvocato.CAMPO_ID_AVVOCATO %>"  maxlength="35" size="35">
-          </td>
           </tr>
         </table>
          <table>

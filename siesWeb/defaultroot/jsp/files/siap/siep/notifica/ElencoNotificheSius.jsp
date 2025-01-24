@@ -140,6 +140,7 @@
       if (FiltoRicerca.getFiltroNote() != null && FiltoRicerca.getFiltroNote().trim().length() > 0)
  {
 	 %>
+     </tr>
        <tr>
      	<td class="lVerdeNB"><%=lTipoAtti%> annotate per:  <%=FiltoRicerca.getFiltroNote()%></td>
      </tr>
@@ -148,6 +149,7 @@
  if (lCodUtente != null && lCodUtente.trim().length() > 0)
  {
 	 %>
+     </tr>
        <tr>
      	<td class="lVerdeNB"><%=lTipoAtti%> inserite dall'utente:  <%=lCodUtente%></td>
      </tr>
@@ -158,6 +160,7 @@
  if (FiltoRicerca.getDescOrdinamento() != null)
  {
 	 %>
+     </tr>
        <tr>
      	<td class="lVerdeNB"><%=lTipoAtti + "ordinate per " + FiltoRicerca.getDescOrdinamento()%> </td>
      	</tr>
@@ -200,20 +203,15 @@
     	String lContenuto = StringUtils.toStringJSP(notifica.getEvento().getDescrTipoProvvedimento(), "-") + " <br>" + StringUtils.toStringJSP(notifica.getEvento().getDescrMotivo(), "-") + " <br> " + StringUtils.toStringJSP(notifica.getEvento().getDescrEsito(), "-");
 
     	%>
-	<tr>
-		<td class="c">
-			<font class="label">
-      			<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>=<%=notifica.getFascicoloSius().getIdFascicoloSius()%><%=retParam%>"><%=notifica.getFascicoloSius().getChiaveAnno()%>/<%=notifica.getFascicoloSius().getChiaveProgr()%></a>
-      		</font>
-      	</td>
-      	<td class="c">
-      		<font class="label"><%=DateUtils.getDateToString(notifica.getDataInserimento(),"dd-MM-yyyy")%></font>
-      	</td>
-		<td class="c">
-			<font class="label">
-       	  		<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.soggetto.action.ActLoadDettaglioSoggetto&<%=ICostantiSoggetto.CAMPO_ID_SOGGETTO%>=<%=lIdSoggetto%>&TornaQui=<%=TornaQui%>"><%=StringUtils.toStringJSP( lCognome, "-" )+ " " + StringUtils.toStringJSP(lNome, "-")%></a>
-         	</font>
-		</td>
+      <tr>
+      	<td class="c"><font class="label">
+      	<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>=<%=notifica.getFascicoloSius().getIdFascicoloSius()%><%=retParam%>">
+      	<%=notifica.getFascicoloSius().getChiaveAnno()%>/<%=notifica.getFascicoloSius().getChiaveProgr()%></font></td>
+      	</a>
+      	<td class="c"><font class="label"><%=DateUtils.getDateToString(notifica.getDataInserimento(),"dd-MM-yyyy")%></font></td>
+       	<td class="c"><font class="label">
+       	  <a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.soggetto.action.ActLoadDettaglioSoggetto&<%=ICostantiSoggetto.CAMPO_ID_SOGGETTO%>=<%=lIdSoggetto%>&TornaQui=<%=TornaQui%>">
+         	<%=StringUtils.toStringJSP( lCognome, "-" )+ " " + StringUtils.toStringJSP(lNome, "-")%></font></a></td>
        	<td class="c"><font class="label"><%=DateUtils.getDateToString(notifica.getEvento().getDataEmissione(),"dd-MM-yyyy")%></font></td>
       	<td class="c"><font class="label"><%=StringUtils.toStringJSP(lContenuto, "-")%></font></td>
       	<td class="c"><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString(notifica.getEvento().getDataTrasmissioneAtti(),"dd-MM-yyyy"), "-")%></font></td>
