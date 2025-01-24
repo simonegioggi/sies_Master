@@ -2,7 +2,7 @@ BRANCH SIES VERSIONE 12.7.1.0
 
 Nasce dal branch 12.7.0.0 in data 19/12/2024
 
-Questa release verrà rilasciata il 24/01/2025 (Patch mese di Gennaio 2025)
+Questa release verrà rilasciata il 28/02/2025 (Patch mesi di Gennaio, Febbraio 2025)
 
 Comprende i seguenti Ticket MAC:
 
