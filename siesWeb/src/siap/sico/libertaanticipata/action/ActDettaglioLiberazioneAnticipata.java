@@ -1,16 +1,9 @@
 package siap.sico.libertaanticipata.action;
 
-/**
- * <p>Title: ActDettaglioLiberazioneAnticipata</p>
- * <p>Description: Classe Action per il dettaglio dei periodi di liberazione anticipata</p>
- * <p>Copyright: Copyright (c) 2002</p>
- * <p>Company: Bull</p>
- * @version 1.0
- */
-
 import java.math.BigDecimal;
 import java.util.Vector;
 
+import f3b.util.F3BException;
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.libertaanticipata.controller.ILicenzaPeriodiLibAnticipata;
 import siap.sico.libertaanticipata.model.LicenzaLibAnticipataModel;
@@ -30,17 +23,23 @@ import siap.siep.util.SIEPLookupRemote;
 import siap.sius.depositoordinanzapc.controller.IDepositoOrdinanzaPc;
 import siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel;
 import siap.sius.util.SIUSLookupRemote;
-import f3b.util.F3BException;
 
+/**
+ * ActDettaglioLiberazioneAnticipata - Classe Action per il dettaglio dei periodi di liberazione anticipata
+ *
+ * @version 1.0
+ */
 public class ActDettaglioLiberazioneAnticipata extends ActionSiap implements ICostantiLibertaAnticipata {
+
 	/**
 	 * Azione di Dettaglio del Liberazione Anticipata
-	 * 
+	 *
 	 * @return Nome della pagina JSP da visualizzare al termine dell'elaborazione
 	 * @throws F3BException
 	 */
 	@SuppressWarnings("rawtypes")
 	public String processRequest() throws Exception {
+
 		FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 		BigDecimal lIdFascicolo = lFascMod.getIdFascicoloSiep();
 
@@ -57,12 +56,11 @@ public class ActDettaglioLiberazioneAnticipata extends ActionSiap implements ICo
 		if (!this.isRequestParameterNullObj(ICostantiEvento.CAMPO_ID_EVENTO)) {
 			mIdEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
 		} else {
-			lLicModel = lCtrlLib
-					.ExRicercaLicenzaLibanticipataByKey(getRequestBigDecimalParameter(ICostantiLicenzaLibanticipata.CAMPO_ID_LICENZA_LIBANTICIPATA));
+			lLicModel = lCtrlLib.ExRicercaLicenzaLibanticipataByKey(getRequestBigDecimalParameter(
+					ICostantiLicenzaLibanticipata.CAMPO_ID_LICENZA_LIBANTICIPATA));
 
 			mIdEvento = lLicModel.getEveIdEvento();
 		}
-
 
 		// RICERCA DEPOSITO_ORDINANZA_PC
 		IDepositoOrdinanzaPc lCtrlDep = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
@@ -101,10 +99,9 @@ public class ActDettaglioLiberazioneAnticipata extends ActionSiap implements ICo
 
 		String lFlagErgastolo = "N";
 		// se la Pena Complessiva è un ergastolo o ergastolo con isolamento diurno
-		if (lPenComMod.getCodTipoPenaDetentiva() != null
-				&& lPenComMod.getCodTipoPenaDetentiva() != ""
-				&& (lPenComMod.getCodTipoPenaDetentiva().equals("03") || lPenComMod.getCodTipoPenaDetentiva()
-						.equals("04"))) {
+		if (lPenComMod.getCodTipoPenaDetentiva() != null && lPenComMod.getCodTipoPenaDetentiva() != ""
+				&& (lPenComMod.getCodTipoPenaDetentiva().equals("03")
+						|| lPenComMod.getCodTipoPenaDetentiva().equals("04"))) {
 			lFlagErgastolo = "S";
 		}
 
