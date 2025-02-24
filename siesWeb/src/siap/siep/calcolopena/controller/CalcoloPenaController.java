@@ -1924,7 +1924,6 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 				// Inserisco la nuova pena residua
 				lModRet = lPenResSqlDao.inserisciOModificaPenaResidua(lModRet);
 				aCalcoloPenaModel.getPenaResiduaRicalcolata().setIdPenaResidua(lModRet.getIdPenaResidua());
-				;
 
 				// Aggiorna ad "E" i record legati soltanto all'ordinanza selezionata
 				lLicSqlDao.updateFlagElaboratoByEveIdEvento(aIdEventoOrdinanza, "E", aDatiOperazione);
@@ -1995,11 +1994,8 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 			lPenRes = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
 
 			// Controllo esistenza PENA_RESIDUA (se non trovata non effettua il calcolo)
-			if (lPenRes == null)
-				return lDataFineRicalcolata;
-
 			// Controllo esistenza DATA_FINE pena (se non trovata non effettua il calcolo)
-			if (lPenRes.getDataFine() == null)
+			if ((lPenRes == null) || (lPenRes.getDataFine() == null))
 				return lDataFineRicalcolata;
 
 			lDataFineRicalcolata = DateUtils.moveDateTo(lPenRes.getDataFine(), Calendar.DAY_OF_MONTH,
@@ -2884,38 +2880,18 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 			throws F3BException {
 
 		/*
-		 * ------------------------------------------------------------------------------ Preliminare : carico
+		 * ----------------------------------------------------------------------------- Preliminare : carico
 		 * la PenaResidua del Fascicolo Si da per scontato che esista un record VALIDATO di PenaResidua !!!
-		 * ------------------------------------------------------------------------------
+		 * -----------------------------------------------------------------------------
 		 */
 
-		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		// siesLogger.debug("----------------------------------------------------------------------");
-		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		// siesLogger.debug("aDataDAL:" + aDataDAL);
-		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		// siesLogger.debug("aQuantumRevocatoReclusione:" + aQuantumRevocatoReclusione);
-		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		// siesLogger.debug("aQuantumRevocatoArresto:" + aQuantumRevocatoArresto);
-		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		// siesLogger.debug("a30giorni:" + a30giorni);
-		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		// siesLogger.debug("aStatoDetenuto:" + aStatoDetenuto);
-		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		// siesLogger.debug("aNuovoInizioPena:" + aNuovoInizioPena);
-		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		// siesLogger.debug("aDetenuto:" + aDetenuto);
-		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		// siesLogger.debug("----------------------------------------------------------------------");
+		siesLogger.debug("aDataDAL:" + aDataDAL);
+		siesLogger.debug("aQuantumRevocatoReclusione:" + aQuantumRevocatoReclusione);
+		siesLogger.debug("aQuantumRevocatoArresto:" + aQuantumRevocatoArresto);
+		siesLogger.debug("a30giorni:" + a30giorni);
+		siesLogger.debug("aStatoDetenuto:" + aStatoDetenuto);
+		siesLogger.debug("aNuovoInizioPena:" + aNuovoInizioPena);
+		siesLogger.debug("aDetenuto:" + aDetenuto);
 
 		BigDecimal Zero = new BigDecimal("0");
 
@@ -2950,8 +2926,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 		switch (aStatoDetenuto) {
 		case 0:
 		case 1:
-			if (aDataDAL != null) // CASO DataDAL
-			{
+			if (aDataDAL != null) { // CASO DataDAL
 				if (lPenRes == null) {
 					throw new SIEPException(SIEPException.USER_MESSAGE,
 							"Impossibile emettere provvedimento. Data Fine Pena non valorizzata.");
@@ -3062,8 +3037,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 					ex.printStackTrace();
 					throw new SIEPException(SIEPException.USER_MESSAGE, ex.getMessage());
 				}
-			} else // Quantum
-			{
+			} else { // Quantum
 				// non è stata specificata la aDataDal (data revoca) ma solo i quantum
 				lPenRes.setNumAnniArresto(new BigDecimal(aQuantumRevocatoArresto.getNumAnni() + ""));
 				lPenRes.setNumMesiArresto(new BigDecimal(aQuantumRevocatoArresto.getNumMesi() + ""));
@@ -3198,8 +3172,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 			// ====================================================================
 			// Affidamento concluso
 			// ====================================================================
-			if (aDataDAL != null) // CASO DataDAL
-			{
+			if (aDataDAL != null) { // CASO DataDAL
 				if (lPenRes == null) {
 					throw new SIEPException(SIEPException.USER_MESSAGE,
 							"Impossibile emettere provvedimento.Data fine pena non valorizzata.");
@@ -3254,8 +3227,8 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 					ex.printStackTrace();
 					throw new SIEPException(SIEPException.USER_MESSAGE, ex.getMessage());
 				}
-			} else // Quantum
-			{ // Specificati i soli quantum
+			} else { // Quantum
+				// Specificati i soli quantum
 				lPenRes.setNumAnniReclusione(new BigDecimal(aQuantumRevocatoReclusione.getNumAnni() + ""));
 				lPenRes.setNumMesiReclusione(new BigDecimal(aQuantumRevocatoReclusione.getNumMesi() + ""));
 				lPenRes.setNumGiorniReclusione(
@@ -3284,9 +3257,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 			lPenRes.setDataInserimento(DateUtils.getSysDate());
 		}
 
-		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		// siesLogger.debug("Pena residua rideterminata a seguito della Revoca: \n"+lPenRes);
+		siesLogger.debug("Pena residua rideterminata a seguito della Revoca: " + lPenRes);
 
 		lPenRes.setFasSieIdFascicoloSiep(lFascID);
 		aCalcoloPenaModel.setPenaResiduaRicalcolata(lPenRes);

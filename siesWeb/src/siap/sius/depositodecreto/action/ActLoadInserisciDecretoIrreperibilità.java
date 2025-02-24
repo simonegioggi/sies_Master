@@ -24,25 +24,16 @@ import siap.sius.tenore.model.TenoreModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * <p>
- * Title: ActLoadInserisciDecretoInammissibilita
- * </p>
- * <p>
- * Description: Classe Action per la load inserisci di ActLoadInserisciDecretoInammissibilita
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ * ActLoadInserisciDecretoInammissibilita - Classe Action per il caricamento dell'inserimento del decreto di
+ * irreperibilita'
+ *
  * @version 1.0
  */
 public class ActLoadInserisciDecretoIrreperibilità extends ActRicercaFSPuntuale
 		implements ICostantiDepositoDecreto {
+
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
-	
+
 	@SuppressWarnings("rawtypes")
 	public String processRequest() throws Exception {
 
@@ -71,9 +62,9 @@ public class ActLoadInserisciDecretoIrreperibilità extends ActRicercaFSPuntuale
 		IDepositoDecreto lDepDecrCtrl = SIUSLookupRemote.getDepositoDecretoRemote();
 
 		if (lDepDecrCtrl.ExVerificaEsistenzaDepositoDecretoByIdGenProcCodTipoDec(lIdGenProc,
-				IRREPERIBILITA)) 
-		{
-			siesLogger.debug("Inserimento decreto irreperibilità: Esiste già il decreto vado sul dettaglio se depositato");
+				IRREPERIBILITA)) {
+			siesLogger.debug(
+					"Inserimento decreto irreperibilità: Esiste già il decreto vado sul dettaglio se depositato");
 			// Se già esiste un decreto viene lanciato il dettaglio.
 			DepositoDecretoModel lDepDec = lDepDecrCtrl.ExRicercaDepositoDecretoByGenProc(lIdGenProc,
 					IRREPERIBILITA);
@@ -95,16 +86,16 @@ public class ActLoadInserisciDecretoIrreperibilità extends ActRicercaFSPuntuale
 			// Se esiste un decreto di inammissibilità si impedisce l'inserimento
 			if (lDepDecrCtrl.ExEsisteDepositoDecretoByGenProcCodEsito(lIdGenProc, "0003")) {
 				// setta la risposta nella request
-				// Ticket#20210127015 - Il messaggio rilanciato è errato. Indica la presenza di 
-				//                      un Decreto di Irreperibilità ma cerca un rigetto
-				//                      Corretto anche il codice da 0002 Rigetto a 0003 inammissibile
-				//setRequestAttribute(IWebConstants.MESSAGE_TEXT,
-				//		"Inserimento impossibile : Esiste un Decreto di irreperibilità");
+				// Ticket#20210127015 - Il messaggio rilanciato è errato. Indica la presenza di
+				// un Decreto di Irreperibilità ma cerca un rigetto
+				// Corretto anche il codice da 0002 Rigetto a 0003 inammissibile
+				// setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+				// "Inserimento impossibile : Esiste un Decreto di irreperibilità");
 				siesLogger.warn("Inserimento impossibile : Esiste un Decreto di Inammissibilita'");
 				setRequestAttribute(IWebConstants.MESSAGE_TEXT,
 						"Inserimento impossibile : Esiste un Decreto di Inammissibilita'");
 				// FINE Ticket#20210127015
-				
+
 				// Prepara la "pagina" di destinAction
 				RedirectTo lRedirigi = new RedirectTo();
 				lRedirigi.setPage(IWebConstants.PG_MAIN);
@@ -140,7 +131,6 @@ public class ActLoadInserisciDecretoIrreperibilità extends ActRicercaFSPuntuale
 				setRequestAttribute("descOggetti", lDescOggetti);
 				setRequestAttribute("codDettagli", lCodDettagli); // STUB 19/04/2004
 
-				//
 				// Preleva il cod Oggetto procedimento per poi passarlo come contenuto
 				lCodOggettoProc = lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento();
 				if (lCodOggettoProc == null)
@@ -150,8 +140,6 @@ public class ActLoadInserisciDecretoIrreperibilità extends ActRicercaFSPuntuale
 				String lDescContenuto = DecodificheUtils.getDescbyCode(
 						DecodificheManager.getInstance().getOggettoProcedimento(), lCodOggettoProc);
 				setRequestAttribute("contenuto", lDescContenuto);
-
-				//
 
 				// Ricerca del Magistrato Relatore
 				IMagistratoRelatore lMagCtrl = SIUSLookupRemote.getMagistratoRelatoreRemote();
@@ -172,8 +160,8 @@ public class ActLoadInserisciDecretoIrreperibilità extends ActRicercaFSPuntuale
 				setRequestAttribute("tipoUfficioSIUSTrattino", "-" + lOption2);
 			}
 		}
-
-		return lRetPage; // restituisce la jsp di VIEW
+		// restituisce la jsp di VIEW
+		return lRetPage;
 	}
 
 }
