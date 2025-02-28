@@ -1,17 +1,5 @@
-BRANCH SIES VERSIONE 12.7.1.0
+BRANCH SIES VERSIONE 12.7.2.0
 
-Nasce dal branch 12.7.0.0 in data 19/12/2024
+Nasce dal branch 12.7.1.0 in data 28/02/2025
 
-Questa release verrà rilasciata il 28/02/2025 (Patch mesi di Gennaio, Febbraio 2025)
-
-Comprende i seguenti Ticket MAC:
-
-1)	Ticket#202501220131 - Uffici
-	modificato il caricamento della combo degli uffici che
-	modificava anche la cache cambiando l'ordine degli uffici ed il nome da UDS a MDS
-	Classi modificate:
-	-	siesWeb/src/siap/sico/evento/action/ActLoadTrasferisciDocumento.java
-	-	siesWeb/src/siap/siep/jms/action/ActLoadListaProvvedimentiTrasmessi.java
-	-	siesWeb/src/siap/siep/nuovaistanza/action/ActLoadTrasferisciNuovaIstanza.java
-	-	siesWeb/src/siap/siep/ordineesecuzione/action/ActLoadTrasferisciProvvedimentoL78del2013.java
-	-	siesWeb/src/siap/siep/richiesta/action/ActLoadTrasferisciRichiestaGenerica.java
+Questa release verrà rilasciata il 28/03/2025 (Patch mese di Marzo 2025)
