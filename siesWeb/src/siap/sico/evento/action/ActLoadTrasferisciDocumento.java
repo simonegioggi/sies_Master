@@ -2,33 +2,23 @@ package siap.sico.evento.action;
 
 import java.math.BigDecimal;
 import java.util.Collection;
-import java.util.Vector;
+import java.util.Iterator;
 
-import siap.sico.decodifiche.controller.DecodificheManager;
-import siap.sico.decodifiche.model.DecodificheModel;
-import siap.sico.web.ActionSiap;
 import f3b.web.html.Option;
+import siap.sico.decodifiche.controller.DecodificheManager;
+import siap.sico.decodifiche.controller.IDecodifiche;
+import siap.sico.decodifiche.model.DecodificheModel;
+import siap.sico.util.SICOLookupRemote;
+import siap.sico.web.ActionSiap;
 
 /**
- * <p>
- * Title: ActLoadTrasferisciDocumento
- * </p>
- * <p>
- * Description: Trasferisce il documentoistanze verso il tribunale di sorveglianza
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
+ * ActLoadTrasferisciDocumento - Trasferisce il documentoistanze verso il tribunale di sorveglianza
+ *
  * @version 1.0
  */
 public class ActLoadTrasferisciDocumento extends ActionSiap implements ICostantiEvento {
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings("rawtypes")
 	public String processRequest() throws Exception {
 
 		BigDecimal lEveId = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
@@ -42,16 +32,29 @@ public class ActLoadTrasferisciDocumento extends ActionSiap implements ICostanti
 		// A.S. 18/05/2015 su richiesta di Michele/Nunzia
 		// Per SIEP la descrizione UDSM cambia da "Ufficio di Sorveglianza presso il Tribunale per minorenni"
 		// in "Magistrato di Sorveglianza per i minorenni"
-		Collection lUffici = new Vector();
-		lUffici = DecodificheManager.getInstance().getTipoUfficio();
-		for (int i = 0; i < lUffici.size(); i++) {
-			lUffici.remove(new DecodificheModel("UDSM",
-					"Ufficio di Sorveglianza presso il Tribunale per minorenni", "TIPO_UFFICIO", "", "T", "",
-					"", "", ""));
+		// Collection lUffici = new Vector();
+		// lUffici = DecodificheManager.getInstance().getTipoUfficio();
+		// for (int i = 0; i < lUffici.size(); i++) {
+		// lUffici.remove(new DecodificheModel("UDSM",
+		// "Ufficio di Sorveglianza presso il Tribunale per minorenni", "TIPO_UFFICIO", "", "T", "",
+		// "", "", ""));
+		// }
+		// lUffici.add(new DecodificheModel("UDSM", "Magistrato di Sorveglianza per i minorenni",
+		// "TIPO_UFFICIO", "", "T", "", "", "", ""));
+		// Ticket#202501220131: modificato il caricamento della combo degli uffici che
+		// modifica anche la cache cambiando l'ordine degli uffici ed il nome da UDS a MDS
+		IDecodifiche id = SICOLookupRemote.getDecodificheRemote();
+		Collection uffici = id
+				.ExRicercaDecodifiche(new DecodificheModel("", "", "TIPO_UFFICIO", "", "", "", "", "", ""));
+		Iterator i = uffici.iterator();
+		while (i.hasNext()) {
+			DecodificheModel dm = (DecodificheModel) i.next();
+			if ("UDSM".equalsIgnoreCase(dm.getCode())) {
+				dm.setDescription("Magistrato di Sorveglianza per i minorenni");
+				break;
+			}
 		}
-		lUffici.add(new DecodificheModel("UDSM", "Magistrato di Sorveglianza per i minorenni",
-				"TIPO_UFFICIO", "", "T", "", "", "", ""));
-		Option lOption = new Option(lUffici);
+		Option lOption = new Option(uffici);
 		lOption.setFilter(new String[] { "-", "UDS", "TDS", "TDSM", "UDSM" });
 
 		setRequestAttribute("uffici", "" + lOption);
