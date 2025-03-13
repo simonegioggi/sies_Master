@@ -4,6 +4,10 @@ import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.List;
 
+//import java.util.Collection;
+import f3b.web.IWebConstants;
+import f3b.web.RedirectTo;
+import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.libertaanticipata.controller.ILicenzaPeriodiLibAnticipata;
 import siap.sico.libertaanticipata.model.LicenzaLibAnticipataModel;
@@ -17,26 +21,10 @@ import siap.siep.penaresidua.model.PenaResiduaModel;
 import siap.siep.posizione.controller.IPosizioneGiuridica;
 import siap.siep.posizione.model.PosizioneGiuridicaModel;
 import siap.siep.util.SIEPLookupRemote;
-//import java.util.Collection;
-import f3b.web.IWebConstants;
-import f3b.web.RedirectTo;
-import f3b.web.html.Option;
 
 /**
- * <p>
- * Title: ActLoadInserisciLiberazioneAnticipata
- * </p>
- * <p>
- * Description: Azione Load inserimento Liberazione Anticipata
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author unascribed
+ * ActLoadInserisciLiberazioneAnticipata - Azione Load inserimento Liberazione Anticipata
+ *
  * @version 1.0
  */
 public class ActLoadInserisciLiberazioneAnticipata extends ActionSiap implements ICostantiLibertaAnticipata {
@@ -105,15 +93,15 @@ public class ActLoadInserisciLiberazioneAnticipata extends ActionSiap implements
 		 * Pena Complessiva ***************************** IPenaComplessiva ICtrlPenCom =
 		 * SIEPLookupRemote.getPenaComplessivaRemote(); PenaComplessivaModel lPenComMod =
 		 * ICtrlPenCom.ExRicercaPenaComplessivaByIdFascicolo(lIdFascicolo);
-		 * 
-		 * if (lPenComMod == null) throw new SIEPException(SIEPException.USER_MESSAGE,
-		 * "Pena Complessiva non presente. Impossibile eseguire la richiesta.");
-		 * 
+		 *
+		 * if (lPenComMod == null) throw new SIEPException(SIEPException.USER_MESSAGE, "Pena Complessiva non
+		 * presente. Impossibile eseguire la richiesta.");
+		 *
 		 * String lFlagErgastolo = "N"; // se la Pena Complessiva è un ergastolo o ergastolo con isolamento
 		 * diurno if( lPenComMod.getCodTipoPenaDetentiva() != null && lPenComMod.getCodTipoPenaDetentiva() !=
 		 * "" && ( lPenComMod.getCodTipoPenaDetentiva().equals("03") ||
 		 * lPenComMod.getCodTipoPenaDetentiva().equals("04") ) ) { lFlagErgastolo = "S"; }
-		 * 
+		 *
 		 * setRequestAttribute("flagergastolo", lFlagErgastolo); Fine Pena Complessiva
 		 ************************/
 
@@ -142,17 +130,17 @@ public class ActLoadInserisciLiberazioneAnticipata extends ActionSiap implements
 		 * (lPenaResidua.getFlagValidato() != null && !lPenaResidua.getFlagValidato().equals("S") &&
 		 * lFlagErgastolo.equals("N")) ) { lErrore = "Pena Residua da Espiare non validata. Validare?";
 		 * lAzioneChiamante = "siap.siep.calcolopena.action.ActLoadCalcoloPena"; }
-		 * 
+		 *
 		 * else if( !lPosizione.isLibero() // non è libero && ( lPenaResidua.getDataInizio() == null // non ha
 		 * le date || lPenaResidua.getDataFine() == null) && lFlagErgastolo.equals("N") ) { lErrore =
 		 * "Data decorrenza pena inestistente. Rivedere la Posizione Giuridica"; lAzioneChiamante =
 		 * "siap.siep.posizione.action.ActLoadInserisciPosizioneGiuridica"; }
-		 * 
+		 *
 		 * if(lErrore != null) { RedirectTo lRedirigi = new RedirectTo();
 		 * lRedirigi.setPage(IWebConstants.PG_MAIN); setRequestAttribute(IWebConstants.MESSAGE_TEXT, lErrore);
 		 * lRedirigi.setAction(lAzioneChiamante+"&" + ISIAPCostantiWeb.CAMPO_AZIONE_CHIAMANTE + "=" +
 		 * getClass().getName()); setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
-		 * 
+		 *
 		 * return IWebConstants.PG_MESSAGE; }
 		 */
 		setRequestAttribute("penaresidua", lPenaResidua);
@@ -161,7 +149,7 @@ public class ActLoadInserisciLiberazioneAnticipata extends ActionSiap implements
 		 * //ESITO TENORE DecodificheModel lModel = new DecodificheModel(); IDecodifiche lDecodifiche =
 		 * SICOLookupRemote.getDecodificheRemote(); Collection lColl =
 		 * lDecodifiche.ExRicercaEsitiByOggetto("2130"); Option lOption = new Option(lColl);
-		 * 
+		 *
 		 * setRequestAttribute("esitotenore", "" + lOption );
 		 */
 		/*
@@ -177,9 +165,9 @@ public class ActLoadInserisciLiberazioneAnticipata extends ActionSiap implements
 		// Si cerca la presenza di Liberazioni Anticipate non elaborate
 		// per presentare un messaggio di avviso all'utente
 		ILicenzaPeriodiLibAnticipata lCtrlLib = SICOLookupRemote.getLicenzaPeriodiLibAntRemote();
-//		LicenzaLibAnticipataModel lModelLib = new LicenzaLibAnticipataModel();
-		List lLicenze = lCtrlLib.ExRicercaLicenzaLibanticipataConcesseDepositateByIdFascicoloSIEP(
-				lIdFascicolo, "NE");
+		// LicenzaLibAnticipataModel lModelLib = new LicenzaLibAnticipataModel();
+		List lLicenze = lCtrlLib
+				.ExRicercaLicenzaLibanticipataConcesseDepositateByIdFascicoloSIEP(lIdFascicolo, "NE");
 
 		if (!lLicenze.isEmpty()) {
 			// IL messaggio di Alert:
@@ -201,7 +189,8 @@ public class ActLoadInserisciLiberazioneAnticipata extends ActionSiap implements
 		// MEV 10 - filtro sui minorenni
 		setRequestAttribute("filtroMinorenni", this.getFiltroMinorenni());
 
-		return PG_LOAD_INSERISCILIBANTICIPATA; // restituisce la jsp di VIEW
+		// restituisce la jsp di VIEW
+		return PG_LOAD_INSERISCILIBANTICIPATA;
 	}
 
 }
