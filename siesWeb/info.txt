@@ -2,4 +2,4 @@ BRANCH SIES VERSIONE 12.7.2.0
 
 Nasce dal branch 12.7.1.0 in data 28/02/2025
 
-Questa release verrà rilasciata il 28/03/2025 (Patch mese di Marzo 2025)
+Questa release verrà rilasciata il 24/04/2025 (Patch mesi di Marzo e Aprile 2025)
