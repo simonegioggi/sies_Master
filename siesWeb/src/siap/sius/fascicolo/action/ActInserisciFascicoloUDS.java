@@ -8,6 +8,7 @@ import java.util.Vector;
 
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
+import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.model.ComuneModel;
@@ -237,18 +238,18 @@ public class ActInserisciFascicoloUDS extends ActionSiap implements ICostantiFas
 				|| getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U019") == 0
 				// MEV_2023-35 - Si gestisce anche il cod delle Pene Sospese U126
 				|| getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U126") == 0) {
-			if (getRequestStringParameter(CAMPO_DESCR_SEDE_MITTENTE) != "") {
+			if (Utils.isPresentNotTrattino(getRequestStringParameter(CAMPO_DESCR_SEDE_MITTENTE)))
 				aCodUfficioMittente = getCodUfficioByCodTipoUfficioDescrComune(
 						DecodificheUtils.getCodebyDesc(DecodificheManager.getInstance().getTipoUfficio(),
 								aDescrUfficioMittente),
 						getRequestStringParameter(CAMPO_DESCR_SEDE_MITTENTE));
-			}
 			lFasGPMod.getGeneraleProcedimentoModel().setCodUfficioMittente(aCodUfficioMittente);
 		} else {
 			lFasGPMod.getGeneraleProcedimentoModel().setDescrDefinizione("");
 		}
 
 		// Il campo FasSiuIdFascicoloSius di Generale Procedimento viene impostato nel controller
+
 		// Caricamento Tenore
 		// Preleva dalla request i codici e descrizioni dei tenori, impipati rispettivamente con separatore
 		// "|" e "\n".
