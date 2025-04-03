@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.StringTokenizer;
 
 import f3b.util.DateUtils;
+import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.model.ComuneModel;
@@ -63,7 +64,7 @@ public class ActModificaFascicolo extends ActionSiap implements ICostantiFascico
 		// Modifica del 10/09/2013 mev "Revisione Misure di Sicurezza SIUS"
 		// Eliminato controllo su ufficio mittente se il campo non è valorizzato
 		// nel caso di "Iscrizione di una Esecuzione Misura di Sicurezza"
-		String[] lArrayCodici = (getRequestStringParameters(ICostantiFascicoloSius.CAMPO_COD_OGGETTO));
+		String[] lArrayCodici = (getRequestStringParameters(CAMPO_COD_OGGETTO));
 		String lCodiciOggetto = "";
 
 		for (int i = 0; i < lArrayCodici.length; i++)
@@ -71,17 +72,18 @@ public class ActModificaFascicolo extends ActionSiap implements ICostantiFascico
 
 		if (!isRequestParameterNullObj(CAMPO_COD_CONTENUTO)) {
 			// MEV10-s3: aggiunte or condition per gestire uffici minorenni
-			if (((CAMPO_COD_CONTENUTO.compareTo("U019") == 0 && lCodTipoUfficioMittente.compareTo("UDS") != 0
+			if (((getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U019") == 0
+					&& lCodTipoUfficioMittente.compareTo("UDS") != 0
 					&& lCodTipoUfficioMittente.compareTo("UDSM") != 0
 					&& lCodTipoUfficioMittente.compareTo("TDS") != 0
 					&& lCodTipoUfficioMittente.compareTo("TDSM") != 0)
-					|| (CAMPO_COD_CONTENUTO.compareTo("U004") == 0
+					|| (getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U004") == 0
 							&& lCodTipoUfficioMittente.compareTo("TDS") != 0
 							&& lCodTipoUfficioMittente.compareTo("TDSM") != 0
 							&& lCodTipoUfficioMittente.compareTo("UDS") != 0
 							&& lCodTipoUfficioMittente.compareTo("UDSM") != 0
 							&& lCodTipoUfficioMittente.compareTo("-") != 0))
-					&& (!(CAMPO_COD_CONTENUTO.compareTo("U004") == 0
+					&& (!(getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U004") == 0
 							&& (lCodTipoUfficioMittente.compareTo("PM") == 0
 									|| lCodTipoUfficioMittente.compareTo("PGCAP") == 0)
 							&& lCodiciOggetto.indexOf("2368") >= 0)))
@@ -166,14 +168,12 @@ public class ActModificaFascicolo extends ActionSiap implements ICostantiFascico
 		// Preleva dalla request i codici e descrizioni dei tenori, impipati rispettivamente con separatore
 		// "|" e "\n".
 		// Stabilisce la size dell'Array di Tenori da caricare in FascicoloGpModel.
-		// String lCodOgg = getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_OGGETTO);
-		StringTokenizer lCodOggetto = new StringTokenizer(
-				getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_OGGETTO), "|");
-		StringTokenizer lDescrOggetto = new StringTokenizer(
-				getRequestStringParameter(ICostantiFascicoloSius.CAMPO_DESCR_OGGETTO), "\n");
+		// String lCodOgg = getRequestStringParameter(CAMPO_COD_OGGETTO);
+		StringTokenizer lCodOggetto = new StringTokenizer(getRequestStringParameter(CAMPO_COD_OGGETTO), "|");
+		StringTokenizer lDescrOggetto = new StringTokenizer(getRequestStringParameter(CAMPO_DESCR_OGGETTO),
+				"\n");
 		// STUB 12/11/2003 Aggiunti i Codici Dettaglio Oggetti.
-		String lStCodiceDet = new String(
-				getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_DETTAGLIO_OGGETTO));
+		String lStCodiceDet = new String(getRequestStringParameter(CAMPO_COD_DETTAGLIO_OGGETTO));
 
 		int lSizeVector = lCodOggetto.countTokens();
 		TenoreModel lTenori[] = new TenoreModel[lSizeVector];
@@ -191,8 +191,7 @@ public class ActModificaFascicolo extends ActionSiap implements ICostantiFascico
 			lTenModel.setCodOperatoreInserimento(getCodUtenteConnesso()); // Codice dell'operatore che
 																			// inserisce
 			lTenModel.setDataInserimento(DateUtils.getSysDate());
-			lTenModel
-					.setCodMagistrato(getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_MAGISTRATO));
+			lTenModel.setCodMagistrato(getRequestStringParameter(CAMPO_COD_MAGISTRATO));
 			lTenModel.setProgrTenore(new BigDecimal((double) (lIndex + 1)));
 			lTenModel.setCodEsitoTenore("-");
 			// Il campo Id_Generale_Procedimento di Tenore viene impostato nel controller
@@ -281,7 +280,8 @@ public class ActModificaFascicolo extends ActionSiap implements ICostantiFascico
 		// BigDecimal lIdEsecuzioneSS = null;
 		if (lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U019") == 0
 				// MEV_2023-35 aggiunta gestione U126 EPS
-				|| lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U126") == 0) {
+				|| lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
+						.compareTo("U126") == 0) {
 			if (!isRequestParameterNullObj(ICostantiEsecuzioneSS.CAMPO_ID_ESECUZIONE_SS)
 					&& getRequestStringParameter(ICostantiEsecuzioneSS.CAMPO_ID_ESECUZIONE_SS).length() > 4) {
 				IEsecuzioneSS lESSCtrl = SIUSLookupRemote.getEsecuzioneSSRemote();
@@ -304,14 +304,17 @@ public class ActModificaFascicolo extends ActionSiap implements ICostantiFascico
 						throw new SIUSException(SIUSException.USER_MESSAGE,
 								"Ufficio Mittente non valido per la Sanzione Sostitutiva");
 					// MEV_2023-35 aggiunta gestione U126 EPS
-					else if (lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
-							.compareTo("U126") == 0)
-						throw new SIUSException(SIUSException.USER_MESSAGE,
-								"Ufficio Mittente non valido per la Pena Sostitutiva");
+					// else if (lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
+					// .compareTo("U126") == 0)
+					// throw new SIUSException(SIUSException.USER_MESSAGE,
+					// "Ufficio Mittente non valido per la Pena Sostitutiva");
 				}
 
-				lESSModel.setCodAutoritaEmittOrd(getCodUfficioByCodTipoUfficioDescrComune(
-						lCodTipoUfficioMittente, getRequestStringParameter(CAMPO_DESCR_SEDE_MITTENTE)));
+				if (Utils.isPresentNotTrattino(getRequestStringParameter(CAMPO_DESCR_SEDE_MITTENTE)))
+					lESSModel.setCodAutoritaEmittOrd(getCodUfficioByCodTipoUfficioDescrComune(
+							lCodTipoUfficioMittente, getRequestStringParameter(CAMPO_DESCR_SEDE_MITTENTE)));
+				else
+					lESSModel.setCodAutoritaEmittOrd("");
 
 				if (lESSModel.getDepOpidDepositoOrdinanzaPc() == null
 						&& getRequestBigDecimalParameter(CAMPO_CHIAVE_ANNO_S22) != null

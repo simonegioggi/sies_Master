@@ -57,24 +57,25 @@ public class ActInserisciFascicoloUDS extends ActionSiap implements ICostantiFas
 		// nel caso di "Iscrizione di una Esecuzione Misura di Sicurezza"
 		String lCodTipoUfficioMittente = DecodificheUtils
 				.getCodebyDesc(DecodificheManager.getInstance().getTipoUfficio(), aDescrUfficioMittente);
-		String[] lArrayCodici = (getRequestStringParameters(ICostantiFascicoloSius.CAMPO_COD_OGGETTO));
+		String[] lArrayCodici = (getRequestStringParameters(CAMPO_COD_OGGETTO));
 		String lCodiciOggetto = "";
 
 		for (int i = 0; i < lArrayCodici.length; i++)
 			lCodiciOggetto += lArrayCodici[i];
 
 		// MEV10-s3: aggiunte or condition per gestire uffici minorenni
-		if (((CAMPO_COD_CONTENUTO.compareTo("U019") == 0 && lCodTipoUfficioMittente.compareTo("UDS") != 0
+		if (((getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U019") == 0
+				&& lCodTipoUfficioMittente.compareTo("UDS") != 0
 				&& lCodTipoUfficioMittente.compareTo("UDSM") != 0
 				&& lCodTipoUfficioMittente.compareTo("TDS") != 0
 				&& lCodTipoUfficioMittente.compareTo("TDSM") != 0)
-				|| (CAMPO_COD_CONTENUTO.compareTo("U004") == 0
+				|| (getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U004") == 0
 						&& lCodTipoUfficioMittente.compareTo("TDS") != 0
 						&& lCodTipoUfficioMittente.compareTo("TDSM") != 0
 						&& lCodTipoUfficioMittente.compareTo("UDS") != 0
 						&& lCodTipoUfficioMittente.compareTo("UDSM") != 0
 						&& lCodTipoUfficioMittente.compareTo("-") != 0))
-				&& (!(CAMPO_COD_CONTENUTO.compareTo("U004") == 0
+				&& (!(getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U004") == 0
 						&& (lCodTipoUfficioMittente.compareTo("PM") == 0
 								|| lCodTipoUfficioMittente.compareTo("PGCAP") == 0)
 						&& lCodiciOggetto.indexOf("2368") >= 0)))
@@ -252,14 +253,12 @@ public class ActInserisciFascicoloUDS extends ActionSiap implements ICostantiFas
 		// Preleva dalla request i codici e descrizioni dei tenori, impipati rispettivamente con separatore
 		// "|" e "\n".
 		// Stabilisce la size dell'Array di Tenori da caricare in FascicoloGpModel.
-		StringTokenizer lCodOggetto = new StringTokenizer(
-				getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_OGGETTO), "|");
-		StringTokenizer lDescrOggetto = new StringTokenizer(
-				getRequestStringParameter(ICostantiFascicoloSius.CAMPO_DESCR_OGGETTO), "\n");
+		StringTokenizer lCodOggetto = new StringTokenizer(getRequestStringParameter(CAMPO_COD_OGGETTO), "|");
+		StringTokenizer lDescrOggetto = new StringTokenizer(getRequestStringParameter(CAMPO_DESCR_OGGETTO),
+				"\n");
 
 		// Valorizzazione dei Codici Dettaglio Oggetti.
-		String lStCodiceDet = new String(
-				getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_DETTAGLIO_OGGETTO));
+		String lStCodiceDet = new String(getRequestStringParameter(CAMPO_COD_DETTAGLIO_OGGETTO));
 
 		int lSizeVector = lCodOggetto.countTokens();
 		TenoreModel lTenori[] = new TenoreModel[lSizeVector];
