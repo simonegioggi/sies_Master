@@ -4,29 +4,17 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Vector;
 
+import f3b.util.DateUtils;
 import siap.jms.JMSLookupRemote;
 import siap.jms.jmscode.controller.JmsCodeController;
 import siap.jms.messaggio.action.ICostantiMessaggio;
 import siap.jms.messaggio.controller.IMessaggio;
 import siap.sico.decodifiche.util.DecodificheUtils;
 import siap.sico.web.ActionSiap;
-import f3b.util.DateUtils;
 
 /**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2005
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
+ * ActListaMessaggiTrasmessi - Classe che carica la lista dei messaggi trasmessi
+ *
  * @version 1.0
  */
 @SuppressWarnings("rawtypes")
@@ -53,7 +41,7 @@ public class ActListaMessaggiTrasmessi extends ActionSiap implements ICostantiMe
 		String codTipoOperazione = (getRequestStringParameter(CAMPO_COD_TIPO_OPERAZIONE));
 
 		JmsCodeController lCrtl = new JmsCodeController();
-		Collection collTipoOperazione = (Collection) lCrtl.ExRicercaPerDominioEDescrizione("TIPO_OPERAZIONE",
+		Collection collTipoOperazione = lCrtl.ExRicercaPerDominioEDescrizione("TIPO_OPERAZIONE",
 				"TRASFERIMENTO");
 		String descTipoOperazione = DecodificheUtils.getDescbyCode(collTipoOperazione, codTipoOperazione);
 
@@ -84,14 +72,21 @@ public class ActListaMessaggiTrasmessi extends ActionSiap implements ICostantiMe
 			descTipoEsito = "Esito Positivo";
 		}
 
-		// try
-		// {
 		IMessaggio lCrtlMessaggio = JMSLookupRemote.getMessaggioRemote();
 		lVect = lCrtlMessaggio.ExRicercaMessaggioEsitoConFiltri(codUfficio, codUtente, tipoEsito,
 				codTipoOperazione, dataRicercaInizio, dataRicercaFine);
+
+		// TODO: Ticket#202501220131: modificato il caricamento della combo degli uffici
+		// allora anche la pagina di dettaglio dovrà avere la stessa dicitura? decommentare nel caso
+		// Iterator i = lVect.iterator();
+		// while (i.hasNext()) {
+		// MessaggioModel mm = (MessaggioModel) i.next();
+		// IUfficio iu = SICOLookupRemote.getUfficioRemote();
+		// UfficioModel um = iu.ExRicercaUfficioByCod(mm.getCodUfficioDestinatario());
+		// if ("UDSM".equalsIgnoreCase(um.getCodTipoUfficio())) {
+		// mm.setDescrUfficioDestinatario("Magistrato di Sorveglianza per i minorenni");
+		// break;
 		// }
-		// catch (F3BException ex)
-		// {
 		// }
 
 		this.setRequestAttribute("Messaggi", lVect);
