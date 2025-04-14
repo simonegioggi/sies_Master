@@ -12,25 +12,10 @@
 <jsp:useBean id="codTipoUfficioS"    scope="request" class="java.lang.String"/>
 <jsp:useBean id="descTipoUfficioS"   scope="request" class="java.lang.String"/>
 
-<%-- MEV_2019-09 (D.lgs. 123/2018) --%>
-<jsp:useBean id="ultimoEventoRichAtti"   scope="request" class="siap.sico.evento.model.EventoModel"/>
-
 <%
   // Azione da chiamare per l'inserimento dei dati.
   String lAzione = "siap.sius.richiestaatti.action.ActInserisciAccertProgTerapeut";
-
-  //MEV_2019-09 (D.lgs. 123/2018)
-  Date lUltimaDataRestitAttiIstruttori = ultimoEventoRichAtti.getDataRestituzioneAi();
 %>
-
-<script language="JavaScript">
-    var desktop;
-    function ListaComuni(a_formname,a_fieldname)
-    {
-      desktop = window.open("<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComune&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Ufficio","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=370,height=500");
-    }
-</script>
-
 <html>
 <head>
   <title>[S.I.E.S.] - Richiesta Accertamenti Programma Terapeutico</title>
@@ -39,24 +24,12 @@
   <script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
     <script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
     <script language="JavaScript">
-    
-    <%-- INIZIO: MEV_2019-09 (D.lgs. 123/2018) --%>
-    function abilitaCampiDataRestituzione() {
-    	if (document.LoadInserisciAccertProgTerapeut.<%=ICostantiRichiestaAtti.CHECK_DATA_RESTITUZIONE%>.checked){
-	   		document.LoadInserisciAccertProgTerapeut.<%=ICostantiRichiestaAtti.CAMPO_GIORNO_DATA_RESTITUZIONE%>.disabled = false;
-	   		document.LoadInserisciAccertProgTerapeut.<%=ICostantiRichiestaAtti.CAMPO_MESE_DATA_RESTITUZIONE%>.disabled = false;
-	   		document.LoadInserisciAccertProgTerapeut.<%=ICostantiRichiestaAtti.CAMPO_ANNO_DATA_RESTITUZIONE%>.disabled = false;
-    	}
-    	else {
-	   		document.LoadInserisciAccertProgTerapeut.<%=ICostantiRichiestaAtti.CAMPO_GIORNO_DATA_RESTITUZIONE%>.disabled = true;
-	   		document.LoadInserisciAccertProgTerapeut.<%=ICostantiRichiestaAtti.CAMPO_MESE_DATA_RESTITUZIONE%>.disabled = true;
-	   		document.LoadInserisciAccertProgTerapeut.<%=ICostantiRichiestaAtti.CAMPO_ANNO_DATA_RESTITUZIONE%>.disabled = true;
-    	}    	
-   	}
-    <%-- FINE: MEV_2019-09 (D.lgs. 123/2018) --%>
-    
-    function Verify()
-    {
+var desktop;
+function ListaComuni(a_formname,a_fieldname) {
+	desktop = window.open("<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComune&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Ufficio","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=370,height=500");
+}
+
+function Verify() {
       // Controllo validita' della data emissione
       var data_emissione=document.LoadInserisciAccertProgTerapeut.<%=ICostantiRichiestaAtti.CAMPO_GIORNO_DATA_EMISSIONE%>.value+'/'+document.LoadInserisciAccertProgTerapeut.<%=ICostantiRichiestaAtti.CAMPO_MESE_DATA_EMISSIONE%>.value+'/'+document.LoadInserisciAccertProgTerapeut.<%=ICostantiRichiestaAtti.CAMPO_ANNO_DATA_EMISSIONE%>.value;
       if (! ControllaData(data_emissione))
@@ -79,25 +52,6 @@
         alert('Data Emissione minore della data di inserimento del fascicolo SIUS!');
         return false;
       }
-
-      <%-- INIZIO: MEV_2019-09 (D.lgs. 123/2018) --%>
-      if (document.LoadInserisciAccertProgTerapeut.<%=ICostantiRichiestaAtti.CHECK_DATA_RESTITUZIONE%>.checked){
-	      var data_restituzione = document.LoadInserisciAccertProgTerapeut.<%=ICostantiRichiestaAtti.CAMPO_GIORNO_DATA_RESTITUZIONE%>.value
-	                        +'/'+ document.LoadInserisciAccertProgTerapeut.<%=ICostantiRichiestaAtti.CAMPO_MESE_DATA_RESTITUZIONE%>.value
-	                        +'/'+ document.LoadInserisciAccertProgTerapeut.<%=ICostantiRichiestaAtti.CAMPO_ANNO_DATA_RESTITUZIONE%>.value;
-	      if (! ControllaData(data_restituzione))
-	      {
-	        alert('Data Restituzione atti non valida');
-	        return false;
-	      }
-	      
-	      if ( ! CompareDate( data_emissione, data_restituzione) )
-	      {
-	        alert('Data Emissione maggiore della Data Restituzione atti!');
-	        return false;
-	      }
-      }
-      <%-- FINE: MEV_2019-09 (D.lgs. 123/2018) --%>
       
       return true;
     }
@@ -132,31 +86,7 @@
           <input Title="Giorno" value="<%=DateUtils.getSysDate("dd")%>"   type="text" size="2" maxlength="2" name="<%= ICostantiRichiestaAtti.CAMPO_GIORNO_DATA_EMISSIONE %>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)" > /
           <input Title="Mese"   value="<%=DateUtils.getSysDate("MM")%>"   type="text" size="2" maxlength="2" name="<%= ICostantiRichiestaAtti.CAMPO_MESE_DATA_EMISSIONE %>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)" > /
           <input Title="Anno"   value="<%=DateUtils.getSysDate("yyyy")%>" type="text" size="4" maxlength="4" name="<%= ICostantiRichiestaAtti.CAMPO_ANNO_DATA_EMISSIONE %>"  onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillYear(value)" >
-        </td>
-        
-        <%-- INIZIO: MEV_2019-09 (D.lgs. 123/2018) --%>
-        <td class="l"><input value="S" type="checkbox" name="<%=ICostantiRichiestaAtti.CHECK_DATA_RESTITUZIONE%>" 
-                             onClick="abilitaCampiDataRestituzione()"
-                             >  Atti da restituire entro il </font></td>
-        <td class="L">
-          <input Title="Giorno"  type="text" size="2" maxlength="2" 
-                 name="<%= ICostantiRichiestaAtti.CAMPO_GIORNO_DATA_RESTITUZIONE%>" 
-                 value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lUltimaDataRestitAttiIstruttori,"dd"),"")%>" 
-                 onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  
-                 onBlur="javascript:value=FillDM(value)" disabled> /
-          <input Title="Mese" type="text" size="2" maxlength="2" 
-                 name="<%= ICostantiRichiestaAtti.CAMPO_MESE_DATA_RESTITUZIONE%>" 
-                 value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lUltimaDataRestitAttiIstruttori,"MM"),"")%>" 
-                 onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  
-                 onBlur="javascript:value=FillDM(value)" disabled> /
-          <input Title="Anno" type="text" size="4" maxlength="4" 
-                 name="<%= ICostantiRichiestaAtti.CAMPO_ANNO_DATA_RESTITUZIONE %>"  
-                 value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lUltimaDataRestitAttiIstruttori,"yyyy"),"")%>" 
-          		 onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  
-          		 onBlur="javascript:value=FillYear(value)" disabled>
-        </td>       
-        <%-- FINE: MEV_2019-09 (D.lgs. 123/2018) --%>   
-        
+        </td>     
       </tr>
 
       <!-- Destinatario + luogo -->
@@ -186,9 +116,8 @@
         <tr>
             <td class="l">Note</td>
             <td class="L" colspan=3>
-             <TEXTAREA title="Note" name="<%= ICostantiRichiestaAtti.CAMPO_AGGIUNTIVO %>"  cols=40 rows=4 ></textarea>
+             <TEXTAREA title="Note" name="<%= ICostantiRichiestaAtti.CAMPO_AGGIUNTIVO %>" cols="40" rows="4"></textarea>
             </td>
-            <input name="<%=ICostantiRichiestaAtti.CAMPO_NOTE%>" value="" type="hidden" >
         </tr>
 
       <tr>
@@ -197,8 +126,8 @@
         </td>
       </tr>
     </table>
-
-    <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="<%=lAzione%>" >
+	<input type="hidden" name="<%=ICostantiRichiestaAtti.CAMPO_NOTE%>" value="">
+    <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="<%=lAzione%>">
   </form>
 
   <script language="JavaScript" type="text/javascript">

@@ -622,6 +622,7 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 	public void ricercaEventoByFascicoloTipEveTipProvSiepDescPerEventoDaAnnullareCancellare(BigDecimal aKey,
 			String[] aTipoEvento, String[] aTipoProv, String[] aCodMotivo, String aOrdinamento)
 			throws DAOException {
+
 		String lStatement = getSqlQuery();
 
 		lStatement += " AND FAS_SIE_ID_FASCICOLO_SIEP = " + aKey;
@@ -659,9 +660,8 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 	}
 
 	public void getCountEventoByFascicoloSiepTipEventoNOTTipProv(BigDecimal aFascKey,
-			String aCodUfficioUtenteConnesso, String[] aTipoEvento, String[] aTipoProv) throws DAOException
+			String aCodUfficioUtenteConnesso, String[] aTipoEvento, String[] aTipoProv) throws DAOException {
 
-	{
 		String lStatement = "SELECT COUNT(*) HowManyRecords FROM EVENTO";
 
 		// Nel caso non sia stato passato l'Id del fascicolo
@@ -701,9 +701,8 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 	public void getCountEventoByFascicoloSiepTipEventoNOTTipProv(BigDecimal aFascKey,
 			// String aCodUfficioUtenteConnesso
 			UfficioModel aUfficioUtenteConnesso, String[] aTipoEvento, String[] aTipoProv,
-			String[] aCodMotivo) throws DAOException
+			String[] aCodMotivo) throws DAOException {
 
-	{
 		String lStatement = "SELECT COUNT(*) HowManyRecords FROM EVENTO";
 
 		// Nel caso non sia stato passato l'Id del fascicolo
@@ -754,6 +753,7 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 
 	public void ricercaEventoByFascicoloSiepTipEventoNOTTipProvNONAnnullati(BigDecimal aKey,
 			String[] aTipoEvento, String[] aTipoProv) throws DAOException {
+
 		String lStatement = getSqlQuery();
 
 		lStatement += " AND FAS_SIE_ID_FASCICOLO_SIEP = " + aKey;
@@ -958,13 +958,7 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		String lStatement = getSqlQuery();
 
 		lStatement += " AND (EVENTO.COD_TIPO_EVENTO = '01')";
-		lStatement += " AND (EVENTO.COD_TIPO_PROVVEDIMENTO = '04'"
-				// MEV_2019-09-SIEP: aggiunta or condition per gestire conferma applicazione provvisoria
-				+ " OR EVENTO.COD_MOTIVO in" // affidamento in prova provvisorio=12; libero=26
-				// AFFIDAMENTO
-				+ " ('5443', '5444', '5445', '5446', '5447', '5460', '5461', '5462', '5463', '5464',"
-				// DETENZIONE E SEMILIBERTA'
-				+ " '5465', '5466', '5467', '5468'))";
+		lStatement += " AND (EVENTO.COD_TIPO_PROVVEDIMENTO = '04')";
 		lStatement += " AND  EVENTO.EVE_ID_EVENTO = " + aEveKey;
 		lStatement += " AND (EVENTO.FLAG_DOCUMENTO_REGISTRATO ='N' OR EVENTO.FLAG_DOCUMENTO_REGISTRATO IS NULL)";
 		lStatement += " AND FAS_SIE_ID_FASCICOLO_SIEP = " + aIdFascicolo;
@@ -1847,10 +1841,6 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		lStatement += " DATA_INVIO_ATTI, ";
 		lStatement += " UFF_EMI.COD_TIPO_UFFICIO as TIPO_COD_UFFICIO_EMITTENTE, ";
 		lStatement += " TIPOLOGIA_INVIO_ATTI ";
-
-		// MEV_2019-09 (D.lgs. 123/2018)
-		lStatement += " , DATA_RESTITUZIONE_AI ";
-
 		lStatement += " FROM EVENTO, cg_ref_codes CODESI,cg_ref_codes CODMOV,UFFICIO UFF_EMI, CG_REF_CODES UFF_TIPO_EMI,";
 		lStatement += " CG_REF_CODES CODTIPPRO,CG_REF_CODES CODEVE, COMUNE LUOEMI,COMUNE LUODES, CG_REF_CODES UFF_TIPO_DES";
 		lStatement += " WHERE";
@@ -1939,9 +1929,6 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		lStatement += " EVENTO.ISTR_ID_ISTRUTTORIA_CUMULO, ";
 		lStatement += " EVENTO.ESTREMI_SOGG_RICH_ISTR, ";
 		lStatement += " KEY_ESEC_NSC ";
-		// MEV_2019-09 (D.lgs. 123/2018)
-		lStatement += " , DATA_RESTITUZIONE_AI ";
-
 		lStatement += " FROM EVENTO, cg_ref_codes CODESI,cg_ref_codes CODMOV,UFFICIO UFF_EMI, CG_REF_CODES UFF_TIPO_EMI,";
 		lStatement += " CG_REF_CODES CODTIPPRO,CG_REF_CODES CODEVE, COMUNE LUOEMI,COMUNE LUODES, CG_REF_CODES UFF_TIPO_DES";
 		lStatement += " WHERE";
@@ -2021,9 +2008,6 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		lStatement += " DATA_ESPULSIONE_SANZ_SOST, ";
 		lStatement += " DATA_RICHIESTA, ";
 		lStatement += " KEY_ESEC_NSC ";
-
-		// MEV_2019-09 (D.lgs. 123/2018)
-		lStatement += " , DATA_RESTITUZIONE_AI ";
 
 		lStatement += " FROM EVENTO, FASCICOLO_SIEP fasc, cg_ref_codes CODESI,cg_ref_codes CODMOV,UFFICIO UFF_EMI, CG_REF_CODES UFF_TIPO_EMI,";
 		lStatement += " CG_REF_CODES CODTIPPRO,CG_REF_CODES CODEVE, COMUNE LUOEMI,COMUNE LUODES, CG_REF_CODES UFF_TIPO_DES";
@@ -2105,10 +2089,6 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		lStatement += " EVENTO.ISTR_ID_ISTRUTTORIA_CUMULO, ";
 		lStatement += " EVENTO.ESTREMI_SOGG_RICH_ISTR, ";
 		lStatement += " KEY_ESEC_NSC ";
-
-		// MEV_2019-09 (D.lgs. 123/2018)
-		lStatement += " , DATA_RESTITUZIONE_AI ";
-
 		lStatement += " FROM EVENTO";
 
 		return lStatement;
@@ -2168,9 +2148,6 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		lStatement += " EVENTO.ISTR_ID_ISTRUTTORIA_CUMULO, ";
 		lStatement += " EVENTO.ESTREMI_SOGG_RICH_ISTR, ";
 		lStatement += " KEY_ESEC_NSC ";
-		// MEV_2019-09 (D.lgs. 123/2018)
-		lStatement += " , DATA_RESTITUZIONE_AI ";
-
 		lStatement += " FROM EVENTO, cg_ref_codes CODESI,cg_ref_codes CODMOV,UFFICIO UFF_EMI, CG_REF_CODES UFF_TIPO_EMI,";
 		lStatement += " CG_REF_CODES CODTIPPRO,CG_REF_CODES CODEVE, COMUNE LUOEMI,COMUNE LUODES, CG_REF_CODES UFF_TIPO_DES";
 		lStatement += " WHERE";
@@ -2215,9 +2192,6 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		lStatement += " DATA_ESPULSIONE_SANZ_SOST, ";
 		lStatement += " DATA_RICHIESTA, ";
 		lStatement += " KEY_ESEC_NSC ";
-
-		// MEV_2019-09 (D.lgs. 123/2018)
-		lStatement += " , DATA_RESTITUZIONE_AI ";
 
 		lStatement += " FROM EVENTO, cg_ref_codes CODESI,cg_ref_codes CODMOV,UFFICIO UFF_EMI, CG_REF_CODES UFF_TIPO_EMI, CG_REF_CODES UFF_TIPO_DES,";
 		lStatement += " CG_REF_CODES CODTIPPRO,CG_REF_CODES CODEVE, COMUNE LUOEMI,COMUNE LUODES";
@@ -2336,10 +2310,6 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		if (findColumn("TIPO_COD_UFFICIO_EMITTENTE"))
 			aModel.setCodTipoUfficioEmittente(getString("TIPO_COD_UFFICIO_EMITTENTE"));
 
-		// MEV_2019-09 (D.lgs. 123/2018)
-		if (findColumn("DATA_RESTITUZIONE_AI"))
-			aModel.setDataRestituzioneAi(getDate("DATA_RESTITUZIONE_AI"));
-
 		return aModel;
 	}
 
@@ -2412,10 +2382,6 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		} catch (Exception sqex) {
 		}
 
-		// MEV_2019-09 (D.lgs. 123/2018)
-		if (findColumn("DATA_RESTITUZIONE_AI"))
-			aModel.setDataRestituzioneAi(getDate("DATA_RESTITUZIONE_AI"));
-
 		return aModel;
 	}
 
@@ -2482,10 +2448,6 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 
 		aModel.setDataRichiesta(getDate("DATA_RICHIESTA"));
 		aModel.setKeyEsecNsc(getBigDecimal("KEY_ESEC_NSC"));
-
-		// MEV_2019-09 (D.lgs. 123/2018)
-		if (findColumn("DATA_RESTITUZIONE_AI"))
-			aModel.setDataRestituzioneAi(getDate("DATA_RESTITUZIONE_AI"));
 
 		EventoNotificaModel lEveNotMd = new EventoNotificaModel();
 		lEveNotMd.setEvento(aModel);
@@ -2573,9 +2535,6 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		lStatement += " DATA_ESPULSIONE_SANZ_SOST, ";
 		lStatement += " DATA_RICHIESTA, ";
 		lStatement += " KEY_ESEC_NSC ";
-
-		// MEV_2019-09 (D.lgs. 123/2018)
-		lStatement += " , DATA_RESTITUZIONE_AI ";
 
 		lStatement += " FROM EVENTO,DEPOSITO_DECRETO,DEPOSITO_ORDINANZA_PC, cg_ref_codes CODESI,cg_ref_codes CODMOV,UFFICIO UFF_EMI, CG_REF_CODES UFF_TIPO_EMI,";
 		lStatement += " CG_REF_CODES CODTIPPRO,CG_REF_CODES CODEVE, COMUNE LUOEMI,COMUNE LUODES, CG_REF_CODES UFF_TIPO_DES";
@@ -3128,10 +3087,6 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		lStatement += " EVENTO.ESTREMI_SOGG_RICH_ISTR, ";
 		lStatement += " DATA_RICHIESTA, ";
 		lStatement += " KEY_ESEC_NSC ";
-
-		// MEV_2019-09 (D.lgs. 123/2018)
-		lStatement += " , DATA_RESTITUZIONE_AI ";
-
 		lStatement += " FROM EVENTO";
 		lStatement += " WHERE ";
 
@@ -3186,10 +3141,6 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		lStatement += " CRC.RV_MEANING as DESCR_TIPOLOGIA_INVIO_ATTI,";
 		// MERGE v10 --> MEV10-s3: aggiunto campo in estrazione
 		lStatement += " '' COD_TIPO_UFFICIO_EMITTENTE ";
-
-		// MEV_2019-09 (D.lgs. 123/2018)
-		lStatement += " , DATA_RESTITUZIONE_AI ";
-
 		lStatement += " FROM EVENTO EV, PROVVEDIMENTO_SIGE PROVV, CG_REF_CODES CRC";
 		lStatement += " WHERE";
 
@@ -3291,9 +3242,6 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		lStatement += " COD_LUOGO_UFFICIO_FIRMATARIO, COD_LUO_FIR.DESCRIZIONE ,";
 		lStatement += " EVENTO.ISTR_ID_ISTRUTTORIA_CUMULO, ";
 		lStatement += " VER.IST_DET_ID_ISTITUTO_DETENZIONE, NUMERO_PROTOCOLLO ";
-
-		// MEV_2019-09 (D.lgs. 123/2018)
-		lStatement += " , DATA_RESTITUZIONE_AI ";
 
 		lStatement += " FROM EVENTO, VERBALE VER, UFFICIO UFF_EMI, CG_REF_CODES CODTIPPRO,CG_REF_CODES CODEVE, CG_REF_CODES CODMOV,";
 		lStatement += " CG_REF_CODES UFF_TIPO_EMI, CG_REF_CODES COD_VER, CG_REF_CODES COD_UFF_FIR, COMUNE LUOEMI, COMUNE COD_LUO_FIR";
@@ -3410,15 +3358,6 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 
 	}
 
-	private boolean findColumn(String aValue) {
-		try {
-			mRs.findColumn(aValue);
-		} catch (Exception sqex) {
-			return false;
-		}
-		return true;
-	}
-
 	/**
 	 * MEV 16: aggiunto metodo di estrazione info esistenza FC
 	 *
@@ -3481,8 +3420,6 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		lStatement += " EVE_ID_EVENTO,  ";
 		lStatement += " DATA_RICHIESTA, ";
 		lStatement += " ISTR_ID_ISTRUTTORIA_CUMULO ";
-		// MEV_2019-09 (D.lgs. 123/2018)
-		lStatement += " , DATA_RESTITUZIONE_AI ";
 
 		lStatement += " FROM EVENTO, cg_ref_codes CODMOV,";
 		lStatement += " CG_REF_CODES CODTIPPRO,CG_REF_CODES CODEVE";
@@ -3649,23 +3586,5 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		setStatement(s);
 	}
 	// ***** FINE INTERVENTO MEV_2023-33 *****//
-
-	/**
-	 * MEV_2019-09 (D.lgs. 123/2018). Ricerca ultimo evento di Fase istruttoria » Richiesta Atti in cui è
-	 * valorizzata la DATA_RESTITUZIONE_AI per poterla precaricare nelle successive richieste dove prevista
-	 *
-	 * @param aIdFascicoloSius
-	 * @throws DAOException
-	 */
-	public void ricercaUltimoEventoRichiestaAttiIsruttoriByIdFasc(BigDecimal aIdFascicoloSius)
-			throws DAOException {
-		String lStatement = getSqlQuery();
-		lStatement += " AND FAS_SIU_ID_FASCICOLO_SIUS = " + aIdFascicoloSius;
-		lStatement += " AND ID_EVENTO = ";
-		lStatement += "(SELECT MAX(ID_EVENTO) FROM evento WHERE FAS_SIU_ID_FASCICOLO_SIUS = "
-				+ aIdFascicoloSius + " AND DATA_RESTITUZIONE_AI is NOT NULL)";
-
-		setStatement(lStatement);
-	}
 
 } // Chiude DAO

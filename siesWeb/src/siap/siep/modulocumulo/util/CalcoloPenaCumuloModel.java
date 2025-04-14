@@ -727,10 +727,6 @@ public class CalcoloPenaCumuloModel extends GenericModel {
     siesLogger.debug("lCalReclusioneTotMod = "+lCalReclusioneTotMod);
     siesLogger.debug("lCalArrestiTotMod = "+lCalArrestiTotMod);
     
-	/* INIZIO ticket#20201204019 in caso di Reclusione negativa, la sposto sull'arresto SOLO al termine 
-	 * del computo di tutte le quantità in quanto potrebbe ritornare positivo a seguito di revoche di benefici.
-	 * Se spostato ora sull'arresto non può più tornare indietro.
-	 * 
 		if (!lCalUtil.isPositiveTime(lCalReclusioneTotMod)) {
 			siesLogger.debug("Attenzione Quantum di Reclusione Negativi: " + lCalReclusioneTotMod);
 
@@ -751,10 +747,7 @@ public class CalcoloPenaCumuloModel extends GenericModel {
 			lCalReclusioneTotMod.setNumGiorni(0);
 			
 		}
-		FINE ticket#20201204019
-		*/
-
-    siesLogger.debug("Totali Parziali Aggiornati ==================");
+		siesLogger.debug("Totali Parziali Aggiornati ==================");
     siesLogger.debug("lCalReclusioneTotMod = "+lCalReclusioneTotMod);
     siesLogger.debug("lCalArrestiTotMod = "+lCalArrestiTotMod);
 

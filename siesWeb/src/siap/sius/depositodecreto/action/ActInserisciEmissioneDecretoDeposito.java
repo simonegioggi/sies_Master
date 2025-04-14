@@ -54,6 +54,7 @@ public class ActInserisciEmissioneDecretoDeposito extends ActionSius implements 
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+
 	// Variabili di sessione.
 	private FascicoloGPModel mFasGPMod = null;
 	private String mCodiceOperatore = null;
@@ -137,9 +138,7 @@ public class ActInserisciEmissioneDecretoDeposito extends ActionSius implements 
 			DepositoDecretoEventoModel lDepDecrEveModel = new DepositoDecretoEventoModel();
 			lDepDecrEveModel.setDepositoDecreto(generaDecreto(lDataEmissione));
 			lDepDecrEveModel.setEvento(generaEvento(lDataEmissione));
-			//
 			// - Lettura dei campi opzionali -
-			//
 			if (!isRequestParameterNullObj(CAMPO_NOTE)) {
 				// Lettura Note Rilevato
 				lNote = getRequestStringParameter(CAMPO_NOTE);
@@ -394,9 +393,21 @@ public class ActInserisciEmissioneDecretoDeposito extends ActionSius implements 
 				lDepDecrEveModel.getDepositoDecreto()
 						.setDescrCommActa(getRequestStringParameter(CAMPO_DESCR_COMM_ACTA));
 			}
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			// siesLogger.debug("Deposito Decreto = "+lDepDecrEveModel.getDepositoDecreto());
+
+			// MEV_2023-35: aggiunto recupero dell'importo della pena pecuniaria convertita
+			if (!isRequestParameterNullObj(CAMPO_INTERO_PENA_PECUNIARIA_CONVERTITA)
+					&& ((getRequestStringParameter(CAMPO_INTERO_PENA_PECUNIARIA_CONVERTITA) != null
+							&& !(getRequestStringParameter(CAMPO_INTERO_PENA_PECUNIARIA_CONVERTITA))
+									.equals(""))
+							|| (getRequestStringParameter(CAMPO_DECIMALE_PENA_PECUNIARIA_CONVERTITA) != null
+									&& !(getRequestStringParameter(CAMPO_DECIMALE_PENA_PECUNIARIA_CONVERTITA))
+											.equals("")))) {
+				lDepDecrEveModel.getDepositoDecreto()
+						.setSommaRisarcimentoDanni((new BigDecimal(getRequestStringParameter(
+								CAMPO_INTERO_PENA_PECUNIARIA_CONVERTITA) + "."
+								+ getRequestStringParameter(CAMPO_DECIMALE_PENA_PECUNIARIA_CONVERTITA))));
+			}
+			// FINE MEV_2023-35
 
 			// Inserisce nel model aggregante l'Array di model dei Tenori e Il model
 			// GeneraleProcedimento.
@@ -455,7 +466,6 @@ public class ActInserisciEmissioneDecretoDeposito extends ActionSius implements 
 				PeriodoAltraSanzioneModel lPASMod = lPASmESS.caricaPeriodoAltraSanzioneModESS(mFasGPMod);
 				// Carica model dell'Esecuzione Sanzione Sostitutiva
 				mEssM = lPASmESS.getESS();
-
 				lDepDecrEveModel = lDepDecrCtrl.ExInserisciDecretoPeriodoAltraSanzione(lGPTenoreModel,
 						lDepDecrEveModel, lPASMod, mEssM);
 			} else if (lDepDecrEveModel.getDepositoDecreto().getCodTipoDecreto()
@@ -470,7 +480,6 @@ public class ActInserisciEmissioneDecretoDeposito extends ActionSius implements 
 				PeriodoAltraMisuraModel lPAMMod = lPAMmEMS.caricaPeriodoAltraMisuraModEMS(mFasGPMod);
 				// Carica model dell'Esecuzione Misura Sicurezza
 				mEmsM = lPAMmEMS.getEMS();
-
 				lDepDecrEveModel = lDepDecrCtrl.ExInserisciDecretoPeriodoAltraMisura(lGPTenoreModel,
 						lDepDecrEveModel, lPAMMod, mEmsM);
 			} else {
@@ -570,6 +579,7 @@ public class ActInserisciEmissioneDecretoDeposito extends ActionSius implements 
 		// LogF3B.getLogger()
 		siesLogger.debug(getClass().getName() + ".processRequest(): fine");
 
+		// pagina di ritorno
 		return lRetPage;
 	}
 
@@ -728,7 +738,6 @@ public class ActInserisciEmissioneDecretoDeposito extends ActionSius implements 
 		else
 			lLicMod.setCodTipoLicenza("PI"); // Permesso Internato
 
-		// TODO carmela verificare
 		if (!isRequestParameterNullObj(ICostantiLicenzaLibanticipata.CAMPO_NUMERO_MESI)
 				&& getRequestStringParameter(ICostantiLicenzaLibanticipata.CAMPO_NUMERO_MESI).trim()
 						.length() > 0)
@@ -810,24 +819,16 @@ public class ActInserisciEmissioneDecretoDeposito extends ActionSius implements 
 		// Inizializzazione LicenzaLibAnticipata.
 		LicenzaLibAnticipataModel lLicenza = generaLicenza(aIdEvento);
 
-		/*
-		 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		 * LogF3B.getLogger() siesLogger.debug("CodOggettoProcedimento : " +
-		 * mFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento() ); // [FT] - 03/08/2016 -
-		 * MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-		 * siesLogger.debug("COD_CONTENUTO : " + getRequestStringParameter(
-		 * ICostantiFascicoloSius.CAMPO_COD_CONTENUTO ) );
-		 */
 		// 20110520
 		// Esegue controllo per discriminare il tipo di licenza.
 		// Questo controllo verrà eseguito utilizzando il CodiceOggettoProcedimento pari a U068
 		if (mFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U068"))
 			lLicenza.setCodTipoLicenza("LI"); // Licenza Internati
+		else if (mFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U135"))
+			lLicenza.setCodTipoLicenza("LP"); // MEV_2023-35: aggiunta Licenza pene sostitutive
 		else
 			lLicenza.setCodTipoLicenza("LC"); // Licenza
-
 		lLicenza.setFlagConcesso("C");
-		// TODO carmela verificare
 		if (!isRequestParameterNullObj(ICostantiLicenzaLibanticipata.CAMPO_NUMERO_MESI)
 				&& getRequestStringParameter(ICostantiLicenzaLibanticipata.CAMPO_NUMERO_MESI).trim()
 						.length() > 0)

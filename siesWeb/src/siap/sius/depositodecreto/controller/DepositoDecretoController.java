@@ -103,18 +103,7 @@ import siap.sius.tenore.model.TenoreModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * <p>
- * Title: DepositoDecretoController
- * </p>
- * <p>
- * Description: Classe Controller per DepositoDecreto
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * DepositoDecretoController - Classe Controller per DepositoDecreto
  *
  * @version 1.0
  */
@@ -126,7 +115,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Effettua l'inserimento di un Deposito Decreto.
-	 * <p>
 	 *
 	 * @param aDepositoDecreto
 	 *            Model con i dati da inserire.
@@ -167,7 +155,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Effettua la ricerca di depositi decreti.
-	 * <p>
 	 *
 	 * @param aDepositoDecreto
 	 *            model deposito decreto con i dati utili per la ricerca.
@@ -200,7 +187,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Effettua la ricerca di un singolo record di deposito decreto.
-	 * <p>
 	 *
 	 * @param aKey
 	 *            l'id del deposito decreto da ricercare.
@@ -238,7 +224,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Ricerca deposito decreto attraverso l'id generato.
-	 * <p>
 	 *
 	 * @param aIdEvento
 	 *            l'id dell'evento.
@@ -276,7 +261,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Ricerca Deposito Decreto Inammissibilità e Motivazioni attraverso l'id generato.
-	 * <p>
 	 *
 	 * @param aIdEvento
 	 *            l'id dell'evento.
@@ -348,7 +332,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 	/**
 	 * Ricerca Deposito Decreto Incompetenza e Motivazioni attraverso l'id generato, inoltre preleva dalla
 	 * tabella evento il flag di stato del documento registrato.
-	 * <p>
 	 *
 	 * @param aIdEvento
 	 *            l'id dell'evento.
@@ -416,7 +399,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Ricerca Deposito Decreto, Evento, Fascicolo SIUS a partire dall'ID Soggetto.
-	 * <p>
 	 * Nota: del Fascicolo vengono valorizzati solo ID, Anno e Progressivo e non gli altri campi.
 	 *
 	 * @param aIdSoggetto
@@ -464,7 +446,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Ricerca Deposito Decreto, Fascicolo SIUS a partire dall'ID Evento Generato.
-	 * <p>
 	 * Nota: del Fascicolo vengono valorizzati solo ID, Anno e Progressivo e non gli altri campi.
 	 *
 	 * @param aIdSoggetto
@@ -496,7 +477,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Verifica l'esistenza di un deposito decreto per l'id di generale procedimento.
-	 * <p>
 	 *
 	 * @param aKey
 	 *            id di generale procedimento.
@@ -536,7 +516,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Verifica l'esistenza di un deposito decreto per l'id di generale procedimento e di un tipo specificato.
-	 * <p>
 	 *
 	 * @param aKey
 	 *            id di generale procedimento,
@@ -580,7 +559,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Verifica l'esistenza di un deposito decreto per l'id di generale procedimento e di un tipo specificato.
-	 * <p>
 	 *
 	 * @param aKey
 	 *            id di generale procedimento,
@@ -625,7 +603,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 	/**
 	 * Verifica l'esistenza di un deposito decreto per l'id di generale procedimento e per cod_esito
 	 * nell'evento collegato.
-	 * <p>
 	 *
 	 * @param aKey
 	 *            : id di generale procedimento,
@@ -664,7 +641,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 	/**
 	 * Verifica l'esistenza di un deposito decreto per l'id di generale procedimento e per Data Emissione
 	 * nell'evento collegato.
-	 * <p>
 	 *
 	 * @param aKey
 	 *            : id di generale procedimento,
@@ -704,7 +680,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 	 * La funzione verifica l'esistenza di almeno un decreto emesso per uno specifico Generale Procedimento
 	 * individuato dal suo id e che sia di un tipo decreto non compreso tra quelli nella lista definita nella
 	 * funzione stessa.
-	 * <p>
 	 *
 	 * @param aKey
 	 *            : id di generale procedimento,
@@ -739,7 +714,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Esegue la modifica di un determinato record di deposito decreto.
-	 * <p>
 	 *
 	 * @param aDepositoDecreto
 	 *            contine i dati con cui modificare il record già esistente.
@@ -778,7 +752,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Esegue la cancellazione di un record del deposito decreto.
-	 * <p>
 	 *
 	 * @param aKeyDepDec
 	 *            : chiave del record
@@ -821,7 +794,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Esegue la cancellazione di un record del deposito decreto.
-	 * <p>
 	 *
 	 * @param aDepDec
 	 *            : model DepositoDecreto in cui siano valorizzati almeno i campi IDDepositoDecreto e
@@ -897,7 +869,7 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 			PeriodoAltraSanzioneModel lPASMod = (PeriodoAltraSanzioneModel) lPASSqlDao.getModelByKey();
 
 			if (lPASMod != null && lPASMod.getFasSiuIdFascicoloSius() != null
-					&& aDepDec.getFlagRecuperoSS().equals("S")) {
+					&& "S".equals(aDepDec.getFlagRecuperoSS())) {
 				// ---- Ricerca in Esecuzione Sanzione Sostitutiva con l'ID del Fascicolo SIUS (PADRE) trovato
 				// ----
 				lESSSqlDao = new EsecuzioneSanzioneSostitutivaSqlDAO(aConn);
@@ -1046,7 +1018,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Esegue l'inserimento del Emissione Decreto Incompetenza.
-	 * <p>
 	 *
 	 * @param aGPTenoreModel
 	 * @param aDepDecrEveModel
@@ -1146,7 +1117,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 	 */
 	/**
 	 * Esegue l'inserimento del Emissione Decreto Incompetenza.
-	 * <p>
 	 *
 	 * @param aGPTenoreModel
 	 * @param aDepDecrEveModel
@@ -1281,17 +1251,11 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Esegue l'inserimento del Emissione Decreto.
-	 * <p>
 	 * Description: Funzione per l'inserimento dell'Emissione di un decreto generico.
-	 * </p>
 	 * Le tabelle coinvolte sono:
-	 * <p>
 	 * DEPOSITO_DECRETO : viene inserito il nuovo record decreto;
-	 * <p>
 	 * EVENTO : viene inserito un nuovo record;
-	 * <p>
 	 * TENORE : vengono chiusi i tenori attivi (data_fine) ed inseriti i nuovi tenori;
-	 * <p>
 	 * GENERALE_PROCEDIMENTO : update del contenuto del procemimento.
 	 *
 	 * @param aGPTenoreModel
@@ -1323,7 +1287,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 	/**
 	 * Metodo che esegue l'inseriemento di un decreto, tale metodo chiama il metodo private ExInserisciDecreto
 	 * appartente a questa classe
-	 * <p>
 	 *
 	 * @param aGPTenoreModel
 	 * @param aDepDecrEveModel
@@ -1387,9 +1350,7 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * 30/08/2007 Inserimento Decreto Licenza o Permesso Transazionale.
-	 * <p>
 	 * Description: Funzione per l'inserimento del decreto di Concessione Licenza/Permesso.
-	 * </p>
 	 *
 	 * @param aGPTenoreModel
 	 * @param aDepDecrEveModel
@@ -1433,10 +1394,8 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 	}
 
 	/**
-	 * <p>
 	 * Description: Funzione per l'inserimento del decreto di Procedimento di Sospensione e Periodo Altra
 	 * Sanzione.
-	 * </p>
 	 *
 	 * @param aGPTenoreModel
 	 * @param aDepDecrEveModel
@@ -1677,7 +1636,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Esegue la stampa decreto.
-	 * <p>
 	 *
 	 * @param aEvento
 	 *            id evento
@@ -1752,7 +1710,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Preleva i dati del decreto.
-	 * <p>
 	 *
 	 * @param aEvento
 	 *            Evento model.
@@ -2177,12 +2134,7 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 			// STUB 24-02-2006 La Misura Alternativa si iscrive se il Deposito non riguarda la
 			// Fissazione Udienza.
 					(lEveMod.getCodEsito().compareTo("0601") != 0
-							&& lEveMod.getCodEsito().compareTo("0602") != 0
-							// MEV_2019-09: anche per il decreto di designazione del magistrato relatore non
-							// bisogna iscrivere la Misura Alternativa
-							// && lEveMod.getCodEsito().compareTo("0270") != 0
-							// && lEveMod.getCodEsito().compareTo("0271") != 0
-							&& lEveMod.getCodEsito().compareTo("0610") != 0))
+							&& lEveMod.getCodEsito().compareTo("0602") != 0))
 					&& !(lMADao.esisteMisuraAlternativaPerEvento(lEveMod.getIdEvento()))
 					&& lMASqlDao.eventoCoRiRe(lEveMod.getIdEvento())) {
 				MisuraAlternativaModel lMAModel = new MisuraAlternativaModel();
@@ -2277,12 +2229,8 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 			lFasSiusDao.setDAOFromModelForUpdate(aFasGPMod.getFascicoloSiusModel());
 			// STUB 02-02-2006 Lo stato del fascicolo cambia se il Deposito non riguarda la Fissazione
 			// Udienza.
-			if (lEveMod.getCodEsito().compareTo("0601") != 0 && lEveMod.getCodEsito().compareTo("0602") != 0
-			// MEV_2019-09: anche per il decreto di designazione del magistrato relatore non bisogna passare lo
-			// stato ad "Emesso Provvedimento" (07)
-			// && lEveMod.getCodEsito().compareTo("0270") != 0
-			// && lEveMod.getCodEsito().compareTo("0271") != 0
-					&& lEveMod.getCodEsito().compareTo("0610") != 0) {
+			if (lEveMod.getCodEsito().compareTo("0601") != 0
+					&& lEveMod.getCodEsito().compareTo("0602") != 0) {
 				lFasSiusDao.setCodStatoFascicolo("07");
 				lFasSiusDao.update();
 				lFasSiusDao.stop();
@@ -2360,7 +2308,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 	/**
 	 * STUB: 20030926 - Temporanea per problema riferito al fascicolo siep inestitente a fronte di un fasciclo
 	 * SIUS.
-	 * <p>
 	 * Crea la root del Documento
 	 *
 	 * @param aEveModel
@@ -2392,7 +2339,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 	/**
 	 * STUB: 20031014 - Recupero dei destinatari con impipamento dei dati nel formato TIPO DESTINATARIO | SEDE
 	 * | COD_UFFICIO .
-	 * <p>
 	 *
 	 * @param aIdDepositoDecreto
 	 * @return lStampa
@@ -2489,7 +2435,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Esegue la ricerca del deposito ordinanza per l'id di Evento.
-	 * <p>
 	 *
 	 * @param aEveKey
 	 *            id Evento.
@@ -2526,7 +2471,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Esegue la ricerca del deposito ordinanza per l'id di Evento.
-	 * <p>
 	 *
 	 * @param aEveKey
 	 *            id Evento.
@@ -2771,7 +2715,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Esecuzione stampa Emissione Decreto
-	 * <p>
 	 *
 	 * @param aModel
 	 * @return ByteArrayOutputStream
@@ -2835,7 +2778,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * Esecuzione stampa Foglio Complementare
-	 * <p>
 	 *
 	 * @param aModel
 	 * @return ByteArrayOutputStream
@@ -3131,10 +3073,8 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 	}
 
 	/**
-	 * <p>
 	 * Description: Funzione per l'inserimento del decreto di Procedimento di Sospensione e Periodo Altra
 	 * Misura
-	 * </p>
 	 *
 	 * @param aGPTenoreModel
 	 * @param aDepDecrEveModel
@@ -3266,9 +3206,7 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/**
 	 * 07/2014 Inserimento Decreto Revoca liberazione Anticipata.
-	 * <p>
 	 * Description: Funzione per l'inserimento del decreto di Revoca liberazione Anticipata ,
-	 * </p>
 	 * Inserimento Decreto Violazione art 3 CEDU,
 	 *
 	 * @param aGPTenoreModel
@@ -3516,178 +3454,5 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 		// valore di ritorno
 		return lDepMod;
 	}
-
-	/*
-	 * ISSUE MEV : Aggiunto metodo di inserimento decreto di designazione Magistrato relatore Numero MEV : 9
-	 * Autore : Gioggi Data : 17 nov 2020 Branch : MEV_2019-09
-	 */
-	@Override
-	public DepositoDecretoEventoModel ExInserisciDecretoMagistratoRelatore(GPTenoreModel gptm,
-			DepositoDecretoEventoModel ddem) throws F3BException {
-
-		Connection c = null;
-
-		GeneraleProcedimentoDAO gpDAO = null;
-		TenoreDAO tDAO = null;
-		TenoreSqlDAO tsDAO = null;
-		DepositoDecretoDAO ddDAO = null;
-		EventoDAO eDAO = null;
-
-		GPTenoreModel gptmNew = new GPTenoreModel(gptm);
-		DepositoDecretoModel ddm = new DepositoDecretoModel(ddem.getDepositoDecreto());
-		EventoModel em = new EventoModel(ddem.getEvento());
-		DepositoDecretoEventoModel ddemNew = null;
-
-		try {
-			c = getDBTransaction();
-
-			gpDAO = new GeneraleProcedimentoDAO(c);
-			tDAO = new TenoreDAO(c);
-			tsDAO = new TenoreSqlDAO(c);
-			ddDAO = new DepositoDecretoDAO(c);
-			eDAO = new EventoDAO(c);
-
-			// Update GeneraleProcedimento
-			gpDAO.setCodOggettoProcedimento(
-					gptmNew.getGeneraleProcedimentoModel().getCodOggettoProcedimento());
-			gpDAO.setDataAggiornamento(gptmNew.getGeneraleProcedimentoModel().getDataAggiornamento());
-			gpDAO.setCodUfficioAggiornamento(
-					gptmNew.getGeneraleProcedimentoModel().getCodUfficioAggiornamento());
-			gpDAO.setCodOperatoreAggiornamento(
-					gptmNew.getGeneraleProcedimentoModel().getCodOperatoreAggiornamento());
-			gpDAO.setCondizioneUpdate(gptmNew.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
-			gpDAO.update();
-
-			// Insert DepositoDecreto
-			ddDAO.setDAOFromModel(ddm);
-			BigDecimal depDecIdDepositoDecreto = ddDAO.insert();
-			ddDAO.stop();
-
-			// Parte Gestione Tenori
-			BigDecimal idGeneraleProcedimento = gptmNew.getGeneraleProcedimentoModel()
-					.getIdGeneraleProcedimento();
-			TenoreModel tm = new TenoreModel();
-			// Valorizzazione dei campi da aggiornare & update
-			tm.setCodOperatoreAggiornamento(
-					gptmNew.getGeneraleProcedimentoModel().getCodOperatoreAggiornamento());
-			tm.setCodUfficioAggiornamento(
-					gptmNew.getGeneraleProcedimentoModel().getCodUfficioAggiornamento());
-			tm.setDataAggiornamento(gptmNew.getGeneraleProcedimentoModel().getDataAggiornamento());
-			tm.setDataFine(gptmNew.getGeneraleProcedimentoModel().getDataAggiornamento());
-			tm.setGenPridGeneraleProcedimento(
-					gptmNew.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
-			tm.setCodUfficioInserimento(ddm.getCodUfficioInserimento());
-			tm.setDescrUfficioInserimento(ddm.getDescrUfficioInserimento());
-			tDAO.setDAOFromModelForUpdateDataFine(tm);
-			tDAO.update();
-			tDAO.stop();
-
-			// Insert dei tenori
-			TenoreModel[] tmArray = gptmNew.getTenori();
-			int lCount = tmArray.length;
-			for (int x = 0; x < lCount; x++) {
-				tmArray[x].setGenPridGeneraleProcedimento(idGeneraleProcedimento);
-				tmArray[x].setDepDecIdDepositoDecreto(depDecIdDepositoDecreto);
-				tmArray[x].setCodUfficioInserimento(ddm.getCodUfficioInserimento());
-				tmArray[x].setDescrUfficioInserimento(ddm.getDescrUfficioInserimento());
-				tDAO.setDAOFromModel(tmArray[x]);
-				tDAO.insert();
-				tDAO.stop();
-			}
-
-			// Ricerca dati del tenore
-			tsDAO.ricercaTenoriByDecretoOrderByPeso(depDecIdDepositoDecreto);
-			tm = new TenoreModel((TenoreModel) tsDAO.getModelByKey());
-			// Insert Evento, imposta COD_MOTIVO e IdTenore, nel model
-			em.setCodMotivo(tm.getCodOggettoTenore());
-			em.setTenIdTenore(tm.getIdTenore());
-			eDAO.setDAOFromModel(em);
-			BigDecimal idEvento = eDAO.insert();
-
-			// Effettua update del campo evento_generato
-			ddDAO.setCondizioneUpdate(depDecIdDepositoDecreto);
-			ddDAO.setIdEventoGenerato(idEvento);
-			ddDAO.update();
-
-			// Prepara il model di ritorno
-			ddemNew = new DepositoDecretoEventoModel();
-			ddemNew.getEvento().setIdEvento(idEvento);
-			ddemNew.getDepositoDecreto().setIdDepositoDecreto(depDecIdDepositoDecreto);
-
-			commit(c);
-		} catch (DAOException daoEx) {
-			rollback(c);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			siesLogger.debug("DAOException: " + daoEx);
-			throw new SIUSException(
-					"DepositoDecretoController.ExInserisciDecretoMagistratoRelatore: " + daoEx);
-		} finally {
-			cleanup(gpDAO);
-			cleanup(tDAO);
-			cleanup(tsDAO);
-			cleanup(ddDAO);
-			cleanup(eDAO);
-			cleanup(c);
-		}
-
-		return ddemNew;
-	}
-
-	/**
-	 * Aggiunto metodo di modifica decreto di designazione Magistrato relatore
-	 */
-	@Override
-	public void ExModificaDecretoMagistratoRelatore(DepositoDecretoEventoModel ddem) throws F3BException {
-
-		Connection c = null;
-
-		DepositoDecretoDAO ddDAO = null;
-		EventoDAO eDAO = null;
-		TenoreSqlDAO tsDAO = null;
-
-		DepositoDecretoModel ddm = new DepositoDecretoModel(ddem.getDepositoDecreto());
-		EventoModel em = new EventoModel(ddem.getEvento());
-
-		try {
-			c = getDBTransaction();
-
-			ddDAO = new DepositoDecretoDAO(c);
-			eDAO = new EventoDAO(c);
-			tsDAO = new TenoreSqlDAO(c);
-
-			// Ricerca dati del tenore
-			tsDAO.ricercaTenoriByDecretoOrderByPeso(ddm.getIdDepositoDecreto());
-			TenoreModel tm = new TenoreModel((TenoreModel) tsDAO.getModelByKey());
-			// update Evento, imposta COD_MOTIVO e IdTenore, nel model
-			em.setCodMotivo(tm.getCodOggettoTenore());
-			em.setTenIdTenore(tm.getIdTenore());
-			eDAO.setDAOFromModel(em);
-			eDAO.setDAOFromModelForUpdate(em);
-			eDAO.update();
-			eDAO.stop();
-
-			// Effettua update del campo evento_generato in tabella DepositoDecreto
-			ddDAO.setDAOFromModel(ddm);
-			ddDAO.setCondizioneUpdate(ddm.getIdDepositoDecreto());
-			ddDAO.setIdEventoGenerato(em.getIdEvento());
-			ddDAO.update();
-			ddDAO.stop();
-
-			commit(c);
-		} catch (DAOException daoEx) {
-			rollback(c);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			siesLogger.debug("DAOException: " + daoEx);
-			throw new SIUSException(
-					"DepositoDecretoController.ExModificaDecretoMagistratoRelatore: " + daoEx);
-		} finally {
-			cleanup(ddDAO);
-			cleanup(eDAO);
-			cleanup(c);
-		}
-	}
-	// ***** FINE INTERVENTO MEV_2019-09 *****//
 
 }

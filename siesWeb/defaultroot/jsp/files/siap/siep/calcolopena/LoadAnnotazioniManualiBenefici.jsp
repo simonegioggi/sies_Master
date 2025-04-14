@@ -634,7 +634,7 @@ BigDecimal LADaConcedere = (BigDecimal) request.getAttribute("LADaConcedere");
     <input type="HIDDEN" name="<%=ICostantiAnnotazioneManuale.CAMPO_COD_TIPO_ANNOTAZIONE%>" value="003">
     <%-- MEV NUOVA INFRASTRUTTURA: refactoring --%>
     <%-- input type="HIDDEN" name="<%=ICostantiAnnotazioneManuale.CAMPO_ID_ANNOTAZIONE_MANUALE%>" value="<%=StringUtils.toStringJSP(OrdinanzaGEAnn.getIdAnnotazioneManuale())%>"--%>
-  <!--  MEV_2019-09 - Id Annotazione della richiesta iniziale -->
+  <!--  MEV 9 - Id Annotazione della richiesta iniziale -->
     <input type="HIDDEN" name="<%=ICostantiAnnotazioneManuale.CAMPO_ID_ANNOTAZIONE_MANUALE%>" value="<%=StringUtils.toStringJSP(lAnnRichMod.getIdAnnotazioneManuale())%>">
 
   <table>
@@ -1471,19 +1471,15 @@ if (lFlagOrdinanzaGE) {
         <font class="campo">
           <%=StringUtils.toStringJSP(OrdinanzaGEAnn.getMotivazioni())%>&nbsp;
         </font>
-    </td>
-  </tr>
-  
-  <input type="HIDDEN" name="IdAnnGE" value="<%=StringUtils.toStringJSP(OrdinanzaGEAnn.getIdAnnotazioneManuale())%>">
+          <input type="HIDDEN" name="IdAnnGE" value="<%=StringUtils.toStringJSP(OrdinanzaGEAnn.getIdAnnotazioneManuale())%>">
   <input type="HIDDEN" name="annoGE" value="<%=StringUtils.toStringJSP(OrdinanzaGEAnn.getAnnoGe())%>">
   <input type="HIDDEN" name="numGE" value="<%=StringUtils.toStringJSP(OrdinanzaGEAnn.getNumeroGe())%>">
   <input type="HIDDEN" name="DaAnArr" value="<%=DateUtils.getDateToString(OrdinanzaGEAnn.getDataGE(), "yyyy")%>">
   <input type="HIDDEN" name="DaGiArr" value="<%=DateUtils.getDateToString(OrdinanzaGEAnn.getDataGE(), "dd")%>">
   <input type="HIDDEN" name="DaMeArr" value="<%=DateUtils.getDateToString(OrdinanzaGEAnn.getDataGE(), "MM")%>">
-  
+    </td>
+  </tr>
   <% } %>
-
-  
   <tr>
     <td class="l" colspan=3>
       <input type="radio" name="TipoOrd" value="SenzaRichiesta" checked>senza richiesta &nbsp;&nbsp;
@@ -1495,12 +1491,11 @@ if (lFlagOrdinanzaGE) {
     <td class="l" colspan=3>
       <input type="radio" name="TipoOrd" value="Rigetta"       onclick="Javascript:isRigetto();">rigetta &nbsp;&nbsp;
       <input type="radio" name="TipoOrd" value="Inammissibile" onclick="Javascript:isInammissibile();">dichiara inammissibile &nbsp;&nbsp;
-      
+        <input type="HIDDEN" name="<%=ICostantiAnnotazioneManuale.CAMPO_TIPO_RICHIE%>" value="<%=Richie%>">
     <!--   <input type="radio" name="TipoOrd" value="Riunisce">riunisce &nbsp;&nbsp;  --> 
     </td>
   </tr>
   <tr>
-  <input type="HIDDEN" name="<%=ICostantiAnnotazioneManuale.CAMPO_TIPO_RICHIE%>" value="<%=Richie%>">
   </tr>
 <%-- MEV NUOVA INFRASTRUTTURA: refactoring --%>
 <%--

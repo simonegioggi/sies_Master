@@ -2,10 +2,10 @@
 <%@ page import="java.util.Date"%>
 <%@ page import="java.math.BigDecimal"%>
 
-<%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
 <%@ page import="f3b.util.Utils"%>
+<%@ page import="f3b.web.IWebConstants"%>
 
 <%@ page import="siap.sius.fascicolo.model.FascicoloGPModel"%>
 <%@ page import="siap.sius.generaleprocedimento.model.GeneraleProcedimentoModel"%>
@@ -21,6 +21,7 @@
 <%@ page import="siap.sico.security.action.ICostantiSecurity" %>
 <%@ page import="siap.sico.utente.model.UtenteModel" %>
 <%@ page import="siap.sico.ufficio.model.UfficioModel" %>
+<%@ page import="siap.sius.esecuzionesanzionesostitutiva.action.ICostantiEsecuzioneSS"%>
 
 <jsp:useBean id="modalita"  					scope="request" class="java.lang.String"/>
 <jsp:useBean id="fascicoloSiusGP" 				scope="session" class="siap.sius.fascicolo.model.FascicoloGPModel" />
@@ -28,8 +29,9 @@
 <jsp:useBean id="depositoDecretoMotivazioni" 	scope="request" class="siap.sius.depositodecreto.model.DepositoDecretoEventoMotivazioniModel"/>
 <jsp:useBean id="tenori" 						scope="request" class="java.util.Vector"/>
 <jsp:useBean id="misuraSicurezza" 				scope="request" class="siap.siep.misurasicurezza.model.MisuraSicurezzaModel"/>
-<%-- INIZIO: MEV_2019-09 (D.lgs. 123/2018) --%>
-<jsp:useBean id="dataDecretoDesignazione" 		scope="request" class="java.lang.String"/>
+<%-- MEV_2023-35: aggiunto useBean per gestione Ordinanza Reclamo Avverso Revoca Pena Sostitutiva --%>
+<jsp:useBean id="tipoPeneSostitutive" 					scope="request" class="java.lang.String"/>
+<jsp:useBean id="esecuzioneSanzioneSostitutivaModel" 	scope="request" class="siap.sius.esecuzionesanzionesostitutiva.model.EsecuzioneSanzioneSostitutivaModel"/>
   
 <%
 String[] esiti = (String[]) request.getAttribute("esiti");
@@ -102,16 +104,6 @@ if (data_deposito != null)
   	data2 = DateUtils.getDateToString(data_deposito,"dd/MM/yyyy");
 else
  	data2 = DateUtils.getSysDate("dd/MM/yyyy");
-
-// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
-String contenuto = "";
-contenuto = fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento();
-boolean is678 = false;
-// String dataDecretoDesignazione = "";
-if (ICostantiDepositoOrdinanzaPc.MISURA_ALTERNATIVA_AMMISSIONE_PROVVISORIA.equals(datiOrdinanza.getOrdinanza().getCodTipoOrdinanza())) {
-	is678 = true;
-}
-// FINE: MEV_2019-09
 %>
 <html>
 <head>
@@ -120,30 +112,6 @@ if (ICostantiDepositoOrdinanzaPc.MISURA_ALTERNATIVA_AMMISSIONE_PROVVISORIA.equal
 <script language="JavaScript">
 function Verify() {
 	var flagDate = VerificaDate();
-<%-- INIZIO: MEV_2019-09 (D.lgs. 123/2018) --%>
-<%
-if (is678) {
-%>
-	var listComboEsiti = document.getElementsByName("<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>"); 
-	var contaProvvisorie = 0;
-	if (typeof (listComboEsiti[1]) != "undefined") {
-		for (idComboEsiti = 0; idComboEsiti < listComboEsiti.length; idComboEsiti++) {
-			var comboEsito = listComboEsiti[idComboEsiti];
-  		    if (comboEsito[comboEsito.selectedIndex].value == '0680'
-    				|| comboEsito[comboEsito.selectedIndex].value == '0690') {
-				contaProvvisorie++;
-  		    }
-	  	}
-	}
-	if (contaProvvisorie > 1) {
-		alert("Attenzione. Può essere selezionato 'Applica Provvisoriamente' per un solo oggetto");
-  	    return false;
-	}
-<%
-}
-%>
-<%-- FINE: MEV_2019-09 (D.lgs. 123/2018) --%>
-
 // MEV_39: aggiunto controllo
 <%
 if ("42".equals(tipo) || "MS".equals(tipo)) {
@@ -200,13 +168,14 @@ if ("42".equals(tipo) || "MS".equals(tipo)) {
        	}
        	return true;
 	}
+		     	
+		     	return true;
 }
 
 function VerificaDate() {
 	var ritorno = true;
 	var data_camera = '<%=data1%>';
 	var data_deposito = '<%=data2%>';
-	var dataDecretoDesignazione = '<%=dataDecretoDesignazione%>'; <%-- MEV_2019-09 (D.lgs. 123/2018) --%>
 	var data_emissione = document.ModificaOrdinanza.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>.value;
 	var data_decorrenza;
 	var nodeDataDec;
@@ -225,27 +194,6 @@ function VerificaDate() {
         alert("La data di emissione non può essere maggiore della data di deposito o in assenza di essa, della data di Sistema!");
         ritorno =  false;
 	}
-<%-- INIZIO: MEV_2019-09 (D.lgs. 123/2018) --%>
-<%
-if (is678) {
-%>		      	
-	else if (dataDecretoDesignazione != "" && !CompareDate(dataDecretoDesignazione, data_emissione)) {
-        alert("La data di emissione non può essere minore della Data emissione del Decreto di Designazione!");
-        ritorno = false;
-   	}
-<%
-}
-if (ICostantiDepositoOrdinanzaPc.CONFERMA_DECISIONE_MAGISTRATO_RELATORE.equals(datiOrdinanza.getOrdinanza().getCodTipoOrdinanza())) {
-%>
-	// Controllo data di emissione >= data udienza
-	if (!CompareDate(data_camera, data_emissione)) {
-		alert('Data Emissione non può essere inferiore alla Data Udienza del ' + data_camera + '!');
-		ritorno = false;
-	}
-<%
-}
-%>
-<%-- FINE: MEV_2019-09 (D.lgs. 123/2018) --%>
    	// Controllo della data deposito <= data camera di consiglio
    	else if (data_camera != null && !CompareDate(data_camera, data_emissione)) {
 		alert("La data di emissione non può essere minore della Data Udienza!");
@@ -508,41 +456,28 @@ if ("42".equals(tipo) || "MS".equals(tipo)) {
 	} // Fine caso più oggetti
 <%
 }
+// MEV_2023-35: aggiunta gestione Ordinanza Reclamo Avverso Revoca Pena Sostitutiva (C063)
+else if (tipo.equals(ICostantiDepositoOrdinanzaPc.RECLAMO_AVVERSO_REVOCA_PENA_SOSTITUTIVA)) {
 %>
-}
-   
-<%-- INIZIO: MEV_2019-09 (D.lgs. 123/2018) --%>
-<%
-if (is678) {
-%>
-function checkEsiti() {
-	var listComboEsiti = document.getElementsByName("<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>");
-	if (typeof (listComboEsiti[1]) == "undefined") {
-		var comboEsito = document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>;
-      	for (j = 0; j < comboEsito.length; j++) {
-			if (comboEsito.options[j].value=='0685' || comboEsito.options[j].value == '0695') {
-				<%-- Si elimina CONCEDE--%>
-           		comboEsito.remove(j);
-           		j--;
-         	}
-      	}
-	} else {
-    	for (i = 0; i < listComboEsiti.length; i++) {
-      		var comboEsito = listComboEsiti[i];
-      		for (j = 0; j < comboEsito.length; j++) {
-         		if (comboEsito.options[j].value=='0685' || comboEsito.options[j].value == '0695') {
-         			<%-- Si elimina CONCEDE--%>
-           			comboEsito.remove(j);
-           			j--;
-         		}
+	var nodeReclamoAvversoRevocaPenaSostitutiva = document.getElementById('idDivReclamoAvversoRevocaPenaSostitutiva');
+  	var isReclamo = "false";
+  	if (typeof (document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[0][0]) == "undefined") {
+    	for (j = 0; j < document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.length ; j++) {
+      		if (document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].selected
+      				&& (document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value == "3127")) {
+      			isReclamo = "true";
       		}
-    	}
-  	}
-}
+    	} // fine ciclo for
+	} // Fine caso singolo oggetto
+	if (isReclamo == "true")
+    	nodeReclamoAvversoRevocaPenaSostitutiva.style.display = "block";
+  	else
+    	nodeReclamoAvversoRevocaPenaSostitutiva.style.display = "none";
 <%
 }
 %>
-<%-- FINE: MEV_2019-09 --%>
+}
+
 </script>
 </head>
 <body class="corpo" onload="visualizza_data_decorrenza()">
@@ -563,7 +498,7 @@ function checkEsiti() {
 		</td>
 	</tr>
 </table>
-<br/>
+<br>
 <table cellspacing="2" cellpadding="2" width=95% id="divDataDecorrenza" style="visibility: hidden">
 	<tr>
 		<td class="l" width="50%">Data Decorrenza Misura di Sicurezza</td> 
@@ -587,7 +522,7 @@ function checkEsiti() {
 		</td>
 	</tr>
 </table>
-<br/>
+<br>
 <table cellspacing="2" cellpadding="2" width=95%>
     <tr>
         <td class="Titolo" colspan=2 width=50%> Oggetto </td>
@@ -613,23 +548,6 @@ for (int i = 0; i < lTenori.length; i++) {
 	<tr><td>&nbsp;</td></tr>
 </table>
 
-<%-- MEV_2019-09: aggiunta tabella x "Ulteriore descrizione della decisione" --%>
-<%
-if (ICostantiDepositoOrdinanzaPc.CONFERMA_DECISIONE_MAGISTRATO_RELATORE.equals(datiOrdinanza.getOrdinanza().getCodTipoOrdinanza())) {
-%>
-<table cellspacing="4" cellpadding="4"  width="95%">
-	<tr>
-      	<td class="l" width="25%">Ulteriore descrizione della decisione</td>
-      	<td class="l">
-			<TEXTAREA title="Ulteriore descrizione della decisione" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_ULTERIORE_DESCRIZIONE%>" cols="70" rows="4"><%=StringUtils.toStringJSP(datiOrdinanza.getOrdinanza().getUlterioreDescrizione(), "")%></textarea>
-      	</td>
-    </tr>
-</table>
-<%
-}
-%>
-<%-- FINE MEV_2019-09 --%>
-
 <table id="tableInForma" style="visibility:hidden" width="95%" cellspacing="2" cellpadding="2">
 	<tr>
 		<td class="l" width="40%">Indicare se la misura deve essere eseguita nelle forme della:</td>
@@ -644,8 +562,7 @@ if (ICostantiDepositoOrdinanzaPc.CONFERMA_DECISIONE_MAGISTRATO_RELATORE.equals(d
 			<input value="2" type="radio" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_FORMA_MISURA%>" onclick="abilitaDisabilitaComunita();">Collocamento in Comunità
 		</td>
 		<td class="l">
-			<input size="50" type="text" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_NOME_COMUNITA%>"
-					value="<%=(misuraSicurezza.getDescrizioneComunita() == null ? "" : StringUtils.toStringJSP(misuraSicurezza.getDescrizioneComunita()))%>">
+				<input size="50" type="text" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_NOME_COMUNITA%>" value="<%=(misuraSicurezza.getDescrizioneComunita() == null ? "" : StringUtils.toStringJSP(misuraSicurezza.getDescrizioneComunita()))%>">
 		</td>
 	</tr>
 </table>
@@ -756,6 +673,39 @@ if ("42".equals(tipo) || "MS".equals(tipo)) {
 }
 %>
 <%-- FINE MEV_39 --%>
+
+<%
+// MEV_2023-35: aggiunta gestione Ordinanza Reclamo Avverso Revoca Pena Sostitutiva (C063)
+if (tipo.equals(ICostantiDepositoOrdinanzaPc.RECLAMO_AVVERSO_REVOCA_PENA_SOSTITUTIVA)) {
+%>
+<div id="idDivReclamoAvversoRevocaPenaSostitutiva" style="display:none;"> 
+<table cellspacing="2" cellpadding="2" width="95%">
+	<tr>
+		<td class="l" width="30%"><font class="label">Pena Sostitutiva piu' grave</font></td>  
+        <td class="l">          
+          	<select title="Tipo Pena Sostitutiva" name="<%=ICostantiEsecuzioneSS.CAMPO_COD_TIPO_SANZIONE%>">
+          		<option value="-">-</option>
+          		<%=tipoPeneSostitutive%>
+          	</select>
+		</td>
+	</tr>
+	<tr>
+		<td class="l"><font class="label">Rideterminazione Quantum Pena Da Espiare</font></td>
+		<td class="l">
+			<font class="label">Anni</font>&nbsp;
+			<input type="text" title="Anni" size="4" maxlength="2" name="<%=ICostantiEsecuzioneSS.CAMPO_NUM_ANNI_SANZIONE%>" value="<%=StringUtils.toZerotoStringaVuota(StringUtils.toStringJSP(esecuzioneSanzioneSostitutivaModel.getNumAnniSanzione()), "")%>" ONKEYPRESS="return TicTabNumField(this,event)">
+			<font class="label">Mesi</font>&nbsp;
+			<input type="text" title="Mesi" size="4" maxlength="2" name="<%=ICostantiEsecuzioneSS.CAMPO_NUM_MESI_SANZIONE%>" value="<%=StringUtils.toZerotoStringaVuota(StringUtils.toStringJSP(esecuzioneSanzioneSostitutivaModel.getNumMesiSanzione()), "")%>" ONKEYPRESS="return TicTabNumField(this,event)">
+			<font class="label">Giorni</font>&nbsp;
+			<input type="text" title="Giorni" size="4" maxlength="2" name="<%=ICostantiEsecuzioneSS.CAMPO_NUM_GIORNI_SANZIONE%>" value="<%=StringUtils.toZerotoStringaVuota(StringUtils.toStringJSP(esecuzioneSanzioneSostitutivaModel.getNumGiorniSanzione()), "")%>" ONKEYPRESS="return TicTabNumField(this,event)">
+		</td>
+	</tr>
+</table>
+</div>
+<%
+}
+%>
+
 <br>
 <table cellspacing="2" cellpadding="2" style="width: 95%;">
 	<tr>
@@ -769,6 +719,13 @@ if ("42".equals(tipo) || "MS".equals(tipo)) {
 <input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%=lIdEvento%>">
 <input type="HIDDEN" name="<%=ICostantiDepositoDecreto.CAMPO_ID_DEPOSITO_DECRETO%>" value="<%=lIdDecreto%>">
 <input type="HIDDEN" name="<%=ICostantiSiusMisuraSicurezza.CAMPO_DATA_DECORRENZA%>" value="">
+<%-- MEV_2023-35: aggiunto campo nascosto --%>
+<%
+String lTipoOrdinanza = "";
+if (datiOrdinanza!=null && datiOrdinanza.getOrdinanza()!=null && datiOrdinanza.getOrdinanza().getCodTipoOrdinanza()!=null)
+  lTipoOrdinanza = datiOrdinanza.getOrdinanza().getCodTipoOrdinanza();
+%>
+<input type="HIDDEN" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_TIPO_ORDINANZA%>" value="<%=lTipoOrdinanza%>">
 </form>
 
 <script language="JavaScript" type="text/javascript">
@@ -776,15 +733,6 @@ if ("42".equals(tipo) || "MS".equals(tipo)) {
 abilitaModificaEsito();
 <%-- MEV_39: aggiunta chiamata a nuova funzione js --%>
 AbilitaCampiEsiti();
-<%-- INIZIO: MEV_2019-09 (D.lgs. 123/2018) --%>
-<%
-if (is678) {
-%>
-checkEsiti();
-<%
-}
-%>
-<%-- FINE: MEV_2019-09  --%>
 
 var frmvalidator  = new Validator("ModificaOrdinanza");
 

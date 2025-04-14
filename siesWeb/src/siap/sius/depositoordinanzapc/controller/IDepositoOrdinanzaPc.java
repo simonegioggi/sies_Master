@@ -11,6 +11,8 @@ import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.libertaanticipata.model.LicenzaLibAnticipataModel;
 import siap.sico.libertaanticipata.model.LicenzaPeriodiLibAnticipataModel;
 import siap.sico.utente.model.UtenteModel;
+import siap.siep.penapecuniaria.model.RichiestaConversioneModel;
+import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 import siap.sius.depositodecreto.model.DepositoDecretoModel;
 import siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel;
 import siap.sius.depositoordinanzapc.model.OrdinanzaEventoTenoriFascicoloSiusModel;
@@ -175,9 +177,11 @@ public interface IDepositoOrdinanzaPc {
 			PeriodoAltraMisuraModel aPeriodoAltraMisuraModel,
 			EsecuzioneMisuraSicurezzaModel aEsecuzioneMisuraSicurezzaModel) throws F3BException;
 
+	// MEV_2023-35: aggiunti parametri di passaggio
 	public OrdinanzaEventoTenoriGProcModel ExInserisciOrdinanzaConversioneRateizzazionePP(
 			OrdinanzaEventoTenoriGProcModel aGProcOrdEveTenori,
-			RichiesteConversioniPerOrdinanzaModel aRicConvMod) throws F3BException;
+			RichiesteConversioniPerOrdinanzaModel aRicConvMod,
+			Vector<RateizzazionePPModel> aListaRate, DepositoOrdinanzaPcModel dopm) throws F3BException;
 
 	// Definizione del metodo afferente alla modifica del Magistrato all'ordinanza.
 	public DepositoOrdinanzaPcModel ExModificaMagistratoOrdinanza(DepositoOrdinanzaPcModel aDepOrdPcMod)
@@ -216,7 +220,13 @@ public interface IDepositoOrdinanzaPc {
 			throws F3BException;
 	// ***** FINE INTERVENTO MEV_39 *****//
 
-	// MEV_2019-09
-	public DepositoOrdinanzaPcModel ExAggiornaDataEsecutivitaDepositoOrdinanzaPc(
-			DepositoOrdinanzaPcModel aDepositoOrdinanzaPc) throws F3BException;
+    // MEV_2023-35
+    public OrdinanzaEventoTenoriGProcModel ExInserisciOrdinanzaRevocaConversionePPS (
+         OrdinanzaEventoTenoriGProcModel aGProcOrdEveTenori,
+         RichiestaConversioneModel aRicConvMod) throws F3BException;
+    public OrdinanzaEventoTenoriGProcModel ExInserisciOrdinanzaRevocaPS (
+        OrdinanzaEventoTenoriGProcModel aGProcOrdEveTenori,
+        EsecuzioneSanzioneSostitutivaModel aEsecSenSostMod) throws F3BException;    
+    // MEV_2023-35 - FINE
+
 }

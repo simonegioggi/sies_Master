@@ -64,7 +64,7 @@ public interface IAnnotazioneManuale {
 			AnnotazioneManualeModel aAnnotazioneManuale, EventoModel aEvento,
 			BigDecimal aIdAnnotazioneManuale) throws F3BException;
 
-	// MEV_2019-09
+	// MEV 9
 	/**
 	 * Come la funzione precedente, ma poi lega l'annotazione inserita alla Richieta iniziale tramite ID e che
 	 * rappresenta la decisione del GE:
@@ -78,7 +78,7 @@ public interface IAnnotazioneManuale {
 	public AnnotazioneManualeModel ExInserisciAnnotazioneManualeEventoUpd(
 			AnnotazioneManualeModel aAnnotazioneManuale, EventoModel aEvento,
 			BigDecimal aIdAnnotazioneRichiesta, BigDecimal aIdAnnotazioneManuale) throws F3BException;
-	// End MEV_2019-09
+	// End MEV 9
 
 	/**
 	 * ************************************************************************** Inserisce le decisioni del

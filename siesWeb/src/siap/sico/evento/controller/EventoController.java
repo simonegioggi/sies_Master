@@ -17,7 +17,6 @@ import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
-import f3b.util.Utils;
 import f3b.util.report.ReportGenerator;
 import f3b.util.xml.TreeModel;
 import siap.controller.SiapController;
@@ -104,14 +103,8 @@ import siap.sius.documentoallegato.model.DocumentoAllegatoModel;
 import siap.sius.esecuzionemisurasicurezza.dao.EsecuzioneMisuraSicurezzaDAO;
 import siap.sius.fascicolo.action.ICostantiFascicoloSius;
 import siap.sius.fascicolo.dao.FascicoloSiusDAO;
-import siap.sius.fascicolo.dao.FascicoloSiusSqlDAO;
-import siap.sius.fascicolo.model.FascicoloSiusModel;
 import siap.sius.generaleprocedimento.dao.GeneraleProcedimentoDAO;
-import siap.sius.generaleprocedimento.dao.GeneraleProcedimentoSqlDAO;
-import siap.sius.generaleprocedimento.model.GeneraleProcedimentoModel;
 import siap.sius.misurasicurezza.dao.PeriodoAltraMisuraDAO;
-import siap.sius.tenore.dao.TenoreDAO;
-import siap.sius.tenore.model.TenoreModel;
 import siap.sius.udienzaprocedimento.dao.UdienzaProcedimentoDAO;
 import siap.sius.udienzaprocedimento.dao.UdienzaProcedimentoSqlDAO;
 import siap.sius.udienzaprocedimento.model.UdienzaProcedimentoUdiModel;
@@ -3540,147 +3533,36 @@ public class EventoController extends SiapController implements IEvento {
 			// LogF3B.getLogger()
 			siesLogger.debug("Num Provv Fascicolo SIUS: " + lNumProv);
 
-			/*
-			 * ISSUE MEV : cambio stato fascicolo se annullo un decreto di designazione Magistrato Relatore
-			 * Numero MEV : 9 
-			 * Autore : Gioggi 
-			 * Data : 2 dic 2020 
-			 * Branch : MEV_2019-09
-			 */
-			FascicoloSiusSqlDAO fssDAO = new FascicoloSiusSqlDAO(lConn);
-			fssDAO.ricercaFascicoloByKey(lEve.getFasSiuIdFascicoloSius());
-			FascicoloSiusModel fsm = (FascicoloSiusModel) fssDAO.getModelByKey();
-			String codStatoFascicolo = fsm.getCodStatoFascicolo();
 			if (lNumProv < 1) {
-				if (ICostantiFascicoloSius.COD_EMESSO_PROVVEDIMENTO.equals(codStatoFascicolo)
-						|| "13".equals(codStatoFascicolo)
-						|| ICostantiFascicoloSius.COD_EMESSO_DECRETO_DESIGNAZIONE.equals(codStatoFascicolo)
-				// MEV_2024-092: non più utilizzato
-				/*
-				 * || ICostantiFascicoloSius.COD_EMESSA_ORDINANZA_APPLICAZIONE_PROVVISORIA
-				 * .equals(codStatoFascicolo)
-				 */) {
-					FascicoloSiusDAO lFasSiusDao = new FascicoloSiusDAO(lConn);
-					lFasSiusDao.setCodStatoFascicolo(ICostantiFascicoloSius.COD_ISCRITTO);
-					lFasSiusDao.setDataAggiornamento(aCampoNota.getDataInserimento());
-					lFasSiusDao.setCodOperatoreAggiornamento(aCampoNota.getCodOperatoreInserimento());
-					lFasSiusDao.setCodUfficioAggiornamento(aCampoNota.getCodUfficioInserimento());
-					if (ICostantiFascicoloSius.COD_EMESSO_PROVVEDIMENTO.equals(codStatoFascicolo)) {
-						if ("0270".equals(lEve.getCodEsito()) && "03".equals(lEve.getCodTipoProvvedimento())
-								&& ("0680".equals(lEve.getCodMotivo())
-										|| "0690".equals(lEve.getCodMotivo()))) {
-							// Aggiorno il fascicolo a stato_fascicolo = 22 (EMESSO_DECRETO_DESIGNAZIONE)
-							// se lo stato attuale e' 07 (EMESSO_PROVVEDIMENTO) per questo caso particolare
-							lFasSiusDao.setCodStatoFascicolo(
-									ICostantiFascicoloSius.COD_EMESSO_DECRETO_DESIGNAZIONE);
-							lFasSiusDao.setCondizioneUpdateStatoFascicolo(lEve.getFasSiuIdFascicoloSius(),
-									ICostantiFascicoloSius.COD_EMESSO_PROVVEDIMENTO);
-						} else
-							// Aggiorno il fascicolo a stato_fascicolo = 02 se lo stato attuale e' 07
-							lFasSiusDao.setCondizioneUpdateStatoFascicolo(lEve.getFasSiuIdFascicoloSius(),
-									ICostantiFascicoloSius.COD_EMESSO_PROVVEDIMENTO);
-					} else if ("13".equals(codStatoFascicolo))
-						// Aggiorno il fascicolo a stato_fascicolo = 02 se lo stato attuale e' 13 (cioe'
-						// sospeso)
-						lFasSiusDao.setCondizioneUpdateStatoFascicolo(lEve.getFasSiuIdFascicoloSius(), "13");
-					// MEV_2024-092: non più utilizzato; al suo posto 07 = COD_EMESSO_PROVVEDIMENTO
-					/*
-					 * else if (ICostantiFascicoloSius.COD_EMESSA_ORDINANZA_APPLICAZIONE_PROVVISORIA
-					 * .equals(codStatoFascicolo)) { // Aggiorno il fascicolo a stato_fascicolo = "22"
-					 * (COD_EMESSO_DECRETO_DESIGNAZIONE) se lo stato attuale e' "24"
-					 * (COD_EMESSA_ORDINANZA_APPLICAZIONE_PROVVISORIA)
-					 * lFasSiusDao.setCodStatoFascicolo(ICostantiFascicoloSius.COD_EMESSO_DECRETO_DESIGNAZIONE
-					 * ); lFasSiusDao.setCondizioneUpdateStatoFascicolo(lEve.getFasSiuIdFascicoloSius(),
-					 * ICostantiFascicoloSius.COD_EMESSA_ORDINANZA_APPLICAZIONE_PROVVISORIA); }
-					 */
-					else
-						// Aggiorno il fascicolo a stato_fascicolo = "02" (iscritto) se lo stato attuale e'
-						// "22" (COD_EMESSO_DECRETO_DESIGNAZIONE)
-						lFasSiusDao.setCondizioneUpdateStatoFascicolo(lEve.getFasSiuIdFascicoloSius(),
-								ICostantiFascicoloSius.COD_EMESSO_DECRETO_DESIGNAZIONE);
-					lFasSiusDao.update();
-					lFasSiusDao.stop();
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-					// LogF3B.getLogger()
-					siesLogger
-							.debug("Aggiornamento Stato Fascicolo SIUS: " + lEve.getFasSiuIdFascicoloSius()
-							+ "; da " + codStatoFascicolo + " a COD_EMESSO_DECRETO_DESIGNAZIONE!");
-					cleanup(lFasSiusDao);
-				}
-			} else if ("0270".equals(lEve.getCodEsito()) && "03".equals(lEve.getCodTipoProvvedimento())
-					&& ("0680".equals(lEve.getCodMotivo()) || "0690".equals(lEve.getCodMotivo()))) {
-				// MEV_2024-092: da (07) COD_EMESSO_PROVVEDIMENTO a 22 COD_EMESSO_DECRETO_DESIGNAZIONE
-				if (ICostantiFascicoloSius.COD_EMESSO_PROVVEDIMENTO.equals(codStatoFascicolo)) {
-					FascicoloSiusDAO lFasSiusDao = new FascicoloSiusDAO(lConn);
-					lFasSiusDao.setDataAggiornamento(aCampoNota.getDataInserimento());
-					lFasSiusDao.setCodOperatoreAggiornamento(aCampoNota.getCodOperatoreInserimento());
-					lFasSiusDao.setCodUfficioAggiornamento(aCampoNota.getCodUfficioInserimento());
-					lFasSiusDao.setCodStatoFascicolo(ICostantiFascicoloSius.COD_EMESSO_DECRETO_DESIGNAZIONE);
-					lFasSiusDao.setCondizioneUpdateStatoFascicolo(lEve.getFasSiuIdFascicoloSius(),
-							ICostantiFascicoloSius.COD_EMESSO_PROVVEDIMENTO);
-					lFasSiusDao.update();
-					lFasSiusDao.stop();
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-					// LogF3B.getLogger()
-					siesLogger.debug("Aggiornamento Stato Fascicolo SIUS: " + lEve.getFasSiuIdFascicoloSius()
-							+ "; da " + codStatoFascicolo + " a COD_EMESSO_DECRETO_DESIGNAZIONE!");
-					cleanup(lFasSiusDao);
-				}
-			}
-
-			// se trattasi di Conferma Decisione Magistrato Relatore ci sta sicuramente una ordinanza di
-			// applicazione provvisoria di MA
-			if ("0271".equals(lEve.getCodEsito())) {
-				FascicoloSiusDAO fsdao = new FascicoloSiusDAO(lConn);
-				// MEV_2024-092: non più utilizzato; al suo posto 07 = COD_EMESSO_PROVVEDIMENTO
-				// fsdao.setCodStatoFascicolo(
-				// ICostantiFascicoloSius.COD_EMESSA_ORDINANZA_APPLICAZIONE_PROVVISORIA);
-				fsdao.setCodStatoFascicolo(ICostantiFascicoloSius.COD_EMESSO_PROVVEDIMENTO);
-				fsdao.setDataAggiornamento(aCampoNota.getDataInserimento());
-				fsdao.setCodOperatoreAggiornamento(aCampoNota.getCodOperatoreInserimento());
-				fsdao.setCodUfficioAggiornamento(aCampoNota.getCodUfficioInserimento());
-				// Aggiorno il fascicolo a stato_fascicolo = "24" se lo stato attuale e' "07"
-				fsdao.setCondizioneUpdateStatoFascicolo(lEve.getFasSiuIdFascicoloSius(),
-						ICostantiFascicoloSius.COD_EMESSO_PROVVEDIMENTO);
-				fsdao.update();
-				fsdao.stop();
+				// Aggiorno il fascicolo a stato_fascicolo = 02 se lo stato attuale e' 07
+				FascicoloSiusDAO lFasSiusDao = new FascicoloSiusDAO(lConn);
+				lFasSiusDao.setCodStatoFascicolo(ICostantiFascicoloSius.COD_ISCRITTO);
+				lFasSiusDao.setDataAggiornamento(aCampoNota.getDataInserimento());
+				lFasSiusDao.setCodOperatoreAggiornamento(aCampoNota.getCodOperatoreInserimento());
+				lFasSiusDao.setCodUfficioAggiornamento(aCampoNota.getCodUfficioInserimento());
+				lFasSiusDao.setCondizioneUpdateStatoFascicolo(lEve.getFasSiuIdFascicoloSius(), "07");
+				lFasSiusDao.update();
+				lFasSiusDao.stop();
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
-				siesLogger.debug("Aggiornamento Stato Fascicolo SIUS: " + lEve.getFasSiuIdFascicoloSius()
-					+ "; da " + codStatoFascicolo + " a " + fsdao.getCodStatoFascicolo());
-				cleanup(fsdao);
-				// passo all'aggiornamento del tenore
-				// Generale Procedimento
-				GeneraleProcedimentoSqlDAO gpsdao = new GeneraleProcedimentoSqlDAO(lConn);
-				gpsdao.ricercaGeneraleProcedimentoByIdFas(lEve.getFasSiuIdFascicoloSius());
-				GeneraleProcedimentoModel gpm = (GeneraleProcedimentoModel) gpsdao.getModelByKey();
-				cleanup(gpsdao);
-				// Deposito Ordinanza Pc
-				lDOPSqlDAO = new DepositoOrdinanzaPcSqlDAO(lConn);
-				lDOPSqlDAO.ricercaDepositoOrdinanzaPcByIdEveGenerato(lEve.getIdEvento());
-				DepositoOrdinanzaPcModel dopm = (DepositoOrdinanzaPcModel) lDOPSqlDAO.getModelByKey();
-				if (Utils.isNullObj(gpm) || Utils.isNullObj(dopm))
-					throw new F3BException(F3BException.USER_MESSAGE, "Tenore NON aggiornabile!");
-				TenoreModel tm = new TenoreModel();
-				// Valorizzazione dei campi da aggiornare + update
-				tm.setDataAggiornamento(aCampoNota.getDataInserimento());
-				tm.setCodOperatoreAggiornamento(aCampoNota.getCodOperatoreInserimento());
-				tm.setCodUfficioAggiornamento(aCampoNota.getCodUfficioInserimento());
-				tm.setDataFine(aCampoNota.getDataInserimento());
-				tm.setGenPridGeneraleProcedimento(gpm.getIdGeneraleProcedimento());
-				tm.setDepOpidDepositoOrdinanzaPc(dopm.getIdDepositoOrdinanzaPc());
-				TenoreDAO tdao = new TenoreDAO(lConn);
-				tdao.setDAOFromModelForUpdateDataFineCM(tm);
-				tdao.update();
-				tdao.stop();
+				siesLogger.debug("Aggiornamento Stato Fascicolo SIUS: " + lEve.getFasSiuIdFascicoloSius());
+				cleanup(lFasSiusDao);
+			}
+			if (lNumProv < 1) {
+				// Aggiorno il fascicolo a stato_fascicolo = 02 se lo stato attuale e' 13 (cioe' sospeso)
+				FascicoloSiusDAO lFasSiusDao = new FascicoloSiusDAO(lConn);
+				lFasSiusDao.setCodStatoFascicolo(ICostantiFascicoloSius.COD_ISCRITTO);
+				lFasSiusDao.setDataAggiornamento(aCampoNota.getDataInserimento());
+				lFasSiusDao.setCodOperatoreAggiornamento(aCampoNota.getCodOperatoreInserimento());
+				lFasSiusDao.setCodUfficioAggiornamento(aCampoNota.getCodUfficioInserimento());
+				lFasSiusDao.setCondizioneUpdateStatoFascicolo(lEve.getFasSiuIdFascicoloSius(), "13");
+				lFasSiusDao.update();
+				lFasSiusDao.stop();
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
-				siesLogger.debug(
-						"Aggiornamento Tenore: IdGeneraleProcedimento = " + gpm.getIdGeneraleProcedimento()
-								+ " ed IdDepositoOrdinanzaPc = " + dopm.getIdDepositoOrdinanzaPc());
-				cleanup(tdao);
+				siesLogger.debug("Aggiornamento Stato Fascicolo SIUS: " + lEve.getFasSiuIdFascicoloSius());
+				cleanup(lFasSiusDao);
 			}
-			// ***** FINE INTERVENTO MEV_2019-09 *****//
 
 			// ------------------------------------------------------------------------
 			// Gestione Aggiornamnto Udienza Procedimento
@@ -5253,38 +5135,6 @@ public class EventoController extends SiapController implements IEvento {
 
 			cleanup(c);
 		}
-	}
-
-	/**
-	 * MEV_2019-09 (D.lgs. 123/2018). Ricerca ultimo evento di Fase istruttoria » Richiesta Atti in cui è
-	 * valorizzata la DATA_RESTITUZIONE_AI per poterla precaricare nelle successive richieste dove prevista
-	 *
-	 * @param aIdFascicoloSius
-	 * @throws DAOException
-	 */
-	public EventoModel ricercaUltimoEventoRichiestaAttiIsruttoriByIdFasc(BigDecimal aIdFascicoloSius)
-			throws F3BException {
-
-		Connection lConn = null;
-		EventoSqlDAO lEveSqlDao = null;
-		EventoModel lEveMod;
-
-		try {
-			lConn = getDBConnection();
-			lEveSqlDao = new EventoSqlDAO(lConn);
-			lEveSqlDao.ricercaUltimoEventoRichiestaAttiIsruttoriByIdFasc(aIdFascicoloSius);
-			lEveMod = (EventoModel) lEveSqlDao.getModelByKey();
-		} catch (DAOException daoEx) {
-			throw new F3BException(
-					"EventoController.ricercaUltimoEventoRichiestaAttiIsruttoriByIdFasc: " + daoEx);
-		} catch (Exception e) {
-			throw new F3BException(
-					"EventoController.ricercaUltimoEventoRichiestaAttiIsruttoriByIdFasc: " + e);
-		} finally {
-			cleanup(lEveSqlDao);
-			cleanup(lConn);
-		}
-		return lEveMod;
 	}
 
 }

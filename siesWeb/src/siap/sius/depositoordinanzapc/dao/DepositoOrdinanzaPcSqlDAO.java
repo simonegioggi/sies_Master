@@ -18,8 +18,7 @@ import siap.sius.fascicolo.model.FascicoloSiusModel;
 import siap.sius.tenore.model.TenoreModel;
 
 /**
- * Title: DepositoOrdinanzaPcSqlDAO
- * Description: Classe SqlDAO che rappresenta la tabella DepositoOrdinanzaPc
+ * DepositoOrdinanzaPcSqlDAO - Classe SqlDAO che rappresenta la tabella DepositoOrdinanzaPc
  *
  * @version 1.0
  */
@@ -46,6 +45,12 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		setStatement(lSql);
 	}
 
+	/**
+	 * Metodo di ricerca DepositoOrdinanzaPc per Generale Procedimento
+	 *
+	 * @param aKey
+	 * @throws DAOException
+	 */
 	public void ricercaDepositoOrdinanzaPcByGenProcedimento(BigDecimal aKey) throws DAOException {
 
 		String lSql = getSqlQuery();
@@ -75,16 +80,18 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 
 		lSql += " WHERE ID_EVENTO_GENERATO = " + aKey;
 		setStatement(lSql);
-		// setStatement(getSqlQueryByIdEvento(aKey));
 	}
 
 	// - - > 01/2014 MIS SIC
 	public void ricercaDepositoOrdinanzaPcByFascicoloSiepIdEveGenerato(BigDecimal aKey) throws DAOException {
 
 		String lSql = "";
-		lSql += "SELECT   distinct (FASC.ID_FASCICOLO_SIUS), FASC.CHIAVE_ANNO, FASC.CHIAVE_PROGR, FASC.CHIAVE_UFFICIO,";
-		lSql += " EVE.COD_TIPO_PROVVEDIMENTO, EVE.COD_MOTIVO, EVE.DATA_EMISSIONE, EVE.ID_EVENTO, EVE.COD_ESITO,";
-		lSql += "	TEN.COD_OGGETTO_TENORE, TEN.COD_ESITO_TENORE, DEPO.ANNO_S3, DEPO.NUM_S3, DEPO.FLAG_ELABORATO,";
+		lSql += "SELECT distinct (FASC.ID_FASCICOLO_SIUS), FASC.CHIAVE_ANNO, FASC.CHIAVE_PROGR, "
+				+ "FASC.CHIAVE_UFFICIO,";
+		lSql += " EVE.COD_TIPO_PROVVEDIMENTO, EVE.COD_MOTIVO, EVE.DATA_EMISSIONE, EVE.ID_EVENTO, "
+				+ "EVE.COD_ESITO,";
+		lSql += " TEN.COD_OGGETTO_TENORE, TEN.COD_ESITO_TENORE, DEPO.ANNO_S3, DEPO.NUM_S3, "
+				+ "DEPO.FLAG_ELABORATO,";
 		lSql += " UFD.DESCR_TIPO_UFFICIO DESCR_TIPO_UF, DESCR_COM_UFF.DESCRIZIONE DESCR_COMUNE_UFFICIO,";
 		lSql += " MOTIVO_PROVVEDIMENTO.RV_MEANING OGGETTO,";
 		// 28/01/2015 lSql+=" ESITO_TENORE.RV_MEANING ESITO";
@@ -117,7 +124,8 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		// 28/01/2015
 		// lSql+=" AND ESITO_TENORE.RV_HIGH_VALUE IN ('U023', 'U088','U064',
 		// 'U066','U095','U096','C036','U093')";
-		lSql += " AND ESITO_TENORE.RV_HIGH_VALUE IN ('U023','U088','U064','U066','U067','U077','U082','U086','U089','U091','U095','U096','C029','C036','U093')";
+		lSql += " AND ESITO_TENORE.RV_HIGH_VALUE IN ('U023','U088','U064','U066','U067','U077','U082',"
+				+ "'U086','U089','U091','U095','U096','C029','C036','U093')";
 		lSql += " AND ESITO_TENORE.RV_ABBREVIATION = TEN.COD_ESITO_TENORE";
 		lSql += " ORDER BY FASC.CHIAVE_ANNO, FASC.CHIAVE_PROGR";
 
@@ -129,8 +137,10 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 			throws DAOException {
 
 		String lSql = "";
-		lSql += "SELECT   distinct (FASC.ID_FASCICOLO_SIUS), FASC.CHIAVE_ANNO, FASC.CHIAVE_PROGR, FASC.CHIAVE_UFFICIO,";
-		lSql += " EVE.COD_TIPO_PROVVEDIMENTO, EVE.COD_MOTIVO, EVE.DATA_EMISSIONE, EVE.ID_EVENTO, EVE.COD_ESITO,";
+		lSql += "SELECT distinct (FASC.ID_FASCICOLO_SIUS), FASC.CHIAVE_ANNO, FASC.CHIAVE_PROGR, "
+				+ "FASC.CHIAVE_UFFICIO,";
+		lSql += " EVE.COD_TIPO_PROVVEDIMENTO, EVE.COD_MOTIVO, EVE.DATA_EMISSIONE, EVE.ID_EVENTO, "
+				+ "EVE.COD_ESITO,";
 		lSql += " EVE.ANNO_PROTOCOLLO, EVE.PROGR_PROTOCOLLO, EVE.DATA_RICEZIONE_ATTI,";
 		lSql += " UFD.DESCR_TIPO_UFFICIO DESCR_TIPO_UF, DESCR_COM_UFF.DESCRIZIONE DESCR_COMUNE_UFFICIO,";
 		lSql += " MOTIVO_PROVVEDIMENTO.RV_MEANING OGGETTO,";
@@ -139,7 +149,8 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		lSql += " TIPO_PROVVEDIMENTO.RV_MEANING PROVVEDIMENTO";
 		lSql += " FROM FASCICOLO_SIUS FASC, EVENTO EVE,";
 		lSql += " UFFICIO UFF, COMUNE DESCR_COM_UFF, UFFICIO_DESCR UFD,";
-		lSql += " CG_REF_CODES MOTIVO_PROVVEDIMENTO, CG_REF_CODES ESITO_PROVVEDIMENTO, CG_REF_CODES TIPO_PROVVEDIMENTO";
+		lSql += " CG_REF_CODES MOTIVO_PROVVEDIMENTO, CG_REF_CODES ESITO_PROVVEDIMENTO, "
+				+ "CG_REF_CODES TIPO_PROVVEDIMENTO";
 		lSql += ", CG_REF_CODES ESITO_PROVV_ALT3";
 		lSql += " WHERE FASC.FAS_SIE_ID_FASCICOLO_SIEP = " + aKey;
 		lSql += " AND EVE.FAS_SIE_ID_FASCICOLO_SIEP = " + aKey;
@@ -147,23 +158,26 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		lSql += " AND EVE.COD_TIPO_PROVVEDIMENTO IN ('02','03')";
 		// lSql+=" AND EVE.COD_MOTIVO IN ('2440','2441','2110','2111','2113','2670')";
 		// lSql+=" AND EVE.COD_MOTIVO IN ('2440','2441','2110','2111','2113','2114','2670')";
+
 		// MEV 39: APPELLO CONTRO: OCCORRE CONSIDERARE ANCHE MOTIVO 0258, 0259 E 0260
 		// Ticket#20220404012 - Si aggiungono anche i codici 9073 e 9074 usati da UDSM
-		// lSql += " AND EVE.COD_MOTIVO IN
-		// ('2440','2441','2110','2111','2113','2114','2670','2697','2698','2700','2701',
-		// '0258','0259','0260')";
-		lSql += " AND EVE.COD_MOTIVO IN ('2440','2441','2110','2111','2113','2114','2670','2697','2698','2700','2701', '0258','0259','0260', '9073','9074')";
-		// Ticket#20220404012 - FINE
+		// lSql += " AND EVE.COD_MOTIVO IN ('2440','2441','2110','2111','2113','2114','2670','2697','2698',
+		// '2700','2701', '0258','0259','0260')";
+		lSql += " AND EVE.COD_MOTIVO IN ('2440','2441','2110','2111','2113','2114','2670','2697','2698',"
+				+ "'2700','2701', '0258','0259','0260', '9073','9074')";
+		//Ticket#20220404012 - FINE
 		// lSql+=" AND EVE.COD_ESITO IN ('0052','0054','0118','0193','0194','0195','0350','0351','0387')";
 		// lSql+=" AND EVE.COD_ESITO IN ('0052','0193','0194','0195','0350','0351','0387')";
+
 		// MEV 39: APPELLO CONTRO: OCCORRE CONSIDERARE ANCHE ESITO 0209 (Accoglie Appello e Revoca
 		// Provvedimento Mds)
-		// Ticket#20220404012 - Si aggiunge anche il codice 0054 - Dichiara cessata la pericolosità sociale e
-		// revoca la misura
-		// lSql += " AND EVE.COD_ESITO IN ('0052','0193','0194','0195','0350','0351','0387','0324','0329',
-		// '0209')";
-		lSql += " AND EVE.COD_ESITO IN ('0052','0193','0194','0195','0350','0351','0387','0324','0329', '0209','0054')";
-		// Ticket#20220404012 - FINE
+		
+		// Ticket#20220404012 - Si aggiunge anche il codice 0054 - Dichiara cessata la pericolosità sociale
+		// e revoca la misura
+		// lSql += " AND EVE.COD_ESITO IN ('0052','0193','0194','0195','0350','0351','0387','0324','0329','0209')";
+		lSql += " AND EVE.COD_ESITO IN ('0052','0193','0194','0195','0350','0351','0387','0324','0329',"
+				+ "'0209','0054')";
+		//Ticket#20220404012 - FINE
 		lSql += " AND UFF.COD_UFFICIO = FASC.CHIAVE_UFFICIO";
 		lSql += " AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE";
 		lSql += " AND UFF.COD_UFFICIO = UFD.COD_UFFICIO";
@@ -222,7 +236,6 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 	}
 
 	// METODO GETMODEL() per ricercaDepositoOrdinanzaPcByFascicoloSiepIdEveGenerato
-	//
 	public GenericModel getModelEsitoArchMisSic() throws DAOException {
 
 		OrdinanzaEventoTenoriFascicoloSiusModel aModel = new OrdinanzaEventoTenoriFascicoloSiusModel();
@@ -326,9 +339,9 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		lSql += " WHERE ID_EVENTO_GENERATO = " + aKey;
 		setStatement(lSql);
 	}
-	// END AMBROS
 
 	public void ricercaDepositoOrdinanzaPcByKey(BigDecimal aKey) throws DAOException {
+
 		String lSql = getSqlQuery();
 
 		lSql += " " + setCondizioniByKey(aKey);
@@ -408,23 +421,31 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		// 10102014 - DL 92 2014 Violazione CEDU
 		lStatement += ", SOMMA_RISARC_DANNI";
 		lStatement += ", COD_USSM";
-		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
-		lStatement += ", DATA_ESECUTIVITA, NOTE_DATA_ESECUTIVITA";
-		// FINE: MEV_2019-09
+		// MEV_2023-35
+		lStatement += ", COD_TIPO_SANZIONE";
+		lStatement += ", COD_TIPO_PENA_ACCESSORIA, DURATA, NUM_ANNI, NUM_MESI, NUM_GIORNI";
+		lStatement += ", TIPOPENA.RV_MEANING DESCRPENA, TIPODURATAPENA.RV_MEANING DESCRDURATA ";
 		lStatement += " FROM DEPOSITO_ORDINANZA_PC, CSSA, cg_ref_codes UFF_TIPO_MAG,";
 		lStatement += " COMUNE COM_UFF_MAG, UFFICIO UFFI_MAG,";
-		lStatement += " COMUNE COM_UFF_TDS, UFFICIO UFFI_TDS";
+		lStatement += "COMUNE COM_UFF_TDS, UFFICIO UFFI_TDS, ";
+		// MEV_2023-35
+		lStatement += "CG_REF_CODES TIPOPENA, CG_REF_CODES TIPODURATAPENA ";
 		lStatement += " WHERE CSSA.ID_CSSA = NVL('9999',ID_CSSA_COMP)";
 		lStatement += " AND UFF_TIPO_MAG.RV_LOW_VALUE = UFFI_MAG.COD_TIPO_UFFICIO";
-		lStatement += " AND UFFI_MAG.COD_UFFICIO = COD_UFFICIO_MAGISTRATO_COMP AND UFF_TIPO_MAG.RV_DOMAIN = 'TIPO_UFFICIO'";
+		lStatement += "AND UFFI_MAG.COD_UFFICIO = COD_UFFICIO_MAGISTRATO_COMP "
+				+ "AND UFF_TIPO_MAG.RV_DOMAIN = 'TIPO_UFFICIO' ";
 		lStatement += " AND COM_UFF_MAG.COD_COMUNE = UFFI_MAG.COD_COMUNE";
 		lStatement += " AND UFFI_TDS.COD_UFFICIO = NVL('-',COD_UFF_TDS_CONCESSO_RIDUZIONE)";
 		lStatement += " AND COM_UFF_TDS.COD_COMUNE = UFFI_TDS.COD_COMUNE";
+		// MEV_2023-35
+		lStatement += "AND TIPOPENA.RV_DOMAIN = 'TIPO_PENA_ACCESSORIA' ";
+		lStatement += "AND TIPOPENA.RV_LOW_VALUE = COD_TIPO_PENA_ACCESSORIA ";
+		lStatement += "AND TIPODURATAPENA.RV_DOMAIN = 'TIPO_DURATA' ";
+		lStatement += "AND TIPODURATAPENA.RV_LOW_VALUE = DURATA";
 
 		return lStatement;
 	}
 
-	// protected String getSqlQueryByIdEvento( BigDecimal aKey )
 	protected String getSqlQuery0() {
 
 		String lStatement = new String("");
@@ -485,19 +506,27 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		// nuovi campi richiesta ottemperanza
 		lStatement += ", FLAG_NOMINA_COMM_ACTA";
 		lStatement += ", DESCR_COMM_ACTA";
-		lStatement += ", TIPO_CONTROLLO_ESECUZIONE, CODTIPOCONTROLLOESECUZIONE.RV_MEANING AS DESC_TIPO_CONTROLLO_ESECUZIONE";
+		lStatement += ", TIPO_CONTROLLO_ESECUZIONE, "
+				+ "CODTIPOCONTROLLOESECUZIONE.RV_MEANING AS DESC_TIPO_CONTROLLO_ESECUZIONE";
 		// 10102014 - DL 92 2014 Violazione CEDU
 		lStatement += ", SOMMA_RISARC_DANNI";
 		lStatement += ", COD_USSM";
-		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
-		lStatement += ", DATA_ESECUTIVITA, NOTE_DATA_ESECUTIVITA ";
-		// FINE: MEV_2019-09
+		// MEV_2023-35
+		lStatement += ", COD_TIPO_SANZIONE";
+		lStatement += ", COD_TIPO_PENA_ACCESSORIA, DURATA, NUM_ANNI, NUM_MESI, NUM_GIORNI";
+		lStatement += ", TIPOPENA.RV_MEANING DESCRPENA, TIPODURATAPENA.RV_MEANING DESCRDURATA ";
 		lStatement += "FROM DEPOSITO_ORDINANZA_PC LEFT  OUTER JOIN CSSA ON CSSA.ID_CSSA = ID_CSSA_COMP ";
 		lStatement += "LEFT OUTER JOIN CG_REF_CODES CODTIPOCONTROLLOESECUZIONE "
 				+ "ON (CODTIPOCONTROLLOESECUZIONE.RV_LOW_VALUE = TIPO_CONTROLLO_ESECUZIONE "
 				+ "AND CODTIPOCONTROLLOESECUZIONE.RV_DOMAIN = 'TIPO_CONTROLLO_ESECUZIONE')";
+		// MEV_2023-35
+		lStatement += "LEFT OUTER JOIN CG_REF_CODES TIPOPENA ";
+		lStatement += "ON (TIPOPENA.RV_DOMAIN = 'TIPO_PENA_ACCESSORIA' ";
+		lStatement += "AND TIPOPENA.RV_LOW_VALUE = COD_TIPO_PENA_ACCESSORIA) ";
+		lStatement += "LEFT OUTER JOIN CG_REF_CODES TIPODURATAPENA ";
+		lStatement += "ON (TIPODURATAPENA.RV_DOMAIN = 'TIPO_DURATA' ";
+		lStatement += "AND TIPODURATAPENA.RV_LOW_VALUE = DURATA)";
 
-		// lStatement += "WHERE ID_EVENTO_GENERATO = " + aKey;
 		return lStatement;
 	}
 
@@ -560,16 +589,26 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		// nuovi campi richiesta ottemperanza
 		lStatement += ", FLAG_NOMINA_COMM_ACTA";
 		lStatement += ", DESCR_COMM_ACTA";
-		lStatement += ", TIPO_CONTROLLO_ESECUZIONE, CODTIPOCONTROLLOESECUZIONE.RV_MEANING AS DESC_TIPO_CONTROLLO_ESECUZIONE";
+		lStatement += ", TIPO_CONTROLLO_ESECUZIONE, "
+				+ "CODTIPOCONTROLLOESECUZIONE.RV_MEANING AS DESC_TIPO_CONTROLLO_ESECUZIONE";
 		lStatement += ", SOMMA_RISARC_DANNI";
-		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
-		lStatement += ", DATA_ESECUTIVITA, NOTE_DATA_ESECUTIVITA ";
-		// FINE: MEV_2019-09
-		lStatement += "FROM DEPOSITO_ORDINANZA_PC LEFT  OUTER JOIN CSSA CSSA_CSSA  ON CSSA_CSSA .ID_CSSA = ID_CSSA_COMP ";
+		// MEV_2023-35
+		lStatement += ", COD_TIPO_SANZIONE";
+		lStatement += ", COD_TIPO_PENA_ACCESSORIA, DURATA, NUM_ANNI, NUM_MESI, NUM_GIORNI";
+		lStatement += ", TIPOPENA.RV_MEANING DESCRPENA, TIPODURATAPENA.RV_MEANING DESCRDURATA ";
+		lStatement += "FROM DEPOSITO_ORDINANZA_PC "
+				+ "LEFT OUTER JOIN CSSA CSSA_CSSA ON CSSA_CSSA.ID_CSSA = ID_CSSA_COMP ";
 		lStatement += "LEFT OUTER JOIN CSSA CSSA_USSM ON CSSA_USSM.ID_CSSA = DEPOSITO_ORDINANZA_PC.COD_USSM ";
 		lStatement += "LEFT OUTER JOIN CG_REF_CODES CODTIPOCONTROLLOESECUZIONE "
 				+ " ON (CODTIPOCONTROLLOESECUZIONE.RV_LOW_VALUE = TIPO_CONTROLLO_ESECUZIONE "
 				+ "	AND CODTIPOCONTROLLOESECUZIONE.RV_DOMAIN = 'TIPO_CONTROLLO_ESECUZIONE') ";
+		// MEV_2023-35
+		lStatement += "LEFT OUTER JOIN CG_REF_CODES TIPOPENA ";
+		lStatement += "ON (TIPOPENA.RV_DOMAIN = 'TIPO_PENA_ACCESSORIA' ";
+		lStatement += "AND TIPOPENA.RV_LOW_VALUE = COD_TIPO_PENA_ACCESSORIA) ";
+		lStatement += "LEFT OUTER JOIN CG_REF_CODES TIPODURATAPENA ";
+		lStatement += "ON (TIPODURATAPENA.RV_DOMAIN = 'TIPO_DURATA' ";
+		lStatement += "AND TIPODURATAPENA.RV_LOW_VALUE = DURATA)";
 
 		return lStatement;
 	}
@@ -640,9 +679,9 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		// 10102014 - DL 92 2014 Violazione CEDU
 		lStatement += ", SOMMA_RISARC_DANNI";
 		lStatement += ", COD_USSM";
-		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
-		lStatement += ", DATA_ESECUTIVITA, NOTE_DATA_ESECUTIVITA ";
-		// FINE: MEV_2019-09
+		// MEV_2023-35
+		lStatement += ", COD_TIPO_SANZIONE";
+		lStatement += ", COD_TIPO_PENA_ACCESSORIA, DURATA, NUM_ANNI, NUM_MESI, NUM_GIORNI ";
 		lStatement += "FROM DEPOSITO_ORDINANZA_PC, CSSA ";
 		lStatement += "WHERE ID_CSSA_COMP = ID_CSSA";
 		return lStatement;
@@ -720,15 +759,28 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		aModel.setSospensioneAASS(getBigDecimal("SOSPENSIONE_AA"));
 		aModel.setFlagNominaComActa(getString("FLAG_NOMINA_COMM_ACTA"));
 		aModel.setDescrCommActa(getString("DESCR_COMM_ACTA"));
-		// 20140603 - PA'MARONN' ( SIUS - implemntazione per il D.L. 146 )
+		// 20140603 - ( SIUS - implemntazione per il D.L. 146 )
 		aModel.setCodTipoControlloEsecuzione(getString("TIPO_CONTROLLO_ESECUZIONE"));
 		aModel.setDescrTipoControlloEsecuzione(getString("DESC_TIPO_CONTROLLO_ESECUZIONE"));
 		// 10102014 - DL 92 2014 Violazione CEDU
 		aModel.setSommaRisarcimento(getBigDecimal("SOMMA_RISARC_DANNI"));
-		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
-		aModel.setDataEsecutivita(getDate("DATA_ESECUTIVITA"));
-		aModel.setNoteDataEsecutivita(getString("NOTE_DATA_ESECUTIVITA"));
-		// FINE: MEV_2019-09
+		// MEV_2023-35
+		if (findColumn("COD_TIPO_SANZIONE"))
+			aModel.setCodTipoSanzione(getString("COD_TIPO_SANZIONE"));
+		if (findColumn("COD_TIPO_PENA_ACCESSORIA"))
+			aModel.setCodTipoPenaAccessoria(getString("COD_TIPO_PENA_ACCESSORIA"));
+		if (findColumn("DESCRPENA"))
+			aModel.setDescrTipoPenaAccessoria(getString("DESCRPENA"));
+		if (findColumn("DURATA"))
+			aModel.setDurata(getString("DURATA"));
+		if (findColumn("DESCRDURATA"))
+			aModel.setDescrDurata(getString("DESCRDURATA"));
+		if (findColumn("NUM_ANNI"))
+			aModel.setNumAnni(getBigDecimal("NUM_ANNI"));
+		if (findColumn("NUM_MESI"))
+			aModel.setNumMesi(getBigDecimal("NUM_MESI"));
+		if (findColumn("NUM_GIORNI"))
+			aModel.setNumGiorni(getBigDecimal("NUM_GIORNI"));
 
 		return aModel;
 	}
@@ -736,23 +788,6 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 	public String setCondizione(DepositoOrdinanzaPcModel aModel) {
 
 		String lCondizioni = new String();
-		/* 
-		 * ISSUE MEV : aggiunte condizioni
-		 * Numero MEV : 9
-		 * Autore    : sgioggi
-		 * Data      : 16 dic 2022
-		 * Branch    : MEV_2019-09
-		 */
-		if (aModel.getIdDepositoOrdinanzaPc() != null)
-			lCondizioni = lCondizioni + " AND ID_DEPOSITO_ORDINANZA_PC = " + aModel.getIdDepositoOrdinanzaPc();
-
-		if (aModel.getGenPridGeneraleProcedimento() != null)
-			lCondizioni = lCondizioni + " AND GEN_PRID_GENERALE_PROCEDIMENTO = " + aModel.getGenPridGeneraleProcedimento();
-
-		if (aModel.getIdEventoGenerato() != null)
-			lCondizioni = lCondizioni + " AND ID_EVENTO_GENERATO = " + aModel.getIdEventoGenerato();
-		//***** FINE INTERVENTO MEV_2019-09 *****//
-
 		return lCondizioni;
 	}
 
@@ -771,10 +806,8 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Imposta condizione di filtro su la chiave id del deposito ordinanza.
-	 * <p>
 	 *
-	 * @param aKey
-	 *            chaive deposito ordinanza.
+	 * @param aKey chiave deposito ordinanza.
 	 * @return la codizione sql.
 	 */
 	public String setCondizioniByKey(BigDecimal aKey) {
@@ -783,10 +816,8 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Imposta condizione unica di filtro sulla chiave id del deposito ordinanza.
-	 * <p>
 	 *
-	 * @param aKey
-	 *            chaive deposito ordinanza.
+	 * @param aKey chiave deposito ordinanza.
 	 * @return la codizione sql.
 	 */
 	public String setCondizioneByKey(BigDecimal aKey) {
@@ -813,10 +844,8 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Imposta select count per uso verifica esistenza di una ordinanza per id generale procedimento.
-	 * <p>
 	 *
-	 * @param aKey
-	 *            id generale procedimento.
+	 * @param aKey id generale procedimento.
 	 */
 	public void ricercaEsistenzaDepositoOrdinanzaByIdGenProc(BigDecimal aKey) {
 		String lSql = "SELECT COUNT(*) AS NUM_REC FROM DEPOSITO_ORDINANZA_PC ";
@@ -825,15 +854,11 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 	}
 
 	/**
-	 * <p>
 	 * Description: metodo di ricerca, restituisce il numero di record in DEPOSITO_ORDINANZA_PC con un record
 	 * evento collegato con data di emissione specificata.
-	 * </p>
 	 *
-	 * @param BigDecimal
-	 *            aKey : Identificativo Generale Procedimento
-	 * @param Date
-	 *            aDataEmissione : Data Emissione
+	 * @param BigDecimal aKey : Identificativo Generale Procedimento
+	 * @param Date aDataEmissione : Data Emissione
 	 * @return int : numero di record trovati
 	 * @throws DAOException
 	 */
@@ -844,7 +869,8 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		BigDecimal lCount = null;
 		int retNum = -1;
 
-		String lStatement = "select count(*) as COUNT from DEPOSITO_ORDINANZA_PC D, EVENTO E WHERE D.ID_EVENTO_GENERATO = E.ID_EVENTO ";
+		String lStatement = "select count(*) as COUNT from DEPOSITO_ORDINANZA_PC D, "
+				+ "EVENTO E WHERE D.ID_EVENTO_GENERATO = E.ID_EVENTO ";
 		lStatement += " AND E.DATA_EMISSIONE = TO_DATE("
 				+ DateUtils.getDateToString(aDataEmissione, "yyyyMMdd") + ",'YYYYMMDD')";
 		lStatement += " AND D.GEN_PRID_GENERALE_PROCEDIMENTO = " + aKey;
@@ -859,11 +885,9 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 	}
 
 	/**
-	 * <p>
 	 * Description: metodo di ricerca, restituisce il numero di record in DEPOSITO_ORDINANZA_PC relativi ad un
 	 * generale procedimento specificato dalla sua chiave passata come primo argomento e di tipo non presente
 	 * tra quelli passati nella liata secondo argomento della funzione.
-	 * </p>
 	 *
 	 * @param BigDecimal
 	 *            aKey : Identificativo Generale Procedimento
@@ -879,7 +903,9 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		BigDecimal lCount = null;
 		int retNum = -1;
 
-		String lStatement = "select count(*) as COUNT from DEPOSITO_ORDINANZA_PC D join EVENTO E ON  (D.ID_EVENTO_GENERATO = E.ID_EVENTO  AND (E.FLAG_DOCUMENTO_REGISTRATO IS NULL OR E.FLAG_DOCUMENTO_REGISTRATO <> 'A'))";
+		String lStatement = "select count(*) as COUNT from DEPOSITO_ORDINANZA_PC D join EVENTO E ON "
+				+ "(D.ID_EVENTO_GENERATO = E.ID_EVENTO  AND (E.FLAG_DOCUMENTO_REGISTRATO IS NULL OR "
+				+ "E.FLAG_DOCUMENTO_REGISTRATO <> 'A'))";
 		lStatement += " WHERE D.GEN_PRID_GENERALE_PROCEDIMENTO = " + aKey;
 
 		if (lNumTipi > 0) {
@@ -908,10 +934,8 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 	}
 
 	/**
-	 * <p>
 	 * Description: metodo di ricerca, restituisce la DATA_DEPOSITO di record in DEPOSITO_ORDINANZA_PC
 	 * selezionato tramite ID_EVENTO_GENERATO.
-	 * </p>
 	 *
 	 * @param BigDecimal
 	 *            aKey : Identificativo Evento
@@ -954,7 +978,8 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		strQuery += " FASCICOLO_SIUS FASC,";
 		strQuery += " EVENTO EVE, DEPOSITO_ORDINANZA_PC DEPO, TENORE TEN, SOGGETTO SOG,";
 		strQuery += " UFFICIO UFF, UFFICIO_DESCR UFD, COMUNE DESCR_COM_UFF,";
-		strQuery += " CG_REF_CODES MOTIVO_PROVVEDIMENTO, CG_REF_CODES TIPO_PROVVEDIMENTO, CG_REF_CODES ESITO_TENORE";
+		strQuery += " CG_REF_CODES MOTIVO_PROVVEDIMENTO, CG_REF_CODES TIPO_PROVVEDIMENTO, "
+				+ "CG_REF_CODES ESITO_TENORE";
 		// MEV_39: aggiunte tabelle in join
 		strQuery += ", fascicolo_siep s, UFFICIO UFF_SIEP";
 		strQuery += setCondizioneWhere(aData_inizio, aData_fine, aElaborati, codUfficio);
@@ -985,7 +1010,8 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		lStatement += " SELECT DISTINCT ID_FASCICOLO_SIUS FROM FASCICOLO_SIUS FASC,";
 		lStatement += " EVENTO EVE, DEPOSITO_ORDINANZA_PC DEPO, TENORE TEN, SOGGETTO SOG,";
 		lStatement += " UFFICIO UFF, UFFICIO_DESCR UFD, COMUNE DESCR_COM_UFF,";
-		lStatement += " CG_REF_CODES MOTIVO_PROVVEDIMENTO, CG_REF_CODES TIPO_PROVVEDIMENTO, CG_REF_CODES ESITO_TENORE";
+		lStatement += " CG_REF_CODES MOTIVO_PROVVEDIMENTO, CG_REF_CODES TIPO_PROVVEDIMENTO, "
+				+ "CG_REF_CODES ESITO_TENORE";
 		// MEV_39: aggiunte tabelle in join
 		lStatement += ", fascicolo_siep s, UFFICIO UFF_SIEP";
 		lStatement += setCondizioneWhere(aData_inizio, aData_fine, aElaborati, codUfficio);
@@ -996,16 +1022,8 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		setStatement(lStatement);
 	}
 
-	private boolean findColumn(String aValue) {
-		try {
-			mRs.findColumn(aValue);
-		} catch (Exception sqex) {
-			return false;
-		}
-		return true;
-	}
-
 	protected String getQueryProvvFascicoloSiusTenoreSoggetto() {
+
 		String lStatement = new String();
 
 		lStatement += " SELECT DISTINCT (FASC.ID_FASCICOLO_SIUS),";
@@ -1083,9 +1101,11 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		lStatement += " AND UFF.COD_UFFICIO = UFD.COD_UFFICIO";
 		lStatement += " AND SOG.ID_SOGGETTO = FASC.SOG_ID_SOGGETTO";
 		// MEV_39: aggiunti codici 2726, 0258, 0259, 0260
-		lStatement += " AND EVE.COD_TIPO_PROVVEDIMENTO = '03' AND EVE.COD_MOTIVO in ('0258', '0259', '0260', '2116', '2117', '2118', '2119', '2726')";
+		lStatement += " AND EVE.COD_TIPO_PROVVEDIMENTO = '03' AND EVE.COD_MOTIVO in ('0258', '0259', '0260',"
+				+ " '2116', '2117', '2118', '2119', '2726')";
 		// lStatement += " AND EVE.FLAG_DOCUMENTO_REGISTRATO = 'S'";
-		lStatement += " AND MOTIVO_PROVVEDIMENTO.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' AND MOTIVO_PROVVEDIMENTO.RV_LOW_VALUE = EVE.COD_MOTIVO";
+		lStatement += " AND MOTIVO_PROVVEDIMENTO.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' "
+				+ "AND MOTIVO_PROVVEDIMENTO.RV_LOW_VALUE = EVE.COD_MOTIVO";
 		lStatement += " AND TIPO_PROVVEDIMENTO.RV_DOMAIN = 'TIPO_PROVVEDIMENTO'";
 		lStatement += " AND TIPO_PROVVEDIMENTO.RV_LOW_VALUE = EVE.COD_TIPO_PROVVEDIMENTO";
 		lStatement += " AND ESITO_TENORE.RV_DOMAIN = 'ESITO_TENORE'";
@@ -1096,8 +1116,8 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		lStatement += " AND ESITO_TENORE.RV_ABBREVIATION in ('0061', '0190', '0191', '0210', '0380')";
 		lStatement += " and s.id_fascicolo_siep = fasc.fas_sie_id_fascicolo_siep";
 		lStatement += " and s.chiave_ufficio = '" + codUfficio + "'";
-		// MEV_39: and condition errata e non funzionante per uffici diversi nello stesso distretto (es:
-		// verbania non riceveva più da torino)
+		// MEV_39: and condition errata e non funzionante per uffici diversi nello stesso distretto
+		// (es: verbania non riceveva più da torino)
 		// lStatement += " and UFF_SIEP.COD_COMUNE = uff.cod_comune";
 		lStatement += " and UFF_SIEP.COD_UFFICIO = s.chiave_ufficio";
 		lStatement += " AND (DEPO.DATA_DEPOSITO is not null) ";
@@ -1114,51 +1134,54 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 
 	/*
 	 * ISSUE MEV : aggiunta query per ricercare i provvedimenti di Sorveglianza in materia di differimento
-	 * della pena Numero MEV : 39 Autore : Gioggi Data : 03/mar/2017 Branch : MEV_39
+	 * della pena 
+	 * Numero MEV : 39 
+	 * Autore : Gioggi 
+	 * Data : 03/mar/2017 
+	 * Branch : MEV_39
 	 */
 	public void RicercaEventoProvvedimentiDifferimentoSIUSByFascicoloSiep(BigDecimal idFascicoloSiep)
 			throws DAOException {
 
-		String lSql = "SELECT DISTINCT FASC.ID_FASCICOLO_SIUS," + "                FASC.CHIAVE_ANNO,"
-				+ "                FASC.CHIAVE_PROGR," + "                FASC.CHIAVE_UFFICIO,"
-				+ "                EVE.COD_TIPO_PROVVEDIMENTO," + "                EVE.COD_MOTIVO,"
-				+ "                EVE.DATA_EMISSIONE," + "                EVE.ID_EVENTO,"
-				+ "                EVE.COD_ESITO," + "                EVE.ANNO_PROTOCOLLO,"
+		String lSql = "SELECT DISTINCT FASC.ID_FASCICOLO_SIUS, FASC.CHIAVE_ANNO, "
+				+ "FASC.CHIAVE_PROGR, FASC.CHIAVE_UFFICIO, "
+				+ "EVE.COD_TIPO_PROVVEDIMENTO, EVE.COD_MOTIVO, "
+				+ "EVE.DATA_EMISSIONE, EVE.ID_EVENTO, "
+				+ "EVE.COD_ESITO, EVE.ANNO_PROTOCOLLO, "
 				+ "                EVE.PROGR_PROTOCOLLO,"
 				+ "				 UFF.COD_TIPO_UFFICIO            COD_TIPO_UFFICIO,"
-				+ "				 UFF.COD_UFFICIO		         COD_UFFICIO,"
+				+ "UFF.COD_UFFICIO OD_UFFICIO, "
 				+ "                UFD.DESCR_TIPO_UFFICIO          DESCR_TIPO_UFFICIO,"
-				+ "                DESCR_COM_UFF.DESCRIZIONE       DESCR_COMUNE_UFFICIO,"
+				+ "DESCR_COM_UFF.DESCRIZIONE ESCR_COMUNE_UFFICIO, "
 				+ "                MOTIVO_PROVVEDIMENTO.RV_MEANING DESCR_OGGETTO,"
 				+ "                ESITO_PROVVEDIMENTO.RV_MEANING  DESCR_ESITO,"
 				+ "                TIPO_PROVVEDIMENTO.RV_MEANING   DESCR_PROVVEDIMENTO,"
 				+ "                NULL							 FLAG_DECISIONE_TRIBUNALE,"
-				+ "                P.LUOGO_SVOLGIMENTO_PROVA," + "                P.DATA_INIZIO_PERIODO,"
-				+ "                P.DATA_FINE_MISURA," + "                P.SOSPENSIONE_GG,"
-				+ "                P.SOSPENSIONE_MM," + "                P.SOSPENSIONE_AA,"
+				+ "P.LUOGO_SVOLGIMENTO_PROVA, P.DATA_INIZIO_PERIODO, "
+				+ "P.DATA_FINE_MISURA, P.SOSPENSIONE_GG, "
+				+ "P.SOSPENSIONE_MM, P.SOSPENSIONE_AA, "
 				+ "                MA.DATA_SCARCERAZIONE,"
 				+ "                MA.COD_TIPO_UFFICIO_SCARCERAZIONE,"
-				+ "				 MA.ID_MISURA_ALTERNATIVA," + "				 MA.DATA_INIZIO_MISURA,"
-				+ "				 MA.DATA_FINE_MISURA" + "  FROM FASCICOLO_SIUS        FASC,"
-				+ "       EVENTO                EVE," + "       UFFICIO               UFF,"
-				+ "       COMUNE                DESCR_COM_UFF," + "       UFFICIO_DESCR         UFD,"
+				+ "MA.ID_MISURA_ALTERNATIVA, MA.DATA_INIZIO_MISURA, "
+				+ "MA.DATA_FINE_MISURA FROM FASCICOLO_SIUS FASC, "
+				+ "EVENTOEVE, UFFICIO UFF, "
+				+ "COMUNEDESCR_COM_UFF, UFFICIO_DESCR  UFD, "
 				+ "       CG_REF_CODES          MOTIVO_PROVVEDIMENTO,"
 				+ "       CG_REF_CODES          ESITO_PROVVEDIMENTO,"
-				+ "       CG_REF_CODES          TIPO_PROVVEDIMENTO," + "       DEPOSITO_ORDINANZA_PC P,"
+				+ "CG_REF_CODES TIPO_PROVVEDIMENTO, DEPOSITO_ORDINANZA_PC P, "
 				+ "       MISURA_ALTERNATIVA    MA ,  FASCICOLO_SIEP FS "
 				+ " WHERE FASC.FAS_SIE_ID_FASCICOLO_SIEP = " + idFascicoloSiep
 				+ "   AND EVE.FAS_SIE_ID_FASCICOLO_SIEP = " + idFascicoloSiep
 				+ "   AND EVE.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS"
 				+ "   AND EVE.ID_EVENTO = P.ID_EVENTO_GENERATO(+)"
-				+ "   AND EVE.COD_TIPO_PROVVEDIMENTO IN ( '03')" +
+				+ " AND EVE.COD_TIPO_PROVVEDIMENTO IN ('03')"
 				// 20190919 [SG]: modificata condizione per mancanza codici
 				// + " AND EVE.COD_MOTIVO IN"
 				// + " ('0428', '0429', '0430', '0431', '0432', '0433', '2550', '2551', '2552', '2553',
 				// '2554', '2555', '2610', '2611')"
 				// + " AND MOTIVO_PROVVEDIMENTO.rv_alt2_value in ('1148','1138','1139')" in alternativa
-				"   AND MOTIVO_PROVVEDIMENTO.rv_high_value in ('C036','U077','U082')"
-				+ "   AND EVE.COD_ESITO IN"
-				+ " ('0002', '0003', '0004', '0005', '0035', '0119', '0145', '0360')"
+				+ " AND MOTIVO_PROVVEDIMENTO.rv_high_value in ('C036','U077','U082')"
+				+ " AND EVE.COD_ESITO IN ('0002','0003','0004','0005','0035','0119','0145','0360')"
 				+ "   AND UFF.COD_UFFICIO = FASC.CHIAVE_UFFICIO"
 				+ "   AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE"
 				+ "   AND UFF.COD_UFFICIO = UFD.COD_UFFICIO"
@@ -1171,7 +1194,8 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 				+ "   AND MA.FAS_SIE_ID_FASCICOLO_SIEP(+) =  " + idFascicoloSiep
 				+ "	AND MA.EVE_ID_EVENTO(+) = EVE.ID_EVENTO "
 				+ "    AND FS.ID_FASCICOLO_SIEP=FASC.FAS_SIE_ID_FASCICOLO_SIEP  AND FS.ID_FASCICOLO_SIEP NOT IN("
-				+ "  (SELECT EE.FAS_SIE_ID_FASCICOLO_SIEP  FROM EVENTO EE WHERE EE.FAS_SIE_ID_FASCICOLO_SIEP = FS.ID_FASCICOLO_SIEP"
+				+ " (SELECT EE.FAS_SIE_ID_FASCICOLO_SIEP FROM EVENTO EE WHERE EE.FAS_SIE_ID_FASCICOLO_SIEP ="
+				+ " FS.ID_FASCICOLO_SIEP"
 				+ "  AND EE.COD_MOTIVO IN ('1132') AND EE.FLAG_DOCUMENTO_REGISTRATO <> 'A' )  )"
 				+ " ORDER BY FASC.CHIAVE_ANNO, FASC.CHIAVE_PROGR, FASC.ID_FASCICOLO_SIUS";
 
@@ -1181,11 +1205,11 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 	public void RicercaEventoProvvDiffSIUSByFascSiepEFascSius(BigDecimal idFascicoloSiep,
 			BigDecimal idFascSius, BigDecimal idEveFascSius, BigDecimal idEvento) throws DAOException {
 
-		String lSql = "SELECT DISTINCT FASC.ID_FASCICOLO_SIUS," + "                FASC.CHIAVE_ANNO,"
-				+ "                FASC.CHIAVE_PROGR," + "                FASC.CHIAVE_UFFICIO,"
-				+ "                EVE.COD_TIPO_PROVVEDIMENTO," + "                EVE.COD_MOTIVO,"
-				+ "                EVE.DATA_EMISSIONE," + "                EVE.ID_EVENTO,"
-				+ "                EVE.COD_ESITO," + "                EVE.ANNO_PROTOCOLLO,"
+		String lSql = "SELECT DISTINCT FASC.ID_FASCICOLO_SIUS, FASC.CHIAVE_ANNO, "
+				+ "FASC.CHIAVE_PROGR, FASC.CHIAVE_UFFICIO, "
+				+ "EVE.COD_TIPO_PROVVEDIMENTO, EVE.COD_MOTIVO, "
+				+ "EVE.DATA_EMISSIONE, EVE.ID_EVENTO, "
+				+ "EVE.COD_ESITO, EVE.ANNO_PROTOCOLLO, "
 				+ "                EVE.PROGR_PROTOCOLLO,"
 				+ "				 UFF.COD_TIPO_UFFICIO            COD_TIPO_UFFICIO,"
 				+ "				 UFF.COD_UFFICIO		         COD_UFFICIO,"
@@ -1195,19 +1219,19 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 				+ "                ESITO_PROVVEDIMENTO.RV_MEANING  DESCR_ESITO,"
 				+ "                TIPO_PROVVEDIMENTO.RV_MEANING   DESCR_PROVVEDIMENTO,"
 				+ "                NULL							 FLAG_DECISIONE_TRIBUNALE,"
-				+ "                P.LUOGO_SVOLGIMENTO_PROVA," + "                P.DATA_INIZIO_PERIODO,"
-				+ "                P.DATA_FINE_MISURA," + "                P.SOSPENSIONE_GG,"
-				+ "                P.SOSPENSIONE_MM," + "                P.SOSPENSIONE_AA,"
+				+ "P.LUOGO_SVOLGIMENTO_PROVA, P.DATA_INIZIO_PERIODO, "
+				+ "P.DATA_FINE_MISURA, P.SOSPENSIONE_GG, "
+				+ "P.SOSPENSIONE_MM, P.SOSPENSIONE_AA, "
 				+ "                MA.DATA_SCARCERAZIONE,"
 				+ "                MA.COD_TIPO_UFFICIO_SCARCERAZIONE,"
-				+ "				 MA.ID_MISURA_ALTERNATIVA," + "                MA.DATA_INIZIO_MISURA,"
-				+ "				 MA.DATA_FINE_MISURA" + "  FROM FASCICOLO_SIUS        FASC,"
-				+ "       EVENTO                EVE," + "       UFFICIO               UFF,"
-				+ "       COMUNE                DESCR_COM_UFF," + "       UFFICIO_DESCR         UFD,"
+				+ "MA.ID_MISURA_ALTERNATIVA, MA.DATA_INIZIO_MISURA, "
+				+ "MA.DATA_FINE_MISURA FROM FASCICOLO_SIUS FASC, "
+				+ "EVENTOEVE, UFFICIO UFF, "
+				+ "COMUNEDESCR_COM_UFF, UFFICIO_DESCR  UFD, "
 				+ "       CG_REF_CODES          MOTIVO_PROVVEDIMENTO,"
 				+ "       CG_REF_CODES          ESITO_PROVVEDIMENTO,"
-				+ "       CG_REF_CODES          TIPO_PROVVEDIMENTO," + "       DEPOSITO_ORDINANZA_PC P,"
-				+ "       MISURA_ALTERNATIVA    MA" + " WHERE FASC.FAS_SIE_ID_FASCICOLO_SIEP = "
+				+ "CG_REF_CODES TIPO_PROVVEDIMENTO, DEPOSITO_ORDINANZA_PC P, "
+				+ "MISURA_ALTERNATIVA MA WHERE FASC.FAS_SIE_ID_FASCICOLO_SIEP = "
 				+ idFascicoloSiep + "   AND EVE.FAS_SIE_ID_FASCICOLO_SIEP = " + idFascicoloSiep
 				+ "	AND FASC.ID_FASCICOLO_SIUS = " + idFascSius;
 		if (idEveFascSius != null)
@@ -1221,10 +1245,9 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 				// '2554', '2555', '2610', '2611')"
 				// + " AND MOTIVO_PROVVEDIMENTO.rv_alt2_value in ('1148','1138','1139')" in alternativa
 				+ "   AND MOTIVO_PROVVEDIMENTO.rv_high_value in ('C036','U077','U082')"
-				+ "   AND EVE.COD_ESITO IN"
-				+ " ('0002', '0003', '0004', '0005', '0035', '0119', '0145', '0360')" +
+				+ "   AND EVE.COD_ESITO IN ('0002', '0003', '0004', '0005', '0035', '0119', '0145', '0360')"
 				// " ('0035', '0119', '0145', '0360')" +
-				"   AND UFF.COD_UFFICIO = FASC.CHIAVE_UFFICIO"
+				+ " AND UFF.COD_UFFICIO = FASC.CHIAVE_UFFICIO"
 				+ "   AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE"
 				+ "   AND UFF.COD_UFFICIO = UFD.COD_UFFICIO"
 				+ "   AND TIPO_PROVVEDIMENTO.RV_DOMAIN = 'TIPO_PROVVEDIMENTO'"

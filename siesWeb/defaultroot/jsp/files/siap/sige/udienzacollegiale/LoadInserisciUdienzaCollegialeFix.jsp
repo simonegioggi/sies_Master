@@ -359,7 +359,7 @@ if (aulaUdienza!=null){
   	<%-- Ticket#20210728014: FINE --%>
 
 
-    <input type="HIDDEN" name="<%=ICostantiCollegio.CAMPO_COD_COLLEGIO%>" value="<%=codCollegio%>" />
+  	<input type="HIDDEN" name="<%=ICostantiCollegio.CAMPO_COD_COLLEGIO%>" value="<%=codCollegio%>" />
     <input type="HIDDEN" name="<%=ICostantiUdienzaSige.CAMPO_ID_UDIENZA_SIGE%>" value="<%=idUdiSige%>" />
     <input type="HIDDEN" name="PopUp" value="<%=PopUp%>" />
 	
@@ -625,36 +625,34 @@ if ("yes".equals(giudiciPopolari)) {
 							 onkeypress="return TicTabNumField(this,event)" 
 							  onBlur="javascript:value=FillDM(value)">
     </tr>
-    
     <tr>
-      <td>
-        <input class="bottone" type="submit" name="conferma" value="Conferma" onClick="javascript:return VerifyConferma();">
-      </td>
-    </tr>
-
-  </table>
+      	<td>
+        	<input class="bottone" type="submit" name="conferma" value="Conferma" onClick="javascript:return VerifyConferma();">
+		</td>
+	</tr>
+</table>
 </form>
+<script language="JavaScript" type="text/javascript">
+var frmvalidator  = new Validator("LoadInserisciUdienzaCollegiale");
+
+//================================================================
+// Aggiungere le opportune chiamate al genvalidator 
+//================================================================
+//frmvalidator.addValidation("","req","Il campo XXXX è obbligatorio");
+//frmvalidator.addValidation("","numeric","Il XXXX è un campo numerico");
+//frmvalidator.addValidation("","maxlen=4","La lunghezza massima per XXXX è di 4 caratteri");
+//frmvalidator.addValidation("","minlen=4","La lunghezza minima per XXXX è di 4 caratteri");
+//frmvalidator.addValidation("","gt=1900");
+//frmvalidator.addValidation("","lt=3000");
+//frmvalidator.addValidation("","alphanumeric");
+//frmvalidator.addValidation("","numeric");
+//frmvalidator.addValidation("","alpha");
+//frmvalidator.addValidation("","alnumhyphen");
+//frmvalidator.addValidation("","email");
+//frmvalidator.addValidation("","regexp");
+//frmvalidator.addValidation("","dontselect");
+
+frmvalidator.setAddnlValidationFunction("Verify"); 
+</script>
 </body>
 </html>
-<script language="JavaScript" type="text/javascript">
-  var frmvalidator  = new Validator("LoadInserisciUdienzaCollegiale");
-
-  //================================================================
-  // Aggiungere le opportune chiamate al genvalidator 
-  //================================================================
-  //frmvalidator.addValidation("","req","Il campo XXXX è obbligatorio");
-  //frmvalidator.addValidation("","numeric","Il XXXX è un campo numerico");
-  //frmvalidator.addValidation("","maxlen=4","La lunghezza massima per XXXX è di 4 caratteri");
-  //frmvalidator.addValidation("","minlen=4","La lunghezza minima per XXXX è di 4 caratteri");
-  //frmvalidator.addValidation("","gt=1900");
-  //frmvalidator.addValidation("","lt=3000");
-  //frmvalidator.addValidation("","alphanumeric");
-  //frmvalidator.addValidation("","numeric");
-  //frmvalidator.addValidation("","alpha");
-  //frmvalidator.addValidation("","alnumhyphen");
-  //frmvalidator.addValidation("","email");
-  //frmvalidator.addValidation("","regexp");
-  //frmvalidator.addValidation("","dontselect");
-
-  frmvalidator.setAddnlValidationFunction("Verify"); 
-</script>

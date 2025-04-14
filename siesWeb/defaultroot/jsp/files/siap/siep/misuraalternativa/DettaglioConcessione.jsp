@@ -113,11 +113,7 @@ if (tipoMisura.equals("AFFIDAMENTO")) {
 <%
 if (((eventonotifica.getEvento().getFlagDocumentoRegistrato() != null
 		&& eventonotifica.getEvento().getFlagDocumentoRegistrato().compareTo("N") == 0)
-		|| eventonotifica.getEvento().getFlagDocumentoRegistrato() == null)
-		// MEV_2019-09-SIEP: aggiunto pulsante di modifica diversificato per tipo misura
-		&& (tipoMisura.equals("DETENZIONE")
-				|| tipoMisura.equals("SEMILIBERTA")
-				|| tipoMisura.equals("AFFIDAMENTO"))) {
+		|| eventonotifica.getEvento().getFlagDocumentoRegistrato() == null)) {
 	String action = "ActLoadInserisciMAAffidamentoInProva";
 	if (tipoMisura.equals("DETENZIONE"))
 		action = "ActLoadInserisciMADetenzioneDomiciliare";
@@ -136,15 +132,8 @@ if (((eventonotifica.getEvento().getFlagDocumentoRegistrato() != null
    		<jsp:include page="<%=ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>">
      		<jsp:param name="ActionLink" value="<%="/jsp/Main.jsp?Action=siap.siep.misuraalternativa.action.ActStampaConcessione&IdEvento="+eventonotifica.getEvento().getIdEvento()+"&tipoMisura="+tipoMisura+"&IdEventoAmmProvvAff="+StringUtils.toStringJSP(lEventoAmmProvvAff.getIdEvento())%>"/>
 		</jsp:include>
-		<%-- MEV_2019-09-SIEP: aggiunto pulsante di validazione diretta --%>
-		<!-- BOTTONE DI VALIDAZIONE DIRETTA -->
-  		<td class="LBG">
-    		<a href="/jsp/Main.jsp?Action=siap.siep.misuraalternativa.action.ActUploadMA&<%=ICostantiEvento.CAMPO_ID_EVENTO%>=<%=eventonotifica.getEvento().getIdEvento()%>&<%=ICostantiEvento.CAMPO_AZIONE_DETTAGLIO%>=siap.siep.misuraalternativa.action.ActDettaglioConcessione&<%=ICostantiEvento.CAMPO_VALIDA%>=S&noblob=S">
-      			<img align="middle" src="/images/upload24.gif" alt="Valida Provvedimento" width="24" height="24" border="0">
-    		</a>
-  		</td>
 <%
-// MEV_2019-09-SIEP: stava dentro if (eventonotifica.getEvento().getFlagDocumentoRegistrato() != null) quindi era dead code
+// stava dentro if (eventonotifica.getEvento().getFlagDocumentoRegistrato() != null) quindi era dead code
 // if (eventonotifica.getEvento().getFlagDocumentoRegistrato() == null)
 // spostato nel ramo else
 } else {
@@ -485,27 +474,6 @@ if (misuraalternativa.getDescrLuogoProva() != null) {
 	</tr>
 <%
 }
-// MEV_2019-09-SIEP: aggiunte etichette x tre tipo misura
-// MEV_2024-092: rimosse le etichette x tre tipo misura
-// if ((tipoMisura.equals("AFFIDAMENTO") || tipoMisura.equals("DETENZIONE") || tipoMisura.equals("SEMILIBERTA"))
-// 		&&!Utils.isNullObj(misuraalternativa.getAnnoRegistroMaAt())) {
-%>
-<!-- 	<tr> -->
-<!-- 		<td class="l">Anno / Numero Ordinanza Provvisoria</td> -->
-<!-- 		<td class="l" colspan="3"> -->
-<%-- 			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistroMaAt())%>&nbsp;/&nbsp;<%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistroMaAt())%></font> --%>
-<!-- 		</td> -->
-<!-- 	</tr> -->
-<!-- 	<tr> -->
-<!-- 	  	<td class="l">Data Emissione Ordinanza Provvisoria</td> -->
-<!-- 	  	<td class="L" colspan="3"> -->
-<%-- 			<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "dd-MM-yyyy"))%></font> --%>
-<!-- 		</td> -->
-<!-- 	</tr> -->
-<%
-// }
-// FINE MEV_2024-092
-// FINE MEV_2019-09-SIEP
 if (verbale.getDataEmissione() != null) {
 %>
 	<tr>
@@ -521,7 +489,6 @@ if (verbale.getDataEmissione() != null) {
 	<tr>
 <%
 	if (misuraalternativa.getDataInizioMisura() != null) {
-		// MEV_2019-09-SIEP: aggiunta diversificazione dell'etichetta
 		// MEV_2024-092: rimossa diversificazione dell'etichetta
 		boolean testDataFineMisura = misuraalternativa.getDataFineMisura() == null;
 // 		if (tipoMisura.equals("AFFIDAMENTO")) {

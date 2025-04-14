@@ -244,22 +244,27 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 				if (lEveMod.getFlagDocumentoRegistrato() != null
 						&& lEveMod.getFlagDocumentoRegistrato().equals("S")) {
 					if (isCumulo(lEveMod)) {
+						siesLogger.debug("PENA_IN_CUMULO");
 						lCalcoloPenaMod.setTipoPenaIniziale(ICostantiCalcoloPena.PENA_IN_CUMULO);
 						lEventoIniziale = lEveMod;
 						break;
 					} else if (isNuovoCumulo(lEveMod)) {
+						siesLogger.debug("PENA_IN_CUMULO_NEW");
 						lCalcoloPenaMod.setTipoPenaIniziale(ICostantiCalcoloPena.PENA_IN_CUMULO_NEW);
 						lEventoIniziale = lEveMod;
 						break;
 					} else if (isSospensione(lEveMod)) {
+						siesLogger.debug("PENA_SOSPENSIONE");
 						lCalcoloPenaMod.setTipoPenaIniziale(ICostantiCalcoloPena.PENA_SOSPENSIONE);
 						lEventoIniziale = lEveMod;
 						break;
 					} else if (isSospensioneRes(lEveMod)) {
+						siesLogger.debug("pre PENA_SOSPENSIONE_RES");
 						// Provo a vedere se riesco a recuperare la pena da sospensione
 						// n.b. non sempre è possibile
 						lPenaInizialeMod = getPena(lEveMod, ICostantiCalcoloPena.PENA_SOSPENSIONE_RES);
 						if (lPenaInizialeMod != null) {
+							siesLogger.debug("PENA_SOSPENSIONE_RES");
 							lCalcoloPenaMod.setTipoPenaIniziale(ICostantiCalcoloPena.PENA_SOSPENSIONE_RES);
 							lEventoIniziale = lEveMod;
 							break;
@@ -269,6 +274,7 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 							siesLogger.error("Sospensione RES scartata per mancanza di pena ");
 						}
 					} else if (isSospensioneMigrata(lEveMod)) {
+						siesLogger.debug("PENA_SOSPENSIONE");
 						lCalcoloPenaMod.setTipoPenaIniziale(ICostantiCalcoloPena.PENA_SOSPENSIONE);
 						lEventoIniziale = lEveMod;
 						break;
@@ -280,60 +286,62 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 					// break;
 					// }
 					else if (isInterruzione(lEveMod) || isInterruzioneRES(lEveMod)) {
+						siesLogger.debug("PENA_SOSPENSIONE 2");
 						// In fase di test
-						lCalcoloPenaMod.setTipoPenaIniziale(ICostantiCalcoloPena.PENA_SOSPENSIONE); // n.b.
-																									// l'interruzione
-																									// è
-																									// assimilata
-																									// a una
-																									// Sospensione
+						lCalcoloPenaMod.setTipoPenaIniziale(ICostantiCalcoloPena.PENA_SOSPENSIONE);
+						// n.b. l'interruzione è assimilata a una Sospensione
 						lEventoIniziale = lEveMod;
 						break;
 					} else if (isEspulsione(lEveMod)) {
-						lCalcoloPenaMod.setTipoPenaIniziale(ICostantiCalcoloPena.PENA_SOSPENSIONE); // n.b.
-																									// l'espulsione
-																									// è
-																									// assimilata
-																									// a una
-																									// Sospensione
+						siesLogger.debug("PENA_SOSPENSIONE 3");
+						lCalcoloPenaMod.setTipoPenaIniziale(ICostantiCalcoloPena.PENA_SOSPENSIONE);
+						// n.b. l'espulsione è assimilata a una Sospensione
 						lEventoIniziale = lEveMod;
 						break;
 					} else if (isDifferimento(lEveMod)) {
+						siesLogger.debug("PENA_SOSPENSIONE 4");
 						// Verifico se esiste una pena residua associata
 						lCalcoloPenaMod.setTipoPenaIniziale(ICostantiCalcoloPena.PENA_SOSPENSIONE);
 						lEventoIniziale = lEveMod;
 						break;
 					} else if (isRevocaMA(lEveMod)) {
+						siesLogger.debug("PENA_REVOCA_MA");
 						// Verifico se esiste una pena residua associata
 						lCalcoloPenaMod.setTipoPenaIniziale(ICostantiCalcoloPena.PENA_REVOCA_MA);
 						lEventoIniziale = lEveMod;
 						break;
 					} else if (isRevocaIndultino(lEveMod)) {
+						siesLogger.debug("PENA_REVOCA_INDULTINO");
 						// Verifico se esiste una pena residua associata
 						lCalcoloPenaMod.setTipoPenaIniziale(ICostantiCalcoloPena.PENA_REVOCA_INDULTINO);
 						lEventoIniziale = lEveMod;
 						break;
 					} else if (isCessazioneMA(lEveMod)) {
+						siesLogger.debug("PENA_CESSAZIONE_MA");
 						// Verifico se esiste una pena residua associata
 						lCalcoloPenaMod.setTipoPenaIniziale(ICostantiCalcoloPena.PENA_CESSAZIONE_MA);
 						lEventoIniziale = lEveMod;
 						break;
 					} else if (isArchiviazioneSIEP(lEveMod)) {
+						siesLogger.debug("pre PENA_ARCHIVIATA_SIEP");
 						lPenaInizialeMod = getPena(lEveMod, ICostantiCalcoloPena.PENA_ARCHIVIATA_SIEP);
 						if (lPenaInizialeMod != null) {
+							siesLogger.debug("PENA_ARCHIVIATA_SIEP");
 							lCalcoloPenaMod.setTipoPenaIniziale(ICostantiCalcoloPena.PENA_ARCHIVIATA_SIEP);
 							lEventoIniziale = lEveMod;
 							break;
 						} else {
 							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
 							// posto di LogF3B.getLogger()
-							siesLogger.error("Archiviazione SIEP scartata per mancanza di pena ");
+							siesLogger.error("Archiviazione SIEP scartata per mancanza di pena!");
 						}
 					} else if (isArchiviazioneRes(lEveMod)) {
+						siesLogger.debug("pre PENA_ARCHIVIATA_RES");
 						// Provo a vedere se riesco a recuperare la pena da archiviazione
 						// n.b. non sempre è possibile
 						lPenaInizialeMod = getPena(lEveMod, ICostantiCalcoloPena.PENA_ARCHIVIATA_RES);
 						if (lPenaInizialeMod != null) {
+							siesLogger.debug("PENA_ARCHIVIATA_RES");
 							lCalcoloPenaMod.setTipoPenaIniziale(ICostantiCalcoloPena.PENA_ARCHIVIATA_RES);
 							lEventoIniziale = lEveMod;
 							break;
@@ -343,13 +351,16 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 							siesLogger.error("Archiviazione RES scartata per mancanza di pena ");
 						}
 					} else if (isPenaManuale(lEveMod)) {
+						siesLogger.debug("PENA_MANUALE");
 						lCalcoloPenaMod.setTipoPenaIniziale(ICostantiCalcoloPena.PENA_MANUALE);
 						lEventoIniziale = lEveMod;
 						break;
 					} else if (isForzaturaRes(lEveMod)) {
+						siesLogger.debug("pre PENA_MANUALE_RES");
 						// Verifico se esiste una annotazione manuale associata
 						lPenaInizialeMod = getPena(lEveMod, ICostantiCalcoloPena.PENA_MANUALE_RES);
 						if (lPenaInizialeMod != null) {
+							siesLogger.debug("PENA_MANUALE_RES");
 							lCalcoloPenaMod.setTipoPenaIniziale(ICostantiCalcoloPena.PENA_MANUALE_RES);
 							lEventoIniziale = lEveMod;
 							break;
@@ -359,10 +370,12 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 							siesLogger.error("Forzatura RES scartata per mancanza Annotazione ");
 						}
 					} else if (isInterruzioneIndulto(lEveMod)) {
+						siesLogger.debug("PENA_DA_INDULTO");
 						lCalcoloPenaMod.setTipoPenaIniziale(ICostantiCalcoloPena.PENA_DA_INDULTO);
 						lEventoIniziale = lEveMod;
 						break;
 					} else if (isRevocaSanzioneSostitutiva(lEveMod)) {
+						siesLogger.debug("PENA_DA_REVOCA_SS");
 						lCalcoloPenaMod.setTipoPenaIniziale(ICostantiCalcoloPena.PENA_DA_REVOCA_SS);
 						lEventoIniziale = lEveMod;
 						break;
@@ -507,11 +520,11 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 							.getTipoPenaIniziale() == ICostantiCalcoloPena.PENA_DA_INDULTO) {
 						lTipoPenaIniziale = "Pena Residua dopo Scarcerazione Indulto";
 					}
-
 					throw new F3BException(F3BException.USER_MESSAGE,
-							"Impossibile ricostruire la Pena da Espiare. Dati a sistema inconsistenti, manca pena residua associata all'evento di "
-									+ lTipoPenaIniziale
-									+ ". Utilizzare la funzione di Pena Residua Manuale o segnalare l'anomalia all'help desk.");
+							"Impossibile ricostruire la Pena da Espiare. Dati a sistema inconsistenti, "
+									+ "manca pena residua associata all'evento di " + lTipoPenaIniziale
+									+ ". Utilizzare la funzione di Pena Residua Manuale o segnalare "
+									+ "l'anomalia all'help desk.");
 				}
 			}
 
@@ -1099,6 +1112,7 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 */
 	private boolean isCumulo(EventoModel aEveModel) {
 
+		siesLogger.debug("isCumulo");
 		boolean isCumulo = false;
 
 		if (aEveModel.getCodTipoEvento() != null && aEveModel.getCodTipoProvvedimento() != null
@@ -1134,6 +1148,7 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 */
 	private boolean isNuovoCumulo(EventoModel aEveModel) {
 
+		siesLogger.debug("isNuovoCumulo");
 		boolean isNuovoCumulo = false;
 
 		if (aEveModel.getCodTipoEvento() != null && aEveModel.getCodTipoProvvedimento() != null
@@ -1158,6 +1173,7 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 */
 	private boolean isSospensione(EventoModel aEveModel) throws F3BException {
 
+		siesLogger.debug("isSospensione");
 		boolean isSospensione = false;
 		Connection lConn = null;
 		SospensioneSqlDAO lSospSqlDao = null;
@@ -1166,7 +1182,8 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 		// Se è un evento migrato esco subito. Le sospensioni migrate vengono gestite
 		// da apposito metodo
 		// ==========================================================================
-		if (aEveModel.getCodOperatoreInserimento().indexOf("res") != -1) {
+		if (aEveModel.getCodOperatoreInserimento() != null &&
+				aEveModel.getCodOperatoreInserimento().indexOf("res") != -1) {
 			return false;
 		}
 
@@ -1329,6 +1346,7 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 */
 	private boolean isDifferimento(EventoModel aEveModel) throws F3BException {
 
+		siesLogger.debug("isDifferimento");
 		boolean isDifferimento = false;
 
 		Connection lConn = null;
@@ -1339,11 +1357,8 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 				&& aEveModel.getCodMotivo() != null && aEveModel.getCodTipoEvento().equals("01")
 				&& (aEveModel.getCodTipoProvvedimento().equals("09")
 						|| aEveModel.getCodTipoProvvedimento().equals("12")
-						|| aEveModel.getCodTipoProvvedimento().equals("04") // n.b. il cod. 04 è previsto solo
-																			// nel nuovo
-																			// diff. per le posizioni
-																			// giuridiche non
-																			// gestite
+						// il cod. 04 è previsto solo nel nuovo diff. per le posizioni giuridiche non gestite
+						|| aEveModel.getCodTipoProvvedimento().equals("04")
 				) && (aEveModel.getCodMotivo().equals("0274") || aEveModel.getCodMotivo().equals("0221"))) {
 			// Differimento Provvisorio
 			// Tipo Evento: 01 = Provvedimento
@@ -1417,6 +1432,7 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 */
 	private boolean isInterruzione(EventoModel aEveModel) throws F3BException {
 
+		siesLogger.debug("isInterruzione");
 		boolean isInterruzione = false;
 		Connection lConn = null;
 		SospensioneSqlDAO lSospSqlDao = null;
@@ -1425,7 +1441,8 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 		// Se è un evento migrato esco subito. Le Interruzioni migrate vengono gestite
 		// da apposito metodo
 		// ==========================================================================
-		if (aEveModel.getCodOperatoreInserimento().indexOf("res") != -1) {
+		if (aEveModel.getCodOperatoreInserimento() != null
+				&& aEveModel.getCodOperatoreInserimento().indexOf("res") != -1) {
 			return false;
 		}
 
@@ -1494,6 +1511,7 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 */
 	private boolean isInterruzioneRES(EventoModel aEveModel) throws F3BException {
 
+		siesLogger.debug("isInterruzioneRES");
 		boolean isInterruzione = false;
 
 		// ==========================================================================
@@ -1508,7 +1526,8 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 		// SOSPENSIONE per cui non lo considero nel calcolo della pena
 		// 01-25-0366 Interruzioni per indulto migrate RES
 		// ==========================================================================
-		if (aEveModel.getCodOperatoreInserimento().indexOf("res") != -1
+		if (aEveModel.getCodOperatoreInserimento() != null
+				&& aEveModel.getCodOperatoreInserimento().indexOf("res") != -1
 				&& aEveModel.getCodTipoEvento() != null && aEveModel.getCodTipoProvvedimento() != null
 				&& aEveModel.getCodMotivo() != null && aEveModel.getCodTipoEvento().equals("01")
 				&& ((aEveModel.getCodTipoProvvedimento().equals("12")
@@ -1534,6 +1553,7 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 */
 	private boolean isRevocaMA(EventoModel aEveModel) throws F3BException {
 
+		siesLogger.debug("isRevocaMA");
 		boolean isRevocaMA = false;
 		// ==========================================================================
 		// Revoca Affidamento in Prova
@@ -1622,6 +1642,7 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 */
 	private boolean isCessazioneMA(EventoModel aEveModel) throws F3BException {
 
+		siesLogger.debug("isCessazioneMA");
 		boolean isCessazioneMA = false;
 		// ==========================================================================
 		// Cessazione Misura di Sicurezza
@@ -1728,6 +1749,7 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 */
 	private boolean isRevocaIndultino(EventoModel aEveModel) {
 
+		siesLogger.debug("isRevocaIndultino");
 		boolean isRevocaIndultino = false;
 		// ==========================================================================
 		// Revoca Indultino
@@ -1760,6 +1782,7 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 */
 	private boolean isPenaManuale(EventoModel aEveModel) {
 
+		siesLogger.debug("isPenaManuale");
 		boolean isPenaManuale = false;
 
 		if (aEveModel.getCodTipoEvento() != null && aEveModel.getCodTipoProvvedimento() != null
@@ -1788,6 +1811,7 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 */
 	private boolean isForzaturaRes(EventoModel aEveModel) throws F3BException {
 
+		siesLogger.debug("isForzaturaRes");
 		boolean isForzaturaRes = false;
 
 		Connection lConn = null;
@@ -1844,6 +1868,7 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 */
 	private boolean isSospensioneMigrata(EventoModel aEveModel) throws F3BException {
 
+		siesLogger.debug("isSospensioneMigrata");
 		boolean isSospensioneMigrata = false;
 		Connection lConn = null;
 		SospensioneSqlDAO lSospSqlDao = null;
@@ -1902,12 +1927,14 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 */
 	private boolean isSospensioneRes(EventoModel aEveModel) throws F3BException {
 
+		siesLogger.debug("isSospensioneRes");
 		boolean isSospensione = false;
 
 		// ==========================================================================
 		// Verifico subito se trattasi di Sospensione migrata RES
 		// ==========================================================================
-		if (aEveModel.getCodOperatoreInserimento().indexOf("res") != -1
+		if (aEveModel.getCodOperatoreInserimento() != null
+				&& aEveModel.getCodOperatoreInserimento().indexOf("res") != -1
 				&& aEveModel.getCodTipoEvento() != null && aEveModel.getCodTipoProvvedimento() != null
 				&& aEveModel.getCodMotivo() != null) {
 			// ========================================================================
@@ -1986,9 +2013,11 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 */
 	private boolean isArchiviazioneRes(EventoModel aEveModel) throws F3BException {
 
+		siesLogger.debug("isArchiviazioneRes");
 		boolean isArchiviazione = false;
 
-		if (aEveModel.getCodOperatoreInserimento().indexOf("res") != -1 // solo RES
+		if (aEveModel.getCodOperatoreInserimento() != null
+				&& aEveModel.getCodOperatoreInserimento().indexOf("res") != -1 // solo RES
 				&& aEveModel.getCodTipoEvento() != null && aEveModel.getCodTipoProvvedimento() != null
 				&& aEveModel.getCodMotivo() != null && aEveModel.getCodTipoEvento().equals("01")
 				&& aEveModel.getCodTipoProvvedimento().equals("04")
@@ -2020,10 +2049,12 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 */
 	private boolean isArchiviazioneSIEP(EventoModel aEveModel) throws F3BException {
 
+		siesLogger.debug("isArchiviazioneSIEP");
 		boolean isArchiviazione = false;
 
 		// Se l'evento è migrato non lo considero
-		if (aEveModel.getCodOperatoreInserimento().indexOf("res") != -1) {
+		if (aEveModel.getCodOperatoreInserimento() != null
+				&& aEveModel.getCodOperatoreInserimento().indexOf("res") != -1) {
 			return false;
 		}
 
@@ -2203,13 +2234,13 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 */
 	private boolean isEspulsione(EventoModel aEveModel) throws F3BException {
 
+		siesLogger.debug("isEspulsione");
 		boolean isEspulsione = false;
 
 		Connection lConn = null;
 		SospensioneSqlDAO lSospSqlDao = null;
 
 		try {
-
 			if (aEveModel.getCodTipoEvento() != null && aEveModel.getCodTipoProvvedimento() != null
 					&& aEveModel.getCodMotivo() != null && ( // Vecchia espulsione
 					(aEveModel.getCodTipoEvento().equals("01")
@@ -2275,6 +2306,7 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 */
 	private boolean isInterruzioneIndulto(EventoModel aEveModel) throws F3BException {
 
+		siesLogger.debug("isInterruzionendulto");
 		boolean isInterruzioneIndulto = false;
 
 		Connection lConn = null;
@@ -2366,6 +2398,7 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 */
 	private boolean isRevocaSanzioneSostitutiva(EventoModel aEveModel) throws F3BException {
 
+		siesLogger.debug("isRevocaSanzioneSostitutiva");
 		boolean isRevocaSanzioneSostitutiva = false;
 
 		if (aEveModel.getCodTipoEvento() != null && aEveModel.getCodTipoProvvedimento() != null
@@ -2779,6 +2812,7 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 */
 	public PenaResiduaModel getPena(EventoModel aEventoIniziale, int aTipoPena) throws F3BException {
 
+		siesLogger.debug("getPena");
 		Connection lConn = null;
 
 		PenaResiduaSqlDAO lPenaResSqlDao = null;
@@ -2940,6 +2974,7 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 */
 	public boolean isInterruzionePerStatoEsecuzione(EventoModel aEveModel) throws F3BException {
 
+		siesLogger.debug("isInterruzionePerStatoEsecuzione");
 		// Verifico se l'evento passato è di tipo interrutivo utilizzando tutti i
 		// metodi privati già sviluppati.
 
@@ -2961,8 +2996,6 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 		lReturn = this.isDifferimento(aEveModel);
 		if (lReturn)
 			return true;
-
-		// ---
 
 		lReturn = this.isEspulsione(aEveModel);
 		if (lReturn)

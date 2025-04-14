@@ -33,16 +33,12 @@ import siap.sius.avvocato.controller.IAvvocato;
 import siap.sius.avvocato.model.AvvocatoSiusModel;
 import siap.sius.avvocatura.action.ICostantiAvvisiAvvocato;
 import siap.sius.avvocatura.model.AvvisiAvvocatoModel;
-import siap.sius.fascicolo.action.ICostantiFascicoloSius;
-import siap.sius.fascicolo.controller.IFascicoloSius;
 import siap.sius.fascicolo.model.FascicoloGPModel;
-import siap.sius.fascicolo.model.FascicoloSiusModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * Title: ActUploadDocument
- * Description: Azione demandata alla realizzazione delle funzioni di validazione ed upload sulla tabella
- * EVENTO.
+ * ActUploadDocument - Azione demandata alla realizzazione delle funzioni di validazione ed upload sulla
+ * tabella EVENTO.
  *
  * @version 1.0
  */
@@ -218,26 +214,6 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 			// Prepara la "pagina" di destinAction
 			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
 					"Aggiornamento Documento Avvenuto Correttamente!");
-
-			/*
-			 * ISSUE MEV : aggiunto aggiornamento stato fascicolo per decreto di tipo DM 
-			 * Numero MEV : 9 
-			 * Autore : Gioggi 
-			 * Data : 19 nov 2020 
-			 * Branch : MEV_2019-09
-			 */
-			if ("SIUS".equals(stato)
-					&& ("0610".equals(em.getCodEsito()) || "0271".equals(em.getCodEsito()))) {
-				IFascicoloSius ifs = SIUSLookupRemote.getFascicoloSiusRemote();
-				FascicoloSiusModel fsm = new FascicoloSiusModel();
-				fsm.setCodOperatoreAggiornamento(getCodUtenteConnesso());
-				fsm.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
-				fsm.setDataAggiornamento(DateUtils.getSysDate());
-				fsm.setCodStatoFascicolo(ICostantiFascicoloSius.COD_EMESSO_DECRETO_DESIGNAZIONE);
-				fsm.setIdFascicoloSius(em.getFasSiuIdFascicoloSius());
-				ifs.aggiornaStatoFascicoloSius(fsm);
-			}
-			// ***** FINE INTERVENTO MEV_2019-09 *****//
 		}
 
 		// Se c'è lo stack di ritorno effettua un ritorno in cima
@@ -455,11 +431,7 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 			/*
 			 * ISSUE MEV : segnalazione Maffucci oggetto mail: SIUS Avvocati Di pre-esercizio - SIES MO di
 			 * Roma: Eliminato recupero dalla session del soggetto che viene inserito nella tabella degli
-			 * avvisi_avvocato 
-			 * Numero MEV : MEV_20 
-			 * Autore : monica 
-			 * Data : 13/mar/2020 
-			 * Branch : MEV_20
+			 * avvisi_avvocato Numero MEV : MEV_20 Autore : monica Data : 13/mar/2020 Branch : MEV_20
 			 */
 			/*
 			 * if (!isSessionAttributeNullObj("soggetto")) { SoggettoModel datiSoggetto = (SoggettoModel)

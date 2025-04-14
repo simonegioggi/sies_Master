@@ -5,11 +5,17 @@ import java.sql.Connection;
 import java.util.Date;
 
 import f3b.dao.DAOException;
-//import f3b.dao.TableDAO;
 import f3b.model.GenericModel;
 import siap.dao.SIAPTableDAO;
 import siap.sius.generaleprocedimento.model.GeneraleProcedimentoModel;
 
+/**
+* <p>Title: GeneraleProcedimentoDAO</p>
+* <p>Description: Classe DAO che rappresenta la tabella GeneraleProcedimento</p>
+* <p>Copyright: Copyright (c) 2002</p>
+* <p>Company: Bull</p>
+* @version 1.0
+*/
 public class GeneraleProcedimentoDAO extends SIAPTableDAO {
 
 	public GeneraleProcedimentoDAO(Connection con) {
@@ -57,16 +63,6 @@ public class GeneraleProcedimentoDAO extends SIAPTableDAO {
 		setField("COD_POSIZIONE_GIURIDICA", STRING);
 		setField("UDI_ID_UDIENZA", BIG_DECIMAL);
 		setField("DESCR_MITTENTE", STRING);
-		/* 
-		 * ISSUE MEV : aggiunti 2 campi in tabella per gestione restituzione atti al presidente
-		 * Numero MEV : 9
-		 * Autore    : sgioggi
-		 * Data      : 22 nov 2022
-		 * Branch    : MEV_2019-09
-		 */
-		setField("DATA_RESTITUZIONE", DATE);
-		setField("DESCR_RESTITUZIONE", STRING);
-		//***** FINE INTERVENTO MEV_2019-09 *****//
 	}
 
 	//
@@ -433,7 +429,7 @@ public class GeneraleProcedimentoDAO extends SIAPTableDAO {
 				getCodTipoAtto(), getDescrTipoAtto(), getCodSedeMittente(), getDescrSedeMittente(),
 				getCodTipoMittenteAtto(), getDescrTipoMittenteAtto(), getIdFascicoloSius(), getSezione(),
 				getDataFinePena(), getCodPosGiuridica(), getDescrPosGiuridica(), getUdiIdUdienza(), "", "",
-				getDescrMittente(), "", getDataRestituzione(), getDescrRestituzione());
+				getDescrMittente(), "");
 	}
 
 	public void setDAOFromModel(GeneraleProcedimentoModel aModel) throws DAOException {
@@ -479,8 +475,6 @@ public class GeneraleProcedimentoDAO extends SIAPTableDAO {
 		setDescrPosGiuridica(aModel.getDescrPosGiuridica());
 		setUdiIdUdienza(aModel.getUdiIdUdienza());
 		setDescrMittente(aModel.getDescrMittente());
-		setDataRestituzione(aModel.getDataRestituzione());
-		setDescrRestituzione(aModel.getDescrRestituzione());
 	}
 
 	// 03/03/2005 Aggiunto controllo dei campi per l'Update.
@@ -562,10 +556,6 @@ public class GeneraleProcedimentoDAO extends SIAPTableDAO {
 			setUdiIdUdienza(aModel.getUdiIdUdienza());
 		if (aModel.getDescrMittente() != "")
 			setDescrMittente(aModel.getDescrMittente());
-		if (aModel.getDataRestituzione() != null)
-			setDataRestituzione(aModel.getDataRestituzione());
-		if (aModel.getDescrRestituzione() != "")
-			setDescrRestituzione(aModel.getDescrRestituzione());
 
 		if (aModel.getIdGeneraleProcedimento() != null)
 			setCondizioneUpdate(aModel.getIdGeneraleProcedimento());
@@ -597,9 +587,6 @@ public class GeneraleProcedimentoDAO extends SIAPTableDAO {
 			setCodSedeMittente(aModel.getCodSedeMittente());
 		if (aModel.getDescrSedeMittente() != "")
 			setDescrSedeMittente(aModel.getDescrSedeMittente());
-		setDataRestituzione(aModel.getDataRestituzione());
-		if (aModel.getDescrRestituzione() != "")
-			setDescrRestituzione(aModel.getDescrRestituzione());
 
 		// STUB 03/01/2005
 		if (aModel.getCodOggettoProcedimento() != "")
@@ -648,7 +635,6 @@ public class GeneraleProcedimentoDAO extends SIAPTableDAO {
 	/**
 	 * Verifica se esiste un record che abbia a fronte di un idGeneraleProcedimento con l'id udienza passata
 	 * anch'essa come parametro.
-	 * <p>
 	 *
 	 * @param aIdGenProc
 	 *            valore id generale procedimento.

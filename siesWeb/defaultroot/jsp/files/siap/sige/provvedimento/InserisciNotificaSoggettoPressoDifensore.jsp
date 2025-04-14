@@ -46,8 +46,9 @@
     <tr>
         <td class="l">Sede </td>
         <td class="l">
+        <%-- MEV_21 (avvocati) Sostituzione di getAvvocato().getForo() con getAvvocato().getDescComuneSedeForo() --%>
            <input Title="Sede " name="<%=ICostantiRichiestaAtti.CAMPO_SEDE%>"
-              value="<%=StringUtils.toStringJSP(lAvv.getAvvocato().getForo(),"-")%>" type="text" maxlength="35" size="35">
+              value="<%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescComuneSedeForo(),"-")%>" type="text" maxlength="35" size="35">
               <a href="Javascript:ListaUNEP('<%=NomeForm%>','<%=ICostantiRichiestaAtti.CAMPO_SEDE%>[<%=num_sede%>]');">
               <img src="/images/filefolder.gif" border=0> </a>
         </td>

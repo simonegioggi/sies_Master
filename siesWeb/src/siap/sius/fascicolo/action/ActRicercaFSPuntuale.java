@@ -1,28 +1,15 @@
 package siap.sius.fascicolo.action;
 
-import java.math.BigDecimal;
-import java.util.Vector;
-
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
-import f3b.util.DateUtils;
 import f3b.util.F3BException;
-import f3b.util.Utils;
-import f3b.web.IWebConstants;
-import siap.sico.evento.controller.IEvento;
-import siap.sico.evento.model.EventoModel;
 import siap.sico.security.action.ICostantiSecurity;
 import siap.sico.utente.model.UtenteModel;
-import siap.sico.util.SICOLookupRemote;
 import siap.siep.fascicolo.controller.IFascicoloSiep;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.util.SIEPLookupRemote;
 import siap.sius.ActionSius;
-import siap.sius.SIUSException;
-import siap.sius.depositodecreto.action.ICostantiDepositoDecreto;
-import siap.sius.depositoordinanzapc.controller.IDepositoOrdinanzaPc;
-import siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel;
 import siap.sius.fascicolo.controller.IFascicoloSius;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.util.SIUSLookupRemote;
@@ -74,82 +61,6 @@ public class ActRicercaFSPuntuale extends ActionSius implements ICostantiFascico
 			mFasGPMod = lCtrl.ExRicercaFascicoloByAnnoProgrCodUfficioNoControl(
 					getRequestBigDecimalParameter(CAMPO_CHIAVE_ANNO),
 					getRequestBigDecimalParameter(CAMPO_CHIAVE_PROGR), StrCodiceUfficioUtente);
-
-		/*
-		 * ISSUE MEV : aggiunto controllo su tipo procedimento C050 e C051 
-		 * Numero MEV : 9 
-		 * Autore : Gioggi 
-		 * Data : 12 nov 2020 
-		 * Branch : MEV_2019-09
-		 */
-		if (mFasGPMod != null && mFasGPMod.getGeneraleProcedimentoModel() != null
-				&& mFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento() != null) {
-			if (!(mFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals(
-					ICostantiDepositoDecreto.COD_OGGETTO_CONCESSIONE_MISURE_ALTERNATIVE_ALLA_DETENZIONE)
-					|| mFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals(
-							ICostantiDepositoDecreto.COD_OGGETTO_CONCESSIONE_MISURE_PENALI_DI_COMUNITA_MISURE_ALTERNATIVE_ALLA_DETENZIONE))
-					&& (this instanceof siap.sius.depositodecreto.action.ActLoadInserisciDesignazioneMagistratoRelatore
-							|| this instanceof siap.sius.depositoordinanzapc.action.ActLoadInserisciConfermaDecisioneMagistratoRelatore)) {
-				String descrOggettoProcedimento = mFasGPMod.getGeneraleProcedimentoModel()
-						.getDescrOggettoProcedimento();
-				throw new F3BException(F3BException.USER_MESSAGE,
-						"Operazione non consentita per il Procedimento di " + descrOggettoProcedimento);
-			}
-			if ((mFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals(
-					ICostantiDepositoDecreto.COD_OGGETTO_CONCESSIONE_MISURE_ALTERNATIVE_ALLA_DETENZIONE)
-					|| mFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals(
-							ICostantiDepositoDecreto.COD_OGGETTO_CONCESSIONE_MISURE_PENALI_DI_COMUNITA_MISURE_ALTERNATIVE_ALLA_DETENZIONE))
-					&& (this instanceof siap.sius.udienza.action.ActLoadInserisciFissazioneUdienza
-							|| this instanceof siap.sius.udienzaprocedimento.action.ActLoadPreFissazioneUdienza)) {
-				boolean isFissazione = this instanceof siap.sius.udienza.action.ActLoadInserisciFissazioneUdienza;
-				BigDecimal idEventoOrdinanza = null;
-				// verifico se già esiste Ordinanza di applicazione provvisoria di M.A.
-				IEvento ie = SICOLookupRemote.getEventoRemote();
-				Vector<?> v = ie.ExRicercaEventoByFascicoloSius(
-						mFasGPMod.getFascicoloSiusModel().getIdFascicoloSius(), null);
-				boolean existOrdinanzaApplicazioneProvvisoria = false;
-				for (int i = 0; i < v.size(); i++) {
-					EventoModel em = (EventoModel) v.elementAt(i);
-					if ("0270".equals(em.getCodEsito()) && !"A".equals(em.getFlagDocumentoRegistrato())) {
-						// Ordinanza Applicazione ex art. 678 comma 1 ter cpp deve esistere ma NON annullata
-						existOrdinanzaApplicazioneProvvisoria = true;
-						idEventoOrdinanza = em.getIdEvento();
-						break;
-					}
-				}
-				if (existOrdinanzaApplicazioneProvvisoria && isFissazione)
-					// MEV_2024-092: cambio messaggio da Provvisoria M.A. a Misure Alternative DL 123/2018
-					throw new SIUSException(SIUSException.USER_MESSAGE,
-							"Operazione NON consentita poiché sul Procedimento è già stata emessa "
-									+ "un'ordinanza di Applicazione Misure Alternative DL 123/2018. "
-									+ "Utilizzare la funzione di Prefissazione Udienza!");
-				IDepositoOrdinanzaPc idopc = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
-				// DepositoOrdinanzaPcModel dopcm = idopc.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd(
-				// fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), "AM");
-				DepositoOrdinanzaPcModel dopcm = idopc
-						.ExRicercaDepositoOrdinanzaPcByEvento(idEventoOrdinanza);
-				if (!Utils.isNullObj(dopcm)) {
-					// 20231206: trasformo in warning su osservazione di Luigi G.
-					if (Utils.isNullObj(dopcm.getDataEsecutivita()) && !isFissazione
-							&& isRequestParameterNullObj("warning")) {
-						// throw new SIUSException(SIUSException.USER_MESSAGE,
-						// "L'Ordinanza di Applicazione Provvisoria è priva della Data Esecutività!"
-						// + " Impossibile prefissare l'Udienza!");
-						setRequestAttribute(IWebConstants.ACTION_FIELD,
-								"siap.sius.fascicolo.action.ActRicercaFSPuntuale");
-						setRequestAttribute(IWebConstants.MESSAGE_TEXT,
-								"L'Ordinanza di Applicazione Misure Alternative DL 123/2018 &egrave; priva "
-										+ "della Data Esecutivit&agrave;. "
-										+ "Si vuole procedere con la prefissazione Udienza?");
-						// pagina di ritorno
-						return IWebConstants.PG_WARNING;
-					} else
-						setRequestAttribute("dataEsecutivitaStr",
-								DateUtils.getDateToString(dopcm.getDataEsecutivita(), "dd/MM/yyyy"));
-				}
-			}
-		}
-		// ***** FINE INTERVENTO MEV_2019-09 *****//
 
 		// 30/04/2007 Si Consente alla fase di "Richiesta atti" di operare con i Procedimenti di ESECUZIONE
 		// MISURE ALTERNATIVE.

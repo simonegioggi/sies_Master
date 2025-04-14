@@ -119,13 +119,17 @@ public class ActModificaSoggetto extends ActionSiap implements ICostantiSoggetto
 		if (!isRequestParameterNullObj(ICostantiComune.CAMPO_COD_COMUNE_REALE)
 				&& getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE).length() > 0) {
 			// se presente dal codice comune (e descrizione)
-			lComMod = new ComuneModel(getDatiComuneByCodDescrFlagVal(
+			// 20210524	MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni senza flag validità.
+			//lComMod = new ComuneModel(getDatiComuneByCodDescrFlagVal(
+			lComMod = new ComuneModel(getDatiComuneByCodDescr(
 					getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
 					getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
 		} else {
 			// altrimenti dalla sola descrizione (rischio omonimi)
 			lComMod = new ComuneModel(
-					getDatiComuneByDescrOmonimiaFlagVal(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
+					// 20210524	MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni senza flag validità.
+					//getDatiComuneByDescrOmonimiaFlagVal(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
+					getDatiComuneByDescrOmonimia(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
 		}
 
 		lSogMod.setCodComuneNascita(lComMod.getCodComune());

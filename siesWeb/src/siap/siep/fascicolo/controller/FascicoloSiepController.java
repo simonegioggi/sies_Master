@@ -4472,12 +4472,7 @@ public class FascicoloSiepController extends SiapController implements IFascicol
 			IEventoSimeone lCtrl = SICOLookupRemote.getEventoSimeoneRemote();
 			try {
 				String[] lTipoEvento = { "01", "02", "03", "14" };
-				// Ticket#202101270113 - Escludo anche 50 (Rinvio udienza da verbale) altrimenti potrebbe uscire
-				//                       tra gli ultimi evento SIEP quando il dettaglio SIEP viene visualizzato 
-				//                       dal TDS che ha emesso in verbale
-				//String[] lTipoProv = { "02", "03" };
-				String[] lTipoProv = { "02", "03", "50" };
-				// FIne Ticket#202101270113 -
+				String[] lTipoProv = { "02", "03" };
 				Vector lEve = lCtrl.ExRicercaEventoNotificaByFascicoloSiepTipEventoNOTTipProvNONAnnullati(
 						aIdFascicolo, lTipoEvento, lTipoProv);
 

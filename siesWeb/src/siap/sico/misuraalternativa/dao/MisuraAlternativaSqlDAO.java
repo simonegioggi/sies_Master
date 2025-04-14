@@ -4,20 +4,19 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 
 import f3b.dao.DAOException;
-import f3b.dao.SqlDAO;
 import f3b.model.GenericModel;
 import f3b.util.DateUtils;
+import siap.dao.SIAPSqlDAO;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.misuraalternativa.model.MisuraAlternativaModel;
 import siap.siep.posizione.model.PosizioneGiuridicaModel;
 
 /**
- * Title: MisuraAlternativaSqlDAO 
- * Description: Classe SqlDAO che rappresenta la tabella MisuraAlternativa 
+ * MisuraAlternativaSqlDAO - Classe SqlDAO che rappresenta la tabella MisuraAlternativa
  *
  * @version 1.0
  */
-public class MisuraAlternativaSqlDAO extends SqlDAO {
+public class MisuraAlternativaSqlDAO extends SIAPSqlDAO {
 
 	public MisuraAlternativaSqlDAO(Connection con) {
 		super(con);
@@ -470,7 +469,6 @@ public class MisuraAlternativaSqlDAO extends SqlDAO {
 		lStatement += "MA.FLAG_UFFICIO_INSERIMENTO, ";
 		lStatement += "MA.DATA_SCADENZA_PROROGA,MA.FLAG_DECISIONE_TRIBUNALE,MA.COD_TDS_COMPETENTE, ";
 		lStatement += "MA.FLAG_SITUAZIONE, ";
-		lStatement += "MA.DATA_ESECUTIVITA, "; // MEV_2019-09
 		lStatement += "MA.FLAG_PERIODO_ESPIATO ";
 		lStatement += "FROM MISURA_ALTERNATIVA MA, CG_REF_CODES PROV, CG_REF_CODES NAT, CG_REF_CODES UFFSCA, ";
 		lStatement += "CG_REF_CODES MPROV, CG_REF_CODES TIPO_AUTORITA,COMUNE LUOGO_ALTRO, ";
@@ -551,7 +549,6 @@ public class MisuraAlternativaSqlDAO extends SqlDAO {
 				+ ", MA.CHIAVE_UFF_FAS_SIUS_MA_AT, TIPO_UFF_AT.RV_MEANING descTipoUffMaAt"
 				+ ", MA.ANNO_REGISTRO_MA_AT " + ", MA.NUMERO_REGISTRO_MA_AT";
 		lStatement += ", MA.FL_FORMA_MISURA";
-		lStatement += ", MA.DATA_ESECUTIVITA"; // MEV_2019-09
 		lStatement += ", MA.DESCRIZIONE_COMUNITA ";
 		lStatement += "FROM MISURA_ALTERNATIVA MA, CG_REF_CODES PROV, CG_REF_CODES NAT,CG_REF_CODES UFFSCA, ";
 		lStatement += "CG_REF_CODES MPROV,CG_REF_CODES TIPO_AUTORITA,COMUNE LUOGO_ALTRO, ";
@@ -631,7 +628,6 @@ public class MisuraAlternativaSqlDAO extends SqlDAO {
 				+ "MA.ANNO_ALTRO_TITOLO, MA.NUM_ALTRO_TITOLO, MA.DATA_ALTRO_TITOLO, "
 				+ "MA.COD_LUOGO_ALTRO_TITOLO, MA.COD_AUTORITA_ALTRO_TITOLO, "
 				+ "LUOGO_ALTRO.DESCRIZIONE DESCR_LUOGO, TIPO_AUTORITA.RV_MEANING DESCR_TIPO_AUTORITA, "
-				+ "MA.DATA_ESECUTIVITA, " // MEV_2019-09
 				+ "MA.DATA_SCADENZA_PROROGA, MA.FLAG_DECISIONE_TRIBUNALE, MA.COD_TDS_COMPETENTE, "
 				+ "MA.FLAG_SITUAZIONE, MA.FLAG_UFFICIO_INSERIMENTO ";
 		lStatement += "FROM EVENTO EV, EVENTO EVESUCCESSIVO, MISURA_ALTERNATIVA MA, CG_REF_CODES PROV, "
@@ -736,7 +732,6 @@ public class MisuraAlternativaSqlDAO extends SqlDAO {
 		aModel.setFlagSituazione(getString("FLAG_SITUAZIONE"));
 		aModel.setDescTdsCompetente(getString("DESCUFFTDS"));
 		aModel.setDescSedeTdsCompetente(getString("DESCCOMTDS"));
-		aModel.setDataEsecutivita(getDate("DATA_ESECUTIVITA")); // MEV_2019-09
 		// DL146/2013
 		if (findColumn("COD_TIPO_DECISIONE_MA_AT")) {
 			aModel.setCodTipoDecisioneMaAt(getString("COD_TIPO_DECISIONE_MA_AT"));
@@ -961,15 +956,6 @@ public class MisuraAlternativaSqlDAO extends SqlDAO {
 		lStatement += " AND UFF_TIPO_DES.RV_LOW_VALUE = EVENTO.COD_TIPO_UFFICIO_DESTINATARIO AND UFF_TIPO_DES.RV_DOMAIN = 'TIPO_UFFICIO'";
 
 		return lStatement;
-	}
-
-	private boolean findColumn(String aValue) {
-		try {
-			mRs.findColumn(aValue);
-		} catch (Exception sqex) {
-			return false;
-		}
-		return true;
 	}
 
 }

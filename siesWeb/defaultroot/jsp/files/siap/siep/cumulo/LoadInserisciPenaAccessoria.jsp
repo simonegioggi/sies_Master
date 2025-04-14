@@ -259,12 +259,12 @@
 	</tr>
 </table>
 	
-<FORM method="POST" action="<%= IWebConstants.PG_MAIN%>" name="LoadInserisciPenaAccessoria" >
+<FORM method="POST" action="<%=IWebConstants.PG_MAIN%>" name="LoadInserisciPenaAccessoria" >
   <table width='95%' cellspacing=2 cellpadding=2>
 		<tr>
       <td  width='25%' class="l">Tipo di Pena Accessoria</td>
       <td class="l">
-        <select class="small" name="<%= ICostantiPenaAccessoria.CAMPO_COD_TIPO_PENA_ACCESSORIA %>" onchange="JavaScript:cambia();" >
+        <select class="small" name="<%=ICostantiPenaAccessoria.CAMPO_COD_TIPO_PENA_ACCESSORIA%>" onchange="JavaScript:cambia();" >
           <%=TipoPenaAccessoria%>
         </select>
       </td>
@@ -275,8 +275,8 @@
 
     <tr>
          <td width='25%' class="l"> <font class="l">Descrizione Altre P.A.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font>
-          </td><td class="l"><font class="l">
-            <input maxlength="100" size="70" Title="Descrizione Altre P.A." value="<%=StringUtils.toStringJSP(lPenaAccessoria.getDescrAltrePA()) %>" type="text" name="<%=ICostantiPenaAccessoria.CAMPO_DESCR_ALTRE_PA %>">
+          </td><td class="l">
+            <input maxlength="100" size="70" Title="Descrizione Altre P.A." value="<%=StringUtils.toStringJSP(lPenaAccessoria.getDescrAltrePA()) %>" type="text" name="<%=ICostantiPenaAccessoria.CAMPO_DESCR_ALTRE_PA%>">
         </td>
  		</tr>
      </table>
@@ -293,9 +293,9 @@
 		<tr>
 				<td class="l">Durata</td>
         <td class="l">
-          Anni <input maxlength=2 size=2 Title="Anni Durata" value="<%=StringUtils.toStringJSP(lPenaAccessoria.getNumAnni()) %>" type="text" name="<%= ICostantiPenaAccessoria.CAMPO_NUM_ANNI %>">
-          Mesi <input maxlength=2 size=2 Title="Mesi Durata" value="<%=StringUtils.toStringJSP(lPenaAccessoria.getNumMesi()) %>" type="text" name="<%= ICostantiPenaAccessoria.CAMPO_NUM_MESI %>">
-          Giorni <input maxlength=2  size=2 Title="Giorni Durata" value="<%=StringUtils.toStringJSP(lPenaAccessoria.getNumGiorni()) %>" type="text" name="<%= ICostantiPenaAccessoria.CAMPO_NUM_GIORNI %>">
+          Anni <input maxlength=2 size=2 Title="Anni Durata" value="<%=StringUtils.toStringJSP(lPenaAccessoria.getNumAnni()) %>" type="text" name="<%=ICostantiPenaAccessoria.CAMPO_NUM_ANNI %>">
+          Mesi <input maxlength=2 size=2 Title="Mesi Durata" value="<%=StringUtils.toStringJSP(lPenaAccessoria.getNumMesi()) %>" type="text" name="<%=ICostantiPenaAccessoria.CAMPO_NUM_MESI %>">
+          Giorni <input maxlength=2  size=2 Title="Giorni Durata" value="<%=StringUtils.toStringJSP(lPenaAccessoria.getNumGiorni()) %>" type="text" name="<%=ICostantiPenaAccessoria.CAMPO_NUM_GIORNI %>">
         </td>
 		</tr>
     <tr>
@@ -351,7 +351,7 @@
 		<tr>
       <td class="l">Tenore</td>
       <td class="l">
-      	<select name="<%= ICostantiPenaAccessoria.CAMPO_FLAG_CONDONATA %>" onchange=JavaScript:sostituzionePA(); >
+      	<select name="<%=ICostantiPenaAccessoria.CAMPO_FLAG_CONDONATA%>" onchange=JavaScript:sostituzionePA(); >
         	<%=tenoreOrdinanza%>
       	</select>
         &nbsp;&nbsp;<font class="l">Data Ordinanza</font>
@@ -407,7 +407,7 @@
     </tr>
     <tr>
       <td class="c">
-        <select name="<%= ICostantiReato.CAMPO_COD_FONTE %>">
+        <select name="<%=ICostantiReato.CAMPO_COD_FONTE %>">
           <%=TipiFontiReato%>
         </select>
       </td>
@@ -415,60 +415,58 @@
         <input size=4 maxlength=4 title="Anno Fonte" value="<%=StringUtils.toStringJSP(lPenaAccessoria.getAnnoFonteGE())%>" type="text" name="<%=ICostantiReato.CAMPO_ANNO_FONTE %>">
       </td>
       <td class="c">
-        <input size=6 maxlength=6 title="Numero Fonte" value="<%=StringUtils.toStringJSP(lPenaAccessoria.getNumeroFonteGE())%>" type="text" name="<%= ICostantiReato.CAMPO_NUMERO_FONTE %>">
+        <input size=6 maxlength=6 title="Numero Fonte" value="<%=StringUtils.toStringJSP(lPenaAccessoria.getNumeroFonteGE())%>" type="text" name="<%=ICostantiReato.CAMPO_NUMERO_FONTE %>">
       </td>
       <td class="c">
-        <input size=5 maxlength=5 title="Articolo Fonte" value="<%=StringUtils.toStringJSP(lPenaAccessoria.getArticoloGE())%>" type="text" name="<%= ICostantiReato.CAMPO_ARTICOLO %>">
+        <input size=5 maxlength=5 title="Articolo Fonte" value="<%=StringUtils.toStringJSP(lPenaAccessoria.getArticoloGE())%>" type="text" name="<%=ICostantiReato.CAMPO_ARTICOLO %>">
       </td>
       <td class="c">
-        <select name="<%= ICostantiReato.CAMPO_COD_SOTTONUMERAZIONE %>">
+        <select name="<%=ICostantiReato.CAMPO_COD_SOTTONUMERAZIONE %>">
           <%=TipiSottonumerazione %>
         </select>
       </td>
       <td class="c">
         <strong>C</strong>
-        <input size=10 maxlength=10 title="Comma" value="<%=StringUtils.toStringJSP(lPenaAccessoria.getCommaGE())%>" type="text" name="<%= ICostantiReato.CAMPO_COMMA %>">
+        <input size=10 maxlength=10 title="Comma" value="<%=StringUtils.toStringJSP(lPenaAccessoria.getCommaGE())%>" type="text" name="<%=ICostantiReato.CAMPO_COMMA%>">
       </td>
       <td class="c">
         <strong>L</strong>
-        <input size=2 maxlength=2 title="Lettera" value="<%=StringUtils.toStringJSP(lPenaAccessoria.getLetteraGE())%>" type="text" name="<%= ICostantiReato.CAMPO_LETTERA %>">
+        <input size=2 maxlength=2 title="Lettera" value="<%=StringUtils.toStringJSP(lPenaAccessoria.getLetteraGE())%>" type="text" name="<%=ICostantiReato.CAMPO_LETTERA%>">
       </td>
       <td class="c">
        <strong>N</strong>
-       <input size=2 maxlength=2 title="Numero" value="<%=StringUtils.toStringJSP(lPenaAccessoria.getNumeroGE())%>" type="text" name="<%= ICostantiReato.CAMPO_NUMERO %>">
+       <input size=2 maxlength=2 title="Numero" value="<%=StringUtils.toStringJSP(lPenaAccessoria.getNumeroGE())%>" type="text" name="<%=ICostantiReato.CAMPO_NUMERO %>">
       </td>
     </tr>
 </table>
 <%----------------------------------------%>
-  <div id=sostPA class="label" style="visibility:hidden; position:relative; " >
-  <table style="width: 95%;">
+<div id=sostPA class="label" style="visibility:hidden; position:relative; " >
+<table style="width: 95%;">
     <tr>
-      <td colspan="2">
-
-  	    <tr><td class="Titolo" colspan=4>Estremi Pena Accessoria in Sostituzione</td></tr>
-				<tr>
-      		<td class="l">Tipo di Pena Accessoria</td>
-      		<td class="l">
-        		<select class="small" name="<%= ICostantiPenaAccessoria.CAMPO_COD_TIPO_PENA_ACCESSORIA_NUOVO %>"  onchange="javascript:cambia();"
-<%            if(modalita.equals("M")																			&&
-								 penaaccessoria.getCodNuovoTipoPenaAccessoria()!=null     &&
-								 penaaccessoria.getCodNuovoTipoPenaAccessoria().compareTo("-")!=0)
-							{%>DISABLED<%}%> >
-          		<%=TipoPenaAccessoriaNoAltre%>
-        		</select>
-      		</td>
-				</tr>
-    </td>
-   </tr>
-  </table>
-  </div>
+    	<td class="Titolo" colspan="2">Estremi Pena Accessoria in Sostituzione</td>
+    </tr>
+	<tr>
+		<td class="l">Tipo di Pena Accessoria</td>
+		<td class="l">
+			<select class="small" name="<%=ICostantiPenaAccessoria.CAMPO_COD_TIPO_PENA_ACCESSORIA_NUOVO %>" onchange="javascript:cambia();"
+<%
+if (modalita.equals("M")
+		&& penaaccessoria.getCodNuovoTipoPenaAccessoria() != null
+		&& penaaccessoria.getCodNuovoTipoPenaAccessoria().compareTo("-") != 0) {
+%>
+			DISABLED
+<%
+}
+%>
+			><%=TipoPenaAccessoriaNoAltre%></select>
+		</td>
+	</tr>
+</table>
+</div>
 <%----------------------------------------%>
 
   <div id=RevCondono class="label" style="visibility:visible; position:relative; " >
   <table style="width: 95%;">
-    <tr>
-      <td colspan="2">
-
 	    <tr><td class="Titolo" colspan=4>Revoca Condono</td></tr>
 			<tr>
       	<td class="l">Revoca Condono</td>
@@ -568,7 +566,7 @@
 			<tr>
       	<td class="l">Note</td>
       	<td class="l">
-        	<Textarea Title="Note" name="<%= ICostantiPenaAccessoria.CAMPO_NOTE %>" cols=80 rows=5><%=StringUtils.toStringJSP(lPenaAccessoria.getNote())%></textarea>
+        	<Textarea Title="Note" name="<%=ICostantiPenaAccessoria.CAMPO_NOTE %>" cols=80 rows=5><%=StringUtils.toStringJSP(lPenaAccessoria.getNote())%></textarea>
       	</td>
 			</tr>
     	<tr>
@@ -585,65 +583,61 @@
 <%
     		}
 %>
-    	</tr>
-   </tr>
-  </table>
-  </div>
-
-
-  <input value="<%=lPenaAccessoria.getIdPenaAccessoria() %>" type="HIDDEN" name="<%= ICostantiPenaAccessoria.CAMPO_ID_PENA_ACCESSORIA %>">
-  <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="">
-  <input type="HIDDEN" name="lTipoFunzione" value="<%=lTipoFunzione%>">
-
+	</tr>
+</table>
+</div>
+<input value="<%=lPenaAccessoria.getIdPenaAccessoria() %>" type="HIDDEN" name="<%=ICostantiPenaAccessoria.CAMPO_ID_PENA_ACCESSORIA%>">
+<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="">
+<input type="HIDDEN" name="lTipoFunzione" value="<%=lTipoFunzione%>">
 </form>
 <script language="JavaScript" type="text/javascript">
-  var frmvalidator  = new Validator("LoadInserisciPenaAccessoria");
+var frmvalidator  = new Validator("LoadInserisciPenaAccessoria");
 
-  frmvalidator.addValidation("<%= ICostantiPenaAccessoria.CAMPO_COD_TIPO_PENA_ACCESSORIA %>","req","Il campo Tipo Pena Accessoria è obbligatorio");
+frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_COD_TIPO_PENA_ACCESSORIA%>","req","Il campo Tipo Pena Accessoria è obbligatorio");
 
-  frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_NUM_ANNI%>", "numeric");
-  frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_NUM_MESI%>", "numeric");
-  frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_NUM_GIORNI%>","numeric");
+frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_NUM_ANNI%>","numeric");
+frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_NUM_MESI%>","numeric");
+frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_NUM_GIORNI%>","numeric");
 
-  frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_DATA_SENTENZA_REVOCA%>","numeric");
-  frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_DATA_SENTENZA_REVOCA%>","gt=1900");
-  frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_DATA_SENTENZA_REVOCA%>","lt=3000");
+frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_DATA_SENTENZA_REVOCA%>","numeric");
+frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_DATA_SENTENZA_REVOCA%>","gt=1900");
+frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_DATA_SENTENZA_REVOCA%>","lt=3000");
 
-  frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_DATA_SENTENZA_REVOCA%>","numeric");
-  frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_DATA_SENTENZA_REVOCA%>","gt=1900");
-  frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_DATA_SENTENZA_REVOCA%>","lt=3000");
+frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_DATA_SENTENZA_REVOCA%>","numeric");
+frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_DATA_SENTENZA_REVOCA%>","gt=1900");
+frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_DATA_SENTENZA_REVOCA%>","lt=3000");
 
-  frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_NUMERO_REGE_PM_REVOCA%>","numeric");
-  frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_PM_REVOCA%>","numeric");
-  frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_PM_REVOCA%>","gt=1900");
-  frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_PM_REVOCA%>","lt=3000");
+frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_NUMERO_REGE_PM_REVOCA%>","numeric");
+frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_PM_REVOCA%>","numeric");
+frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_PM_REVOCA%>","gt=1900");
+frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_PM_REVOCA%>","lt=3000");
 
-  frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_NUMERO_REGE_GIP_REVOCA%>","numeric");
-  frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_GIP_REVOCA%>","numeric");
-  frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_GIP_REVOCA%>","gt=1900");
-  frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_GIP_REVOCA%>","lt=3000");
+frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_NUMERO_REGE_GIP_REVOCA%>","numeric");
+frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_GIP_REVOCA%>","numeric");
+frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_GIP_REVOCA%>","gt=1900");
+frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_GIP_REVOCA%>","lt=3000");
 
-  frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_NUMERO_REGE_DIB_REVOCA%>","numeric");
-  frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_DIB_REVOCA%>","numeric");
-  frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_DIB_REVOCA%>","gt=1900");
-  frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_DIB_REVOCA%>","lt=3000");
+frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_NUMERO_REGE_DIB_REVOCA%>","numeric");
+frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_DIB_REVOCA%>","numeric");
+frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_DIB_REVOCA%>","gt=1900");
+frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_DIB_REVOCA%>","lt=3000");
 
-  frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_NUMERO_REGE_CAS_REVOCA%>","numeric");
-  frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_CAS_REVOCA%>","numeric");
-  frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_CAS_REVOCA%>","gt=1900");
-  frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_CAS_REVOCA%>","lt=3000");
+frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_NUMERO_REGE_CAS_REVOCA%>","numeric");
+frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_CAS_REVOCA%>","numeric");
+frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_CAS_REVOCA%>","gt=1900");
+frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_CAS_REVOCA%>","lt=3000");
 
-  frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_NUMERO_REGE_CAP_REVOCA%>","numeric");
-  frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_CAP_REVOCA%>","numeric");
-  frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_CAP_REVOCA%>","gt=1900");
-  frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_CAP_REVOCA%>","lt=3000");
+frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_NUMERO_REGE_CAP_REVOCA%>","numeric");
+frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_CAP_REVOCA%>","numeric");
+frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_CAP_REVOCA%>","gt=1900");
+frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_CAP_REVOCA%>","lt=3000");
 
-  frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_NUMERO_REGE_CASAP_REVOCA%>","numeric");
-  frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_CASAP_REVOCA%>","numeric");
-  frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_CASAP_REVOCA%>","gt=1900");
-  frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_CASAP_REVOCA%>","lt=3000");
+frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_NUMERO_REGE_CASAP_REVOCA%>","numeric");
+frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_CASAP_REVOCA%>","numeric");
+frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_CASAP_REVOCA%>","gt=1900");
+frmvalidator.addValidation("<%=ICostantiPenaAccessoria.CAMPO_ANNO_REGE_CASAP_REVOCA%>","lt=3000");
 
-  frmvalidator.setAddnlValidationFunction("Verify");
+frmvalidator.setAddnlValidationFunction("Verify");
 </script>
 </body>
 </html>

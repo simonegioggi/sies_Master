@@ -44,19 +44,10 @@ import siap.sius.tenore.controller.ITenore;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * <p>
- * Title: ActLoadDettaglioDecretoDeposito
- * </p>
- * <p>
- * Description: Classe Action per il caricamento del dettaglio di qualsiasi tipo di decreto.
- * </p>
- * L'azione implementata riceve dalla request l'ID_EVENTO con il quale viene attivata la ricerca.
- * </p>
+ * ActLoadDettaglioDecretoDeposito - Classe Action per il caricamento del dettaglio di qualsiasi tipo di
+ * decreto. L'azione implementata riceve dalla request l'ID_EVENTO con il quale viene attivata la ricerca.
  * Effettuata la ricerca del decreto viene effettuata una diramazione delle possibili uscite, una per ogni
  * tipo di decreto.
- * <p>
- * Company: Bull
- * </p>
  *
  * @version 1.0
  */
@@ -111,10 +102,8 @@ public class ActLoadDettaglioDecretoDeposito extends ActionSius
 		siesLogger.debug("ActLoadDettaglioDecretoDeposito tipo decreto: " + lTipoDecreto);
 
 		// Luigi 5-10-2004 Per i dettagli non standard non si fissa il Link di ritorno
-		if (lTipoDecreto.compareTo(CITAZIONE) == 0 || lTipoDecreto.compareTo(UNIFICAZIONE) == 0
-				|| lTipoDecreto.compareTo(IRREPERIBILITA) == 0
-				// MEV_2019-09: aggiunta gestione ritorno per decreti tipo DM
-				|| lTipoDecreto.compareTo(DECRETO_DESIGNAZIONE_MAGISTRATO_RELATORE_PER_MA) == 0)
+		if ((lTipoDecreto.compareTo(CITAZIONE) == 0) || (lTipoDecreto.compareTo(UNIFICAZIONE) == 0)
+				|| (lTipoDecreto.compareTo(IRREPERIBILITA) == 0))
 			gestioneRitorno();
 		else
 			setLinkRitorno();
@@ -206,7 +195,8 @@ public class ActLoadDettaglioDecretoDeposito extends ActionSius
 		setRequestAttribute("StatoLibertatis", DecodificheManager.getInstance().getStatoLibertatis());
 
 		// Switch sul tipo di decreto
-		if (lTipoDecreto.compareTo(GENERICO) == 0
+		// MEV_2023-35 si aggiunge un nuovo codice per il decreto generico (GENERICO2=GE)
+		if (lTipoDecreto.compareTo(GENERICO) == 0 || lTipoDecreto.compareTo(GENERICO2) == 0
 				|| lTipoDecreto.compareTo(ICostantiDepositoOrdinanzaPc.RICHIESTA_OTTEMPERANZA) == 0) {
 			// Decreto di tipo GENERICO
 			lRetPage = PG_DETTAGLIO_GENERICO;
@@ -271,7 +261,9 @@ public class ActLoadDettaglioDecretoDeposito extends ActionSius
 			// Decreto di tipo Autorizzazione Corrispondenza Telefonica
 			lRetPage = PG_DETTAGLIO_AUTORIZ_CORRIS_TELEFONICA;
 			gestioneTemplate(lIdEvento);
-		} else if (lTipoDecreto.compareTo(RINVIO_ESECUZIONE_PENA) == 0) {
+		} else if (lTipoDecreto.compareTo(RINVIO_ESECUZIONE_PENA) == 0
+				// MEV_2023-35 - aggiunto codice
+				|| lTipoDecreto.compareTo(RINVIO_ESECUZIONE_PENA_SOST_DERIVANTE_CONVERSIONE) == 0) {
 			// Decreto di tipo Rinvio Esecuzione Pena
 			lRetPage = PG_DETTAGLIO_RINVIO_ESECUZIONE_PENA;
 			gestioneTemplate(lIdEvento);
@@ -465,8 +457,11 @@ public class ActLoadDettaglioDecretoDeposito extends ActionSius
 			ricercaPrescrizioni(lDepDecreto.getIdEventoGenerato());
 		}
 		/*
-		 * ISSUE MEV : aggiunta casisitica per gestione rinvio MS Numero MEV : 39 Autore : Gioggi Data :
-		 * 09/giu/2017 Branch : MEV_39
+		 * ISSUE MEV : aggiunta casisitica per gestione rinvio MS 
+		 * Numero MEV : 39 
+		 * Autore : Gioggi 
+		 * Data : 09/giu/2017 
+		 * Branch : MEV_39
 		 */
 		else if (lTipoDecreto.compareTo(RINVIO_ESECUZIONE_MS) == 0) {
 			// Rinvio Misura Sicurezza
@@ -475,18 +470,20 @@ public class ActLoadDettaglioDecretoDeposito extends ActionSius
 			// Ricerca di eventuali prescrizioni collegatie al decreto.
 			ricercaPrescrizioni(lDepDecreto.getIdEventoGenerato());
 		}
+		// MEV_2023-35 - Revoca Autorizzazioni / Modifica Pena Sostitutive
+	    else if (lTipoDecreto.compareTo(REVOCA_AUTORIZZAZIONE_PS) == 0) {
+            // Revoca Autorizzazioni / Modifica Pena Sostitutive
+            lRetPage = PG_DETTAGLIO_REVOCA_AUTORIZZAZIONE_PENA_SOSTITUTIVA;
+            gestioneTemplate(lIdEvento);
+            if (lFasGPMod.getFascicoloSiusModel() != null 
+                && lFasGPMod.getFascicoloSiusModel().getIdFascicoloSiusOrigine() != null) {
+              ricercaFascicoloOrigine(lFasGPMod.getFascicoloSiusModel().getIdFascicoloSiusOrigine());
+            }            
+            // Ricerca di eventuali prescrizioni collegatie al decreto.
+            ricercaPrescrizioni(lDepDecreto.getIdEventoGenerato());
+        }
+		// MEV_2023-35 - FINE
 		// ***** FINE INTERVENTO MEV_39 *****//
-		/*
-		 * ISSUE MEV : aggiunta casistica per gestione Designazione Magistrato Relatore Numero MEV : 9 Autore
-		 * : Gioggi Data : 18 nov 2020 Branch : MEV_2019-09
-		 */
-		else if (lTipoDecreto.compareTo(DECRETO_DESIGNAZIONE_MAGISTRATO_RELATORE_PER_MA) == 0) {
-			// if ("0610".equals(mDepDecrMotMod.getEvento().getCodEsito()))
-			String action = "siap.sius.depositodecreto.action.ActLoadDettaglioDesignazioneMagistratoRelatore";
-			lRedirectTo.setAction(action);
-			lRetPage = lRedirectTo.toString();
-		}
-		// ***** FINE INTERVENTO MEV_2019-09 *****//
 		else {
 			lRetPage = IWebConstants.PG_MESSAGE;
 			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
@@ -540,7 +537,7 @@ public class ActLoadDettaglioDecretoDeposito extends ActionSius
 	}
 
 	/**
-	 *
+	 * Metodo privato "gestioneMagistratoByEvento"
 	 *
 	 * @param aIdEvento
 	 * @throws Exception
@@ -555,7 +552,6 @@ public class ActLoadDettaglioDecretoDeposito extends ActionSius
 
 	/**
 	 * Gestione Avvocati per idFascicolo. Ricerca gli avvocati associati al fascicolo.
-	 * <p>
 	 *
 	 * @param aFasGPMod
 	 * @throws Exception

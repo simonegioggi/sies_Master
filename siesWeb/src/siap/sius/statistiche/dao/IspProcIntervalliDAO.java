@@ -275,63 +275,8 @@ public class IspProcIntervalliDAO extends TableDAO {
 		setBigDecimal("TEMPO_RICEZIONE_DEPOSITO", aValore);
 	}
 
-	// MEV_2019-09: modificato metodo getModel(); poi commentato poichè prendo per buono il TICKET#202409020116
-	// public GenericModel getModel() throws DAOException {
-	//
-	// return new IspProcIntervalliModel(getFasSiuIdFascicoloSius(), getFasSiuChiaveAnno(),
-	// getFasSiuChiaveUfficio(), getFasSiuChiaveProgr(), getFasSiuCodStatoFascicolo(),
-	// getFasSiuDataIscrizione(), getFasSiuDataDefinizione(), getCodOggettoTenore(),
-	// DecodificheUtils.getDescbyCode(DecodificheManager.getInstance().getMotivoProvvedimento(),
-	// getCodOggettoTenore()),
-	// getCodEsitoTenore(),
-	// // MEV_2019-09: cambiato dominio di estrazione
-	// // DecodificheUtils.getDescbyCode(DecodificheManager.getInstance().getEsitoTenore(),
-	// // getCodEsitoTenore()),
-	// calcolaEsitoProvvedimento(getCodEsitoTenore()),
-	// // FINE MEV_2019-09
-	// getCodMagistrato(), "", getGenPridGeneraleProcedimento(), getDepOpidDepositoOrdinanzaPc(),
-	// getDepDecIdDepositoDecreto(), getTenData(), getTenDataFine(), getCodEsitoStatistica(), "",
-	// getDescContenutoStatis(), getDataRicezione(), getDataPrimaUdienza(), getDataUltimaUdienza(),
-	// getDataDecisione(), getDataDeposito(), getTempoDecisioneDeposito(),
-	// getTepoRicezioneFissazione1(), getTempoFissazione2Deposito(), getTempoRicezioneDeposito());
-	// }
-
-	/*
-	 * MEV_2019-09: aggiunto metodo di estrazione codice esito provvedimento
-	 */
-	// private String calcolaEsitoProvvedimento(String codEsitoTenore) throws DAOException {
-	//
-	// try {
-	// return DecodificheUtils.getDescbyCode(DecodificheManager.getInstance().getEsitoProvvedimento(),
-	// codEsitoTenore);
-	// } catch (DAOException de) {
-	// throw de;
-	// } catch (Exception e) {
-	// throw new DAOException(e.getMessage());
-	// }
-	// }
-	// ***** FINE INTERVENTO MEV_2019-09 *****//
-
-	/*
-	 * public GenericModel getModel() throws DAOException { return new IspProcIntervalliModel(
-	 * getFasSiuIdFascicoloSius() , getFasSiuChiaveAnno() , getFasSiuChiaveUfficio() , getFasSiuChiaveProgr()
-	 * , getFasSiuCodStatoFascicolo() , getFasSiuDataIscrizione() , getFasSiuDataDefinizione() ,
-	 * getCodOggettoTenore() ,
-	 * DecodificheUtils.getDescbyCode(DecodificheManager.getInstance().getMotivoProvvedimento(),
-	 * getCodOggettoTenore()), getCodEsitoTenore() , // TICKET#202409020116 - si decodifaca dal dominio
-	 * ESITO_PROVVEDIMENTO e non ESITO_TENORE
-	 * DecodificheUtils.getDescbyCode(DecodificheManager.getInstance().getEsitoTenore(), getCodEsitoTenore()),
-	 * //DecodificheUtils.getDescbyCode(DecodificheManager.getInstance().getEsitoProvvedimento(),
-	 * getCodEsitoTenore()), // TICKET#202409020116 - FINE getCodMagistrato() , "",
-	 * getGenPridGeneraleProcedimento() , getDepOpidDepositoOrdinanzaPc() , getDepDecIdDepositoDecreto() ,
-	 * getTenData() , getTenDataFine() , getCodEsitoStatistica() , "", getDescContenutoStatis() ,
-	 * getDataRicezione() , getDataPrimaUdienza() , getDataUltimaUdienza() , getDataDecisione() ,
-	 * getDataDeposito() , getTempoDecisioneDeposito() , getTepoRicezioneFissazione1() ,
-	 * getTempoFissazione2Deposito() , getTempoRicezioneDeposito() ); }
-	 */
-
 	// TICKET#202409020116 si riscrive la getModel per gestire l'eccezione rilanciata dal metodo
-	// getEsitoProvvedimento sovrascrivendo anche quanto fatto con la MEV_2019-09 (conflitto nel MERGE)
+	// getEsitoProvvedimento
 	public GenericModel getModel() throws DAOException {
 
 		IspProcIntervalliModel lProcIntervalliModel = new IspProcIntervalliModel();

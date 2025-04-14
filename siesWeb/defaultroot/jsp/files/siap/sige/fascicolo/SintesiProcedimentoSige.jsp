@@ -63,6 +63,10 @@ if (FascicoloSigeEsteso.getUdienzaProcedimento()!=null && FascicoloSigeEsteso.ge
 */  
   boolean isAvvocatoForoSoppresso = false;
   String strAlertAvvocato = "";
+ 
+  boolean isAvvocatoForoRegInde = false;
+  String strAlertAvvocatoReginde = "";
+
   
   if (isFascicoloModificabile){
     Vector listaAvvocati = null;
@@ -73,6 +77,7 @@ if (FascicoloSigeEsteso.getUdienzaProcedimento()!=null && FascicoloSigeEsteso.ge
       Collection listaFori = DecodificheManager.getInstance().getForoAll();
       
       int contaSoppressi = 0;
+      int contaRegInde = 0;  
       if (listaAvvocati!=null){
         for (int i=0; i<listaAvvocati.size();i++) {
          
@@ -91,6 +96,19 @@ if (FascicoloSigeEsteso.getUdienzaProcedimento()!=null && FascicoloSigeEsteso.ge
                                +StringUtils.toStringJSP(lAvvocatoModel.getForo())
                                +" soppresso a seguito dell’accorpamento degli uffici giudiziari. ";
           }
+          
+          // INIZIO: MEV_21 (avvocati)
+          if ("NO".equals(lAvvocatoModel.getFlagRegInde())) {
+             isAvvocatoForoRegInde = true;
+             contaRegInde++;
+             strAlertAvvocatoReginde+= " L'anagrafica dell'Avvocato "+StringUtils.toStringJSP(lAvvocatoModel.getCognome())+" "
+                               +StringUtils.toStringJSP(lAvvocatoModel.getNome())
+                               +" non risulta certificata su RegInde. "
+                               +"  ";
+           
+          }
+          // FINE: MEV_21           
+          
         }
       }
   
@@ -100,6 +118,14 @@ if (FascicoloSigeEsteso.getUdienzaProcedimento()!=null && FascicoloSigeEsteso.ge
         else
           strAlertAvvocato += "Prima di procedere con l'emissione di nuovi provvedimenti è necessario provvedere ad aggiornare i dati degli Avvocati utilizzando le opportune funzioni.";
       } 
+      
+      // INIZIO: MEV_21 (avvocati)
+      if (isAvvocatoForoRegInde){
+        if (contaRegInde==1)
+          strAlertAvvocatoReginde += "Prima di procedere con l'emissione di nuovi provvedimenti è necessario provvedere ad aggiornare i dati dell'Avvocato utilizzando le opportune funzioni.";
+        else
+          strAlertAvvocatoReginde += "Prima di procedere con l'emissione di nuovi provvedimenti è necessario provvedere ad aggiornare i dati degli Avvocati utilizzando le opportune funzioni.";
+      }      
         
     }catch(Exception e){
       // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
@@ -141,7 +167,7 @@ if (FascicoloSigeEsteso.getUdienzaProcedimento()!=null && FascicoloSigeEsteso.ge
     //==========================================================================
     %>    
     <% 
-    if (isAvvocatoForoSoppresso) { 
+    if (isAvvocatoForoSoppresso || isAvvocatoForoRegInde) { 
     %>
     <script type="text/javascript">
       function blink() {
@@ -159,11 +185,21 @@ if (FascicoloSigeEsteso.getUdienzaProcedimento()!=null && FascicoloSigeEsteso.ge
       else window.onload = blink;
     </script>    
     
+    <% if (isAvvocatoForoSoppresso) { %>
     <tr>
       <td class="cRosso">
         <blink>Attenzione!!</blink> <%=strAlertAvvocato%>
       </td>
     </tr>
+    <% } %> 
+        
+    <% if (isAvvocatoForoRegInde) {  // INIZIO: MEV_21 (avvocati) %>
+    <tr>
+      <td class="cRosso">
+        <blink>Attenzione!!</blink> <%=strAlertAvvocatoReginde%>
+      </td>
+    </tr>
+    <% } // FINE: MEV_21 %>    
     <% } %>  
     
   </table>

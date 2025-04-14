@@ -3,14 +3,11 @@ package siap.sius.richiestaatti.action;
 import java.util.Collection;
 import java.util.Date;
 
-import siap.sico.decodifiche.controller.DecodificheManager;
-import siap.sico.evento.controller.IEvento;
-import siap.sico.evento.model.EventoModel;
-import siap.sico.util.SICOLookupRemote;
-import siap.sico.web.ActionSiap;
-import siap.sius.fascicolo.model.FascicoloGPModel;
 import f3b.util.DateUtils;
 import f3b.web.html.Option;
+import siap.sico.decodifiche.controller.DecodificheManager;
+import siap.sico.web.ActionSiap;
+import siap.sius.fascicolo.model.FascicoloGPModel;
 
 public class ActLoadRichiestaInformazioniart474c extends ActionSiap implements ICostantiRichiestaAtti {
 	@SuppressWarnings("rawtypes")
@@ -18,8 +15,8 @@ public class ActLoadRichiestaInformazioniart474c extends ActionSiap implements I
 		gestioneRitorno();
 
 		// Data Fascicolo SIUS
-		Date lDataInserimento = ((FascicoloGPModel) getSessionAttribute("fascicoloSiusGP")).getFascicoloSiusModel()
-				.getDataInserimento();
+		Date lDataInserimento = ((FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"))
+				.getFascicoloSiusModel().getDataInserimento();
 		String lDataInserimentoString = DateUtils.getDateToString(lDataInserimento, "dd/MM/yyyy");
 		setRequestAttribute("dataInsFS", lDataInserimentoString);
 
@@ -33,24 +30,18 @@ public class ActLoadRichiestaInformazioniart474c extends ActionSiap implements I
 		// LISTA CSSA
 		Collection lCol2 = DecodificheManager.getInstance().getTipoAutorita();
 		// MEV10-s3: aggiunto controllo su tipologia di ufficio connesso
-		String codTipoUfficio = ((FascicoloGPModel) getSessionAttribute("fascicoloSiusGP")).getFascicoloSiusModel().
-				getCodTipoUfficio();
+		String codTipoUfficio = ((FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"))
+				.getFascicoloSiusModel().getCodTipoUfficio();
 		String[] lStringFilter2;
 		if ("UDSM".equals(codTipoUfficio) || "TDSM".equals(codTipoUfficio))
-			lStringFilter2 = new String[]{ "-", "40", "B5" };
+			lStringFilter2 = new String[] { "-", "40", "B5" };
 		else
-			lStringFilter2 = new String[]{ "-", "40" };
+			lStringFilter2 = new String[] { "-", "40" };
 		Option lOption2 = new Option(lCol2);
 		lOption2.setFilter(lStringFilter2);
 		setRequestAttribute("TipiIstituti2", "" + lOption2);
-		
-		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
-		IEvento lEveCtrl = SICOLookupRemote.getEventoRemote();
-		EventoModel lUltimoEventoRichAtti = lEveCtrl.ricercaUltimoEventoRichiestaAttiIsruttoriByIdFasc (((FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"))
-				.getFascicoloSiusModel().getIdFascicoloSius());
-		setRequestAttribute("ultimoEventoRichAtti", lUltimoEventoRichAtti);
-		// FINE: MEV_2019-09 (D.lgs. 123/2018)
 
-		return PG_LOAD_RICHIESTAINFORMAZIONIART474C; // restituisce la jsp di VIEW
+		// restituisce la jsp di VIEW
+		return PG_LOAD_RICHIESTAINFORMAZIONIART474C;
 	}
 }

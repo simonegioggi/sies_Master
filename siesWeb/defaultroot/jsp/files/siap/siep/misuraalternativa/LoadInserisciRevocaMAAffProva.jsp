@@ -1317,9 +1317,9 @@ if ((misuraalternativa == null || misuraalternativa.getIdMisuraAlternativa() == 
 			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_REVOCA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDayToString(misuraalternativa.getDataInizioRevoca()))%>">
 			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_REVOCA%>" value="<%=StringUtils.toStringJSP(DateUtils.getMonthToString(misuraalternativa.getDataInizioRevoca()))%>">
 			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_REVOCA%>" value="<%=StringUtils.toStringJSP(DateUtils.getYearToString(misuraalternativa.getDataInizioRevoca()))%>">
+       		<input type="HIDDEN" name="<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>" value="<%=misuraalternativa.getIdMisuraAlternativa()%>">
        	</td>
 	</tr>
-    <input type="HIDDEN" name="<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>" value="<%=misuraalternativa.getIdMisuraAlternativa()%>">
 <%
 	if (misuraalternativa.getNumAnniRevocaReclusione() != null
 			|| misuraalternativa.getNumMesiRevocaReclusione() != null
@@ -1328,6 +1328,7 @@ if ((misuraalternativa == null || misuraalternativa.getIdMisuraAlternativa() == 
 			|| misuraalternativa.getNumMesiRevocaArresto() != null
 			|| misuraalternativa.getNumGiorniRevocaArresto() != null) {
 %>
+	<tr>
 		<td class="l">Pena residua rideterminata</td>
 		<td class="l" colspan="3">RECLUSIONE
 			&nbsp;Anni&nbsp;<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getNumAnniRevocaReclusione(),"0")%></font>
@@ -1346,7 +1347,8 @@ if ((misuraalternativa == null || misuraalternativa.getIdMisuraAlternativa() == 
 			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_NUM_GIORNI_REVOCA_ARRESTO%>" value="<%=StringUtils.toStringJSP(misuraalternativa.getNumGiorniRevocaArresto())%>">
 			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_NUM_MESI_REVOCA_ARRESTO%>" value="<%=StringUtils.toStringJSP(misuraalternativa.getNumMesiRevocaArresto())%>">
 			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_NUM_ANNI_REVOCA_ARRESTO%>" value="<%=StringUtils.toStringJSP(misuraalternativa.getNumAnniRevocaArresto())%>">
-		</td>      
+		</td>
+	</tr>
 <%
 }
 // Solo se "In Misura" (13,27,50), si escludono quindi le sospensive e le provvisorie,
@@ -1522,13 +1524,13 @@ if (nuovapenaresidua != null && nuovapenaresidua.getIdPenaResidua() != null) {
 if (nuovapenaresidua != null && nuovapenaresidua.getIdPenaResidua() != null) {
 %>
 <table style="width: 95%;">
-	<input type="hidden" Title="presenzanuovopena" name="presenzanuovopenaricalcolata" value="S">
  	<tr>
      	<td class="Titolo" colspan=6> Magistrato Firmatario </td>
   	</tr>
   	<tr>
 		<td class="l">Magistrato Firmatario</td>
 		<td class="L">
+			<input type="hidden" Title="presenzanuovopena" name="presenzanuovopenaricalcolata" value="S">
 		  	<input type="HIDDEN" title="CodiceMagistratoNuovo" value="<%=StringUtils.toStringJSP(magistratocompetente.getMagistrato().getCodMagistrato())%>" type="text" name="<%=ICostantiMagistrato.CAMPO_COD_MAGISTRATO %>"  maxlength="35" size="35" >
 			<input readonly title="Cognome Magistrato" value="<%=StringUtils.toStringJSP(magistratocompetente.getMagistrato().getCognome())%>" type="text" name="<%=ICostantiMagistrato.CAMPO_COGNOME %>" maxlength="35" size="25">
 			<input readonly title= "Nome Magistrato"    value="<%=StringUtils.toStringJSP(magistratocompetente.getMagistrato().getNome())%>" type="text" name="<%=ICostantiMagistrato.CAMPO_NOME %>"   maxlength="35" size="25">
@@ -1562,7 +1564,7 @@ if (nuovapenaresidua != null && nuovapenaresidua.getIdPenaResidua() != null) {
 	} else {
 %>
 			<input readonly Title="Istituto" name="Comune" value="" size=70>
-			<input type="hidden"  Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="" size=35>
+			<input type="hidden" Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="" size=35>
 			<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciMisuraAlternativa','<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
 				<img src="/images/filefolder.gif" border=0>
 			</a>
@@ -1579,7 +1581,7 @@ if (nuovapenaresidua != null && nuovapenaresidua.getIdPenaResidua() != null) {
 	<tr>
         <td class="l" width ="30%">Autorita' Competente per territorio <font class="ob">(*)</font></td>
         <td class="L" colspan="3">
-            <select  Title="Autorita Esterna"  class="small" name="<%=ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E%>">
+            <select  Title="Autorita Esterna" class="small" name="<%=ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E%>">
 				<%=codiceAutoritaE%>
             </select>
         </td>
@@ -1587,7 +1589,7 @@ if (nuovapenaresidua != null && nuovapenaresidua.getIdPenaResidua() != null) {
     <tr>
 		<td class="l" width ="30%">Sede</td>
 		<td class="L">
-		    <input title="Sede Autorita Esterna"  type="text" name="<%=ICostantiMisuraAlternativa.CAMPO_SEDE_POL_E%>"  maxlength="35" size="35">
+		    <input title="Sede Autorita Esterna" type="text" name="<%=ICostantiMisuraAlternativa.CAMPO_SEDE_POL_E%>"  maxlength="35" size="35">
 			<a href="Javascript:ListaComuni('LoadInserisciMisuraAlternativa','<%=ICostantiMisuraAlternativa.CAMPO_SEDE_POL_E%>');">
 		    	<img src="/images/filefolder.gif" border=0>
 		    </a>
@@ -1598,8 +1600,7 @@ if (nuovapenaresidua != null && nuovapenaresidua.getIdPenaResidua() != null) {
 		</td>
 	</tr>
 </table>
-</div> 
-
+</div>
 <div id="altri" style="width: 100%; display:none; position:relative;">  
 <table width ="95%">
 	<tr>
@@ -1613,17 +1614,19 @@ if (nuovapenaresidua != null && nuovapenaresidua.getIdPenaResidua() != null) {
 		descrTipoUfficio = "Magistrato di Sorveglianza per i Minorenni";
    	}
 %>
-		<td class="l" width ="30%"><%=descrTipoUfficio%> <font class=ob>(*)</font></td>
-		<input type="hidden" value="<%=StringUtils.toStringJSP(UfficioEmittente.getCodTipoUfficio())%>" name="<%=ICostantiMisuraAlternativa.CAMPO_COD_TRIBUNALE%>">
+		<td class="l" width ="30%">
+			<%=descrTipoUfficio%> <font class=ob>(*)</font>
+			<input type="hidden" value="<%=StringUtils.toStringJSP(UfficioEmittente.getCodTipoUfficio())%>" name="<%=ICostantiMisuraAlternativa.CAMPO_COD_TRIBUNALE%>">
+		</td>
 		<td class="l" colspan="3">
-  			<input title="Sede" value="<%=StringUtils.toStringJSP(UfficioEmittente.getDescrComune())%>" type="text" name="<%=ICostantiMisuraAlternativa.CAMPO_SEDE_TDS %>"  maxlength="35" size="35">
+			<input title="Sede" value="<%=StringUtils.toStringJSP(UfficioEmittente.getDescrComune())%>" type="text" name="<%=ICostantiMisuraAlternativa.CAMPO_SEDE_TDS%>" maxlength="35" size="35">
 			<a href="Javascript:ListaUfficiPerTipo('LoadInserisciMisuraAlternativa','<%=ICostantiMisuraAlternativa.CAMPO_SEDE_TDS%>','<%=StringUtils.toStringJSP(UfficioEmittente.getCodTipoUfficio())%>');">
      			<img src="/images/filefolder.gif" border=0>
      		</a>
 		</td>
 	</tr>
   	<tr>
-		<td class="Titolo" colspan="6">Destinatario per Notifica </td>
+		<td class="Titolo" colspan="6">Destinatario per Notifica</td>
   	</tr>
 </table>
 <%
@@ -1646,8 +1649,8 @@ if (nuovapenaresidua != null && nuovapenaresidua.getIdPenaResidua() != null) {
 			<font class="campo">
   				<%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescrTipo())%>
   			</font>
+  			<input type="HIDDEN" title="Codice Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep())%>" type="text" name="<%=ICostantiAvvocato.CAMPO_ID_AVVOCATO%>" maxlength="35" size="35">
 		</td>
-		<input type="HIDDEN" title="Codice Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep())%>" type="text" name="<%=ICostantiAvvocato.CAMPO_ID_AVVOCATO %>"  maxlength="35" size="35">
 	</tr>
 </table>
 <table>
@@ -1661,17 +1664,18 @@ if (nuovapenaresidua != null && nuovapenaresidua.getIdPenaResidua() != null) {
 	</tr>
 	<tr>
   		<td class="l">Sede </td><td class="L">
-    		<input title="Sede Foro Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocato().getForo())%>" type="text" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>" maxlength="35" size="35">
+			<%-- MEV_21 (avvocati) Sostituzione di getAvvocato().getForo() con getAvvocato().getDescComuneSedeForo() --%>
+			<input title="Sede Foro Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescComuneSedeForo())%>" type="text" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>" maxlength="35" size="35">
 			<a href="Javascript:ListaComuni('LoadInserisciMisuraAlternativa','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>[<%=lIdxAvv%>]');">
-    			<img src="/images/filefolder.gif" border="0">
-  			</a>
-		</td>
+				<img src="/images/filefolder.gif" border="0">
+			</a>
+        </td>
 		<td class="l">Note</td>
 		<td class="L">
   			<textarea title="Note" name="<%=ICostantiMisuraAlternativa.CAMPO_NOTE_AVVOCATI%>" cols=35></textarea>
      	</td>
 	</tr>
-  	<tr><td>&nbsp;</td>  </tr>
+  	<tr><td>&nbsp;</td></tr>
 </table>
 <%
 		lIdxAvv++;

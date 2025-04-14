@@ -406,44 +406,6 @@ public class ActLoadDettaglioFascicolo extends ActionSius
 		if (!"N".equals(fgpm.getFascicoloSiusModel().getVisibilitaMinorenne()))
 			checkMinorenne(fgpm.getFascicoloSiusModel().getSoggetto(), fgpm, lParser.getSentenza());
 
-		/*
-		 * ISSUE MEV : aggiunta estrazione data esecutivita 
-		 * Numero MEV : 9 
-		 * Autore : sgioggi 
-		 * Data : 5 dic 2022
-		 * Branch : MEV_2019-09
-		 */
-		if (!Utils.isNullObj(fgpm) && !Utils.isNullObj(fgpm.getGeneraleProcedimentoModel())
-				&& !Utils.isNullObj(fgpm.getGeneraleProcedimentoModel().getCodOggettoProcedimento())
-				&& (fgpm.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("C050") == 0
-						|| fgpm.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
-								.compareTo("C051") == 0)) {
-			IDepositoOrdinanzaPc idopc = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
-			DepositoOrdinanzaPcModel dopcm = new DepositoOrdinanzaPcModel();
-			dopcm.setGenPridGeneraleProcedimento(
-					fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
-			Vector<?> v = null;
-			try {
-				v = idopc.ExRicercaDepositoOrdinanzaPc(dopcm);
-			} catch (Exception e) {
-				v = new Vector<>();
-			}
-			siesLogger.debug(v != null ? "vettore con " + v.size() + " elementi" : "vettore vuoto");
-			setRequestAttribute("depositoOrdinanzaVector", v);
-			String dataRestituzioneStr = "";
-			if (!Utils.isNullObj(fgpm.getGeneraleProcedimentoModel().getDataRestituzione()))
-				dataRestituzioneStr = DateUtils.getDateToString(
-						fgpm.getGeneraleProcedimentoModel().getDataRestituzione(), "dd/MM/yyyy");
-			setRequestAttribute("dataRestituzioneStr", dataRestituzioneStr);
-			// DepositoOrdinanzaPcModel dopcm = idopc.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd(
-			// fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), "AM");
-			// String dataEsecutivita = null;
-			// if (!Utils.isNullObj(dopcm) && !Utils.isNullObj(dopcm.getDataEsecutivita()))
-			// dataEsecutivita = DateUtils.getDateToString(dopcm.getDataEsecutivita(), "dd/MM/yyyy");
-			// setRequestAttribute("dataEsecutivitaStr", dataEsecutivita);
-		}
-		// ***** FINE INTERVENTO MEV_2019-09 *****//
-
 		// info per il log
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
@@ -468,7 +430,6 @@ public class ActLoadDettaglioFascicolo extends ActionSius
 
 	/**
 	 * Esegue la ricerca del permesso o licenza depositata.
-	 * <p>
 	 *
 	 * @param aIdFascSius
 	 *            id del fascilo sius di riferimento.
@@ -489,7 +450,6 @@ public class ActLoadDettaglioFascicolo extends ActionSius
 	/**
 	 * Verifica che le misure applicate nell'ordinanza del fascicolo collegato siano oggetto di questo o di
 	 * altri fascicoli, quindi prepara un warning che sarà letto nella jsp di dettaglio
-	 * <p>
 	 *
 	 * @param lFasGPEMS
 	 *            FascicoloGPModel di riferimento.

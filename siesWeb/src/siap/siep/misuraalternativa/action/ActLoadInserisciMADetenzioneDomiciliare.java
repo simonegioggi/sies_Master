@@ -4,10 +4,8 @@ import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
 import f3b.util.F3BException;
-import f3b.util.Utils;
 import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
-import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.misuraalternativa.controller.IMisuraAlternativa;
@@ -39,13 +37,7 @@ public class ActLoadInserisciMADetenzioneDomiciliare extends ActConcessione {
 			return lRitorno;
 
 		// setto il campo codice motivo
-		Option lOption = null;
-		// MEV_2019-09-SIEP: si differenzia per PM e PMM
-		if (isUfficioMinorenni())
-			lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoMADDomMinor());
-		else
-			lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoMADDom());
-		// FINE MEV_2019-09-SIEP
+		Option lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoMADDom());
 		setRequestAttribute("motivoProvv", "" + lOption);
 
 		setRequestAttribute("tipoMisura", "DETENZIONE");
@@ -54,29 +46,20 @@ public class ActLoadInserisciMADetenzioneDomiciliare extends ActConcessione {
 		// Instanzia il model dell'evento
 		EventoModel lEvent = new EventoModel();
 
-		// MEV_2019-09-SIEP: aggiunta nuova gestione per modifica
-		IEvento ie = SICOLookupRemote.getEventoRemote();
-		EventoModel lEve = null;
-		String tipoOperazione = "";
-		if (!isRequestParameterNullObj("tipoOperazione"))
-			tipoOperazione = getRequestStringParameter("tipoOperazione");
-		if ("MODIFICA".equals(tipoOperazione)) {
-			lEve = ie.ExRicercaEventoByKey(getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO));
-		} else {
-			// prende dalla Session l'ID del procedimento e lo carica nel model
-			lEvent.setFasSieIdFascicoloSiep(
-					((FascicoloSiepModel) getSessionAttribute("fascicolo")).getIdFascicoloSiep());
-			// carica nel model il Tipo evento
-			lEvent.setCodTipoEvento("01");
-			// carica nel model il flag documento registrato
-			lEvent.setFlagDocumentoRegistrato("S");
-			// carica nel model il tipo motivo
-			String[] lMotivo = { "2005" };
-			// carica nel model il codice dei provvedimenti
-			String[] lProvv = { "04", "09", "12" };
-			// Ricerca nella tabella EVENTO
-			lEve = ie.ExRicercaEventoPerMotivoPerProvv(lMotivo, lProvv, lEvent);
-		}
+		// prende dalla Session l'ID del procedimento e lo carica nel model
+		lEvent.setFasSieIdFascicoloSiep(
+				((FascicoloSiepModel) getSessionAttribute("fascicolo")).getIdFascicoloSiep());
+		// carica nel model il Tipo evento
+		lEvent.setCodTipoEvento("01");
+		// carica nel model il flag documento registrato
+		lEvent.setFlagDocumentoRegistrato("S");
+		// carica nel model il tipo motivo
+		String[] lMotivo = { "2005" };
+		// carica nel model il codice dei provvedimenti
+		String[] lProvv = { "04", "09", "12" };
+		// Ricerca nella tabella EVENTO
+		IEvento lCtrlEvento = SICOLookupRemote.getEventoRemote();
+		EventoModel lEve = lCtrlEvento.ExRicercaEventoPerMotivoPerProvv(lMotivo, lProvv, lEvent);
 
 		// setta la risposta della ricerca nella request
 		setRequestAttribute("eventoammissioneprovvisoria", lEve);
@@ -88,12 +71,6 @@ public class ActLoadInserisciMADetenzioneDomiciliare extends ActConcessione {
 
 			// setta la risposta della ricerca nella request
 			setRequestAttribute("maammissioneprovvisoria", mam);
-
-			// MEV_2019-09-SIEP: aggiunta impostazione per il campo codice motivo
-			if (!Utils.isNullObj(mam)) {
-				lOption.setSelected(mam.getCodTipoMisura());
-				setRequestAttribute("motivoProvv", "" + lOption);
-			}
 		}
 
 		// MEV 10 - filtro sui minorenni

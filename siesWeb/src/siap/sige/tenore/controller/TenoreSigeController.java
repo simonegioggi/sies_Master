@@ -37,18 +37,7 @@ import siap.sige.tenore.model.TenoreSigeModel;
 import siap.sige.util.SIGELookupRemote;
 
 /**
- * <p>
- * Title: TenoreSigeController
- * </p>
- * <p>
- * Description: Classe Controller per TenoreSige
- * </p>
- * <p>
- * Copyright: Copyright (c) 2008
- * </p>
- * <p>
- * Company:
- * </p>
+ * TenoreSigeController - Classe Controller per TenoreSige
  *
  * @version 1.0
  */
@@ -744,7 +733,7 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 
 				// Inserimento Annotazione Manuale riferita all'Ordinanza
 				/*
-				 * MEV_2019-09 Se è uno dei seguenti codici, Metto sempre R ("Rigetta") e metto sempre il valore dei
+				 * MEV 9 Se è uno dei seguenti codici, Metto sempre R ("Rigetta") e metto sempre il valore dei
 				 * quantun positivo ("+") , per avere un corretto calcolo della pena residua anche se
 				 * l'operatore sbaglia a mettere i quantum
 				 */
@@ -760,7 +749,7 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 					aAnnotazioneManuale.setFlagConforme("I");
 					aAnnotazioneManuale.setFlagPiuMeno("+");
 				}
-				// End MEV_2019-09
+				// End MEV 9
 				lAnnDao.setDAOFromModel(aAnnotazioneManuale);
 				BigDecimal lKey = null;
 				lKey = lAnnDao.insert();
@@ -768,7 +757,7 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 				lAnnDao.stop();
 				cleanup(lAnnDao);
 
-				// MEV_2019-09 - NON VIENE più eseguita la l'aggiornamento delle richieste con il legame
+				// MEV 9 - NON VIENE più eseguita la l'aggiornamento delle richieste con il legame
 				// all'ordinanza
 
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -809,7 +798,7 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 				// Si inserisce nell'Evento il riferimento all'eventuale Fascicolo SIEP
 				if (aAnnotazioneManuale.getFasSieIdFascicoloSiep() != null)
 					lEventoDAO.setFasSieIdFascicoloSiep(aAnnotazioneManuale.getFasSieIdFascicoloSiep());
-				// MEV_2019-09
+				// MEV 9
 				if (aTenore.getCodEsitoSige().equals("0142") || aTenore.getCodEsitoSige().equals("0143")
 						|| aTenore.getCodEsitoSige().equals("0146")
 						|| aTenore.getCodEsitoSige().equals("0147")
@@ -820,7 +809,7 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 				if (aTenore.getCodEsitoSige().equals("0145")) {
 					lEventoDAO.setCodEsito("I");
 				}
-				// End MEV_2019-09
+				// End MEV 9
 				lEventoDAO.selCondizioneUpdate(aAnnotazioneManuale.getEveIdEvento());
 				lEventoDAO.update();
 				lEventoDAO.stop();

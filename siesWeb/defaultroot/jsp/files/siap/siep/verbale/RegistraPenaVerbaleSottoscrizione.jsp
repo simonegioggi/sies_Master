@@ -1,10 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ page import="java.math.BigDecimal"%>
 
-<%@ page import="java.util.Arrays"%>
-<%@ page import="java.util.HashSet"%>
-<%@ page import="java.util.Set"%>
-
 <%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
@@ -19,10 +15,6 @@
 <jsp:useBean id="cssa" scope="request" class="siap.sico.cssa.model.CSSAModel" />
 <jsp:useBean id="misuraposold" scope="request" class="siap.sico.misuraalternativa.model.MisuraAlternativaModel" />
 <jsp:useBean id="istitutodetenzione" scope="request" class="siap.siep.istitutodetenzione.model.IstitutoDetenzioneModel" />
-
-<% // MEV_2019-09-SIEP aggiunto decreto/ordinanza per testare l'esito e capire se provvisoria o concessione %>
-<jsp:useBean id="provvSorv" scope="request" class="siap.sico.evento.model.EventoModel" />
-
 <!--
 < jsp:useBean id="lTotGiorniConcessi"  scope="request" class="java.lang.String"/>
 -->
@@ -34,13 +26,6 @@
 <script language="JavaScript" src=<%=IWebConstants.JS_DATE_CONTROL%>></script>
 <script language="JavaScript" src=<%=IWebConstants.JS_VALIDATOR%>></script>
 <script language="JavaScript" src="/html/conferma.js"></script>
-
-<% 
-// MEV-9 si aggiungono gli ulteriori codici motivo (sorveglianza)
-Set<String> codiciAffidamentoSorvNew = new HashSet<String>(Arrays.asList(new String[]{"0680","0681","0690","0691","0692"}));
-Set<String> codiciDetenzioneSorvNew  = new HashSet<String>(Arrays.asList(new String[]{"0682","0693"}));
-Set<String> codiciSemilibertaSorvNew = new HashSet<String>(Arrays.asList(new String[]{"2007","0683","0694"}));
-%>
 <script language="JavaScript">
 
   function Avanti()
@@ -58,39 +43,12 @@ Set<String> codiciSemilibertaSorvNew = new HashSet<String>(Arrays.asList(new Str
        {%>
           document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMAAmmProvDetDom&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraposold.getIdMisuraAlternativa()%>";
        <%}
-       // MEV_2019-09 si aggiungono i nuovi codici dell'ammissione provv
-       else if (codiciDetenzioneSorvNew.contains(misuraposold.getCodTipoMisura()))
-       {%>
-          <% if ("0270".equals(provvSorv.getCodEsito())) { %>
-          document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMAAmmProvDetDom&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraposold.getIdMisuraAlternativa()%>";
-          <% } else { %>
-          document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMADetenzioneDomiciliare&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraposold.getIdMisuraAlternativa()%>";
-          <% } %>
-       <%}      
        else if(misuraposold.getCodTipoMisura().equals("2006") || misuraposold.getCodTipoMisura().equals("2008"))
        {
        %>
          document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMAAmmProvAffi&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraposold.getIdMisuraAlternativa()%>";
        <%
        }
-       // MEV_2019-09-SIEP si aggiungono i nuovi codici per la semilibertà provvisoria
-       else if (codiciAffidamentoSorvNew.contains(misuraposold.getCodTipoMisura()))
-       {%>
-	       <% if ("0270".equals(provvSorv.getCodEsito())) { %>
-	       document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMAAmmProvAffi&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraposold.getIdMisuraAlternativa()%>";
-	       <% } else { %>
-         document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMAAffidamentoInProva&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraposold.getIdMisuraAlternativa()%>";
-	       <% } %>
-       <%} // MEV_2019-09 si aggiungono i nuovi codici per la semilibertà provvisoria
-       else if (codiciSemilibertaSorvNew.contains(misuraposold.getCodTipoMisura()))
-       {%>
-	       <% if ("0270".equals(provvSorv.getCodEsito())) { %>
-         document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMAAmmProvSemiliberta&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraposold.getIdMisuraAlternativa()%>";
-	       <% } else { %>
-	       document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMASemiliberta&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraposold.getIdMisuraAlternativa()%>";
-	       <% } %>
-       <%
-       }       
       else if(misuraposold.getCodTipoMisura().equals("0004"))
        {%>
          document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMASemiliberta&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraposold.getIdMisuraAlternativa()%>";
@@ -170,25 +128,6 @@ Set<String> codiciSemilibertaSorvNew = new HashSet<String>(Arrays.asList(new Str
        if(misuraposold.getCodTipoMisura().equals("0011"))
        {%>
          <td class="l" colspan=2>Concessione Detenzione Domiciliare a Termine</td>
-         <%-- MEV_2024-092: rework le applicazione non sono più provvisorie, si eliminala dicitura --%>
-      <% } else if(codiciAffidamentoSorvNew.contains(misuraposold.getCodTipoMisura())) { %> <%--// MEV_2019-09 --%>
-          <% if ("0270".equals(provvSorv.getCodEsito())) {%>
-          <td class="l" colspan=2>Applicazione <!--Provvisoria ad-->  Affidamento in Prova - Art. 678 comma 1-ter c.p.p.</td> 
-          <% } else { %>
-          <td class="l" colspan=2>Concessione Affidamento in Prova - Art. 678 comma 1-ter c.p.p.</td>
-          <% } %>
-      <% } else if(codiciDetenzioneSorvNew.contains(misuraposold.getCodTipoMisura())) { %> <%--// MEV_2019-09 --%>
-           <% if ("0270".equals(provvSorv.getCodEsito())) {%>
-          <td class="l" colspan=2>Applicazione <!--Provvisoria a--> Detenzione Domiciliare - Art. 678 comma 1-ter c.p.p.</td> 
-          <% } else { %>
-          <td class="l" colspan=2>Concessione Detenzione Domiciliare - Art. 678 comma 1-ter c.p.p.</td>
-          <% } %>  
-      <% } else if(codiciSemilibertaSorvNew.contains(misuraposold.getCodTipoMisura())) { %> <%--// MEV_2019-09-SIEP --%>
-          <% if ("0270".equals(provvSorv.getCodEsito())) {%>
-          <td class="l" colspan=2>Applicazione <!--Provvisoria a--> Semiliberta' - Art. 678 comma 1-ter c.p.p.</td> 
-          <% } else { %>
-          <td class="l" colspan=2>Concessione Semiliberta' - Art. 678 comma 1-ter c.p.p.</td>
-          <% } %>            
      <%}%>
     </tr>
 		<tr>

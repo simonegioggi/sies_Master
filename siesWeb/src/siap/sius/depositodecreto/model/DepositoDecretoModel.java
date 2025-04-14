@@ -7,26 +7,12 @@ import f3b.model.GenericModel;
 import siap.sico.ufficio.model.UfficioModel;
 
 /**
- * <p>
- * Title: DepositoDecretoModel
- * </p>
- * <p>
- * Description: Classe Model che rappresenta il DepositoDecreto
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * DepositoDecretoModel - Classe Model che rappresenta il DepositoDecreto
  *
  * @version 1.0
  */
 public class DepositoDecretoModel extends GenericModel {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = -2057270908061067016L;
 
 	private BigDecimal mIdDepositoDecreto;
@@ -96,9 +82,6 @@ public class DepositoDecretoModel extends GenericModel {
 	private BigDecimal mSommaRisarcimentoDanni;
 	// 02/2015 Mis.Sic
 	private String mFlagElaborato;
-	// MEV_2019-09 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
-	private Date mDataTermineEmissione;
-	private BigDecimal mNumGiorniTermineEmissione;
 
 	// COSTRUTTORE DI DEFAULT
 	public DepositoDecretoModel() {
@@ -172,9 +155,6 @@ public class DepositoDecretoModel extends GenericModel {
 		this.mSommaRisarcimentoDanni = null;
 		// 02/2015
 		this.mFlagElaborato = "";
-		// MEV_2019-09 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
-		this.mDataTermineEmissione = null;
-		this.mNumGiorniTermineEmissione = null;
 	}
 
 	// COSTRUTTORE DI COPIA
@@ -247,9 +227,6 @@ public class DepositoDecretoModel extends GenericModel {
 		this.mSommaRisarcimentoDanni = aModel.mSommaRisarcimentoDanni;
 		// 02/2015 Mis.Sic.
 		this.mFlagElaborato = aModel.mFlagElaborato;
-		// MEV_2019-09 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
-		this.mDataTermineEmissione = aModel.mDataTermineEmissione;
-		this.mNumGiorniTermineEmissione = aModel.mNumGiorniTermineEmissione;
 	}
 
 	// COSTRUTTORE MODEL
@@ -281,10 +258,7 @@ public class DepositoDecretoModel extends GenericModel {
 			// DL 92 2014 Violazione CEDU
 			BigDecimal aNumGiorniRiduzionePena, BigDecimal aSommaRisarcimentoDanni,
 			// 02/2015 Mis.Sic.
-			String aFlagElaborato,
-			// MEV_2019-09 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
-			Date aDataTermineEmissione, BigDecimal aNumGiorniTermineEmissione) {
-
+			String aFlagElaborato) {
 		this.mIdDepositoDecreto = aIdDepositoDecreto;
 		this.mAnnoS72 = aAnnoS72;
 		this.mNumS72 = aNumS72;
@@ -352,9 +326,6 @@ public class DepositoDecretoModel extends GenericModel {
 		this.mSommaRisarcimentoDanni = aSommaRisarcimentoDanni;
 		// 02/2015 Mis.Sic.
 		this.mFlagElaborato = aFlagElaborato;
-		// MEV_2019-09 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
-		this.mDataTermineEmissione = aDataTermineEmissione;
-		this.mNumGiorniTermineEmissione = aNumGiorniTermineEmissione;
 	}
 
 	//
@@ -625,16 +596,6 @@ public class DepositoDecretoModel extends GenericModel {
 		return mFlagElaborato;
 	}
 
-	// MEV_2019-09 aggiunto campo DATA_TERMINE_EMISSIONE
-	public Date getDataTermineEmissione() {
-		return mDataTermineEmissione;
-	}
-
-	// MEV_2019-09 aggiunto campo NUM_GIORNI_TERMINE_EMISSIONE
-	public BigDecimal getNumGiorniTermineEmissione() {
-		return mNumGiorniTermineEmissione;
-	}
-
 	//
 	// METODI SET()
 	//
@@ -887,16 +848,6 @@ public class DepositoDecretoModel extends GenericModel {
 		mFlagElaborato = aValore;
 	}
 
-	// MEV_2019-09 aggiunto campo DATA_TERMINE_EMISSIONE
-	public void setDataTermineEmissione(Date aValore) {
-		mDataTermineEmissione = aValore;
-	}
-
-	// MEV_2019-09 aggiunto campo NUM_GIORNI_TERMINE_EMISSIONE
-	public void setNumGiorniTermineEmissione(BigDecimal aValore) {
-		mNumGiorniTermineEmissione = aValore;
-	}
-
 	// Metodo toString.
 	public String toString() {
 
@@ -924,9 +875,7 @@ public class DepositoDecretoModel extends GenericModel {
 				+ mSospensioneAASS + " - " + mFlagNominaComActa + " - " + mDescrCommActa + " - "
 				+ mCodTipoControlloEsecuzione + " - " + mDescrTipoControlloEsecuzione + " - "
 				+ mNumGiorniRevocaLA + " - " + mNumGiorniRiduzionePena + " - " + mSommaRisarcimentoDanni
-				+ " - " + mFlagElaborato // 02/2015 Mis.Sic.
-				// MEV_2019-09 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
-				+ " - " + mDataTermineEmissione + " - " + mNumGiorniTermineEmissione;
+				+ " - " + mFlagElaborato;
 
 		if (this.mUfficioCompetente != null)
 			lStr += " - UFFICIO COMP.: " + mUfficioCompetente;

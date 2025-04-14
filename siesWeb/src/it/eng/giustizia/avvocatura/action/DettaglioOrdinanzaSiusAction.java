@@ -643,7 +643,7 @@ public class DettaglioOrdinanzaSiusAction extends ActionSius implements ICostant
 			odo.setDatiRicoveri(OrdinanzaMapper.mapDatiRicoveri(oetpm));
 			odo.setDatiRicoveriOssPsich(OrdinanzaMapper.mapDatiRicoveriOssPsich(oetpm));
 			odo.setDatiRinvioSanzSost(OrdinanzaMapper.mapDatiRinvioSanzSost(oetpm));
-			odo.setDatiSanzioneSostitutiva(OrdinanzaMapper.mapDatiSanzioneSostitutiva(oetpm));;
+			odo.setDatiSanzioneSostitutiva(OrdinanzaMapper.mapDatiSanzioneSostitutiva(oetpm));
 			odo.setDatiScomputo(OrdinanzaMapper.mapDatiScomputo(licenze));
 			odo.setDatiSopravvenienzaNuovoTitolo(OrdinanzaMapper.mapDatiSopravvenienzaNuovoTitolo(oetpm,
 					codTipoUfficio));

@@ -1,13 +1,5 @@
 package siap.sige.avvocato.action;
 
-/**
- * <p>Title: ActLoadSostituzioneDifensore</p>
- * <p>Description: Classe Action per l'inserimento di Avvocato</p>
- * <p>Copyright: Copyright (c) 2008</p>
- * <p>Company: Eutelia S.p.A.</p>
- * @version 1.0
- */
-
 import java.math.BigDecimal;
 import java.util.Vector;
 
@@ -26,9 +18,8 @@ public class ActLoadSostituzioneDifensore extends ActionSiap implements ICostant
 
 	/**
 	 * Azione di Inserimento del Avvocato
-	 * 
+	 *
 	 * @return Nome della pagina JSP da visualizzare al termine dell'elaborazione
-	 *         <p>
 	 * @throws F3BException
 	 */
 	@SuppressWarnings("rawtypes")
@@ -90,6 +81,14 @@ public class ActLoadSostituzioneDifensore extends ActionSiap implements ICostant
 		}
 
 		setRequestAttribute("foro", "" + lOption);
+
+		// 20210627 MEV_21 Nuova gestione Combo per Stato di Nascita
+		lOption = new Option(DecodificheManager.getInstance().getNazioni(), "-");
+		setRequestAttribute("nazione", "" + lOption);
+
+		// 20210627 MEV_21 Nuova gestione Combo per Stato Difensore
+		lOption = new Option(DecodificheManager.getInstance().getListaAttivitaAvvocato(), "-");
+		setRequestAttribute("statoAvv", "" + lOption);
 
 		return PG_SOSTITUZIONE_AVVOCATO;
 	}

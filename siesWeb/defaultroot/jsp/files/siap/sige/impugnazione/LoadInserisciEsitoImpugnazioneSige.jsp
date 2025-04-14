@@ -558,7 +558,10 @@ if (codTipoImpugnazione.equals("04")) {
 		
 		<%
 		String checkSNT = "";
-		String descSede =lAvv.getAvvocato().getForo(); 
+    // MEV_21 (avvocati) Sostituzione di getAvvocato().getForo() con getAvvocato().getDescComuneSedeForo()
+		// String descSede =lAvv.getAvvocato().getForo(); 
+    String descSede =lAvv.getAvvocato().getDescComuneSedeForo(); 
+    // MEV_21: FINE 
 		NotificaModel modNotAvv = null;
 		Iterator itxNotAvv = vectNotAvv.iterator();
 		while ( itxNotAvv.hasNext()) {

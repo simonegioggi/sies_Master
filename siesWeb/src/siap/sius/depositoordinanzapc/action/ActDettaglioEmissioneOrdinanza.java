@@ -11,7 +11,6 @@ import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.magistrato.controller.IMagistrato;
 import siap.sico.magistrato.model.MagistratoModel;
 import siap.sico.template.action.ICostantiTemplate;
-import siap.sico.template.model.TemplateModel;
 import siap.sico.template.util.UtilTemplate;
 import siap.sico.ufficio.controller.IUfficio;
 import siap.sico.ufficio.model.UfficioModel;
@@ -34,14 +33,14 @@ import siap.sius.misurasicurezza.model.PeriodoAltraMisuraModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * Title: ActLoadDettaglioEmissioneOrdinanza
- * Description: Classe Action per la load dettaglio di DepositoOrdinanzaPc
+ * ActLoadDettaglioEmissioneOrdinanza - Classe Action per la load dettaglio di DepositoOrdinanzaPc
  *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ActDettaglioEmissioneOrdinanza extends ActionSius
 		implements ICostantiDepositoOrdinanzaPc, ICostantiTemplate {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
@@ -173,7 +172,6 @@ public class ActDettaglioEmissioneOrdinanza extends ActionSius
 			}
 		}
 
-		// TODO carmela verificare INIZIO ***************************
 		int lSize = mOrdEveTenPreMod.getTenori().length;
 		String unificazione = "";
 		for (int x = 0; x < lSize; x++) {
@@ -216,7 +214,6 @@ public class ActDettaglioEmissioneOrdinanza extends ActionSius
 			setRequestAttribute("attualeMisuraSicurezza", aEMSNewMod);
 		}
 
-		// TODO carmela INIZIO ***************************
 		// Nel caso di Ordinanza di Esecuzione Misure Sicurezza con Trasformazione occorre caricare
 		// le misure rideterminate a seguito unificazione
 		if (mOrdEveTenPreMod != null
@@ -266,7 +263,6 @@ public class ActDettaglioEmissioneOrdinanza extends ActionSius
 			setRequestAttribute("precedenteMisuraSicurezza", aEMSOldMod);
 			setRequestAttribute("attualeMisuraSicurezza", null);
 		}
-		// TODO carmela FINE ***************************
 
 		if (mOrdEveTenPreMod.getEvento() != null && mOrdEveTenPreMod.getEvento().getCodMotivo() != null
 				&& (mOrdEveTenPreMod.getEvento().getCodMotivo().equals("2410")
@@ -277,31 +273,6 @@ public class ActDettaglioEmissioneOrdinanza extends ActionSius
 			ricercaPeriodoAltraMisura();
 			// return PG_DETTAGLIO_ORD_SOSPENSIONE_EMS;
 		}
-
-		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
-		if (mOrdEveTenPreMod != null && mOrdEveTenPreMod.getOrdinanza() != null
-				&& MISURA_ALTERNATIVA_AMMISSIONE_PROVVISORIA
-						.equals(mOrdEveTenPreMod.getOrdinanza().getCodTipoOrdinanza())) {
-			// Nuovo caricamento combo Template
-			siesLogger.debug("Ordinanza di ammissione provvisoria filtro i template");
-
-			TemplateModel tempaletRicerca = new TemplateModel();
-			tempaletRicerca.setCodTipoEvento(mOrdEveTenPreMod.getEvento().getCodTipoEvento());
-			tempaletRicerca.setCodTipoProvvedimento(mOrdEveTenPreMod.getEvento().getCodTipoProvvedimento());
-			tempaletRicerca.setCodMotivo(mOrdEveTenPreMod.getEvento().getCodMotivo());
-			tempaletRicerca.setCodOggettoProcedimento(
-					mFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento());
-			tempaletRicerca.setFlagTemplate("1"); // presente solo per le provvisorie che hanno gli stessi
-													// codice dalle ordinarie
-
-			Option lOptTemplate = null;
-			lOptTemplate = UtilTemplate.listaCbxTemplate(tempaletRicerca);
-			setRequestAttribute(CAMPO_COMBO_TEMPLATE, "" + lOptTemplate);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			siesLogger.debug("ElencoTemplate -> " + lOptTemplate);
-		}
-		// FINE: MEV_2019-09
 
 		ricercaFascicoloOrigine();
 

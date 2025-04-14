@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import org.apache.log4j.Logger;
 
 import siap.sico.decodifiche.controller.DecodificheManager;
+import siap.sico.decodifiche.util.DecodificheUtils;
 import siap.sico.ufficio.model.UfficioModel;
 import siap.sico.web.ActionSiap;
 import siap.siep.avvocato.controller.IAvvocato;
@@ -85,6 +86,13 @@ public class ActLoadInserisciAssegnaAvvocato
     // 19/03/2010 Nuova gestione Combo per Foro avvocato.
   	lOption = new Option(DecodificheManager.getInstance().getForo(), lDescrComune.toUpperCase().trim(), Option.NO_BLANK_ITEM);
   	setRequestAttribute("foro", ""+ lOption);
+  	
+    // 20210620 MEV_21 Nuova gestione Combo per Stato di Nascita
+  	lOption = new Option(DecodificheManager.getInstance().getNazioni(), "-");
+  	setRequestAttribute("nazione", "" + lOption );      
+    // 20210626 MEV_21 Nuova gestione Combo per Stato Difensore
+  	lOption = new Option(DecodificheManager.getInstance().getListaAttivitaAvvocato(), "-");
+  	setRequestAttribute("statoAvv", "" + lOption );      
     
     return PG_ASSEGNA_INSERISCI_DIFENSORE; //restituisce la jsp di VIEW
 

@@ -39,7 +39,6 @@
 <%@ page import="siap.sius.tenore.model.TenoreModel"%>
 <%@ page import="siap.sius.cancassfascsius.model.CancAssFascSiusModel"%>
 <%@ page import="siap.sius.esperto.model.EspertoModel"%>
-<%@ page import="siap.sius.depositodecreto.action.ICostantiDepositoDecreto"%>
 
 <jsp:useBean id="UtenteConnesso" 			scope="session" class="siap.sico.utente.model.UtenteModel"/>
 <jsp:useBean id="fascicoloSiusGP" 			scope="request" class="siap.sius.fascicolo.model.FascicoloGPModel"/>
@@ -72,8 +71,7 @@
 <jsp:useBean id="etichettaEta" 				scope="request" class="java.lang.String"/>
 <jsp:useBean id="oscuraEta" 				scope="request" class="java.lang.String"/>
 <jsp:useBean id="esperto" 					scope="request" class="siap.sius.esperto.model.EspertoModel"/>
-<%-- MEV_2019-09: aggiunto useBean --%>
-<jsp:useBean id="dataRestituzioneStr" 		scope="request" class="java.lang.String"/>
+
 <%
 String isVALIGN = "top";
 String isBorder = "0";
@@ -227,15 +225,14 @@ if (licenza != null) {
 	// Licenze
   	// LC = Licenza
 	// LI = Licenza per Internato
-	// Permessi
-  	// PP = Permesso Premio
-  	// PI = Permesso Internato
-  	if ("LC".equalsIgnoreCase(lCodTipoLic) || "LI".equalsIgnoreCase(lCodTipoLic)) {
-  		// Tipo Licenza
+  	// LP = Licenza Pene Sostitutive // MEV_2023-35
+  	// Permessi
+	// PP = Permesso Premio
+	// PI = Permesso Internato
+  	if ("LC".equalsIgnoreCase(lCodTipoLic) || "LI".equalsIgnoreCase(lCodTipoLic) || "LP".equalsIgnoreCase(lCodTipoLic)) { // Tipo Licenza
 		lDescrLink = "Dettaglio Esecuzione Licenza";
 		lRedir.setAction("siap.sius.permesso.action.ActLoadDettaglioEsecuzioneLicenza");
-	} else if (lCodTipoLic.equalsIgnoreCase("PP") || lCodTipoLic.equalsIgnoreCase("PI")) {
-		// Tipo Permesso 
+	} else if (lCodTipoLic.equalsIgnoreCase("PP") || lCodTipoLic.equalsIgnoreCase("PI")) { // Tipo Permesso 
 		lDescrLink = "Dettaglio Esecuzione Permesso";
 		lRedir.setAction("siap.sius.permesso.action.ActLoadDettaglioEsecuzionePermesso");
 	}
@@ -329,16 +326,23 @@ if (fascicoloUnificante != null && fascicoloUnificante.getFascicoloSiusModel() !
 if (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodTipoRegistro() != null) {
 	if (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodTipoRegistro().compareTo("S22") == 0
 			||  fascicoloSiusGP.getGeneraleProcedimentoModel().getCodTipoRegistro().compareTo("S12") == 0
-      		||  fascicoloSiusGP.getGeneraleProcedimentoModel().getCodTipoRegistro().compareTo("S09") == 0) {
+			|| fascicoloSiusGP.getGeneraleProcedimentoModel().getCodTipoRegistro().compareTo("S09") == 0
+			// MEV_2023-35
+			|| fascicoloSiusGP.getGeneraleProcedimentoModel().getCodTipoRegistro().compareTo("S30") == 0) {
 		String lTipoEsecuzione = "E.M.A.";
 		String lAzioneDiEsecuzione = "siap.sius.esecuzionemisuraalternativa.action.ActRicercaEsecuzioneMA";
 		if (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodTipoRegistro().compareTo("S12") == 0) {
 			lTipoEsecuzione="E.S.S.";
-			lAzioneDiEsecuzione="siap.sius.esecuzionesanzionesostitutiva.action.ActRicercaEsecuzioneSS";
+		    lAzioneDiEsecuzione="siap.sius.esecuzionesanzionesostitutiva.action.ActRicercaEsecuzioneSS&"+ICostantiFascicoloSius.CAMPO_COD_CONTENUTO+"=U019";
     	} else if (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodTipoRegistro().compareTo("S09") == 0) {
 			lTipoEsecuzione="E.M.S.";
 			lAzioneDiEsecuzione="siap.sius.esecuzionemisurasicurezza.action.ActRicercaEsecuzioneMS";
+		// MEV_2023-35    
+		} else if (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodTipoRegistro().compareTo("S30") == 0) {
+		    lTipoEsecuzione="E.P.S.";
+		    lAzioneDiEsecuzione="siap.sius.esecuzionesanzionesostitutiva.action.ActRicercaEsecuzioneSS&"+ICostantiFascicoloSius.CAMPO_COD_CONTENUTO+"=U126";
     	}
+		// MEV_2023-35 - FINE 
 %>
 				</tr>
 				<tr>
@@ -1302,26 +1306,6 @@ if (elencoNote != null && elencoNote.size() > 0) {
 		</td>
 	</tr>
 </table>
-
-<%
-// MEV_2019-09: aggiunta riga per RESTITUZIONE ATTI AL PRESIDENTE
-if (Utils.isPresent(dataRestituzioneStr)) {
-%>
-<table cellspacing="1" cellpadding="1" style="width: 100%;" border=<%=isBorder%>>
-	<tr>
-		<td class="label" width="15%" valign=<%=isVALIGN%>>&nbsp;</td>
-		<td class="Label">
-			<font class="cRosso">
-				Atti Restituiti al Presidente il <a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.fascicolo.action.ActLoadGestioneRestituzioneAttiPresidente&<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>=<%=fascicoloSiusGP.getFascicoloSiusModel().getIdFascicoloSius()%>&TornaQui=<%=TornaQui%>"><%=dataRestituzioneStr%></a>
-			</font>
-		</td>
-	</tr>
-</table>
-<%
-}
-// FINE MEV_2019-09
-%>
-
 <%
 if (ulterioriistanze != null && ulterioriistanze.size() > 0) {
 %>

@@ -10,15 +10,12 @@
 <%@ page import="siap.sius.tenore.model.TenoreModel"%>
 <%@ page import="siap.sius.depositoordinanzapc.action.ICostantiDepositoOrdinanzaPc"%>
 <%@ page import="siap.siep.util.MinorMask"%>
-<%@ page import="siap.sico.ufficio.action.ICostantiUfficio"%>
 
 <jsp:useBean id="fascicoloSiusGP" 		scope="session" class="siap.sius.fascicolo.model.FascicoloGPModel" />
 <jsp:useBean id="contenuto"     		scope="request" class="java.lang.String"/>
 <jsp:useBean id="tipo_decreto"     		scope="request" class="java.lang.String"/>
 <jsp:useBean id="data_emissione"     	scope="request" class="java.util.Date"/>
 <jsp:useBean id="inFormaDiPanelTDSM" 	scope="request" class="java.lang.String"/>
-
-<jsp:useBean id="tipoUfficioProcure" 	scope="request" class="java.lang.String"/>
 
 <%
 TenoreModel[] tenori = (TenoreModel[]) request.getAttribute("tenori");
@@ -30,13 +27,6 @@ if (fascicoloSiusGP.getGeneraleProcedimentoModel().getDataCameraConsiglio() != n
 	data1 = DateUtils.getDateToString(fascicoloSiusGP.getGeneraleProcedimentoModel().getDataCameraConsiglio(), "dd/MM/yyyy");
 else
 	data1 = DateUtils.getDateToString(fascicoloSiusGP.getFascicoloSiusModel().getDataIscrizione(), "dd/MM/yyyy");
-
-//INIZIO: MEV_2019-09 (D.lgs. 123/2018)
-boolean is678 = false;
-if (ICostantiDepositoOrdinanzaPc.COD_OGGETTO_CONCESSIONE_MISURE_ALTERNATIVA_678.equals(contenuto)
-		|| ICostantiDepositoOrdinanzaPc.COD_OGGETTO_CONCESSIONE_MISURE_ALTERNATIVA_678_MINORI.equals(contenuto))
-	is678 = true;
-//FINE: MEV_2019-09
 %>
 
 <html>
@@ -58,11 +48,7 @@ function Verify() {
 	// il Luogo di Svolgimento della prova è obbligatorio
 	var lTenori = document.InserisciOrdinanzaMA.<%=ICostantiTenore.CAMPO_COD_OGGETTO_TENORE%>;
     if (typeof (lTenori[0]) == "undefined") {
-		if (((lTenori.value in {'0001':1, '0002':1, '0003':1, '0005':1, '0010':1, '0012':1, '0013':1, '0195':1, '0361':1, '0362':1, '0610':1})
-				&& lEsiti.value == '0001')
-				// MEV_2019-09: aggiunti 6 (3+3) motivi provvedimento per nuovi contenuti C050 e C051
-				|| ((lTenori.value in {'0680':1, '0681':1, '0682':1}) && (lEsiti.value in {'0680':1, '0685':1}))
-				|| ((lTenori.value in {'0690':1, '0691':1, '0692':1}) && (lEsiti.value in {'0690':1, '0695':1}))) {
+		if ((lTenori.value in {'0001':1, '0002':1, '0003':1, '0005':1, '0010':1, '0012':1, '0013':1, '0195':1, '0362':1, '0610':1}) && lEsiti.value == '0001') {
 			if (document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_LUOGO_SVOLGIMENTO_PROVA%>.value == "") {
        			alert ('Luogo di svolgimento della prova obbligatorio!');
          		return false;
@@ -70,29 +56,12 @@ function Verify() {
       	}
    	}
 	for (jTenori = 0; jTenori < lTenori.length; jTenori++) {
-		if (lTenori[jTenori].value in {'0001':1, '0002':1, '0003':1, '0005':1, '0010':1, '0012':1, '0013':1, '0195':1, '0361':1, '0362':1, '0610':1}) {
-     	  	for (jEsiti = 0; jEsiti < lEsiti[jTenori].length ; jEsiti++) {
-				if ((lEsiti[jTenori][jEsiti].selected) && (lEsiti[jTenori][jEsiti].value == '0001')) {
-               		if (document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_LUOGO_SVOLGIMENTO_PROVA%>.value == "") {
-          				alert ('Luogo di svolgimento della prova obbligatorio!');
-            			return false;
-            		}
-          		}
-        	}
-    	}
-		// MEV_2019-09: aggiunti 6 (3+3) motivi provvedimento per nuovi contenuti C050 e C051
-		else if (lTenori[jTenori].value in {'0680':1, '0681':1, '0682':1}) {
-     	  	for (jEsiti = 0; jEsiti < lEsiti[jTenori].length ; jEsiti++) {
-				if ((lEsiti[jTenori][jEsiti].selected) && (lEsiti[jTenori][jEsiti].value in {'0680':1, '0685':1})) {
-               		if (document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_LUOGO_SVOLGIMENTO_PROVA%>.value == "") {
-          				alert ('Luogo di svolgimento della prova obbligatorio!');
-            			return false;
-            		}
-          		}
-        	}
-    	} else if (lTenori[jTenori].value in {'0690':1, '0691':1, '0692':1}) {
-     	  	for (jEsiti = 0; jEsiti < lEsiti[jTenori].length ; jEsiti++) {
-				if ((lEsiti[jTenori][jEsiti].selected) && (lEsiti[jTenori][jEsiti].value in {'0690':1, '0695':1})) {
+			if (lTenori[jTenori].value in {'0001':1, '0002':1, '0003':1, '0005':1, '0010':1, '0012':1, '0013':1, '0195':1, '0362':1, '0610':1}) {
+        	  for (jEsiti = 0; jEsiti < lEsiti[jTenori].length ; jEsiti++ )
+              {
+                
+                if ( (lEsiti[jTenori][jEsiti].selected) && (lEsiti[jTenori][jEsiti].value == '0001' ) )
+                {
                		if (document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_LUOGO_SVOLGIMENTO_PROVA%>.value == "") {
           				alert ('Luogo di svolgimento della prova obbligatorio!');
             			return false;
@@ -176,33 +145,6 @@ function enableForma() {
 		}
 	}
 }
-
-<%-- INIZIO: MEV_2019-09 (D.lgs. 123/2018) --%>
-function checkEsiti() {
-	var listComboEsiti = document.getElementsByName('<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>');
-	if (typeof (listComboEsiti[1]) == "undefined") {
-		var comboEsito = document.InserisciOrdinanzaMA.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>;
-		for (j = 0; j < comboEsito.length; j++) {
-			if (comboEsito.options[j].value == '0680' || comboEsito.options[j].value == '0690') {
-				<%-- Si elimina APPLICA PROVVISORIAMENTE x ordinanza normale --%>
-	       		comboEsito.remove(j);
-	       		j--;
-     		}
-   		}
-	} else {
-		for (i = 0; i < listComboEsiti.length; i++) {
-	   		var comboEsito = listComboEsiti[i];
-	   		for (j = 0; j < comboEsito.length; j++) {
-				if (comboEsito.options[j].value == '0680' || comboEsito.options[j].value == '0690') {
-					<%-- Si elimina APPLICA PROVVISORIAMENTE x ordinanza normale --%>
-	        		comboEsito.remove(j);
-	        		j--;
-	      		}
-	     	}
-   		}
-	}
-}
-
 </script>
 <jsp:include page="/jsp/files/siap/siep/misuraalternativa/MinorScript.jsp"/>
 </head>

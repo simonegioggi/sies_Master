@@ -23,7 +23,12 @@ import siap.sige.web.ActionSige;
 
 /**
  * ActRicercaProvvedimenti - Azione specializzata per la ricerca dei Provvedimenti legati al fascicolo SIGE
- * 
+ * <<<<<<< HEAD
+ *
+ * =======
+ *
+ * >>>>>>> MEV_2024-092_FASE-1
+ *
  * @version 1.0
  */
 public class ActRicercaProvvedimenti extends ActionSige implements ICostantiProvvedimentoSige {
@@ -53,7 +58,6 @@ public class ActRicercaProvvedimenti extends ActionSige implements ICostantiProv
 			siesLogger.debug("Ricerca Provvedimendi da ID FASCICOLO->" + lIdFascicolo);
 			IFascicoloSige lCtrlFas = SIGELookupRemote.getFascicoloSigeRemote();
 			lFasEsteso = lCtrlFas.ExRicercaEstesaFascicoloSigeByKey(lIdFascicolo);
-
 		} else {
 			lFasEsteso = this.getFascicoloSigeEstesoInSessione();
 			lIdFascicolo = lFasEsteso.getFascicoloSige().getIdFascicoloSige();
@@ -72,7 +76,6 @@ public class ActRicercaProvvedimenti extends ActionSige implements ICostantiProv
 		setRequestAttribute("provvedimenti", lVect);
 
 		// Ricerca dell'eventuale prima impugnazione valida per ciascun provvedimento
-
 		IImpugnazioneSige ctrIS = SIGELookupRemote.getImpugnazioneSigeRemote();
 		Vector<ImpugnazioneSigeModel> impugnazioniProvvedimento = new Vector<>();
 		Vector<ImpugnazioneSigeModel> impugnazioniProvvedimenti = new Vector<>();
@@ -108,7 +111,7 @@ public class ActRicercaProvvedimenti extends ActionSige implements ICostantiProv
 				for (Iterator iterator = impugn.iterator(); iterator.hasNext();) {
 					ImpugnazioneSigeModel impugnazioneSigeModel = (ImpugnazioneSigeModel) iterator.next();
 					if (impugnazioneSigeModel.getCodTenoreDecisione() != null && (impugnazioneSigeModel
-									.getCodTenoreDecisione()
+							.getCodTenoreDecisione()
 							.equals(ICostantiImpugnazioneSige.COD_ESITO_ACCOGLIE_FISSA_UDIENZA)
 							|| impugnazioneSigeModel.getCodTenoreDecisione().equals(
 									ICostantiImpugnazioneSige.COD_ESITO_CONVERTE_RICORSO_IN_OPPOSIZIONE))) {
@@ -123,9 +126,7 @@ public class ActRicercaProvvedimenti extends ActionSige implements ICostantiProv
 				lModificabile = "NO";
 			else
 				lModificabile = "SI";
-
 		}
-
 		setRequestAttribute("isModificabile", lModificabile);
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di

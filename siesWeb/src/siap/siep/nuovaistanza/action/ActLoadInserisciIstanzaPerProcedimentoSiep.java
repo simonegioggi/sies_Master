@@ -1,16 +1,11 @@
 package siap.siep.nuovaistanza.action;
 
-/**
-* <p>Title: ActRicercaFascicolo</p>
-* <p>Description: </p>
-* <p>Copyright: Copyright (c) 2009</p>
-* <p>Company: Agile s.r.l.</p>
-* @author Dario Babarini
-* @version 5.0
-*/
-
 import java.math.BigDecimal;
 
+import f3b.util.F3BException;
+import f3b.web.IWebConstants;
+import f3b.web.RedirectTo;
+import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.web.ActionSiap;
 import siap.siep.SIEPException;
@@ -18,62 +13,86 @@ import siap.siep.fascicolo.action.ICostantiFascicoloSiep;
 import siap.siep.fascicolo.controller.IFascicoloSiep;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.util.SIEPLookupRemote;
-import f3b.util.F3BException;
-import f3b.web.IWebConstants;
-import f3b.web.RedirectTo;
-import f3b.web.html.Option;
 
-public class ActLoadInserisciIstanzaPerProcedimentoSiep extends ActionSiap implements ICostantiNuovaIstanza
-{
- public String processRequest() throws Exception
- {
-      //Istanzio il Model
-      FascicoloSiepModel lFasMod = new FascicoloSiepModel();
+public class ActLoadInserisciIstanzaPerProcedimentoSiep extends ActionSiap implements ICostantiNuovaIstanza {
 
-      BigDecimal lChiaveProgr = getRequestBigDecimalParameter(ICostantiFascicoloSiep.CAMPO_CHIAVE_PROGR);
-      BigDecimal lChiaveAnno = getRequestBigDecimalParameter(ICostantiFascicoloSiep.CAMPO_CHIAVE_ANNO);
+	public String processRequest() throws Exception {
 
-      if (lChiaveAnno.intValue()>= 90000 &&
-      		lChiaveAnno.intValue()<= 99999)
-        throw new SIEPException(F3BException.USER_MESSAGE,"Iscrizione Istanza non prevista per questo Numero");
+		// Istanzio il Model
+		FascicoloSiepModel lFasMod = new FascicoloSiepModel();
 
-      lFasMod.setChiaveUfficio(getCodUfficioUtenteConnesso());
-      lFasMod.setChiaveProgr(lChiaveProgr);
-      lFasMod.setChiaveAnno(lChiaveAnno);
+		BigDecimal lChiaveProgr = getRequestBigDecimalParameter(ICostantiFascicoloSiep.CAMPO_CHIAVE_PROGR);
+		BigDecimal lChiaveAnno = getRequestBigDecimalParameter(ICostantiFascicoloSiep.CAMPO_CHIAVE_ANNO);
 
-      IFascicoloSiep lCtrl = SIEPLookupRemote.getFascicoloSiepRemote();
-      FascicoloSiepModel lFasRet = lCtrl.ExRicercaFascicoloSiepByProgrAnnoCodUfficio(lFasMod);
+		if (lChiaveAnno.intValue() >= 90000 && lChiaveAnno.intValue() <= 99999)
+			throw new SIEPException(F3BException.USER_MESSAGE,
+					"Iscrizione Istanza non prevista per questo Numero");
 
-      if (lFasRet == null)
-      {
-  			// setta la risposta nella request
-  			setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Nessun Fascicolo con Anno "+ lChiaveAnno+" e Progressivo " +lChiaveProgr+".Fare Iscrizione Istanza Completa.");
+		lFasMod.setChiaveUfficio(getCodUfficioUtenteConnesso());
+		lFasMod.setChiaveProgr(lChiaveProgr);
+		lFasMod.setChiaveAnno(lChiaveAnno);
 
-  	    //Prepara la "pagina" di destinAction
-  	    RedirectTo lRedirigi = new RedirectTo();
-  	    lRedirigi.setPage( IWebConstants.PG_MAIN );
-  	    lRedirigi.setAction( "siap.siep.nuovaistanza.action.ActLoadInserisciIstanzaPerTitoloEsecutivo" );
+		IFascicoloSiep lCtrl = SIEPLookupRemote.getFascicoloSiepRemote();
+		FascicoloSiepModel lFasRet = lCtrl.ExRicercaFascicoloSiepByProgrAnnoCodUfficio(lFasMod);
 
-  	    setRequestAttribute( IWebConstants.GOTO_PAGE, "" + lRedirigi );
+		if (lFasRet == null) {
+			// setta la risposta nella request
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Nessun Fascicolo con Anno " + lChiaveAnno
+					+ " e Progressivo " + lChiaveProgr + ".Fare Iscrizione Istanza Completa.");
 
-  			return IWebConstants.PG_MESSAGE;
-      }
-      setSessionAttribute("fascicolo",lFasRet);
-      setSessionAttribute("soggetto",lFasRet.getSoggetto());
-      setSessionAttribute("sentenza",lFasRet.getSentenza());
-      setRequestAttribute("idfascicolo",""+ lFasRet.getIdFascicoloSiep());
-      
-      //19/04/2010 Autorità Mittente Nuova Istanza
-	  	//Option lOption = new Option( DecodificheManager.getInstance().getTipoAutorita());
-    	Option lOption = new Option( DecodificheManager.getInstance().getTipoAutoritaMittenteIstanza());
-      setRequestAttribute("autorita", "" + lOption );
-      
-      Option lOptionTA = new Option(DecodificheManager.getInstance().getTipoAvvocato());
-      setRequestAttribute("tipoAvvocato", "" + lOptionTA);
+			// Prepara la "pagina" di destinAction
+			RedirectTo lRedirigi = new RedirectTo();
+			lRedirigi.setPage(IWebConstants.PG_MAIN);
+			lRedirigi.setAction("siap.siep.nuovaistanza.action.ActLoadInserisciIstanzaPerTitoloEsecutivo");
 
-      Option lOptionCI = new Option(DecodificheManager.getInstance().getTipoContenutoIstanza());
-      setRequestAttribute("contenuto", "" + lOptionCI);   
+			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
 
-      return PG_LOAD_INSERISCI_PROCEDIMENTO_ISTANZA;
-  }
+			return IWebConstants.PG_MESSAGE;
+		}
+		setSessionAttribute("fascicolo", lFasRet);
+		setSessionAttribute("soggetto", lFasRet.getSoggetto());
+		setSessionAttribute("sentenza", lFasRet.getSentenza());
+		setRequestAttribute("idfascicolo", "" + lFasRet.getIdFascicoloSiep());
+
+		// 19/04/2010 Autorità Mittente Nuova Istanza
+		// Option lOption = new Option( DecodificheManager.getInstance().getTipoAutorita());
+		Option lOption = new Option(DecodificheManager.getInstance().getTipoAutoritaMittenteIstanza());
+		setRequestAttribute("autorita", "" + lOption);
+
+		Option lOptionTA = new Option(DecodificheManager.getInstance().getTipoAvvocato());
+		setRequestAttribute("tipoAvvocato", "" + lOptionTA);
+
+		Option lOptionCI = new Option(DecodificheManager.getInstance().getTipoContenutoIstanza());
+		setRequestAttribute("contenuto", "" + lOptionCI);
+
+		// 20210729 Gestione Combo per Foro avvocato.
+		// lOption = new Option(DecodificheManager.getInstance().getForo(), lDescrComune.toUpperCase().trim(),
+		// Option.NO_BLANK_ITEM);
+		// String lStatoForo =
+		// DecodificheUtils.getCodAltebyCode(DecodificheManager.getInstance().getForoAll(),
+		// avvocato.getAvvocato().getForo());
+
+		// if ("SOPPRESSO".equals(lStatoForo)){
+		// aggiungo un black item. La combo foro non deve presentare un valore preselezionato
+		lOption = new Option(DecodificheManager.getInstance().getForo(), Option.BLANK_ITEM);
+		// } else {
+		// lOption = new Option(DecodificheManager.getInstance().getForo(),
+		// avvocato.getAvvocato().getForo(),Option.NO_BLANK_ITEM);
+		// }
+		setRequestAttribute("foro", "" + lOption);
+		setRequestAttribute("foroP", "" + lOption);
+
+		// 20210729 MEV_21 Nuova gestione Combo per Stato di Nascita
+		lOption = new Option(DecodificheManager.getInstance().getNazioni(), "-");
+		setRequestAttribute("nazione", "" + lOption);
+		setRequestAttribute("nazioneP", "" + lOption);
+
+		// 20210729 MEV_21 Nuova gestione Combo per Stato Difensore
+		lOption = new Option(DecodificheManager.getInstance().getListaAttivitaAvvocato(), "-");
+		setRequestAttribute("statoAvv", "" + lOption);
+		setRequestAttribute("statoAvvP", "" + lOption);
+
+		return PG_LOAD_INSERISCI_PROCEDIMENTO_ISTANZA;
+	}
+
 }

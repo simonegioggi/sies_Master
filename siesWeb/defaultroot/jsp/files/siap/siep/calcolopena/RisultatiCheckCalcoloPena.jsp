@@ -148,7 +148,7 @@ if (lFascicoliConErrore.size()>0)
 <% 
 for (int i=0; i<lFascicoliConErrore.size();i++)
 {
-  FascicoloSiepModel lFascicolo = (FascicoloSiepModel)lFascicoliConErrore.elementAt(i);;
+  FascicoloSiepModel lFascicolo = (FascicoloSiepModel)lFascicoliConErrore.elementAt(i);
   // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
   siesLogger.error("Errore Fascicolo: "+lFascicolo.getIdFascicoloSiep()+" - "+lFascicolo.getChiaveAnno()+"/"+lFascicolo.getChiaveProgr());
 %>  

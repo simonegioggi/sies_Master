@@ -62,6 +62,8 @@ public interface IAvvocato {
 
 	public AvvocatoModel ExModificaAvvocato(AvvocatoModel aAvvocato) throws F3BException;
 
+	public AvvocatoModel ExAggiornaAvvocatoDaReginde(AvvocatoModel aAvvocato) throws F3BException;	// 20210623 MEV_21
+	
 	public void ExCancellaAvvocato(AvvocatoModel aAvvocato) throws F3BException;
 
 	/*****************************************************************************
@@ -148,4 +150,6 @@ public interface IAvvocato {
 
 	public Vector ExRicercaForiDisponibili() throws F3BException;
 
+	public AvvocatoModel ExRicercaAvvocatoCertRegInde(AvvocatoModel lAvvMod) throws F3BException;	// 20210614 MEV_21
+	
 }

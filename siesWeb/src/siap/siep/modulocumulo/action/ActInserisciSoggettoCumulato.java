@@ -22,6 +22,7 @@ import siap.sico.decodifiche.action.ICostantiComune;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.decodifiche.model.DecodificheModel;
+import siap.sico.soggetto.action.ICostantiSoggetto;
 import siap.siep.fascicolo.action.ICostantiFascicoloSiep;
 import siap.siep.modulocumulo.controller.ISoggettoCumulato;
 import siap.siep.modulocumulo.model.SoggettoCumulatoModel;
@@ -85,7 +86,9 @@ public class ActInserisciSoggettoCumulato extends ActionModuloCumulo implements 
 		} else {
 			// altrimenti dalla sola descrizione (rischio omonimi)
 			lComMod = new ComuneModel(
-					getDatiComuneByDescrOmonimiaFlagVal(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
+					// 20210521	MEV_Scheda-21 Correzione per la gestione delle Omonimie dei Comuni.
+					//getDatiComuneByDescrOmonimiaFlagVal(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
+					getDatiComuneByDescrOmonimia(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));    	
 		}
 
 		lSogMod.setCodComuneNascita(lComMod.getCodComune());

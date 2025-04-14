@@ -622,8 +622,14 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 					lAut = new AutoritaEsternaModel();
 					lAut.setCodTipoAutorita(lTipoAutoritaEsternaAvvocato[lIndex]);
 
+					// INIZIO: MEV_21 (avvocati) - si inibisce la selezione di comuni non validi (tipo NAPOLI
+					// NORD)
+					// ComuneModel lComMod = new ComuneModel(
+					// getCodComuneByDescr(lSedeAutoritaEsternaAvvocato[lIndex]));
 					ComuneModel lComMod = new ComuneModel(
-							getCodComuneByDescr(lSedeAutoritaEsternaAvvocato[lIndex]));
+							getCodComuneByDescrFlagVal(lSedeAutoritaEsternaAvvocato[lIndex]));
+					// FINE: MEV_21
+
 					lAut.setCodSede(lComMod.getCodComune());
 					lAut.setCodOperatoreInserimento(lCodiceOperatore);
 					lAut.setCodUfficioInserimento(lCodiceUfficio);
@@ -1169,52 +1175,94 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 		lNotifiche.add(lNotMod);
 		// FINE NOTIFICA AUTORITA I C
 
-		// INIZIO NOTIFICA AUTORITA N
-		lNotMod = new NotificaModel();
-		// COD_TIPO_NOTIFICA
-		lNotMod.setCodTipoNotifica("N");
-		// AUT_EST_ID_AUTORITA_ESTERNA
-		// nel caso"N" l'autorita' esterna è "Ufficio di Destinazione"
-		String tipoAutoritaEsternaE;
-		if (!isRequestParameterNullObj(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA)) {
-			tipoAutoritaEsternaE = getRequestStringParameter(
-					ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA);
-		} else {
-			tipoAutoritaEsternaE = "-";
+		// ==============================================================================================================
+		// INIZIO MAC non segnalata scoperta in fase di intervento MEV 21 Avvocati. Il codice non gestisce in
+		// inserimento
+		// più avvocati ma carica solo il primo avvocato della form anche se ne sono presenti 2.
+		// Codice sostituito con quello recuperato dal metodo setNotificheMisuraAlternativa()
+		/*
+		 * // INIZIO NOTIFICA AUTORITA N lNotMod = new NotificaModel(); // COD_TIPO_NOTIFICA
+		 * lNotMod.setCodTipoNotifica("N"); // AUT_EST_ID_AUTORITA_ESTERNA // nel caso"N" l'autorita' esterna
+		 * è "Ufficio di Destinazione" String tipoAutoritaEsternaE; if
+		 * (!isRequestParameterNullObj(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA)) {
+		 * tipoAutoritaEsternaE = getRequestStringParameter(
+		 * ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA); } else { tipoAutoritaEsternaE = "-"; } String
+		 * sedeAutoritaEsternaE = "-"; if
+		 * (!isRequestParameterNullObj(ICostantiAutoritaEsterna.CAMPO_COD_SEDE)) { sedeAutoritaEsternaE =
+		 * getRequestStringParameter(ICostantiAutoritaEsterna.CAMPO_COD_SEDE); } if
+		 * (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE_AVVOCATI)) { String lSedeNoteE =
+		 * getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE_AVVOCATI);
+		 * lNotMod.setNote(lSedeNoteE); } lNotMod.setCodEsito("-");
+		 * lNotMod.setCodOperatoreInserimento(lCodiceOperatore);
+		 * lNotMod.setDataInserimento(DateUtils.getSysDate());
+		 * lNotMod.setCodUfficioInserimento(lCodiceUfficio); lNotMod.setDataInvio(lDataEmissione);
+		 * AutoritaEsternaModel aut = new AutoritaEsternaModel();
+		 * aut.setCodTipoAutorita(tipoAutoritaEsternaE); ComuneModel lComMod = new
+		 * ComuneModel(getCodComuneByDescrFlagVal(sedeAutoritaEsternaE));
+		 * aut.setCodSede(lComMod.getCodComune()); aut.setDescrSede(sedeAutoritaEsternaE);
+		 * aut.setCodOperatoreInserimento(lCodiceOperatore); aut.setCodUfficioInserimento(lCodiceUfficio);
+		 * aut.setDataInserimento(DateUtils.getSysDate()); lNotMod.setAutoritaEsterna(aut); //
+		 * AVV_ID_AVVOCATO_FASCICOLO_SIEP String avvocato =
+		 * getRequestStringParameter(ICostantiAvvocato.CAMPO_ID_AVVOCATO);
+		 * lNotMod.setAvvIdAvvocatoFascicoloSiep(new BigDecimal(avvocato)); // CSS_ID_CSSA
+		 * lNotMod.setCssIdCssa(null); // IST_DET_ID_ISTITUTO_DETENZIONE
+		 * lNotMod.setIstDetIdIstitutoDetenzione(null); // UFF_COD_UFFICIO lNotMod.setUffCodUfficio(null);
+		 * lNotifiche.add(lNotMod); // FINE NOTIFICA AUTORITA N
+		 */
+
+		int lIndex = 0;
+		if (!this.isRequestParameterNullObj(ICostantiAvvocato.CAMPO_ID_AVVOCATO)) {
+			String[] lAvvocati = this.getRequestStringParameters(ICostantiAvvocato.CAMPO_ID_AVVOCATO);
+			for (lIndex = 0; lIndex < lAvvocati.length; lIndex++) {
+				if ("".equals(lAvvocati[lIndex])) {
+					// 23-01-2014 d.f. per gestire il caso di Avvocati presenti in maschera
+					// ma in DIV a scomparsa. Se l'utente decide di non inviare la notifica,
+					// sulla submit il campo ICostantiAvvocato.CAMPO_ID_AVVOCATO viene
+					// 'sbiancato' e passa comunque come parameter ma vuoto ('').
+					continue;
+				}
+				NotificaModel lNotAvv = new NotificaModel();
+
+				lNotAvv.setCodTipoNotifica("N");
+				lNotAvv.setDataInvio(lDataEmissione);
+				lNotAvv.setCodEsito("-");
+				lNotAvv.setCodOperatoreInserimento(lCodiceOperatore);
+				lNotAvv.setDataInserimento(DateUtils.getSysDate());
+				lNotAvv.setCodUfficioInserimento(lCodiceUfficio);
+				lNotAvv.setAvvIdAvvocatoFascicoloSiep(new BigDecimal(lAvvocati[lIndex]));
+
+				if (!this.isRequestParameterNullObj(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA)) {
+					String[] lTipoAutoritaEsternaAvvocato = this
+							.getRequestStringParameters(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA);
+					String[] lSedeAutoritaEsternaAvvocato = this
+							.getRequestStringParameters(ICostantiAutoritaEsterna.CAMPO_COD_SEDE);
+
+					String[] lNoteAvvocato = this
+							.getRequestStringParameters(ICostantiMisuraAlternativa.CAMPO_NOTE_AVVOCATI);
+					lNotAvv.setNote(lNoteAvvocato[lIndex]);
+					AutoritaEsternaModel lAut = new AutoritaEsternaModel();
+					lAut = new AutoritaEsternaModel();
+					lAut.setCodTipoAutorita(lTipoAutoritaEsternaAvvocato[lIndex]);
+
+					// INIZIO: MEV_21 (avvocati) - si inibisce la selezione di comuni non validi (tipo NAPOLI
+					// NORD)
+					// ComuneModel lComMod = new ComuneModel(
+					// getCodComuneByDescr(lSedeAutoritaEsternaAvvocato[lIndex]));
+					ComuneModel lComMod = new ComuneModel(
+							getCodComuneByDescrFlagVal(lSedeAutoritaEsternaAvvocato[lIndex]));
+					// FINE: MEV_21
+
+					lAut.setCodSede(lComMod.getCodComune());
+					lAut.setCodOperatoreInserimento(lCodiceOperatore);
+					lAut.setCodUfficioInserimento(lCodiceUfficio);
+					lAut.setDataInserimento(DateUtils.getSysDate());
+					lNotAvv.setAutoritaEsterna(lAut);
+				}
+				lNotifiche.add(lNotAvv);
+			}
 		}
-		String sedeAutoritaEsternaE = "-";
-		if (!isRequestParameterNullObj(ICostantiAutoritaEsterna.CAMPO_COD_SEDE)) {
-			sedeAutoritaEsternaE = getRequestStringParameter(ICostantiAutoritaEsterna.CAMPO_COD_SEDE);
-		}
-		if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE_AVVOCATI)) {
-			String lSedeNoteE = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE_AVVOCATI);
-			lNotMod.setNote(lSedeNoteE);
-		}
-		lNotMod.setCodEsito("-");
-		lNotMod.setCodOperatoreInserimento(lCodiceOperatore);
-		lNotMod.setDataInserimento(DateUtils.getSysDate());
-		lNotMod.setCodUfficioInserimento(lCodiceUfficio);
-		lNotMod.setDataInvio(lDataEmissione);
-		AutoritaEsternaModel aut = new AutoritaEsternaModel();
-		aut.setCodTipoAutorita(tipoAutoritaEsternaE);
-		ComuneModel lComMod = new ComuneModel(getCodComuneByDescrFlagVal(sedeAutoritaEsternaE));
-		aut.setCodSede(lComMod.getCodComune());
-		aut.setDescrSede(sedeAutoritaEsternaE);
-		aut.setCodOperatoreInserimento(lCodiceOperatore);
-		aut.setCodUfficioInserimento(lCodiceUfficio);
-		aut.setDataInserimento(DateUtils.getSysDate());
-		lNotMod.setAutoritaEsterna(aut);
-		// AVV_ID_AVVOCATO_FASCICOLO_SIEP
-		String avvocato = getRequestStringParameter(ICostantiAvvocato.CAMPO_ID_AVVOCATO);
-		lNotMod.setAvvIdAvvocatoFascicoloSiep(new BigDecimal(avvocato));
-		// CSS_ID_CSSA
-		lNotMod.setCssIdCssa(null);
-		// IST_DET_ID_ISTITUTO_DETENZIONE
-		lNotMod.setIstDetIdIstitutoDetenzione(null);
-		// UFF_COD_UFFICIO
-		lNotMod.setUffCodUfficio(null);
-		lNotifiche.add(lNotMod);
-		// FINE NOTIFICA AUTORITA N
+		// FINE INTERVENTO MAC (MEV_21)
+		// ==============================================================================================================
 
 		// INIZIO NOTIFICA AUTORITA II C
 		lNotMod = new NotificaModel();
@@ -1513,16 +1561,7 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 		lMisMod.setDataInserimento(DateUtils.getSysDate());
 		lMisMod.setFlagUfficioInserimento("P");
 
-		// MEV_2019-09 - SI aggiunge la data Esecutività
-		if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA)
-				&& getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA) != null
-				&& !getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA)
-						.equals("-"))
-			lMisMod.setDataEsecutivita(
-					getRequestDateParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA,
-							ICostantiMisuraAlternativa.CAMPO_MESE_DATA_ESECUTIVITA,
-							ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA));
-
+		// model di ritorno
 		return lMisMod;
 	}
 

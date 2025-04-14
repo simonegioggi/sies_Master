@@ -1,15 +1,16 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%@ page import="siap.sico.magistrato.action.ICostantiMagistrato"%>
-<%@ page import="siap.sius.udienza.action.ICostantiUdienza"%>
 <%@ page import="java.util.HashSet"%>
+<%@ page import="java.util.Iterator"%>
+<%@ page import="java.util.Collection"%>
+
 <%@ page import="f3b.web.RedirectTo"%>
 <%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
-<%@ page import="java.util.Iterator"%>
-<%@ page import="java.util.Collection"%>
 <%@ page import="f3b.web.html.Option"%>
 
+<%@ page import="siap.sico.magistrato.action.ICostantiMagistrato"%>
+<%@ page import="siap.sius.udienza.action.ICostantiUdienza"%>
 <%@ page import="siap.sico.evento.action.ICostantiEvento"%>
 <%@ page import="siap.sico.evento.model.EventoNotificaModel"%>
 <%@ page import="siap.siep.notifica.model.NotificaModel"%>
@@ -31,53 +32,33 @@
 <%@ page import="siap.sige.aula.model.AulaUdienzaModel"%>
 <%@ page import="siap.sige.aula.action.ICostantiAula"%>
 
-<jsp:useBean id="tipoAutoritaSogg" scope="request"
-	class="java.lang.String" />
-<jsp:useBean id="tipoAutoritaAltro" scope="request"
-	class="java.lang.String" />
-<jsp:useBean id="TipiIstitutiColl" scope="request"
-	class="java.lang.Object" />
-<jsp:useBean id="luogodet" scope="request"
-	class="siap.sige.detenzione.model.FasSigeDetenzioneModel" />
+<jsp:useBean id="tipoAutoritaSogg" scope="request" class="java.lang.String"/>
+<jsp:useBean id="tipoAutoritaAltro" scope="request" class="java.lang.String"/>
+<jsp:useBean id="TipiIstitutiColl" scope="request" class="java.lang.Object"/>
+<jsp:useBean id="luogodet" scope="request" class="siap.sige.detenzione.model.FasSigeDetenzioneModel"/>
 <jsp:useBean id="tipoGiudizio" scope="request" class="java.lang.String" />
-<jsp:useBean id="tipoGiudizioVal" scope="request"
-	class="java.lang.String" />
+<jsp:useBean id="tipoGiudizioVal" scope="request" class="java.lang.String"/>
 <jsp:useBean id="avvocato" scope="request" class="java.util.Vector" />
-<jsp:useBean id="UdienzaPreFissata" scope="request"
-	class="siap.sige.udienza.model.UdienzaSigeModel" />
+<jsp:useBean id="UdienzaPreFissata" scope="request"	class="siap.sige.udienza.model.UdienzaSigeModel"/>
 <jsp:useBean id="TornaQui" scope="request" class="java.lang.String" />
 <jsp:useBean id="TipoDest" scope="request" class="java.lang.String" />
 <jsp:useBean id="tenori" scope="session" class="java.util.Vector" />
-<jsp:useBean id="UdienzaSige" scope="request"
-	class="siap.sige.udienza.model.UdienzaSigeModel" />
-<jsp:useBean id="FascicoloSigeEsteso" scope="session"
-	class="siap.sige.fascicolo.model.FascicoloSigeEstesoModel" />
-<jsp:useBean id="aulaUdienza" scope="request"
-	class="siap.sige.aula.model.AulaUdienzaModel" />
-<jsp:useBean id="magistratoassegnatario" scope="request"
-	class="siap.sige.magistratoassegnatario.model.MagistratoAssegnatarioModel" />
-
-<jsp:useBean id="notificaComunicazione" scope="request"
-	class="java.lang.String" />
+<jsp:useBean id="UdienzaSige" scope="request" class="siap.sige.udienza.model.UdienzaSigeModel"/>
+<jsp:useBean id="FascicoloSigeEsteso" scope="session" class="siap.sige.fascicolo.model.FascicoloSigeEstesoModel"/>
+<jsp:useBean id="aulaUdienza" scope="request" class="siap.sige.aula.model.AulaUdienzaModel"/>
+<jsp:useBean id="magistratoassegnatario" scope="request" class="siap.sige.magistratoassegnatario.model.MagistratoAssegnatarioModel"/>
+<jsp:useBean id="notificaComunicazione" scope="request" class="java.lang.String"/>
 <jsp:useBean id="vectNotAvv" scope="request" class="java.util.Vector" />
-<jsp:useBean id="notSogg" scope="request"
-	class="siap.siep.notifica.model.NotificaModel" />
-<jsp:useBean id="notAltro" scope="request"
-	class="siap.siep.notifica.model.NotificaModel" />
-
+<jsp:useBean id="notSogg" scope="request" class="siap.siep.notifica.model.NotificaModel"/>
+<jsp:useBean id="notAltro" scope="request" class="siap.siep.notifica.model.NotificaModel"/>
 <jsp:useBean id="IdEvento" scope="request" class="java.lang.String" />
 <jsp:useBean id="IdUdienzaSige" scope="request" class="java.lang.String" />
-<jsp:useBean id="IdUdienzaProcedimentoSige" scope="request"
-	class="java.lang.String" />
+<jsp:useBean id="IdUdienzaProcedimentoSige" scope="request" class="java.lang.String"/>
 <jsp:useBean id="modalita" scope="request" class="java.lang.String" />
-<jsp:useBean id="elencoSezioniUdienza" scope="request"
-	class="java.lang.String" />
-<jsp:useBean id="eventoNotifica" scope="request"
-	class="siap.sico.evento.model.EventoNotificaModel" />
-<jsp:useBean id="provvedimentoSige" scope="request"
-	class="siap.sige.provvedimento.model.ProvvedimentoSigeEventoModel" />
-<jsp:useBean id="indirizzoUfficio" scope="request"
-	class="java.lang.String" />
+<jsp:useBean id="elencoSezioniUdienza" scope="request" class="java.lang.String"/>
+<jsp:useBean id="eventoNotifica" scope="request" class="siap.sico.evento.model.EventoNotificaModel"/>
+<jsp:useBean id="provvedimentoSige" scope="request" class="siap.sige.provvedimento.model.ProvvedimentoSigeEventoModel"/>
+<jsp:useBean id="indirizzoUfficio" scope="request" class="java.lang.String"/>
 <%-- 20171004: [SG] aggiunto useBean --%>
 <jsp:useBean id="ufficioConSezioni" scope="request" class="java.lang.String" />
 <jsp:useBean id="provEsitoImpugnaz"       scope="request" class="java.lang.String"/>
@@ -203,8 +184,7 @@
 <html>
 <head>
 <title>[S.I.E.S.] - Inserisci Fissazione Udienza</title>
-<link rel="STYLESHEET" type="text/css"
-	href="<%=IWebConstants.PG_STYLE%>">
+<link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
 
 <script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
 <script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
@@ -649,10 +629,10 @@
 						size="4" maxlength="4" onFocus="javascript:textboxSelect(this)"
 						onkeypress="return TicTabNumField(this,event)"
 						onBlur="javascript:value=FillYear(value)"> <!-- MEV 15 - Revisione SIGE -->
-						<a
-						href="javascript:calendario('LoadInserisciFissazioneUdienza','<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>','<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>','<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>');">
+					<a href="javascript:calendario('LoadInserisciFissazioneUdienza','<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>','<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>','<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>');">
 							<img src="/images/calendario.gif" border=0>
-					</a></td>
+					</a>
+				</td>
 				</tr>
 
 				<!-- Sezione Oggetti -->
@@ -769,10 +749,7 @@ function effettoTree(){
 			<table style="width: 100%;" cellpadding="2" cellspacing="2">
 				<tr>
 					<td class="Titolo">
-						<div align="left">
-							<a><img name="imageDestina" src="/images/expand.gif"
-								onClick="return effettoTree();" alt="" border=0></a>Destinatari
-						</div>
+			<div align="left"><a><img name="imageDestina" src="/images/expand.gif" onClick="return effettoTree();" alt="" border=0></a>Destinatari</div>
 					</td>
 				</tr>
 
@@ -782,9 +759,7 @@ function effettoTree(){
 
 							<tr>
 								<td class="l" colspan=6>Per la comunicazione al <%=TipoDest%>
-									<input type="checkbox"
-									name="<%=ICostantiUdienzaSige.CAMPO_PROCURA_GENERALE%>"
-									<%=notificaComunicazione%>>
+						<input type="checkbox" name="<%=ICostantiUdienzaSige.CAMPO_PROCURA_GENERALE%>" <%=notificaComunicazione%>>
 								</td>
 							</tr>
 							<tr>
@@ -795,46 +770,42 @@ function effettoTree(){
 							</tr>
 
 							<%
-								if (luogodet.getLuogoDetenzione() == null || luogodet.getLuogoDetenzione().getIdLuogoDetenzione() == null  || luogodet.getLuogoDetenzione().getDataFineDetenzione() != null || luogodet.getLuogoDetenzione().getIstitutoDetenzione() == null ) {
+if (luogodet.getLuogoDetenzione() == null || luogodet.getLuogoDetenzione().getIdLuogoDetenzione() == null
+		|| luogodet.getLuogoDetenzione().getDataFineDetenzione() != null || luogodet.getLuogoDetenzione().getIstitutoDetenzione() == null ) {
 							%>
 							<tr>
 								<td class="l">Autorità Destinazione</td>
-								<td class="l"><select title="Destinatario"
-									name="<%=ICostantiUdienzaSige.CAMPO_COD_IST_DETENZIONE%>">
-										<%=tipoAutoritaSogg%>
-								</select></td>
+		<td class="l">
+			<select title="Destinatario" name="<%=ICostantiUdienzaSige.CAMPO_COD_IST_DETENZIONE%>"><%=tipoAutoritaSogg%></select>
+		</td>
 							</tr>
 							<tr>
 								<td class="l">Sede</td>
-								<td class="l"><input type="text"
-									name="<%=ICostantiUdienzaSige.CAMPO_COD_LUOGO_DETENZIONE%>"
-									value="<%=StringUtils.toStringJSP((notSogg.getAutoritaEsterna()!=null)?notSogg.getAutoritaEsterna().getDescrSede():null)%>"
-									maxlength="35" size="35" title="Sede"> <a
-									href="Javascript:ListaComuni('LoadInserisciFissazioneUdienza','<%=ICostantiUdienzaSige.CAMPO_COD_LUOGO_DETENZIONE%>');"><img
-										src="/images/filefolder.gif" border=0></a></td>
+		<td class="l">
+			<input type="text" name="<%=ICostantiUdienzaSige.CAMPO_COD_LUOGO_DETENZIONE%>" value="<%=StringUtils.toStringJSP((notSogg.getAutoritaEsterna()!=null)?notSogg.getAutoritaEsterna().getDescrSede():null)%>" maxlength="35" size="35" title="Sede">
+			<a href="Javascript:ListaComuni('LoadInserisciFissazioneUdienza','<%=ICostantiUdienzaSige.CAMPO_COD_LUOGO_DETENZIONE%>');">
+				<img src="/images/filefolder.gif" border=0>
+			</a>
+		</td>
 							</tr>
 							<tr>
 								<td class="l">Indirizzo</td>
-								<td class="L" colspan=3><input type="text"
-									name="<%=ICostantiRichiestaAtti.CAMPO_NOTE%>"
-									value="<%=StringUtils.toStringJSP(notSogg.getNote())%>"
-									maxlength="80" size="80" title="Indirizzo"></td>
+		<td class="L" colspan=3>
+			<input type="text" name="<%=ICostantiRichiestaAtti.CAMPO_NOTE%>" value="<%=StringUtils.toStringJSP(notSogg.getNote())%>" maxlength="80" size="80" title="Indirizzo">
+		</td>
 							</tr>
 							<%
 								}else{
 							%>
 							<tr>
 								<td class="l">Tipo Istituto</td>
-								<td class="l"><input type="text" name="Comune"
-									value="<%=StringUtils.toStringJSP(luogodet.getLuogoDetenzione().getDescrTipoIstituto())%> di <%=StringUtils.toStringJSP(luogodet.getLuogoDetenzione().getDescrLuogo())%>"
-									size="50" title="Istituto" readonly> <a
-									href="Javascript:ListaIstitutoDetenzione('LoadInserisciFissazioneUdienza','<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>','Comune');">
+		<td class="l">
+			<input type="text" name="Comune" value="<%=StringUtils.toStringJSP(luogodet.getLuogoDetenzione().getDescrTipoIstituto())%> di <%=StringUtils.toStringJSP(luogodet.getLuogoDetenzione().getDescrLuogo())%>" size="50" title="Istituto" readonly>
+			<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciFissazioneUdienza','<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>','Comune');">
 										<img src="/images/filefolder.gif" border=0>
-								</a> <input type="hidden"
-									name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>"
-									value="<%=luogodet.getLuogoDetenzione().getIstDetIdIstitutoDetenzione()%>">
-									<input type="hidden"
-									name="<%=ICostantiRichiestaAtti.CAMPO_NOTE%>" value="">
+			</a>
+			<input type="hidden" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="<%=luogodet.getLuogoDetenzione().getIstDetIdIstitutoDetenzione()%>">
+			<input type="hidden" name="<%=ICostantiRichiestaAtti.CAMPO_NOTE%>" value="">
 								</td>
 							</tr>
 							<%
@@ -855,67 +826,69 @@ function effettoTree(){
 								<td class=l colspan=6>Per la notifica all' avvocato <%=StringUtils.toStringJSP(lAvv.getAvvocato().getCognome(),"-") + " " + StringUtils.toStringJSP(lAvv.getAvvocato().getNome(),"-")%>
 									Foro di <%=StringUtils.toStringJSP(lAvv.getAvvocato().getForo(),"-")%>
 									Difensore <%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescrTipo(),"-")%>
-									<input type="hidden"
-									name="<%=ICostantiUdienzaSige.CAMPO_COD_AVVOCATO%>"
-									value="<%=lAvv.getAvvocato().getIdAvvocato()%>">
+			<input type="hidden" name="<%=ICostantiUdienzaSige.CAMPO_COD_AVVOCATO%>" value="<%=lAvv.getAvvocato().getIdAvvocato()%>">
 								</td>
 							</tr>
 
 							<%
-								String checkSNT = "";
-
-							String descSede =lAvv.getAvvocato().getForo(); 
-							NotificaModel modNotAvv = null;
-							Iterator itxNotAvv = vectNotAvv.iterator();
-							while ( itxNotAvv.hasNext()) {
-								NotificaModel nm = (NotificaModel)itxNotAvv.next();
-								if (lAvv.getAvvocatoFascicoloSigeModel().getIdAvvocatoFascicoloSige().equals(nm.getAvvIdAvvocatoFascicoloSige())){
-									modNotAvv = nm;
-									// se non c'è autorità esterna allora è una notifica telematica
-									if (nm.getAutoritaEsterna()==null){
-								checkSNT = "checked";
-									}
-								}
-							}
-
-							String comboDefVal = ""; 
-							if ( modNotAvv != null && modNotAvv.getAutoritaEsterna()!=null && modNotAvv.getAutoritaEsterna().getDescrSede()!=null && !"".equals(modNotAvv.getAutoritaEsterna().getDescrSede()) ) {
-								descSede = modNotAvv.getAutoritaEsterna().getDescrSede();
-								comboDefVal = modNotAvv.getAutoritaEsterna().getCodTipoAutorita();
-							}
-
-							String[] lStringFilter = { "-", "22" };
-							Option lOptionAvv = new Option((Collection<Object>)TipiIstitutiColl, comboDefVal, 75);
-							lOptionAvv.setFilter(lStringFilter);
-							String comboTipiIstituti = lOptionAvv.toString();
-							%>
-
+	String checkSNT = "";
+	// MEV_21 (avvocati) Sostituzione di getAvvocato().getForo() con getAvvocato().getDescComuneSedeForo() 
+	// String descSede = lAvv.getAvvocato().getForo(); 
+	String descSede = lAvv.getAvvocato().getDescComuneSedeForo(); 
+	// MEV_21: FINE
+	NotificaModel modNotAvv = null;
+	NotificaModel modAutDest = null;
+	Iterator itxNotAvv = vectNotAvv.iterator();
+	while ( itxNotAvv.hasNext()) {
+		NotificaModel nm = (NotificaModel) itxNotAvv.next();
+		if (lAvv.getAvvocatoFascicoloSigeModel().getIdAvvocatoFascicoloSige().equals(nm.getAvvIdAvvocatoFascicoloSige())){
+			modNotAvv = nm;
+			// se non c'è autorità esterna allora è una notifica telematica
+			if (nm.getAutoritaEsterna() == null) {
+				checkSNT = "checked";
+			}
+		} else
+			modAutDest = nm;
+	}
+	String comboDefVal = ""; 
+	if ( modNotAvv != null && modNotAvv.getAutoritaEsterna() != null && modNotAvv.getAutoritaEsterna().getDescrSede() != null
+			&& !"".equals(modNotAvv.getAutoritaEsterna().getDescrSede())) {
+		descSede = modNotAvv.getAutoritaEsterna().getDescrSede();
+		comboDefVal = modNotAvv.getAutoritaEsterna().getCodTipoAutorita();
+	} else if (modAutDest != null && modAutDest.getAutoritaEsterna() != null && modAutDest.getAutoritaEsterna().getDescrSede() != null
+			&& !"".equals(modAutDest.getAutoritaEsterna().getDescrSede())) {
+		descSede = modAutDest.getAutoritaEsterna().getDescrSede();
+		comboDefVal = modAutDest.getAutoritaEsterna().getCodTipoAutorita();
+	}
+	String[] lStringFilter = { "-", "22" };
+	Option lOptionAvv = new Option((Collection<Object>)TipiIstitutiColl, comboDefVal, 75);
+	lOptionAvv.setFilter(lStringFilter);
+	String comboTipiIstituti = lOptionAvv.toString();
+	%>
 							<tr>
-								<td class="l" colspan=6><input type="checkbox"
-									name="flagSNT" id="flagSNT_<%=lIdxAvv%>" value="<%=lIdxAvv%>"
-									onclick="javascript:checkSNT('<%=lIdxAvv%>');" <%=checkSNT%>>
-									S.N.T. (Sistema Notifiche Telematiche)</td>
+		<td class="l" colspan=6>
+			<input type="checkbox" name="flagSNT" id="flagSNT_<%=lIdxAvv%>" value="<%=lIdxAvv%>" onclick="javascript:checkSNT('<%=lIdxAvv%>');" <%=checkSNT%>>
+			S.N.T. (Sistema Notifiche Telematiche)
+		</td>
 							</tr>
 
 							<tr id="AutDestRow_<%=lIdxAvv%>">
 								<td class="l">Autorità Destinazione</td>
-								<td class="l"><select
-									name="<%=ICostantiRichiestaAtti.CAMPO_COD_DESTINATARIO%>"
-									id="<%=ICostantiRichiestaAtti.CAMPO_COD_DESTINATARIO%>_<%=lIdxAvv%>"
-									title="Destinatario">
+		<td class="l">
+			<select name="<%=ICostantiRichiestaAtti.CAMPO_COD_DESTINATARIO%>" id="<%=ICostantiRichiestaAtti.CAMPO_COD_DESTINATARIO%>_<%=lIdxAvv%>" title="Destinatario">
 										<%=comboTipiIstituti%>
-								</select></td>
+			</select>
+		</td>
 							</tr>
 
 							<tr id="SedeDestRow_<%=lIdxAvv%>">
 								<td class="l">Sede</td>
-								<td class="l"><input type="text"
-									name="<%=ICostantiRichiestaAtti.CAMPO_SEDE%>"
-									id="<%=ICostantiRichiestaAtti.CAMPO_SEDE%>_<%=lIdxAvv%>"
-									value="<%=StringUtils.toStringJSP(descSede)%>" maxlength="35"
-									size="35" title="Sede Procura"> <a
-									href="Javascript:ListaUffici('LoadInserisciFissazioneUdienza','<%=ICostantiRichiestaAtti.CAMPO_SEDE%>[<%=lIdxAvv%>]');"><img
-										src="/images/filefolder.gif" border=0> </a></td>
+		<td class="l">
+			<input type="text" name="<%=ICostantiRichiestaAtti.CAMPO_SEDE%>" id="<%=ICostantiRichiestaAtti.CAMPO_SEDE%>_<%=lIdxAvv%>" value="<%=StringUtils.toStringJSP(descSede)%>" maxlength="35" size="35" title="Sede Procura">
+			<a href="Javascript:ListaUffici('LoadInserisciFissazioneUdienza','<%=ICostantiRichiestaAtti.CAMPO_SEDE%>[<%=lIdxAvv%>]');">
+				<img src="/images/filefolder.gif" border=0>
+			</a>
+		</td>
 							</tr>
 							<%
 								lIdxAvv++;
@@ -1002,57 +975,29 @@ function effettoTree(){
   	<table>
 				<tr>
 					<td class="l">Sezione</td>
-					<td class="l"><select title="sezione"
-						name="<%=ICostantiUdienzaSige.CAMPO_COD_SEZIONE_UDIENZA%>" > 
-							<%=elencoSezioniUdienza%>
-					</select></td>
-					<td class="l" colspan="2">Aula <input type="text"
-						name="<%=ICostantiAula.CAMPO_DESCRIZIONE_AULA%>"
-						value="<%=StringUtils.toStringJSP(lAulaUdienza.getDescrizioneAula())%>"
-						size="12" maxlength="30" readonly="readonly">&nbsp;&nbsp;
-						Ingresso <input type="text"
-						name="<%=ICostantiAula.CAMPO_DESCRIZIONE_INGRESSO%>"
-						value="<%=StringUtils.toStringJSP(lAulaUdienza.getDescrizioneIngresso())%>"
-						size="30" maxlength="30" readonly="readonly">&nbsp;&nbsp;
-						Piano <input type="text"
-						name="<%=ICostantiAula.CAMPO_NUMERO_PIANO%>"
-						value="<%=StringUtils.toStringJSP(lAulaUdienza.getNumeroPiano())%>"
-						size="12" maxlength="30" readonly="readonly">&nbsp;&nbsp;
-						<input type="HIDDEN" name="<%=ICostantiAula.CAMPO_ID_AULA%>"
-						value="<%=StringUtils.toStringJSP(lAulaUdienza.getIdAula())%>">
-						<%-- <a
-						href="Javascript:ListaAule('LoadInserisciFissazioneUdienza', document.LoadInserisciFissazioneUdienza.<%=ICostantiUdienzaSige.CAMPO_COD_SEZIONE_UDIENZA%>.value);"><img
-							src="/images/filefolder.gif" border=0></a> --%>
+		<td class="l">
+			<select title="sezione" name="<%=ICostantiUdienzaSige.CAMPO_COD_SEZIONE_UDIENZA%>"><%=elencoSezioniUdienza%></select>
+		</td>
+		<td class="l" colspan="2">
+			Aula <input type="text" name="<%=ICostantiAula.CAMPO_DESCRIZIONE_AULA%>" value="<%=StringUtils.toStringJSP(lAulaUdienza.getDescrizioneAula())%>" size="12" maxlength="30" readonly="readonly">&nbsp;&nbsp;
+			Ingresso <input type="text" name="<%=ICostantiAula.CAMPO_DESCRIZIONE_INGRESSO%>" value="<%=StringUtils.toStringJSP(lAulaUdienza.getDescrizioneIngresso())%>" size="30" maxlength="30" readonly="readonly">&nbsp;&nbsp;
+			Piano <input type="text" name="<%=ICostantiAula.CAMPO_NUMERO_PIANO%>" value="<%=StringUtils.toStringJSP(lAulaUdienza.getNumeroPiano())%>" size="12" maxlength="30" readonly="readonly">&nbsp;&nbsp;
+			<input type="HIDDEN" name="<%=ICostantiAula.CAMPO_ID_AULA%>" value="<%=StringUtils.toStringJSP(lAulaUdienza.getIdAula())%>">
+			<%-- <a href="Javascript:ListaAule('LoadInserisciFissazioneUdienza', document.LoadInserisciFissazioneUdienza.<%=ICostantiUdienzaSige.CAMPO_COD_SEZIONE_UDIENZA%>.value);"><img src="/images/filefolder.gif" border=0></a> --%>
 					</td>
 				</tr>
 
 				<tr>
 					<td class="l">Orario Inizio (ora:min)</td>
-					<td class="l"><input type="text" maxlength="2" size="2"
-						onFocus="javascript:textboxSelect(this)"
-						onkeypress="return TicTabNumField(this,event)"
-						onBlur="javascript:value=FillDM(value)"
-						value="<%=StringUtils.toStringJSP(lUdienzaSige.getOraInizio())%>"
-						name="<%=ICostantiUdienzaSige.CAMPO_ORA_INIZIO%>"  readonly="readonly"> : <input
-						type="text" maxlength="2" size="2"
-						onFocus="javascript:textboxSelect(this)"
-						onkeypress="return TicTabNumField(this,event)"
-						onBlur="javascript:value=FillDM(value)"
-						value="<%=StringUtils.toStringJSP(lUdienzaSige.getMinInizio())%>"
-						name="<%=ICostantiUdienzaSige.CAMPO_MIN_INIZIO%>"  readonly="readonly" ></td>
+		<td class="l">
+			<input type="text" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)" value="<%=StringUtils.toStringJSP(lUdienzaSige.getOraInizio())%>" name="<%=ICostantiUdienzaSige.CAMPO_ORA_INIZIO%>" readonly="readonly"> : 
+			<input type="text" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)" value="<%=StringUtils.toStringJSP(lUdienzaSige.getMinInizio())%>" name="<%=ICostantiUdienzaSige.CAMPO_MIN_INIZIO%>" readonly="readonly">
+		</td>
 					<td class="l">Orario Fine (ora:min)</td>
-					<td class="l"><input type="text" maxlength="2" size="2"
-						onFocus="javascript:textboxSelect(this)"
-						onkeypress="return TicTabNumField(this,event)"
-						onBlur="javascript:value=FillDM(value)"
-						value="<%=StringUtils.toStringJSP(lUdienzaSige.getOraFine())%>"
-						name="<%=ICostantiUdienzaSige.CAMPO_ORA_FINE%>"  readonly="readonly"> : <input
-						type="text" maxlength="2" size="2"
-						onFocus="javascript:textboxSelect(this)"
-						onkeypress="return TicTabNumField(this,event)"
-						onBlur="javascript:value=FillDM(value)"
-						value="<%=StringUtils.toStringJSP(lUdienzaSige.getMinFine())%>"
-						name="<%=ICostantiUdienzaSige.CAMPO_MIN_FINE%>"  readonly="readonly"></td>
+		<td class="l">
+			<input type="text" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)" value="<%=StringUtils.toStringJSP(lUdienzaSige.getOraFine())%>" name="<%=ICostantiUdienzaSige.CAMPO_ORA_FINE%>" readonly="readonly"> : 
+			<input type="text" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)" value="<%=StringUtils.toStringJSP(lUdienzaSige.getMinFine())%>" name="<%=ICostantiUdienzaSige.CAMPO_MIN_FINE%>" readonly="readonly">
+		</td>
 				</tr>
 
 				<tr>
@@ -1062,25 +1007,23 @@ function effettoTree(){
 						<%-- 20170907: [SG] prevenzione nullpointer: prima si mette la stringa di confronto poi la variabile!!! --%>
 						<%
 							if("".equals(myLuogo)){
-						%> <input type="text"
-									name="<%=ICostantiProvvedimentoSige.CAMPO_LUOGO_SVOLGIMENTO%>"
-									value="<%=StringUtils.toStringJSP( lUdienzaSige.getLuogoUdienza() , "")%>"
-									size="95"> <%
+%>
+			<input type="text" name="<%=ICostantiProvvedimentoSige.CAMPO_LUOGO_SVOLGIMENTO%>" value="<%=StringUtils.toStringJSP( lUdienzaSige.getLuogoUdienza() , "")%>" size="95">
+<%
 							} else { 
 								     if(lUdienzaSige.getLuogoUdienza() != null && !lUdienzaSige.getLuogoUdienza().equals("")){
-								 %> <input type="text"
-														name="<%=ICostantiProvvedimentoSige.CAMPO_LUOGO_SVOLGIMENTO%>"
-														value="<%=StringUtils.toStringJSP( lUdienzaSige.getLuogoUdienza() , "")%>"
-														size="95"  readonly="readonly"> <%
+%>
+			<input type="text" name="<%=ICostantiProvvedimentoSige.CAMPO_LUOGO_SVOLGIMENTO%>" value="<%=StringUtils.toStringJSP( lUdienzaSige.getLuogoUdienza() , "")%>" size="95" readonly="readonly">
+<%
 								 	} else {
-								 %> <input type="text"
-														name="<%=ICostantiProvvedimentoSige.CAMPO_LUOGO_SVOLGIMENTO%>"
-														value="<%=myLuogo%>" size="95"  readonly="readonly"> <%
+%>
+			<input type="text" name="<%=ICostantiProvvedimentoSige.CAMPO_LUOGO_SVOLGIMENTO%>" value="<%=myLuogo%>" size="95" readonly="readonly">
+<%
 								 	}
 							}
-								 %> <a href="Javascript:cleanLuogoSvolgimento();"> <img
-															src="/images/delete.gif" width="12" height="12"
-															alt="Pulisci Campo" border="0">
+%>
+			<a href="Javascript:cleanLuogoSvolgimento();">
+				<img src="/images/delete.gif" width="12" height="12" alt="Pulisci Campo" border="0">
 													</a>
 					</td>
 				</tr>
@@ -1100,11 +1043,8 @@ function effettoTree(){
 				// Passaggio dell'eventuale ID UDIENZA_PROCEDIMENTO
 					if (request.getAttribute(ICostantiUdienzaProcedimentoSige.CAMPO_ID_UDIENZA_PROCEDIMENTO_SIGE) != null) {
 			%>
-			<input type="HIDDEN"
-				name="<%=ICostantiUdienzaProcedimentoSige.CAMPO_ID_UDIENZA_PROCEDIMENTO_SIGE%>"
-				value="<%=StringUtils.toStringJSP( request.getAttribute(ICostantiUdienzaProcedimentoSige.CAMPO_ID_UDIENZA_PROCEDIMENTO_SIGE), "0" )%>">
-			<input type="HIDDEN" name="Cancellabile"
-				value="<%=StringUtils.toStringJSP( request.getAttribute("Cancellabile"), "" )%>">
+<input type="HIDDEN" name="<%=ICostantiUdienzaProcedimentoSige.CAMPO_ID_UDIENZA_PROCEDIMENTO_SIGE%>" value="<%=StringUtils.toStringJSP( request.getAttribute(ICostantiUdienzaProcedimentoSige.CAMPO_ID_UDIENZA_PROCEDIMENTO_SIGE), "0" )%>">
+<input type="HIDDEN" name="Cancellabile" value="<%=StringUtils.toStringJSP( request.getAttribute("Cancellabile"), "" )%>">
 			<%
 				}
 			%>

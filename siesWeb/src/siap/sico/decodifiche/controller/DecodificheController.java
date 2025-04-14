@@ -638,9 +638,6 @@ public class DecodificheController extends SiapController implements IDecodifich
 								|| "U066".equals(lContenuto.getCode()) || "U067".equals(lContenuto.getCode())
 								|| "U093".equals(lContenuto.getCode()))
 							continue;
-						// MEV_2019-09: aggiunto contenuto solo x TDS
-						if ("TDSM".equals(aCodTipoUfficio) && "C050".equals(lContenuto.getCode()))
-							continue;
 					}
 					// MERGE v10 COLLAUDO: per i maggiori continuo nello scorrimento della lista per i
 					// seguenti codici
@@ -653,9 +650,6 @@ public class DecodificheController extends SiapController implements IDecodifich
 								// MEV_66: aggiunti 4 contenuti solo x minori
 								"U120".equals(lContenuto.getCode()) || "U121".equals(lContenuto.getCode())
 								|| "U122".equals(lContenuto.getCode()) || "U123".equals(lContenuto.getCode()))
-							continue;
-						// MEV_2019-09: aggiunto contenuto solo x TDSM
-						if ("TDS".equals(aCodTipoUfficio) && "C051".equals(lContenuto.getCode()))
 							continue;
 					}
 					lContenuti.add(lContenuto);
@@ -743,8 +737,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 		return lContenuti;
 	}
 
-	// MEV_2019-09-SIEP: cambiata firma del metodo per distinguere PM da PMM
-	public Collection ExListaMotivoProvvMA(String aMisAlt, String aCodTipoUfficio) throws F3BException {
+	public Collection ExListaMotivoProvvMA(String aMisAlt) throws F3BException {
 
 		Connection lConn = null;
 		DecodificheSqlDAO lDecSqlDao = null;
@@ -754,7 +747,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 			lConn = getDBConnection();
 			lDecSqlDao = new DecodificheSqlDAO(lConn);
 
-			lDecSqlDao.listaMotivoProvvMA(aMisAlt, aCodTipoUfficio);
+			lDecSqlDao.listaMotivoProvvMA(aMisAlt);
 
 			lDecSqlDao.start();
 
@@ -1982,8 +1975,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 		return lListaOggettiSospensione;
 	}
 
-	// MEV_2019-09-SIEP: cambiata firma del metodo per distinguere PM da PMM
-	public Collection ExListaOggettiSospensioneDecisioneSor(String aCodTipoUfficio) throws F3BException {
+	public Collection ExListaOggettiSospensioneDecisioneSor() throws F3BException {
 
 		Connection lConn = null;
 		DecodificheSqlDAO lDecSqlDao = null;
@@ -1991,7 +1983,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 		try {
 			lConn = getDBConnection();
 			lDecSqlDao = new DecodificheSqlDAO(lConn);
-			lDecSqlDao.listaOggettiSospensioneDecisioneSor(aCodTipoUfficio);
+			lDecSqlDao.listaOggettiSospensioneDecisioneSor();
 			lDecSqlDao.start();
 			while (lDecSqlDao.next()) {
 				DecodificheModel lDecMod = new DecodificheModel();
@@ -3565,44 +3557,4 @@ public class DecodificheController extends SiapController implements IDecodifich
 		return descOggettoSige;
 	}
 
-	/**
-	 * MEV_2019-09-SIEP
-	 */
-	public Collection ExListaMotivoProvvSosp678() throws F3BException {
-
-		Connection lConn = null;
-		Collection lDecodifiche = new Vector();
-		DecodificheSqlDAO lDecSqlDao = null;
-
-		try {
-			lConn = getDBConnection();
-
-			lDecSqlDao = new DecodificheSqlDAO(lConn);
-
-			lDecSqlDao.listaMotivoProvvSosp678();
-
-			lDecSqlDao.start();
-
-			while (lDecSqlDao.next()) {
-				//lDecodifiche.add(lDecSqlDao.getModel());				
-				DecodificheModel lDecMod = new DecodificheModel();
-				lDecMod.setCode(lDecSqlDao.getModelRvLowValue());
-				lDecMod.setDescription(lDecSqlDao.getModelRvMeaning());
-				lDecodifiche.add(lDecMod);
-			}
-
-			lDecSqlDao.stop();
-		} catch (DAOException daoex) {
-			throw new SICOException(F3BException.USER_MESSAGE,
-					"DecodificheController.ExListaMotivoProvvSosp678: " + daoex);
-		} catch (Exception sqex) {
-			throw new SICOException(F3BException.USER_MESSAGE,
-					"DecodificheController.ExListaMotivoProvvSosp678: " + sqex);
-		} finally {
-			cleanup(lDecSqlDao);
-			cleanup(lConn);
-		}
-
-		return lDecodifiche;
-	}
 }

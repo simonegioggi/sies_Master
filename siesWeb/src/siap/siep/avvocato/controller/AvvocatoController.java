@@ -47,22 +47,6 @@ import siap.siep.storicoavvocato.dao.StoricoAvvocatoSqlDAO;
 import siap.siep.storicoavvocato.model.StoricoAvvocatoModel;
 import siap.siep.util.SIEPLookupRemote;
 
-/**
- * <p>
- * Title: AvvocatoController
- * </p>
- * <p>
- * Description: Classe Controller per Avvocato
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- *
- * @version 1.0
- */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class AvvocatoController extends SiapController implements IAvvocato {
 
@@ -71,7 +55,7 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 
 		Connection lConn = null;
 
-		AvvocatoDAO lAvvDao = null;
+		// AvvocatoDAO lAvvDao = null;
 		AvvocatoFascicoloSiepDAO lAvvFascDao = null;
 		EventoSqlDAO lEveSqlDao = null;
 		NotificaEventoSqlDAO lNotEveDao = null;
@@ -144,7 +128,7 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 			ex.printStackTrace();
 			throw new F3BException(this.getClass().getName() + ".ExInserisciAvvocato: " + ex);
 		} finally {
-			cleanup(lAvvDao);
+			// cleanup(lAvvDao);
 			cleanup(lAvvFascDao);
 			cleanup(lEveSqlDao);
 			cleanup(lNotEveDao);
@@ -160,7 +144,7 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 
 		Connection lConn = null;
 
-		AvvocatoDAO lAvvDao = null;
+		// AvvocatoDAO lAvvDao = null;
 		AvvocatoFascicoloSiepDAO lAvvFascDao = null;
 		EventoSqlDAO lEveSqlDao = null;
 		NotificaEventoSqlDAO lNotEveDao = null;
@@ -237,7 +221,7 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 			ex.printStackTrace();
 			throw new F3BException(this.getClass().getName() + ".ExInserisciAvvocato: " + ex);
 		} finally {
-			cleanup(lAvvDao);
+			// cleanup(lAvvDao);
 			cleanup(lAvvFascDao);
 			cleanup(lEveSqlDao);
 			cleanup(lNotEveDao);
@@ -343,6 +327,34 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 			cleanup(lConn);
 		}
 
+		return lAvvocato;
+	}
+
+	// 20210614 MEV_21
+	public AvvocatoModel ExRicercaAvvocatoCertRegInde(AvvocatoModel lAvvMod) throws F3BException {
+
+		Connection lConn = null;
+		AvvocatoSqlDAO lAvvDao = null;
+		AvvocatoModel lAvvocato = null;
+
+		try {
+			lConn = getDBConnection();
+			lAvvDao = new AvvocatoSqlDAO(lConn);
+			lAvvDao.ricercaAvvocatoCertRegInde(lAvvMod);
+
+			lAvvDao.start();
+			if (lAvvDao.next()) {
+				lAvvocato = (AvvocatoModel) lAvvDao.getModel();
+			}
+
+			lAvvDao.stop();
+
+		} catch (Exception ex) {
+			// throw new F3BException(this.getClass().getName() + ".ExRicercaAvvocatoCertReginde: " + ex);
+		} finally {
+			cleanup(lAvvDao);
+			cleanup(lConn);
+		}
 		return lAvvocato;
 	}
 
@@ -696,6 +708,30 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 		return aAvvocato;
 	}
 
+	// 20210623 MEV_21 Aggiornamento Avvocato caricato da Reginde.
+	public AvvocatoModel ExAggiornaAvvocatoDaReginde(AvvocatoModel aAvvocato) throws F3BException {
+
+		Connection lConn = null;
+		AvvocatoDAO lAvvDao = null;
+
+		try {
+			lConn = getDBConnection();
+			lAvvDao = new AvvocatoDAO(lConn);
+			lAvvDao.setDAOFromModelForUpdate(aAvvocato);
+			lAvvDao.update();
+			commit(lConn);
+		} catch (DAOException ex) {
+			rollback(lConn);
+			throw new F3BException(
+					this.getClass().getName() + ".ExModificaAvvocato: Non posso inserire: " + ex);
+		} finally {
+			cleanup(lAvvDao);
+			cleanup(lConn);
+		}
+
+		return aAvvocato;
+	}
+
 	/*****************************************************************************
 	*
 	************************************************************************** */
@@ -994,7 +1030,10 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 			lAvvDao.ricercaAvvocatoFascicoloSiepByIdAvvocatoIdFascicolo(aIdAvvocato, aIdFascicolo);
 			lAvvFasModel = (AvvocatoSiepModel) lAvvDao.getModelByKey();
 			if (lAvvFasModel == null)
-				throw new SIEPException(SIEPException.USER_MESSAGE, "L'avvocato non esiste.");
+				// MEV_21: modificato msg di risposta
+				// throw new SIEPException(SIEPException.USER_MESSAGE, "L'avvocato non esiste.");
+				throw new SIEPException(SIEPException.USER_MESSAGE,
+						"Avvocato con Foro inesistente, procedere con la Dismissione del Mandato.");
 		} catch (DAOException daoEx) {
 			throw new F3BException(this.getClass().getName()
 					+ ".ExRicercaAvvocatoFascicoloSiepByKeyAvvocatoIdFascicolo: " + daoEx);

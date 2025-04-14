@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Vector;
 
+import f3b.util.DateUtils;
 import siap.sico.camponota.model.CampoNotaModel;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoNotificaModel;
@@ -12,7 +13,6 @@ import siap.siep.autoritaesterna.model.AutoritaEsternaModel;
 import siap.siep.notifica.model.NotificaModel;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.fascicolo.model.FascicoloSiusModel;
-import f3b.util.DateUtils;
 
 public class ActInserisciInformazioniart474c extends ActInserisciRicAtti implements ICostantiRichiestaAtti {
 
@@ -57,15 +57,6 @@ public class ActInserisciInformazioniart474c extends ActInserisciRicAtti impleme
 		lEveNot.getEvento().setCodTipoUfficioDestinatario("-");
 		lEveNot.getEvento().setFasSiuIdFascicoloSius(lFasSius.getIdFascicoloSius());
 
-		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
-		if (!isRequestParameterNullObj(CAMPO_ANNO_DATA_RESTITUZIONE)) {
-			Date lDataRestituzioneAtti = getRequestDateParameter(CAMPO_ANNO_DATA_RESTITUZIONE
-					                                           , CAMPO_MESE_DATA_RESTITUZIONE
-				                                               , CAMPO_GIORNO_DATA_RESTITUZIONE  );
-			lEveNot.getEvento().setDataRestituzioneAi(lDataRestituzioneAtti);
-		}
-		// FINE: MEV_2019-09 (D.lgs. 123/2018)		
-		
 		// Imposta i dati necessari per la gestione delle Notifica
 		Vector lNotifiche = new Vector();
 		lSize = lDestinatari.length;
@@ -75,12 +66,12 @@ public class ActInserisciInformazioniart474c extends ActInserisciRicAtti impleme
 				if (x == 0) { // destinatario interno (CSSA)
 					// MERGE v10 COLLAUDO: modificata gestione CSSA
 					// Preleva l'id del CSSA attraverso la propria descrizione.
-//					BigDecimal lIdCSSA = getIdCSSAByDescrComune(lSedi[x]);
-				    BigDecimal lIdCSSA = null;
-				    if ("B5".equals(lDestinatari[x]))
-				    	lIdCSSA = getIdCSSAByDescrComuneETipo(lSedi[x], "USSM");
-				    else
-				    	lIdCSSA = getIdCSSAByDescrComuneETipo(lSedi[x], "UEPE");
+					// BigDecimal lIdCSSA = getIdCSSAByDescrComune(lSedi[x]);
+					BigDecimal lIdCSSA = null;
+					if ("B5".equals(lDestinatari[x]))
+						lIdCSSA = getIdCSSAByDescrComuneETipo(lSedi[x], "USSM");
+					else
+						lIdCSSA = getIdCSSAByDescrComuneETipo(lSedi[x], "UEPE");
 
 					NotificaModel lNotifica = new NotificaModel();
 

@@ -98,7 +98,7 @@ import siap.sius.udienzaprocedimento.model.UdienzaProcedimentoModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * Title: FascicoloSiusController Description: Classe Controller per FascicoloSius
+ * FascicoloSiusController - Classe Controller per FascicoloSius
  *
  * @version 1.0
  */
@@ -518,7 +518,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 
 	/**
 	 * Inserisce il Fascicolo Sius partendo da un Fascicolo SIUS.
-	 * <p>
 	 *
 	 * @param aFascicoloGPModel
 	 * @param aIdEventoInviato
@@ -863,7 +862,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 
 	/**
 	 * Ricerca il Fascicolo SIUS in Banca Dati per primary key
-	 * <p>
 	 *
 	 * @param aModel
 	 * @return FascicoloGPModel
@@ -959,7 +957,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	/**
 	 * 20131206 - creazione nuovo metodo di ricerca non paginata, per stampa folglio xls. Ricerca Fascicolo
 	 * Sius per Estremi
-	 * <p>
 	 *
 	 * @param aFascModel
 	 * @param sTipoAtto
@@ -1232,7 +1229,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 
 	/**
 	 * Ricerca paginata Fascicolo Sius per Estremi.
-	 * <p>
 	 *
 	 * @param aFascicoloSius
 	 * @param aPageNum
@@ -1759,7 +1755,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 
 	/**
 	 * Modifica il Fascicolo Sius Aggregato
-	 * <p>
 	 *
 	 * @param aFascicoloGPModel
 	 * @return FascicoloGPModel
@@ -1810,6 +1805,15 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 					insertEMS = true;
 				if (lGenMod.getCodOggettoProcedimento().compareTo("U024") == 0)
 					deleteEMS = true;
+
+				// MEV_2023-35 - si gestisce ance il COD U126 per esecuzione Pena Sospese (scrivono anche lore
+				// su EsecuzioneSanzioneSost)
+				if (aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
+						.compareTo("U126") == 0)
+					insertESS = true;
+				if (lGenMod.getCodOggettoProcedimento().compareTo("U126") == 0)
+					deleteESS = true;
+				// MEV_2023-35 - FINE
 			}
 
 			// Set del DAO e aggiornamento del FascicoloSius.
@@ -1818,17 +1822,24 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 
 			/*
 			 * ISSUE MAC : Ticket#20200610014 — Anomalia SIES: modificato come in inserimento
-			 * FascicoloSiusUDSController.ExInserisciFascicoloSiusUDS Numero MAC : 20200610014 Autore : Gioggi
-			 * Data : 11 giu 2020 Branch : MAC_20200610014
+			 * FascicoloSiusUDSController.ExInserisciFascicoloSiusUDS 
+			 * Numero MAC : 20200610014 
+			 * Autore : Gioggi
+			 * Data : 11 giu 2020 
+			 * Branch : MAC_20200610014
 			 */
 			if (aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U004")
 					|| aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
 							.equals("U019")
+					// MEV_2023-35 - si gestisce ance il COD U126 per esecuzione Pena Sospese
+					|| aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
+							.equals("U126")
 					|| aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
 							.equals("U024")) {
 				// Caso di Inserimento ESECUZIONE_MISURA_ALTERNATIVA - U004
 				// Caso di Inserimento ESECUZIONE_SANZIONE_SOSTITUTIVA - U019
 				// Caso di Inserimento ESECUZIONE_MISURA_SICUREZZA - U024
+				// Caso di Inserimento ESECUZIONE_PENA_SOSTITUTIVA - U126
 				// ATTENZIONE! Occorre Updatare il Generale Procedimento appena inserito nei campi ANNO_S1 &
 				// PROGR_S1 poichè in essi hanno "viaggiato" Anno e Numero Ordinanza!
 				aFascicoloGPModel.getGeneraleProcedimentoModel()
@@ -2001,6 +2012,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 		try {
 			lConn = getDBTransaction();
 			lFasDao = new FascicoloSiusDAO(lConn);
+
 			// Set del DAO e aggiornamento del FascicoloSius
 			lFasDao.setDAOFromModelForUpdate(aFascicoloSiusModel);
 			lFasDao.update();
@@ -2030,7 +2042,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 
 	/**
 	 * Modifica l' ID_FASCICOLO_SIUS_ORIGINE del Fascicolo Sius
-	 * <p>
 	 *
 	 * @param aFascicoloSiusModel
 	 * @return FascicoloSiusModel
@@ -2076,7 +2087,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 
 	/**
 	 * Esecuzione stampa del fascicolo.
-	 * <p>
 	 *
 	 * @param aIdFascicolo
 	 * @param lTipoUfficio
@@ -2117,7 +2127,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 
 	/**
 	 * 02/02/2005 Esecuzione stampa dei procedimenti Del Soggetto.
-	 * <p>
 	 *
 	 * @param aModel
 	 * @return ByteArrayOutputStream
@@ -2221,7 +2230,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 
 	/**
 	 * Ricerca Fascicoli Per Id Origine = aIdFascicoloOrigine
-	 * <p>
 	 *
 	 * @param aIdFascicoloOrigine
 	 * @return Vettore di FascicoloSiusModel
@@ -2266,7 +2274,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 
 	/**
 	 * Ricerca Fascicoli Sius per Soggetto e Codice Oggetto.
-	 * <p>
 	 *
 	 * @param aIdSoggetto
 	 * @return Vector di FascicoloGPModel
@@ -2307,7 +2314,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	}
 
 	/**
-	 * <p>
 	 * Description: : la funzione effettua la cancellazione di una residenza nella tabella
 	 * RESIDENZA_FASCICOLO_SIUS
 	 *
@@ -2353,7 +2359,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	}
 
 	/**
-	 * <p>
 	 * Description: : la funzione effettua la cancellazione di un domicilio nella tabella
 	 * RESIDENZA_FASCICOLO_SIUS
 	 *
@@ -2399,7 +2404,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	}
 
 	/**
-	 * <p>
 	 * Description: : la funzione inserisce Una occorrenza di ResidenzaAssociata nella tabella
 	 * RESIDENZA_FASCICOLO_SIUS
 	 *
@@ -2474,7 +2478,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	}
 
 	/**
-	 * <p>
 	 * Description: : la funzione modifica la Residenza riferita al Fascicolo SIUS in Oggetto.
 	 *
 	 * @param aResidenza
@@ -2612,7 +2615,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 
 	/**
 	 * Ricerca Fascicoli Sius Paginata per Soggetto, e filtri aggiuntivi.
-	 * <p>
 	 *
 	 * @param aSogModel
 	 * @param strCodUffOTrib
@@ -2804,7 +2806,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	/**
 	 * Ricerca Fascicoli di Un Soggetto (Nel model aSogModel è valorizzato l'ID) in base ai parametridi
 	 * ricerca selezionati.
-	 * <p>
 	 *
 	 * @param aSogModel
 	 * @param strCodUfficioUtenteConnesso
@@ -2898,7 +2899,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 
 	/**
 	 * Ricerca Fascicoli per fascicoli SIEP
-	 * <p>
 	 *
 	 * @param Id_FascicoloSIEP
 	 * @return lFascicoli
@@ -2977,7 +2977,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 
 	/**
 	 * Ricerca Fascicoli Sius Paginata per Fine Pena, e filtri aggiuntivi.
-	 * <p>
 	 *
 	 * @param lUfficioUtenteConnesso
 	 * @param dataDalIscrizione
@@ -3046,7 +3045,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 
 	/**
 	 * Ricerca Fascicoli Sius Fine Pena e filtri aggiuntivi per Stampa Excel.
-	 * <p>
 	 *
 	 * @param lUfficioUtenteConnesso
 	 * @param dataDalIscrizione
@@ -3278,7 +3276,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 
 	/**
 	 * Inserisce il Fascicolo Sius con CHIAVE_ANNO e CHIAVE_PROGR inseriti manualmente.
-	 * <p>
 	 *
 	 * @param aFascicoloGPModel
 	 *            ;
@@ -3620,7 +3617,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 
 	/**
 	 * Ricerca Fascicoli Unificati.
-	 * <p>
 	 *
 	 * @param idFasSius
 	 * @return lFascicoli
@@ -3783,7 +3779,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 
 	/**
 	 * Metodo di scrittura di RIFERIMENTO_FASCICOLO_SIUS a partire da aFasGPModel.
-	 * <p>
 	 *
 	 * @param aFasGPModel
 	 * @param lConn
@@ -3859,7 +3854,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 
 	/**
 	 * Metodo di ricerca di un FASCICOLO_SIUS con stessi: CHIAVE_ANNO, CHIAVE_PROGR, CHIAVE_UFFICIO.
-	 * <p>
 	 *
 	 * @param aFSModel
 	 * @param lConn
@@ -3892,7 +3886,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	/**
 	 * Metodo di scrittura di ESECUZIONE_MISURA_ALTERNATIVA e SCADENZARIO_SIUS. a partire da
 	 * aFascicoloGPModel.
-	 * <p>
 	 *
 	 * @param aFasGPModel
 	 * @param lConn
@@ -4108,7 +4101,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	/**
 	 * Metodo di cancellazione di ESECUZIONE_MISURA_ALTERNATIVA e SCADENZARIO_SIUS. a partire da
 	 * aFascicoloGPModel.
-	 * <p>
 	 *
 	 * @param aFasGPModel
 	 * @param lConn
@@ -4158,7 +4150,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	/**
 	 * Metodo di scrittura di ESECUZIONE_SANZIONE_SOSTITUTIVA e SCADENZARIO_SIUS. a partire da
 	 * aFascicoloGPModel.
-	 * <p>
 	 *
 	 * @param aFasGPModel
 	 * @param lConn
@@ -4367,7 +4358,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	/**
 	 * Metodo di cancellazione di ESECUZIONE_SANZIONE_SOSTITUTIVA e SCADENZARIO_SIUS. a partire da
 	 * aFascicoloGPModel.
-	 * <p>
 	 *
 	 * @param aFasGPModel
 	 * @param lConn
@@ -4416,7 +4406,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 
 	/**
 	 * Metodo di scrittura di ESECUZIONE_MISURA_SICUREZZA e SCADENZARIO_SIUS. a partire da aFascicoloGPModel.
-	 * <p>
 	 *
 	 * @param aFasGPModel
 	 * @param lConn
@@ -4630,7 +4619,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	/**
 	 * Metodo di cancellazione di ESECUZIONE_MISURA_SICUREZZA e SCADENZARIO_SIUS. a partire da
 	 * aFascicoloGPModel.
-	 * <p>
 	 *
 	 * @param aFasGPModel
 	 * @param lConn
@@ -4876,7 +4864,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	/**
 	 * Ricerca il Fascicolo SIUS di collegamento in Banca Dati per primary key; Non si propaga errore di
 	 * eccezione in caso di mancato recupero del Fascicolo
-	 * <p>
 	 *
 	 * @param aIdFascicoloSius
 	 * @return FascicoloGPModel
@@ -5351,123 +5338,4 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 		return am.getCodUffAppartenenza();
 	}
 
-	/*
-	 * ISSUE MEV : aggiunto aggiornamento stato fascicolo per decreto di tipo DM 
-	 * Numero MEV : 9 
-	 * Autore : Gioggi 
-	 * Data : 19 nov 2020 
-	 * Branch : MEV_2019-09
-	 */
-	public void aggiornaStatoFascicoloSius(FascicoloSiusModel fsm) throws F3BException {
-
-		Connection lConn = null;
-
-		FascicoloSiusDAO lFasDao = null;
-
-		try {
-			lConn = getDBTransaction();
-			lFasDao = new FascicoloSiusDAO(lConn);
-			FascicoloGPModel fgpm = ExRicercaFascicoloByKey(fsm.getIdFascicoloSius());
-			FascicoloSiusModel fsmOld = fgpm.getFascicoloSiusModel();
-			// Set del DAO e aggiornamento del FascicoloSius
-			lFasDao.setDAOFromModel(fsmOld);
-			lFasDao.setDataAggiornamento(fsm.getDataAggiornamento());
-			lFasDao.setCodOperatoreAggiornamento(fsm.getCodOperatoreAggiornamento());
-			lFasDao.setCodUfficioAggiornamento(fsm.getCodUfficioAggiornamento());
-			lFasDao.setCodStatoFascicolo(fsm.getCodStatoFascicolo());
-			lFasDao.setCondizioneUpdateStatoFascicolo(fsmOld.getIdFascicoloSius(),
-					fsmOld.getCodStatoFascicolo());
-			lFasDao.update();
-			lFasDao.stop();
-
-			// COMMIT
-			commit(lConn);
-		} catch (DAOException ex) {
-			rollback(lConn);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			siesLogger.error("DAOException: " + ex);
-			throw new SIUSException(F3BException.USER_MESSAGE,
-					"FascicoloSiusController.aggiornaStatoFascicoloSius: " + ex);
-		} catch (Exception e) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			siesLogger.error("Exception: " + e);
-			throw new SIUSException(F3BException.USER_MESSAGE, e.getMessage());
-		} finally {
-			cleanup(lFasDao);
-			cleanup(lConn);
-		}
-	}
-	// ***** FINE INTERVENTO MEV_2019-09 *****//
-
-	/**
-	 * Aggiorna Generale procedimento con la data restituzione e il motivo
-	 * Aggiorna lo stato del fascicolo SIUS
-	 * @param aFasGPMod
-	 * @throws F3BException
-	 * @since MEV_2019-09
-	 */
-	// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
-	public void ExInserisciRestituzioneAttiAlPresidente(FascicoloGPModel aFasGPMod) throws F3BException {
-
-		Connection lConn = null;
-		FascicoloSiusDAO lFasDao = null;
-		GeneraleProcedimentoDAO lGenProcDao = null;
-
-		FascicoloSiusModel lFasc = aFasGPMod.getFascicoloSiusModel();
-		GeneraleProcedimentoModel lGenProc = aFasGPMod.getGeneraleProcedimentoModel();
-		if (lFasc == null || lFasc.getIdFascicoloSius() == null || lGenProc == null
-				|| lGenProc.getIdGeneraleProcedimento() == null)
-			throw new SIUSException(F3BException.USER_MESSAGE, "Dati Fascicolo non definiti !");
-
-		try {
-			lConn = getDBTransaction();
-			// Update del FASCICOLO_SIUS
-			lFasDao = new FascicoloSiusDAO(lConn);
-			lFasDao.setCodStatoFascicolo(lFasc.getCodStatoFascicolo());
-			
-			//lFasDao.setDataDefinizione(lFasc.getDataDefinizione());
-			
-			lFasDao.setCondizioneUpdate(lFasc.getIdFascicoloSius());
-			
-			lFasDao.setCodOperatoreAggiornamento(lFasc.getCodOperatoreAggiornamento());
-			lFasDao.setCodUfficioAggiornamento(lFasc.getCodUfficioAggiornamento());
-			lFasDao.setDataAggiornamento(lFasc.getDataAggiornamento());
-
-			lFasDao.update();
-			lFasDao.stop();
-
-			// Update del GENERALE_PROCEDIMENTO
-			lGenProcDao = new GeneraleProcedimentoDAO(lConn);
-			// lGenProcDao.setTipoDefinizione(lGenProc.getTipoDefinizione());
-			lGenProcDao.setDescrRestituzione (lGenProc.getDescrRestituzione());
-			lGenProcDao.setDataRestituzione  (lGenProc.getDataRestituzione());
-			
-			lGenProcDao.setCodOperatoreAggiornamento(lGenProc.getCodOperatoreAggiornamento());
-			lGenProcDao.setCodUfficioAggiornamento(lGenProc.getCodUfficioAggiornamento());
-			lGenProcDao.setDataAggiornamento(lGenProc.getDataAggiornamento());
-
-			lGenProcDao.setCondizioneUpdate(lGenProc.getIdGeneraleProcedimento());
-
-			lGenProcDao.update();
-			lGenProcDao.stop();
-
-			commit(lConn);
-		} catch (DAOException ex) {
-			rollback(lConn);
-			throw new SIUSException(F3BException.USER_MESSAGE,
-					"FascicoloSiusController.ExInserisciRestituzioneAttiAlPresidente : " + ex);
-		} catch (Exception ex) {
-			rollback(lConn);
-			throw new SIUSException(F3BException.USER_MESSAGE,
-					"FascicoloSiusController.ExInserisciRestituzioneAttiAlPresidente : " + ex);
-		} finally {
-			cleanup(lFasDao);
-			cleanup(lGenProcDao);
-			cleanup(lConn);
-		}
-		return;
-	}
-	// FINE: MEV_2019-09
 }

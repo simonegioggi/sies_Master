@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import f3b.util.F3BException;
 import siap.sico.avvocato.model.AvvocatoModel;
 import siap.siep.storicoavvocato.model.StoricoAvvocatoModel;
 import siap.sige.avvocato.model.AvvocatoFascicoloSigeModel;
@@ -19,7 +20,6 @@ import siap.sige.avvocato.model.AvvocatoSigeModel;
 import siap.sige.sentenza.model.SentenzaSigeModel;
 import siap.sige.udienzaparti.model.AvvocatoParteModel;
 import siap.sige.udienzaparti.model.PartiUdienzaDifensoreModel;
-import f3b.util.F3BException;
 
 @SuppressWarnings("rawtypes")
 public interface IAvvocato {
@@ -94,5 +94,11 @@ public interface IAvvocato {
 
 	public PartiUdienzaDifensoreModel ExSostituzioneAvvocato(PartiUdienzaDifensoreModel aAvvUp,
 			PartiUdienzaDifensoreModel aAvvocatoIns) throws F3BException;
+
+	// MEV_21: aggiunto metodo di ricerca avvocato certificato reginde
+	public AvvocatoModel ExRicercaAvvocatoCertRegInde(AvvocatoModel am) throws F3BException;
+
+	// MEV_21: aggiunto metodo di aggiornamento avvocato da reginde
+	public AvvocatoModel ExAggiornaAvvocatoDaReginde(AvvocatoModel am) throws F3BException;
 
 }

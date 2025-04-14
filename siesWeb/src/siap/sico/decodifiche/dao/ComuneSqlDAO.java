@@ -3,11 +3,11 @@ package siap.sico.decodifiche.dao;
 import java.math.BigDecimal;
 import java.sql.Connection;
 
+import f3b.dao.DAOException;
+import f3b.model.GenericModel;
 import siap.dao.SIAPSqlDAO;
 import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.decodifiche.model.ComuneProvinciaModel;
-import f3b.dao.DAOException;
-import f3b.model.GenericModel;
 
 public class ComuneSqlDAO extends SIAPSqlDAO {
 
@@ -83,12 +83,24 @@ public class ComuneSqlDAO extends SIAPSqlDAO {
 		return lCPr;
 	}
 
+	// MEV_21 Recupero Comune, Descrizione, CAP e CodProvincia dal COMUNE puntato dal ccc.
+	public GenericModel getModelComuneCcc() throws DAOException {
+		ComuneModel lCcc = new ComuneModel();
+
+		lCcc.setCodComune(getString("COD_COMUNE"));
+		lCcc.setDescrizione(getString("DESCRIZIONE"));
+		lCcc.setCap(getString("CAP"));
+		lCcc.setCodProvincia(getString("COD_PROVINCIA"));
+
+		return lCcc;
+	}
+	
 	/**
 	 * La funzione prepara la Select per effettuare la ricerca dei Comuni di uno specifico Distretto che siano
 	 * sedi UNEP. Sono possibili sedi UNEP quei Comuni del Distretto che risultino anche sede di uno dei
 	 * seguenti uffici: CAP : Corte d'Appello; DIB : Tribunale Ordinario; TRIBSD : Sezione distaccata di
 	 * Tribunale.
-	 * 
+	 *
 	 * @param aCodDis
 	 *            : codice Distretto
 	 * @throws DAOException
@@ -128,4 +140,33 @@ public class ComuneSqlDAO extends SIAPSqlDAO {
 		return retNum;
 	}
 
+	// MEV_21: ricerco il comune dato il codice catastale
+	public void ricercaComuneByCodCatastale(String ccc) {
+
+		String lStatement = new String();
+		lStatement += " SELECT COD_COMUNE, COD_PROVINCIA, DESCRIZIONE, CAP ";
+		lStatement += " FROM COMUNE";
+		lStatement += " WHERE COD_CATASTALE_COMUNE = '" + ccc + "'";
+
+		setStatement(lStatement);
+	}
+
+	// MEV_21: ricerco la nazione collegata al codice catastale estratto dal C.F. soggetto nato all'Estero.
+	/**
+	 * La funzione restituisce la lista delle province per codTipoUfficio PM, PMM, PGCAP, ...
+	 */
+	public void ricercaNazionePerCcc(String aCcc) throws DAOException {
+
+		// BigDecimal lCount;
+		// int retNum = 0;
+
+		String lStatement = new String();
+		lStatement += " SELECT '-' COD_COMUNE, RV_HIGH_VALUE COD_PROVINCIA, RV_MEANING DESCRIZIONE, RV_ABBREVIATION CAP ";
+		lStatement += " FROM CG_REF_CODES";
+		lStatement += " WHERE CG_REF_CODES.RV_DOMAIN='NAZIONE' AND CG_REF_CODES.RV_ALT2_VALUE='"+aCcc+"' ";
+
+		setStatement(lStatement);
+
+	}
+	
 }

@@ -117,8 +117,6 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 						lBollettinoSqlDAO.getModels());
 				lRata.setListaBollettini(lListaBollettini);
 			}
-
-			commit(c);
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException", daoEx);
 			rollback(c);
@@ -284,16 +282,12 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 			c = getDBConnection();
 
 			lRateizzazioneSqlDao = new RateizzazionePPSqlDAO(c);
-
 			lRateizzazioneSqlDao.ricercaRateizzazionePPByEveIdEvento(aIdEvento);
-
 			lRateizzazioneSqlDao.start();
 			while (lRateizzazioneSqlDao.next()) {
 				lListaRate.add((RateizzazionePPModel) lRateizzazioneSqlDao.getModel());
 			}
 			lRateizzazioneSqlDao.stop();
-
-			commit(c);
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException", daoEx);
 			rollback(c);
@@ -314,8 +308,9 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 	/**
 	 * Override del metodo per esporre la chiamata consentendo si specificare anche se se non si \E8
 	 * interessati agli eventi non validati
-	 * 
-	 * @param motivo indica i codici motivo dei provvedimenti da ricercare (ALL = tutti)
+	 *
+	 * @param motivo
+	 *            indica i codici motivo dei provvedimenti da ricercare (ALL = tutti)
 	 */
 	@Override
 	public Vector<EventoRateizzazionePPModel> exRicercaEventoRateizzazionePP(BigDecimal idFascicolo,
@@ -327,8 +322,8 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 		return exRicercaEventoRateizzazionePP(idFascicolo, motivo, "S");
 	}
 
-	private Vector<EventoRateizzazionePPModel> exRicercaEventiRateizzazionePP(BigDecimal idFascicolo, String flagValidato)
-			throws F3BException {
+	private Vector<EventoRateizzazionePPModel> exRicercaEventiRateizzazionePP(BigDecimal idFascicolo,
+			String flagValidato) throws F3BException {
 
 		Connection c = null;
 
@@ -338,7 +333,7 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 		// Ricerca gli eventi per id Fascicolo
 		EventoModel em = new EventoModel();
 		if ("S".equals(flagValidato))
-		  em.setFlagDocumentoRegistrato("S");
+			em.setFlagDocumentoRegistrato("S");
 		em.setFasSieIdFascicoloSiep(idFascicolo);
 		String[] motivi = new String[] { "0622", "1307", "1308" };
 		// String[] tipi = new String[] { "04", "06" };
@@ -390,64 +385,36 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 
 	/*
 	 * 2023.11.09 si commeta il metodo non più richiamato da nessuna action
-	@Override
-	public Vector<EventoRateizzazionePPModel> exRicercaEventoRateizzazionePP(BigDecimal idFascicolo,
-			String motivo, String validato) throws F3BException {
-
-		Connection c = null;
-
-		RateizzazionePPSqlDAO rppsdao = null;
-		EventoSqlDAO esdao = null;
-
-		// Ricerca gli eventi per id Fascicolo
-		EventoModel em = new EventoModel();
-		// 2023.09.19
-		if ("S".equals(validato))
-			em.setFlagDocumentoRegistrato("S");
-		// 2023.09.19
-		em.setFasSieIdFascicoloSiep(idFascicolo);
-		if ("rpp".equals(motivo)) {
-			em.setCodMotivo("1307");
-			em.setCodTipoProvvedimento("04");
-		} else {
-			em.setCodMotivo("0622");
-			em.setCodTipoProvvedimento("06");
-		}
-		em.setCodTipoEvento("01");
-
-		Vector<EventoRateizzazionePPModel> listaEventoRateizzazioniPP = new Vector<>();
-
-		try {
-			c = getDBConnection();
-			esdao = new EventoSqlDAO(c);
-			esdao.ricercaEvento(em);
-			List<EventoModel> listaEventi = new ArrayList(esdao.getModels());
-			esdao.stop();
-
-			Iterator<EventoModel> iter = listaEventi.iterator();
-			while (iter.hasNext()) {
-				EventoModel evm = iter.next();
-				Vector<RateizzazionePPModel> listaRateizzazionePP = exRicercaRateizzazioniByIdEvento(
-						evm.getIdEvento());
-				// Aggiungo l'evento
-				EventoRateizzazionePPModel erppm = new EventoRateizzazionePPModel();
-				erppm.setEvento(evm);
-				erppm.setListaRateizzazioniPP(listaRateizzazionePP);
-				listaEventoRateizzazioniPP.add(erppm);
-			}
-		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			siesLogger.error("DAOException: ", daoEx);
-			throw new F3BException("RateizzazionePPController.exRicercaEventoRateizzazionePP: " + daoEx);
-		} finally {
-			cleanup(rppsdao);
-			cleanup(esdao);
-			cleanup(c);
-		}
-
-		return listaEventoRateizzazioniPP;
-	}
+	 *
+	 * @Override public Vector<EventoRateizzazionePPModel> exRicercaEventoRateizzazionePP(BigDecimal
+	 * idFascicolo, String motivo, String validato) throws F3BException {
+	 *
+	 * Connection c = null;
+	 *
+	 * RateizzazionePPSqlDAO rppsdao = null; EventoSqlDAO esdao = null;
+	 *
+	 * // Ricerca gli eventi per id Fascicolo EventoModel em = new EventoModel(); // 2023.09.19 if
+	 * ("S".equals(validato)) em.setFlagDocumentoRegistrato("S"); // 2023.09.19
+	 * em.setFasSieIdFascicoloSiep(idFascicolo); if ("rpp".equals(motivo)) { em.setCodMotivo("1307");
+	 * em.setCodTipoProvvedimento("04"); } else { em.setCodMotivo("0622"); em.setCodTipoProvvedimento("06"); }
+	 * em.setCodTipoEvento("01");
+	 *
+	 * Vector<EventoRateizzazionePPModel> listaEventoRateizzazioniPP = new Vector<>();
+	 *
+	 * try { c = getDBConnection(); esdao = new EventoSqlDAO(c); esdao.ricercaEvento(em); List<EventoModel>
+	 * listaEventi = new ArrayList(esdao.getModels()); esdao.stop();
+	 *
+	 * Iterator<EventoModel> iter = listaEventi.iterator(); while (iter.hasNext()) { EventoModel evm =
+	 * iter.next(); Vector<RateizzazionePPModel> listaRateizzazionePP = exRicercaRateizzazioniByIdEvento(
+	 * evm.getIdEvento()); // Aggiungo l'evento EventoRateizzazionePPModel erppm = new
+	 * EventoRateizzazionePPModel(); erppm.setEvento(evm);
+	 * erppm.setListaRateizzazioniPP(listaRateizzazionePP); listaEventoRateizzazioniPP.add(erppm); } } catch
+	 * (DAOException daoEx) { // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
+	 * posto di // LogF3B.getLogger() siesLogger.error("DAOException: ", daoEx); throw new
+	 * F3BException("RateizzazionePPController.exRicercaEventoRateizzazionePP: " + daoEx); } finally {
+	 * cleanup(rppsdao); cleanup(esdao); cleanup(c); }
+	 *
+	 * return listaEventoRateizzazioniPP; }
 	 */
 	/**
 	 * 2023.09.27
@@ -507,11 +474,8 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 	}
 
 	/*
-	 * ISSUE MEV : aggiunti metodi per insert, update, print 
-	 * Numero MEV : 2023-33 
-	 * Autore : sgioggi 
-	 * Data : 29 ago 2023 
-	 * Branch : MEV_2023-33
+	 * ISSUE MEV : aggiunti metodi per insert, update, print Numero MEV : 2023-33 Autore : sgioggi Data : 29
+	 * ago 2023 Branch : MEV_2023-33
 	 */
 	@Override
 	public BigDecimal exInserisciRideterminazionePP(EventoNotificaModel enm, String[] arrayIdRate,
@@ -849,9 +813,7 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 
 			lRateizzazioneSqlDao = new RateizzazionePPSqlDAO(c);
 			lBollettinoSqlDAO = new BollettinoPagopaSqlDAO(c);
-
 			lRateizzazioneSqlDao.ricercaRateizzazionePPByIdFasSIEPLibero(aIdFasc);
-
 			lRateizzazioneSqlDao.start();
 			while (lRateizzazioneSqlDao.next()) {
 				lListaRate.add((RateizzazionePPModel) lRateizzazioneSqlDao.getModel());
@@ -864,8 +826,6 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 						lBollettinoSqlDAO.getModels());
 				lRata.setListaBollettini(lListaBollettini);
 			}
-
-			commit(c);
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException", daoEx);
 			rollback(c);
@@ -1771,14 +1731,12 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 		return idEvento;
 	}
 
-  /**
-   * Funzione di validazione del provvedimento di archiviazione per estinzione pena pecuniaria
-   * - Cancellazione scadenzari
-   * - Aggiorna lo stato procedimento
-   * - Aggiorna lo stato del fascicolo in archiviato
-   * - Valida l'evento
-   * 
-   */
+	/**
+	 * Funzione di validazione del provvedimento di archiviazione per estinzione pena pecuniaria -
+	 * Cancellazione scadenzari - Aggiorna lo stato procedimento - Aggiorna lo stato del fascicolo in
+	 * archiviato - Valida l'evento
+	 *
+	 */
 	@Override
 	public void exUpdateDefinizioneProcedimentoPP(EventoModel em) throws F3BException {
 
@@ -1820,7 +1778,7 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 			spm.setCodOperatoreInserimento(em.getCodOperatoreAggiornamento());
 			spm.setDataInserimento(em.getDataAggiornamento());
 			spm.setCodUfficioInserimento(em.getCodUfficioAggiornamento());
-			
+
 			spDAO = new StatoProcedimentoDAO(lConn);
 			// - Cancella eventuali record prima di inserire un nuovo STATO_PROCEDIMENTO
 			spDAO.setCondizioneByIdFascicolo(emRic.getFasSieIdFascicoloSiep());
@@ -1843,19 +1801,19 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 				lScaDao.setCondizioneDelete(lScaMod.getIdScadenzario());
 				lScaDao.delete();
 				lScaDao.stop();
-			}		
+			}
 			// ===================================================================
 			// Cancella tutti gli scadenzari di tipo LEGGE SIMEONE ( Tipo = 01 )
 			// ===================================================================
 			lScaDao.setCondizioneByIdFascicoloSiepTipoScadenzario(emRic.getFasSieIdFascicoloSiep(), "01");
 			lScaDao.delete();
-			
+
 			lArchSqlDao = new ArchiviazioneSqlDAO(lConn);
 
 			ArchiviazioneModel lArchMod = new ArchiviazioneModel();
 			lArchSqlDao.ricercaArchiviazioneByIdEvento(em.getIdEvento());
-			lArchMod = (ArchiviazioneModel) lArchSqlDao.getModelByKey();			
-			
+			lArchMod = (ArchiviazioneModel) lArchSqlDao.getModelByKey();
+
 			// Aggiorna il fascicolo con stato = "01" archiviato/definito
 			lFascDao = new FascicoloSiepDAO(lConn);
 
@@ -1870,7 +1828,7 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 			lFascDao.selCondizioneUpdate(emRic.getFasSieIdFascicoloSiep());
 			lFascDao.update();
 			lFascDao.stop();
-			
+
 			// ========================================================================
 			// Aggiorno il blob sull'evento
 			// ========================================================================
@@ -1896,10 +1854,10 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 			cleanup(esDAO);
 			cleanup(spDAO);
 			cleanup(lArchSqlDao);
-			cleanup(lFascDao);			
+			cleanup(lFascDao);
 			cleanup(lScaSqlDao);
-			cleanup(lScaDao);			
-			
+			cleanup(lScaDao);
+
 			cleanup(eDAOBlob);
 
 			cleanup(lConn);
@@ -2164,8 +2122,6 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 						bpsDAO.getModels());
 				rppm.setListaBollettini(bpmVector);
 			}
-
-			commit(c);
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException", daoEx);
 			rollback(c);
@@ -2174,7 +2130,8 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 		} catch (Exception ex) {
 			siesLogger.error("Exception", ex);
 			rollback(c);
-			throw new F3BException("RateizzazionePPController.exRicercaMancatiPagamentiUnicaSoluzione: " + ex);
+			throw new F3BException(
+					"RateizzazionePPController.exRicercaMancatiPagamentiUnicaSoluzione: " + ex);
 		} finally {
 			cleanup(rppsDAO);
 			cleanup(bpsDAO);
@@ -2185,5 +2142,141 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 		return rppVector;
 	}
 	// ***** FINE INTERVENTO MEV_2023-33 *****//
+
+	/**
+	 * Metodo che ricerca le rateizzazioni per fascicolo SIUS
+	 *
+	 * @author sgioggi
+	 * @since MEV_2023-35
+	 */
+	@Override
+	public Vector<RateizzazionePPModel> exRicercaRateizzazioniByIdFascicoloSius(BigDecimal idFascicoloSius)
+			throws F3BException {
+
+		Vector<RateizzazionePPModel> lListaRate = new Vector<>();
+
+		Connection c = null;
+
+		RateizzazionePPSqlDAO lRateizzazioneSqlDao = null;
+		BollettinoPagopaSqlDAO lBollettinoSqlDAO = null;
+
+		try {
+			c = getDBConnection();
+
+			lRateizzazioneSqlDao = new RateizzazionePPSqlDAO(c);
+			lBollettinoSqlDAO = new BollettinoPagopaSqlDAO(c);
+
+			lRateizzazioneSqlDao.ricercaRateizzazionePPByIdFascicoloSius(idFascicoloSius);
+
+			lRateizzazioneSqlDao.start();
+			while (lRateizzazioneSqlDao.next())
+				lListaRate.add((RateizzazionePPModel) lRateizzazioneSqlDao.getModel());
+			lRateizzazioneSqlDao.stop();
+		} catch (DAOException daoEx) {
+			siesLogger.error("DAOException", daoEx);
+			rollback(c);
+			throw new F3BException(
+					"RateizzazionePPController.exRicercaRateizzazioniByIdFascicoloSius: " + daoEx);
+		} catch (Exception ex) {
+			siesLogger.error("Exception", ex);
+			rollback(c);
+			throw new F3BException(
+					"RateizzazionePPController.exRicercaRateizzazioniByIdFascicoloSius: " + ex);
+		} finally {
+			cleanup(lRateizzazioneSqlDao);
+			cleanup(lBollettinoSqlDAO);
+
+			cleanup(c);
+		}
+
+		return lListaRate;
+	}
+
+	/**
+	 * Metodo che modifica le rateizzazioni per rate ed id fascicolo SIUS
+	 *
+	 * @author sgioggi
+	 * @since MEV_2023-35
+	 */
+	@Override
+	public void exModificaRateizzazioniByIdFascicoloSius(Vector<RateizzazionePPModel> rate,
+			BigDecimal idFascicoloSius) throws F3BException {
+
+		Connection c = null;
+
+		RateizzazionePPDAO lRateizzazioneDao = null;
+
+		try {
+			c = getDBTransaction();
+
+			lRateizzazioneDao = new RateizzazionePPDAO(c);
+			siesLogger.debug("Cancello le precedenti rate.");
+			lRateizzazioneDao.selCondizioneByIdFasSius(idFascicoloSius);
+			lRateizzazioneDao.delete();
+			siesLogger.debug("Ciclo caricamento rate. Num rate = " + rate.size());
+			for (int i = 0; i < rate.size(); i++) {
+				RateizzazionePPModel lRataModel = rate.elementAt(i);
+				lRateizzazioneDao.setDAOFromModel(lRataModel);
+				lRateizzazioneDao.insert();
+				lRateizzazioneDao.stop();
+			}
+
+			commit(c);
+		} catch (DAOException daoEx) {
+			siesLogger.error("DAOException", daoEx);
+			rollback(c);
+			throw new F3BException("RateizzazionePPController.exModificaRateizzazioni: " + daoEx);
+		} catch (Exception ex) {
+			siesLogger.error("Exception", ex);
+			rollback(c);
+			throw new F3BException("RateizzazionePPController.exModificaRateizzazioni: " + ex);
+		} finally {
+			cleanup(lRateizzazioneDao);
+
+			cleanup(c);
+		}
+
+		return;
+	}
+
+	/**
+	 * Metodo che cancella le rateizzazioni per id fascicolo SIUS
+	 *
+	 * @author sgioggi
+	 * @since MEV_2023-35
+	 */
+	@Override
+	public void exCancellaRateizzazioniByIdFascicoloSius(BigDecimal idFascicoloSius) throws F3BException {
+
+		Connection c = null;
+
+		RateizzazionePPDAO lRateizzazioneDao = null;
+
+		try {
+			c = getDBConnection();
+
+			lRateizzazioneDao = new RateizzazionePPDAO(c);
+
+			siesLogger.debug("Cancello le rate per il FASCICOLO SIUS " + idFascicoloSius);
+			lRateizzazioneDao.selCondizioneByIdFasSius(idFascicoloSius);
+			lRateizzazioneDao.delete();
+
+			commit(c);
+		} catch (DAOException daoEx) {
+			siesLogger.error("DAOException", daoEx);
+			rollback(c);
+			throw new F3BException(
+					"RateizzazionePPController.exCancellaRateizzazioniByIdFascicoloSius: " + daoEx);
+		} catch (Exception ex) {
+			siesLogger.error("Exception", ex);
+			rollback(c);
+			throw new F3BException(
+					"RateizzazionePPController.exCancellaRateizzazioniByIdFascicoloSius: " + ex);
+		} finally {
+			cleanup(lRateizzazioneDao);
+
+			cleanup(c);
+		}
+	}
 
 }

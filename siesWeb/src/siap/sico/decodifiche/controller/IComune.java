@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.Vector;
 //import java.rmi.RemoteException;
 
-import siap.sico.decodifiche.model.ComuneModel;
 import f3b.util.F3BException;
+import siap.sico.decodifiche.model.ComuneModel;
 
 @SuppressWarnings("rawtypes")
 public interface IComune {
@@ -20,6 +20,8 @@ public interface IComune {
 
 	public Vector ExGetListaComuni(ComuneModel lModel) throws F3BException;
 
+	public Vector ExGetListaComuniNascita(ComuneModel lModel) throws F3BException;	// 2021/05/17	MEV_21
+
 	public Vector ExGetListaComuniTds() throws F3BException;
 
 	public Vector ExGetListaComuniTdsm() throws F3BException;
@@ -29,5 +31,8 @@ public interface IComune {
 	public boolean ExIsComuneSedeUNEP(String aCodComune) throws F3BException;
 
 	public ComuneModel ExRicercaComuneByKey(String aKey) throws F3BException;
+
+	// MEV_21: ricerco il comune dato il codice catastale
+	public ComuneModel ExRicercaComuneByCodCatastale(String ccc) throws F3BException;
 
 }

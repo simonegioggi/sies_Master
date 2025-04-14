@@ -1671,20 +1671,24 @@ if (nuovapenaresidua != null && nuovapenaresidua.getIdPenaResidua() != null) {
 	Iterator lItxAvv = avvocati.iterator();
 	while (lItxAvv.hasNext()) {
 		AvvocatoSiepModel lAvv = (AvvocatoSiepModel) lItxAvv.next();
-%>  
+%>
 <table>
-  	<tr>
+	<tr>
     	<td class="l">Per Avvocato&nbsp;
       		<font class="campo">
-        		<%=StringUtils.toStringJSP(lAvv.getAvvocato().getCognome())%>&nbsp;<%=StringUtils.toStringJSP(lAvv.getAvvocato().getNome())%>
+        		%=StringUtils.toStringJSP(lAvv.getAvvocato().getCognome())%>&nbsp;<%=StringUtils.toStringJSP(lAvv.getAvvocato().getNome())%>
 			</font>
 			&nbsp;Foro di&nbsp;
-			<font class="campo"><%=StringUtils.toStringJSP(lAvv.getAvvocato().getForo())%></font>
+			<font class="campo">
+  				<%=StringUtils.toStringJSP(lAvv.getAvvocato().getForo())%>
+			</font>
 			&nbsp;Difensore di&nbsp;
-			<font class="campo"><%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescrTipo())%></font>
-			<input type="HIDDEN" title="Codice Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep())%>" type="text" name="<%=ICostantiAvvocato.CAMPO_ID_AVVOCATO%>" maxlength="35" size="35">
+			<font class="campo">
+  				<%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescrTipo())%>
+  			</font>
+  			<input type="HIDDEN" title="Codice Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep())%>" type="text" name="<%=ICostantiAvvocato.CAMPO_ID_AVVOCATO%>" maxlength="35" size="35">
 		</td>
-  	</tr>
+	</tr>
 </table>
 <table>
   	<tr>
@@ -1696,9 +1700,11 @@ if (nuovapenaresidua != null && nuovapenaresidua.getIdPenaResidua() != null) {
   		</td>
 	</tr>
 	<tr>
-  		<td class="l">Sede </td><td class="L">
-    		<input title="Sede Foro Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocato().getForo())%>" type="text" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>" maxlength="35" size="35">
-			<a href="Javascript:ListaComuni('LoadInserisciMisuraAlternativa','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>[<%=lIdxAvv%>]');">
+  		<td class="l">Sede</td>
+  		<td class="L">
+			<%-- MEV_21 (avvocati) Sostituzione di getAvvocato().getForo() con getAvvocato().getDescComuneSedeForo() --%>
+			<input title="Sede Foro Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescComuneSedeForo())%>" type="text" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>" maxlength="35" size="35">
+			<a href="Javascript:ListaComuni('LoadInserisciMisuraAlternativa','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>[<%=lIdxAvv%>]');">
     			<img src="/images/filefolder.gif" border="0">
   			</a>
 		</td>
@@ -1710,8 +1716,8 @@ if (nuovapenaresidua != null && nuovapenaresidua.getIdPenaResidua() != null) {
   	<tr><td>&nbsp;</td></tr>
 </table>
 <%
-		lIdxAvv++;
-	}
+    lIdxAvv++;
+  }
 %>
 </div>
 <%

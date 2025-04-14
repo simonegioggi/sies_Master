@@ -2,6 +2,11 @@ package siap.sius.fascicolo.action;
 
 import f3b.web.IWebConstants;
 
+/**
+ * ICostantiFascicoloSius - Classe di costanti di FascicoloSius
+ *
+ * @version 1.0
+ */
 public interface ICostantiFascicoloSius {
 
 	public static final String CAMPO_ID_FASCICOLO_SIUS = "IdFascicoloSius";
@@ -243,6 +248,8 @@ public interface ICostantiFascicoloSius {
 	public static final String COD_OGGETTO_PROCEDIMENTO_MA = "U004"; // Esecuzione Misura Alternativa
 	public static final String COD_OGGETTO_PROCEDIMENTO_SS = "U019"; // Esecuzione Sanzioni Sostitutive
 	public static final String COD_OGGETTO_PROCEDIMENTO_MS = "U024"; // Esecuzione Misure di Sicurezza
+	// MEV_2023-35
+	public static final String COD_OGGETTO_PROCEDIMENTO_PS = "U126"; // Esecuzione Pen Sostitutive
 
 	// CODIFICA STATO FASCICOLO
 	public static final String COD_DEFINITO = "01";
@@ -274,31 +281,5 @@ public interface ICostantiFascicoloSius {
 	public static final String COD_FUNZIONE_90050000 = "90050000"; // Udienze
 	public static final String COD_FUNZIONE_90060000 = "90060000"; // Ordinanze
 	public static final String COD_FUNZIONE_90110000 = "90110000"; // Funzioni Amministrative
-
-	/* 
-	 * ISSUE MEV : aggiunta costante per creazione pagina jsp
-	 * Numero MEV : 9
-	 * Autore    : sgioggi
-	 * Data      : 22 nov 2022
-	 * Branch    : MEV_2019-09
-	 */
-	public static final String PG_LOAD_GESTIONE_RESTITUZIONE_ATTI_PRESIDENTE = IWebConstants.ROOT_DIR
-			+ "files/siap/sius/fascicolo/LoadGestioneRestituzioneAttiPresidente.jsp";
-	// DATA RESTITUZIONE
-	public static final String CAMPO_GIORNO_DATA_RESTITUZIONE = "GiornoDataRestituzione";
-	public static final String CAMPO_MESE_DATA_RESTITUZIONE = "MeseDataRestituzione";
-	public static final String CAMPO_ANNO_DATA_RESTITUZIONE = "AnnoDataRestituzione";
-	public static final String COD_EMESSO_DECRETO_DESIGNAZIONE = "22";
-	public static final String COD_ATTI_RESTITUITI_PRESIDENTE = "23";
-	// MEV_2024-092: non più utilizzato
-	// public static final String COD_EMESSA_ORDINANZA_APPLICAZIONE_PROVVISORIA = "24";
-	public static final String PG_LOAD_ESECUTIVITA_ORDINANZA_APPLICAZIONE_PROVVISORIA_MA = IWebConstants.ROOT_DIR
-			+ "files/siap/sius/fascicolo/LoadEsecutivitaOrdinanzaApplicazioneProvvisoriaMA.jsp";
-	public static final String CAMPO_GIORNO_DATA_ESECUTIVITA = "GiornoDataEsecutivita";
-	public static final String CAMPO_MESE_DATA_ESECUTIVITA = "MeseDataEsecutivita";
-	public static final String CAMPO_ANNO_DATA_ESECUTIVITA = "AnnoDataEsecutivita";
-	public static final String PG_DETTAGLIO_ESECUTIVITA_ORDINANZA_APPLICAZIONE_PROVVISORIA_MA = IWebConstants.ROOT_DIR
-			+ "files/siap/sius/fascicolo/DettaglioEsecutivitaOrdinanzaApplicazioneProvvisoriaMA.jsp";
-	//***** FINE INTERVENTO MEV_2019-09 *****//
 
 }

@@ -147,10 +147,7 @@
     </tr>
     <tr>
       <td width="32%" class="menulines" nowrap>
-        <%-- MEV_2019-09-SIEP - Si aggancia la nuova griglia della sospensioni dove viene spostata l'attuale bottone
         <a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sospensione.action.ActLoadInserisciSospensioneDecisioniSorv">Sospensione Esecuzione Pena</a>
-        --%>
-        <a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActMisuraAlternativaGrigliaSospensione">Sospensione Esecuzione Pena</a>
       </td>
       <td width="32%" class="menulines" nowrap>
         <!-- VECCHIA GESTIONE DIFFERIMENTO-->

@@ -90,6 +90,16 @@ public class ActLoadInserisciAssegnaAvvocato
 		// 19/03/2010 Nuova gestione Combo per Foro avvocato.
 		lOption = new Option(DecodificheManager.getInstance().getForo(), lDescrComune.toUpperCase().trim(), Option.NO_BLANK_ITEM);
 		setRequestAttribute("foro", ""+ lOption);
+		
+		
+    // MEV_21 Nuova gestione Combo per Stato di Nascita
+  	lOption = new Option(DecodificheManager.getInstance().getNazioni(), "-");
+  	setRequestAttribute("nazione", "" + lOption );      
+
+  	// MEV_21 Nuova gestione Combo per Stato Difensore
+  	lOption = new Option(DecodificheManager.getInstance().getListaAttivitaAvvocato(), "-");
+  	setRequestAttribute("statoAvv", "" + lOption ); 
+		
 
     return PG_LOAD_INSERISCIAVVOCATO; //restituisce la jsp di VIEW
   }

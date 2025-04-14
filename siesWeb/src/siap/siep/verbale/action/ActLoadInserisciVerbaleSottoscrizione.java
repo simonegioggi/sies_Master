@@ -1,9 +1,5 @@
 package siap.siep.verbale.action;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
@@ -104,12 +100,6 @@ public class ActLoadInserisciVerbaleSottoscrizione extends ActionSiap
 			throw new SIEPException(SIEPException.USER_MESSAGE,
 					"Non esiste l'Ordinanza/Decreto del TDS/MDS.");
 
-		// MEV-9 si aggiungono gli ulteriori codici motivo (sorveglianza)
-		Set<String> codiciAffidamentoSorvNew = new HashSet<>(
-				Arrays.asList(new String[] { "0680", "0681", "0690", "0691", "0692" }));
-		Set<String> codiciDetenzioneSorvNew = new HashSet<>(
-				Arrays.asList(new String[] { "0682", "0693" }));
-
 		if (lEveMod != null && lEveMod.getCodTipoEvento() != null && lEveMod.getCodTipoProvvedimento() != null
 				&& lEveMod.getCodTipoEvento().equals("01") // Provvedimento
 				&& (lEveMod.getCodTipoProvvedimento().equals("03") // Ordinanza
@@ -131,17 +121,6 @@ public class ActLoadInserisciVerbaleSottoscrizione extends ActionSiap
 																	// Prova - Affidamento Terapeutico
 						|| lEveMod.getCodMotivo().equals("2008") // Ammissione provvisoria ad Affidamento in
 																	// Prova - new DL146 2013
-						// MEV_2019-09 - SIEP - Si gestiscono anche i codici della semiliberta
-						|| lEveMod.getCodMotivo().equals("2007") // Ammissione provvisoria a Semiliberta'
-						|| lEveMod.getCodMotivo().equals("0683") // Semiliberta' (Art. 50 comma 1 O.P. - Art.
-																	// 678 comma 1-ter c.p.p.)
-						|| lEveMod.getCodMotivo().equals("0694") // Semiliberta' (art. 7 d.lgs. 121/2018, art.
-																	// 678 comma 1 ter cp.p.)
-						// MEV_2019-09 - SIEP - Fine Semiliberta
-						// MEV_2019-09 - SIEP Si gestiscono gli ulteriori codici AFFIDAMENTO
-						|| codiciAffidamentoSorvNew.contains(lEveMod.getCodMotivo())
-						// MEV_2019-09 - SIEP Si gestiscono gli ulteriori codici DETENZIONE DOMICILIARE
-						|| codiciDetenzioneSorvNew.contains(lEveMod.getCodMotivo())
 						// 20191120 [SG]: aggiunto codice per gestione ticket
 						// Ticket#20191114019 — SIES - mancata registrazione data inizio misura
 						// Esecuzione presso domicilio della pena detentiva ( TdS )

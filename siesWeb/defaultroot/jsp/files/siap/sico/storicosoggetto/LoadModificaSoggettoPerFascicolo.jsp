@@ -556,7 +556,10 @@ if( lProfilo.isSius())
     <input type="HIDDEN" name="<%=ICostantiSoggetto.CAMPO_MESE_DATA_NASCITA%>" value="<%=StringUtils.toStringJSP(soggettonuovo.getMeseNascita())%>">
     <input type="HIDDEN" name="<%=ICostantiSoggetto.CAMPO_GIORNO_DATA_NASCITA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(soggettonuovo.getDataNascita(),"dd")) %>">
     <input type="HIDDEN" name="<%=ICostantiSoggetto.CAMPO_DATA_NASCITA_PRESUNTA%>" value="<%=soggettonuovo.getDataNascitaPresunta()%>">
-    <input type="HIDDEN" name="<%=ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA%>" value="<%=soggettonuovo.getDescrComuneNascita()%>">
+    <!-- 20210830 MEV_21 Valorizzazione Codice Comune di Nascita -->
+    <input type="HIDDEN" name="<%=ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA%>" value="<%=soggettonuovo.getCodComuneNascita()%>">
+    <input type="HIDDEN" name="DescrComuneNascita" value="<%=soggettonuovo.getDescrComuneNascita()%>">
+
     <input type="HIDDEN" name="<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>" value="<%=soggettonuovo.getCodStatoNascita()%>">
     <input type="HIDDEN" name="<%=ICostantiSoggetto.CAMPO_DESC_COMUNE_NASCITA_ESTERO%>" value="<%=soggettonuovo.getDescComuneNascitaEstero()%>">
     <input type="HIDDEN" name="<%=ICostantiSoggetto.CAMPO_NAZIONALITA%>" value="<%=soggettonuovo.getNazionalita()%>">

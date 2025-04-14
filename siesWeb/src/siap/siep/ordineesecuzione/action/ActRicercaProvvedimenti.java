@@ -26,7 +26,6 @@ import siap.siep.util.SIEPLookupRemote;
  * @version 1.0
  */
 public class ActRicercaProvvedimenti extends ActionSiap implements ICostantiOrdineEsecuzione {
-
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -98,9 +97,9 @@ public class ActRicercaProvvedimenti extends ActionSiap implements ICostantiOrdi
 			// Ticket#202101270113 - si adeguano le condizione della count alle condizioni della select
 			// impostando il filtro sull'ufficio + accorpati
 			CountRisultati = lCtrl.ExGetCountEventoByFascicoloSiepTipEventoNOTTipProvPaged(
-					lFascicoloModel.getIdFascicoloSiep()
-					// , getCodUfficioUtenteConnesso()
-					, getUfficioUtenteConnesso(), lTipoEvento, lTipoProv, lCodMotivo);
+					lFascicoloModel.getIdFascicoloSiep(),
+					// getCodUfficioUtenteConnesso()
+					getUfficioUtenteConnesso(), lTipoEvento, lTipoProv, lCodMotivo);
 		} else
 			CountRisultati = getRequestBigDecimalParameter("CountRisultati");
 

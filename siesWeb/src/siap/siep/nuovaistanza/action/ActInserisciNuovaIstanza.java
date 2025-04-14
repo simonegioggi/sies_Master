@@ -12,10 +12,14 @@ package siap.siep.nuovaistanza.action;
 
 import java.math.BigDecimal;
 
+import siap.sico.decodifiche.action.ICostantiComune;
+import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.soggetto.model.SoggettoModel;
+import siap.siep.avvocato.action.ICostantiAvvocato;
 import siap.siep.fascicolo.action.ICostantiFascicoloSiep;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
+import siap.siep.misuraalternativa.action.ICostantiMisuraAlternativa;
 import siap.siep.nuovaistanza.controller.INuovaIstanza;
 import siap.siep.nuovaistanza.model.NuovaIstanzaModel;
 import siap.siep.sentenza.action.ICostantiSentenza;
@@ -46,6 +50,14 @@ public class ActInserisciNuovaIstanza extends ActionNuovaIstanza implements ICos
 	//preparo il model dell'ISTANZA
 	NuovaIstanzaModel lNuoMod = getNuovaIstanza(lIdFascicolo);
 	
+	//20210812 MEV_21 Valorizzazione AVV_ID_AVVOCATO Inserito/modificato/confermato
+	if (this.getRequestStringParameter(ICostantiAvvocato.CAMPO_COGNOME).length()>1) 
+		lNuoMod.setAvvIdAvvocato(getIdAvvocatoInserito());
+
+	//20210819 MEV_21 Valorizzazione AVV_ID_AVVOCATO_PRESENTANTE Inserito/modificato/confermato
+	if ("D".equals(this.getRequestStringParameter(ICostantiNuovaIstanza.CAMPO_FLAG_PRESDEP)) )
+		lNuoMod.setAvvIdAvvocatoPresentante(getIdAvvocatoPresInserito());
+	
 	//preparo il model della sentenza
 	SentenzaModel lSenMod = null;
 	
@@ -73,7 +85,21 @@ public class ActInserisciNuovaIstanza extends ActionNuovaIstanza implements ICos
 	SoggettoModel lSogMod = null;
 	if(!this.isRequestParameterNullObj(CAMPO_COGNOME))
 	{
-	  lSogMod = getSoggetto();
+		// 20210524	MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni.
+		ComuneModel lComMod;
+		if (!isRequestParameterNullObj(ICostantiComune.CAMPO_COD_COMUNE_REALE)
+				&& getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE).length() > 0) {
+			// se presente dal codice comune (e descrizione)
+			lComMod = new ComuneModel(getDatiComuneByCodDescr(
+					getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
+					getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
+		} else {
+			// altrimenti dalla sola descrizione (rischio omonimi)
+			lComMod = new ComuneModel(
+					getDatiComuneByDescrOmonimia(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
+		}
+
+		lSogMod = getSoggetto();
 	}
 	
 	//preparo il model del fascicolo

@@ -3,7 +3,6 @@ package siap.sico.web;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -59,8 +58,7 @@ import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.web.ISIAPCostantiWeb;
 
 /**
- * Title: ActionSiap 
- * Description: Azione padre delle classi figlie ActXxxx. Questa classe mette a disposizione
+ * Title: ActionSiap Description: Azione padre delle classi figlie ActXxxx. Questa classe mette a disposizione
  * alle classi figlie i metodi per estrarre i dati dagli oggetti <code>session</code> e <code>request</code>,
  * inoltre cosa fondamentale ha la responsabilità di caricare dinamicamente la classe azione figlia, metodo
  * direttamente invocato dalla <code>Main.jsp</code>.
@@ -70,8 +68,6 @@ public class ActionSiap extends Action {
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
-	// [FT] - 03/08/2016 - MAC_LOG - Commento la dichiarazione di mLog in favore della variabile siesLogger
-	// static Logger mLog = LogF3B.getLogger();
 
 	/**
 	 * Costruttore di classe.
@@ -121,8 +117,6 @@ public class ActionSiap extends Action {
 	 *             propaga errore di eccezione.
 	 */
 	public void setFunctionsAvailableToRequest(String aNameAction) throws F3BException {
-		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-		// siesLogger.debug("Action setFunctionsAvailableToRequest");
 
 		UtenteModel lUtenteConnesso = (UtenteModel) getSessionAttribute(
 				ICostantiSecurity.SESSION_UTENTE_CONNESSO);
@@ -190,8 +184,6 @@ public class ActionSiap extends Action {
 	 *             propaga errore di eccezione.
 	 */
 	protected FunctionModel getFunctionByNameAction(String aNameAction) throws F3BException {
-		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-		// siesLogger.debug("Action getFunctionByNameAction");
 
 		UtenteModel lUtenteConnesso = (UtenteModel) getSessionAttribute(
 				ICostantiSecurity.SESSION_UTENTE_CONNESSO);
@@ -218,7 +210,7 @@ public class ActionSiap extends Action {
 	 */
 	protected ComuneModel getCodComuneByDescr(String aDescrComune) throws F3BException {
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-		siesLogger.debug("Action getDescrComuneByCod");
+		siesLogger.debug("Action getCodComuneByDescr");
 
 		ComuneModel lComMod = new ComuneModel();
 
@@ -233,7 +225,7 @@ public class ActionSiap extends Action {
 	// Ricerca comune da InserisciDomicilio/Residenza - Query con Flag_Validita
 	protected ComuneModel getCodComuneByDescrFlagVal(String aDescrComune) throws F3BException {
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-		siesLogger.debug("Action getDescrComuneByCod");
+		siesLogger.debug("Action getCodComuneByDescrFlagVal");
 
 		ComuneModel lComMod = new ComuneModel();
 
@@ -516,31 +508,28 @@ public class ActionSiap extends Action {
 		LogAttivitaModel log = new LogAttivitaModel();
 		ILogAttivita ilog = SICOLookupRemote.getLogAttivitaRemote();
 
-    // MEV_2024-DNA -  eliminazione tracciature degli utenti DNA che iniziano per J
-    String lCodOperatore = "";
-    
-    if (!isSessionAttributeNullObj(ICostantiSecurity.SESSION_UTENTE_CONNESSO))
-      lCodOperatore = ((UtenteModel) getSessionAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO))
-                  .getUserId();
-      else
-          // solo alla login!!!!
-        lCodOperatore = getRequestStringParameter(ICostantiSecurity.CAMPO_USER_ID);
-    
-    if (lCodOperatore.startsWith("J"))
-      return;
-    else 
-      log.setCodOperatore (lCodOperatore);
-    
-    /*
-    if (!isSessionAttributeNullObj(ICostantiSecurity.SESSION_UTENTE_CONNESSO))
-      log.setCodOperatore(((UtenteModel) getSessionAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO))
-          .getUserId());
-    else
-      // solo alla login!!!!
-      log.setCodOperatore(getRequestStringParameter(ICostantiSecurity.CAMPO_USER_ID));
-    */
-    // MEV_2024-DNA - FINE
+		// MEV_2024-DNA - eliminazione tracciature degli utenti DNA che iniziano per J
+		String lCodOperatore = "";
 
+		if (!isSessionAttributeNullObj(ICostantiSecurity.SESSION_UTENTE_CONNESSO))
+			lCodOperatore = ((UtenteModel) getSessionAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO))
+					.getUserId();
+		else
+			// solo alla login!!!!
+			lCodOperatore = getRequestStringParameter(ICostantiSecurity.CAMPO_USER_ID);
+
+		if (lCodOperatore.startsWith("J"))
+			return;
+		else
+			log.setCodOperatore(lCodOperatore);
+
+		/*
+		 * if (!isSessionAttributeNullObj(ICostantiSecurity.SESSION_UTENTE_CONNESSO))
+		 * log.setCodOperatore(((UtenteModel) getSessionAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO))
+		 * .getUserId()); else // solo alla login!!!!
+		 * log.setCodOperatore(getRequestStringParameter(ICostantiSecurity.CAMPO_USER_ID));
+		 */
+		// MEV_2024-DNA - FINE
 
 		log.setIpUtente(getRequest().getRemoteAddr());
 		log.setAzioneContestoJava(aNameAction);
@@ -659,9 +648,6 @@ public class ActionSiap extends Action {
 		// log_rec = log_rec.substring(3);
 		// }
 		//
-		// //// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		// //siesLogger.debug("log_rec* = "+log_rec);
 		// log_rec = ""; // Per ora resetto il codice
 		// }
 		// Fine sezione sperimentale, per ora non ha effetto
@@ -676,10 +662,6 @@ public class ActionSiap extends Action {
 		// ==========================================================================
 		// Intervento 1) Sustituzione della Action con '*'
 		if (!MultipartContent.isMultipartContent(getRequest())) {
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			// siesLogger.debug("noMultipart");
-
 			Map param_map = getRequest().getParameterMap();
 			Set keys = param_map.keySet();
 
@@ -710,9 +692,6 @@ public class ActionSiap extends Action {
 				// }
 			}
 		} else {
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			// siesLogger.debug("Multipart");
 			MultipartContent lReqMultipart = getRequestMultipart();
 
 			Hashtable param_map = lReqMultipart.getParameters();
@@ -737,9 +716,6 @@ public class ActionSiap extends Action {
 			log_rec = log_rec.substring(3);
 		}
 
-		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		// siesLogger.debug("log_rec = "+log_rec);
 		// 15/11/2010 Controllo Stringa Record > 4000
 		if (log_rec.length() > 4000) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -807,7 +783,7 @@ public class ActionSiap extends Action {
 	 * ISIAPCostantiWeb.PG_PAGINA_VUOTA.
 	 */
 	protected String ritornoDopoCancellazione(String aMessaggio, String aActDopo) throws Exception {
-		// String retPage = null;
+
 		String lLinkRet = null;
 
 		// setta la risposta nella request
@@ -846,8 +822,8 @@ public class ActionSiap extends Action {
 	 * @return String:
 	 * @throws Exception
 	 */
-
 	protected String goToRitorno() throws Exception {
+
 		String lLinkRet = null;
 		// Se esiste un bottone di ritorno si salta al suo link
 		if (!isSessionAttributeNullObj("StackDiRitorno")) {
@@ -1220,6 +1196,7 @@ public class ActionSiap extends Action {
 					|| "N".equals(lEveMod.getFlagDocumentoRegistrato())) {
 				/*
 				 * ISSUE MAC : aggiunte info del provvedimento non validato nel messaggio dell'eccezione
+				 *
 				 * Numero MAC : 20200220017 Autore : monica Data : 20/feb/2020 Branch : 12.1
 				 */
 				String infoEventoNONValidato = lEveMod.getDescrTipoProvvedimento() != null
@@ -1261,6 +1238,7 @@ public class ActionSiap extends Action {
 					|| "N".equals(lEveMod.getFlagDocumentoRegistrato())) {
 				/*
 				 * ISSUE MAC : aggiunte info del provvedimento non validato nel messaggio dell'eccezione
+				 *
 				 * Numero MAC : 20200220017 Autore : monica Data : 20/feb/2020 Branch : 12.1
 				 */
 				String infoEventoNONValidato = lEveMod.getDescrTipoProvvedimento() != null
@@ -1294,10 +1272,6 @@ public class ActionSiap extends Action {
 				this.getCodUfficioUtenteConnesso());
 
 		return lEveMod;
-
-		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		// siesLogger.debug("Ultimo evento non validato: "+lEveMod);
 
 		// if ( lEveMod != null
 		// && lEveMod.getIdEvento().compareTo(aEveComputo.getIdEvento())!=0
@@ -1477,12 +1451,11 @@ public class ActionSiap extends Action {
 	 *
 	 * @param aLogModel
 	 * @return
-	 *
 	 */
 	private boolean isRecordDaLoggare(LogAttivitaModel aLogModel) {
+
 		if (aLogModel.getAzioneContestoJava()
 				.equals("siap.siep.fascicolo.action.ActLoadDettaglioFascicolo")) {
-
 		}
 
 		return true;
@@ -1559,26 +1532,6 @@ public class ActionSiap extends Action {
 		// }
 
 		return ret;
-	}
-
-	// MEV_2019-09 aggiunto metodo
-	protected boolean isUfficioMinorenni() throws F3BException {
-
-		Set<String> ufficiMinori = new HashSet<>();
-
-		ufficiMinori.add("PMM");
-		ufficiMinori.add("DIBM");
-		ufficiMinori.add("GIPM");
-		ufficiMinori.add("GUPM");
-		ufficiMinori.add("CAPSM");
-		ufficiMinori.add("TDSM");
-		ufficiMinori.add("UDSM");
-
-		UfficioModel ufficioUtente = getUfficioUtenteConnesso();
-		if (ufficiMinori.contains(ufficioUtente.getCodTipoUfficio()))
-			return true;
-		else
-			return false;
 	}
 
 	/**

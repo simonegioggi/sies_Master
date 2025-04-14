@@ -151,43 +151,8 @@ public class ActStampaConcessione extends ActConcessione {
 		if (flagTemplate != null && lEventoModel != null && lEventoModel.getCodTipoEvento() != null
 				&& lEventoModel.getCodMotivo() != null && !lEventoModel.getCodMotivo().equals("0000")
 				&& lMisMod != null && lMisMod.getCodTipoMisura() != null) {
-			// MEV_2019-09-SIEP: imposto flag_template e codTipoMisura e codTipoProvvedimento
-			// if ("0680".equals(lMotivo) || "0681".equals(lMotivo) // AFFIDAMENTO
-			// || "0690".equals(lMotivo) || "0691".equals(lMotivo) || "0692".equals(lMotivo) // AFFIDAMENTO
-			// || "0682".equals(lMotivo) || "0693".equals(lMotivo) // DETENZIONE DOMICILIARE
-			// || "0683".equals(lMotivo) || "0694".equals(lMotivo)) // SEMILIBERTA'
-			// flagTemplate = "1";
-			if ("5460".equals(lMotivo) || "5461".equals(lMotivo) // AFFIDAMENTO
-					|| "5462".equals(lMotivo) || "5463".equals(lMotivo) || "5464".equals(lMotivo) // AFFIDAMENTO
-					|| "5465".equals(lMotivo) || "5466".equals(lMotivo) // DETENZIONE DOMICILIARE
-					|| "5467".equals(lMotivo) || "5468".equals(lMotivo)) // SEMILIBERTA'
-				lTemMod = lCtrlTem.ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplate(
-						lEventoModel.getCodTipoEvento(), "12", lMotivo, "1");
-			else { // MEV_2024-092: aggiunto controllo su codMotivo per risolvere conflitto
-				// template siep-sius che hanno lo stesso
-				// COD_TIPO_EVENTO 01, COD_TIPO_PROVVEDIMENTO 03, COD_MOTIVO 0681, FLAG_TEMPLATE 1
-				// diversifico per cod_oggetto_procedimento che è nullo per siep (vale x tutti e 3)
-				// AFFIDAMENTO
-				if (("0680".equals(lMotivo) || "0681".equals(lMotivo) || "0690".equals(lMotivo)
-						|| "0691".equals(lMotivo) || "0692".equals(lMotivo)
-						// DETENZIONE DOMICILIARE
-						|| "0682".equals(lMotivo) || "0693".equals(lMotivo)
-						|| "1418".equals(lMotivo) || "1424".equals(lMotivo)
-						// SEMILIBERTA'
-						|| "0683".equals(lMotivo) || "0694".equals(lMotivo))
-						|| "1419".equals(lMotivo) || "1425".equals(lMotivo)
-						|| ("26".equals(lEventoModel.getCodTipoProvvedimento())
-								&& ("5443".equals(lMotivo) || "5444".equals(lMotivo) || "5445".equals(lMotivo)
-										|| "5446".equals(lMotivo) || "5447".equals(lMotivo))))
-					// MEV_2019-09-SIEP: imposto flag_template e codTipoMisura e codTipoProvvedimento
-					// flagTemplate = "1";
-					// MEV_2024-092: aggiunto metodo di ricerca
-					lTemMod = lCtrlTem.ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplateCodOgg(
-							lEventoModel.getCodTipoEvento(), "03", lMisMod.getCodTipoMisura(), flagTemplate);
-				else
-					lTemMod = lCtrlTem.ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplate(
-							lEventoModel.getCodTipoEvento(), "03", lMisMod.getCodTipoMisura(), flagTemplate);
-			}
+			lTemMod = lCtrlTem.ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplate(
+					lEventoModel.getCodTipoEvento(), "03", lMisMod.getCodTipoMisura(), flagTemplate);
 			lEveMod.setNomeTemplate(lTemMod.getIdTemplate());
 		} else
 			lEveMod.setNomeTemplate(TEMPLATE_VUOTO);

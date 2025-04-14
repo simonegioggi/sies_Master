@@ -444,8 +444,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		setStatement(lStatement);
 	}
 
-	// MEV_2019-09-SIEP: cambiata firma del metodo per gestione maggiorenni/minorenni
-	public void listaOggettiSospensioneDecisioneSor(String aCodTipoUfficio) throws DAOException {
+	public void listaOggettiSospensioneDecisioneSor() throws DAOException {
 
 		String lStatement = new String();
 		// 09/10/2009 lStatement =
@@ -455,19 +454,8 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// CG_REF_CODES
 		// E' cambiato l'oggetto per le sospensioni
 		// lStatement += " AND (RV_HIGH_VALUE = 'U001' OR RV_HIGH_VALUE = 'U071')";
-		lStatement += "AND (RV_HIGH_VALUE = 'X001' OR RV_HIGH_VALUE = 'U071' ";
+		lStatement += " AND (RV_HIGH_VALUE = 'X001' OR RV_HIGH_VALUE = 'U071')";
 		// Ticket#20211006019 - FINE
-		// MEV_2019-09-SIEP: aggiunta condizione di estrazione x SOSPENSIONE ESECUZIONE PENA ed ordinamento
-		// MEV_2024-092: rimuovo 0724 & 0735 (Conferma appl. provv. Sospensione dell'Esecuzione della Pena
-		// (Art. 90 DPR 309/90 - Art. 678 comma 1-ter c.p.p.))
-		if ("PMM".equals(aCodTipoUfficio))
-			// lStatement += "OR RV_LOW_VALUE = '0695' OR RV_LOW_VALUE = '0735') ";
-			lStatement += "OR RV_LOW_VALUE = '0695') ";
-		else
-			// lStatement += "OR RV_LOW_VALUE = '0684' OR RV_LOW_VALUE = '0724') ";
-			lStatement += "OR RV_LOW_VALUE = '0684') ";
-		lStatement += "ORDER BY RV_MEANING";
-
 		setStatement(lStatement);
 	}
 
@@ -578,55 +566,26 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		setStatement(lStatement);
 	}
 
-	// MEV_2019-09-SIEP: cambiata firma del metodo per distinguere PM da PMM
-	public void listaMotivoProvvMA(String aMisAlt, String aCodTipoUfficio) throws DAOException {
-
+	public void listaMotivoProvvMA(String aCodTipoUfficio) throws DAOException {
 		String lStatement = new String();
-		lStatement = "SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
-		if (aMisAlt.equals("DETENZIONE")) {
-			// MEV_2019-09-SIEP: aggiunta condizione di estrazione x DETENZIONE DOMICILIARE
-			// lStatement += "AND (RV_LOW_VALUE = '0005' OR RV_LOW_VALUE = '0010' OR RV_LOW_VALUE = '0013') ";
-			// MEV_2024-092: rimosse le conferme (MACA e MACM)
-			if ("PMM".equals(aCodTipoUfficio))
-				lStatement += "AND (RV_LOW_VALUE = '0005' OR RV_LOW_VALUE = '0010' OR RV_LOW_VALUE = '0013' "
-						// + "OR RV_LOW_VALUE = '0693' OR RV_LOW_VALUE = '0733') ";
-						+ "OR RV_LOW_VALUE = '0693') ";
-			else
-				lStatement += "AND (RV_LOW_VALUE = '0005' OR RV_LOW_VALUE = '0010' OR RV_LOW_VALUE = '0013' "
-						// + "OR RV_LOW_VALUE = '0682' OR RV_LOW_VALUE = '0722') ";
-						+ "OR RV_LOW_VALUE = '0682') ";
-		} else if (aMisAlt.equals("AFFIDAMENTO")) {
-			// MEV_2019-09-SIEP: aggiunta condizione di estrazione x AFFIDAMENTO IN PROVA
-			// lStatement += "AND (RV_LOW_VALUE = '0001' OR RV_LOW_VALUE = '0002' OR RV_LOW_VALUE = '0003')";
-			// MEV_2024-092: rimosse le conferme (MACA e MACM)
-			if ("PMM".equals(aCodTipoUfficio))
-				lStatement += "AND (RV_LOW_VALUE = '0001' OR RV_LOW_VALUE = '0002' OR RV_LOW_VALUE = '0003' "
-						+ "OR RV_LOW_VALUE = '0690' OR RV_LOW_VALUE = '0691' OR RV_LOW_VALUE = '0692') ";
-			// + "OR RV_LOW_VALUE = '0730' OR RV_LOW_VALUE = '0731' OR RV_LOW_VALUE = '0732') ";
-			else
-				lStatement += "AND (RV_LOW_VALUE = '0001' OR RV_LOW_VALUE = '0002' OR RV_LOW_VALUE = '0003' "
-						+ "OR RV_LOW_VALUE = '0680' OR RV_LOW_VALUE = '0681') ";
-			// + "OR RV_LOW_VALUE = '0720' OR RV_LOW_VALUE = '0721') ";
-		} else if (aMisAlt.equals("SEMILIBERTA")) {
-			// MEV_2019-09-SIEP: aggiunta condizione di estrazione x SEMILIBERTA'
-			// lStatement += "AND (RV_LOW_VALUE = '0004') ";
-			// MEV_2024-092: rimosse le conferme (MACA e MACM)
-			if ("PMM".equals(aCodTipoUfficio))
-				lStatement += "AND (RV_LOW_VALUE = '0004' "
-						// + "OR RV_LOW_VALUE = '0694' OR RV_LOW_VALUE = '0734') ";
-						+ "OR RV_LOW_VALUE = '0694') ";
-			else
-				lStatement += "AND (RV_LOW_VALUE = '0004' "
-						// + "OR RV_LOW_VALUE = '0683' OR RV_LOW_VALUE = '0723') ";
-						+ "OR RV_LOW_VALUE = '0683') ";
-		} else if (aMisAlt.equals("INDULTINO"))
+
+		// 10/09/2009 lStatement =
+		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
+		// "
+		// +
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		if (aCodTipoUfficio.equals("DETENZIONE"))
+			lStatement += " AND (RV_LOW_VALUE = '0005' OR RV_LOW_VALUE = '0010' OR RV_LOW_VALUE = '0013') ";
+		else if (aCodTipoUfficio.equals("AFFIDAMENTO"))
+			lStatement += " AND (RV_LOW_VALUE = '0001' OR RV_LOW_VALUE = '0002' OR RV_LOW_VALUE = '0003') ";
+		else if (aCodTipoUfficio.equals("SEMILIBERTA"))
+			lStatement += " AND (RV_LOW_VALUE = '0004') ";
+		else if (aCodTipoUfficio.equals("INDULTINO"))
 			lStatement += "AND (RV_LOW_VALUE = '2245') ";
-		else if (aMisAlt.equals(ICostantiMisuraAlternativa.ESP_PRESSO_DOM))
-			lStatement += "AND (RV_LOW_VALUE = '" + ICostantiMisuraAlternativa.ESP_PRESSO_DOM_MOTIVO
-					+ "' OR RV_LOW_VALUE = '0610') ";
-		// MEV_2019-09-SIEP: modificato ordinamento
-		// lStatement += "ORDER BY RV_ABBREVIATION ";
-		lStatement += "ORDER BY RV_MEANING";
+		else if (aCodTipoUfficio.equals(ICostantiMisuraAlternativa.ESP_PRESSO_DOM))
+			lStatement += " AND (RV_LOW_VALUE = '" + ICostantiMisuraAlternativa.ESP_PRESSO_DOM_MOTIVO + "' OR RV_LOW_VALUE = '0610' ) ";
+
+		lStatement += " ORDER BY RV_ABBREVIATION ";
 
 		setStatement(lStatement);
 	}
@@ -949,29 +908,17 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 	public void listaMotivoProvvAmmProvvisoria(String aTipo) throws DAOException {
 
 		String lStatement = new String();
-		/*
-		 * // 09/10/2009 lStatement = // "SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING,
-		 * RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE // " // + lStatement =
-		 * "SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' "; if
-		 * (aTipo.equals("AMMISSIONE_PROV_DET_DOM")) lStatement += " AND (RV_LOW_VALUE = '2005') "; else if
-		 * (aTipo.equals("AMMISSIONE_PROV_AFFI")) lStatement += " AND (RV_LOW_VALUE in ('2006','2008')) "; //
-		 * lStatement += " AND (RV_LOW_VALUE = '2006') "; //mod d.f.
-		 *
-		 */
-		// MEV_2019-09: si differenziano i codici per PM e PMM aggiungendo i nuovi codici
-		lStatement = "SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
-		if (aTipo.equals("AMMISSIONE_PROV_DET_DOM_PM"))
-			lStatement += " AND (RV_LOW_VALUE in ('2005','0682')) ";
-		else if (aTipo.equals("AMMISSIONE_PROV_DET_DOM_PMM"))
-			lStatement += " AND (RV_LOW_VALUE in ('2005','0693')) ";
-		else if (aTipo.equals("AMMISSIONE_PROV_AFFI_PM"))
-			lStatement += " AND (RV_LOW_VALUE in ('2006','2008','0680','0681')) ";
-		else if (aTipo.equals("AMMISSIONE_PROV_AFFI_PMM"))
-			lStatement += " AND (RV_LOW_VALUE in ('2006','2008','0690','0691','0692')) ";
-		else if (aTipo.equals("AMMISSIONE_PROV_SEMILIB_PMM"))
-			lStatement += " AND (RV_LOW_VALUE in ('2007','0694')) ";
-		else if (aTipo.equals("AMMISSIONE_PROV_SEMILIB_PM"))
-			lStatement += " AND (RV_LOW_VALUE in ('2007','0683')) ";
+
+		// 09/10/2009 lStatement =
+		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
+		// "
+		// +
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		if (aTipo.equals("AMMISSIONE_PROV_DET_DOM"))
+			lStatement += " AND (RV_LOW_VALUE = '2005') ";
+		else if (aTipo.equals("AMMISSIONE_PROV_AFFI"))
+			lStatement += " AND (RV_LOW_VALUE in ('2006','2008')) ";
+		// lStatement += " AND (RV_LOW_VALUE = '2006') "; //mod d.f.
 
 		lStatement += " ORDER BY RV_ABBREVIATION ";
 
@@ -1681,17 +1628,6 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 
 		String lStatement = "SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'OGGETTO_PROCEDIMENTO' AND "
 				+ " RV_LOW_VALUE = '" + codContenutoSige + "'";
-
-		setStatement(lStatement);
-	}
-
-	// MEV_2019-09-SIEP
-	public void listaMotivoProvvSosp678() throws DAOException {
-
-		String lStatement = new String();
-
-		lStatement = "SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
-		lStatement += " AND RV_LOW_VALUE in ('0684', '0695')";
 
 		setStatement(lStatement);
 	}

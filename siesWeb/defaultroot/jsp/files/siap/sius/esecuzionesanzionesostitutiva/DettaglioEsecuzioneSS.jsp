@@ -40,6 +40,35 @@
 
   String lStrOrdDec = (sanzioneUno.getGeneraleProcedimentoModel().getCodTipoAtto().compareTo("04")==0 ) ? "Ordinanza N.ro : " : "Decreto N.ro : ";
 %>
+
+<%
+// MEV_2023-35: si gestisce in form anche l'esecuzione Pene sostitutive
+String codOggettoProcedimentoES = sanzioneUno.getGeneraleProcedimentoModel().getCodOggettoProcedimento();
+String strTitoloFunzione = "";
+String strLabelBtnIscrizione = "";
+String strLabelBtnModifica = "";
+String strProcedimentES = "";
+String strDurataES = "";
+String strElencoES = "";
+String strEsecuzionePriva ="";
+if ("U019".equals(codOggettoProcedimentoES)) {
+  strTitoloFunzione     = "Elenco dei Procedimenti relativi all' Esecuzione della Sanzione Sostitutiva";
+  strLabelBtnIscrizione = "Iscrizione procedimento di Esecuzione S.S.";
+  strLabelBtnModifica   = "Modifica procedimento di Esecuzione S.S.";
+  strProcedimentES      = "N.ro Procedimento E.S.S. : ";
+  strDurataES           = "Durata sanzione: ";
+  strElencoES           = "Elenco Periodi Sanzione Sostitutiva ";
+  strEsecuzionePriva    = "Esecuzione Sanzione Sostitutiva priva di procedimenti";
+} else if ("U126".equals(codOggettoProcedimentoES)) {
+  strTitoloFunzione     = "Elenco dei Procedimenti relativi all' Esecuzione della Pena Sostitutiva";
+  strLabelBtnIscrizione = "Iscrizione procedimento di Esecuzione P.S.";
+  strLabelBtnModifica   = "Modifica procedimento di Esecuzione P.S.";
+  strProcedimentES      = "N.ro Procedimento E.P.S. : ";
+  strDurataES           = "Durata pena: ";
+  strElencoES           = "Elenco Periodi Pena Sostitutiva ";
+  strEsecuzionePriva    = "Esecuzione Pena Sostitutiva priva di procedimenti";
+}
+%>
 <html>
   <head>
     <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
@@ -71,7 +100,7 @@
     <tr>
       <td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
       <td class="LBG"><font class=label>Funzione :</font>&nbsp;
-      <font class="campo"> Elenco dei Procedimenti relativi all' Esecuzione della Sanzione Sostitutiva </font>
+      <font class="campo"> <%=strTitoloFunzione%> </font>
       </td>
 <%
       BigDecimal IdSoggetto = sanzioneUno.getFascicoloSiusModel().getSoggetto().getIdSoggetto();
@@ -90,11 +119,11 @@
 	      if ( dettaglioFascSiep !=null  )
 	      {%>
 	        <a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.fascicolo.action.ActLoadInsFascicoloDaSoggettoUDS&<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>=<%=IdFascicoloSius%>&TornaQui=<%=TornaQui%>">
-	          <img align="middle" src="<%=IWebConstants.IMAGES_DIR%>new24.gif" alt="Iscrizione procedimento di Esecuzione S.S." width="24" height="24" border="0">
+	          <img align="middle" src="<%=IWebConstants.IMAGES_DIR%>new24.gif" alt="<%=strLabelBtnIscrizione %>" width="24" height="24" border="0">
 	        </a>
 	      <%}else{%>
 	        <a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.fascicolo.action.ActLoadInsFascicoloDaSoggettoUDS&<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>=<%=IdFascicoloSius%>&<%=ICostantiSoggetto.CAMPO_ID_SOGGETTO%>=<%=IdSoggetto%>&TornaQui=<%=TornaQui%>">
-	          <img align="middle" src="<%=IWebConstants.IMAGES_DIR%>new24.gif" alt="Iscrizione procedimento di Esecuzione S.S." width="24" height="24" border="0">
+	          <img align="middle" src="<%=IWebConstants.IMAGES_DIR%>new24.gif" alt="<%=strLabelBtnIscrizione %>"  width="24" height="24" border="0">
 	        </a>
 	      <%}%>
 	      </td>
@@ -105,11 +134,11 @@
 	      if ( dettaglioFascSiep !=null  )
 	      {%>
 	        <a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.esecuzionesanzionesostitutiva.action.ActLoadModificaEsecuzioneSS&<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>=<%=IdFascicoloSius%>&<%=ICostantiSoggetto.CAMPO_ID_SOGGETTO%>=<%=IdSoggetto%>&<%=ICostantiEsecuzioneSS.CAMPO_ID_FASCICOLO_SIEP%>=<%=dettaglioFascSiep.getFascicoloSiep().getIdFascicoloSiep()%>&TornaQui=<%=TornaQui%>">
-	          <img align="middle" src="<%=IWebConstants.IMAGES_DIR%>modifica24.gif" alt="Modifica procedimento di Esecuzione S.S." width="24" height="24" border="0">
+	          <img align="middle" src="<%=IWebConstants.IMAGES_DIR%>modifica24.gif" alt="<%=strLabelBtnModifica %>" width="24" height="24" border="0">
 	        </a>
 	      <%}else{%>
 	        <a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.esecuzionesanzionesostitutiva.action.ActLoadModificaEsecuzioneSS&<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>=<%=IdFascicoloSius%>&<%=ICostantiSoggetto.CAMPO_ID_SOGGETTO%>=<%=IdSoggetto%>&TornaQui=<%=TornaQui%>">
-	          <img align="middle" src="<%=IWebConstants.IMAGES_DIR%>modifica24.gif" alt="Modifica procedimento di Esecuzione S.S." width="24" height="24" border="0">
+	          <img align="middle" src="<%=IWebConstants.IMAGES_DIR%>modifica24.gif" alt="<%=strLabelBtnModifica %>" width="24" height="24" border="0">
 	        </a>
 	      <%}%>
 	      </td>
@@ -122,7 +151,8 @@
       <table>
         <tr>
           <br>
-          <td class="lVerde">N.ro Procedimento E.S.S. : <font class="cVerde">
+
+          <td class="lVerde"><%=strProcedimentES %><font class="cVerde">
           <%--=sanzioneUno.getGeneraleProcedimentoModel().getAnnoS1()%>/<%=sanzioneUno.getGeneraleProcedimentoModel().getProgrS1()--%>
             <a class="CliccabileFermo" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>=<%=sanzioneUno.getFascicoloSiusModel().getIdFascicoloSius()%>&TornaQui=<%=TornaQui%>" Title="Dettaglio Procedimento SIUS">
               <%=sanzioneUno.getGeneraleProcedimentoModel().getAnnoS1()%>/<%=sanzioneUno.getGeneraleProcedimentoModel().getProgrS1()%>
@@ -138,7 +168,7 @@
         </td>
         </tr>
         <tr>
-          <td class="l">Soggetto: <font class="campo"><%=sanzioneUno.getFascicoloSiusModel().getSoggetto().getCognome()%>
+          <td class="l">Soggetto: <font class="campo"><%=sanzioneUno.getFascicoloSiusModel().getSoggetto().getCognome()%>&nbsp;
           <%=sanzioneUno.getFascicoloSiusModel().getSoggetto().getNome()%></font>
 
           <td class="c" colspan="2"><font class="label">
@@ -185,8 +215,8 @@
 %>
           <tr>
             <td class="l">Titolo Esecutivo N.ro Siep : <font class="campo"><%=dettaglioFascSiep.getFascicoloSiep().getChiaveAnno()%>/<%=dettaglioFascSiep.getFascicoloSiep().getChiaveProgr()%></font></td>
-            <td class="c" colspan="2"><font class="campo"> <%=dettaglioFascSiep.getFascicoloSiep().getDescrTipoUfficio()%> - <%=dettaglioFascSiep.getFascicoloSiep().getDescrComuneUfficio()%>
-            </font><font class="label">del: </font><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(dettaglioFascSiep.getFascicoloSiep().getDataIscrizione(),"dd-MM-yyyy"),"-")%>
+            <td class="c" colspan="2" nowrap><font class="campo"> <%=dettaglioFascSiep.getFascicoloSiep().getDescrTipoUfficio()%> - <%=dettaglioFascSiep.getFascicoloSiep().getDescrComuneUfficio()%>
+            </font><font class="label"> del: </font><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(dettaglioFascSiep.getFascicoloSiep().getDataIscrizione(),"dd-MM-yyyy"),"-")%>
             </font></td>
           </tr>
         <%}%>
@@ -200,7 +230,7 @@
           </font></td>
         </tr>
  		<tr>
-			<td class="L" width="40%">Durata sanzione: &nbsp;&nbsp;Anni
+			<td class="L" width="40%"><%=strDurataES %>: &nbsp;&nbsp;Anni
 				<%if (sanzioneSostitutiva.getNumAnniSanzione() !=null){%>
 	        		<font class="campo"><%=sanzioneSostitutiva.getNumAnniSanzione()%>
 	        		</font>
@@ -219,7 +249,7 @@
 
 					<td class="l">
 						<a class="CliccabileFermo" href="Javascript:ListaSanzioni();">
-		   				Elenco Periodi Sanzione Sostitutiva
+		   				<%=strElencoES %>
 						</a>
 					</td>
 
@@ -276,7 +306,7 @@
 %>
       <tr>
         <td class="c" colspan=7><font class="label">
-         Esecuzione Sanzione Sostitutiva priva di procedimenti
+         <%=strEsecuzionePriva %> 
         </font></td>
       </tr>
 <%

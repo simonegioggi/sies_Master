@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.StringTokenizer;
 
 import f3b.util.DateUtils;
+import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.model.ComuneModel;
@@ -28,22 +29,9 @@ import siap.sius.tenore.model.TenoreModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * <p>
- * Title: ActModificaFascicolo
- * </p>
- * <p>
- * Description: Classe Azione di modifica del Fascicolo SIUS
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * ActModificaFascicolo - Classe Azione di modifica del Fascicolo SIUS
  */
 public class ActModificaFascicolo extends ActionSiap implements ICostantiFascicoloSius {
-
-	// private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	@SuppressWarnings("rawtypes")
 	public String processRequest() throws Exception {
@@ -74,7 +62,7 @@ public class ActModificaFascicolo extends ActionSiap implements ICostantiFascico
 		// Modifica del 10/09/2013 mev "Revisione Misure di Sicurezza SIUS"
 		// Eliminato controllo su ufficio mittente se il campo non è valorizzato
 		// nel caso di "Iscrizione di una Esecuzione Misura di Sicurezza"
-		String[] lArrayCodici = (getRequestStringParameters(ICostantiFascicoloSius.CAMPO_COD_OGGETTO));
+		String[] lArrayCodici = (getRequestStringParameters(CAMPO_COD_OGGETTO));
 		String lCodiciOggetto = "";
 
 		for (int i = 0; i < lArrayCodici.length; i++)
@@ -82,17 +70,18 @@ public class ActModificaFascicolo extends ActionSiap implements ICostantiFascico
 
 		if (!isRequestParameterNullObj(CAMPO_COD_CONTENUTO)) {
 			// MEV10-s3: aggiunte or condition per gestire uffici minorenni
-			if (((CAMPO_COD_CONTENUTO.compareTo("U019") == 0 && lCodTipoUfficioMittente.compareTo("UDS") != 0
+			if (((getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U019") == 0
+					&& lCodTipoUfficioMittente.compareTo("UDS") != 0
 					&& lCodTipoUfficioMittente.compareTo("UDSM") != 0
 					&& lCodTipoUfficioMittente.compareTo("TDS") != 0
 					&& lCodTipoUfficioMittente.compareTo("TDSM") != 0)
-					|| (CAMPO_COD_CONTENUTO.compareTo("U004") == 0
+					|| (getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U004") == 0
 							&& lCodTipoUfficioMittente.compareTo("TDS") != 0
 							&& lCodTipoUfficioMittente.compareTo("TDSM") != 0
 							&& lCodTipoUfficioMittente.compareTo("UDS") != 0
 							&& lCodTipoUfficioMittente.compareTo("UDSM") != 0
 							&& lCodTipoUfficioMittente.compareTo("-") != 0))
-					&& (!(CAMPO_COD_CONTENUTO.compareTo("U004") == 0
+					&& (!(getRequestStringParameter(CAMPO_COD_CONTENUTO).compareTo("U004") == 0
 							&& (lCodTipoUfficioMittente.compareTo("PM") == 0
 									|| lCodTipoUfficioMittente.compareTo("PGCAP") == 0)
 							&& lCodiciOggetto.indexOf("2368") >= 0)))
@@ -114,10 +103,14 @@ public class ActModificaFascicolo extends ActionSiap implements ICostantiFascico
 		}
 
 		// Caricamento Fascicolo SIUS (solo dati modificati)
-		// Codice dell'operatore che inserisce
-		lFasGPMod.getFascicoloSiusModel().setCodOperatoreAggiornamento(getCodUtenteConnesso());
-		// Codice dell'Ufficio che inserisce
-		lFasGPMod.getFascicoloSiusModel().setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
+		lFasGPMod.getFascicoloSiusModel().setCodOperatoreAggiornamento(getCodUtenteConnesso()); // Codice
+																								// dell'operatore
+																								// che
+																								// inserisce
+		lFasGPMod.getFascicoloSiusModel().setCodUfficioAggiornamento(getCodUfficioUtenteConnesso()); // Codice
+																										// dell'operatore
+																										// che
+																										// inserisce
 		lFasGPMod.getFascicoloSiusModel().setDataAggiornamento(DateUtils.getSysDate());
 
 		ComuneModel lComMod = new ComuneModel(
@@ -177,14 +170,12 @@ public class ActModificaFascicolo extends ActionSiap implements ICostantiFascico
 		// Preleva dalla request i codici e descrizioni dei tenori, impipati rispettivamente con separatore
 		// "|" e "\n".
 		// Stabilisce la size dell'Array di Tenori da caricare in FascicoloGpModel.
-		// String lCodOgg = getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_OGGETTO);
-		StringTokenizer lCodOggetto = new StringTokenizer(
-				getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_OGGETTO), "|");
-		StringTokenizer lDescrOggetto = new StringTokenizer(
-				getRequestStringParameter(ICostantiFascicoloSius.CAMPO_DESCR_OGGETTO), "\n");
+		// String lCodOgg = getRequestStringParameter(CAMPO_COD_OGGETTO);
+		StringTokenizer lCodOggetto = new StringTokenizer(getRequestStringParameter(CAMPO_COD_OGGETTO), "|");
+		StringTokenizer lDescrOggetto = new StringTokenizer(getRequestStringParameter(CAMPO_DESCR_OGGETTO),
+				"\n");
 		// STUB 12/11/2003 Aggiunti i Codici Dettaglio Oggetti.
-		String lStCodiceDet = new String(
-				getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_DETTAGLIO_OGGETTO));
+		String lStCodiceDet = new String(getRequestStringParameter(CAMPO_COD_DETTAGLIO_OGGETTO));
 
 		int lSizeVector = lCodOggetto.countTokens();
 		TenoreModel lTenori[] = new TenoreModel[lSizeVector];
@@ -202,8 +193,7 @@ public class ActModificaFascicolo extends ActionSiap implements ICostantiFascico
 			lTenModel.setCodOperatoreInserimento(getCodUtenteConnesso()); // Codice dell'operatore che
 																			// inserisce
 			lTenModel.setDataInserimento(DateUtils.getSysDate());
-			lTenModel
-					.setCodMagistrato(getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_MAGISTRATO));
+			lTenModel.setCodMagistrato(getRequestStringParameter(CAMPO_COD_MAGISTRATO));
 			lTenModel.setProgrTenore(new BigDecimal((double) (lIndex + 1)));
 			lTenModel.setCodEsitoTenore("-");
 			// Il campo Id_Generale_Procedimento di Tenore viene impostato nel controller
@@ -242,12 +232,8 @@ public class ActModificaFascicolo extends ActionSiap implements ICostantiFascico
 				lFasGPMod.getGeneraleProcedimentoModel()
 						.setProgrS1(getRequestBigDecimalParameter(CAMPO_CHIAVE_PROGR_S22));
 			}
-		} /* else { */
-		// Ticket#20201106019 e Ticket#202011180111.
-		// Commentata la riga che modificava erroneamente l'anno del GP
-		// lFasGPMod.getGeneraleProcedimentoModel().setAnnoS1(new
-		// BigDecimal(DateUtils.getSysDate("yyyy")));
-		/* } */
+		} else
+			lFasGPMod.getGeneraleProcedimentoModel().setAnnoS1(new BigDecimal(DateUtils.getSysDate("yyyy")));
 		// FINE MEV_66
 
 		IFascicoloSius lCtrl = SIUSLookupRemote.getFascicoloSiusRemote();
@@ -268,6 +254,11 @@ public class ActModificaFascicolo extends ActionSiap implements ICostantiFascico
 				lEMAModel.setDataOrdinanza(getRequestDateParameter(CAMPO_ANNO_DATA_ATTO, CAMPO_MESE_DATA_ATTO,
 						CAMPO_GIORNO_DATA_ATTO));
 				// Valorizzazione del codice Ufficio
+				// Collection lMittenti = DecodificheManager.getInstance().getMittenteAtto();
+				// String lDescrMittente = DecodificheUtils.getDescbyCode(lMittenti,
+				// getRequestStringParameter(CAMPO_COD_MITTENTE_ATTO));
+				// Collection lUffici = DecodificheManager.getInstance().getTipoUfficio();
+
 				if (lCodTipoUfficioMittente.compareTo("-") == 0)
 					throw new SIUSException(SIUSException.USER_MESSAGE,
 							"Ufficio Mittente non valido per la Misura Alternativa");
@@ -290,14 +281,16 @@ public class ActModificaFascicolo extends ActionSiap implements ICostantiFascico
 
 		// STUB 30/07/2007 Caricamento Esecuzione Sanzione Sostitutiva.
 		// BigDecimal lIdEsecuzioneSS = null;
-		if (lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U019") == 0) {
+		if (lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U019") == 0
+				// MEV_2023-35 aggiunta gestione U126 EPS
+				|| lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
+						.compareTo("U126") == 0) {
 			if (!isRequestParameterNullObj(ICostantiEsecuzioneSS.CAMPO_ID_ESECUZIONE_SS)
 					&& getRequestStringParameter(ICostantiEsecuzioneSS.CAMPO_ID_ESECUZIONE_SS).length() > 4) {
 				IEsecuzioneSS lESSCtrl = SIUSLookupRemote.getEsecuzioneSSRemote();
 				EsecuzioneSanzioneSostitutivaModel lESSModel = lESSCtrl
 						.ExRicercaEsecuzioneSanzioneSostitutivaByIdFascicolo(
 								lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
-
 				if (lSizeVector > 0)
 					lESSModel.setCodTipoSanzione(lTenori[0].getCodOggettoTenore());
 				lESSModel.setDataOrdinanza(getRequestDateParameter(CAMPO_ANNO_DATA_ATTO, CAMPO_MESE_DATA_ATTO,
@@ -308,13 +301,23 @@ public class ActModificaFascicolo extends ActionSiap implements ICostantiFascico
 						getRequestStringParameter(CAMPO_COD_MITTENTE_ATTO));
 				Collection lUffici = DecodificheManager.getInstance().getTipoUfficio();
 				lCodTipoUfficioMittente = DecodificheUtils.getCodebyDesc(lUffici, lDescrMittente);
+				if (lCodTipoUfficioMittente.compareTo("-") == 0) {
+					if (lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
+							.compareTo("U019") == 0)
+						throw new SIUSException(SIUSException.USER_MESSAGE,
+								"Ufficio Mittente non valido per la Sanzione Sostitutiva");
+					// MEV_2023-35 aggiunta gestione U126 EPS
+					// else if (lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
+					// .compareTo("U126") == 0)
+					// throw new SIUSException(SIUSException.USER_MESSAGE,
+					// "Ufficio Mittente non valido per la Pena Sostitutiva");
+				}
 
-				if (lCodTipoUfficioMittente.compareTo("-") == 0)
-					throw new SIUSException(SIUSException.USER_MESSAGE,
-							"Ufficio Mittente non valido per la Sanzione Sostitutiva");
-
-				lESSModel.setCodAutoritaEmittOrd(getCodUfficioByCodTipoUfficioDescrComune(
-						lCodTipoUfficioMittente, getRequestStringParameter(CAMPO_DESCR_SEDE_MITTENTE)));
+				if (Utils.isPresentNotTrattino(getRequestStringParameter(CAMPO_DESCR_SEDE_MITTENTE)))
+					lESSModel.setCodAutoritaEmittOrd(getCodUfficioByCodTipoUfficioDescrComune(
+							lCodTipoUfficioMittente, getRequestStringParameter(CAMPO_DESCR_SEDE_MITTENTE)));
+				else
+					lESSModel.setCodAutoritaEmittOrd("");
 
 				if (lESSModel.getDepOpidDepositoOrdinanzaPc() == null
 						&& getRequestBigDecimalParameter(CAMPO_CHIAVE_ANNO_S22) != null
@@ -382,7 +385,7 @@ public class ActModificaFascicolo extends ActionSiap implements ICostantiFascico
 
 	/**
 	 * MEV10-s3: aggiunto metodo per gestire passaggio alla maggiore età del soggetto
-	 *
+	 * 
 	 * @param lFasGPMod
 	 * @param lUtenteMod
 	 * @throws Exception

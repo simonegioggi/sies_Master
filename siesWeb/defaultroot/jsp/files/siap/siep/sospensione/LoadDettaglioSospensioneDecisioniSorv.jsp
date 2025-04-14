@@ -4,7 +4,6 @@
 <%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
-<%@ page import="f3b.util.Utils"%>
 
 <%@ page import="siap.web.ISIAPCostantiWeb"%>
 <%@ page import="siap.sico.evento.action.ICostantiEvento"%>
@@ -71,33 +70,21 @@ if (lAltraCausa == null)
   			<font class="label">Funzione :</font>&nbsp;&nbsp;
 			<font class="campo">Dettaglio Sospensione dell'esecuzione della pena</font>
 		</td>
-<%
-// MEV_2019-09-SIEP: ottimizzato il codice ed aggiunti pulsanti di modifica e validazione diretta
-if ((Utils.isPresent(eventonotifica.getEvento().getFlagDocumentoRegistrato())
-		&& "N".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato()))
-		|| Utils.isNullObj(eventonotifica.getEvento().getFlagDocumentoRegistrato())) {
-%>
-     	<!-- BOTTONE DI MODIFICA -->
-     	<td class="LBG">
-			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sospensione.action.ActLoadInserisciSospensioneDecisioniSorv
-			&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraalternativa.getIdMisuraAlternativa()%>&tipoOperazione=MODIFICA
-			&<%=ICostantiEvento.CAMPO_ID_EVENTO%>=<%=eventonotifica.getEvento().getIdEvento()%>">
-				<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>modifica24.gif" alt="Modifica" width="24" height="24" border="0">
-			</a>
-		</td>
+<%if (eventonotifica.getEvento().getFlagDocumentoRegistrato()!=null)
+ if (eventonotifica.getEvento().getFlagDocumentoRegistrato().compareTo("N")==0) {%>
 		<!-- BOTTONE DI STAMPA -->
 		<jsp:include page="<%=ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>">
 			<jsp:param name="ActionLink" value="<%="/jsp/Main.jsp?Action=siap.siep.sospensione.action.ActStampaSospensioneDecisioniSorv&IdEvento="+eventonotifica.getEvento().getIdEvento()%>"/>
 		</jsp:include>
-		<!-- BOTTONE DI VALIDAZIONE DIRETTA -->
-  		<td class="LBG">
-    		<a href="/jsp/Main.jsp?Action=siap.siep.sospensione.action.ActUploadSospensioneDecisioniSorv&<%=ICostantiEvento.CAMPO_ID_EVENTO%>=<%=eventonotifica.getEvento().getIdEvento()%>&<%=ICostantiEvento.CAMPO_AZIONE_DETTAGLIO%>=siap.siep.sospensione.action.ActLoadDettaglioSospensioneDecisioniSorv&<%=ICostantiEvento.CAMPO_VALIDA%>=S&noblob=S">
-      			<img align="middle" src="/images/upload24.gif" alt="Valida Provvedimento" width="24" height="24" border="0">
-    		</a>
-  		</td>
-<%
-}
-%>
+<%}%>
+
+<%if (eventonotifica.getEvento().getFlagDocumentoRegistrato()==null)
+ {%>
+ <!-- BOTTONE DI STAMPA -->
+   <jsp:include page="<%=ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>">
+     <jsp:param name="ActionLink" value="<%="/jsp/Main.jsp?Action=siap.siep.sospensione.action.ActStampaSospensioneDecisioniSorv&IdEvento="+eventonotifica.getEvento().getIdEvento()%>"/>
+   </jsp:include>
+ <%}%>
 </tr>
 </table>
 <br>
@@ -360,28 +347,6 @@ if (("PM".equals(codiceTipoUfficio)
     		<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisione(), "dd-MM-yyyy"))%></font>
    		</td>
 	</tr>
-<%--
-// MEV_2019-09-SIEP: aggiunte etichette (x2)
-// MEV_2024-092: rimosse le etichette (x2)
-// if (!Utils.isNullObj(misuraalternativa.getAnnoRegistroMaAt())) {
---%>
-<!-- 	<tr> -->
-<!-- 		<td class="l">Anno / Numero Ordinanza Provvisoria</td> -->
-<!-- 		<td class="l" colspan="3"> -->
-<%-- 			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistroMaAt())%>&nbsp;/&nbsp;<%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistroMaAt())%></font> --%>
-<!-- 		</td> -->
-<!-- 	</tr> -->
-<!-- 	<tr> -->
-<!-- 	  	<td class="l">Data Emissione Ordinanza Provvisoria</td> -->
-<!-- 	  	<td class="L" colspan="3"> -->
-<%-- 			<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "dd-MM-yyyy"))%></font> --%>
-<!-- 		</td> -->
-<!-- 	</tr> -->
-<%--
-}
-// FINE MEV_2024-092
-// FINE MEV_2019-09-SIEP
---%>
 <%
 if (misuraalternativa != null && misuraalternativa.getNote() != null) {
 %>

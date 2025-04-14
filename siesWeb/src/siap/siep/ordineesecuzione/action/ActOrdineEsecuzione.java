@@ -395,8 +395,11 @@ public class ActOrdineEsecuzione extends ActionSiap implements ICostantiOrdineEs
 			AutoritaEsternaModel lAut = new AutoritaEsternaModel();
 			lAut.setCodTipoAutorita(lArrayDestinatari[lIndNotifiche]);
 
-			ComuneModel lComMod = new ComuneModel(getCodComuneByDescr(lArraySedeDestinatari[lIndNotifiche]));
-
+			//INIZIO: MEV_21 (avvocati) - si inibisce la selezione di comuni non validi (tipo NAPOLI NORD)
+			//ComuneModel lComMod = new ComuneModel(getCodComuneByDescr(lArraySedeDestinatari[lIndNotifiche]));
+			ComuneModel lComMod = new ComuneModel(getCodComuneByDescrFlagVal(lArraySedeDestinatari[lIndNotifiche]));
+			//FINE: MEV_21
+			
 			lAut.setCodSede(lComMod.getCodComune());
 			lAut.setCodOperatoreInserimento(lCodiceOperatore);
 			lAut.setCodUfficioInserimento(lCodiceUfficio);
@@ -802,8 +805,11 @@ public class ActOrdineEsecuzione extends ActionSiap implements ICostantiOrdineEs
 			AutoritaEsternaModel lAut = new AutoritaEsternaModel();
 			lAut.setCodTipoAutorita(lArrayDestinatari[lIndNotifiche]);
 
-			ComuneModel lComMod = new ComuneModel(getCodComuneByDescr(lArraySedeDestinatari[lIndNotifiche]));
-
+			//INIZIO: MEV_21 (avvocati) - si inibisce la selezione di comuni non validi (tipo NAPOLI NORD)
+			// ComuneModel lComMod = new ComuneModel(getCodComuneByDescr(lArraySedeDestinatari[lIndNotifiche]));
+			ComuneModel lComMod = new ComuneModel(getCodComuneByDescrFlagVal(lArraySedeDestinatari[lIndNotifiche]));
+			//FINE: MEV_21
+			
 			lAut.setCodSede(lComMod.getCodComune());
 			lAut.setCodOperatoreInserimento(lCodiceOperatore);
 			lAut.setCodUfficioInserimento(lCodiceUfficio);
@@ -1035,9 +1041,13 @@ public class ActOrdineEsecuzione extends ActionSiap implements ICostantiOrdineEs
 					AutoritaEsternaModel lAut = new AutoritaEsternaModel();
 					lAut.setCodTipoAutorita(lArrayDestinatari[lIndNotifiche]);
 
+					
+					//INIZIO: MEV_21 (avvocati) - si inibisce la selezione di comuni non validi (tipo NAPOLI NORD)
+//					ComuneModel lComMod = new ComuneModel(
+//							getCodComuneByDescr(lArraySedeDestinatari[lIndNotifiche]));
 					ComuneModel lComMod = new ComuneModel(
-							getCodComuneByDescr(lArraySedeDestinatari[lIndNotifiche]));
-
+							getCodComuneByDescrFlagVal(lArraySedeDestinatari[lIndNotifiche]));
+					//FINE: MEV_21
 					lAut.setCodSede(lComMod.getCodComune());
 					lAut.setCodOperatoreInserimento(lCodiceOperatore);
 					lAut.setCodUfficioInserimento(lCodiceUfficio);

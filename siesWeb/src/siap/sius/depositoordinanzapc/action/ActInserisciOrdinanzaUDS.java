@@ -33,6 +33,7 @@ import siap.siep.misurasicurezza.action.ICostantiMisuraSicurezza;
 import siap.siep.misurasicurezza.controller.IMisuraSicurezza;
 import siap.siep.misurasicurezza.controller.MisuraSicurezzaController;
 import siap.siep.misurasicurezza.model.MisuraSicurezzaModel;
+import siap.siep.penaaccessoria.action.ICostantiPenaAccessoria;
 import siap.siep.util.SIEPLookupRemote;
 import siap.sius.ActionSius;
 import siap.sius.SIUSException;
@@ -167,35 +168,7 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 		if (lMagRel != null && lMagRel.getMagistrato() != null)
 			mCodMagistrato = lMagRel.getMagistrato().getCodMagistrato();
 
-		// MEV_2019-09: aggiunto controllo preventivo poichè qui la data emissione è manuale
-		Date lDataEmissione = null;
-		if (CONFERMA_DECISIONE_MAGISTRATO_RELATORE
-				.equals(getRequestStringParameter(CAMPO_COD_TIPO_ORDINANZA)))
-			lDataEmissione = getRequestDateParameter(CAMPO_ANNO_DATA_EMISSIONE, CAMPO_MESE_DATA_EMISSIONE,
-					CAMPO_GIORNO_DATA_EMISSIONE);
-		else
-			lDataEmissione = getRequestDateParameter(CAMPO_DATA_EMISSIONE, "dd/MM/yyyy");
-
-		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
-		// Se selezionata la "Restituzione Atti Al presidente" non viene emesso evento ma
-		// aggiornato solo lo stato del fascicolo a 23 =
-		// GP.DATA_RESTITUZIONE = data emissione
-		// GP.DESCR_RESTITUZIONE = campo nota
-		// FS.COD_STATO_FASCICOLO = 23
-		if (isRequestChecked(CAMPO_CK_ATTI_AL_PRESIDENTE)) {
-			// Dettaglio Gestione Restituzione Atti al Presidente, invece del Dettaglio Procedimento
-			// Si ritorna per ora la dettaglio procedimento
-			// siap.sius.fascicolo.action.ActLoadDettaglioFascicolo&IdFascicoloSius=366877032022&TornaQui=10
-			elaboraAttiAlPresidente(mFasGPMod);
-			RedirectTo lRedirectTo = new RedirectTo();
-			lRedirectTo.setPage(IWebConstants.PG_MAIN);
-			lRedirectTo.setAction("siap.sius.fascicolo.action.ActLoadGestioneRestituzioneAttiPresidente");
-			// lRedirectTo.setAction("siap.sius.fascicolo.action.ActLoadDettaglioFascicolo");
-			lRedirectTo.setParameter(ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS,
-					mFasGPMod.getFascicoloSiusModel().getIdFascicoloSius().toString());
-			return lRedirectTo.toString();
-		}
-		// FINE: MEV_2019-09
+		Date lDataEmissione = getRequestDateParameter(CAMPO_DATA_EMISSIONE, "dd/MM/yyyy");
 
 		try {
 			OrdinanzaEventoTenoriGProcModel lOrdEveTenGP = new OrdinanzaEventoTenoriGProcModel();
@@ -697,6 +670,13 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 					&& getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO).equals("C002")) {
 				// non faccio nulla
 				siesLogger.debug("Revoca MA non gestisco l'inserimento MS ");
+				// MEV_2023-35 aggiungo anche la revoca PS che scrivono sul campo deposito.data_decorrenza
+			} else if (!isRequestParameterNullObj(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
+					&& (getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO).equals("U131")
+							|| getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
+									.equals("U132"))) {
+				// non faccio nulla
+				siesLogger.debug("Revoca Pene sostitutive non gestisco l'inserimento MS ");
 			} else {
 				Date dataDecorrenzaMS = null;
 				if (!isRequestParameterNullObj(ICostantiSiusMisuraSicurezza.CAMPO_ANNO_DATA_DECORRENZA))
@@ -884,6 +864,21 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 							"siap.sius.depositoordinanzapc.action.ActLoadDettaglioOrdinanza");
 
 					lRetPage = lRedirectTo.toString();
+				} else if (!isRequestParameterNullObj(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
+						&& getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
+								.equals("U125")) {
+					siesLogger.debug("Prescrizioni SP: ");
+
+					RedirectTo lRedirectTo = new RedirectTo();
+					lRedirectTo.setPage(IWebConstants.PG_MAIN);
+					lRedirectTo.setAction("siap.sius.prescrizione.action.ActLoadInserisciPrescrizioneNew");
+					lRedirectTo.setParameter(ICostantiEvento.CAMPO_ID_EVENTO,
+							lOrdEveTenGP.getEvento().getIdEvento().toString());
+					// Action successiva
+					lRedirectTo.setParameter("nextaction",
+							"siap.sius.depositoordinanzapc.action.ActLoadDettaglioOrdinanza");
+
+					lRetPage = lRedirectTo.toString();
 				} else {
 					lRetPage = ICostantiPrescrizione.PG_LOAD_INSERISCIPRESCRIZIONE;
 				}
@@ -1045,6 +1040,24 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 			lDepOrdModel.setDescrUfficioMagistratoComp(
 					getRequestStringParameter(CAMPO_COD_UFFICIO_MAGISTRATO_COMP_RECLA));
 		}
+
+		// MEV_2023-35: aggiunto recupero dell'importo della pena pecuniaria convertita
+		if (getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO).equals("C065")) {
+			if (!isRequestParameterNullObj(CAMPO_INTERO_PENA_PECUNIARIA_CONVERTITA)
+					&& ((getRequestStringParameter(CAMPO_INTERO_PENA_PECUNIARIA_CONVERTITA) != null
+							&& !(getRequestStringParameter(CAMPO_INTERO_PENA_PECUNIARIA_CONVERTITA))
+									.equals(""))
+							|| (getRequestStringParameter(CAMPO_DECIMALE_PENA_PECUNIARIA_CONVERTITA) != null
+									&& !(getRequestStringParameter(CAMPO_DECIMALE_PENA_PECUNIARIA_CONVERTITA))
+											.equals("")))) {
+				lDepOrdModel.setSommaRisarcimento((new BigDecimal(
+						getRequestStringParameter(CAMPO_INTERO_PENA_PECUNIARIA_CONVERTITA) + "."
+								+ getRequestStringParameter(CAMPO_DECIMALE_PENA_PECUNIARIA_CONVERTITA))));
+			}
+		} else if (getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO).equals("U142")) {
+			lDepOrdModel.setCodTipoOrdinanza("SR");
+		}
+		// FINE MEV_2023-35
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
@@ -1270,7 +1283,6 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 					lDepOrdModel.setCodUfficioMagistratoComp("-");
 			}
 		}
-		// ===============================
 
 		// Data Decorrenza Sospensione
 		if (!isRequestParameterNullObj(ICostantiDepositoDecreto.CAMPO_GIORNO_SOSPENSIONE_SS)
@@ -1324,6 +1336,21 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 			lDepOrdModel.setSospensioneGGSS(
 					getRequestBigDecimalParameter(ICostantiDepositoDecreto.CAMPO_SOSPENSIONE_GG_SS));
 
+		// MEV_2023-35: aggiungo controllo per Data "Fino al"
+		if ((!isRequestParameterNullObj(ICostantiDepositoDecreto.CAMPO_GIORNO_SCADENZA_SOSPENSIONE_SS)
+				&& getRequestStringParameter(ICostantiDepositoDecreto.CAMPO_GIORNO_SCADENZA_SOSPENSIONE_SS)
+						.length() > 0)
+				&& (!isRequestParameterNullObj(ICostantiDepositoDecreto.CAMPO_MESE_SCADENZA_SOSPENSIONE_SS)
+						&& getRequestStringParameter(
+								ICostantiDepositoDecreto.CAMPO_MESE_SCADENZA_SOSPENSIONE_SS).length() > 0)
+				&& (!isRequestParameterNullObj(ICostantiDepositoDecreto.CAMPO_ANNO_SCADENZA_SOSPENSIONE_SS)
+						&& getRequestStringParameter(
+								ICostantiDepositoDecreto.CAMPO_ANNO_SCADENZA_SOSPENSIONE_SS).length() > 0))
+			lDepOrdModel.setDataScadenzaSospensioneSS(
+					getRequestDateParameter(ICostantiDepositoDecreto.CAMPO_ANNO_SCADENZA_SOSPENSIONE_SS,
+							ICostantiDepositoDecreto.CAMPO_MESE_SCADENZA_SOSPENSIONE_SS,
+							ICostantiDepositoDecreto.CAMPO_GIORNO_SCADENZA_SOSPENSIONE_SS));
+
 		if (!isRequestParameterNullObj(ICostantiDepositoDecreto.CAMPO_COD_TIPO_DECRETO))
 			lDepOrdModel = leggiDatiDecreto(lDepOrdModel);
 
@@ -1348,6 +1375,25 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 				lDepOrdModel.setCodUfficioMagistratoComp("-");
 		}
 
+		// MEV_2023-35: gestione Sospensione esecuzione pene accessorie
+		String codOggettoProcedimento = mFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento();
+		if (COD_OGGETTO_SOSPENSIONE_ESECUZIONE_PENE_ACCESSORIE_TDS.equals(codOggettoProcedimento)
+				|| COD_OGGETTO_SOSPENSIONE_ESECUZIONE_PENE_ACCESSORIE_UDS.equals(codOggettoProcedimento)) {
+			lDepOrdModel.setCodTipoPenaAccessoria(
+					getRequestStringParameter(ICostantiPenaAccessoria.CAMPO_COD_TIPO_PENA_ACCESSORIA));
+			if (!isRequestParameterNullEmptyObj(ICostantiPenaAccessoria.CAMPO_DURATA))
+				lDepOrdModel.setDurata(getRequestStringParameter(ICostantiPenaAccessoria.CAMPO_DURATA));
+			if (!isRequestParameterNullEmptyObj(ICostantiPenaAccessoria.CAMPO_NUM_ANNI))
+				lDepOrdModel
+						.setNumAnni(getRequestBigDecimalParameter(ICostantiPenaAccessoria.CAMPO_NUM_ANNI));
+			if (!isRequestParameterNullEmptyObj(ICostantiPenaAccessoria.CAMPO_NUM_MESI))
+				lDepOrdModel
+						.setNumMesi(getRequestBigDecimalParameter(ICostantiPenaAccessoria.CAMPO_NUM_MESI));
+			if (!isRequestParameterNullEmptyObj(ICostantiPenaAccessoria.CAMPO_NUM_GIORNI))
+				lDepOrdModel.setNumGiorni(
+						getRequestBigDecimalParameter(ICostantiPenaAccessoria.CAMPO_NUM_GIORNI));
+		}
+
 		// Aggiornamento Ordinanza effettuato
 		aModel.setOrdinanza(lDepOrdModel);
 
@@ -1370,9 +1416,8 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 				lEvento.setTemIdTemplate(TEMPLATE_ORDINANZA_RIGETTO_GENERICO);
 			else if (getRequestStringParameter(CAMPO_TIPO_ORDINANZA_DA_PRODURRE).equals("04"))
 				lEvento.setTemIdTemplate(TEMPLATE_ORDINANZA_NLP_GENERICO);
-			else if (getRequestStringParameter(CAMPO_TIPO_ORDINANZA_DA_PRODURRE).equals("01"))
+			else if (getRequestStringParameter(CAMPO_TIPO_ORDINANZA_DA_PRODURRE).equals("01")) {
 			// generazione automantica
-			{
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
 				siesLogger.debug(">>>> Chiama la logica Decisionale per il template  ...");
@@ -1890,45 +1935,6 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 			return null;
 		BigDecimal val = super.getRequestBigDecimalParameter(paramName);
 		return val;
-	}
-
-	/**
-	 * Aggiorna il fascicolo e il GP in caso di restituzione atti al presidente che non inserisce una
-	 * ordinanza
-	 *
-	 * @param fascicoloGPModel
-	 * @since MEV_2019-09
-	 */
-	private void elaboraAttiAlPresidente(FascicoloGPModel fascicoloGPModel) throws F3BException {
-
-		Date lDataRestituzione = getRequestDateParameter(CAMPO_DATA_EMISSIONE, "dd/MM/yyyy");
-		String lDescRestituzione = getRequestStringParameter(CAMPO_ULTERIORE_DESCRIZIONE);
-
-		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
-		// Se selezionata la "Restituzione Atti Al presidente" non viene emesso evento ma
-		// aggiornato solo lo stato del fasciclo a 23 =
-		// GP.DATA_RESTITUZIONE = data emissione
-		// GP.DESCR_RESTITUZIONE = campo nota
-		// FS.COD_STATO_FASCICOLO = 23
-
-		// Fascicolo SIUS
-		fascicoloGPModel.getFascicoloSiusModel()
-				.setCodStatoFascicolo(ICostantiFascicoloSius.COD_ATTI_RESTITUITI_PRESIDENTE);
-
-		fascicoloGPModel.getFascicoloSiusModel().setCodOperatoreAggiornamento(mCodiceOperatore);
-		fascicoloGPModel.getFascicoloSiusModel().setCodUfficioAggiornamento(mCodiceUfficio);
-		fascicoloGPModel.getFascicoloSiusModel().setDataAggiornamento(DateUtils.getSysDate());
-
-		// FGenerale Procedimento
-		fascicoloGPModel.getGeneraleProcedimentoModel().setDataRestituzione(lDataRestituzione);
-		fascicoloGPModel.getGeneraleProcedimentoModel().setDescrRestituzione(lDescRestituzione);
-
-		fascicoloGPModel.getGeneraleProcedimentoModel().setCodOperatoreAggiornamento(mCodiceOperatore);
-		fascicoloGPModel.getGeneraleProcedimentoModel().setCodUfficioAggiornamento(mCodiceUfficio);
-		fascicoloGPModel.getGeneraleProcedimentoModel().setDataAggiornamento(DateUtils.getSysDate());
-
-		IFascicoloSius lFasCtrl = SIUSLookupRemote.getFascicoloSiusRemote();
-		lFasCtrl.ExInserisciRestituzioneAttiAlPresidente(fascicoloGPModel);
 	}
 
 }

@@ -23,8 +23,6 @@
 <jsp:useBean id="fascicoloSiusGP" 			scope="request" class="siap.sius.fascicolo.model.FascicoloGPModel"/>
 <jsp:useBean id="flag_valida"  				scope="request" class="java.lang.String"/>
 <jsp:useBean id="isModificabile"			scope="request" class="java.lang.String"/>
-<%-- MEV_2019-09: aggiunto useBean --%>
-<jsp:useBean id="depositoOrdinanzaVector"	scope="request" class="java.util.Vector"/>
 
 <html>
 <head>
@@ -109,17 +107,6 @@ if (provvedimenti.size() == 0) {
 		<td class="int">Motivo provvedimento</td>
 		<td class="int">Esito provvedimento</td>
 		<td class="int" nowrap>Data Deposito</td>
-		<%-- MEV_2019-09: aggiunta data esecutivita e gestita nella pagina solo per C050 e C051 --%>
-<%
-	if (!Utils.isNullObj(fascicoloSiusGP) && !Utils.isNullObj(fascicoloSiusGP.getGeneraleProcedimentoModel())
-			&& !Utils.isNullObj(fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento())
-			&& (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("C050") == 0
-			|| fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("C051") == 0)) {
-%>
-		<td class="int" nowrap>Data Esecutivita&#768;</td>
-<%
-	}
-%>
 		<td class="int" nowrap>Data Ricorso </td>
 <%
 	if (flag_valida.equals("SI")) {
@@ -161,32 +148,6 @@ if (provvedimenti.size() == 0) {
 		<td class="c"><%=StringUtils.toStringJSP(lProv.getDescrMotivo(),"-")%></td>
 		<td class="c"><%=StringUtils.toStringJSP(lProv.getDescrEsito(),"-")%></td>
 		<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lProv.getDataDeposito(),"dd-MM-yyyy"),"-")%></td>
-<%
-		if (!Utils.isNullObj(fascicoloSiusGP) && !Utils.isNullObj(fascicoloSiusGP.getGeneraleProcedimentoModel())
-				&& !Utils.isNullObj(fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento())
-				&& (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("C050") == 0
-				|| fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("C051") == 0)) {
-			if ("0270".equals(lProv.getCodEsito()) && "03".equals(lProv.getCodTipoProvvedimento())) {
-				Date dataEsecutivita = null;
-				Iterator iter = depositoOrdinanzaVector.iterator();
-				while (iter.hasNext()) {
-					DepositoOrdinanzaPcModel dopcm = (DepositoOrdinanzaPcModel) iter.next();
-					if (lProv.getIdEvento().compareTo(dopcm.getIdEventoGenerato()) == 0
-							&& !Utils.isNullObj(dopcm.getDataEsecutivita())) {
-						dataEsecutivita = dopcm.getDataEsecutivita();
-						break;
-					}
-				}
-%>
-		<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(dataEsecutivita, "dd-MM-yyyy"), "-")%></td>
-<%
-			} else {
-%>
-		<td class="c">-</td>
-<%
-			}
-		}
-%>
 		<td class="c">
 			<font class="campo">
 <%
@@ -294,10 +255,6 @@ il provv. non appartiene ad uno dei seguenti tipi:
 	Fissazione Udienza (cod. Esito = 0601),
 	Irreperibilità (cod. Esito = 0602),
 	Rinvio Udienza (cod. Esito = 0603),
-	// MEV_2019-09: aggiungo 3 nuovi esiti per il decreto di designazione magistrato relatore
-	ESITO_PROVVEDIMENTO 0270 Applica provvisoriamente,						NON PIU'
-	ESITO_PROVVEDIMENTO 0271 Conferma Decisione del Magistrato Relatore,	NON PIU'
-	ESITO_PROVVEDIMENTO 0610 Magistrato Designato art. 678 1-ter;
 */
 		String lModificaProvvedimento = "NO";
 		if (modificabile && lProv.getFlagDocumentoRegistrato() != null && lProv.getFlagDocumentoRegistrato().equalsIgnoreCase("S")

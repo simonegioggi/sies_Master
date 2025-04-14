@@ -620,7 +620,7 @@ if (provvSorv != null && Utils.isNullObj(provvSorv.getEvento())) {
 </head>
 
 <body class="corpo" onload="Javascript:VediNotificaAvvocati();">
-	<table style="width: 95%;">
+	<table>
 		<tr>
 			<td class="LBG">
 				<a href="Javascript:window.print();">
@@ -1168,7 +1168,8 @@ if (NotificaAvvocati.compareTo("-") == 0) {
 					<tr>
 						<td class="l">Sede <font class=ob>(*)</font></td>
 						<td class="L">
-							<input title="Sede Autorita per Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocato().getForo())%>"
+						  <%-- MEV_21 (avvocati) Sostituzione di getAvvocato().getForo() con getAvvocato().getDescComuneSedeForo() --%>
+							<input title="Sede Autorita per Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescComuneSedeForo())%>"
 								type="text" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>" maxlength="35" size="35">
 <%
 		if (avvocati.size() > 1) {

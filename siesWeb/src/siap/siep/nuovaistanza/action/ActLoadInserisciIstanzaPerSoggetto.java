@@ -141,6 +141,29 @@ public class ActLoadInserisciIstanzaPerSoggetto extends ActionSiap implements IC
     lOptionProvv.setFilter(new String[]{"-", "01", "53"});    
     setRequestAttribute("tipoProvvedimenti", "" + lOptionProvv );
     setRequestAttribute("tipoProvvedimentiAltro", "" + lOptionProvv );
+
+    // 20210730 Gestione Combo per Foro avvocato.
+    //lOption = new Option(DecodificheManager.getInstance().getForo(), lDescrComune.toUpperCase().trim(), Option.NO_BLANK_ITEM);
+    //String lStatoForo = DecodificheUtils.getCodAltebyCode(DecodificheManager.getInstance().getForoAll(), avvocato.getAvvocato().getForo());
+    
+    //if ("SOPPRESSO".equals(lStatoForo)){
+    // aggiungo un black item. La combo foro non deve presentare un valore preselezionato
+    lOption = new Option(DecodificheManager.getInstance().getForo(), Option.BLANK_ITEM);
+    //} else {
+    //  lOption = new Option(DecodificheManager.getInstance().getForo(), avvocato.getAvvocato().getForo(),Option.NO_BLANK_ITEM);
+    //}
+    setRequestAttribute("foro", ""+ lOption);
+    setRequestAttribute("foroP", ""+ lOption);
+
+    // 20210730 MEV_21 Nuova gestione Combo per Stato di Nascita
+	lOption = new Option(DecodificheManager.getInstance().getNazioni(), "-");
+	setRequestAttribute("nazione", "" + lOption );      
+	setRequestAttribute("nazioneP", "" + lOption );      
+	
+	// 20210730 MEV_21 Nuova gestione Combo per Stato Difensore
+	lOption = new Option(DecodificheManager.getInstance().getListaAttivitaAvvocato(), "-");
+	setRequestAttribute("statoAvv", "" + lOption );      
+	setRequestAttribute("statoAvvP", "" + lOption );      
     
     // Imposta la Modalità a Inserimento.
     setRequestAttribute("modalita", "I");

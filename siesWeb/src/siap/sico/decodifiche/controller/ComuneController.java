@@ -140,6 +140,35 @@ public class ComuneController extends SiapController implements IComune {
 		return lCollComuni;
 	}
 
+	// 20210517	MEV21
+	public Vector ExGetListaComuniNascita(ComuneModel lModel) throws F3BException {
+
+		Connection lConn = null;
+		ComuneDAO lDao = null;
+
+		Vector lCollComuni = new Vector();
+
+		try {
+			lConn = getDBConnection();
+
+			lDao = new ComuneDAO(lConn);
+			lDao.selCondizioniNascita(lModel);
+			lDao.start();
+
+			while (lDao.next()) {
+				lCollComuni.add(lDao.getModel());
+			}
+
+			lDao.stop();
+		} catch (DAOException daoex) {
+			throw new SICOException("ComuneController.ExGetListaComuni: " + daoex);
+		} finally {
+			cleanup(lDao);
+			cleanup(lConn);
+		}
+		return lCollComuni;
+	}
+	
 	public Vector ExGetListaComuniTds() throws F3BException {
 
 		Connection lConn = null;
@@ -301,4 +330,46 @@ public class ComuneController extends SiapController implements IComune {
 		return lComMod;
 	}
 
+	// MEV_21: ricerco il comune dato il codice catastale
+	@Override
+	public ComuneModel ExRicercaComuneByCodCatastale(String ccc) throws F3BException {
+
+		Connection c = null;
+		ComuneSqlDAO csdao = null;
+		ComuneModel cm = null;
+
+		try {
+			c = getDBConnection();
+			csdao = new ComuneSqlDAO(c);
+				
+			// 20210616 MEV_21 In caso di soggetto nato all'estero il ccc inizia con 'Z'.
+			// In tal caso anziché leggere dalla tabella COMUNE occorre leggere da CG_REF_CODES.
+			if (ccc.startsWith("Z")) {
+				csdao.ricercaNazionePerCcc(ccc);
+				csdao.start();
+				if (csdao.next())
+					cm = (ComuneModel) csdao.getModelComuneCcc();
+				csdao.stop();				
+			} else {
+				csdao.ricercaComuneByCodCatastale(ccc);
+				csdao.start();
+				if (csdao.next()) {
+					cm = (ComuneModel) csdao.getModelComuneCcc();
+				} else {
+					throw new SICOException(SICOException.USER_MESSAGE,
+						"Non esiste in SIES alcun comune con il codice catastale "+ccc+" estratto dal Codice Fiscale dell'Avvocato.\b Inviare segnalazione all'Help Desk!");
+				}
+				csdao.stop();
+			}
+
+		} catch (DAOException daoex) {
+			siesLogger.error("Exception: " + daoex);
+			throw new SICOException("ComuneController.ExRicercaComuneByCodCatastale: " + daoex);
+		} finally {
+			cleanup(csdao);
+			cleanup(c);
+		}
+		return cm;
+	}
+			
 }
