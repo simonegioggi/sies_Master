@@ -116,7 +116,7 @@ public class ActInserisciEsitoImpugnazioneSige extends ActionSiap
 						// @emma 21082018 intervento post COLLAUDO 11.2, per esito
 						// DICHIARA_INAMISSIBILE_IL_RICORSO lo stato del fascicolo non deve essere aggiornato
 						// ad EmessoProvvedimento(vedi doc di nunzia esiti procedimento.docx)
-						/* || esito.equals(COD_ESITO_DICHIARA_INAMISSIBILE_IL_RICORSO) */
+						/* || esito.equals(COD_ESITO_DICHIARA_INAMMISSIBILE_IL_RICORSO) */
 						|| esito.equals(COD_ESITO_RIGETTA)
 						// @emma 21082018 intervento post COLLAUDO 11.2, per esito COD_ESITO_RETTIFICA lo
 						// stato del fascicolo non deve essere aggiornato ad EmessoProvvedimento(vedi doc di
@@ -130,10 +130,9 @@ public class ActInserisciEsitoImpugnazioneSige extends ActionSiap
 						// del fascicolo non deve essere aggiornato ad EmessoProvvedimento(vedi doc di nunzia
 						// esiti procedimento.docx)
 						/* || esito.equals(COD_ESITO_DICHIARA_NDP_NLP) */
-
-						|| esito.equals(COD_ESITO_DICHIARA_INCOPETENZA)
+						|| esito.equals(COD_ESITO_DICHIARA_INCOMPETENZA)
 						|| esito.equals(COD_ESITO_CONVERTE_IN_RICORSO_IN_CASSAZIONE)
-						|| esito.equals(COD_ESITO_DICHIARA_INAMISSIBILE))) {
+						/*|| esito.equals(COD_ESITO_DICHIARA_INAMMISSIBILE)*/)) {
 			// aggiornaStatoFascicolo (COD_EMESSO_PROVVEDIMENTO, null);
 			aggiornaStatoFascicolo(COD_EMESSO_PROVVEDIMENTO, impugnazione.getDataDecisione());
 		}
@@ -166,8 +165,8 @@ public class ActInserisciEsitoImpugnazioneSige extends ActionSiap
 				aggiornaStatoFascicolo(COD_RICORSO, impugnazione.getDataDecisione());
 		}
 		// 27/11/2018 intervento post COLLAUDO 11.2 (by Nunzia. se metto esito COD_ESITO_DICHIARA_INAMISSIBILE
-		// lo stato deve essere opposizione )
-		if (esito.equals(COD_ESITO_DICHIARA_INAMISSIBILE)) {
+		// lo stato deve essere opposizione)
+		if (esito.equals(COD_ESITO_DICHIARA_INAMMISSIBILE)) {
 			aggiornaStatoFascicolo(COD_OPPOSIZIONE, impugnazione.getDataDecisione());
 		}
 
