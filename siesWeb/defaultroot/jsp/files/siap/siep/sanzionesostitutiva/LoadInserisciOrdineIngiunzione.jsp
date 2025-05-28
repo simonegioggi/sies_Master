@@ -39,10 +39,10 @@
 <jsp:useBean id="eventonotifica"   			scope="request" class="siap.sico.evento.model.EventoNotificaModel"/>
 
 <%
-FascicoloSiepModel lFascicoloAssociato = (FascicoloSiepModel) session.getAttribute("fascicolo");
-PosizioneGiuridicaModel lPosizione = posizioneluogoaltra.getPosizioneGiuridica();
-LuogoDetenzioneModel lLuogoDetenzione = posizioneluogoaltra.getLuogoDetenzione();
-AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
+FascicoloSiepModel fsm = (FascicoloSiepModel) session.getAttribute("fascicolo");
+PosizioneGiuridicaModel pgm = posizioneluogoaltra.getPosizioneGiuridica();
+LuogoDetenzioneModel ldm = posizioneluogoaltra.getLuogoDetenzione();
+AltraCausaModel acm = posizioneluogoaltra.getAltraCausa();
 
 Date dataEmissione    = DateUtils.getSysDate();
 Date dataTrasmissione = DateUtils.getSysDate();
@@ -51,6 +51,12 @@ if (eventonotifica.getEvento().getIdEvento() != null) {
 	dataEmissione    = eventonotifica.getEvento().getDataEmissione();
 	dataTrasmissione = eventonotifica.getNotifiche()[0].getDataInvio();
 }
+
+if (pgm == null)
+	pgm = new PosizioneGiuridicaModel();
+
+if (acm == null)
+	acm = new AltraCausaModel();
 %>
 <html>
 <head>
@@ -242,18 +248,18 @@ if ("I".equals(modalita)) {
 		<td class="L" colspan=5>
 		  	<font class="campo">
 <%
-if(lFascicoloAssociato.getFlagAltraCausa() != null && lFascicoloAssociato.getFlagAltraCausa().equals("S")) {
+if(fsm.getFlagAltraCausa() != null && fsm.getFlagAltraCausa().equals("S")) {
 %>
-				DETENUTO PER ALTRA CAUSA - <%=lAltraCausa.getDescrTipoPosGiuridica()%>
+				DETENUTO PER ALTRA CAUSA - <%=acm.getDescrTipoPosGiuridica()%>
 <%
 } else {
 %>
-				<%=lPosizione.getDescrPosizioneGiuridica()%>
+				<%=pgm.getDescrPosizioneGiuridica()%>
 <%
 }
 %>
 			</font>
-			<input type="HIDDEN" title="Codice Posizione" value="<%=StringUtils.toStringJSP(lPosizione.getCodPosizioneGiuridica())%>" type="text" name="<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>"  maxlength="6" size="6" >
+			<input type="HIDDEN" title="Codice Posizione" value="<%=StringUtils.toStringJSP(pgm.getCodPosizioneGiuridica())%>" type="text" name="<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>"  maxlength="6" size="6" >
 		</td>
 	</tr>
 </table>
@@ -485,7 +491,7 @@ if ("I".equals(modalita) && contaLibere == 0) {
 		<td class="Titolo" colspan="8">Notifica al Condannato</td>
 	</tr>
 <%
-	if (lFascicoloAssociato.getFlagAltraCausa() != null && lFascicoloAssociato.getFlagAltraCausa().equals("S")) {
+	if (fsm.getFlagAltraCausa() != null && fsm.getFlagAltraCausa().equals("S")) {
   		// Se detenuto altra causa in Custodia Cautelare
   		if (posizioneluogoaltra.getAltraCausa() != null
   				&& (posizioneluogoaltra.getAltraCausa().getCodTipoPosGiuridica().equals("23") // Custodia Cautelare in Regime di Arresti Domiciliari
@@ -556,8 +562,8 @@ if ("I".equals(modalita) && contaLibere == 0) {
 %>  
 	<tr>
 <%
-	if (lPosizione.getCodPosizioneGiuridica().equals("74") || lPosizione.getCodPosizioneGiuridica().equals("75")
-			|| lPosizione.getCodPosizioneGiuridica().equals("76") || lPosizione.getCodPosizioneGiuridica().equals("77")) {
+	if (pgm.getCodPosizioneGiuridica().equals("74") || pgm.getCodPosizioneGiuridica().equals("75")
+			|| pgm.getCodPosizioneGiuridica().equals("76") || pgm.getCodPosizioneGiuridica().equals("77")) {
       // ALTRA_CAUSA
       // Espiazione pena per Altra Causa in Regime di Detenzione
       // Espiazione pena per Altra Causa in Misura Sicurezza Detentiva (Internato)
@@ -573,18 +579,18 @@ if ("I".equals(modalita) && contaLibere == 0) {
 	}
 
 
-if ("L".equals(lPosizione.getCodMascheraCG()) || "EA".equals(lPosizione.getCodMascheraCG()))
+if ("L".equals(pgm.getCodMascheraCG()) || "EA".equals(pgm.getCodMascheraCG()))
 {   
     /*
-	if (lPosizione.getCodPosizioneGiuridica().equals("07") || lPosizione.getCodPosizioneGiuridica().equals("10")
-			|| lPosizione.getCodPosizioneGiuridica().equals("02") || lPosizione.getCodPosizioneGiuridica().equals("04")
-      		|| lPosizione.getCodPosizioneGiuridica().equals("16") || lPosizione.getCodPosizioneGiuridica().equals("20") 
-      		|| lPosizione.getCodPosizioneGiuridica().equals("46") || lPosizione.getCodPosizioneGiuridica().equals("47")   
-			|| lPosizione.getCodPosizioneGiuridica().equals("78") || lPosizione.getCodPosizioneGiuridica().equals("79") 
-			|| lPosizione.getCodPosizioneGiuridica().equals("80") || lPosizione.getCodPosizioneGiuridica().equals("81")
-			|| lPosizione.getCodPosizioneGiuridica().equals("70") || lPosizione.getCodPosizioneGiuridica().equals("71")
-			|| lPosizione.getCodPosizioneGiuridica().equals("50")
-			|| lPosizione.getCodPosizioneGiuridica().equals("72")) {
+	if (pgm.getCodPosizioneGiuridica().equals("07") || pgm.getCodPosizioneGiuridica().equals("10")
+			|| pgm.getCodPosizioneGiuridica().equals("02") || pgm.getCodPosizioneGiuridica().equals("04")
+      		|| pgm.getCodPosizioneGiuridica().equals("16") || pgm.getCodPosizioneGiuridica().equals("20") 
+      		|| pgm.getCodPosizioneGiuridica().equals("46") || pgm.getCodPosizioneGiuridica().equals("47")   
+			|| pgm.getCodPosizioneGiuridica().equals("78") || pgm.getCodPosizioneGiuridica().equals("79") 
+			|| pgm.getCodPosizioneGiuridica().equals("80") || pgm.getCodPosizioneGiuridica().equals("81")
+			|| pgm.getCodPosizioneGiuridica().equals("70") || pgm.getCodPosizioneGiuridica().equals("71")
+			|| pgm.getCodPosizioneGiuridica().equals("50")
+			|| pgm.getCodPosizioneGiuridica().equals("72")) {
 	  */	
 %>
 		<td class="L" colspan="3">
@@ -608,11 +614,11 @@ if ("L".equals(lPosizione.getCodMascheraCG()) || "EA".equals(lPosizione.getCodMa
 <%
 	} else {
     	// Detenuto    
-		if (lLuogoDetenzione != null && lLuogoDetenzione.getIstitutoDetenzione() != null) {
+		if (ldm != null && ldm.getIstitutoDetenzione() != null) {
 %>
 		<td class="l">
-        	<input readonly Title="Istituto" name="Comune" id="descIstituto"  value="<%=StringUtils.toStringJSP(lLuogoDetenzione.getIstitutoDetenzione().getDescrTipoIstituto())%> di <%=StringUtils.toStringJSP(lLuogoDetenzione.getIstitutoDetenzione().getDescrComune())%>" size=50>
-        	<input type="hidden"  Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" id="<%=ICostantiIstitutoDetenzione.CAMPO_ID_ISTITUTO_DETENZIONE%>" value="<%=lLuogoDetenzione.getIstDetIdIstitutoDetenzione()%>">
+        	<input readonly Title="Istituto" name="Comune" id="descIstituto"  value="<%=StringUtils.toStringJSP(ldm.getIstitutoDetenzione().getDescrTipoIstituto())%> di <%=StringUtils.toStringJSP(ldm.getIstitutoDetenzione().getDescrComune())%>" size=50>
+        	<input type="hidden"  Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" id="<%=ICostantiIstitutoDetenzione.CAMPO_ID_ISTITUTO_DETENZIONE%>" value="<%=ldm.getIstDetIdIstitutoDetenzione()%>">
         	<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciOrdineIngiunzione','<%= ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
           		<img src="/images/filefolder.gif" border=0>
           	</a>
