@@ -37,21 +37,9 @@ import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * <p>
- * Title: ActUploadDocument
- * </p>
- * <p>
- * Description: Azione demandata alla realizzazione delle funzioni di validazione ed upload sulla tabella
- * EVENTO.
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company:
- * </p>
+ * ActUploadDocument - Azione demandata alla realizzazione delle funzioni di validazione ed upload sulla
+ * tabella EVENTO.
  *
- * @author not attributable
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -62,9 +50,11 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 
 	// Attributo di classe contenente l'azione da passare ad eventuale jsp Warning.
 	public String mAzione = "siap.sico.evento.action.ActUploadDocument";
+
 	// Input stream contenente il documento di upload.
 	public ByteArrayInputStream mInStr = null;
-	// Controller IEvento utilizzato per accedere alla tabella Evento.
+
+	// variabile IEvento utilizzato per accedere alla tabella Evento
 	public IEvento mEveCtrl = null;
 	public byte[] mBytes = null;
 
@@ -72,7 +62,7 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getPackage().getName() + ".processRequest(): inizio");
+		siesLogger.debug(this.getClass().getName() + ".processRequest(): inizio");
 		String lPage = IWebConstants.PG_MESSAGE;
 
 		// Lettura ID Evento
@@ -249,7 +239,7 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 		}
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getPackage().getName() + ".processRequest(): fine");
+		siesLogger.debug(this.getClass().getName() + ".processRequest(): fine");
 		return lPage;
 	}
 
@@ -259,7 +249,7 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getPackage().getName() + ".passaggioParametri(): inizio");
+		siesLogger.debug(this.getClass().getName() + ".passaggioParametri(): inizio");
 
 		setRequestAttribute(CAMPO_ID_EVENTO, getRequestStringParameter(CAMPO_ID_EVENTO));
 		setRequestAttribute(CAMPO_AZIONE_DETTAGLIO, getRequestStringParameter(CAMPO_AZIONE_DETTAGLIO));
@@ -292,7 +282,7 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 		this.goToRitorno();
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getPackage().getName() + ".passaggioParametri(): fine");
+		siesLogger.debug(this.getClass().getName() + ".passaggioParametri(): fine");
 		return;
 	}
 
@@ -307,7 +297,7 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getPackage().getName() + ".updateTabella(): inizio");
+		siesLogger.debug(this.getClass().getName() + ".updateTabella(): inizio");
 
 		// Valorizzazione del Model
 		EventoModel lModel = new EventoModel();
@@ -330,7 +320,7 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 		mEveCtrl.ExUpdateDocument(lModel);
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getPackage().getName() + ".updateTabella(): fine");
+		siesLogger.debug(this.getClass().getName() + ".updateTabella(): fine");
 		return;
 	}
 
@@ -345,7 +335,7 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getPackage().getName() + ".leggiDocumento(): inizio");
+		siesLogger.debug(this.getClass().getName() + ".leggiDocumento(): inizio");
 
 		// Valorizzazione del Model con la chiave di ricerca
 		EventoModel lModel = new EventoModel();
@@ -357,7 +347,7 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getPackage().getName() + ".leggiDocumento(): fine");
+		siesLogger.debug(this.getClass().getName() + ".leggiDocumento(): fine");
 		return;
 	}
 
@@ -369,7 +359,7 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getPackage().getName() + ".updateTabella(): inizio");
+		siesLogger.debug(this.getClass().getName() + ".updateTabella(): inizio");
 
 		// Valorizzazione del Model
 		EventoModel lModel = new EventoModel();
@@ -448,24 +438,20 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 
 			// Recupero i dati del soggetto dalla sessione @emma 25/08/2016 - avvocatura
 			String cognomeSoggetto = "";
-			String nomeSoggetto = "";	
-			
-			/* 
-			 * ISSUE MEV : segnalazione Maffucci oggetto mail: SIUS Avvocati Di pre-esercizio - SIES MO di Roma:
-			 * Eliminato recupero dalla session del soggetto che viene inserito nella tabella 
-			 * degli avvisi_avvocato 
-			 * Numero MEV : MEV_20
-			 * Autore    : monica
-			 * Data      : 13/mar/2020
-			 * Branch    : MEV_20 
+			String nomeSoggetto = "";
+
+			/*
+			 * ISSUE MEV : segnalazione Maffucci oggetto mail: SIUS Avvocati Di pre-esercizio - SIES MO di
+			 * Roma: Eliminato recupero dalla session del soggetto che viene inserito nella tabella degli
+			 * avvisi_avvocato Numero MEV : MEV_20 Autore : monica Data : 13/mar/2020 Branch : MEV_20
 			 */
-			/*if (!isSessionAttributeNullObj("soggetto")) {
-				SoggettoModel datiSoggetto = (SoggettoModel) getSessionAttribute("soggetto");
-				cognomeSoggetto = datiSoggetto.getCognome();
-				nomeSoggetto = datiSoggetto.getNome();
-			} else */
-				//***** FINE INTERVENTO MEV_20  *****//
-				if (lFasGPMod != null && lFasGPMod.getFascicoloSiusModel() != null) {
+			/*
+			 * if (!isSessionAttributeNullObj("soggetto")) { SoggettoModel datiSoggetto = (SoggettoModel)
+			 * getSessionAttribute("soggetto"); cognomeSoggetto = datiSoggetto.getCognome(); nomeSoggetto =
+			 * datiSoggetto.getNome(); } else
+			 */
+			// ***** FINE INTERVENTO MEV_20 *****//
+			if (lFasGPMod != null && lFasGPMod.getFascicoloSiusModel() != null) {
 				// provo a verificare se è presente nell'oggetto FascicoloGPModel
 				cognomeSoggetto = lFasGPMod.getFascicoloSiusModel().getSoggetto() != null
 						? lFasGPMod.getFascicoloSiusModel().getSoggetto().getCognome()
@@ -520,7 +506,7 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getPackage().getName() + ".updateTabella(): fine");
+		siesLogger.debug(this.getClass().getName() + ".updateTabella(): fine");
 		return;
 	}
 

@@ -4,6 +4,10 @@ import java.math.BigDecimal;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.web.IWebConstants;
+import f3b.web.RedirectTo;
 import siap.sico.magistrato.action.ICostantiMagistrato;
 import siap.sige.detenzione.action.ICostantiFasSigeDetenzione;
 import siap.sige.detenzione.model.FasSigeDetenzioneModel;
@@ -15,29 +19,17 @@ import siap.sige.richiesta.action.ICostantiRichiestaSige;
 import siap.sige.richiesta.model.RichiestaSigeModel;
 import siap.sige.util.SIGELookupRemote;
 import siap.sige.web.ActionSige;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.web.IWebConstants;
-import f3b.web.RedirectTo;
 
 /**
- * <p>
- * Title: ActInserisciFascicolo
- * </p>
- * <p>
- * Description: Classe Azione di inserimento del Fascicolo SIGE
- * </p>
- * <p>
- * Copyright: Copyright (c) 2008
- * </p>
- * <p>
- * Company: Eutelia
- * </p>
+ * ActInserisciFascicolo - Classe Azione di inserimento del Fascicolo SIGE
+ *
+ * @version 1.0
  */
 public class ActInserisciFascicolo extends ActionSige implements ICostantiFascicoloSige {
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+
 	FascicoloSigeModel mFascicolo = null;
 	RichiestaSigeModel mRichiesta = null;
 	MagistratoAssegnatarioModel mMagAssegnatario = null;
@@ -47,7 +39,7 @@ public class ActInserisciFascicolo extends ActionSige implements ICostantiFascic
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getPackage().getName() + ".processRequest : inizio");
+		siesLogger.debug(getClass().getName() + ".processRequest : inizio");
 
 		// Lettura dei dati dalla form
 		mFascicolo = leggiDatiFascicolo();
@@ -63,18 +55,19 @@ public class ActInserisciFascicolo extends ActionSige implements ICostantiFascic
 		RedirectTo lRedirigi = new RedirectTo();
 		lRedirigi.setPage(IWebConstants.PG_MAIN);
 		lRedirigi.setAction("siap.sige.fascicolo.action.ActLoadDettaglioFascicolo");
-		lRedirigi.setParameter(CAMPO_ID_FASCICOLO_SIGE, (mFascicolo.getIdFascicoloSige() != null ? mFascicolo
-				.getIdFascicoloSige().toString() : ""));
+		lRedirigi.setParameter(CAMPO_ID_FASCICOLO_SIGE,
+				(mFascicolo.getIdFascicoloSige() != null ? mFascicolo.getIdFascicoloSige().toString() : ""));
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getPackage().getName() + ".processRequest : fine");
+		siesLogger.debug(getClass().getName() + ".processRequest : fine");
+
 		return lRedirigi.toString();
 	}
 
 	/**
 	 * La funzione costruisce il FascicoloSigeModel a partire dai dati inseriti nella form di inserimento.
-	 * 
+	 *
 	 * @return FascicoloSigeModel
 	 * @throws Exception
 	 */
@@ -114,8 +107,8 @@ public class ActInserisciFascicolo extends ActionSige implements ICostantiFascic
 			lFascicolo.setCodStatoFascicolo("02");
 
 		if (!isRequestParameterNullObj(CAMPO_IS_FASCICOLO_COLLEGATO_RICORSO)
-				&& super.getRequestStringParameter(CAMPO_IS_FASCICOLO_COLLEGATO_RICORSO).equalsIgnoreCase(
-						"true")) {
+				&& super.getRequestStringParameter(CAMPO_IS_FASCICOLO_COLLEGATO_RICORSO)
+						.equalsIgnoreCase("true")) {
 			// Lo stato del fascicolo del procedimento secondario
 			// deve essere impostato a iscritto
 			lFascicolo.setCodStatoFascicolo("02");
@@ -126,10 +119,10 @@ public class ActInserisciFascicolo extends ActionSige implements ICostantiFascic
 					CAMPO_ANNO_DECISIONE_RICORSO_COLLEGATO, CAMPO_MESE_DECISIONE_RICORSO_COLLEGATO,
 					CAMPO_GIORNO_DECISIONE_RICORSO_COLLEGATO));
 			// lFascicolo.setDataDefinizione(aValore);
-			lFascicolo
-					.setIdFascicoloSigeOrigine(getRequestBigDecimalParameter(CAMPO_ID_FASCICOLO_SIGE_ORIGINE));
-			lFascicolo
-					.setCodTenoreDecisione(getRequestStringParameter(ICostantiImpugnazioneSige.CAMPO_COD_TENORE_DECISIONE));
+			lFascicolo.setIdFascicoloSigeOrigine(
+					getRequestBigDecimalParameter(CAMPO_ID_FASCICOLO_SIGE_ORIGINE));
+			lFascicolo.setCodTenoreDecisione(
+					getRequestStringParameter(ICostantiImpugnazioneSige.CAMPO_COD_TENORE_DECISIONE));
 		}
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -141,7 +134,7 @@ public class ActInserisciFascicolo extends ActionSige implements ICostantiFascic
 
 	/**
 	 * La funzione costruisce il RichiestaSigeModel a partire dai dati inseriti nella form di inserimento.
-	 * 
+	 *
 	 * @return RichiestaSigeModel
 	 * @throws Exception
 	 */
@@ -159,18 +152,19 @@ public class ActInserisciFascicolo extends ActionSige implements ICostantiFascic
 		lRichiesta.setDataEmissione(getRequestDateParameter(ICostantiRichiestaSige.CAMPO_ANNO_DATA_EMISSIONE,
 				ICostantiRichiestaSige.CAMPO_MESE_DATA_EMISSIONE,
 				ICostantiRichiestaSige.CAMPO_GIORNO_DATA_EMISSIONE));
-		lRichiesta
-				.setCodTipoRichiedente(getRequestStringParameter(ICostantiRichiestaSige.CAMPO_COD_TIPO_RICHIEDENTE));
+		lRichiesta.setCodTipoRichiedente(
+				getRequestStringParameter(ICostantiRichiestaSige.CAMPO_COD_TIPO_RICHIEDENTE));
 		lRichiesta.setCodTipoAtto(getRequestStringParameter(ICostantiRichiestaSige.CAMPO_COD_TIPO_ATTO));
-		lRichiesta.setDataArrivoCancelleria(getRequestDateParameter(
-				ICostantiRichiestaSige.CAMPO_ANNO_DATA_ARRIVO_CANCELLERIA,
-				ICostantiRichiestaSige.CAMPO_MESE_DATA_ARRIVO_CANCELLERIA,
-				ICostantiRichiestaSige.CAMPO_GIORNO_DATA_ARRIVO_CANCELLERIA));
+		lRichiesta.setDataArrivoCancelleria(
+				getRequestDateParameter(ICostantiRichiestaSige.CAMPO_ANNO_DATA_ARRIVO_CANCELLERIA,
+						ICostantiRichiestaSige.CAMPO_MESE_DATA_ARRIVO_CANCELLERIA,
+						ICostantiRichiestaSige.CAMPO_GIORNO_DATA_ARRIVO_CANCELLERIA));
 
 		// Mittente
 		if (!isRequestParameterNullObj(ICostantiRichiestaSige.CAMPO_SEDE_RICHIEDENTE)
 				&& getRequestStringParameter(ICostantiRichiestaSige.CAMPO_SEDE_RICHIEDENTE) != null
-				&& getRequestStringParameter(ICostantiRichiestaSige.CAMPO_SEDE_RICHIEDENTE).trim().length() > 0)
+				&& getRequestStringParameter(ICostantiRichiestaSige.CAMPO_SEDE_RICHIEDENTE).trim()
+						.length() > 0)
 			lRichiesta.setCodSedeRichiedente(getCodComuneByDescr(
 					getRequestStringParameter(ICostantiRichiestaSige.CAMPO_SEDE_RICHIEDENTE)).getCodComune());
 
@@ -182,15 +176,15 @@ public class ActInserisciFascicolo extends ActionSige implements ICostantiFascic
 				&& getRequestStringParameter(ICostantiRichiestaSige.CAMPO_COD_UFFICIO_RICHIEDENTE) != null
 				&& getRequestStringParameter(ICostantiRichiestaSige.CAMPO_COD_UFFICIO_RICHIEDENTE).trim()
 						.length() > 0)
-			lRichiesta
-					.setCodUfficioRichiedente(getRequestStringParameter(ICostantiRichiestaSige.CAMPO_COD_UFFICIO_RICHIEDENTE));
+			lRichiesta.setCodUfficioRichiedente(
+					getRequestStringParameter(ICostantiRichiestaSige.CAMPO_COD_UFFICIO_RICHIEDENTE));
 
 		// ID Fascicolo SIEP
 		if (getRequestStringParameter(ICostantiRichiestaSige.CAMPO_FAS_SIE_ID_FASCICOLO_SIEP) != null
 				&& getRequestStringParameter(ICostantiRichiestaSige.CAMPO_FAS_SIE_ID_FASCICOLO_SIEP).trim()
 						.length() > 0)
-			lRichiesta
-					.setFasSieIdFascicoloSiep(getRequestBigDecimalParameter(ICostantiRichiestaSige.CAMPO_FAS_SIE_ID_FASCICOLO_SIEP));
+			lRichiesta.setFasSieIdFascicoloSiep(
+					getRequestBigDecimalParameter(ICostantiRichiestaSige.CAMPO_FAS_SIE_ID_FASCICOLO_SIEP));
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
@@ -214,19 +208,18 @@ public class ActInserisciFascicolo extends ActionSige implements ICostantiFascic
 			lMagistrato.setCodOperatoreInserimento(mFascicolo.getCodOperatoreInserimento());
 			lMagistrato.setDataInserimento(mFascicolo.getDataInserimento());
 		}
-		return lMagistrato;
 
+		return lMagistrato;
 	}
 
 	/**
 	 * La funzione legge i dati relativi al Luogo di Detenzione. Se nella form di input risulta vistato il
 	 * check che conferma il Luogo di Detenzione del Fascicolo SIEP, questa funzione inserirà in un oggetto
 	 * FasSigeDetenzioneModel ID Luogo Detenzione ed ID AltraCausa presenti nella form.
-	 * 
+	 *
 	 * @return FasSigeDetenzioneModel
 	 * @throws Exception
 	 */
-
 	protected FasSigeDetenzioneModel leggiDatiDetenzione() throws Exception {
 
 		FasSigeDetenzioneModel lDetenzione = null;
@@ -236,10 +229,10 @@ public class ActInserisciFascicolo extends ActionSige implements ICostantiFascic
 			lDetenzione = new FasSigeDetenzioneModel();
 
 			// Valorizzazione del Riferimento a Luogo Detenzione o a Altra Causa
-			lDetenzione
-					.setLdIdLuogoDetenzione(getRequestBigDecimalParameter(ICostantiFasSigeDetenzione.CAMPO_LD_ID_LUOGO_DETENZIONE));
-			lDetenzione
-					.setAcIdAltraCausa(getRequestBigDecimalParameter(ICostantiFasSigeDetenzione.CAMPO_AC_ID_ALTRA_CAUSA));
+			lDetenzione.setLdIdLuogoDetenzione(
+					getRequestBigDecimalParameter(ICostantiFasSigeDetenzione.CAMPO_LD_ID_LUOGO_DETENZIONE));
+			lDetenzione.setAcIdAltraCausa(
+					getRequestBigDecimalParameter(ICostantiFasSigeDetenzione.CAMPO_AC_ID_ALTRA_CAUSA));
 
 			// Campi di sistema
 			lDetenzione.setCodUfficioInserimento(mFascicolo.getCodUfficioInserimento());

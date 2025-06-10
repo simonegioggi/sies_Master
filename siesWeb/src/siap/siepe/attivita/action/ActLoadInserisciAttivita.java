@@ -23,19 +23,8 @@ import siap.siepe.fascicolo.model.FascicoloSiepeModel;
 import siap.siepe.util.SIEPELookupRemote;
 
 /**
- * <p>
- * Title: ActLoadInserisciAttivita
- * </p>
- * <p>
- * Description: Classe Action per la load inserisci di Attivita
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ * ActLoadInserisciAttivita - Classe Action per la load inserisci di Attivita
+ *
  * @version 1.0
  */
 @SuppressWarnings("rawtypes")
@@ -48,8 +37,8 @@ public class ActLoadInserisciAttivita extends ActionSiap implements ICostantiAtt
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getPackage().getName() + "." + this.getClass().getName()
-				+ ".processRequest(): inizio");
+		siesLogger.debug(
+				this.getClass().getName() + "." + this.getClass().getName() + ".processRequest(): inizio");
 		// Il Fascicolo è in sessione
 		FascicoloSiepeEstesoModel lFasEsteso = (FascicoloSiepeEstesoModel) this
 				.getSessionAttribute("FascicoloSiepeEsteso");
@@ -100,13 +89,15 @@ public class ActLoadInserisciAttivita extends ActionSiap implements ICostantiAtt
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getPackage().getName() + "." + this.getClass().getName()
-				+ ".processRequest(): fine");
+		siesLogger.debug(
+				this.getClass().getName() + "." + this.getClass().getName() + ".processRequest(): fine");
 
-		return PG_LOAD_INSERISCIATTIVITA; // restituisce la jsp di VIEW
+		// restituisce la jsp di VIEW
+		return PG_LOAD_INSERISCIATTIVITA;
 	}
 
 	private Collection EliminaAttivitaAssegnate(Collection aElencoAttivita, Collection aElencoAssegnate) {
+
 		// Iteratore sull'elenco delle attività già assegnate
 		Iterator itxAssegnate = aElencoAssegnate.iterator();
 
@@ -127,6 +118,8 @@ public class ActLoadInserisciAttivita extends ActionSiap implements ICostantiAtt
 				}
 			}
 		}
+
+		// valore di ritorno
 		return aElencoAttivita;
 	}
 

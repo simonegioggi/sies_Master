@@ -5,6 +5,11 @@ import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.web.IWebConstants;
+import f3b.web.RedirectTo;
 import siap.jms.ICostantiJMS;
 import siap.jms.JMSLookupRemote;
 import siap.jms.SIAPSender;
@@ -18,27 +23,13 @@ import siap.siepe.attivita.model.AttivitaModel;
 import siap.siepe.fascicolo.controller.IFascicoloSiepe;
 import siap.siepe.fascicolo.model.FascicoloSiepeModel;
 import siap.siepe.util.SIEPELookupRemote;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.web.IWebConstants;
-import f3b.web.RedirectTo;
 
 /**
- * <p>
- * Title: ActInserisciFascicoloSiepe
- * </p>
- * <p>
- * Description: Classe Azione di inserimento del Fascicolo SIEPE L'azione elabora la Presa in Carico del
- * Messaggio da trattare e quindi la Creazione e la valorizzazione del Fascicolo SIEPE e delle Attività
- * corrispondenti.
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * ActInserisciFascicoloSiepe - Classe Azione di inserimento del Fascicolo SIEPE L'azione elabora la Presa in
+ * Carico del Messaggio da trattare e quindi la Creazione e la valorizzazione del Fascicolo SIEPE e delle
+ * Attività corrispondenti
+ *
+ * @version 1.0
  */
 public class ActInserisciFascicoloSiepe extends ActionSiap implements ICostantiFascicoloSiepe {
 
@@ -49,7 +40,7 @@ public class ActInserisciFascicoloSiepe extends ActionSiap implements ICostantiF
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getPackage().getName() + ".processRequest : inizio");
+		siesLogger.debug(getClass().getName() + ".processRequest : inizio");
 
 		if (isRequestParameterNullObj(ICostantiMessaggio.CAMPO_ID_MESSAGGIO))
 			throw (new F3BException(F3BException.USER_MESSAGE, "Dati del Messaggio Assenti !"));
@@ -103,7 +94,7 @@ public class ActInserisciFascicoloSiepe extends ActionSiap implements ICostantiF
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getPackage().getName() + ".processRequest : fine");
+		siesLogger.debug(getClass().getName() + ".processRequest : fine");
 
 		return lRedirigi.toString();
 	}
@@ -111,15 +102,15 @@ public class ActInserisciFascicoloSiepe extends ActionSiap implements ICostantiF
 	/**
 	 * Lettura delle Attività assegnate al Fascicolo SIEPE. Vengono letti i codici attivita dalla form ed in
 	 * base a questi valorizzato un array di AttivitaModel da archiviare.
-	 * 
+	 *
 	 * @throws F3BException
 	 */
 	private AttivitaModel[] letturaAttivita() throws F3BException {
 
 		// I codici attività sono elencati in un unico campo di input
 		// e separati attraverso un carattere speciale.
-		StringTokenizer lListaCodAttivita = new StringTokenizer(
-				getRequestStringParameter(CAMPO_COD_ATTIVITA), "|");
+		StringTokenizer lListaCodAttivita = new StringTokenizer(getRequestStringParameter(CAMPO_COD_ATTIVITA),
+				"|");
 		int numAttivita = lListaCodAttivita.countTokens();
 		AttivitaModel lListaAttivita[] = new AttivitaModel[numAttivita];
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -137,13 +128,14 @@ public class ActInserisciFascicoloSiepe extends ActionSiap implements ICostantiF
 			// LogF3B.getLogger()
 			siesLogger.debug("Attivita n." + i + " :" + lListaAttivita[i]);
 		}
+
 		return lListaAttivita;
 	}
 
 	/**
 	 * Funzione di compilazione del messaggio da restituire al mittente per notificare l'avvenuta Presa in
-	 * Carico.
-	 * 
+	 * Carico
+	 *
 	 * @param aMessaggio
 	 * @param aCodEsito
 	 * @param aCodTipoMessaggio

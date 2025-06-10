@@ -17,12 +17,11 @@ import siap.sige.util.SIGELookupRemote;
 import siap.sige.web.ActionSige;
 
 /**
- * Classe per la ricerca Reati da Sentenza. Attualmente la funzione effettua una ricerca diversa per i Reati
- * collegati alla Sentenza del Procedimemto SIEP da quella per i reati invece collegati ad "Altro Titolo
- * Esecutivo". STUB: da rivedere
- * 
- * @author Luigi
+ * ActRicercaReati - Classe action per la ricerca Reati da Sentenza. Attualmente la funzione effettua una
+ * ricerca diversa per i Reati collegati alla Sentenza del Procedimemto SIEP da quella per i reati invece
+ * collegati ad "Altro Titolo Esecutivo". STUB: da rivedere
  *
+ * @version 1.0
  */
 @SuppressWarnings("rawtypes")
 public class ActRicercaReati extends ActionSige implements ICostantiTenoreSige {
@@ -36,7 +35,7 @@ public class ActRicercaReati extends ActionSige implements ICostantiTenoreSige {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getPackage().getName() + ".processRequest : inizio");
+		siesLogger.debug(getClass().getName() + ".processRequest : inizio");
 		BigDecimal lIdFasSigeSentenza = null;
 		Vector lReati = null;
 
@@ -54,7 +53,7 @@ public class ActRicercaReati extends ActionSige implements ICostantiTenoreSige {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getPackage().getName() + ".processRequest : fine");
+		siesLogger.debug(getClass().getName() + ".processRequest : fine");
 
 		return ICostantiDecodifiche.PG_LISTAREATI_SIGE;
 	}
@@ -62,7 +61,7 @@ public class ActRicercaReati extends ActionSige implements ICostantiTenoreSige {
 	/**
 	 * La funzione ricerca un riferimento nella tabella FAS_SIGE_SENTENZA tra Procedimento e Sentenza. Se il
 	 * riferimento esiste è anche unico e servirà ad individuare i reati collegati.
-	 * 
+	 *
 	 * @return
 	 * @throws F3BException
 	 */
@@ -100,7 +99,7 @@ public class ActRicercaReati extends ActionSige implements ICostantiTenoreSige {
 
 	/**
 	 * Ricerca dei Reati collegati aLTitolo Esecutivo
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException

@@ -25,20 +25,8 @@ import siap.sico.decodifiche.model.DecodificheModel;
 import siap.sico.decodifiche.model.OggettiModel;
 
 /**
- * <p>
- * Title: DecodificheController
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company:
- * </p>
+ * DecodificheController - Classe controlle per le decodifiche tabelle DB
  *
- * @author unascribed
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -2830,7 +2818,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 		} catch (Exception eEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + eEx);
-			throw new F3BException(this.getClass().getPackage().getName() + ".ExRicercaAttivita: " + eEx);
+			throw new F3BException(this.getClass().getName() + ".ExRicercaAttivita: " + eEx);
 		} finally {
 			cleanup(lDecDao);
 			cleanup(lConn);
@@ -2904,7 +2892,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 		} catch (Exception eEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + eEx);
-			throw new F3BException(this.getClass().getPackage().getName() + ".ExRicercaAttivita: " + eEx);
+			throw new F3BException(this.getClass().getName() + ".ExRicercaAttivita: " + eEx);
 		} finally {
 			cleanup(lDecDao);
 			cleanup(lConn);
@@ -2928,7 +2916,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 		} catch (Exception eEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + eEx);
-			throw new F3BException(this.getClass().getPackage().getName() + ".ExRicercaAttivita: " + eEx);
+			throw new F3BException(this.getClass().getName() + ".ExRicercaAttivita: " + eEx);
 		} finally {
 			cleanup(lDecDao);
 			cleanup(lConn);
