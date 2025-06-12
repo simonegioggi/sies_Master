@@ -93,8 +93,10 @@ public class ActRicercaSentenzaSoggetto extends ActionSiap implements ICostantiS
 						//getDatiComuneByDescrOmonimiaFlagVal(getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)));
 						getDatiComuneByDescrOmonimia(getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)));
 			}
-
-			lSogmod.setCodComuneNascita(lComMod.getCodComune());
+			// 20250612 [SG]: risolto problema ricerca soggetto col "-" pari al cod comune nascita
+			// Ticket#20250612016 - SIES - ricerche soggetto
+			String codComuneNascita = "-".equals(lComMod.getCodComune()) ? "" : lComMod.getCodComune();
+			lSogmod.setCodComuneNascita(codComuneNascita);
 		}
 
 		lSmod.setCodUfficioInserimento(lUtenteMod.getUfficioUtente().getCodUfficio());

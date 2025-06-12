@@ -28,19 +28,7 @@ import siap.siep.sentenza.model.SentenzaModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * Azione Padre di tutte le Action della nuova istanza.
- * <p>
- * Title: ActionNuovaIstanza
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2009
- * </p>
- * <p>
- * Company: Agile S.r.l.
- * </p>
+ * ActionNuovaIstanza - Azione Padre di tutte le Action della nuova istanza.
  *
  * @version 5.0
  */
@@ -54,6 +42,7 @@ public class ActionNuovaIstanza extends ActionSiap
 	 * @throws F3BException
 	 */
 	protected FascicoloSiepModel getFascicolo(BigDecimal aIdSentenza) throws Exception {
+
 		// data irrevocabilità per ora non sò come gestirla verrà inserita nella modifica??
 
 		UtenteModel lUtenteMod = new UtenteModel(
@@ -110,6 +99,7 @@ public class ActionNuovaIstanza extends ActionSiap
 	 * @throws F3BException
 	 */
 	protected EventoModel getEvento(BigDecimal aIdFascicolo) throws Exception {
+
 		EventoModel lEveMod = new EventoModel();
 
 		lEveMod.setCodTipoEvento("03");
@@ -170,7 +160,10 @@ public class ActionNuovaIstanza extends ActionSiap
 					getDatiComuneByDescrOmonimia(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
 		}
 
-		lSogMod.setCodComuneNascita(lComMod.getCodComune());
+		// 20250612 [SG]: risolto problema ricerca soggetto col "-" pari al cod comune nascita
+		// Ticket#20250612016 - SIES - ricerche soggetto
+		String codComuneNascita = "-".equals(lComMod.getCodComune()) ? "" : lComMod.getCodComune();
+		lSogMod.setCodComuneNascita(codComuneNascita);
 		lSogMod.setCodProvinciaNascita(lComMod.getCodProvincia());
 
 		if (!isRequestParameterNullObj(CAMPO_NAZIONALITA)

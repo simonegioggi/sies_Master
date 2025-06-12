@@ -156,17 +156,19 @@ public class ActInserisciParteUdienza extends ActionSige implements ICostantiPar
 			lComMod = new ComuneModel(
 					getDatiComuneByCodDescr(getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
 							getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
-			lAnagraficaParteModel.setCodComuneNascita(lComMod.getCodComune());
-			lAnagraficaParteModel.setCodProvinciaNascita(lComMod.getCodProvincia());
 		} else {
 			// altrimenti dalla sola descrizione (rischio omonimi)
 			lComMod = new ComuneModel(
 					// 20210524 MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni senza flag
 					// validità.
 					getDatiComuneByDescrOmonimia(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
-			lAnagraficaParteModel.setCodComuneNascita(lComMod.getCodComune());
-			lAnagraficaParteModel.setCodProvinciaNascita(lComMod.getCodProvincia());
 		}
+
+		// 20250612 [SG]: risolto problema ricerca soggetto col "-" pari al cod comune nascita
+		// Ticket#20250612016 - SIES - ricerche soggetto
+		String codComuneNascita = "-".equals(lComMod.getCodComune()) ? "" : lComMod.getCodComune();
+		lAnagraficaParteModel.setCodComuneNascita(codComuneNascita);
+		lAnagraficaParteModel.setCodProvinciaNascita(lComMod.getCodProvincia());
 
 		// Stato Nascita
 		if (!isRequestParameterNullObj(CAMPO_COD_STATO_NASCITA)) {

@@ -93,7 +93,10 @@ public class ActRicercaSoggettoAltreBDI extends ActionSiap implements ICostantiS
 					lComMod = new ComuneModel(getDatiComuneByDescrOmonimia(
 							getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
 				}
-				lSogMod.setCodComuneNascita(lComMod.getCodComune());
+				// 20250612 [SG]: risolto problema ricerca soggetto col "-" pari al cod comune nascita
+				// Ticket#20250612016 - SIES - ricerche soggetto
+				String codComuneNascita = "-".equals(lComMod.getCodComune()) ? "" : lComMod.getCodComune();
+				lSogMod.setCodComuneNascita(codComuneNascita);
 				lSogMod.setDescrComuneNascita(lComMod.getDescrizione());
 			}
 			

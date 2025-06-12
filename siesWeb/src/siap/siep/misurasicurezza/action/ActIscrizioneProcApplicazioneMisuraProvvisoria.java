@@ -330,8 +330,10 @@ public class ActIscrizioneProcApplicazioneMisuraProvvisoria extends ActionSiap i
 				//getDatiComuneByDescrOmonimiaFlagVal(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
 				getDatiComuneByDescrOmonimia(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
 		}
-
-		lSogMod.setCodComuneNascita(lComMod.getCodComune());
+		// 20250612 [SG]: risolto problema ricerca soggetto col "-" pari al cod comune nascita
+		// Ticket#20250612016 - SIES - ricerche soggetto
+		String codComuneNascita = "-".equals(lComMod.getCodComune()) ? "" : lComMod.getCodComune();
+		lSogMod.setCodComuneNascita(codComuneNascita);
 		lSogMod.setCodProvinciaNascita(lComMod.getCodProvincia());
 
 		if (!isRequestParameterNullObj(CAMPO_NAZIONALITA)

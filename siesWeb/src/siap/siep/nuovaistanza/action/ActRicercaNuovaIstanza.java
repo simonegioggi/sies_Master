@@ -1,13 +1,5 @@
 package siap.siep.nuovaistanza.action;
 
-/**
-* <p>Title: ActRicercaNuovaIstanza</p>
-* <p>Description: Classe Action per la ricerca di NuovaIstanza</p>
-* <p>Copyright: Copyright (c) 2009</p>
-* <p>Company: Agile s.r.l.</p>
-* @version 5.0
-*/
-
 import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.Vector;
@@ -15,11 +7,9 @@ import java.util.Vector;
 import f3b.util.F3BException;
 import f3b.web.IWebConstants;
 import siap.sico.decodifiche.action.ICostantiComune;
-import siap.sico.decodifiche.controller.IComune;
 import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.soggetto.action.ICostantiSoggetto;
 import siap.sico.soggetto.model.SoggettoModel;
-import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
 import siap.siep.avvocato.controller.IAvvocato;
 import siap.siep.avvocato.model.AvvocatoModel;
@@ -29,11 +19,16 @@ import siap.siep.nuovaistanza.controller.INuovaIstanza;
 import siap.siep.nuovaistanza.model.NuovaIstanzaModel;
 import siap.siep.util.SIEPLookupRemote;
 
+/**
+ * ActRicercaNuovaIstanza - Classe Action per la ricerca di NuovaIstanza
+ *
+ * @version 5.0
+ */
 public class ActRicercaNuovaIstanza extends ActionSiap implements ICostantiNuovaIstanza {
 
 	/*****************************************************************************
 	 * Azione di Ricerca. Recupera i dati dalla form ed effettua la ricerca.
-	 * 
+	 *
 	 * @return Nome della pagina JSP da visualizzare
 	 * @throws F3BException
 	 *****************************************************************************/
@@ -122,24 +117,26 @@ public class ActRicercaNuovaIstanza extends ActionSiap implements ICostantiNuova
 									ICostantiSoggetto.CAMPO_MESE_DATA_NASCITA,
 									ICostantiSoggetto.CAMPO_GIORNO_DATA_NASCITA));
 				}
-				/* 20210601	MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni senza flag validità.
-				if (!isRequestParameterNullObj(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)) {
-					// soggIstanzaModel.setCodComuneNascita(getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA));
-					ComuneModel comuneMod = new ComuneModel();
-					comuneMod.setDescrizione(
-							(getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA))
-									.toUpperCase());
-					IComune lCtrlCom = SICOLookupRemote.getComuneRemote();
-					soggIstanzaModel.setCodComuneNascita(
-							(lCtrlCom.ExGetCodiceComuneValidita(comuneMod)).getCodComune());
-				} */
+				/*
+				 * 20210601 MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni senza flag
+				 * validità. if (!isRequestParameterNullObj(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)) { //
+				 * soggIstanzaModel.setCodComuneNascita(getRequestStringParameter(ICostantiSoggetto.
+				 * CAMPO_COD_COMUNE_NASCITA)); ComuneModel comuneMod = new ComuneModel();
+				 * comuneMod.setDescrizione(
+				 * (getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)) .toUpperCase());
+				 * IComune lCtrlCom = SICOLookupRemote.getComuneRemote();
+				 * soggIstanzaModel.setCodComuneNascita(
+				 * (lCtrlCom.ExGetCodiceComuneValidita(comuneMod)).getCodComune()); }
+				 */
 				if (!this.isRequestParameterNullObj(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)
-						&& getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA).length() > 1) {
+						&& getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)
+								.length() > 1) {
 					// Recupero dati del Comune di nascita
 					ComuneModel lComMod;
 
 					if (!isRequestParameterNullObj(ICostantiComune.CAMPO_COD_COMUNE_REALE)
-							&& getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE).length() > 0) {
+							&& getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE)
+									.length() > 0) {
 						// se presente dal codice comune (e descrizione)
 						lComMod = new ComuneModel(getDatiComuneByCodDescr(
 								getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
@@ -149,11 +146,13 @@ public class ActRicercaNuovaIstanza extends ActionSiap implements ICostantiNuova
 						lComMod = new ComuneModel(getDatiComuneByDescrOmonimia(
 								getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)));
 					}
-
-					soggIstanzaModel.setCodComuneNascita(lComMod.getCodComune());
+					// 20250612 [SG]: risolto problema ricerca soggetto col "-" pari al cod comune nascita
+					// Ticket#20250612016 - SIES - ricerche soggetto
+					String codComuneNascita = "-".equals(lComMod.getCodComune()) ? ""
+							: lComMod.getCodComune();
+					soggIstanzaModel.setCodComuneNascita(codComuneNascita);
 				}
-				
-				
+
 				tipoRicerca = ICostantiNuovaIstanza.TIPO_RICERCA_SOGGETTO_ISTANZA;
 			}
 		}
