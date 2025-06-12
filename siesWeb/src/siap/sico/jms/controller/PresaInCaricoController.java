@@ -98,19 +98,12 @@ import siap.sius.tenore.dao.TenoreDAO;
 import siap.sius.tenore.model.TenoreModel;
 
 /**
- * <p>
- * Title: PresaInCaricoController
- * </p>
- * <p>
- * Description: Presa in carico di un'ordinanza proveniente da altra BDI
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- */
-/*
+ * PresaInCaricoController - Presa in carico di un'ordinanza proveniente da altra BDI
+ *
  * Luigi 28-06-2006 Questo Controller sostituira' l'analogo in siap.sius.jms.controller. In fase di test
- * continuano a sussistere entrambi.
+ * continuano a sussistere entrambi
+ *
+ * @version 1.0
  */
 @SuppressWarnings("rawtypes")
 public class PresaInCaricoController extends SiapController implements IPresaInCarico {
@@ -139,8 +132,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 		} catch (Exception e) {
 			rollback(lConn);
 			e.printStackTrace();
-			throw new F3BException(
-					this.getClass().getPackage().getName() + ".ExPresaInCaricoOrdinanza: " + e);
+			throw new F3BException(this.getClass().getName() + ".ExPresaInCaricoOrdinanza: " + e);
 		} finally {
 			cleanup(lConn);
 		}
@@ -283,7 +275,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 		} catch (Exception e) {
 			rollback(lConn);
 			e.printStackTrace();
-			throw new F3BException(this.getClass().getPackage().getName() + ".ExPresaInCaricoDecreto: " + e);
+			throw new F3BException(this.getClass().getName() + ".ExPresaInCaricoDecreto: " + e);
 		} finally {
 			cleanup(lConn);
 		}
@@ -423,7 +415,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 		} catch (Exception e) {
 			rollback(lConn);
 			e.printStackTrace();
-			throw new F3BException(this.getClass().getPackage().getName() + ".ExPresaInCaricoAttivita: " + e);
+			throw new F3BException(this.getClass().getName() + ".ExPresaInCaricoAttivita: " + e);
 		} finally {
 			cleanup(lConn);
 		}
@@ -485,8 +477,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 		} catch (Exception ex) {
 			rollback(lConn);
 			ex.printStackTrace();
-			throw new F3BException(
-					this.getClass().getPackage().getName() + ".ExPresaInCaricoRichiestaSiepe: " + ex);
+			throw new F3BException(this.getClass().getName() + ".ExPresaInCaricoRichiestaSiepe: " + ex);
 		} finally {
 			cleanup(lConn);
 		}
@@ -3419,8 +3410,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 		} catch (Exception e) {
 			rollback(lConn);
 			e.printStackTrace();
-			throw new F3BException(
-					this.getClass().getPackage().getName() + ".ExPresaInCaricoOrdinanza: " + e);
+			throw new F3BException(this.getClass().getName() + ".ExPresaInCaricoOrdinanza: " + e);
 		} finally {
 			cleanup(lConn);
 		}

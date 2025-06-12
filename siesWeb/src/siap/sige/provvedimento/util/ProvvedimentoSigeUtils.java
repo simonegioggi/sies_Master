@@ -29,24 +29,14 @@ import siap.sige.util.SIGELookupRemote;
 import siap.sige.web.ActionSige;
 
 /**
- * <p>
- * Title: FascicoloSigeUtils
- * </p>
- * <p>
- * Description: Classe di utilita' per il package provvedimento di Sige
- * </p>
- * <p>
- * Copyright: Copyright (c) 2009
- * </p>
- * <p>
- * Company: Eutelia
- * </p>
+ * FascicoloSigeUtils - Classe di utilita' per il package provvedimento di Sige
  *
  * @version 1.0
  */
 @SuppressWarnings("unchecked")
 public class ProvvedimentoSigeUtils extends ActionSige
 		implements ICostantiProvvedimentoSige, ICostantiImpugnazioneSige {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
@@ -60,6 +50,7 @@ public class ProvvedimentoSigeUtils extends ActionSige
 	 */
 	public boolean isMagistratoAssInCollegio(BigDecimal aIdCollegio, String lCodMagAssegnatario)
 			throws Exception {
+
 		boolean lRet = false;
 
 		// Ricerca del Collegio
@@ -81,6 +72,7 @@ public class ProvvedimentoSigeUtils extends ActionSige
 
 	// Funzione per la costruzione della combo con i template di stampa previsti.
 	public void gestioneTemplate(TemplateModel lTempRic) throws Exception {
+
 		Option lOptTemplate = null;
 
 		lOptTemplate = UtilTemplate.listaTemplateByCodProvvSige(lTempRic.getCodTipoProvvedimentoSige());
@@ -101,6 +93,7 @@ public class ProvvedimentoSigeUtils extends ActionSige
 	}
 
 	public void ricercaCollegio(BigDecimal aIdCollegio, String aCodTipoUfficioConnesso) throws Exception {
+
 		// Chiama il controller.
 		ICollegio lCtrl = SIGELookupRemote.getCollegioRemote();
 		CollegioModel lColMod = lCtrl.ExRicercaCollegioByKey(aIdCollegio);
@@ -122,6 +115,7 @@ public class ProvvedimentoSigeUtils extends ActionSige
 	}
 
 	public String getOggettiProvvedimento(ProvvedimentoSigeEventoModel lProvEve) {
+
 		Vector<TenoreSigeModel> lTenori = null;
 
 		if (lProvEve.getProvvedimento().getCodTipoProvvedimentoSige() != null
@@ -150,6 +144,7 @@ public class ProvvedimentoSigeUtils extends ActionSige
 	}
 
 	public String getDescrizioneTipoProvvedimento(ProvvedimentoSigeEventoModel lProvEve) {
+
 		String descrizione = "";
 		if (lProvEve.getProvvedimento().getCodTipoProvvedimentoSige() != null) {
 			descrizione = StringUtils.toStringJSP(lProvEve.getProvvedimento().getDescrTipoProvvedimentoSige(),
@@ -249,7 +244,6 @@ public class ProvvedimentoSigeUtils extends ActionSige
 						+ lProvEve.getEventoNotifica().getEvento().getIdEvento() + "&TornaQui=0\">"
 						+ StringUtils.toStringJSP(descrizione, "-") + "</a>";
 			}
-
 		} else {
 			descrizione = StringUtils.toStringJSP(lProvEve.getProvvedimento().getDescrTipoProvvedimento(),
 					"-");
@@ -269,6 +263,7 @@ public class ProvvedimentoSigeUtils extends ActionSige
 
 	public String getProvvedimentoValidato(ProvvedimentoSigeEventoModel lProvEve, String flagValida,
 			String lFunAnnullaValidaProvvedimento, boolean modificabile) {
+
 		if (flagValida.equalsIgnoreCase("NO"))
 			return "";
 
@@ -306,11 +301,11 @@ public class ProvvedimentoSigeUtils extends ActionSige
 		}
 		tag.append("</td>");
 		return tag.toString();
-
 	}
 
 	public String getDepositoValidato(ProvvedimentoSigeEventoModel lProvEve, String flagValida,
 			String lFunAnnullaValidaAllegato) {
+
 		if (flagValida.equalsIgnoreCase("NO"))
 			return "";
 
@@ -340,6 +335,7 @@ public class ProvvedimentoSigeUtils extends ActionSige
 	}
 
 	public String getDataRicorso(Vector<ImpugnazioneSigeModel> impugnazioni) {
+
 		StringBuffer tag = new StringBuffer("<font class=\"campo\">");
 		String tag1 = "-";
 		String action = "siap.sige.impugnazione.action.ActLoadDettaglioImpugnazioneSige";
@@ -365,6 +361,7 @@ public class ProvvedimentoSigeUtils extends ActionSige
 	}
 
 	public String getDataOpposizione(Vector<ImpugnazioneSigeModel> impugnazioni) {
+
 		StringBuffer tag = new StringBuffer("<font class=\"campo\">");
 		String tag1 = "-";
 		String action = "siap.sige.impugnazione.action.ActLoadDettaglioImpugnazioneSige";
@@ -391,6 +388,7 @@ public class ProvvedimentoSigeUtils extends ActionSige
 	}
 
 	public String getLinkDettaglioOrdinanzaUdienza(ProvvedimentoSigeEventoModel lProvEve) {
+
 		UdienzaSigeModel udienzaModel = lProvEve.getProvvedimento().getUdienzaSige();
 		if (udienzaModel == null)
 			return "&nbsp;";
@@ -399,9 +397,12 @@ public class ProvvedimentoSigeUtils extends ActionSige
 		String action = "siap.sige.udienza.action.ActLoadDettaglioFissazioneUdienza";
 
 		StringBuffer tag = new StringBuffer();
-		if (codTipoProvv.equals("04")) {
+		if (codTipoProvv.equals("04"))
 			action = "siap.sige.udienzaprocedimento.action.ActLoadDettaglioOrdinanzaRinvioUdienza";
-		}
+		// 20250610 [SG]: aggiunta distinzione action di reindirizzamento
+		else if (codTipoProvv.equals("50"))
+			action = "siap.sige.udienzaprocedimento.action.ActLoadDettaglioVerbaleRinvioUdienza";
+
 		// @emma 26072018 intervento post COLLAUDO 11.2 (la data udienza deve essere visibile per tipo
 		// provvedimetno sige 'Decreto Fissazione Udienza')
 		/*
@@ -410,7 +411,6 @@ public class ProvvedimentoSigeUtils extends ActionSige
 		 * 18/nov/2019 Branch : MAC_20191115013
 		 */
 		if (codTipoProvv.equals("01") || codTipoProvv.equals("04") || codTipoProvv.equals("50")) {
-			// ***** FINE INTERVENTO MAC_20191115013 *****//
 			tag.append("<a class=\"cliccabile\" href=\"" + IWebConstants.PG_MAIN + "?"
 					+ IWebConstants.ACTION_FIELD + "=" + action + "&TornaQui=0&IdEvento="
 					+ lProvEve.getEventoNotifica().getEvento().getIdEvento().toString() + "\">"
@@ -420,10 +420,14 @@ public class ProvvedimentoSigeUtils extends ActionSige
 		} else {
 			tag.append("-");
 		}
+		// ***** FINE INTERVENTO MAC_20191115013 *****//
+
+		// valore di ritorno
 		return tag.toString();
 	}
 
 	public String getLinkDettaglioDeposito(ProvvedimentoSigeEventoModel lProvEve) {
+
 		String descr = StringUtils.toStringJSP(
 				DateUtils.getDateToString(lProvEve.getProvvedimento().getDataDeposito(), "dd-MM-yyyy"), "-");
 		String action = "siap.sige.provvedimento.action.ActLoadDettaglioDataDeposito";
@@ -451,4 +455,5 @@ public class ProvvedimentoSigeUtils extends ActionSige
 		tag.append(descr);
 		return tag.toString();
 	}
+
 }

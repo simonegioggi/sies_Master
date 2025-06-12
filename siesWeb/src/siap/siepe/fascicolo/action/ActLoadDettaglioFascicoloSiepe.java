@@ -31,30 +31,21 @@ import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * <p>
- * Title: ActLoadDettaglioFascicoloSiepe
- * </p>
- * <p>
- * Description: Classe Action per la load dettaglio di FascicoloSiepe
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ * ActLoadDettaglioFascicoloSiepe - Classe Action per la load dettaglio di FascicoloSiepe
+ *
  * @version 1.0
  */
 public class ActLoadDettaglioFascicoloSiepe extends ActionSiap implements ICostantiFascicoloSiepe {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	@SuppressWarnings("rawtypes")
 	public String processRequest() throws Exception {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getPackage().getName() + "ActLoadDettaglioFascicoloSiepe: inizio");
+		siesLogger.debug(this.getClass().getName() + "ActLoadDettaglioFascicoloSiepe: inizio");
 
 		FascicoloSiepeEstesoModel lFascicoloEsteso = null;
 		SoggettoModel lSoggetto = null;
@@ -137,8 +128,9 @@ public class ActLoadDettaglioFascicoloSiepe extends ActionSiap implements ICosta
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getPackage().getName() + "ActLoadDettaglioFascicoloSiepe: fine");
+		siesLogger.debug(this.getClass().getName() + "ActLoadDettaglioFascicoloSiepe: fine");
 
+		// restituisce la jsp di VIEW
 		return PG_LOAD_DETTAGLIOFASCICOLOSIEPE;
 	}
 

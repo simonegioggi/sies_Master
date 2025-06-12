@@ -23,19 +23,8 @@ import siap.siepe.fascicolo.model.FascicoloSiepeModel;
 import siap.siepe.util.SIEPELookupRemote;
 
 /**
- * <p>
- * Title: ActLoadInserisciRichiesta
- * </p>
- * <p>
- * Description: Classe Action per la load inserisci di Richiesta
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ * ActLoadInserisciRichiesta - Classe Action per la load inserisci di FasSiepePuntuale Attivita
+ *
  * @version 1.0
  */
 @SuppressWarnings("rawtypes")
@@ -62,8 +51,8 @@ public class ActLoadInserisciFSPAttivita extends ActRicercaFasSiepePuntuale impl
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getPackage().getName() + "." + this.getClass().getName()
-				+ ".processRequest(): inizio");
+		siesLogger.debug(
+				this.getClass().getName() + "." + this.getClass().getName() + ".processRequest(): inizio");
 		// Il Fascicolo è in sessione
 		FascicoloSiepeEstesoModel lFasEsteso = (FascicoloSiepeEstesoModel) this
 				.getSessionAttribute("FascicoloSiepeEsteso");
@@ -104,13 +93,14 @@ public class ActLoadInserisciFSPAttivita extends ActRicercaFasSiepePuntuale impl
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getPackage().getName() + "." + this.getClass().getName()
-				+ ".processRequest(): fine");
+		siesLogger.debug(
+				this.getClass().getName() + "." + this.getClass().getName() + ".processRequest(): fine");
 
 		return PG_LOAD_INSERISCIATTIVITA; // restituisce la jsp di VIEW
 	}
 
 	private Collection EliminaAttivitaAssegnate(Collection aElencoAttivita, Collection aElencoAssegnate) {
+
 		// Iteratore sull'elenco delle attività già assegnate
 		Iterator itxAssegnate = aElencoAssegnate.iterator();
 
@@ -131,6 +121,8 @@ public class ActLoadInserisciFSPAttivita extends ActRicercaFasSiepePuntuale impl
 				}
 			}
 		}
+
+		// valore di ritorno
 		return aElencoAttivita;
 	}
 

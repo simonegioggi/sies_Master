@@ -14,6 +14,7 @@ import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
+import f3b.util.Utils;
 import siap.controller.SiapController;
 import siap.siep.modulocumulo.dao.BeneficioCumuloSqlDAO;
 import siap.siep.modulocumulo.dao.ComputiCumuloSqlDAO;
@@ -65,12 +66,7 @@ import siap.siep.modulocumulo.model.TitoloCumulatoModel;
 import siap.siep.modulocumulo.util.StatoEsecuzioneCumuloUtils;
 
 /**
- * <p>
- * Title: RichiestePmInCumuloController
- * </p>
- * <p>
- * Description: Classe Controller per RichiestePmInCumulo
- * </p>
+ * RichiestePmInCumuloController - Classe Controller per RichiestePmInCumulo
  *
  * @version 1.0
  */
@@ -571,7 +567,6 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 			cleanup(lProvvDao);
 			cleanup(lConn);
 		}
-
 	}
 
 	/*****************************************************************************
@@ -772,7 +767,9 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 						TitoloCumulatoModel lTitMod = (TitoloCumulatoModel) lTitSqlDao.getModelByKey();
 						if (lTitMod != null && lTitMod.getIdTitoloCumulato() != null) {
 							if (i == 1) {
-								lRicMod.setAnnoSentenza(lTitMod.getAnnoSentenza().toString());
+								lRicMod.setAnnoSentenza(!Utils.isNullObj(lTitMod.getAnnoSentenza())
+										? lTitMod.getAnnoSentenza().toString()
+										: "");
 								lRicMod.setNumeroSentenza(lTitMod.getNumeroSentenza());
 							}
 						}
@@ -1774,10 +1771,7 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 
 			lRicDao.stop();
 
-			if (lByteArrayOut == null)
-				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Documento Associato");
-
-			if (lByteArrayOut.size() == 0)
+			if ((lByteArrayOut == null) || (lByteArrayOut.size() == 0))
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Documento Associato");
 
 		} catch (DAOException ex) {

@@ -12,17 +12,11 @@ import org.apache.log4j.Logger;
 import f3b.log.LogF3B;
 
 /**
- * <p>
- * Title: StoreProcedureDAO
- * </p>
- * <p>
- * Description: Classe padre per la gestione delle Store Procedure, infatti eredita tutte le proprietà di
- * GenericDAO pertanto dovrà essere ereditata da tutte le classi che hanno la responsabilità di effettuare
+ * StoreProcedureDAO - Classe padre per la gestione delle Store Procedure, infatti eredita tutte le proprietà
+ * di GenericDAO pertanto dovrà essere ereditata da tutte le classi che hanno la responsabilità di effettuare
  * StoreProcedure
- * </p>
- * <p>
- * Company: Bull Italia S.p.A.
- * </p>
+ *
+ * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class StoreProcedureDAO extends GenericDAO {
@@ -45,7 +39,7 @@ public class StoreProcedureDAO extends GenericDAO {
 	/**
 	 * Costruttore di classe con la connessione al db come parametro.
 	 * <p>
-	 * 
+	 *
 	 * @param aCon
 	 *            Connessione al Dbase.
 	 */
@@ -62,7 +56,7 @@ public class StoreProcedureDAO extends GenericDAO {
 
 	/**
 	 * Setta il Nome della StoreProcedure
-	 * 
+	 *
 	 * @param aName
 	 * @throws DAOException
 	 */
@@ -72,14 +66,14 @@ public class StoreProcedureDAO extends GenericDAO {
 
 	/**
 	 * Esecuzione della Store Procedure.
-	 * 
+	 *
 	 * @return Ritorna true se non si è verificato un errore
 	 * @throws DAOException
 	 */
 	public boolean execute() throws DAOException {
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getPackage().getName() + ".execute : inizio");
+		siesLogger.debug(this.getClass().getName() + ".execute : inizio");
 
 		try {
 			int lFieldType = 0;
@@ -87,7 +81,7 @@ public class StoreProcedureDAO extends GenericDAO {
 
 			String lCall = "";
 			String lField = null;
-//			String lFieldKey = null;
+			// String lFieldKey = null;
 			Object lValue = null;
 			Enumeration lEnumFields = null;
 
@@ -152,8 +146,8 @@ public class StoreProcedureDAO extends GenericDAO {
 
 					case DATE: // Attributo DATE
 						if (lValue != null)
-							mCallStat.setTimestamp(lFieldsPosition, new java.sql.Timestamp(
-									((java.util.Date) lValue).getTime()));
+							mCallStat.setTimestamp(lFieldsPosition,
+									new java.sql.Timestamp(((java.util.Date) lValue).getTime()));
 						else
 							mCallStat.setTimestamp(lFieldsPosition, null);
 
@@ -226,7 +220,7 @@ public class StoreProcedureDAO extends GenericDAO {
 
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug(this.getClass().getPackage().getName() + ".execute : fine");
+			siesLogger.debug(this.getClass().getName() + ".execute : fine");
 
 			return true;
 		} catch (SQLException sqlEx) {
@@ -249,20 +243,20 @@ public class StoreProcedureDAO extends GenericDAO {
 
 	/**
 	 * Esecuzione di una Store procedure che restituisce un resultset
-	 * 
+	 *
 	 * @return Ritorna true se non si è verificato un errore
 	 * @throws DAOException
 	 */
 	public void executeQuery() throws DAOException {
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getPackage().getName() + ".executeQuery : inizio");
+		siesLogger.debug(this.getClass().getName() + ".executeQuery : inizio");
 		try {
 			int lFieldType = 0;
 			int lFieldsCount = 0;
 			String lCall = "";
 			String lField = null;
-//			String lFieldKey = null;
+			// String lFieldKey = null;
 			Object lValue = null;
 			Enumeration lEnumFields = null;
 
@@ -312,8 +306,8 @@ public class StoreProcedureDAO extends GenericDAO {
 
 					case DATE: // Attributo DATE
 						if (lValue != null)
-							mCallStat.setTimestamp(lFieldsCount, new java.sql.Timestamp(
-									((java.util.Date) lValue).getTime()));
+							mCallStat.setTimestamp(lFieldsCount,
+									new java.sql.Timestamp(((java.util.Date) lValue).getTime()));
 						else
 							mCallStat.setTimestamp(lFieldsCount, null);
 						break;
@@ -356,7 +350,7 @@ public class StoreProcedureDAO extends GenericDAO {
 			}
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug(this.getClass().getPackage().getName() + ".executeQuery : fine");
+			siesLogger.debug(this.getClass().getName() + ".executeQuery : fine");
 
 		} catch (SQLException sqlEx) {
 			sqlEx.printStackTrace();
@@ -371,7 +365,7 @@ public class StoreProcedureDAO extends GenericDAO {
 	/**
 	 * Imposta nome e tipo campo.
 	 * <p>
-	 * 
+	 *
 	 * @param aFieldName
 	 *            nome del campo della tablla di riferimento.
 	 * @param aType
@@ -384,7 +378,7 @@ public class StoreProcedureDAO extends GenericDAO {
 	/**
 	 * Imposta nome e posizione del parametro di input.
 	 * <p>
-	 * 
+	 *
 	 * @param aFieldName
 	 *            nome del campo della tablla di riferimento.
 	 * @param aPosition
@@ -397,7 +391,7 @@ public class StoreProcedureDAO extends GenericDAO {
 	/**
 	 * Imposta nome e tipo campo dei parametri in uscita.
 	 * <p>
-	 * 
+	 *
 	 * @param aFieldName
 	 *            nome del campo della tablla di riferimento.
 	 * @param aType
@@ -411,7 +405,7 @@ public class StoreProcedureDAO extends GenericDAO {
 	/**
 	 * Imposta nome e posizione del parametro di output.
 	 * <p>
-	 * 
+	 *
 	 * @param aFieldName
 	 *            nome del campo della tablla di riferimento.
 	 * @param aPosition
@@ -424,7 +418,7 @@ public class StoreProcedureDAO extends GenericDAO {
 	/**
 	 * Imposta il campo di riferimento con il valore <code>BigDecimal</code>.
 	 * <p>
-	 * 
+	 *
 	 * @param aFieldName
 	 *            nome del campo di riferimento.
 	 * @param aValue
@@ -440,7 +434,7 @@ public class StoreProcedureDAO extends GenericDAO {
 	/**
 	 * Imposta il campo di riferimento con il valore <code>String</code>.
 	 * <p>
-	 * 
+	 *
 	 * @param aFieldName
 	 *            nome del campo di riferimento.
 	 * @param aValue

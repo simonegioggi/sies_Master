@@ -29,8 +29,7 @@ import siap.sige.sentenza.action.ICostantiFasSigeSentenza;
 import siap.sige.util.SIGELookupRemote;
 
 /**
- * Title: ActionSige
- * Description: Azione estensione della ActionSiap. Questa classe mette a disposizione nuove funzioni
+ * ActionSige - Azione estensione della ActionSiap. Questa classe mette a disposizione nuove funzioni
  * specifiche dell'utente SIGE.
  *
  * @version 1.0
@@ -66,6 +65,7 @@ public class ActionSige extends ActionSiap {
 	 *             Propagazione errori di eccezione.
 	 */
 	public boolean IsFascicoloSigeModificabile() throws F3BException {
+
 		boolean lRet = false;
 
 		if (getSession() == null)
@@ -106,6 +106,7 @@ public class ActionSige extends ActionSiap {
 	 */
 
 	protected boolean IsFascicoloSigeIscrittoCompetenza() throws F3BException {
+
 		return IsFascicoloSigeIscrittoCompetenza(getFascicoloSigeInSessione());
 	}
 
@@ -117,10 +118,12 @@ public class ActionSige extends ActionSiap {
 	 */
 
 	protected boolean IsFascicoloSigeDefinito() throws F3BException {
+
 		return IsFascicoloSigeDefinito(getFascicoloSigeInSessione());
 	}
 
 	private boolean IsFascicoloSigeIscrittoCompetenza(FascicoloSigeModel aFascicolo) throws F3BException {
+
 		boolean lRet = false;
 
 		if ((aFascicolo.getCodStatoFascicolo().equalsIgnoreCase("02")
@@ -153,6 +156,7 @@ public class ActionSige extends ActionSiap {
 	 * @throws F3BException
 	 */
 	protected FascicoloSigeEstesoModel getFascicoloSigeEstesoInSessione() throws F3BException {
+
 		if (isSessionAttributeNullObj("FascicoloSigeEsteso"))
 			throw new F3BException(F3BException.USER_MESSAGE,
 					"Dati del Procedimento SIGE non in sessione !!");
@@ -187,6 +191,7 @@ public class ActionSige extends ActionSiap {
 	 * @throws F3BException
 	 */
 	protected FascicoloSigeModel getFascicoloSigeInSessione() throws F3BException {
+
 		FascicoloSigeEstesoModel lFascicoloEsteso = getFascicoloSigeEstesoInSessione();
 
 		if (lFascicoloEsteso == null || lFascicoloEsteso.getFascicoloSige() == null)
@@ -251,6 +256,7 @@ public class ActionSige extends ActionSiap {
 	 * @throws F3BException
 	 */
 	protected BigDecimal getIdFasSigeSentenzaInSessione() throws F3BException {
+
 		if (isSessionAttributeNullObj(ICostantiFasSigeSentenza.CAMPO_ID_FAS_SIGE_SENTENZA))
 			throw new F3BException(F3BException.USER_MESSAGE, "Dati del Titolo Esecutivo non in sessione !!");
 
@@ -380,6 +386,7 @@ public class ActionSige extends ActionSiap {
 	 *             Propagazione errori di eccezione.
 	 */
 	protected boolean esisteProvvedimentoDefinitorio() throws F3BException {
+
 		boolean lRet = false;
 
 		// STUB: da modificare ed usare una funzione nel controller che verifichi solo l'esistenza del
@@ -495,6 +502,7 @@ public class ActionSige extends ActionSiap {
 	}
 
 	protected Option getComboTipoGiudizio(String lTipoGiudizio, String lCodTipoUfficio) throws Exception {
+
 		// Carica Combo x TipoGiudizio.
 		Option lOptionGiudizio = new Option(DecodificheManager.getInstance().getTipoGiudizioSige(),
 				lTipoGiudizio, Option.BLANK_ITEM);
@@ -533,7 +541,7 @@ public class ActionSige extends ActionSiap {
 		switch (Short.parseShort(codImpugnazione)) {
 		case ICostantiImpugnazioneSige.SHORT_COD_ESITO_ANNULLA_SENZA_RINVIO:
 		case ICostantiImpugnazioneSige.SHORT_COD_ESITO_ANNULLA_PARZIALMENTE:
-		case ICostantiImpugnazioneSige.SHORT_COD_ESITO_DICHIARA_INAMISSIBILE_IL_RICORSO:
+		case ICostantiImpugnazioneSige.SHORT_COD_ESITO_DICHIARA_INAMMISSIBILE_IL_RICORSO:
 		case ICostantiImpugnazioneSige.SHORT_COD_ESITO_RIGETTA:
 		case ICostantiImpugnazioneSige.SHORT_COD_ESITO_RETTIFICA:
 		case ICostantiImpugnazioneSige.SHORT_COD_ESITO_ACCOGLIE:
@@ -555,7 +563,7 @@ public class ActionSige extends ActionSiap {
 
 		switch (Short.parseShort(codImpugnazione)) {
 		case ICostantiImpugnazioneSige.SHORT_COD_ESITO_RIGETTA:
-		case ICostantiImpugnazioneSige.SHORT_COD_ESITO_DICHIARA_INAMISSIBILE:
+		case ICostantiImpugnazioneSige.SHORT_COD_ESITO_DICHIARA_INAMMISSIBILE:
 			show = true;
 			break;
 		default:
@@ -580,6 +588,7 @@ public class ActionSige extends ActionSiap {
 	}
 
 	protected String checkMinori() throws F3BException {
+
 		String ret = "";
 		if (getUtenteConnesso().getUfficioUtente() != null
 				&& getUtenteConnesso().getUfficioUtente().getCodTipoUfficio() != null) {
@@ -593,6 +602,7 @@ public class ActionSige extends ActionSiap {
 	// ***** FINE INTERVENTO MEV_57 *****//
 
 	protected boolean IsFascicoloUnificato() throws F3BException {
+
 		FascicoloSigeModel aFascicolo = getFascicoloSigeInSessione();
 
 		boolean lRet = false;
@@ -605,6 +615,7 @@ public class ActionSige extends ActionSiap {
 	}
 
 	protected boolean IsFascicoloDefinito() throws F3BException {
+
 		FascicoloSigeModel aFascicolo = getFascicoloSigeInSessione();
 
 		boolean lRet = false;
@@ -638,13 +649,10 @@ public class ActionSige extends ActionSiap {
 	}
 
 	/**
-	 * Ticket#20211129018 - Rinvio udienza Sige
-	 * In caso di esistenza di Provvedimento Definitorio, si può
-	 * emettere un altro provvedimento se lo stato del fascicolo è:
-	 * Opposizione - Accoglie (fissa l'udienza) = 14
-	 * Ricorso convertito in opposizione = 16
-	 * Decreto Fissazione Udienza = 20
-	 * Ricorso convertito in opposizione (Fissa Udienza) = 21
+	 * Ticket#20211129018 - Rinvio udienza Sige In caso di esistenza di Provvedimento Definitorio, si può
+	 * emettere un altro provvedimento se lo stato del fascicolo è: Opposizione - Accoglie (fissa l'udienza) =
+	 * 14 Ricorso convertito in opposizione = 16 Decreto Fissazione Udienza = 20 Ricorso convertito in
+	 * opposizione (Fissa Udienza) = 21
 	 *
 	 * @return true or false
 	 * @throws F3BException

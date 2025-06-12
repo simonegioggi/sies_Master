@@ -7,16 +7,16 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
+import f3b.web.IWebConstants;
+import f3b.web.RedirectTo;
 import siap.sico.evento.action.ActUploadDocument;
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.util.SICOLookupRemote;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
-import f3b.web.IWebConstants;
-import f3b.web.RedirectTo;
 
 public class ActValidaInizioEsecuzione extends ActUploadDocument {
 
@@ -67,7 +67,7 @@ public class ActValidaInizioEsecuzione extends ActUploadDocument {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getPackage().getName() + ".processRequest(): inizio");
+		siesLogger.debug(this.getClass().getName() + ".processRequest(): inizio");
 		String lPage = IWebConstants.PG_MESSAGE;
 
 		// Lettura ID Evento
@@ -118,7 +118,8 @@ public class ActValidaInizioEsecuzione extends ActUploadDocument {
 		if (lisUpdate) {
 			updateTabella(lIdEvento);
 			// Prepara la "pagina" di destinAction
-			setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Aggiornamento Documento Avvenuto Correttamente!");
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+					"Aggiornamento Documento Avvenuto Correttamente!");
 		}
 		// Se c'è lo stack di ritorno effettua un ritorno in cima
 		String lRitorno = goToRitorno();
@@ -133,7 +134,7 @@ public class ActValidaInizioEsecuzione extends ActUploadDocument {
 		}
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getPackage().getName() + ".processRequest(): fine");
+		siesLogger.debug(this.getClass().getName() + ".processRequest(): fine");
 		return lPage;
 	}
 
