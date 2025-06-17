@@ -164,10 +164,7 @@ public class ActInserisciParteUdienza extends ActionSige implements ICostantiPar
 					getDatiComuneByDescrOmonimia(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
 		}
 
-		// 20250612 [SG]: risolto problema ricerca soggetto col "-" pari al cod comune nascita
-		// Ticket#20250612016 - SIES - ricerche soggetto
-		String codComuneNascita = "-".equals(lComMod.getCodComune()) ? "" : lComMod.getCodComune();
-		lAnagraficaParteModel.setCodComuneNascita(codComuneNascita);
+		lAnagraficaParteModel.setCodComuneNascita(lComMod.getCodComune());
 		lAnagraficaParteModel.setCodProvinciaNascita(lComMod.getCodProvincia());
 
 		// Stato Nascita

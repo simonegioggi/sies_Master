@@ -5,6 +5,13 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.util.Utils;
+import f3b.web.IWebConstants;
+import f3b.web.RedirectTo;
+import f3b.web.html.Option;
 import siap.jms.SIAPSender;
 import siap.jms.jmscode.action.ICostantiJmsCode;
 import siap.jms.messaggio.model.MessaggioModel;
@@ -19,32 +26,27 @@ import siap.sico.ufficio.model.UfficioModel;
 import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
 import siap.siep.jms.action.ICostantiSiepJMS;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.web.IWebConstants;
-import f3b.web.RedirectTo;
-import f3b.web.html.Option;
 
 /**
+ * ActRicercaSoggettoAltreBDI - Azione di ricerca di un soggetto specificato e dei suoi fascicoli fuori
+ * distretto
  *
- * <p>Title: ActRicercaSoggettoAltreBDI</p>
- * <p>Description: Azione di ricerca di un soggetto specificato e dei suoi fascicoli
- * fuori distretto.</p>
- * <p>Copyright: Copyright (c) 2004</p>
- * <p>Company: Bull Italia S.p.A.</p>
+ * @version 1.0
  */
 public class ActRicercaSoggettoAltreBDI extends ActionSiap implements ICostantiSiepJMS, ICostantiSoggetto {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	/**
-	 * Restituisce la descriizone di una nazione passandogli il codice
-	 * sfruttando il decodifiche manager invece che il Database
+	 * Restituisce la descriizone di una nazione passandogli il codice sfruttando il decodifiche manager
+	 * invece che il Database
+	 *
 	 * @param aCodice
 	 * @return
 	 */
 	private String getDescrStatoNascitaByCod(String aCodice) {
+
 		String lDescrizione = "";
 		Option lOption = new Option(DecodificheManager.getInstance().getNazioni(), aCodice);
 		if (lOption != null) {
@@ -55,26 +57,21 @@ public class ActRicercaSoggettoAltreBDI extends ActionSiap implements ICostantiS
 	}
 
 	private SoggettoModel getSoggetto(boolean fromDetail) throws F3BException {
+
 		SoggettoModel lSogMod = new SoggettoModel();
 
 		if (fromDetail) {
-
 			BigDecimal lId = getRequestBigDecimalParameter(CAMPO_ID_SOGGETTO);
 			ISoggetto lSogCtrl = SICOLookupRemote.getSoggettoRemote();
 			lSogMod = lSogCtrl.ExRicercaSoggettoByKey(lId);
-
 		} else {
-
-			/* 20210601	MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni senza flag validità.
-			String lComune = getRequestStringParameters(CAMPO_COD_COMUNE_NASCITA)[1];
-
-			// parse della request
-			if (lComune != null && lComune.length() > 1) {
-				
-				ComuneModel lComMod = new ComuneModel(getCodComuneByDescr(lComune));
-				lSogMod.setCodComuneNascita(lComMod.getCodComune());
-				lSogMod.setDescrComuneNascita(lComMod.getDescrizione());
-			} */
+			/*
+			 * 20210601 MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni senza flag validità.
+			 * String lComune = getRequestStringParameters(CAMPO_COD_COMUNE_NASCITA)[1]; // parse della
+			 * request if (lComune != null && lComune.length() > 1) { ComuneModel lComMod = new
+			 * ComuneModel(getCodComuneByDescr(lComune)); lSogMod.setCodComuneNascita(lComMod.getCodComune());
+			 * lSogMod.setDescrComuneNascita(lComMod.getDescrizione()); }
+			 */
 			String lComune = getRequestStringParameters(CAMPO_COD_COMUNE_NASCITA)[1];
 
 			// parse della request
@@ -86,12 +83,13 @@ public class ActRicercaSoggettoAltreBDI extends ActionSiap implements ICostantiS
 						&& getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE).length() > 0) {
 					// se presente dal codice comune (e descrizione)
 					lComMod = new ComuneModel(getDatiComuneByCodDescr(
-							getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
-							lComune));
+							getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE), lComune));
 				} else {
 					// altrimenti dalla sola descrizione (rischio omonimi)
 					lComMod = new ComuneModel(getDatiComuneByDescrOmonimia(
-							getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
+							Utils.isPresent(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA))
+									? getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)
+									: lComune));
 				}
 				// 20250612 [SG]: risolto problema ricerca soggetto col "-" pari al cod comune nascita
 				// Ticket#20250612016 - SIES - ricerche soggetto
@@ -99,10 +97,10 @@ public class ActRicercaSoggettoAltreBDI extends ActionSiap implements ICostantiS
 				lSogMod.setCodComuneNascita(codComuneNascita);
 				lSogMod.setDescrComuneNascita(lComMod.getDescrizione());
 			}
-			
 
 			// String lComuneEstero = getRequestStringParameters( CAMPO_DESC_COMUNE_NASCITA_ESTERO )[1];
-			// if (lComuneEstero!=null) lSogMod.setDescComuneNascitaEstero(getRequestStringParameter(lComuneEstero));
+			// if (lComuneEstero!=null)
+			// lSogMod.setDescComuneNascitaEstero(getRequestStringParameter(lComuneEstero));
 
 			// riempie il model
 			lSogMod.setCognome(getRequestStringParameters(CAMPO_COGNOME)[1].toUpperCase());
@@ -110,7 +108,9 @@ public class ActRicercaSoggettoAltreBDI extends ActionSiap implements ICostantiS
 
 			// STUB 27/09/2005 I Campi di data nascita sono modificati.
 			if (getRequestStringParameter(CAMPO_ANNO_DATA_NASCITA2).length() > 2) {
-				Date lDate = DateUtils.getDate(getRequestStringParameter(CAMPO_ANNO_DATA_NASCITA2), getRequestStringParameter(CAMPO_MESE_DATA_NASCITA2), getRequestStringParameter(CAMPO_GIORNO_DATA_NASCITA2));
+				Date lDate = DateUtils.getDate(getRequestStringParameter(CAMPO_ANNO_DATA_NASCITA2),
+						getRequestStringParameter(CAMPO_MESE_DATA_NASCITA2),
+						getRequestStringParameter(CAMPO_GIORNO_DATA_NASCITA2));
 				lSogMod.setDataNascita(lDate);
 			}
 
@@ -134,7 +134,8 @@ public class ActRicercaSoggettoAltreBDI extends ActionSiap implements ICostantiS
 			}
 
 		}
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.info("Soggettoricercato = " + lSogMod);
 
 		return lSogMod;
@@ -145,11 +146,11 @@ public class ActRicercaSoggettoAltreBDI extends ActionSiap implements ICostantiS
 		SoggettoModel lSogMod = getSoggetto(fromDetail);
 
 		String dalDettaglio = "N";
-		if (fromDetail){
+		if (fromDetail) {
 			dalDettaglio = "S";
 		}
 		setRequestAttribute("fromDetail", dalDettaglio);
-		
+
 		UfficioModel lBDIMittente = getUfficioByCodUfficio(getUfficioUtenteConnesso().getCodDistretto());
 
 		RicercaSICOJMSController lCtrlMess = new RicercaSICOJMSController();
@@ -178,20 +179,24 @@ public class ActRicercaSoggettoAltreBDI extends ActionSiap implements ICostantiS
 			lMessage.setCodBdiDestinataria(lCodBDI);
 			lMessage.setDescrBdiDestinataria(lDescrBDI);
 			lMessage.setDescrUfficioDestinatario(lDescrBDI);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.info("\nBDI Unica a cui mandare = " + lCodBDI + "\n");
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.info("\nBDI Descr a cui mandare = " + lDescrBDI + "\n");
 
 			lSender.send(lMessage);
 		}
 
-		setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Richiesta di ricerca Soggetto sottomessa al Sistema!");
+		setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+				"Richiesta di ricerca Soggetto sottomessa al Sistema!");
 
 		RedirectTo lRedirigi = new RedirectTo();
 		lRedirigi.setPage(IWebConstants.PG_MAIN);
 		// STUB 08/08/2005 lRedirigi.setAction("siap.sico.jms.action.ActRicercaEsitiSoggetto");
-		// lRedirigi.setAction("siap.siep.fascicolo.action.ActLoadRicercaFascicoloPerSoggetto");// STUB 08/08/2005
+		// lRedirigi.setAction("siap.siep.fascicolo.action.ActLoadRicercaFascicoloPerSoggetto");// STUB
+		// 08/08/2005
 		lRedirigi.setAction("siap.sico.jms.action.ActLoadListaEsitiRicercaSoggAltreBDI");// STUB 08/08/2005
 		setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
 
@@ -199,6 +204,7 @@ public class ActRicercaSoggettoAltreBDI extends ActionSiap implements ICostantiS
 	}
 
 	public String processRequest() throws Exception {
+
 		return standardRequest(!isRequestParameterNullObj("DalDettaglio"));
 	}
 

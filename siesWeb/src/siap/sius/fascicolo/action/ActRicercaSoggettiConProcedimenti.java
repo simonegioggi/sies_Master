@@ -20,20 +20,8 @@ import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company:
- * </p>
+ * ActRicercaSoggettiConProcedimenti - Action per la ricerca dei coggetti con procedimenti
  *
- * @author unascribed
  * @version 1.0
  */
 public class ActRicercaSoggettiConProcedimenti extends ActionSiusMinor implements ICostantiFascicoloSius {

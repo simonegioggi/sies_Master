@@ -12,43 +12,34 @@
 <%@ page import="siap.sius.fascicolo.action.ICostantiFascicoloSius"%>
 <%@ page import="siap.sico.ufficio.model.UfficioModel"%>
 
-<jsp:useBean id="soggetto" scope="request"
-	class="siap.sico.soggetto.model.SoggettoModel" />
-<jsp:useBean id="modalita" scope="request" class="java.lang.String" />
-<jsp:useBean id="nazioni" scope="request" class="java.lang.String" />
-<jsp:useBean id="StatoCittadinanza" scope="request"
-	class="java.lang.String" />
-<jsp:useBean id="sesso" scope="request" class="java.lang.String" />
-<jsp:useBean id="dataNascitaPresunta" scope="request"
-	class="java.lang.String" />
-<jsp:useBean id="lTipoFunzione" scope="request" class="java.lang.String" />
-<jsp:useBean id="UtenteConnesso" scope="session"
-	class="siap.sico.utente.model.UtenteModel" />
-<jsp:useBean id="codFunzione" scope="request" class="java.lang.String" />
+<jsp:useBean id="soggetto" scope="request" class="siap.sico.soggetto.model.SoggettoModel"/>
+<jsp:useBean id="modalita" scope="request" class="java.lang.String"/>
+<jsp:useBean id="nazioni" scope="request" class="java.lang.String"/>
+<jsp:useBean id="StatoCittadinanza" scope="request"	class="java.lang.String"/>
+<jsp:useBean id="sesso" scope="request" class="java.lang.String"/>
+<jsp:useBean id="dataNascitaPresunta" scope="request" class="java.lang.String"/>
+<jsp:useBean id="lTipoFunzione" scope="request" class="java.lang.String"/>
+<jsp:useBean id="UtenteConnesso" scope="session" class="siap.sico.utente.model.UtenteModel"/>
+<jsp:useBean id="codFunzione" scope="request" class="java.lang.String"/>
 
 <html>
 <head>
-<link rel="STYLESHEET" type="text/css"
-	href="<%=IWebConstants.PG_STYLE%>">
+<link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
 <title>[S.I.E.S.] - Gestione Soggetto - Inserimento</title>
 <script language="JavaScript">
-      var desktop;
-      function ListaComuni(a_formname,a_fieldname)
-      {
-        desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComuneNascita&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=400,height=500");
-      }
-      <!-- 20210524	MEV Scheda-21 -->
-      function ListaComuniNascita(a_formname,a_fieldname)
-      {
-        desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComuneNascita&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=400,height=500");
-      }      
+var desktop;
+function ListaComuni(a_formname,a_fieldname) {
+	desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComuneNascita&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=400,height=500");
+}
+<!-- 20210524	MEV Scheda-21 -->
+function ListaComuniNascita(a_formname,a_fieldname) {
+	desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComuneNascita&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=400,height=500");
+}      
 
-      function calendario(a_formname,a_field_year,a_field_month,a_field_day)
-      {
-        desktop = 
-            window.open("<%=IWebConstants.ROOT_DIR%>" + "files/siap/sico/Calendario.jsp?formname="+a_formname+"&fieldyear="+a_field_year+"&fieldmonth="+a_field_month+"&fieldday="+a_field_day, "Calendario","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=300,height=250");
-      }
-    </script>
+function calendario(a_formname,a_field_year,a_field_month,a_field_day) {
+	desktop = window.open("<%=IWebConstants.ROOT_DIR%>" + "files/siap/sico/Calendario.jsp?formname="+a_formname+"&fieldyear="+a_field_year+"&fieldmonth="+a_field_month+"&fieldday="+a_field_day, "Calendario","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=300,height=250");
+}
+</script>
 <script language="JavaScript" src=<%=IWebConstants.JS_VALIDATOR%>></script>
 <script language="JavaScript" src=<%=IWebConstants.JS_DATE_CONTROL%>></script>
 </head>
@@ -454,7 +445,6 @@ function Verify() {
 			document.LoadInserisciSoggetto.<%= ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA %>.focus;
 			return false;
 		}
-          
 	} else {
 		document.LoadInserisciSoggetto.<%= ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA %>.value='';
 		cancellaCodComuneReale();
@@ -615,7 +605,7 @@ function Verify() {
 }
 </script>
 
-	<script language="JavaScript">
+<script language="JavaScript">
 var frmvalidator  = new Validator("LoadInserisciSoggetto");
 frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_NOME %>","req","Il campo Nome Soggetto è obbligatorio");
 frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_NOME %>","maxlen=35","La lunghezza massima per il nome è di 35 caratteri");
@@ -626,12 +616,12 @@ frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COGNOME %>","maxlen=35",
 frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COGNOME %>","alpha");
 
 
-// frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA %>","req","Il campo Anno di Nascita è obbligatorio");
-// frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>","maxlen=4","La lunghezza massima per l'anno di nascita è di 4 caratteri");
-// frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>","minlen=4","La lunghezza minima per l'anno di nascita è di 4 caratteri");
-// frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>","numeric");
-// frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>","gt=1900");
-// frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>","lt=3000");
+<%-- // frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA %>","req","Il campo Anno di Nascita è obbligatorio"); --%>
+<%-- // frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>","maxlen=4","La lunghezza massima per l'anno di nascita è di 4 caratteri"); --%>
+<%-- // frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>","minlen=4","La lunghezza minima per l'anno di nascita è di 4 caratteri"); --%>
+<%-- // frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>","numeric"); --%>
+<%-- // frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>","gt=1900"); --%>
+<%-- // frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>","lt=3000"); --%>
 
 frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COD_FISCALE %>","alphanumeric");
 frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COD_AFIS %>","alphanumeric");
@@ -644,11 +634,13 @@ frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_PATERNITA%>","alphabetic
 frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COGNOME_MADRE%>","alphabetic");
 frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_NOME_MADRE%>","alphabetic");
 frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ATTO_NASCITA%>","alphanumeric");
-frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA %>","alpha");
+<%-- Ticket#202506130166 - SIES: Anomalia inserimento provvedimento - schermata sede dell'autorità emittente--%>
+<%-- ELIMINATO CONTROLLO per consentire inserimento comuni tipo MERANO/MERAN) --%>
+<%-- frmvalidator.addValidation("<%=ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA%>","alpha"); --%>
 frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_DESC_COMUNE_NASCITA_ESTERO %>","alpha");
 
-// frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ETA_PRESUNTA_MESI%>","numeric");
-// frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ETA_PRESUNTA_MESI%>","lt=12");
+<%-- // frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ETA_PRESUNTA_MESI%>","numeric"); --%>
+<%-- // frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ETA_PRESUNTA_MESI%>","lt=12"); --%>
   
 // frmvalidator.setAddnlValidationFunction("Verify");
 </script>
