@@ -5,6 +5,7 @@ import java.sql.Connection;
 import f3b.dao.DAOException;
 import f3b.model.GenericModel;
 import f3b.util.StringUtils;
+import f3b.util.Utils;
 import siap.dao.SIAPSqlDAO;
 import siap.sico.avvocato.model.AvvocatoModel;
 import siap.sige.avvocato.model.AvvocatoFascicoloSigeModel;
@@ -448,7 +449,12 @@ public class DifensoreSqlDao extends SIAPSqlDAO {
 		lStatement += "	DESNASCITA.COD_COMUNE = COD_LUOGO_NASCITA AND";
 		lStatement += "	CG.RV_DOMAIN  = 'NON_ATTIVITA' AND";
 		lStatement += "	CG.RV_LOW_VALUE = COD_NON_ATTIVITA AND";
-		lStatement += "	FAS_SIE_ID_FASCICOLO_SIEP=" + sentenza.getFasSieIdFascicoloSiep().toString() + " AND";
+		// 20250618 [SG]: controllo di consistenza per la sentenza
+		String fasSieIdFascicoloSiep = (Utils.isNullObj(sentenza)
+				&& Utils.isNullObj(sentenza.getFasSieIdFascicoloSiep()))
+						? sentenza.getFasSieIdFascicoloSiep().toString()
+						: "0";
+		lStatement += "	FAS_SIE_ID_FASCICOLO_SIEP=" + fasSieIdFascicoloSiep + " AND";
 		lStatement += "	FLAG_CANCELLATO ='N' and data_fine_validita is NULL";
 		// INIZIO: MEV_21 (avvocati)
 		lStatement += " AND AVVOCATO.FORO = AVVFORO.RV_MEANING";

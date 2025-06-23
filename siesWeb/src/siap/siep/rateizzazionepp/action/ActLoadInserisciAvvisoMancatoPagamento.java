@@ -111,6 +111,8 @@ public class ActLoadInserisciAvvisoMancatoPagamento extends ActionSiap implement
 				rt.setAction("siap.siep.sanzionesostitutiva.action.ActVerificaStatoPagamenti&"
 						+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
 				setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
+				// info per il log
+				siesLogger.debug("Non e' stato inserito un metodo di pagamento rateizzato con rate non pagate.");
 				return IWebConstants.PG_MESSAGE;
 			} else {
 				Iterator<EventoRateizzazionePPModel> iterERPPM = listaRichiestaBollettini.iterator();
@@ -133,6 +135,9 @@ public class ActLoadInserisciAvvisoMancatoPagamento extends ActionSiap implement
 									+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "="
 									+ getClass().getName());
 							setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
+							// info per il log
+							siesLogger.debug("Avviso Mancato Pagamento non consentito su procedimento con "
+									+ "pagamento in unica soluzione!");
 							return IWebConstants.PG_MESSAGE;
 						}
 						idEvento = rata.getEveIdEvento();
@@ -148,14 +153,20 @@ public class ActLoadInserisciAvvisoMancatoPagamento extends ActionSiap implement
 			Iterator<BollettinoPagopaModel> iterBPM = elencoStatoPagamenti.iterator();
 			BigDecimal importoPagato = new BigDecimal(0);
 			BigDecimal importoDaPagare = new BigDecimal(0);
+			// Ticket#202506190140 - SIES - Siep - Problema emissione AVVISO MANCATO PAGAMENTO
+			// 20250620 [SG]: era il caso che metà era pagato e metà no
+			BigDecimal importoTotaleDaPagare = new BigDecimal(0);
 			while (iterBPM.hasNext()) {
 				BollettinoPagopaModel bpm = iterBPM.next();
-				if ("PA".equals(bpm.getStatoPagamento()) || "PP".equals(bpm.getStatoPagamento()))
+				if ("PA".equals(bpm.getStatoPagamento()) || "PP".equals(bpm.getStatoPagamento())) {
 					importoPagato = importoPagato.add(bpm.getImportoPagato());
-				else
+					importoTotaleDaPagare = importoTotaleDaPagare.add(bpm.getImportoPagato());
+				} else {
 					importoDaPagare = importoDaPagare.add(bpm.getImportoRata());
+					importoTotaleDaPagare = importoTotaleDaPagare.add(bpm.getImportoRata());
+				}
 			}
-			if (importoPagato.compareTo(importoDaPagare) == 0) {
+			if (importoPagato.compareTo(importoTotaleDaPagare) == 0) {
 				RedirectTo rt = new RedirectTo();
 				rt.setPage(IWebConstants.PG_MAIN);
 				setRequestAttribute(IWebConstants.MESSAGE_TEXT,
@@ -165,6 +176,8 @@ public class ActLoadInserisciAvvisoMancatoPagamento extends ActionSiap implement
 				rt.setAction("siap.siep.sanzionesostitutiva.action.ActVerificaStatoPagamenti&"
 						+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
 				setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
+				// info per il log
+				siesLogger.debug("Avviso Mancato Pagamento non consentito: tutte le rate risultano pagate!");
 				return IWebConstants.PG_MESSAGE;
 			}
 			setRequestAttribute("importoPagato", importoPagato.toString());

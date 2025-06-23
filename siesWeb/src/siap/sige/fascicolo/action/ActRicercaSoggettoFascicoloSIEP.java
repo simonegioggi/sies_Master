@@ -24,20 +24,9 @@ import siap.sige.web.ActionSige;
 import siap.sius.fascicolo.action.ICostantiFascicoloSius;
 
 /**
- * <p>
- * Title: ActLoadRicercaFascicoloSIEP
- * </p>
- * <p>
- * Description: Classe Action per la ricerca di Soggetti titolari di Procedimento SIEP.
- * </p>
+ * ActLoadRicercaFascicoloSIEP - Classe Action per la ricerca di Soggetti titolari di Procedimento SIEP.
  * L'action specializza siap.sius.fascicolo.action.ActRicercaSoggettoFascicoloSiep solo per cambiare
  * l'intestazione della pagina risultato della ricerca.
- * <p>
- * Copyright: Copyright (c) 2008
- * </p>
- * <p>
- * Company: Eutelia
- * </p>
  *
  * @version 5.0
  */

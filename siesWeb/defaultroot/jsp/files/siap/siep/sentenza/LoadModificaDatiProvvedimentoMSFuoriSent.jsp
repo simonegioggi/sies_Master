@@ -279,7 +279,7 @@
 <%if(Fascicolo_di.compareTo("MP")==0 )
   { %>
   	<tr>
-		<td class="l">Sezione Autorità Emittente </font></td>
+		<td class="l">Sezione Autorità Emittente</td>
 		<td class="L" colspan=3>
 			<input Title="Sezione Autorità Emittente" value="<%=StringUtils.toStringJSP(lSentenza.getNumSezioneAutoritaEmittente()) %>" type="text" name="<%= ICostantiSentenza.CAMPO_NUM_SEZIONE_AUTORITA_EMITTENTE %>" maxlength="30" size="30">
 		</td>
@@ -408,7 +408,7 @@
   frmvalidator.addValidation("<%= ICostantiSentenza.CAMPO_COD_TIPO_AUTORITA_EMITTENTE %>","dontselect=0");
 
   frmvalidator.addValidation("<%= ICostantiSentenza.CAMPO_COD_LUOGO_EMITTENTE %>","req","Il campo Luogo Emittente è obbligatorio");
-  frmvalidator.addValidation("<%= ICostantiSentenza.CAMPO_COD_LUOGO_EMITTENTE%>","alphabetic");
+<%--   frmvalidator.addValidation("<%= ICostantiSentenza.CAMPO_COD_LUOGO_EMITTENTE%>","alphabetic"); --%>
 
       </script>
 </body>

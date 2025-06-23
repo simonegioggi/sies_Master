@@ -225,7 +225,7 @@ if (lSentenza.getAnnoRegeGip()!=null)
       </td>
 		</tr>
     <tr>
-      <td class="l">Sezione Autorità Emittente </font></td>
+      <td class="l">Sezione Autorità Emittente</td>
       <td class="L" colspan=3>
           <input Title="Sezione Autorità Emittente" value="<%=StringUtils.toStringJSP(lSentenza.getSezioneAutoritaEmittente()) %>" type="text" name="<%= ICostantiSentenzaRiunita.CAMPO_SEZIONE_AUTORITA_EMITTENTE %>" maxlength="30" size="30" >
       </td>
@@ -281,8 +281,7 @@ if (lSentenza.getAnnoRegeGip()!=null)
   frmvalidator.addValidation("<%= ICostantiSentenzaRiunita.CAMPO_COD_TIPO_AUTORITA_EMITTENTE %>","req","Il campo Autorità Emittente è obbligatorio");
 
   frmvalidator.addValidation("<%= ICostantiSentenzaRiunita.CAMPO_COD_LUOGO_EMITTENTE %>","req","Il campo Luogo Emittente è obbligatorio");
-  frmvalidator.addValidation("<%= ICostantiSentenzaRiunita.CAMPO_COD_LUOGO_EMITTENTE%>","alphabetic");
-
-    </script>
-  </body>
+<%--   frmvalidator.addValidation("<%= ICostantiSentenzaRiunita.CAMPO_COD_LUOGO_EMITTENTE%>","alphabetic"); --%>
+</script>
+</body>
 </html>

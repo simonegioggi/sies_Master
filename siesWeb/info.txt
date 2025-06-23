@@ -1,3 +1,5 @@
-Branch release_12.8.0.2
+Branch release_12.8.0.3
 
-1)	nato il 16/06/2025 dal branch release_12.8.0.1 per correzione tickets
+1)	nato il 20/06/2025 dal branch release_12.8.0.2 per correzione tickets.
+2)	aggiornamento DB.
+3)	aggiornamento Test di Sistema.

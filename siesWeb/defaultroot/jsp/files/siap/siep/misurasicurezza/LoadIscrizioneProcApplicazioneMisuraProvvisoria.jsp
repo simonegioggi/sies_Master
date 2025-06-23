@@ -868,8 +868,8 @@
     frmvalidator.addValidation("<%= ICostantiSentenza.CAMPO_NUMERO_SENTENZA%>","alfanumeric");
     frmvalidator.addValidation("<%= ICostantiSentenza.CAMPO_NUMERO_SENTENZA%>","req", "Numero provvedimento Obbligatorio" );
  
-    //frmvalidator.addValidation("<%= ICostantiSentenza.CAMPO_COD_LUOGO_EMITTENTE%>","alphabetic");
-    //frmvalidator.addValidation("<%= ICostantiSentenza.CAMPO_COD_LUOGO_EMITTENTE%>","req", "Luogo Autorità Emittente Obbligatorio");
+<%--     frmvalidator.addValidation("<%= ICostantiSentenza.CAMPO_COD_LUOGO_EMITTENTE%>","alphabetic"); --%>
+<%--     frmvalidator.addValidation("<%= ICostantiSentenza.CAMPO_COD_LUOGO_EMITTENTE%>","req", "Luogo Autorità Emittente Obbligatorio"); --%>
 
   /**************************FINE Sentenza ****************************************/  
  

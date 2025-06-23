@@ -160,7 +160,7 @@
 
     frmvalidator.addValidation("<%=ICostantiRichiestaAtti.CAMPO_SEDE%>", "req","Il campo Sede è obbligatorio");
     frmvalidator.addValidation("<%=ICostantiRichiestaAtti.CAMPO_SEDE%>","maxlen=35","La lunghezza massima per la Sede è di 35 caratteri");
-    frmvalidator.addValidation("<%=ICostantiRichiestaAtti.CAMPO_SEDE%>","alpha");
+<%--     frmvalidator.addValidation("<%=ICostantiRichiestaAtti.CAMPO_SEDE%>","alpha"); --%>
 
     //Chiama la funzione di Verify().
     frmvalidator.setAddnlValidationFunction("Verify");
