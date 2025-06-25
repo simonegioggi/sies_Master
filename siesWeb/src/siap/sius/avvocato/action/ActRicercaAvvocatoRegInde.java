@@ -90,6 +90,21 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 				Iterator<Soggetto> avvocati = listaAvvocati.iterator();
 				while (avvocati.hasNext()) {
 					Soggetto avvocato = avvocati.next();
+					if (!Utils.isNullObj(avvocato.getSoggetto())) {
+						siesLogger.debug(!Utils.isNullObj(avvocato.getSoggetto().getCodFisc())
+								? avvocato.getSoggetto().getCodFisc()
+								: "CF NULLO!");
+						siesLogger.debug(!Utils.isNullObj(avvocato.getSoggetto().getCognome())
+								? avvocato.getSoggetto().getCognome()
+								: "COGNOME NULLO!");
+						siesLogger.debug(!Utils.isNullObj(avvocato.getSoggetto().getNome())
+								? avvocato.getSoggetto().getNome()
+								: "NOME NULLO!");
+						siesLogger.debug(!Utils.isNullObj(avvocato.getSoggetto().getDataNascita())
+								? avvocato.getSoggetto().getDataNascita().getTime()
+								: "SCARTATO: DATA DI NASCITA NULLA!");
+					} else
+						siesLogger.debug("SOGGETTO NULLO!");
 					if (!Utils.isNullObj(avvocato.getSoggetto())
 							&& Utils.isNullObj(avvocato.getSoggetto().getDataNascita()))
 						avvocati.remove();

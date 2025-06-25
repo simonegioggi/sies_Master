@@ -176,7 +176,8 @@ if (avvocato.size() > 0 && avvocato.size() < 201) {
 				if (Utils.isPresent(codice) && codice.contains("COA")) {
 					String codComune = r[cnt1].getCodice().substring(3);
 					foro = DecodificheUtils.getCodebyCodAlt2(DecodificheManager.getInstance().getForoAll(), codComune);
-				}
+				} else
+					continue;
 				if ("attivo".equalsIgnoreCase(stato))
 					break;
 				else // radiato, sospeso, cessato
