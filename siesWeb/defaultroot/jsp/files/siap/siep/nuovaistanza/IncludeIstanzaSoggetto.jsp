@@ -95,7 +95,7 @@
         <td class="L">
           <input title="Comune di Nascita" type="text" name="<%= ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA %>"  maxlength="35" size="35" onChange="cancellaCodComuneReale();"
 						value="<%=StringUtils.toStringJSP(soggetto.getDescrComuneNascita())%>" >
-          <a href="Javascript:ListaComuni('LoadInserisciSentenza','<%= ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA %>');">
+          <a href="Javascript:ListaComuniNascita('LoadInserisciSentenza','<%= ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA %>');">
             <img src="/images/filefolder.gif" border=0>
           </a>
         </td>
@@ -114,8 +114,8 @@
            	<%= nazioni %>
           </select>
          </td>
-				<td class="l">Comune Nascita Estero</td>
-				<td class="L"><input title="Comune di Nascita Estero" type="text" name="<%= ICostantiSoggetto.CAMPO_DESC_COMUNE_NASCITA_ESTERO %>"  
+				<td class="l">Luogo di Nascita Estero</td>
+				<td class="L"><input title="Luogo di Nascita Estero" type="text" name="<%= ICostantiSoggetto.CAMPO_DESC_COMUNE_NASCITA_ESTERO %>"  
 					value="<%=StringUtils.toStringJSP(soggetto.getDescComuneNascitaEstero()) %>">
 				</td>
 		</tr>

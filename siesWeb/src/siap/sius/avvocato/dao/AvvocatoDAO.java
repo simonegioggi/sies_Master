@@ -58,6 +58,14 @@ public class AvvocatoDAO extends SIAPTableDAO
     setField("CAP", STRING);
     setField("FLAG_VISUALIZZA", BIG_DECIMAL);
     setField("ID_AVVOCATO_STANDARD", BIG_DECIMAL);
+    
+	// MEV_21 (avvocati): aggiunti 6 campi in tabella
+	setField("PEC", STRING);
+	setField("FLAG_REGINDE", STRING);
+	setField("DESCR_COMUNE_STUDIO", STRING);
+	setField("COD_STATO_NASCITA_AVV", STRING);
+	setField("DESC_LUOGO_NAS_REGINDE", STRING);
+	setField("ID_AVVOCATO_BONIFICATO", BIG_DECIMAL);    
   }
 
   //
@@ -96,6 +104,15 @@ public class AvvocatoDAO extends SIAPTableDAO
   public BigDecimal  getFlagVisualizza()        throws DAOException  { return getBigDecimal("FLAG_VISUALIZZA"); }
   public BigDecimal  getIdAvvocatoStandard()      throws DAOException  { return getBigDecimal("ID_AVVOCATO_STANDARD"); }
 
+  
+  // MEV_21 (avvocati): aggiunti 6 campi in tabella
+  public String     getPec()                  throws DAOException {return getString("PEC");	}
+  public String     getFlagRegInde()          throws DAOException {return getString("FLAG_REGINDE");	}
+  public String     getDescrComuneStudio()    throws DAOException {return getString("DESCR_COMUNE_STUDIO");	}
+  public String     getCodStatoNascita()      throws DAOException {return getString("COD_STATO_NASCITA_AVV");	}
+  public String     getDescLuogoNasRegInde()  throws DAOException {return getString("DESC_LUOGO_NAS_REGINDE");	}
+  public BigDecimal getIdAvvocatoBonificato() throws DAOException {return getBigDecimal("ID_AVVOCATO_BONIFICATO");	}  
+  
 //
 // METODI SET()
 //
@@ -132,6 +149,14 @@ public class AvvocatoDAO extends SIAPTableDAO
   public void setFlagVisualizza(BigDecimal aValore)     {setBigDecimal("FLAG_VISUALIZZA", aValore);}
   public void setIdAvvocatoStandard(BigDecimal aValore)   {setBigDecimal("ID_AVVOCATO_STANDARD", aValore);}
 
+  // MEV_21 (avvocati): aggiunti 6 campi in tabella
+  public void setPec                  (String aValore)     {		setString("PEC", aValore);	}
+  public void setFlagRegInde          (String aValore)     {		setString("FLAG_REGINDE", aValore);	}
+  public void setDescrComuneStudio    (String aValore)     {		setString("DESCR_COMUNE_STUDIO", aValore);	}
+  public void setCodStatoNascita      (String aValore)     {		setString("COD_STATO_NASCITA_AVV", aValore);	}
+  public void setDescLuogoNasRegInde  (String aValore)     {		setString("DESC_LUOGO_NAS_REGINDE", aValore);	}
+  public void setIdAvvocatoBonificato (BigDecimal aValore) {		setBigDecimal("ID_AVVOCATO_BONIFICATO", aValore);	}  
+  
 
   public GenericModel     getModel() throws DAOException
   {
@@ -140,6 +165,10 @@ public class AvvocatoDAO extends SIAPTableDAO
         getCognome(), 
         getNome(),
         getForo(),
+        // MEV_21 (avvocati) descrizione SedeForo() + 6 nuovi campi db
+		"", getPec(), getFlagRegInde(), getDescrComuneStudio(), getDescLuogoNasRegInde(),
+		getCodStatoNascita(), "", getIdAvvocatoBonificato(), 
+		// MEV_21
         getIndirizzo(),
         getTelefono(),
         getFax(),
@@ -203,6 +232,15 @@ public class AvvocatoDAO extends SIAPTableDAO
      setCap(aModel.getCap());
      setFlagVisualizza(aModel.getFlagVisualizza());
      setIdAvvocatoStandard(aModel.getIdAvvocatoStandard());  
+     
+     // MEV_21 (avvocati) aggiunti 6 nuovi campi db
+     setPec(aModel.getPec());
+     setFlagRegInde(aModel.getFlagRegInde());
+     setDescrComuneStudio(aModel.getDescrComuneStudio());
+     setCodStatoNascita(aModel.getCodStatoNascita());
+     setDescLuogoNasRegInde(aModel.getDescLuogoNascitaReginde());
+     setIdAvvocatoBonificato(aModel.getIdAvvocatoBonificato());
+     // MEV_21 (avvocati)
    }
 
    public void setDAOFromModelForUpdate(AvvocatoModel aModel) throws DAOException
@@ -233,6 +271,14 @@ public class AvvocatoDAO extends SIAPTableDAO
       setNote(aModel.getNote());
       setFlagCancellato(aModel.getFlagCancellato());
       selCondizioneUpdate(aModel.getIdAvvocato());
+      
+	  // MEV_21 (avvocati) aggiunti 6 nuovi campi db
+	  setPec(aModel.getPec());
+	  setFlagRegInde(aModel.getFlagRegInde());
+	  setDescrComuneStudio(aModel.getDescrComuneStudio());
+	  setCodStatoNascita(aModel.getCodStatoNascita());
+	  setDescLuogoNasRegInde(aModel.getDescLuogoNascitaReginde());
+	  setIdAvvocatoBonificato(aModel.getIdAvvocatoBonificato());      
     }
 
   public void setCondizioneUpdate(BigDecimal key)

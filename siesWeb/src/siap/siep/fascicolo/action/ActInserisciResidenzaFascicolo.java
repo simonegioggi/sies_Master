@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
 import f3b.web.IWebConstants;
+import siap.sico.decodifiche.action.ICostantiComune;
 //import siap.sico.decodifiche.controller.ComuneController;
 import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.residenza.action.ICostantiResidenza;
@@ -18,29 +19,20 @@ import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * <p>
- * Title: ActInserisciResidenza
- * </p>
- * <p>
- * Description: Classe Action per l'inserimento di Residenza
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ * ActInserisciResidenza - Classe Action per l'inserimento di Residenza
+ *
  * @version 1.0
  */
 public class ActInserisciResidenzaFascicolo extends ActionSiap implements ICostantiResidenza {
+
 	/**
 	 * Azione di Inserimento della Residenza
-	 * 
+	 *
 	 * @return Nome della pagina JSP da visualizzare al termine dell'elaborazione
 	 * @throws F3BException
 	 */
 	public String processRequest() throws Exception {
+
 		if (this.isSessionAttributeNullObj("fascicolo")) {
 			return ICostantiFascicoloSiep.REDIRECT_FASCICOLO_RICERCATO + getClass().getName();
 		}
@@ -57,15 +49,34 @@ public class ActInserisciResidenzaFascicolo extends ActionSiap implements ICosta
 
 		// String lDescrComune = getRequestStringParameter(CAMPO_DESCR_COMUNE);
 
-		if (getRequestStringParameter(CAMPO_DESCR_COMUNE).length() > 1) {
-			ComuneModel lComMod = new ComuneModel(
-					getCodComuneByDescrFlagVal(getRequestStringParameter(CAMPO_DESCR_COMUNE)));
-			lResMod.setCodComune(lComMod.getCodComune());
-			lResMod.setCodProvincia(lComMod.getCodProvincia());
+		/*
+		 * 20210531 MEV_Scheda-21 Correzione Comune Residenza per omonimie dei Comuni con flag validità. if
+		 * (getRequestStringParameter(CAMPO_DESCR_COMUNE).length() > 1) { ComuneModel lComMod = new
+		 * ComuneModel( // 20210524 MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni.
+		 * //getCodComuneByDescrFlagVal(getRequestStringParameter(CAMPO_DESCR_COMUNE)));
+		 * getDatiComuneByDescrOmonimiaFlagVal(getRequestStringParameter(CAMPO_DESCR_COMUNE)));
+		 * lResMod.setCodComune(lComMod.getCodComune()); lResMod.setCodProvincia(lComMod.getCodProvincia()); }
+		 * else { lResMod.setCodProvincia("-"); lResMod.setCodComune("-"); }
+		 */
+
+		// 20210531 MEV_Scheda-21 Correzione Comune Residenza per omonimie dei Comuni con flag validità.
+		// Recupero dati del Comune di residenza
+		ComuneModel lComMod;
+		if (!isRequestParameterNullObj(ICostantiComune.CAMPO_COD_COMUNE_REALE)
+				&& getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE).length() > 0) {
+			// se presente dal codice comune (e descrizione)
+			lComMod = new ComuneModel(getDatiComuneByCodDescrFlagVal(
+					getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
+					getRequestStringParameter(CAMPO_DESCR_COMUNE)));
 		} else {
-			lResMod.setCodProvincia("-");
-			lResMod.setCodComune("-");
+			// altrimenti dalla sola descrizione (rischio omonimi)
+			lComMod = new ComuneModel(
+					getDatiComuneByDescrOmonimiaFlagVal(getRequestStringParameter(CAMPO_DESCR_COMUNE)));
 		}
+		// 20250612 [SG]: risolto problema ricerca soggetto col "-" pari al cod comune nascita
+		// Ticket#20250612016 - SIES - ricerche soggetto
+		lResMod.setCodComune(lComMod.getCodComune());
+		lResMod.setCodProvincia(lComMod.getCodProvincia());
 
 		lResMod.setCap(getRequestStringParameter(CAMPO_CAP));
 		lResMod.setIndirizzo(getRequestStringParameter(CAMPO_INDIRIZZO));
@@ -77,7 +88,7 @@ public class ActInserisciResidenzaFascicolo extends ActionSiap implements ICosta
 		lResMod.setDataInserimento(DateUtils.getSysDate());
 		lResMod.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
 		lResMod.setDescComuneEstero(getRequestStringParameter(CAMPO_DESC_COMUNE_ESTERO));
-		// NON é SULLA TABELLA RESIDENZA LA VALIDITA' lResMod.setDataInizioValidita( DateUtils.getSysDate() );
+		// NON é SULLA TABELLA RESIDENZA LA VALIDITA' lResMod.setDataInizioValidita(DateUtils.getSysDate());
 		lResMod.setSogIdSoggetto(lIdSoggetto);
 		lResMod.setIdResidenza(lIdResidenza);
 

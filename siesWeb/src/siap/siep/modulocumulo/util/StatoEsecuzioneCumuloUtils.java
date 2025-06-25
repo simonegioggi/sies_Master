@@ -592,15 +592,7 @@ public class StatoEsecuzioneCumuloUtils {
 		} else if (aCodSospEsecuzioneSORV.contains(aStatoEsecModel.getCodMotivo())) {
 			return "siap.siep.modulocumulo.action.ActDettaglioSospEsecuzionePenaCumulo";
 		} else if (aCodRevocaMisAltSORV.contains(aStatoEsecModel.getCodMotivo())) {
-			// INIZIO: Ticket#202012020116 - Errore non segnalato ma emerso in fase di analisi del ticket
-			// Il provvedimento di esecuzuone del PM avendo lo stesso codice del provv sorveglianza agganciava
-			// lo stesso dettaglio ma andava in errore non avendo i dati richiesti
-			if (   "02".equals(aStatoEsecModel.getCodTipoProvvedimento())
-				|| "03".equals(aStatoEsecModel.getCodTipoProvvedimento())
-			   ) {
-				return "siap.siep.modulocumulo.action.ActDettaglioRevocaMisuraAlternativaCumulo";
-		    }
-			// FIne Ticket
+			return "siap.siep.modulocumulo.action.ActDettaglioRevocaMisuraAlternativaCumulo";
 		} else if (aCodDifferimentoSORV.contains(aStatoEsecModel.getCodMotivo())) {
 			return "siap.siep.modulocumulo.action.ActDettaglioDifferimentoPenaCumulo";
 		} else if (aCodSospMisAltSORV.contains(aStatoEsecModel.getCodMotivo())) {

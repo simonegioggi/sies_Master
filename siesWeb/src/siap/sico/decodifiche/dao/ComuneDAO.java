@@ -25,6 +25,10 @@ public class ComuneDAO extends SIAPTableDAO {
 		setField("CAP", STRING);
 		setField("DATA_CARICAMENTO_REGE", DATE);
 		setField("COD_SEDE_GIUDIZIARIA", STRING);
+		setField("FLAG_VALIDITA", STRING);				// 20210517 MEV_21
+		setField("COD_CATASTALE_COMUNE", STRING);		// 20210517 MEV_21
+		setField("DATA_AGGIORNAMENTO_COMUNE", DATE);	// 20210517 MEV_21
+		setField("DATA_FINE_VALIDITA_COMUNE", DATE);	// 20210517 MEV_21
 	}
 
 	//
@@ -55,6 +59,22 @@ public class ComuneDAO extends SIAPTableDAO {
 		return getString("COD_SEDE_GIUDIZIARIA");
 	}
 
+	public String getFlagValidita() throws DAOException {
+		return getString("FLAG_VALIDITA");
+	}
+
+	public String getCodCatastaleComune() throws DAOException {
+		return getString("COD_CATASTALE_COMUNE");
+	}
+
+	public Date getDataAggiornamentoComune() throws DAOException {
+		return getDate("DATA_AGGIORNAMENTO_COMUNE");
+	}
+
+	public Date getDataFineValiditaComune() throws DAOException {
+		return getDate("DATA_FINE_VALIDITA_COMUNE");
+	}
+
 	//
 	// METODI SET()
 	//
@@ -83,13 +103,30 @@ public class ComuneDAO extends SIAPTableDAO {
 		setString("COD_SEDE_GIUDIZIARIA", aValore);
 	}
 
+	public void setFlagValidita(String aValore) {
+		setString("FLAG_VALIDITA", aValore);
+	}
+
+	public void setCodCatastaleComune(String aValore) {
+		setString("COD_CATASTALE_COMUNE", aValore);
+	}
+
+	public void setDataAggiornamentoComune(Date valore) {
+		setDate("DATA_AGGIORNAMENTO_COMUNE", valore);
+	}
+
+	public void setDataFineValiditaComune(Date valore) {
+		setDate("DATA_FINE_VALIDITA_COMUNE", valore);
+	}
+
 	//
 	// GET MODEL
 	//
 
 	public GenericModel getModel() throws DAOException {
 		return new ComuneModel(getCodComune(), getCodProvincia(), getDescrizione(), getCap(),
-				getDataCaricamentoRege(), getCodSedeGiudiziaria(), "", false);
+				getDataCaricamentoRege(), getCodSedeGiudiziaria(), "", false, getFlagValidita(), 
+				getCodCatastaleComune(), getDataAggiornamentoComune(), getDataFineValiditaComune());
 	}
 
 	public void selCondizioni(ComuneModel aModel, String FlagVal) {
@@ -180,4 +217,22 @@ public class ComuneDAO extends SIAPTableDAO {
 		setCondition(lCondizioni);
 	}
 
+	// 20210517	MEV_21
+	public void selCondizioniNascita(ComuneModel aModel) {
+		String lCondizioni = new String();
+		lCondizioni += "";
+
+		if ((aModel.getDescrizione() != null) && !(aModel.getDescrizione().equals("")))
+			lCondizioni += " DESCRIZIONE LIKE '" + StringUtils.convertSqlString(aModel.getDescrizione())
+					+ "%' ";
+		else if (aModel.getCodProvincia() != null)
+			lCondizioni += " COD_PROVINCIA = '" + aModel.getCodProvincia() + "'";
+
+		// 20210721	Condizione di esclusione NAPOLI NORD
+		lCondizioni += " AND NOT (DATA_FINE_VALIDITA_COMUNE is NULL AND FLAG_VALIDITA = 'N' ) ";
+
+		lCondizioni += " ORDER BY DESCRIZIONE ASC, DATA_FINE_VALIDITA_COMUNE DESC";
+		setCondition(lCondizioni);
+	}
+	
 }

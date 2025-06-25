@@ -2923,7 +2923,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 		query += " AND AFS.AVV_ID_AVVOCATO = AVV.ID_AVVOCATO";
 		query += " AND AFS.DATA_FINE_VALIDITA IS NULL";
 		query += " AND AVV.COD_FISCALE = '" + codFiscaleAvvocato + "'";
-		query += setCondizione(sm);
+		query += setCondizioneAvvocatura(sm);
 		query += ") XXX"; // XXX.COD_AFIS, XXX.NAZIONALITA,
 		query += " group by XXX.Cognome, XXX.nome, XXX.DATA_NASCITA,XXX.COD_COMUNE_NASCITA, XXX.SOG_ID_SOGGETTO,";
 		query += " XXX.DESCR_COMUNE_NASCITA, XXX.DESC_COMUNE_NASCITA_ESTERO, XXX.COD_PROVINCIA_NASCITA";
@@ -2935,6 +2935,48 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 		setStatement(query);
 		// info per il log
 		avvocaturaLogger.info("query");
+	}
+
+	// AVVOCATURA: aggiunto metodo di impostazione condizioni per MEV_21
+	private String setCondizioneAvvocatura(SoggettoModel sm) {
+
+		String lCondizioni = new String();
+		if (sm.getIdSoggetto().doubleValue() == 0) {
+			if (!(sm.getCognome().equals("")))
+				lCondizioni += " AND SOGG.COGNOME like '" + StringUtils.convertSqlString(sm.getCognome())
+						+ "%'";
+			if (!(sm.getNome().equals("")))
+				lCondizioni += " AND SOGG.NOME like '" + StringUtils.convertSqlString(sm.getNome()) + "%'";
+			if (!(sm.getCodComuneNascita().equals("")))
+				// lCondizioni += " AND COD_COMUNE_NASCITA = '"
+				// + StringUtils.convertSqlString(sm.getCodComuneNascita()) + "'";
+				lCondizioni += " AND COD_COMUNE_NASCITA in (select c.cod_comune from AVVSIES.COMUNI c where "
+						+ "c.descrizione in (select co.descrizione from AVVSIES.COMUNI co where co.cod_comune = '"
+						+ StringUtils.convertSqlString(sm.getCodComuneNascita()) + "'))";
+			if (!(sm.getPaternita().equals("")))
+				lCondizioni += " AND PATERNITA LIKE '"
+						+ StringUtils.convertSqlString(sm.getPaternita().toUpperCase()) + "%'";
+			if (!(sm.getCodAfis().equals("")))
+				lCondizioni += " AND COD_AFIS LIKE '"
+						+ StringUtils.convertSqlString(sm.getCodAfis().toUpperCase()) + "%'";
+			if (!(sm.getCodCs().equals("")))
+				lCondizioni += " AND COD_CS LIKE '"
+						+ StringUtils.convertSqlString(sm.getCodCs().toUpperCase()) + "%'";
+			if (!(sm.getNomeMadre().equals("")))
+				lCondizioni += " AND NOME_MADRE LIKE '"
+						+ StringUtils.convertSqlString(sm.getNomeMadre().toUpperCase()) + "%'";
+			if (!(sm.getCognomeMadre().equals("")))
+				lCondizioni += " AND COGNOME_MADRE LIKE '"
+						+ StringUtils.convertSqlString(sm.getCognomeMadre().toUpperCase()) + "%'";
+			if (!(sm.getCodStatoNascita().equals("")))
+				lCondizioni += " AND COD_STATO_NASCITA = '" + sm.getCodStatoNascita() + "'";
+			if (sm.getDataNascita() != null)
+				lCondizioni += " AND trunc(SOGG.DATA_NASCITA) = TO_DATE('"
+						+ DateUtils.getDateToString(sm.getDataNascita(), "ddMMyyyy") + "', 'DDMMYYYY') ";
+		} else {
+			lCondizioni = " AND ID_SOGGETTO = " + sm.getIdSoggetto();
+		}
+		return lCondizioni;
 	}
 
 	/**

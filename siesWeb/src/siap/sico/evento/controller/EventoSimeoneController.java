@@ -64,18 +64,8 @@ import siap.sius.tenore.dao.TenoreSqlDAO;
 import siap.sius.tenore.model.TenoreModel;
 
 /**
- * <p>
  * Title: Evento Simeone Controller
- * </p>
- * <p>
  * Description: Classe Controller per Evento
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
  *
  * @version 1.0
  */
@@ -1151,12 +1141,11 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 	 * @throws F3BException
 	 */
 	// Ticket#202101270113 - si adeguano le condizione della count alle condizioni della select
-	//                       impostando il filtro sull'ufficio + accorpati
+	// impostando il filtro sull'ufficio + accorpati
 	public BigDecimal ExGetCountEventoByFascicoloSiepTipEventoNOTTipProvPaged(BigDecimal aFascKey,
 			// String aCodUfficioUtenteConnesso
-			UfficioModel aUfficioUtenteConnesso
-			, String[] aTipoEvento, String[] aTipoProv, String[] aCodMotivo)
-			throws F3BException {
+			UfficioModel aUfficioUtenteConnesso, String[] aTipoEvento, String[] aTipoProv,
+			String[] aCodMotivo) throws F3BException {
 
 		BigDecimal lCount = new BigDecimal(0);
 
@@ -1168,7 +1157,8 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 			lConn = getDBConnection();
 
 			lSqlDao = new EventoSqlDAO(lConn);
-			lSqlDao.getCountEventoByFascicoloSiepTipEventoNOTTipProv (aFascKey, aUfficioUtenteConnesso, // aCodUfficioUtenteConnesso,
+			lSqlDao.getCountEventoByFascicoloSiepTipEventoNOTTipProv(aFascKey, aUfficioUtenteConnesso,
+					// aCodUfficioUtenteConnesso,
 					aTipoEvento, aTipoProv, aCodMotivo);
 			lSqlDao.start();
 			lSqlDao.next();

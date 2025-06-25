@@ -55,6 +55,30 @@ AvvocatoModel am = new AvvocatoModel(avvocatoFascSius.getAvvocato());
 		<td class="l"><font class="label">Nome</font></td>
 		<td class="l"><font class="campo"><%=am.getNome()%></font></td>
 	</tr>
+
+  <%-- MEV_21: Aggiunti ulteriori campi  --%>
+	<tr>
+		<td class="l"><font class="label">Comune di nascita</font></td>
+		<td class="l"><font class="campo"><%=am.getDescLuogoNascita()%></font></td>
+	</tr>
+	<tr>
+		<td class="l"><font class="label">Stato di Nascita</font></td>
+		<td class="l"><font class="campo"><%=am.getDescrStatoNascita()%>&nbsp;</font></td>
+	</tr>
+	<tr>
+<%		String descLuogoNascitaEstero = "039".equals(am.getCodStatoNascita()) 
+										? ""
+										: am.getDescLuogoNascitaReginde();
+%>
+		<td class="l"><font class="label">Luogo di Nascita Estero</font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(descLuogoNascitaEstero)%>&nbsp;</font></td>
+	</tr>
+	<tr>
+		<td class="l"><font class="label">Data di Nascita</font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(am.getDataNascita(),"dd-MM-YYYY"))%></font></td>
+	</tr>
+  <%-- MEV_21: FINE --%>
+
 	<tr>
 		<td class="l"><font class="label">Foro</font></td>
 		<td class="l"><font class="campo"><%=am.getForo()%></font></td>
@@ -63,6 +87,14 @@ AvvocatoModel am = new AvvocatoModel(avvocatoFascSius.getAvvocato());
 		<td class="l"><font class="label">Indirizzo</font></td>
 		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(am.getIndirizzo(), "-")%></font></td>
 	</tr>
+
+  <%-- MEV_21: Aggiunti ulteriori campi  --%>
+	<tr>
+		<td class="l"><font class="label">Con Studio in</font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(am.getDescrComuneStudio(), "-")%>&nbsp;</font></td>
+	</tr>
+  <%-- MEV_21: FINE --%>
+
 	<tr>
 		<td class="l"><font class="label">Telefono</font></td>
 		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(am.getTelefono(), "-")%></font></td>
@@ -75,10 +107,25 @@ AvvocatoModel am = new AvvocatoModel(avvocatoFascSius.getAvvocato());
 		<td class="l"><font class="label">EMail</font></td>
 		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(am.getEMail(), "-")%></font></td>
 	</tr>
+
+  <%-- MEV_21: Aggiunti ulteriori campi  --%>
+	<tr>
+		<td class="l"><font class="label">pec</font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(am.getPec(), "-")%></font></td>
+	</tr>
+  <%-- MEV_21: FINE --%>
+
 	<tr>
 		<td class="l"><font class="label">Codice Fiscale</font></td>
 		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(am.getCodiceFiscale(), "-")%></font></td>
 	</tr>
+
+  <%-- MEV_21: Aggiunti ulteriori campi  --%>
+	<tr>
+		<td class="l"><font class="label">Stato Attivita' Difensore</font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(am.getDescrNonAttivita(), "-")%></font></td>
+	</tr>
+  <%-- MEV_21: FINE --%>
 
 	<tr>
 		<td class="l"><font class="label">Tipo</font></td>

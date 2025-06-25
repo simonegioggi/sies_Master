@@ -29,15 +29,17 @@ import siap.web.ISIAPCostantiWeb;
  * <p>
  * Company: Engineering S.p.A.
  * </p>
- * 
+ *
  * @version 1.0
  */
 public class ActLoadInserisciAvvocato extends ActionSiap implements ICostantiPartiUdienza {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	@SuppressWarnings("rawtypes")
 	public String processRequest() throws Exception {
+
 		String idSoggetto = "";
 
 		if (!this.isRequestParameterNullObj(ICostantiPartiUdienza.CAMPO_ID_SOGGETTO)) {
@@ -105,8 +107,15 @@ public class ActLoadInserisciAvvocato extends ActionSiap implements ICostantiPar
 					lDescrComune.toUpperCase().trim(), Option.NO_BLANK_ITEM);
 			setRequestAttribute("foro", "" + lOption);
 
-			return PG_LOAD_INSERISCIAVVOCATO; // restituisce la jsp di VIEW
+			// MEV_21 Nuova gestione Combo per Stato di Nascita
+			lOption = new Option(DecodificheManager.getInstance().getNazioni(), "-");
+			setRequestAttribute("nazione", "" + lOption);
 
+			// MEV_21 Nuova gestione Combo per Stato Difensore
+			lOption = new Option(DecodificheManager.getInstance().getListaAttivitaAvvocato(), "-");
+			setRequestAttribute("statoAvv", "" + lOption);
+
+			return PG_LOAD_INSERISCIAVVOCATO; // restituisce la jsp di VIEW
 		}
 	}
 

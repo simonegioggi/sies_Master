@@ -1,13 +1,5 @@
 package siap.sige.richiesta.model;
 
-/**
-* <p>Title: RichiestaSigeModel</p>
-* <p>Description: Classe Model che rappresenta il RichiestaSige</p>
-* <p>Copyright: Copyright (c) 2008</p>
-* <p>Company: Eutelia</p>
-* @version 5.0
-*/
-
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -18,11 +10,19 @@ import siap.sico.decodifiche.util.DecodificheUtils;
 import siap.sico.ufficio.controller.UfficioUtils;
 import siap.sico.ufficio.model.UfficioModel;
 
+/**
+ * RichiestaSigeModel - Classe Model che rappresenta il RichiestaSige
+ *
+ * @version 5.0
+ */
 public class RichiestaSigeModel extends GenericModel {
+
 	/**
-	 *
+	 * Adds a generated serial version ID to the selected type. Use this option to add a compiler-generated ID
+	 * if the type did not undergo structural changes since its first release.
 	 */
 	private static final long serialVersionUID = -1255255107390559219L;
+
 	private BigDecimal mIdRichiestaSige;
 	private String mCodTipoAtto;
 	private String mDescrTipoAtto;
@@ -317,12 +317,12 @@ public class RichiestaSigeModel extends GenericModel {
 
 	/**
 	 * Il metodo effettua la decodifica di quegli attributi del Model che contengono dei campi codificati.
-	 * 
+	 *
 	 * La decodifica del campo interessato viene memorizzata nell'attributo di descrizione ad esso relativo.
 	 * Gli attributi codificati ed i relativi attributi di decodifica interessati a questa operazione sono:
 	 * mCodTipoAtto -> mDescrTipoAtto, mCodTipoRichiedente -> mDescrTipoRichiedente, mCodUfficioRichiedente ->
 	 * DescrUfficioRichiedente, mCodSedeRichiedente -> DescrSedeRichiedente.
-	 * 
+	 *
 	 * @throws F3BException
 	 */
 	public RichiestaSigeModel decodifica() throws F3BException {
@@ -349,7 +349,7 @@ public class RichiestaSigeModel extends GenericModel {
 			}
 		} catch (Exception e) {
 			throw new F3BException(F3BException.EX_OPERATION_FAILED, "Errore nella trascodifica codice ( "
-					+ getClass().getPackage().getName() + ".decodifica()) -> " + e.getMessage());
+					+ getClass().getName() + ".decodifica()) -> " + e.getMessage());
 		}
 		return this;
 	}

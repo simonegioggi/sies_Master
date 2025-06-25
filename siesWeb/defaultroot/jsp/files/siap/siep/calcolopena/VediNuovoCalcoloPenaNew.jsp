@@ -999,6 +999,12 @@ Boolean lIsSoloImporti = (Boolean) request.getAttribute("lIsSoloImporti");
         frmvalidator.setAddnlValidationFunction("Verify");
       </script>
 <%
+    } else {
+%>
+      <script language="JavaScript" type="text/javascript">
+        var frmvalidator  = new Validator("f");
+      </script>
+<%
     }
 %>
 </html>

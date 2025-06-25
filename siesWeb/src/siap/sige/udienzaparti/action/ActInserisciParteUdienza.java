@@ -6,6 +6,7 @@ import java.util.List;
 import f3b.util.DateUtils;
 import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
+import siap.sico.decodifiche.action.ICostantiComune;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.decodifiche.model.DecodificheModel;
@@ -44,10 +45,8 @@ public class ActInserisciParteUdienza extends ActionSige implements ICostantiPar
 
 	/**
 	 * Effettua Inserimento della Parte (Offesa/Civile) di una Udienza.
-	 * <p>
 	 *
 	 * @return Nome della pagina JSP da visualizzare al termine dell'elaborazione.
-	 *         <p>
 	 * @throws Exception
 	 */
 	public String processRequest() throws Exception {
@@ -94,6 +93,7 @@ public class ActInserisciParteUdienza extends ActionSige implements ICostantiPar
 
 	@SuppressWarnings("rawtypes")
 	protected AnagraficaPartiUdienzaModel letturaAnagraficaParte() throws Exception {
+
 		AnagraficaPartiUdienzaModel lAnagraficaParteModel = new AnagraficaPartiUdienzaModel();
 		ResidenzaModel residenzaMod = new ResidenzaModel();
 
@@ -146,18 +146,26 @@ public class ActInserisciParteUdienza extends ActionSige implements ICostantiPar
 				CAMPO_MESE_DATA_NASCITA, CAMPO_GIORNO_DATA_NASCITA));
 
 		// Recupero dati del Comune di nascita
-		ComuneModel lComMod = null;
-		if (!isRequestParameterNullObj(CAMPO_COD_COMUNE_NASCITA)
-				&& getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA).length() > 0) {
+		lAnagraficaParteModel.setCodComuneNascita("-");
+		lAnagraficaParteModel.setCodProvinciaNascita("-");
+		ComuneModel lComMod;
+		if (!isRequestParameterNullObj(ICostantiComune.CAMPO_COD_COMUNE_REALE)
+				&& getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE).length() > 0) {
 			// se presente dal codice comune (e descrizione)
-			lComMod = getCodComuneByDescr(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA));
-			// Comune Nascita
-			lAnagraficaParteModel.setCodComuneNascita(lComMod.getCodComune());
-			lAnagraficaParteModel.setCodProvinciaNascita(lComMod.getCodProvincia());
+			// 20210524 MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni senza flag validità.
+			lComMod = new ComuneModel(
+					getDatiComuneByCodDescr(getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
+							getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
 		} else {
-			lAnagraficaParteModel.setCodComuneNascita("-");
-			lAnagraficaParteModel.setCodProvinciaNascita("-");
+			// altrimenti dalla sola descrizione (rischio omonimi)
+			lComMod = new ComuneModel(
+					// 20210524 MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni senza flag
+					// validità.
+					getDatiComuneByDescrOmonimia(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
 		}
+
+		lAnagraficaParteModel.setCodComuneNascita(lComMod.getCodComune());
+		lAnagraficaParteModel.setCodProvinciaNascita(lComMod.getCodProvincia());
 
 		// Stato Nascita
 		if (!isRequestParameterNullObj(CAMPO_COD_STATO_NASCITA)) {
@@ -184,11 +192,9 @@ public class ActInserisciParteUdienza extends ActionSige implements ICostantiPar
 		String lDescri = ((DecodificheModel) lNazioni.get(lIndModel)).getDescription();
 		lAnagraficaParteModel.setDescrStatoNascita(lDescri);
 
-		if (lComMod != null) {
+		lAnagraficaParteModel.setDescComuneNascita("-");
+		if (lComMod != null)
 			lAnagraficaParteModel.setDescComuneNascita(lComMod.getDescrizione());
-		} else {
-			lAnagraficaParteModel.setDescComuneNascita("-");
-		}
 
 		// Imposto la descrizione della Provincia di Nascita
 		lDecMod = new DecodificheModel();
@@ -199,9 +205,8 @@ public class ActInserisciParteUdienza extends ActionSige implements ICostantiPar
 		if (lIndModel != -1) {
 			lDescri = ((DecodificheModel) lProvincie.get(lIndModel)).getDescription();
 			lAnagraficaParteModel.setDescrProvinciaNascita(lDescri);
-		} else {
+		} else
 			lAnagraficaParteModel.setDescrProvinciaNascita("-");
-		}
 
 		// Residenza/Domicilio
 
@@ -300,10 +305,11 @@ public class ActInserisciParteUdienza extends ActionSige implements ICostantiPar
 					ICostantiUdienzaProcedimentoSige.CAMPO_ID_UDIENZA_PROCEDIMENTO_SIGE));
 		} catch (Exception e) {
 			throw new SIGEException(SIGEException.USER_MESSAGE,
-//					"Attenzione! L'inserimento delle parti civili o delle parti offese va fatto dopo aver "
-//							+ "fissato l'udienza da apposita funzione (Udienze/Fissazione/Rinvio/Ruolo >> Fissazione Udienza).");
+					// "Attenzione! L'inserimento delle parti civili o delle parti offese va fatto dopo aver "
+					// + "fissato l'udienza da apposita funzione (Udienze/Fissazione/Rinvio/Ruolo >>
+					// Fissazione Udienza).");
 					"Attenzione! L'inserimento delle parti civili o delle parti offese è previsto dopo"
-					+ " l'emissione del Decreto di Fissazione Udienza.");
+							+ " l'emissione del Decreto di Fissazione Udienza.");
 		}
 		// FINE Ticket#20200528012
 

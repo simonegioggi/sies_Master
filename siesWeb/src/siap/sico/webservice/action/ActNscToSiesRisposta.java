@@ -52,6 +52,16 @@ public class ActNscToSiesRisposta {
 			String lCodOperatoreIns, String lCodUfficioIns, String idFascicoloSiep, String progrFascSiep,
 			String annoFascSiep, String idSoggettoSiep) throws Exception {
 
+//		siesLogger.debug("ActNscToSiesRisposta: aDatiNscToSiesModel = "+aDatiNscToSiesModel);
+//		siesLogger.debug("ActNscToSiesRisposta: aCodiceEsito = "+aCodiceEsito);
+//		siesLogger.debug("ActNscToSiesRisposta: lCodOperatoreIns = "+lCodOperatoreIns);
+//		siesLogger.debug("ActNscToSiesRisposta: lCodUfficioIns = "+lCodUfficioIns);
+//		siesLogger.debug("ActNscToSiesRisposta: idFascicoloSiep = "+idFascicoloSiep);
+//		siesLogger.debug("ActNscToSiesRisposta: progrFascSiep = "+progrFascSiep);
+//		siesLogger.debug("ActNscToSiesRisposta: annoFascSiep = "+annoFascSiep);
+//		siesLogger.debug("ActNscToSiesRisposta: idSoggettoSiep = "+idSoggettoSiep);
+		
+		
 		TRASFERIMENTODocument lxmlRisp = TRASFERIMENTODocument.Factory.newInstance();
 		try {
 			BigDecimal lAnnoFascicolo = null;
@@ -94,6 +104,7 @@ public class ActNscToSiesRisposta {
 				lAnnoFascicolo = new BigDecimal(annoFascSiep);
 				lNumeroFascicolo = new BigDecimal(progrFascSiep);
 			} else {
+				//siesLogger.debug("ActNscToSiesRisposta: getFascicoloSiepModel() = "+aDatiNscToSiesModel.getFascicoloSiepModel());
 				lAnnoFascicolo = aDatiNscToSiesModel.getFascicoloSiepModel().getChiaveAnno();
 				lNumeroFascicolo = aDatiNscToSiesModel.getFascicoloSiepModel().getChiaveProgr();
 			}
@@ -153,7 +164,7 @@ public class ActNscToSiesRisposta {
 			siesLogger.error("--------------------------------------------------");
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.error("ActNscToSiesRisposta - Errore nella Risposta a NSC");
+			siesLogger.error("ActNscToSiesRisposta - Errore nella Risposta a NSC",e);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error(e.getStackTrace());

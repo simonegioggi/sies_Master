@@ -315,8 +315,9 @@ if (lRicerca.verificaEsistenzaSospensione())
     <tr>
     	<td> </td>
         <td class="l" colspan=2>Sede  
+          <%-- MEV_21 (avvocati) Sostituzione di getAvvocato().getForo() con getAvvocato().getDescComuneSedeForo() --%>
              <input Title="Sede Procura" name="<%=ICostantiRichiestaAtti.CAMPO_SEDE_AVVOCATO%>"
-              value="<%=StringUtils.toStringJSP(lAvv.getAvvocato().getForo(),"-")%>" type="text" maxlength="35" size="35">
+              value="<%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescComuneSedeForo(),"-")%>" type="text" maxlength="35" size="35">
               <a href="Javascript:ListaUffici('LoadInserisciRimessioneAtti','<%=ICostantiRichiestaAtti.CAMPO_SEDE_AVVOCATO%>');">
               <img src="/images/filefolder.gif" border=0> </a>
         </td>

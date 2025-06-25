@@ -57,4 +57,19 @@ public interface ICostantiAvvocato
       public static final String PG_RICERCAAVVOCATOBREVEGENERICO	= IWebConstants.ROOT_DIR + "files/siap/sius/avvocato/RicercaAvvocatoBreveGenerico.jsp";
       public static final String PG_FILTRAAVV = IWebConstants.ROOT_DIR + "files/siap/sius/avvocato/FiltraAvv.jsp";
 
+   // MEV_21: aggiunte costanti e pagine per chiamata a WS per individuare lista avvocato in RegInde
+  	public static final String PG_LOAD_RICERCA_AVVOCATO_REGINDE = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/avvocato/LoadRicercaAvvocatoRegInde.jsp";
+	public static final String PG_FILTRA_AVV_REGINDE = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/avvocato/FiltraAvvRegInde.jsp";
+	public static final String CAMPO_FLAG_TUTTI_FORI = "FlagTuttiFori";
+	public static final String PG_RICERCA_AVVOCATO_REGINDE = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/avvocato/RicercaAvvocatoRegInde.jsp";
+	public static final String CAMPO_DESC_COMUNE_NASCITA_REGINDE = "DescComuneNascitaEstero";
+	public static final String CAMPO_DESC_COMUNE_STUDIO = "DescComuneStudio";
+	public static final String CAMPO_DESC_STATO_NASCITA = "DescStatoNascita";
+	public static final String CAMPO_COD_STATO_NASCITA = "CodStatoNascita";
+	public static final String CAMPO_COD_NON_ATTIVITA = "CodNonAttivita";
+	public static final String CAMPO_PEC = "Pec";
+   // MEV_21: FINE
 }

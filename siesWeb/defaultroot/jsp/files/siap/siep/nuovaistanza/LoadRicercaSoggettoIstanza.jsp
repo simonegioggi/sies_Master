@@ -21,6 +21,15 @@
       {
         desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComune&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=300,height=500");
       }
+  	  <!-- 20210524	MEV Scheda-21 -->
+      function ListaComuniNascita(a_formname,a_fieldname)
+      {
+        desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComuneNascita&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=400,height=500");
+      }      
+      function cancellaCodComuneReale() {
+       	document.LoadRicercaSoggettoIstanza.<%=ICostantiComune.CAMPO_COD_COMUNE_REALE%>.value = "";      	
+      }	
+      
   </script>
 
   <script language="JavaScript" src=<%=IWebConstants.JS_VALIDATOR%> ></script>
@@ -103,7 +112,7 @@
         <td class="l">Comune di nascita</td>
         <td class="l">
           <input title="Comune di Nascita" value="" type="text" name="<%=ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA%>" maxlength="30" size="30" onChange="cancellaCodComuneReale();">
-          <a href="Javascript:ListaComuni('LoadRicercaSoggettoIstanza','<%= ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA %>');">
+          <a href="Javascript:ListaComuniNascita('LoadRicercaSoggettoIstanza','<%= ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA %>');">
           <img src="/images/filefolder.gif" border="0" />
           </a>
         </td>
@@ -161,7 +170,9 @@
           frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>","numeric");
           frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>","gt=1900");
           frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>","lt=3000");
-          frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA%>","alpha");
+          <%-- Ticket#202506130166 - SIES: Anomalia inserimento provvedimento - schermata sede dell'autorità emittente--%>
+          <%-- ELIMINATO CONTROLLO per consentire inserimento comuni tipo MERANO/MERAN) --%>
+<%--           frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA%>","alpha"); --%>
           frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_PATERNITA%>","alphabetic");
           frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COGNOME_MADRE%>","alphabetic");
           frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_NOME_MADRE%>","alphabetic");

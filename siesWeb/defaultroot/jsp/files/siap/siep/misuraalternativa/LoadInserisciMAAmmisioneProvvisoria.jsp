@@ -1940,27 +1940,27 @@ if (lAvvocatiOpzionali) {
 }
 %>
 
-<!--<div id="divavvocati" style="width: 100%; visibility:hidden; position:relative;" -->
+<!-- <div id="divavvocati" style="width: 100%; visibility:hidden; position:relative;" -->
 <div id="divavvocati" style="width: 100%; display:none; position:relative;">
 <table width="100%">
 <%
 if (!lAvvocatiOpzionali) {
 %>
-	<tr>
-	  	<td class="Titolo" colspan=6>Destinatario per Notifica </td>
-	</tr>
+  	<tr>
+    	<td class="Titolo" colspan=6>Destinatario per Notifica </td>
+  	</tr>
 <%
 }
 int lIdxAvv = 0;
 Iterator lItxAvv = avvocati.iterator();
-while(lItxAvv.hasNext()) {
+while (lItxAvv.hasNext()) {
 	AvvocatoSiepModel lAvv =  (AvvocatoSiepModel)lItxAvv.next();
 %>
   	<tr>
     	<td>
         	<table>
-	         	<tr>
-	           		<td class="l" width="100%">Per Avvocato&nbsp;
+          		<tr>
+            		<td class="l" width="100%">Per Avvocato&nbsp;
 	             		<font class="campo">
 	               			<%=StringUtils.toStringJSP(lAvv.getAvvocato().getCognome())%>&nbsp;<%=StringUtils.toStringJSP(lAvv.getAvvocato().getNome())%>
 	             		</font>
@@ -1986,21 +1986,22 @@ while(lItxAvv.hasNext()) {
 	           		</td>
 	         	</tr>
 	         	<tr>
-	           		<td class="l">Sede</td>
-	           		<td class="L">
-	             		<input title="Sede Foro Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocato().getForo())%>" type="text" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>" maxlength="35" size="35">
-	             		<a href="Javascript:ListaComuni('LoadInserisciMisuraAlternativa','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>[<%=lIdxAvv%>]');">
-	               			<img src="/images/filefolder.gif" border=0>
-	             		</a>
-	           		</td>
-	           		<td class="l">Note</td>
-	           		<td class="L">
-	               		<textarea title="Note" name="<%=ICostantiMisuraAlternativa.CAMPO_NOTE_AVVOCATI%>" cols=30></textarea>
-	           		</td>
-	         	</tr>
-	         	<tr><td>&nbsp;</td></tr>
-			</table>
-	     </td>
+            		<td class="l">Sede</td>
+            		<td class="L">
+              			<%-- MEV_21 (avvocati) Sostituzione di getAvvocato().getForo() con getAvvocato().getDescComuneSedeForo() --%>
+              			<input title="Sede Foro Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescComuneSedeForo())%>" type="text" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>" maxlength="35" size="35">
+              			<a href="Javascript:ListaComuni('LoadInserisciMisuraAlternativa','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>[<%=lIdxAvv%>]');">
+                			<img src="/images/filefolder.gif" border=0>
+              			</a>
+            		</td>
+            		<td class="l">Note</td>
+            		<td  class="L">
+                		<textarea title="Note" name="<%=ICostantiMisuraAlternativa.CAMPO_NOTE_AVVOCATI%>"  cols=30 ></textarea>
+            		</td>
+          		</tr>
+          		<tr><td>&nbsp;</td></tr>
+        	</table>
+		</td>
 	</tr>
 <%
 	lIdxAvv++;

@@ -19,25 +19,15 @@ import siap.siepe.relazione.controller.IRelazione;
 import siap.siepe.util.SIEPELookupRemote;
 
 /**
- * <p>
- * Title: ActLoadDettaglioAttivita
- * </p>
- * <p>
- * Description: Classe Action per la load dettaglio di Attivita
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ * ActLoadDettaglioAttivita - Classe Action per la load dettaglio di Attivita
+ *
  * @version 1.0
  */
-
 public class ActLoadDettaglioAttivita extends ActionSiap implements ICostantiAttivita {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+
 	AttivitaModel mAttMod = null;
 	AssistenteSocialeModel mAssSocMod = null;
 	String lMessaggioRiapertura = "Confermi la riapertura della Attività ? ";
@@ -67,7 +57,7 @@ public class ActLoadDettaglioAttivita extends ActionSiap implements ICostantiAtt
 		// LogF3B.getLogger()
 		siesLogger.debug(" Numero di Esperti attivi ->" + lEsperti.size());
 
-		ritorno();
+		setLinkRitorno();
 
 		// Gestione stampabilità, modificabilità, trasferibilità
 		String lStampabile = "SI";
@@ -127,10 +117,6 @@ public class ActLoadDettaglioAttivita extends ActionSiap implements ICostantiAtt
 		return PG_LOAD_DETTAGLIOATTIVITA;
 	}
 
-	public void ritorno() throws Exception {
-		setLinkRitorno();
-	}
-
 	// Funzione per la costruzione della combo con i template di stampa previsti per l'attività
 	private void gestioneTemplate() throws Exception {
 
@@ -152,11 +138,10 @@ public class ActLoadDettaglioAttivita extends ActionSiap implements ICostantiAtt
 	}
 
 	private boolean isProprietario() throws Exception {
-		boolean retValue = false;
 
+		boolean retValue = false;
 		if (getCodUfficioUtenteConnesso().equalsIgnoreCase(mAttMod.getCodUfficioInserimento()))
 			retValue = true;
-
 		return retValue;
 	}
 

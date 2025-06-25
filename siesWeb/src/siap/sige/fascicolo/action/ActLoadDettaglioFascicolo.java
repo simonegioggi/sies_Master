@@ -6,6 +6,8 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.note.controller.INote;
 import siap.siep.cumulo.controller.ICumulo;
@@ -31,25 +33,13 @@ import siap.sige.util.SIGELookupRemote;
 import siap.sige.util.SigeMaggiorenniUtil;
 import siap.sige.web.ActionSige;
 import siap.sius.util.SIUSLookupRemote;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
- * <p>
- * Title: ActLoadDettaglioFascicolo
- * </p>
- * <p>
- * Description: Classe Action per la ricerca e visualizzazione del dettaglio del Fascicolo SIGE.
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Eutelia
- * </p>
- * 
-* @version 5.0
-*/
+ * ActLoadDettaglioFascicolo - Classe Action per la ricerca e visualizzazione del dettaglio del Fascicolo
+ * SIGE
+ *
+ * @version 5.0
+ */
 @SuppressWarnings("rawtypes")
 public class ActLoadDettaglioFascicolo extends ActionSige implements ICostantiFascicoloSige {
 
@@ -62,7 +52,7 @@ public class ActLoadDettaglioFascicolo extends ActionSige implements ICostantiFa
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getPackage().getName() + "ActLoadDettaglioFascicolo: inizio");
+		siesLogger.debug(getClass().getName() + ".processRequest(): inizio");
 
 		// Bottone di ritorno
 		setLinkRitorno();
@@ -78,7 +68,7 @@ public class ActLoadDettaglioFascicolo extends ActionSige implements ICostantiFa
 		if (!isRequestParameterNullObj(CAMPO_ID_FASCICOLO_SIGE)) {
 			lId = getRequestBigDecimalParameter(CAMPO_ID_FASCICOLO_SIGE);
 		} else if (!isSessionAttributeNullObj("FascicoloSigeEsteso")
-		// 20171016: [SG] aggiunto controllo preventivo
+				// 20171016: [SG] aggiunto controllo preventivo
 				&& ((FascicoloSigeEstesoModel) getSessionAttribute("FascicoloSigeEsteso"))
 						.getFascicoloSige() != null) {
 			// Se provengo del Menù Scelta Rapida devo recuparere i dati dalla sessione
@@ -142,7 +132,7 @@ public class ActLoadDettaglioFascicolo extends ActionSige implements ICostantiFa
 			lFascSigeOrigine = lCtrl
 					.ExRicercaFascicoloCollegato(mFascicoloEsteso.getFascicoloSige().getIdFascicoloSige());
 		}
-		
+
 		setRequestAttribute("fascicoloCollegato", lFascSigeOrigine);
 
 		// Ricerca Tenori
@@ -193,15 +183,14 @@ public class ActLoadDettaglioFascicolo extends ActionSige implements ICostantiFa
 			siesLogger.info("Nessun Elemento trovato");
 		}
 
-		//String lTipiProvv = "'" + ICostantiProvvedimentoSige.COD_ISTRUTTORIE + "'";
-		//Vector lVectAtti = lCtrlProv.ExRicercaProvvSigePerIdFasSigeTipiProvv(lId, lTipiProvv);
-		//setRequestAttribute("atti", lVectAtti);
-		
-		ParereModel parere=new ParereModel ();
+		// String lTipiProvv = "'" + ICostantiProvvedimentoSige.COD_ISTRUTTORIE + "'";
+		// Vector lVectAtti = lCtrlProv.ExRicercaProvvSigePerIdFasSigeTipiProvv(lId, lTipiProvv);
+		// setRequestAttribute("atti", lVectAtti);
+
+		ParereModel parere = new ParereModel();
 		parere.setIdFascicoloSige(lId);
-		Vector <ParereModel> pareri=lCtrl.ExRicercaPareriPaginata(parere, -1);
-		setRequestAttribute ("pareri",pareri);
-		
+		Vector<ParereModel> pareri = lCtrl.ExRicercaPareriPaginata(parere, -1);
+		setRequestAttribute("pareri", pareri);
 
 		// Elenco NOTE
 		Vector lNoteVect = null;
@@ -232,7 +221,7 @@ public class ActLoadDettaglioFascicolo extends ActionSige implements ICostantiFa
 				&& mFascicoloEsteso.getFascicoloSige().getCodStatoFascicolo().equals("16")) {
 			if (lVectProv != null && !lVectProv.isEmpty()) {
 				for (int i = 0; i < lVectProv.size(); i++) {
-					ProvvedimentoSigeEventoModel provvSige = (ProvvedimentoSigeEventoModel) lVectProv.get(i);
+					ProvvedimentoSigeEventoModel provvSige = lVectProv.get(i);
 					if (provvSige.getRicorsi() != null && provvSige.getRicorsi().size() > 0) {
 						// se esistono ricorsi, prendo la prima impugnazione e la aggiungo come attributo
 						// nella request
@@ -249,19 +238,18 @@ public class ActLoadDettaglioFascicolo extends ActionSige implements ICostantiFa
 		IPosizioneMaterialeFascSige lPosMatCtrl = SIGELookupRemote.getPosizioneMaterialeFascSigeRemote();
 		Vector<PosizioneMaterialeFascModel> lPosizioniMat = lPosMatCtrl
 				.ExRicercaPosizioneMaterialeFascAttiva(lId);
-		if (lPosizioniMat != null && lPosizioniMat.size() > 0){
-			setRequestAttribute("posizione_materiale", (PosizioneMaterialeFascModel) lPosizioniMat.get(0));
+		if (lPosizioniMat != null && lPosizioniMat.size() > 0) {
+			setRequestAttribute("posizione_materiale", lPosizioniMat.get(0));
 		}
-		
-		
+
 		IFascicoloSige lFasCtrl = SIGELookupRemote.getFascicoloSigeRemote();
-		EventoModel model=lFasCtrl.ExRicercaDataInvioAtti(lId);
+		EventoModel model = lFasCtrl.ExRicercaDataInvioAtti(lId);
 
 		if (model != null)
 			mFascicoloEsteso.setDataInvioAttiInArchivio(model.getDataInvioAtti());
-		
-		IDocumentoAllegato docCtrl=SIGELookupRemote.getDocumentoAllegatoController();
-		DocumentoAllegatoModel foglioComplementare=docCtrl.ExRicercaFoglioComplementareByFascicolo(lId);
+
+		IDocumentoAllegato docCtrl = SIGELookupRemote.getDocumentoAllegatoController();
+		DocumentoAllegatoModel foglioComplementare = docCtrl.ExRicercaFoglioComplementareByFascicolo(lId);
 		if (foglioComplementare != null)
 			mFascicoloEsteso.setDataCompilazioneFoglioComplementare(foglioComplementare.getDataEmissione());
 
@@ -283,26 +271,26 @@ public class ActLoadDettaglioFascicolo extends ActionSige implements ICostantiFa
 		}
 
 		// MEV_57: aggiunta gestione etichetta minorenne
-//		String etichettaEta = SigeMaggiorenniUtil.checkMinorenne(mFascicoloEsteso.getSoggetto(),
-//				mFascicoloEsteso.getFascicoloSige());
+		// String etichettaEta = SigeMaggiorenniUtil.checkMinorenne(mFascicoloEsteso.getSoggetto(),
+		// mFascicoloEsteso.getFascicoloSige());
 		String etichettaEta = SigeMaggiorenniUtil.checkMinorenneEtichetta(mFascicoloEsteso);
 		setRequestAttribute("etichettaEta", etichettaEta);
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getPackage().getName() + "ActLoadDettaglioFascicolo: fine");
+		siesLogger.debug(getClass().getName() + "ActLoadDettaglioFascicolo: fine");
 
 		Vector lProcedimentoSiepDiCumulo = null;
 		IFascicoloSige lFasSigeCtrl = SIGELookupRemote.getFascicoloSigeRemote();
-		
+
 		if (getFascicoloSigeEstesoInSessione() != null
 				&& getFascicoloSigeEstesoInSessione().getFascicoloSiep() != null
 				&& getFascicoloSigeEstesoInSessione().getFascicoloSiep().getIdFascicoloSiep() != null) {
-			
-			//lProcedimentoSiepDiCumulo = lFasSenCtrl
-			//		.ExRicercaProcedimentoSiepDiCumulo(getFascicoloSigeEstesoInSessione().getFascicoloSiep()
-			//				.getIdFascicoloSiep());
-			
+
+			// lProcedimentoSiepDiCumulo = lFasSenCtrl
+			// .ExRicercaProcedimentoSiepDiCumulo(getFascicoloSigeEstesoInSessione().getFascicoloSiep()
+			// .getIdFascicoloSiep());
+
 			// Modifica del 28/11/2016 MEV_15_S4
 			// La modifica si è resa necessaria per integrare la funzionalità
 			// alla "Nuova Gestione del Cumulo" introdotta con la MEV_26
@@ -321,19 +309,20 @@ public class ActLoadDettaglioFascicolo extends ActionSige implements ICostantiFa
 				&& getFascicoloSigeEstesoInSessione().getFascicoloSiep().getIdFascicoloSiep() != null) {
 			aModelCum.setFasSieIdFascicoloSiep(
 					getFascicoloSigeEstesoInSessione().getFascicoloSiep().getIdFascicoloSiep());
-			//lCumuloSiep = lCtrCum.ExRicercaCumulo(aModelCum);
+			// lCumuloSiep = lCtrCum.ExRicercaCumulo(aModelCum);
 
 			// Modifica del 28/11/2016 MEV_15_S4
 			// La modifica si è resa necessaria per integrare la funzionalità
 			// alla "Nuova Gestione del Cumulo" introdotta con la MEV_26
-			// Vengono estratti dalla tabella Evento, tutti gli eventi legati al Fascicolo Siep, 
-			// che hanno COD_MOTIVO legati al cumulo 
+			// Vengono estratti dalla tabella Evento, tutti gli eventi legati al Fascicolo Siep,
+			// che hanno COD_MOTIVO legati al cumulo
 			lCumuloSiep = lCtrCum.ExRicercaEventoCumulo(
 					getFascicoloSigeEstesoInSessione().getFascicoloSiep().getIdFascicoloSiep());
-			
+
 		}
 		setRequestAttribute("lCumuloSiep", lCumuloSiep);
 
+		// restituisce la jsp di VIEW
 		return PG_LOAD_DETTAGLIOFASCICOLOSIGE;
 	}
 

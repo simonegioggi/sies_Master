@@ -714,7 +714,7 @@ function ctrl_autorita(idcmb1, idcmb2, idDiv, idTipoRito) {
     frmvalidator.addValidation("<%= ICostantiRegeSentenza.CAMPO_COD_TIPO_AUTORITA_EMITTENTE %>","req","L'Autorità Emittente è obbligatorio");
 
     frmvalidator.addValidation("<%= ICostantiRegeSentenza.CAMPO_COD_LUOGO_EMITTENTE %>","req","Il Luogo Emittente è obbligatorio");
-    frmvalidator.addValidation("<%= ICostantiRegeSentenza.CAMPO_COD_LUOGO_EMITTENTE%>","alphabetic");
+<%--     frmvalidator.addValidation("<%= ICostantiRegeSentenza.CAMPO_COD_LUOGO_EMITTENTE%>","alphabetic"); --%>
 
     frmvalidator.addValidation("<%= ICostantiRegeSentenza.CAMPO_GIORNO_DATA_PROVV_RIF%>","numeric");
     frmvalidator.addValidation("<%= ICostantiRegeSentenza.CAMPO_GIORNO_DATA_PROVV_RIF%>","gt=1");
@@ -727,7 +727,7 @@ function ctrl_autorita(idcmb1, idcmb2, idDiv, idTipoRito) {
     frmvalidator.addValidation("<%= ICostantiRegeSentenza.CAMPO_ANNO_DATA_PROVV_RIF%>","maxlen=4","La lunghezza massima per l'anno della data Sentenza di riferimento è di 4 caratteri");
     frmvalidator.addValidation("<%= ICostantiRegeSentenza.CAMPO_ANNO_DATA_PROVV_RIF%>","gt=1900");
 
-    frmvalidator.addValidation("<%= ICostantiRegeSentenza.CAMPO_COD_LUOGO_PROVV_RIF%>","alphabetic");
+<%--     frmvalidator.addValidation("<%= ICostantiRegeSentenza.CAMPO_COD_LUOGO_PROVV_RIF%>","alphabetic"); --%>
 
     frmvalidator.addValidation("<%= ICostantiRegeSentenza.CAMPO_GIORNO_DATA_IRREVOCABILITA%>","req","Il Giorno della Data irrevocabilità è obbligatorio");
     frmvalidator.addValidation("<%= ICostantiRegeSentenza.CAMPO_GIORNO_DATA_IRREVOCABILITA%>","numeric");

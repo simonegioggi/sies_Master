@@ -1,18 +1,13 @@
 package siap.siep.avvocato.action;
 
-/**
-* <p>Title: ActLoadInserisciAvvocato</p>
-* <p>Description: Classe Action per la load inserisci di Avvocato</p>
-* <p>Copyright: Copyright (c) 2002</p>
-* <p>Company: Bull</p>
-* @version 1.0
-*/
-
 import java.math.BigDecimal;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.web.IWebConstants;
+import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.ufficio.model.UfficioModel;
 import siap.sico.web.ActionSiap;
@@ -25,9 +20,6 @@ import siap.siep.notefascicolo.controller.NoteFascicoloController;
 import siap.siep.notefascicolo.model.NoteFascicoloModel;
 import siap.siep.util.SIEPLookupRemote;
 import siap.web.ISIAPCostantiWeb;
-import f3b.log.LogF3B;
-import f3b.web.IWebConstants;
-import f3b.web.html.Option;
 
 @SuppressWarnings("rawtypes")
 public class ActLoadInserisciAvvocato extends ActionSiap implements ICostantiAvvocato {
@@ -37,22 +29,21 @@ public class ActLoadInserisciAvvocato extends ActionSiap implements ICostantiAvv
 
 	public String processRequest() throws Exception {
 
-		if (!this.isRequestParameterNullObj("lTipoFunzione")) // paramentro passato solo nel caso di
-																// iscrizione guidata
-		{
-			this.setRequestAttribute("lTipoFunzione", this.getRequestStringParameter("lTipoFunzione"));
+		// paramentro passato solo nel caso di iscrizione guidata
+		if (!isRequestParameterNullObj("lTipoFunzione")) {
+			setRequestAttribute("lTipoFunzione", getRequestStringParameter("lTipoFunzione"));
 		}
-		if (this.isSessionAttributeNullObj("fascicolo")) {
+		if (isSessionAttributeNullObj("fascicolo")) {
 			return ICostantiFascicoloSiep.REDIRECT_FASCICOLO_RICERCATO + getClass().getName();
 		}
-		this.isFascicoloSiepDiCompetenza();
+		isFascicoloSiepDiCompetenza();
 
 		if (isFascicoloArchiviatoDefinito())
 			return IWebConstants.PG_MESSAGE;
 
-		if (!this.isRequestParameterNullObj(ISIAPCostantiWeb.CAMPO_AZIONE_CHIAMANTE)) {
+		if (!isRequestParameterNullObj(ISIAPCostantiWeb.CAMPO_AZIONE_CHIAMANTE)) {
 			setRequestAttribute(ISIAPCostantiWeb.CAMPO_AZIONE_CHIAMANTE,
-					this.getRequestStringParameter(ISIAPCostantiWeb.CAMPO_AZIONE_CHIAMANTE));
+					getRequestStringParameter(ISIAPCostantiWeb.CAMPO_AZIONE_CHIAMANTE));
 		}
 
 		BigDecimal lKeyFascicolo = ((FascicoloSiepModel) (getSessionAttribute("fascicolo")))
@@ -101,11 +92,11 @@ public class ActLoadInserisciAvvocato extends ActionSiap implements ICostantiAvv
 
 			// 19/03/2010 Nuova gestione Combo per Foro avvocato.
 			// Vector lVect1 = lCtrl.ExRicercaForiCaricati();
-			// this.setRequestAttribute("foro", lVect1);
+			// setRequestAttribute("foro", lVect1);
 
-			UfficioModel lUffUte = this.getUfficioUtenteConnesso();
+			UfficioModel lUffUte = getUfficioUtenteConnesso();
 			String lDescrComune = lUffUte.getDescrComune();
-			this.setRequestAttribute("comune", lDescrComune);
+			setRequestAttribute("comune", lDescrComune);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug(" load INSERISCI2 AVVOCATO PAOLO");
@@ -114,6 +105,14 @@ public class ActLoadInserisciAvvocato extends ActionSiap implements ICostantiAvv
 			lOption = new Option(DecodificheManager.getInstance().getForo(),
 					lDescrComune.toUpperCase().trim(), Option.NO_BLANK_ITEM);
 			setRequestAttribute("foro", "" + lOption);
+
+			// 20210620 MEV_21 Nuova gestione Combo per Stato di Nascita
+			lOption = new Option(DecodificheManager.getInstance().getNazioni(), "-");
+			setRequestAttribute("nazione", "" + lOption);
+
+			// 20210626 MEV_21 Nuova gestione Combo per Stato Difensore
+			lOption = new Option(DecodificheManager.getInstance().getListaAttivitaAvvocato(), "-");
+			setRequestAttribute("statoAvv", "" + lOption);
 
 			return PG_ASSEGNA_INSERISCI_DIFENSORE; // restituisce la jsp di VIEW
 		}

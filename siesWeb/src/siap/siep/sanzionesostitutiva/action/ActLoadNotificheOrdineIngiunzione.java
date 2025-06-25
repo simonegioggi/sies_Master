@@ -28,11 +28,10 @@ import siap.siep.rateizzazionepp.model.EventoRateizzazionePPModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * Classe per la load della form di inserimento e mnodifica delle notifiche
+ * Classe per la load della form di inserimento e modifica delle notifiche
  *
- *
- * @author 	sgioggi
- * @since 	MEV_2023-13
+ * @author sgioggi
+ * @since MEV_2023-13
  * @version 1.0
  */
 public class ActLoadNotificheOrdineIngiunzione extends ActionSiap implements ICostantiSanzioneSostitutiva {

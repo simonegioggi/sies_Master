@@ -20,31 +20,21 @@ import siap.siepe.jms.controller.ITrasmissioneJMS;
 import siap.siepe.util.SIEPELookupRemote;
 
 /**
- * <p>
- * Title: ActTrasferisciRelazione
- * </p>
- * <p>
- * Description: L'Azione impacchetta i dati da inviare nel messaggio, poi attiva l'invio del messaggio stesso
- * ai destinatari.
- * </p>
- * <p>
- * Copyright: Copyright (c) 2006
- * </p>
- * <p>
- * Company: bull
- * </p>
- * 
- * @author not attributable
+ * ActTrasferisciRelazione Classe action che impacchetta i dati da inviare nel messaggio, poi attiva l'invio
+ * del messaggio stesso ai destinatari.
+ *
  * @version 1.0
  */
 public class ActTrasferisciRelazione extends ActionSiap implements ICostantiJMS {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	public String processRequest() throws Exception {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getPackage().getName() + ".ActTrasferisciRelazione: inizio");
+		siesLogger.debug(getClass().getName() + ".ActTrasferisciRelazione: inizio");
 
 		BigDecimal lIdRelazione = getRequestBigDecimalParameter(ICostantiRelazione.CAMPO_ID_RELAZIONE);
 
@@ -179,7 +169,7 @@ public class ActTrasferisciRelazione extends ActionSiap implements ICostantiJMS 
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getPackage().getName() + ".ActTrasferisciRelazione: fine");
+		siesLogger.debug(getClass().getName() + ".ActTrasferisciRelazione: fine");
 
 		return lPage;
 	}
