@@ -457,7 +457,10 @@ public class ActInserisciOSRidetPenaAltro extends ActOrdineEsecuzione implements
 
 			lAut.setCodTipoAutorita(lArrayTipoAutorita[lIndex]);
 
-			ComuneModel lComMod = new ComuneModel(getCodComuneByDescr(lArraySedeAutorita[lIndex]));
+			//INIZIO: MEV_21 (avvocati) - si inibisce la selezione di comuni non validi (tipo NAPOLI NORD)
+			//ComuneModel lComMod = new ComuneModel(getCodComuneByDescr(lArraySedeAutorita[lIndex]));
+			ComuneModel lComMod = new ComuneModel(getCodComuneByDescrFlagVal(lArraySedeAutorita[lIndex]));
+			//FINE: MEV_21
 			lAut.setCodSede(lComMod.getCodComune());
 
 			lAut.setCodOperatoreInserimento(lCodiceOperatore);

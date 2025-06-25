@@ -6,49 +6,26 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import oracle.jdbc.OracleCallableStatement;
-import oracle.jdbc.OracleResultSet;
-import oracle.jdbc.OracleTypes;
-
 import org.apache.log4j.Logger;
 
-import siap.sius.collaboratore.model.CollaboratoreModel;
 import f3b.dao.DAOException;
 import f3b.dao.StoreProcedureDAO;
 import f3b.log.LogF3B;
 import f3b.model.GenericModel;
 import f3b.util.DateUtils;
+import oracle.jdbc.OracleCallableStatement;
+import oracle.jdbc.OracleTypes;
+import siap.sius.collaboratore.model.CollaboratoreModel;
 
 /**
- * <p>
- * Title: getCollabCurStProDAO
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * La classe costituisce l'interfaccia a 2 funzioni rese disponibili dal package COLLA.COLL.
- * <p>
- * Le due funzioni sono COLLA.COLL.getCollabCur() e COLLA.COLL.getCollabById().
- * </p>
- * <p>
- * Schema : COLLA
- * </p>
- * <p>
- * Nome del package : COLL
- * </p>
- * <p>
- * procedure getCollabCur ( par_ufficio IN VARCHAR2, par_id IN number, par_cur IN OUT COLLAB_CUR)
- * </p>
- * <p>
- * procedure getCollabById ( par_id IN number, par_cur IN OUT COLLAB_CUR);
- * </p>
- * <p>
- * Entrambe le procedure restituiscono il risultato attraverso un REF CURSOR, poichè tale tipo è gestito solo
- * dai driver Oracle questa classe e le funzioni gestite non sono portabili su JDBS non Oracle.
- * <p>
- * Copyright: Copyright (c) 2007
- * </p>
+ * getCollabCurStProDAO - Classe che costituisce l'interfaccia a 2 funzioni rese disponibili dal package
+ * COLLA.COLL. Le due funzioni sono COLLA.COLL.getCollabCur() e COLLA.COLL.getCollabById(). Schema : COLLA
+ * Nome del package : COLL procedure getCollabCur ( par_ufficio IN VARCHAR2, par_id IN number, par_cur IN OUT
+ * COLLAB_CUR) procedure getCollabById ( par_id IN number, par_cur IN OUT COLLAB_CUR); Entrambe le procedure
+ * restituiscono il risultato attraverso un REF CURSOR, poichè tale tipo è gestito solo dai driver Oracle
+ * questa classe e le funzioni gestite non sono portabili su JDBS non Oracle.
+ *
+ * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class getCollabCurStProDAO extends StoreProcedureDAO {
@@ -67,7 +44,7 @@ public class getCollabCurStProDAO extends StoreProcedureDAO {
 
 	/**
 	 * Costruttore per creare l'interfaccia alla procedure : COLLA.COLL.getCollabCur.
-	 * 
+	 *
 	 * @param aConn
 	 *            : connessione;
 	 * @param aCodUfficio
@@ -100,7 +77,7 @@ public class getCollabCurStProDAO extends StoreProcedureDAO {
 
 	/**
 	 * Costruttore per creare l'interfaccia alla procedure : COLLA.COLL.getCollabById.
-	 * 
+	 *
 	 * @param aConn
 	 *            : connessione;
 	 * @param aIdCollaboratore
@@ -128,7 +105,7 @@ public class getCollabCurStProDAO extends StoreProcedureDAO {
 	 * procedure di ricerca che è stata impostata dal costruttore; effettua un casting del ResouseSet ad
 	 * OracleResultSet e lo associa al CURSOR risultato della stored procedure; esegue quindi il ciclo di
 	 * fetch sul cursore e ritorna l'elenco di CollaboratoreModel costruiti attraverso l'uso della getModel().
-	 * 
+	 *
 	 * @return Collection : Elenco di CollaboratoreModel risultato della ricerca.
 	 * @throws Exception
 	 */
@@ -136,21 +113,21 @@ public class getCollabCurStProDAO extends StoreProcedureDAO {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getPackage().getName() + ".getModelsByCur : inizio");
+		siesLogger.debug(getClass().getName() + ".getModelsByCur : inizio");
 
 		ArrayList lAL = null;
 
 		try {
 			execute();
 
-			mCallStat = (OracleCallableStatement) super.mCallStat;
+			mCallStat = super.mCallStat;
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("effettuato casting CallableStatement -> OracleCallableStatement ");
 
 			if (mCallStat == null)
 				throw new DAOException("OracleCallableStatement NULL !!");
-			mRs = (OracleResultSet) ((OracleCallableStatement) (mCallStat))
+			mRs = ((OracleCallableStatement) (mCallStat))
 					.getCursor(((Integer) mArgOutputsPosition.get("LISTA")).intValue());
 
 			// mRs = (OracleResultSet) (mCallStat.getCursor( ( (Integer) mArgOutputsPosition.get("LISTA")
@@ -188,7 +165,7 @@ public class getCollabCurStProDAO extends StoreProcedureDAO {
 		}
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getPackage().getName() + ".getModelsByCur : fine");
+		siesLogger.debug(getClass().getName() + ".getModelsByCur : fine");
 
 		return lAL;
 	}

@@ -42,9 +42,8 @@ import siap.sico.versione.util.VersionProperties;
 import siap.sico.webservice.config.NscProperties;
 
 /**
- * Title: TestController 
- * Description: Classe che realizza il test del sistema SIES interrogando varie
- * 				componenti del nostro sistema e compilando il documento di test
+ * Title: TestController Description: Classe che realizza il test del sistema SIES interrogando varie
+ * componenti del nostro sistema e compilando il documento di test
  */
 @SuppressWarnings("rawtypes")
 public class TestController {
@@ -94,6 +93,8 @@ public class TestController {
 			// MEV_2023-33 aggiunti due controlli per endpoint address PagoPA-PST
 			lTest.setTestWSServiziInvioPagamentiTelematici(interrogateWS("wssipt"));
 			lTest.setTestWSServiziConsultazionePagamentiTelematici(interrogateWS("wsscpt"));
+			// release 10.8.0.3 per MEV_21: aggiunto test x REGINDE - ServiziInterrogazioneInterni
+			lTest.setTestWSServiziInterrogazioneInterni(interrogateWS("wssii"));
 		} catch (Exception ex) {
 			lTest.setTestWebServer(ex.toString());
 			lTest.setTestWSIscriviProvvedimentoProvvisorio(ex.toString());
@@ -103,6 +104,8 @@ public class TestController {
 			// MEV_2023-33 aggiunti due controlli per endpoint address PagoPA-PST
 			lTest.setTestWSServiziInvioPagamentiTelematici(ex.toString());
 			lTest.setTestWSServiziConsultazionePagamentiTelematici(ex.toString());
+			// release 10.8.0.3 per MEV_21: aggiunto test x ServiziInterrogazioneInterni
+			lTest.setTestWSServiziInterrogazioneInterni(ex.toString());
 		}
 
 		String lBDINome = JMSProperties.getInstance().getProperty("JMS_LOCAL_MITTENTE");
@@ -220,9 +223,11 @@ public class TestController {
 	private String interrogateWS(String cases) throws F3BException {
 
 		// MEV_2023-33 aggiunte due variabili per endpoint address PagoPA-PST
+		// release 10.8.0.3 per MEV_21: aggiunto variabile x endpoint address REGINDE
 		String messaggio = "", iscriviProvvedimentoProvvisorio = "", iscriviProvvedimentoEsecuzione = "",
 				trasferisciFoglioComplementare = "", richiestaCertificato = "",
-				serviziInvioPagamentiTelematici = "", serviziConsultazionePagamentiTelematici = "";
+				serviziInvioPagamentiTelematici = "", serviziConsultazionePagamentiTelematici = "",
+				serviziInterrogazioneInterni = "";
 		NscProperties nscProperty = NscProperties.getInstance();
 		try {
 			if ("webserver".equals(cases)) {
@@ -310,6 +315,18 @@ public class TestController {
 				else
 					messaggio = "ERRORE: " + resp[1] + ". Web Service non disponibile all'indirizzo: "
 							+ serviziConsultazionePagamentiTelematici;
+			} else if ("wssii".equals(cases)) {
+				// release 10.8.0.3 per MEV_21: aggiunto test x REGINDE - ServiziInterrogazioneInterni
+				serviziInterrogazioneInterni = F3BProperties.getProperty("EndpointAddress");
+				siesLogger.info("Indirizzo WS REGINDE - SERVIZI INTERROGAZIONE INTERNI: #"
+						+ serviziInterrogazioneInterni + "#");
+				String[] resp = testConnection(serviziInterrogazioneInterni + "?WSDL");
+				if ("200".equals(resp[0]))
+					messaggio = "Il Web Service di RegIndE - Servizi Interrogazione Interni e' disponibile"
+							+ " all'indirizzo: " + serviziInterrogazioneInterni;
+				else
+					messaggio = "ERRORE: " + resp[1] + ". Web Service non disponibile all'indirizzo: "
+							+ serviziInterrogazioneInterni;
 			} else
 				messaggio = "ERRORE GENERICO";
 		} catch (MalformedURLException murle) {
@@ -372,14 +389,13 @@ public class TestController {
 	}
 
 	/*
-	 * ISSUE MEV : aggiunti metodi di test connessione per PagoPA - PST
+	 * ISSUE MEV : aggiunti metodi di test connessione per PagoPA - PST 
 	 * Numero MEV : 2023-33 
-	 * Autore : sgioggi 
-	 * Data : 8 giu 2023
+	 * Autore : sgioggi
+	 * Data : 8 giu 2023 
 	 * Branch : MEV_2023-33
 	 */
-	private String[] testConnectionPagoPA(String endpointAddress)
-			throws MalformedURLException, IOException {
+	private String[] testConnectionPagoPA(String endpointAddress) throws MalformedURLException, IOException {
 
 		URL url = new URL(endpointAddress);
 		HttpsURLConnection connections;

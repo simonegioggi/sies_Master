@@ -1,25 +1,31 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%@ page import="f3b.web.IWebConstants" %>
-<%@ page import="f3b.util.StringUtils" %>
+<%@ page import="f3b.web.IWebConstants"%>
+<%@ page import="f3b.util.StringUtils"%>
 
-<%@ page import="siap.sico.soggetto.action.ICostantiSoggetto" %>
-<%@ page import="siap.sico.soggetto.model.SoggettoModel" %>
+<%@ page import="siap.sico.soggetto.action.ICostantiSoggetto"%>
+<%@ page import="siap.sico.soggetto.model.SoggettoModel"%>
 <%@ page import="siap.sico.decodifiche.action.ICostantiComune"%>
-<%@ page import="siap.sius.fascicolo.action.ICostantiFascicoloSius" %>
+<%@ page import="siap.sius.fascicolo.action.ICostantiFascicoloSius"%>
 
-<jsp:useBean id="nazioni"     scope="request" class="java.lang.String"/>
-<jsp:useBean id="codFunzione" scope="request" class="java.lang.String"/>
+<jsp:useBean id="nazioni" scope="request" class="java.lang.String" />
+<jsp:useBean id="codFunzione" scope="request" class="java.lang.String" />
 
 <html>
 <head>
-  <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
-  <title> [S.I.E.S.] - Ricerca Soggetto - </title>
-  <script language="JavaScript">
+<link rel="STYLESHEET" type="text/css"
+	href="<%=IWebConstants.PG_STYLE%>">
+<title>[S.I.E.S.] - Ricerca Soggetto -</title>
+<script language="JavaScript">
       var desktop;
       function ListaComuni(a_formname,a_fieldname)
       {
         desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComune&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=300,height=500");
       }
+      <!-- 20210524	MEV Scheda-21 -->
+      function ListaComuniNascita(a_formname,a_fieldname)
+      {
+        desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComuneNascita&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=400,height=500");
+      }      
 
       function calendario(a_formname,a_field_year,a_field_month,a_field_day)
       {
@@ -27,9 +33,9 @@
             window.open("<%=IWebConstants.ROOT_DIR%>" + "files/siap/sico/Calendario.jsp?formname="+a_formname+"&fieldyear="+a_field_year+"&fieldmonth="+a_field_month+"&fieldday="+a_field_day, "Calendario","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=300,height=250");
       }
   </script>
-  <script language="JavaScript" src="/html/gen_validatorv2.js"></script>
-  <script language="JavaScript" src="/html/ControllaData.js"></script>
-  <script language="JavaScript">
+<script language="JavaScript" src="/html/gen_validatorv2.js"></script>
+<script language="JavaScript" src="/html/ControllaData.js"></script>
+<script language="JavaScript">
     function Verify()
     {
 		if (document.LoadRicercaSoggetto.<%=ICostantiSoggetto.CAMPO_GIORNO_DATA_NASCITA%>.value.length==1)
@@ -61,14 +67,14 @@
     if(document.LoadRicercaSoggetto.<%=ICostantiSoggetto.CAMPO_DESC_COMUNE_NASCITA_ESTERO%>.value !="" &&
        document.LoadRicercaSoggetto.<%=ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA%>.value !="")
     {
-       alert('Valorizzare o il campo comune nascita estero o il campo comune nascita');
+       alert('Valorizzare o il campo luogo di nascita estero o il campo comune nascita');
 			 return false;
     }
 
     if(document.LoadRicercaSoggetto.<%=ICostantiSoggetto.CAMPO_DESC_COMUNE_NASCITA_ESTERO%>.value !="" &&
         document.LoadRicercaSoggetto.<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>[document.LoadRicercaSoggetto.<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>.selectedIndex].value == '039')
    {
-       alert('Il campo Stato Nascita e comune nascita estero incongruenti');
+       alert('Il campo Stato Nascita e luogo di nascita estero incongruenti');
 			 return false;
     }
 
@@ -82,116 +88,149 @@
 </head>
 
 <body class="corpo">
-  <FORM method="POST" action="<%= IWebConstants.PG_MAIN%>" name="LoadRicercaSoggetto">
+	<FORM method="POST" action="<%= IWebConstants.PG_MAIN%>"
+		name="LoadRicercaSoggetto">
 
-    <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.sico.soggetto.action.ActRicercaSoggetto">
-    <input type="HIDDEN" name="<%=ICostantiComune.CAMPO_COD_COMUNE_REALE%>" value="">    
+		<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>"
+			value="siap.sico.soggetto.action.ActRicercaSoggetto"> <input
+			type="HIDDEN" name="<%=ICostantiComune.CAMPO_COD_COMUNE_REALE%>"
+			value="">
 
-    <table>
+		<table>
 
 
 
-      <tr><td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
-        <td class="LBG"><font class="label">Funzione :</font> <font class="campo">Ricerca Soggetto</font></td>
-      </tr>
-    </table>
+			<tr>
+				<td class="LBG"><a href="Javascript:window.print();"><img
+						align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif"
+						alt="Stampa questa videata" border=0></a></td>
+				<td class="LBG"><font class="label">Funzione :</font> <font
+					class="campo">Ricerca Soggetto</font></td>
+			</tr>
+		</table>
 
-    <br>
+		<br>
 
-    <table cellspacing=2 cellpadding=2>
-      <tr><td class="Titolo" colspan="2">Ricerca valida solo nel Distretto</td></tr>
-      <tr>
-        <td class="l">Cognome</td>
-        <td class="l"><input title="Cognome Soggetto" type="text" name="<%=ICostantiSoggetto.CAMPO_COGNOME%>" value="" size="30" maxlength="30"></td>
-      </tr>
+		<table cellspacing=2 cellpadding=2>
+			<tr>
+				<td class="Titolo" colspan="2">Ricerca valida solo nel
+					Distretto</td>
+			</tr>
+			<tr>
+				<td class="l">Cognome</td>
+				<td class="l"><input title="Cognome Soggetto" type="text"
+					name="<%=ICostantiSoggetto.CAMPO_COGNOME%>" value="" size="30"
+					maxlength="30"></td>
+			</tr>
 
-      <tr>
-        <td class="l">Nome</td>
-        <td class="l"><input title="Nome Soggetto"  type="text" name="<%=ICostantiSoggetto.CAMPO_NOME%>" value="" size="30" maxlength="30"></td>
-      </tr>
+			<tr>
+				<td class="l">Nome</td>
+				<td class="l"><input title="Nome Soggetto" type="text"
+					name="<%=ICostantiSoggetto.CAMPO_NOME%>" value="" size="30"
+					maxlength="30"></td>
+			</tr>
 
-       <tr>
-        <td class="l">Comune di nascita</td>
-        <td class="l">
-          <input title="Comune di Nascita" value="" type="text" name="<%=ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA%>" maxlength="30" size="30" onChange="cancellaCodComuneReale();">
-          <a href="Javascript:ListaComuni('LoadRicercaSoggetto','<%= ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA %>');">
-          <img src="/images/filefolder.gif" border=0>
-          </a>
-        </td>
-      </tr>
-       <tr>
-        <td class="l">Comune di nascita Estero</td>
-        <td class="l">
-          <input title="Comune di Nascita Estero" value="" type="text" name="<%=ICostantiSoggetto.CAMPO_DESC_COMUNE_NASCITA_ESTERO%>" maxlength="30" size="30">
-        </td>
-      </tr>
-     <tr>
-        <td class="l">Stato di Nascita</td>
-        <td class="L">
-          <select  title="Stato di Nascita" name="<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>">
-            <%= nazioni %>
-          </select>
-         </td>
-      </tr>
-      <tr>
-        <td class="l">Data di nascita </td>
-          <td class="l"><input title="Data di nascita" type="text" name="<%= ICostantiSoggetto.CAMPO_GIORNO_DATA_NASCITA%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)">
-            /
-            <input title="Data di nascita" type="text" name="<%= ICostantiSoggetto.CAMPO_MESE_DATA_NASCITA %>" maxlength="2" size="2"  onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)">
-            /
-            <input title="Data di nascita" type="text" name="<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>"maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
-<%
+			<tr>
+				<td class="l">Comune di nascita</td>
+				<td class="l"><input title="Comune di Nascita" value=""
+					type="text" name="<%=ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA%>"
+					maxlength="30" size="30" onChange="cancellaCodComuneReale();">
+					<a
+					href="Javascript:ListaComuniNascita('LoadRicercaSoggetto','<%= ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA %>');">
+						<img src="/images/filefolder.gif" border=0>
+				</a></td>
+			</tr>
+			<tr>
+				<td class="l">Luogo di nascita Estero</td>
+				<td class="l"><input title="Luogo di Nascita Estero" value=""
+					type="text"
+					name="<%=ICostantiSoggetto.CAMPO_DESC_COMUNE_NASCITA_ESTERO%>"
+					maxlength="30" size="30"></td>
+			</tr>
+			<tr>
+				<td class="l">Stato di Nascita</td>
+				<td class="L"><select title="Stato di Nascita"
+					name="<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>">
+						<%= nazioni %>
+				</select></td>
+			</tr>
+			<tr>
+				<td class="l">Data di nascita</td>
+				<td class="l"><input title="Data di nascita" type="text"
+					name="<%= ICostantiSoggetto.CAMPO_GIORNO_DATA_NASCITA%>"
+					maxlength="2" size="2" onFocus="javascript:textboxSelect(this)"
+					onkeypress="return TicTabNumField(this,event)"
+					onBlur="javascript:value=FillDM(value)"> / <input
+					title="Data di nascita" type="text"
+					name="<%= ICostantiSoggetto.CAMPO_MESE_DATA_NASCITA %>"
+					maxlength="2" size="2" onFocus="javascript:textboxSelect(this)"
+					onkeypress="return TicTabNumField(this,event)"
+					onBlur="javascript:value=FillDM(value)"> / <input
+					title="Data di nascita" type="text"
+					name="<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>"
+					maxlength="4" size="4" onFocus="javascript:textboxSelect(this)"
+					onkeypress="return TicTabNumField(this,event)"
+					onBlur="javascript:value=FillYear(value)"> <%
 	  // MEV 15 - Revisione SIGE
       // Il calendario viene visualizzato solo quando la maschera viene richiamata da SIGE
 	  // Funzione: Ricerca Soggetto da Iscrizione Manuale
 	  if(codFunzione != null && codFunzione.equals(ICostantiFascicoloSius.COD_FUNZIONE_90010000)){
-%>
-			<a href="javascript:calendario('LoadRicercaSoggetto','<%=ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>','<%=ICostantiSoggetto.CAMPO_MESE_DATA_NASCITA%>','<%=ICostantiSoggetto.CAMPO_GIORNO_DATA_NASCITA%>');">
-       			<img src="/images/calendario.gif" border=0>
-        	</a>
-<%		  
+%> <a
+					href="javascript:calendario('LoadRicercaSoggetto','<%=ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>','<%=ICostantiSoggetto.CAMPO_MESE_DATA_NASCITA%>','<%=ICostantiSoggetto.CAMPO_GIORNO_DATA_NASCITA%>');">
+						<img src="/images/calendario.gif" border=0>
+				</a> <%		  
 	  }
-%>
-          </td>
-      </tr>
-      <tr>
-        <td class="l">Paternità </td>
-          <td class="l"><input title="Paternita" type="text" name="<%= ICostantiSoggetto.CAMPO_PATERNITA%>" size="30" maxlength="30"></td>
-      </tr>
-      <tr>
-        <td class="l">Cognome Madre </td>
-          <td class="l"><input title="Cognome Madre" type="text" name="<%= ICostantiSoggetto.CAMPO_COGNOME_MADRE%>" size="30" maxlength="30"></td>
-      </tr>
-      <tr>
-        <td class="l">Nome Madre </td>
-          <td class="l"><input title="Nome Madre" type="text" name="<%= ICostantiSoggetto.CAMPO_NOME_MADRE%>" size="30" maxlength="30"></td>
-      </tr>
-      <tr>
-        <td class="l">Atto Nascita</td>
-        <td class="L">
-          <input title="Atto di nascita" type="text" name="<%= ICostantiSoggetto.CAMPO_ATTO_NASCITA %>" maxlength="10" size="10">
-        </td>
-      </tr>
-      <tr>
-        <td class="l">Codice CUI</td>
-        <td class="L">
-          <input title="Codice CUI" type="text" name="<%= ICostantiSoggetto.CAMPO_COD_AFIS %>" maxlength="7" size="7">
-        </td>
-      </tr>
+%></td>
+			</tr>
+			<tr>
+				<td class="l">Paternità</td>
+				<td class="l"><input title="Paternita" type="text"
+					name="<%= ICostantiSoggetto.CAMPO_PATERNITA%>" size="30"
+					maxlength="30"></td>
+			</tr>
+			<tr>
+				<td class="l">Cognome Madre</td>
+				<td class="l"><input title="Cognome Madre" type="text"
+					name="<%= ICostantiSoggetto.CAMPO_COGNOME_MADRE%>" size="30"
+					maxlength="30"></td>
+			</tr>
+			<tr>
+				<td class="l">Nome Madre</td>
+				<td class="l"><input title="Nome Madre" type="text"
+					name="<%= ICostantiSoggetto.CAMPO_NOME_MADRE%>" size="30"
+					maxlength="30"></td>
+			</tr>
+			<tr>
+				<td class="l">Atto Nascita</td>
+				<td class="L"><input title="Atto di nascita" type="text"
+					name="<%= ICostantiSoggetto.CAMPO_ATTO_NASCITA %>" maxlength="10"
+					size="10"></td>
+			</tr>
+			<tr>
+				<td class="l">Codice CUI</td>
+				<td class="L"><input title="Codice CUI" type="text"
+					name="<%= ICostantiSoggetto.CAMPO_COD_AFIS %>" maxlength="7"
+					size="7"></td>
+			</tr>
 
-<tr><td>&nbsp;</td></tr><tr><td>&nbsp;</td></tr>
+			<tr>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+			</tr>
 
 
-      <tr>
-        <td colspan="2">
-        <br><br>
-          <INPUT onclick="Javascript:return Verify();" class="bottone" type="submit"  name="RICERCA" value="Ricerca">
-        </td>
-      </tr>
+			<tr>
+				<td colspan="2"><br>
+				<br> <INPUT onclick="Javascript:return Verify();"
+					class="bottone" type="submit" name="RICERCA" value="Ricerca">
+				</td>
+			</tr>
 
-    </table>
-  </form>
-  <script language="JavaScript" type="text/javascript">
+		</table>
+	</form>
+	<script language="JavaScript" type="text/javascript">
 
     var frmvalidator  = new Validator("LoadRicercaSoggetto");
 
@@ -206,8 +245,9 @@
     frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>","numeric");
     frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>","gt=1900");
     frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>","lt=3000");
-
-    frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA %>","alpha");
+    <%-- Ticket#202506130166 - SIES: Anomalia inserimento provvedimento - schermata sede dell'autorità emittente--%>
+    <%-- ELIMINATO CONTROLLO per consentire inserimento comuni tipo MERANO/MERAN) --%>
+<%--     frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA %>","alpha"); --%>
 
     frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_PATERNITA%>","alphabetic");
 

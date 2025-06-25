@@ -6,6 +6,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.web.IWebConstants;
+import siap.sico.decodifiche.action.ICostantiComune;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.decodifiche.util.DecodificheUtils;
@@ -17,9 +21,6 @@ import siap.sico.web.ActionSiusMinor;
 import siap.sius.fascicolo.controller.IFascicoloSius;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.util.SIUSLookupRemote;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.web.IWebConstants;
 
 /**
  * <p>
@@ -34,12 +35,12 @@ import f3b.web.IWebConstants;
  * <p>
  * Company:
  * </p>
- * 
+ *
  * @author unascribed
  * @version 1.0
  */
-public class ActRicercaSoggettiConProcDiEsecuzioneSS extends ActionSiusMinor implements
-		ICostantiFascicoloSius {
+public class ActRicercaSoggettiConProcDiEsecuzioneSS extends ActionSiusMinor
+		implements ICostantiFascicoloSius {
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
@@ -62,13 +63,31 @@ public class ActRicercaSoggettiConProcDiEsecuzioneSS extends ActionSiusMinor imp
 		lSogMod.setCognome(getRequestStringParameter(ICostantiSoggetto.CAMPO_COGNOME));
 		lSogMod.setNome(getRequestStringParameter(ICostantiSoggetto.CAMPO_NOME));
 
-		// Correzione Codice comune.
-		if (!this.isRequestParameterNullObj(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)
-				&& getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA).length() > 1) {
-			ComuneModel lComMod = new ComuneModel(
-					getCodComuneByDescr(getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)));
-			lSogMod.setCodComuneNascita(lComMod.getCodComune());
+		/*
+		 * 20210524 MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni. if
+		 * (!this.isRequestParameterNullObj(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA) &&
+		 * getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA).length() > 1) { ComuneModel
+		 * lComMod = new ComuneModel(
+		 * getCodComuneByDescr(getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)));
+		 * lSogMod.setCodComuneNascita(lComMod.getCodComune()); }
+		 */
+		// Recupero dati del Comune di nascita
+		ComuneModel lComMod;
+		if (!isRequestParameterNullObj(ICostantiComune.CAMPO_COD_COMUNE_REALE)
+				&& getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE).length() > 0) {
+			// se presente dal codice comune (e descrizione)
+			lComMod = new ComuneModel(
+					getDatiComuneByCodDescr(getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
+							getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)));
+		} else {
+			// altrimenti dalla sola descrizione (rischio omonimi)
+			lComMod = new ComuneModel(getDatiComuneByDescrOmonimia(
+					getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)));
 		}
+		// 20250612 [SG]: risolto problema ricerca soggetto col "-" pari al cod comune nascita
+		// Ticket#20250612016 - SIES - ricerche soggetto
+		String codComuneNascita = "-".equals(lComMod.getCodComune()) ? "" : lComMod.getCodComune();
+		lSogMod.setCodComuneNascita(codComuneNascita);
 
 		if (getRequestStringParameter(ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA).length() > 2)
 			lSogMod.setDataNascita(getRequestDateParameter(ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA,
@@ -116,8 +135,8 @@ public class ActRicercaSoggettiConProcDiEsecuzioneSS extends ActionSiusMinor imp
 			lIncludeArchiviati = "S";
 
 		String lCodContenuto = getRequestStringParameter(CAMPO_COD_CONTENUTO);
-		String lDescrContenuto = DecodificheUtils.getDescbyCode(DecodificheManager.getInstance()
-				.getOggettoProcedimento(), lCodContenuto);
+		String lDescrContenuto = DecodificheUtils
+				.getDescbyCode(DecodificheManager.getInstance().getOggettoProcedimento(), lCodContenuto);
 
 		Date dataDalInCancelleria = (getRequestDateParameter(CAMPO_ANNO_DATA_INSERIMENTO,
 				CAMPO_MESE_DATA_INSERIMENTO, CAMPO_GIORNO_DATA_INSERIMENTO));

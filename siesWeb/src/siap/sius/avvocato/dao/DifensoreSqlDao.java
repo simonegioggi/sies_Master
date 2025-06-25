@@ -39,17 +39,29 @@ public class DifensoreSqlDao extends SIAPSqlDAO {
 				+ "DESCR.DESCRIZIONE DESCR_COMUNE_RESIDENZA, "
 				+ "DESNASCITA.DESCRIZIONE DESCR_LUOGO_NASCITA, " + "AVVOCATO.COD_UFFICIO_APPARTENENZA, "
 				+ "AVVOCATO.DATA_NASCITA, " + "CG.RV_MEANING DESCR_NON_ATTIVITA, "
+				// MEV_21: aggiunti nuovi campi 
+				+ "PEC, FLAG_REGINDE, DESCR_COMUNE_STUDIO, DESC_LUOGO_NAS_REGINDE, "
+				+ "COD_STATO_NASCITA_AVV, SN.RV_MEANING DESCR_STATO_NASCITA, "
+				+ "ID_AVVOCATO_BONIFICATO, "
+				// MEV_21: FINE 
 				+ "AVVOCATO_FASCICOLO_SIUS.DATA_INIZIO_VALIDITA ";
-		lStatement += " FROM AVVOCATO,AVVOCATO_FASCICOLO_SIUS,CG_REF_CODES AVVTIPODESC,CG_REF_CODES CG, COMUNE DESNASCITA,COMUNE DESCR";
+		lStatement += " FROM AVVOCATO,AVVOCATO_FASCICOLO_SIUS,CG_REF_CODES AVVTIPODESC,CG_REF_CODES CG, COMUNE DESNASCITA, COMUNE DESCR";
+	  // MEV_21: aggiunti nuove join 
+		lStatement += ", CG_REF_CODES SN";
+	  // MEV_21: FINE 
 		lStatement += " WHERE ";
 		lStatement += " DATA_FINE_VALIDITA IS NULL AND ";
 		lStatement += " AVVOCATO.ID_AVVOCATO=AVVOCATO_FASCICOLO_SIUS.AVV_ID_AVVOCATO AND ";
 		lStatement += " AVVTIPODESC.RV_LOW_VALUE=AVVOCATO_FASCICOLO_SIUS.COD_TIPO_AVVOCATO ";
 		lStatement += " AND AVVTIPODESC.RV_DOMAIN='TIPO_AVVOCATO' ";
-		lStatement += "AND DESCR.COD_COMUNE = COD_COMUNE_RESIDENZA ";
+		lStatement += " AND DESCR.COD_COMUNE = COD_COMUNE_RESIDENZA ";
 		lStatement += " AND DESNASCITA.COD_COMUNE = COD_LUOGO_NASCITA ";
 		lStatement += " AND CG.RV_DOMAIN  = 'NON_ATTIVITA' ";
 		lStatement += " AND CG.RV_LOW_VALUE = COD_NON_ATTIVITA ";
+		// MEV_21: aggiunti nuove join
+		lStatement += " AND SN.RV_LOW_VALUE = COD_STATO_NASCITA_AVV";
+		lStatement += " AND SN.RV_DOMAIN  = 'NAZIONE'";		
+		// MEV_21: FINE
 		// lStatement += " AND FLAG_VISUALIZZA = 1 ";
 
 		lStatement += " " + setCondizione(aModel, aFModel);
@@ -60,6 +72,12 @@ public class DifensoreSqlDao extends SIAPSqlDAO {
 		setStatement(lStatement);
 	}
 
+	/**
+	 * MEV_21 il metodo è stato riscritto per reuperare sologli avvocati certificati REGINDE
+	 * su tutta la tabella AVVOCATO indipendentemente dell'ufficio appartenenza non più pertinente
+	 * @param aModel
+	 * @throws DAOException
+	 */
 	public void ricercaDifensore(AvvocatoModel aModel) throws DAOException {
 
 		String lStatement = new String("");
@@ -75,34 +93,82 @@ public class DifensoreSqlDao extends SIAPSqlDAO {
 				+ "AVVOCATO.FLAG_CANCELLATO, " + "DESCR.DESCRIZIONE DESCR_COMUNE_RESIDENZA, "
 				+ "DESNASCITA.DESCRIZIONE DESCR_LUOGO_NASCITA, " + "AVVOCATO.COD_UFFICIO_APPARTENENZA, "
 				+ "AVVOCATO.DATA_NASCITA, " + "CG.RV_MEANING DESCR_NON_ATTIVITA, "
+				// MEV_21: aggiunti nuovi campi 
+				+ "PEC, FLAG_REGINDE, DESCR_COMUNE_STUDIO, DESC_LUOGO_NAS_REGINDE, "
+				+ "COD_STATO_NASCITA_AVV, SN.RV_MEANING DESCR_STATO_NASCITA, "
+				+ "ID_AVVOCATO_BONIFICATO, "
+				// MEV_21: FINE  
 				+ "DATA_INSERIMENTO DATA_INIZIO_VALIDITA ";
 		lStatement += " FROM AVVOCATO,CG_REF_CODES CG, COMUNE DESNASCITA,COMUNE DESCR";
+	  // MEV_21: aggiunti nuove join 
+		lStatement += ", CG_REF_CODES SN";
+	  // MEV_21: FINE 		
 		lStatement += " WHERE ";
 		lStatement += " DESCR.COD_COMUNE = COD_COMUNE_RESIDENZA ";
 		lStatement += " AND DESNASCITA.COD_COMUNE = COD_LUOGO_NASCITA ";
 		lStatement += " AND CG.RV_DOMAIN  = 'NON_ATTIVITA' ";
 		lStatement += " AND CG.RV_LOW_VALUE = COD_NON_ATTIVITA ";
+		lStatement += " AND FLAG_REGINDE = 'SI' ";
+		// MEV_21: aggiunti nuove join
+		lStatement += " AND SN.RV_LOW_VALUE = COD_STATO_NASCITA_AVV";
+		lStatement += " AND SN.RV_DOMAIN  = 'NAZIONE'";		
+		// MEV_21: FINE
+		
 		lStatement += " " + setCondizione(aModel);
-		int lPos = lStatement.indexOf("WHERE");
-		String lSql1 = lStatement.substring(0, lPos);
-		String lSql2 = lStatement.substring(lPos + 5, lStatement.length());
-		lStatement += " MINUS " + lSql1;
-		lStatement += " where cod_ufficio_appartenenza='00000' and id_avvocato_standard in ";
-		// 11/12/2007 lStatement += " (select id_avvocato_standard from avvocato where flag_visualizza = 1 and
-		// FLAG_CANCELLATO ='N' ";
-		lStatement += " (select id_avvocato_standard from avvocato where flag_visualizza = 1 ";
-		// 20191028 [SG]: aggiunta and condition
-		lStatement += "AND FLAG_CANCELLATO = 'N'";
-		lStatement += " and cod_ufficio_appartenenza = '"
-				+ StringUtils.convertSqlString(aModel.getCodUffAppartenenza().toUpperCase());
-		lStatement += "') and " + lSql2;
+
 		lStatement += " ORDER BY COGNOME,NOME ASC";
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		siesLogger.debug(" lStatement1 = " + lStatement);
+
+		siesLogger.debug(" lStatement = " + lStatement);
 
 		setStatement(lStatement);
 	}
+	
+	// MEV_21 vecchio metodo che effettuava la ricerca degli avvocati SIUE dell'ufficio.
+	// Riscritto per recuperare solo gli avvocati certificati REGINDE
+//	public void ricercaDifensore(AvvocatoModel aModel) throws DAOException {
+//
+//		String lStatement = new String("");
+//
+//		lStatement += " SELECT " + "ID_AVVOCATO, " + "COGNOME, " + "NOME, " + "FORO, " + "INDIRIZZO, "
+//				+ "TELEFONO, " + "FAX, " + "E_MAIL, " + "COD_FISCALE," + "PROVINCIA," + "AVVOCATO.CAP,"
+//				+ "FLAG_VISUALIZZA," + "ID_AVVOCATO_STANDARD," + "AVVOCATO.NOTE NOTEAVV, "
+//				+ "AVVOCATO.COD_OPERATORE_INSERIMENTO, " + "AVVOCATO.DATA_INSERIMENTO, "
+//				+ "AVVOCATO.COD_OPERATORE_AGGIORNAMENTO, " + "AVVOCATO.COD_UFFICIO_INSERIMENTO, "
+//				+ "AVVOCATO.DATA_AGGIORNAMENTO, " + "COGNOME  DESCRTIPO, " + "AVVOCATO.DATA_SOSPESO_FINO_AL, "
+//				+ "AVVOCATO.DATA_RADIATO_DAL, " + "AVVOCATO.COD_NON_ATTIVITA, "
+//				+ "AVVOCATO.COD_LUOGO_NASCITA, " + "AVVOCATO.COD_COMUNE_RESIDENZA, "
+//				+ "AVVOCATO.FLAG_CANCELLATO, " + "DESCR.DESCRIZIONE DESCR_COMUNE_RESIDENZA, "
+//				+ "DESNASCITA.DESCRIZIONE DESCR_LUOGO_NASCITA, " + "AVVOCATO.COD_UFFICIO_APPARTENENZA, "
+//				+ "AVVOCATO.DATA_NASCITA, " + "CG.RV_MEANING DESCR_NON_ATTIVITA, "
+//				+ "DATA_INSERIMENTO DATA_INIZIO_VALIDITA ";
+//		lStatement += " FROM AVVOCATO,CG_REF_CODES CG, COMUNE DESNASCITA,COMUNE DESCR";
+//		lStatement += " WHERE ";
+//		lStatement += " DESCR.COD_COMUNE = COD_COMUNE_RESIDENZA ";
+//		lStatement += " AND DESNASCITA.COD_COMUNE = COD_LUOGO_NASCITA ";
+//		lStatement += " AND CG.RV_DOMAIN  = 'NON_ATTIVITA' ";
+//		lStatement += " AND CG.RV_LOW_VALUE = COD_NON_ATTIVITA ";
+//		lStatement += " " + setCondizione(aModel);
+//		int lPos = lStatement.indexOf("WHERE");
+//		String lSql1 = lStatement.substring(0, lPos);
+//		String lSql2 = lStatement.substring(lPos + 5, lStatement.length());
+//		lStatement += " MINUS " + lSql1;
+//		lStatement += " where cod_ufficio_appartenenza='00000' and id_avvocato_standard in ";
+//		// 11/12/2007 lStatement += " (select id_avvocato_standard from avvocato where flag_visualizza = 1 and
+//		// FLAG_CANCELLATO ='N' ";
+//		lStatement += " (select id_avvocato_standard from avvocato where flag_visualizza = 1 ";
+//		// 20191028 [SG]: aggiunta and condition
+//		lStatement += "AND FLAG_CANCELLATO = 'N'";
+//		lStatement += " and cod_ufficio_appartenenza = '"
+//				+ StringUtils.convertSqlString(aModel.getCodUffAppartenenza().toUpperCase());
+//		lStatement += "') and " + lSql2;
+//		lStatement += " ORDER BY COGNOME,NOME ASC";
+//		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+//		// LogF3B.getLogger()
+//		siesLogger.debug(" lStatement1 = " + lStatement);
+//
+//		setStatement(lStatement);
+//	}	
+	
 
 	public GenericModel getModel() throws DAOException {
 
@@ -141,6 +207,18 @@ public class DifensoreSqlDao extends SIAPSqlDAO {
 		aModel.getAvvocato().setCap(getString("CAP"));
 		aModel.getAvvocato().setFlagVisualizza(getBigDecimal("FLAG_VISUALIZZA"));
 		aModel.getAvvocato().setIdAvvocatoStandard(getBigDecimal("ID_AVVOCATO_STANDARD"));
+		
+		// MEV_21: nuovi campi
+		//aModel.setDescComuneSedeForo(getString("DescComuneSedeForo"));	
+		aModel.getAvvocato().setPec                     (getString("PEC"));
+		aModel.getAvvocato().setFlagRegInde             (getString("FLAG_REGINDE"));
+		aModel.getAvvocato().setDescrComuneStudio       (getString("DESCR_COMUNE_STUDIO"));
+		aModel.getAvvocato().setDescLuogoNascitaReginde (getString("DESC_LUOGO_NAS_REGINDE"));
+		aModel.getAvvocato().setCodStatoNascita         (getString("COD_STATO_NASCITA_AVV"));
+		aModel.getAvvocato().setDescrStatoNascita       (getString("DESCR_STATO_NASCITA"));
+		aModel.getAvvocato().setIdAvvocatoBonificato    (getBigDecimal("ID_AVVOCATO_BONIFICATO"));
+	  // MEV_21: FINE
+		
 		return aModel;
 	}
 

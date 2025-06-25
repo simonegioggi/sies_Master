@@ -245,6 +245,22 @@ public class DecodificheUtils {
 		return risultato;
 	}
 
+	// 20210627	MEV_21 Confronto tra descrizioni in upperCase.
+	public static String getCodebyDescUpCase(Collection aCol, String aDesc) {
+		Iterator itx = aCol.iterator();
+		String risultato = new String("-");
+		DecodeModel ldecodeModel;
+
+		while (itx.hasNext()) {
+			ldecodeModel = (DecodeModel) itx.next();
+			if ((ldecodeModel.getDescription()).toUpperCase().equals(aDesc.toUpperCase())) {
+				risultato = ldecodeModel.getCode();
+				break;
+			}
+		}
+		return risultato;
+	}
+	
 	/**
 	 * Funzione getDecodesWithoutCode().
 	 * 

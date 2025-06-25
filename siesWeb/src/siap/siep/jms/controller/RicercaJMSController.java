@@ -544,7 +544,7 @@ public class RicercaJMSController extends SiapController implements IRicercaJMS 
 				lTreeRoot = new TreeModel(createRoot(2));
 				TreeModel lTreeFasMod = new TreeModel(lDettFascicolo);
 				lTreeRoot.add(lTreeFasMod);
-				
+
 				// Ticket#20210702015 - In qeuesta rierca non venivano aricati i dati del CUMULO
 				// aggiunto come nel metodo:
 				// public MessaggioModel ExRicercaFascicoloSiepPerTrasferimento(FascicoloSiepModel aModel)
@@ -604,9 +604,7 @@ public class RicercaJMSController extends SiapController implements IRicercaJMS 
 				}
 				// Ticket#20210702015 - FINE
 				// --------------------------------------------------------------------------------------------------------------------------
-				
-				
-				
+
 				lMessage.setCodEsito("10000");
 			} else {
 				lTreeRoot = new TreeModel(createRoot(0));

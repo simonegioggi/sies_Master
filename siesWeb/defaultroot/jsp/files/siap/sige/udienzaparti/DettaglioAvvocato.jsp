@@ -59,16 +59,15 @@
 	</tr>
 	<tr>
 		<td class="l"><font class="label">Nome</font></td>
-		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getNome())%>&nbsp;</font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getNome())%></font></td>
 	</tr>
 	<tr>
 		<td class="l"><font class="label">Luogo Nascita</font></td>
-		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getDescLuogoNascita())%>&nbsp;</font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getDescLuogoNascita())%></font></td>
 	</tr>
 	<tr>
 		<td class="l"><font class="label">Data Nascita</font></td>
-		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(
-							lAvvocato.getDataNascita(), "dd-MM-yyyy"))%>&nbsp;</font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lAvvocato.getDataNascita(), "dd-MM-yyyy"))%></font></td>
 	</tr>
 	<tr>
 		<td class="l"><font class="label">Foro</font></td>
@@ -76,28 +75,27 @@
 	</tr>
 	<tr>
 		<td class="l"><font class="label">Indirizzo</font></td>
-		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getIndirizzo())%></font>&nbsp;</td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getIndirizzo())%></font></td>
 	</tr>
 	<tr>
 		<td class="l"><font class="label">Con Studio in</font></td>
-		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato
-							.getDescComuneResidenza())%></font>&nbsp;</td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getDescComuneResidenza())%></font></td>
 	</tr>
 	<tr>
 		<td class="l"><font class="label">Telefono</font></td>
-		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getTelefono())%></font>&nbsp;</td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getTelefono())%></font></td>
 	</tr>
 	<tr>
 		<td class="l"><font class="label">Fax</font></td>
-		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getFax())%></font>&nbsp;</td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getFax())%></font></td>
 	</tr>
 	<tr>
 		<td class="l"><font class="label">EMail</font></td>
-		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getEMail())%></font>&nbsp;</td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getEMail())%></font></td>
 	</tr>
 	<tr>
 		<td class="l"><font class="label">Codice Fiscale</font></td>
-		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getCodiceFiscale())%></font>&nbsp;</td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getCodiceFiscale())%></font></td>
 	</tr>
 
 <%
@@ -105,22 +103,19 @@
 %>
 	<tr>
 		<td class="l"><font class="label">Sospeso fino al</font></td>
-		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(
-								lAvvocato.getDataSospensione(), "dd-MM-yyyy"))%></font>&nbsp;</td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lAvvocato.getDataSospensione(), "dd-MM-yyyy"))%></font></td>
 	</tr>
 	<tr>
 		<td class="l"><font class="label">Radiato dal</font></td>
-		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(
-								lAvvocato.getDataRadiazione(), "dd-MM-yyyy"))%></font>&nbsp;</td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lAvvocato.getDataRadiazione(), "dd-MM-yyyy"))%></font></td>
 	</tr>
 	<tr>
 		<td class="l"><font class="label">Non in attività per </font></td>
-		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato
-								.getDescrNonAttivita())%></font>&nbsp;</td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getDescrNonAttivita())%></font></td>
 	</tr>
 	<tr>
 		<td class="l"><font class="label">Note </font></td>
-		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getNote())%></font>&nbsp;</td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getNote())%></font></td>
 	</tr>
 <%
 	}

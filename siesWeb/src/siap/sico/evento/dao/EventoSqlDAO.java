@@ -622,6 +622,7 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 	public void ricercaEventoByFascicoloTipEveTipProvSiepDescPerEventoDaAnnullareCancellare(BigDecimal aKey,
 			String[] aTipoEvento, String[] aTipoProv, String[] aCodMotivo, String aOrdinamento)
 			throws DAOException {
+
 		String lStatement = getSqlQuery();
 
 		lStatement += " AND FAS_SIE_ID_FASCICOLO_SIEP = " + aKey;
@@ -659,9 +660,8 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 	}
 
 	public void getCountEventoByFascicoloSiepTipEventoNOTTipProv(BigDecimal aFascKey,
-			String aCodUfficioUtenteConnesso, String[] aTipoEvento, String[] aTipoProv) throws DAOException
+			String aCodUfficioUtenteConnesso, String[] aTipoEvento, String[] aTipoProv) throws DAOException {
 
-	{
 		String lStatement = "SELECT COUNT(*) HowManyRecords FROM EVENTO";
 
 		// Nel caso non sia stato passato l'Id del fascicolo
@@ -701,9 +701,8 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 	public void getCountEventoByFascicoloSiepTipEventoNOTTipProv(BigDecimal aFascKey,
 			// String aCodUfficioUtenteConnesso
 			UfficioModel aUfficioUtenteConnesso, String[] aTipoEvento, String[] aTipoProv,
-			String[] aCodMotivo) throws DAOException
+			String[] aCodMotivo) throws DAOException {
 
-	{
 		String lStatement = "SELECT COUNT(*) HowManyRecords FROM EVENTO";
 
 		// Nel caso non sia stato passato l'Id del fascicolo
@@ -754,6 +753,7 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 
 	public void ricercaEventoByFascicoloSiepTipEventoNOTTipProvNONAnnullati(BigDecimal aKey,
 			String[] aTipoEvento, String[] aTipoProv) throws DAOException {
+
 		String lStatement = getSqlQuery();
 
 		lStatement += " AND FAS_SIE_ID_FASCICOLO_SIEP = " + aKey;

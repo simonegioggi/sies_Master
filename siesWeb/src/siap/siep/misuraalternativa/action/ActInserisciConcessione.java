@@ -26,18 +26,7 @@ import siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel;
 import siap.sius.tenore.model.TenoreModel;
 
 /**
- * <p>
- * Title: ActInserisciConcessione
- * </p>
- * <p>
- * Description: Classe Action per l'inserimento di Concessione MisuraAlternativa
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * ActInserisciConcessione - Classe Action per l'inserimento di Concessione MisuraAlternativa
  *
  * @version 1.0
  */
@@ -283,13 +272,15 @@ public class ActInserisciConcessione extends ActConcessione {
 					+ "=siap.siep.misuraalternativa.action.ActDettaglioConcessione&"
 					+ ICostantiEvento.CAMPO_ID_EVENTO + "=" + lEveNotModel.getEvento().getIdEvento();
 
-		} else // la misura alternativa esiste (NEL CASO DEI MINORENNI GIA' ESISTE PERCHE' INSERITA DALLA SORVEGLIANZA)
+		} else // la misura alternativa esiste (NEL CASO DEI MINORENNI GIA' ESISTE PERCHE' INSERITA DALLA
+				// SORVEGLIANZA)
 		{
 			// MEV_62 [EC] 15/05/2018 - INIZIO
-			if(lMisAlModConcessa.getCodTipoUfficioScarcerazione() == null || "".equals(lMisAlModConcessa.getCodTipoUfficioScarcerazione())){
+			if (lMisAlModConcessa.getCodTipoUfficioScarcerazione() == null
+					|| "".equals(lMisAlModConcessa.getCodTipoUfficioScarcerazione())) {
 				lMisAlModConcessa.setCodTipoUfficioScarcerazione("PROC");
 			}
-			//MEV_62 [EC] 15/05/2018 - FINE
+			// MEV_62 [EC] 15/05/2018 - FINE
 			EventoNotificaModel lEveNot = new EventoNotificaModel();
 			lEveNot = SettaProvvedimento(lFlagSan, tipoMisura, lPosizione, lFlagAffi,
 					lMisAlModConcessa.getCodTipoMisura(), lMisAlModConcessa);
@@ -473,8 +464,8 @@ public class ActInserisciConcessione extends ActConcessione {
 		// quando il soggetto non è libero sicuramente lFlagAffi.equals("N")
 		// lFlagAffi.equals("N") potrebbe indicare anche un soggetto gia in misura e viene concessa un'altra
 		// misura
-		else if (!(aPosMod.isLibero()) && aFlagAffi.equals("N")) // && !atipoMisura.equals("SEMILIBERTA"))
-		{
+		else if (!(aPosMod.isLibero()) && aFlagAffi.equals("N")) {
+			// && !atipoMisura.equals("SEMILIBERTA"))
 			// se non è libero compare la possibilità di inserire la data di scarcerazione o data esecuzione
 			// per i domiciliari
 			// se si indica la data di scarcerazione si inserisce questa data come data inizio misura e come
@@ -486,9 +477,9 @@ public class ActInserisciConcessione extends ActConcessione {
 						ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_SCARCERAZIONE,
 						ICostantiMisuraAlternativa.CAMPO_MESE_DATA_SCARCERAZIONE,
 						ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE);
-			} else // if (!this.isRequestParameterNullObj("tipo") &&
-					// this.getRequestStringParameter("tipo").equals("scarcerare"))
-			{
+			} else {
+				// if (!this.isRequestParameterNullObj("tipo") &&
+				// this.getRequestStringParameter("tipo").equals("scarcerare"))
 				// se non è libero compare la possibilità di inserire la data di scarcerazione o data
 				// esecuzione per i domiciliari
 				// se non si indica la data di scarcerazione si inserisce la data di emissione provvedimento

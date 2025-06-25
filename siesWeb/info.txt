@@ -2,6 +2,6 @@ BRANCH MASTER
 
 Allineato al:
 
-BRANCH SIES VERSIONE 12.7.1.0
+BRANCH SIES VERSIONE 12.8.0.3
 
-Questa release è stata rilasciata il 28/02/2025
+Questa release è stata rilasciata il 23/06/2025

@@ -12,251 +12,462 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Date;
 
-import siap.dao.SIAPTableDAO;
-import siap.siep.avvocato.model.AvvocatoModel;
 import f3b.dao.DAOException;
 import f3b.model.GenericModel;
+import siap.dao.SIAPTableDAO;
+import siap.siep.avvocato.model.AvvocatoModel;
 
-public class AvvocatoDAO extends SIAPTableDAO
-{
-   public AvvocatoDAO(Connection con) {
-    super(con);
-    
-    setTable("AVVOCATO");
-    
-    setSequenceField("ID_AVVOCATO", "AVV_SEQ");
-    
-    
-    setField("ID_AVVOCATO", BIG_DECIMAL);
-    setField("COGNOME", STRING);
-    setField("NOME", STRING);
-    setField("FORO", STRING);
-    setField("INDIRIZZO", STRING);
-    setField("TELEFONO", STRING);
-    setField("FAX", STRING);
-    setField("E_MAIL", STRING);
-    setField("COD_FISCALE", STRING);
-    setField("PROVINCIA", STRING);
-    setField("CAP", STRING);
-    setField("FLAG_VISUALIZZA", BIG_DECIMAL);
-    
-    
-    setField("COD_LUOGO_NASCITA", STRING);
-    setField("COD_COMUNE_RESIDENZA", STRING);
-    setField("DATA_NASCITA", DATE);
-    setField("DATA_SOSPESO_FINO_AL", DATE);
-    setField("DATA_RADIATO_DAL", DATE);
-    setField("COD_NON_ATTIVITA", STRING);
-    setField("COD_UFFICIO_APPARTENENZA", STRING);
-    setField("NOTE", STRING);
-    setField("FLAG_CANCELLATO", STRING);
-    setField("ID_AVVOCATO_STANDARD", BIG_DECIMAL);
-    
-    setField("COD_OPERATORE_INSERIMENTO", STRING);
-    setField("COD_UFFICIO_INSERIMENTO", STRING);
-    setField("DATA_INSERIMENTO", DATE);
-    
-    setField("COD_OPERATORE_AGGIORNAMENTO", STRING);
-    setField("DATA_AGGIORNAMENTO", DATE);
-    setField("COD_UFFICIO_AGGIORNAMENTO", STRING);
-    
-  }
+public class AvvocatoDAO extends SIAPTableDAO {
 
+	public AvvocatoDAO(Connection con) {
 
-  //
-  // METODI GET()
-  //
+		super(con);
 
-  public BigDecimal  getIdAvvocato()        throws DAOException  { return getBigDecimal("ID_AVVOCATO"); }
-  public String      getCognome()           throws DAOException  { return getString("COGNOME"); }
-  public String      getNome()            throws DAOException  { return getString("NOME"); }
-  public String      getForo()            throws DAOException  { return getString("FORO"); }
-  public String      getIndirizzo()         throws DAOException  { return getString("INDIRIZZO"); }
-  public String      getTelefono()          throws DAOException  { return getString("TELEFONO"); }
-  public String      getFax()             throws DAOException  { return getString("FAX"); }
-  public String      getEMail()           throws DAOException  { return getString("E_MAIL"); }
-  public String      getCodiceFiscale()       throws DAOException  { return getString("COD_FISCALE"); }
-  public String      getProvincia()         throws DAOException  { return getString("PROVINCIA"); }
-  public String      getCap()             throws DAOException  { return getString("CAP"); }
-  public BigDecimal  getFlagVisualizza()      throws DAOException  { return getBigDecimal("FLAG_VISUALIZZA"); }
-  public String      getCodLuogoNascita()       throws DAOException  { return getString("COD_LUOGO_NASCITA"); }
-  public String      getCodComuneResidenza()    throws DAOException  { return getString("COD_COMUNE_RESIDENZA"); }
-  public Date        getDataNascita()         throws DAOException  { return getDate("DATA_NASCITA"); }
-  public Date        getDataSospensione()       throws DAOException  { return getDate("DATA_SOSPESO_FINO_AL"); }
-  public Date        getDataRadiazione()      throws DAOException  { return getDate("DATA_RADIATO_DAL"); }
-  public String      getCodNonAttivita ()       throws DAOException  { return getString("COD_NON_ATTIVITA"); }
-  public String      getCodUffAppartenenza()    throws DAOException  { return getString("COD_UFFICIO_APPARTENENZA"); }
-  public String      getNote()            throws DAOException  { return getString("NOTE"); }
-  public String      getFlagCancellato()      throws DAOException  { return getString("FLAG_CANCELLATO"); }
-  public BigDecimal  getIdAvvocatoStandard()    throws DAOException  { return getBigDecimal("ID_AVVOCATO_STANDARD"); }
+		setTable("AVVOCATO");
 
+		setSequenceField("ID_AVVOCATO", "AVV_SEQ");
 
-  public String      getCodOperatoreInserimento()   throws DAOException  { return getString("COD_OPERATORE_INSERIMENTO"); }
-  public String      getCodUfficioInserimento()     throws DAOException  { return getString("COD_UFFICIO_INSERIMENTO"); }
-  public Date        getDataInserimento()           throws DAOException  { return getDate("DATA_INSERIMENTO"); }
-  public String      getCodOperatoreAggiornamento() throws DAOException  { return getString("COD_OPERATORE_AGGIORNAMENTO"); }
-  public Date        getDataAggiornamento()         throws DAOException  { return getDate("DATA_AGGIORNAMENTO"); }
-  public String      getCodUfficioAggiornamento()   throws DAOException  { return getString("COD_UFFICIO_AGGIORNAMENTO"); }
+		setField("ID_AVVOCATO", BIG_DECIMAL);
+		setField("COGNOME", STRING);
+		setField("NOME", STRING);
+		setField("FORO", STRING);
+		setField("INDIRIZZO", STRING);
+		setField("TELEFONO", STRING);
+		setField("FAX", STRING);
+		setField("E_MAIL", STRING);
+		setField("COD_FISCALE", STRING);
+		setField("PROVINCIA", STRING);
+		setField("CAP", STRING);
+		setField("FLAG_VISUALIZZA", BIG_DECIMAL);
+		setField("COD_LUOGO_NASCITA", STRING);
+		setField("COD_COMUNE_RESIDENZA", STRING);
+		setField("DATA_NASCITA", DATE);
+		setField("DATA_SOSPESO_FINO_AL", DATE);
+		setField("DATA_RADIATO_DAL", DATE);
+		setField("COD_NON_ATTIVITA", STRING);
+		setField("COD_UFFICIO_APPARTENENZA", STRING);
+		setField("NOTE", STRING);
+		setField("FLAG_CANCELLATO", STRING);
+		setField("ID_AVVOCATO_STANDARD", BIG_DECIMAL);
 
-  /**
-   * 
-   * @param aValore
-   */
-  public void    setIdAvvocato(BigDecimal aValore )       { setBigDecimal("ID_AVVOCATO", aValore); }
-  public void    setCognome(String aValore )          { setString("COGNOME", aValore); }
-  public void    setNome(String aValore )             { setString("NOME", aValore); }
-  public void    setForo(String aValore )             { setString("FORO", aValore); }
-  public void    setIndirizzo(String aValore )          { setString("INDIRIZZO", aValore); }
-  public void    setTelefono(String aValore )           { setString("TELEFONO", aValore); }
-  public void    setFax(String aValore )            { setString("FAX", aValore); }
-  public void    setEMail(String aValore )            { setString("E_MAIL", aValore); }
-  public void    setCodiceFiscale(String aValore )        { setString("COD_FISCALE", aValore); }
-  public void    setProvincia(String aValore )          { setString("PROVINCIA", aValore); }
-  public void    setCap(String aValore )            { setString("CAP", aValore); }
-  public void    setFlagVisualizza(BigDecimal aValore )     { setBigDecimal("FLAG_VISUALIZZA", aValore); }
-  
-  public void    setCodLuogoNascita(String aValore )      { setString("COD_LUOGO_NASCITA", aValore); }
-  public void    setCodComuneResidenza(String aValore )     { setString("COD_COMUNE_RESIDENZA", aValore); }
-  public void    setDataNascita(Date aValore )          { setDate("DATA_NASCITA", aValore); }
-  public void    setDataSospensione(Date aValore )          { setDate("DATA_SOSPESO_FINO_AL", aValore); }
-  public void    setDataRadiazione(Date aValore )           { setDate("DATA_RADIATO_DAL", aValore); }
-  public void    setCodNonAttivita (String aValore )        { setString("COD_NON_ATTIVITA", aValore); }
-  public void    setCodUffAppartenenza(String aValore )       { setString("COD_UFFICIO_APPARTENENZA", aValore); }
-  public void    setNote(String aValore )             { setString("NOTE", aValore); }
-  public void    setFlagCancellato(String aValore)        { setString("FLAG_CANCELLATO", aValore); }
-  public void    setIdAvvocatoStandard(BigDecimal aValore )   { setBigDecimal("ID_AVVOCATO_STANDARD", aValore); }
+		setField("COD_OPERATORE_INSERIMENTO", STRING);
+		setField("COD_UFFICIO_INSERIMENTO", STRING);
+		setField("DATA_INSERIMENTO", DATE);
 
-  public void    setCodOperatoreInserimento   (String aValore )   { setString("COD_OPERATORE_INSERIMENTO", aValore); }
-  public void    setCodUfficioInserimento     (String aValore )   { setString("COD_UFFICIO_INSERIMENTO", aValore); }
-  public void    setDataInserimento           (Date   aValore )   { setDate("DATA_INSERIMENTO", aValore); }
-  public void    setCodOperatoreAggiornamento (String aValore )   { setString("COD_OPERATORE_AGGIORNAMENTO", aValore); }
-  public void    setDataAggiornamento         (Date   aValore )   { setDate("DATA_AGGIORNAMENTO", aValore); }
-  public void    setCodUfficioAggiornamento   (String aValore)    { setString("COD_UFFICIO_AGGIORNAMENTO",aValore); }
-  
-  
-  public GenericModel     getModel() throws DAOException
-  {
-     return new AvvocatoModel(
-         getIdAvvocato() ,
-         getCognome() ,
-         getNome() ,
-         getForo() ,
-         getIndirizzo() ,
-         getTelefono() ,
-         getFax() ,
-         getEMail() ,
-         getCodiceFiscale(),
-         getProvincia(),
-         getCap(),
-         getFlagVisualizza(),
-         getCodOperatoreInserimento() ,
-         getCodUfficioInserimento(),
-         getDataInserimento() ,
-         getCodOperatoreAggiornamento() ,
-         getDataAggiornamento(),
-         getCodUfficioAggiornamento(),
-         "",
-         "",
-         "",
-         "",
-         this.getCodLuogoNascita(),
-         this.getCodComuneResidenza(),
-         this.getDataNascita(),
-         this.getDataSospensione(),
-         this.getDataRadiazione(),
-         this.getCodNonAttivita(),
-         this.getCodUffAppartenenza(),
-         getNote(),
-         getFlagCancellato(),
-         getIdAvvocatoStandard()
-        );
-   }
+		setField("COD_OPERATORE_AGGIORNAMENTO", STRING);
+		setField("DATA_AGGIORNAMENTO", DATE);
+		setField("COD_UFFICIO_AGGIORNAMENTO", STRING);
 
+		// MEV_21 (avvocati): aggiunti 6 campi in tabella
+		setField("PEC", STRING);
+		setField("FLAG_REGINDE", STRING);
+		setField("DESCR_COMUNE_STUDIO", STRING);
+		setField("COD_STATO_NASCITA_AVV", STRING);
+		setField("DESC_LUOGO_NAS_REGINDE", STRING);
+		setField("ID_AVVOCATO_BONIFICATO", BIG_DECIMAL);
+	}
 
-  public void setDAOFromModel(AvvocatoModel aModel) throws DAOException {
-    setIdAvvocato(aModel.getIdAvvocato());
-    setCognome(aModel.getCognome());
-    setNome(aModel.getNome());
-    setForo(aModel.getForo());
-    setIndirizzo(aModel.getIndirizzo());
-    setTelefono(aModel.getTelefono());
-    setFax(aModel.getFax());
-    setEMail(aModel.getEMail());
-    setCodiceFiscale(aModel.getCodiceFiscale());
-    setProvincia(aModel.getProvincia());
-    setCap(aModel.getCap());
-    setFlagVisualizza(aModel.getFlagVisualizza());
-    setCodLuogoNascita(aModel.getCodLuogoNascita());
-    setCodComuneResidenza(aModel.getCodComuneResidenza());
-    setDataNascita(aModel.getDataNascita());
-    setDataSospensione(aModel.getDataSospensione());
-    setDataRadiazione(aModel.getDataRadiazione());
-    setCodNonAttivita(aModel.getCodNonAttivita());
-    setCodUffAppartenenza(aModel.getCodUffAppartenenza());
-    setNote(aModel.getNote());
-    setFlagCancellato(aModel.getFlagCancellato());
-    setIdAvvocatoStandard(aModel.getIdAvvocatoStandard());
+	//
+	// METODI GET()
+	//
 
-    setCodOperatoreInserimento (aModel.getCodOperatoreInserimento());
-    setCodUfficioInserimento   (aModel.getCodUfficioInserimento());
-    setDataInserimento         (aModel.getDataInserimento());
-    
-    setCodOperatoreAggiornamento (aModel.getCodOperatoreAggiornamento());
-    setDataAggiornamento         (aModel.getDataAggiornamento());
-    setCodUfficioAggiornamento   (aModel.getCodUfficioAggiornamento());
-  
-  }
+	public BigDecimal getIdAvvocato() throws DAOException {
+		return getBigDecimal("ID_AVVOCATO");
+	}
 
-  public void setDAOFromModelForUpdate(AvvocatoModel aModel) throws DAOException
-  {
-      setCognome( aModel.getCognome() );
-      setNome( aModel.getNome() );
-      setForo( aModel.getForo() );
-      setIndirizzo( aModel.getIndirizzo() );
-      setTelefono( aModel.getTelefono() );
-      setFax( aModel.getFax() );
-      setEMail( aModel.getEMail() );
-      setCodiceFiscale( aModel.getCodiceFiscale() );
-      setProvincia( aModel.getProvincia() );
-      setCap( aModel.getCap() );
-      setFlagVisualizza( aModel.getFlagVisualizza() );
-      
-      setCodLuogoNascita(aModel.getCodLuogoNascita() );
-      setCodComuneResidenza(aModel.getCodComuneResidenza() );
-      setDataNascita(aModel.getDataNascita() );
-      setDataSospensione(aModel.getDataSospensione() );
-      setDataRadiazione(aModel.getDataRadiazione() );
-      setCodNonAttivita (aModel.getCodNonAttivita() );
-      setCodUffAppartenenza(aModel.getCodUffAppartenenza() );
-      setNote(aModel.getNote());
-      setFlagCancellato(aModel.getFlagCancellato());
+	public String getCognome() throws DAOException {
+		return getString("COGNOME");
+	}
 
-      setCodOperatoreAggiornamento ( aModel.getCodOperatoreAggiornamento() );
-      setDataAggiornamento         ( aModel.getDataAggiornamento() );
-      setCodUfficioAggiornamento   ( aModel.getCodUfficioAggiornamento() );
+	public String getNome() throws DAOException {
+		return getString("NOME");
+	}
 
-      selCondizioneUpdate (aModel.getIdAvvocato());
-  }
+	public String getForo() throws DAOException {
+		return getString("FORO");
+	}
 
+	public String getIndirizzo() throws DAOException {
+		return getString("INDIRIZZO");
+	}
 
-  public void selCondizione(AvvocatoModel aModel) {
-    String lCondizioni = new String();
-    boolean lInserito = false;
-    if (aModel.getIdAvvocato().doubleValue() != 0) {
-      if (lInserito)
-        lCondizioni += " AND ID_AVVOCATO= " + aModel.getIdAvvocato();
-      else {
-        lCondizioni = " ID_AVVOCATO= " + aModel.getIdAvvocato();
-        lInserito = true;
-      }
-    }
-    if (lInserito)
-      setCondition(lCondizioni);
-  }
+	public String getTelefono() throws DAOException {
+		return getString("TELEFONO");
+	}
 
-  public void selCondizioneUpdate(BigDecimal key)
-  {
-    setCondition(" ID_AVVOCATO = " + key );
-  }
+	public String getFax() throws DAOException {
+		return getString("FAX");
+	}
+
+	public String getEMail() throws DAOException {
+		return getString("E_MAIL");
+	}
+
+	public String getCodiceFiscale() throws DAOException {
+		return getString("COD_FISCALE");
+	}
+
+	public String getProvincia() throws DAOException {
+		return getString("PROVINCIA");
+	}
+
+	public String getCap() throws DAOException {
+		return getString("CAP");
+	}
+
+	public BigDecimal getFlagVisualizza() throws DAOException {
+		return getBigDecimal("FLAG_VISUALIZZA");
+	}
+
+	public String getCodLuogoNascita() throws DAOException {
+		return getString("COD_LUOGO_NASCITA");
+	}
+
+	public String getCodComuneResidenza() throws DAOException {
+		return getString("COD_COMUNE_RESIDENZA");
+	}
+
+	public Date getDataNascita() throws DAOException {
+		return getDate("DATA_NASCITA");
+	}
+
+	public Date getDataSospensione() throws DAOException {
+		return getDate("DATA_SOSPESO_FINO_AL");
+	}
+
+	public Date getDataRadiazione() throws DAOException {
+		return getDate("DATA_RADIATO_DAL");
+	}
+
+	public String getCodNonAttivita() throws DAOException {
+		return getString("COD_NON_ATTIVITA");
+	}
+
+	public String getCodUffAppartenenza() throws DAOException {
+		return getString("COD_UFFICIO_APPARTENENZA");
+	}
+
+	public String getNote() throws DAOException {
+		return getString("NOTE");
+	}
+
+	public String getFlagCancellato() throws DAOException {
+		return getString("FLAG_CANCELLATO");
+	}
+
+	public BigDecimal getIdAvvocatoStandard() throws DAOException {
+		return getBigDecimal("ID_AVVOCATO_STANDARD");
+	}
+
+	public String getCodOperatoreInserimento() throws DAOException {
+		return getString("COD_OPERATORE_INSERIMENTO");
+	}
+
+	public String getCodUfficioInserimento() throws DAOException {
+		return getString("COD_UFFICIO_INSERIMENTO");
+	}
+
+	public Date getDataInserimento() throws DAOException {
+		return getDate("DATA_INSERIMENTO");
+	}
+
+	public String getCodOperatoreAggiornamento() throws DAOException {
+		return getString("COD_OPERATORE_AGGIORNAMENTO");
+	}
+
+	public Date getDataAggiornamento() throws DAOException {
+		return getDate("DATA_AGGIORNAMENTO");
+	}
+
+	public String getCodUfficioAggiornamento() throws DAOException {
+		return getString("COD_UFFICIO_AGGIORNAMENTO");
+	}
+
+	// MEV_21 (avvocati): aggiunti 6 campi in tabella
+	public String getPec() throws DAOException {
+		return getString("PEC");
+	}
+
+	public String getFlagRegInde() throws DAOException {
+		return getString("FLAG_REGINDE");
+	}
+
+	public String getDescrComuneStudio() throws DAOException {
+		return getString("DESCR_COMUNE_STUDIO");
+	}
+
+	public String getCodStatoNascita() throws DAOException {
+		return getString("COD_STATO_NASCITA_AVV");
+	}
+
+	public String getDescLuogoNasRegInde() throws DAOException {
+		return getString("DESC_LUOGO_NAS_REGINDE");
+	}
+	public BigDecimal getIdAvvocatoBonificato() throws DAOException {
+		return getBigDecimal("ID_AVVOCATO_BONIFICATO");
+	}
+
+	//
+	// METODI SET(...)
+	//
+
+	/**
+	 *
+	 * @param aValore
+	 */
+	public void setIdAvvocato(BigDecimal aValore) {
+		setBigDecimal("ID_AVVOCATO", aValore);
+	}
+
+	public void setCognome(String aValore) {
+		setString("COGNOME", aValore);
+	}
+
+	public void setNome(String aValore) {
+		setString("NOME", aValore);
+	}
+
+	public void setForo(String aValore) {
+		setString("FORO", aValore);
+	}
+
+	public void setIndirizzo(String aValore) {
+		setString("INDIRIZZO", aValore);
+	}
+
+	public void setTelefono(String aValore) {
+		setString("TELEFONO", aValore);
+	}
+
+	public void setFax(String aValore) {
+		setString("FAX", aValore);
+	}
+
+	public void setEMail(String aValore) {
+		setString("E_MAIL", aValore);
+	}
+
+	public void setCodiceFiscale(String aValore) {
+		setString("COD_FISCALE", aValore);
+	}
+
+	public void setProvincia(String aValore) {
+		setString("PROVINCIA", aValore);
+	}
+
+	public void setCap(String aValore) {
+		setString("CAP", aValore);
+	}
+
+	public void setFlagVisualizza(BigDecimal aValore) {
+		setBigDecimal("FLAG_VISUALIZZA", aValore);
+	}
+
+	public void setCodLuogoNascita(String aValore) {
+		setString("COD_LUOGO_NASCITA", aValore);
+	}
+
+	public void setCodComuneResidenza(String aValore) {
+		setString("COD_COMUNE_RESIDENZA", aValore);
+	}
+
+	public void setDataNascita(Date aValore) {
+		setDate("DATA_NASCITA", aValore);
+	}
+
+	public void setDataSospensione(Date aValore) {
+		setDate("DATA_SOSPESO_FINO_AL", aValore);
+	}
+
+	public void setDataRadiazione(Date aValore) {
+		setDate("DATA_RADIATO_DAL", aValore);
+	}
+
+	public void setCodNonAttivita(String aValore) {
+		setString("COD_NON_ATTIVITA", aValore);
+	}
+
+	public void setCodUffAppartenenza(String aValore) {
+		setString("COD_UFFICIO_APPARTENENZA", aValore);
+	}
+
+	public void setNote(String aValore) {
+		setString("NOTE", aValore);
+	}
+
+	public void setFlagCancellato(String aValore) {
+		setString("FLAG_CANCELLATO", aValore);
+	}
+
+	public void setIdAvvocatoStandard(BigDecimal aValore) {
+		setBigDecimal("ID_AVVOCATO_STANDARD", aValore);
+	}
+
+	public void setCodOperatoreInserimento(String aValore) {
+		setString("COD_OPERATORE_INSERIMENTO", aValore);
+	}
+
+	public void setCodUfficioInserimento(String aValore) {
+		setString("COD_UFFICIO_INSERIMENTO", aValore);
+	}
+
+	public void setDataInserimento(Date aValore) {
+		setDate("DATA_INSERIMENTO", aValore);
+	}
+
+	public void setCodOperatoreAggiornamento(String aValore) {
+		setString("COD_OPERATORE_AGGIORNAMENTO", aValore);
+	}
+
+	public void setDataAggiornamento(Date aValore) {
+		setDate("DATA_AGGIORNAMENTO", aValore);
+	}
+
+	public void setCodUfficioAggiornamento(String aValore) {
+		setString("COD_UFFICIO_AGGIORNAMENTO", aValore);
+	}
+
+	// MEV_21 (avvocati): aggiunti 6 campi in tabella
+	// public void setDescComuneSedeForo(String aValore) {
+	// setString("DESCR_COMUNE_STUDIO", aValore);
+	// }
+
+	public void setPec(String aValore) {
+		setString("PEC", aValore);
+	}
+
+	public void setFlagRegInde(String aValore) {
+		setString("FLAG_REGINDE", aValore);
+	}
+
+	public void setDescrComuneStudio(String aValore) {
+		setString("DESCR_COMUNE_STUDIO", aValore);
+	}
+
+	public void setCodStatoNascita(String aValore) {
+		setString("COD_STATO_NASCITA_AVV", aValore);
+	}
+
+	public void setDescLuogoNasRegInde(String aValore) {
+		setString("DESC_LUOGO_NAS_REGINDE", aValore);
+	}
+	public void setIdAvvocatoBonificato(BigDecimal aValore) {
+		setBigDecimal("ID_AVVOCATO_BONIFICATO", aValore);
+	}
+
+	public GenericModel getModel() throws DAOException {
+
+		return new AvvocatoModel(getIdAvvocato(), getCognome(), getNome(), getForo(),
+				// MEV_21 (avvocati) descrizione SedeForo() + 6 nuovi campi db
+				"", getPec(), getFlagRegInde(), getDescrComuneStudio(), getDescLuogoNasRegInde(),
+				getCodStatoNascita(), "", getIdAvvocatoBonificato(), getIndirizzo(), getTelefono(), getFax(), getEMail(),
+				getCodiceFiscale(), getProvincia(), getCap(), getFlagVisualizza(),
+				getCodOperatoreInserimento(), getCodUfficioInserimento(), getDataInserimento(),
+				getCodOperatoreAggiornamento(), getDataAggiornamento(), getCodUfficioAggiornamento(), "", "",
+				"", "", this.getCodLuogoNascita(), this.getCodComuneResidenza(), this.getDataNascita(),
+				this.getDataSospensione(), this.getDataRadiazione(), this.getCodNonAttivita(),
+				this.getCodUffAppartenenza(), getNote(), getFlagCancellato(), getIdAvvocatoStandard());
+	}
+
+	public void setDAOFromModel(AvvocatoModel aModel) throws DAOException {
+
+		setIdAvvocato(aModel.getIdAvvocato());
+		setCognome(aModel.getCognome());
+		setNome(aModel.getNome());
+		setForo(aModel.getForo());
+		setIndirizzo(aModel.getIndirizzo());
+		setTelefono(aModel.getTelefono());
+		setFax(aModel.getFax());
+		setEMail(aModel.getEMail());
+		setCodiceFiscale(aModel.getCodiceFiscale());
+		setProvincia(aModel.getProvincia());
+		setCap(aModel.getCap());
+		setFlagVisualizza(aModel.getFlagVisualizza());
+		// MEV_21 (avvocati) aggiunti 6 nuovi campi db
+		setPec(aModel.getPec());
+		setFlagRegInde(aModel.getFlagRegInde());
+		setDescrComuneStudio(aModel.getDescrComuneStudio());
+		setCodStatoNascita(aModel.getCodStatoNascita());
+		setDescLuogoNasRegInde(aModel.getDescLuogoNascitaReginde());
+		setIdAvvocatoBonificato(aModel.getIdAvvocatoBonificato());
+
+		setCodLuogoNascita(aModel.getCodLuogoNascita());
+		setCodComuneResidenza(aModel.getCodComuneResidenza());
+		setDataNascita(aModel.getDataNascita());
+		setDataSospensione(aModel.getDataSospensione());
+		setDataRadiazione(aModel.getDataRadiazione());
+		setCodNonAttivita(aModel.getCodNonAttivita());
+		setCodUffAppartenenza(aModel.getCodUffAppartenenza());
+		setNote(aModel.getNote());
+		setFlagCancellato(aModel.getFlagCancellato());
+		setIdAvvocatoStandard(aModel.getIdAvvocatoStandard());
+
+		setCodOperatoreInserimento(aModel.getCodOperatoreInserimento());
+		setCodUfficioInserimento(aModel.getCodUfficioInserimento());
+		setDataInserimento(aModel.getDataInserimento());
+
+		setCodOperatoreAggiornamento(aModel.getCodOperatoreAggiornamento());
+		setDataAggiornamento(aModel.getDataAggiornamento());
+		setCodUfficioAggiornamento(aModel.getCodUfficioAggiornamento());
+	}
+
+	public void setDAOFromModelForUpdate(AvvocatoModel aModel) throws DAOException {
+
+		setCognome(aModel.getCognome());
+		setNome(aModel.getNome());
+		setForo(aModel.getForo());
+		setIndirizzo(aModel.getIndirizzo());
+		setTelefono(aModel.getTelefono());
+		setFax(aModel.getFax());
+		setEMail(aModel.getEMail());
+		setCodiceFiscale(aModel.getCodiceFiscale());
+		setProvincia(aModel.getProvincia());
+		setCap(aModel.getCap());
+		setFlagVisualizza(aModel.getFlagVisualizza());
+		// MEV_21 (avvocati) aggiunti 6 nuovi campi db
+		setPec(aModel.getPec());
+		setFlagRegInde(aModel.getFlagRegInde());
+		setDescrComuneStudio(aModel.getDescrComuneStudio());
+		setCodStatoNascita(aModel.getCodStatoNascita());
+		setDescLuogoNasRegInde(aModel.getDescLuogoNascitaReginde());
+		setIdAvvocatoBonificato(aModel.getIdAvvocatoBonificato());
+
+		setCodLuogoNascita(aModel.getCodLuogoNascita());
+		setCodComuneResidenza(aModel.getCodComuneResidenza());
+		setDataNascita(aModel.getDataNascita());
+		setDataSospensione(aModel.getDataSospensione());
+		setDataRadiazione(aModel.getDataRadiazione());
+		setCodNonAttivita(aModel.getCodNonAttivita());
+		setCodUffAppartenenza(aModel.getCodUffAppartenenza());
+		setNote(aModel.getNote());
+		setFlagCancellato(aModel.getFlagCancellato());
+
+		setCodOperatoreAggiornamento(aModel.getCodOperatoreAggiornamento());
+		setDataAggiornamento(aModel.getDataAggiornamento());
+		setCodUfficioAggiornamento(aModel.getCodUfficioAggiornamento());
+
+		selCondizioneUpdate(aModel.getIdAvvocato());
+	}
+
+	public void selCondizione(AvvocatoModel aModel) {
+
+		String lCondizioni = new String();
+		boolean lInserito = false;
+		if (aModel.getIdAvvocato().doubleValue() != 0) {
+			if (lInserito)
+				lCondizioni += " AND ID_AVVOCATO= " + aModel.getIdAvvocato();
+			else {
+				lCondizioni = " ID_AVVOCATO= " + aModel.getIdAvvocato();
+				lInserito = true;
+			}
+		}
+		if (lInserito)
+			setCondition(lCondizioni);
+	}
+
+	public void selCondizioneUpdate(BigDecimal key) {
+
+		setCondition(" ID_AVVOCATO = " + key);
+	}
 
 }

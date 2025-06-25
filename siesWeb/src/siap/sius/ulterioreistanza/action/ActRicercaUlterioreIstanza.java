@@ -12,18 +12,7 @@ import siap.sius.ulterioreistanza.model.UlterioreIstanzaModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * <p>
- * Title: ActRicercaUlterioreIstanza
- * </p>
- * <p>
- * Description: Classe Action per la ricerca di UlterioreIstanza
- * </p>
- * <p>
- * Copyright: Copyright (c) 2006
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * ActRicercaUlterioreIstanza - Classe Action per la ricerca di UlterioreIstanza
  * 
  * @version 1.0
  */
@@ -44,7 +33,7 @@ public class ActRicercaUlterioreIstanza extends ActionSius implements ICostantiU
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getPackage().getName() + ".processRequest(): inizio");
+		siesLogger.debug(this.getClass().getName() + ".processRequest(): inizio");
 
 		// Inizializza e popola il model con il dato utile per la ricerca.
 		// id del fascicolo sius
@@ -63,7 +52,7 @@ public class ActRicercaUlterioreIstanza extends ActionSius implements ICostantiU
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getPackage().getName() + ".processRequest(): fine");
+		siesLogger.debug(this.getClass().getName() + ".processRequest(): fine");
 
 		return PG_RICERCAULTERIOREISTANZA;
 	}

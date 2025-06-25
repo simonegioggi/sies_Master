@@ -93,15 +93,9 @@ import siap.sius.statistiche.model.RicercaProvvedimentoModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * <p>
- * Title: StatisController
- * </p>
- * <p>
- * Description: Controller per le statistiche
- * </p>
- * <p>
- * Company: Bull Italia S.p.A.
- * </p>
+ * StatisController - Classe Controller per le statistiche
+ *
+ * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class StatisController extends GenericController {
@@ -3245,7 +3239,7 @@ public class StatisController extends GenericController {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioFascicoliPriviDiRelatore : inizio");
+		siesLogger.debug(getClass().getName() + ".creaFoglioFascicoliPriviDiRelatore : inizio");
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("Vector size : " + aElencoProcNoRel.size());
@@ -3373,7 +3367,7 @@ public class StatisController extends GenericController {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioFascicoliPriviDiRelatore : fine");
+		siesLogger.debug(getClass().getName() + ".creaFoglioFascicoliPriviDiRelatore : fine");
 	}
 
 	/**
@@ -4380,7 +4374,7 @@ public class StatisController extends GenericController {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioFascicoliPendenti : inizio");
+		siesLogger.debug(getClass().getName() + ".creaFoglioFascicoliPendenti : inizio");
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("Vector size : " + aElencoProc.size());
@@ -4486,7 +4480,7 @@ public class StatisController extends GenericController {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioFascicoliPendenti : fine");
+		siesLogger.debug(getClass().getName() + ".creaFoglioFascicoliPendenti : fine");
 	}
 
 	/**
@@ -4506,7 +4500,7 @@ public class StatisController extends GenericController {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioContenutiPendenti : inizio");
+		siesLogger.debug(getClass().getName() + ".creaFoglioContenutiPendenti : inizio");
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("Vector size : " + aElencoProc.size());
@@ -4700,7 +4694,7 @@ public class StatisController extends GenericController {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioContenutiPendenti : fine");
+		siesLogger.debug(getClass().getName() + ".creaFoglioContenutiPendenti : fine");
 	}
 
 	/**
@@ -4720,7 +4714,7 @@ public class StatisController extends GenericController {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioOggettiPendenti : inizio");
+		siesLogger.debug(getClass().getName() + ".creaFoglioOggettiPendenti : inizio");
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("Vector size : " + aElencoProc.size());
@@ -4865,7 +4859,7 @@ public class StatisController extends GenericController {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioFascicoliPendentiPerOggetto : fine");
+		siesLogger.debug(getClass().getName() + ".creaFoglioFascicoliPendentiPerOggetto : fine");
 	}
 
 	/**
@@ -4883,7 +4877,7 @@ public class StatisController extends GenericController {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioOggettiCancellati : inizio");
+		siesLogger.debug(getClass().getName() + ".creaFoglioOggettiCancellati : inizio");
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("Vector size : " + aElencoProc.size());
@@ -4978,7 +4972,7 @@ public class StatisController extends GenericController {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioOggettiCancellati : fine");
+		siesLogger.debug(getClass().getName() + ".creaFoglioOggettiCancellati : fine");
 	}
 
 	/**
@@ -4998,7 +4992,7 @@ public class StatisController extends GenericController {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioFascicoliUnificati : inizio");
+		siesLogger.debug(getClass().getName() + ".creaFoglioFascicoliUnificati : inizio");
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("Vector size : " + aElencoProc.size());
@@ -5098,7 +5092,7 @@ public class StatisController extends GenericController {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioFascicoliUnificati : fine");
+		siesLogger.debug(getClass().getName() + ".creaFoglioFascicoliUnificati : fine");
 	}
 
 	// AMBROS L78/2013

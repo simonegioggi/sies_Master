@@ -1014,7 +1014,7 @@ if(posizioneluogoaltra != null && posizioneluogoaltra.getAltraCausa() != null &&
      	</tr>
 		<tr>
       		<td class="l">Sede </td><td class="L">
-        		<input title="Sede Foro Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocato().getForo())%>" type="text" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>" maxlength="35" size="35">
+        		<input title="Sede Foro Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescComuneSedeForo())%>" type="text" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>" maxlength="35" size="35">
 <%
         		if (avvocati.size() > 1) {
 %>

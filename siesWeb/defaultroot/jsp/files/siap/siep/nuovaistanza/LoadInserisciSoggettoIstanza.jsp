@@ -11,31 +11,36 @@
 
 <!---------------------------------Soggetto------------------------------------------------->
 
-<%@ page import="f3b.security.model.ProfileModel" %>
-<%@ page import="siap.sico.soggetto.action.ICostantiSoggetto" %>
-<%@ page import="siap.sico.soggetto.model.SoggettoModel" %>
-<%@ page import="java.util.Iterator" %>
-<%@ page import="siap.sico.utente.model.UtenteModel" %>
+<%@ page import="f3b.security.model.ProfileModel"%>
+<%@ page import="siap.sico.soggetto.action.ICostantiSoggetto"%>
+<%@ page import="siap.sico.soggetto.model.SoggettoModel"%>
+<%@ page import="java.util.Iterator"%>
+<%@ page import="siap.sico.utente.model.UtenteModel"%>
 <%@ page import="siap.sico.decodifiche.action.ICostantiComune"%>
 <%@ page import="siap.sico.ufficio.action.ICostantiUfficio"%>
 
-<jsp:useBean id="UtenteConnesso" scope="session" class="siap.sico.utente.model.UtenteModel" />
+<jsp:useBean id="UtenteConnesso" scope="session"
+	class="siap.sico.utente.model.UtenteModel" />
 
 <!---------------------------------Fine Soggetto------------------------------------------------->
-<jsp:useBean id="tipoinserimento" scope="request" class="java.lang.String" />
+<jsp:useBean id="tipoinserimento" scope="request"
+	class="java.lang.String" />
 <jsp:useBean id="idfascicolo" scope="request" class="java.lang.String" />
 <jsp:useBean id="idsentenza" scope="request" class="java.lang.String" />
 <jsp:useBean id="idsoggetto" scope="request" class="java.lang.String" />
 
 <html>
 <head>
-  <title> Gestione Nuova Istanza </title>
-  <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
-  <script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
-  <script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
-  <script language="JavaScript" src="<%=IWebConstants.JS_DIR%>/controlli.js"></script>
-  <script language="JavaScript" src="<%=ICostantiFasSigeSentenza.JS_SENTENZA%>"></script>
-  <script language="JavaScript" >
+<title>Gestione Nuova Istanza</title>
+<link rel="STYLESHEET" type="text/css"
+	href="<%=IWebConstants.PG_STYLE%>">
+<script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
+<script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
+<script language="JavaScript"
+	src="<%=IWebConstants.JS_DIR%>/controlli.js"></script>
+<script language="JavaScript"
+	src="<%=ICostantiFasSigeSentenza.JS_SENTENZA%>"></script>
+<script language="JavaScript">
   // 10/06/2010 Lista Uffici per TIPO_UFFICIO
   var desktop;
   function ListaUfficiPerTipo(a_formname, a_fieldname, codTipoUfficio)
@@ -105,6 +110,12 @@
 	var desktop;
     desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComune&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=300,height=500");
   }
+
+  <!-- 20210524	MEV Scheda-21 -->
+  function ListaComuniNascita(a_formname,a_fieldname)
+  {
+    desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComuneNascita&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=400,height=500");
+  }      
   
   function ListaAvvocati(a_formname,a_filtro)
   {
@@ -447,6 +458,105 @@
         return false; 
      }
 
+
+  	// 20210812 MEV_21 - Aggiunti controlli per inserimento manuale avvocato non certificato.
+	var lTipoIns = document.LoadInserisciSentenza.lTipoInserimento.value;
+	if (lTipoIns == 'manuale' ) {
+		if (document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_COGNOME%>.value.length==0 ) {
+			alert('Il Cognome è obbligatorio');
+			document.LoadInserisciSentenza.<%= ICostantiAvvocato.CAMPO_COGNOME %>.focus;
+			return false;
+		}
+		if (document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_NOME%>.value.length==0 ) {
+			alert('Il Nome è obbligatorio');
+			document.LoadInserisciSentenza.<%= ICostantiAvvocato.CAMPO_NOME %>.focus;
+			return false;
+		}
+	  	
+		if (document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>[document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>.selectedIndex].value=='039') {
+			document.LoadInserisciSentenza.<%= ICostantiAvvocato.CAMPO_DESC_COMUNE_NASCITA_REGINDE %>.value="";
+			if (document.LoadInserisciSentenza.<%= ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA %>.value.length==0) {
+				alert('Il Comune di Nascita è obbligatorio se lo Stato di Nascita è Italia');
+				document.LoadInserisciSentenza.<%= ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA %>.focus;
+				return false;
+			}
+		} else 	if (document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>[document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>.selectedIndex].value!='-') {
+			document.LoadInserisciSentenza.<%= ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA %>.value='';
+			cancellaCodComuneReale();
+		}
+	
+		if (document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA%>.value.length > 0 	&&
+			document.LoadInserisciSentenza.<%= ICostantiAvvocato.CAMPO_DESC_COMUNE_NASCITA_REGINDE %>.value.length > 0 ) {
+				alert('Il Comune di Nascita e il luogo di Nascita Estero sono alternativi');
+				document.LoadInserisciSentenza.<%= ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA %>.focus;
+				return false;
+		}
+			
+		if (document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>.value.length==1)
+			document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>.value='0'+document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>.value;
+		if (document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>.value.length==1)
+			document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>.value='0'+document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>.value;
+	
+		var data_to_verify=document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>.value+'/'+document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>.value+'/'+document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA%>.value;
+		if (! ControllaData(data_to_verify)) {
+			alert('Data di nascita non valida');
+			return false;
+		}
+	
+		if (document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_COD_TIPO%>.value == "-") {
+			alert('Il tipo difensore è obbligatorio');
+			return false;
+		}
+	}
+
+  	// 20210812 MEV_21 - Controlli per inserimento manuale avvocato presentante solo se check depositata.
+	var lTipoInsP = document.LoadInserisciSentenza.lTipoInserimentoP.value;
+	if ((document.LoadInserisciSentenza.<%=ICostantiNuovaIstanza.CAMPO_FLAG_PRESDEP %>[0].checked == true)	&& 
+	    (lTipoInsP == 'manuale' ) )
+	{
+		if (document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_COGNOME_P%>.value.length==0 ) {
+			alert('Il Cognome è obbligatorio');
+			document.LoadInserisciSentenza.<%= ICostantiAvvocato.CAMPO_COGNOME_P %>.focus;
+			return false;
+		}
+		if (document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_NOME_P%>.value.length==0 ) {
+			alert('Il Nome è obbligatorio');
+			document.LoadInserisciSentenza.<%= ICostantiAvvocato.CAMPO_NOME_P %>.focus;
+			return false;
+		}
+	  	
+		if (document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA_P%>[document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA_P%>.selectedIndex].value=='039') {
+			document.LoadInserisciSentenza.<%= ICostantiAvvocato.CAMPO_DESC_COMUNE_NASCITA_REGINDE_P %>.value="";
+			if (document.LoadInserisciSentenza.<%= ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA_P %>.value.length==0) {
+				alert('Il Comune di Nascita è obbligatorio se lo Stato di Nascita è Italia');
+				document.LoadInserisciSentenza.<%= ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA_P %>.focus;
+				return false;
+			}
+		} else 	if (document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA_P%>[document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA_P%>.selectedIndex].value!='-') {
+			document.LoadInserisciSentenza.<%= ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA_P %>.value='';
+			cancellaCodComuneReale();
+		}
+
+		if (document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA_P%>.value.length > 0 	&&
+			document.LoadInserisciSentenza.<%= ICostantiAvvocato.CAMPO_DESC_COMUNE_NASCITA_REGINDE_P %>.value.length > 0 ) {
+				alert('Il Comune di Nascita e il luogo di Nascita Estero sono alternativi');
+				document.LoadInserisciSentenza.<%= ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA_P %>.focus;
+				return false;
+		}
+			
+		if (document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA_P%>.value.length==1)
+			document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA_P%>.value='0'+document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA_P%>.value;
+		if (document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA_P%>.value.length==1)
+			document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA_P%>.value='0'+document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA_P%>.value;
+
+		var data_to_verify=document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA_P%>.value+'/'+document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA_P%>.value+'/'+document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA_P%>.value;
+		if (! ControllaData(data_to_verify)) {
+			alert('Data di nascita non valida');
+			return false;
+		}
+	}
+
+ 	
      var lRitorno = true
      if(!document.LoadInserisciSentenza.<%=ICostantiSoggetto.CAMPO_NOME%>.disabled)
      {
@@ -468,8 +578,8 @@
      }
       
       return lRitorno;
- 
-    } 
+  }	// end Verify()
+     
 	function AbilitaSentenza()
 	{	  
         document.LoadInserisciSentenza.<%=ICostantiSentenza.CAMPO_ANNO_REGE_PM%>.disabled=false;
@@ -763,8 +873,54 @@
           document.LoadInserisciSentenza.<%=ICostantiNuovaIstanza.CAMPO_SOGG_PRESENTANTE_IDENTIFICATO%>.disabled=false;           
           document.LoadInserisciSentenza.<%=ICostantiNuovaIstanza.CAMPO_AVV_ID_AVVOCATO_PRESENTANTE%>.disabled=false;           
 
-  		  
   	    }
+	  	// 20210730 Controllo tipo inserimento non Reginde
+		var lTipoIns = document.LoadInserisciSentenza.lTipoInserimento.value;
+		if (lTipoIns == 'manuale' ) {
+			document.getElementById('inserimento').style.visibility = 'visible';
+			document.getElementById('confermaBtn').style.visibility = 'hidden';
+			document.getElementById('ricReginde').style.visibility = 'hidden';
+			document.getElementById('<%=ICostantiAvvocato.CAMPO_COGNOME%>').readOnly = false; 
+			document.getElementById('<%=ICostantiAvvocato.CAMPO_NOME%>').readOnly = false; 
+			document.getElementById('<%=ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA%>').readOnly = false; 
+			document.getElementById('<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>').disabled = false;
+			document.getElementById('<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_NASCITA_REGINDE%>').readOnly = false; 
+			document.getElementById('<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>').readOnly = false; 
+			document.getElementById('<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>').readOnly = false; 
+			document.getElementById('<%=ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA%>').readOnly = false; 
+			document.getElementById('<%=ICostantiAvvocato.CAMPO_FORO%>').disabled = false;
+			document.getElementById('<%=ICostantiAvvocato.CAMPO_INDIRIZZO%>').readOnly = false; 
+			document.getElementById('<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_STUDIO%>').readOnly = false; 
+			document.getElementById('<%=ICostantiAvvocato.CAMPO_TELEFONO%>').readOnly = false; 
+			document.getElementById('<%=ICostantiAvvocato.CAMPO_FAX%>').readOnly = false; 
+			document.getElementById('<%=ICostantiAvvocato.CAMPO_E_MAIL%>').readOnly = false; 
+			document.getElementById('<%=ICostantiAvvocato.CAMPO_PEC%>').readOnly = false; 
+			document.getElementById('<%=ICostantiAvvocato.CAMPO_CODICE_FISCALE%>').readOnly = false; 
+			document.getElementById('<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA%>').disabled = false;
+		}
+  		var lTipoInsP = document.LoadInserisciSentenza.lTipoInserimentoP.value;
+  		if (lTipoInsP == 'manuale' ) {
+  			document.getElementById('inserimentoP').style.visibility = 'visible';
+  			document.getElementById('ricRegindeP').style.visibility = 'hidden';
+  			document.getElementById('<%=ICostantiAvvocato.CAMPO_COGNOME_P%>').readOnly = false; 
+  			document.getElementById('<%=ICostantiAvvocato.CAMPO_NOME_P%>').readOnly = false; 
+  			document.getElementById('<%=ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA_P%>').readOnly = false; 
+  			document.getElementById('<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA_P%>').disabled = false;
+  			document.getElementById('<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_NASCITA_REGINDE_P%>').readOnly = false; 
+  			document.getElementById('<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA_P%>').readOnly = false; 
+  			document.getElementById('<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA_P%>').readOnly = false; 
+  			document.getElementById('<%=ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA_P%>').readOnly = false; 
+  			document.getElementById('<%=ICostantiAvvocato.CAMPO_FORO_P%>').disabled = false;
+  			document.getElementById('<%=ICostantiAvvocato.CAMPO_INDIRIZZO_P%>').readOnly = false; 
+  			document.getElementById('<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_STUDIO_P%>').readOnly = false; 
+  			document.getElementById('<%=ICostantiAvvocato.CAMPO_TELEFONO_P%>').readOnly = false; 
+  			document.getElementById('<%=ICostantiAvvocato.CAMPO_FAX_P%>').readOnly = false; 
+  			document.getElementById('<%=ICostantiAvvocato.CAMPO_E_MAIL_P%>').readOnly = false; 
+  			document.getElementById('<%=ICostantiAvvocato.CAMPO_PEC_P%>').readOnly = false; 
+  			document.getElementById('<%=ICostantiAvvocato.CAMPO_CODICE_FISCALE_P%>').readOnly = false; 
+  			document.getElementById('<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA_P%>').disabled = false;
+  		}
+ 	    
     } 
 
     function ctrl_autorita(idcmb1, idcmb2, idDiv, idTipoRito) {
@@ -887,38 +1043,52 @@
     		}
     	}
     	
+        <%-- MEV_21: aggiunta chiamata a WS per individuare lista avvocato in RegInde --%>
+        function ListaAvvocatiRegInde(a_formname) {
+        	desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.siep.avvocato.action.ActLoadRicercaAvvocatoRegInde&formname="+a_formname,"Ricerca_Avvocato_RegInde","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=1000,height=600");
+        }
 
-    	
+
+        <%-- 20210809 MEV_21: Gestione Inserimento estemporaneo di avvocato da RegInde o manuale --%>
+        function ListaInsAvvRegInde(a_formname) {
+        	desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.siep.avvocato.action.ActLoadRicercaInsAvvRegInde&formname="+a_formname,"Ricerca_Avvocato_RegInde","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=1000,height=600");
+        }
+        
+     	// Enable ComboBox
+        function EnableCombo() {
+        	document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>.disabled = false;
+        	document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_FORO%>.disabled = false;
+        	document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA%>.disabled = false;
+        	document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA_P%>.disabled = false;
+        	document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_FORO_P%>.disabled = false;
+        	document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA_P%>.disabled = false;
+        }
+        
+        
   </script>
 </head>
 
 <body class="corpo" onLoad="Javascript:comandainserimento();">
-  <table>
-    <tr>
-      <td class="LBG">
-        <a href="Javascript:window.print();">
-          <img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border="0">
-        </a>
-      </td>
-      <td class="LBG">
-        <font class="label">Funzione :</font>&nbsp;&nbsp;
-        <%
+	<table>
+		<tr>
+			<td class="LBG"><a href="Javascript:window.print();"> <img
+					align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif"
+					alt="Stampa questa videata" border="0">
+			</a></td>
+			<td class="LBG"><font class="label">Funzione :</font>&nbsp;&nbsp;
+				<%
         NuovaIstanzaModel lNuovaIstanza = new NuovaIstanzaModel(); 
         String lAzione = new String();
   
           lAzione = "siap.siep.nuovaistanza.action.ActInserisciNuovaIstanza"; 
-         %>
-           <font class="campo">Iscrizione Istanza per Soggetto</font>
-       
-     
+         %> <font class="campo">Iscrizione Istanza per Soggetto</font></td>
+		</tr>
+	</table>
 
-      </td>
-    </tr>
-  </table>
-
-<FORM method="POST" action="Main.jsp" name="LoadInserisciSentenza">
-  <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="<%=lAzione%>">
-<!-- 
+	<FORM method="POST" action="Main.jsp" name="LoadInserisciSentenza">
+		<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>"
+			value="<%=lAzione%>">
+		<!-- 
     INIZIO dell'include! 
 
      All'interno dell'include si trova il sorgente della pagina visualizzata,
@@ -927,57 +1097,61 @@
      ---ATTENZIONE QUANDO SI MODIFICA!! --- 
      
      Dario  -- 25/06/2009
--->   
+-->
 
 
-  <input type="HIDDEN" name="tipoinserimento" value="<%=tipoinserimento%>">
-  <input type="HIDDEN" name="<%=ICostantiSoggetto.CAMPO_ID_SOGGETTO%>" value="<%=idsoggetto%>">
-  <input type="HIDDEN" name="<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>" value="<%=idfascicolo%>">
-<%
+		<input type="HIDDEN" name="tipoinserimento"
+			value="<%=tipoinserimento%>"> <input type="HIDDEN"
+			name="<%=ICostantiSoggetto.CAMPO_ID_SOGGETTO%>"
+			value="<%=idsoggetto%>"> <input type="HIDDEN"
+			name="<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>"
+			value="<%=idfascicolo%>">
+		<%
 	  if("fascicolo".equals(tipoinserimento)) 
 	  {%>
- 		 <jsp:include page="/jsp/files/siap/siep/fascicolo/DettaglioSoggettoSentenza.jsp"/>
-	  <br>  	
+		<jsp:include
+			page="/jsp/files/siap/siep/fascicolo/DettaglioSoggettoSentenza.jsp" />
+		<br>
 
-<%
+		<%
 	  }else if("soggetto".equals(tipoinserimento))
-	  {%>  
+	  {%>
 
-        <jsp:include page="/jsp/files/siap/sico/soggetto/SintesiSoggetto.jsp"/>
-	  <br>   	
-<%
-	  }%>	
+		<jsp:include page="/jsp/files/siap/sico/soggetto/SintesiSoggetto.jsp" />
+		<br>
+		<%
+	  }%>
 
-  	<div id="divsoggetto" style="display:none; position:relative; ">  
-      <jsp:include page="/jsp/files/siap/siep/nuovaistanza/IncludeIstanzaSoggetto.jsp"/>	
-  	</div>
-  	
-  	<div id="divsentenza" style="display:none; position:relative; ">  	
-      <jsp:include page="/jsp/files/siap/siep/nuovaistanza/IncludeProvvedimento.jsp"/>	
-  	</div>
-  	
-  	<div id="divistanza" style="display:none; position:relative; ">  
-      <jsp:include page="/jsp/files/siap/siep/nuovaistanza/IncludeIstanza.jsp"/>   	  	
-    </div> 
-    
-    
-<!-- 
+		<div id="divsoggetto" style="display: none; position: relative;">
+			<jsp:include
+				page="/jsp/files/siap/siep/nuovaistanza/IncludeIstanzaSoggetto.jsp" />
+		</div>
+
+		<div id="divsentenza" style="display: none; position: relative;">
+			<jsp:include
+				page="/jsp/files/siap/siep/nuovaistanza/IncludeProvvedimento.jsp" />
+		</div>
+
+		<div id="divistanza" style="display: none; position: relative;">
+			<jsp:include
+				page="/jsp/files/siap/siep/nuovaistanza/IncludeIstanza.jsp" />
+		</div>
+
+
+		<!-- 
      FINE dell'include! 
      
      ---ATTENZIONE QUANDO SI MODIFICA!! --- 
      
      Dario  -- 25/06/2009
--->    
-<table>
-    <tr>
-      <td class="l">
-        <input class="bottone" type="submit" name="conferma" value="Conferma">
-      </td>
-    </tr>
-</table>
-</form>
-</body>
-</html>
+-->
+		<table>
+			<tr>
+				<td class="l">
+        			<input class="bottone" type="submit" name="conferma" value="Conferma" onClick="Javascript:return EnableCombo();">
+			</tr>
+		</table>
+	</form>
 <script language="JavaScript" type="text/javascript">
   var frmvalidator  = new Validator("LoadInserisciSentenza");
 
@@ -997,16 +1171,18 @@
 	frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>","gt=1900");
 	frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>","lt=3000");
 	
-	frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COD_FISCALE %>","alphanumeric");
-	frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COD_AFIS %>","alphanumeric");
+	<%-- frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COD_FISCALE %>","alphanumeric"); --%>
+	<%-- frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COD_AFIS %>","alphanumeric"); --%>
 	frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_NAZIONALITA%>","alphabetic");
-	frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>","alphanumeric");
-	frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_DESC_COMUNE_NASCITA_ESTERO%>","alphanumeric");
+	<%-- frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>","alphanumeric"); --%>
+	<%-- frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_DESC_COMUNE_NASCITA_ESTERO%>","alphanumeric"); --%>
 	frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_PATERNITA%>","alphabetic");
 	frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COGNOME_MADRE%>","alphabetic");
 	frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_NOME_MADRE%>","alphabetic");
-	frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ATTO_NASCITA%>","alphanumeric");
-	frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA %>","alpha");
+	<%-- frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ATTO_NASCITA%>","alphanumeric"); --%>
+	<%-- Ticket#202506130166 - SIES: Anomalia inserimento provvedimento - schermata sede dell'autorità emittente--%>
+	<%-- ELIMINATO CONTROLLO per consentire inserimento comuni tipo MERANO/MERAN) --%>
+<%-- 	frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA %>","alpha"); --%>
 	frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_DESC_COMUNE_NASCITA_ESTERO %>","alpha");
 	/**************************fine soggetto****************************************/
 	/**************************Sentenza straniera****************************************/	
@@ -1052,10 +1228,9 @@
     frmvalidator.addValidation("<%= ICostantiSentenza.CAMPO_ANNO_SENTENZA%>","numeric");
     frmvalidator.addValidation("<%= ICostantiSentenza.CAMPO_ANNO_SENTENZA%>","gt=1900");
 
-    frmvalidator.addValidation("<%= ICostantiSentenza.CAMPO_NUMERO_SENTENZA%>","alfanumeric");
-
+    <%-- frmvalidator.addValidation("<%= ICostantiSentenza.CAMPO_NUMERO_SENTENZA%>","alfanumeric"); --%>
   
-    frmvalidator.addValidation("<%= ICostantiSentenza.CAMPO_COD_LUOGO_EMITTENTE%>","alphabetic");
+<%--     frmvalidator.addValidation("<%= ICostantiSentenza.CAMPO_COD_LUOGO_EMITTENTE%>","alphabetic"); --%>
 
     frmvalidator.addValidation("<%= ICostantiSentenza.CAMPO_GIORNO_DATA_PROVV_RIF%>","numeric");
     frmvalidator.addValidation("<%= ICostantiSentenza.CAMPO_GIORNO_DATA_PROVV_RIF%>","gt=1");
@@ -1068,10 +1243,11 @@
     frmvalidator.addValidation("<%= ICostantiSentenza.CAMPO_ANNO_DATA_PROVV_RIF%>","maxlen=4","La lunghezza massima per l'anno della data Sentenza di riferimento è di 4 caratteri");
     frmvalidator.addValidation("<%= ICostantiSentenza.CAMPO_ANNO_DATA_PROVV_RIF%>","gt=1900");
 
-    frmvalidator.addValidation("<%= ICostantiSentenza.CAMPO_COD_LUOGO_PROVV_RIF%>","alphabetic");
+<%--     frmvalidator.addValidation("<%= ICostantiSentenza.CAMPO_COD_LUOGO_PROVV_RIF%>","alphabetic"); --%>
 
 	/**************************FINE Sentenza ****************************************/	
  
     frmvalidator.setAddnlValidationFunction("Verify"); 
-
 </script>
+</body>
+</html>

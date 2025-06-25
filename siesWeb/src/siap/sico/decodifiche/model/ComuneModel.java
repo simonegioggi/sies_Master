@@ -28,6 +28,10 @@ public class ComuneModel extends GenericModel {
 	private String mCodSedeGiudiziaria;
 	private String mDescrSedeGiudiziaria;
 	private boolean mControlloOmonimi;
+	private String mFlagValidita;			// 2021/05/17 MEV_21
+	private String mCodCatastaleComune;		// 2021/05/17 MEV_21
+	private Date mDataAggiornamentoComune;	// 2021/05/17 MEV_21
+	private Date mDataFineValiditaComune;	// 2021/05/17 MEV_21
 
 	// COSTRUTTORE DI DEFAULT
 	public ComuneModel() {
@@ -39,6 +43,10 @@ public class ComuneModel extends GenericModel {
 		this.mCodSedeGiudiziaria = "";
 		this.mDescrSedeGiudiziaria = "";
 		this.mControlloOmonimi = false;
+		this.mFlagValidita = "";
+		this.mCodCatastaleComune = "";
+		this.mDataAggiornamentoComune = null;
+		this.mDataFineValiditaComune = null;
 	}
 
 	// COSTRUTTORE DI COPIA
@@ -51,11 +59,16 @@ public class ComuneModel extends GenericModel {
 		this.mCodSedeGiudiziaria = aModel.mCodSedeGiudiziaria;
 		this.mDescrSedeGiudiziaria = aModel.mDescrSedeGiudiziaria;
 		this.mControlloOmonimi = aModel.mControlloOmonimi;
+		this.mFlagValidita = aModel.mFlagValidita;
+		this.mCodCatastaleComune = aModel.mCodCatastaleComune;
+		this.mDataAggiornamentoComune = aModel.mDataAggiornamentoComune;
+		this.mDataFineValiditaComune = aModel.mDataFineValiditaComune;
 	}
 
 	// COSTRUTTORE MODEL
 	public ComuneModel(String aCodComune, String aCodProvincia, String aDescrizione, String aCap,
-			Date aDataCaricamentoRege, String aCodSedeGiu, String aDescrSedeGiu, boolean aControlloOmonimi) {
+			Date aDataCaricamentoRege, String aCodSedeGiu, String aDescrSedeGiu, boolean aControlloOmonimi, 
+			String aFlagValidita, String aCodCatastaleComune, Date aDataAggiornamentoComune, Date aDataFineValiditaComune) {
 		this.mCodComune = aCodComune;
 		this.mCodProvincia = aCodProvincia;
 		this.mDescrizione = aDescrizione;
@@ -64,6 +77,10 @@ public class ComuneModel extends GenericModel {
 		this.mCodSedeGiudiziaria = aCodSedeGiu;
 		this.mDescrSedeGiudiziaria = aDescrSedeGiu;
 		this.mControlloOmonimi = aControlloOmonimi;
+		this.mFlagValidita = aFlagValidita;
+		this.mCodCatastaleComune = aCodCatastaleComune;
+		this.mDataAggiornamentoComune = aDataAggiornamentoComune;
+		this.mDataFineValiditaComune = aDataFineValiditaComune;
 	}
 
 	//
@@ -100,7 +117,23 @@ public class ComuneModel extends GenericModel {
 	public boolean getControlloOmonimi() {
 		return mControlloOmonimi;
 	}
+	
+	public String getFlagValidita() {
+		return mFlagValidita;
+	}
 
+	public String getCodCatastaleComune() {
+		return mCodCatastaleComune;
+	}
+	
+	public Date getDataAggiornamentoComune() {
+		return mDataAggiornamentoComune;
+	}
+
+	public Date getDataFineValiditaComune() {
+		return mDataFineValiditaComune;
+	}
+	
 	//
 	// METODI SET()
 	//
@@ -136,10 +169,27 @@ public class ComuneModel extends GenericModel {
 		this.mControlloOmonimi = aValore;
 	}
 
+	public void setFlagValidita(String aValore) {
+		this.mFlagValidita = aValore;
+	}
+
+	public void setCodCatastaleComune(String aValore) {
+		this.mCodCatastaleComune = aValore;
+	}
+
+	public void setDataAggiornamentoComune(Date aValore) {
+		this.mDataAggiornamentoComune = aValore;
+	}
+
+	public void setDataFineValiditaComune(Date aValore) {
+		this.mDataFineValiditaComune = aValore;
+	}
+
 	public String toString() {
 		String lToString = this.mCodComune + " - " + this.mCodProvincia + " - " + this.mDescrizione + " - "
 				+ this.mCap + " - " + this.mDataCaricamentoRege + " - " + this.mCodSedeGiudiziaria + " - "
-				+ this.mDescrSedeGiudiziaria + " - " + this.mControlloOmonimi;
+				+ this.mDescrSedeGiudiziaria + " - " + this.mControlloOmonimi + " - " + this.mFlagValidita + " - "
+				+ this.mCodCatastaleComune + " - " + this.mDataAggiornamentoComune + " - " + this.mCodSedeGiudiziaria;
 		return lToString;
 	}
 

@@ -422,7 +422,7 @@ frmvalidator.addValidation("<%=ICostantiSentenza.CAMPO_NUMERO_SENTENZA%>","alfan
 frmvalidator.addValidation("<%=ICostantiSentenza.CAMPO_COD_TIPO_AUTORITA_EMITTENTE%>","req","L'Autorità Emittente è obbligatorio");
 
 frmvalidator.addValidation("<%=ICostantiSentenza.CAMPO_COD_LUOGO_EMITTENTE%>","req","Il Luogo Emittente è obbligatorio");
-frmvalidator.addValidation("<%=ICostantiSentenza.CAMPO_COD_LUOGO_EMITTENTE%>","alphabetic");
+<%-- frmvalidator.addValidation("<%=ICostantiSentenza.CAMPO_COD_LUOGO_EMITTENTE%>","alphabetic"); --%>
 
 frmvalidator.addValidation("<%=ICostantiSentenza.CAMPO_GIORNO_DATA_PROVV_RIF%>","numeric");
 frmvalidator.addValidation("<%=ICostantiSentenza.CAMPO_GIORNO_DATA_PROVV_RIF%>","gt=1");
@@ -435,7 +435,7 @@ frmvalidator.addValidation("<%=ICostantiSentenza.CAMPO_MESE_DATA_PROVV_RIF%>","l
 frmvalidator.addValidation("<%=ICostantiSentenza.CAMPO_ANNO_DATA_PROVV_RIF%>","maxlen=4","La lunghezza massima per l'anno della data Sentenza di riferimento è di 4 caratteri");
 frmvalidator.addValidation("<%=ICostantiSentenza.CAMPO_ANNO_DATA_PROVV_RIF%>","gt=1900");
 
-frmvalidator.addValidation("<%=ICostantiSentenza.CAMPO_COD_LUOGO_PROVV_RIF%>","alphabetic");
+<%-- frmvalidator.addValidation("<%=ICostantiSentenza.CAMPO_COD_LUOGO_PROVV_RIF%>","alphabetic"); --%>
 
 frmvalidator.setAddnlValidationFunction("Verify");
 </script>

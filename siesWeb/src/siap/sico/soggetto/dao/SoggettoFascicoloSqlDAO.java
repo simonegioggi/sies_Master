@@ -2,23 +2,20 @@ package siap.sico.soggetto.dao;
 
 import java.sql.Connection;
 
-import siap.dao.SIAPSqlDAO;
-import siap.sico.soggetto.model.SoggettoModel;
-import siap.siep.fascicolo.model.FascicoloSiepModel;
-import siap.siep.util.MinorMask;
 import f3b.dao.DAOException;
 import f3b.model.GenericModel;
 import f3b.util.DateUtils;
 import f3b.util.StringUtils;
 import f3b.web.IWebConstants;
+import siap.dao.SIAPSqlDAO;
+import siap.sico.soggetto.model.SoggettoModel;
+import siap.siep.fascicolo.model.FascicoloSiepModel;
+import siap.siep.util.MinorMask;
 
 /**
- * <p>
- * Title: SoggettoFascicoloSqlDAO
- * </p>
- * <p>
- * Description: Classe SqlDAO che rappresenta la tabella Soggetto e Fascicolo Siep
- * </p>
+ * SoggettoFascicoloSqlDAO - Classe SqlDAO che rappresenta la tabella Soggetto e Fascicolo Siep
+ * 
+ * @version 1.0
  */
 public class SoggettoFascicoloSqlDAO extends SIAPSqlDAO {
 
@@ -32,7 +29,7 @@ public class SoggettoFascicoloSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Ricerca Soggetti e Fascicoli
-	 * 
+	 *
 	 * @param aModel
 	 * @param strCodUfficioUtenteConnesso
 	 * @param aPage
@@ -68,7 +65,7 @@ public class SoggettoFascicoloSqlDAO extends SIAPSqlDAO {
 	// Ambros SuperSoggetto 082009
 	/**
 	 * Ricerca Soggetti e Fascicoli per SuperSoggetto
-	 * 
+	 *
 	 * @param aModel
 	 * @param strCodUfficioUtenteConnesso
 	 * @param aPage
@@ -130,7 +127,7 @@ public class SoggettoFascicoloSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Condizioni di ricerca per numero di fascicoli per il soggetto selezionato per UFFICIO
-	 * 
+	 *
 	 * @param aModel
 	 * @param strCodUfficioUtenteConnesso
 	 * @return
@@ -203,7 +200,7 @@ public class SoggettoFascicoloSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Condizioni di ricerca per numero di fascicoli per il soggetto selezionato per DISTRETTO
-	 * 
+	 *
 	 * @param aModel
 	 * @param strCodUfficioUtenteConnesso
 	 * @param SoggettoModel
@@ -298,9 +295,9 @@ public class SoggettoFascicoloSqlDAO extends SIAPSqlDAO {
 
 	/*
 	 * Condizioni di ricerca inserite nella form di ricerca
-	 * 
+	 *
 	 * @param SoggettoModel
-	 * 
+	 *
 	 * @return
 	 */
 	private String setCondizione(SoggettoModel aSm) {
@@ -344,11 +341,11 @@ public class SoggettoFascicoloSqlDAO extends SIAPSqlDAO {
 
 	/*
 	 * Condizioni per ricerca ufficio, e controllo comune e tipo ufficio
-	 * 
+	 *
 	 * @param strCodUfficioUtenteConnesso
-	 * 
+	 *
 	 * @param strTipoRicerca
-	 * 
+	 *
 	 * @return
 	 */
 	private String setCondizioneUfficio(String strCodUfficioUtenteConnesso, String strTipoRicerca) {
@@ -370,7 +367,7 @@ public class SoggettoFascicoloSqlDAO extends SIAPSqlDAO {
 
 	/*
 	 * Ordinamento
-	 * 
+	 *
 	 * @return
 	 */
 	private String setOrderCognome() {
@@ -382,15 +379,15 @@ public class SoggettoFascicoloSqlDAO extends SIAPSqlDAO {
 
 	/*
 	 * Funzione per il COUNT Soggetti
-	 * 
+	 *
 	 * @param SoggettoModel
-	 * 
+	 *
 	 * @param strCodUfficioUtenteConnesso
-	 * 
+	 *
 	 * @param strCodDistrettoUtenteConnesso
-	 * 
+	 *
 	 * @param strTipoRicerca
-	 * 
+	 *
 	 * @return
 	 */
 	public void getCountSoggettiPerProcedimenti(SoggettoModel aModel, String strCodUfficioUtenteConnesso,
@@ -523,7 +520,7 @@ public class SoggettoFascicoloSqlDAO extends SIAPSqlDAO {
 	 * private String setGroupSoggetto() { String lGroupBy = new String(); lGroupBy =
 	 * " group by Cognome, nome, sogg.DATA_NASCITA, sogg.COD_COMUNE_NASCITA, COMUNE_NASCITA.DESCRIZIONE, sogg.DESC_COMUNE_NASCITA_ESTERO, sogg.COD_PROVINCIA_NASCITA "
 	 * ;
-	 * 
+	 *
 	 * // paolo cherubini x supersoggetto Agosto 2009 // aggiungo le seguenti righe String lSuperSogg = new
 	 * String(); lSuperSogg =
 	 * ", sogg.COD_FISCALE, sogg.COD_CS, sogg.COD_AFIS, sogg.ANNO_NASCITA, sogg.DATA_NASCITA_PRESUNTA";
@@ -531,13 +528,13 @@ public class SoggettoFascicoloSqlDAO extends SIAPSqlDAO {
 	 * ", sogg.COD_STATO_NASCITA, sogg.NAZIONALITA, sogg.PATERNITA, sogg.COGNOME_MADRE, sogg.NOME_MADRE";
 	 * lSuperSogg += ", sogg.SESSO, sogg.ATTO_NASCITA, sogg.MESE_NASCITA, sogg.PROG_ANAG_RES "; lGroupBy +=
 	 * lSuperSogg; //fine
-	 * 
+	 *
 	 * return lGroupBy; }
 	 */
 	// // Ambros SuperSoggetto 08/2009
 	/**
 	 * Condizioni di ricerca per numero di fascicoli per il SUPERsoggetto selezionato per UFFICIO
-	 * 
+	 *
 	 * @param aModel
 	 * @param strCodUfficioUtenteConnesso
 	 * @return
@@ -578,7 +575,9 @@ public class SoggettoFascicoloSqlDAO extends SIAPSqlDAO {
 		lStatement += " UFFICIO_DESCR UD,UFFICIO U, COMUNE C, COMUNE COMUNE_NASCITA, V_SOGGETTO_ETA VSE";
 
 		lStatement += " WHERE F.SOG_ID_SOGGETTO = ID_SOGGETTO AND F.CHIAVE_UFFICIO = U.COD_UFFICIO AND U.COD_COMUNE = C.COD_COMUNE";
-		lStatement += " AND S.COD_COMUNE_NASCITA = COMUNE_NASCITA.COD_COMUNE";
+		// 20250616 [SG]: risolto problema ricerca avvocato senza cod stato nascita
+		// Ticket#202506120155 - avvocato con foro incompetente- impossibilità aggiornamento secondo avvocato
+		lStatement += " AND S.COD_COMUNE_NASCITA = COMUNE_NASCITA.COD_COMUNE(+)";
 		lStatement += " AND F.CHIAVE_UFFICIO = UD.COD_UFFICIO";
 		lStatement += " AND F.CHIAVE_UFFICIO ='" + strCodUfficioUtenteConnesso + "'";
 
@@ -673,7 +672,7 @@ public class SoggettoFascicoloSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Condizioni di GroupBy per il SUPERsoggetto selezionato per UFFICIO
-	 * 
+	 *
 	 * @param aModel
 	 * @param strCodUDistrettoUtente
 	 * @return
@@ -697,7 +696,7 @@ public class SoggettoFascicoloSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Condizioni di GroupBy per il SUPERsoggetto selezionato per Distretto
-	 * 
+	 *
 	 * @param aModel
 	 * @param strCodUDistrettoUtente
 	 * @return
@@ -723,7 +722,7 @@ public class SoggettoFascicoloSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Condizioni di ricerca per numero di fascicoli per il SUPERsoggetto selezionato per UFFICIO
-	 * 
+	 *
 	 * @param aModel
 	 * @param strCodUDistrettoUtente
 	 * @return
@@ -764,8 +763,9 @@ public class SoggettoFascicoloSqlDAO extends SIAPSqlDAO {
 
 		lStatement += " FROM FASCICOLO_SIEP F, SOGGETTO S, ";
 		lStatement += " UFFICIO U, COMUNE C, COMUNE COMUNE_NASCITA, V_SOGGETTO_ETA VSE";
-		lStatement += " WHERE F.SOG_ID_SOGGETTO = ID_SOGGETTO  AND U.COD_COMUNE = C.COD_COMUNE";
-		lStatement += " AND S.COD_COMUNE_NASCITA = COMUNE_NASCITA.COD_COMUNE";
+		lStatement += " WHERE F.SOG_ID_SOGGETTO = ID_SOGGETTO AND U.COD_COMUNE = C.COD_COMUNE";
+		// 20250616 [SG]: risolto problema ricerca soggetto senza comune nascita
+		lStatement += " AND S.COD_COMUNE_NASCITA = COMUNE_NASCITA.COD_COMUNE(+)";
 		lStatement += " AND F.CHIAVE_UFFICIO = U.COD_UFFICIO";
 		lStatement += " AND U.COD_DISTRETTO = '" + strCodDistrettoUtenteConnesso + "'";
 		// lStatement += " AND F.CHIAVE_UFFICIO = S.COD_UFFICIO_INSERIMENTO";
@@ -793,9 +793,9 @@ public class SoggettoFascicoloSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Imposta la query di ricerca sull'intera BDI di tutti i fascicoli collegati a Soggetti avento Nome e
 	 * Cognome uguali a quelli del Model passato in Input.
-	 * 
+	 *
 	 * La query recupera sia i dati del Soggetto che quelli del fascioli
-	 * 
+	 *
 	 * @param aSoggettoModel
 	 */
 	public void ricercaFascicoliESoggettoPerSoggettoBDI(SoggettoModel aSoggettoModel) {
@@ -868,7 +868,7 @@ public class SoggettoFascicoloSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Metodo get Mode da utilizzare per l'esecuzione della query costruita dal metodo
 	 * ricercaFascicoliESoggettoPerSoggettoBDI
-	 * 
+	 *
 	 * @return
 	 * @throws DAOException
 	 */
@@ -972,7 +972,7 @@ public class SoggettoFascicoloSqlDAO extends SIAPSqlDAO {
 	// 03-11-2014 - Ricerca Soggetto per Iscrizione Procedimento Misura Sicurezza PROVVISORIA
 	/**
 	 * Condizioni di ricerca per numero di fascicoli per il SUPERsoggetto selezionato su tutta la BDI
-	 * 
+	 *
 	 * @param aModel
 	 * @return
 	 */
@@ -1003,8 +1003,9 @@ public class SoggettoFascicoloSqlDAO extends SIAPSqlDAO {
 		lStatement += " FROM FASCICOLO_SIEP F, SOGGETTO S, ";
 		lStatement += " UFFICIO U, COMUNE C, COMUNE COMUNE_NASCITA";
 		lStatement += " WHERE F.SOG_ID_SOGGETTO = ID_SOGGETTO";
-		lStatement += " AND S.COD_COMUNE_NASCITA = COMUNE_NASCITA.COD_COMUNE";
-
+		// 20250616 [SG]: risolto problema ricerca avvocato senza cod stato nascita
+		// Ticket#202506120155 - avvocato con foro incompetente- impossibilità aggiornamento secondo avvocato
+		lStatement += " AND S.COD_COMUNE_NASCITA = COMUNE_NASCITA.COD_COMUNE(+)";
 		lStatement += " AND U.COD_COMUNE = C.COD_COMUNE";
 		lStatement += " AND F.CHIAVE_UFFICIO = U.COD_UFFICIO";
 

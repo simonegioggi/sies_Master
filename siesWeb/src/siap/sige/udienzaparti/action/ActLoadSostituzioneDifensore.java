@@ -29,7 +29,7 @@ import siap.sige.util.SIGELookupRemote;
  * <p>
  * Company: Engineering S.p.A.
  * </p>
- * 
+ *
  * @version 1.0
  */
 public class ActLoadSostituzioneDifensore extends ActionSiap implements ICostantiPartiUdienza {
@@ -99,6 +99,14 @@ public class ActLoadSostituzioneDifensore extends ActionSiap implements ICostant
 		lOption = new Option(DecodificheManager.getInstance().getForo(), lDescrComune.toUpperCase().trim(),
 				Option.NO_BLANK_ITEM);
 		setRequestAttribute("foro", "" + lOption);
+
+		// 20210627 MEV_21 Nuova gestione Combo per Stato di Nascita
+		lOption = new Option(DecodificheManager.getInstance().getNazioni(), "-");
+		setRequestAttribute("nazione", "" + lOption);
+
+		// 20210627 MEV_21 Nuova gestione Combo per Stato Difensore
+		lOption = new Option(DecodificheManager.getInstance().getListaAttivitaAvvocato(), "-");
+		setRequestAttribute("statoAvv", "" + lOption);
 
 		return PG_SOSTITUZIONE_AVVOCATO;
 	}

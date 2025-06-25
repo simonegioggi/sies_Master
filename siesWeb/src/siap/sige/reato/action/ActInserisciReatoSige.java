@@ -12,23 +12,11 @@ import siap.siep.util.SIEPLookupRemote;
 import siap.sige.sentenza.action.ICostantiFasSigeSentenza;
 
 /**
- * <p>
- * Title: ActInserisciReatoSige
- * </p>
- * <p>
- * Description: Classe Action per l'inserimento di Reato.
- * </p>
- * L'action specializza siap.siep.reato.action.ActInserisciReato poichè la form di input utilizzata è la
- * stessa; questa action utilizza la funzione letturaDati(...) ereditata che valorizza i reati da inserire.
- * Viene poi richiamata la funzione specifica per l'inserimento di reati
- * <p>
- * Copyright: Copyright (c) 2008
- * </p>
- * <p>
- * Company: Eutelia
- * </p>
- * 
- * @author luigi
+ * ActInserisciReatoSige -: Classe Action per l'inserimento di Reato SIGE; l'action specializza
+ * siap.siep.reato.action.ActInserisciReato poichè la form di input utilizzata è la stessa; questa action
+ * utilizza la funzione letturaDati(...) ereditata che valorizza i reati da inserire. Viene poi richiamata la
+ * funzione specifica per l'inserimento di reati
+ *
  * @version 1.0
  */
 public class ActInserisciReatoSige extends ActInserisciReato {
@@ -40,7 +28,7 @@ public class ActInserisciReatoSige extends ActInserisciReato {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getPackage().getName() + ".processRequest : inizio");
+		siesLogger.debug(getClass().getName() + ".processRequest : inizio");
 
 		// Viene chiamata la funzione ereditata per leggere i dati dalla form
 		letturaDati(null);
@@ -70,9 +58,10 @@ public class ActInserisciReatoSige extends ActInserisciReato {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getPackage().getName() + ".processRequest : fine");
+		siesLogger.debug(getClass().getName() + ".processRequest : fine");
 
-		return lRetPage; // restituisce la jsp di VIEW
+		// restituisce la jsp di VIEW
+		return lRetPage;
 	}
 
 }

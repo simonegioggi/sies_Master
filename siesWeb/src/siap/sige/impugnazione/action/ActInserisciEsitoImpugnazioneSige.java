@@ -29,19 +29,8 @@ import siap.sige.util.SIGELookupRemote;
 import siap.sius.richiestaatti.action.ICostantiRichiestaAtti;
 
 /**
- * <p>
- * Title: ActInserisciImpugnazione
- * </p>
- * <p>
- * Description: Classe Action per l'inserimento di Impugnazione
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ * ActInserisciImpugnazione - Classe Action per l'inserimento di Impugnazione
+ *
  * @version 1.0
  */
 public class ActInserisciEsitoImpugnazioneSige extends ActionSiap
@@ -49,7 +38,7 @@ public class ActInserisciEsitoImpugnazioneSige extends ActionSiap
 
 	/**
 	 * Azione di Inserimento dell' Impugnazione
-	 * 
+	 *
 	 * @return Nome della pagina JSP da visualizzare al termine dell'elaborazione
 	 * @throws F3BException
 	 */
@@ -127,7 +116,7 @@ public class ActInserisciEsitoImpugnazioneSige extends ActionSiap
 						// @emma 21082018 intervento post COLLAUDO 11.2, per esito
 						// DICHIARA_INAMISSIBILE_IL_RICORSO lo stato del fascicolo non deve essere aggiornato
 						// ad EmessoProvvedimento(vedi doc di nunzia esiti procedimento.docx)
-						/* || esito.equals(COD_ESITO_DICHIARA_INAMISSIBILE_IL_RICORSO) */
+						/* || esito.equals(COD_ESITO_DICHIARA_INAMMISSIBILE_IL_RICORSO) */
 						|| esito.equals(COD_ESITO_RIGETTA)
 						// @emma 21082018 intervento post COLLAUDO 11.2, per esito COD_ESITO_RETTIFICA lo
 						// stato del fascicolo non deve essere aggiornato ad EmessoProvvedimento(vedi doc di
@@ -141,17 +130,16 @@ public class ActInserisciEsitoImpugnazioneSige extends ActionSiap
 						// del fascicolo non deve essere aggiornato ad EmessoProvvedimento(vedi doc di nunzia
 						// esiti procedimento.docx)
 						/* || esito.equals(COD_ESITO_DICHIARA_NDP_NLP) */
-
-						|| esito.equals(COD_ESITO_DICHIARA_INCOPETENZA)
+						|| esito.equals(COD_ESITO_DICHIARA_INCOMPETENZA)
 						|| esito.equals(COD_ESITO_CONVERTE_IN_RICORSO_IN_CASSAZIONE)
-						|| esito.equals(COD_ESITO_DICHIARA_INAMISSIBILE))) {
+						/*|| esito.equals(COD_ESITO_DICHIARA_INAMMISSIBILE)*/)) {
 			// aggiornaStatoFascicolo (COD_EMESSO_PROVVEDIMENTO, null);
 			aggiornaStatoFascicolo(COD_EMESSO_PROVVEDIMENTO, impugnazione.getDataDecisione());
 		}
 
 		if (esito.equals(COD_ESITO_ANNULLA_CON_RINVIO)) {
 			// Ticket#202305030118 — Si corregge lo stato del fascicolo
-			//aggiornaStatoFascicolo(COD_ACCOGLIE_FISSA_UDIENZA, impugnazione.getDataDecisione());
+			// aggiornaStatoFascicolo(COD_ACCOGLIE_FISSA_UDIENZA, impugnazione.getDataDecisione());
 			aggiornaStatoFascicolo(COD_ANNULLA_CON_RINVIO, impugnazione.getDataDecisione());
 			// Ticket#202305030118 - FINE
 		}
@@ -171,11 +159,14 @@ public class ActInserisciEsitoImpugnazioneSige extends ActionSiap
 		// 13/11/2018 intervento post COLLAUDO 11.2 (email del 20/9/2018 di Alfieri) - vedi allegato Ricorso-
 		// esiti.docx
 		if (esito.equals(COD_ESITO_ACCOGLIE)) {
-			aggiornaStatoFascicolo(null, impugnazione.getDataDecisione());
+			if (lFasEst.getFascicoloSige().getCodStatoFascicolo().equals(COD_RICORSO))
+				aggiornaStatoFascicolo(null, impugnazione.getDataDecisione());
+			else
+				aggiornaStatoFascicolo(COD_RICORSO, impugnazione.getDataDecisione());
 		}
 		// 27/11/2018 intervento post COLLAUDO 11.2 (by Nunzia. se metto esito COD_ESITO_DICHIARA_INAMISSIBILE
-		// lo stato deve essere opposizione )
-		if (esito.equals(COD_ESITO_DICHIARA_INAMISSIBILE)) {
+		// lo stato deve essere opposizione)
+		if (esito.equals(COD_ESITO_DICHIARA_INAMMISSIBILE)) {
 			aggiornaStatoFascicolo(COD_OPPOSIZIONE, impugnazione.getDataDecisione());
 		}
 

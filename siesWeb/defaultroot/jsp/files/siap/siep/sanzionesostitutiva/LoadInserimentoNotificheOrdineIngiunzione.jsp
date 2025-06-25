@@ -22,19 +22,28 @@
 
 <%@ page import="siap.sico.evento.action.ICostantiEvento"%>
 
-<jsp:useBean id="posizioneluogoaltra" scope="request" class="siap.siep.posizione.model.PosizioneGiuridicaLuogoDetenzioneAltraCausaModel"/>
-<jsp:useBean id="ordineIngiunzione"   scope="request" class="siap.sico.evento.model.EventoNotificaModel"/>
-<jsp:useBean id="comboAutNotifica"    scope="request" class="java.lang.String"/>
-<jsp:useBean id="notificaAlCondannato" scope="request" class="siap.siep.notifica.model.NotificaModel"/>
-<jsp:useBean id="listaNotAvvSiep"      scope="request" class="java.util.ArrayList"/>
-<jsp:useBean id="lListaNotObbligati"   scope="request" class="java.util.ArrayList"/>
-<jsp:useBean id="notifichePending"   scope="request" class="java.lang.String"/>
+<jsp:useBean id="posizioneluogoaltra" 	scope="request" class="siap.siep.posizione.model.PosizioneGiuridicaLuogoDetenzioneAltraCausaModel"/>
+<jsp:useBean id="ordineIngiunzione"   	scope="request" class="siap.sico.evento.model.EventoNotificaModel"/>
+<jsp:useBean id="comboAutNotifica"    	scope="request" class="java.lang.String"/>
+<jsp:useBean id="notificaAlCondannato"	scope="request" class="siap.siep.notifica.model.NotificaModel"/>
+<jsp:useBean id="listaNotAvvSiep"      	scope="request" class="java.util.ArrayList"/>
+<jsp:useBean id="lListaNotObbligati"   	scope="request" class="java.util.ArrayList"/>
+<jsp:useBean id="notifichePending"   	scope="request" class="java.lang.String"/>
 
 <%
 FascicoloSiepModel lFascicoloAssociato = (FascicoloSiepModel) session.getAttribute("fascicolo");
 PosizioneGiuridicaModel lPosizione = posizioneluogoaltra.getPosizioneGiuridica();
 LuogoDetenzioneModel lLuogoDetenzione = posizioneluogoaltra.getLuogoDetenzione();
 AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
+
+if (lPosizione == null)
+	lPosizione = new PosizioneGiuridicaModel();
+
+if (lLuogoDetenzione == null)
+	lLuogoDetenzione = new LuogoDetenzioneModel();
+
+if (lAltraCausa == null)
+  	lAltraCausa = new AltraCausaModel();
 
 String listaIdNotAvv = "";
 for (int i = 0; i < listaNotAvvSiep.size(); i++) 
@@ -234,7 +243,7 @@ for (int i = 0; i < lNotifiche.length; i++) {
 		<td class="L" colspan="5">
         	<font class="campo">
 <%
-if (lFascicoloAssociato.getFlagAltraCausa()!=null && lFascicoloAssociato.getFlagAltraCausa().equals("S")) {
+if (lFascicoloAssociato.getFlagAltraCausa() != null && lFascicoloAssociato.getFlagAltraCausa().equals("S")) {
 %>
           		DETENUTO PER ALTRA CAUSA - <%=lAltraCausa.getDescrTipoPosGiuridica()%>
 <%

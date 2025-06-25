@@ -335,8 +335,9 @@ if (Aggiungi.equals("no") ){
     <tr id="SedeDestRow_<%=lIdxAvv%>">
       <td class="l">Sede</td>
       <td class="l">
+           <%-- MEV_21 (avvocati) Sostituzione di getAvvocato().getForo() con getAvvocato().getDescComuneSedeForo() --%>
            <input Title="Sede Procura" name="<%=ICostantiRichiestaAtti.CAMPO_SEDE%>" id="<%=ICostantiRichiestaAtti.CAMPO_SEDE%>_<%=lIdxAvv%>"
-              value="<%=StringUtils.toStringJSP(lAvv.getAvvocato().getForo(),"-")%>" type="text" maxlength="35" size="35">
+              value="<%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescComuneSedeForo(),"-")%>" type="text" maxlength="35" size="35">
               <a href="Javascript:ListaUNEP('<%=NomeForm%>','<%=ICostantiRichiestaAtti.CAMPO_SEDE%>[<%=num_sede%>]');">
               <img src="/images/filefolder.gif" border=0> </a>
       </td>

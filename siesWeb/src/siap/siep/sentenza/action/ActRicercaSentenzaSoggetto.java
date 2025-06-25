@@ -81,16 +81,22 @@ public class ActRicercaSentenzaSoggetto extends ActionSiap implements ICostantiS
 			if (!isRequestParameterNullObj(ICostantiComune.CAMPO_COD_COMUNE_REALE)
 					&& getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE).length() > 0) {
 				// se presente dal codice comune (e descrizione)
-				lComMod = new ComuneModel(getDatiComuneByCodDescrFlagVal(
+				// 20210524	MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni senza flag validità.
+				//lComMod = new ComuneModel(getDatiComuneByCodDescrFlagVal(
+				lComMod = new ComuneModel(getDatiComuneByCodDescr(
 						getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
 						getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)));
 			} else {
 				// altrimenti dalla sola descrizione (rischio omonimi)
 				lComMod = new ComuneModel(
-						getDatiComuneByDescrOmonimiaFlagVal(getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)));
+						// 20210524	MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni senza flag validità.
+						//getDatiComuneByDescrOmonimiaFlagVal(getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)));
+						getDatiComuneByDescrOmonimia(getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)));
 			}
-
-			lSogmod.setCodComuneNascita(lComMod.getCodComune());
+			// 20250612 [SG]: risolto problema ricerca soggetto col "-" pari al cod comune nascita
+			// Ticket#20250612016 - SIES - ricerche soggetto
+			String codComuneNascita = "-".equals(lComMod.getCodComune()) ? "" : lComMod.getCodComune();
+			lSogmod.setCodComuneNascita(codComuneNascita);
 		}
 
 		lSmod.setCodUfficioInserimento(lUtenteMod.getUfficioUtente().getCodUfficio());

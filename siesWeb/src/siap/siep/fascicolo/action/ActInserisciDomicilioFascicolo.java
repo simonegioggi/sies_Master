@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
 import f3b.web.IWebConstants;
+import siap.sico.decodifiche.action.ICostantiComune;
 import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.residenza.action.ICostantiResidenza;
 import siap.sico.residenza.model.ResidenzaAssociataModel;
@@ -46,6 +47,7 @@ public class ActInserisciDomicilioFascicolo extends ActionSiap implements ICosta
 		String lCodStato = getRequestStringParameter(CAMPO_COD_STATO);
 		lResMod.setCodStato(lCodStato);
 
+		/* 20210531	MEV_Scheda-21 Correzione Comune Domicilio per omonimie dei Comuni con flag validità.
 		if (getRequestStringParameter(CAMPO_DESCR_COMUNE).length() > 1) {
 			ComuneModel lComMod = new ComuneModel(
 					getCodComuneByDescrFlagVal(getRequestStringParameter(CAMPO_DESCR_COMUNE)));
@@ -54,7 +56,26 @@ public class ActInserisciDomicilioFascicolo extends ActionSiap implements ICosta
 		} else {
 			lResMod.setCodProvincia("-");
 			lResMod.setCodComune("-");
+		} */
+		// 20210531	MEV_Scheda-21 Correzione Comune Domicilio per omonimie dei Comuni con flag validità.
+		// Recupero dati del Comune di residenza
+		ComuneModel lComMod;
+		if (!isRequestParameterNullObj(ICostantiComune.CAMPO_COD_COMUNE_REALE)
+				&& getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE).length() > 0) {
+			// se presente dal codice comune (e descrizione)
+			lComMod = new ComuneModel(getDatiComuneByCodDescrFlagVal(
+					getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
+					getRequestStringParameter(CAMPO_DESCR_COMUNE)));
+		} else {
+			// altrimenti dalla sola descrizione (rischio omonimi)
+			lComMod = new ComuneModel(
+					getDatiComuneByDescrOmonimiaFlagVal(getRequestStringParameter(CAMPO_DESCR_COMUNE)));
 		}
+
+		// 20250612 [SG]: risolto problema ricerca soggetto col "-" pari al cod comune nascita
+		// Ticket#20250612016 - SIES - ricerche soggetto
+		lResMod.setCodComune(lComMod.getCodComune());
+		lResMod.setCodProvincia(lComMod.getCodProvincia());
 
 		lResMod.setCap(getRequestStringParameter(CAMPO_CAP));
 		lResMod.setIndirizzo(getRequestStringParameter(CAMPO_INDIRIZZO));

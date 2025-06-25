@@ -62,6 +62,7 @@ public class ActLoadTrasferisciRichiestaAttiExArt51Bis extends ActionSiap implem
 					setRequestAttribute("ufficiouds", lNotMod.getUfficio());
 					setRequestAttribute("UfficioDestinatario", lNotMod.getUfficio());
 				}
+
 			}
 		}
 
@@ -72,6 +73,7 @@ public class ActLoadTrasferisciRichiestaAttiExArt51Bis extends ActionSiap implem
 		// String PG_LOAD_TRASFERISCI_CONVERSIONE = IWebConstants.ROOT_DIR +
 		// "files/siap/siep/penapecuniaria/LoadTrasferisciConversione.jsp";
 		return PG_LOAD_TRASM_ATTI_51_BIS;
+
 	}
 
 }

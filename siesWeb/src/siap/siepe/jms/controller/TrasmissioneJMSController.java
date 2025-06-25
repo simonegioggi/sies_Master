@@ -45,14 +45,10 @@ import siap.sius.stampa.controller.IStampaSius;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- *
- * <p>
- * Title:TrasmissioneJMScontroller
- * </p>
- * <p>
- * Description:
- * </p>
- * La classe contiene i metodi per assemblare i messaggi da trasmettere dagli Uffici UEPE.
+ * TrasmissioneJMScontroller - Classe che contiene i metodi per assemblare i messaggi da trasmettere dagli
+ * Uffici UEPE
+ * 
+ * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class TrasmissioneJMSController extends SiapController implements ITrasmissioneJMS {
@@ -62,7 +58,6 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 
 	/**
 	 * Metodo che compone un MessaggioModel, opportunamente specializzato per l'attività.
-	 * <p>
 	 *
 	 * @param aKey
 	 *            BigDecimal Id dell'attività da puntare.
@@ -79,7 +74,7 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getPackage().getName() + ".getMessageForAttivita: inizio");
+		siesLogger.debug(getClass().getName() + ".getMessageForAttivita: inizio");
 		MessaggioModel lMessage = new MessaggioModel();
 
 		// Creazione del TreeModel
@@ -90,7 +85,7 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getPackage().getName() + ".getMessageForAttivita: fine");
+		siesLogger.debug(getClass().getName() + ".getMessageForAttivita: fine");
 
 		return lMessage;
 	}
@@ -190,7 +185,7 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getPackage().getName() + ".getMessageForRichiesta: inizio");
+		siesLogger.debug(getClass().getName() + ".getMessageForRichiesta: inizio");
 		MessaggioModel lMessage = new MessaggioModel();
 
 		// Creazione del TreeModel
@@ -201,7 +196,7 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getPackage().getName() + ".getMessageForRichiesta: fine");
+		siesLogger.debug(getClass().getName() + ".getMessageForRichiesta: fine");
 
 		return lMessage;
 	}
@@ -225,7 +220,7 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getPackage().getName() + ".getMessageForRelazione: inizio");
+		siesLogger.debug(getClass().getName() + ".getMessageForRelazione: inizio");
 		MessaggioModel lMessage = new MessaggioModel();
 
 		// Creazione del TreeModel
@@ -236,7 +231,7 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getPackage().getName() + ".getMessageForRelazione: fine");
+		siesLogger.debug(getClass().getName() + ".getMessageForRelazione: fine");
 
 		return lMessage;
 	}
