@@ -1202,7 +1202,7 @@ if(document.LoadInserisciMisuraAlternativa.<%= ICostantiMisuraAlternativa.CAMPO_
       frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE%>","lt=2099");
 
       frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_SEDE_TDS%>","req","Luogo Tribunale di Sorveglianza obbligatorio");
-      frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_SEDE_TDS %>","alphabetic");
+<%--       frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_SEDE_TDS %>","alphabetic"); --%>
 <%
     }
 
@@ -1210,7 +1210,7 @@ if(document.LoadInserisciMisuraAlternativa.<%= ICostantiMisuraAlternativa.CAMPO_
     {
 %>
       frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_SEDE_POL_E %>","req","Luogo Autorità Destinazione obbligatorio");
-      frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_SEDE_POL_E%>","alphabetic");
+<%--       frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_SEDE_POL_E%>","alphabetic"); --%>
 <%
     }
 
@@ -1218,7 +1218,7 @@ if(document.LoadInserisciMisuraAlternativa.<%= ICostantiMisuraAlternativa.CAMPO_
     {
 %>
       frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_SEDE_POL_C %>","req","Luogo Autorità Destinazione obbligatorio");
-      frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_SEDE_POL_C %>","alphabetic");
+<%--       frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_SEDE_POL_C %>","alphabetic"); --%>
 <%
     }
 %>

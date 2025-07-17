@@ -388,14 +388,14 @@
   {
 %>
     frmvalidator.addValidation("<%= ICostantiRichiesta.CAMPO_SEDE_AUTORITA %>","req","La sede dell'Autorità Esterna è obbligatoria");
-    frmvalidator.addValidation("<%= ICostantiRichiesta.CAMPO_SEDE_AUTORITA%>","alphabetic");
+<%--     frmvalidator.addValidation("<%= ICostantiRichiesta.CAMPO_SEDE_AUTORITA%>","alphabetic"); --%>
 <%
   }
   else
   {
 %>
     frmvalidator.addValidation("<%= ICostantiRichiesta.CAMPO_SEDE_UFFICIO %>","req","La sede dell'Autorità Esterna è obbligatoria");
-    frmvalidator.addValidation("<%= ICostantiRichiesta.CAMPO_SEDE_UFFICIO%>","alphabetic");
+<%--     frmvalidator.addValidation("<%= ICostantiRichiesta.CAMPO_SEDE_UFFICIO%>","alphabetic"); --%>
 <%
   }
 %>

@@ -1,5 +1,5 @@
-Branch release_12.8.0.3
+BRANCH SIES VERSIONE 12.8.1.0
 
-1)	nato il 20/06/2025 dal branch release_12.8.0.2 per correzione tickets.
-2)	aggiornamento DB.
-3)	aggiornamento Test di Sistema.
+Nasce dal branch 12.8.0.3 in data 14/07/2025
+
+Questa Release verrà rilasciata il 18/07/2025 (Patch mesi di Marzo, Aprile, Maggio, Giugno e Luglio 2025)

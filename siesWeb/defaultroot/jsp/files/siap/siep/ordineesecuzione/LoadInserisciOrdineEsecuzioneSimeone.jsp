@@ -54,20 +54,20 @@
 <!--jsp:useBean id="altracausaposizionegiuridica"       scope="request" class="siap.siep.altracausa.model.AltraCausaModel"/-->
 
 <%
-	String FlagIstanza="";
+	String flagIstanza = "";
 	FascicoloSiepModel lFascicoloAssociato = (FascicoloSiepModel)session.getAttribute("fascicolo");
 
   PosizioneGiuridicaModel lPosizione = posizioneluogoaltra.getPosizioneGiuridica();
   LuogoDetenzioneModel lLuogoDetenzione = posizioneluogoaltra.getLuogoDetenzione();
   AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
 
-  if(lPosizione == null)
+  if (lPosizione == null)
     lPosizione = new PosizioneGiuridicaModel();
 
-  if(lLuogoDetenzione == null)
+  if (lLuogoDetenzione == null)
     lLuogoDetenzione = new LuogoDetenzioneModel();
 
-  if(lAltraCausa == null)
+  if (lAltraCausa == null)
     lAltraCausa = new AltraCausaModel();
   
   // Per tutti i provvedimenti che lo gestiscono
@@ -87,7 +87,7 @@
    
   String lCasellario = lUfficioUtenteConnesso.getDescrComune();
 
-  if( lSoggettoAssociato != null 
+  if (lSoggettoAssociato != null 
       && 
       	( 
       	   !"039".equals(lSoggettoAssociato.getCodStatoNascita())
@@ -97,7 +97,7 @@
     lCasellario = "ROMA";
   }
 
-  if( lSoggettoAssociato != null 
+  if (lSoggettoAssociato != null 
       && 
       	(    lSoggettoAssociato.getCodStatoNascita() == null
       	  ||  "".equals(lSoggettoAssociato.getCodStatoNascita()) 
@@ -140,7 +140,7 @@
       function ListaCSSA(a_formname,a_fieldname,a_field2)
       {
     	var codTipoSede = document.LoadInserisciOrdineEsecuzione.<%=ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_UEPE_USSM_SS%>.value
-    	if(codTipoSede=="" || codTipoSede=='-')
+    	if (codTipoSede=="" || codTipoSede=='-')
         {
       		alert("Ufficio Destinatario in Notifica Servizio Sociale è obbligatorio");       
         } else {
@@ -158,7 +158,7 @@
   		function Verify()
   		{
 		  	//Se il "Foglio Complementare" è selezionato, il "Casellario Giudiziale" è obbligatorio
-		  	if( document.LoadInserisciOrdineEsecuzione.<%=ICostantiOrdineEsecuzione.FOGLIO_COMPLEMENTARE%>.checked == true )
+		  	if (document.LoadInserisciOrdineEsecuzione.<%=ICostantiOrdineEsecuzione.FOGLIO_COMPLEMENTARE%>.checked == true )
 		  	{
        		if (   document.LoadInserisciOrdineEsecuzione.<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_CAS %>.value == '-' 
        		    || document.LoadInserisciOrdineEsecuzione.<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_CAS %>.value == '' 
@@ -194,8 +194,8 @@
       	var campo = document.LoadInserisciOrdineEsecuzione.<%= ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA %>.value;
 
 <%
-				if(		 (lFascicoloAssociato.getFlagAltraCausa()!=null && lFascicoloAssociato.getFlagAltraCausa().equals("S") && 
-				posizioneluogoaltra!=null && posizioneluogoaltra.getAltraCausa()!=null && 
+				if (		 (lFascicoloAssociato.getFlagAltraCausa() != null && lFascicoloAssociato.getFlagAltraCausa().equals("S") && 
+				posizioneluogoaltra!=null && posizioneluogoaltra.getAltraCausa() != null && 
 				posizioneluogoaltra.getAltraCausa().getCodTipoPosGiuridica().equals("23") )
 						|| (lPosizione.getCodPosizioneGiuridica().equals("07") && lFascicoloAssociato.getFlagAltraCausa()== null  )
 						|| (lPosizione.getCodPosizioneGiuridica().equals("10") && lFascicoloAssociato.getFlagAltraCausa()== null )
@@ -205,7 +205,7 @@
 						|| lPosizione.getCodPosizioneGiuridica().equals("70") || lPosizione.getCodPosizioneGiuridica().equals("71")|| lPosizione.getCodPosizioneGiuridica().equals("72"))
         {
 %>
-          if(document.LoadInserisciOrdineEsecuzione.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>[document.LoadInserisciOrdineEsecuzione.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>.selectedIndex].value == '-' )
+          if (document.LoadInserisciOrdineEsecuzione.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>[document.LoadInserisciOrdineEsecuzione.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>.selectedIndex].value == '-' )
           {
             alert("Il campo Autorità Destinazione  è obbligatorio!");
             document.LoadInserisciOrdineEsecuzione.<%= ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E %>.focus();
@@ -228,7 +228,7 @@
 			}
 %>
 <%
-			if(avvocati.size() >1)
+			if (avvocati.size() >1)
       {
 %>
       	if (document.LoadInserisciOrdineEsecuzione.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>[0][document.LoadInserisciOrdineEsecuzione.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>[0].selectedIndex].value == '-')
@@ -261,13 +261,13 @@
 			}
 %>
 
-    	if(document.LoadInserisciOrdineEsecuzione.<%=ICostantiMagistrato.CAMPO_COGNOME %>.value=="" && document.LoadInserisciOrdineEsecuzione.<%=ICostantiMagistrato.CAMPO_NOME %>.value=="")
+    	if (document.LoadInserisciOrdineEsecuzione.<%=ICostantiMagistrato.CAMPO_COGNOME %>.value=="" && document.LoadInserisciOrdineEsecuzione.<%=ICostantiMagistrato.CAMPO_NOME %>.value=="")
       {
         alert("Il Magistrato è obbligatorio");
         return false;
       }
 
-    	if( 	 document.LoadInserisciOrdineEsecuzione.<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>.value != '10'
+    	if (	 document.LoadInserisciOrdineEsecuzione.<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>.value != '10'
      			&& document.LoadInserisciOrdineEsecuzione.<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>.value != '07'
      			&& document.LoadInserisciOrdineEsecuzione.<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>.value != '02'
      			&& document.LoadInserisciOrdineEsecuzione.<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>.value != '04'
@@ -280,7 +280,7 @@
      			&& document.LoadInserisciOrdineEsecuzione.<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>.value != '72')
 
      {
-       if(document.LoadInserisciOrdineEsecuzione.<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>.value == "")
+       if (document.LoadInserisciOrdineEsecuzione.<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>.value == "")
        {
           alert("Autorità Destinazione obbligatorio");
           return false;
@@ -288,10 +288,10 @@
      }
 
 <% 
-		 if(lFascicoloAssociato.getFlagAltraCausa()!=null && lFascicoloAssociato.getFlagAltraCausa().equals("S") && posizioneluogoaltra.getAltraCausa()!=null && !posizioneluogoaltra.getAltraCausa().getCodTipoPosGiuridica().equals("23"))
+		 if (lFascicoloAssociato.getFlagAltraCausa() != null && lFascicoloAssociato.getFlagAltraCausa().equals("S") && posizioneluogoaltra.getAltraCausa() != null && !posizioneluogoaltra.getAltraCausa().getCodTipoPosGiuridica().equals("23"))
  		 {
 %>
-    	 if(document.LoadInserisciOrdineEsecuzione.<%=ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>.value == "")
+    	 if (document.LoadInserisciOrdineEsecuzione.<%=ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>.value == "")
        {
          alert("Autorità Destinazione obbligatorio");
           
@@ -301,32 +301,32 @@
 		}
 %>
 <% 
-		if(lPosizione.getCodPosizioneGiuridica().equals("04") || lPosizione.getCodPosizioneGiuridica().equals("02")
+		if (lPosizione.getCodPosizioneGiuridica().equals("04") || lPosizione.getCodPosizioneGiuridica().equals("02")
 				|| lPosizione.getCodPosizioneGiuridica().equals("70")
 				|| lPosizione.getCodPosizioneGiuridica().equals("71")
 				|| lPosizione.getCodPosizioneGiuridica().equals("72"))
    	{
 %>
-	  if(document.LoadInserisciOrdineEsecuzione.<%=ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_UEPE_USSM_SS%>.value == '-' )
+	  if (document.LoadInserisciOrdineEsecuzione.<%=ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_UEPE_USSM_SS%>.value == '-' )
 	  {
 		  alert("Destinatario Notifica Servizio Sociale obbligatorio");
 		 
 		  return false;
 	  }
-	  if(document.LoadInserisciOrdineEsecuzione.<%=ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_UDS_UDSM%>.value == '-' )
+	  if (document.LoadInserisciOrdineEsecuzione.<%=ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_UDS_UDSM%>.value == '-' )
 	  {
 		  alert("Destinatario Notifica Magistrato di Sorveglianza obbligatorio");
 		 
 		  return false;
 	  }
-	  if(document.LoadInserisciOrdineEsecuzione.<%=ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_TDS_TDSM%>.value == '-' )
+	  if (document.LoadInserisciOrdineEsecuzione.<%=ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_TDS_TDSM%>.value == '-' )
 	  {
 		  alert("Destinatario Notifica Ente di Sorveglianza obbligatorio");
 		 
 		  return false;
 	  }
 
-      if(document.LoadInserisciOrdineEsecuzione.<%=ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_SSPA%>.value == "")
+      if (document.LoadInserisciOrdineEsecuzione.<%=ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_SSPA%>.value == "")
       {
         alert("Ufficio di Esecuzione Penale Esterna obbligatorio");
        
@@ -335,7 +335,7 @@
 <%
 		}
 		
-		if(!lPosizione.isLibero() ||(((lFascicoloAssociato.getFlagAltraCausa()!=null && lFascicoloAssociato.getFlagAltraCausa().equals("S")) && (penaresidua.getDataFinePresunta()!= null && penaresidua.getDataFine() == null) ) ))
+		if (!lPosizione.isLibero() ||(((lFascicoloAssociato.getFlagAltraCausa() != null && lFascicoloAssociato.getFlagAltraCausa().equals("S")) && (penaresidua.getDataFinePresunta()!= null && penaresidua.getDataFine() == null) ) ))
 		{
 			if ( ((penaresidua.getFlagErgastolo() == null) || (penaresidua.getFlagErgastolo() != null && !penaresidua.getFlagErgastolo().equals("S") && !penaresidua.getFlagErgastolo().equals("D"))))
  			{
@@ -376,7 +376,7 @@
     function ListaComuniUds(formname,fieldname)
     { 
       var codTipoSede = document.LoadInserisciOrdineEsecuzione.<%=ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_UDS_UDSM%>.value
-      if(codTipoSede=="" || codTipoSede=='-')
+      if (codTipoSede=="" || codTipoSede=='-')
       {
     	  alert("Ufficio Destinatario in Notifica Magistrato di Sorveglianza è obbligatorio");       
       } else {
@@ -388,7 +388,7 @@
     function ListaComuniTds(formname,fieldname)
     {
       var codTipoSede = document.LoadInserisciOrdineEsecuzione.<%=ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_TDS_TDSM%>.value
-      if(codTipoSede=="" || codTipoSede=='-')
+      if (codTipoSede=="" || codTipoSede=='-')
       {
     	  alert("Ufficio Destinatario in Notifica Ente di Sorveglianza è obbligatorio");       
       } else {
@@ -414,23 +414,23 @@
 </head>
 <body class="corpo">
   <table>
-    <tr><td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
+    <tr><td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border="0"></a></td>
       <td class="LBG">
       <font class="label">Funzione :</font>&nbsp;&nbsp;
 <%
         EventoModel lProvvedimento = new EventoModel();
         String lAzione = new String();
 
-        if( modalita.equals("I") )
+        if (modalita.equals("I") )
 			  {
           lProvvedimento = new EventoModel(evento);
           lAzione = "siap.siep.ordineesecuzione.action.ActInserisciOEDetenutoQC";
           
         // Paolo Cherubini 17/01/2012 aggiungo controllo su null altrimenti va in java null pointer.  
-        if( lFascicoloAssociato.getFlagAltraCausa()!=null && lFascicoloAssociato.getFlagAltraCausa().equals("S"))
+        if (lFascicoloAssociato.getFlagAltraCausa() != null && lFascicoloAssociato.getFlagAltraCausa().equals("S"))
 			   {%>
             <font class="campo">Ordine di Esecuzione con sospensione (LEGGE 165/98) - DETENUTO PER ALTRA CAUSA</font>
-			   <%}else{%>
+			   <%} else {%>
             <% if (lPosizione.getCodPosizioneGiuridica().equals("02")) { %>
                 <font class="campo">Ordine di Esecuzione con sospensione (LEGGE 165/98) - CUST. CAUT. PER QUESTA CAUSA IN REGIME DI ARRESTI DOMICILIARI</font>
             <% } else {%>
@@ -438,7 +438,7 @@
          <%}
          }
         }
-        else if( modalita.equals("M") )
+        else if (modalita.equals("M") )
         {
           lProvvedimento = new EventoModel(evento);
 			    lAzione = "siap.siep.ordineesecuzione.action.ActModificaOEDetenutoQC";
@@ -461,7 +461,7 @@
         <td class="L" colspan=5>
           <font class="campo">
 <%
-        if(lFascicoloAssociato.getFlagAltraCausa()!=null && lFascicoloAssociato.getFlagAltraCausa().equals("S"))
+        if (lFascicoloAssociato.getFlagAltraCausa() != null && lFascicoloAssociato.getFlagAltraCausa().equals("S"))
         {
 %>
           DETENUTO PER ALTRA CAUSA - <%=lAltraCausa.getDescrTipoPosGiuridica()%>
@@ -479,32 +479,32 @@
         </td>
       </tr>
 <%
-        if(lFascicoloAssociato.getFlagAltraCausa()!=null && lFascicoloAssociato.getFlagAltraCausa().equals("S"))
+        if (lFascicoloAssociato.getFlagAltraCausa() != null && lFascicoloAssociato.getFlagAltraCausa().equals("S"))
         {
 //modifica relativa al tipo istituto
-          if(lAltraCausa.getIstitutoDetenzione() != null)
-         //  if(!lAltraCausa.getDescrTipoIstituto().equals("") && lAltraCausa.getDescrTipoIstituto()!= null && !lAltraCausa.getDescrTipoIstituto().equals("-"))
+          if (lAltraCausa.getIstitutoDetenzione() != null)
+         //  if (!lAltraCausa.getDescrTipoIstituto().equals("") && lAltraCausa.getDescrTipoIstituto()!= null && !lAltraCausa.getDescrTipoIstituto().equals("-"))
            {
 %>
            <tr>
              <td class="l">Detenuto presso </td>
              <td class="L" colspan=5><font class="campo"><%=lAltraCausa.getIstitutoDetenzione().getDescrTipoIstituto()%></font>
-              <%//if(lAltraCausa.getDescrLuogoIstituto()!=null){%>
+              <%//if (lAltraCausa.getDescrLuogoIstituto() != null){%>
               di<font class="campo"> <%=lAltraCausa.getIstitutoDetenzione().getDescrComune()%></font>
             <%//}%>
             </td>
            </tr>
 
           <%}
-           if (lAltraCausa.getAltroLuogo()!=null)
+           if (lAltraCausa.getAltroLuogo() != null)
             { %>
             <tr>
              <td class="l">Altro Luogo </td >
              <td class="L" colspan=5><font class="campo"><%=StringUtils.toStringJSP(lAltraCausa.getAltroLuogo())%></font>&nbsp; </td>
           <%}
        } else
-      if(lLuogoDetenzione.getIstitutoDetenzione() != null)
-       //if(!lLuogoDetenzione.getDescrTipoIstituto().equals("") && lLuogoDetenzione.getDescrTipoIstituto()!= null && !lLuogoDetenzione.getDescrTipoIstituto().equals("-"))
+      if (lLuogoDetenzione.getIstitutoDetenzione() != null)
+       //if (!lLuogoDetenzione.getDescrTipoIstituto().equals("") && lLuogoDetenzione.getDescrTipoIstituto()!= null && !lLuogoDetenzione.getDescrTipoIstituto().equals("-"))
         {
 %>
           <tr>
@@ -512,7 +512,7 @@
            <td class="L" colspan=5>
             <font class="campo"><%=lLuogoDetenzione.getIstitutoDetenzione().getDescrTipoIstituto()%></font>
 <%
-            //  if(lLuogoDetenzione.getDescrLuogo()!=null)
+            //  if (lLuogoDetenzione.getDescrLuogo() != null)
             //  {
 %>
                 di<font class="campo"> <%=lLuogoDetenzione.getIstitutoDetenzione().getDescrComune()%></font>
@@ -525,13 +525,13 @@
         }
 
         // Nel Caso di Posizione Giuridica ARRESTI DOMICILIARI ( 02, 04)
-        if(lPosizione.getCodPosizioneGiuridica() != null && (lPosizione.getCodPosizioneGiuridica().equals("02") ||
+        if (lPosizione.getCodPosizioneGiuridica() != null && (lPosizione.getCodPosizioneGiuridica().equals("02") ||
         lPosizione.getCodPosizioneGiuridica().equals("04")
         || lPosizione.getCodPosizioneGiuridica().equals("70")
         || lPosizione.getCodPosizioneGiuridica().equals("71")
         || lPosizione.getCodPosizioneGiuridica().equals("72")) )
         {
-          if(lLuogoDetenzione.getAltroLuogo() != null)
+          if (lLuogoDetenzione.getAltroLuogo() != null)
           {
 %>
             <tr>
@@ -551,7 +551,7 @@
 <%--input type="HIDDEN" title="Codice Istituto" value="<%=lLuogoDetenzione.getIstDetIdIstitutoDetenzione()%>" type="text" name=<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>  maxlength="6" size="6" --%>
   <tr>
 <%//fine modifica relativa al tipo istituto
-    if(penaresidua.getIdPenaResidua() != null && ( (penaresidua.getFlagErgastolo() == null) ||
+    if (penaresidua.getIdPenaResidua() != null && ( (penaresidua.getFlagErgastolo() == null) ||
     (penaresidua.getFlagErgastolo() != null && !penaresidua.getFlagErgastolo().equals("S") && !penaresidua.getFlagErgastolo().equals("D")) ) )
     {
         if ((penaresidua.getNumAnniReclusione().compareTo(new BigDecimal(0))==0) &&
@@ -579,7 +579,7 @@
 			if ((penaresidua.getNumAnniArresto().compareTo(new BigDecimal(0))==0) &&
          (penaresidua.getNumMesiArresto().compareTo(new BigDecimal(0))==0) &&
              (penaresidua.getNumGiorniArresto().compareTo(new BigDecimal(0))==0))
-      {}else{
+      {} else {
 %>
 	      <td class="l" >Arresto</td>
 	      <td class="l" colspan=2>
@@ -596,9 +596,9 @@
 %>
     <tr>
 <%
-    if((!lPosizione.getCodPosizioneGiuridica().equals("07") && !lPosizione.getCodPosizioneGiuridica().equals("10")  && !lPosizione.getCodPosizioneGiuridica().equals("16") && !lPosizione.getCodPosizioneGiuridica().equals("20") && !lPosizione.getCodPosizioneGiuridica().equals("46")
+    if ((!lPosizione.getCodPosizioneGiuridica().equals("07") && !lPosizione.getCodPosizioneGiuridica().equals("10")  && !lPosizione.getCodPosizioneGiuridica().equals("16") && !lPosizione.getCodPosizioneGiuridica().equals("20") && !lPosizione.getCodPosizioneGiuridica().equals("46")
          && !lPosizione.getCodPosizioneGiuridica().equals("47")) ||
-     (lFascicoloAssociato.getFlagAltraCausa()!=null &&  lFascicoloAssociato.getFlagAltraCausa().equals("S") ) )
+     (lFascicoloAssociato.getFlagAltraCausa() != null &&  lFascicoloAssociato.getFlagAltraCausa().equals("S") ) )
 		{
        if (penaresidua.getDataInizio() != null)
        {
@@ -619,14 +619,14 @@
 
        if (penaresidua.getFlagErgastolo() != null)
        {
-         if(penaresidua.getFlagErgastolo().equals("S"))
+         if (penaresidua.getFlagErgastolo().equals("S"))
          {
 %>
            <td class="l">Pena Detentiva</td>
            <td class="L"><font class="campo">ERGASTOLO&nbsp;</font></td>
 <%
          }
-         else if(penaresidua.getFlagErgastolo().equals("D"))
+         else if (penaresidua.getFlagErgastolo().equals("D"))
          {
 %>
            <td class="l">Pena Detentiva</td>
@@ -637,8 +637,8 @@
 		}
 %>
 <%
-    if((!lPosizione.getCodPosizioneGiuridica().equals("07") && !lPosizione.getCodPosizioneGiuridica().equals("10") && !lPosizione.getCodPosizioneGiuridica().equals("16") && !lPosizione.getCodPosizioneGiuridica().equals("20") && !lPosizione.getCodPosizioneGiuridica().equals("46")
-         && !lPosizione.getCodPosizioneGiuridica().equals("47")) || (lFascicoloAssociato.getFlagAltraCausa()!=null &&  lFascicoloAssociato.getFlagAltraCausa().equals("S") ) )
+    if ((!lPosizione.getCodPosizioneGiuridica().equals("07") && !lPosizione.getCodPosizioneGiuridica().equals("10") && !lPosizione.getCodPosizioneGiuridica().equals("16") && !lPosizione.getCodPosizioneGiuridica().equals("20") && !lPosizione.getCodPosizioneGiuridica().equals("46")
+         && !lPosizione.getCodPosizioneGiuridica().equals("47")) || (lFascicoloAssociato.getFlagAltraCausa() != null &&  lFascicoloAssociato.getFlagAltraCausa().equals("S") ) )
 		{
         if  ((penaresidua.getFlagErgastolo() == null) || (penaresidua.getFlagErgastolo() != null && !penaresidua.getFlagErgastolo().equals("S") && !penaresidua.getFlagErgastolo().equals("D")))
         {
@@ -655,9 +655,9 @@
 		         </td>
 <%
           }
-          else if( penaresidua.getDataFine() != null)
+          else if (penaresidua.getDataFine() != null)
           {
-            if(penaresidua.getDataFine().equals(penaresidua.getDataFinePresunta()))
+            if (penaresidua.getDataFine().equals(penaresidua.getDataFinePresunta()))
             {
 %>
 	             <td class="l">Data Fine Pena</td>
@@ -711,7 +711,7 @@
      	<td class="l" id="inputCasellario" style="display:block;">
        	<input title="Sede Casellario Giudiziale" value="<%= StringUtils.toStringJSP( lCasellario ) %>" type="text" name="<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_CAS %>"  maxlength="35" size="35">
        	<a href="Javascript:ListaUfficiPerTipo('LoadInserisciOrdineEsecuzione','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_CAS %>','DIB');">
-         	<img src="/images/filefolder.gif" border=0>
+         	<img src="/images/filefolder.gif" border="0">
        	</a>
      	</td>
     </tr>
@@ -729,7 +729,7 @@
          <input readonly title="Cognome Magistrato" value="<%=StringUtils.toStringJSP(magistrato.getMagistrato().getCognome() )%>" type="text" name="<%= ICostantiMagistrato.CAMPO_COGNOME %>" maxlength="35" size="25">
          <input readonly title= "Nome Magistrato"    value="<%=StringUtils.toStringJSP(magistrato.getMagistrato().getNome() )%>" type="text" name="<%= ICostantiMagistrato.CAMPO_NOME %>"        maxlength="35" size="25">
            <a href="Javascript:ListaMagistrati('LoadInserisciOrdineEsecuzione');">
-            <img src="/images/filefolder.gif" border=0>
+            <img src="/images/filefolder.gif" border="0">
             </a>
       </td>
       <td>
@@ -737,7 +737,7 @@
       </td>
      </tr>
 <%
-		 if(istanza!=null && istanza.getIdEvento()!=null)
+		 if (istanza!=null && istanza.getIdEvento() != null)
 		 {
 %>
 		    <tr>
@@ -751,146 +751,156 @@
 <%
 		}
 %>
-   <tr><td class="Titolo" colspan=6>Notifica al Condannato </td></tr>
+	<tr><td class="Titolo" colspan=6>Notifica al Condannato </td></tr>
 <%-- MEV NUOVA INFRASTRUTTURA: refactoring --%>
 <!--tr><td class="l">Autorità Destinazione </td-->
 <%--//modifica relativa al tipo istituto--%>
-<%if(lFascicoloAssociato.getFlagAltraCausa()!=null && lFascicoloAssociato.getFlagAltraCausa().equals("S") )
-{%>
-<tr>
- <td class="l" width="20%">Autorità Destinazione <font class=ob>(*)</font></td>
-
-<%if( posizioneluogoaltra.getAltraCausa()!=null && (posizioneluogoaltra.getAltraCausa().getCodTipoPosGiuridica().equals("23") ||
-	  posizioneluogoaltra.getAltraCausa().getCodTipoPosGiuridica().equals("78") ||
-	  posizioneluogoaltra.getAltraCausa().getCodTipoPosGiuridica().equals("79") ||
-	  posizioneluogoaltra.getAltraCausa().getCodTipoPosGiuridica().equals("80") ||
-	  posizioneluogoaltra.getAltraCausa().getCodTipoPosGiuridica().equals("81"))	)
-{%>
-
-<td class="L"  colspan="3">
-       <select  Title="Autorita Esterna" class="small" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>">
-        <%=autoritaEsternaE%>
-       </select>
-      </td>
+<%
+if (lFascicoloAssociato.getFlagAltraCausa() != null && lFascicoloAssociato.getFlagAltraCausa().equals("S")) {
+%>
+	<tr>
+ 		<td class="l" width="20%">Autorità Destinazione <font class=ob>(*)</font></td>
+<%
+	if (posizioneluogoaltra.getAltraCausa() != null && (posizioneluogoaltra.getAltraCausa().getCodTipoPosGiuridica().equals("23")
+			|| posizioneluogoaltra.getAltraCausa().getCodTipoPosGiuridica().equals("78")
+			|| posizioneluogoaltra.getAltraCausa().getCodTipoPosGiuridica().equals("79")
+			|| posizioneluogoaltra.getAltraCausa().getCodTipoPosGiuridica().equals("80")
+			|| posizioneluogoaltra.getAltraCausa().getCodTipoPosGiuridica().equals("81"))) {
+%>
+		<td class="L" colspan="3">
+       		<select Title="Autorita Esterna" class="small" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>">
+        		<%=autoritaEsternaE%>
+       		</select>
+     	</td>
     </tr>
     <tr>
-      <td class="l">Sede <font class=ob>(*)</font></td>
-      <td class="L">
-<%//modifica relativa al tipo istituto%>
-        <input title="Sede Autorita Esterna" value="" type="text" name="<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E %>"  maxlength="35" size="35">
+      	<td class="l">Sede <font class=ob>(*)</font></td>
+      	<td class="L">
+<%// modifica relativa al tipo istituto%>
+			<input title="Sede Autorita Esterna" value="" type="text" name="<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E %>" maxlength="35" size="35">
 <%//fine modifica relativa al tipo istituto%>
-       <a href="Javascript:ListaComuni('LoadInserisciOrdineEsecuzione','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E %>');">
-          <img src="/images/filefolder.gif" border=0>
-        </a>
-      </td>
-      <td class="l">Indirizzo</td>
-      <td class="L">
-        <TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>"  cols=30 ></textarea>
-      </td>
-<%}else{%>
-<%if(posizioneluogoaltra!= null && posizioneluogoaltra.getAltraCausa()!= null && posizioneluogoaltra.getAltraCausa()!=null && posizioneluogoaltra.getAltraCausa().getIstitutoDetenzione() != null)
- {%>
-               <td class="l">
-              <input readonly Title="Istituto" name="Comune" value="<%=StringUtils.toStringJSP(posizioneluogoaltra.getAltraCausa().getIstitutoDetenzione().getDescrTipoIstituto())%> di <%=StringUtils.toStringJSP(posizioneluogoaltra.getAltraCausa().getIstitutoDetenzione().getDescrComune())%>" size=50>
-              <input type="hidden"  Title="Istituto" name="<%=ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="<%=posizioneluogoaltra.getAltraCausa().getIstDetIdIstitutoDetenzione()%>" size=50>
-              <a href="Javascript:ListaIstitutoDetenzione('LoadInserisciOrdineEsecuzione','<%= ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
-              <img src="/images/filefolder.gif" border=0></a></td>
-
-<%}else {%>
-              <td class="l">
-              <input readonly Title="Istituto" name="Comune" value="" size=50>
-              <input type="hidden"  Title="Istituto" name="<%=ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="" size=50>
-              <a href="Javascript:ListaIstitutoDetenzione('LoadInserisciOrdineEsecuzione','<%= ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
-              <img src="/images/filefolder.gif" border=0></a></td>
-
-
-       <%}%>
-
-      <td class="l">Note</td>
-      <td class="L">
-        <TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>"  cols=35></textarea>
-      </td>
-<%}%>
-
-
-<tr><td>&nbsp;</td></tr>
-
-
-    </tr>
-
-
-<%}else{%>
-    <!--tr-->
-    <%if(lPosizione.getCodPosizioneGiuridica().equals("74") || lPosizione.getCodPosizioneGiuridica().equals("75") 
-    		|| lPosizione.getCodPosizioneGiuridica().equals("76") || lPosizione.getCodPosizioneGiuridica().equals("77"))
-	{%>
-		 <td class="l" width="20%">Istituto di Detenzione <font class=ob>(*)</font></td>
-	<%} else {%>
-	 	 <td class="l" width="20%">Autorità Destinazione <font class=ob>(*)</font></td>
-	<%}%>
-     
-<%if(lPosizione.getCodPosizioneGiuridica().equals("07") || lPosizione.getCodPosizioneGiuridica().equals("10") 
-	 || lPosizione.getCodPosizioneGiuridica().equals("02") || lPosizione.getCodPosizioneGiuridica().equals("04")
-     || lPosizione.getCodPosizioneGiuridica().equals("16") || lPosizione.getCodPosizioneGiuridica().equals("20") 
-     || lPosizione.getCodPosizioneGiuridica().equals("46") || lPosizione.getCodPosizioneGiuridica().equals("47")   
-     || lPosizione.getCodPosizioneGiuridica().equals("78") || lPosizione.getCodPosizioneGiuridica().equals("79") 
-     || lPosizione.getCodPosizioneGiuridica().equals("80") || lPosizione.getCodPosizioneGiuridica().equals("81")
-     || lPosizione.getCodPosizioneGiuridica().equals("70") || lPosizione.getCodPosizioneGiuridica().equals("71")
-     || lPosizione.getCodPosizioneGiuridica().equals("72") )
-{%>
- <td class="L" colspan="3">
-       <select  Title="Autorita Esterna" class="small" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>">
-        <%=autoritaEsternaE%>
-       </select>
-      </td>
-    </tr>
+       		<a href="Javascript:ListaComuni('LoadInserisciOrdineEsecuzione','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E %>');">
+          		<img src="/images/filefolder.gif" border="0">
+        	</a>
+		</td>
+      	<td class="l">Indirizzo</td>
+      	<td class="L">
+        	<TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>"  cols=30 ></textarea>
+      	</td>
+<%
+	} else {
+		if (posizioneluogoaltra != null && posizioneluogoaltra.getAltraCausa() != null
+				&& posizioneluogoaltra.getAltraCausa() != null && posizioneluogoaltra.getAltraCausa().getIstitutoDetenzione() != null) {
+%>
+		<td class="l">
+			<input readonly Title="Istituto" name="Comune" value="<%=StringUtils.toStringJSP(posizioneluogoaltra.getAltraCausa().getIstitutoDetenzione().getDescrTipoIstituto())%> di <%=StringUtils.toStringJSP(posizioneluogoaltra.getAltraCausa().getIstitutoDetenzione().getDescrComune())%>" size=50>
+			<input type="hidden"  Title="Istituto" name="<%=ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="<%=posizioneluogoaltra.getAltraCausa().getIstDetIdIstitutoDetenzione()%>" size=50>
+			<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciOrdineEsecuzione','<%= ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
+				<img src="/images/filefolder.gif" border="0">
+			</a>
+		</td>
+<%
+		} else {
+%>
+		<td class="l">
+			<input readonly Title="Istituto" name="Comune" value="" size=50>
+			<input type="hidden"  Title="Istituto" name="<%=ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="" size=50>
+			<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciOrdineEsecuzione','<%= ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
+				<img src="/images/filefolder.gif" border="0">
+			</a>
+		</td>
+<%
+		}
+%>
+      	<td class="l">Note</td>
+      	<td class="L">
+        	<TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>"  cols=35></textarea>
+      	</td>
+<%
+	}
+%>
+	</tr>
+	<tr><td>&nbsp;</td></tr>
+<%
+} else {
+%>
     <tr>
-      <td class="l">Sede <font class=ob>(*)</font></td>
-      <td class="L">
-        <input title="Sede Autorita Esterna" value="" type="text" name="<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E %>"  maxlength="35" size="35">
-        <a href="Javascript:ListaComuni('LoadInserisciOrdineEsecuzione','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E %>');">
-          <img src="/images/filefolder.gif" border=0>
-        </a>
-      </td>
-      <td class="l">Indirizzo</td>
-      <td class="L">
-        <TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>"  cols=30 ></textarea>
-      </td>
-
-<%}else{
-//modifica relativa al tipo istituto
-  if(lLuogoDetenzione != null && lLuogoDetenzione.getIstitutoDetenzione() != null)
-  {%>
-
-              <td class="l">
-              <input readonly Title="Istituto" name="Comune" value="<%=StringUtils.toStringJSP(lLuogoDetenzione.getIstitutoDetenzione().getDescrTipoIstituto())%> di <%=StringUtils.toStringJSP(lLuogoDetenzione.getIstitutoDetenzione().getDescrComune())%>" size=50>
-              <input type="hidden"  Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="<%=lLuogoDetenzione.getIstDetIdIstitutoDetenzione()%>" size=50>
-              <a href="Javascript:ListaIstitutoDetenzione('LoadInserisciOrdineEsecuzione','<%= ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
-              <img src="/images/filefolder.gif" border=0></a></td>
-
-
-               <%}else {%>
-
-              <td class="l">
-              <input readonly Title="Istituto" name="Comune" value="" size=50>
-              <input type="hidden"  Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="" size=50>
-              <a href="Javascript:ListaIstitutoDetenzione('LoadInserisciOrdineEsecuzione','<%= ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
-              <img src="/images/filefolder.gif" border=0></a></td>
-
-
-       <%}%>
-
-      <td class="l">Note</td>
-      <td class="L">
-        <TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>"  cols=35></textarea>
-      </td>
-<tr><td>&nbsp;</td></tr>
-   <%}%>
-
-
-
+<%
+	if (lPosizione.getCodPosizioneGiuridica().equals("74") || lPosizione.getCodPosizioneGiuridica().equals("75") 
+    		|| lPosizione.getCodPosizioneGiuridica().equals("76") || lPosizione.getCodPosizioneGiuridica().equals("77")) {
+%>
+		<td class="l" width="20%">Istituto di Detenzione <font class=ob>(*)</font></td>
+<%
+	} else {
+%>
+		<td class="l" width="20%">Autorità Destinazione <font class=ob>(*)</font></td>
+<%
+	}
+	if (lPosizione.getCodPosizioneGiuridica().equals("07") || lPosizione.getCodPosizioneGiuridica().equals("10") 
+			|| lPosizione.getCodPosizioneGiuridica().equals("02") || lPosizione.getCodPosizioneGiuridica().equals("04")
+			|| lPosizione.getCodPosizioneGiuridica().equals("16") || lPosizione.getCodPosizioneGiuridica().equals("20") 
+			|| lPosizione.getCodPosizioneGiuridica().equals("46") || lPosizione.getCodPosizioneGiuridica().equals("47")   
+			|| lPosizione.getCodPosizioneGiuridica().equals("78") || lPosizione.getCodPosizioneGiuridica().equals("79") 
+			|| lPosizione.getCodPosizioneGiuridica().equals("80") || lPosizione.getCodPosizioneGiuridica().equals("81")
+			|| lPosizione.getCodPosizioneGiuridica().equals("70") || lPosizione.getCodPosizioneGiuridica().equals("71")
+			|| lPosizione.getCodPosizioneGiuridica().equals("72")) {
+%>
+ 		<td class="L" colspan="3">
+       		<select  Title="Autorita Esterna" class="small" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>">
+        		<%=autoritaEsternaE%>
+       		</select>
+      	</td>
+	</tr>
+    <tr>
+      	<td class="l">Sede <font class=ob>(*)</font></td>
+      	<td class="L">
+        	<input title="Sede Autorita Esterna" value="" type="text" name="<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E %>"  maxlength="35" size="35">
+       		<a href="Javascript:ListaComuni('LoadInserisciOrdineEsecuzione','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E %>');">
+          		<img src="/images/filefolder.gif" border="0">
+        	</a>
+      	</td>
+      	<td class="l">Indirizzo</td>
+      	<td class="L">
+        	<TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>"  cols=30 ></textarea>
+      	</td>
+<%
+	} else {
+		// modifica relativa al tipo istituto
+  		if (lLuogoDetenzione != null && lLuogoDetenzione.getIstitutoDetenzione() != null) {
+%>
+		<td class="l">
+			<input readonly Title="Istituto" name="Comune" value="<%=StringUtils.toStringJSP(lLuogoDetenzione.getIstitutoDetenzione().getDescrTipoIstituto())%> di <%=StringUtils.toStringJSP(lLuogoDetenzione.getIstitutoDetenzione().getDescrComune())%>" size=50>
+			<input type="hidden"  Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="<%=lLuogoDetenzione.getIstDetIdIstitutoDetenzione()%>" size=50>
+			<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciOrdineEsecuzione','<%= ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
+				<img src="/images/filefolder.gif" border="0">
+			</a>
+		</td>
+<%
+		} else {
+%>
+		<td class="l">
+			<input readonly Title="Istituto" name="Comune" value="" size=50>
+			<input type="hidden"  Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="" size=50>
+			<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciOrdineEsecuzione','<%= ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
+				<img src="/images/filefolder.gif" border="0">
+			</a>
+		</td>
+<%
+		}
+%>
+		<td class="l">Note</td>
+      	<td class="L">
+        	<TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>"  cols=35></textarea>
+      	</td>
+<%
+	}
+%>
     </tr>
-<%}%>
+    <tr><td>&nbsp;</td></tr>
+<%
+}
+%>
+
 <%-- MEV NUOVA INFRASTRUTTURA: refactoring --%>
 <%--td class="L">
 <select Title="Autorita Esterna" class="small" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>">
@@ -910,94 +920,95 @@
         <%--input title="Sede Autorita Esterna" value="<%=StringUtils.toStringJSP(lLuogoDetenzione.getDescrLuogo()) %>" type="text" name="<-%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>"  maxlength="35" size="35"--%>
 <%--//fine modifica relativa al tipo istituto--%>
         <%--a href="Javascript:ListaComuni('LoadInserisciOrdineEsecuzione','<-%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>[0]');">
-          <img src="/images/filefolder.gif" border=0>
+          <img src="/images/filefolder.gif" border="0">
         </a>
       </td>
     </tr--%>
 <%--//fine modifica relativa al tipo istituto--%>
+
     <tr>
-      <td class="Titolo" colspan=6>Notifica al Difensore</td></tr>
+		<td class="Titolo" colspan=6>Notifica al Difensore</td>
+	</tr>
 <%
-      int lIdxAvv = 0;
-			int lNumAvvocati = avvocati.size();
-      Iterator lItxAvv = avvocati.iterator();
-      while( lItxAvv.hasNext() )
-      {
-        AvvocatoSiepModel lAvv =  (AvvocatoSiepModel)lItxAvv.next();
+int lIdxAvv = 0;
+int lNumAvvocati = avvocati.size();
+Iterator lItxAvv = avvocati.iterator();
+while (lItxAvv.hasNext()) {
+	AvvocatoSiepModel lAvv = (AvvocatoSiepModel) lItxAvv.next();
 %>
-				</table>
-        <table width=100%>
-          <tr>
-            <td class="l"  width="20%">Per Avvocato </td>
-            <td class="L">
-              <input type="hidden" name="indexAvvocati" value="<%=lIdxAvv%>">
-              <font class="campo">
-                <%=StringUtils.toStringJSP(lAvv.getAvvocato().getCognome())%>&nbsp;<%=StringUtils.toStringJSP(lAvv.getAvvocato().getNome())%>
-              </font>
-              &nbsp;Foro di&nbsp;
-              <font class="campo">
-                <%=StringUtils.toStringJSP(lAvv.getAvvocato().getForo())%>
-              </font>
-              &nbsp;Difensore di&nbsp;
-              <font class="campo">
-                <%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescrTipo())%>
-              </font>
-              <input type="HIDDEN" title="Codice Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep())%>" type="text" name="<%= ICostantiAvvocato.CAMPO_ID_AVVOCATO %>"  maxlength="35" size="35">
-            </td>
-          </tr>
-        </table>
-         <table width=100%>
-          <tr><td class="l">Autorità Destinazione </td >
-          <td class="L" colspan=3>
-             <select Title="Autorita Esterna" class="small" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>" >
-               <%=autoritaEsternaN%>
-             </select>
-         </td>
-     </tr>
-     <tr>
-      <td class="l">Sede </td><td class="L">
-        <%-- MEV_21 (avvocati) Sostituzione di getAvvocato().getForo() con getAvvocato().getDescComuneSedeForo() --%>
-        <input title="Sede Foro Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescComuneSedeForo())%>" type="text" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>" maxlength="35" size="35">
+</table>
+<table width=100%>
+  	<tr>
+    	<td class="l"  width="20%">Per Avvocato </td>
+    	<td class="L">
+      		<input type="hidden" name="indexAvvocati" value="<%=lIdxAvv%>">
+			<font class="campo">
+  				<%=StringUtils.toStringJSP(lAvv.getAvvocato().getCognome())%>&nbsp;<%=StringUtils.toStringJSP(lAvv.getAvvocato().getNome())%>
+			</font>
+			&nbsp;Foro di&nbsp;
+			<font class="campo">
+  				<%=StringUtils.toStringJSP(lAvv.getAvvocato().getForo())%>
+			</font>
+			&nbsp;Difensore di&nbsp;
+			<font class="campo">
+				<%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescrTipo())%>
+			</font>
+			<input type="HIDDEN" title="Codice Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep())%>" type="text" name="<%= ICostantiAvvocato.CAMPO_ID_AVVOCATO %>"  maxlength="35" size="35">
+		</td>
+  	</tr>
+</table>
+<table width=100%>
+	<tr>
+		<td class="l">Autorità Destinazione </td >
+ 		<td class="L" colspan=3>
+	    	<select Title="Autorita Esterna" class="small" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>" >
+				<%=autoritaEsternaN%>
+	    	</select>
+		</td>
+	</tr>
+	<tr>
+		<td class="l">Sede </td><td class="L">
+        	<%-- MEV_21 (avvocati) Sostituzione di getAvvocato().getForo() con getAvvocato().getDescComuneSedeForo() --%>
+        	<input title="Sede Foro Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescComuneSedeForo())%>" type="text" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>" maxlength="35" size="35">
 <%
-				if( lNumAvvocati < 2 )
-				{
+	if (lNumAvvocati < 2) {
 %>
-        	<a href="Javascript:ListaComuni('LoadInserisciOrdineEsecuzione','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>');">
+			<a href="Javascript:ListaComuni('LoadInserisciOrdineEsecuzione','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>');">
+				<img src="/images/filefolder.gif" border="0">
+        	</a>
 <%
-				}
-				else
-				{
+	} else {
 %>
-        	<a href="Javascript:ListaComuni('LoadInserisciOrdineEsecuzione','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>[<%=lIdxAvv%>]');">
+       		<a href="Javascript:ListaComuni('LoadInserisciOrdineEsecuzione','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>[<%=lIdxAvv%>]');">
+				<img src="/images/filefolder.gif" border="0">
+        	</a>
 <%
-				}
+	}
 %>
-          <img src="/images/filefolder.gif" border=0>
-        </a>
-      </td>
-       <td class="l">Note</td>
-       <td class="L">
-          <textarea title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE%>"  cols=35></textarea>
-       </td>
-    </tr>
-    <tr><td>&nbsp;</td></tr>
+		</td>
+       	<td class="l">Note</td>
+       	<td class="L">
+          	<textarea title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE%>"  cols=35></textarea>
+       	</td>
+	</tr>
+	<tr><td>&nbsp;</td></tr>
 <%
-    lIdxAvv++;
-  }
+	lIdxAvv++;
+}
 %>
 <!--Notifica del Tribunale di Sorveglianza e i Servizi Sociali (SCD)-->
-
-<% if(lPosizione.getCodPosizioneGiuridica().equals("04") || lPosizione.getCodPosizioneGiuridica().equals("02")
+<%
+if (lPosizione.getCodPosizioneGiuridica().equals("04") || lPosizione.getCodPosizioneGiuridica().equals("02")
 		|| lPosizione.getCodPosizioneGiuridica().equals("70")
 		|| lPosizione.getCodPosizioneGiuridica().equals("71")
-		|| lPosizione.getCodPosizioneGiuridica().equals("72"))
-   {%>
-    <tr>
-          <td class="Titolo" colspan=6> Notifica Servizio Sociale</td></tr>
-   <tr>
+		|| lPosizione.getCodPosizioneGiuridica().equals("72")) {
+%>
+	<tr>
+		<td class="Titolo" colspan=6> Notifica Servizio Sociale</td></tr>
+   	<tr>
         <td class="l">Destinatario</td>
         <td class="l">
-            <select title="UfficioDestinazione" name="<%= ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_UEPE_USSM_SS %>">
+			<select title="UfficioDestinazione" name="<%= ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_UEPE_USSM_SS %>">
             	<%=tipUffDestSerSoc%>
            	</select>
            	<input type="hidden" name="typename" value="USSM">
@@ -1005,30 +1016,30 @@
 		</td>
 	</tr>
 	<tr>
-     <td class="l">Sede<font class=ob>(*)</font></td>
-      <td class="l">
-        <input readonly Title="UEPE Competente" name="Indirizzo" value="" size=35 >
-        <input type="hidden" readonly Title="UEPE Competente" name="<%= ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_SSPA%>" value="" size=35 >
-        <a href="Javascript:ListaCSSA('LoadInserisciOrdineEsecuzione','<%= ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_SSPA %>','Indirizzo');">
-        <img src="/images/filefolder.gif" border=0></a>
-      </td>
+		<td class="l">Sede<font class=ob>(*)</font></td>
+      	<td class="l">
+	        <input readonly Title="UEPE Competente" name="Indirizzo" value="" size=35 >
+	        <input type="hidden" readonly Title="UEPE Competente" name="<%= ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_SSPA%>" value="" size=35 >
+	        <a href="Javascript:ListaCSSA('LoadInserisciOrdineEsecuzione','<%= ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_SSPA %>','Indirizzo');">
+	        	<img src="/images/filefolder.gif" border="0">
+	        </a>
+		</td>
         <td class="l">Note</td>
         <td class="L">
-          <TEXTAREA title="Note" name="<%= ICostantiOrdineEsecuzione.CAMPO_NOTE_SSPA %>"  cols=35></textarea>
+          	<TEXTAREA title="Note" name="<%= ICostantiOrdineEsecuzione.CAMPO_NOTE_SSPA %>" cols="35"></textarea>
         </td>
  </tr>
 
 <%-- MEV NUOVA INFRASTRUTTURA: refactoring --%>
-  <%--tr><td class="L">Sede </td><td class="L">
-       <input title="Sede per Servizio Sociale" value="<%=StringUtils.toStringJSP(lProvvedimento.getDescrUfficioDestinatario()) %>" type="text" name="<%= ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_SSPA %>"  maxlength="35" size="35">
-       <a href="Javascript:ListaComuni('LoadInserisciOrdineEsecuzione','<%=ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_SSPA %>');">
-       <img src="/images/filefolder.gif" border=0></a></td>
-   </tr--%>
+<%--tr><td class="L">Sede </td><td class="L">
+     <input title="Sede per Servizio Sociale" value="<%=StringUtils.toStringJSP(lProvvedimento.getDescrUfficioDestinatario()) %>" type="text" name="<%= ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_SSPA %>"  maxlength="35" size="35">
+     <a href="Javascript:ListaComuni('LoadInserisciOrdineEsecuzione','<%=ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_SSPA %>');">
+     <img src="/images/filefolder.gif" border="0"></a></td>
+ </tr--%>
 
-   <tr>
-          <td class="Titolo" colspan=6> Notifica Magistrato di Sorveglianza</td></tr>
-   <tr>
-
+   	<tr>
+		<td class="Titolo" colspan=6> Notifica Magistrato di Sorveglianza</td></tr>
+   	<tr>
         <td class="l">Destinatario</td>
         <td class="l"> 
             <select title="UfficioSorveglianza" name="<%= ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_UDS_UDSM %>">
@@ -1037,76 +1048,88 @@
            	<input type="hidden" name="typename" value="USSM">
         	<input type="hidden" value="UDS">
          </td>
-  </tr>
-  <tr><td class="L">Sede <font class=ob>(*)</font></td><td class="L">
-       <input title="Sede Notifica Magistrato" value="" type="text" name="<%= ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_UDS %>"  maxlength="35" size="35">
-       <a href="Javascript:ListaComuniUds('LoadInserisciOrdineEsecuzione','<%=ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_UDS%>');">
-       <img src="/images/filefolder.gif" border=0></a></td>
+  	</tr>
+  	<tr>
+  		<td class="L">Sede <font class=ob>(*)</font></td>
+  		<td class="L">
+       		<input title="Sede Notifica Magistrato" value="" type="text" name="<%= ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_UDS %>"  maxlength="35" size="35">
+       		<a href="Javascript:ListaComuniUds('LoadInserisciOrdineEsecuzione','<%=ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_UDS%>');">
+       			<img src="/images/filefolder.gif" border="0">
+       		</a>
+       	</td>
         <td class="l">Note</td>
-         <td class="L">
-          <TEXTAREA title="Note" name="<%= ICostantiOrdineEsecuzione.CAMPO_NOTE_UDS %>"  cols=35></textarea>
+        <td class="L">
+        	<TEXTAREA title="Note" name="<%= ICostantiOrdineEsecuzione.CAMPO_NOTE_UDS %>" cols="35"></textarea>
         </td>
-   </tr>
-  <%}%>
-
-
-<%if(istanza!=null && istanza.getIdEvento()!=null)
-{
-      FlagIstanza="S";%>
-      <input type="hidden" name="IdIstanza" value="<%=istanza.getIdEvento()%>">
+	</tr>
 <%
 }
-else
-{
-      FlagIstanza="N";
+%>
+	<tr>
+		<td>
+<%
+if (istanza != null && istanza.getIdEvento() != null) {
+	flagIstanza="S";%>
+			<input type="hidden" name="IdIstanza" value="<%=istanza.getIdEvento()%>">
+<%
+} else {
+	flagIstanza="N";
 }
 %>
-<input type="hidden" name="istanza" value="<%=FlagIstanza%>">
-
-
-     <%if(((istanza != null) && (istanza.getIdEvento()!=null))||(lPosizione.getCodPosizioneGiuridica().equals("04")) || (lPosizione.getCodPosizioneGiuridica().equals("02")) || (lPosizione.getCodPosizioneGiuridica().equals("70"))|| (lPosizione.getCodPosizioneGiuridica().equals("71"))|| (lPosizione.getCodPosizioneGiuridica().equals("72")))
-   {
-   %>
-   <tr><td class="Titolo" colspan=6> Notifica Ente di Sorveglianza</td></tr>
-   <tr>
+			<input type="hidden" name="istanza" value="<%=flagIstanza%>">
+		</td>
+	</tr>
+<%
+if (((istanza != null) && (istanza.getIdEvento() != null))
+		||(lPosizione.getCodPosizioneGiuridica().equals("04"))
+		|| (lPosizione.getCodPosizioneGiuridica().equals("02"))
+		|| (lPosizione.getCodPosizioneGiuridica().equals("70"))
+		|| (lPosizione.getCodPosizioneGiuridica().equals("71"))
+		|| (lPosizione.getCodPosizioneGiuridica().equals("72"))) {
+%>
+	<tr><td class="Titolo" colspan=6> Notifica Ente di Sorveglianza</td></tr>
+   	<tr>
 <%-- MEV NUOVA INFRASTRUTTURA: refactoring --%>
-        <%--<td class="l">Destinatario<font class=ob>(*)</font></td >
-       <td class="L">
-             <select Title="Tribunale di Sorveglianza" name="<%=ICostantiNotifica.CAMPO_UFF_COD_UFFICIO%>">
-               <%=tipoufficiosius%>
-             </select>
-         </td>--%>
-         <td class="l">Destinatario</td >
-         <td class="l"> 
-            <select title="UfficioDestinazione" name="<%= ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_TDS_TDSM %>">
+<%--<td class="l">Destinatario<font class=ob>(*)</font></td >
+<td class="L">
+	<select Title="Tribunale di Sorveglianza" name="<%=ICostantiNotifica.CAMPO_UFF_COD_UFFICIO%>">
+	  	<%=tipoufficiosius%>
+	</select>
+</td>--%>
+		<td class="l">Destinatario</td >
+		<td class="l"> 
+			<select title="UfficioDestinazione" name="<%= ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_TDS_TDSM %>">
             	<%=tipUffDestEntSor%>
            	</select>
          </td>
-         
          <%-- MEV NUOVA INFRASTRUTTURA: refactoring --%>
          <%--input type="hidden" value="TDS" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>"--%>
-   </tr>
-   <tr>
-         <td class="l">Sede <font class=ob>(*)</font></td><td class="L">
-         <input title="Sede Tribunale Sorveglianza" value="" type="text" name="<%= ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_TDS %>"  maxlength="35" size="35">
-         <a href="Javascript:ListaComuniTds('LoadInserisciOrdineEsecuzione','<%=ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_TDS %>');">
-         <img src="/images/filefolder.gif" border=0></a></td>
+	</tr>
+	<tr>
+		<td class="l">Sede <font class=ob>(*)</font></td><td class="L">
+         	<input title="Sede Tribunale Sorveglianza" value="" type="text" name="<%= ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_TDS %>"  maxlength="35" size="35">
+         	<a href="Javascript:ListaComuniTds('LoadInserisciOrdineEsecuzione','<%=ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_TDS %>');">
+         		<img src="/images/filefolder.gif" border="0">
+         	</a>
+         </td>
          <td class="l">Note</td>
          <td class="L">
-          <TEXTAREA title="Note" name="<%=  ICostantiOrdineEsecuzione.CAMPO_NOTE_TDS %>"  cols=35></textarea>
+          	<TEXTAREA title="Note" name="<%=  ICostantiOrdineEsecuzione.CAMPO_NOTE_TDS %>"  cols=35></textarea>
          </td>
-     </tr>
-
-   <% }%>
-    		<td class="lNoBord" colspan="2">
-      			<br>
-      			<INPUT class="bottone" type="submit" name="I" value="Conferma" onClick="javascript:return Verify();">
-    		</td>
-  		</tr>
-	</table>
-	</form>
-	<script language="JavaScript" type="text/javascript">
-  	var frmvalidator  = new Validator("LoadInserisciOrdineEsecuzione");
+	</tr>
+<%
+}
+%>
+	<tr>
+   		<td class="lNoBord" colspan="2">
+   			<br>
+   			<INPUT class="bottone" type="submit" name="I" value="Conferma" onClick="javascript:return Verify();">
+   		</td>
+	</tr>
+</table>
+</form>
+<script language="JavaScript" type="text/javascript">
+var frmvalidator  = new Validator("LoadInserisciOrdineEsecuzione");
 <%
 if (istanza != null && istanza.getIdEvento() != null) {
 %>
@@ -1146,7 +1169,7 @@ if (lPosizione.getCodPosizioneGiuridica().equals("07")
 				&& lFascicoloAssociato.getFlagAltraCausa().equals("N"))) {
 %>
   	frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E %>","req","Luogo Autorità Destinazione obbligatoria");
-  	frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E %>","alphabetic");
+<%--   	frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E %>","alphabetic"); --%>
 <%
 	}
 }
@@ -1157,13 +1180,13 @@ if (lFascicoloAssociato.getFlagAltraCausa() != null && lFascicoloAssociato.getFl
 			&& posizioneluogoaltra.getAltraCausa().getCodTipoPosGiuridica().equals("23")) {
 %>
   	frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E %>","req","Luogo Autorità Destinazione obbligatoria");
-  	frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E %>","alphabetic");
+<%--   	frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E %>","alphabetic"); --%>
 <%
 	}
 }
 %>
  	frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>","req","Luogo Autorità Destinazione obbligatoria");
- 	frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>","alphabetic");
+<%--  	frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>","alphabetic"); --%>
 <%
 if (lPosizione.getCodPosizioneGiuridica().equals("04")
 		|| lPosizione.getCodPosizioneGiuridica().equals("02")
@@ -1172,7 +1195,7 @@ if (lPosizione.getCodPosizioneGiuridica().equals("04")
 		|| lPosizione.getCodPosizioneGiuridica().equals("72")) {
 %>
  	frmvalidator.addValidation("<%= ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_UDS %>","req","Sede UDS obbligatoria");
- 	frmvalidator.addValidation("<%= ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_UDS %>","alphabetic");
+<%--  	frmvalidator.addValidation("<%= ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_UDS %>","alphabetic"); --%>
 <%
 }
 if (((istanza != null) && (istanza.getIdEvento() != null))
@@ -1183,7 +1206,7 @@ if (((istanza != null) && (istanza.getIdEvento() != null))
 		|| (lPosizione.getCodPosizioneGiuridica().equals("72"))) {
 %>
  	frmvalidator.addValidation("<%= ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_TDS %>","req","Sede TDS obbligatoria");
- 	frmvalidator.addValidation("<%= ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_TDS %>","alphabetic");
+<%--  	frmvalidator.addValidation("<%= ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_TDS %>","alphabetic"); --%>
 <%
 }
 if ((!lPosizione.getCodPosizioneGiuridica().equals("07")
@@ -1215,6 +1238,6 @@ if ((!lPosizione.getCodPosizioneGiuridica().equals("07")
  	}
 }
 %>
-	</script>
+</script>
 </body>
 </html>

@@ -298,7 +298,7 @@ frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_MESE_DATA_RADIAZIONE%>",
 frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_MESE_DATA_RADIAZIONE%>","lt=12");
 --%>
 
-frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA%>","alphabetic");
+<%-- frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA%>","alphabetic"); --%>
 frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_FORO%>","alphabetic");
 <%-- 20210610 MEV_21 --%>
 <%-- frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA%>","alphabetic"); --%>

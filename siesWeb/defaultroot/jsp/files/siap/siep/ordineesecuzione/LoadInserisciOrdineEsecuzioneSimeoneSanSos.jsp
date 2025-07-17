@@ -929,7 +929,7 @@ if (lPosizione.getCodPosizioneGiuridica().equals("07")
 			|| (lFascicoloAssociato.getFlagAltraCausa() != null && lFascicoloAssociato.getFlagAltraCausa().equals("N"))) {
 %>
 frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>","req","Luogo Autorità Destinazione obbligatoria");
-frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>","alphabetic");
+<%-- frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>","alphabetic"); --%>
 <%
 	}
 }
@@ -937,18 +937,18 @@ if (lFascicoloAssociato.getFlagAltraCausa() != null && lFascicoloAssociato.getFl
 	if (lAltraCausa.getCodTipoPosGiuridica().equals("23")) {
 %>
 frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>","req","Luogo Autorità Destinazione obbligatoria");
-frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>","alphabetic");
+<%-- frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>","alphabetic"); --%>
 <%
 	}
 }
 %>
 frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>","req","Luogo Autorità Destinazione obbligatoria");
-frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>","alphabetic");
+<%-- frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>","alphabetic"); --%>
 <%
 if (lPosizione.getCodPosizioneGiuridica().equals("04") || lPosizione.getCodPosizioneGiuridica().equals("02")) {
 %>
 frmvalidator.addValidation("<%= ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_UDS%>","req","Sede UDS obbligatoria");
-frmvalidator.addValidation("<%= ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_UDS%>","alphabetic");
+<%-- frmvalidator.addValidation("<%= ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_UDS%>","alphabetic"); --%>
 <%
 }
 if (((istanza != null) && (istanza.getIdEvento() != null))
@@ -956,7 +956,7 @@ if (((istanza != null) && (istanza.getIdEvento() != null))
 		|| (lPosizione.getCodPosizioneGiuridica().equals("02"))) {
 %>
 frmvalidator.addValidation("<%= ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_TDS%>","req","Sede TDS obbligatoria");
-frmvalidator.addValidation("<%= ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_TDS%>","alphabetic");
+<%-- frmvalidator.addValidation("<%= ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_TDS%>","alphabetic"); --%>
 <%
 }
 if ((!lPosizione.getCodPosizioneGiuridica().equals("07") && !lPosizione.getCodPosizioneGiuridica().equals("10")

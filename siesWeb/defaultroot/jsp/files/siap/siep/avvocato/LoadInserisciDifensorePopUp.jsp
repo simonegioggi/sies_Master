@@ -166,10 +166,10 @@
 		frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>","gt=1");
 		frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>","lt=12");
 		
-		frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA%>","alphabetic");
+<%-- 		frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA%>","alphabetic"); --%>
 		frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_FORO%>","alphabetic");
 		
-		frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA%>","alphabetic");
+<%-- 		frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA%>","alphabetic"); --%>
 		
 		frmvalidator.setAddnlValidationFunction("Verify");
 	</script>

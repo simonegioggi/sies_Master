@@ -820,7 +820,7 @@ if(provvedimento.getSbViewProcpena()==null)
 	   }
 	   if (document.DettaglioProvvedimentoBDMC.appoAutoEmi.value > 0){
 		    frmvalidator.addValidation("<%=ICostantiSbPren.CAMPO_LUOGO_AUTORITA %>","req");	
-			frmvalidator.addValidation("<%=ICostantiSbPren.CAMPO_AUTORITA%>","alphabetic");
+<%-- 			frmvalidator.addValidation("<%=ICostantiSbPren.CAMPO_AUTORITA%>","alphabetic"); --%>
 	   }
 	frmvalidator.setAddnlValidationFunction("Verify");
 

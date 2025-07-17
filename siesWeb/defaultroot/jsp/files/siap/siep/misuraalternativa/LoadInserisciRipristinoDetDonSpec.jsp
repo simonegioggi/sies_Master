@@ -987,9 +987,9 @@ if(penaresidua.getDataFine()!= null){
  %>
 
  frmvalidator.addValidation("<%= ICostantiMisuraAlternativa.CAMPO_SEDE_POL_C %>","req","Luogo Autorità Destinazione obbligatoria");
- frmvalidator.addValidation("<%= ICostantiMisuraAlternativa.CAMPO_SEDE_POL_C %>","alphabetic");
+<%--  frmvalidator.addValidation("<%= ICostantiMisuraAlternativa.CAMPO_SEDE_POL_C %>","alphabetic"); --%>
  frmvalidator.addValidation("<%= ICostantiMisuraAlternativa.CAMPO_SEDE_TDS%>","req","Luogo Tribunale di Sorveglianza obbligatoria");
- frmvalidator.addValidation("<%= ICostantiMisuraAlternativa.CAMPO_SEDE_TDS %>","alphabetic");
+<%--  frmvalidator.addValidation("<%= ICostantiMisuraAlternativa.CAMPO_SEDE_TDS %>","alphabetic"); --%>
 </script>
 
 </body>
