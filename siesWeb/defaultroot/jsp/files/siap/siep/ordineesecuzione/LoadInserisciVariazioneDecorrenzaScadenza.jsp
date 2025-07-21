@@ -465,7 +465,7 @@ if (posizioneluogoaltra != null && posizioneluogoaltra.getAltraCausa() != null &
 }%>
 
  frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>","req","Luogo Autorità Destinazione obbligatoria");
- frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>","alphabetic");
+<%--  frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>","alphabetic"); --%>
 
 </script>
 </body>

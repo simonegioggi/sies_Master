@@ -1100,7 +1100,7 @@ if((!lPosizione.isLibero()) || (lFascicoloAssociato.getFlagAltraCausa()!=null &&
   frmvalidator.addValidation("<%= ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INGRESSO_ISTITUTO%>","lt=2099");
 <%}%>
 
- frmvalidator.addValidation("<%= ICostantiMisuraAlternativa.CAMPO_SEDE_TDS %>","alphabetic");
+<%--  frmvalidator.addValidation("<%= ICostantiMisuraAlternativa.CAMPO_SEDE_TDS %>","alphabetic"); --%>
 
  frmvalidator.setAddnlValidationFunction("Verify");
 </script>

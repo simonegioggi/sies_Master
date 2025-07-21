@@ -911,7 +911,7 @@ Eseguita da Procura&nbsp;<input type="radio" name="tipo" value="procura" <%=chec
 
 
   frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_SEDE_TDS_EMITT%>","req","Il campo Sede Ufficio Emittente è obbligatorio");
-  frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_SEDE_TDS_EMITT%>","alphabetic");
+<%--   frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_SEDE_TDS_EMITT%>","alphabetic"); --%>
 
   frmvalidator.addValidation("<%= ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>","req","Il campo Giorno Data Emissione Ordinanza è obbligatorio");
   frmvalidator.addValidation("<%= ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>","numeric");
@@ -929,7 +929,7 @@ Eseguita da Procura&nbsp;<input type="radio" name="tipo" value="procura" <%=chec
 <%if(checkProcura.equals("checked"))
 {%>
   frmvalidator.addValidation("<%= ICostantiMisuraAlternativa.CAMPO_SEDE_POL_E %>","req","Luogo Autorità Destinazione obbligatoria");
-  frmvalidator.addValidation("<%= ICostantiMisuraAlternativa.CAMPO_SEDE_POL_E%>","alphabetic");
+<%--   frmvalidator.addValidation("<%= ICostantiMisuraAlternativa.CAMPO_SEDE_POL_E%>","alphabetic"); --%>
 <%}%>
 
 </script>

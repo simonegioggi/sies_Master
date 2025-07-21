@@ -192,7 +192,7 @@ function Verifica()
   frmvalidator.addValidation("<%= ICostantiVerbale.CAMPO_ANNO_DATA_PERVENIMENTO%>","gt=1900");
   frmvalidator.addValidation("<%= ICostantiVerbale.CAMPO_ANNO_DATA_PERVENIMENTO%>","lt=2099");
 
-  frmvalidator.addValidation("<%= ICostantiVerbale.CAMPO_COD_LUOGO_UFFICIO_FIRMATARIO %>","alphabetic");
+<%--   frmvalidator.addValidation("<%= ICostantiVerbale.CAMPO_COD_LUOGO_UFFICIO_FIRMATARIO %>","alphabetic"); --%>
 
   frmvalidator.addValidation("<%= ICostantiVerbale.CAMPO_GIORNO_DATA_EMISSIONE%>","numeric");
   frmvalidator.addValidation("<%= ICostantiVerbale.CAMPO_GIORNO_DATA_EMISSIONE%>","lt=31");
@@ -204,8 +204,8 @@ function Verifica()
   frmvalidator.addValidation("<%= ICostantiVerbale.CAMPO_ANNO_DATA_EMISSIONE%>","gt=1900");
   frmvalidator.addValidation("<%= ICostantiVerbale.CAMPO_ANNO_DATA_EMISSIONE%>","lt=2099");
 
- // frmvalidator.addValidation("<-%= ICostantiLuogoDetenzione.CAMPO_COD_LUOGO %->","alphabetic");
-   frmvalidator.setAddnlValidationFunction("Verifica");
+<%-- 	frmvalidator.addValidation("<%= ICostantiLuogoDetenzione.CAMPO_COD_LUOGO %>","alphabetic"); --%>
+   	frmvalidator.setAddnlValidationFunction("Verifica");
 
  </script>
 	</body>

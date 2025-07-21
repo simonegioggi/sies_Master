@@ -765,11 +765,11 @@ if (avvocati.size() >1) {
 {
   %>
   frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E %>","req","Luogo Autorità Destinazione obbligatoria");
-  frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E %>","alphabetic");
+<%--   frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E %>","alphabetic"); --%>
 <%}%>
 
  frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>","req","Luogo Autorità Destinazione obbligatoria");
- frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>","alphabetic");
+<%--  frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>","alphabetic"); --%>
 
 
 <% if(lPosizione.getCodPosizioneGiuridica().equals("04") || 
@@ -778,7 +778,7 @@ if (avvocati.size() >1) {
 	  )
    {%>
  frmvalidator.addValidation("<%= ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_UDS_NOTIFICA %>","req","Sede UDS obbligatoria");
- frmvalidator.addValidation("<%= ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_UDS_NOTIFICA %>","alphabetic");
+<%--  frmvalidator.addValidation("<%= ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_UDS_NOTIFICA %>","alphabetic"); --%>
 <%}%>
 
 <%
