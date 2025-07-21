@@ -168,14 +168,7 @@
 			return false;
 		}
 	}
- 	
-
- 	
   }
-
-
-
-
   	   
     function gestioneTipoIstanza()
     {    
@@ -192,8 +185,6 @@
          document.LoadInserisciSentenza.<%=ICostantiNuovaIstanza.CAMPO_ANNO_DATA_ISTANZA%>.disabled=false;
          document.LoadInserisciSentenza.<%=ICostantiNuovaIstanza.CAMPO_COD_AUTORITA_MITTENTE%>.disabled=false; 
          document.LoadInserisciSentenza.<%=ICostantiNuovaIstanza.CAMPO_COD_SEDE_MITTENTE%>.disabled=false;
-     
-
 
          document.LoadInserisciSentenza.<%=ICostantiNuovaIstanza.CAMPO_GIORNO_DATA_DEPOSITO%>.disabled=true;
          document.LoadInserisciSentenza.<%=ICostantiNuovaIstanza.CAMPO_MESE_DATA_DEPOSITO%>.disabled=true;
@@ -201,8 +192,6 @@
          document.LoadInserisciSentenza.<%=ICostantiNuovaIstanza.CAMPO_SOGG_PRESENTANTE%>.disabled=true; 
          document.LoadInserisciSentenza.<%=ICostantiNuovaIstanza.CAMPO_SOGG_PRESENTANTE_IDENTIFICATO%>.disabled=true;           
          document.LoadInserisciSentenza.<%=ICostantiNuovaIstanza.CAMPO_AVV_ID_AVVOCATO_PRESENTANTE%>.disabled=true;           
-
-
   	    }
   	   else if (document.LoadInserisciSentenza.<%=ICostantiNuovaIstanza.CAMPO_FLAG_PRESDEP %>[1].checked == true)
   	    {
@@ -214,8 +203,6 @@
           document.LoadInserisciSentenza.<%=ICostantiNuovaIstanza.CAMPO_ANNO_DATA_ISTANZA%>.disabled=true;
           document.LoadInserisciSentenza.<%=ICostantiNuovaIstanza.CAMPO_COD_AUTORITA_MITTENTE%>.disabled=true; 
           document.LoadInserisciSentenza.<%=ICostantiNuovaIstanza.CAMPO_COD_SEDE_MITTENTE%>.disabled=true;
-      
-
 
           document.LoadInserisciSentenza.<%=ICostantiNuovaIstanza.CAMPO_GIORNO_DATA_DEPOSITO%>.disabled=false;
           document.LoadInserisciSentenza.<%=ICostantiNuovaIstanza.CAMPO_MESE_DATA_DEPOSITO%>.disabled=false;
@@ -223,7 +210,6 @@
           document.LoadInserisciSentenza.<%=ICostantiNuovaIstanza.CAMPO_SOGG_PRESENTANTE%>.disabled=false; 
           document.LoadInserisciSentenza.<%=ICostantiNuovaIstanza.CAMPO_SOGG_PRESENTANTE_IDENTIFICATO%>.disabled=false;           
           document.LoadInserisciSentenza.<%=ICostantiNuovaIstanza.CAMPO_AVV_ID_AVVOCATO_PRESENTANTE%>.disabled=false;           
-
   	    }
 	  	// 20210730 Controllo tipo inserimento non Reginde
 		var lTipoIns = document.LoadInserisciSentenza.lTipoInserimento.value;
@@ -273,7 +259,6 @@
  		}
     } 
 
-
     <%-- 20210824 MEV_21: aggiunta chiamata a WS per individuare lista avvocato in RegInde --%>
     function ListaAvvocatiRegInde(a_formname) {
     	desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.siep.avvocato.action.ActLoadRicercaAvvocatoRegInde&formname="+a_formname,"Ricerca_Avvocato_RegInde","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=1000,height=600");
@@ -293,9 +278,12 @@
     	document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_FORO_P%>.disabled = false;
     	document.LoadInserisciSentenza.<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA_P%>.disabled = false;
     }
-    
-    	
-  </script>
+
+<!-- 20210524 - MEV Scheda-21 -->
+function ListaComuniNascita(a_formname,a_fieldname) {
+	desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComuneNascita&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=400,height=500");
+}    	
+</script>
 </head>
 
 <body class="corpo" onLoad="Javascript:gestioneTipoIstanza();">

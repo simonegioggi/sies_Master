@@ -667,7 +667,7 @@ function ctrl_autorita(idcmb1, idcmb2, idDiv, idTipoRito) {
     frmvalidator.addValidation("<%= ICostantiAltriGradiGiudizio.CAMPO_COD_AUT_EMITT_SENT_I_GRADO %>","req","L'Autorità Emittente è obbligatorio");
 
     frmvalidator.addValidation("<%= ICostantiAltriGradiGiudizio.CAMPO_COD_LUO_EMITT_SENT_I_GRADO %>","req","Il Luogo Emittente è obbligatorio");
-    frmvalidator.addValidation("<%= ICostantiAltriGradiGiudizio.CAMPO_COD_LUO_EMITT_SENT_I_GRADO %>","alphabetic");
+<%--     frmvalidator.addValidation("<%= ICostantiAltriGradiGiudizio.CAMPO_COD_LUO_EMITT_SENT_I_GRADO %>","alphabetic"); --%>
 
     //frmvalidator.addValidation("< %= ICostantiAltriGradiGiudizio.CAMPO_GIORNO_DATA_SENTENZA_II_GRADO%>","req","Il Giorno della data Sentenza è obbligatorio");
     frmvalidator.addValidation("<%= ICostantiAltriGradiGiudizio.CAMPO_GIORNO_DATA_SENTENZA_II_GRADO %>","numeric");
@@ -689,9 +689,9 @@ function ctrl_autorita(idcmb1, idcmb2, idDiv, idTipoRito) {
     //frmvalidator.addValidation("< %= ICostantiAltriGradiGiudizio.CAMPO_NUMERO_SENTENZA_II_GRADO %>","req","Il Numero sentenza è obbligatorio");
     frmvalidator.addValidation("<%= ICostantiAltriGradiGiudizio.CAMPO_NUMERO_SENTENZA_II_GRADO %>","alfanumeric");
 
-    //frmvalidator.addValidation("<%= ICostantiAltriGradiGiudizio.CAMPO_COD_AUT_EMITT_SENT_II_GRADO %>","req","L'Autorità Emittente è obbligatorio");
+<%--     frmvalidator.addValidation("<%= ICostantiAltriGradiGiudizio.CAMPO_COD_AUT_EMITT_SENT_II_GRADO %>","req","L'Autorità Emittente è obbligatorio"); --%>
 
-    frmvalidator.addValidation("<%= ICostantiAltriGradiGiudizio.CAMPO_COD_LUO_EMITT_SENT_II_GRADO %>","alphabetic");
+<%--     frmvalidator.addValidation("<%= ICostantiAltriGradiGiudizio.CAMPO_COD_LUO_EMITT_SENT_II_GRADO %>","alphabetic"); --%>
 
     
     frmvalidator.setAddnlValidationFunction("Verify");

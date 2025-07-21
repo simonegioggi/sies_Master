@@ -841,8 +841,8 @@
   if(posizioneGiuridica.isMisAlt() || (Posizione.equals("10") || Posizione.equals("07") && (evento06 != null  && evento06.getIdEvento()!= null)))
   {
 %>
- //  frmvalidator.addValidation("<%= ICostantiAnnotazioneManuale.SEDE_AUTORITA_ESTERNA  %>","req","Luogo Autorità di polizia competente per territorio obbligatoria");
-    frmvalidator.addValidation("<%= ICostantiAnnotazioneManuale.SEDE_AUTORITA_ESTERNA %>","alphabetic");
+<%-- 	frmvalidator.addValidation("<%= ICostantiAnnotazioneManuale.SEDE_AUTORITA_ESTERNA  %>","req","Luogo Autorità di polizia competente per territorio obbligatoria"); --%>
+<%--     frmvalidator.addValidation("<%= ICostantiAnnotazioneManuale.SEDE_AUTORITA_ESTERNA %>","alphabetic"); --%>
 <%
   }
 %>
@@ -852,12 +852,12 @@
   {
 %>
     frmvalidator.addValidation("<%= ICostantiAnnotazioneManuale.SEDE_AUTORITA_ESTERNA_NC  %>","req","Luogo Ufficiali Giudiziari per notifica al condannato obbligatoria");
-    frmvalidator.addValidation("<%= ICostantiAnnotazioneManuale.SEDE_AUTORITA_ESTERNA_NC %>","alphabetic");
+<%--     frmvalidator.addValidation("<%= ICostantiAnnotazioneManuale.SEDE_AUTORITA_ESTERNA_NC %>","alphabetic"); --%>
 <%
   }
 %>
   frmvalidator.addValidation("<%= ICostantiAnnotazioneManuale.SEDE_AUTORITA_ESTERNA_ND  %>","req","Luogo Ufficiali Giudiziari per notifica al difensore obbligatoria");
-  frmvalidator.addValidation("<%= ICostantiAnnotazioneManuale.SEDE_AUTORITA_ESTERNA_ND %>","alphabetic");
+<%--   frmvalidator.addValidation("<%= ICostantiAnnotazioneManuale.SEDE_AUTORITA_ESTERNA_ND %>","alphabetic"); --%>
 </script>
 </body>
 </html>

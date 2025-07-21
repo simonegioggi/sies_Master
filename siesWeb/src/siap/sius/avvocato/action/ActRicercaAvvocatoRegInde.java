@@ -2,12 +2,16 @@ package siap.sius.avvocato.action;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
+import f3b.util.CodiceFiscaleInverso;
+import f3b.util.DateUtils;
 import f3b.util.F3BException;
 import f3b.util.F3BProperties;
 import f3b.util.Utils;
@@ -54,21 +58,14 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 				siesLogger.debug("COA + Foro: " + foro);
 			}
 			// inizio chiamata al servizio REGINDE
+			String endpointAddress = F3BProperties.getProperty("EndpointAddress");
 			WsServiziInterrogazioneInterni_ServiceLocator service = new WsServiziInterrogazioneInterni_ServiceLocator();
-			service.setServiziInterrogazioneInterniBeanPortEndpointAddress(
-					F3BProperties.getProperty("EndpointAddress"));
-
-			/* Commentare le System.setProperty per i test locali e per il rilascio in esercizio */
-			// System.setProperty("javax.net.debug", F3BProperties.getProperty("javax.net.debug"));
-			// System.setProperty("http.proxyHost", F3BProperties.getProperty("http.proxyHost"));
-			// System.setProperty("http.proxyPort", F3BProperties.getProperty("http.proxyPort"));
-			// System.setProperty("https.proxyHost", F3BProperties.getProperty("https.proxyHost"));
-			// System.setProperty("https.proxyPort", F3BProperties.getProperty("https.proxyPort"));
-
+			service.setServiziInterrogazioneInterniBeanPortEndpointAddress(endpointAddress);
 			WsServiziInterrogazioneInterni_PortType port = service.getServiziInterrogazioneInterniBeanPort();
 			Soggetto[] listaSoggetti = null;
 			siesLogger.debug(
-					"Chiamo ricercaSoggettoComplete(cognome, nome, codiceFiscale, indirizzo, codiceEnte, orderBy, asc)");
+					"Chiamo ricercaSoggettoComplete(cognome, nome, codiceFiscale, indirizzo, codiceEnte, orderBy, asc) su "
+							+ endpointAddress);
 			// Gestione CF: il sistema ricercherà tutti gli avvocati con il codice fiscale indicato in tutti i
 			// fori, non considerando il contenuto degli altri campi!!!
 			if (Utils.isPresent(am.getCodiceFiscale()))
@@ -91,23 +88,42 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 				while (avvocati.hasNext()) {
 					Soggetto avvocato = avvocati.next();
 					if (!Utils.isNullObj(avvocato.getSoggetto())) {
-						siesLogger.debug(!Utils.isNullObj(avvocato.getSoggetto().getCodFisc())
+						siesLogger.debug(Utils.isPresent(avvocato.getSoggetto().getCodFisc())
 								? avvocato.getSoggetto().getCodFisc()
 								: "CF NULLO!");
-						siesLogger.debug(!Utils.isNullObj(avvocato.getSoggetto().getCognome())
+						siesLogger.debug(Utils.isPresent(avvocato.getSoggetto().getCognome())
 								? avvocato.getSoggetto().getCognome()
 								: "COGNOME NULLO!");
-						siesLogger.debug(!Utils.isNullObj(avvocato.getSoggetto().getNome())
+						siesLogger.debug(Utils.isPresent(avvocato.getSoggetto().getNome())
 								? avvocato.getSoggetto().getNome()
 								: "NOME NULLO!");
 						siesLogger.debug(!Utils.isNullObj(avvocato.getSoggetto().getDataNascita())
 								? avvocato.getSoggetto().getDataNascita().getTime()
-								: "SCARTATO: DATA DI NASCITA NULLA!");
+								: "DATA DI NASCITA NULLA!");
 					} else
 						siesLogger.debug("SOGGETTO NULLO!");
 					if (!Utils.isNullObj(avvocato.getSoggetto())
-							&& Utils.isNullObj(avvocato.getSoggetto().getDataNascita()))
-						avvocati.remove();
+							&& Utils.isNullObj(avvocato.getSoggetto().getDataNascita())) {
+						// decodifica CF
+						if (Utils.isPresent(avvocato.getSoggetto().getCodFisc())) {
+							CodiceFiscaleInverso.DatiEstratti dati = CodiceFiscaleInverso
+									.estraiDati(avvocato.getSoggetto().getCodFisc());
+							siesLogger.debug("CodiceFiscaleInverso --> " + dati.toString());
+							if (Utils.isNullObj(dati.anno) || Utils.isNullObj(dati.mese)
+									|| Utils.isNullObj(dati.giorno))
+								avvocati.remove();
+							else {
+								Date d = DateUtils.getDate(dati.anno, dati.mese, dati.giorno);
+								Calendar dn = Calendar.getInstance();
+								dn.setTime(d);
+								avvocato.getSoggetto().setDataNascita(dn);
+								// IMPOSTO se MANCANTE anche: comune;
+								if (!Utils.isPresent(avvocato.getSoggetto().getLuogoNascita()))
+									avvocato.getSoggetto().setLuogoNascita(dati.comune);
+							}
+						} else
+							avvocati.remove();
+					}
 				}
 				siesLogger.debug("Avvocati trovati dopo del ciclo: " + listaAvvocati.size());
 
@@ -122,12 +138,12 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 		} catch (Exception e) {
 			siesLogger.error("Errore in " + getClass().getName() + ": " + e.toString());
 			siesLogger.error("Errore in " + getClass().getName() + ": ", e);
-			if (!Utils.isNullObj(e) && !Utils.isNullObj(e.getMessage())
-					&& e.getMessage().contains("Unrecognized")) {
+			if (!Utils.isNullObj(e) && !Utils.isNullObj(e.getMessage())) {
 				siesLogger.error("Errore in " + getClass().getName() + ": " + e.getMessage());
 				setRequestAttribute("msg",
 						"Attenzione: collegamento con RegIndE assente!\\nE' possibile effettuare la ricerca del Difensore su SIES!");
-			}
+			} else
+				siesLogger.debug("Nessun Avvocato trovato!");
 		}
 
 		setRequestAttribute("formname", getRequestStringParameter("formname"));

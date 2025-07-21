@@ -43,7 +43,9 @@ public class ActInserisciNuovaIstanza extends ActionNuovaIstanza implements ICos
 			lNuoMod.setAvvIdAvvocato(getIdAvvocatoInserito());
 
 		// 20210819 MEV_21 Valorizzazione AVV_ID_AVVOCATO_PRESENTANTE Inserito/modificato/confermato
-		if ("D".equals(this.getRequestStringParameter(ICostantiNuovaIstanza.CAMPO_FLAG_PRESDEP)))
+		if ("D".equals(this.getRequestStringParameter(ICostantiNuovaIstanza.CAMPO_FLAG_PRESDEP))
+				// Ticket#202506300126 - fascicolo 20033_25_pm_gela
+				&& this.getRequestStringParameter(ICostantiAvvocato.CAMPO_COGNOME_P).length() > 1)
 			lNuoMod.setAvvIdAvvocatoPresentante(getIdAvvocatoPresInserito());
 
 		// preparo il model della sentenza

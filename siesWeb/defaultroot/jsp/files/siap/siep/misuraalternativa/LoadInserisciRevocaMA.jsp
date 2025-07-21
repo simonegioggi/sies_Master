@@ -854,11 +854,11 @@ if((!lPosizione.isLibero()) || (lFascicoloAssociato.getFlagAltraCausa()!=null &&
 <%}
 if(lPosizione!= null && lPosizione.getCodPosizioneGiuridica()!= null && lPosizione.getCodPosizioneGiuridica().equals("12"))
  {%>
-   frmvalidator.addValidation("<%= ICostantiMisuraAlternativa.CAMPO_SEDE_POL_E%>","alphabetic");
+<%--    frmvalidator.addValidation("<%= ICostantiMisuraAlternativa.CAMPO_SEDE_POL_E%>","alphabetic"); --%>
 <%}
 if( misuraalternativa == null || misuraalternativa.getIdMisuraAlternativa()== null)
 {%>
-frmvalidator.addValidation("<%= ICostantiMisuraAlternativa.CAMPO_SEDE_TDS_EMITT %>","alphabetic");
+<%-- frmvalidator.addValidation("<%= ICostantiMisuraAlternativa.CAMPO_SEDE_TDS_EMITT %>","alphabetic"); --%>
 <%}%>
 </script>
 

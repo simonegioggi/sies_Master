@@ -1308,7 +1308,7 @@ if(tipoMisura.equals("SEMILIBERTA") || tipoMisura.equals("SEMILIBERTACUMULO"))
   if( misuraalternativa == null || misuraalternativa.getIdMisuraAlternativa()== null)
   {
 %>
-    frmvalidator.addValidation("<%= ICostantiMisuraAlternativa.CAMPO_SEDE_TDS_EMITT %>","alphabetic");
+<%--     frmvalidator.addValidation("<%= ICostantiMisuraAlternativa.CAMPO_SEDE_TDS_EMITT %>","alphabetic"); --%>
 <%
   }
 %>
@@ -1329,7 +1329,7 @@ if(tipoMisura.equals("SEMILIBERTA") || tipoMisura.equals("SEMILIBERTACUMULO"))
     {
 %>
       frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_NUM_ALTRO_TITOLO%>","numeric","Il Campo Numero Altro titolo è numerico");
-      frmvalidator.addValidation("<%= ICostantiMisuraAlternativa.CAMPO_COD_LUOGO_ALTRO_TITOLO %>","alphabetic","Il Campo Luogo Altro titolo non è numerico");
+<%--       frmvalidator.addValidation("<%= ICostantiMisuraAlternativa.CAMPO_COD_LUOGO_ALTRO_TITOLO %>","alphabetic","Il Campo Luogo Altro titolo non è numerico"); --%>
 
       frmvalidator.addValidation("<%= ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ALTRO_TITOLO%>","numeric");
 
