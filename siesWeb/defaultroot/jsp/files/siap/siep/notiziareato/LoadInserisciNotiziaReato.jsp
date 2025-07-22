@@ -677,10 +677,7 @@
 		    frmvalidator.addValidation("<%= ICostantiNotiziaReato.CAMPO_ANNO_DATA_FOTO%>","numeric");
 		    frmvalidator.addValidation("<%= ICostantiNotiziaReato.CAMPO_ANNO_DATA_FOTO%>","gt=1900");
 
-
-
-			frmvalidator.addValidation("<%= ICostantiNotiziaReato.CAMPO_COD_COMUNE_FONTE %>","alpha");
-
+<%-- 			frmvalidator.addValidation("<%= ICostantiNotiziaReato.CAMPO_COD_COMUNE_FONTE %>","alpha"); --%>
 
 			frmvalidator.setAddnlValidationFunction("Verify");
 

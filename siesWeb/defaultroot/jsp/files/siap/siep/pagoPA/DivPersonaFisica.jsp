@@ -431,10 +431,10 @@ frmvalidator.addValidation("<%=ICostantiPagoPA.CAMPO_ANNO_DATA_NASCITA%>","gt=19
 frmvalidator.addValidation("<%=ICostantiPagoPA.CAMPO_ANNO_DATA_NASCITA%>","lt=3000");
 
 frmvalidator.addValidation("<%=ICostantiPagoPA.CAMPO_COD_FISCALE%>","alphanumeric");
-frmvalidator.addValidation("<%=ICostantiPagoPA.CAMPO_DESC_COMUNE_NASCITA_ESTERO%>","alpha");
+<%-- frmvalidator.addValidation("<%=ICostantiPagoPA.CAMPO_DESC_COMUNE_NASCITA_ESTERO%>","alpha"); --%>
 
 frmvalidator.addValidation("<%=ICostantiPagoPA.CAMPO_CAP_RESIDENZA%>","numeric");
-frmvalidator.addValidation("<%=ICostantiPagoPA.CAMPO_DESC_COMUNE_ESTERO_RESIDENZA%>","alpha");
+<%-- frmvalidator.addValidation("<%=ICostantiPagoPA.CAMPO_DESC_COMUNE_ESTERO_RESIDENZA%>","alpha"); --%>
 
 frmvalidator.setAddnlValidationFunction("Verify");
 </script>

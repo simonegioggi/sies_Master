@@ -346,10 +346,10 @@
     frmvalidator.addValidation("<%= ICostantiPartiUdienza.CAMPO_ANNO_DATA_NASCITA%>","lt=3000");
     
     frmvalidator.addValidation("<%= ICostantiPartiUdienza.CAMPO_COD_FISCALE %>","alphanumeric");
-    frmvalidator.addValidation("<%= ICostantiPartiUdienza.CAMPO_DESC_COMUNE_NASCITA_ESTERO%>","alpha");
+<%--     frmvalidator.addValidation("<%= ICostantiPartiUdienza.CAMPO_DESC_COMUNE_NASCITA_ESTERO%>","alpha"); --%>
     
     frmvalidator.addValidation("<%= ICostantiPartiUdienza.CAMPO_CAP_RESIDENZA%>","numeric");
-    frmvalidator.addValidation("<%= ICostantiPartiUdienza.CAMPO_DESC_COMUNE_ESTERO_RESIDENZA%>","alpha");
+<%--     frmvalidator.addValidation("<%= ICostantiPartiUdienza.CAMPO_DESC_COMUNE_ESTERO_RESIDENZA%>","alpha"); --%>
     
     frmvalidator.setAddnlValidationFunction("Verify");
   </script>
