@@ -1,37 +1,13 @@
-BRANCH SIES Ticket#202507220132 - SIES - ricerca utenti il campo sede non può avere caratteri speciali
+BRANCH SIES VERSIONE 12.8.2.0
 
-Nasce dal branch 12.8.2.0 in data 22/07/2025
+Nasce dal branch 12.8.1.0 in data 21/07/2025
 
-siesWeb/defaultroot/jsp/files/siap/siep/pagoPA/DivPersonaFisica.jsp
-siesWeb/defaultroot/jsp/files/siap/sige/udienzaparti/DivPersonaFisica.jsp
-siesWeb/defaultroot/jsp/files/siap/siep/pagoPA/DivPersonaGiuridica.jsp
-siesWeb/defaultroot/jsp/files/siap/sige/udienzaparti/DivPersonaGiuridica.jsp
-siesWeb/defaultroot/jsp/files/siap/sige/titoloesecutivo/LoadDeassegnaTitoloEsecutivo.jsp
-siesWeb/defaultroot/jsp/files/siap/sius/titoloesecutivo/LoadDeassegnaTitoloEsecutivo.jsp
-siesWeb/defaultroot/jsp/files/siap/siep/istruttoria/LoadInserisciAnagraficaCittadiniStranieri.jsp
-siesWeb/defaultroot/jsp/files/siap/siep/istruttoria/LoadInserisciArrestiDomiciliariAttuali.jsp
-siesWeb/defaultroot/jsp/files/siap/siep/avvocato/LoadInserisciAvvocato.jsp
-siesWeb/defaultroot/jsp/files/siap/siep/istruttoria/LoadInserisciCertificatoEsecuzione.jsp
-siesWeb/defaultroot/jsp/files/siap/siep/avvocato/LoadInserisciDifensore.jsp
-siesWeb/defaultroot/jsp/files/siap/sige/udienzaparti/LoadInserisciDifensore.jsp
-siesWeb/defaultroot/jsp/files/siap/siep/avvocato/LoadInserisciDifensorePopUp.jsp
-siesWeb/defaultroot/jsp/files/siap/siep/avvocato/LoadInserisciDifensoreReginde.jsp
-siesWeb/defaultroot/jsp/files/siap/siep/istruttoria/LoadInserisciIstruttoriaRichiestaPagamentoPP.jsp
-siesWeb/defaultroot/jsp/files/siap/siep/notiziareato/LoadInserisciNotiziaReato.jsp
-siesWeb/defaultroot/jsp/files/siap/siep/istruttoria/LoadInserisciPosizioneGiuridica.jsp
-siesWeb/defaultroot/jsp/files/siap/sige/richiestaatti/LoadInserisciRichiestaCorpoReato.jsp
-siesWeb/defaultroot/jsp/files/siap/sico/soggetto/LoadInserisciSoggetto.jsp
-siesWeb/defaultroot/jsp/files/siap/siep/modulocumulo/LoadInserisciSoggettoCumulato.jsp
-siesWeb/defaultroot/jsp/files/siap/siep/nuovaistanza/LoadInserisciSoggettoIstanza.jsp
-siesWeb/defaultroot/jsp/files/siap/siep/nuovaistanza/LoadInserisciTitEsecIstanza.jsp
-siesWeb/defaultroot/jsp/files/siap/siep/misurasicurezza/LoadIscrizioneProcApplicazioneMisuraProvvisoria.jsp
-siesWeb/defaultroot/jsp/files/siap/siep/misurasicurezza/LoadIscrizioneProcedimentoMisuraFuoriSentenza.jsp
-siesWeb/defaultroot/jsp/files/siap/siep/avvocato/LoadModificaDifensore.jsp
-siesWeb/defaultroot/jsp/files/siap/siep/avvocato/LoadRicercaCancellaDifensore.jsp
-siesWeb/defaultroot/jsp/files/siap/siep/avvocato/LoadRicercaDifensore.jsp
-siesWeb/defaultroot/jsp/files/siap/siep/fascicolo/LoadRicercaFascicoloSiepPerSoggetto.jsp
-siesWeb/defaultroot/jsp/files/siap/sico/utente/LoadRicercaUtentiPerUfficio.jsp
-siesWeb/defaultroot/jsp/files/siap/siep/avvocato/ModificaDifensore.jsp
-siesWeb/defaultroot/jsp/files/siap/regesies/regesoggetto/ModificaRegeSoggetto.jsp
-siesWeb/defaultroot/jsp/files/siap/sige/avvocato/SostituzioneDifensore.jsp
-siesWeb/defaultroot/jsp/files/siap/sige/udienzaparti/SostituzioneDifensore.jsp
+Questa Release verrà rilasciata il 29/08/2025 (Patch mese di Agosto 2025)
+
+Comprende i seguenti Ticket MAC:
+
+1)	Ticket#202507220132 - SIES - ricerca utenti il campo sede non può avere caratteri speciali
+	Per la risoluzione della problematica è stata modificata la pagina di ricerca utente eliminando il controllo alfabetico sul campo interessato.
+	Il problema era legato al fatto che il campo di ricerca "Sede" non consentiva l'inserimento di caratteri speciali tipo "/".
+	Classe modificata:
+	-   siap/sico/utente/LoadRicercaUtentiPerUfficio.jsp
