@@ -1,10 +1,3 @@
-//
-// Questo file è stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
-// Vedere <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Qualsiasi modifica a questo file andrà persa durante la ricompilazione dello schema di origine. 
-// Generato il: 2017.02.06 alle 11:58:26 AM CET 
-//
-
 
 package it.mig.sies.type.foglicomplementari;
 
@@ -34,31 +27,24 @@ import javax.xml.namespace.QName;
 public class ObjectFactory {
 
     private final static QName _AnnoOrdinanza_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "annoOrdinanza");
-    private final static QName _MisuraSicurezza_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "MisuraSicurezza");
+    private final static QName _ChiaviAnagrafica_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "ChiaviAnagrafica");
     private final static QName _AnnoSIEP_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "annoSIEP");
+    private final static QName _DataFinePenaDal_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "dataFinePenaDal");
     private final static QName _AnnoSentenza_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "annoSentenza");
+    private final static QName _Arresto_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "arresto");
     private final static QName _IsolamentoDiurno_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "isolamentoDiurno");
+    private final static QName _Ergastolo_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "ergastolo");
+    private final static QName _NumeroSentenza_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "numeroSentenza");
     private final static QName _ProvvedimentoGiudiziario_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "ProvvedimentoGiudiziario");
     private final static QName _ChiaveSies_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "chiaveSies");
-    private final static QName _PenaAccessoria_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "PenaAccessoria");
-    private final static QName _NumeroSIEP_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "numeroSIEP");
-    private final static QName _Reclusione_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "reclusione");
-    private final static QName _ChiaviProvvedimentoGiudiziario_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "ChiaviProvvedimentoGiudiziario");
-    private final static QName _PenaConversionePenaPecuniaria_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "PenaConversionePenaPecuniaria");
-    private final static QName _ChiaviAnagrafica_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "ChiaviAnagrafica");
-    private final static QName _DataFinePenaDal_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "dataFinePenaDal");
-    private final static QName _SanzioniSostitutive_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "SanzioniSostitutive");
-    private final static QName _Arresto_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "arresto");
-    private final static QName _Ergastolo_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "ergastolo");
-    private final static QName _RichiesteGEAnticipazioneEffetti_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "RichiesteGEAnticipazioneEffetti");
-    private final static QName _NumeroSentenza_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "numeroSentenza");
     private final static QName _NumeroOrdinanza_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "numeroOrdinanza");
     private final static QName _CodiceSedePM_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "codiceSedePM");
+    private final static QName _NumeroSIEP_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "numeroSIEP");
     private final static QName _DataFinePenaAl_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "dataFinePenaAl");
-    private final static QName _LiberazioneAnticipataConcessaDetrarreCumulo_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "LiberazioneAnticipataConcessaDetrarreCumulo");
-    private final static QName _SanzioniGiudicePace_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "SanzioniGiudicePace");
+    private final static QName _Reclusione_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "reclusione");
     private final static QName _ChiaveNsc_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "chiaveNsc");
     private final static QName _DataFinePena_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "dataFinePena");
+    private final static QName _ChiaviProvvedimentoGiudiziario_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "ChiaviProvvedimentoGiudiziario");
     private final static QName _ChiaviProvvedimentoEsecutivo_QNAME = new QName("http://it/mig/sies/type/fogliComplementari", "ChiaviProvvedimentoEsecutivo");
 
     /**
@@ -85,19 +71,19 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link TrasferisciFoglioComplementareResponse }
+     * 
+     */
+    public TrasferisciFoglioComplementareResponse createTrasferisciFoglioComplementareResponse() {
+        return new TrasferisciFoglioComplementareResponse();
+    }
+
+    /**
      * Create an instance of {@link ChiaviProvvedimentoGiudiziario }
      * 
      */
     public ChiaviProvvedimentoGiudiziario createChiaviProvvedimentoGiudiziario() {
         return new ChiaviProvvedimentoGiudiziario();
-    }
-
-    /**
-     * Create an instance of {@link PenaConversionePenaPecuniaria }
-     * 
-     */
-    public PenaConversionePenaPecuniaria createPenaConversionePenaPecuniaria() {
-        return new PenaConversionePenaPecuniaria();
     }
 
     /**
@@ -149,51 +135,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link MisuraSicurezza }
+     * Create an instance of {@link TrasferisciFoglioComplementare_Type }
      * 
      */
-    public MisuraSicurezza createMisuraSicurezza() {
-        return new MisuraSicurezza();
-    }
-
-    /**
-     * Create an instance of {@link PenaAccessoria }
-     * 
-     */
-    public PenaAccessoria createPenaAccessoria() {
-        return new PenaAccessoria();
-    }
-
-    /**
-     * Create an instance of {@link SanzioniSostitutive }
-     * 
-     */
-    public SanzioniSostitutive createSanzioniSostitutive() {
-        return new SanzioniSostitutive();
-    }
-
-    /**
-     * Create an instance of {@link LiberazioneAnticipataConcessaDetrarreCumulo }
-     * 
-     */
-    public LiberazioneAnticipataConcessaDetrarreCumulo createLiberazioneAnticipataConcessaDetrarreCumulo() {
-        return new LiberazioneAnticipataConcessaDetrarreCumulo();
-    }
-
-    /**
-     * Create an instance of {@link SanzioniGiudicePace }
-     * 
-     */
-    public SanzioniGiudicePace createSanzioniGiudicePace() {
-        return new SanzioniGiudicePace();
-    }
-
-    /**
-     * Create an instance of {@link RichiesteGEAnticipazioneEffetti }
-     * 
-     */
-    public RichiesteGEAnticipazioneEffetti createRichiesteGEAnticipazioneEffetti() {
-        return new RichiesteGEAnticipazioneEffetti();
+    public TrasferisciFoglioComplementare_Type createTrasferisciFoglioComplementare_Type() {
+        return new TrasferisciFoglioComplementare_Type();
     }
 
     /**
@@ -210,14 +156,6 @@ public class ObjectFactory {
      */
     public ChiaviAnagrafica createChiaviAnagrafica() {
         return new ChiaviAnagrafica();
-    }
-
-    /**
-     * Create an instance of {@link ProvvedimentoNSC }
-     * 
-     */
-    public ProvvedimentoNSC createProvvedimentoNSC() {
-        return new ProvvedimentoNSC();
     }
 
     /**
@@ -262,12 +200,12 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link MisuraSicurezza }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link ChiaviAnagrafica }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://it/mig/sies/type/fogliComplementari", name = "MisuraSicurezza")
-    public JAXBElement<MisuraSicurezza> createMisuraSicurezza(MisuraSicurezza value) {
-        return new JAXBElement<MisuraSicurezza>(_MisuraSicurezza_QNAME, MisuraSicurezza.class, null, value);
+    @XmlElementDecl(namespace = "http://it/mig/sies/type/fogliComplementari", name = "ChiaviAnagrafica")
+    public JAXBElement<ChiaviAnagrafica> createChiaviAnagrafica(ChiaviAnagrafica value) {
+        return new JAXBElement<ChiaviAnagrafica>(_ChiaviAnagrafica_QNAME, ChiaviAnagrafica.class, null, value);
     }
 
     /**
@@ -277,6 +215,15 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://it/mig/sies/type/fogliComplementari", name = "annoSIEP")
     public JAXBElement<BigInteger> createAnnoSIEP(BigInteger value) {
         return new JAXBElement<BigInteger>(_AnnoSIEP_QNAME, BigInteger.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link XMLGregorianCalendar }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://it/mig/sies/type/fogliComplementari", name = "dataFinePenaDal")
+    public JAXBElement<XMLGregorianCalendar> createDataFinePenaDal(XMLGregorianCalendar value) {
+        return new JAXBElement<XMLGregorianCalendar>(_DataFinePenaDal_QNAME, XMLGregorianCalendar.class, null, value);
     }
 
     /**
@@ -292,9 +239,36 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link Durata }{@code >}}
      * 
      */
+    @XmlElementDecl(namespace = "http://it/mig/sies/type/fogliComplementari", name = "arresto")
+    public JAXBElement<Durata> createArresto(Durata value) {
+        return new JAXBElement<Durata>(_Arresto_QNAME, Durata.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link Durata }{@code >}}
+     * 
+     */
     @XmlElementDecl(namespace = "http://it/mig/sies/type/fogliComplementari", name = "isolamentoDiurno")
     public JAXBElement<Durata> createIsolamentoDiurno(Durata value) {
         return new JAXBElement<Durata>(_IsolamentoDiurno_QNAME, Durata.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://it/mig/sies/type/fogliComplementari", name = "ergastolo")
+    public JAXBElement<String> createErgastolo(String value) {
+        return new JAXBElement<String>(_Ergastolo_QNAME, String.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link BigInteger }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://it/mig/sies/type/fogliComplementari", name = "numeroSentenza")
+    public JAXBElement<BigInteger> createNumeroSentenza(BigInteger value) {
+        return new JAXBElement<BigInteger>(_NumeroSentenza_QNAME, BigInteger.class, null, value);
     }
 
     /**
@@ -316,114 +290,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link PenaAccessoria }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://it/mig/sies/type/fogliComplementari", name = "PenaAccessoria")
-    public JAXBElement<PenaAccessoria> createPenaAccessoria(PenaAccessoria value) {
-        return new JAXBElement<PenaAccessoria>(_PenaAccessoria_QNAME, PenaAccessoria.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link BigInteger }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://it/mig/sies/type/fogliComplementari", name = "numeroSIEP")
-    public JAXBElement<BigInteger> createNumeroSIEP(BigInteger value) {
-        return new JAXBElement<BigInteger>(_NumeroSIEP_QNAME, BigInteger.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link Durata }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://it/mig/sies/type/fogliComplementari", name = "reclusione")
-    public JAXBElement<Durata> createReclusione(Durata value) {
-        return new JAXBElement<Durata>(_Reclusione_QNAME, Durata.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link ChiaviProvvedimentoGiudiziario }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://it/mig/sies/type/fogliComplementari", name = "ChiaviProvvedimentoGiudiziario")
-    public JAXBElement<ChiaviProvvedimentoGiudiziario> createChiaviProvvedimentoGiudiziario(ChiaviProvvedimentoGiudiziario value) {
-        return new JAXBElement<ChiaviProvvedimentoGiudiziario>(_ChiaviProvvedimentoGiudiziario_QNAME, ChiaviProvvedimentoGiudiziario.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link PenaConversionePenaPecuniaria }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://it/mig/sies/type/fogliComplementari", name = "PenaConversionePenaPecuniaria")
-    public JAXBElement<PenaConversionePenaPecuniaria> createPenaConversionePenaPecuniaria(PenaConversionePenaPecuniaria value) {
-        return new JAXBElement<PenaConversionePenaPecuniaria>(_PenaConversionePenaPecuniaria_QNAME, PenaConversionePenaPecuniaria.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link ChiaviAnagrafica }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://it/mig/sies/type/fogliComplementari", name = "ChiaviAnagrafica")
-    public JAXBElement<ChiaviAnagrafica> createChiaviAnagrafica(ChiaviAnagrafica value) {
-        return new JAXBElement<ChiaviAnagrafica>(_ChiaviAnagrafica_QNAME, ChiaviAnagrafica.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link XMLGregorianCalendar }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://it/mig/sies/type/fogliComplementari", name = "dataFinePenaDal")
-    public JAXBElement<XMLGregorianCalendar> createDataFinePenaDal(XMLGregorianCalendar value) {
-        return new JAXBElement<XMLGregorianCalendar>(_DataFinePenaDal_QNAME, XMLGregorianCalendar.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link SanzioniSostitutive }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://it/mig/sies/type/fogliComplementari", name = "SanzioniSostitutive")
-    public JAXBElement<SanzioniSostitutive> createSanzioniSostitutive(SanzioniSostitutive value) {
-        return new JAXBElement<SanzioniSostitutive>(_SanzioniSostitutive_QNAME, SanzioniSostitutive.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link Durata }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://it/mig/sies/type/fogliComplementari", name = "arresto")
-    public JAXBElement<Durata> createArresto(Durata value) {
-        return new JAXBElement<Durata>(_Arresto_QNAME, Durata.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://it/mig/sies/type/fogliComplementari", name = "ergastolo")
-    public JAXBElement<String> createErgastolo(String value) {
-        return new JAXBElement<String>(_Ergastolo_QNAME, String.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link RichiesteGEAnticipazioneEffetti }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://it/mig/sies/type/fogliComplementari", name = "RichiesteGEAnticipazioneEffetti")
-    public JAXBElement<RichiesteGEAnticipazioneEffetti> createRichiesteGEAnticipazioneEffetti(RichiesteGEAnticipazioneEffetti value) {
-        return new JAXBElement<RichiesteGEAnticipazioneEffetti>(_RichiesteGEAnticipazioneEffetti_QNAME, RichiesteGEAnticipazioneEffetti.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link BigInteger }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://it/mig/sies/type/fogliComplementari", name = "numeroSentenza")
-    public JAXBElement<BigInteger> createNumeroSentenza(BigInteger value) {
-        return new JAXBElement<BigInteger>(_NumeroSentenza_QNAME, BigInteger.class, null, value);
-    }
-
-    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link BigInteger }{@code >}}
      * 
      */
@@ -442,6 +308,15 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link BigInteger }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://it/mig/sies/type/fogliComplementari", name = "numeroSIEP")
+    public JAXBElement<BigInteger> createNumeroSIEP(BigInteger value) {
+        return new JAXBElement<BigInteger>(_NumeroSIEP_QNAME, BigInteger.class, null, value);
+    }
+
+    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link XMLGregorianCalendar }{@code >}}
      * 
      */
@@ -451,21 +326,12 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link LiberazioneAnticipataConcessaDetrarreCumulo }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link Durata }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://it/mig/sies/type/fogliComplementari", name = "LiberazioneAnticipataConcessaDetrarreCumulo")
-    public JAXBElement<LiberazioneAnticipataConcessaDetrarreCumulo> createLiberazioneAnticipataConcessaDetrarreCumulo(LiberazioneAnticipataConcessaDetrarreCumulo value) {
-        return new JAXBElement<LiberazioneAnticipataConcessaDetrarreCumulo>(_LiberazioneAnticipataConcessaDetrarreCumulo_QNAME, LiberazioneAnticipataConcessaDetrarreCumulo.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link SanzioniGiudicePace }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://it/mig/sies/type/fogliComplementari", name = "SanzioniGiudicePace")
-    public JAXBElement<SanzioniGiudicePace> createSanzioniGiudicePace(SanzioniGiudicePace value) {
-        return new JAXBElement<SanzioniGiudicePace>(_SanzioniGiudicePace_QNAME, SanzioniGiudicePace.class, null, value);
+    @XmlElementDecl(namespace = "http://it/mig/sies/type/fogliComplementari", name = "reclusione")
+    public JAXBElement<Durata> createReclusione(Durata value) {
+        return new JAXBElement<Durata>(_Reclusione_QNAME, Durata.class, null, value);
     }
 
     /**
@@ -484,6 +350,15 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://it/mig/sies/type/fogliComplementari", name = "dataFinePena")
     public JAXBElement<XMLGregorianCalendar> createDataFinePena(XMLGregorianCalendar value) {
         return new JAXBElement<XMLGregorianCalendar>(_DataFinePena_QNAME, XMLGregorianCalendar.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link ChiaviProvvedimentoGiudiziario }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://it/mig/sies/type/fogliComplementari", name = "ChiaviProvvedimentoGiudiziario")
+    public JAXBElement<ChiaviProvvedimentoGiudiziario> createChiaviProvvedimentoGiudiziario(ChiaviProvvedimentoGiudiziario value) {
+        return new JAXBElement<ChiaviProvvedimentoGiudiziario>(_ChiaviProvvedimentoGiudiziario_QNAME, ChiaviProvvedimentoGiudiziario.class, null, value);
     }
 
     /**

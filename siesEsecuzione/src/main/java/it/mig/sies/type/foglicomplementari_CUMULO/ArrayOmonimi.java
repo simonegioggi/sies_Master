@@ -1,5 +1,12 @@
+//
+// Questo file ï¿½ stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
+// Vedere <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
+// Qualsiasi modifica a questo file andrï¿½ persa durante la ricompilazione dello schema di origine. 
+// Generato il: 2016.10.26 alle 04:01:02 PM CEST 
+//
 
-package it.mig.sies.type.foglicomplementari;
+
+package it.mig.sies.type.foglicomplementari_CUMULO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,7 +120,7 @@ public class ArrayOmonimi {
         protected byte[] certificatoControllo;
 
         /**
-         * Recupera il valore della proprietà anagrafica.
+         * Recupera il valore della proprietï¿½ anagrafica.
          * 
          * @return
          *     possible object is
@@ -125,7 +132,7 @@ public class ArrayOmonimi {
         }
 
         /**
-         * Imposta il valore della proprietà anagrafica.
+         * Imposta il valore della proprietï¿½ anagrafica.
          * 
          * @param value
          *     allowed object is
@@ -137,7 +144,7 @@ public class ArrayOmonimi {
         }
 
         /**
-         * Recupera il valore della proprietà certificatoControllo.
+         * Recupera il valore della proprietï¿½ certificatoControllo.
          * 
          * @return
          *     possible object is
@@ -148,7 +155,7 @@ public class ArrayOmonimi {
         }
 
         /**
-         * Imposta il valore della proprietà certificatoControllo.
+         * Imposta il valore della proprietï¿½ certificatoControllo.
          * 
          * @param value
          *     allowed object is
