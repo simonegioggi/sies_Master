@@ -434,7 +434,7 @@ public class PresaInCaricoJMSController extends SiapPresaInCaricoJMSController i
 				if (!lProc.getReturn().equals("0000")) {
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// LogF3B.getLogger()
-					siesLogger.error("ERRORE DURANTE LA STORE PROCEDURE...");
+					siesLogger.error("ERRORE DURANTE LA STORE PROCEDURE..."+lProc.getReturn());
 					throw new DAOException("Errore durante la chiamata alla Store Procedure");
 				}
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
