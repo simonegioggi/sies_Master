@@ -702,23 +702,33 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 		lStatement += " AND UFF.COD_UFFICIO = FASC.CHIAVE_UFFICIO";
 		lStatement += " AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE";
 		lStatement += " AND (FASC.ID_FASCICOLO_SIUS) NOT IN (select FASC2.ID_FASCICOLO_SIUS";
-		lStatement += " FROM FASCICOLO_SIUS FASC2, SOGGETTO  SOGG, GENERALE_PROCEDIMENTO GP,EVENTO EV";
-		lStatement += " WHERE FASC2.SOG_ID_SOGGETTO = SOGG.ID_SOGGETTO";
-		lStatement += " AND FASC2.ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS";
-		// 20250731: [SG] aggiunta condizione sull'ufficio
+        // 20250731: [DF] si esclude la condizione sul max data_ins non necessaria per la NOT IN
+//		lStatement += " FROM FASCICOLO_SIUS FASC2, SOGGETTO  SOGG, GENERALE_PROCEDIMENTO GP, EVENTO EV";
+//		lStatement += " WHERE FASC2.SOG_ID_SOGGETTO = SOGG.ID_SOGGETTO";
+//		lStatement += " AND FASC2.ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS";
+		lStatement += " FROM FASCICOLO_SIUS FASC2, EVENTO EV";
+		lStatement += " WHERE EV.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS";
 		lStatement += " AND FASC2.CHIAVE_UFFICIO = '" + lUfficioUtenteConnesso + "'";
-		lStatement += " AND (EV.DATA_INSERIMENTO,ID_FASCICOLO_SIUS) = (select EV2.DATA_INSERIMENTO,"
-				+ " FAS_SIU_ID_FASCICOLO_SIUS from EVENTO EV2";
-		lStatement += " where EV2.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS";
-		// 20250731: [SG] aggiunta condizione sull'ufficio
-		lStatement += " AND FASC.CHIAVE_UFFICIO = '" + lUfficioUtenteConnesso + "'";
-		lStatement += " AND (EV2.COD_TIPO_PROVVEDIMENTO = '02'  OR EV2.COD_TIPO_PROVVEDIMENTO = '03')";
-		lStatement += " AND EV2.DATA_INSERIMENTO = (select max (EV3.DATA_INSERIMENTO) from EVENTO EV3";
-		lStatement += " where EV3.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS";
-		lStatement += " AND (EV3.COD_TIPO_PROVVEDIMENTO = '02'  OR EV3.COD_TIPO_PROVVEDIMENTO = '03')))";
 		lStatement += " AND (EV.COD_TIPO_PROVVEDIMENTO = '02'  OR EV.COD_TIPO_PROVVEDIMENTO = '03')";
 		lStatement += " AND EV.FAS_SIU_ID_FASCICOLO_SIUS = FASC2.ID_FASCICOLO_SIUS";
-		lStatement += " ) ";
+        lStatement += " ) ";
+        // 20250731: [DF]--------------------------------------------------------
+        
+//		// 20250731: [SG] aggiunta condizione sull'ufficio
+//		lStatement += " AND FASC2.CHIAVE_UFFICIO = '" + lUfficioUtenteConnesso + "'";
+//		lStatement += " AND (EV.DATA_INSERIMENTO,ID_FASCICOLO_SIUS) = (select EV2.DATA_INSERIMENTO,"
+//				+ " FAS_SIU_ID_FASCICOLO_SIUS from EVENTO EV2";
+//		lStatement += " where EV2.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS";
+//		// 20250731: [SG] aggiunta condizione sull'ufficio
+//		lStatement += " AND FASC.CHIAVE_UFFICIO = '" + lUfficioUtenteConnesso + "'";
+//		lStatement += " AND (EV2.COD_TIPO_PROVVEDIMENTO = '02'  OR EV2.COD_TIPO_PROVVEDIMENTO = '03')";
+//		lStatement += " AND EV2.DATA_INSERIMENTO = (select max (EV3.DATA_INSERIMENTO) from EVENTO EV3";
+//		lStatement += " where EV3.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS";
+//		lStatement += " AND (EV3.COD_TIPO_PROVVEDIMENTO = '02'  OR EV3.COD_TIPO_PROVVEDIMENTO = '03')))";
+//		lStatement += " AND (EV.COD_TIPO_PROVVEDIMENTO = '02'  OR EV.COD_TIPO_PROVVEDIMENTO = '03')";
+//		lStatement += " AND EV.FAS_SIU_ID_FASCICOLO_SIUS = FASC2.ID_FASCICOLO_SIUS";
+//		lStatement += " ) ";
+        
 		return lStatement;
 	}
 
