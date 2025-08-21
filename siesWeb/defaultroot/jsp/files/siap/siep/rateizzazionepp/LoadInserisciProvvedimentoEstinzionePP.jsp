@@ -57,6 +57,15 @@ if (eventonotifica.getEvento().getIdEvento() != null) {
   dataEmissione    = eventonotifica.getEvento().getDataEmissione();
   dataTrasmissione = eventonotifica.getNotifiche()[0].getDataInvio();
 }
+
+if (lPosizione == null)
+	lPosizione = new PosizioneGiuridicaModel();
+
+if (lLuogoDetenzione == null)
+	lLuogoDetenzione = new LuogoDetenzioneModel();
+
+if (lAltraCausa == null)
+	lAltraCausa = new AltraCausaModel();
 %>
 <html>
 <head>
