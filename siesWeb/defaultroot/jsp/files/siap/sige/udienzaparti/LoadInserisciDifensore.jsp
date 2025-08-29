@@ -216,7 +216,7 @@
     frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_NOME %>","alpha");
 
     frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_FORO %>","req","Il campo Foro  è obbligatorio");
-    frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_FORO %>","alpha");
+<%--     frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_FORO %>","alpha"); --%>
 
     frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA%>","maxlen=4","La lunghezza massima per l'anno di nascita è di 4 caratteri");
     frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA%>","minlen=4","La lunghezza minima per l'anno di nascita è di 4 caratteri");

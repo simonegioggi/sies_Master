@@ -113,21 +113,22 @@
 </div>
 </form>
 <script language="JavaScript" type="text/javascript">
-  var frmvalidator  = new Validator("ricercaUtenti");
+var frmvalidator  = new Validator("ricercaUtenti");
 
-  frmvalidator.addValidation("<%= ICostantiUtente.CAMPO_NOME %>","maxlen=50","La lunghezza massima per il nome è di 50 caratteri");
-  frmvalidator.addValidation("<%= ICostantiUtente.CAMPO_NOME %>","alpha","Il campo Nome Utente non può contenere caratteri non alfabetici");
+frmvalidator.addValidation("<%= ICostantiUtente.CAMPO_NOME %>","maxlen=50","La lunghezza massima per il nome è di 50 caratteri");
+frmvalidator.addValidation("<%= ICostantiUtente.CAMPO_NOME %>","alpha","Il campo Nome Utente non può contenere caratteri non alfabetici");
 
-  frmvalidator.addValidation("<%= ICostantiUtente.CAMPO_COGNOME %>","maxlen=50","La lunghezza massima per il cognome è di 50 caratteri");
-  frmvalidator.addValidation("<%= ICostantiUtente.CAMPO_COGNOME %>","alpha","Il campo Cognome Utente non può contenere caratteri non alfabetici");
+frmvalidator.addValidation("<%= ICostantiUtente.CAMPO_COGNOME %>","maxlen=50","La lunghezza massima per il cognome è di 50 caratteri");
+frmvalidator.addValidation("<%= ICostantiUtente.CAMPO_COGNOME %>","alpha","Il campo Cognome Utente non può contenere caratteri non alfabetici");
 
-  frmvalidator.addValidation("<%= ICostantiUtente.CAMPO_COD_UTENTE %>","minlen=6","La lunghezza per il codice utente è di 6 caratteri");
-  frmvalidator.addValidation("<%= ICostantiUtente.CAMPO_COD_UTENTE %>","maxlen=6","La lunghezza per il codice utente è di 6 caratteri");
-  frmvalidator.addValidation("<%= ICostantiUtente.CAMPO_COD_UTENTE %>","alphanumeric","Il campo Codice Utente non può contenere caratteri non alfanumerici");
+frmvalidator.addValidation("<%= ICostantiUtente.CAMPO_COD_UTENTE %>","minlen=6","La lunghezza per il codice utente è di 6 caratteri");
+frmvalidator.addValidation("<%= ICostantiUtente.CAMPO_COD_UTENTE %>","maxlen=6","La lunghezza per il codice utente è di 6 caratteri");
+frmvalidator.addValidation("<%= ICostantiUtente.CAMPO_COD_UTENTE %>","alphanumeric","Il campo Codice Utente non può contenere caratteri non alfanumerici");
 
-  frmvalidator.addValidation("<%=ICostantiUfficio.CAMPO_SEDE_UFFICIO%>","alpha","Il campo Sede Uffcio non può contenere caratteri non alfabetici");
+// Ticket#202507220132 - SIES - ricerca utenti il campo sede non può avere caratteri speciali
+<%--   frmvalidator.addValidation("<%=ICostantiUfficio.CAMPO_SEDE_UFFICIO%>","alpha","Il campo Sede Uffcio non può contenere caratteri non alfabetici"); --%>
 
-  frmvalidator.setAddnlValidationFunction("Verify");
+frmvalidator.setAddnlValidationFunction("Verify");
 </script>
 </body>
 </html>

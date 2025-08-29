@@ -33,20 +33,22 @@
 FascicoloSiepModel lFascicoloAssociato = (FascicoloSiepModel) session.getAttribute("fascicolo");
 PosizioneGiuridicaModel lPosizione = posizioneluogoaltra.getPosizioneGiuridica();
 AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
-%>
 
-<% 
-   int contaRinnovi = listaRinnovi.size();
-   int contaDaValidare = 0;
-   for (int i = 0; i < listaRinnovi.size(); i++) 
-   {
-     RinnovoModel lRinnovo = (RinnovoModel) listaRinnovi.elementAt(i);
-     if (lRinnovo.getFlagDocumentoRegistrato()==null 
-          || lRinnovo.getFlagDocumentoRegistrato().equals("N") )
-       contaDaValidare++; 
-   }
-%>
+if (lPosizione == null)
+	lPosizione = new PosizioneGiuridicaModel();
 
+if (lAltraCausa == null)
+	lAltraCausa = new AltraCausaModel();
+
+int contaRinnovi = listaRinnovi.size();
+int contaDaValidare = 0;
+for (int i = 0; i < listaRinnovi.size(); i++) {
+	RinnovoModel lRinnovo = (RinnovoModel) listaRinnovi.elementAt(i);
+  	if (lRinnovo.getFlagDocumentoRegistrato() == null
+  			|| lRinnovo.getFlagDocumentoRegistrato().equals("N"))
+		contaDaValidare++; 
+}
+%>
 
 <html>
   <head>

@@ -637,7 +637,7 @@ frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ATTO_NASCITA%>","alphanu
 <%-- Ticket#202506130166 - SIES: Anomalia inserimento provvedimento - schermata sede dell'autorità emittente--%>
 <%-- ELIMINATO CONTROLLO per consentire inserimento comuni tipo MERANO/MERAN) --%>
 <%-- frmvalidator.addValidation("<%=ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA%>","alpha"); --%>
-frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_DESC_COMUNE_NASCITA_ESTERO %>","alpha");
+<%-- frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_DESC_COMUNE_NASCITA_ESTERO %>","alpha"); --%>
 
 <%-- // frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ETA_PRESUNTA_MESI%>","numeric"); --%>
 <%-- // frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ETA_PRESUNTA_MESI%>","lt=12"); --%>

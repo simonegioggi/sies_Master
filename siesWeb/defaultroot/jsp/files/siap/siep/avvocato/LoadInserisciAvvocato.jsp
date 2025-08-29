@@ -160,7 +160,7 @@ frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_COGNOME %>","req","Il ca
 // frmvalidator.addValidation("<-%= ICostantiAvvocato.CAMPO_NOME %->","alpha");
 
 frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_FORO %>","req","Il campo Foro  è obbligatorio");
-frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_FORO %>","alpha");
+<%-- frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_FORO %>","alpha"); --%>
 
 frmvalidator.setAddnlValidationFunction("Verify");
 </script>

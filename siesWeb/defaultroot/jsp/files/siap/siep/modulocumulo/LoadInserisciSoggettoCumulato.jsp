@@ -376,7 +376,7 @@
   frmvalidator.addValidation("<%=ICostantiSoggettoCumulato.CAMPO_NAZIONALITA %>","alphanumeric");  
   frmvalidator.addValidation("<%=ICostantiSoggettoCumulato.CAMPO_ATTO_NASCITA%>","alphanumeric");
   
-  frmvalidator.addValidation("<%=ICostantiSoggettoCumulato.CAMPO_DESC_COMUNE_NASCITA_ESTERO %>","alpha");
+<%--   frmvalidator.addValidation("<%=ICostantiSoggettoCumulato.CAMPO_DESC_COMUNE_NASCITA_ESTERO %>","alpha"); --%>
   frmvalidator.addValidation("<%=ICostantiSoggettoCumulato.CAMPO_COD_AFIS%>","alphanumeric" );
 
 </script>

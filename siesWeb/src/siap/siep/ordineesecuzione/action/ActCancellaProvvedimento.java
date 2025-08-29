@@ -27,18 +27,7 @@ import siap.sius.util.SIUSLookupRemote;
 import siap.web.ISIAPCostantiWeb;
 
 /**
- * <p>
- * Title: ActCancellaProvvedimento
- * </p>
- * <p>
- * Description: Classe Action per la load dettaglio di Scadenzario
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * ActCancellaProvvedimento - Classe Action per la cancellazione del provvedimento
  *
  * @version 1.0
  */
@@ -159,20 +148,15 @@ public class ActCancellaProvvedimento extends ActionSiap implements ICostantiOrd
 						&& "01".equals(em.getCodTipoEvento()) && em.getDataTrasmissioneAtti() != null
 						&& em.getDataTrasmissioneAtti().compareTo(em.getDataEmissione()) == 0
 						&& em.getCodOperatoreInserimento().equals(lEveModRic.getCodOperatoreInserimento())
-						// Ticket#20230718019 - In caso di Annullamento di un verbale di sottoscrizione non si annulla 
-						//                      anche l'ordinanza in quanto puntata anche dalla richiesta del verbale
-						//                       
-						&& !(   lEveModRic.getCodTipoEvento().equals("07")   // 07-Verbale
-							 && (   lEveModRic.getCodTipoProvvedimento().equals("16") // 16-Verbale
-							     || lEveModRic.getCodTipoProvvedimento().equals("18") // 18-Verbale obblighi
-							    )
-							 && (   lEveModRic.getCodMotivo().equals("0314") // 0314-sottoscrizione obblighi
-								 || lEveModRic.getCodMotivo().equals("0312") // 0312-verbale
-								)
-							)
-						// Ticket#20230718019 - FINE
-					) 
-				{
+						// Ticket#20230718019 - In caso di Annullamento di un verbale di sottoscrizione non si
+						// annulla anche l'ordinanza in quanto puntata anche dalla richiesta del verbale
+						&& !(lEveModRic.getCodTipoEvento().equals("07") // 07-Verbale
+								&& (lEveModRic.getCodTipoProvvedimento().equals("16") // 16-Verbale
+										// 18-Verbale obblighi
+										|| lEveModRic.getCodTipoProvvedimento().equals("18"))
+								&& (lEveModRic.getCodMotivo().equals("0314") // 0314-sottoscrizione obblighi
+										|| lEveModRic.getCodMotivo().equals("0312") // 0312-verbale
+								))) { // Ticket#20230718019 - FINE
 					em.setFlagDocumentoRegistrato("A");
 					lCtrl.ExAggiornaEventoInserisciCampoNota(em, lCampoMod);
 				}
@@ -224,7 +208,7 @@ public class ActCancellaProvvedimento extends ActionSiap implements ICostantiOrd
 				lPage = ritornoDopoCancellazione("Provvedimento Annullato!", null);
 		}
 
-		if (lMessaggioOE == true) {
+		if (lMessaggioOE) {
 			RedirectTo lRedirigi = new RedirectTo();
 			lRedirigi.setPage(IWebConstants.PG_MAIN);
 			lRedirigi.setAction(lAzione);
