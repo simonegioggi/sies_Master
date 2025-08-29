@@ -126,7 +126,7 @@
            if (document.LoadRicercaSoggetto.<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>[1][document.LoadRicercaSoggetto.<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>[1].selectedIndex].value =='-')
            {
              frmvalidatorAtriDistr.addValidationWithIdx("<%= ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA %>","1","req");
-             frmvalidatorAtriDistr.addValidationWithIdx("<%= ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA %>","1","alpha");
+<%--              frmvalidatorAtriDistr.addValidationWithIdx("<%= ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA %>","1","alpha"); --%>
            }
            frmvalidatorAtriDistr.addValidation("<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA2%>","req");
            frmvalidatorAtriDistr.addValidation("<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA2%>","maxlen=4","La lunghezza massima per l'anno di nascita è di 4 caratteri");

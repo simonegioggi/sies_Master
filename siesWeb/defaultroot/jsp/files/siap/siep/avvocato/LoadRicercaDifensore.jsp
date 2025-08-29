@@ -84,7 +84,7 @@
 	var frmvalidator  = new Validator("LoadRicercaAvvocato");
   frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_COGNOME %>","alpha");
   frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_NOME %>","alpha");
-  frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_FORO %>","alpha");
+<%--   frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_FORO %>","alpha"); --%>
 </script>
 </body>
 </html>
