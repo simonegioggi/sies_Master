@@ -172,7 +172,7 @@ public interface ICostantiAnnotazioneManuale
   public static final String DEPENALIZZAZIONE    = "004";
   public static final String INCOSTITUZIONALITA  = "013";
   
-  // Mev 9
+  // Mev9
   public static final String CAMPO_TIPO_RICHIE  = "tRich";
 
   //25-07-2015	- Mev 29 punto 11
