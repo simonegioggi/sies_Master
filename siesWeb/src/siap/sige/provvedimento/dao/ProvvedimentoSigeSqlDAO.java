@@ -394,7 +394,7 @@ public class ProvvedimentoSigeSqlDAO extends SIAPSqlDAO {
 		if (aModel.getCodTipoProvvedimento() != null)
 			lCondizioni += " AND PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO ='"
 					+ aModel.getCodTipoProvvedimento() + "'";
-		
+
 		// Ticket#202310120117 aggiunto += era presente solo = e si perdeva le 2 condizioni precedenti
 		// lCondizioni = " AND PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO_SIGE NOT IN ('52', '55', '56', '11',
 		// '03','14','18','07','06','04','10','15','16') ";
@@ -599,13 +599,15 @@ public class ProvvedimentoSigeSqlDAO extends SIAPSqlDAO {
 		// Ticket#202405240118 - sige 159/2023 Tribunale di Teramo
 		// anche 04 - Ordinanza Rinvio Udienza
 		// e 50 - Rinvio udienza da verbale
-		lStatement += "AND p.COD_TIPO_PROVVEDIMENTO_SIGE not in ("
-				+ ICostantiProvvedimentoSige.TIPI_PROVVEDIMENTI_UDIENZE + ") ";
-		// lStatement += "AND p.COD_TIPO_PROVVEDIMENTO_SIGE <> '01' ";
-		lStatement += " AND p.DATA_DEPOSITO  IS NOT NULL ";
-		lStatement += " AND p.ID_EVENTO_GENERATO = e.ID_EVENTO ";
-		lStatement += " AND e.FLAG_DOCUMENTO_REGISTRATO = 'S' ";
-		lStatement += " AND e.DATA_TRASMISSIONE_ATTI IS NOT NULL ";
+		lStatement += " AND p.COD_TIPO_PROVVEDIMENTO_SIGE not in ("
+				+ ICostantiProvvedimentoSige.TIPI_PROVVEDIMENTI_UDIENZE + ","
+				+ ICostantiProvvedimentoSige.TIPI_PROVVEDIMENTI_DECRETI_NO_DEFINITORI + ")";
+		// lStatement += "AND p.COD_TIPO_PROVVEDIMENTO_SIGE <> '01'";
+		// lStatement += "AND p.DEFINITORIO	= 'S'";
+		lStatement += " AND p.DATA_DEPOSITO IS NOT NULL";
+		lStatement += " AND p.ID_EVENTO_GENERATO = e.ID_EVENTO";
+		lStatement += " AND e.FLAG_DOCUMENTO_REGISTRATO = 'S'";
+		lStatement += " AND e.DATA_TRASMISSIONE_ATTI IS NOT NULL";
 
 		setStatement(lStatement);
 
