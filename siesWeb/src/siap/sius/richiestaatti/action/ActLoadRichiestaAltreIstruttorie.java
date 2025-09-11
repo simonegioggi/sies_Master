@@ -3,23 +3,20 @@ package siap.sius.richiestaatti.action;
 import java.util.Collection;
 import java.util.Date;
 
-import siap.sico.decodifiche.controller.DecodificheManager;
-import siap.sico.decodifiche.util.DecodificheUtils;
-import siap.sico.evento.controller.IEvento;
-import siap.sico.evento.model.EventoModel;
-import siap.sico.util.SICOLookupRemote;
-import siap.sico.web.ActionSiap;
-import siap.sius.fascicolo.model.FascicoloGPModel;
 import f3b.util.DateUtils;
 import f3b.web.html.Option;
+import siap.sico.decodifiche.controller.DecodificheManager;
+import siap.sico.decodifiche.util.DecodificheUtils;
+import siap.sico.web.ActionSiap;
+import siap.sius.fascicolo.model.FascicoloGPModel;
 
 /**
  * <p>
  * Title: ActLoadRichiestaAltreIstruttorie
  * </p>
  * <p>
- * Description: Classe di Azione responsabile della composizione dei dati per le combobox e ritorna la chiamata alla
- * corrispondente JSP
+ * Description: Classe di Azione responsabile della composizione dei dati per le combobox e ritorna la
+ * chiamata alla corrispondente JSP
  * </p>
  * <p>
  * Copyright: Copyright (c) 2004
@@ -27,16 +24,16 @@ import f3b.web.html.Option;
  * <p>
  * Company:
  * </p>
- * 
+ *
  * @author not attributable
  * @version 1.0
  */
 public class ActLoadRichiestaAltreIstruttorie extends ActionSiap implements ICostantiRichiestaAtti {
 	/**
-	 * Metodo processRequest che prepara i dati necessari per la composizione della form, e ritorna come parametro la
-	 * relativa JSP compresiva di path.
+	 * Metodo processRequest che prepara i dati necessari per la composizione della form, e ritorna come
+	 * parametro la relativa JSP compresiva di path.
 	 * <p>
-	 * 
+	 *
 	 * @return pagina JSP da caricare
 	 * @throws Exception
 	 *             propaga qualunque errore di eccezione.
@@ -46,8 +43,8 @@ public class ActLoadRichiestaAltreIstruttorie extends ActionSiap implements ICos
 		gestioneRitorno();
 
 		// Data Fascicolo SIUS
-		Date lDataInserimento = ((FascicoloGPModel) getSessionAttribute("fascicoloSiusGP")).getFascicoloSiusModel()
-				.getDataInserimento();
+		Date lDataInserimento = ((FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"))
+				.getFascicoloSiusModel().getDataInserimento();
 		String lDataInserimentoString = DateUtils.getDateToString(lDataInserimento, "dd/MM/yyyy");
 		setRequestAttribute("dataInsFS", lDataInserimentoString);// Imposta il valore in request.
 
@@ -55,13 +52,13 @@ public class ActLoadRichiestaAltreIstruttorie extends ActionSiap implements ICos
 		Collection lElencoUffGiudiz = DecodificheManager.getInstance().getTipoUfficio();
 		Option lOption = new Option(DecodificheUtils.getDecodesWithoutCode(lElencoUffGiudiz, "SSPA"));
 		setRequestAttribute("ElencoUffGiudiz", "" + lOption); // Imposta il valore in request.
-		
+
 		// MEV10-s3: aggiunto controllo su tipologia di ufficio connesso (solo "TDSM" e "UDSM")
-		String codTipoUfficio = ((FascicoloGPModel) getSessionAttribute("fascicoloSiusGP")).getFascicoloSiusModel().
-				getCodTipoUfficio();
+		String codTipoUfficio = ((FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"))
+				.getFascicoloSiusModel().getCodTipoUfficio();
 		if ("UDSM".equals(codTipoUfficio) || "TDSM".equals(codTipoUfficio)) {
 			Collection lCol = DecodificheManager.getInstance().getTipoAutorita();
-			String[] lStringFilter  = new String[]{ "-", "40", "B5" };
+			String[] lStringFilter = new String[] { "-", "40", "B5" };
 			lOption = new Option(lCol);
 			lOption.setFilter(lStringFilter);
 			setRequestAttribute("ElencoDest3", "" + lOption);
@@ -72,13 +69,6 @@ public class ActLoadRichiestaAltreIstruttorie extends ActionSiap implements ICos
 		lOption = new Option(lElencoTipiAutorita);
 		setRequestAttribute("ElencoTipiAutorita", "" + lOption); // Imposta il valore in request.
 
-		// INIZIO: MEV_9 (D.lgs. 123/2018)
-		IEvento lEveCtrl = SICOLookupRemote.getEventoRemote();
-		EventoModel lUltimoEventoRichAtti = lEveCtrl.ricercaUltimoEventoRichiestaAttiIsruttoriByIdFasc (((FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"))
-				.getFascicoloSiusModel().getIdFascicoloSius());
-		setRequestAttribute("ultimoEventoRichAtti", lUltimoEventoRichAtti);
-		// FINE: MEV_9 (D.lgs. 123/2018)
-		
 		return PG_LOAD_RICHIESTAALTREISTRUTTORIE; // restituisce la jsp di VIEW
 	}
 

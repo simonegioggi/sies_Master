@@ -323,17 +323,12 @@ public class EventoSimeoneSqlDAO extends SIAPSqlDAO {
 	}
 
 	public void ricercaEventoByEveIdEventoTipEveTipProvCodMotivo(BigDecimal aKey, String aTipoEvento,
-			String aTipoProv, String aMotivo, String flagDocRegistrato) throws DAOException {
+			String aTipoProv, String aMotivo) throws DAOException {
 		String lStatement = getSqlQuery();
 		lStatement += " AND COD_TIPO_EVENTO =  '" + aTipoEvento + "'";
 		lStatement += " AND COD_TIPO_PROVVEDIMENTO =  '" + aTipoProv + "'";
 		lStatement += " AND COD_MOTIVO = '" + aMotivo + "'";
 		lStatement += " AND EVE_ID_EVENTO = " + aKey;
-		
-		// MEV_9
-		if ("S".equals(flagDocRegistrato) )
-			lStatement += " AND FLAG_DOCUMENTO_REGISTRATO = 'S' ";		
-		
 		lStatement += setOrderEventoDesc();
 
 		setStatement(lStatement);

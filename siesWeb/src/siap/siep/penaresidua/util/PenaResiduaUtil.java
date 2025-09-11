@@ -197,7 +197,6 @@ public class PenaResiduaUtil {
 	 * Questo metodo ricalcola il periodo di PENA_RESIDUA utilizzando la nuova data fine. Vengono ricalcolati:
 	 * gg, mm, aa, DataFineReclusione, DataInizioArresto, DataFine aggiungendo o sottraendo opportunamente i
 	 * gg da Reclusione e Arresto<br>
-	 * <br>
 	 *
 	 * n.b. Vengono aggiornati preferibilmente se possibile i quantum dell'arresto e solo se non possibile
 	 * vengono aggiornati i dati della reclusione
@@ -340,13 +339,10 @@ public class PenaResiduaUtil {
 				lCalReclusioneNew = lCalUtil.CalcolaNumGiorniMesiAnni(lCalReclusioneNew, aEscludiDiesequo);
 				lCalReclusioneNew = lCalUtil.ricalcolaGAM(lCalReclusioneNew);
 			}
-		} else if (!lCalUtil.isZero(lCalReclusione) && lCalUtil.isZero(lCalArresto)) { // Solo reclusione
-																						// [FT] - 03/08/2016 -
-																						// MAC_LOG - Utilizzo
-																						// la variabile di
-																						// istanza siesLogger
-																						// al posto di
-																						// LogF3B.getLogger()
+		} else if (!lCalUtil.isZero(lCalReclusione) && lCalUtil.isZero(lCalArresto)) {
+			// Solo reclusione
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("Reclusione != 0");
 
 			lCalReclusioneNew.setDataInizio(aPenaResidua.getDataInizio());
@@ -359,13 +355,10 @@ public class PenaResiduaUtil {
 
 			// ARRESTO = 0
 			lCalArrestoNew = new CalendarModel();
-		} else if (lCalUtil.isZero(lCalReclusione) && !lCalUtil.isZero(lCalArresto)) { // Solo arresti
-																						// [FT] - 03/08/2016 -
-																						// MAC_LOG - Utilizzo
-																						// la variabile di
-																						// istanza siesLogger
-																						// al posto di
-																						// LogF3B.getLogger()
+		} else if (lCalUtil.isZero(lCalReclusione) && !lCalUtil.isZero(lCalArresto)) {
+			// Solo arresti
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("Arresto != 0");
 
 			// RECLUSIONE = 0

@@ -109,7 +109,6 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 		lSheet.setColumnWidth(numCol++, 15 * 256); // Pendenti Inizio Periodo
 		lSheet.setColumnWidth(numCol++, 15 * 256); // Sopravvenuti
 		lSheet.setColumnWidth(numCol++, 15 * 256); // Accolti
-		lSheet.setColumnWidth(numCol++, 15 * 256); // Accolti Provvisoriamente MEV9
 		lSheet.setColumnWidth(numCol++, 15 * 256); // Rigettati
 		lSheet.setColumnWidth(numCol++, 15 * 256); // Inammissibilità
 		lSheet.setColumnWidth(numCol++, 15 * 256); // NLP/NDP
@@ -126,7 +125,6 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 		setCell(lRow, numCol++, "Pendenti Inizio Periodo", lCellStyleCenter);
 		setCell(lRow, numCol++, "Sopravvenuti", lCellStyleCenter);
 		setCell(lRow, numCol++, "Accolti", lCellStyleCenter);
-		setCell(lRow, numCol++, "Accolti Provvisoriamente", lCellStyleCenter); // MEV9
 		setCell(lRow, numCol++, "Rigettati", lCellStyleCenter);
 		setCell(lRow, numCol++, "Inammissibilità", lCellStyleCenter);
 		setCell(lRow, numCol++, "NLP/NDP", lCellStyleCenter);
@@ -140,7 +138,6 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 		BigDecimal totalePendentiInizio = new BigDecimal("0");
 		BigDecimal totaleSopravvenuti = new BigDecimal("0");
 		BigDecimal totaleAccolti = new BigDecimal("0");
-		BigDecimal totaleAccoltiProvv = new BigDecimal("0"); // MEV9
 		BigDecimal totaleRigettati = new BigDecimal("0");
 		BigDecimal totaleInammissibilita = new BigDecimal("0");
 		BigDecimal totaleNLPNDP = new BigDecimal("0");
@@ -161,7 +158,6 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 			totalePendentiInizio = totalePendentiInizio.add(lModel.getNumPendentiInizio());
 			totaleSopravvenuti = totaleSopravvenuti.add(lModel.getNumSopravvenuti());
 			totaleAccolti = totaleAccolti.add(lModel.getNumDefEsito1());
-			totaleAccoltiProvv = totaleAccoltiProvv.add(lModel.getNumAppProvv()); // MEV9
 			totaleRigettati = totaleRigettati.add(lModel.getNumDefEsito2());
 			totaleInammissibilita = totaleInammissibilita.add(lModel.getNumDefEsito3());
 			totaleNLPNDP = totaleNLPNDP.add(lModel.getNumDefEsito4());
@@ -185,7 +181,6 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumPendentiInizio()), lCellStyleCenter);
 			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumSopravvenuti()), lCellStyleCenter);
 			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumDefEsito1()), lCellStyleCenter);
-			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumAppProvv()), lCellStyleCenter); // MEV9
 			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumDefEsito2()), lCellStyleCenter);
 			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumDefEsito3()), lCellStyleCenter);
 			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumDefEsito4()), lCellStyleCenter);
@@ -205,7 +200,6 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totalePendentiInizio), lCellStyleCenter);
 		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totaleSopravvenuti), lCellStyleCenter);
 		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totaleAccolti), lCellStyleCenter);
-		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totaleAccoltiProvv), lCellStyleCenter); // MEV9
 		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totaleRigettati), lCellStyleCenter);
 		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totaleInammissibilita), lCellStyleCenter);
 		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totaleNLPNDP), lCellStyleCenter);
@@ -300,7 +294,6 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 		lSheet.setColumnWidth(numCol++, 10 * 256); // Pendenti Inizio Periodo
 		lSheet.setColumnWidth(numCol++, 10 * 256); // Sopravvenuti
 		lSheet.setColumnWidth(numCol++, 10 * 256); // Accolti
-		lSheet.setColumnWidth(numCol++, 10 * 256); // Accolti Provvisoriamente MEV9
 		lSheet.setColumnWidth(numCol++, 10 * 256); // Rigettati
 		lSheet.setColumnWidth(numCol++, 10 * 256); // Inammissibilità
 		lSheet.setColumnWidth(numCol++, 10 * 256); // NLP/NDP
@@ -318,7 +311,6 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 		setCell(lRow, numCol++, "Pendenti Inizio Periodo", lCellStyleCenter);
 		setCell(lRow, numCol++, "Sopravvenuti", lCellStyleCenter);
 		setCell(lRow, numCol++, "Accolti", lCellStyleCenter);
-		setCell(lRow, numCol++, "Accolti Provvisoriamente", lCellStyleCenter); // MEV9
 		setCell(lRow, numCol++, "Rigettati", lCellStyleCenter);
 		setCell(lRow, numCol++, "Inammissibilità", lCellStyleCenter);
 		setCell(lRow, numCol++, "NLP/NDP", lCellStyleCenter);
@@ -332,7 +324,6 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 		BigDecimal totalePendentiInizio = new BigDecimal("0");
 		BigDecimal totaleSopravvenuti = new BigDecimal("0");
 		BigDecimal totaleAccolti = new BigDecimal("0");
-		BigDecimal totaleAccoltiProvv = new BigDecimal("0"); // MEV 9		
 		BigDecimal totaleRigettati = new BigDecimal("0");
 		BigDecimal totaleInammissibilita = new BigDecimal("0");
 		BigDecimal totaleNLPNDP = new BigDecimal("0");
@@ -354,7 +345,6 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumPendentiInizio()), lCellStyleCenter);
 			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumSopravvenuti()), lCellStyleCenter);
 			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumDefEsito1()), lCellStyleCenter);
-			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumAccoltiProvv()), lCellStyleCenter); // MEV 9
 			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumDefEsito2()), lCellStyleCenter);
 			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumDefEsito3()), lCellStyleCenter);
 			setCell(lRow, numCol++, StringUtils.cStrForJS("" + lModel.getNumDefEsito4()), lCellStyleCenter);
@@ -368,7 +358,6 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 			totalePendentiInizio = totalePendentiInizio.add(lModel.getNumPendentiInizio());
 			totaleSopravvenuti = totaleSopravvenuti.add(lModel.getNumSopravvenuti());
 			totaleAccolti = totaleAccolti.add(lModel.getNumDefEsito1());			
-			totaleAccoltiProvv = totaleAccoltiProvv.add(lModel.getNumAccoltiProvv()); // NEV9
 			totaleRigettati = totaleRigettati.add(lModel.getNumDefEsito2());
 			totaleInammissibilita = totaleInammissibilita.add(lModel.getNumDefEsito3());
 			totaleNLPNDP = totaleNLPNDP.add(lModel.getNumDefEsito4());
@@ -389,7 +378,6 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totalePendentiInizio), lCellStyleCenter);
 		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totaleSopravvenuti), lCellStyleCenter);
 		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totaleAccolti), lCellStyleCenter);
-		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totaleAccoltiProvv), lCellStyleCenter);
 		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totaleRigettati), lCellStyleCenter);
 		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totaleInammissibilita), lCellStyleCenter);
 		setCell(lRow, numCol++, StringUtils.cStrForJS("" + totaleNLPNDP), lCellStyleCenter);

@@ -2731,19 +2731,16 @@ public class StatisController extends GenericController {
 			sheet.setColumnWidth(numCol++, (30 * 256)); // OGGETTO
 		sheet.setColumnWidth(numCol++, (10 * 256)); // Pendenti Inizio Periodo
 		sheet.setColumnWidth(numCol++, (10 * 256)); // Sopravvenuti
-		sheet.setColumnWidth(numCol++, (10 * 256));   // Accolti		
-		// MEV9 - Si aggiunge Accolti Provvisoriamente
-		sheet.setColumnWidth(numCol++, (10 * 256));   // Accolti Provvisoriamente
-		// MEV9 - FINE		
-		sheet.setColumnWidth(numCol++, (10 * 256));   // Rigettati
-		sheet.setColumnWidth(numCol++, (10 * 256));   // Inammissibilita'
-		sheet.setColumnWidth(numCol++, (10 * 256));   // NLP/NDP
-		sheet.setColumnWidth(numCol++, (10 * 256));   // Incompetenza
+		sheet.setColumnWidth(numCol++, (10 * 256)); // Accolti
+		sheet.setColumnWidth(numCol++, (10 * 256)); // Rigettati
+		sheet.setColumnWidth(numCol++, (10 * 256)); // Inammissibilita'
+		sheet.setColumnWidth(numCol++, (10 * 256)); // NLP/NDP
+		sheet.setColumnWidth(numCol++, (10 * 256)); // Incompetenza
 		sheet.setColumnWidth(numCol++, (10 * 256)); // Iscritti per errore
 		sheet.setColumnWidth(numCol++, (10 * 256)); // Unificati
 		sheet.setColumnWidth(numCol++, (10 * 256)); // Cancellati
 		sheet.setColumnWidth(numCol++, (10 * 256)); // Altro
-		sheet.setColumnWidth(numCol++, (10 * 256)); // Pendenti Fine Periodo 
+		sheet.setColumnWidth(numCol++, (10 * 256)); // Pendenti Fine Periodo
 
 		// N.ro riga corrente
 		int nRow = 0;
@@ -2807,9 +2804,6 @@ public class StatisController extends GenericController {
 		setCell(row, numCol++, "Pendenti Inizio Periodo", csCenter);
 		setCell(row, numCol++, "Sopravvenuti", csCenter);
 		setCell(row, numCol++, "Accolti", csCenter);
-		// MEV9 - Si aggiunge Accolti Provvisoriamente
-		setCell(row, numCol++, "Accolti Provvisoriamente", csCenter);
-		// MEV9 - FINE
 		setCell(row, numCol++, "Rigettati", csCenter);
 		setCell(row, numCol++, "Inammissibilita'", csCenter);
 		setCell(row, numCol++, "NLP/NDP", csCenter);
@@ -2840,9 +2834,6 @@ public class StatisController extends GenericController {
 				setCell(row, numCol++, lMod.getNumPendentiInizio().doubleValue(), csCenter);
 				setCell(row, numCol++, lMod.getNumSopravvenuti().doubleValue(), csCenter);
 				setCell(row, numCol++, lMod.getNumDefEsito1().doubleValue(), csCenter); // Accolti
-				// MEV9 - Si aggiunge Accolti Provvisoriamente
-				setCell(row, numCol++, lMod.getNumAccoltiProvv().doubleValue(), csCenter); // Accolti
-				// MEV9 - FINE
 				setCell(row, numCol++, lMod.getNumDefEsito2().doubleValue(), csCenter); // Rigettati
 				setCell(row, numCol++, lMod.getNumDefEsito3().doubleValue(), csCenter); // Inammissibilita'
 				setCell(row, numCol++, lMod.getNumDefEsito4().doubleValue(), csCenter); // NLP/NDP
@@ -2865,9 +2856,7 @@ public class StatisController extends GenericController {
 		row = sheet.createRow(nRow++);
 		setCell(row, numCol++, "TOTALI", csCenter);
 		// 12 totali su 12 colonne
-		// MEV9 - Si aggiunge Accolti Provvisoriamente le colonne diventano 13
-		//for (int i = 0; i < 12; i++) {
-		for (int i = 0; i < 13; i++) {
+		for (int i = 0; i < 12; i++) {
 			formula = getStringaSomma(nRowIni, numCol, nRowFine, numCol);
 			setFormulaCell(row, numCol++, formula, csCenter);
 		}
@@ -2949,9 +2938,6 @@ public class StatisController extends GenericController {
 					setCell(row, numCol++, lMod.getNumPendentiInizio().doubleValue(), aCsCenter);
 					setCell(row, numCol++, lMod.getNumSopravvenuti().doubleValue(), aCsCenter);
 					setCell(row, numCol++, lMod.getNumDefEsito1().doubleValue(), aCsCenter);
-					// MEV9 - Accolti provvisoriamente
-					setCell(row, numCol++, lMod.getNumAccoltiProvv().doubleValue(), aCsCenter);
-					// MEV9 - FINE
 					setCell(row, numCol++, lMod.getNumDefEsito2().doubleValue(), aCsCenter);
 					setCell(row, numCol++, lMod.getNumDefEsito3().doubleValue(), aCsCenter);
 					setCell(row, numCol++, lMod.getNumDefEsito4().doubleValue(), aCsCenter);
@@ -3253,7 +3239,7 @@ public class StatisController extends GenericController {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getName() + ".creaFoglioFascicoliPriviDiRelatore : inizio");
+		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioFascicoliPriviDiRelatore : inizio");
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("Vector size : " + aElencoProcNoRel.size());
@@ -3381,7 +3367,7 @@ public class StatisController extends GenericController {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getName() + ".creaFoglioFascicoliPriviDiRelatore : fine");
+		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioFascicoliPriviDiRelatore : fine");
 	}
 
 	/**
@@ -3420,12 +3406,11 @@ public class StatisController extends GenericController {
 		// settaggio della larghezza
 		// delle colonne
 		numCol = 0;
-		sheet.setColumnWidth(numCol++, (40 * 256)); // 
-		sheet.setColumnWidth(numCol++, (10 * 256)); // 
-		sheet.setColumnWidth(numCol++, (10 * 256)); // 
-		sheet.setColumnWidth(numCol++, (10 * 256)); // 
-		sheet.setColumnWidth(numCol++, (10 * 256)); // Accolti Provvisoriamente - MEV 9
-		sheet.setColumnWidth(numCol++, (10 * 256)); // 
+		sheet.setColumnWidth(numCol++, (40 * 256));
+		sheet.setColumnWidth(numCol++, (10 * 256));
+		sheet.setColumnWidth(numCol++, (10 * 256));
+		sheet.setColumnWidth(numCol++, (10 * 256));
+		sheet.setColumnWidth(numCol++, (10 * 256));
 		sheet.setColumnWidth(numCol++, (10 * 256));
 		sheet.setColumnWidth(numCol++, (10 * 256));
 		sheet.setColumnWidth(numCol++, (10 * 256));
@@ -3448,7 +3433,6 @@ public class StatisController extends GenericController {
 		setCell(row, numCol++, "Pendenti Inizio Periodo", csCenter);
 		setCell(row, numCol++, "Sopravvenuti", csCenter);
 		setCell(row, numCol++, "Accolti", csCenter);
-		setCell(row, numCol++, "Accolti Provvisoriamente", csCenter); // MEV 9
 		setCell(row, numCol++, "Rigettati", csCenter);
 		setCell(row, numCol++, "Inammissibilita'", csCenter);
 		setCell(row, numCol++, "NLP/NDP", csCenter);
@@ -3502,7 +3486,6 @@ public class StatisController extends GenericController {
 			setCell(row, numCol++, lMod.getNumPendentiInizio().doubleValue(), csCenter);
 			setCell(row, numCol++, lMod.getNumSopravvenuti().doubleValue(), csCenter);
 			setCell(row, numCol++, lMod.getNumDefEsito1().doubleValue(), csCenter);
-			setCell(row, numCol++, lMod.getNumAppProvv().doubleValue(), csCenter); // MEV 9			
 			setCell(row, numCol++, lMod.getNumDefEsito2().doubleValue(), csCenter);
 			setCell(row, numCol++, lMod.getNumDefEsito3().doubleValue(), csCenter);
 			setCell(row, numCol++, lMod.getNumDefEsito4().doubleValue(), csCenter);
@@ -3523,10 +3506,8 @@ public class StatisController extends GenericController {
 		nRow++;
 		row = sheet.createRow(nRow++);
 		setCell(row, numCol++, "TOTALI", csCenter);
-		// MEV9 Sono diventati 13
 		// 12 totali su 12 colonne
-		//for (int i = 0; i < 12; i++) {
-		for (int i = 0; i < 13; i++) {	
+		for (int i = 0; i < 12; i++) {
 			formula = getStringaSomma(nRowIni, numCol, nRowFine, numCol);
 			setFormulaCell(row, numCol++, formula, csCenter);
 		}
@@ -4393,7 +4374,7 @@ public class StatisController extends GenericController {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getName() + ".creaFoglioFascicoliPendenti : inizio");
+		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioFascicoliPendenti : inizio");
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("Vector size : " + aElencoProc.size());
@@ -4499,7 +4480,7 @@ public class StatisController extends GenericController {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getName() + ".creaFoglioFascicoliPendenti : fine");
+		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioFascicoliPendenti : fine");
 	}
 
 	/**
@@ -4519,7 +4500,7 @@ public class StatisController extends GenericController {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getName() + ".creaFoglioContenutiPendenti : inizio");
+		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioContenutiPendenti : inizio");
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("Vector size : " + aElencoProc.size());
@@ -4713,7 +4694,7 @@ public class StatisController extends GenericController {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getName() + ".creaFoglioContenutiPendenti : fine");
+		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioContenutiPendenti : fine");
 	}
 
 	/**
@@ -4733,7 +4714,7 @@ public class StatisController extends GenericController {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getName() + ".creaFoglioOggettiPendenti : inizio");
+		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioOggettiPendenti : inizio");
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("Vector size : " + aElencoProc.size());
@@ -4878,7 +4859,7 @@ public class StatisController extends GenericController {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getName() + ".creaFoglioFascicoliPendentiPerOggetto : fine");
+		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioFascicoliPendentiPerOggetto : fine");
 	}
 
 	/**
@@ -4896,7 +4877,7 @@ public class StatisController extends GenericController {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getName() + ".creaFoglioOggettiCancellati : inizio");
+		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioOggettiCancellati : inizio");
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("Vector size : " + aElencoProc.size());
@@ -4991,7 +4972,7 @@ public class StatisController extends GenericController {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getName() + ".creaFoglioOggettiCancellati : fine");
+		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioOggettiCancellati : fine");
 	}
 
 	/**
@@ -5011,7 +4992,7 @@ public class StatisController extends GenericController {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getName() + ".creaFoglioFascicoliUnificati : inizio");
+		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioFascicoliUnificati : inizio");
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("Vector size : " + aElencoProc.size());
@@ -5111,7 +5092,7 @@ public class StatisController extends GenericController {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getName() + ".creaFoglioFascicoliUnificati : fine");
+		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioFascicoliUnificati : fine");
 	}
 
 	// AMBROS L78/2013

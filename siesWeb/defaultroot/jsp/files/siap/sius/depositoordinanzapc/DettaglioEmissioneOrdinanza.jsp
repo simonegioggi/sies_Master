@@ -48,8 +48,6 @@
 <jsp:useBean id="misuraSicurezza"      	scope="request" class="siap.siep.misurasicurezza.model.MisuraSicurezzaModel"/>
 <jsp:useBean id="misuraAlternativa"		scope="request" class="siap.sico.misuraalternativa.model.MisuraAlternativaModel"/>
 <jsp:useBean id="LicenzePeriodi"      	scope="request" class="java.util.Vector"/>
-<%-- MEV_9: aggiunto useBean --%>
-<jsp:useBean id="dopcm"					scope="request" class="siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel"/>
 
 <%
 //==============================================================================
@@ -57,7 +55,7 @@
 // Modifica Ordinanza
 //==============================================================================
 BigDecimal IdEvento = (BigDecimal) request.getAttribute("IdEvento");
-UtenteModel lUteMod = (UtenteModel) session.getAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO);
+UtenteModel lUteMod = (UtenteModel)session.getAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO);
 UfficioModel lUffMod = lUteMod.getUfficioUtente();
 String CodUff = new String(lUffMod.getCodTipoUfficio());
 boolean retFlag = false;
@@ -742,44 +740,6 @@ if (!modificaOrdinanza) {
       	<td colspan="2">&nbsp;</td>
     </tr>
 </table>
-
-<%-- MEV_9: aggiunta tabella x dati ORDINANZA APPLICAZIONE PROVVISORIA M.A --%>
-<%
-if (ICostantiDepositoOrdinanzaPc.CONFERMA_DECISIONE_MAGISTRATO_RELATORE.equals(codice)
-		&& !Utils.isNullObj(dopcm) && Utils.isPresent(dopcm.getAnnoS3())) {
-%>
-<table cellspacing="4" cellpadding="4"  width="95%">
-<%
-	if (!modificaOrdinanza) {
-%>
-	<tr>
-      	<td class="l" width="25%">Ulteriore descrizione della decisione</td>
-      	<td class="l"><font class="campo"><%=StringUtils.toStringJSP(datiOrdinanza.getOrdinanza().getUlterioreDescrizione(), "-")%></font></td>
-    </tr>
-    <tr><td>&nbsp;</td></tr>
-<%
-	}
-%>
-	<tr>
-		<td class="l" colspan="2">Ordinanza N.&nbsp;
-      		<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.depositoordinanzapc.action.ActLoadInserisciDataDeposito&<%=ICostantiEvento.CAMPO_ID_EVENTO%>=<%=dopcm.getIdEventoGenerato()%><%=retParam%>">
-         		<%=StringUtils.toStringJSP(dopcm.getAnnoS3())%>/<%=StringUtils.toStringJSP(dopcm.getNumS3())%>
-      		</a>
-      		&nbsp;del&nbsp;<font class="campo"><%=DateUtils.getDateToString(dopcm.getDataDeposito(),"dd/MM/yyyy")%></font>
-    	</td>
-	</tr>
-	<tr>
-		<td class="l" colspan="2">
-			<%=dopcm.getDescrTipoOrdinanza()%>
-		</td>
-	</tr>
-</table>
-<br>
-<%
-}
-%>
-<%-- FINE MEV_9 --%>
-
 <%
 // Controllo su tipo Ordinanza per determinare se visualizzare le Misure Sicurezza
 if (codice != null
@@ -980,11 +940,6 @@ if (!modificaOrdinanza) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_MA%>"/>
 <%
-// INIZIO: MEV_9 (D.lgs. 123/2018) gestito il caso di tipo ordinanza AM Si aggancia per ora lo stesso dettaglio della MA
-		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.MISURA_ALTERNATIVA_AMMISSIONE_PROVVISORIA) == 0) {
-%>
-<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_MA%>"/>
-<%
    		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_MA) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_REVOCA_MA%>"/>
@@ -1069,12 +1024,12 @@ if (!modificaOrdinanza) {
 <%
    		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.APPLICAZIONE_SANZIONI_SOSTITUTIVE) == 0) {
 %>
-<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_APPLICAZIONE_SS%>"/>
+<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_APPLICAZIONE_SS %>"/>
 <% // MEV_2023-35 
       } else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.APPLICAZIONE_PENE_SOSTITUTIVE) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_APPLICAZIONE_SP%>"/>
-<% 
+<%
       } else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_PENA_SOSTITUTIVA) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_REVOCA_PENA_SOSTITUTIVA%>"/>
@@ -1107,17 +1062,17 @@ if (!modificaOrdinanza) {
 <%
    		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.RINVIO_SANZIONI_SOSTITUTIVE) == 0) {
 %>
-<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_RINVIO_SS%>"/>
+<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_RINVIO_SS %>"/>
 <%
    		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_PENE_PECUNIARIE) == 0
    				// MEV_2023-35: aggiunto codice per 'SR' (U142,U143,U145)
    				|| codice.compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_PENE_PECUNIARIE_MANCATO_PAGAMENTO) == 0) {
 %>
-<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_CONVERSIONE_PP%>"/>
+<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_CONVERSIONE_PP %>"/>
 <%
    		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.RIMESSIONE_ATTI) == 0) {
 %>
-<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_RIMESSIONE_ATTI%>"/>
+<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_RIMESSIONE_ATTI %>"/>
 <%
    		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.ESEC_PRESSO_DOMICILIO) == 0) {
 %>
@@ -1183,8 +1138,8 @@ if (!modificaOrdinanza) {
        			<td class="L">
 		            <input  class=bottone  type="submit" value="Conferma">
 		            <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.sico.evento.action.ActUploadDocument">
-		            <input type="HIDDEN" name="IdEvento" value="<%= IdEvento%>">
-		            <input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_AZIONE_DETTAGLIO%>" value="siap.sius.depositoordinanzapc.action.ActLoadDettaglioOrdinanza">
+		            <input type="HIDDEN" name="IdEvento"  value="<%= IdEvento%>">
+		            <input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_AZIONE_DETTAGLIO%>"  value="siap.sius.depositoordinanzapc.action.ActLoadDettaglioOrdinanza">
        				<input type="HIDDEN" name="FlagAvvocatura" value="<%=ICostantiAvvisiAvvocato.EMISSIONE_ORDINANZA%>">
        			</td>
        		</tr>

@@ -55,16 +55,7 @@ public class ActInserisciRelazioneSanitaria extends ActInserisciRicAtti implemen
 		lEveNot.getEvento().setCodTipoProvvedimento("-");
 		lEveNot.getEvento().setCodLuogoDestinatario("-");
 		lEveNot.getEvento().setCodTipoUfficioDestinatario("-");
-		lEveNot.getEvento().setFasSiuIdFascicoloSius(lFasSius.getIdFascicoloSius());
-
-		// INIZIO: MEV_9 (D.lgs. 123/2018)
-		if (!isRequestParameterNullObj(CAMPO_ANNO_DATA_RESTITUZIONE)) {
-			Date lDataRestituzioneAtti = getRequestDateParameter(CAMPO_ANNO_DATA_RESTITUZIONE
-					                                           , CAMPO_MESE_DATA_RESTITUZIONE
-				                                               , CAMPO_GIORNO_DATA_RESTITUZIONE  );
-			lEveNot.getEvento().setDataRestituzioneAi(lDataRestituzioneAtti);
-		}
-		// FINE: MEV_9 (D.lgs. 123/2018)		
+		lEveNot.getEvento().setFasSiuIdFascicoloSius(lFasSius.getIdFascicoloSius());	
 		
 		// Imposta i dati necessari per la gestione delle Notifica
 		Vector lNotifiche = new Vector();

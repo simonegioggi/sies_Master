@@ -16,21 +16,19 @@
 <%-- MEV10-s3: aggiunto recupero di info dalla sessione ed aggiunto riferimento all'oggetto "ElencoDest3" --%>
 <jsp:useBean id="fascicoloSiusGP" 	 scope="session" class="siap.sius.fascicolo.model.FascicoloGPModel" />
 <jsp:useBean id="ElencoDest3"    	 scope="request" class="java.lang.String"/>
-
-<%-- MEV_9 (D.lgs. 123/2018) --%>
-<jsp:useBean id="ultimoEventoRichAtti"   scope="request" class="siap.sico.evento.model.EventoModel"/>
-
 <%
   // Azione da chiamare per l'inserimento dei dati.
   String lAzione = "siap.sius.richiestaatti.action.ActInserisciRichiestaAltreIstruttorie";
-
-  //MEV_9 (D.lgs. 123/2018)
-  Date lUltimaDataRestitAttiIstruttori = ultimoEventoRichAtti.getDataRestituzioneAi();
 %>
+<html>
+<head>
+  <title>[S.I.E.S.] - Altre Richieste Istruttorie </title>
+  <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
 
-<script language="JavaScript">
-
-  var desktop;
+  <script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
+  <script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
+  <script language="JavaScript">
+var desktop;
 
   // Chiamata lista Comuni con filtro sulla Provincia dell'ufficio connesso.
   function ListaComuniRicercaUfficio(a_formname,a_fieldname)
@@ -74,30 +72,6 @@
   	function ListaUSSM(a_formname,a_fieldname) {
  		desktop = window.open("/jsp/Main.jsp?Action=siap.sico.cssa.action.ActLoadListaUSSM&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_CSSA","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=370,height=500");
   	}
-</script>
-<html>
-<head>
-  <title>[S.I.E.S.] - Altre Richieste Istruttorie </title>
-  <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
-
-  <script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
-  <script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
-  <script language="JavaScript">
-  
-	  <%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
-	  function abilitaCampiDataRestituzione() {
-	  	if (document.LoadInserisciRichiestaAltreIstruttorie.<%=ICostantiRichiestaAtti.CHECK_DATA_RESTITUZIONE%>.checked){
-	   		document.LoadInserisciRichiestaAltreIstruttorie.<%=ICostantiRichiestaAtti.CAMPO_GIORNO_DATA_RESTITUZIONE%>.disabled = false;
-	   		document.LoadInserisciRichiestaAltreIstruttorie.<%=ICostantiRichiestaAtti.CAMPO_MESE_DATA_RESTITUZIONE%>.disabled = false;
-	   		document.LoadInserisciRichiestaAltreIstruttorie.<%=ICostantiRichiestaAtti.CAMPO_ANNO_DATA_RESTITUZIONE%>.disabled = false;
-	  	}
-	  	else {
-	   		document.LoadInserisciRichiestaAltreIstruttorie.<%=ICostantiRichiestaAtti.CAMPO_GIORNO_DATA_RESTITUZIONE%>.disabled = true;
-	   		document.LoadInserisciRichiestaAltreIstruttorie.<%=ICostantiRichiestaAtti.CAMPO_MESE_DATA_RESTITUZIONE%>.disabled = true;
-	   		document.LoadInserisciRichiestaAltreIstruttorie.<%=ICostantiRichiestaAtti.CAMPO_ANNO_DATA_RESTITUZIONE%>.disabled = true;
-	  	}    	
-	 }
-	 <%-- FINE: MEV_9 (D.lgs. 123/2018) --%>
 
 	function Verify() {
 		var tipo = document.LoadInserisciRichiestaAltreIstruttorie.tipoDest[2].value;
@@ -136,25 +110,6 @@
         return false;
       }
 
-      <%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
-      if (document.LoadInserisciRichiestaAltreIstruttorie.<%=ICostantiRichiestaAtti.CHECK_DATA_RESTITUZIONE%>.checked){
-	      var data_restituzione = document.LoadInserisciRichiestaAltreIstruttorie.<%=ICostantiRichiestaAtti.CAMPO_GIORNO_DATA_RESTITUZIONE%>.value
-	                        +'/'+ document.LoadInserisciRichiestaAltreIstruttorie.<%=ICostantiRichiestaAtti.CAMPO_MESE_DATA_RESTITUZIONE%>.value
-	                        +'/'+ document.LoadInserisciRichiestaAltreIstruttorie.<%=ICostantiRichiestaAtti.CAMPO_ANNO_DATA_RESTITUZIONE%>.value;
-	      if (! ControllaData(data_restituzione))
-	      {
-	        alert('Data Restituzione atti non valida');
-	        return false;
-	      }
-	      
-	      if ( ! CompareDate( data_emissione, data_restituzione) )
-	      {
-	        alert('Data Emissione maggiore della Data Restituzione atti!');
-	        return false;
-	      }
-      }
-      <%-- FINE: MEV_9 (D.lgs. 123/2018) --%>      
-      
       // Controlla che le coppie di campi Destinatario/Sede siano riempiti
       // Destinatario 1
       if (document.LoadInserisciRichiestaAltreIstruttorie.<%=ICostantiRichiestaAtti.CAMPO_COD_DESTINATARIO%>[0].value != '-'
@@ -235,29 +190,6 @@
           <input Title="Mese" value="<%=DateUtils.getSysDate("MM")%>" type="text" size="2" maxlength="2" name="<%= ICostantiRichiestaAtti.CAMPO_MESE_DATA_EMISSIONE %>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"  > /
           <input Title="Anno" value="<%=DateUtils.getSysDate("yyyy")%>" type="text" size="4" maxlength="4" name="<%= ICostantiRichiestaAtti.CAMPO_ANNO_DATA_EMISSIONE %>"  onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillYear(value)" >
         </td>
-        
-        <%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
-        <td class="l"><input value="S" type="checkbox" name="<%=ICostantiRichiestaAtti.CHECK_DATA_RESTITUZIONE%>" 
-                             onClick="abilitaCampiDataRestituzione()"
-                             >  Atti da restituire entro il </font></td>
-        <td class="L">
-          <input Title="Giorno"  type="text" size="2" maxlength="2" 
-                 name="<%= ICostantiRichiestaAtti.CAMPO_GIORNO_DATA_RESTITUZIONE%>" 
-                 value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lUltimaDataRestitAttiIstruttori,"dd"),"")%>" 
-                 onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  
-                 onBlur="javascript:value=FillDM(value)" disabled> /
-          <input Title="Mese" type="text" size="2" maxlength="2" 
-                 name="<%= ICostantiRichiestaAtti.CAMPO_MESE_DATA_RESTITUZIONE%>" 
-                 value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lUltimaDataRestitAttiIstruttori,"MM"),"")%>" 
-                 onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  
-                 onBlur="javascript:value=FillDM(value)" disabled> /
-          <input Title="Anno" type="text" size="4" maxlength="4" 
-                 name="<%= ICostantiRichiestaAtti.CAMPO_ANNO_DATA_RESTITUZIONE %>"  
-                 value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lUltimaDataRestitAttiIstruttori,"yyyy"),"")%>" 
-          		 onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  
-          		 onBlur="javascript:value=FillYear(value)" disabled>
-        </td>     
-        <%-- FINE: MEV_9 (D.lgs. 123/2018) --%>        
       </tr>
         <!-- Start new impl -->
 
@@ -266,13 +198,11 @@
           <td class="l">Destinatario n°1</td>
           <td class="L" colspan=3>
            <table>
-             <tr >
+             <tr>
              <td class="l"> Ufficio Giudiziario </td>
-
+             <td class="l">
              <input type="hidden"  Title="Tipo" name="tipoDest" value="UFF_GIUD" size=50>
              <input name="<%=ICostantiRichiestaAtti.CAMPO_NOTE%>" value="" type="hidden" >
-
-             <td class="l" >
                <select title="UfficioGiudiziario" name="<%=ICostantiRichiestaAtti.CAMPO_COD_DESTINATARIO%>">
                  <%= ElencoUffGiudiz %>
                </select>
@@ -299,15 +229,12 @@
            <table>
            <tr>
              <td class="l">Istituto Penitenziario </td>
-
-             <input type="hidden"  Title="Tipo" name="tipoDest" value="IST_DET" size=50>
-             <input name="<%=ICostantiRichiestaAtti.CAMPO_NOTE%>" value="" type="hidden" >
-
              <td class="l">
-               <input type="hidden"  Title="Sede" name="<%=ICostantiRichiestaAtti.CAMPO_SEDE%>" value="" size="35">
-
+               <input type="hidden"  Title="Sede" name="<%=ICostantiRichiestaAtti.CAMPO_SEDE%>" value="">
+             <input type="hidden"  Title="Tipo" name="tipoDest" value="IST_DET">
+             <input name="<%=ICostantiRichiestaAtti.CAMPO_NOTE%>" value="" type="hidden" >
                <input readonly  Title="Istituto" name="Comune" value="" size=50>
-               <input type="hidden"  Title="Istituto" name="<%=ICostantiRichiestaAtti.CAMPO_COD_DESTINATARIO%>" value="" size=50>
+               <input type="hidden"  Title="Istituto" name="<%=ICostantiRichiestaAtti.CAMPO_COD_DESTINATARIO%>" value="">
                <a href="Javascript:ListaIstitutoDetenzione('LoadInserisciRichiestaAltreIstruttorie','<%= ICostantiRichiestaAtti.CAMPO_COD_DESTINATARIO%>[1]','Comune');">
                <img src="/images/filefolder.gif" border=0></a>
              </td>
@@ -335,9 +262,8 @@
           					</td>
           					<td class="l">Sede <font class=ob>(*)</font></td>
           					<td class="l">
-             					<input Title="Sede" name="<%=ICostantiRichiestaAtti.CAMPO_SEDE%>"
-                					value="" type="text" maxlength="35" size="35">
-                				<input type="hidden" Title="Tipo" name="<%=ICostantiRichiestaAtti.CAMPO_COD_DESTINATARIO%>" value="" size=50>
+             					<input Title="Sede" name="<%=ICostantiRichiestaAtti.CAMPO_SEDE%>" value="" type="text" maxlength="35" size="35">
+                				<input type="hidden" Title="Tipo" name="<%=ICostantiRichiestaAtti.CAMPO_COD_DESTINATARIO%>" value="">
                 				<a href="Javascript:scegliTipo();">
                 				<img src="/images/filefolder.gif" border=0> </a>
           					</td>
@@ -360,11 +286,11 @@
 	           		<table>
 	           			<tr>
 	             			<td class="l">UEPE</td>
-             				<input type="hidden" Title="Tipo" name="tipoDest" value="CSSA" size=50>
-             				<input name="<%=ICostantiRichiestaAtti.CAMPO_NOTE%>" value="" type="hidden" >
              				<td class="l">
+	             				<input type="hidden" Title="Tipo" name="tipoDest" value="CSSA">
+             					<input name="<%=ICostantiRichiestaAtti.CAMPO_NOTE%>" value="" type="hidden" >
 	               				<input Title="Sede" name="<%=ICostantiRichiestaAtti.CAMPO_SEDE%>" value="" type="text" maxlength="35" size="35">
-	               				<input type="hidden" Title="Tipo" name="<%=ICostantiRichiestaAtti.CAMPO_COD_DESTINATARIO%>" value="CSSA" size=50>
+	               				<input type="hidden" Title="Tipo" name="<%=ICostantiRichiestaAtti.CAMPO_COD_DESTINATARIO%>" value="CSSA">
 	                			<a href="Javascript:ListaCSSA('LoadInserisciRichiestaAltreIstruttorie','<%=ICostantiRichiestaAtti.CAMPO_SEDE%>[2]');">
 	                				<img src="/images/filefolder.gif" border=0>
 	                			</a>
@@ -382,10 +308,8 @@
           <table>
           <tr>
             <td class="l">Tipo</td>
-
-            <input type="hidden"  Title="Tipo" name="tipoDest" value="AUT_EXT" size=50>
-
             <td class="l" >
+            	<input type="hidden"  Title="Tipo" name="tipoDest" value="AUT_EXT">
              <select title="Destinatario" name="<%=ICostantiRichiestaAtti.CAMPO_COD_DESTINATARIO%>">
               <%= ElencoTipiAutorita %>
              </select>
@@ -420,10 +344,8 @@
 
           <tr>
             <td class="l">Tipo</td>
-
-            <input type="hidden"  Title="Tipo" name="tipoDest" value="AUT_EXT" size=50>
-
             <td class="l" >
+             <input type="hidden"  Title="Tipo" name="tipoDest" value="AUT_EXT">
               <select title="Destinatario" name="<%=ICostantiRichiestaAtti.CAMPO_COD_DESTINATARIO%>">
                <%= ElencoTipiAutorita %>
               </select>

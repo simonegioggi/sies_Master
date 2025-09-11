@@ -361,7 +361,4 @@ public interface IEvento {
 	// MEV_2023-33: aggiunto metodo di modifica
 	public void ExModificaEventoNotifiche(EventoNotificaModel enm) throws F3BException;
 
-	// INIZIO: MEV_9 (D.lgs. 123/2018)
-	public EventoModel ricercaUltimoEventoRichiestaAttiIsruttoriByIdFasc (BigDecimal aIdFascicoloSius) throws F3BException;
-	// FINE: MEV_9 (D.lgs. 123/2018)
 }

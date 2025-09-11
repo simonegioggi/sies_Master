@@ -78,7 +78,7 @@ public interface IAnnotazioneManuale {
 	public AnnotazioneManualeModel ExInserisciAnnotazioneManualeEventoUpd(
 			AnnotazioneManualeModel aAnnotazioneManuale, EventoModel aEvento,
 			BigDecimal aIdAnnotazioneRichiesta, BigDecimal aIdAnnotazioneManuale) throws F3BException;
-	// End MEV9
+	// End MEV 9
 
 	/**
 	 * ************************************************************************** Inserisce le decisioni del

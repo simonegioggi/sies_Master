@@ -19,9 +19,6 @@
 <jsp:useBean id="estremiFoglioComp"         scope="request" class="java.util.Vector"/>
 <jsp:useBean id="impugnazioniEvento"  		scope="request" class="java.util.Hashtable"/>
 <jsp:useBean id="opposizioniEvento"   		scope="request" class="java.util.Hashtable"/>
-<%-- MEV_9: aggiunti useBean --%>
-<jsp:useBean id="fascicoloSiusGP" 			scope="request" class="siap.sius.fascicolo.model.FascicoloGPModel"/>
-<jsp:useBean id="depositoOrdinanzaVector"	scope="request" class="java.util.Vector"/>
 
 <html>
 <table width="100%">
@@ -40,17 +37,6 @@ if (provvedimenti.size() == 0) {
 		<td class="int">Motivo</td>
 		<td class="int">Esito</td>
 		<td class="int" nowrap>Data Deposito</td>
-		<%-- MEV_9: aggiunta data esecutivita e gestita nella pagina solo per C050 e C051 --%>
-<%
-	if (!Utils.isNullObj(fascicoloSiusGP) && !Utils.isNullObj(fascicoloSiusGP.getGeneraleProcedimentoModel())
-			&& !Utils.isNullObj(fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento())
-			&& (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("C050") == 0
-			|| fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("C051") == 0)) {
-%>
-		<td class="int" nowrap>Data Esecutivita&#768;</td>
-<%
-	}
-%>
 		<td class="int">Altre Informazioni</td>
 		<td class="int">Provv.<br>Validato</td>
 		<td class="int">Deposito<br>Validato</td>
@@ -104,32 +90,6 @@ if (provvedimenti.size() == 0) {
 		<td class="c"><font class="campo"><%=StringUtils.toStringJSP(lProv.getDescrMotivo(),"-")%></font></td>
 		<td class="c"><font class="campo"><%=StringUtils.toStringJSP(lProv.getDescrEsito(),"-")%></font></td>
 		<td class="c"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lProv.getDataDeposito(), "dd-MM-yyyy"), "-")%></font></td>
-<%
-		if (!Utils.isNullObj(fascicoloSiusGP) && !Utils.isNullObj(fascicoloSiusGP.getGeneraleProcedimentoModel())
-				&& !Utils.isNullObj(fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento())
-				&& (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("C050") == 0
-				|| fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("C051") == 0)) {
-			if ("0270".equals(lProv.getCodEsito()) && "03".equals(lProv.getCodTipoProvvedimento())) {
-				Date dataEsecutivita = null;
-				Iterator iter = depositoOrdinanzaVector.iterator();
-				while (iter.hasNext()) {
-					DepositoOrdinanzaPcModel dopcm = (DepositoOrdinanzaPcModel) iter.next();
-					if (lProv.getIdEvento().compareTo(dopcm.getIdEventoGenerato()) == 0
-							&& !Utils.isNullObj(dopcm.getDataEsecutivita())) {
-						dataEsecutivita = dopcm.getDataEsecutivita();
-						break;
-					}
-				}
-%>
-		<td class="c"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(dataEsecutivita, "dd-MM-yyyy"), "-")%></font></td>
-<%
-			} else {
-%>
-		<td class="c"><font class="campo">-</font></td>
-<%
-			}
-		}
-%>
 		<td class="c">
 			<font class="campo">      
 <%

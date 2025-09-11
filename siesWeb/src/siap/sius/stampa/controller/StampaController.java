@@ -353,36 +353,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 			lTreeFasSIUS.add(lTreeEventoNotifiche);
 
-			// INIZIO: MEV_9 (D.lgs. 123/2018)
-			// Si aggiungono al treemodel tutti gli altri eventi e depositi sia decreti che ordinanza
-			siesLogger.debug("Procedo alla ricerca precedenti eventi 02,03");
-			IEvento mCtrl = SICOLookupRemote.getEventoRemote();
-			Vector<EventoModel> elencoEventi = mCtrl
-					.ExRicercaEventoByFascicoloSius(lEvento.getFasSiuIdFascicoloSius(), null);
-			for (EventoModel ulterioreEvento : elencoEventi) {
-				siesLogger.debug("ulterioreEvento: " + ulterioreEvento.getIdEvento() + " - "
-						+ ulterioreEvento.getCodTipoEvento() + " - "
-						+ ulterioreEvento.getCodTipoProvvedimento() + " - " + ulterioreEvento.getCodMotivo());
-				// scarto evento corrente
-				if (ulterioreEvento.getIdEvento().compareTo(lEvento.getIdEvento()) != 0) {
-					if ("02".equals(ulterioreEvento.getCodTipoProvvedimento())) {
-						siesLogger.debug("ulterioreEvento: ricerco dati deposito decreto");
-						TreeModel lTreeUlterioreDepositoDecreto = prelevaDatiDepositoDecreto(
-								ulterioreEvento.getIdEvento(), lConn);
-						lTreeFasSIUS.add(lTreeUlterioreDepositoDecreto);
-						lTreeFasSIUS.add(new TreeModel(new EventoModel(ulterioreEvento)));
-					} else if ("03".equals(ulterioreEvento.getCodTipoProvvedimento())) {
-						siesLogger.debug("ulterioreEvento: ricerco dati deposito ordinanza");
-						TreeModel lTreeUlterioreDepositoOrdinanza = prelevaDatiDepositoOrdinanzaPC(
-								ulterioreEvento.getIdEvento(), lConn);
-						lTreeFasSIUS.add(lTreeUlterioreDepositoOrdinanza);
-						lTreeFasSIUS.add(new TreeModel(new EventoModel(ulterioreEvento)));
-					}
-				} else
-					siesLogger.debug("ulterioreEvento scartato: e' l'evento corrente");
-			}
-			// FINE: MEV_9
-
 			lRoot.add(lTreeFasSIUS);
 			lRoot.add(lTreeGenProc);
 			lRoot.add(lTreeFasSIEP);

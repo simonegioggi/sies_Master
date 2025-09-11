@@ -16,10 +16,6 @@
 <%@ page import="siap.siep.misuraalternativa.action.ICostantiMisuraAlternativa"%>
 
 <jsp:useBean id="documentiSius" scope="request" class="java.util.ArrayList"/>
-<%-- MEV_9-SIEP --%>
-<jsp:useBean id="TipoMA"   		scope="request" class="java.lang.String"/>
-<jsp:useBean id="NaturaMA" 		scope="request" class="java.lang.String"/>
-<%-- FINE MEV_9-SIEP --%>
 
 <html>
 <head>
@@ -79,19 +75,7 @@ function insertIT(
 		mesiMisura,
 		anniMisura,
 		flagDecisioneTribunale,
-		sedeTdsCompetente,
-		<%-- MEV_9 (x3) --%>
-		giornoEsecutivita, 
-		meseEsecutivita,
-		annoEsecutivita,
-		<%-- MEV_9-SIEP (x7) --%>
-		giornoDecisione, 
-		meseDecisione,
-		annoDecisione,
-		annoOrdinanzaProvvisoria,
-		numeroOrdinanzaProvvisoria,
-		idOrdinanzaProvvisoria,
-		isOrdinanzaProvvisoria) {
+        sedeTdsCompetente) {
 	if (annoSius != '-')
 		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_CHIAVE_ANNO_FASCICOLO_SIUS%>.value = annoSius;
 	else
@@ -131,6 +115,11 @@ function insertIT(
 	else
   		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiEvento.CAMPO_COD_MOTIVO%>.value = "";
 
+  	<%-- MEV_2024-092: rework. FAccio scattare l'onchange sulla combo --%>
+	try {
+		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiEvento.CAMPO_COD_MOTIVO%>.onchange();
+	} catch (err) { }
+
 	if (giorno != '-')
   		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>.value = giorno;
 	else
@@ -159,74 +148,6 @@ function insertIT(
 		else
   			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_COD_TIPO_DECISIONE%>.value = "";
 	} catch (err) { }
-
-	// MEV_9 si aggiunge la data esecutivita
-	try {
-    	if (giornoEsecutivita != '-')
-      		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA%>.value = giornoEsecutivita;
-		else
-  			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA%>.value = "";
-
-		if (meseEsecutivita != '-' )
-  			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_ESECUTIVITA%>.value = meseEsecutivita;
-		else
-  			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_ESECUTIVITA%>.value = "";
-
-		if (annoEsecutivita != '-')
-  			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA%>.value = annoEsecutivita;
-		else
-  			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA%>.value = "";
-	} catch (err) { }
-
-	// MEV_9-SIEP: aggiunti campi in estrazione
-	try {
-    	if (giornoDecisione != '-')
-      		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value = giornoDecisione;
-		else
-  			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value = "";
-
-		if (meseDecisione != '-' )
-  			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.value = meseDecisione;
-		else
-  			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.value = "";
-
-		if (annoDecisione != '-')
-  			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>.value = annoDecisione;
-		else
-  			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>.value = "";
-
-		if (annoOrdinanzaProvvisoria != '-')
-	  		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>.value = annoOrdinanzaProvvisoria;
-		else
-	  		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>.value = "";
-
-		if (numeroOrdinanzaProvvisoria != '-')
-	 		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT%>.value = numeroOrdinanzaProvvisoria;
-		else
-	  		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT%>.value = "";
-
-  		if (idOrdinanzaProvvisoria != '-')
-	 		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_EVE_ID_EVENTO%>.value = idOrdinanzaProvvisoria;
-		else
-	  		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_EVE_ID_EVENTO%>.value = "";
-
-	  	if (isOrdinanzaProvvisoria != 'false') {
-<%-- 	  		window.parent.opener.document.<%=request.getParameter("formname")%>.getElementById('divOrdinanzaProvvisoria').style.visibility = 'visible'; --%>
-			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>.disabled = false;
-			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT%>.disabled = false;
-			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.disabled = false;
-			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.disabled = false;
-			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>.disabled = false;
-	  	} else {
-<%--   			window.parent.opener.document.<%=request.getParameter("formname")%>.getElementById('divOrdinanzaProvvisoria').style.visibility = 'hidden'; --%>
-			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>.disabled = true;
-			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT%>.disabled = true;
-			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.disabled = true;
-			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.disabled = true;
-			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>.disabled = true;
-	  	}
-	} catch (err) { }
-	// FINE MEV_9-SIEP
 
 	// PP = PROSECUZIONE_PROVVISORIA
 	// PC = PROSECUZIONE_PROVVISORIA_CUMULO
@@ -331,9 +252,7 @@ function insertIT(
 	//===============================================================
 	if (natura != '-' && natura == 'CO'
 			&& (oggetto == '2010' || oggetto == '2011' || oggetto == '0030' || oggetto == '0031' || oggetto == '0032'
-					|| oggetto == '0033' || oggetto == '0201' || oggetto == '0202' || oggetto == '2140'
-					<%-- MEV_9-SIEP: aggiunti nuovi oggetti ed aggiunto try..catch x AFFIDAMENTO --%>
-					|| oggetto == '0720' || oggetto == '0721' || oggetto == '0730' || oggetto == '0731' || oggetto == '0732')) {
+					|| oggetto == '0033' || oggetto == '0201' || oggetto == '0202' || oggetto == '2140') {
 		try {
 	  		// Quantum di differimento
 	  		if (anniMisura != '-')
@@ -353,7 +272,6 @@ function insertIT(
 		} catch (err) { }
 
 	 	if (oggetto != '2140') {
-	 		// MEV_9-SIEP: aggiunta gestione errore
 	 		try {
 	  			if (giornoInizioMisura != '-')
 	    			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.value = giornoInizioMisura;
@@ -376,7 +294,7 @@ function insertIT(
 				if (flagScarcerato=='SORV') {
 			     	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_COD_TIPO_UFFICIO_SCARCERAZIONE%>[1].checked = true;
 					window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_COD_TIPO_UFFICIO_SCARCERAZIONE%>[0].checked = false;
-				} else if (flagScarcerato=='PROC') {
+				} else if (flagScarcerato == 'PROC') {
 			  		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_COD_TIPO_UFFICIO_SCARCERAZIONE%>[0].checked = true;
 					window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_COD_TIPO_UFFICIO_SCARCERAZIONE%>[1].checked = false;
 			   	}
@@ -526,7 +444,6 @@ if (!documentiSius.isEmpty()) {
 		<td class="int">Anno/Numero Sius</td>
 		<td class="int">Autorità Emittente</td>
 		<td class="int">Oggetto</td>
-		<td class="int">Anno/Numero Ordinanza Provvisoria</td>	<%-- MEV_9-SIEP: aggiunta colonna --%>
 		<td class="int" width=5%>Azioni</td>
     </tr>
 <%
@@ -546,41 +463,6 @@ if (!documentiSius.isEmpty()) {
         // Il codice precedente ribalta in modo non corretto l'Autorità Emittente,
         // poichè non individua i codici TDSM e UDSM
         String lUfficio = StringUtils.toStringJSP(eventoModel.getCodTipoUfficioEmittente(), "-");
-        // MEV_9-SIEP: aggiunto controllo per escludere dalla visualizzazione
-        if (   !"AMMISSIONE_PROVVISORIA".equals(NaturaMA)
-            && !"CONCESSIONE_SOSPENSIONE".equals(NaturaMA)
-            && !"CONCESSIONE_SOSPENSIONE678".equals(NaturaMA)          
-           ) 
-        {
-			if ((("TDS".equals(lUfficio)
-					&& ("0680".equals(misuraModel.getCodTipoMisura())					// AFFIDAMENTO
-							|| "0681".equals(misuraModel.getCodTipoMisura())			// AFFIDAMENTO
-							|| "0682".equals(misuraModel.getCodTipoMisura())			// DETENZIONE DOMICILIARE
-							|| "0683".equals(misuraModel.getCodTipoMisura())			// SEMILIBERTA'
-							|| "0684".equals(misuraModel.getCodTipoMisura())))			// SOSPENSIONE
-					|| ("TDSM".equals(lUfficio)
-							&& ("0690".equals(misuraModel.getCodTipoMisura())			// AFFIDAMENTO
-									|| "0691".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
-									|| "0692".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
-									|| "0693".equals(misuraModel.getCodTipoMisura())	// DETENZIONE DOMICILIARE
-									|| "0694".equals(misuraModel.getCodTipoMisura())	// SEMILIBERTA'
-									|| "0695".equals(misuraModel.getCodTipoMisura()))))	// SOSPENSIONE
-					&& "0270".equals(eventoModel.getCodEsito()))
-				continue;
-		}
-
-        // MEV_9-SIEP per le sospe 678 provvisorie prendo solo quelle con esito 0270 Applica provvisoriamente 
-        if ("CONCESSIONE_SOSPENSIONE678".equals(NaturaMA)) {  
-        	if (!"0270".equals(eventoModel.getCodEsito()))
-        		continue;
-        }
-        
-        if ("CONCESSIONE_SOSPENSIONE".equals(NaturaMA)) {  
-          if ("0270".equals(eventoModel.getCodEsito()))
-            continue;
-        }
-        
-        
 %>
 	<tr>
 		<td class="c">
@@ -613,94 +495,9 @@ if (!documentiSius.isEmpty()) {
 			<%=StringUtils.toStringJSP(misuraModel.getDescrTipoDecisione(), "-")%>
 <%
 		}
-		// MEV_9-SIEP: aggiunto controllo x varie tipologie
-		if (("0680".equals(misuraModel.getCodTipoMisura())			// AFFIDAMENTO
-				|| "0681".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
-				|| "0682".equals(misuraModel.getCodTipoMisura())	// DETENZIONE DOMICILIARE
-				|| "0683".equals(misuraModel.getCodTipoMisura())	// SEMILIBERTA'
-				|| "0684".equals(misuraModel.getCodTipoMisura())	// SOSPENSIONE
-				|| "0690".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
-				|| "0691".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
-				|| "0692".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
-				|| "0693".equals(misuraModel.getCodTipoMisura())	// DETENZIONE DOMICILIARE
-				|| "0694".equals(misuraModel.getCodTipoMisura())	// SEMILIBERTA'
-				|| "0695".equals(misuraModel.getCodTipoMisura()))	// SOSPENSIONE
-				&& "0270".equals(eventoModel.getCodEsito())) {
-%>
-			Applicazione Provvisoria 
-<%
-		}
 %>
 			<%=StringUtils.toStringJSP(eventoModel.getDescrMotivo(), "-")%>
 		</td>
-<%
-		// MEV_9-SIEP: aggiunti campi in estrazione
-		boolean isOrdinanzaProvvisoria = false;
-		String descrLuogoProva = misuraModel.getDescrLuogoProva();
-		// "0271".equals(eventoModel.getCodEsito()) && // 'CO' - Conferma Decisione del Magistrato Relatore
-		if ("0720".equals(misuraModel.getCodTipoMisura())			// AFFIDAMENTO
-				|| "0721".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
-				|| "0722".equals(misuraModel.getCodTipoMisura())	// DETENZIONE DOMICILIARE
-				|| "0723".equals(misuraModel.getCodTipoMisura())	// SEMILIBERTA'
-				|| "0724".equals(misuraModel.getCodTipoMisura())	// SOSPENSIONE
-				|| "0680".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
-				|| "0681".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
-				|| "0682".equals(misuraModel.getCodTipoMisura())	// DETENZIONE DOMICILIARE
-				|| "0683".equals(misuraModel.getCodTipoMisura())	// SEMILIBERTA'
-				|| "0684".equals(misuraModel.getCodTipoMisura())	// SOSPENSIONE
-				|| "0730".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
-				|| "0731".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
-				|| "0732".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
-				|| "0733".equals(misuraModel.getCodTipoMisura())	// DETENZIONE DOMICILIARE
-				|| "0734".equals(misuraModel.getCodTipoMisura())	// SEMILIBERTA'
-				|| "0735".equals(misuraModel.getCodTipoMisura())	// SOSPENSIONE
-				|| "0690".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
-				|| "0691".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
-				|| "0692".equals(misuraModel.getCodTipoMisura())	// AFFIDAMENTO
-				|| "0693".equals(misuraModel.getCodTipoMisura())	// DETENZIONE DOMICILIARE
-				|| "0694".equals(misuraModel.getCodTipoMisura())	// SEMILIBERTA'
-				|| "0695".equals(misuraModel.getCodTipoMisura())) {	// SOSPENSIONE
-			isOrdinanzaProvvisoria = true;
-			Date dataOrdinanzaProvvisoria = null;
-			BigDecimal annoOrdinanzaProvvisoria = null;
-			BigDecimal numeroOrdinanzaProvvisoria = null;
-			BigDecimal idFascicoloSius = eventoModel.getFasSiuIdFascicoloSius();
-			BigDecimal idOrdinanzaProvvisoria = null;
-			Iterator<?> iter = documentiSius.iterator();
-			while (iter.hasNext()) {
-				MisuraAlternativaEventoModel maem = (MisuraAlternativaEventoModel) iter.next();
-				MisuraAlternativaModel mam = maem.getMisuraAlternativa();
-				EventoModel em = maem.getEvento();
-				if (!Utils.isNullObj(em.getFasSiuIdFascicoloSius())
-						&& !Utils.isNullObj(idFascicoloSius)
-						&& idFascicoloSius.compareTo(em.getFasSiuIdFascicoloSius()) == 0
-						&& ("0680".equals(em.getCodMotivo())			// AFFIDAMENTO
-								|| "0681".equals(em.getCodMotivo())		// AFFIDAMENTO
-								|| "0682".equals(em.getCodMotivo())		// DETENZIONE DOMICILIARE
-								|| "0683".equals(em.getCodMotivo())		// SEMILIBERTA'
-								|| "0684".equals(em.getCodMotivo())		// SOSPENSIONE
-								|| "0690".equals(em.getCodMotivo())		// AFFIDAMENTO
-								|| "0691".equals(em.getCodMotivo())		// AFFIDAMENTO
-								|| "0692".equals(em.getCodMotivo())		// AFFIDAMENTO
-								|| "0693".equals(em.getCodMotivo())		// DETENZIONE DOMICILIARE
-								|| "0694".equals(em.getCodMotivo())		// SEMILIBERTA'
-								|| "0695".equals(em.getCodMotivo()))	// SOSPENSIONE
-						&& "0270".equals(em.getCodEsito())) {
-					dataOrdinanzaProvvisoria = mam.getDataDecisione();
-					annoOrdinanzaProvvisoria = mam.getAnnoRegistro();
-					numeroOrdinanzaProvvisoria = mam.getNumeroRegistro();
-					idOrdinanzaProvvisoria = mam.getEveIdEvento();
-					descrLuogoProva = mam.getDescrLuogoProva();
-					misuraModel.setDataInizioMisura(mam.getDataInizioMisura());
-					break;
-				}
-			}
-%>
-		<td class="c">
-			<%=StringUtils.toStringJSP(annoOrdinanzaProvvisoria, "-")%>
-			/
-			<%=StringUtils.toStringJSP(numeroOrdinanzaProvvisoria, "-")%>
-		</td>
 		<td class="c">
 			<a href="Javascript:insertIT('<%=StringUtils.toStringJSP(eventoModel.getIdEvento(), "-")%>',
                                          '<%=StringUtils.toStringJSP(misuraModel.getChiaveAnnoFascicoloSius(), "-")%>',
@@ -714,7 +511,7 @@ if (!documentiSius.isEmpty()) {
                                          '<%=StringUtils.toStringJSP(DateUtils.getDateToString(eventoModel.getDataEmissione(), "dd"), "-")%>',
                                          '<%=StringUtils.toStringJSP(DateUtils.getDateToString(eventoModel.getDataEmissione(), "MM"), "-")%>',
                                          '<%=StringUtils.toStringJSP(DateUtils.getDateToString(eventoModel.getDataEmissione(), "yyyy"), "-")%>',
-                                         '<%=StringUtils.cStrForJS(descrLuogoProva)%>',
+                                         '<%=StringUtils.cStrForJS(misuraModel.getDescrLuogoProva())%>',
                                          '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataInizioMisura(), "dd"), "-")%>',
                                          '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataInizioMisura(), "MM"), "-")%>',
                                          '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataInizioMisura(), "yyyy"), "-")%>',
@@ -740,84 +537,10 @@ if (!documentiSius.isEmpty()) {
                                          '<%=StringUtils.toStringJSP(misuraModel.getNumMesiMisura(), "-")%>',
                                          '<%=StringUtils.toStringJSP(misuraModel.getNumAnniMisura(), "-")%>',
                                          '<%=StringUtils.toStringJSP(misuraModel.getFlagDecisioneTribunale(), "-")%>',
-                                         '<%=StringUtils.cStrForJS(misuraModel.getDescSedeTdsCompetente())%>',
-                                         <%-- MEV_9 --%>
-                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataEsecutivita(), "dd"), "-")%>',
-                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataEsecutivita(), "MM"), "-")%>',
-                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataEsecutivita(), "yyyy"), "-")%>',
-                                         <%-- MEV_9-SIEP: aggiunti campi in estrazione: ID + anno/numero ordinanza provvisoria + data emissione provvedimento --%>
-                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataOrdinanzaProvvisoria, "dd"), "-")%>',
-                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataOrdinanzaProvvisoria, "MM"), "-")%>',
-                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataOrdinanzaProvvisoria, "yyyy"), "-")%>',
-                                         '<%=StringUtils.toStringJSP(annoOrdinanzaProvvisoria, "-")%>',
-                                         '<%=StringUtils.toStringJSP(numeroOrdinanzaProvvisoria, "-")%>',
-                                         '<%=StringUtils.toStringJSP(idOrdinanzaProvvisoria, "-")%>',
-                                         '<%=StringUtils.toStringJSP(isOrdinanzaProvvisoria, "-")%>'
+                                         '<%=StringUtils.cStrForJS(misuraModel.getDescSedeTdsCompetente())%>'
                                          );">
 				<img align="middle" src="/images/fileselected.gif" border=0>
 			</a>
-<%
-		} else {
-%>
-		<td class="c">-</td>
-		<td class="c">
-			<a href="Javascript:insertIT('<%=StringUtils.toStringJSP(eventoModel.getIdEvento(), "-")%>',
-                                         '<%=StringUtils.toStringJSP(misuraModel.getChiaveAnnoFascicoloSius(), "-")%>',
-                                         '<%=StringUtils.toStringJSP(misuraModel.getChiaveProgrFascicoloSius(), "-")%>',
-                                         '<%=StringUtils.toStringJSP(misuraModel.getAnnoRegistro(), "-")%>',
-                                         '<%=StringUtils.toStringJSP(misuraModel.getNumeroRegistro(), "-")%>',
-                                         '<%=StringUtils.toStringJSP(lUfficio)%>',
-                                         '<%=StringUtils.cStrForJS(eventoModel.getDescrLuogoEmittente())%>',
-                                         '<%=StringUtils.toStringJSP(eventoModel.getCodMotivo(), "-")%>',
-                                         '<%=StringUtils.toStringJSP(misuraModel.getCodNaturaDecisione(), "-")%>',
-                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(eventoModel.getDataEmissione(), "dd"), "-")%>',
-                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(eventoModel.getDataEmissione(), "MM"), "-")%>',
-                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(eventoModel.getDataEmissione(), "yyyy"), "-")%>',
-                                         '<%=StringUtils.cStrForJS(descrLuogoProva)%>',
-                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataInizioMisura(), "dd"), "-")%>',
-                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataInizioMisura(), "MM"), "-")%>',
-                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataInizioMisura(), "yyyy"), "-")%>',
-                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataInizioRevoca(), "dd"), "-")%>',
-                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataInizioRevoca(), "MM"), "-")%>',
-                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataInizioRevoca(), "yyyy"), "-")%>',
-                                         '<%=StringUtils.toStringJSP(misuraModel.getNumAnniRevocaReclusione(), "-")%>',
-                                         '<%=StringUtils.toStringJSP(misuraModel.getNumMesiRevocaReclusione(), "-")%>',
-                                         '<%=StringUtils.toStringJSP(misuraModel.getNumGiorniRevocaReclusione(), "-")%>',
-                                         '<%=StringUtils.toStringJSP(misuraModel.getNumAnniRevocaArresto(), "-")%>',
-                                         '<%=StringUtils.toStringJSP(misuraModel.getNumMesiRevocaArresto(), "-")%>',
-                                         '<%=StringUtils.toStringJSP(misuraModel.getNumGiorniRevocaArresto(), "-")%>',
-                                         '<%=StringUtils.cStrForJS(misuraModel.getNote())%>',
-                                         '<%=StringUtils.toStringJSP(misuraModel.getCodTipoDecisione(), "-")%>',
-                                         '<%=StringUtils.toStringJSP(misuraModel.getCodTipoUfficioScarcerazione(), "-")%>',
-                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataScarcerazione(), "dd"), "-")%>',
-                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataScarcerazione(), "MM"), "-")%>',
-                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataScarcerazione(), "yyyy"), "-")%>',
-                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataFineMisura(), "dd"), "-")%>',
-                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataFineMisura(), "MM"), "-")%>',
-                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataFineMisura(), "yyyy"), "-")%>',
-                                         '<%=StringUtils.toStringJSP(misuraModel.getNumGiorniMisura(), "-")%>',
-                                         '<%=StringUtils.toStringJSP(misuraModel.getNumMesiMisura(), "-")%>',
-                                         '<%=StringUtils.toStringJSP(misuraModel.getNumAnniMisura(), "-")%>',
-                                         '<%=StringUtils.toStringJSP(misuraModel.getFlagDecisioneTribunale(), "-")%>',
-                                         '<%=StringUtils.cStrForJS(misuraModel.getDescSedeTdsCompetente())%>',
-                                         <%-- MEV_9 --%>
-                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataEsecutivita(), "dd"), "-")%>',
-                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataEsecutivita(), "MM"), "-")%>',
-                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataEsecutivita(), "yyyy"), "-")%>',
-                                         <%-- MEV_9-SIEP: aggiunti campi in estrazione: ID + anno/numero ordinanza provvisoria + data emissione provvedimento --%>
-                                         '',
-                                         '',
-                                         '',
-                                         '',
-                                         '',
-                                         '',
-                                         '<%=StringUtils.toStringJSP(isOrdinanzaProvvisoria, "-")%>'
-                                         );">
-				<img align="middle" src="/images/fileselected.gif" border=0>
-			</a>
-<%
-		}
-%>
 		</td>
 	</tr>
 <%

@@ -15,9 +15,6 @@ import f3b.util.DateUtils;
 import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.util.DecodificheUtils;
-import siap.sico.evento.controller.IEvento;
-import siap.sico.evento.model.EventoModel;
-import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 
@@ -44,12 +41,6 @@ public class ActLoadRichiestaCarichiPendenti extends ActionSiap implements ICost
 		lOption.setFilter(new String[] { "PM", "PMM" });
 		setRequestAttribute("uffici", "" + lOption);
 
-		// INIZIO: MEV_9 (D.lgs. 123/2018)
-		IEvento lEveCtrl = SICOLookupRemote.getEventoRemote();
-		EventoModel lUltimoEventoRichAtti = lEveCtrl.ricercaUltimoEventoRichiestaAttiIsruttoriByIdFasc (((FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"))
-				.getFascicoloSiusModel().getIdFascicoloSius());
-		setRequestAttribute("ultimoEventoRichAtti", lUltimoEventoRichAtti);		
-		
 		return PG_LOAD_RICHIESTACARICHIPENDENTI; // restituisce la jsp di VIEW
 	}
 

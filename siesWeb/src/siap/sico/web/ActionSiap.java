@@ -3,7 +3,6 @@ package siap.sico.web;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -59,12 +58,10 @@ import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.web.ISIAPCostantiWeb;
 
 /**
- * Title: Action
- *
- * Description: Azione padre delle classi figlie ActXxxx. Questa classe mette a disposizione alle classi
- * figlie i metodi per estrarre i dati dagli oggetti <code>session</code> e <code>request</code>, inoltre cosa
- * fondamentale ha la responsabilità di caricare dinamicamente la classe azione figlia, metodo direttamente
- * invocato dalla <code>Main.jsp</code>.
+ * ActionSiap - Azione padre delle classi figlie ActXxxx. Questa classe mette a disposizione
+ * alle classi figlie i metodi per estrarre i dati dagli oggetti <code>session</code> e <code>request</code>,
+ * inoltre cosa fondamentale ha la responsabilità di caricare dinamicamente la classe azione figlia, metodo
+ * direttamente invocato dalla <code>Main.jsp</code>.
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ActionSiap extends Action {
@@ -212,7 +209,6 @@ public class ActionSiap extends Action {
 	 *             propaga l'errore di eccezione.
 	 */
 	protected ComuneModel getCodComuneByDescr(String aDescrComune) throws F3BException {
-
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 		siesLogger.debug("Action getCodComuneByDescr");
 
@@ -228,7 +224,6 @@ public class ActionSiap extends Action {
 
 	// Ricerca comune da InserisciDomicilio/Residenza - Query con Flag_Validita
 	protected ComuneModel getCodComuneByDescrFlagVal(String aDescrComune) throws F3BException {
-
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 		siesLogger.debug("Action getCodComuneByDescrFlagVal");
 
@@ -355,7 +350,6 @@ public class ActionSiap extends Action {
 	 *             propaga l'errore di eccezione.
 	 */
 	protected UfficioModel getUfficioByCodUfficio(String aCodUfficio) throws F3BException {
-
 		UfficioModel lUfficio = new UfficioModel();
 		// Chiamata al controller.
 		IUfficio lUff = SICOLookupRemote.getUfficioRemote();
@@ -413,7 +407,6 @@ public class ActionSiap extends Action {
 	 * @throws F3BException
 	 */
 	protected UfficioModel getUfficioUtenteConnesso() throws F3BException {
-
 		UtenteModel lUtenteMod = new UtenteModel(
 				(UtenteModel) getSessionAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO));
 
@@ -441,7 +434,6 @@ public class ActionSiap extends Action {
 	 *             propaga errore di eccezione.
 	 */
 	protected String getCodUtenteConnesso() throws F3BException {
-
 		UtenteModel lUtenteMod = new UtenteModel(
 				(UtenteModel) getSessionAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO));
 
@@ -456,7 +448,6 @@ public class ActionSiap extends Action {
 	 *             propaga errore di eccezione.
 	 */
 	protected UtenteModel getUtenteConnesso() throws F3BException {
-
 		UtenteModel lUtenteMod = new UtenteModel(
 				(UtenteModel) getSessionAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO));
 
@@ -471,7 +462,6 @@ public class ActionSiap extends Action {
 	 *             propaga errore di eccezione.
 	 */
 	protected String getCodComuneUtenteConnesso() throws F3BException {
-
 		UtenteModel lUtenteMod = new UtenteModel(
 				(UtenteModel) getSessionAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO));
 
@@ -486,7 +476,6 @@ public class ActionSiap extends Action {
 	 *             propaga eventuali errori di eccezione.
 	 */
 	protected String getCodDistrettoUtenteConnesso() throws F3BException {
-
 		UtenteModel lUtenteMod = new UtenteModel(
 				(UtenteModel) getSessionAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO));
 
@@ -503,7 +492,6 @@ public class ActionSiap extends Action {
 	 *             Propaga errore di eccezione
 	 */
 	protected BigDecimal getIdCSSAByDescrComune(String aDescComune) throws Exception {
-
 		CSSAModel lCSSAModel = new CSSAModel();
 		if (aDescComune != null && !aDescComune.equals("")) {
 			ICSSA lCtrl = SICOLookupRemote.getCSSARemote();
@@ -519,7 +507,6 @@ public class ActionSiap extends Action {
 	 * @throws F3BException
 	 */
 	public void WriteActivityLog(String aNameAction) throws F3BException {
-
 		LogAttivitaModel log = new LogAttivitaModel();
 		ILogAttivita ilog = SICOLookupRemote.getLogAttivitaRemote();
 
@@ -738,7 +725,6 @@ public class ActionSiap extends Action {
 	 * @throws F3BException
 	 */
 	public String getCompleteRequestURL() throws F3BException {
-
 		String lRequest = this.getRequest().getRequestURL() + "?";
 		Set lKeys = getRequest().getParameterMap().keySet();
 
@@ -761,7 +747,6 @@ public class ActionSiap extends Action {
 	 * @throws F3BException
 	 */
 	public String getRetRequestURL() throws F3BException {
-
 		String lRequest = this.getRequest().getRequestURL() + "?";
 		Set lKeys = getRequest().getParameterMap().keySet();
 
@@ -848,7 +833,6 @@ public class ActionSiap extends Action {
 	 * "CHIAMANTE" nel ciclo del bottone di ritorno.
 	 */
 	protected void setLinkRitorno() throws Exception {
-
 		gestioneStackRitorno();
 		// Flag 20 indica Action Chiamante
 		setRequestAttribute(IWebConstants.LINK_RITORNO, "20");
@@ -867,7 +851,6 @@ public class ActionSiap extends Action {
 	 * come punto di ritorno.
 	 */
 	protected void gestioneRitorno() throws Exception {
-
 		// Flag 10 indica Action "Passante"
 		if (gestioneStackRitorno())
 			setRequestAttribute(IWebConstants.LINK_RITORNO, "10");
@@ -879,7 +862,6 @@ public class ActionSiap extends Action {
 	 * come punto di ritorno.
 	 */
 	protected void gestioneRitornoCodCui() throws Exception {
-
 		setRequestAttribute(IWebConstants.LINK_RITORNO, "10");
 	}
 
@@ -892,7 +874,6 @@ public class ActionSiap extends Action {
 	 * chiamante.
 	 */
 	private boolean gestioneStackRitorno() throws Exception {
-
 		boolean lRitorno = true;
 		if (!isRequestParameterNullObj(IWebConstants.FLAG_RITORNO)) {
 			String lFlag = this.getRequestStringParameter(IWebConstants.FLAG_RITORNO);
@@ -923,7 +904,6 @@ public class ActionSiap extends Action {
 	 * Eliminazione Stack Di Ritorno
 	 */
 	private void deleteStackRitorno() {
-
 		if (!isSessionAttributeNullObj("StackDiRitorno")) {
 			// Rimuovo lo stack dalla sessione
 			removeSessionAttribute("StackDiRitorno");
@@ -931,13 +911,13 @@ public class ActionSiap extends Action {
 			// LogF3B.getLogger()
 			siesLogger.debug("Rimosso lo StacDiRitorno dalla sessione");
 		}
+
 	}
 
 	/**
 	 * Estrae un elemento dallo stack in sessione e lo ripone in sessione se non vuooto.
 	 */
 	private String popStackRitorno() throws Exception {
-
 		Stack lRetStack = null;
 		String lRet = null;
 
@@ -975,7 +955,6 @@ public class ActionSiap extends Action {
 	 * @throws Exception
 	 */
 	private void pushStackRitorno(String aValore) throws Exception {
-
 		Stack lRetStack = null;
 		if (isSessionAttributeNullObj("StackDiRitorno")) {
 			// Non c'è lo stack in sessione
@@ -1009,7 +988,6 @@ public class ActionSiap extends Action {
 	 * @throws Exception
 	 */
 	private String peekStackRitorno() throws Exception {
-
 		Stack lRetStack = null;
 		String lRet = null;
 
@@ -1043,7 +1021,6 @@ public class ActionSiap extends Action {
 	 * @throws F3BException
 	 */
 	public boolean isFascicoloSiepDiCompetenza() throws F3BException {
-
 		FascicoloSiepModel lFas = (FascicoloSiepModel) getSession().getAttribute("fascicolo");
 		UtenteModel lUtenteMod = new UtenteModel(
 				(UtenteModel) getSession().getAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO));
@@ -1100,7 +1077,6 @@ public class ActionSiap extends Action {
 	 * @throws F3BException
 	 */
 	protected void isEventoNonValidato() throws F3BException {
-
 		FascicoloSiepModel lFas = (FascicoloSiepModel) getSession().getAttribute("fascicolo");
 		IEventoSimeone lCtrl = SICOLookupRemote.getEventoSimeoneRemote();
 		EventoModel lEveMod = new EventoModel();
@@ -1145,7 +1121,6 @@ public class ActionSiap extends Action {
 	 * @throws F3BException
 	 */
 	protected void isEventoNonValidatoAnnotazioniManuali() throws F3BException {
-
 		FascicoloSiepModel lFas = (FascicoloSiepModel) getSession().getAttribute("fascicolo");
 		IEventoSimeone lCtrl = SICOLookupRemote.getEventoSimeoneRemote();
 		EventoModel lEveMod = new EventoModel();
@@ -1193,7 +1168,6 @@ public class ActionSiap extends Action {
 	 * @throws F3BException
 	 */
 	protected void isEventoNonValidatoPerCumulo() throws F3BException {
-
 		FascicoloSiepModel lFas = (FascicoloSiepModel) getSession().getAttribute("fascicolo");
 		IEventoSimeone lCtrl = SICOLookupRemote.getEventoSimeoneRemote();
 		EventoModel lEveMod = new EventoModel();
@@ -1239,7 +1213,6 @@ public class ActionSiap extends Action {
 	 * @throws F3BException
 	 */
 	protected void isEventoNonValidatoPerPenaCumulo() throws F3BException {
-
 		FascicoloSiepModel lFas = (FascicoloSiepModel) getSession().getAttribute("fascicolo");
 		IEventoSimeone lCtrl = SICOLookupRemote.getEventoSimeoneRemote();
 		EventoModel lEveMod = new EventoModel();
@@ -1284,7 +1257,6 @@ public class ActionSiap extends Action {
 	 * @throws F3BException
 	 */
 	protected EventoModel isEventoNonValidatoRidetPenaAltro(EventoModel aEveComputo) throws F3BException {
-
 		FascicoloSiepModel lFas = (FascicoloSiepModel) getSession().getAttribute("fascicolo");
 		IEventoSimeone lCtrl = SICOLookupRemote.getEventoSimeoneRemote();
 		EventoModel lEveMod = new EventoModel();
@@ -1319,7 +1291,6 @@ public class ActionSiap extends Action {
 	 * @throws F3BException
 	 */
 	protected boolean isFascicoloNonValidato() throws F3BException {
-
 		FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSession().getAttribute("fascicolo");
 		if ("N".equalsIgnoreCase(lFascMod.getFlagValidato())) {
 			RedirectTo lRedirigi = new RedirectTo();
@@ -1341,7 +1312,6 @@ public class ActionSiap extends Action {
 	 * @throws F3BException
 	 */
 	protected boolean isFascicoloArchiviatoDefinito() throws F3BException {
-
 		FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSession().getAttribute("fascicolo");
 		if ("01".equals(lFascMod.getCodStatoFascicolo())) {
 			RedirectTo lRedirigi = new RedirectTo();
@@ -1361,7 +1331,6 @@ public class ActionSiap extends Action {
 	 */
 	protected boolean notEsistePenaResiduaCorrenteByFascicoloSiep(PenaResiduaModel aPenaResMod)
 			throws F3BException {
-
 		// FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSession().getAttribute("fascicolo");
 		if (aPenaResMod == null) {
 			RedirectTo lRedirigi = new RedirectTo();
@@ -1384,7 +1353,6 @@ public class ActionSiap extends Action {
 	 */
 	protected boolean notEsistePosizioneGiuridica(PosizioneGiuridicaLuogoDetenzioneAltraCausaModel aPos)
 			throws F3BException {
-
 		FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSession().getAttribute("fascicolo");
 		if (aPos == null || aPos.getPosizioneGiuridica() == null) {
 			RedirectTo lRedirigi = new RedirectTo();
@@ -1405,7 +1373,6 @@ public class ActionSiap extends Action {
 	 * @return
 	 */
 	protected String calcolaMagistrato() throws F3BException {
-
 		String lCodiceMagistrato = getRequestStringParameter(ICostantiMagistrato.CAMPO_COD_MAGISTRATO);
 		if (lCodiceMagistrato.compareTo("") == 0) {
 			MagistratoModel lMagMod = new MagistratoModel();
@@ -1435,7 +1402,6 @@ public class ActionSiap extends Action {
 	 *             propaga l'errore di eccezione.
 	 */
 	protected InputStream getFile(String aParamName) throws F3BException {
-
 		if (MultipartContent.isMultipartContent(this.getRequest())) {
 			fileUploadParser(aParamName);
 			return this.getRequestMultipart().getFile(aParamName);
@@ -1451,7 +1417,6 @@ public class ActionSiap extends Action {
 	 * @throws F3BException
 	 */
 	protected void fileUploadParser(String aParamName) throws F3BException {
-
 		byte[] mBytes = getFileBytes(aParamName);
 
 		if (mBytes != null && mBytes.length > 0) {
@@ -1519,7 +1484,6 @@ public class ActionSiap extends Action {
 	 * @throws F3BException
 	 */
 	protected boolean isFascicoloIscritto() throws F3BException {
-
 		FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSession().getAttribute("fascicolo");
 		if (lFascMod.getCodStatoFascicolo().equalsIgnoreCase("02")) {
 			// setta la risposta nella request
@@ -1543,7 +1507,6 @@ public class ActionSiap extends Action {
 	 * @throws F3BException
 	 */
 	protected String getFiltroMinorenni() throws F3BException {
-
 		String ret = "true";
 
 		// *************
@@ -1563,26 +1526,6 @@ public class ActionSiap extends Action {
 		return ret;
 	}
 
-	// MEV_9 aggiunto metodo
-	protected boolean isUfficioMinorenni() throws F3BException {
-
-		Set<String> ufficiMinori = new HashSet<>();
-
-		ufficiMinori.add("PMM");
-		ufficiMinori.add("DIBM");
-		ufficiMinori.add("GIPM");
-		ufficiMinori.add("GUPM");
-		ufficiMinori.add("CAPSM");
-		ufficiMinori.add("TDSM");
-		ufficiMinori.add("UDSM");
-
-		UfficioModel ufficioUtente = getUfficioUtenteConnesso();
-		if (ufficiMinori.contains(ufficioUtente.getCodTipoUfficio()))
-			return true;
-		else
-			return false;
-	}
-
 	/**
 	 * MEV10-s3: aggiunto metodo di estrazione campo
 	 *
@@ -1590,7 +1533,6 @@ public class ActionSiap extends Action {
 	 * @throws F3BException
 	 */
 	protected String getCodTipoUfficioConnesso() throws F3BException {
-
 		UfficioModel um = getUfficioUtenteConnesso();
 		return um.getCodTipoUfficio();
 	}
@@ -1604,7 +1546,6 @@ public class ActionSiap extends Action {
 	 * @throws Exception
 	 */
 	protected BigDecimal getIdCSSAByDescrComuneETipo(String aDescComune, String aTipo) throws Exception {
-
 		CSSAModel lCSSAModel = new CSSAModel();
 		ICSSA lCtrl = SICOLookupRemote.getCSSARemote();
 		lCSSAModel = lCtrl.getCSSAByDescrComuneETipo(aDescComune.toUpperCase(), aTipo);
@@ -1619,7 +1560,6 @@ public class ActionSiap extends Action {
 	 *             propaga l'errore di eccezione.
 	 */
 	protected String getCodFunMenuVerticale() throws F3BException {
-
 		LinkedList LastFunctionAnt = (LinkedList) getSessionAttribute("FunAntenate");
 		String codFunzione = null;
 		if (LastFunctionAnt.size() > 0) {
@@ -1637,7 +1577,6 @@ public class ActionSiap extends Action {
 	 * @throws F3BException
 	 */
 	protected String getTipoSentenza() throws F3BException {
-
 		String TipoSent = "";
 		FascicoloSiepModel lFas = (FascicoloSiepModel) getSession().getAttribute("fascicolo");
 		ISentenza lCtrlS = SIEPLookupRemote.getSentenzaRemote();

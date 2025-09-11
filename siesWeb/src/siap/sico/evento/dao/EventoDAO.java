@@ -6,99 +6,85 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Date;
 
-import siap.dao.SIAPTableDAO;
-import siap.sico.evento.model.EventoModel;
 import f3b.dao.DAOException;
 import f3b.model.GenericModel;
+import siap.dao.SIAPTableDAO;
+import siap.sico.evento.model.EventoModel;
 
 /**
- * <p>
- * Title: EventoDAO
- * </p>
- * <p>
- * Description: Classe DAO che rappresenta la tabella Evento
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
-* @version 1.0
-*/
+ * EventoDAO - Classe DAO che rappresenta la tabella Evento
+ *
+ * @version 1.0
+ */
 public class EventoDAO extends SIAPTableDAO {
 
 	public EventoDAO(Connection con) {
-    super(con);
-    setTable("EVENTO");
 
-    //Settare la Sequence e i campi chiave
-    this.setSequenceField("ID_EVENTO","EVE_SEQ");
-    this.setFieldKey("ID_EVENTO", BIG_DECIMAL);
+		super(con);
+		setTable("EVENTO");
 
-    setField("ID_EVENTO", BIG_DECIMAL);
-    setField("COD_TIPO_EVENTO", STRING);
-    setField("COD_TIPO_PROVVEDIMENTO", STRING);
-    setField("COD_MOTIVO", STRING);
-    setField("COD_UFFICIO_EMITTENTE", STRING);
-    setField("COD_LUOGO_EMITTENTE", STRING);
-    setField("COGNOME_SOGGETTO_PRESENTANTE", STRING);
-    setField("NOME_SOGGETTO_PRESENTANTE", STRING);
-    setField("DATA_EMISSIONE", DATE);
-    setField("COD_ESITO", STRING);
-    setField("FLAG_PIU_MENO", STRING);
-    setField("DATA_TRASMISSIONE_ATTI", DATE);
-    setField("DATA_RICEZIONE_ATTI", DATE);
-    setField("COD_UFFICIO_DESTINATARIO", STRING);
-    setField("COD_LUOGO_DESTINATARIO", STRING);
-    setField("ANNO_PROTOCOLLO", BIG_DECIMAL);
-    setField("PROGR_PROTOCOLLO", BIG_DECIMAL);
-    setField("DOC_BLOB", TBLOB);
-    setField("COD_OPERATORE_INSERIMENTO", STRING);
-    setField("DATA_INSERIMENTO", DATE);
-    setField("COD_UFFICIO_INSERIMENTO", STRING);
-    setField("COD_OPERATORE_AGGIORNAMENTO", STRING);
-    setField("DATA_AGGIORNAMENTO", DATE);
-    setField("COD_UFFICIO_AGGIORNAMENTO", STRING);
-    setField("FAS_SIE_ID_FASCICOLO_SIEP", BIG_DECIMAL);
-    setField("FAS_SIU_ID_FASCICOLO_SIUS", BIG_DECIMAL);
-    setField("TEN_ID_TENORE", BIG_DECIMAL);
-    // setField("FAS_SIU_SOG_ID_SOGGETTO", BIG_DECIMAL);
-    setField("FLAG_DOCUMENTO_REGISTRATO", STRING);
-    setField("COD_MAGISTRATO", STRING);
-    setField("COD_TIPO_UFFICIO_DESTINATARIO", STRING);
-    setField("FAS_SIU_ID_FASCICOLO_SIUS_DEST", BIG_DECIMAL);
-    // STUB:2003-07-09 PM Aggiunto pro tempore
-    setField("TEM_ID_TEMPLATE", STRING);
-    setField("EVE_ID_EVENTO", BIG_DECIMAL);
-    setField("FLAG_STAMPA_SIEP", STRING);
-    setField("FLAG_STAMPA_SIUS", STRING);
-    setField("FLAG_VIDEO_SIEP", STRING);
-    setField("FLAG_VIDEO_SIUS", STRING);
-    setField("DEC_ID_DECRETO_ORDINANZA_SIEP", BIG_DECIMAL);
-    setField("PEN_ACC_ID_PENA_ACCESSORIA", BIG_DECIMAL);
-    setField("EVE_ID_EVENTO_REVOCA", BIG_DECIMAL);
-    setField("ANN_ID_ANNOTAZIONE_MANUALE", BIG_DECIMAL);
-    setField("PEN_ID_PENA_RESIDUA", BIG_DECIMAL);
-    setField("DATA_ESPULSIONE_SANZ_SOST",DATE);
-    setField("DATA_RICHIESTA",DATE);
-    setField("KEY_ESEC_NSC", BIG_DECIMAL);
-    setField("TIPOLOGIA_INVIO_ATTI", STRING);
-    setField("DESCRIZIONE_INVIO_ATTI", STRING);
-    setField("DATA_INVIO_ATTI", DATE);
-    
-    setField("ISTR_ID_ISTRUTTORIA_CUMULO", BIG_DECIMAL);
-    setField("ESTREMI_SOGG_RICH_ISTR", STRING);
-    
-    // MEV_9 (D.lgs. 123/2018)
-    setField("DATA_RESTITUZIONE_AI", DATE);
-   }
+		// Settare la Sequence e i campi chiave
+		this.setSequenceField("ID_EVENTO", "EVE_SEQ");
+		this.setFieldKey("ID_EVENTO", BIG_DECIMAL);
 
+		setField("ID_EVENTO", BIG_DECIMAL);
+		setField("COD_TIPO_EVENTO", STRING);
+		setField("COD_TIPO_PROVVEDIMENTO", STRING);
+		setField("COD_MOTIVO", STRING);
+		setField("COD_UFFICIO_EMITTENTE", STRING);
+		setField("COD_LUOGO_EMITTENTE", STRING);
+		setField("COGNOME_SOGGETTO_PRESENTANTE", STRING);
+		setField("NOME_SOGGETTO_PRESENTANTE", STRING);
+		setField("DATA_EMISSIONE", DATE);
+		setField("COD_ESITO", STRING);
+		setField("FLAG_PIU_MENO", STRING);
+		setField("DATA_TRASMISSIONE_ATTI", DATE);
+		setField("DATA_RICEZIONE_ATTI", DATE);
+		setField("COD_UFFICIO_DESTINATARIO", STRING);
+		setField("COD_LUOGO_DESTINATARIO", STRING);
+		setField("ANNO_PROTOCOLLO", BIG_DECIMAL);
+		setField("PROGR_PROTOCOLLO", BIG_DECIMAL);
+		setField("DOC_BLOB", TBLOB);
+		setField("COD_OPERATORE_INSERIMENTO", STRING);
+		setField("DATA_INSERIMENTO", DATE);
+		setField("COD_UFFICIO_INSERIMENTO", STRING);
+		setField("COD_OPERATORE_AGGIORNAMENTO", STRING);
+		setField("DATA_AGGIORNAMENTO", DATE);
+		setField("COD_UFFICIO_AGGIORNAMENTO", STRING);
+		setField("FAS_SIE_ID_FASCICOLO_SIEP", BIG_DECIMAL);
+		setField("FAS_SIU_ID_FASCICOLO_SIUS", BIG_DECIMAL);
+		setField("TEN_ID_TENORE", BIG_DECIMAL);
+		// setField("FAS_SIU_SOG_ID_SOGGETTO", BIG_DECIMAL);
+		setField("FLAG_DOCUMENTO_REGISTRATO", STRING);
+		setField("COD_MAGISTRATO", STRING);
+		setField("COD_TIPO_UFFICIO_DESTINATARIO", STRING);
+		setField("FAS_SIU_ID_FASCICOLO_SIUS_DEST", BIG_DECIMAL);
+		// STUB:2003-07-09 PM Aggiunto pro tempore
+		setField("TEM_ID_TEMPLATE", STRING);
+		setField("EVE_ID_EVENTO", BIG_DECIMAL);
+		setField("FLAG_STAMPA_SIEP", STRING);
+		setField("FLAG_STAMPA_SIUS", STRING);
+		setField("FLAG_VIDEO_SIEP", STRING);
+		setField("FLAG_VIDEO_SIUS", STRING);
+		setField("DEC_ID_DECRETO_ORDINANZA_SIEP", BIG_DECIMAL);
+		setField("PEN_ACC_ID_PENA_ACCESSORIA", BIG_DECIMAL);
+		setField("EVE_ID_EVENTO_REVOCA", BIG_DECIMAL);
+		setField("ANN_ID_ANNOTAZIONE_MANUALE", BIG_DECIMAL);
+		setField("PEN_ID_PENA_RESIDUA", BIG_DECIMAL);
+		setField("DATA_ESPULSIONE_SANZ_SOST", DATE);
+		setField("DATA_RICHIESTA", DATE);
+		setField("KEY_ESEC_NSC", BIG_DECIMAL);
+		setField("TIPOLOGIA_INVIO_ATTI", STRING);
+		setField("DESCRIZIONE_INVIO_ATTI", STRING);
+		setField("DATA_INVIO_ATTI", DATE);
 
-  //
-  // METODI GET()
-  //
+		setField("ISTR_ID_ISTRUTTORIA_CUMULO", BIG_DECIMAL);
+		setField("ESTREMI_SOGG_RICH_ISTR", STRING);
+	}
+
+	//
+	// METODI GET()
+	//
 
 	public BigDecimal getIdEvento() throws DAOException {
 		return getBigDecimal("ID_EVENTO");
@@ -226,7 +212,7 @@ public class EventoDAO extends SIAPTableDAO {
 		return getBigDecimal("FAS_SIU_ID_FASCICOLO_SIUS_DEST");
 	}
 
-  // STUB:2003-07-09 PM Aggiunto pro tempore
+	// STUB:2003-07-09 PM Aggiunto pro tempore
 	public String getTemIdTemplate() throws DAOException {
 		return getString("TEM_ID_TEMPLATE");
 	}
@@ -290,22 +276,22 @@ public class EventoDAO extends SIAPTableDAO {
 	public String getDescrizioneTipologiaInvioAtti() throws DAOException {
 		return getString("DESCRIZIONE_INVIO_ATTI");
 	}
-  
-  public BigDecimal getIstruIdIstruttoriaCumulo()   throws DAOException     { return getBigDecimal("ISTR_ID_ISTRUTTORIA_CUMULO"); }
-  public String     getEstremiSoggRichIstr()        throws DAOException     { return getString("ESTREMI_SOGG_RICH_ISTR"); }
+
+	public BigDecimal getIstruIdIstruttoriaCumulo() throws DAOException {
+		return getBigDecimal("ISTR_ID_ISTRUTTORIA_CUMULO");
+	}
+
+	public String getEstremiSoggRichIstr() throws DAOException {
+		return getString("ESTREMI_SOGG_RICH_ISTR");
+	}
 
 	public Date getDataInvioAtti() throws DAOException {
 		return getDate("DATA_INVIO_ATTI");
 	}
-  
-	// MEV_9 (D.lgs. 123/2018)
-	public Date getDataRestituzioneAi() throws DAOException {
-		return getDate("DATA_RESTITUZIONE_AI");
-	}
-	
-  //
-  // METODI SET()
-  //
+
+	//
+	// METODI SET()
+	//
 
 	public void setIdEvento(BigDecimal aValore) {
 		setBigDecimal("ID_EVENTO", aValore);
@@ -431,7 +417,7 @@ public class EventoDAO extends SIAPTableDAO {
 		setBigDecimal("FAS_SIU_ID_FASCICOLO_SIUS_DEST", aValore);
 	}
 
-  // STUB:2003-07-09 PM Aggiunto pro tempore
+	// STUB:2003-07-09 PM Aggiunto pro tempore
 	public void setTemIdTemplate(String aValore) {
 		setString("TEM_ID_TEMPLATE", aValore);
 	}
@@ -499,381 +485,368 @@ public class EventoDAO extends SIAPTableDAO {
 	public void setDataInvioAtti(Date aValore) {
 		setDate("DATA_INVIO_ATTI", aValore);
 	}
-  
+
 	public void setIstruIdIstruttoriaCumulo(BigDecimal aValore) {
 		setBigDecimal("ISTR_ID_ISTRUTTORIA_CUMULO", aValore);
 	}
-	
-	public void setEstremiSoggRichIstr (String aValore)           { 
-		setString("ESTREMI_SOGG_RICH_ISTR", aValore); 
-	}  
-  
-	// MEV_9 (D.lgs. 123/2018)
-	public void setDataRestituzioneAi (Date aValore) throws DAOException {
-		setDate("DATA_RESTITUZIONE_AI",aValore);
-	}
-  
-  
-	public GenericModel getModel() throws DAOException {
-    EventoModel lEveMod = new EventoModel();
 
-    lEveMod.setIdEvento(getIdEvento());
-    lEveMod.setCodTipoEvento(getCodTipoEvento());
-    lEveMod.setCodTipoProvvedimento(getCodTipoProvvedimento());
-    lEveMod.setCodMotivo(getCodMotivo());
-    lEveMod.setCodUfficioEmittente(getCodUfficioEmittente());
-    lEveMod.setCodLuogoEmittente(getCodLuogoEmittente());
-    lEveMod.setCognomeSoggettoPresentante(getCognomeSoggettoPresentante());
-    lEveMod.setNomeSoggettoPresentante(getNomeSoggettoPresentante());
-    lEveMod.setDataEmissione(getDataEmissione());
-    lEveMod.setCodEsito(getCodEsito());
-    lEveMod.setFlagPiuMeno(getFlagPiuMeno());
-    lEveMod.setDataTrasmissioneAtti(getDataTrasmissioneAtti());
-    lEveMod.setDataRicezioneAtti(getDataRicezioneAtti());
-    lEveMod.setCodUfficioDestinatario(getCodUfficioDestinatario());
-    lEveMod.setCodLuogoDestinatario(getCodLuogoDestinatario());
-    lEveMod.setAnnoProtocollo(getAnnoProtocollo());
-    lEveMod.setProgrProtocollo(getProgrProtocollo());
-    //setDocBlob( )
-    lEveMod.setCodOperatoreInserimento(getCodOperatoreInserimento());
-    lEveMod.setDataInserimento(getDataInserimento());
-    lEveMod.setCodUfficioInserimento(getCodUfficioInserimento());
-    lEveMod.setCodOperatoreAggiornamento(getCodOperatoreAggiornamento());
-    lEveMod.setDataAggiornamento(getDataAggiornamento());
-    lEveMod.setCodUfficioAggiornamento(getCodUfficioAggiornamento());
-    lEveMod.setFasSieIdFascicoloSiep(getFasSieIdFascicoloSiep());
-    lEveMod.setFasSiuIdFascicoloSius(getFasSiuIdFascicoloSius());
-    lEveMod.setTenIdTenore(getTenIdTenore());
-    lEveMod.setFlagDocumentoRegistrato(getFlagDocumentoRegistrato());
-    lEveMod.setCodMagistrato(getCodMagistrato());
-    lEveMod.setCodTipoUfficioDestinatario(getCodTipoUfficioDestinatario());
-    lEveMod.setFasSiuIdFascicoloSiusDest(getFasSiuIdFascicoloSiusDest());
-    lEveMod.setTemIdTemplate(getTemIdTemplate());
-    lEveMod.setFlagStampaSiep(getFlagStampaSiep());
-    lEveMod.setFlagStampaSius(getFlagStampaSius());
-    lEveMod.setFlagVideoSiep(getFlagVideoSiep());
-    lEveMod.setFlagVideoSius(getFlagVideoSius());
-    lEveMod.setDecIdDecretoOrdinanzaSiep(getDecIdDecretoOrdinanzaSiep());
-    lEveMod.setPenAccIdPenaAccessoria(getPenAccIdPenaAccessoria());
-    lEveMod.setEveIdEvento(getEveIdEvento());
-    lEveMod.setEveIdEventoRevoca(getEveIdEventoRevoca());
-    lEveMod.setAnnIdAnnotazioneManuale(getAnnIdAnnotazioneManuale());
-    lEveMod.setPenIdPenaResidua(getPenIdPenaResidua());
-    lEveMod.setDataEspulsioneSanzSost(getDataEspulsioneSanzSost());
-    lEveMod.setDataRichiesta(getDataRichiesta());
-    lEveMod.setKeyEsecNsc(getKeyEsecNsc());
-    
-    lEveMod.setCodTipologiaInvioAtti (getCodTipologiaInvioAtti()); 
-    lEveMod.setDescrizioneInvioAtti (getDescrizioneTipologiaInvioAtti()); 
-    lEveMod.setDataInvioAtti (this.getDataInvioAtti()); 
-	
-	lEveMod.setIstruidIstruttoriaCumulo(getIstruIdIstruttoriaCumulo());
-	lEveMod.setEstremiSoggRichIstr(getEstremiSoggRichIstr());
-	
-	// MEV_9 (D.lgs. 123/2018)
-	lEveMod.setDataRestituzioneAi(getDataRestituzioneAi());
-	
-    return lEveMod;
-  }
+	public void setEstremiSoggRichIstr(String aValore) {
+		setString("ESTREMI_SOGG_RICH_ISTR", aValore);
+	}
+
+	public GenericModel getModel() throws DAOException {
+		EventoModel lEveMod = new EventoModel();
+
+		lEveMod.setIdEvento(getIdEvento());
+		lEveMod.setCodTipoEvento(getCodTipoEvento());
+		lEveMod.setCodTipoProvvedimento(getCodTipoProvvedimento());
+		lEveMod.setCodMotivo(getCodMotivo());
+		lEveMod.setCodUfficioEmittente(getCodUfficioEmittente());
+		lEveMod.setCodLuogoEmittente(getCodLuogoEmittente());
+		lEveMod.setCognomeSoggettoPresentante(getCognomeSoggettoPresentante());
+		lEveMod.setNomeSoggettoPresentante(getNomeSoggettoPresentante());
+		lEveMod.setDataEmissione(getDataEmissione());
+		lEveMod.setCodEsito(getCodEsito());
+		lEveMod.setFlagPiuMeno(getFlagPiuMeno());
+		lEveMod.setDataTrasmissioneAtti(getDataTrasmissioneAtti());
+		lEveMod.setDataRicezioneAtti(getDataRicezioneAtti());
+		lEveMod.setCodUfficioDestinatario(getCodUfficioDestinatario());
+		lEveMod.setCodLuogoDestinatario(getCodLuogoDestinatario());
+		lEveMod.setAnnoProtocollo(getAnnoProtocollo());
+		lEveMod.setProgrProtocollo(getProgrProtocollo());
+		// setDocBlob( )
+		lEveMod.setCodOperatoreInserimento(getCodOperatoreInserimento());
+		lEveMod.setDataInserimento(getDataInserimento());
+		lEveMod.setCodUfficioInserimento(getCodUfficioInserimento());
+		lEveMod.setCodOperatoreAggiornamento(getCodOperatoreAggiornamento());
+		lEveMod.setDataAggiornamento(getDataAggiornamento());
+		lEveMod.setCodUfficioAggiornamento(getCodUfficioAggiornamento());
+		lEveMod.setFasSieIdFascicoloSiep(getFasSieIdFascicoloSiep());
+		lEveMod.setFasSiuIdFascicoloSius(getFasSiuIdFascicoloSius());
+		lEveMod.setTenIdTenore(getTenIdTenore());
+		lEveMod.setFlagDocumentoRegistrato(getFlagDocumentoRegistrato());
+		lEveMod.setCodMagistrato(getCodMagistrato());
+		lEveMod.setCodTipoUfficioDestinatario(getCodTipoUfficioDestinatario());
+		lEveMod.setFasSiuIdFascicoloSiusDest(getFasSiuIdFascicoloSiusDest());
+		lEveMod.setTemIdTemplate(getTemIdTemplate());
+		lEveMod.setFlagStampaSiep(getFlagStampaSiep());
+		lEveMod.setFlagStampaSius(getFlagStampaSius());
+		lEveMod.setFlagVideoSiep(getFlagVideoSiep());
+		lEveMod.setFlagVideoSius(getFlagVideoSius());
+		lEveMod.setDecIdDecretoOrdinanzaSiep(getDecIdDecretoOrdinanzaSiep());
+		lEveMod.setPenAccIdPenaAccessoria(getPenAccIdPenaAccessoria());
+		lEveMod.setEveIdEvento(getEveIdEvento());
+		lEveMod.setEveIdEventoRevoca(getEveIdEventoRevoca());
+		lEveMod.setAnnIdAnnotazioneManuale(getAnnIdAnnotazioneManuale());
+		lEveMod.setPenIdPenaResidua(getPenIdPenaResidua());
+		lEveMod.setDataEspulsioneSanzSost(getDataEspulsioneSanzSost());
+		lEveMod.setDataRichiesta(getDataRichiesta());
+		lEveMod.setKeyEsecNsc(getKeyEsecNsc());
+
+		lEveMod.setCodTipologiaInvioAtti(getCodTipologiaInvioAtti());
+		lEveMod.setDescrizioneInvioAtti(getDescrizioneTipologiaInvioAtti());
+		lEveMod.setDataInvioAtti(this.getDataInvioAtti());
+
+		lEveMod.setIstruidIstruttoriaCumulo(getIstruIdIstruttoriaCumulo());
+		lEveMod.setEstremiSoggRichIstr(getEstremiSoggRichIstr());
+
+		return lEveMod;
+	}
 
 	public void setDAOFromModel(EventoModel aModel) throws DAOException {
-    setIdEvento( aModel.getIdEvento() );
-    setCodTipoEvento( aModel.getCodTipoEvento() );
-    setCodTipoProvvedimento( aModel.getCodTipoProvvedimento() );
-    this.setCodTipoUfficioDestinatario( aModel.getCodTipoUfficioDestinatario() );
-    setCodMotivo( aModel.getCodMotivo() );
-    setCodUfficioEmittente( aModel.getCodUfficioEmittente() );
-    setCodLuogoEmittente( aModel.getCodLuogoEmittente() );
-    setCognomeSoggettoPresentante( aModel.getCognomeSoggettoPresentante() );
-    setNomeSoggettoPresentante( aModel.getNomeSoggettoPresentante() );
-    setDataEmissione( aModel.getDataEmissione() );
-    setCodEsito( aModel.getCodEsito() );
-    setFlagPiuMeno( aModel.getFlagPiuMeno() );
-    setDataTrasmissioneAtti( aModel.getDataTrasmissioneAtti() );
-    setDataRicezioneAtti( aModel.getDataRicezioneAtti() );
-    setCodUfficioDestinatario( aModel.getCodUfficioDestinatario() );
-    setCodLuogoDestinatario( aModel.getCodLuogoDestinatario() );
-    setAnnoProtocollo( aModel.getAnnoProtocollo() );
-    setProgrProtocollo( aModel.getProgrProtocollo() );
-    setDocBlob( aModel.getDocBlobIn() );
-    setCodOperatoreInserimento( aModel.getCodOperatoreInserimento() );
-    setDataInserimento( aModel.getDataInserimento() );
-    setCodUfficioInserimento( aModel.getCodUfficioInserimento() );
-    //setCodOperatoreAggiornamento( aModel.getCodOperatoreAggiornamento() );
-    //setDataAggiornamento( aModel.getDataAggiornamento() );
-    //setCodUfficioAggiornamento( aModel.getCodUfficioAggiornamento() );
-    setFasSieIdFascicoloSiep( aModel.getFasSieIdFascicoloSiep() );
-    setFasSiuIdFascicoloSius( aModel.getFasSiuIdFascicoloSius() );
-    setTenIdTenore( aModel.getTenIdTenore() );
-    setDocBlob( aModel.getDocBlobIn());
-    setFlagDocumentoRegistrato( aModel.getFlagDocumentoRegistrato() );
-    setFasSiuIdFascicoloSiusDest( aModel.getFasSiuIdFascicoloSiusDest() );
-    setCodMagistrato( aModel.getCodMagistrato() );
-    // STUB:2003-07-09 PM Aggiunto pro tempore
-    setTemIdTemplate( aModel.getTemIdTemplate() );
-    setFlagStampaSiep (aModel.getFlagStampaSiep());
-    setFlagStampaSius (aModel.getFlagStampaSius());
-    setFlagVideoSiep (aModel.getFlagVideoSiep());
-    setFlagVideoSius (aModel.getFlagVideoSius());
-    setDecIdDecretoOrdinanzaSiep( aModel.getDecIdDecretoOrdinanzaSiep() );
-    setPenAccIdPenaAccessoria( aModel.getPenAccIdPenaAccessoria() );
-    setEveIdEvento (aModel.getEveIdEvento());
-    setEveIdEventoRevoca(aModel.getEveIdEventoRevoca());
-    setAnnIdAnnotazioneManuale(aModel.getAnnIdAnnotazioneManuale());
-    setPenIdPenaResidua(aModel.getPenIdPenaResidua());
-    setDataEspulsioneSanzSost(aModel.getDataEspulsioneSanzSost());
-    setDataRichiesta(aModel.getDataRichiesta());
-    setKeyEsecNsc(aModel.getKeyEsecNsc());
-    setIstruIdIstruttoriaCumulo(aModel.getIstruIdIstruttoriaCumulo());
-    setEstremiSoggRichIstr(aModel.getEstremiSoggRichIstr());
+		setIdEvento(aModel.getIdEvento());
+		setCodTipoEvento(aModel.getCodTipoEvento());
+		setCodTipoProvvedimento(aModel.getCodTipoProvvedimento());
+		this.setCodTipoUfficioDestinatario(aModel.getCodTipoUfficioDestinatario());
+		setCodMotivo(aModel.getCodMotivo());
+		setCodUfficioEmittente(aModel.getCodUfficioEmittente());
+		setCodLuogoEmittente(aModel.getCodLuogoEmittente());
+		setCognomeSoggettoPresentante(aModel.getCognomeSoggettoPresentante());
+		setNomeSoggettoPresentante(aModel.getNomeSoggettoPresentante());
+		setDataEmissione(aModel.getDataEmissione());
+		setCodEsito(aModel.getCodEsito());
+		setFlagPiuMeno(aModel.getFlagPiuMeno());
+		setDataTrasmissioneAtti(aModel.getDataTrasmissioneAtti());
+		setDataRicezioneAtti(aModel.getDataRicezioneAtti());
+		setCodUfficioDestinatario(aModel.getCodUfficioDestinatario());
+		setCodLuogoDestinatario(aModel.getCodLuogoDestinatario());
+		setAnnoProtocollo(aModel.getAnnoProtocollo());
+		setProgrProtocollo(aModel.getProgrProtocollo());
+		setDocBlob(aModel.getDocBlobIn());
+		setCodOperatoreInserimento(aModel.getCodOperatoreInserimento());
+		setDataInserimento(aModel.getDataInserimento());
+		setCodUfficioInserimento(aModel.getCodUfficioInserimento());
+		// setCodOperatoreAggiornamento( aModel.getCodOperatoreAggiornamento() );
+		// setDataAggiornamento( aModel.getDataAggiornamento() );
+		// setCodUfficioAggiornamento( aModel.getCodUfficioAggiornamento() );
+		setFasSieIdFascicoloSiep(aModel.getFasSieIdFascicoloSiep());
+		setFasSiuIdFascicoloSius(aModel.getFasSiuIdFascicoloSius());
+		setTenIdTenore(aModel.getTenIdTenore());
+		setDocBlob(aModel.getDocBlobIn());
+		setFlagDocumentoRegistrato(aModel.getFlagDocumentoRegistrato());
+		setFasSiuIdFascicoloSiusDest(aModel.getFasSiuIdFascicoloSiusDest());
+		setCodMagistrato(aModel.getCodMagistrato());
+		// STUB:2003-07-09 PM Aggiunto pro tempore
+		setTemIdTemplate(aModel.getTemIdTemplate());
+		setFlagStampaSiep(aModel.getFlagStampaSiep());
+		setFlagStampaSius(aModel.getFlagStampaSius());
+		setFlagVideoSiep(aModel.getFlagVideoSiep());
+		setFlagVideoSius(aModel.getFlagVideoSius());
+		setDecIdDecretoOrdinanzaSiep(aModel.getDecIdDecretoOrdinanzaSiep());
+		setPenAccIdPenaAccessoria(aModel.getPenAccIdPenaAccessoria());
+		setEveIdEvento(aModel.getEveIdEvento());
+		setEveIdEventoRevoca(aModel.getEveIdEventoRevoca());
+		setAnnIdAnnotazioneManuale(aModel.getAnnIdAnnotazioneManuale());
+		setPenIdPenaResidua(aModel.getPenIdPenaResidua());
+		setDataEspulsioneSanzSost(aModel.getDataEspulsioneSanzSost());
+		setDataRichiesta(aModel.getDataRichiesta());
+		setKeyEsecNsc(aModel.getKeyEsecNsc());
+		setIstruIdIstruttoriaCumulo(aModel.getIstruIdIstruttoriaCumulo());
+		setEstremiSoggRichIstr(aModel.getEstremiSoggRichIstr());
 
-    this.setDataInvioAtti(aModel.getDataInvioAtti());
-    this.setCodTipologiaInvioAtti(aModel.getCodTipologiaInvioAtti());
-    this.setDescrizioneTipologiaInvioAtti(aModel.getDescrizioneInvioAtti());
-    
-    // MEV_9 (D.lgs. 123/2018)
-    setDataRestituzioneAi(aModel.getDataRestituzioneAi());
-  }
+		this.setDataInvioAtti(aModel.getDataInvioAtti());
+		this.setCodTipologiaInvioAtti(aModel.getCodTipologiaInvioAtti());
+		this.setDescrizioneTipologiaInvioAtti(aModel.getDescrizioneInvioAtti());
+	}
 
 	public void setDAOFromModelForUpdate(EventoModel aModel) throws DAOException {
-    setCodTipoEvento( aModel.getCodTipoEvento() );
-    setCodTipoProvvedimento( aModel.getCodTipoProvvedimento() );
-    setCodMotivo( aModel.getCodMotivo() );
-    setCodUfficioEmittente( aModel.getCodUfficioEmittente() );
-    setCodLuogoEmittente( aModel.getCodLuogoEmittente() );
-    setCognomeSoggettoPresentante( aModel.getCognomeSoggettoPresentante() );
-    setNomeSoggettoPresentante( aModel.getNomeSoggettoPresentante() );
-    setDataEmissione( aModel.getDataEmissione() );
-    setCodEsito( aModel.getCodEsito() );
-    setFlagPiuMeno( aModel.getFlagPiuMeno() );
-    setDataTrasmissioneAtti( aModel.getDataTrasmissioneAtti() );
-    setDataRicezioneAtti( aModel.getDataRicezioneAtti() );
-    setCodUfficioDestinatario( aModel.getCodUfficioDestinatario() );
-    setCodLuogoDestinatario( aModel.getCodLuogoDestinatario() );
-    setDocBlob( aModel.getDocBlobIn() );
-    setCodOperatoreAggiornamento( aModel.getCodOperatoreAggiornamento() );
-    setDataAggiornamento( aModel.getDataAggiornamento() );
-    setCodUfficioAggiornamento( aModel.getCodUfficioAggiornamento() );
-    setFasSieIdFascicoloSiep( aModel.getFasSieIdFascicoloSiep() );
-    setFasSiuIdFascicoloSius( aModel.getFasSiuIdFascicoloSius() );
-    setTenIdTenore( aModel.getTenIdTenore() );
-    setDocBlob( aModel.getDocBlobIn());
-    setFlagDocumentoRegistrato( aModel.getFlagDocumentoRegistrato() );
-    setCodMagistrato( aModel.getCodMagistrato());
-    // STUB:2003-07-09 PM Aggiunto pro tempore
-    setTemIdTemplate( aModel.getTemIdTemplate() );
-    setFlagStampaSiep( aModel.getFlagStampaSiep());
-    setFlagStampaSius( aModel.getFlagStampaSius());
-    setFlagVideoSiep( aModel.getFlagVideoSiep());
-    setFlagVideoSius( aModel.getFlagVideoSius());
-    setDecIdDecretoOrdinanzaSiep( aModel.getDecIdDecretoOrdinanzaSiep() );
-    setPenAccIdPenaAccessoria( aModel.getPenAccIdPenaAccessoria() );
-    setEveIdEvento (aModel.getEveIdEvento());
-    setEveIdEventoRevoca(aModel.getEveIdEventoRevoca());
-    setAnnIdAnnotazioneManuale(aModel.getAnnIdAnnotazioneManuale());
-    setPenIdPenaResidua(aModel.getPenIdPenaResidua());
-    setDataEspulsioneSanzSost(aModel.getDataEspulsioneSanzSost());
-    setDataRichiesta(aModel.getDataRichiesta());
-    setKeyEsecNsc(aModel.getKeyEsecNsc());
-    
-    this.setDataInvioAtti(aModel.getDataInvioAtti());
-    this.setCodTipologiaInvioAtti(aModel.getCodTipologiaInvioAtti());
-    this.setDescrizioneTipologiaInvioAtti(aModel.getDescrizioneInvioAtti());
+		setCodTipoEvento(aModel.getCodTipoEvento());
+		setCodTipoProvvedimento(aModel.getCodTipoProvvedimento());
+		setCodMotivo(aModel.getCodMotivo());
+		setCodUfficioEmittente(aModel.getCodUfficioEmittente());
+		setCodLuogoEmittente(aModel.getCodLuogoEmittente());
+		setCognomeSoggettoPresentante(aModel.getCognomeSoggettoPresentante());
+		setNomeSoggettoPresentante(aModel.getNomeSoggettoPresentante());
+		setDataEmissione(aModel.getDataEmissione());
+		setCodEsito(aModel.getCodEsito());
+		setFlagPiuMeno(aModel.getFlagPiuMeno());
+		setDataTrasmissioneAtti(aModel.getDataTrasmissioneAtti());
+		setDataRicezioneAtti(aModel.getDataRicezioneAtti());
+		setCodUfficioDestinatario(aModel.getCodUfficioDestinatario());
+		setCodLuogoDestinatario(aModel.getCodLuogoDestinatario());
+		setDocBlob(aModel.getDocBlobIn());
+		setCodOperatoreAggiornamento(aModel.getCodOperatoreAggiornamento());
+		setDataAggiornamento(aModel.getDataAggiornamento());
+		setCodUfficioAggiornamento(aModel.getCodUfficioAggiornamento());
+		setFasSieIdFascicoloSiep(aModel.getFasSieIdFascicoloSiep());
+		setFasSiuIdFascicoloSius(aModel.getFasSiuIdFascicoloSius());
+		setTenIdTenore(aModel.getTenIdTenore());
+		setDocBlob(aModel.getDocBlobIn());
+		setFlagDocumentoRegistrato(aModel.getFlagDocumentoRegistrato());
+		setCodMagistrato(aModel.getCodMagistrato());
+		// STUB:2003-07-09 PM Aggiunto pro tempore
+		setTemIdTemplate(aModel.getTemIdTemplate());
+		setFlagStampaSiep(aModel.getFlagStampaSiep());
+		setFlagStampaSius(aModel.getFlagStampaSius());
+		setFlagVideoSiep(aModel.getFlagVideoSiep());
+		setFlagVideoSius(aModel.getFlagVideoSius());
+		setDecIdDecretoOrdinanzaSiep(aModel.getDecIdDecretoOrdinanzaSiep());
+		setPenAccIdPenaAccessoria(aModel.getPenAccIdPenaAccessoria());
+		setEveIdEvento(aModel.getEveIdEvento());
+		setEveIdEventoRevoca(aModel.getEveIdEventoRevoca());
+		setAnnIdAnnotazioneManuale(aModel.getAnnIdAnnotazioneManuale());
+		setPenIdPenaResidua(aModel.getPenIdPenaResidua());
+		setDataEspulsioneSanzSost(aModel.getDataEspulsioneSanzSost());
+		setDataRichiesta(aModel.getDataRichiesta());
+		setKeyEsecNsc(aModel.getKeyEsecNsc());
 
-    setIstruIdIstruttoriaCumulo(aModel.getIstruIdIstruttoriaCumulo());
-    setEstremiSoggRichIstr(aModel.getEstremiSoggRichIstr());
-	
-    selCondizioneUpdate(aModel.getIdEvento());
-    
-    // MEV_9 (D.lgs. 123/2018)
-    //setDataRestituzioneAi(aModel.getDataRestituzioneAi());
-  }
+		this.setDataInvioAtti(aModel.getDataInvioAtti());
+		this.setCodTipologiaInvioAtti(aModel.getCodTipologiaInvioAtti());
+		this.setDescrizioneTipologiaInvioAtti(aModel.getDescrizioneInvioAtti());
+
+		setIstruIdIstruttoriaCumulo(aModel.getIstruIdIstruttoriaCumulo());
+		setEstremiSoggRichIstr(aModel.getEstremiSoggRichIstr());
+
+		selCondizioneUpdate(aModel.getIdEvento());
+	}
 
 	public void setDAOFromModelForUpdateBlob(EventoModel aModel) throws DAOException {
-    setDocBlob( aModel.getDocBlobIn() );
-    setDataAggiornamento( aModel.getDataAggiornamento() );
-    setCodUfficioAggiornamento( aModel.getCodUfficioAggiornamento() );
-    setCodOperatoreAggiornamento( aModel.getCodOperatoreAggiornamento() );
-    setFlagDocumentoRegistrato( aModel.getFlagDocumentoRegistrato() );
-  }
+		setDocBlob(aModel.getDocBlobIn());
+		setDataAggiornamento(aModel.getDataAggiornamento());
+		setCodUfficioAggiornamento(aModel.getCodUfficioAggiornamento());
+		setCodOperatoreAggiornamento(aModel.getCodOperatoreAggiornamento());
+		setFlagDocumentoRegistrato(aModel.getFlagDocumentoRegistrato());
+	}
 
-  // Update della data di ricezione atti
+	// Update della data di ricezione atti
 	public void setDAOFromModelForUpdateDataRicezione(EventoModel aModel) throws DAOException {
-    setDataRicezioneAtti(aModel.getDataRicezioneAtti());
-    setDataAggiornamento( aModel.getDataAggiornamento() );
-    setCodUfficioAggiornamento( aModel.getCodUfficioAggiornamento() );
-    setCodOperatoreAggiornamento( aModel.getCodOperatoreAggiornamento() );
+		setDataRicezioneAtti(aModel.getDataRicezioneAtti());
+		setDataAggiornamento(aModel.getDataAggiornamento());
+		setCodUfficioAggiornamento(aModel.getCodUfficioAggiornamento());
+		setCodOperatoreAggiornamento(aModel.getCodOperatoreAggiornamento());
 
-    selCondizioneUpdate(aModel.getIdEvento());
-  }
+		selCondizioneUpdate(aModel.getIdEvento());
+	}
 
-  // Update dell'Ufficio Destinatario  // 06/12/2010
+	// Update dell'Ufficio Destinatario // 06/12/2010
 	public void setDAOFromModelForUpdateUfficioDestinatario(EventoModel aModel) throws DAOException {
-    setCodUfficioDestinatario(aModel.getCodUfficioDestinatario());
-    setDataAggiornamento( aModel.getDataAggiornamento() );
-    setCodUfficioAggiornamento( aModel.getCodUfficioAggiornamento() );
-    setCodOperatoreAggiornamento( aModel.getCodOperatoreAggiornamento() );
+		setCodUfficioDestinatario(aModel.getCodUfficioDestinatario());
+		setDataAggiornamento(aModel.getDataAggiornamento());
+		setCodUfficioAggiornamento(aModel.getCodUfficioAggiornamento());
+		setCodOperatoreAggiornamento(aModel.getCodOperatoreAggiornamento());
 
-    selCondizioneUpdate(aModel.getIdEvento());
-  }
+		selCondizioneUpdate(aModel.getIdEvento());
+	}
 
-  // Update del FAS_SIE_ID_FASCICOLO_SIEP.
+	// Update del FAS_SIE_ID_FASCICOLO_SIEP.
 	public void setDAOFromModelForUpdateIdFascicoloSius(EventoModel aModel) throws DAOException {
-    setFasSieIdFascicoloSiep(aModel.getFasSieIdFascicoloSiep());
-    setDataAggiornamento( aModel.getDataAggiornamento() );
-    setCodUfficioAggiornamento( aModel.getCodUfficioAggiornamento() );
-    setCodOperatoreAggiornamento( aModel.getCodOperatoreAggiornamento() );
+		setFasSieIdFascicoloSiep(aModel.getFasSieIdFascicoloSiep());
+		setDataAggiornamento(aModel.getDataAggiornamento());
+		setCodUfficioAggiornamento(aModel.getCodUfficioAggiornamento());
+		setCodOperatoreAggiornamento(aModel.getCodOperatoreAggiornamento());
 
-    selCondizioneUpdateXIdFascicoloSius(aModel.getFasSiuIdFascicoloSius());
-  }
-  /**
-   * Il metodo prepara l'Update da effettuare sulla tabella EVENTO per annullare tutti i riferimenti
-   * attraverso l'EVE_ID_EVENTO al record il cui ID viene passato attraverso il model.
-	 * 
-   * @param aModel
-   * @throws DAOException
-   */
+		selCondizioneUpdateXIdFascicoloSius(aModel.getFasSiuIdFascicoloSius());
+	}
+
+	/**
+	 * Il metodo prepara l'Update da effettuare sulla tabella EVENTO per annullare tutti i riferimenti
+	 * attraverso l'EVE_ID_EVENTO al record il cui ID viene passato attraverso il model.
+	 *
+	 * @param aModel
+	 * @throws DAOException
+	 */
 	public void setDAOFromModelForResetRifEveIdEvento(EventoModel aModel) throws DAOException {
-    setDataAggiornamento( aModel.getDataAggiornamento() );
-    setCodUfficioAggiornamento( aModel.getCodUfficioAggiornamento() );
-    setCodOperatoreAggiornamento( aModel.getCodOperatoreAggiornamento() );
-    setEveIdEvento(null);
+		setDataAggiornamento(aModel.getDataAggiornamento());
+		setCodUfficioAggiornamento(aModel.getCodUfficioAggiornamento());
+		setCodOperatoreAggiornamento(aModel.getCodOperatoreAggiornamento());
+		setEveIdEvento(null);
 
-    setCondition(" EVE_ID_EVENTO = " + aModel.getIdEvento());
-  }
+		setCondition(" EVE_ID_EVENTO = " + aModel.getIdEvento());
+	}
 
- /**
-  * Il metodo prepara l'Update da effettuare sulla tabella EVENTO per annullare tutti i riferimenti
-  * attraverso l'EVE_ID_EVENTO_REVOCA al record il cui ID viene passato attraverso il model.
-	 * 
-  * @param aModel
-  * @throws DAOException
-  * @param aModel
-  * @throws DAOException
-  */
+	/**
+	 * Il metodo prepara l'Update da effettuare sulla tabella EVENTO per annullare tutti i riferimenti
+	 * attraverso l'EVE_ID_EVENTO_REVOCA al record il cui ID viene passato attraverso il model.
+	 *
+	 * @param aModel
+	 * @throws DAOException
+	 * @param aModel
+	 * @throws DAOException
+	 */
 	public void setDAOFromModelForResetRifEveIdEventoRevoca(EventoModel aModel) throws DAOException {
-   setDataAggiornamento( aModel.getDataAggiornamento() );
-   setCodUfficioAggiornamento( aModel.getCodUfficioAggiornamento() );
-   setCodOperatoreAggiornamento( aModel.getCodOperatoreAggiornamento() );
-   setEveIdEventoRevoca(null);
+		setDataAggiornamento(aModel.getDataAggiornamento());
+		setCodUfficioAggiornamento(aModel.getCodUfficioAggiornamento());
+		setCodOperatoreAggiornamento(aModel.getCodOperatoreAggiornamento());
+		setEveIdEventoRevoca(null);
 
-   setCondition(" EVE_ID_EVENTO_REVOCA = " + aModel.getIdEvento());
- }
+		setCondition(" EVE_ID_EVENTO_REVOCA = " + aModel.getIdEvento());
+	}
 
- /**
+	/**
 	 * Il metodo annulla i riferimenti in tabella ad un Evento con chiave IdEvento, riferimenti tramite
 	 * EVE_ID_EVENTO e EVE_ID_EVENTO_REVOCA.
-	 * 
-  * @param aModel
-  * @throws DAOException
-  */
+	 *
+	 * @param aModel
+	 * @throws DAOException
+	 */
 	public void updateDAOFromModelForResetRifEve(EventoModel aModel) throws DAOException {
-    // Cancellazione  riferimenti tramite EVE_ID_EVENTO
-    setDAOFromModelForResetRifEveIdEvento(aModel);
-    update();
-    stop();
+		// Cancellazione riferimenti tramite EVE_ID_EVENTO
+		setDAOFromModelForResetRifEveIdEvento(aModel);
+		update();
+		stop();
 
-    // Cancellazione  riferimenti tramite EVE_ID_EVENTO_REVOCA
-    setDAOFromModelForResetRifEveIdEventoRevoca(aModel);
-    update();
-    stop();
-  }
+		// Cancellazione riferimenti tramite EVE_ID_EVENTO_REVOCA
+		setDAOFromModelForResetRifEveIdEventoRevoca(aModel);
+		update();
+		stop();
+	}
 
 	public void selCondizione(EventoModel aModel) {
-    setCondition(" ID_EVENTO = " + aModel.getIdEvento());
-  }
+		setCondition(" ID_EVENTO = " + aModel.getIdEvento());
+	}
 
 	public void selCondizioneUpdateXIdFascicoloSius(BigDecimal key) {
-    setCondition(" FAS_SIU_ID_FASCICOLO_SIUS = " + key);
-  }
+		setCondition(" FAS_SIU_ID_FASCICOLO_SIUS = " + key);
+	}
 
 	public void selCondizioneUpdate(BigDecimal key) {
-    setCondition(" ID_EVENTO = " + key);
-  }
+		setCondition(" ID_EVENTO = " + key);
+	}
 
 	public void selCondizioneEveIdEvento(BigDecimal key) {
-    setCondition(" EVE_ID_EVENTO = " + key);
-  }
+		setCondition(" EVE_ID_EVENTO = " + key);
+	}
 
 	public void selCondizioneAnnIdAnnotazioneManualeNonValidati(BigDecimal key) {
 		setCondition(" ANN_ID_ANNOTAZIONE_MANUALE = " + key
 				+ " AND (FLAG_DOCUMENTO_REGISTRATO = 'N' OR FLAG_DOCUMENTO_REGISTRATO IS NULL)");
-  }
+	}
 
-// Per il cambiamento del codice Tipo Provvedimento in molti provvedimenti è necessario
+	// Per il cambiamento del codice Tipo Provvedimento in molti provvedimenti è necessario
 	// prevedere una funzione di ricerca compatibile con i dati vecchi, ovvero che cerchi sia i codici nuovi
 	// che il vecchi.
-// Luigi 12-10-2005
+	// Luigi 12-10-2005
 	public void selCondizioneRicerca(BigDecimal aIdFascicolo, String aTipoEvento, String[] aTipoProv,
 			String[] aCodMotiv, String aFlagRegistrato) {
-    String lCondizione = new String();
+		String lCondizione = new String();
 
 		if (aIdFascicolo != null) {
-      lCondizione += " FAS_SIE_ID_FASCICOLO_SIEP=" + aIdFascicolo;
-    }
+			lCondizione += " FAS_SIE_ID_FASCICOLO_SIEP=" + aIdFascicolo;
+		}
 
 		if (aTipoEvento != null) {
-      if (aTipoEvento.compareTo("") != 0)
-        lCondizione += " AND COD_TIPO_EVENTO ='" +aTipoEvento+ "'";
-    }
+			if (aTipoEvento.compareTo("") != 0)
+				lCondizione += " AND COD_TIPO_EVENTO ='" + aTipoEvento + "'";
+		}
 		if (aTipoProv != null && aTipoProv.length > 0 && aCodMotiv != null && aCodMotiv.length > 0
 				&& aTipoProv.length == aCodMotiv.length) {
-      lCondizione += " AND ( ";
+			lCondizione += " AND ( ";
 			for (int i = 0; i < aTipoProv.length; i++) {
-        if ( i > 0)
-          lCondizione += " OR ";
+				if (i > 0)
+					lCondizione += " OR ";
 				lCondizione += "(COD_TIPO_PROVVEDIMENTO = '" + aTipoProv[i] + "' AND COD_MOTIVO = '"
 						+ aCodMotiv[i] + "' )";
-      }
-      lCondizione += " )";
-    }
+			}
+			lCondizione += " )";
+		}
 		if (aFlagRegistrato != null) {
 			if (aFlagRegistrato.compareTo("S") == 0) {
-        lCondizione += " AND FLAG_DOCUMENTO_REGISTRATO = 'S' ";
+				lCondizione += " AND FLAG_DOCUMENTO_REGISTRATO = 'S' ";
 			} else {
-        if (aFlagRegistrato.compareTo("N") == 0)
-          lCondizione += " AND (FLAG_DOCUMENTO_REGISTRATO = 'N' OR FLAG_DOCUMENTO_REGISTRATO IS NULL)";
-      }
-    }
+				if (aFlagRegistrato.compareTo("N") == 0)
+					lCondizione += " AND (FLAG_DOCUMENTO_REGISTRATO = 'N' OR FLAG_DOCUMENTO_REGISTRATO IS NULL)";
+			}
+		}
 
-    setCondition(lCondizione);
-    setOrder("DATA_INSERIMENTO");
-  }
+		setCondition(lCondizione);
+		setOrder("DATA_INSERIMENTO");
+	}
 
-//	private String inCodiceMotivo(String[] aCodMotivi) {
-//		String lCondizione = "";
-//
-//		if (aCodMotivi.length > 0) {
-//			lCondizione += " AND COD_MOTIVO IN (";
-//			for (int i = 0; i < aCodMotivi.length; i++) {
-//				lCondizione += "'" + aCodMotivi[i] + "'";
-//				if (aCodMotivi.length > 1 && i < aCodMotivi.length - 1)
-//					lCondizione += ",";
-//			}
-//			lCondizione += ")";
-//		}
-//
-//		return lCondizione;
-//	}
+	// private String inCodiceMotivo(String[] aCodMotivi) {
+	// String lCondizione = "";
+	//
+	// if (aCodMotivi.length > 0) {
+	// lCondizione += " AND COD_MOTIVO IN (";
+	// for (int i = 0; i < aCodMotivi.length; i++) {
+	// lCondizione += "'" + aCodMotivi[i] + "'";
+	// if (aCodMotivi.length > 1 && i < aCodMotivi.length - 1)
+	// lCondizione += ",";
+	// }
+	// lCondizione += ")";
+	// }
+	//
+	// return lCondizione;
+	// }
 
-  /**
-   * 22/01/2008 Il metodo prepara l'Update da effettuare sulla tabella EVENTO per valorizzare i campi
+	/**
+	 * 22/01/2008 Il metodo prepara l'Update da effettuare sulla tabella EVENTO per valorizzare i campi
 	 * PEN_ID_PENA_RESIDUA e ANN_ID_ANNOTAZIONE_MANUALE; l'EVENTO era stato inserito senza di essi per evitare
 	 * eccezioni di integrità referenziale.
-	 * 
-   * @param aModel
-   * @throws DAOException
-   */
+	 *
+	 * @param aModel
+	 * @throws DAOException
+	 */
 	public void setDAOFromModelForValoriIntegritaRef(EventoModel aModel) throws DAOException {
-    setAnnIdAnnotazioneManuale( aModel.getAnnIdAnnotazioneManuale() );
-    setPenIdPenaResidua( aModel.getPenIdPenaResidua() );
-    setEveIdEvento( aModel.getEveIdEvento() );
-    setEveIdEventoRevoca( aModel.getEveIdEventoRevoca() );
+		setAnnIdAnnotazioneManuale(aModel.getAnnIdAnnotazioneManuale());
+		setPenIdPenaResidua(aModel.getPenIdPenaResidua());
+		setEveIdEvento(aModel.getEveIdEvento());
+		setEveIdEventoRevoca(aModel.getEveIdEventoRevoca());
 
-    setCondition(" EVE_ID_EVENTO = " + aModel.getIdEvento());
-  }
-  
+		setCondition(" EVE_ID_EVENTO = " + aModel.getIdEvento());
+	}
+
 	public void setDAOFromModelForUpdateKeyNsc(EventoModel aModel) throws DAOException {
-        setKeyEsecNsc(aModel.getKeyEsecNsc());
-  }
+		setKeyEsecNsc(aModel.getKeyEsecNsc());
+	}
+
 }

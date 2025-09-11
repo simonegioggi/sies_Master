@@ -11,15 +11,12 @@ import f3b.web.IWebConstants;
 import siap.sico.cssa.action.ICostantiCSSA;
 import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.evento.action.ICostantiEvento;
-import siap.sico.evento.controller.IEvento;
-import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.misuraalternativa.controller.IMisuraAlternativa;
 import siap.sico.misuraalternativa.model.MisuraAlternativaModel;
 import siap.sico.util.SICOLookupRemote;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.notifica.model.NotificaModel;
-import siap.siep.ordineesecuzione.controller.IOrdineEsecuzione;
 import siap.siep.penaresidua.action.ICostantiPenaResidua;
 import siap.siep.penaresidua.controller.IPenaResidua;
 import siap.siep.penaresidua.model.PenaResiduaModel;
@@ -117,21 +114,6 @@ public class ActInserisciConcessione extends ActConcessione {
 			lFlagSan = "S";
 
 		FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
-
-		// MEV_9-SIEP: aggiunta nuova gestione per modifica
-		String tipoOperazione = null;
-		if (!isRequestParameterNullObj("tipoOperazione"))
-			tipoOperazione = getRequestStringParameter("tipoOperazione");
-		if ("MODIFICA".equals(tipoOperazione)) {
-			BigDecimal idEventoOld = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
-			siesLogger
-					.debug("Sono in modifica procedo alla cancellazione dell'evento con id = " + idEventoOld);
-			IEvento ie = SICOLookupRemote.getEventoRemote();
-			EventoModel lEveModRic = ie.ExRicercaEventoByKey(idEventoOld);
-			IOrdineEsecuzione ioe = SIEPLookupRemote.getOrdineEsecuzioneRemote();
-			ioe.ExCancellaEventoConStoreProcedure(lEveModRic);
-			siesLogger.debug("Evento cancellato proseguo con un nuovo inserimento");
-		}
 
 		// setto la natura della MA
 		String tipoMisura = getRequestStringParameter("tipomisura");
@@ -272,12 +254,8 @@ public class ActInserisciConcessione extends ActConcessione {
 						ICostantiPenaResidua.CAMPO_MESE_DATA_FINE,
 						ICostantiPenaResidua.CAMPO_GIORNO_DATA_FINE));
 
-			siesLogger.debug("TEST 1");
 			if (!lPosMod.isLibero())
 				lMisMod = SettaReclusioneArresto(lPenaResMod, lMisMod);
-
-			// MEV_9-SIEP: aggiunto metodo
-			settaDatiOrdinanzaProvvisoria(lMisMod);
 
 			// MEV10-s3: anticipo questo metodo per prevenire errore inserimento dati ufficio UDS / TDS
 			NotificaModel[] lNotificheMod = setNotificheMisuraAlternativa();
@@ -354,7 +332,6 @@ public class ActInserisciConcessione extends ActConcessione {
 			if (lDataInizio != null)
 				lMisAlModConcessa.setDataInizioMisura(lDataInizio);
 
-			siesLogger.debug("TEST 2");
 			if (!lPosMod.isLibero())
 				lMisAlModConcessa = SettaReclusioneArresto(lPenaResMod, lMisAlModConcessa);
 
@@ -371,18 +348,7 @@ public class ActInserisciConcessione extends ActConcessione {
 			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE))
 				lMisAlModConcessa.setNote(getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE));
 
-			// MEV_9-SIEP: aggiunta impostazione di variabile
-			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA))
-				lMisAlModConcessa.setDescrLuogoProva(
-						getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA));
-
-			// MEV_9-SIEP: aggiunto metodo
-			settaDatiOrdinanzaProvvisoria(lMisAlModConcessa);
-
-			// model di ritorno
 			lRetModel = lMisAltCtrl.ExInserisciOModificaMANotifica(lEveNot, prm, lMisAlModConcessa, null);
-
-			// pagina di ritorno
 			lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
 					+ "=siap.siep.misuraalternativa.action.ActDettaglioConcessione&"
 					+ ICostantiEvento.CAMPO_ID_EVENTO + "=" + lRetModel.getEvento().getIdEvento();
@@ -393,24 +359,6 @@ public class ActInserisciConcessione extends ActConcessione {
 
 		// pagina di ritorno
 		return lPage;
-	}
-
-	// MEV_9-SIEP: aggiunto metodo
-	private void settaDatiOrdinanzaProvvisoria(MisuraAlternativaModel mam) throws F3BException {
-
-		if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT))
-			mam.setAnnoRegistroMaAt(
-					getRequestBigDecimalParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT));
-		if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT))
-			mam.setNumeroRegistroMaAt(
-					getRequestBigDecimalParameter(ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT));
-		if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT)
-				&& !isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT)
-				&& !isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT))
-			mam.setDataDecisioneMaAt(
-					getRequestDateParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT,
-							ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT,
-							ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT));
 	}
 
 	/**
@@ -474,8 +422,7 @@ public class ActInserisciConcessione extends ActConcessione {
 			aEveNot = getProvvedimentoMotivoDetDom(aPosizione, aFlagAffi,
 					aMisMod.getCodTipoUfficioScarcerazione(), aCodice);
 		else if (atipoMisura.equals("SEMILIBERTA"))
-			// MEV_9-SIEP: cambiata firma al metodo aggiunto codMotivo
-			aEveNot = getProvvedimentoMotivoSemiliberta(aPosizione, aFlagAffi, aCodice);
+			aEveNot = getProvvedimentoMotivoSemiliberta(aPosizione, aFlagAffi);
 		else if (atipoMisura.equals("INDULTINO"))
 			aEveNot = getProvvedimentoMotivoIndultino(aPosizione, aFlagAffi,
 					aMisMod.getCodTipoUfficioScarcerazione(), aCodice);
@@ -508,10 +455,8 @@ public class ActInserisciConcessione extends ActConcessione {
 		// se il soggetto è in detenzione domiciliare provvisoria (29) e viene concessa la detenzione
 		// mantengo la stessa data inizio misura della detenzione domiciliare provvisoria (precedentemente
 		// caricata in maschera)
-		if ((aPosMod.getCodPosizioneGiuridica().equals("29") && atipoMisura.equals("DETENZIONE"))
-				// MEV_9-SIEP: aggiunta or condition per gestione ordinanza applicazione provvisoria
-				|| (aPosMod.isLibero() && atipoMisura.equals("AFFIDAMENTO"))) {
-			if (!isRequestParameterNullEmptyObj(ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA))
+		if (aPosMod.getCodPosizioneGiuridica().equals("29") && atipoMisura.equals("DETENZIONE")) {
+			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA))
 				aDataInizio = getRequestDateParameter(
 						ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA,
 						ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA,
@@ -525,14 +470,12 @@ public class ActInserisciConcessione extends ActConcessione {
 		// affidamento in prova
 		// mantengo la stessa data inizio misura affidamento in prova provvisorio (precedentemente caricata in
 		// maschera)
-		else if (atipoMisura.equals("AFFIDAMENTO")
-				&& (!isRequestParameterNullEmptyObj(ICostantiEvento.CAMPO_ID_EVENTO)
-						// MEV_9-SIEP: aggiunta or condition per gestione ordinanza applicazione provvisoria
-						|| !isRequestParameterNullEmptyObj(ICostantiMisuraAlternativa.CAMPO_EVE_ID_EVENTO))
+		else if ((getRequestStringParameter(ICostantiEvento.CAMPO_ID_EVENTO) != null
+				&& !getRequestStringParameter(ICostantiEvento.CAMPO_ID_EVENTO).equals(""))
 				&& (aPosMod.getCodPosizioneGiuridica().equals("13") // Affidamento in prova
 						|| aPosMod.getCodPosizioneGiuridica().equals("54") // Affidamento Provvisorio
-				)) {
-			if (!isRequestParameterNullEmptyObj(ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA))
+				) && atipoMisura.equals("AFFIDAMENTO")) {
+			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA))
 				aDataInizio = getRequestDateParameter(
 						ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA,
 						ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA,

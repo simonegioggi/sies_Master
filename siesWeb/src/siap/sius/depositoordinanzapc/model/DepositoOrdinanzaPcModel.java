@@ -91,12 +91,6 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 	private String mDescrTipoControlloEsecuzione;
 	// 10102014 - D.L. 92 2014 Violazione CEDU
 	private BigDecimal mSommaRisarcimento;
-
-	// INIZIO: MEV_9 (D.lgs. 123/2018)
-	private Date mDataEsecutivita;
-	private String mNoteDataEsecutivita;
-	// FINE: MEV_9
-
 	// MEV_2023-35: aggiunta variabile di classe per memorizzare il tipo di sanzione comminata
 	private String mCodTipoSanzione;
 	// MEV_2023-35: aggiunte variabili di classe per memorizzare il tipo di PA sospesa
@@ -180,10 +174,6 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 		this.mDescrTipoControlloEsecuzione = null;
 		// 10102014 - D.L. 92 2014 Violazione CEDU
 		this.mSommaRisarcimento = null;
-		// INIZIO: MEV_9 (D.lgs. 123/2018)
-		this.mDataEsecutivita = null;
-		this.mNoteDataEsecutivita = "";
-		// FINE: MEV_9
 		this.mCodTipoSanzione = "";
 		this.mCodTipoPenaAccessoria = "-";
 		this.mDescrTipoPenaAccessoria = null;
@@ -267,10 +257,6 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 		this.mDescrTipoControlloEsecuzione = aModel.mDescrTipoControlloEsecuzione;
 		// 10102014 - D.L. 92 2014 Violazione CEDU
 		this.mSommaRisarcimento = aModel.mSommaRisarcimento;
-		// INIZIO: MEV_9 (D.lgs. 123/2018)
-		this.mDataEsecutivita = aModel.mDataEsecutivita;
-		this.mNoteDataEsecutivita = aModel.mNoteDataEsecutivita;
-		// FINE: MEV_9
 		this.mCodTipoSanzione = aModel.mCodTipoSanzione;
 		this.mCodTipoPenaAccessoria = aModel.mCodTipoPenaAccessoria;
 		this.mDescrTipoPenaAccessoria = aModel.mDescrTipoPenaAccessoria;
@@ -308,8 +294,7 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 			Date aDataScadenzaSospensioneSS, BigDecimal aSospensioneGGSS, BigDecimal aSospensioneMMSS,
 			BigDecimal aSospensioneAASS, String aFlagNominaComActa, String aDescrCommActa,
 			String aCodTipoControlloEsecuzione, String aDescrTipoControlloEsecuzione,
-			BigDecimal aSommaRisarcimento, Date aDataEsecutivita, String aNoteDataEsecutivita,
-			String aCodTipoSanzione, String aCodTipoPenaAccessoria,
+			BigDecimal aSommaRisarcimento, String aCodTipoSanzione, String aCodTipoPenaAccessoria,
 			String aDescrTipoPenaAccessoria, String aDurata, String aDescrDurata, BigDecimal aNumAnni,
 			BigDecimal aNumMesi, BigDecimal aNumGiorni) {
 
@@ -381,10 +366,6 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 		this.mDescrTipoControlloEsecuzione = aDescrTipoControlloEsecuzione;
 		// 10102014 - D.L. 92 2014 Violazione CEDU
 		this.mSommaRisarcimento = aSommaRisarcimento;
-		// INIZIO: MEV_9 (D.lgs. 123/2018)
-		this.mDataEsecutivita = aDataEsecutivita;
-		this.mNoteDataEsecutivita = aNoteDataEsecutivita;
-		// FINE: MEV_9
 		this.mCodTipoSanzione = aCodTipoSanzione;
 		this.mCodTipoPenaAccessoria = aCodTipoPenaAccessoria;
 		this.mDescrTipoPenaAccessoria = aDescrTipoPenaAccessoria;
@@ -688,16 +669,6 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 		else
 			return new BigDecimal(0);
 	}
-
-	// INIZIO: MEV_9 (D.lgs. 123/2018)
-	public Date getDataEsecutivita() {
-		return mDataEsecutivita;
-	}
-
-	public String getNoteDataEsecutivita() {
-		return mNoteDataEsecutivita;
-	}
-	// FINE: MEV_9
 
 	public String getCodTipoSanzione() {
 		return mCodTipoSanzione;
@@ -1013,16 +984,6 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 		this.mSommaRisarcimento = aValore;
 	}
 
-	// INIZIO: MEV_9 (D.lgs. 123/2018)
-	public void setDataEsecutivita(Date mDataEsecutivita) {
-		this.mDataEsecutivita = mDataEsecutivita;
-	}
-
-	public void setNoteDataEsecutivita(String mNoteDataEsecutivita) {
-		this.mNoteDataEsecutivita = mNoteDataEsecutivita;
-	}
-	// FINE: MEV_9
-
 	public void setCodTipoSanzione(String aValore) {
 		this.mCodTipoSanzione = aValore;
 	}
@@ -1087,10 +1048,7 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 				// 20140603 - P.M. ( SIUS - implemntazione per il D.L. 146 )
 				mCodTipoControlloEsecuzione + " - " + mDescrTipoControlloEsecuzione + " - " +
 				// 10102014 - D.L. 92 2014 Violazione CEDU
-				mSommaRisarcimento + " - " +
-				// MEV_9 (D.lgs. 123/2018)
-				mDataEsecutivita + " - " + mNoteDataEsecutivita + " - " +
-				mCodTipoSanzione + " - " + mCodTipoPenaAccessoria + " - "
+				mSommaRisarcimento + " - " + mCodTipoSanzione + " - " + mCodTipoPenaAccessoria + " - "
 				+ mDescrTipoPenaAccessoria + " - " + mDurata + " - " + mDescrDurata + " - " + mNumAnni + " - "
 				+ mNumMesi + " - " + mNumGiorni;
 

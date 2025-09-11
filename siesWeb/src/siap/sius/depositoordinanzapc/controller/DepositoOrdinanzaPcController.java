@@ -347,7 +347,6 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
-			daoEx.printStackTrace();
 			throw new SIUSException(
 					"DepositoOrdinanzaPcController.ExInserisciOrdinanza: Non posso leggere : " + daoEx);
 		} catch (SQLException sqlEx) {
@@ -355,7 +354,6 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("SQLException: " + sqlEx);
-			sqlEx.printStackTrace();
 			throw new SIUSException(
 					"DepositoOrdinanzaPcController.ExInserisciOrdinanza: Non posso leggere  : " + sqlEx);
 		} catch (Exception e) {
@@ -363,7 +361,6 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + e);
-			e.printStackTrace();
 			throw new SIUSException("DepositoOrdinanzaPcController.ExInserisciOrdinanza:" + e);
 		} finally {
 			cleanup(lConn);
@@ -410,7 +407,6 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + e);
-			e.printStackTrace();
 			throw new SIUSException("DepositoOrdinanzaPcController.ExInserisciOrdinanza:" + e);
 		} finally {
 			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
@@ -712,32 +708,21 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			// -- Parte Gestione Tenori --//
 			BigDecimal lIdGenProc = aGProcOrdEveTenori.getGeneraleProcedimento().getIdGeneraleProcedimento();
 
-			/*
-			 * ISSUE MEV : aggiunta gestione per ORDINANZA di conferma decisione MAGISTRATO RELATORE 
-			 * Numero MEV : 9 
-			 * Autore : sgioggi 
-			 * Data : 17 gen 2023 
-			 * Branch : MEV_9
-			 */
-			if (!"CM".equals(lGProcOrdEveTenori.getOrdinanza().getCodTipoOrdinanza())) {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
-				siesLogger.debug("Fase di chiusura per il Tenore");
+			siesLogger.debug("Fase di apertura per il Tenore");
 				TenoreModel lTenore = new TenoreModel();
 				// Valorizzazione dei campi da aggiornare + update
 				lTenore.setCodOperatoreAggiornamento(
 						lGProcOrdEveTenori.getGeneraleProcedimento().getCodOperatoreAggiornamento());
 				lTenore.setCodUfficioAggiornamento(
 						lGProcOrdEveTenori.getGeneraleProcedimento().getCodUfficioAggiornamento());
-					lTenore.setDataAggiornamento(
-							lGProcOrdEveTenori.getGeneraleProcedimento().getDataAggiornamento());
+			lTenore.setDataAggiornamento(lGProcOrdEveTenori.getGeneraleProcedimento().getDataAggiornamento());
 				lTenore.setDataFine(lGProcOrdEveTenori.getGeneraleProcedimento().getDataAggiornamento());
 				lTenore.setGenPridGeneraleProcedimento(lIdGenProc);
 				lTenoreDao.setDAOFromModelForUpdateDataFine(lTenore);
 				lTenoreDao.update();
 				lTenoreDao.stop();
-			}
-			// ***** FINE INTERVENTO MEV_9 *****//
 
 			// Insert dei tenori.
 			TenoreModel[] lTenori = lGProcOrdEveTenori.getTenori();
@@ -925,48 +910,6 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 		return lDepMod;
 	}
 
-	/**
-	 * Aggiorna il Deposito e anche il record MA per consentire a SIEP di vedere l'ordinanza
-	 * MEV_9 02.2024
-	 */
-	public DepositoOrdinanzaPcModel ExAggiornaDataEsecutivitaDepositoOrdinanzaPc(
-			DepositoOrdinanzaPcModel aDepositoOrdinanzaPc) throws F3BException {
-
-		Connection lConn = null;
-		DepositoOrdinanzaPcDAO lDepDao = null;
-		DepositoOrdinanzaPcModel lDepMod = new DepositoOrdinanzaPcModel(aDepositoOrdinanzaPc);
-
-		MisuraAlternativaDAO lMisAltDao = null;
-		
-		try {
-			lConn = getDBConnection();
-			
-			lDepDao = new DepositoOrdinanzaPcDAO(lConn);
-			lDepDao.setDAOFromModelForUpdate(aDepositoOrdinanzaPc);
-			lDepDao.update();
-
-			lMisAltDao = new MisuraAlternativaDAO(lConn);
-			if (aDepositoOrdinanzaPc.getIdEventoGenerato()!=null) {
-				lMisAltDao.setDataEsecutivita(aDepositoOrdinanzaPc.getDataEsecutivita());
-				
-				lMisAltDao.setCondizioneByIdEvento(aDepositoOrdinanzaPc.getIdEventoGenerato());
-				
-				lMisAltDao.update();
-			}
-			
-			commit(lConn);
-		} catch (DAOException ex) {
-			rollback(lConn);
-			siesLogger.error("DAOException: ", ex);
-			throw new F3BException("DepositoOrdinanzaPcController.ExAggiornaDataEsecutivitaDepositoOrdinanzaPc: Non posso inserire: " + ex);
-		} finally {
-			cleanup(lDepDao);
-			cleanup(lMisAltDao);
-			cleanup(lConn);
-		}
-		return lDepMod;
-	}
-
 	public void ExCancellaDepositoOrdinanza(DepositoOrdinanzaPcModel aDepOrd) throws F3BException {
 
 		Connection lConn = null;
@@ -1018,25 +961,10 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			// LogF3B.getLogger()
 			siesLogger.debug(">>>> Cancellate prescrizioni collegate a DepOrdinanzaPC " + lIdDepOrd);
 
-			// TENORI COLLEGATI
+			// update Tenori collegati
 			lTenDao = new TenoreDAO(aConn);
 			lTenDao.setDAOForDeleteDepOrd(aDepOrd);
-			/*
-			 * ISSUE MEV : cancello tenore se cancello ordinanza di conferma decisione magistrato relatore
-			 * Numero MEV : 9 
-			 * Autore : sgioggi 
-			 * Data : 18 gen 2023 
-			 * Branch : MEV_9
-			 */
-			if (!"CM".equals(aDepOrd.getCodTipoOrdinanza())) {
-				// update Tenori collegati
 			lTenDao.update();
-			} else {
-				// delete Tenori collegati
-				lTenDao.delete();
-			}
-			// ***** FINE INTERVENTO MEV_9 *****//
-
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug(">>>> Aggiornati tenori collegati a DepOrdinanzaPC " + lIdDepOrd);
@@ -2107,16 +2035,9 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			if (lEveMod.getCodEsito().compareTo("0603") != 0) {
 				lFasSiusDao = new FascicoloSiusDAO(lConn);
 				lFasSiusDao.setDAOFromModelForUpdate(aFasGPMod.getFascicoloSiusModel());
-
-				// INIZIO: MEV_9 (D.lgs. 123/2018)
-				if (lEveMod.getCodEsito().compareTo("0605") != 0) {
-					// INIZIO: MEV_9 (D.lgs. 123/2018)
-					if (lEveMod.getCodEsito().compareTo("0270") == 0) {
-						lFasSiusDao.setCodStatoFascicolo("24");
-					} // FINE: MEV_9
-					else
+				if (lEveMod.getCodEsito().compareTo("0605") != 0)
 					lFasSiusDao.setCodStatoFascicolo("07");
-				} else if (aFasGPMod.getFascicoloSiusModel().getCodStatoFascicolo().compareTo("07") != 0)
+				else if (aFasGPMod.getFascicoloSiusModel().getCodStatoFascicolo().compareTo("07") != 0)
 					lFasSiusDao.setCodStatoFascicolo("13");
 				lFasSiusDao.update();
 				lFasSiusDao.stop();

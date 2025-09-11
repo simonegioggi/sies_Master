@@ -6,14 +6,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Vector;
 
+import f3b.util.F3BException;
 import siap.siep.notifica.model.NotificaModel;
 import siap.siep.notifica.model.RicercaNotificheSiusModel;
-import f3b.util.F3BException;
 
 /**
- * Title: NotificaController
- * Description: Classe Controller per Notifica
- * 
+ * NotificaController - Classe Controller per Notifica
+ *
  * @version 1.0
  */
 @SuppressWarnings("rawtypes")
@@ -78,8 +77,5 @@ public interface INotifica {
 	public ArrayList ExInserisciNotifiche(ArrayList aNotifica, Connection aConn) throws F3BException;
 
 	public Vector ExRicercaNotificaByIdParteUdienza(BigDecimal aIdParteUdienza) throws F3BException;
-
-	// MEV_9: AGGIUNTO METODO DI AGGIORNAMENTO DATI NOTIFICHE
-	public void ExModificaNotifiche(Vector<NotificaModel> notifiche, String[] check) throws F3BException;
 
 }

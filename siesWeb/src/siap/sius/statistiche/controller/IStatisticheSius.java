@@ -28,8 +28,7 @@ import siap.sius.statistiche.model.RicercaProcedimentoModel;
 import siap.sius.statistiche.model.RicercaProvvedimentoModel;
 
 /**
- * Title: IStatisticheSius 
- * Description: interface per il controller di Statistiche SIUS.
+ * IStatisticheSius - interface per il controller di Statistiche SIUS.
  *
  * @version 1.0
  */
@@ -76,10 +75,11 @@ public interface IStatisticheSius {
 
 	public Vector ExListaOggettiEstratti(String aNomeTabEstrazione) throws F3BException;
 
+	/*
+	 * Mod . Michele 5 / 12 / 2008
+	 */
 	public Vector ExListaOggettiEstratti(String aNomeTabEstrazione, String aCodUfficio)
-			throws F3BException; /*
-									 * Mod . Michele 5 / 12 / 2008
-									 */
+			throws F3BException;
 
 	public Vector ExRicercaOggettiEstratti(IspEstrazioneOggettiModel aModel) throws F3BException;
 
@@ -87,10 +87,11 @@ public interface IStatisticheSius {
 
 	public Vector ExRicercaTempiEstratti(IspProcIntervalliModel aModel) throws F3BException;
 
+	 /*
+	 * Mod. Michele 15 /12/2008
+	 */
 	public Vector ExRicercaFascicoliPendenti(String aCodUfficio, String aCodMag)
-			throws F3BException; /*
-									 * Mod. Michele 15 /12/2008
-									 */
+			throws F3BException;
 
 	public Vector ExRicercaOggettiPendenti(String aCodUfficio, String aCodMag) throws F3BException;
 
@@ -211,22 +212,5 @@ public interface IStatisticheSius {
 	 *             metodo introdotto per anomalia 7 del verbale collaudo sies 11.3 (terza sessione)
 	 */
 	public Vector ExRicercaMagistratiProcIntervalli(String aCodUfficio) throws F3BException;
-
-	// MEV_9: aggiunti metodi per le statistiche di Misure Alternative
-	public Collection<EveFasGepSogProvModel> ProcPerStatisticaMisureAlternative(RicercaProcedimentoModel rpm)
-			throws F3BException;
-
-	public Collection<EveFasGepSogProvModel> ExRicercaProcPerStatisticaMisureAlternative(
-			RicercaProcedimentoModel rpm, int pagina) throws F3BException;
-
-	public BigDecimal ExGetNumRicercaProcPerStatisticaMisureAlternative(RicercaProcedimentoModel rpm)
-			throws F3BException;
-	
-	public Collection<EveFasGepSogProvModel> ExRicercaAttiIstruttoriDataRestPaginata(
-			RicercaProcedimentoModel aModel, int aPagina) throws F3BException;
-	public BigDecimal ExGetNumRicercaAttiIstruttoriDataRestPaginata(RicercaProcedimentoModel aModel)
-			throws F3BException;
-
-	// FINE MEV_9
 
 }

@@ -271,4 +271,26 @@ public class TemplateSqlDAO extends SIAPSqlDAO {
 		return " FLAG_TEMPLATE = '" + aFlagTemplate + "'";
 	}
 
+	// MEV_2024-092: aggiunto metodo di ricerca
+	public void ricercaTemplateByTipEveTipoProvCodMotivoFlagTemplateCodOgg(String aTipoEvento,
+			String aTipoProv, String aCodMotivo, String aFlagTemplate) {
+
+		String lSql = getSqlQuery();
+
+		lSql += " WHERE ID_TEMPLATE IS NOT NULL ";
+		if (aCodMotivo != null)
+			lSql += " AND COD_MOTIVO = '" + aCodMotivo + "'";
+
+		if (aFlagTemplate != null)
+			lSql += " AND FLAG_TEMPLATE = '" + aFlagTemplate + "'";
+
+		if (aTipoEvento != null)
+			lSql += " AND COD_TIPO_EVENTO = '" + aTipoEvento + "'";
+
+		if (aTipoProv != null)
+			lSql += " AND COD_TIPO_PROVVEDIMENTO = '" + aTipoProv + "'";
+		lSql += " AND COD_ESITO IS NULL AND COD_OGGETTO_PROCEDIMENTO IS NULL";
+		setStatement(lSql);
+	}
+
 }

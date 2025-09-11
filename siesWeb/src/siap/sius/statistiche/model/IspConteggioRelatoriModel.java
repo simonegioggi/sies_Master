@@ -41,7 +41,6 @@ public class IspConteggioRelatoriModel extends GenericModel {
 	private String mFasSiuChiaveUfficio;
 	private BigDecimal mNumCancellati;
 	private BigDecimal mNumUnificati;
-	private BigDecimal mNumAppProvv; // MEV9
 
 	// COSTRUTTORE DI DEFAULT
 	public IspConteggioRelatoriModel() {
@@ -60,7 +59,6 @@ public class IspConteggioRelatoriModel extends GenericModel {
 		mFasSiuChiaveUfficio = "";
 		mNumCancellati = null;
 		mNumUnificati = null;
-		mNumAppProvv = null; //MEV9
 	}
 
 	// COSTRUTTORE DI COPIA
@@ -80,7 +78,6 @@ public class IspConteggioRelatoriModel extends GenericModel {
 		mFasSiuChiaveUfficio = aModel.mFasSiuChiaveUfficio;
 		mNumCancellati = aModel.mNumCancellati;
 		mNumUnificati = aModel.mNumUnificati; 
-		mNumAppProvv = aModel.mNumAppProvv; //MEV9
 	}
 
 	// COSTRUTTORE MODEL
@@ -89,9 +86,7 @@ public class IspConteggioRelatoriModel extends GenericModel {
 			BigDecimal aNumDefEsito2, BigDecimal aNumDefEsito3, BigDecimal aNumDefEsito4,
 			BigDecimal aNumDefEsito5, BigDecimal aNumDefEsito6, BigDecimal aNumDefIscErr,
 			BigDecimal aNumPendentiFine, String aFasSiuChiaveUfficio, BigDecimal aNumCancellati,
-			BigDecimal aNumUnificati,
-			BigDecimal aNumAppProvv // MEV9
-			) {
+			BigDecimal aNumUnificati) {
 		mCodRelatore = aCodRelatore;
 		mDescContenutoStatis = aDescContenutoStatis;
 		mNumPendentiInizio = aNumPendentiInizio;
@@ -107,7 +102,6 @@ public class IspConteggioRelatoriModel extends GenericModel {
 		mFasSiuChiaveUfficio = aFasSiuChiaveUfficio;
 		mNumCancellati = aNumCancellati;
 		mNumUnificati = aNumUnificati;
-		mNumAppProvv = aNumAppProvv; // MEV9
 	}
 
 	//
@@ -174,11 +168,6 @@ public class IspConteggioRelatoriModel extends GenericModel {
 		return mNumUnificati;
 	}
 	
-	// MEV9
-	public BigDecimal getNumAppProvv() {
-		return mNumAppProvv;
-	}
-
 	//
 	// METODI SET()
 	//
@@ -243,13 +232,6 @@ public class IspConteggioRelatoriModel extends GenericModel {
 		mNumUnificati = aValore;
 	}
 
-	// MEV9
-	public void setNumAppProvv(BigDecimal aValore) {
-		mNumAppProvv = aValore;
-	}
-	
-	
-	
 	/**
 	 * Somma tra due model. E' possibile sommare solo due IspConteggioRelatoriModel con lo stesso contenuto.
 	 * La funzione viene utilizzata per ottenere la Statistica Aggregata a partire da quella Dettagliata.
@@ -273,8 +255,6 @@ public class IspConteggioRelatoriModel extends GenericModel {
 				lAppoggioMod.setNumPendentiFine(mNumPendentiFine.add(aModel.getNumPendentiFine()));
 				lAppoggioMod.setNumCancellati(mNumCancellati.add(aModel.getNumCancellati()));
 				lAppoggioMod.setNumUnificati(mNumUnificati.add(aModel.getNumUnificati()));
-				// MEV9
-				lAppoggioMod.setNumAppProvv(mNumAppProvv.add(aModel.getNumAppProvv()));
 			} else
 				throw new F3BException(F3BException.USER_MESSAGE,
 						"Impossibile sommare 2 IspConteggioRelatoriModel con contenuto diverso !");

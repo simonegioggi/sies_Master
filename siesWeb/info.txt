@@ -41,4 +41,10 @@ Gli interventi sono relativi ai sottosistemi SIEP e SIUS.
 
 In data 11/09/2025 eseguito il merge con il branch MEV_2024-092.
 
-MEV_9: 07/10/2020	-->	ID 09 SIES DLgs 123/18 e 121/18
+Nasce dal branch 12.6.3.0 in data 18/09/2024
+
+In data 30/09/2024 eseguito merge col branch 12.6.4.0
+
+In data 16/10/2024 eseguito merge col branch MEV_2019-009
+
+In data 04/04/2025 eseguito merge col branch MEV_2019-021

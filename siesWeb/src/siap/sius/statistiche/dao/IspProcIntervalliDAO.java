@@ -15,11 +15,10 @@ import siap.sico.decodifiche.util.DecodificheUtils;
 import siap.sius.statistiche.model.IspProcIntervalliModel;
 
 /**
- * Title: IspProcIntervalliDAO Description: Classe DAO che rappresenta la tabella IspProcIntervalli
+ * IspProcIntervalliDAO - Classe DAO che rappresenta la tabella IspProcIntervalli
  *
  * @version 1.0
  */
-
 public class IspProcIntervalliDAO extends TableDAO {
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
@@ -31,6 +30,7 @@ public class IspProcIntervalliDAO extends TableDAO {
 		setTable("ISP_PROC_INTERVALLI");
 
 		// Settare la Sequence e i campi chiave
+
 		setField("FAS_SIU_ID_FASCICOLO_SIUS", BIG_DECIMAL);
 		setField("FAS_SIU_CHIAVE_ANNO", BIG_DECIMAL);
 		setField("FAS_SIU_CHIAVE_UFFICIO", STRING);
@@ -292,11 +292,6 @@ public class IspProcIntervalliDAO extends TableDAO {
 		lProcIntervalliModel.setDescrOggettoTenore(DecodificheUtils.getDescbyCode(
 				DecodificheManager.getInstance().getMotivoProvvedimento(), getCodOggettoTenore()));
 		lProcIntervalliModel.setCodEsitoTenore(getCodEsitoTenore());
-		// MEV_9: cambiato dominio di estrazione
-		// DecodificheUtils.getDescbyCode(DecodificheManager.getInstance().getEsitoTenore(),
-		// getCodEsitoTenore()),
-		// calcolaEsitoProvvedimento(getCodEsitoTenore());
-		// FINE MEV_9
 		// TICKET#202409020116 - si decodifica dal dominio ESITO_PROVVEDIMENTO e non ESITO_TENORE
 		try {
 			lProcIntervalliModel.setDescrEsitoTenore(DecodificheUtils.getDescbyCode(
@@ -327,26 +322,6 @@ public class IspProcIntervalliDAO extends TableDAO {
 
 		return lProcIntervalliModel;
 	}
-
-	/*
-	 * ISSUE MEV : aggiunto metodo di estrazione codice esito provvedimento
-	 * Numero MEV : 9 
-	 * Autore : sgioggi
-	 * Data : 19 apr 2023 
-	 * Branch : MEV_9
-	 */
-	// private String calcolaEsitoProvvedimento(String codEsitoTenore) throws DAOException {
-	//
-	// try {
-	// return DecodificheUtils.getDescbyCode(DecodificheManager.getInstance().getEsitoProvvedimento(),
-	// codEsitoTenore);
-	// } catch (DAOException de) {
-	// throw de;
-	// } catch (Exception e) {
-	// throw new DAOException(e.getMessage());
-	// }
-	// }
-	// ***** FINE INTERVENTO MEV_9 *****//
 
 	public void setDAOFromModel(IspProcIntervalliModel aModel) throws DAOException {
 

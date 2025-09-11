@@ -334,9 +334,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 					lLuoDetModel.setDataAggiornamento(null);
 					lLuoDetModel.setCodUfficioAggiornamento("");
 					lLuoDetModel.setCodOperatoreAggiornamento("");
-
 					lLuoDetDao = new LuogoDetenzioneDAO(lConn);
-
 					lLuoDetDao.setDAOFromModel(lLuoDetModel);
 					lChiave = lLuoDetDao.insert();
 					lLuoDetDao.stop();
@@ -364,7 +362,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 						lResFSiusModel.setResIdResidenza(lKey);
 						cleanup(lResDao);
 						// fine Paolo x SuperSoggetto
-
 						lResFSiusDao = new ResidenzaFascicoloSiusDAO(lConn);
 						lResFSiusDao.setDataInizioValidita(lResFSiusModel.getDataInizioValidita());
 						lResFSiusDao.setDataFineValidita(lResFSiusModel.getDataFineValidita());
@@ -397,7 +394,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 						lResFSiusModel.setResIdResidenza(lKey);
 						cleanup(lResDao);
 						// fine Paolo x SuperSoggetto
-
 						lResFSiusDao = new ResidenzaFascicoloSiusDAO(lConn);
 						lResFSiusDao.start();
 						lResFSiusDao.setDataInizioValidita(lResFSiusModel.getDataInizioValidita());
@@ -467,7 +463,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 						lResFSiepModel.setResIdResidenza(lKey);
 						cleanup(lResDao);
 						// fine Paolo x SuperSoggetto
-
 						lResFSiusDao = new ResidenzaFascicoloSiusDAO(lConn);
 						lResFSiusDao.start();
 						lResFSiusDao.setDataInizioValidita(lResFSiepModel.getDataInizioValidita());
@@ -654,7 +649,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 			if (!aFascicoloGPModel.getGeneraleProcedimentoModel().getCodAutoritaDelegata().startsWith("-")) {
 				MagistratoRelatoreModel lMagistrato = new MagistratoRelatoreModel();
 				lMagRelDao = new MagistratoRelatoreDAO(lConn);
-
 				// Dati nuovo Magistrato.
 				// lMagistrato.setMagCodMagistrato(aFascicoloGPModel.getTenoreModel().getCodMagistrato());
 				lMagistrato.setMagCodMagistrato(
@@ -669,7 +663,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 						aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
 				lMagistrato.setCodUfficioInserimento(
 						aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
-
 				// Si Esegue l'inserimento del Nuovo Magistrato.
 				lMagRelDao.setDAOFromModel(lMagistrato);
 				lMagRelDao.insert();
@@ -752,9 +745,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 					lLuoDetModel.setDataAggiornamento(null);
 					lLuoDetModel.setCodUfficioAggiornamento("");
 					lLuoDetModel.setCodOperatoreAggiornamento("");
-
 					lLuoDetDao = new LuogoDetenzioneDAO(lConn);
-
 					lLuoDetDao.setDAOFromModel(lLuoDetModel);
 					lChiave = lLuoDetDao.insert();
 					lLuoDetDao.stop();
@@ -782,7 +773,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 						lResFSiepModel.setResIdResidenza(lKey);
 						cleanup(lResDao);
 						// fine Paolo x SuperSoggetto
-
 						lResFSiusDao = new ResidenzaFascicoloSiusDAO(lConn);
 						lResFSiusDao.setDataInizioValidita(lResFSiepModel.getDataInizioValidita());
 						lResFSiusDao.setDataFineValidita(lResFSiepModel.getDataFineValidita());
@@ -815,7 +805,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 						lResFSiepModel.setResIdResidenza(lKey);
 						cleanup(lResDao);
 						// fine Paolo x SuperSoggetto
-
 						lResFSiusDao = new ResidenzaFascicoloSiusDAO(lConn);
 						lResFSiusDao.start();
 						lResFSiusDao.setDataInizioValidita(lResFSiepModel.getDataInizioValidita());
@@ -937,7 +926,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 					&& lFascicolo.getGeneraleProcedimentoModel().getUdiIdUdienza() != null)
 				lFascicolo.setUdiPro(cercaUdiProcAttiva(
 						lFascicolo.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), lConn));
-
 		} catch (DAOException dex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -1138,7 +1126,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 		}
 
 		// ==========================================================================
-
 		lRow = lSheet.createRow(lRowCounter);
 
 		HSSFUtils.getInstance().setCell(lRow, (short) 0, "", lCellStyleNull);
@@ -1367,7 +1354,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 			ResidenzaFascicoloSiusModel lResFasMod = null;
 			while (lDao.next()) {
 				lResAssMod = new ResidenzaAssociataModel();
-
 				lResMod = (ResidenzaModel) lDao.getModel();
 				lResFasMod = lDao.getModelResidenzaFascicoloSius();
 				lResAssMod.setResidenza(lResMod);
@@ -1503,7 +1489,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 			while (lFasSoggDao.next()) {
 				lFascicolo = (FascicoloGPModel) lFasSoggDao.getFascicoloSiusGPModelForStorico();
 				lFascicolo.getFascicoloSiusModel().setSoggetto(aSogModel);
-
 				lFascicoli.add(lFascicolo);
 			}
 
@@ -1837,8 +1822,11 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 
 			/*
 			 * ISSUE MAC : Ticket#20200610014 — Anomalia SIES: modificato come in inserimento
-			 * FascicoloSiusUDSController.ExInserisciFascicoloSiusUDS Numero MAC : 20200610014 Autore : Gioggi
-			 * Data : 11 giu 2020 Branch : MAC_20200610014
+			 * FascicoloSiusUDSController.ExInserisciFascicoloSiusUDS
+			 * Numero MAC : 20200610014
+			 * Autore : Gioggi
+			 * Data : 11 giu 2020
+			 * Branch : MAC_20200610014
 			 */
 			if (aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U004")
 					|| aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
@@ -2024,6 +2012,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 		try {
 			lConn = getDBTransaction();
 			lFasDao = new FascicoloSiusDAO(lConn);
+
 			// Set del DAO e aggiornamento del FascicoloSius
 			lFasDao.setDAOFromModelForUpdate(aFascicoloSiusModel);
 			lFasDao.update();
@@ -5351,123 +5340,4 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 		return am.getCodUffAppartenenza();
 	}
 
-	/*
-	 * ISSUE MEV : aggiunto aggiornamento stato fascicolo per decreto di tipo DM 
-	 * Numero MEV : 9 
-	 * Autore : Gioggi 
-	 * Data : 19 nov 2020 
-	 * Branch : MEV_9
-	 */
-	public void aggiornaStatoFascicoloSius(FascicoloSiusModel fsm) throws F3BException {
-
-		Connection lConn = null;
-
-		FascicoloSiusDAO lFasDao = null;
-
-		try {
-			lConn = getDBTransaction();
-			lFasDao = new FascicoloSiusDAO(lConn);
-			FascicoloGPModel fgpm = ExRicercaFascicoloByKey(fsm.getIdFascicoloSius());
-			FascicoloSiusModel fsmOld = fgpm.getFascicoloSiusModel();
-			// Set del DAO e aggiornamento del FascicoloSius
-			lFasDao.setDAOFromModel(fsmOld);
-			lFasDao.setDataAggiornamento(fsm.getDataAggiornamento());
-			lFasDao.setCodOperatoreAggiornamento(fsm.getCodOperatoreAggiornamento());
-			lFasDao.setCodUfficioAggiornamento(fsm.getCodUfficioAggiornamento());
-			lFasDao.setCodStatoFascicolo(fsm.getCodStatoFascicolo());
-			lFasDao.setCondizioneUpdateStatoFascicolo(fsmOld.getIdFascicoloSius(),
-					fsmOld.getCodStatoFascicolo());
-			lFasDao.update();
-			lFasDao.stop();
-
-			// COMMIT
-			commit(lConn);
-		} catch (DAOException ex) {
-			rollback(lConn);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			siesLogger.error("DAOException: " + ex);
-			throw new SIUSException(F3BException.USER_MESSAGE,
-					"FascicoloSiusController.aggiornaStatoFascicoloSius: " + ex);
-		} catch (Exception e) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			siesLogger.error("Exception: " + e);
-			throw new SIUSException(F3BException.USER_MESSAGE, e.getMessage());
-		} finally {
-			cleanup(lFasDao);
-			cleanup(lConn);
-		}
-	}
-	// ***** FINE INTERVENTO MEV_9 *****//
-
-	/**
-	 * Aggiorna Generale procedimento con la data restituzione e il motivo
-	 * Aggiorna lo stato del fascicolo SIUS
-	 * @param aFasGPMod
-	 * @throws F3BException
-	 * @since MEV_9
-	 */
-	// INIZIO: MEV_9 (D.lgs. 123/2018)
-	public void ExInserisciRestituzioneAttiAlPresidente(FascicoloGPModel aFasGPMod) throws F3BException {
-
-		Connection lConn = null;
-		FascicoloSiusDAO lFasDao = null;
-		GeneraleProcedimentoDAO lGenProcDao = null;
-
-		FascicoloSiusModel lFasc = aFasGPMod.getFascicoloSiusModel();
-		GeneraleProcedimentoModel lGenProc = aFasGPMod.getGeneraleProcedimentoModel();
-		if (lFasc == null || lFasc.getIdFascicoloSius() == null || lGenProc == null
-				|| lGenProc.getIdGeneraleProcedimento() == null)
-			throw new SIUSException(F3BException.USER_MESSAGE, "Dati Fascicolo non definiti !");
-
-		try {
-			lConn = getDBTransaction();
-			// Update del FASCICOLO_SIUS
-			lFasDao = new FascicoloSiusDAO(lConn);
-			lFasDao.setCodStatoFascicolo(lFasc.getCodStatoFascicolo());
-			
-			//lFasDao.setDataDefinizione(lFasc.getDataDefinizione());
-			
-			lFasDao.setCondizioneUpdate(lFasc.getIdFascicoloSius());
-			
-			lFasDao.setCodOperatoreAggiornamento(lFasc.getCodOperatoreAggiornamento());
-			lFasDao.setCodUfficioAggiornamento(lFasc.getCodUfficioAggiornamento());
-			lFasDao.setDataAggiornamento(lFasc.getDataAggiornamento());
-
-			lFasDao.update();
-			lFasDao.stop();
-
-			// Update del GENERALE_PROCEDIMENTO
-			lGenProcDao = new GeneraleProcedimentoDAO(lConn);
-			// lGenProcDao.setTipoDefinizione(lGenProc.getTipoDefinizione());
-			lGenProcDao.setDescrRestituzione (lGenProc.getDescrRestituzione());
-			lGenProcDao.setDataRestituzione  (lGenProc.getDataRestituzione());
-			
-			lGenProcDao.setCodOperatoreAggiornamento(lGenProc.getCodOperatoreAggiornamento());
-			lGenProcDao.setCodUfficioAggiornamento(lGenProc.getCodUfficioAggiornamento());
-			lGenProcDao.setDataAggiornamento(lGenProc.getDataAggiornamento());
-
-			lGenProcDao.setCondizioneUpdate(lGenProc.getIdGeneraleProcedimento());
-
-			lGenProcDao.update();
-			lGenProcDao.stop();
-
-			commit(lConn);
-		} catch (DAOException ex) {
-			rollback(lConn);
-			throw new SIUSException(F3BException.USER_MESSAGE,
-					"FascicoloSiusController.ExInserisciRestituzioneAttiAlPresidente : " + ex);
-		} catch (Exception ex) {
-			rollback(lConn);
-			throw new SIUSException(F3BException.USER_MESSAGE,
-					"FascicoloSiusController.ExInserisciRestituzioneAttiAlPresidente : " + ex);
-		} finally {
-			cleanup(lFasDao);
-			cleanup(lGenProcDao);
-			cleanup(lConn);
-		}
-		return;
-	}
-	// FINE: MEV_9
 }

@@ -9,20 +9,8 @@ import siap.sico.decodifiche.model.DecodificheModel;
 import siap.sico.decodifiche.util.DecodificheUtils;
 
 /**
- * <p>
- * Title: FascicoloUtils
- * </p>
- * <p>
- * Description: Classe di utilita' per il package FascicoloSius
- * </p>
- * <p>
- * Copyright: Copyright (c) 2004
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * FascicoloUtils - Classe di utilita' per il package FascicoloSius
  *
- * @author Vincenzo
  * @version 1.0
  */
 @SuppressWarnings("rawtypes")
@@ -242,9 +230,7 @@ public class FascicoloUtils {
 
 		boolean lRet = false;
 		if (aCodStatoFascicolo.compareTo("01") == 0 || aCodStatoFascicolo.compareTo("07") == 0
-				|| aCodStatoFascicolo.compareTo("05") == 0 || aCodStatoFascicolo.compareTo("99") == 0
-				|| aCodStatoFascicolo.compareTo("24") == 0 // MEV_9 si aggiunge anche il 24
-			)
+				|| aCodStatoFascicolo.compareTo("05") == 0 || aCodStatoFascicolo.compareTo("99") == 0)
 			lRet = true;
 		return lRet;
 	}

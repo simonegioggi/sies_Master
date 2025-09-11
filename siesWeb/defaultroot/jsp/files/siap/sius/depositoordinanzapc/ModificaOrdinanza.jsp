@@ -12,15 +12,15 @@
 <%@ page import="siap.sius.fascicolo.action.ICostantiFascicoloSius"%>
 <%@ page import="siap.sius.tenore.action.ICostantiTenore"%>
 <%@ page import="siap.sius.depositoordinanzapc.action.ICostantiDepositoOrdinanzaPc"%>
-<%@ page import="siap.sico.soggetto.model.SoggettoModel"%>
-<%@ page import="siap.sius.tenore.model.TenoreModel"%>
+<%@ page import="siap.sico.soggetto.model.SoggettoModel" %>
+<%@ page import="siap.sius.tenore.model.TenoreModel" %>
 <%@ page import="siap.sico.evento.action.ICostantiEvento"%>
 <%@ page import="siap.sius.depositodecreto.model.DepositoDecretoEventoMotivazioniModel"%>
 <%@ page import="siap.sius.depositodecreto.action.ICostantiDepositoDecreto"%>
 <%@ page import="siap.sius.misurasicurezza.action.ICostantiSiusMisuraSicurezza"%>
-<%@ page import="siap.sico.security.action.ICostantiSecurity"%>
-<%@ page import="siap.sico.utente.model.UtenteModel"%>
-<%@ page import="siap.sico.ufficio.model.UfficioModel"%>
+<%@ page import="siap.sico.security.action.ICostantiSecurity" %>
+<%@ page import="siap.sico.utente.model.UtenteModel" %>
+<%@ page import="siap.sico.ufficio.model.UfficioModel" %>
 <%@ page import="siap.sius.esecuzionesanzionesostitutiva.action.ICostantiEsecuzioneSS"%>
 
 <jsp:useBean id="modalita"  							scope="request" class="java.lang.String"/>
@@ -29,9 +29,6 @@
 <jsp:useBean id="depositoDecretoMotivazioni" 			scope="request" class="siap.sius.depositodecreto.model.DepositoDecretoEventoMotivazioniModel"/>
 <jsp:useBean id="tenori" 								scope="request" class="java.util.Vector"/>
 <jsp:useBean id="misuraSicurezza" 						scope="request" class="siap.siep.misurasicurezza.model.MisuraSicurezzaModel"/>
-<%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
-<jsp:useBean id="dataDecretoDesignazione" 				scope="request" class="java.lang.String"/>
-
 <%-- MEV_2023-35: aggiunto useBean per gestione Ordinanza Reclamo Avverso Revoca Pena Sostitutiva --%>
 <jsp:useBean id="tipoPeneSostitutive" 					scope="request" class="java.lang.String"/>
 <jsp:useBean id="esecuzioneSanzioneSostitutivaModel" 	scope="request" class="siap.sius.esecuzionesanzionesostitutiva.model.EsecuzioneSanzioneSostitutivaModel"/>
@@ -107,16 +104,6 @@ if (data_deposito != null)
   	data2 = DateUtils.getDateToString(data_deposito,"dd/MM/yyyy");
 else
  	data2 = DateUtils.getSysDate("dd/MM/yyyy");
-
-// INIZIO: MEV_9 (D.lgs. 123/2018)
-String contenuto = "";
-contenuto = fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento();
-boolean is678 = false;
-// String dataDecretoDesignazione = "";
-if (ICostantiDepositoOrdinanzaPc.MISURA_ALTERNATIVA_AMMISSIONE_PROVVISORIA.equals(datiOrdinanza.getOrdinanza().getCodTipoOrdinanza())) {
-	is678 = true;
-}
-// FINE: MEV_9
 %>
 <html>
 <head>
@@ -125,30 +112,6 @@ if (ICostantiDepositoOrdinanzaPc.MISURA_ALTERNATIVA_AMMISSIONE_PROVVISORIA.equal
 <script language="JavaScript">
 function Verify() {
 	var flagDate = VerificaDate();
-<%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
-<%
-if (is678) {
-%>
-	var listComboEsiti = document.getElementsByName("<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>"); 
-	var contaProvvisorie = 0;
-	if (typeof (listComboEsiti[1]) != "undefined") {
-		for (idComboEsiti = 0; idComboEsiti < listComboEsiti.length; idComboEsiti++) {
-			var comboEsito = listComboEsiti[idComboEsiti];
-  		    if (comboEsito[comboEsito.selectedIndex].value == '0680'
-    				|| comboEsito[comboEsito.selectedIndex].value == '0690') {
-				contaProvvisorie++;
-  		    }
-	  	}
-	}
-	if (contaProvvisorie > 1) {
-		alert("Attenzione. Può essere selezionato 'Applica Provvisoriamente' per un solo oggetto");
-  	    return false;
-	}
-<%
-}
-%>
-<%-- FINE: MEV_9 (D.lgs. 123/2018) --%>
-
 // MEV_39: aggiunto controllo
 <%
 if ("42".equals(tipo) || "MS".equals(tipo)) {
@@ -212,7 +175,6 @@ function VerificaDate() {
 	var ritorno = true;
 	var data_camera = '<%=data1%>';
 	var data_deposito = '<%=data2%>';
-	var dataDecretoDesignazione = '<%=dataDecretoDesignazione%>'; <%-- MEV_9 (D.lgs. 123/2018) --%>
 	var data_emissione = document.ModificaOrdinanza.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>.value;
 	var data_decorrenza;
 	var nodeDataDec;
@@ -231,27 +193,6 @@ function VerificaDate() {
         alert("La data di emissione non può essere maggiore della data di deposito o in assenza di essa, della data di Sistema!");
         ritorno =  false;
 	}
-<%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
-<%
-if (is678) {
-%>		      	
-	else if (dataDecretoDesignazione != "" && !CompareDate(dataDecretoDesignazione, data_emissione)) {
-        alert("La data di emissione non può essere minore della Data emissione del Decreto di Designazione!");
-        ritorno = false;
-   	}
-<%
-}
-if (ICostantiDepositoOrdinanzaPc.CONFERMA_DECISIONE_MAGISTRATO_RELATORE.equals(datiOrdinanza.getOrdinanza().getCodTipoOrdinanza())) {
-%>
-	// Controllo data di emissione >= data udienza
-	if (!CompareDate(data_camera, data_emissione)) {
-		alert('Data Emissione non può essere inferiore alla Data Udienza del ' + data_camera + '!');
-		ritorno = false;
-	}
-<%
-}
-%>
-<%-- FINE: MEV_9 (D.lgs. 123/2018) --%>
    	// Controllo della data deposito <= data camera di consiglio
    	else if (data_camera != null && !CompareDate(data_camera, data_emissione)) {
 		alert("La data di emissione non può essere minore della Data Udienza!");
@@ -539,38 +480,6 @@ else if (tipo.equals(ICostantiDepositoOrdinanzaPc.RECLAMO_AVVERSO_REVOCA_PENA_SO
 %>
 }
 
-<%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
-<%
-if (is678) {
-%>
-function checkEsiti() {
-	var listComboEsiti = document.getElementsByName("<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>");
-	if (typeof (listComboEsiti[1]) == "undefined") {
-		var comboEsito = document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>;
-      	for (j = 0; j < comboEsito.length; j++) {
-			if (comboEsito.options[j].value=='0685' || comboEsito.options[j].value == '0695') {
-				<%-- Si elimina CONCEDE--%>
-           		comboEsito.remove(j);
-           		j--;
-         	}
-      	}
-	} else {
-    	for (i = 0; i < listComboEsiti.length; i++) {
-      		var comboEsito = listComboEsiti[i];
-      		for (j = 0; j < comboEsito.length; j++) {
-         		if (comboEsito.options[j].value=='0685' || comboEsito.options[j].value == '0695') {
-         			<%-- Si elimina CONCEDE--%>
-           			comboEsito.remove(j);
-           			j--;
-         		}
-      		}
-    	}
-  	}
-}
-<%
-}
-%>
-<%-- FINE: MEV_9 --%>
 </script>
 </head>
 <body class="corpo" onload="visualizza_data_decorrenza()">
@@ -640,23 +549,6 @@ for (int i=0; i < lTenori.length;i++) {
 %>
 	<tr><td>&nbsp;</td></tr>
 </table>
-
-<%-- MEV_9: aggiunta tabella x "Ulteriore descrizione della decisione" --%>
-<%
-if (ICostantiDepositoOrdinanzaPc.CONFERMA_DECISIONE_MAGISTRATO_RELATORE.equals(datiOrdinanza.getOrdinanza().getCodTipoOrdinanza())) {
-%>
-<table cellspacing="4" cellpadding="4"  width="95%">
-	<tr>
-      	<td class="l" width="25%">Ulteriore descrizione della decisione</td>
-      	<td class="l">
-			<TEXTAREA title="Ulteriore descrizione della decisione" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_ULTERIORE_DESCRIZIONE%>" cols="70" rows="4"><%=StringUtils.toStringJSP(datiOrdinanza.getOrdinanza().getUlterioreDescrizione(), "")%></textarea>
-      	</td>
-    </tr>
-</table>
-<%
-}
-%>
-<%-- FINE MEV_9 --%>
 
 <table id="tableInForma" style="visibility:hidden" width="95%" cellspacing="2" cellpadding="2">
 	<tr>
@@ -843,15 +735,6 @@ if (datiOrdinanza!=null && datiOrdinanza.getOrdinanza()!=null && datiOrdinanza.g
 abilitaModificaEsito();
 <%-- MEV_39: aggiunta chiamata a nuova funzione js --%>
 AbilitaCampiEsiti();
-<%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
-<%
-if (is678) {
-%>
-checkEsiti();
-<%
-}
-%>
-<%-- FINE: MEV_9  --%>
 
 var frmvalidator  = new Validator("ModificaOrdinanza");
 

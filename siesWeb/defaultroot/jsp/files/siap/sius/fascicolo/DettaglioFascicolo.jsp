@@ -39,7 +39,6 @@
 <%@ page import="siap.sius.tenore.model.TenoreModel"%>
 <%@ page import="siap.sius.cancassfascsius.model.CancAssFascSiusModel"%>
 <%@ page import="siap.sius.esperto.model.EspertoModel"%>
-<%@ page import="siap.sius.depositodecreto.action.ICostantiDepositoDecreto"%>
 
 <jsp:useBean id="UtenteConnesso" 			scope="session" class="siap.sico.utente.model.UtenteModel"/>
 <jsp:useBean id="fascicoloSiusGP" 			scope="request" class="siap.sius.fascicolo.model.FascicoloGPModel"/>
@@ -72,8 +71,7 @@
 <jsp:useBean id="etichettaEta" 				scope="request" class="java.lang.String"/>
 <jsp:useBean id="oscuraEta" 				scope="request" class="java.lang.String"/>
 <jsp:useBean id="esperto" 					scope="request" class="siap.sius.esperto.model.EspertoModel"/>
-<%-- MEV_9: aggiunto useBean --%>
-<jsp:useBean id="dataRestituzioneStr" 		scope="request" class="java.lang.String"/>
+
 <%
 String isVALIGN = "top";
 String isBorder = "0";
@@ -344,9 +342,9 @@ if (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodTipoRegistro() != null)
 		if (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodTipoRegistro().compareTo("S12") == 0) {
 		    lTipoEsecuzione="E.S.S.";
 		    lAzioneDiEsecuzione="siap.sius.esecuzionesanzionesostitutiva.action.ActRicercaEsecuzioneSS&"+ICostantiFascicoloSius.CAMPO_COD_CONTENUTO+"=U019";
-		} else if (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodTipoRegistro().compareTo("S09") == 0) {
-		    lTipoEsecuzione="E.M.S.";
-		    lAzioneDiEsecuzione="siap.sius.esecuzionemisurasicurezza.action.ActRicercaEsecuzioneMS";
+    	} else if (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodTipoRegistro().compareTo("S09") == 0) {
+			lTipoEsecuzione="E.M.S.";
+			lAzioneDiEsecuzione="siap.sius.esecuzionemisurasicurezza.action.ActRicercaEsecuzioneMS";
 		// MEV_2023-35    
 		} else if (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodTipoRegistro().compareTo("S30") == 0) {
 		    lTipoEsecuzione="E.P.S.";
@@ -656,7 +654,7 @@ if (Utils.isNullObj(luogodet.getIstitutoDetenzione())) {
 					<td class="L" colspan="2" width=30%>
 						<font class="label">Data Fine Pena SIUS:</font>&nbsp;
 <%
-if (fascicoloSiusGP.getGeneraleProcedimentoModel().getDataFinePena() != null) {
+if (fascicoloSiusGP.getGeneraleProcedimentoModel().getDataFinePena()!= null) {
 %>
 						<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(fascicoloSiusGP.getGeneraleProcedimentoModel().getDataFinePena(), "dd-MM-yyyy"))%></font>
 <%
@@ -735,7 +733,7 @@ if ((fascicoloSiusGP.getGeneraleProcedimentoModel().getDescrMittente().length() 
 						<font class="label">N° SIEP</font>&nbsp;
 						<font class="campo">
 <%
-if ((fascicoloSiusGP.getFascicoloSiusModel().getChiaveAnnoSIEP() != null)) {
+if ((fascicoloSiusGP.getFascicoloSiusModel().getChiaveAnnoSIEP()!= null)) {
 %>
 							<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>=<%=fascicoloSiusGP.getFascicoloSiusModel().getFasSieIdFascicoloSiep()%>&TornaQui=<%=TornaQui%>">
 								<%=fascicoloSiusGP.getFascicoloSiusModel().getChiaveAnnoSIEP()%>/<%=fascicoloSiusGP.getFascicoloSiusModel().getChiaveProgrSIEP()%>
@@ -821,7 +819,7 @@ if (fascicoloSiusGP.getFascicoloSiusModel().getFasSieIdFascicoloSiep() != null) 
 					<td class="L" width="28%">
 						<font class="label">Inizio Pena:</font>&nbsp;
 <%
-		if (dettagliofascicolo.getPenaResidua().getDataInizio() != null) {
+		if (dettagliofascicolo.getPenaResidua().getDataInizio()!= null) {
 %>
 						<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(dettagliofascicolo.getPenaResidua().getDataInizio(), "dd-MM-yyyy"))%></font>
 <%
@@ -947,7 +945,7 @@ if (fascicoloSiusGP.getFascicoloSiusModel().getFasSieIdFascicoloSiep() != null) 
 		if (dettagliofascicolo.getPenaComplessivaSanzioneSostitutiva() != null) {
     		PenaComplessivaSanzioneSostitutivaModel lPenaSostMod=dettagliofascicolo.getPenaComplessivaSanzioneSostitutiva();
     		if (lPenaSostMod != null) {
-      			PenaComplessivaModel lPenCompMod=lPenaSostMod.getPenaComplessiva();
+      		PenaComplessivaModel lPenCompMod=lPenaSostMod.getPenaComplessiva();
       			if (lPenCompMod != null) {
 %>
 				<tr>
@@ -1051,19 +1049,18 @@ if (fascicoloSiusGP.getFascicoloSiusModel().getFasSieIdFascicoloSiep() != null) 
 <%
 }
 %>
+					
 				<tr>
 <%
-if (dettagliofascicolo.getFascicoloSiep() != null && dettagliofascicolo.getFascicoloSiep().getNote() != null) {
+if (dettagliofascicolo.getFascicoloSiep()!= null && dettagliofascicolo.getFascicoloSiep().getNote() != null) {
 %>
-					<td class="L" colspan="3">
-						<font class="label">Note Titolo Esecutivo:</font>
-						<font class="campo"><%=dettagliofascicolo.getFascicoloSiep().getNote()%></font>
+					<td class="L" colspan=3><font class="label">Note Titolo Esecutivo :</font>
+						<font class="campo"><%=dettagliofascicolo.getFascicoloSiep().getNote() %></font>
 					</td>
 <%
 } else {
 %>
-					<td class="L" colspan="3">
-						<font class="label">Note Titolo Esecutivo:</font> 
+					<td class="L" colspan=3><font class="label">Note Titolo Esecutivo :</font>
 						<font class="campo">-</font>
 					</td>
 <% 
@@ -1119,12 +1116,12 @@ if (fascicoloSiusGP.getTenori() != null) {
 	int lSize = fascicoloSiusGP.getTenori().length;
   	if (lSize == 0) {
 %>
-						-&nbsp;
+							-&nbsp;
 <%
 	}
 	for (int x = 0; x < lSize; x++) {
 %>
-						<font class="campo"><%=fascicoloSiusGP.getTenori()[x].getDescrOggettoTenore()%>
+							<font class="campo"><%=fascicoloSiusGP.getTenori()[x].getDescrOggettoTenore()%>
 <%
 		if (fascicoloSiusGP.getTenori()[x].getCodDettaglioOggetto().length() > 1) {
 %>
@@ -1133,12 +1130,12 @@ if (fascicoloSiusGP.getTenori() != null) {
 <%
 		}
 %>
-						<br>
+							<br>
 <%
 	}
 } else {
 %>
-						-&nbsp;
+							-&nbsp;
 <%
 }
 %>
@@ -1211,35 +1208,6 @@ if (esperto != null && esperto.getIdEsperto() != null) {
 } else {
 %>		
 	<!-- Magistrato -->
-	<!-- Modifica del 15/11/2016 MEV_32
-		 Per gli uffici TDS e TDSM è possibile inserire il Magistrato o l'Esperto.
-		 Pertanto nel dettaglio deve essere possibile identificarlo.
-		 N.B. Modifica del 12/01/2017 La descrizione deve rimanere "Magistrato" e
-		 nel caso specifico deve comparire la dicutura (Esperto) dopo il nominativo
-		 del Magistrato
-	 -->
-<%
-	if (esperto != null && esperto.getIdEsperto() != null) {
-%>		
-	<!-- Esperto -->
-	<tr>
-		<td class="label" width=15% valign=<%=isVALIGN%>><font
-			class="label"> Magistrato </font></td>
-		<td colspan=3>
-			<table cellspacing=1 cellpadding=1 width="<%=lWidth%>" style="border: 0;">
-				<tr>
-					<td class="L" colspan=1 width=100%><font class="campo">
-							<%=StringUtils.toStringJSP(esperto.getCognome())+" "+StringUtils.toStringJSP(esperto.getNome())%> &nbsp;(Esperto)
-					</font>
-				<tr>
-			</table>
-		</td>
-	</tr>
-		
-<%
-	} else {
-%>		
-	<!-- Magistrato -->
 	<tr>
 		<td class="label" width="15%" valign=<%=isVALIGN%>>Magistrato</td>
 		<td colspan="3">
@@ -1274,8 +1242,7 @@ if (esperto != null && esperto.getIdEsperto() != null) {
 		</td>
 	</tr>
 <%
-	} // chiude else Magistrato
-} // chiude else Magistrato
+} // chiude if esperto else magistrato
 if (cancelleria_assegnataria != null && cancelleria_assegnataria.getDescCancelleriaAssegnataria() != null
 		&& cancelleria_assegnataria.getDescCancelleriaAssegnataria().length() > 0) {
 %>
@@ -1305,7 +1272,7 @@ if (cancelleria_assegnataria != null && cancelleria_assegnataria.getDescCancelle
 						<font class="campo">
 <%
 if (fascicoloSiusGP.getGeneraleProcedimentoModel().getAnnotazione() != null
-		&& fascicoloSiusGP.getGeneraleProcedimentoModel().getAnnotazione().length() > 0) {
+		&& fascicoloSiusGP.getGeneraleProcedimentoModel().getAnnotazione().length()>0) {
 %>
 							<%=fascicoloSiusGP.getGeneraleProcedimentoModel().getAnnotazione()%>
 <%
@@ -1347,26 +1314,6 @@ if (elencoNote != null && elencoNote.size() > 0) {
 		</td>
 	</tr>
 </table>
-
-<%
-// MEV_9: aggiunta riga per RESTITUZIONE ATTI AL PRESIDENTE
-if (Utils.isPresent(dataRestituzioneStr)) {
-%>
-<table cellspacing="1" cellpadding="1" style="width: 100%;" border=<%=isBorder%>>
-	<tr>
-		<td class="label" width="15%" valign=<%=isVALIGN%>>&nbsp;</td>
-		<td class="Label">
-			<font class="cRosso">
-				Atti Restituiti al Presidente il <a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.fascicolo.action.ActLoadGestioneRestituzioneAttiPresidente&<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>=<%=fascicoloSiusGP.getFascicoloSiusModel().getIdFascicoloSius()%>&TornaQui=<%=TornaQui%>"><%=dataRestituzioneStr%></a>
-			</font>
-		</td>
-	</tr>
-</table>
-<%
-}
-// FINE MEV_9
-%>
-
 <%
 if (ulterioriistanze != null && ulterioriistanze.size() > 0) {
 %>

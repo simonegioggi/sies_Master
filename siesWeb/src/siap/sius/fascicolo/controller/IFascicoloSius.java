@@ -182,10 +182,4 @@ public interface IFascicoloSius {
 	public String ricercaCodUfficioAppartenenza(BigDecimal idFascicoloSius, String codiceFiscaleAvvocato,
 			String codDistretto, String codTipoUfficio) throws F3BException;
 
-	// MEV_9: aggiunto metodo di aggiornamento per decreto di tipo DM
-	public void aggiornaStatoFascicoloSius(FascicoloSiusModel fsm) throws F3BException;
-	
-	// MEV_9: Aggiunto metodo per la restituzione atti
-	public void ExInserisciRestituzioneAttiAlPresidente(FascicoloGPModel aFasGPMod) throws F3BException;
-
 }

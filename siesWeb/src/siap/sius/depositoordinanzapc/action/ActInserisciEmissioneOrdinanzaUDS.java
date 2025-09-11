@@ -2,7 +2,6 @@ package siap.sius.depositoordinanzapc.action;
 
 import java.math.BigDecimal;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -37,7 +36,6 @@ import siap.siep.util.SIEPLookupRemote;
 import siap.sius.SIUSException;
 import siap.sius.depositodecreto.action.ActInserisciEmissioneDecreto;
 import siap.sius.depositodecreto.action.ICostantiDepositoDecreto;
-import siap.sius.depositodecreto.controller.IDepositoDecreto;
 import siap.sius.depositodecreto.model.DepositoDecretoModel;
 import siap.sius.depositoordinanzapc.model.OrdinanzaEventoTenoriPrescrizioniModel;
 import siap.sius.depositoordinanzapc.util.RicercaProvvedimentiCollegati;
@@ -113,6 +111,7 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 					(FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"));
 			BigDecimal lIdFascicoloSiusOrigine = lFasGPMod.getFascicoloSiusModel()
 					.getIdFascicoloSiusOrigine();
+
 			if (lIdFascicoloSiusOrigine != null) {
 				IFascicoloSius lCtrl = SIUSLookupRemote.getFascicoloSiusRemote();
 				FascicoloGPModel lFasGPModOrigine = lCtrl.ExRicercaFascicoloByKey(lIdFascicoloSiusOrigine);
@@ -138,6 +137,7 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 							lFasGPModOrigine.getGeneraleProcedimentoModel().getAnnoS1(),
 							lFasGPModOrigine.getGeneraleProcedimentoModel().getProgrS1(),
 							lFasGPModOrigine.getGeneraleProcedimentoModel().getCodUfficioInserimento());
+
 					// prendo l'ultimo periodo altra sanzione per visualizzare la pena residua ed espiata
 					lListaSanzioniSius = lCtrllst.ExRicercaSanzioneSostitutivaByIdFascicolo(
 							lFasGPModPadreESS.getFascicoloSiusModel().getIdFascicoloSius());
@@ -167,30 +167,9 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 		} else if (lCodTipoDec.compareTo(MISURA_ALTERNATIVA) == 0) {
 			// Ordinanza di Misurs Alternativa
 			mRetPage = PG_LOAD_INSERISCI_ORDINANZA_MA;
-			// INIZIO: MEV_9 (D.lgs. 123/2018)
-			Option lOptionUffPM = new Option();
-			lOptionUffPM = new Option(DecodificheManager.getInstance().getTipoUfficioPM());
-			lOptionUffPM.setFilter(new String[] { "-", "PM", "PMM", "PGCAP" });
-			setRequestAttribute("tipoUfficioProcure", "" + lOptionUffPM);
-			// FINE: MEV_9
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("Ordinanza Misurs Alternativa " + lCodTipoDec);
-			// INIZIO: MEV_9 (D.lgs. 123/2018)
-			if (!isRequestParameterNullEmptyObj("isOrdProvvisoria")) {
-				// verifico che la data emissione sia >= data emissione decreto di designazione
-				if (verificaDataDecretoDesignazione()) {
-					siesLogger.debug(
-							"Ordinanza Misura Alternativa Provvisoria forzo il codice tipo ordinanza in AM");
-					lCodTipoDec = MISURA_ALTERNATIVA_AMMISSIONE_PROVVISORIA;
-					// cambio jsp
-					mRetPage = PG_LOAD_INSERISCI_ORDINANZA_MA_AMM_PROVV;
-				} else {
-					throw new SIUSException(SIUSException.USER_MESSAGE,
-							"La data emissione dell'ordinanza non puo' essere antecedente alla data emissione del decreto di designazione.");
-				}
-			}
-			// FINE: MEV_9
 		} else if (lCodTipoDec.compareTo(INDULTINO) == 0) {
 			// Ordinanza di Indultino
 			mRetPage = PG_LOAD_INSERISCI_ORDINANZA_INDULTINO;
@@ -292,6 +271,7 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 			// LogF3B.getLogger()
 			siesLogger.debug("Ordinanza Inosservanza Obblighi su Misure Sicurezza " + lCodTipoDec);
 		} else if (lCodTipoDec.compareTo(TRASFORMA_MISURA_SICUREZZA) == 0) {
+
 			// Lettura elenco Misure di Sicurezza Collegate al Fascicolo SIUS
 			FascicoloGPModel lFasGPMod = new FascicoloGPModel(
 					(FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"));
@@ -514,8 +494,10 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 		} else if (lCodTipoDec.compareTo(REVOCA_ORDINANZA) == 0) {
 			// throw new SIUSException(SIUSException.USER_MESSAGE,
 			// "Ordinanza di Revoca non ancora prevista ma in fase di rilascio.");
+
 			// Esiste il decreto oltre all'ordinanza. Luigi 8-11-2006
 			// Ordinanza di Revoca Ordinanza
+
 			mRetPage = PG_LOAD_INSERISCI_ORDINANZA_REVOCA;
 			ricercaFascicoloOrigine();
 			// setRequestAttribute("Action", "siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaUDS");
@@ -592,6 +574,7 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 				if (lCodOggetto.indexOf("2471") < 0 && lCodOggetto.indexOf("2470") < 0)
 					throw new SIUSException(SIUSException.USER_MESSAGE,
 							"Ordinanza di Conversione Pene Pecuniare richiede un oggetto specifico");
+
 				// Lettura dell'eventuale Richiesta di Conversione Pene Pecuniarie.
 				RichiestaConversioneModel aRichiestaConversione = new RichiestaConversioneModel();
 				FascicoloGPModel lFasGPMod = new FascicoloGPModel(
@@ -601,9 +584,11 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 				IRichiestaConversione lCtrlRC = SIEPLookupRemote.getRichiestaConversioneRemote();
 				Vector lVectRichConversioniPP = lCtrlRC
 						.ExRicercaRichiestaConversioneEstesa(aRichiestaConversione);
+
 				if (!(lVectRichConversioniPP.size() > 0))
 					throw new SIUSException(SIUSException.USER_MESSAGE,
 							"Ordinanza di Conversione Pene Pecuniare impossibile senza Richiesta Conversione");
+
 				setRequestAttribute("richiesteconversioni", lVectRichConversioniPP);
 			} else if (!("U143".equals(lCodContenuto) || "U145".equals(lCodContenuto))) {
 				// MEV_2023-35: ricerca della rateizzazione per U142
@@ -930,37 +915,6 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 				"CAPMID", "CSS", "GIPMI", "GIP", "GIPM", "GP", "GUP", "GUPM", "GUPMI", "PT", "PM", "PMM",
 				"PMPT", "PGCAP", "PGMI", "PGMID", "PMI", "TRIBSD", "CAPSM", "TMI", "DIB", "DIBM" });
 		setRequestAttribute("tipoUfficioCompetente", "" + lOption);
-	}
-
-	/**
-	 * Verifica se la data di emissione dell'ordinanza di ammissione provvisorie è >= della data emissione del
-	 * decreto di designazione
-	 *
-	 * @return true se il controllo è OK false se KO
-	 * @since MEV_9
-	 */
-	private boolean verificaDataDecretoDesignazione() throws F3BException {
-		FascicoloGPModel lFasGPMod = new FascicoloGPModel(
-				(FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"));
-
-		// Verifica esistenza di un deposito decreto per il fascicolo sius selezionato e tipo decreto
-		BigDecimal idGP = lFasGPMod.getGeneraleProcedimentoModel().getIdGeneraleProcedimento();
-		IDepositoDecreto idd = SIUSLookupRemote.getDepositoDecretoRemote();
-		DepositoDecretoModel ddm = idd.ExRicercaDepositoDecretoByGenProc(idGP,
-				DECRETO_DESIGNAZIONE_MAGISTRATO_RELATORE_PER_MA);
-
-		Date lDataEmissioneDecreto = ddm.getDataEmissione();
-
-		// Preleva data di emissione
-		Date lDataEmissioneOrdinanza = getRequestDateParameter(
-				ICostantiDepositoDecreto.CAMPO_ANNO_DATA_EMISSIONE,
-				ICostantiDepositoDecreto.CAMPO_MESE_DATA_EMISSIONE,
-				ICostantiDepositoDecreto.CAMPO_GIORNO_DATA_EMISSIONE);
-
-		if (DateUtils.isLower(lDataEmissioneOrdinanza, lDataEmissioneDecreto))
-			return false; // controlllo non passato
-		else
-			return true;
 	}
 
 	// MEV_2023-35 Recupero Se Presente la Rateizzazione collegata all'ultimo avviso mancato pagamento

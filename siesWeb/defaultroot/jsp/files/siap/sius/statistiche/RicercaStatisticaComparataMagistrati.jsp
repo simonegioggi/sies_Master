@@ -91,7 +91,6 @@
   BigDecimal totalePendentiInizio		= new BigDecimal("0");
   BigDecimal totaleSopravvenuti			= new BigDecimal("0");
   BigDecimal totaleAccolti					= new BigDecimal("0");
-  BigDecimal totaleAccoltiProvvisoriamente  = new BigDecimal("0"); // MEV_9
   BigDecimal totaleRigettati				= new BigDecimal("0");
   BigDecimal totaleInammissibilita	= new BigDecimal("0");
   BigDecimal totaleNLPNDP						= new BigDecimal("0");
@@ -116,7 +115,6 @@
       <td class="int">Pendenti Inizio Periodo</td>
       <td class="int">Sopravvenuti</td>
       <td class="int">Accolti</td>
-      <td class="int">Accolti Provvisoriamente</td>  <%-- MEV_9 --%>    
       <td class="int">Rigettati</td>
       <td class="int">Inammissibilità</td>
       <td class="int">NLP/NDP</td>
@@ -125,7 +123,7 @@
       <td class="int">Unificati</td>
       <td class="int">Cancellati</td>
       <td class="int">Altro</td>
-      <td class="int">Pendenti Fine Perido</td>
+      <td class="int">Pendenti Fine Periodo</td>
     </tr>
 <%
    while ( itx.hasNext()) {
@@ -134,9 +132,6 @@
        totalePendentiInizio = totalePendentiInizio.add(elenco.getNumPendentiInizio());
        totaleSopravvenuti = totaleSopravvenuti.add(elenco.getNumSopravvenuti());
        totaleAccolti = totaleAccolti.add(elenco.getNumDefEsito1());
-       // MEV_9
-       totaleAccoltiProvvisoriamente = totaleAccoltiProvvisoriamente.add(elenco.getNumAppProvv());
-       
        totaleRigettati = totaleRigettati.add(elenco.getNumDefEsito2());
        totaleInammissibilita = totaleInammissibilita.add(elenco.getNumDefEsito3());
        totaleNLPNDP = totaleNLPNDP.add(elenco.getNumDefEsito4());
@@ -167,13 +162,6 @@
         <td class="c">
         	<font class="label"><%=StringUtils.toStringJSP("" + elenco.getNumDefEsito1())%></font>
         </td>
-        
-        <%-- MEV_9 Accolti provvisoriamente --%>
-        <td class="c">
-        	<font class="label"><%=StringUtils.toStringJSP("" + elenco.getNumAppProvv())%></font>
-        </td>
-        <%-- MEV_9 - FINE --%>
-                
         <td class="c">
         	<font class="label"><%=StringUtils.toStringJSP("" + elenco.getNumDefEsito2())%></font>
         </td>
@@ -221,13 +209,6 @@
         <td class="c">
         	<font class="label"><%=StringUtils.toStringJSP("" + totaleAccolti)%></font>
         </td>
-        
-        <%-- MEV_9 Accolti provvisoriamente --%>
-        <td class="c">
-        	<font class="label"><%=StringUtils.toStringJSP("" + totaleAccoltiProvvisoriamente)%></font>
-        </td>        
-        <%-- MEV_9 - FINE --%>
-        
         <td class="c">
         	<font class="label"><%=StringUtils.toStringJSP("" + totaleRigettati)%></font>
         </td>

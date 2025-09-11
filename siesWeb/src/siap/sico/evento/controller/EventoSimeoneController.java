@@ -1527,13 +1527,6 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 		return lEveMod;
 	}
 
-	
-	// MEV_9 si evvettua l'override per aggiungere il parametro per filtrare solo gli eventi validati
-	public EventoModel ExRicercaEventoByEveIdEventoTipoProvCodMotivo(BigDecimal aEventoKey,
-			String aTipoEvento, String aTipoProvv, String aMotivo) throws F3BException {
-		return ExRicercaEventoByEveIdEventoTipoProvCodMotivo (aEventoKey, aTipoEvento, aTipoProvv, aMotivo, null);
-	}
-	
 	/**
 	 * Ricerca Evento By EveIdEvento TipoProv CodMotivo
 	 *
@@ -1545,7 +1538,7 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 	 * @throws F3BException
 	 */
 	public EventoModel ExRicercaEventoByEveIdEventoTipoProvCodMotivo(BigDecimal aEventoKey,
-			String aTipoEvento, String aTipoProvv, String aMotivo, String flagDocRegistrato) throws F3BException {
+			String aTipoEvento, String aTipoProvv, String aMotivo) throws F3BException {
 
 		Connection lConn = null;
 		EventoSimeoneSqlDAO lEveDao = null;
@@ -1556,7 +1549,7 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 
 			lEveDao = new EventoSimeoneSqlDAO(lConn);
 			lEveDao.ricercaEventoByEveIdEventoTipEveTipProvCodMotivo(aEventoKey, aTipoEvento, aTipoProvv,
-					aMotivo, flagDocRegistrato);
+					aMotivo);
 			lEveDao.start();
 
 			if (lEveDao.next())

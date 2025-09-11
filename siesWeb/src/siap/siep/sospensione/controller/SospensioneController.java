@@ -2593,10 +2593,8 @@ public class SospensioneController extends SiapController implements ISospension
 				lNomProvvDAO.setCodNomeProvvedimento("NP104");
 			else if (motivo.equals("0241"))
 				lNomProvvDAO.setCodNomeProvvedimento("NP105");
-			// MEV_9-SIEP: gestione nuovi codici tipo misura
-			else if (motivo.equals("5469") || motivo.equals("5496")
-					|| motivo.equals("0724") || motivo.equals("0735")
-					|| motivo.equals("0684") || motivo.equals("0695")) 
+			// MEV_2024-092: aggiunte impostazioni di motivo 1420 & 1426
+			else if (motivo.equals("1420") || motivo.equals("1426"))
 				lNomProvvDAO.setCodNomeProvvedimento("NP105");
 
 			lNomProvvDAO.setEveIdEvento(lEveModel.getIdEvento());
@@ -2609,11 +2607,9 @@ public class SospensioneController extends SiapController implements ISospension
 				lStatoProcMod = "0083";
 			else if (motivo.equals("0241"))
 				lStatoProcMod = "0155";
-			// MEV_9-SIEP: gestione nuovi codici tipo misura
-			else if (motivo.equals("5469") || motivo.equals("5496")
-					|| motivo.equals("0724") || motivo.equals("0735")
-					|| motivo.equals("0684") || motivo.equals("0695"))
-				lStatoProcMod = "0583";
+			// MEV_2024-092: aggiunte impostazioni di motivo 1420 & 1426
+			else if (motivo.equals("1420") || motivo.equals("1426"))
+					lStatoProcMod = "0575";
 
 			InserimentoCancellazioneStatoProcedimento(lConn, aFascicolo.getIdFascicoloSiep(), lEveModel,
 					lStatoProcMod);
@@ -2629,10 +2625,8 @@ public class SospensioneController extends SiapController implements ISospension
 				lPosizione = "46";
 			else if (motivo.equals("0241"))
 				lPosizione = "47";
-			// MEV_9-SIEP: gestione nuovi codici tipo misura
-			else if (motivo.equals("5469") || motivo.equals("5496")
-					|| motivo.equals("0724") || motivo.equals("0735")
-					|| motivo.equals("0684") || motivo.equals("0695"))
+			// MEV_2024-092: aggiunte impostazioni di motivo 1420 & 1426
+			else if (motivo.equals("1420") || motivo.equals("1426"))
 				lPosizione = "47";
 
 			Date lData = lEveModel.getDataEmissione();
@@ -4299,118 +4293,6 @@ public class SospensioneController extends SiapController implements ISospension
 			cleanup(lScaDao);
 			cleanup(lMisSqlDao);
 			cleanup(lMisDAO);
-			cleanup(lConn);
-			cleanup(lEveDaoBlob);
-		}
-
-		return lEveMod;
-	}
-
-	/**
-	 * MEV_9-SIEP
-	 */
-	public EventoModel ExUpdateValidaSospensioneDecisioniSorveglianza678(EventoModel aEvento,
-			FascicoloSiepModel aFascicolo) throws F3BException {
-
-		Connection lConn = null;
-
-		EventoSqlDAO lEveSqlDao = null;
-		PosizioneGiuridicaSqlDAO lPosSqlDao = null;
-		MisuraAlternativaSqlDAO lMisSqlDAO = null;
-		EventoDAO lEveDaoMisAlt = null;
-		EventoDAO lEveDaoBlob = null;
-
-		EventoModel lEveMod = new EventoModel(aEvento);
-
-		try {
-			lConn = getDBTransaction();
-
-			// ** Aggiorna EVENTO **
-			lEveSqlDao = new EventoSqlDAO(lConn);
-			lEveSqlDao.ricercaEventoByKey(aEvento.getIdEvento());
-			EventoModel lEveModel = (EventoModel) lEveSqlDao.getModelByKey();
-			// String motivo = lEveModel.getCodMotivo();
-
-			lEveModel.setCodOperatoreAggiornamento(aEvento.getCodOperatoreAggiornamento());
-			lEveModel.setCodUfficioAggiornamento(aEvento.getCodUfficioAggiornamento());
-			lEveModel.setDataAggiornamento(aEvento.getDataAggiornamento());
-
-			// cerca la misura
-			lMisSqlDAO = new MisuraAlternativaSqlDAO(lConn);
-			lMisSqlDAO.ricercaMisuraAlternativaByIdEvento(lEveModel.getEveIdEvento());
-			MisuraAlternativaModel lMisMDS = (MisuraAlternativaModel) lMisSqlDAO.getModelByKey();
-
-			// Valido l'evento riferito alla misura alternativa modifica
-			if (lMisMDS != null && lMisMDS.getIdMisuraAlternativa() != null) {
-				lEveSqlDao.ricercaEventoByKey(lMisMDS.getEveIdEvento());
-				EventoModel lEveModelMis = (EventoModel) lEveSqlDao.getModelByKey();
-				lEveDaoMisAlt = new EventoDAO(lConn);
-
-				if (lEveModelMis != null && (lEveModelMis.getFlagDocumentoRegistrato() == null
-						|| lEveModelMis.getFlagDocumentoRegistrato().equals("N"))) {
-					lEveModelMis.setFlagDocumentoRegistrato("S");
-					lEveModelMis.setCodOperatoreAggiornamento(aEvento.getCodOperatoreAggiornamento());
-					lEveModelMis.setCodUfficioAggiornamento(aEvento.getCodUfficioAggiornamento());
-					lEveModelMis.setDataAggiornamento(DateUtils.getSysDate());
-
-					lEveDaoMisAlt.setDAOFromModelForUpdate(lEveModelMis);
-					lEveDaoMisAlt.update();
-					lEveDaoMisAlt.stop();
-				}
-			}
-
-			// SETTA LO STATO PROCEDIMENTO
-			String lStatoProcMod = "0575";
-
-			InserimentoCancellazioneStatoProcedimento(lConn, aFascicolo.getIdFascicoloSiep(), lEveModel,
-					lStatoProcMod);
-
-			// Aggiorna Inserisci PENA_RESIDUA
-			InserimentoAggiornamentoPenResMisuraAlternativa(lConn, lEveModel,
-					aFascicolo.getIdFascicoloSiep());
-
-			// Aggiorna POSIZIONE_GIURIDICA
-			String lPosizione = "47"; // Libero in Sospensione 309/90
-
-			Date lData = lEveModel.getDataEmissione();
-			if (lMisMDS != null && lMisMDS.getDataScarcerazione() != null)
-				lData = lMisMDS.getDataScarcerazione();// data sospensione esecuzione
-
-			// Cerca POSIZIONE_GIURIDICA corrente
-			lPosSqlDao = new PosizioneGiuridicaSqlDAO(lConn);
-			lPosSqlDao.ricercaPosGiuCorrenteByIdFascicolo(aFascicolo.getIdFascicoloSiep());
-			PosizioneGiuridicaModel lPosMod = (PosizioneGiuridicaModel) lPosSqlDao.getModelByKey();
-
-			InserimentoAggiornamentoPosizioneGiuridica(lConn, lPosizione, lPosMod, lData, lEveModel,
-					aFascicolo.getIdFascicoloSiep(), aEvento.getIdEvento());
-
-			// ------- EVENTO--------
-			lEveDaoBlob = new EventoDAO(lConn);
-			lEveDaoBlob.setDAOFromModelForUpdateBlob(aEvento);
-
-			lEveDaoBlob.selCondizioneUpdate(aEvento.getIdEvento());
-			lEveDaoBlob.update();
-			lEveDaoBlob.stop();
-
-			commit(lConn);
-		} catch (DAOException daoEx) {
-			siesLogger.error("DAOException: ", daoEx);
-			rollback(lConn);
-			daoEx.printStackTrace();
-			throw new F3BException(
-					"SospensioneController.ExUpdateValidaSospensioneDecisioniSorveglianza678 : " + daoEx);
-		} catch (Exception ex) {
-			siesLogger.error("Exception: ", ex);
-			rollback(lConn);
-			ex.printStackTrace();
-			throw new F3BException(
-					"SospensioneController.ExUpdateValidaSospensioneDecisioniSorveglianza678 : " + ex);
-		} finally {
-			cleanup(lEveSqlDao);
-			cleanup(lPosSqlDao);
-			cleanup(lMisSqlDAO);
-			cleanup(lEveDaoMisAlt);
-
 			cleanup(lConn);
 			cleanup(lEveDaoBlob);
 		}

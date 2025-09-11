@@ -11,24 +11,10 @@
 <jsp:useBean id="dataInsFS"         scope="request" class="java.lang.String"/>
 <jsp:useBean id="TipiIstituti1"     scope="request" class="java.lang.String"/>
 
-<%-- MEV_9 (D.lgs. 123/2018) --%>
-<jsp:useBean id="ultimoEventoRichAtti"   scope="request" class="siap.sico.evento.model.EventoModel"/>
 <%
   // Azione da chiamare per l'inserimento dei dati.
   String lAzione = "siap.sius.richiestaatti.action.ActInserisciRichiestaCumulo";
-
-  //MEV_9 (D.lgs. 123/2018)
-  Date lUltimaDataRestitAttiIstruttori = ultimoEventoRichAtti.getDataRestituzioneAi();
 %>
-
-<script language="JavaScript">
-    var desktop;
-    function ListaUffici(a_formname,a_fieldname)
-    {
-      desktop = window.open("<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.ufficio.action.ActLoadRicercaUfficio&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Ufficio","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=370,height=500");
-    }
-</script>
-
 <html>
 <head>
   <title>[S.I.E.S.] - Richiesta Cumulo</title>
@@ -38,21 +24,12 @@
     <script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
     <script language="JavaScript">
     
-    <%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
-    function abilitaCampiDataRestituzione() {
-    	if (document.LoadInserisciRichiestaCumulo.<%=ICostantiRichiestaAtti.CHECK_DATA_RESTITUZIONE%>.checked){
-	   		document.LoadInserisciRichiestaCumulo.<%=ICostantiRichiestaAtti.CAMPO_GIORNO_DATA_RESTITUZIONE%>.disabled = false;
-	   		document.LoadInserisciRichiestaCumulo.<%=ICostantiRichiestaAtti.CAMPO_MESE_DATA_RESTITUZIONE%>.disabled = false;
-	   		document.LoadInserisciRichiestaCumulo.<%=ICostantiRichiestaAtti.CAMPO_ANNO_DATA_RESTITUZIONE%>.disabled = false;
-    	}
-    	else {
-	   		document.LoadInserisciRichiestaCumulo.<%=ICostantiRichiestaAtti.CAMPO_GIORNO_DATA_RESTITUZIONE%>.disabled = true;
-	   		document.LoadInserisciRichiestaCumulo.<%=ICostantiRichiestaAtti.CAMPO_MESE_DATA_RESTITUZIONE%>.disabled = true;
-	   		document.LoadInserisciRichiestaCumulo.<%=ICostantiRichiestaAtti.CAMPO_ANNO_DATA_RESTITUZIONE%>.disabled = true;
-    	}    	
-   	}
-    <%-- FINE: MEV_9 (D.lgs. 123/2018) --%>
-    
+    var desktop;
+    function ListaUffici(a_formname,a_fieldname)
+    {
+      desktop = window.open("<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.ufficio.action.ActLoadRicercaUfficio&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Ufficio","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=370,height=500");
+    }
+
     function Verify()
     {
       if (document.LoadInserisciRichiestaCumulo.<%=ICostantiRichiestaAtti.CAMPO_GIORNO_DATA_EMISSIONE%>.value.length==1)
@@ -89,26 +66,6 @@
         alert('Data Emissione minore della data di inserimento del fascicolo SIUS!');
         return false;
       }
-
-      <%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
-      if (document.LoadInserisciRichiestaCumulo.<%=ICostantiRichiestaAtti.CHECK_DATA_RESTITUZIONE%>.checked){
-	      var data_restituzione = document.LoadInserisciRichiestaCumulo.<%=ICostantiRichiestaAtti.CAMPO_GIORNO_DATA_RESTITUZIONE%>.value
-	                        +'/'+ document.LoadInserisciRichiestaCumulo.<%=ICostantiRichiestaAtti.CAMPO_MESE_DATA_RESTITUZIONE%>.value
-	                        +'/'+ document.LoadInserisciRichiestaCumulo.<%=ICostantiRichiestaAtti.CAMPO_ANNO_DATA_RESTITUZIONE%>.value;
-	      if (! ControllaData(data_restituzione))
-	      {
-	        alert('Data Restituzione atti non valida');
-	        return false;
-	      }
-	      
-	      if ( ! CompareDate( data_emissione, data_restituzione) )
-	      {
-	        alert('Data Emissione maggiore della Data Restituzione atti!');
-	        return false;
-	      }
-      }
-      <%-- FINE: MEV_9 (D.lgs. 123/2018) --%>
-      
       return true;
     }
   </script>
@@ -143,29 +100,6 @@
           <input Title="Mese"   value="<%=DateUtils.getSysDate("MM")%>"   type="text" size="2" maxlength="2" name="<%= ICostantiRichiestaAtti.CAMPO_MESE_DATA_EMISSIONE %>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"  > /
           <input Title="Anno"   value="<%=DateUtils.getSysDate("yyyy")%>" type="text" size="4" maxlength="4" name="<%= ICostantiRichiestaAtti.CAMPO_ANNO_DATA_EMISSIONE %>"  onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillYear(value)" >
         </td>
-        
-        <%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
-        <td class="l"><input value="S" type="checkbox" name="<%=ICostantiRichiestaAtti.CHECK_DATA_RESTITUZIONE%>" 
-                             onClick="abilitaCampiDataRestituzione()"
-                             >  Atti da restituire entro il </font></td>
-        <td class="L">
-          <input Title="Giorno"  type="text" size="2" maxlength="2" 
-                 name="<%= ICostantiRichiestaAtti.CAMPO_GIORNO_DATA_RESTITUZIONE%>" 
-                 value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lUltimaDataRestitAttiIstruttori,"dd"),"")%>" 
-                 onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  
-                 onBlur="javascript:value=FillDM(value)" disabled> /
-          <input Title="Mese" type="text" size="2" maxlength="2" 
-                 name="<%= ICostantiRichiestaAtti.CAMPO_MESE_DATA_RESTITUZIONE%>" 
-                 value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lUltimaDataRestitAttiIstruttori,"MM"),"")%>" 
-                 onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  
-                 onBlur="javascript:value=FillDM(value)" disabled> /
-          <input Title="Anno" type="text" size="4" maxlength="4" 
-                 name="<%= ICostantiRichiestaAtti.CAMPO_ANNO_DATA_RESTITUZIONE %>"  
-                 value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lUltimaDataRestitAttiIstruttori,"yyyy"),"")%>" 
-          		 onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  
-          		 onBlur="javascript:value=FillYear(value)" disabled>
-        </td>     
-        <%-- FINE: MEV_9 (D.lgs. 123/2018) --%>           
       </tr>
 
       <!-- Destinatario + luogo -->
@@ -190,9 +124,8 @@
         <tr>
             <td class="l">Note</td>
             <td class="L" colspan=3>
-             <TEXTAREA title="Note" name="<%= ICostantiRichiestaAtti.CAMPO_AGGIUNTIVO %>"  cols=40 rows=4 ></textarea>
+             <TEXTAREA title="Note" name="<%= ICostantiRichiestaAtti.CAMPO_AGGIUNTIVO %>" cols="40" rows="4"></textarea>
             </td>
-            <input name="<%=ICostantiRichiestaAtti.CAMPO_NOTE%>" value="" type="hidden" >
         </tr>
 
       <tr>
@@ -201,9 +134,9 @@
         </td>
       </tr>
     </table>
-
+	<input type="hidden" name="<%=ICostantiRichiestaAtti.CAMPO_NOTE%>" value="">
     <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="<%=lAzione%>" >
-  </form>
+</form>
 
   <script language="JavaScript" type="text/javascript">
     var frmvalidator = new Validator("LoadInserisciRichiestaCumulo");

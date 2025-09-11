@@ -16,8 +16,6 @@
 <jsp:useBean id="udienza"         		scope="request" class="siap.sius.udienza.model.UdienzaModel"/>
 <jsp:useBean id="TornaQui"        		scope="request" class="java.lang.String"/>
 <jsp:useBean id="fascicoloSiusGP"    	scope="session" class="siap.sius.fascicolo.model.FascicoloGPModel"/>
-<%-- MEV_9: aggiunto useBean --%>
-<jsp:useBean id="dataEsecutivitaStr"	scope="request" class="java.lang.String"/>
 
 <%
 String modalita = "";
@@ -62,18 +60,7 @@ function Verify() {
 		alert('Non è possibile rifissare la stessa udienza!');
 		return false;
   	}
-<%
-// MEV_9: aggiunto controllo che la data udienza sia >= data esecutività
-if (Utils.isPresent(dataEsecutivitaStr)) {
-%>
-	var dataEsecutivita = '<%=dataEsecutivitaStr%>';
-	if (!CompareDate(dataEsecutivita, dataUdienza)) {
-		alert('Data Udienza non può essere inferiore alla Data Esecutività del ' + dataEsecutivita + '!');
-		return false;
-	}
-<%
-}
-%>
+
 	return true;
 }
 

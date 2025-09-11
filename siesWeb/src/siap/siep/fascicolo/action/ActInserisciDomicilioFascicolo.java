@@ -1,15 +1,10 @@
 package siap.siep.fascicolo.action;
 
-/**
-* <p>Title: ActInserisciResidenza</p>
-* <p>Description: Classe Action per l'inserimento di Residenza</p>
-* <p>Copyright: Copyright (c) 2002</p>
-* <p>Company: Bull</p>
-* @version 1.0
-*/
-//import siap.sico.decodifiche.controller.ComuneController;
 import java.math.BigDecimal;
 
+import org.apache.log4j.Logger;
+
+import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
 import f3b.web.IWebConstants;
@@ -25,14 +20,24 @@ import siap.siep.fascicolo.controller.IFascicoloSiep;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.util.SIEPLookupRemote;
 
+/**
+ * ActInserisciResidenza - Classe Action per l'inserimento di Residenza
+ *
+ * @version 1.0
+ */
 public class ActInserisciDomicilioFascicolo extends ActionSiap implements ICostantiResidenza {
+
+	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+	
 	/**
 	 * Azione di Inserimento della Residenza
-	 * 
+	 *
 	 * @return Nome della pagina JSP da visualizzare al termine dell'elaborazione
 	 * @throws F3BException
 	 */
 	public String processRequest() throws Exception {
+
 		if (this.isSessionAttributeNullObj("fascicolo")) {
 			return ICostantiFascicoloSiep.REDIRECT_FASCICOLO_RICERCATO + getClass().getName();
 		}
@@ -47,17 +52,14 @@ public class ActInserisciDomicilioFascicolo extends ActionSiap implements ICosta
 		String lCodStato = getRequestStringParameter(CAMPO_COD_STATO);
 		lResMod.setCodStato(lCodStato);
 
-		/* 20210531	MEV_Scheda-21 Correzione Comune Domicilio per omonimie dei Comuni con flag validità.
-		if (getRequestStringParameter(CAMPO_DESCR_COMUNE).length() > 1) {
-			ComuneModel lComMod = new ComuneModel(
-					getCodComuneByDescrFlagVal(getRequestStringParameter(CAMPO_DESCR_COMUNE)));
-			lResMod.setCodComune(lComMod.getCodComune());
-			lResMod.setCodProvincia(lComMod.getCodProvincia());
-		} else {
-			lResMod.setCodProvincia("-");
-			lResMod.setCodComune("-");
-		} */
-		// 20210531	MEV_Scheda-21 Correzione Comune Domicilio per omonimie dei Comuni con flag validità.
+		/*
+		 * 20210531 MEV_Scheda-21 Correzione Comune Domicilio per omonimie dei Comuni con flag validità. if
+		 * (getRequestStringParameter(CAMPO_DESCR_COMUNE).length() > 1) { ComuneModel lComMod = new
+		 * ComuneModel( getCodComuneByDescrFlagVal(getRequestStringParameter(CAMPO_DESCR_COMUNE)));
+		 * lResMod.setCodComune(lComMod.getCodComune()); lResMod.setCodProvincia(lComMod.getCodProvincia()); }
+		 * else { lResMod.setCodProvincia("-"); lResMod.setCodComune("-"); }
+		 */
+		// 20210531 MEV_Scheda-21 Correzione Comune Domicilio per omonimie dei Comuni con flag validità.
 		// Recupero dati del Comune di residenza
 		ComuneModel lComMod;
 		if (!isRequestParameterNullObj(ICostantiComune.CAMPO_COD_COMUNE_REALE)
@@ -71,6 +73,7 @@ public class ActInserisciDomicilioFascicolo extends ActionSiap implements ICosta
 			lComMod = new ComuneModel(
 					getDatiComuneByDescrOmonimiaFlagVal(getRequestStringParameter(CAMPO_DESCR_COMUNE)));
 		}
+		siesLogger.info(lComMod != null ? lComMod.getCodComune() : "");
 
 		// 20250612 [SG]: risolto problema ricerca soggetto col "-" pari al cod comune nascita
 		// Ticket#20250612016 - SIES - ricerche soggetto
@@ -104,8 +107,6 @@ public class ActInserisciDomicilioFascicolo extends ActionSiap implements ICosta
 		// --- FASCICOLO ---
 		IFascicoloSiep lCtrl = SIEPLookupRemote.getFascicoloSiepRemote();
 		lResAss = lCtrl.ExInserisciResidenzaFascicoloSiep(lResAss);
-
-		// String lPage = "";
 
 		return /* lPage = */IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
 				+ "=siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&"
