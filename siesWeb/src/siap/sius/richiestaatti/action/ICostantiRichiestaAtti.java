@@ -26,6 +26,14 @@ public interface ICostantiRichiestaAtti
   public static final String CAMPO_MESE_ULTERIORE         = "CampoMeseUlteriore";
   public static final String CAMPO_GIORNO_ULTERIORE       = "CampoGiornoUlteriore";
 
+  // INIZIO: MEV_9 (D.lgs. 123/2018)
+  public static final String CHECK_DATA_RESTITUZIONE         = "checkDataRestituzione";
+  public static final String CAMPO_GIORNO_DATA_RESTITUZIONE  = "giornoDataRestituzione";
+  public static final String CAMPO_MESE_DATA_RESTITUZIONE    = "meseDataRestituzione";
+  public static final String CAMPO_ANNO_DATA_RESTITUZIONE    = "annoDataRestituzione";
+  //FINE: MEV_9 (D.lgs. 123/2018)
+  
+  
   // Elenco stampe.
   public static final String PG_ELENCOSTAMPEDOCISTRUTTORI = IWebConstants.ROOT_DIR + "files/siap/sius/richiestaatti/ElencoStampeDocIstruttori.jsp";
   public static final String PG_LOAD_RICHIESTACARICHIPENDENTI = IWebConstants.ROOT_DIR + "files/siap/sius/richiestaatti/LoadInserisciCarichiPendenti.jsp";

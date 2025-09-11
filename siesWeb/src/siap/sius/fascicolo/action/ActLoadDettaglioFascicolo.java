@@ -86,7 +86,7 @@ public class ActLoadDettaglioFascicolo extends ActionSius
 		// e poi successivamente cancellato un Riferimento Altro Titolo Esecutivo.
 		// In questo caso il campo "CAMPO_ID_FASCICOLO_SIUS" deve essere recuperato dalla
 		// sessione e non dalla form altrimenti restituisce null).
-		String idFascSius = this.getParameter(CAMPO_ID_FASCICOLO_SIUS);
+		String idFascSius = getParameter(CAMPO_ID_FASCICOLO_SIUS);
 		BigDecimal aIdFascicoloSius = null;
 		if (idFascSius != null) {
 			aIdFascicoloSius = getRequestBigDecimalParameter(CAMPO_ID_FASCICOLO_SIUS);
@@ -95,18 +95,18 @@ public class ActLoadDettaglioFascicolo extends ActionSius
 					.getFascicoloSiusModel().getIdFascicoloSius();
 		}
 
-		FascicoloGPModel lFasGPMod = new FascicoloGPModel();
-		lFasGPMod.getFascicoloSiusModel().setIdFascicoloSius(aIdFascicoloSius);
+		FascicoloGPModel fgpm = new FascicoloGPModel();
+		fgpm.getFascicoloSiusModel().setIdFascicoloSius(aIdFascicoloSius);
 
 		IFascicoloSius lCtrl = SIUSLookupRemote.getFascicoloSiusRemote();
-		lFasGPMod = lCtrl.ExRicercaFascicoloByKey(aIdFascicoloSius);
+		fgpm = lCtrl.ExRicercaFascicoloByKey(aIdFascicoloSius);
 
 		BigDecimal lengthCertPenale = lCtrl.ExGetLengthCertPenaleByIdFascicolo(aIdFascicoloSius);
 
 		Vector lVectFas = null;
-		if (lFasGPMod.getFascicoloSiusModel() != null
-				&& lFasGPMod.getFascicoloSiusModel().getNumeroFascicoliUnificati() != null
-				&& lFasGPMod.getFascicoloSiusModel().getNumeroFascicoliUnificati().intValue() > 0) {
+		if (fgpm.getFascicoloSiusModel() != null
+				&& fgpm.getFascicoloSiusModel().getNumeroFascicoliUnificati() != null
+				&& fgpm.getFascicoloSiusModel().getNumeroFascicoliUnificati().intValue() > 0) {
 			FascicoloSiusModel lFasRicModel = new FascicoloSiusModel();
 			lFasRicModel.setFasSiuIdFascicoloSius(aIdFascicoloSius);
 			lVectFas = lCtrl.ExRicercaElencoFascicoliUnificati(lFasRicModel);
@@ -115,31 +115,31 @@ public class ActLoadDettaglioFascicolo extends ActionSius
 
 		// 20/06/2006 Elenco Fascicoli Collegati
 		Vector lVectCol = null;
-		if (lFasGPMod.getFascicoloSiusModel() != null)
+		if (fgpm.getFascicoloSiusModel() != null)
 			lVectCol = lCtrl.ExRicercaFascicoliXIdOrigine(aIdFascicoloSius);
 
 		setRequestAttribute("elencoFasCollegati", lVectCol);
 
 		// Fascicolo Padre
 		FascicoloGPModel lFasPadre = null;
-		if (lFasGPMod.getFascicoloSiusModel().getIdFascicoloSiusOrigine() != null) {
+		if (fgpm.getFascicoloSiusModel().getIdFascicoloSiusOrigine() != null) {
 			// 29/01/2008 Per fascicoli ExtraUfficio Il Fascicolo Padre può anche non esistere in archivio.
-			if (CAMPO_CHIAVE_UFFICIO.compareTo(lFasGPMod.getFascicoloSiusModel().getChiaveUfficio()) == 0)
-				lFasPadre = lCtrl.ExRicercaFascicoloByKey(
-						lFasGPMod.getFascicoloSiusModel().getIdFascicoloSiusOrigine());
+			if (CAMPO_CHIAVE_UFFICIO.compareTo(fgpm.getFascicoloSiusModel().getChiaveUfficio()) == 0)
+				lFasPadre = lCtrl
+						.ExRicercaFascicoloByKey(fgpm.getFascicoloSiusModel().getIdFascicoloSiusOrigine());
 			else
 				lFasPadre = lCtrl.ExRicercaFascicoloCollegato(
-						lFasGPMod.getFascicoloSiusModel().getIdFascicoloSiusOrigine());
+						fgpm.getFascicoloSiusModel().getIdFascicoloSiusOrigine());
 		}
 		setRequestAttribute("fascicoloPadre", lFasPadre);
 
 		FascicoloGPModel lUnificante = null;
-		if (lFasGPMod.getFascicoloSiusModel() != null
-				&& lFasGPMod.getFascicoloSiusModel().getFasSiuIdFascicoloSius() != null) {
-			BigDecimal lCodUnificante = lFasGPMod.getFascicoloSiusModel().getFasSiuIdFascicoloSius();
+		if (fgpm.getFascicoloSiusModel() != null
+				&& fgpm.getFascicoloSiusModel().getFasSiuIdFascicoloSius() != null) {
+			BigDecimal lCodUnificante = fgpm.getFascicoloSiusModel().getFasSiuIdFascicoloSius();
 			// 29/01/2008 Per fascicoli ExtraUfficio Il Fascicolo Unificante può anche non esistere in
 			// archivio.
-			if (CAMPO_CHIAVE_UFFICIO.compareTo(lFasGPMod.getFascicoloSiusModel().getChiaveUfficio()) == 0)
+			if (CAMPO_CHIAVE_UFFICIO.compareTo(fgpm.getFascicoloSiusModel().getChiaveUfficio()) == 0)
 				lUnificante = lCtrl.ExRicercaFascicoloByKey(lCodUnificante);
 			else
 				lUnificante = lCtrl.ExRicercaFascicoloCollegato(lCodUnificante);
@@ -147,11 +147,11 @@ public class ActLoadDettaglioFascicolo extends ActionSius
 		setRequestAttribute("fascicoloUnificante", lUnificante);
 
 		// Metto in sessione il fascicolo SIUS per consentire le funzionalità annesse.
-		setSessionAttribute("fascicoloSiusGP", lFasGPMod);
+		setSessionAttribute("fascicoloSiusGP", fgpm);
 
 		// Leggo se il fascicolo e' modificabile
 		String lModificabile = "NO";
-		if (this.IsFascicoloSiusModificabile())
+		if (IsFascicoloSiusModificabile())
 			lModificabile = "SI";
 		else
 			lModificabile = "NO";
@@ -200,10 +200,10 @@ public class ActLoadDettaglioFascicolo extends ActionSius
 		setRequestAttribute("atti", lVect);
 
 		// Metto in sessione il Dettaglio Fascicolo Siep per recuperare Pena Residua, Posizione Giuridica etc.
-		if (lFasGPMod.getFascicoloSiusModel().getFasSieIdFascicoloSiep() != null) {
+		if (fgpm.getFascicoloSiusModel().getFasSieIdFascicoloSiep() != null) {
 			IFascicoloSiep fCtrl = SIEPLookupRemote.getFascicoloSiepRemote();
 			DettaglioFascicoloModel detFasSiep = fCtrl
-					.ExDettaglioFascicoloSiep(lFasGPMod.getFascicoloSiusModel().getFasSieIdFascicoloSiep());
+					.ExDettaglioFascicoloSiep(fgpm.getFascicoloSiusModel().getFasSieIdFascicoloSiep());
 			setRequestAttribute("dettagliofascicolo", detFasSiep);
 		}
 
@@ -268,33 +268,33 @@ public class ActLoadDettaglioFascicolo extends ActionSius
 		Vector lUdiProVect = null;
 		IUdienzaProcedimento lUdiProCtrl = SIUSLookupRemote.getUdienzaProcedimentoRemote();
 		lUdiProVect = lUdiProCtrl.ExRicercaUdienzaProcedimentoUdiByGeneraleProcedimento(
-				lFasGPMod.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
+				fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 		setRequestAttribute("MovimentiUdienze", lUdiProVect);
 
 		// Elenco NOTE STUB 06/09/2005
 		Vector lNoteVect = null;
 		INote lNoteCtrl = SIUSLookupRemote.getNoteRemote();
-		lNoteVect = lNoteCtrl.ExRicercaNote(lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
+		lNoteVect = lNoteCtrl.ExRicercaNote(fgpm.getFascicoloSiusModel().getIdFascicoloSius());
 		setRequestAttribute("elencoNote", lNoteVect);
 
 		// Posizione Materiale Fascicolo
 		IPosizioneMaterialeFascSius lPosMatCtrl = SIUSLookupRemote.getPosizioneMaterialeFascSiusRemote();
-		Vector lPosizioniMat = lPosMatCtrl.ExRicercaPosizioneMaterialeFascAttiva(
-				lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
+		Vector lPosizioniMat = lPosMatCtrl
+				.ExRicercaPosizioneMaterialeFascAttiva(fgpm.getFascicoloSiusModel().getIdFascicoloSius());
 		if (lPosizioniMat != null && lPosizioniMat.size() > 0)
 			setRequestAttribute("posizione_materiale", lPosizioniMat.get(0));
 
-		this.setRequestAttribute("isModificabile", lModificabile);
-		this.setRequestAttribute("UtenteConnesso", lUtenteMod);
-		this.setRequestAttribute("fascicoloSiusGP", lFasGPMod);
-		this.setRequestAttribute("fascicolo", lParser.getFascicolo());
-		this.setRequestAttribute("residenza", lParser.getResidenza());
-		this.setRequestAttribute("sentenza", lParser.getSentenza());
-		this.setRequestAttribute("udienza", lParser.getUdienza());
-		this.setRequestAttribute("magistrato", lParser.getMagistrati());
-		this.setRequestAttribute("luogodet", lParser.getLuogoDetenzione());
-		this.setRequestAttribute("istitutodet", lParser.getIstitutoDetenzione());
-		this.setRequestAttribute("avvocato", lParser.getAvvocato());
+		setRequestAttribute("isModificabile", lModificabile);
+		setRequestAttribute("UtenteConnesso", lUtenteMod);
+		setRequestAttribute("fascicoloSiusGP", fgpm);
+		setRequestAttribute("fascicolo", lParser.getFascicolo());
+		setRequestAttribute("residenza", lParser.getResidenza());
+		setRequestAttribute("sentenza", lParser.getSentenza());
+		setRequestAttribute("udienza", lParser.getUdienza());
+		setRequestAttribute("magistrato", lParser.getMagistrati());
+		setRequestAttribute("luogodet", lParser.getLuogoDetenzione());
+		setRequestAttribute("istitutodet", lParser.getIstitutoDetenzione());
+		setRequestAttribute("avvocato", lParser.getAvvocato());
 
 		// 08/2014 - Magistrato ESPERTO
 		if (lParser.getMagistrati() != null) {
@@ -308,18 +308,14 @@ public class ActLoadDettaglioFascicolo extends ActionSius
 				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
 				// siesLogger.debug(" XXXXX ----> lEspMod = "+lEspMod);
-				this.setRequestAttribute("esperto", lEspMod);
+				setRequestAttribute("esperto", lEspMod);
 			}
-		} else {
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			// siesLogger.debug(" XXXXX ----> lMagistrato e Esperto = null");
 		}
 
 		// Cancelleria Assegnataria
 		ICancAssFascSius lCancAssFascCtrl = SIUSLookupRemote.getCancAssFascSiusRemote();
 		CancAssFascSiusModel lCancAssFascAttiva = lCancAssFascCtrl
-				.ExRicercaCancAssFascSiusAttiva(lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
+				.ExRicercaCancAssFascSiusAttiva(fgpm.getFascicoloSiusModel().getIdFascicoloSius());
 		// Se esiste una Cancelleria Assegnataria per il fascicolo viene passato alla request
 		if (lCancAssFascAttiva != null)
 			setRequestAttribute("cancelleria_assegnataria", lCancAssFascAttiva);
@@ -332,7 +328,7 @@ public class ActLoadDettaglioFascicolo extends ActionSius
 		Vector lEstremiFCVect = new Vector();
 		// MEV10-s3: aggiunto parametro di passaggio per gestire tipologia ufficio minorenni
 		String strCodTipoUfficio = getUfficioUtenteConnesso().getCodTipoUfficio();
-		Vector lVectFC = mCtrl.ExRicercaEventoXCFC(lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius(),
+		Vector lVectFC = mCtrl.ExRicercaEventoXCFC(fgpm.getFascicoloSiusModel().getIdFascicoloSius(),
 				COD_EVENTO_PROVVEDIMENTO, strCodTipoUfficio);
 
 		if (lVectFC.size() > 0) {
@@ -358,14 +354,14 @@ public class ActLoadDettaglioFascicolo extends ActionSius
 		// 08/01/2007 Elenco Tenori Stralciati
 		Vector lVectTenStralcio = null;
 		IStralcio lCtrlStra = SIUSLookupRemote.getStralcioRemote();
-		if (lFasGPMod.getFascicoloSiusModel() != null) {
+		if (fgpm.getFascicoloSiusModel() != null) {
 			lVectTenStralcio = lCtrlStra.ExRicercaTenoriStralciatiByIdFascicolo(aIdFascicoloSius);
 		}
 		setRequestAttribute("elencoTenoriStralcio", lVectTenStralcio);
 
 		// 06/06/2007 Elenco Ulteriori Istanze
 		Vector lVectUI = null;
-		if (lFasGPMod.getFascicoloSiusModel() != null) {
+		if (fgpm.getFascicoloSiusModel() != null) {
 			UlterioreIstanzaModel lUltIstMod = new UlterioreIstanzaModel();
 			lUltIstMod.setFasSiuIdFascicoloSius(aIdFascicoloSius);
 			IUlterioreIstanza lCtrlUI = SIUSLookupRemote.getUlterioreIstanzaRemote();
@@ -375,7 +371,7 @@ public class ActLoadDettaglioFascicolo extends ActionSius
 		setRequestAttribute("ulterioriistanze", lVectUI);
 
 		// Collaboratore di giustizia
-		if (isCollaboratoreDiGiustizia(lFasGPMod)) {
+		if (isCollaboratoreDiGiustizia(fgpm)) {
 			setRequestAttribute("collaboratore", "Collaboratore di Giustizia");
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -383,22 +379,21 @@ public class ActLoadDettaglioFascicolo extends ActionSius
 		}
 
 		// Per un fascicolo EMS verificare la congruenza con il fascicolo AMS o EMS trasformato collegato
-		if (lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
+		if (fgpm.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
 				.compareTo(COD_OGGETTO_PROCEDIMENTO_MS) == 0)
-			verificaOggettiEMSAMS(lFasGPMod);
+			verificaOggettiEMSAMS(fgpm);
 
 		// =========================================================================
 		// MEV 12 - Richiesta Certificato Penale
 		// =========================================================================
 		// se è presente il Certificato Casellario Giudiziale recupero la data INVIO dello stesso.
-		if (lFasGPMod != null && lFasGPMod.getFascicoloSiusModel() != null
-				&& lengthCertPenale.intValue() > 0) {
+		if (fgpm != null && fgpm.getFascicoloSiusModel() != null && lengthCertPenale.intValue() > 0) {
 			INotifica mCtrlNot = SIEPLookupRemote.getNotificaRemote();
 			String lTipoEvento = "05";
 			String lCodMotivo = "0050";
 
 			Date dataInvioCertificato = mCtrlNot.ExRicercaDataInvioCertCasellario(
-					lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius(), lTipoEvento, lCodMotivo);
+					fgpm.getFascicoloSiusModel().getIdFascicoloSius(), lTipoEvento, lCodMotivo);
 			setRequestAttribute("dataInvioCertificato", dataInvioCertificato);
 			setRequestAttribute("certificatoPenale", "SI");
 		} else {
@@ -408,8 +403,46 @@ public class ActLoadDettaglioFascicolo extends ActionSius
 		// MEV10-s3: aggiunta gestione soggetto Maggiorenne/Minorenne
 		// if ((soggMod.getDataNascitaPresunta() != null && "S".equals(soggMod.getDataNascitaPresunta()))
 		// || soggMod.getEtaPresuntaAnni() != null)
-		if (!"N".equals(lFasGPMod.getFascicoloSiusModel().getVisibilitaMinorenne()))
-			checkMinorenne(lFasGPMod.getFascicoloSiusModel().getSoggetto(), lFasGPMod, lParser.getSentenza());
+		if (!"N".equals(fgpm.getFascicoloSiusModel().getVisibilitaMinorenne()))
+			checkMinorenne(fgpm.getFascicoloSiusModel().getSoggetto(), fgpm, lParser.getSentenza());
+
+		/*
+		 * ISSUE MEV : aggiunta estrazione data esecutivita 
+		 * Numero MEV : 9 
+		 * Autore : sgioggi 
+		 * Data : 5 dic 2022
+		 * Branch : MEV_9
+		 */
+		if (!Utils.isNullObj(fgpm) && !Utils.isNullObj(fgpm.getGeneraleProcedimentoModel())
+				&& !Utils.isNullObj(fgpm.getGeneraleProcedimentoModel().getCodOggettoProcedimento())
+				&& (fgpm.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("C050") == 0
+						|| fgpm.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
+								.compareTo("C051") == 0)) {
+			IDepositoOrdinanzaPc idopc = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
+			DepositoOrdinanzaPcModel dopcm = new DepositoOrdinanzaPcModel();
+			dopcm.setGenPridGeneraleProcedimento(
+					fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
+			Vector<?> v = null;
+			try {
+				v = idopc.ExRicercaDepositoOrdinanzaPc(dopcm);
+			} catch (Exception e) {
+				v = new Vector<>();
+			}
+			siesLogger.debug(v != null ? "vettore con " + v.size() + " elementi" : "vettore vuoto");
+			setRequestAttribute("depositoOrdinanzaVector", v);
+			String dataRestituzioneStr = "";
+			if (!Utils.isNullObj(fgpm.getGeneraleProcedimentoModel().getDataRestituzione()))
+				dataRestituzioneStr = DateUtils.getDateToString(
+						fgpm.getGeneraleProcedimentoModel().getDataRestituzione(), "dd/MM/yyyy");
+			setRequestAttribute("dataRestituzioneStr", dataRestituzioneStr);
+			// DepositoOrdinanzaPcModel dopcm = idopc.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd(
+			// fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), "AM");
+			// String dataEsecutivita = null;
+			// if (!Utils.isNullObj(dopcm) && !Utils.isNullObj(dopcm.getDataEsecutivita()))
+			// dataEsecutivita = DateUtils.getDateToString(dopcm.getDataEsecutivita(), "dd/MM/yyyy");
+			// setRequestAttribute("dataEsecutivitaStr", dataEsecutivita);
+		}
+		// ***** FINE INTERVENTO MEV_9 *****//
 
 		// info per il log
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -528,11 +561,11 @@ public class ActLoadDettaglioFascicolo extends ActionSius
 	 * MEV10-s3: aggiunto metodo di controllo età soggetto
 	 *
 	 * @param soggMod
-	 * @param lFasGPMod
+	 * @param fgpm
 	 * @param lSentenzaMod
 	 * @throws F3BException
 	 */
-	private void checkMinorenne(SoggettoModel soggMod, FascicoloGPModel lFasGPMod, SentenzaModel lSentenzaMod)
+	private void checkMinorenne(SoggettoModel soggMod, FascicoloGPModel fgpm, SentenzaModel lSentenzaMod)
 			throws F3BException {
 
 		// data di sistema
@@ -547,7 +580,7 @@ public class ActLoadDettaglioFascicolo extends ActionSius
 			// calcolo gli anni del soggetto
 			int anniSoggetto = deltaAnni(dataNascitaSoggetto, dataSistema);
 			int anniReato = deltaAnni(dataNascitaSoggetto, dataReato);
-			impostaEtichetta(anniSoggetto, anniReato, lFasGPMod, anni_18_Maggiorenne, lSentenzaMod, "");
+			impostaEtichetta(anniSoggetto, anniReato, fgpm, anni_18_Maggiorenne, lSentenzaMod, "");
 		} else if (soggMod.getEtaPresuntaAnni() != null && dataReato != null) {
 			// calcolo gli anni presunti del soggetto
 			Date dataNascitaPresunta = DateUtils.moveDateTo(dataReato, Calendar.YEAR,
@@ -571,14 +604,13 @@ public class ActLoadDettaglioFascicolo extends ActionSius
 					anni_18_Maggiorenne = false;
 				}
 			}
-			impostaEtichetta(anniPresunti, anniPresuntiReato, lFasGPMod, anni_18_Maggiorenne, lSentenzaMod,
-					"");
+			impostaEtichetta(anniPresunti, anniPresuntiReato, fgpm, anni_18_Maggiorenne, lSentenzaMod, "");
 		} else if (soggMod.getEtaPresuntaAnni() != null && dataReato == null) {
 			// caso in cui il soggetto ha età presunta ma non c'è data commesso reato,
 			// in questo caso bisogna recuperare le informazioni del Fasicolo Siep associato,
 			// per impostare l'etichetta Maggiorenne/Minorenne
-			if (lFasGPMod != null && lFasGPMod.getFascicoloSiusModel() != null) {
-				BigDecimal idFascicoloSiep = lFasGPMod.getFascicoloSiusModel().getFasSieIdFascicoloSiep();
+			if (fgpm != null && fgpm.getFascicoloSiusModel() != null) {
+				BigDecimal idFascicoloSiep = fgpm.getFascicoloSiusModel().getFasSieIdFascicoloSiep();
 				String codTipoUfficioSiep = "";
 				if (Utils.isPresent(idFascicoloSiep)) {
 					IFascicoloSiep lCtrl = SIEPLookupRemote.getFascicoloSiepRemote();
@@ -618,8 +650,8 @@ public class ActLoadDettaglioFascicolo extends ActionSius
 								anni_18_Maggiorenne = false;
 							}
 						}
-						impostaEtichetta(anniPresunti, anniPresuntiUltimoReato, lFasGPMod,
-								anni_18_Maggiorenne, lSentenzaMod, codTipoUfficioSiep);
+						impostaEtichetta(anniPresunti, anniPresuntiUltimoReato, fgpm, anni_18_Maggiorenne,
+								lSentenzaMod, codTipoUfficioSiep);
 					}
 				}
 			}
@@ -672,13 +704,13 @@ public class ActLoadDettaglioFascicolo extends ActionSius
 	 *
 	 * @param anni
 	 * @param anniUltimoReato
-	 * @param lFasGPMod
+	 * @param fgpm
 	 * @param anni_18_Maggiorenne
 	 * @param lSentenzaMod
 	 * @param codTipoUfficioSiep
 	 * @throws F3BException
 	 */
-	private void impostaEtichetta(int anni, int anniUltimoReato, FascicoloGPModel lFasGPMod,
+	private void impostaEtichetta(int anni, int anniUltimoReato, FascicoloGPModel fgpm,
 			boolean anni_18_Maggiorenne, SentenzaModel lSentenzaMod, String codTipoUfficioSiep)
 			throws F3BException {
 
@@ -690,7 +722,7 @@ public class ActLoadDettaglioFascicolo extends ActionSius
 		String etichettaEta = "";
 		String oscuraEta = "";
 
-		String codTipoUfficio = lFasGPMod.getFascicoloSiusModel().getCodTipoUfficio();
+		String codTipoUfficio = fgpm.getFascicoloSiusModel().getCodTipoUfficio();
 		if (Utils.isPresent(codTipoUfficioSiep))
 			codTipoUfficio = codTipoUfficioSiep;
 
@@ -727,8 +759,8 @@ public class ActLoadDettaglioFascicolo extends ActionSius
 				&& ("PMM".equals(codTipoUfficio) || "DIBM".equals(codTipoUfficio)
 						|| "GIPM".equals(codTipoUfficio) || "CAPSM".equals(codTipoUfficio)
 						|| "UDSM".equals(codTipoUfficio) || "TDSM".equals(codTipoUfficio))
-				&& anni <= 24 && lFasGPMod.getFascicoloSiusModel().getVisibilitaMinorenne() != null
-				&& "N".equals(lFasGPMod.getFascicoloSiusModel().getVisibilitaMinorenne())) {
+				&& anni <= 24 && fgpm.getFascicoloSiusModel().getVisibilitaMinorenne() != null
+				&& "N".equals(fgpm.getFascicoloSiusModel().getVisibilitaMinorenne())) {
 			etichettaEta = "<span style='color:#F2F2F2;background-color:#5882FA';>&nbsp;Maggiorenne (Anni "
 					+ anni + ")&nbsp;</span>";
 			// rimozione etichetta non visibile
@@ -742,11 +774,11 @@ public class ActLoadDettaglioFascicolo extends ActionSius
 				&& ("PMM".equals(codTipoUfficio) || "DIBM".equals(codTipoUfficio)
 						|| "GIPM".equals(codTipoUfficio) || "CAPSM".equals(codTipoUfficio)
 						|| "UDSM".equals(codTipoUfficio) || "TDSM".equals(codTipoUfficio))
-				&& anni <= 24 && (lFasGPMod.getFascicoloSiusModel().getVisibilitaMinorenne() == null
-						|| "".equals(lFasGPMod.getFascicoloSiusModel().getVisibilitaMinorenne()))) {
+				&& anni <= 24 && (fgpm.getFascicoloSiusModel().getVisibilitaMinorenne() == null
+				|| "".equals(fgpm.getFascicoloSiusModel().getVisibilitaMinorenne()))) {
 			etichettaEta = "<span style='color:#F2F2F2;background-color:#5882FA';>&nbsp;Maggiorenne (Anni "
 					+ anni + ")&nbsp;</span>";
-			if (lFasGPMod.getFascicoloSiusModel().getChiaveUfficio().equals(codUfficioUtente)) {
+			if (fgpm.getFascicoloSiusModel().getChiaveUfficio().equals(codUfficioUtente)) {
 				oscuraEta = "SI";
 			} else {
 				oscuraEta = "NO";
@@ -789,12 +821,12 @@ public class ActLoadDettaglioFascicolo extends ActionSius
 		// ed avente campo VISIBILITA_EX_MINORENNE = 'N';
 		else if (codTipoUfficio != null && !"".equals(codTipoUfficio) && "PGCAP".equals(codTipoUfficio)
 				&& (lSentenzaMod != null && lSentenzaMod.getCodTipoAutoritaEmittente() != null
-						&& ("CAPSM".equals(lSentenzaMod.getCodTipoAutoritaEmittente())
-								|| "DIBM".equals(lSentenzaMod.getCodTipoAutoritaEmittente())
-								|| "GIPM".equals(lSentenzaMod.getCodTipoAutoritaEmittente())))
-				&& anni <= 24 && lFasGPMod.getFascicoloSiusModel().getVisibilitaMinorenne() != null
-				&& "N".equals(lFasGPMod.getFascicoloSiusModel().getVisibilitaMinorenne())) {
-			etichettaEta = "<span style='color:#F2F2F2;background-color:#5882FA';>&nbsp;Maggiorenne (Anni "
+				&& ("CAPSM".equals(lSentenzaMod.getCodTipoAutoritaEmittente())
+						|| "DIBM".equals(lSentenzaMod.getCodTipoAutoritaEmittente())
+						|| "GIPM".equals(lSentenzaMod.getCodTipoAutoritaEmittente())))
+		&& anni <= 24 && fgpm.getFascicoloSiusModel().getVisibilitaMinorenne() != null
+		&& "N".equals(fgpm.getFascicoloSiusModel().getVisibilitaMinorenne())) {
+	etichettaEta = "<span style='color:#F2F2F2;background-color:#5882FA';>&nbsp;Maggiorenne (Anni "
 					+ anni + ")&nbsp;</span>";
 			oscuraEta = "NO";
 		}
@@ -807,11 +839,11 @@ public class ActLoadDettaglioFascicolo extends ActionSius
 						&& ("CAPSM".equals(lSentenzaMod.getCodTipoAutoritaEmittente())
 								|| "DIBM".equals(lSentenzaMod.getCodTipoAutoritaEmittente())
 								|| "GIPM".equals(lSentenzaMod.getCodTipoAutoritaEmittente())))
-				&& anni <= 24 && (lFasGPMod.getFascicoloSiusModel().getVisibilitaMinorenne() == null
-						|| "".equals(lFasGPMod.getFascicoloSiusModel().getVisibilitaMinorenne()))) {
+				&& anni <= 24 && (fgpm.getFascicoloSiusModel().getVisibilitaMinorenne() == null
+						|| "".equals(fgpm.getFascicoloSiusModel().getVisibilitaMinorenne()))) {
 			etichettaEta = "<span style='color:#F2F2F2;background-color:#5882FA';>&nbsp;Maggiorenne (Anni "
 					+ anni + ")&nbsp;</span>";
-			if (lFasGPMod.getFascicoloSiusModel().getChiaveUfficio().equals(codUfficioUtente)) {
+			if (fgpm.getFascicoloSiusModel().getChiaveUfficio().equals(codUfficioUtente)) {
 				oscuraEta = "SI";
 			} else {
 				oscuraEta = "NO";

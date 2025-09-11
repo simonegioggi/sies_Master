@@ -58,6 +58,15 @@ public class ActInserisciConfermaDisponibilitaSERT extends ActInserisciRicAtti
 		lEveNot.getEvento().setCodTipoUfficioDestinatario("-");
 		lEveNot.getEvento().setFasSiuIdFascicoloSius(lFasSius.getIdFascicoloSius());
 
+		// INIZIO: MEV_9 (D.lgs. 123/2018)
+		if (!isRequestParameterNullObj(CAMPO_ANNO_DATA_RESTITUZIONE)) {
+			Date lDataRestituzioneAtti = getRequestDateParameter(CAMPO_ANNO_DATA_RESTITUZIONE
+					                                           , CAMPO_MESE_DATA_RESTITUZIONE
+				                                               , CAMPO_GIORNO_DATA_RESTITUZIONE  );
+			lEveNot.getEvento().setDataRestituzioneAi(lDataRestituzioneAtti);
+		}
+		// FINE: MEV_9 (D.lgs. 123/2018)		
+		
 		// Prepara le notifiche.
 		Vector lNotifiche = new Vector();
 		lSize = lDestinatari.length;

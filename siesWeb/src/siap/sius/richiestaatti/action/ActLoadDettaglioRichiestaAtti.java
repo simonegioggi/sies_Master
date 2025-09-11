@@ -6,7 +6,9 @@ import java.util.Collection;
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
+import f3b.util.xml.TreeModel;
 import f3b.web.html.Option;
+import siap.jms.util.ParserMessageRec;
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoNotificaModel;
@@ -16,6 +18,11 @@ import siap.sico.template.model.TemplateModel;
 import siap.sico.util.SICOLookupRemote;
 import siap.sius.ActionSius;
 import siap.sius.SIUSException;
+import siap.sius.fascicolo.controller.IFascicoloSius;
+import siap.sius.fascicolo.model.FascicoloGPModel;
+import siap.sius.stampa.action.ICostantiStampaSius;
+import siap.sius.stampa.controller.IStampaSius;
+import siap.sius.util.SIUSLookupRemote;
 
 /**
  * <p>
@@ -61,6 +68,24 @@ public class ActLoadDettaglioRichiestaAtti extends ActionSius implements ICostan
 
 		setRequestAttribute("eventoNotifica", lEveNot);
 
+		// MEV_9 Se provengo dalle statistiche devo caricare in sessione il fascicolo legato all'evento
+		//
+		IFascicoloSius lFascicoloCtrl = SIUSLookupRemote.getFascicoloSiusRemote();
+		FascicoloGPModel fgpm = lFascicoloCtrl.ExRicercaFascicoloByKey(lEveNot.getEvento().getFasSiuIdFascicoloSius());
+		setSessionAttribute("fascicoloSiusGP", fgpm);
+		
+		IStampaSius lCtrlSta = SIUSLookupRemote.getStampaRemote();
+//		int[] aTipoDati = { ICostantiStampaSius.TREE_SOGGETTO, ICostantiStampaSius.TREE_FASCICOLOSIEP,
+//				ICostantiStampaSius.TREE_SENTENZA, ICostantiStampaSius.TREE_AVVOCATO,
+//				ICostantiStampaSius.TREE_LUOGODET, ICostantiStampaSius.TREE_MAGISTRATO,
+//				ICostantiStampaSius.TREE_UDIENZA };
+		int[] aTipoDati = { ICostantiStampaSius.TREE_SOGGETTO, ICostantiStampaSius.TREE_FASCICOLOSIEP,
+				ICostantiStampaSius.TREE_SENTENZA};
+		TreeModel lTreeDati = lCtrlSta.ExPrelevaDatiVideo(lEveNot.getEvento().getFasSiuIdFascicoloSius(), aTipoDati);
+		ParserMessageRec lParser = new ParserMessageRec(lTreeDati);
+		setSessionAttribute("fascicolo", lParser.getFascicolo());
+		// MEV_9 - FINE
+		
 		// si ricava l'eventuale Action di ritorno dalla jsp
 		if (!isRequestParameterNullObj("CAMPO_ACTION_RET"))
 			setRequestAttribute("actRet", getRequestStringParameter("CAMPO_ACTION_RET"));

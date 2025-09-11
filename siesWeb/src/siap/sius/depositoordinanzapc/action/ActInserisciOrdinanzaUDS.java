@@ -168,7 +168,35 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 		if (lMagRel != null && lMagRel.getMagistrato() != null)
 			mCodMagistrato = lMagRel.getMagistrato().getCodMagistrato();
 
-		Date lDataEmissione = getRequestDateParameter(CAMPO_DATA_EMISSIONE, "dd/MM/yyyy");
+		// MEV_9: aggiunto controllo preventivo poichè qui la data emissione è manuale
+		Date lDataEmissione = null;
+		if (CONFERMA_DECISIONE_MAGISTRATO_RELATORE
+				.equals(getRequestStringParameter(CAMPO_COD_TIPO_ORDINANZA)))
+			lDataEmissione = getRequestDateParameter(CAMPO_ANNO_DATA_EMISSIONE, CAMPO_MESE_DATA_EMISSIONE,
+					CAMPO_GIORNO_DATA_EMISSIONE);
+		else
+			lDataEmissione = getRequestDateParameter(CAMPO_DATA_EMISSIONE, "dd/MM/yyyy");
+
+		// INIZIO: MEV_9 (D.lgs. 123/2018)
+		// Se selezionata la "Restituzione Atti Al presidente" non viene emesso evento ma
+		// aggiornato solo lo stato del fascicolo a 23 =
+		// GP.DATA_RESTITUZIONE = data emissione
+		// GP.DESCR_RESTITUZIONE = campo nota
+		// FS.COD_STATO_FASCICOLO = 23
+		if (isRequestChecked(CAMPO_CK_ATTI_AL_PRESIDENTE)) {
+			// Dettaglio Gestione Restituzione Atti al Presidente, invece del Dettaglio Procedimento
+			// Si ritorna per ora la dettaglio procedimento
+			// siap.sius.fascicolo.action.ActLoadDettaglioFascicolo&IdFascicoloSius=366877032022&TornaQui=10
+			elaboraAttiAlPresidente(mFasGPMod);
+			RedirectTo lRedirectTo = new RedirectTo();
+			lRedirectTo.setPage(IWebConstants.PG_MAIN);
+			lRedirectTo.setAction("siap.sius.fascicolo.action.ActLoadGestioneRestituzioneAttiPresidente");
+			// lRedirectTo.setAction("siap.sius.fascicolo.action.ActLoadDettaglioFascicolo");
+			lRedirectTo.setParameter(ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS,
+					mFasGPMod.getFascicoloSiusModel().getIdFascicoloSius().toString());
+			return lRedirectTo.toString();
+		}
+		// FINE: MEV_9
 
 		try {
 			OrdinanzaEventoTenoriGProcModel lOrdEveTenGP = new OrdinanzaEventoTenoriGProcModel();
@@ -307,7 +335,6 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 							.compareTo("-") != 0) {
 				IEsecuzioneMS lCtrlEMS = SIUSLookupRemote.getEsecuzioneMSRemote();
 				EsecuzioneMisuraSicurezzaModel lNuovaEMS = new EsecuzioneMisuraSicurezzaModel();
-
 				if (!isRequestParameterNullObj(ICostantiEsecuzioneMS.CAMPO_ID_ESECUZIONE_MS)
 						&& getRequestBigDecimalParameter(
 								ICostantiEsecuzioneMS.CAMPO_ID_ESECUZIONE_MS) != null) {
@@ -514,7 +541,6 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 							.length() > 0
 					&& getRequestStringParameter(ICostantiEsecuzioneMS.CAMPO_COD_TIPO_MISURA_RIDETERMINATA)
 							.compareTo("-") != 0) {
-
 				// Inizio ********************* non so se questo è necessario e se deve settare queste info
 				IEsecuzioneMS lCtrlEMS = SIUSLookupRemote.getEsecuzioneMSRemote();
 				EsecuzioneMisuraSicurezzaModel lRidetrminataEMS = new EsecuzioneMisuraSicurezzaModel();
@@ -966,11 +992,11 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 				lTenModel.setDescrOggettoTenore(lDescOggetti[i]);
 				lTenModel.setCodDettaglioOggetto(lCodDettaglioOggetti[i]);
 				lTenModel.setCodEsitoTenore(lDecCtrl.ExRicercaCodEsitiProvByCodTenore(lCodEsiti[i]));
-
 				// lTenModel.setCodEsitoTenore(lCodEsiti[i]);
-				lTenModel.setCodUfficioInserimento(mCodiceUfficio); // Codice dell'ufficio dell'operatore che
-																	// inserisce
-				lTenModel.setCodOperatoreInserimento(mCodiceOperatore); // Codice dell'operatore che inserisce
+				// Codice dell'ufficio dell'operatore che inserisce
+				lTenModel.setCodUfficioInserimento(mCodiceUfficio);
+				// Codice dell'operatore che inserisce
+				lTenModel.setCodOperatoreInserimento(mCodiceOperatore);
 				lTenModel.setDataInserimento(mOggi);
 				lTenModel.setGenPridGeneraleProcedimento(mIdGenProc);
 				lTenModel.setCodMagistrato(mCodMagistrato);
@@ -981,7 +1007,6 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
 				siesLogger.debug("Tenore n." + i + " = " + lTenori[i]);
-
 			}
 		}
 		return lTenori;
@@ -1935,6 +1960,45 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 			return null;
 		BigDecimal val = super.getRequestBigDecimalParameter(paramName);
 		return val;
+	}
+
+	/**
+	 * Aggiorna il fascicolo e il GP in caso di restituzione atti al presidente che non inserisce una
+	 * ordinanza
+	 *
+	 * @param fascicoloGPModel
+	 * @since MEV_9
+	 */
+	private void elaboraAttiAlPresidente(FascicoloGPModel fascicoloGPModel) throws F3BException {
+
+		Date lDataRestituzione = getRequestDateParameter(CAMPO_DATA_EMISSIONE, "dd/MM/yyyy");
+		String lDescRestituzione = getRequestStringParameter(CAMPO_ULTERIORE_DESCRIZIONE);
+
+		// INIZIO: MEV_9 (D.lgs. 123/2018)
+		// Se selezionata la "Restituzione Atti Al presidente" non viene emesso evento ma
+		// aggiornato solo lo stato del fasciclo a 23 =
+		// GP.DATA_RESTITUZIONE = data emissione
+		// GP.DESCR_RESTITUZIONE = campo nota
+		// FS.COD_STATO_FASCICOLO = 23
+
+		// Fascicolo SIUS
+		fascicoloGPModel.getFascicoloSiusModel()
+				.setCodStatoFascicolo(ICostantiFascicoloSius.COD_ATTI_RESTITUITI_PRESIDENTE);
+
+		fascicoloGPModel.getFascicoloSiusModel().setCodOperatoreAggiornamento(mCodiceOperatore);
+		fascicoloGPModel.getFascicoloSiusModel().setCodUfficioAggiornamento(mCodiceUfficio);
+		fascicoloGPModel.getFascicoloSiusModel().setDataAggiornamento(DateUtils.getSysDate());
+
+		// FGenerale Procedimento
+		fascicoloGPModel.getGeneraleProcedimentoModel().setDataRestituzione(lDataRestituzione);
+		fascicoloGPModel.getGeneraleProcedimentoModel().setDescrRestituzione(lDescRestituzione);
+
+		fascicoloGPModel.getGeneraleProcedimentoModel().setCodOperatoreAggiornamento(mCodiceOperatore);
+		fascicoloGPModel.getGeneraleProcedimentoModel().setCodUfficioAggiornamento(mCodiceUfficio);
+		fascicoloGPModel.getGeneraleProcedimentoModel().setDataAggiornamento(DateUtils.getSysDate());
+
+		IFascicoloSius lFasCtrl = SIUSLookupRemote.getFascicoloSiusRemote();
+		lFasCtrl.ExInserisciRestituzioneAttiAlPresidente(fascicoloGPModel);
 	}
 
 }

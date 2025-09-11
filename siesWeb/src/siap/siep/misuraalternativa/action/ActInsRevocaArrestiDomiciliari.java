@@ -149,7 +149,7 @@ public class ActInsRevocaArrestiDomiciliari extends ActMisuraAlternativa
 					ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE);
 
 			// la Procura effettua l'inserimento dell'evento ordinanza
-			lEveMod.setEvento(setEventoOrdinazaDecretoMisuraAlternativa(lEveMod.getEvento(), "03",
+			lEveMod.setEvento(setEventoOrdinanzaDecretoMisuraAlternativa(lEveMod.getEvento(), "03",
 					lCodiceUffEmi, lComModAutEmi, lDataEmisTras));
 
 			// setto il deposito decreto

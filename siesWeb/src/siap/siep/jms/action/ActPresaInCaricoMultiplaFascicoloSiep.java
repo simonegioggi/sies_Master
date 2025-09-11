@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.Vector;
 
+import f3b.util.xml.TreeModel;
+import f3b.web.IWebConstants;
 import siap.jms.ICostantiJMS;
 import siap.jms.JMSLookupRemote;
 import siap.jms.messaggio.action.ICostantiMessaggio;
@@ -19,24 +21,12 @@ import siap.sico.web.ActionSiap;
 import siap.siep.fascicolo.model.DettaglioFascicoloModel;
 import siap.siep.jms.controller.IPresaInCaricoJMS;
 import siap.siep.util.SIEPLookupRemote;
-import f3b.util.xml.TreeModel;
-import f3b.web.IWebConstants;
 
 /**
- * <p>
- * Title: ActPresaInCaricoMultiplaFascicoloSiep
- * </p>
- * <p>
- * Description: Azione che prende in carico piu' fascicoli di entità passate tramite la struttura JMS da altre
- * BDI
- * </p>
- * <p>
- * Copyright: Copyright (c) 2004
- * </p>
- * <p>
- * Company: Bull Italia S.p.A.
- * </p>
- * not attributable 1.0
+ * ActPresaInCaricoMultiplaFascicoloSiep - Azione che prende in carico piu' fascicoli di entità passate
+ * tramite la struttura JMS da altre BDI
+ *
+ * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ActPresaInCaricoMultiplaFascicoloSiep extends ActionSiap implements ICostantiJMS {
@@ -72,8 +62,8 @@ public class ActPresaInCaricoMultiplaFascicoloSiep extends ActionSiap implements
 			// 06/06/2005 Il vettore di fascicoli va individuato!
 			BigDecimal lIdSoggetto = getRequestBigDecimalParameter(ICostantiSoggetto.CAMPO_ID_SOGGETTO);
 			for (int jj = 0; jj < lParser.getSoggettoArray().size(); jj++) {
-				if (((SoggettoModel) lParser.getSoggettoArray().get(jj)).getIdSoggetto().compareTo(
-						lIdSoggetto) == 0)
+				if (((SoggettoModel) lParser.getSoggettoArray().get(jj)).getIdSoggetto()
+						.compareTo(lIdSoggetto) == 0)
 					lFascicoli = ((SoggettoModel) lParser.getSoggettoArray().get(jj)).getDettaglioFascicoli();
 			}
 
@@ -114,7 +104,7 @@ public class ActPresaInCaricoMultiplaFascicoloSiep extends ActionSiap implements
 
 	/**
 	 * Metodo privato per la creazione della root del messaggio da elaborare
-	 * 
+	 *
 	 * @return
 	 */
 	private RootJMSModel createRoot() {

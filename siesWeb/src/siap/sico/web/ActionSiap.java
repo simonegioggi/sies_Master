@@ -3,6 +3,7 @@ package siap.sico.web;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -128,9 +129,9 @@ public class ActionSiap extends Action {
 			if (lUtenteConnesso.getUserProfile().getProfileId().intValue() == 90
 					|| lUtenteConnesso.getUserProfile().getProfileId().intValue() == 99) {
 				setSessionAttribute("HelpPage", "/help/AMM_Pagina_Iniziale_Titolo.htm");
-			} else if (lUtenteConnesso.getUserProfile().isSiep() == true) {
+			} else if (lUtenteConnesso.getUserProfile().isSiep()) {
 				setSessionAttribute("HelpPage", "/help/T_UNDER_CONSTRUCTION.htm");
-			} else if (lUtenteConnesso.getUserProfile().isSius() == true) {
+			} else if (lUtenteConnesso.getUserProfile().isSius()) {
 				setSessionAttribute("HelpPage", "/help/SIUS_Pagina_Iniziale_Titolo.htm");
 			} else {
 				setSessionAttribute("HelpPage", "/help/T_UNDER_CONSTRUCTION.htm");
@@ -522,12 +523,12 @@ public class ActionSiap extends Action {
 		LogAttivitaModel log = new LogAttivitaModel();
 		ILogAttivita ilog = SICOLookupRemote.getLogAttivitaRemote();
 
-		if (!isSessionAttributeNullObj(ICostantiSecurity.SESSION_UTENTE_CONNESSO))
-			log.setCodOperatore(((UtenteModel) getSessionAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO))
-					.getUserId());
-		else
-			// solo alla login!!!!
-			log.setCodOperatore(getRequestStringParameter(ICostantiSecurity.CAMPO_USER_ID));
+    if (!isSessionAttributeNullObj(ICostantiSecurity.SESSION_UTENTE_CONNESSO))
+      log.setCodOperatore(((UtenteModel) getSessionAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO))
+          .getUserId());
+    else
+      // solo alla login!!!!
+      log.setCodOperatore(getRequestStringParameter(ICostantiSecurity.CAMPO_USER_ID));
 
 		log.setIpUtente(getRequest().getRemoteAddr());
 		log.setAzioneContestoJava(aNameAction);
@@ -1560,6 +1561,26 @@ public class ActionSiap extends Action {
 		// }
 
 		return ret;
+	}
+
+	// MEV_9 aggiunto metodo
+	protected boolean isUfficioMinorenni() throws F3BException {
+
+		Set<String> ufficiMinori = new HashSet<>();
+
+		ufficiMinori.add("PMM");
+		ufficiMinori.add("DIBM");
+		ufficiMinori.add("GIPM");
+		ufficiMinori.add("GUPM");
+		ufficiMinori.add("CAPSM");
+		ufficiMinori.add("TDSM");
+		ufficiMinori.add("UDSM");
+
+		UfficioModel ufficioUtente = getUfficioUtenteConnesso();
+		if (ufficiMinori.contains(ufficioUtente.getCodTipoUfficio()))
+			return true;
+		else
+			return false;
 	}
 
 	/**

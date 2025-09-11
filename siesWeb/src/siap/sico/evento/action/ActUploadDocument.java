@@ -33,7 +33,10 @@ import siap.sius.avvocato.controller.IAvvocato;
 import siap.sius.avvocato.model.AvvocatoSiusModel;
 import siap.sius.avvocatura.action.ICostantiAvvisiAvvocato;
 import siap.sius.avvocatura.model.AvvisiAvvocatoModel;
+import siap.sius.fascicolo.action.ICostantiFascicoloSius;
+import siap.sius.fascicolo.controller.IFascicoloSius;
 import siap.sius.fascicolo.model.FascicoloGPModel;
+import siap.sius.fascicolo.model.FascicoloSiusModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
@@ -62,7 +65,7 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getName() + ".processRequest(): inizio");
+		siesLogger.debug(getClass().getName() + ".processRequest(): inizio");
 		String lPage = IWebConstants.PG_MESSAGE;
 
 		// Lettura ID Evento
@@ -100,13 +103,10 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 		// Se si proviene dalla form di Warning non si effettua il controllo sul BLOB
 		if (!isRequestParameterNullObj(CAMPO_CK_WARNING))
 			lControlloBlob = false;
-
 		if (lControlloBlob) {
 			// Lettura del file di Upload
-
 			InputStream lInput = null;
 			lInput = getFile(ICostantiEvento.CAMPO_BLOB);
-
 			if (lInput != null && lInput.available() > 0) {
 				byte[] lBuffer = new byte[lInput.available()];
 				lInput.read(lBuffer);
@@ -192,21 +192,16 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 				lisUpdate = false;
 				lPage = PG_WARNING;
 				setRequestAttribute(IWebConstants.MESSAGE_TEXT,
-						"Attenzione: E' stata richiesta la validazione di un documento privo di stampa !");
+						"Attenzione: E' stata richiesta la validazione di un documento privo di stampa!");
 				passaggioParametri();
 			}
 		}
 		// Update
 		if (lisUpdate) {
-
 			// INIZIO @emma 12072018 intervento post COLLAUDO 11.2
 			if ("S".equals(lFlagValidazioneEsito)) {
 				// se è stata chiesta la validazione dell'esito, devo updatare
 				// il nuovo campo flag_validazione_esito ='S' sulla tabella IMPUGNAZIONE_SIGE
-
-				// Lettura ID Impugnazione
-				// BigDecimal lIdImpu =
-				// getRequestBigDecimalParameter(ICostantiImpugnazioneSige.CAMPO_ID_IMPUGNAZIONE);
 				IImpugnazioneSige lCtrl = SIGELookupRemote.getImpugnazioneSigeRemote();
 				ImpugnazioneSigeModel impugnazione = lCtrl.ExRicercaImpugnazioneByKey(lIdImpu);
 				impugnazione.setCodOperatoreAggiornamento(getCodUtenteConnesso());
@@ -221,11 +216,31 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 			// MEV_AVVOCATURA aggiunto parametro lFlgAvvocatura al metodo updateTabella
 			// ***********************************************************************
 			updateTabella(lId, lFlgAvvocatura);
-			// updateTabella(lId);
 			// Prepara la "pagina" di destinAction
 			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
 					"Aggiornamento Documento Avvenuto Correttamente!");
+
+			/*
+			 * ISSUE MEV : aggiunto aggiornamento stato fascicolo per decreto di tipo DM 
+			 * Numero MEV : 9 
+			 * Autore : Gioggi 
+			 * Data : 19 nov 2020 
+			 * Branch : MEV_9
+			 */
+			if ("SIUS".equals(stato)
+					&& ("0610".equals(em.getCodEsito()) || "0271".equals(em.getCodEsito()))) {
+				IFascicoloSius ifs = SIUSLookupRemote.getFascicoloSiusRemote();
+				FascicoloSiusModel fsm = new FascicoloSiusModel();
+				fsm.setCodOperatoreAggiornamento(getCodUtenteConnesso());
+				fsm.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
+				fsm.setDataAggiornamento(DateUtils.getSysDate());
+				fsm.setCodStatoFascicolo(ICostantiFascicoloSius.COD_EMESSO_DECRETO_DESIGNAZIONE);
+				fsm.setIdFascicoloSius(em.getFasSiuIdFascicoloSius());
+				ifs.aggiornaStatoFascicoloSius(fsm);
+			}
+			// ***** FINE INTERVENTO MEV_9 *****//
 		}
+
 		// Se c'è lo stack di ritorno effettua un ritorno in cima
 		String lRitorno = goToRitorno();
 		if (lRitorno == null && !isRequestParameterNullObj(CAMPO_AZIONE_DETTAGLIO)) {
@@ -239,7 +254,7 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 		}
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getName() + ".processRequest(): fine");
+		siesLogger.debug(getClass().getName() + ".processRequest(): fine");
 		return lPage;
 	}
 
@@ -249,7 +264,7 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getName() + ".passaggioParametri(): inizio");
+		siesLogger.debug(getClass().getName() + ".passaggioParametri(): inizio");
 
 		setRequestAttribute(CAMPO_ID_EVENTO, getRequestStringParameter(CAMPO_ID_EVENTO));
 		setRequestAttribute(CAMPO_AZIONE_DETTAGLIO, getRequestStringParameter(CAMPO_AZIONE_DETTAGLIO));
@@ -279,10 +294,10 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 
 		// Si passa ACTION_FIELD alla jsp
 		setRequestAttribute(IWebConstants.ACTION_FIELD, mAzione);
-		this.goToRitorno();
+		goToRitorno();
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getName() + ".passaggioParametri(): fine");
+		siesLogger.debug(getClass().getName() + ".passaggioParametri(): fine");
 		return;
 	}
 
@@ -297,7 +312,7 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getName() + ".updateTabella(): inizio");
+		siesLogger.debug(getClass().getName() + ".updateTabella(): inizio");
 
 		// Valorizzazione del Model
 		EventoModel lModel = new EventoModel();
@@ -320,7 +335,7 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 		mEveCtrl.ExUpdateDocument(lModel);
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getName() + ".updateTabella(): fine");
+		siesLogger.debug(getClass().getName() + ".updateTabella(): fine");
 		return;
 	}
 
@@ -335,7 +350,7 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getName() + ".leggiDocumento(): inizio");
+		siesLogger.debug(getClass().getName() + ".leggiDocumento(): inizio");
 
 		// Valorizzazione del Model con la chiave di ricerca
 		EventoModel lModel = new EventoModel();
@@ -347,19 +362,18 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getName() + ".leggiDocumento(): fine");
+		siesLogger.debug(getClass().getName() + ".leggiDocumento(): fine");
 		return;
 	}
 
 	// ***********************************************************************
 	// MEV_AVVOCATURA aggiunto parametro lFlgAvvocatura al metodo updateTabella
 	// ***********************************************************************
-	// public void updateTabella(BigDecimal aId) throws Exception
 	public void updateTabella(BigDecimal aId, String lFlgAvvocatura) throws Exception {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getName() + ".updateTabella(): inizio");
+		siesLogger.debug(getClass().getName() + ".updateTabella(): inizio");
 
 		// Valorizzazione del Model
 		EventoModel lModel = new EventoModel();
@@ -383,7 +397,6 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 		// MEV_AVVOCATURA - INIZIO
 		// **********************************************
 		if (!lFlgAvvocatura.equals("")) {
-
 			String testoAvviso = "";
 			if (lFlgAvvocatura.equals(ICostantiAvvisiAvvocato.FISSAZIONE_UDIENZA)) {
 				testoAvviso = ICostantiAvvisiAvvocato.CONTENUTO_FISSAZIONE_UDIENZA;
@@ -443,7 +456,11 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 			/*
 			 * ISSUE MEV : segnalazione Maffucci oggetto mail: SIUS Avvocati Di pre-esercizio - SIES MO di
 			 * Roma: Eliminato recupero dalla session del soggetto che viene inserito nella tabella degli
-			 * avvisi_avvocato Numero MEV : MEV_20 Autore : monica Data : 13/mar/2020 Branch : MEV_20
+			 * avvisi_avvocato 
+			 * Numero MEV : MEV_20 
+			 * Autore : monica 
+			 * Data : 13/mar/2020 
+			 * Branch : MEV_20
 			 */
 			/*
 			 * if (!isSessionAttributeNullObj("soggetto")) { SoggettoModel datiSoggetto = (SoggettoModel)
@@ -496,7 +513,6 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 			}
 
 			mEveCtrl.ExUpdateDocument(lModel, lAvvvisiAvvocato);
-
 		} else {
 			mEveCtrl.ExUpdateDocument(lModel);
 		}
@@ -506,7 +522,7 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getName() + ".updateTabella(): fine");
+		siesLogger.debug(getClass().getName() + ".updateTabella(): fine");
 		return;
 	}
 

@@ -3,6 +3,9 @@ package siap.siep.sospensione.action;
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 
+import org.apache.log4j.Logger;
+
+import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
 import f3b.web.IWebConstants;
@@ -23,24 +26,20 @@ import siap.siep.posizione.model.PosizioneGiuridicaLuogoDetenzioneAltraCausaMode
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * <p>
- * Title: ActStampaSospensioneDecisioniSorv
- * </p>
- * <p>
- * Description: Classe Action per la Stampa Sospensione della pena
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ * ActStampaSospensioneDecisioniSorv - Classe Action per la Stampa Sospensione della pena
+ *
  * @version 1.0
  */
 public class ActStampaSospensioneDecisioniSorv extends ActionSiap implements ICostantiSospensione {
 
+	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+
 	public String processRequest() throws F3BException {
+
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
 
 		FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 		UtenteModel lUtenteMod = this.getUtenteConnesso();
@@ -101,16 +100,26 @@ public class ActStampaSospensioneDecisioniSorv extends ActionSiap implements ICo
 
 		ITemplate lCtrlTem = SICOLookupRemote.getTemplateRemote();
 		TemplateModel lTemMod = new TemplateModel();
-		lTemMod = lCtrlTem.ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplate(
-				lEventoModel.getCodTipoEvento(), lEventoModel.getCodTipoProvvedimento(), lMotivo,
-				flagTemplate);
+		// MEV_9-SIEP: imposto flag_template e codTipoMisura e codTipoProvvedimento
+		if ("5469".equals(lMotivo) || "5496".equals(lMotivo))
+			lTemMod = lCtrlTem.ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplate(
+					lEventoModel.getCodTipoEvento(), "12", lMotivo, "1");
+		else
+			lTemMod = lCtrlTem.ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplate(
+					lEventoModel.getCodTipoEvento(), lEventoModel.getCodTipoProvvedimento(), lMotivo,
+					flagTemplate);
 		lEveMod.setNomeTemplate(lTemMod.getIdTemplate());
 
-		ByteArrayOutputStream lReport = lCtrl.ExStampaDocumento(lEveMod, lUtenteMod); // setta la risposta
-																						// nella request
+		ByteArrayOutputStream lReport = lCtrl.ExStampaDocumento(lEveMod, lUtenteMod);
 
+		// setta la risposta nella request
 		setRequestAttribute("report", lReport);
 
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.debug(getClass().getName() + ".processRequest: fine");
+
+		// pagina di ritorno
 		return IWebConstants.PG_DOWNLOAD;
 	}
 

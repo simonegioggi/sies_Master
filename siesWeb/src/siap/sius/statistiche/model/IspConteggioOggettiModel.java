@@ -42,6 +42,10 @@ public class IspConteggioOggettiModel extends GenericModel {
 	private String mFasSiuChiaveUfficio; /* mod michele 2/12/2008 */
 	private BigDecimal mNumCancellati;
 	private BigDecimal mNumUnificati;
+	
+	// MEV9 - Va aggiunto un nuovo campo per i provvisori
+	private BigDecimal mNumAccoltiProvv;
+	// MEV9 - FINE
 
 	// COSTRUTTORE DI DEFAULT
 	public IspConteggioOggettiModel() {
@@ -61,6 +65,7 @@ public class IspConteggioOggettiModel extends GenericModel {
 		mFasSiuChiaveUfficio = ""; /* mod michele 2/12/2008 */
 		mNumCancellati = null;
 		mNumUnificati = null;
+		mNumAccoltiProvv = null; // MEV9
 	}
 
 	// COSTRUTTORE DI COPIA
@@ -81,6 +86,7 @@ public class IspConteggioOggettiModel extends GenericModel {
 		mFasSiuChiaveUfficio = aModel.mFasSiuChiaveUfficio; /* mod michele 2/12/2008 */
 		mNumCancellati = aModel.mNumCancellati;
 		mNumUnificati = aModel.mNumUnificati;
+		mNumAccoltiProvv = aModel.mNumAccoltiProvv; // MEV9
 	}
 
 	// COSTRUTTORE MODEL
@@ -89,7 +95,9 @@ public class IspConteggioOggettiModel extends GenericModel {
 			BigDecimal aNumDefEsito2, BigDecimal aNumDefEsito3, BigDecimal aNumDefEsito4,
 			BigDecimal aNumDefEsito5, BigDecimal aNumDefEsito6, BigDecimal aNumDefIscErr,
 			BigDecimal aNumPendentiFine, String aFasSiuChiaveUfficio, /* mod michele 2/12/2008 */
-			BigDecimal aNumCancellati, BigDecimal aNumUnificati) {
+			BigDecimal aNumCancellati, BigDecimal aNumUnificati
+			, BigDecimal aNumAccoltiProvv // MEV9
+			) {
 		mCodOggetto = aCodOggetto;
 		mDescOggetto = aDescOggetto;
 		mDescContenutoStatis = aDescContenutoStatis;
@@ -106,6 +114,7 @@ public class IspConteggioOggettiModel extends GenericModel {
 		mFasSiuChiaveUfficio = aFasSiuChiaveUfficio; /* mod michele 2/12/2008 */
 		mNumCancellati = aNumCancellati;
 		mNumUnificati = aNumUnificati;
+		mNumAccoltiProvv = aNumAccoltiProvv; // MEV9
 	}
 
 	//
@@ -176,6 +185,12 @@ public class IspConteggioOggettiModel extends GenericModel {
 		return mNumUnificati;
 	}
 
+	// MEV9
+	public BigDecimal getNumAccoltiProvv() {
+		return mNumAccoltiProvv;
+	}	
+	
+	
 	//
 	// METODI SET()
 	//
@@ -244,6 +259,12 @@ public class IspConteggioOggettiModel extends GenericModel {
 		mNumUnificati = aValore;
 	}
 
+	// MEV9
+	public void setNumAccoltiProvv(BigDecimal aValore) {
+		mNumAccoltiProvv = aValore;
+	}	
+	
+	
 	/**
 	 * Somma tra due model. E' possibile sommare solo due IspConteggioOggettiModel con lo stesso contenuto. La
 	 * funzione viene utilizzata per ottenere la Statistica Aggregata a partire da quella Dettagliata.
@@ -267,6 +288,8 @@ public class IspConteggioOggettiModel extends GenericModel {
 				lAppoggioMod.setNumPendentiFine(mNumPendentiFine.add(aModel.getNumPendentiFine()));
 				lAppoggioMod.setNumCancellati(mNumCancellati.add(aModel.getNumCancellati()));
 				lAppoggioMod.setNumUnificati(mNumUnificati.add(aModel.getNumUnificati()));
+				//MEV9
+				lAppoggioMod.setNumAccoltiProvv(mNumAccoltiProvv.add(aModel.getNumAccoltiProvv()));
 			} else
 				throw new F3BException(F3BException.USER_MESSAGE,
 						"Impossibile sommare 2 IspConteggioOggettiModel con contenuto diverso !");

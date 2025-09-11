@@ -242,7 +242,9 @@ public class FascicoloUtils {
 
 		boolean lRet = false;
 		if (aCodStatoFascicolo.compareTo("01") == 0 || aCodStatoFascicolo.compareTo("07") == 0
-				|| aCodStatoFascicolo.compareTo("05") == 0 || aCodStatoFascicolo.compareTo("99") == 0)
+				|| aCodStatoFascicolo.compareTo("05") == 0 || aCodStatoFascicolo.compareTo("99") == 0
+				|| aCodStatoFascicolo.compareTo("24") == 0 // MEV_9 si aggiunge anche il 24
+			)
 			lRet = true;
 		return lRet;
 	}

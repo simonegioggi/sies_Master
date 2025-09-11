@@ -90,6 +90,9 @@ public class EventoDAO extends SIAPTableDAO {
     
     setField("ISTR_ID_ISTRUTTORIA_CUMULO", BIG_DECIMAL);
     setField("ESTREMI_SOGG_RICH_ISTR", STRING);
+    
+    // MEV_9 (D.lgs. 123/2018)
+    setField("DATA_RESTITUZIONE_AI", DATE);
    }
 
 
@@ -295,6 +298,11 @@ public class EventoDAO extends SIAPTableDAO {
 		return getDate("DATA_INVIO_ATTI");
 	}
   
+	// MEV_9 (D.lgs. 123/2018)
+	public Date getDataRestituzioneAi() throws DAOException {
+		return getDate("DATA_RESTITUZIONE_AI");
+	}
+	
   //
   // METODI SET()
   //
@@ -495,7 +503,16 @@ public class EventoDAO extends SIAPTableDAO {
 	public void setIstruIdIstruttoriaCumulo(BigDecimal aValore) {
 		setBigDecimal("ISTR_ID_ISTRUTTORIA_CUMULO", aValore);
 	}
-  public void setEstremiSoggRichIstr (String aValore)           { setString("ESTREMI_SOGG_RICH_ISTR", aValore); }
+	
+	public void setEstremiSoggRichIstr (String aValore)           { 
+		setString("ESTREMI_SOGG_RICH_ISTR", aValore); 
+	}  
+  
+	// MEV_9 (D.lgs. 123/2018)
+	public void setDataRestituzioneAi (Date aValore) throws DAOException {
+		setDate("DATA_RESTITUZIONE_AI",aValore);
+	}
+  
   
 	public GenericModel getModel() throws DAOException {
     EventoModel lEveMod = new EventoModel();
@@ -552,6 +569,10 @@ public class EventoDAO extends SIAPTableDAO {
 	
 	lEveMod.setIstruidIstruttoriaCumulo(getIstruIdIstruttoriaCumulo());
 	lEveMod.setEstremiSoggRichIstr(getEstremiSoggRichIstr());
+	
+	// MEV_9 (D.lgs. 123/2018)
+	lEveMod.setDataRestituzioneAi(getDataRestituzioneAi());
+	
     return lEveMod;
   }
 
@@ -609,6 +630,9 @@ public class EventoDAO extends SIAPTableDAO {
     this.setDataInvioAtti(aModel.getDataInvioAtti());
     this.setCodTipologiaInvioAtti(aModel.getCodTipologiaInvioAtti());
     this.setDescrizioneTipologiaInvioAtti(aModel.getDescrizioneInvioAtti());
+    
+    // MEV_9 (D.lgs. 123/2018)
+    setDataRestituzioneAi(aModel.getDataRestituzioneAi());
   }
 
 	public void setDAOFromModelForUpdate(EventoModel aModel) throws DAOException {
@@ -660,6 +684,9 @@ public class EventoDAO extends SIAPTableDAO {
     setEstremiSoggRichIstr(aModel.getEstremiSoggRichIstr());
 	
     selCondizioneUpdate(aModel.getIdEvento());
+    
+    // MEV_9 (D.lgs. 123/2018)
+    //setDataRestituzioneAi(aModel.getDataRestituzioneAi());
   }
 
 	public void setDAOFromModelForUpdateBlob(EventoModel aModel) throws DAOException {

@@ -40,5 +40,4 @@ public class ActLoadGrigliaRichiesteDelPMalGE extends ActionModuloCumulo impleme
 
 		return PG_LOAD_GRIGLIA_RICHIESTE_PM_AL_GE;
 	}
-
 }
