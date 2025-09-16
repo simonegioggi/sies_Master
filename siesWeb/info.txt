@@ -1,13 +1,5 @@
-BRANCH SIES VERSIONE 12.8.2.0
+BRANCH SIES VERSIONE 12.8.2.0_TFC
 
-Nasce dal branch 12.8.1.0 in data 21/07/2025
+Nasce dal branch 12.8.2.0 in data 25/07/2025
 
-Questa Release verrà rilasciata il 29/08/2025 (Patch mese di Agosto 2025)
-
-Comprende i seguenti Ticket MAC:
-
-1)	Ticket#202507220132 - SIES - ricerca utenti il campo sede non può avere caratteri speciali
-	Per la risoluzione della problematica è stata modificata la pagina di ricerca utente eliminando il controllo alfabetico sul campo interessato.
-	Il problema era legato al fatto che il campo di ricerca "Sede" non consentiva l'inserimento di caratteri speciali tipo "/".
-	Classe modificata:
-	-   siap/sico/utente/LoadRicercaUtentiPerUfficio.jsp
+Questa Release verrà rilasciata il 16/09/2025
