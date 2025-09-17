@@ -1769,6 +1769,9 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 		TenoreSigeDAO lTenDao = null;
 		EventoDAO lEveDao = null;
 
+		// Ticket#202509050120 - Si cancellano anche eventuali DOCUMENTI_ALLEGATI altrimenti va in errore
+		DocumentoAllegatoDAO lDocAllDAO = null;
+
 		if (aProvvedimento == null)
 			throw new SIGEException("Provvedimento nullo");
 
@@ -1869,6 +1872,15 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 			// Cancellazione ai riferimenti tramite EVE_ID_EVENTO E EVE_ID_EVENTO_REVOCA
 			lEveDao.updateDAOFromModelForResetRifEve(lEvento);
 
+			//====================
+			// Ticket#202509050120 - Si cancellano anche eventuali DOCUMENTI_ALLEGATI altrimenti va in errore
+			lDocAllDAO = new DocumentoAllegatoDAO(aConn);
+			lDocAllDAO.setCondizioneByEve(lIdEvento);
+			lDocAllDAO.delete();
+			lDocAllDAO.stop();
+			// Ticket#202509050120 - FINE
+			//====================			
+			
 			// cancellazione Evento collegato al Decreto
 			lEveDao.selCondizioneUpdate(lIdEvento);
 			lEveDao.delete();
@@ -1879,6 +1891,8 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 			cleanup(lTenDao);
 			cleanup(lProvDao);
 			cleanup(lEveDao);
+			// Ticket#202509050120
+			cleanup(lDocAllDAO);
 			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
 			cleanup(lTenSenReaDAO);
 		}
