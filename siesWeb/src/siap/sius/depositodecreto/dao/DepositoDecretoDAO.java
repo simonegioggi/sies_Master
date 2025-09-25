@@ -13,7 +13,18 @@ import siap.dao.SIAPTableDAO;
 import siap.sius.depositodecreto.model.DepositoDecretoModel;
 
 /**
- * DepositoDecretoDAO - Classe DAO che rappresenta la tabella DepositoDecreto
+ * <p>
+ * Title: DepositoDecretoDAO
+ * </p>
+ * <p>
+ * Description: Classe DAO che rappresenta la tabella DepositoDecreto
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2002
+ * </p>
+ * <p>
+ * Company: Bull
+ * </p>
  *
  * @version 1.0
  */
@@ -91,6 +102,9 @@ public class DepositoDecretoDAO extends SIAPTableDAO {
 		setField("SOMMA_RISARC_DANNI", BIG_DECIMAL);
 		// 02/2015 Mis. Sic.
 		setField("FLAG_ELABORATO", STRING);
+		// MEV_9 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
+		setField("DATA_TERMINE_EMISSIONE", DATE);
+		setField("NUM_GIORNI_TERMINE_EMISSIONE", BIG_DECIMAL);
 	}
 
 	//
@@ -298,6 +312,16 @@ public class DepositoDecretoDAO extends SIAPTableDAO {
 		return getString("FLAG_ELABORATO");
 	}
 
+	// MEV_9 aggiunto campo DATA_TERMINE_EMISSIONE
+	public Date getDataTermineEmissione() throws DAOException {
+		return getDate("DATA_TERMINE_EMISSIONE");
+	}
+
+	// MEV_9 aggiunto campo NUM_GIORNI_TERMINE_EMISSIONE
+	public BigDecimal getNumGiorniTermineEmissione() throws DAOException {
+		return getBigDecimal("NUM_GIORNI_TERMINE_EMISSIONE");
+	}
+
 	//
 	// METODI SET()
 	//
@@ -503,12 +527,23 @@ public class DepositoDecretoDAO extends SIAPTableDAO {
 		setString("FLAG_ELABORATO", aValore);
 	}
 
+	// MEV_9 aggiunto campo DATA_TERMINE_EMISSIONE
+	public void setDataTermineEmissione(Date aValore) {
+		setDate("DATA_TERMINE_EMISSIONE", aValore);
+	}
+
+	// MEV_9 aggiunto campo NUM_GIORNI_TERMINE_EMISSIONE
+	public void setNumGiorniTermineEmissione(BigDecimal aValore) {
+		setBigDecimal("NUM_GIORNI_TERMINE_EMISSIONE", aValore);
+	}
+
 	/**
-	 * Ritorna il model popolato con i dati del record
+	 * Ritorna il model popolato con i dati del record.
 	 *
-	 * @return model popolato
+	 * @return model popolato.
+	 *         <p>
 	 * @throws DAOException
-	 *             propaga errore di eccezione
+	 *             propaga errore di eccezione.
 	 */
 	public GenericModel getModel() throws DAOException {
 
@@ -534,7 +569,9 @@ public class DepositoDecretoDAO extends SIAPTableDAO {
 				// DL 92 2014 Violazione CEDU
 				getNumeroGiorniRiduzionePena(), getSommaRisarcimentoDanni(),
 				// 02/2015 Mis.Sic.
-				getFlagElaborato());
+				getFlagElaborato(),
+				// MEV_9 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
+				getDataTermineEmissione(), getNumGiorniTermineEmissione());
 	}
 
 	/**
@@ -603,10 +640,14 @@ public class DepositoDecretoDAO extends SIAPTableDAO {
 		setSommaRisarcimentoDanni(aModel.getSommaRisarcimentoDanni());
 		// 02/2015 Mis.Sic.
 		setFlagElaborato(aModel.getFlagElaborato());
+		// MEV_9 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
+		setDataTermineEmissione(aModel.getDataTermineEmissione());
+		setNumGiorniTermineEmissione(aModel.getNumGiorniTermineEmissione());
 	}
 
 	/**
 	 * Imposta il DAO con i dati del model passato come argomento, per la fase di update.
+	 * <p>
 	 *
 	 * @param aModel
 	 *            model dei dati da impostare nel DAO.
@@ -666,12 +707,16 @@ public class DepositoDecretoDAO extends SIAPTableDAO {
 		setSommaRisarcimentoDanni(aModel.getSommaRisarcimentoDanni());
 		// 02/2015
 		setFlagElaborato(aModel.getFlagElaborato());
+		// MEV_9 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
+		setDataTermineEmissione(aModel.getDataTermineEmissione());
+		setNumGiorniTermineEmissione(aModel.getNumGiorniTermineEmissione());
 
 		setCondizioneUpdate(aModel.getIdDepositoDecreto());
 	}
 
 	/**
 	 * Imposta le condizioni per Update e Delete.
+	 * <p>
 	 *
 	 * @param key
 	 *            id del record.

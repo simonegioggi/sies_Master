@@ -5,6 +5,7 @@
 <%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
+<%@ page import="f3b.util.Utils"%>
 
 <%@ page import="siap.sico.evento.model.EventoModel"%>
 <%@ page import="siap.sico.cssa.action.ICostantiCSSA"%>
@@ -27,6 +28,7 @@
 <%@ page import="siap.siep.misuraalternativa.action.ICostantiMisuraAlternativa"%>
 <%@ page import="siap.siep.penacomplessiva.model.PenaComplessivaSanzioneSostitutivaModel"%>
 <%@ page import="siap.siep.sanzionesostitutiva.model.SanzioneSostitutivaModel"%>
+<%@ page import="siap.siep.notifica.model.NotificaModel"%>
 <%@ page import="siap.siep.util.MinorMask"%>
 
 <jsp:useBean id="eventonotifica"      	scope="request" class="siap.sico.evento.model.EventoNotificaModel"/>
@@ -64,6 +66,12 @@
 <jsp:useBean id="tipoUfficioSIUS" 		scope="request" class="java.lang.String"/>
 <jsp:useBean id="lFlagSanzione" 		scope="request" class="java.lang.String"/>
 <jsp:useBean id="filtroMinorenni" 		scope="request" class="java.lang.String"/>
+<%-- MEV_2019-09-SIEP: aggiunti useBean --%>
+<jsp:useBean id="tipoOperazione" 				scope="request" class="java.lang.String"/>
+<jsp:useBean id="comboCSSATrattinoModif"		scope="request" class="java.lang.String"/>
+<jsp:useBean id="comboUfficioEmittenteModif"	scope="request" class="java.lang.String"/>
+<jsp:useBean id="comboMagistratoTrattinoModif"	scope="request" class="java.lang.String"/>
+<jsp:useBean id="comboTribunaleTrattinoModif"	scope="request" class="java.lang.String"/>
 
 <%
 FascicoloSiepModel lFascicoloAssociato = (FascicoloSiepModel)session.getAttribute("fascicolo");
@@ -184,7 +192,9 @@ if (!lPosizione.isLibero() || ("S".equals(lFascicoloAssociato.getFlagAltraCausa(
 	    return false;
   	}
 	var campo = document.LoadInserisciMisuraAlternativa.<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>.value;
-	// Controllo sui campi dell'ordinanza
+	<%-- MEV_2019-09-SIEP: aggiunta variabile --%>
+	<%-- var codMotivo = document.LoadInserisciMisuraAlternativa.<%=ICostantiEvento.CAMPO_COD_MOTIVO%>.value; --%>
+	<%-- Controllo sui campi dell'ordinanza --%>
 	if (document.LoadInserisciMisuraAlternativa.flagmisura.value == "N") {
   		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>.value.length == 1)
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>.value = '0' +
@@ -204,43 +214,91 @@ if (!lPosizione.isLibero() || ("S".equals(lFascicoloAssociato.getFlagAltraCausa(
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_SEDE_TDS_EMITT%>.focus();
 			return false;
   		}
-<%-- 2024.12 Si aggiunge obbligatorietà campo Luogo della prova per affidamento in prova --%>
-<%
-if (tipoMisura.equals("AFFIDAMENTO")  || tipoMisura.equals("DETENZIONE")) {
-%>
-		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA%>.value == "") {
-<%
-	if (tipoMisura.equals("AFFIDAMENTO")) {
-%>		
-			alert("Il campo Luogo della Prova e' obbligatorio");
-<%
-	} else if (tipoMisura.equals("DETENZIONE")) {
-%>
-			alert("Il campo Luogo della Detenzione Domiciliare e' obbligatorio");
-<%
-}
-%>
-			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA%>.focus();
-			return false;
-		}
-<%
-}
-%>
-<%-- 2024.12 - FINE --%>
+<%-- MEV_2019-09-SIEP: aggiunti controlli per determinati codici di AFFIDAMENTO + DETENZIONE + SEMILIBERTA'
+<%-- MEV_2024-092: rimossi i controlli per determinati codici di AFFIDAMENTO + DETENZIONE + SEMILIBERTA'
+<%-- 		if (codMotivo == "0720" || codMotivo == "0721" || codMotivo == "0722" || codMotivo == "0723" || codMotivo == "0730"
+<%-- 				|| codMotivo == "0731" || codMotivo == "0732" || codMotivo == "0733" || codMotivo == "0734") {
+<%-- 			if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>.value == "" --%>
+<%-- 					|| document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT%>.value == "") { --%>
+<%-- 				alert('Anno e Numero Ordinanza Provvisoria obbligatori!');
+<%-- 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>.focus(); --%>
+<%-- 				return false;
+<%-- 			}
+<%-- 			if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value == "" --%>
+<%-- 					&& document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.value == "" --%>
+<%-- 					&& document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>.value == "") { --%>
+<%-- 				alert('Data Emissione Ordinanza Provvisoria obbligatoria!');
+<%-- 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.focus(); --%>
+<%-- 				return false;
+<%-- 			}
+<%-- 		}
+<%-- 		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value != "" --%>
+<%-- 			|| document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.value != "" --%>
+<%-- 			|| document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>.value != "") { --%>
+<%-- 			if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value.length == 1) --%>
+<%-- 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value = '0' + --%>
+<%-- 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value; --%>
+<%-- 			if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.value.length == 1) --%>
+<%-- 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.value = '0' + --%>
+<%-- 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.value; --%>
+<%-- 			var data_to_verify = document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value + '-' + --%>
+<%-- 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.value + '-' + --%>
+<%-- 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>.value; --%>
+<%-- 			if (!ControllaData(data_to_verify)) {
+<%-- 				alert('Data Emissione Ordinanza Provvisoria non valida');
+<%-- 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.focus(); --%>
+<%-- 				return false;
+<%-- 			}
+<%-- 		}
+<%-- FINE MEV_2024-092
+<%-- FINE MEV_2019-09-SIEP --%>
 	} <%-- fine if (document.LoadInserisciMisuraAlternativa.flagmisura.value == "N") --%>
 <%
 // AMBROSINO   - 23-12-2010
 //============================================================================
 // Controllo sui campi: Scarcerato/da scarcerare, Data Scarcerazione, Data Ammissione Provvisoria
 //============================================================================
-if (lPosizione.isLibero() || tipoMisura.equals("SEMILIBERTA")) {
-	
+// MEV_2019-09-SIEP: aggiunta diversificazione e controllo validità data
+// if (lPosizione.isLibero() || tipoMisura.equals("SEMILIBERTA")) {
+if (lPosizione.isLibero() && tipoMisura.equals("AFFIDAMENTO")) {
+%>
+<%-- MEV_2019-09-SIEP: aggiunti controlli --%>
+<%-- MEV_2024-092: rimossi i controlli --%>
+<%-- 		if (codMotivo == "0720" || codMotivo == "0721" || codMotivo == "0730" || codMotivo == "0731" || codMotivo == "0732") {
+<%-- 			if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.value == "" --%>
+<%-- 					&& document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>.value == "" --%>
+<%-- 					&& document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>.value == "") { --%>
+<%-- 				alert('Data Applicazione Provvisoria obbligatoria');
+<%-- 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.focus(); --%>
+<%-- 				return false;
+<%-- 			}
+<%-- 		}
+<%-- 		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.value != "" --%>
+<%-- 				|| document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>.value != "" --%>
+<%-- 				|| document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>.value != "") { --%>
+<%-- 			if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.value.length == 1) --%>
+<%-- 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.value = '0' + --%>
+<%-- 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.value; --%>
+<%-- 			if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>.value.length == 1) --%>
+<%-- 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>.value = '0' + --%>
+<%-- 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>.value; --%>
+<%-- 			var data_to_verify = document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.value + '-' + --%>
+<%-- 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>.value + '-' + --%>
+<%-- 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>.value; --%>
+<%-- 			if (!ControllaData(data_to_verify)) {
+<%-- 				alert('Data Applicazione Provvisoria non valida');
+<%-- 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.focus(); --%>
+<%-- 				return false;
+<%-- 			}
+<%-- 		}
+<%-- FINE MEV_2024-092
+<%-- FINE MEV_2019-09-SIEP --%>
+<%
 } else if (lPosizione.isDetenuto()
 				|| lPosizione.getCodPosizioneGiuridica().equals("14") // Espiazione Pena in Regime di Semilibertà
         		|| lPosizione.getCodPosizioneGiuridica().equals("04")) { // Arresti Domiciliari ex art. 656/10
 %>
-	if (document.getElementById('tipo') && document.LoadInserisciMisuraAlternativa.tipo[1]
-			&& document.LoadInserisciMisuraAlternativa.tipo[1].checked == true) {
+	if (document.LoadInserisciMisuraAlternativa.tipo[1].checked == true) {
   		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE%>.value == "") {
 			alert("La data di Scarcerazione/Esecuzione e' obbligatoria")
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE%>.focus();
@@ -270,7 +328,7 @@ if (lPosizione.isLibero() || tipoMisura.equals("SEMILIBERTA")) {
 else if (lPosizione.getCodPosizioneGiuridica().equals("29")) { // Detenzione Domiciliare Provvisoria (29)
 %>
 	if (document.LoadInserisciMisuraAlternativa.tipomisura.value == 'DETENZIONE'
-			&& document.LoadInserisciMisuraAlternativa.posizionegiuridica.value == '29') {
+			|| document.LoadInserisciMisuraAlternativa.tipomisura.value == 'AFFIDAMENTO') {
   		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.value.length == 1)
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.value = '0' +
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.value;
@@ -286,6 +344,7 @@ else if (lPosizione.getCodPosizioneGiuridica().equals("29")) { // Detenzione Dom
 		}
 	}
 <%
+// MEV_2019-09-SIEP: aggiunto controllo
 // MEV_2024-092: rimosso il controllo
 } else if ((lPosizione.getCodPosizioneGiuridica().equals("13") && lEventoAmmProvvAff.getIdEvento() != null)
 				|| lPosizione.getCodPosizioneGiuridica().equals("54")) {
@@ -303,13 +362,24 @@ else if (lPosizione.getCodPosizioneGiuridica().equals("29")) { // Detenzione Dom
 			+ '-' + document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>.value
 			+ '-' +	document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>.value;
 		if (!ControllaData(data_to_verify)) {
+<%--
+<%-- 				if (tipoMisura.equals("AFFIDAMENTO")) {
+--%>
+<%-- 					alert('Data Applicazione Provvisoria non valida'); --%>
+<%--
+<%--				} else {
+--%>
 			alert('Data Ammissione Provvisoria a Detenzione Domiciliare non valida');
+<%--
+<%-- 				}
+--%>
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.focus();
 		    return false;
 		}
 	}
 <%
 // FINE MEV_2024-092
+// FINE MEV_2019-09-SIEP
 } else if (lPosizione.isMisuraAlternativa() || lPosizione.getCodPosizioneGiuridica().equals("27")) { // L.207/03 indultino
 	// nulla
 } else { // per le altre posizioni giuridiche
@@ -360,11 +430,11 @@ else if (lPosizione.getCodPosizioneGiuridica().equals("29")) { // Detenzione Dom
 <%
 if (lPosizione.isLibero() && (verbale == null || verbale.getIdVerbale() == null)) {
 %>
-			alert("Il Campo Destinatario per esecuzione e' obbligatorio");
+			alert("Il Campo Destinatario per esecuzione è obbligatorio");
 <%
 } else {
 %>
-			alert("Il Campo Autorita' competente per territorio e' obbligatorio");
+			alert("Il Campo Autorità competente per territorio è obbligatorio");
 <%
 }
 %>
@@ -596,7 +666,7 @@ if (tipoMisura.equals("SEMILIBERTA")) {
 		nodecssa.style.visibility = 'hidden';
 		nodesor.style.visibility = 'hidden';
 		nodeautoritaC.style.visibility = 'hidden';
-		<%-- MEV10-s3: modificati valori proprieta top --%>
+		<%-- MEV10-s3: modificati valori proprietà top --%>
 		nodeavvocati.style.top = '-340px';
 		nodebottone.style.top = '-360px';
 		document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E%>.disabled = false;
@@ -673,7 +743,7 @@ else {
 			nodesor.style.visibility = 'hidden';
 			// nodeavvocati.style.top = '-210px';
 			// nodebottone.style.top = '-210px';
-			<%-- MEV10-s3: modificati valori proprieta top --%>
+			<%-- MEV10-s3: modificati valori proprietà top --%>
 			nodeavvocati.style.top = '-330px';
 			nodebottone.style.top = '-330px';
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E%>.disabled = false;
@@ -687,8 +757,7 @@ else {
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_SEDE_TDS%>.disabled = true;
 <%
 	} else if ((tipoMisura.equals("DETENZIONE") && lPosizione.getCodPosizioneGiuridica().equals("29"))
-			// MEV29 gestione affidamento da posizione 29
-			|| (tipoMisura.equals("AFFIDAMENTO") && lPosizione.getCodPosizioneGiuridica().equals("29"))) {
+			|| (tipoMisura.equals("AFFIDAMENTO") && lPosizione.getCodPosizioneGiuridica().equals("29"))) { // MEV29 gestione affidamento da posizione 29
 %>
 			nodeautoritaE.style.visibility = 'visible';
 			nodecssa.style.visibility = 'visible';
@@ -709,7 +778,7 @@ else {
 			nodesor.style.visibility = 'hidden';
 			nodeautoritaE.style.visibility = 'visible';
 			nodeavvocati.style.visibility = 'visible';
-			<%-- MEV10-s3: modificati valori proprieta top --%>
+			<%-- MEV10-s3: modificati valori proprietà top --%>
 			nodeavvocati.style.top = '-260px';
 			nodebottone.style.top = '-280px';
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E%>.disabled = false;
@@ -727,7 +796,7 @@ else {
 			nodeavvocati.style.visibility = 'hidden';
 			nodesor.style.visibility = 'hidden';
 			nodecssa.style.top = '-105px';
-			if (pos == "07")
+			if (pos == "07" || pos == "54") <%-- MEV_2019-09-SIEP: aggiunto 54 --%>
 				nodebottone.style.top = '-460px';
 	      	else
 				nodebottone.style.top = '-340px';
@@ -771,8 +840,7 @@ else {
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_C%>.disabled = true;
 		} else if ((pos == "03") || (flagsanzione == "S" && pos=="19")
 				|| (pos == "14" && (tipomisuraJS != "INDULTINO" && tipomisuraJS != "ESP_PRESSO_DOM"))) {
-			if (document.getElementById('tipo') && document.LoadInserisciMisuraAlternativa.tipo[0]
-					&& document.LoadInserisciMisuraAlternativa.tipo[0].checked) {
+			if (document.LoadInserisciMisuraAlternativa.tipo[0].checked) {
 				nodeistituto.style.visibility = 'visible';
 				nodecssa.style.visibility = 'visible';
 				nodesor.style.visibility = 'visible';
@@ -970,9 +1038,8 @@ else {
 			}
 			} <%--- fine ELSE di else if ((pos == "03") ||(flagsanzione == "S" && pos=="19") || (pos == "14" && (tipomisuraJS != "INDULTINO" && tipomisuraJS != "ESP_PRESSO_DOM"))) --%>
 		// Paolo Cherubini aggiungo controllo poiche da pos semiliberta se concedo AFFIDAMENTO
-		// si sovrappone l'istituto con l'autorita competente
+		// si sovrappone l'istituto con l'autorità competente
 		if (pos == "14" && tipomisuraJS == "AFFIDAMENTO" && lEveAmmProvAff == null
-				&& typeof (document.LoadInserisciMisuraAlternativa.tipo) != "undefined"
 				&& document.LoadInserisciMisuraAlternativa.tipo[1].checked) {
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>.disabled = true;
 			nodeistituto.style.visibility = 'hidden';
@@ -1055,11 +1122,11 @@ else {
 					if (document.LoadInserisciMisuraAlternativa.UDSE)
 					   	document.LoadInserisciMisuraAlternativa.UDSE.disabled = false;
 				  	document.LoadInserisciMisuraAlternativa.notificaSemiliberta.disabled = false;
-					<%-- MEV10-s3: modificati valori proprieta top --%>
+					<%-- MEV10-s3: modificati valori proprietà top --%>
 					// Modifica del 06/11/2015
 					// Risolta anomalia sovrapposizione div
-					// nodesor.style.top = '-135px';
-					// nodeautoritaC.style.top = '-135px';
+					// nodesor.style.top = '-135px'; --> nodesor.style.top = '-0px';
+					// nodeautoritaC.style.top = '-135px'; --> nodeautoritaC.style.top = '-250px';
 					// nodecssa.style.top = '-0px';
 					// 20170905: [SG] modifica risoluzione video
 					// casistica: ESP_PRESSO_DOM + document.LoadInserisciMisuraAlternativa.tipo[1].checked (SCARCERATO)
@@ -1082,30 +1149,28 @@ else {
 			} // d.f. chiusura (typeof)
 		} // chiusura (pos != "13" && tipomisuraJS != "AFFIDAMENTO" && lEveAmmProvAff == null)
 		<%-- 20170908: [SG] aggiunta impostazione --%>
-		else if ((pos == "13" || pos == "14") && tipomisuraJS == "AFFIDAMENTO" && lEveAmmProvAff == null) {
+		else if (pos == "13"  && tipomisuraJS == "AFFIDAMENTO" && lEveAmmProvAff == null) {
 			nodebottone.style.top = '-460px';
 		}
 <%
 	// AMBROSINO - Veniva SedeAut_c e SedeAut_e  Hidden 
 	if (tipoMisura.equals("AFFIDAMENTO")) {
 %>
-		if (pos == "03"
-				&& document.getElementById('tipo') && document.LoadInserisciMisuraAlternativa.tipo[1]
-				&& document.LoadInserisciMisuraAlternativa.tipo[1].checked) {
+		if (pos == "03" && document.LoadInserisciMisuraAlternativa.tipo[1].checked) {
 			nodeautoritaC.style.visibility = 'visible';
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_C%>.disabled = false;
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_SEDE_POL_C%>.disabled = false;
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_NOTE_POL_C%>.disabled = false;
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_COD_UDS%>.disabled = false;
-		} else if (pos == "04"
-					&& document.getElementById('tipo') && document.LoadInserisciMisuraAlternativa.tipo[1]
-					&& document.LoadInserisciMisuraAlternativa.tipo[1].checked) {
+		} else {
+			if (pos == "04" && document.LoadInserisciMisuraAlternativa.tipo[1].checked) {
 					nodeautoritaE.style.visibility = 'visible';
   					document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E%>.disabled = false;
 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_SEDE_POL_E%>.disabled = false;
 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_NOTE_POL_E%>.disabled = false;
 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_COD_UDS%>.disabled = false;
 			}
+		}
 <%
 	}
 %>
@@ -1132,30 +1197,33 @@ else {
 MisuraAlternativaModel lModel = new MisuraAlternativaModel();
 String lAzione = new String();
 String flagMis = new String();
+// MEV_2019-09-SIEP: aggiunta gestione modifica
+boolean isModifica = "MODIFICA".equals(tipoOperazione);
 %>
-    		<font class="campo">Concessione
-
+			<%-- MEV_2019-09-SIEP: aggiunta dicitura / Ratifica (x3) --%>
+			<%-- MEV_2024-092: rimossa la dicitura / Ratifica (x3) --%>
+    		<font class="campo">
 <%
 if (tipoMisura.equals("AFFIDAMENTO")) {
 %>
-    		Affidamento In Prova
+    			<%if (isModifica) {%>Modifica <%}%>Concessione Affidamento In Prova
 <%
 } else if (tipoMisura.equals("DETENZIONE")) {
 %>
-   			Detenzione Domiciliare
+   				<%if (isModifica) {%>Modifica <%}%>Concessione Detenzione Domiciliare
 <%
 }
 if (tipoMisura.equals("ESP_PRESSO_DOM")) {
 %>
-   			Espiazione Pena presso Domicilio
+   				Concessione Espiazione Pena presso Domicilio
 <%
 } else if (tipoMisura.equals("SEMILIBERTA")) {
 %>
-    		Semiliberta'
+    			<%if (isModifica) {%>Modifica <%}%>Concessione Semilibert&agrave;
 <%
 } else if (tipoMisura.equals("INDULTINO")) {
 %>
-    		L.207/2003
+    			Concessione L.207/2003
 <%
 }
 %>
@@ -1171,8 +1239,11 @@ if (tipoMisura.equals("ESP_PRESSO_DOM")) {
 <INPUT type="HIDDEN" name="posizionegiuridica" value="<%=lPosizione.getCodPosizioneGiuridica()%>">
 <INPUT type="HIDDEN" name="lFlagAffi" value="<%=lFlagAffi%>">
 <INPUT type="HIDDEN" name="<%=ICostantiMisuraAlternativa.CAMPO_ID_DOCUMENTO_SIUS%>" value="<%=StringUtils.toStringJSP(misuraalternativa.getEveIdEvento())%>">
-<INPUT type="HIDDEN" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%=StringUtils.toStringJSP(lEventoAmmProvvAff.getIdEvento())%>">
+<%-- MEV_2019-09-SIEP: aggiunto controllo per DETENZIONE E SEMILIBERTA --%>
+<INPUT type="HIDDEN" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%=!Utils.isNullObj(lEventoAmmProvvAff.getIdEvento()) ? StringUtils.toStringJSP(lEventoAmmProvvAff.getIdEvento()) : StringUtils.toStringJSP(eventoammissioneprovvisoria.getIdEvento())%>">
 <INPUT type="HIDDEN" name="lFlagSanzione" value="<%=lFlagSanzione%>">
+<%-- MEV_2019-09-SIEP: aggiunta impostazione campo nascosto --%>
+<INPUT type="HIDDEN" name="tipoOperazione" value="<%=tipoOperazione%>">
 <%
 if (tipoMisura.equals("AFFIDAMENTO")) {
 %>
@@ -1195,16 +1266,14 @@ if (tipoMisura.equals("AFFIDAMENTO")) {
 <input type="HIDDEN" name="tipomisura" value="INDULTINO">
 <%
 }
-%>
-<input type="HIDDEN" title="Id Pena Residua" value="<%=StringUtils.toStringJSP(penaresidua.getIdPenaResidua())%>" type="text" name="<%=ICostantiPenaResidua.CAMPO_ID_PENA_RESIDUA%>">
-<%
-// inizio if per semiliberta'
+// inizio if per semilibertà
 String scarceratodisabilita = null;
 String dascarceraredisabilita = null;
 String disabilitaData = null;
 String scarcerato = null;
 String scarcerare = null;
-if (misuraalternativa == null || misuraalternativa.getIdMisuraAlternativa() == null) {
+// MEV_2019-09-SIEP: aggiunta OR condition
+if (misuraalternativa == null || misuraalternativa.getIdMisuraAlternativa() == null || isModifica) {
 %>
 <input type="HIDDEN" name="flagmisura" value="N">
 <%
@@ -1239,10 +1308,12 @@ if (!tipoMisura.equals("SEMILIBERTA")) {
     		disabilitaData ="readonly";
    		}
 	}
-} // fine if per semiliberta %>
+} //fine if per semilibertà %>
 
-<input type="HIDDEN" name="<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>" value="<%=idmisuraalternativa%>">
-<table>
+<input type="HIDDEN" value="<%=idmisuraalternativa%>" name="<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>">
+<input type="HIDDEN" value="<%=StringUtils.toStringJSP(lPosizione.getCodPosizioneGiuridica())%>" name="<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>">
+<input type="HIDDEN" value="<%=StringUtils.toStringJSP(penaresidua.getIdPenaResidua())%>" name="<%=ICostantiPenaResidua.CAMPO_ID_PENA_RESIDUA%>">
+<table cellspacing="0" cellpadding="0" width="95%">
 	<tr>
 		<td class="l">Posizione Giuridica</td>
       	<td class="L" colspan=5>
@@ -1292,9 +1363,6 @@ if (lFascicoloAssociato.getFlagAltraCausa() != null && lFascicoloAssociato.getFl
 	</tr>
 <%
 }
-%>
-	<input type="HIDDEN" title="Codice Posizione" value="<%=StringUtils.toStringJSP(lPosizione.getCodPosizioneGiuridica())%>" type="text" name="<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>" maxlength="6" size="6">
-<%
 // Nel Caso di Posizione Giuridica ARRESTI DOMICILIARI ( 02, 04)
 if (lPosizione.getCodPosizioneGiuridica() != null && (lPosizione.getCodPosizioneGiuridica().equals("02")
 		|| lPosizione.getCodPosizioneGiuridica().equals("04"))) {
@@ -1423,7 +1491,6 @@ if ((!lPosizione.isLibero())
 	}
 }
 %>
-		<input type="HIDDEN" title="Id Pena Residua" value="<%=StringUtils.toStringJSP(penaresidua.getIdPenaResidua())%>" type="text" name="<%=ICostantiPenaResidua.CAMPO_ID_PENA_RESIDUA%>">
 	</tr>
 <%       
 //==============================================================================      
@@ -1467,17 +1534,40 @@ if ("S".equals(lFlagSanzione) && penaresidua != null && penaresidua.getFlagSanzi
 //==============================================================================      
 %>
 	<tr>
+<%
+// MEV_2019-09-SIEP: aggiunta gestione modifica
+String giornoDE = DateUtils.getSysDate("dd"), meseDE = DateUtils.getSysDate("MM"), annoDE = DateUtils.getSysDate("yyyy");
+String giornoDT = giornoDE, meseDT = meseDE, annoDT = annoDE;
+if (!Utils.isNullObj(eventonotifica.getEvento())) {
+	if (!Utils.isNullObj(eventonotifica.getEvento().getDataEmissione())) {
+		giornoDE = DateUtils.getDateToString(eventonotifica.getEvento().getDataEmissione(), "dd");
+		meseDE = DateUtils.getDateToString(eventonotifica.getEvento().getDataEmissione(), "MM");
+		annoDE = DateUtils.getDateToString(eventonotifica.getEvento().getDataEmissione(), "yyyy");
+	}
+	if (eventonotifica != null && eventonotifica.getNotifiche() != null && eventonotifica.getNotifiche().length > 0
+			&& eventonotifica.getNotifiche()[0] != null && eventonotifica.getNotifiche()[0].getDataInvio() != null) {
+		giornoDT = DateUtils.getDateToString(eventonotifica.getNotifiche()[0].getDataInvio(), "dd");
+		meseDT = DateUtils.getDateToString(eventonotifica.getNotifiche()[0].getDataInvio(), "MM");
+		annoDT = DateUtils.getDateToString(eventonotifica.getNotifiche()[0].getDataInvio(), "yyyy");
+	} else if (!Utils.isNullObj(eventonotifica.getEvento().getDataTrasmissioneAtti())) {
+		giornoDT = DateUtils.getDateToString(eventonotifica.getEvento().getDataTrasmissioneAtti(), "dd");
+		meseDT = DateUtils.getDateToString(eventonotifica.getEvento().getDataTrasmissioneAtti(), "MM");
+		annoDT = DateUtils.getDateToString(eventonotifica.getEvento().getDataTrasmissioneAtti(), "yyyy");
+	}
+}
+// FINE MEV_2019-09-SIEP
+%>
 		<td class="l">Data Emissione</td>
         <td class="L">
-			<input title="Giorno Data Emissione" value="<%=DateUtils.getSysDate("dd")%>" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>" <%=IWebConstants.UTIL_DATA%>> -
-			<input title="Mese Data Emissione" value="<%=DateUtils.getSysDate("MM")%>" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>" <%=IWebConstants.UTIL_DATA%>> -
-			<input title="Anno Data Emissione" value="<%=DateUtils.getSysDate("yyyy")%>" type="text" size="4" maxlength="4" name="<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
+			<input title="Giorno Data Emissione" value="<%=giornoDE%>" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>" <%=IWebConstants.UTIL_DATA%>> -
+			<input title="Mese Data Emissione" value="<%=meseDE%>" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>" <%=IWebConstants.UTIL_DATA%>> -
+			<input title="Anno Data Emissione" value="<%=annoDE%>" type="text" size="4" maxlength="4" name="<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
         </td>
         <td class="l">Data Trasmissione</td>
-        <td class="L">
-			<input title="Giorno Data Trasmissione" value="<%=DateUtils.getSysDate("dd")%>" type="text" size="2" maxlength="2" name="<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>" <%=IWebConstants.UTIL_DATA%>> -
-			<input title="Mese Data Trasmissione" value="<%=DateUtils.getSysDate("MM")%>" type="text" size="2" maxlength="2" name="<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>" <%=IWebConstants.UTIL_DATA%>> -
-			<input title="Anno Data Trasmissione" value="<%=DateUtils.getSysDate("yyyy")%>" type="text" size="4" maxlength="4" name="<%=ICostantiNotifica.CAMPO_ANNO_DATA_INVIO%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
+        <td class="L" colspan="2">
+			<input title="Giorno Data Trasmissione" value="<%=giornoDT%>" type="text" size="2" maxlength="2" name="<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>" <%=IWebConstants.UTIL_DATA%>> -
+			<input title="Mese Data Trasmissione" value="<%=meseDT%>" type="text" size="2" maxlength="2" name="<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>" <%=IWebConstants.UTIL_DATA%>> -
+			<input title="Anno Data Trasmissione" value="<%=annoDT%>" type="text" size="4" maxlength="4" name="<%=ICostantiNotifica.CAMPO_ANNO_DATA_INVIO%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
         </td>
 	</tr>
 </table>
@@ -1486,7 +1576,7 @@ if ("S".equals(lFlagSanzione) && penaresidua != null && penaresidua.getFlagSanzi
 		<td class="Titolo" colspan="4"> Dati Ordinanza Tribunale di Sorveglianza </td>
    	</tr>
 <%
-if (misuraalternativa.getIdMisuraAlternativa() != null) {
+if (misuraalternativa.getIdMisuraAlternativa() != null && !isModifica) {
 %>
 	<tr>
 		<td class="l" width="25%">Anno / Numero SIUS</td>
@@ -1528,6 +1618,26 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
 	    	<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getDescrLuogoProva())%></font>	
 	  	</td>
 	</tr>
+	<%-- MEV_2019-09-SIEP: aggiunte due nuove sezioni x AFFIDAMENTO - SIAMO IN PRESENZA MISURA ALTERNATIVA --%>
+	<%-- MEV_2024-092: rimosse le due nuove sezioni x AFFIDAMENTO - SIAMO IN PRESENZA MISURA ALTERNATIVA --%>
+<!-- 	<tr> -->
+<!-- 		<td class="l" width="20%">Anno / Numero Ordinanza Provvisoria</td> -->
+<!-- 		<td class="l" colspan="3"> -->
+<%-- 			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistroMaAt())%>&nbsp;/&nbsp;<%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistroMaAt())%></font> --%>
+<%-- 			<input type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_EVE_ID_EVENTO%>" value="<%=StringUtils.toStringJSP(misuraalternativa.getEveIdEvento())%>"> --%>
+<!-- 	 	</td> -->
+<!-- 	</tr> -->
+<!-- 	<tr> -->
+<!-- 	  	<td class="l">Data Emissione Ordinanza Provvisoria</td> -->
+<!-- 	  	<td class="l" colspan="3"> -->
+<%-- 			<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "dd-MM-yyyy"))%></font> --%>
+<%-- 			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getDayToString(misuraalternativa.getDataDecisioneMaAt()))%>"> --%>
+<%-- 			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getMonthToString(misuraalternativa.getDataDecisioneMaAt()))%>"> --%>
+<%-- 			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getYearToString(misuraalternativa.getDataDecisioneMaAt()))%>"> --%>
+<!-- 	  	</td> -->
+<!-- 	</tr> -->
+	<%-- FINE MEV_2024-092 --%>
+	<%-- FINE MEV_2019-09-SIEP --%>
 <%
 	} else if (tipoMisura.equals("DETENZIONE")) {
 %>
@@ -1537,6 +1647,26 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
 	    	<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getDescrLuogoProva())%></font>
 	  	</td>
 	</tr>
+	<%-- MEV_2019-09-SIEP: aggiunte due nuove sezioni x DETENZIONE - SIAMO IN PRESENZA MISURA ALTERNATIVA --%>
+	<%-- MEV_2024-092: rimosse le due nuove sezioni x DETENZIONE - SIAMO IN PRESENZA MISURA ALTERNATIVA --%>
+<!-- 	<tr> -->
+<!-- 		<td class="l" width="20%">Anno / Numero Ordinanza Provvisoria</td> -->
+<!-- 		<td class="l" colspan="3"> -->
+<%-- 			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistroMaAt())%>&nbsp;/&nbsp;<%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistroMaAt())%></font> --%>
+<%-- 			<input type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_EVE_ID_EVENTO%>" value="<%=StringUtils.toStringJSP(misuraalternativa.getEveIdEvento())%>"> --%>
+<!-- 	 	</td> -->
+<!-- 	</tr> -->
+<!-- 	<tr> -->
+<!-- 	  	<td class="l">Data Emissione Ordinanza Provvisoria</td> -->
+<!-- 	  	<td class="l" colspan="3"> -->
+<%-- 			<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "dd-MM-yyyy"))%></font> --%>
+<%-- 			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getDayToString(misuraalternativa.getDataDecisioneMaAt()))%>"> --%>
+<%-- 			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getMonthToString(misuraalternativa.getDataDecisioneMaAt()))%>"> --%>
+<%-- 			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getYearToString(misuraalternativa.getDataDecisioneMaAt()))%>"> --%>
+<!-- 	  	</td> -->
+<!-- 	</tr> -->
+	<%-- FINE MEV_2024-092 --%>
+	<%-- FINE MEV_2019-09-SIEP --%>
 <%
 	} else if (tipoMisura.equals("INDULTINO") || tipoMisura.equals("ESP_PRESSO_DOM")) {
 %>
@@ -1547,7 +1677,31 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
 	  	</td>
 	</tr>
 <%
-	}
+	// MEV_2019-09-SIEP: aggiunto ramo else x SEMILIBERTA'
+	} /*else if (tipoMisura.equals("SEMILIBERTA")) {*/
+%>
+	<%-- MEV_2019-09-SIEP: aggiunte due nuove sezioni x SEMILIBERTA' - SIAMO IN PRESENZA MISURA ALTERNATIVA --%>
+	<%-- MEV_2024-092: rimosse le due nuove sezioni x SEMILIBERTA' - SIAMO IN PRESENZA MISURA ALTERNATIVA --%>
+<!-- 	<tr> -->
+<!-- 		<td class="l" width="20%">Anno / Numero Ordinanza Provvisoria</td> -->
+<!-- 		<td class="l" colspan="3"> -->
+<%-- 			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistroMaAt())%>&nbsp;/&nbsp;<%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistroMaAt())%></font> --%>
+<%-- 			<input type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_EVE_ID_EVENTO%>" value="<%=StringUtils.toStringJSP(misuraalternativa.getEveIdEvento())%>"> --%>
+<!-- 	 	</td> -->
+<!-- 	</tr> -->
+<!-- 	<tr> -->
+<!-- 	  	<td class="l">Data Emissione Ordinanza Provvisoria</td> -->
+<!-- 	  	<td class="l" colspan="3"> -->
+<%-- 			<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "dd-MM-yyyy"))%></font> --%>
+<%-- 			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getDayToString(misuraalternativa.getDataDecisioneMaAt()))%>"> --%>
+<%-- 			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getMonthToString(misuraalternativa.getDataDecisioneMaAt()))%>"> --%>
+<%-- 			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getYearToString(misuraalternativa.getDataDecisioneMaAt()))%>"> --%>
+<!-- 	  	</td> -->
+<!-- 	</tr> -->
+	<%-- FINE MEV_2024-092 --%>
+	<%-- FINE MEV_2019-09-SIEP --%>
+<%
+	/*}*/
 	if (verbale.getDataEmissione() != null) {
 %>
 	<tr>
@@ -1558,6 +1712,10 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
 	</tr>
 <%
 	}
+	// MEV_2019-09-SIEP: aggiunto controllo
+	if ((!((lPosizione.getCodPosizioneGiuridica().equals("13") && lEventoAmmProvvAff.getIdEvento() != null)
+			|| lPosizione.getCodPosizioneGiuridica().equals("54")))
+			|| lPosizione.getCodPosizioneGiuridica().equals("14") && tipoMisura.equals("SEMILIBERTA")) {
 		if (misuraalternativa.getDataInizioMisura() != null) {
 %>
 	<tr>
@@ -1568,6 +1726,7 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
 	</tr>
 <%
 		}
+	}
 	if (misuraalternativa.getDataFineMisura() != null) {
 %>
 	<tr>
@@ -1602,18 +1761,22 @@ else { // misuraalternativa.getIdMisuraAlternativa() == null
 	   	<td class="l" width="25%">Anno / Numero SIUS</td>
 	   	<td class="l">
 	     	<input Title="Anno Fascicolo Sius" name="<%=ICostantiMisuraAlternativa.CAMPO_CHIAVE_ANNO_FASCICOLO_SIUS%>" type="text" size="4" maxlength="4" 
-				onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)" onChange="pulisciId();">
+				onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)" onChange="pulisciId();"
+				value="<%=StringUtils.toStringJSP(misuraalternativa.getChiaveAnnoFascicoloSius())%>">
 			/
 			<input Title="Numero Sius" name="<%=ICostantiMisuraAlternativa.CAMPO_CHIAVE_PROGR_FASCICOLO_SIUS%>" type="text" size="6" maxlength="6"
-				onkeypress="return TicTabNumField(this,event)" onChange="pulisciId();">
+				onkeypress="return TicTabNumField(this,event)" onChange="pulisciId();"
+				value="<%=StringUtils.toStringJSP(misuraalternativa.getChiaveProgrFascicoloSius())%>">
 		</td>
 		<td class="l">Anno / Numero Ordinanza</td>
 		<td class="l">
 			<input Title="Anno Ordinanza" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO%>" type="text" size="4" maxlength="4" 
-				onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillYear(value)" onChange="pulisciId();">
+				onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillYear(value)" onChange="pulisciId();"
+				value="<%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistro())%>">
 			/
 			<input Title="Numero Ordinanza" name="<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO%>" type="text" size="6" maxlength="6"
-				onkeypress="return TicTabNumField(this,event)" onChange="pulisciId();">
+				onkeypress="return TicTabNumField(this,event)" onChange="pulisciId();"
+				value="<%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistro())%>">
 		</td>
 	</tr>
 	<tr>
@@ -1628,10 +1791,18 @@ else { // misuraalternativa.getIdMisuraAlternativa() == null
 <%
 	} else {
 		listaComuniScript = "ListaComuniEmitTdsMinor";
+		if (isModifica) {
+%>
+			<select Title="Ufficio Emittente" class="small" name="<%=ICostantiMisuraAlternativa.CAMPO_COD_UFFICIO_SORVEGLIANZA%>" id="<%=MinorMask.ComboEmittenteId%>">
+				<%=comboUfficioEmittenteModif%>
+       		</select>
+<%
+		} else {
 %>
 			<%=MinorMask.comboEmittente(filtroMinorenni, MinorMask.EmittenteTribunale)%>
 <%
 		}
+	}
 %>      
 		</td>
 	</tr>
@@ -1639,7 +1810,8 @@ else { // misuraalternativa.getIdMisuraAlternativa() == null
 		<td class="l">Sede Ufficio Emittente <font class=ob>(*)</font></td>
 		<td class="l" colspan="3">
   			<font class="campo">
-  				<input Title="Luogo Ufficio Sorveglianza" name="<%=ICostantiMisuraAlternativa.CAMPO_SEDE_TDS_EMITT%>" size=35 type="text" onChange="pulisciId();">
+  				<input Title="Luogo Ufficio Sorveglianza" name="<%=ICostantiMisuraAlternativa.CAMPO_SEDE_TDS_EMITT%>" size=35 type="text"
+  				onChange="pulisciId();" value="<%=StringUtils.toStringJSP(sedeUfficioEmittente.getDescrComune())%>">
 				<a href="Javascript:<%=listaComuniScript%>('LoadInserisciMisuraAlternativa','<%=ICostantiMisuraAlternativa.CAMPO_SEDE_TDS_EMITT%>');">
        				<img src="/images/filefolder.gif" border=0>
       			</a>
@@ -1668,11 +1840,31 @@ else { // misuraalternativa.getIdMisuraAlternativa() == null
     <tr>
 		<td class="l">Data Emissione Ordinanza</td>
 		<td class="l" colspan="3">
+<%
+if (isModifica) {
+%>
 			<font class="campo">
-				<input title="Giorno Data Emissione Ordinanza" value="<%=DateUtils.getSysDate("dd")%>" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>" <%=IWebConstants.UTIL_DATA%> onChange="pulisciId();"> -
-				<input title="Mese Data Emissione Ordinanza" value="<%=DateUtils.getSysDate("MM")%>" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE%>" <%=IWebConstants.UTIL_DATA%> onChange="pulisciId();"> -
-				<input title="Anno Data Emissione Ordinanza" value="<%=DateUtils.getSysDate("yyyy")%>" type="text" size="4" maxlength="4" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE%>" <%=IWebConstants.UTIL_DATA_ANNO%> onChange="pulisciId();">
+				<input title="Giorno Data Emissione Ordinanza" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisione(), "dd"))%>"
+				type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>" <%=IWebConstants.UTIL_DATA%> onChange="pulisciId();"> -
+				<input title="Mese Data Emissione Ordinanza" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisione(), "MM"))%>"
+				type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE%>" <%=IWebConstants.UTIL_DATA%> onChange="pulisciId();"> -
+				<input title="Anno Data Emissione Ordinanza" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisione(), "yyyy"))%>"
+				type="text" size="4" maxlength="4" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE%>" <%=IWebConstants.UTIL_DATA_ANNO%> onChange="pulisciId();">
 			</font>
+<%
+} else {
+%>
+			<font class="campo">
+				<input title="Giorno Data Emissione Ordinanza" value="<%=DateUtils.getSysDate("dd")%>" type="text" size="2" maxlength="2"
+				name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>" <%=IWebConstants.UTIL_DATA%> onChange="pulisciId();"> -
+				<input title="Mese Data Emissione Ordinanza" value="<%=DateUtils.getSysDate("MM")%>" type="text" size="2" maxlength="2"
+				name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE%>" <%=IWebConstants.UTIL_DATA%> onChange="pulisciId();"> -
+				<input title="Anno Data Emissione Ordinanza" value="<%=DateUtils.getSysDate("yyyy")%>" type="text" size="4" maxlength="4"
+				name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE%>" <%=IWebConstants.UTIL_DATA_ANNO%> onChange="pulisciId();">
+			</font>
+<%
+}
+%>
 		</td>
     </tr>
 
@@ -1683,10 +1875,42 @@ else { // misuraalternativa.getIdMisuraAlternativa() == null
 	    <td class="l">Luogo della Prova</td>
 	  	<td class="l" colspan="3">
 	    	<font class="campo">
-	      		<input Title="Luogo svolgimento della prova" name="<%=ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA %>" size=35 type="text" onChange="pulisciId();">
+	      		<input Title="Luogo svolgimento della prova" name="<%=ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA%>"
+	      		value="<%=StringUtils.toStringJSP(misuraalternativa.getDescrLuogoProva())%>" size="50" type="text" onChange="pulisciId();">
 	    	</font>
 	  	</td>
 	</tr>
+	<%-- MEV_2019-09-SIEP: aggiunte due nuove sezioni x AFFIDAMENTO - SIAMO IN ASSENZA MISURA ALTERNATIVA --%>
+	<%-- MEV_2024-092: rimosse le due nuove sezioni x AFFIDAMENTO - SIAMO IN ASSENZA MISURA ALTERNATIVA --%>
+<!-- 	<tr> -->
+<!-- 		<td class="l">Anno / Numero Ordinanza Provvisoria</td> -->
+<!-- 		<td class="l" colspan="3"> -->
+<%-- 			<input Title="Anno Ordinanza Provvisoria" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>" type="text" size="4" maxlength="4"  --%>
+<!-- 				onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)" onChange="pulisciId();" -->
+<%-- 				value="<%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistroMaAt())%>"> --%>
+<!-- 			/ -->
+<%-- 			<input Title="Numero Ordinanza Provvisoria" name="<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT%>" type="text" size="6" maxlength="6" --%>
+<!-- 				onkeypress="return TicTabNumField(this,event)" onChange="pulisciId();" -->
+<%-- 				value="<%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistroMaAt())%>"> --%>
+<%-- 			<input type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_EVE_ID_EVENTO%>" value="<%if (isModifica) {%><%=StringUtils.toStringJSP(misuraalternativa.getEveIdEvento())%><%}%>"> --%>
+<!-- 		</td> -->
+<!-- 	</tr> -->
+<!-- 	<tr> -->
+<!-- 	  	<td class="l">Data Emissione Ordinanza Provvisoria</td> -->
+<!-- 	  	<td class="l" colspan="3"> -->
+<!-- 	    	<input title="Giorno Data Emissione Ordinanza Provvisoria" type="text" size="2" maxlength="2"  -->
+<%-- 	    		name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>" <%=IWebConstants.UTIL_DATA%> onChange="pulisciId();" --%>
+<%-- 	    		value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "dd"))%>"> - --%>
+<!-- 			<input title="Mese Data Emissione Ordinanza Provvisoria" type="text" size="2" maxlength="2"  -->
+<%-- 				name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>" <%=IWebConstants.UTIL_DATA%> onChange="pulisciId();" --%>
+<%-- 				value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "MM"))%>"> - --%>
+<!-- 			<input title="Anno Data Emissione Ordinanza Provvisoria" type="text" size="4" maxlength="4"  -->
+<%-- 				name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>" <%=IWebConstants.UTIL_DATA_ANNO%> onChange="pulisciId();" --%>
+<%-- 				value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "yyyy"))%>"> --%>
+<!-- 	  	</td> -->
+<!-- 	</tr> -->
+	<%-- FINE MEV_2024-092 --%>
+	<%-- FINE MEV_2019-09-SIEP --%>
 <%
 	} else if (tipoMisura.equals("DETENZIONE"))	{
 %>
@@ -1698,6 +1922,37 @@ else { // misuraalternativa.getIdMisuraAlternativa() == null
 	    	</font>
 	  	</td>
 	</tr>
+	<%-- MEV_2019-09-SIEP: aggiunte due nuove sezioni x DETENZIONE - SIAMO IN ASSENZA MISURA ALTERNATIVA --%>
+	<%-- MEV_2024-092: rimosse le due nuove sezioni x DETENZIONE - SIAMO IN ASSENZA MISURA ALTERNATIVA --%>
+<!-- 	<tr> -->
+<!-- 		<td class="l">Anno / Numero Ordinanza Provvisoria</td> -->
+<!-- 		<td class="l" colspan="3"> -->
+<%-- 			<input Title="Anno Ordinanza Provvisoria" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>" type="text" size="4" maxlength="4"  --%>
+<!-- 				onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)" onChange="pulisciId();" -->
+<%-- 				value="<%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistroMaAt())%>"> --%>
+<!-- 			/ -->
+<%-- 			<input Title="Numero Ordinanza Provvisoria" name="<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT%>" type="text" size="6" maxlength="6" --%>
+<!-- 				onkeypress="return TicTabNumField(this,event)" onChange="pulisciId();" -->
+<%-- 				value="<%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistroMaAt())%>"> --%>
+<%-- 			<input type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_EVE_ID_EVENTO%>" value="<%if (isModifica) {%><%=StringUtils.toStringJSP(misuraalternativa.getEveIdEvento())%><%}%>"> --%>
+<!-- 		</td> -->
+<!-- 	</tr> -->
+<!-- 	<tr> -->
+<!-- 	  	<td class="l">Data Emissione Ordinanza Provvisoria</td> -->
+<!-- 	  	<td class="l" colspan="3"> -->
+<!-- 	    	<input title="Giorno Data Emissione Ordinanza Provvisoria" type="text" size="2" maxlength="2"  -->
+<%-- 	    		name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>" <%=IWebConstants.UTIL_DATA%> onChange="pulisciId();" --%>
+<%-- 	    		value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "dd"))%>"> - --%>
+<!-- 			<input title="Mese Data Emissione Ordinanza Provvisoria" type="text" size="2" maxlength="2"  -->
+<%-- 				name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>" <%=IWebConstants.UTIL_DATA%> onChange="pulisciId();" --%>
+<%-- 				value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "MM"))%>"> - --%>
+<!-- 			<input title="Anno Data Emissione Ordinanza Provvisoria" type="text" size="4" maxlength="4"  -->
+<%-- 				name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>" <%=IWebConstants.UTIL_DATA_ANNO%> onChange="pulisciId();" --%>
+<%-- 				value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "yyyy"))%>"> --%>
+<!-- 	  	</td> -->
+<!-- 	</tr> -->
+	<%-- FINE MEV_2024-092 --%>
+	<%-- FINE MEV_2019-09-SIEP --%>
 <%
 	} else if (tipoMisura.equals("INDULTINO") || tipoMisura.equals("ESP_PRESSO_DOM")) {
 %>
@@ -1710,12 +1965,47 @@ else { // misuraalternativa.getIdMisuraAlternativa() == null
 	  	</td>
 	</tr>
 <%
-	}
+	// MEV_2019-09-SIEP: aggiunto ramo else x SEMILIBERTA'
+	} /*else if (tipoMisura.equals("SEMILIBERTA")) {*/
+%>
+	<%-- MEV_2019-09-SIEP: aggiunte due nuove sezioni x SEMILIBERTA' - SIAMO IN ASSENZA MISURA ALTERNATIVA --%>
+	<%-- MEV_2024-092: rimosse le due nuove sezioni x SEMILIBERTA' - SIAMO IN ASSENZA MISURA ALTERNATIVA --%>
+<!-- 	<tr> -->
+<!-- 		<td class="l">Anno / Numero Ordinanza Provvisoria</td> -->
+<!-- 		<td class="l" colspan="3"> -->
+<%-- 			<input Title="Anno Ordinanza Provvisoria" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>" type="text" size="4" maxlength="4"  --%>
+<!-- 				onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)" onChange="pulisciId();" -->
+<%-- 				value="<%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistroMaAt())%>"> --%>
+<!-- 			/ -->
+<%-- 			<input Title="Numero Ordinanza Provvisoria" name="<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT%>" type="text" size="6" maxlength="6" --%>
+<!-- 				onkeypress="return TicTabNumField(this,event)" onChange="pulisciId();" -->
+<%-- 				value="<%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistroMaAt())%>"> --%>
+<%-- 			<input type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_EVE_ID_EVENTO%>" value="<%if (isModifica) {%><%=StringUtils.toStringJSP(misuraalternativa.getEveIdEvento())%><%}%>"> --%>
+<!-- 		</td> -->
+<!-- 	</tr> -->
+<!-- 	<tr> -->
+<!-- 	  	<td class="l">Data Emissione Ordinanza Provvisoria</td> -->
+<!-- 	  	<td class="l" colspan="3"> -->
+<!-- 	    	<input title="Giorno Data Emissione Ordinanza Provvisoria" type="text" size="2" maxlength="2"  -->
+<%-- 	    		name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>" <%=IWebConstants.UTIL_DATA%> onChange="pulisciId();" --%>
+<%-- 	    		value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "dd"))%>"> - --%>
+<!-- 			<input title="Mese Data Emissione Ordinanza Provvisoria" type="text" size="2" maxlength="2"  -->
+<%-- 				name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>" <%=IWebConstants.UTIL_DATA%> onChange="pulisciId();" --%>
+<%-- 				value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "MM"))%>"> - --%>
+<!-- 			<input title="Anno Data Emissione Ordinanza Provvisoria" type="text" size="4" maxlength="4"  -->
+<%-- 				name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>" <%=IWebConstants.UTIL_DATA_ANNO%> onChange="pulisciId();" --%>
+<%-- 				value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "yyyy"))%>"> --%>
+<!-- 	  	</td> -->
+<!-- 	</tr> -->
+	<%-- FINE MEV_2024-092 --%>
+	<%-- FINE MEV_2019-09-SIEP --%>
+<%
+	/*}*/
 %>
 	<tr>
 	  	<td class="l">Note</td>
 	  	<td class="L" colspan="3">
-	    	<TEXTAREA title="Note" name="<%=ICostantiMisuraAlternativa.CAMPO_NOTE %>" cols=80 rows=2></textarea>
+	    	<TEXTAREA title="Note" name="<%=ICostantiMisuraAlternativa.CAMPO_NOTE%>" cols="80" rows="2"><%=StringUtils.toStringJSP(misuraalternativa.getNote(), "")%></textarea>
 	  	</td>
 	</tr>
 <%
@@ -1729,7 +2019,7 @@ else { // misuraalternativa.getIdMisuraAlternativa() == null
 // Controllo per posizione giuridica
 // SONO STATI USATI GLI STESSI CAMPI DELLA SCARCERAZIONE CAMBIANDO SOLO LE LABEL
 // PER QUANTO RIGURDA I VALUE DEL RADION BOTTON SONO RIMASTI GLI STESSI DELLA SCARCERAZIONE
-// PER UNIFORMITA CON TUTTI GLI ALTRI INSERIMENTI DI CONCESSIONE.
+// PER UNIFORMITA' CON TUTTI GLI ALTRI INSERIMENTI DI CONCESSIONE.
 
 // Se Libero nulla 0 tipo misura semiliberta	X
 // caso Is detenuto + pos SEML : Data  Da Scarcerare (Da aggiungere)	X
@@ -1737,10 +2027,38 @@ else { // misuraalternativa.getIdMisuraAlternativa() == null
 // le 2 eccezione di ammissione provvisoria
 // tutti gli altri casi  Data  Da Scarcerare (Da aggiungere)
 //==============================================================================
-// Sezione con i check:Da eseguire/eseguita o da scarcerare/gia scarcerato
+// Sezione con i check:Da eseguire/eseguita o da scarcerare/già scarcerato
 //==============================================================================
-if (lPosizione.isLibero() || tipoMisura.equals("SEMILIBERTA")) {
-	// do Nothing
+// MEV_2019-09-SIEP: aggiunta diversificazione
+// MEV_2024-092: rimossa la diversificazione
+if (lPosizione.isLibero()) {
+	if (tipoMisura.equals("SEMILIBERTA")) {
+		// do Nothing
+	} else if (tipoMisura.equals("AFFIDAMENTO")) {
+%>
+<!-- 	<tr> -->
+<!-- 		<td class="l" width="25%">Data Applicazione Provvisoria</td> -->
+<!-- 		<td class="l"> -->
+<%
+// 		if (isModifica) {
+%>
+<%-- 	 		<input title="Giorno Data Applicazione Provvisoria" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataInizioMisura(), "dd"))%>" <%=IWebConstants.UTIL_DATA%>> - --%>
+<%-- 			<input title="Mese Data Applicazione Provvisoria" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataInizioMisura(), "MM"))%>" <%=IWebConstants.UTIL_DATA%>> - --%>
+<%-- 			<input title="Anno Data Applicazione Provvisoria" type="text" size="4" maxlength="4" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataInizioMisura(), "yyyy"))%>" <%=IWebConstants.UTIL_DATA_ANNO%>> --%>
+<%
+// 		} else {
+%>
+<%-- 			<input title="Giorno Data Applicazione Provvisoria" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "dd"))%>" <%=IWebConstants.UTIL_DATA%>> - --%>
+<%-- 			<input title="Mese Data Applicazione Provvisoria" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "MM"))%>" <%=IWebConstants.UTIL_DATA%>> - --%>
+<%-- 			<input title="Anno Data Applicazione Provvisoria" type="text" size="4" maxlength="4" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "yyyy"))%>" <%=IWebConstants.UTIL_DATA_ANNO%>> --%>
+<%
+// 		}
+%>
+<!-- 		</td> -->
+<!-- 	</tr> -->
+<%
+		// do Nothing
+	}
 } else if (lPosizione.getCodPosizioneGiuridica().equals("04")
 		// MEV 10 S3 gestione nuove posizioni giuridiche successive
 		|| lPosizione.getCodPosizioneGiuridica().equals("82")
@@ -1767,7 +2085,7 @@ if (lPosizione.isLibero() || tipoMisura.equals("SEMILIBERTA")) {
 		<td class="l" width="25%">
 			Da eseguire&nbsp;
 			<input type="radio" name="tipo" value="scarcerare" checked onclick="radio();">
-			&nbsp;Gi&agrave; eseguito &nbsp;
+			&nbsp;Gia' eseguito &nbsp;
 			<input type="radio" name="tipo" value="scarcerato" onclick="radio();">
 		</td>
 		<td class="l">Data Esecuzione&nbsp;
@@ -1777,13 +2095,12 @@ if (lPosizione.isLibero() || tipoMisura.equals("SEMILIBERTA")) {
 		</td>
 	</tr>
 <%
-// MEV_2024-092: se PG 14 || isDetenuto non faccio nulla per semilibertà
-} else if (tipoMisura.equals("SEMILIBERTA") && (lPosizione.isDetenuto() || lPosizione.getCodPosizioneGiuridica().equals("14"))) {
-	// do Nothing
-} else if (lPosizione.isDetenuto() || lPosizione.getCodPosizioneGiuridica().equals("14")
-		// Espiazione Pena in Regime di Semiliberta in Prosec.Provv. 51 Bis
+} else if (lPosizione.isDetenuto()
+		// MEV_2024-092: elimino PG 14
+		// || lPosizione.getCodPosizioneGiuridica().equals("14") // Espiazione Pena in Regime di Semilibertà
+		// Espiazione Pena in Regime di Semilibertà in Prosec.Provv. 51 Bis
 		|| lPosizione.getCodPosizioneGiuridica().equals("43")) {
-		// || lPosizione.getCodPosizioneGiuridica().equals("04") // Arresti Domiciliari ex art. 656/10
+		// Paolo Cherubini 24/03/2011 vedi commento sopra	|| lPosizione.getCodPosizioneGiuridica().equals("04") // Arresti Domiciliari ex art. 656/10
 		// || lPosizione.getCodPosizioneGiuridica().equals("12") // Espiazione Pena in Regime di Detenzione Domiciliare
 		// || lPosizione.getCodPosizioneGiuridica().equals("50") // Esecuzione presso domicilio della pena detentiva
 		// || lPosizione.getCodPosizioneGiuridica().equals("53") //  Arresti domiciliari - Esecuzione presso domicilio della pena detentiva
@@ -1822,6 +2139,32 @@ else if ((lPosizione.getCodPosizioneGiuridica().equals("13") && lEventoAmmProvvA
 		|| lPosizione.getCodPosizioneGiuridica().equals("54")) {
 %>
 	<tr>
+<%
+	// MEV_2019-09-SIEP: aggiunta diversificazione
+	// MEV_20249-092: rimossa diversificazione
+// 	if (tipoMisura.equals("AFFIDAMENTO")) {
+%>
+<!-- 		<td class="l" width="25%">Data Applicazione Provvisoria</td> -->
+<!-- 		<td class="l"> -->
+<%
+// if (isModifica) {
+%>
+<%-- 	 		<input title="Giorno Data Applicazione Provvisoria" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataInizioMisura(), "dd"))%>" <%=IWebConstants.UTIL_DATA%>> - --%>
+<%-- 			<input title="Mese Data Applicazione Provvisoria" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataInizioMisura(), "MM"))%>" <%=IWebConstants.UTIL_DATA%>> - --%>
+<%-- 			<input title="Anno Data Applicazione Provvisoria" type="text" size="4" maxlength="4" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataInizioMisura(), "yyyy"))%>" <%=IWebConstants.UTIL_DATA_ANNO%>> --%>
+<%
+// } else {
+%>
+<%-- 			<input title="Giorno Data Applicazione Provvisoria" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "dd"))%>" <%=IWebConstants.UTIL_DATA%>> - --%>
+<%-- 			<input title="Mese Data Applicazione Provvisoria" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "MM"))%>" <%=IWebConstants.UTIL_DATA%>> - --%>
+<%-- 			<input title="Anno Data Applicazione Provvisoria" type="text" size="4" maxlength="4" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "yyyy"))%>" <%=IWebConstants.UTIL_DATA_ANNO%>> --%>
+<%
+// }
+%>
+<!-- 		</td> -->
+<%
+// 	} else {
+%>
 		<td class="l" width="25%">Data Ammissione Provvisoria ad Affidamento in Prova</td>
 		<td class="l">
 			<font class="campo">
@@ -1835,6 +2178,9 @@ else if ((lPosizione.getCodPosizioneGiuridica().equals("13") && lEventoAmmProvvA
 			<input type="HIDDEN" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "MM"))%>">
 			<input type="HIDDEN" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "yyyy"))%>">
 		</td>
+<%
+// 	}
+%>
 	</tr>
 <%
 } else if (lPosizione.isMisuraAlternativa() || lPosizione.getCodPosizioneGiuridica().equals("27")) { // L.207/03 indultino
@@ -1869,7 +2215,7 @@ else if ((lPosizione.getCodPosizioneGiuridica().equals("13") && lEventoAmmProvvA
     	<td class="Titolo" style="width: 100%;" colspan=6> Magistrato Firmatario </td>
    	</tr>
    	<tr>
-		<%-- MEV10-s3: aggiunta proprieta width --%>
+		<%-- MEV10-s3: aggiunta proprietà width --%>
      	<td class="l" width="25%">Magistrato Firmatario</td>
      	<td class="L">
 			<input type="HIDDEN" title="CodiceMagistratoNuovo" value="<%=StringUtils.toStringJSP(magistratocompetente.getMagistrato().getCodMagistrato())%>" type="text" name="<%=ICostantiMagistrato.CAMPO_COD_MAGISTRATO%>"  maxlength="35" size="35">
@@ -1888,13 +2234,13 @@ else if ((lPosizione.getCodPosizioneGiuridica().equals("13") && lEventoAmmProvvA
 </table>
 <%
 //==============================================================================
-// Autorita di polizia  
+// Autorità di polizia  
 //==============================================================================
 %>
 <div id="divautoritacompetenteE" style="width: 95%; visibility: hidden; position: relative;">
 <table style="width: 100%;">
 	<tr>
-	<%-- autorita di polizia --%>
+	<!--autorità di polizia-->
 <%
 if ((lPosizione.isLibero()) && (verbale == null || verbale.getIdVerbale() == null)) {
 %>
@@ -1902,7 +2248,7 @@ if ((lPosizione.isLibero()) && (verbale == null || verbale.getIdVerbale() == nul
 <%
 } else {
 %>
-		<td class="l" width="25%">Autorit&agrave; Competente per territorio <font class=ob>(*)</font></td>
+		<td class="l" width="25%">Autorita' Competente per territorio <font class=ob>(*)</font></td>
 <%
 }
 %>
@@ -1931,8 +2277,23 @@ if (autoritaEsternaE != null && autoritaEsternaE.getDescrSede() != null) {
         	</a>
 		</td>
 		<td class="l">Indirizzo</td>
+<%-- MEV_2019-09-SIEP: aggiunta valorizzazione textarea --%>
+<%
+String indirizzoE = "", indirizzoC = "", noteAvv = "";
+if (eventonotifica != null && eventonotifica.getNotifiche() != null && eventonotifica.getNotifiche().length > 0) {
+	for (int i = 0; i < eventonotifica.getNotifiche().length; i++) {
+		NotificaModel nm = eventonotifica.getNotifiche()[i];
+		if (nm.getAutEstIdAutoritaEsterna() != null && nm.getCodTipoNotifica().equals("E"))
+			indirizzoE = nm.getNote();
+		else if (nm.getAutEstIdAutoritaEsterna() != null && nm.getCodTipoNotifica().equals("C"))
+			indirizzoC = nm.getNote();
+		else if (nm.getAutEstIdAutoritaEsterna() != null && nm.getCodTipoNotifica().equals("N"))
+			noteAvv = nm.getNote();
+	}
+}
+%>
 		<td class="L">
-		   	<TEXTAREA title="Note" name="<%=ICostantiMisuraAlternativa.CAMPO_NOTE_POL_E%>" cols="30"></textarea>
+		   	<TEXTAREA title="Note" name="<%=ICostantiMisuraAlternativa.CAMPO_NOTE_POL_E%>" cols="30"><%=StringUtils.toStringJSP(indirizzoE, "")%></textarea>
 		</td>
 	</tr>
 </table>
@@ -1951,31 +2312,16 @@ if (autoritaEsternaE != null && autoritaEsternaE.getDescrSede() != null) {
 if (posizioneluogoaltra != null &&  posizioneluogoaltra .getLuogoDetenzione()!= null
 		&& posizioneluogoaltra .getLuogoDetenzione().getIstitutoDetenzione() != null) {
 %>
-			<input readonly Title="Istituto" name="Comune" value="<%=StringUtils.toStringJSP(posizioneluogoaltra.getLuogoDetenzione().getIstitutoDetenzione().getDescrTipoIstituto())%> di <%=StringUtils.toStringJSP(posizioneluogoaltra.getLuogoDetenzione().getIstitutoDetenzione().getDescrComune())%>" size="50">
-			<input type="hidden" Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="<%=posizioneluogoaltra.getLuogoDetenzione().getIstDetIdIstitutoDetenzione()%>">
+			<input readonly Title="Istituto" name="Comune" value="<%=StringUtils.toStringJSP(posizioneluogoaltra.getLuogoDetenzione().getIstitutoDetenzione().getDescrTipoIstituto())%> di <%=StringUtils.toStringJSP(posizioneluogoaltra.getLuogoDetenzione().getIstitutoDetenzione().getDescrComune())%>" size=50>
+			<input type="hidden" Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="<%=posizioneluogoaltra.getLuogoDetenzione().getIstDetIdIstitutoDetenzione()%>" size=50>
 			<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciMisuraAlternativa','<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
 				<img src="/images/filefolder.gif" border=0>
 			</a>
 <%
-// MEV_2024-092: aggiunto ramo elseif con ciclo sulle notifiche come nel dettaglioConcessione.jsp
-} else if (eventonotifica != null && eventonotifica.getNotifiche() != null && eventonotifica.getNotifiche().length > 0) {
-	for (int n = 0; n < eventonotifica.getNotifiche().length; n++) {
-		if (eventonotifica.getNotifiche()[n].getCodTipoNotifica().equals("E")
-				&& eventonotifica.getNotifiche()[n].getIstitutoDetenzione() != null) {
-%>
-			<input readonly Title="Istituto" name="Comune" value="<%=StringUtils.toStringJSP(eventonotifica.getNotifiche()[n].getIstitutoDetenzione().getDescrTipoIstituto())%>&nbsp;di&nbsp;<%=StringUtils.toStringJSP(eventonotifica.getNotifiche()[n].getIstitutoDetenzione().getDescrComune())%>" size="50">
-			<input type="hidden" Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="<%=eventonotifica.getNotifiche()[n].getIstitutoDetenzione().getIdIstitutoDetenzione()%>">
-			<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciMisuraAlternativa','<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
-				<img src="/images/filefolder.gif" border=0>
-			</a>
-<%
-			break;
-		}
-	}
 } else {
 %>
-			<input readonly Title="Istituto" name="Comune" value="" size="50">
-			<input type="hidden" Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="">
+			<input readonly Title="Istituto" name="Comune" value="" size=50>
+			<input type="hidden" Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="" size=35>
 			<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciMisuraAlternativa','<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
 				<img src="/images/filefolder.gif" border=0>
 			</a>
@@ -1994,8 +2340,21 @@ if (posizioneluogoaltra != null &&  posizioneluogoaltra .getLuogoDetenzione()!= 
 	</tr>
 	<tr>
 		<td class="l" width="25%">Destinatario <font class=ob>(*)</font></td>
+		<%-- MEV_2019-09-SIEP: diversificazione x la gestione della modifica --%>
 		<td class="l">
+<%
+if (isModifica) {
+%>
+			<select Title="UEPE/USSM" class="small" name="<%=MinorMask.ComboCSSAId%>" id="<%=MinorMask.ComboCSSAId%>">
+				<%=comboCSSATrattinoModif%>
+       		</select>
+<%
+} else {
+%>
 			<%=MinorMask.comboCSSATrattino(MinorMask.ComboCSSAId)%>
+<%
+}
+%>
 		</td>
 	</tr>
 	<tr>
@@ -2023,15 +2382,30 @@ if (posizioneluogoaltra != null &&  posizioneluogoaltra .getLuogoDetenzione()!= 
 		<td class="Titolo" colspan="4">Ufficio / Magistrato di Sorveglianza</td>
 	</tr>
   	<tr>
-    	<td class="l" width="30%">Destinatario <font class=ob>(*)</font></td>
-    	<td class="l"><%=MinorMask.comboMagistratoTrattino()%></td>
+    	<td class="l" width="25%">Destinatario <font class=ob>(*)</font></td>
+		<%-- MEV_2019-09-SIEP: diversificazione x la gestione della modifica --%>
+    	<td class="l">
+<%
+if (isModifica) {
+%>
+			<select Title="Ufficio" class="small" name="<%=ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO%>" id="<%=MinorMask.ComboMagistratoId%>">
+				<%=comboMagistratoTrattinoModif%>
+       		</select>
+<%
+} else {
+%>
+			<%=MinorMask.comboMagistratoTrattino()%>
+<%
+}
+%>
+		</td>
     </tr>
     <tr>
     	<td class="l">Sede</td>
     	<td class="L">
       		<input type="hidden" name="magSorv" value="S">
        		<input type="hidden" name="notificaMagistrato" value="C">
-       		<input title="ufficio" value="" type="text" name="<%=ICostantiMisuraAlternativa.CAMPO_COD_UDS %>" maxlength="35" size="25">
+       		<input title="ufficio" value="<%=StringUtils.toStringJSP(UffUDS)%>" type="text" name="<%=ICostantiMisuraAlternativa.CAMPO_COD_UDS%>" maxlength="35" size="25">
        		<a href="Javascript:ListaComuniMagiSorvMinor('LoadInserisciMisuraAlternativa','<%=ICostantiMisuraAlternativa.CAMPO_COD_UDS%>');">
 				<img src="/images/filefolder.gif" border=0>
 			</a>
@@ -2044,14 +2418,29 @@ if (!tipoMisura.equals("INDULTINO") && !tipoMisura.equals("ESP_PRESSO_DOM")) {
 		<td class="Titolo" colspan="4">Tribunale di Sorveglianza</td>
 	</tr>
 	<tr>
-		<td class="l" width="30%">Destinatario <font class=ob>(*)</font></td>
-        <td class="L"><%=MinorMask.comboTribunaleTrattino()%></td>
+		<td class="l" width="25%">Destinatario <font class=ob>(*)</font></td>
+		<%-- MEV_2019-09-SIEP: diversificazione x la gestione della modifica --%>
+    	<td class="l">
+<%
+if (isModifica) {
+%>
+			<select Title="Ufficio" class="small" name="<%=ICostantiMisuraAlternativa.CAMPO_COD_TRIBUNALE%>" id="<%=MinorMask.ComboTribunaleId%>">
+				<%=comboTribunaleTrattinoModif%>
+       		</select>
+<%
+} else {
+%>
+			<%=MinorMask.comboTribunaleTrattino()%>
+<%
+}
+%>
+		</td>
     </tr>
   	<tr>
 	   	<td class="l">Sede</td>
 		<td class="L">
 			<input type="hidden" value="TDS" name="<%=ICostantiMisuraAlternativa.CAMPO_COD_TRIBUNALE%>">
-	       	<input title="Sede Tribunale Sorveglianza" value="" type="text" name="<%=ICostantiMisuraAlternativa.CAMPO_SEDE_TDS %>"  maxlength="35" size="35">
+	       	<input title="Sede Tribunale Sorveglianza" value="<%=StringUtils.toStringJSP(UffTDS)%>" type="text" name="<%=ICostantiMisuraAlternativa.CAMPO_SEDE_TDS%>" maxlength="35" size="35">
 	       	<a href="Javascript:ListaComuniTribSorvMinor('LoadInserisciMisuraAlternativa','<%=ICostantiMisuraAlternativa.CAMPO_SEDE_TDS%>');">
 	       		<img src="/images/filefolder.gif" border=0>
 	       	</a>
@@ -2064,14 +2453,14 @@ if (!tipoMisura.equals("INDULTINO") && !tipoMisura.equals("ESP_PRESSO_DOM")) {
 </div>
 <%
 //==============================================================================
-// Autorita Competente per territorio
+// Autorità Competente per territorio
 //==============================================================================
 %>
 <div id="divautoritacompetenteC" style="width: 95%; visibility: hidden; position: relative;">
 <table style="width: 100%;">
 	<tr>
-		<%--autorita di polizia--%>
-    	<td class="l" width="25%">Autorit&agrave; Competente per territorio <font class=ob>(*)</font></td>
+		<!--autorità di polizia-->
+    	<td class="l" width="25%">Autorita' Competente per territorio <font class=ob>(*)</font></td>
     	<td class="L" colspan="3">
       		<select Title="Autorita Esterna" class="small" name="<%=ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_C%>">
         		<%=codiceAutoritaC%>
@@ -2097,8 +2486,9 @@ if (autoritaEsternaC != null && autoritaEsternaC.getDescrSede() != null) {
 			</a>
 		</td>
 		<td class="l">Indirizzo</td>
+		<%-- MEV_2019-09-SIEP: aggiunta valorizzazione textarea --%>
 		<td class="L">
-			<TEXTAREA title="Note" name="<%=ICostantiMisuraAlternativa.CAMPO_NOTE_POL_C%>" cols="30"></textarea>
+			<TEXTAREA title="Note" name="<%=ICostantiMisuraAlternativa.CAMPO_NOTE_POL_C%>" cols="30"><%=StringUtils.toStringJSP(indirizzoC, "")%></textarea>
 		</td>
     </tr>
 </table>
@@ -2119,52 +2509,52 @@ Iterator lItxAvv = avvocati.iterator();
 while(lItxAvv.hasNext()) {
 	AvvocatoSiepModel lAvv = (AvvocatoSiepModel) lItxAvv.next();
 %>
-<%-- <table> --%>
-  		<tr>
+<!-- <table> -->
+	<tr>
    		<td class="l" colspan="4">Per Avvocato&nbsp;
-				<font class="campo">
-  					<%=StringUtils.toStringJSP(lAvv.getAvvocato().getCognome())%>&nbsp;<%=StringUtils.toStringJSP(lAvv.getAvvocato().getNome())%>
-				</font>
-				&nbsp;Foro di&nbsp;
-				<font class="campo"><%=StringUtils.toStringJSP(lAvv.getAvvocato().getForo())%></font>
-				&nbsp;Difensore di&nbsp;
-				<font class="campo"><%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescrTipo())%></font>
- 				<input type="HIDDEN" title="Codice Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep())%>" type="text" name="<%= ICostantiAvvocato.CAMPO_ID_AVVOCATO %>"  maxlength="35" size="35">
-			</td>
-		</tr>
-<%-- </table> --%>
-<%-- <table> --%>
-  		<tr>
-		<td class="l" width="25%">Autorit&agrave; Destinazione</td>
-  			<td class="L" colspan="3">
-     			<select Title="Autorita Esterna" class="small" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>" >
-					<%=autoritaEsternaAvv%>
-       			</select>
-			</td>
-		</tr>
-		<tr>
- 			<td class="l">Sede </td>
- 			<td class="L">
-   				<%-- MEV_21 (avvocati) Sostituzione di getAvvocato().getForo() con getAvvocato().getDescComuneSedeForo() --%>
-				<input title="Sede Foro Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescComuneSedeForo())%>" type="text" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>" maxlength="35" size="35">
-				<a href="Javascript:ListaComuni('LoadInserisciMisuraAlternativa','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>[<%=lIdxAvv%>]');">
-    				<img src="/images/filefolder.gif" border=0>
-  				</a>
-			</td>
-  			<td class="l">Note</td>
- 			<td class="L">
-				<textarea title="Note" name="<%=ICostantiMisuraAlternativa.CAMPO_NOTE_AVVOCATI%>" cols="30"></textarea>
-   			</td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
+			<font class="campo">
+				<%=StringUtils.toStringJSP(lAvv.getAvvocato().getCognome())%>&nbsp;<%=StringUtils.toStringJSP(lAvv.getAvvocato().getNome())%>
+			</font>
+			&nbsp;Foro di&nbsp;
+			<font class="campo"><%=StringUtils.toStringJSP(lAvv.getAvvocato().getForo())%></font>
+			&nbsp;Difensore di&nbsp;
+			<font class="campo"><%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescrTipo())%></font>
+			<input type="HIDDEN" title="Codice Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep())%>" type="text" name="<%=ICostantiAvvocato.CAMPO_ID_AVVOCATO %>"  maxlength="35" size="35">
+   		</td>
+	</tr>
+<!-- </table> -->
+<!-- <table> -->
+	<tr>
+		<td class="l" width="25%">Autorita' Destinazione</td>
+		<td class="L" colspan="3">
+   			<select Title="Autorita Esterna" class="small" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>">
+				<%=autoritaEsternaAvv%>
+       		</select>
+   		</td>
+	</tr>
+	<tr>
+		<td class="l">Sede</td>
+		<td class="L">
+			<input title="Sede Foro Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocato().getForo())%>" type="text" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>" maxlength="35" size="35">
+			<a href="Javascript:ListaComuni('LoadInserisciMisuraAlternativa','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>[<%=lIdxAvv%>]');">
+  				<img src="/images/filefolder.gif" border=0>
+			</a>
+		</td>
+		<td class="l">Note</td>
+		<%-- MEV_2019-09-SIEP: aggiunta valorizzazione textarea --%>
+		<td class="L">
+   			<textarea title="Note" name="<%=ICostantiMisuraAlternativa.CAMPO_NOTE_AVVOCATI%>" cols="30"><%=StringUtils.toStringJSP(noteAvv, "")%></textarea>
+		</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
 <%
 	lIdxAvv++;
 }
 %>
-		</tr>
-<%-- </table> --%>
-	</table>
+	</tr>
+<!-- </table> -->
+</table>
 </div>
 <div id="divbottone" style="width: 100%; visibility:visible; position:relative;">
 <table style="width: 100%;">
@@ -2197,8 +2587,10 @@ frmvalidator.addValidation("<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","lt=
 
 if (document.getElementById('<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>')
 		// 20190726 [SG]: aggiunto controllo sbloccante per inserimento evento di Concessione L.207/2003
-		&& !"54".equals(lPosizione.getCodPosizioneGiuridica())) {
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>","req","Il campo Giorno Data Ammissione Provvisoria e Detenzione Domiciliare e' obbligatorio");
+		&& (<%=!"54".equals(lPosizione.getCodPosizioneGiuridica())%>
+		// MEV_2019-09-SIEP: aggiunta casistica per NON inviare msg bloccante
+		&& <%=!(lPosizione.isLibero() && tipoMisura.equals("AFFIDAMENTO"))%>)) {
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>","req","Il campo Giorno Data Ammissione Provvisoria a Detenzione Domiciliare e' obbligatorio");
 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>","numeric");
 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>","gt=1");
 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>","lt=31");
@@ -2255,6 +2647,30 @@ if (document.getElementById('<%=ICostantiMisuraAlternativa.CAMPO_CHIAVE_ANNO_FAS
 	frmvalidator.addValidation("<%=ICostantiNotifica.CAMPO_ANNO_DATA_INVIO%>","numeric");
 	frmvalidator.addValidation("<%=ICostantiNotifica.CAMPO_ANNO_DATA_INVIO%>","gt=1900");
 	frmvalidator.addValidation("<%=ICostantiNotifica.CAMPO_ANNO_DATA_INVIO%>","lt=2099");
+
+// MEV_2019-09-SIEP: aggiunti controlli
+// MEV_2024-092: rimossi controlli
+<%
+// if (tipoMisura.equals("AFFIDAMENTO") || tipoMisura.equals("DETENZIONE") || tipoMisura.equals("SEMILIBERTA")) {
+%>
+<%-- 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>","numeric"); --%>
+<%-- 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>","gt=1900"); --%>
+<%-- 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>","lt=2099"); --%>
+<%-- 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT%>","numeric"); --%>
+<%-- 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>","numeric"); --%>
+<%-- 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>","gt=1"); --%>
+<%-- 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>","lt=31"); --%>
+<%-- 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>","numeric"); --%>
+<%-- 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>","gt=1"); --%>
+<%-- 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>","lt=12"); --%>
+<%-- 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>","numeric"); --%>
+<%-- 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>","gt=1900"); --%>
+<%-- 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>","lt=2099"); --%>
+<%
+// }
+%>
+// FINE MEV_2024-092
+// FINE MEV_2019-09-SIEP
 }
 
 // Controlli Data Fine Pena

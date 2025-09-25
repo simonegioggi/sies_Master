@@ -29,7 +29,18 @@ import siap.sius.sanzionesostitutiva.model.PeriodoAltraSanzioneModel;
 import siap.sius.scadenzario.model.ScadenzarioSiusModel;
 
 /**
- * DepositoDecretoController - Classe Controller per DepositoDecreto
+ * <p>
+ * Title: DepositoDecretoController
+ * </p>
+ * <p>
+ * Description: Classe Controller per DepositoDecreto
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2002
+ * </p>
+ * <p>
+ * Company: Bull
+ * </p>
  *
  * @version 1.0
  */
@@ -160,6 +171,14 @@ public interface IDepositoDecreto {
 
 	public DecretoEventoTenoriFascicoloSiusModel ExRicercaEventoProvvDiffSIUSByFascSiepEFascSius(
 			BigDecimal idFascicoloSiep, BigDecimal idFascSius, BigDecimal idEveFascSius, BigDecimal idEvento)
+			throws F3BException;
+
+	// MEV_9: aggiunto metodo di inserimento
+	public DepositoDecretoEventoModel ExInserisciDecretoMagistratoRelatore(GPTenoreModel gptm,
+			DepositoDecretoEventoModel ddem) throws F3BException;
+
+	// MEV_9: aggiunto metodo di aggiornamento
+	public void ExModificaDecretoMagistratoRelatore(DepositoDecretoEventoModel ddem)
 			throws F3BException;
 
 }

@@ -7,8 +7,9 @@ import f3b.model.GenericModel;
 import f3b.util.DateUtils;
 
 /**
- * MisuraAlternativaModel - Classe Model che rappresenta il MisuraAlternativa
- *
+ * Title: MisuraAlternativaModel
+ * Description: Classe Model che rappresenta il MisuraAlternativa
+ * 
  * @version 1.0
  */
 public class MisuraAlternativaModel extends GenericModel {
@@ -104,6 +105,8 @@ public class MisuraAlternativaModel extends GenericModel {
 	private String mIs51Bis;
 	private BigDecimal mFlFormaMisura;
 	private String mDescrizioneComunita;
+	// MEV_9
+	private Date mDataEsecutivita;
 
 	// COSTRUTTORE DI DEFAULT
 	public MisuraAlternativaModel() {
@@ -184,6 +187,8 @@ public class MisuraAlternativaModel extends GenericModel {
 		this.mDescrChiaveUfficioFascicoloSiusMaAt = "";
 		this.mAnnoRegistroMaAt = null;
 		this.mNumeroRegistroMaAt = null;
+		// MEV_9
+		this.mDataEsecutivita = null;
 	}
 
 	// COSTRUTTORE DI COPIA
@@ -267,6 +272,8 @@ public class MisuraAlternativaModel extends GenericModel {
 		this.mNumeroRegistroMaAt = aModel.mNumeroRegistroMaAt;
 		this.mFlFormaMisura = aModel.mFlFormaMisura;
 		this.mDescrizioneComunita = aModel.mDescrizioneComunita;
+		// MEV_9
+		this.mDataEsecutivita = aModel.mDataEsecutivita;
 	}
 
 	// COSTRUTTORE MODEL
@@ -294,7 +301,9 @@ public class MisuraAlternativaModel extends GenericModel {
 			String aDescrTipoMisuraMaAt, Date aDataDecisioneMaAt, BigDecimal aChiaveAnnoFascicoloSiusMaAt,
 			BigDecimal aChiaveProgrFascicoloSiusMaAt, String aChiaveUfficioFascicoloSiusMaAt,
 			String aDescrChiaveUfficioFascicoloSiusMaAt, BigDecimal aAnnoRegistroMaAt,
-			BigDecimal aNumeroRegistroMaAt, BigDecimal flFormaMisura, String descrizioneComunita) {
+			BigDecimal aNumeroRegistroMaAt, BigDecimal flFormaMisura, String descrizioneComunita,
+			// MEV_9
+			Date aDataEsecutivita) {
 
 		this.mIdMisuraAlternativa = aIdMisuraAlternativa;
 		this.mCodTipoDecisione = aCodTipoDecisione;
@@ -366,6 +375,8 @@ public class MisuraAlternativaModel extends GenericModel {
 		this.mDescrChiaveUfficioFascicoloSiusMaAt = aDescrChiaveUfficioFascicoloSiusMaAt;
 		this.mAnnoRegistroMaAt = aAnnoRegistroMaAt;
 		this.mNumeroRegistroMaAt = aNumeroRegistroMaAt;
+		// MEV_9
+		this.mDataEsecutivita = aDataEsecutivita;
 	}
 
 	//
@@ -704,6 +715,11 @@ public class MisuraAlternativaModel extends GenericModel {
 		return mFlFormaMisura;
 	}
 
+	// MEV_9
+	public Date getDataEsecutivita() {
+		return mDataEsecutivita;
+	}
+
 	//
 	// METODI SET()
 	//
@@ -1039,6 +1055,11 @@ public class MisuraAlternativaModel extends GenericModel {
 		this.mFlFormaMisura = mFlFormaMisura;
 	}
 
+	// MEV_9
+	public void setDataEsecutivita(Date aValore) {
+		mDataEsecutivita = aValore;
+	}
+
 	/**
 	 * calcolaStringaReclusione per la Stampa in cui serve la stringa composta di anni mesi giorni
 	 *
@@ -1137,8 +1158,9 @@ public class MisuraAlternativaModel extends GenericModel {
 				+ "[ mCodTdsCompetente            = " + mCodTdsCompetente + " ]\n"
 				+ "[ mFlagSituazione              = " + mFlagSituazione + " ]\n"
 				+ "[ mDescTdsCompetente           = " + mDescTdsCompetente + " ]\n"
-				+ "[ mDescSedeTdsCompetente       = " + mDescSedeTdsCompetente + " ]\n"
-				+ "[ mCodTipoDecisioneMaAt       = " + mCodTipoDecisioneMaAt + " ]\n"
+				+ "[ mDescSedeTdsCompetente       = " + mDescSedeTdsCompetente + " ]\n" +
+
+				"[ mCodTipoDecisioneMaAt       = " + mCodTipoDecisioneMaAt + " ]\n"
 				+ "[ mDescrTipoDecisioneMaAt     = " + mDescrTipoDecisioneMaAt + " ]\n"
 				+ "[ mCodTipoMisuraMaAt          = " + mCodTipoMisuraMaAt + " ]\n"
 				+ "[ mDescrTipoMisuraMaAt        = " + mDescrTipoMisuraMaAt + " ]\n"
@@ -1147,6 +1169,7 @@ public class MisuraAlternativaModel extends GenericModel {
 				+ "[ mProgrFascicoloSiusMaAt     = " + mChiaveProgrFascicoloSiusMaAt + " ]\n"
 				+ "[ mUfficioFascicoloSiusMaAt   = " + mChiaveUfficioFascicoloSiusMaAt + " ]\n"
 				+ "[ mDescrUfficioFascicoloSiusMaAt = " + mDescrChiaveUfficioFascicoloSiusMaAt + " ]\n"
+				+ "[ mDataEsecutivita            = " + mDataEsecutivita + " ]\n"
 				+ "[ mAnnoRegistroMaAt           = " + mAnnoRegistroMaAt + " ]\n"
 				+ "[ mNumeroRegistroMaAt         = " + mNumeroRegistroMaAt + " ]";
 

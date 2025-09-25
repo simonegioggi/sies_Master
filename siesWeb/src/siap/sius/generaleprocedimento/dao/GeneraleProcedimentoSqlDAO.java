@@ -11,8 +11,9 @@ import siap.dao.SIAPSqlDAO;
 import siap.sius.generaleprocedimento.model.GeneraleProcedimentoModel;
 
 /**
- * GeneraleProcedimentoSqlDAO - Classe SqlDAO che rappresenta la tabella GeneraleProcedimento
- *
+ * Title: GeneraleProcedimentoSqlDAO
+ * Description: Classe SqlDAO che rappresenta la tabella GeneraleProcedimento
+ * 
  * @version 1.0
  */
 public class GeneraleProcedimentoSqlDAO extends SIAPSqlDAO {
@@ -53,7 +54,9 @@ public class GeneraleProcedimentoSqlDAO extends SIAPSqlDAO {
 				+ "COD_OPERATORE_AGGIORNAMENTO, " + "DATA_AGGIORNAMENTO, " + "COD_UFFICIO_AGGIORNAMENTO, "
 				+ "COD_TIPO_ATTO, " + "COD_SEDE_MITTENTE, " + "COD_TIPO_MITTENTE_ATTO, "
 				+ "FAS_SIU_ID_FASCICOLO_SIUS, " + "SEZIONE, " + "DATA_FINE_PENA, "
-				+ "COD_POSIZIONE_GIURIDICA, " + "UDI_ID_UDIENZA, " + "DESCR_MITTENTE";
+				+ "COD_POSIZIONE_GIURIDICA, " + "UDI_ID_UDIENZA, " + "DESCR_MITTENTE, "
+				// MEV_9: aggiunti campi in estrazione
+				+ "DATA_RESTITUZIONE, " + "DESCR_RESTITUZIONE";
 
 		lStatement += " FROM GENERALE_PROCEDIMENTO";
 		// lStatement += " WHERE ";
@@ -64,7 +67,6 @@ public class GeneraleProcedimentoSqlDAO extends SIAPSqlDAO {
 	// METODO GETMODEL()
 	//
 	public GenericModel getModel() throws DAOException {
-
 		GeneraleProcedimentoModel aModel = new GeneraleProcedimentoModel();
 
 		// Inserire le opportune set delle descrizioni!
@@ -105,7 +107,10 @@ public class GeneraleProcedimentoSqlDAO extends SIAPSqlDAO {
 		aModel.setCodPosGiuridica(getString("COD_POSIZIONE_GIURIDICA"));
 		aModel.setUdiIdUdienza(getBigDecimal("UDI_ID_UDIENZA"));
 		aModel.setDescrMittente(getString("DESCR_MITTENTE"));
-
+		// MEV: aggiunti campi in estrazione
+		aModel.setDataRestituzione(getDate("DATA_RESTITUZIONE"));
+		aModel.setDescrRestituzione(getString("DESCR_RESTITUZIONE"));
+		
 		return aModel;
 	}
 

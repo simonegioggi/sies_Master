@@ -4,10 +4,13 @@ import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.Vector;
 
+import f3b.util.Utils;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.util.SICOLookupRemote;
 import siap.sius.ActionSius;
+import siap.sius.depositoordinanzapc.controller.IDepositoOrdinanzaPc;
+import siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel;
 import siap.sius.fascicolo.action.ICostantiFascicoloSius;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.impugnazione.controller.IImpugnazione;
@@ -29,7 +32,7 @@ public class ActRicercaProvvedimenti extends ActionSius implements ICostantiProv
 
 		Vector v = null;
 		BigDecimal idFascicolo = null;
-		// tirato fuori dal ramo else ed impostato nella request come attributo
+		// MEV_9: tirato fuori dal ramo else ed impostato nella request come attributo
 		FascicoloGPModel fgpm = (FascicoloGPModel) getSessionAttribute("fascicoloSiusGP");
 		setRequestAttribute("fascicoloSiusGP", fgpm);
 
@@ -62,7 +65,38 @@ public class ActRicercaProvvedimenti extends ActionSius implements ICostantiProv
 			modificabile = "NO";
 		setRequestAttribute("isModificabile", modificabile);
 
-		// pagina di ritorno
+		/*
+		 * ISSUE MEV : aggiunta estrazione data esecutivita 
+		 * Numero MEV : 9 
+		 * Autore : sgioggi 
+		 * Data : 5 dic 2022
+		 * Branch : MEV_9
+		 */
+		if (!Utils.isNullObj(fgpm) && !Utils.isNullObj(fgpm.getGeneraleProcedimentoModel())
+				&& !Utils.isNullObj(fgpm.getGeneraleProcedimentoModel().getCodOggettoProcedimento())
+				&& (fgpm.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("C050") == 0
+						|| fgpm.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
+								.compareTo("C051") == 0)) {
+			IDepositoOrdinanzaPc idopc = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
+			DepositoOrdinanzaPcModel dopcm = new DepositoOrdinanzaPcModel();
+			dopcm.setGenPridGeneraleProcedimento(
+					fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
+			Vector<?> depositoOrdinanzaVector = null;
+			try {
+				depositoOrdinanzaVector = idopc.ExRicercaDepositoOrdinanzaPc(dopcm);
+			} catch (Exception e) {
+				depositoOrdinanzaVector = new Vector<>();
+			}
+			setRequestAttribute("depositoOrdinanzaVector", depositoOrdinanzaVector);
+			// DepositoOrdinanzaPcModel dopcm = idopc.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd(
+			// fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), "AM");
+			// String dataEsecutivita = null;
+			// if (!Utils.isNullObj(dopcm) && !Utils.isNullObj(dopcm.getDataEsecutivita()))
+			// dataEsecutivita = DateUtils.getDateToString(dopcm.getDataEsecutivita(), "dd/MM/yyyy");
+			// setRequestAttribute("dataEsecutivitaStr", dataEsecutivita);
+		}
+		// ***** FINE INTERVENTO MEV_9 *****//
+
 		return PG_ELENCOPROVVEDIMENTI;
 	}
 

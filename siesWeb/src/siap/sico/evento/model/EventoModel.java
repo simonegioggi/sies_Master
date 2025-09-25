@@ -142,6 +142,10 @@ public class EventoModel extends GenericModel {
 	// mev56
 	private String mDescEsitoTemplate;
 
+	// MEV_9 (D.lgs. 123/2018)
+	private Date mDataRestituzioneAi;
+	
+	
 	// COSTRUTTORE DI DEFAULT
 	public EventoModel() {
 		this.mIdEvento = null;
@@ -231,6 +235,9 @@ public class EventoModel extends GenericModel {
 		this.mIstruIdIstruttoriaCumulo = null;
 		this.mEstremiSoggRichIstr = null;
 		this.mDescEsitoTemplate = null;
+		
+		// MEV_9 (D.lgs. 123/2018)
+		this.mDataRestituzioneAi = null;
 	}
 
 	// COSTRUTTORE DI COPIA
@@ -324,6 +331,9 @@ public class EventoModel extends GenericModel {
 		this.mIstruIdIstruttoriaCumulo = aModel.mIstruIdIstruttoriaCumulo;
 		this.mEstremiSoggRichIstr = aModel.mEstremiSoggRichIstr;
 		this.mDescEsitoTemplate = aModel.mDescEsitoTemplate;
+		
+		// MEV_9 (D.lgs. 123/2018)
+		this.mDataRestituzioneAi = aModel.mDataRestituzioneAi;
 	}
 
 	// COSTRUTTORE MODEL con parametri
@@ -354,7 +364,9 @@ public class EventoModel extends GenericModel {
 			Date aDataEspulsioneSanzSost, Date aDataRichiesta, BigDecimal aKeyEsecNsc, Date aDateInvioAtti,
 			String aCodTipologiaInvioAtti, String aDescrizioneInvioAtti,
 			String aDescrizioneTipologiaInvioAtti, BigDecimal aIstruIdIstruttoriaCumulo,
-			String aEstremiSoggRichIstr, String aDescEsitoTemplate) {
+			String aEstremiSoggRichIstr, String aDescEsitoTemplate
+			, Date aDataRestituzioneAi  // MEV_9 (D.lgs. 123/2018)
+			) {
 		this.mIdEvento = aIdEvento;
 		this.mCodTipoEvento = aCodTipoEvento;
 		this.mDescrTipoEvento = aDescrTipoEvento;
@@ -428,6 +440,8 @@ public class EventoModel extends GenericModel {
 		this.mIstruIdIstruttoriaCumulo = aIstruIdIstruttoriaCumulo;
 		this.mEstremiSoggRichIstr = aEstremiSoggRichIstr;
 		this.mDescEsitoTemplate = aDescEsitoTemplate;
+		// MEV_9 (D.lgs. 123/2018)
+		this.mDataRestituzioneAi = aDataRestituzioneAi;
 	}
 
 	public BigDecimal getIstruIdIstruttoriaCumulo() {
@@ -770,6 +784,10 @@ public class EventoModel extends GenericModel {
 		return mDescEsitoTemplate;
 	}
 
+	// MEV_9 (D.lgs. 123/2018)
+	public Date getDataRestituzioneAi() {
+		return this.mDataRestituzioneAi;
+	}
 	//
 	// METODI SET()
 	//
@@ -1097,6 +1115,11 @@ public class EventoModel extends GenericModel {
 		this.mDescEsitoTemplate = mDescEsitoTemplate;
 	}
 	
+	// MEV_9 (D.lgs. 123/2018)
+	public void setDataRestituzioneAi(Date aValore) {
+		mDataRestituzioneAi = aValore;
+	}
+
 	public String toString() {
 		String lStr = new String();
 
@@ -1162,6 +1185,7 @@ public class EventoModel extends GenericModel {
 				+ "[ mIstrIdIstruttoriaCumulo    = " + mIstruIdIstruttoriaCumulo + " ]\n"
 				+ "[ mEstremiSoggRichIstr        = " + mEstremiSoggRichIstr + " ]\n"
 				+ "[ mDescEsitoTemplate          = " + mDescEsitoTemplate + " ]\n"
+				+ "[ this.mDataRestituzioneAi    = " + this.mDataRestituzioneAi  + " ]\n"
 				+ "[ mKeyEsecNsc                 = " + mKeyEsecNsc + " ]";
 
 		return lStr;

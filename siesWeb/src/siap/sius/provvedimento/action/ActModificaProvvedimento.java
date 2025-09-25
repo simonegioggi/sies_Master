@@ -81,8 +81,7 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 	private PeriodoClass[] mPeriodi = null;
 	private int mInd = 0;
 	private String mTipoConcessione; /* modalità di scelta dei periodi concessi. (S/C) L.A. ordinaria */
-	// private String mFlagConcessione = "C"; /* flag Concessione per generazione periodi libertà anticipata
-	// */
+	// private String mFlagConcessione = "C"; /*flag Concessione per generazione periodi libertà anticipata*/
 
 	private PeriodoClass[] mPeriodi_spe = null;
 	private int mInd_spe = 0;
@@ -152,7 +151,6 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 		MisuraSicurezzaModel lMisuraSicurezza = null;
 
 		// ===== EVENTO E TENORE/I =====
-
 		lEvento = generaEvento();
 		lTenori = generaTenori();
 
@@ -183,7 +181,6 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 				MisuraSicurezzaModel lMisSicuSius = itxMis.next();
 				lMisuraSicurezza = generaMisuraSicurezza(lMisSicuSius);
 				// Effettuo la Modifica della Misura di Sicurezza
-
 				if (!isRequestParameterNullObj(ICostantiSiusMisuraSicurezza.CAMPO_ID_MISURA_SICUREZZA)) {
 					BigDecimal pIdMisuraSicurezza = getRequestBigDecimalParameter(
 							ICostantiSiusMisuraSicurezza.CAMPO_ID_MISURA_SICUREZZA);
@@ -227,7 +224,6 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 
 		// 10102014 - DL 92 2014 - In caso di Ordinanza col LICLIBANTICIPATA, l'aggiornamento viene
 		// fatto dopo la preparazione dei periodi di LICLIBANTICIPATA
-
 		String CodOrdinanza = "";
 		if (!isRequestParameterNullObj(ICostantiDepositoOrdinanzaPc.CAMPO_COD_TIPO_ORDINANZA)
 				&& getRequestStringParameter(ICostantiDepositoOrdinanzaPc.CAMPO_COD_TIPO_ORDINANZA) != null) {
@@ -928,6 +924,29 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 			// && super.isUserUDSM()) {
 			// modificaMisuraAlternativa();
 			// }
+
+			/* 
+			 * ISSUE MEV : aggiunto recupero valore
+			 * Numero MEV : 9
+			 * Autore    : sgioggi
+			 * Data      : 18 gen 2023
+			 * Branch    : MEV_9
+			 */
+			if (codTipoOrdinanza.equalsIgnoreCase(ICostantiDepositoOrdinanzaPc.CONFERMA_DECISIONE_MAGISTRATO_RELATORE)) {
+				if (!isRequestParameterNullObj(ICostantiDepositoOrdinanzaPc.CAMPO_ULTERIORE_DESCRIZIONE)) {
+					if (getRequestStringParameter(
+							ICostantiDepositoOrdinanzaPc.CAMPO_ULTERIORE_DESCRIZIONE) != null
+							&& !getRequestStringParameter(
+									ICostantiDepositoOrdinanzaPc.CAMPO_ULTERIORE_DESCRIZIONE).equals("")
+							&& !getRequestStringParameter(
+									ICostantiDepositoOrdinanzaPc.CAMPO_ULTERIORE_DESCRIZIONE).equals("-")) {
+						lOrdinanza.setUlterioreDescrizione(getRequestStringParameter(
+								ICostantiDepositoOrdinanzaPc.CAMPO_ULTERIORE_DESCRIZIONE));
+					}
+					lCtrl.ExModificaDepositoOrdinanzaPc(lOrdinanza);
+				}
+			}
+			//***** FINE INTERVENTO MEV_9 *****//
 		} else if (lIdDecreto != null) { // DECRETO
 			IDepositoDecreto lCtrlDD = SIUSLookupRemote.getDepositoDecretoRemote();
 			DepositoDecretoModel lDecretoMod = lCtrlDD.ExRicercaDepositoDecretoByEvento(lIdEvento);
@@ -1225,7 +1244,6 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
 				siesLogger.debug("------> C - Tenore Generato N." + i + " = " + lTenori[i]);
-
 			}
 		}
 		return lTenori;

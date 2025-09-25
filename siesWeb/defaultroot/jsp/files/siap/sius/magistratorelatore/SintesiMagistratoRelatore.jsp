@@ -43,7 +43,9 @@ if (magistratorelatore != null) {
 <%
 		} else if (lCodTipoProvvedimento != null && lCodTipoProvvedimento.equals("02"))  { // decreto
 			if (lCodTipoDecreto != null && !lCodTipoDecreto.equals(ICostantiDepositoDecreto.IRREPERIBILITA)
-					&& !lCodTipoDecreto.equals(ICostantiDepositoDecreto.CITAZIONE)) {
+					&& !lCodTipoDecreto.equals(ICostantiDepositoDecreto.CITAZIONE)
+					// MEV_9: aggiunta casistica per non consentire la modifica
+					&& !lCodTipoDecreto.equals(ICostantiDepositoDecreto.DECRETO_DESIGNAZIONE_MAGISTRATO_RELATORE_PER_MA)) { 
 %>
 				&nbsp; - &nbsp;
 				<a class="cliccabile" 

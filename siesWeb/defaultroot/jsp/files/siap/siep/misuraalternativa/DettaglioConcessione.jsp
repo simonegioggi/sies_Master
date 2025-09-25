@@ -97,11 +97,11 @@ if (tipoMisura.equals("AFFIDAMENTO")) {
 <%
 } else if (tipoMisura.equals("SEMILIBERTA")) {
 %>
-			<font class="campo">Dettaglio Concessione Semilibert&agrave;</font>
+			<font class="campo">Dettaglio Concessione Semilibertà</font>
 <%
 } else if (tipoMisura.equals("INDULTINO")) {
 %>
-			<font class="campo">Dettaglio Concessione L.207/2003</font>
+			<font class="campo">Dettaglio Concessione L:207/2003</font>
 <%
 } else if (tipoMisura.equals(ICostantiMisuraAlternativa.ESP_PRESSO_DOM)) {
 %>
@@ -111,9 +111,10 @@ if (tipoMisura.equals("AFFIDAMENTO")) {
 %>
 		</td>
 <%
-if (((eventonotifica.getEvento().getFlagDocumentoRegistrato() != null
+if ((eventonotifica.getEvento().getFlagDocumentoRegistrato() != null
 		&& eventonotifica.getEvento().getFlagDocumentoRegistrato().compareTo("N") == 0)
-		|| eventonotifica.getEvento().getFlagDocumentoRegistrato() == null)) {
+		|| eventonotifica.getEvento().getFlagDocumentoRegistrato() == null) {
+	// MEV_9-SIEP: aggiunto pulsante di modifica diversificato per tipo misura
 	String action = "ActLoadInserisciMAAffidamentoInProva";
 	if (tipoMisura.equals("DETENZIONE"))
 		action = "ActLoadInserisciMADetenzioneDomiciliare";
@@ -132,19 +133,25 @@ if (((eventonotifica.getEvento().getFlagDocumentoRegistrato() != null
    		<jsp:include page="<%=ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>">
      		<jsp:param name="ActionLink" value="<%="/jsp/Main.jsp?Action=siap.siep.misuraalternativa.action.ActStampaConcessione&IdEvento="+eventonotifica.getEvento().getIdEvento()+"&tipoMisura="+tipoMisura+"&IdEventoAmmProvvAff="+StringUtils.toStringJSP(lEventoAmmProvvAff.getIdEvento())%>"/>
 		</jsp:include>
+		<%-- MEV_9-SIEP: aggiunto pulsante di validazione diretta --%>
+		<!-- BOTTONE DI VALIDAZIONE DIRETTA -->
+  		<td class="LBG">
+    		<a href="/jsp/Main.jsp?Action=siap.siep.misuraalternativa.action.ActUploadMA&<%=ICostantiEvento.CAMPO_ID_EVENTO%>=<%=eventonotifica.getEvento().getIdEvento()%>&<%=ICostantiEvento.CAMPO_AZIONE_DETTAGLIO%>=siap.siep.misuraalternativa.action.ActDettaglioConcessione&<%=ICostantiEvento.CAMPO_VALIDA%>=S&noblob=S">
+      			<img align="middle" src="/images/upload24.gif" alt="Valida Provvedimento" width="24" height="24" border="0">
+    		</a>
+  		</td>
 <%
-// stava dentro if (eventonotifica.getEvento().getFlagDocumentoRegistrato() != null) quindi era dead code
+// MEV_9-SIEP: stava dentro if (eventonotifica.getEvento().getFlagDocumentoRegistrato() != null) quindi era dead code
 // if (eventonotifica.getEvento().getFlagDocumentoRegistrato() == null)
-// spostato nel ramo else
-} else {
-%>
-		<!-- BOTTONE DI STAMPA -->
-   		<jsp:include page="<%=ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>">
-     		<jsp:param name="ActionLink" value="<%="/jsp/Main.jsp?Action=siap.siep.misuraalternativa.action.ActStampaConcessione&IdEvento="+eventonotifica.getEvento().getIdEvento()+"&tipoMisura="+tipoMisura+"&IdEventoAmmProvvAff="+StringUtils.toStringJSP(lEventoAmmProvvAff.getIdEvento())%>"/>
-   		</jsp:include>
-<%
 }
 %>
+<%-- 		<!-- BOTTONE DI STAMPA --> --%>
+<%--    		<jsp:include page="<%=ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>"> --%>
+<%--      		<jsp:param name="ActionLink" value="<%="/jsp/Main.jsp?Action=siap.siep.misuraalternativa.action.ActStampaConcessione&IdEvento="+eventonotifica.getEvento().getIdEvento()+"&tipoMisura="+tipoMisura+"&IdEventoAmmProvvAff="+StringUtils.toStringJSP(lEventoAmmProvvAff.getIdEvento())%>"/> --%>
+<%--    		</jsp:include> --%>
+<%-- <% --%>
+<%-- } --%>
+<%-- %> --%>
 	</tr>
 </table>
 <br>
@@ -474,6 +481,25 @@ if (misuraalternativa.getDescrLuogoProva() != null) {
 	</tr>
 <%
 }
+// MEV_9-SIEP: aggiunte etichette x tre tipo misura
+if ((tipoMisura.equals("AFFIDAMENTO") || tipoMisura.equals("DETENZIONE") || tipoMisura.equals("SEMILIBERTA"))
+		&&!Utils.isNullObj(misuraalternativa.getAnnoRegistroMaAt())) {
+%>
+	<tr>
+		<td class="l">Anno / Numero Ordinanza Provvisoria</td>
+		<td class="l" colspan="3">
+			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistroMaAt())%>&nbsp;/&nbsp;<%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistroMaAt())%></font>
+		</td>
+	</tr>
+	<tr>
+	  	<td class="l">Data Emissione Ordinanza Provvisoria</td>
+	  	<td class="L" colspan="3">
+			<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "dd-MM-yyyy"))%></font>
+		</td>
+	</tr>
+<%
+}
+// FINE MEV_9-SIEP
 if (verbale.getDataEmissione() != null) {
 %>
 	<tr>
@@ -489,27 +515,27 @@ if (verbale.getDataEmissione() != null) {
 	<tr>
 <%
 	if (misuraalternativa.getDataInizioMisura() != null) {
-		// MEV_2024-092: rimossa diversificazione dell'etichetta
+		// MEV_9-SIEP: aggiunta diversificazione dell'etichetta
 		boolean testDataFineMisura = misuraalternativa.getDataFineMisura() == null;
-// 		if (tipoMisura.equals("AFFIDAMENTO")) {
+		if (tipoMisura.equals("AFFIDAMENTO")) {
 %>
-<!-- 		<td class="l">Data Applicazione Provvisoria</td> -->
+		<td class="l">Data Applicazione Provvisoria</td>
 <%
-// 		} else {
+		} else {
 %>
 		<td class="l">Data Inizio Misura</td>
 <%
-// 		}
+		}
 %>
 		<td class="l" <%if (testDataFineMisura){%>colspan="3"<%}%>>
-			<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataInizioMisura(), "dd-MM-yyyy"))%></font>
+			<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataInizioMisura(),"dd-MM-yyyy"))%></font>
 		</td>
 <%
 	}
 	if (misuraalternativa.getDataFineMisura() != null) {
 %>
 		<td class="l">Data Fine Misura</td>
-		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataFineMisura(), "dd-MM-yyyy"))%></font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataFineMisura(),"dd-MM-yyyy"))%></font></td>
 <%
 	}
 %>

@@ -763,7 +763,6 @@ public class AnnotazioneManualeSqlDAO extends SIAPSqlDAO {
 	 */
 	public void ricercaAnnotazioneManualeRichiesteAnticipazioneAministiaIndultoByIdFascicolo(BigDecimal aKey)
 			throws DAOException {
-
 		String lSql = getSqlQuery();
 
 		lSql += " AND FAS_SIE_ID_FASCICOLO_SIEP=" + aKey;
@@ -784,7 +783,6 @@ public class AnnotazioneManualeSqlDAO extends SIAPSqlDAO {
 	 */
 	public void ricercaAnnotazioneManualeRichiesteAministiaIndultoByIdFascicolo(BigDecimal aKey)
 			throws DAOException {
-
 		String lSql = getSqlQuery();
 
 		lSql += " AND FAS_SIE_ID_FASCICOLO_SIEP=" + aKey;

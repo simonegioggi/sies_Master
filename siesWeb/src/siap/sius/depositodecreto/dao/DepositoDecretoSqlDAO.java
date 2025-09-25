@@ -539,7 +539,6 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 	 * @return la stringa della quesry sql.
 	 */
 	protected String getSqlQuery() {
-
 		String lStatement = new String("");
 
 		lStatement += " SELECT  ";
@@ -596,7 +595,8 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 		lStatement += "NUM_GIORNI_REVOCA_LA, ";
 		// DL 92 2014 Violazione CEDU
 		lStatement += "NUM_GIORNI_RIDUZIONE_PENA, SOMMA_RISARC_DANNI, ";
-		//
+		// MEV_9 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
+		lStatement += "DATA_TERMINE_EMISSIONE, NUM_GIORNI_TERMINE_EMISSIONE, ";
 		lStatement += "TIPO_CTRL_ES.RV_MEANING AS DESC_TIPO_CONTROLLO_ESECUZIONE";
 		lStatement += " FROM DEPOSITO_DECRETO, CG_REF_CODES TIPO_DECRETO, CG_REF_CODES TIPO_CTRL_ES";
 		lStatement += " WHERE TIPO_DECRETO.RV_DOMAIN = 'TIPO_DECRETO' AND COD_TIPO_DECRETO = TIPO_DECRETO.RV_LOW_VALUE";
@@ -808,6 +808,9 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 		// DL 92 2014 Violazione CEDU
 		aModel.setNumeroGiorniRiduzionePena(getBigDecimal("NUM_GIORNI_RIDUZIONE_PENA"));
 		aModel.setSommaRisarcimentoDanni(getBigDecimal("SOMMA_RISARC_DANNI"));
+		// MEV_9 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
+		aModel.setDataTermineEmissione(getDate("DATA_TERMINE_EMISSIONE"));
+		aModel.setNumGiorniTermineEmissione(getBigDecimal("NUM_GIORNI_TERMINE_EMISSIONE"));
 
 		return aModel;
 	}
@@ -917,6 +920,7 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 	 * @throws DAOException
 	 */
 	public Date getDataDepositoByEve(BigDecimal aIdEve) throws DAOException {
+
 		Date retData = null;
 
 		String lStatement = "select DATA_DEPOSITO from DEPOSITO_DECRETO D WHERE D.ID_EVENTO_GENERATO = "
@@ -965,10 +969,10 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 				+ " CG_REF_CODES TIPO_PROVVEDIMENTO, DEPOSITO_DECRETO P,"
 				+ " MISURA_ALTERNATIVA MA, FASCICOLO_SIEP FS"
 				+ " WHERE FASC.FAS_SIE_ID_FASCICOLO_SIEP = " + idFascicoloSiep
-				+ "   AND EVE.FAS_SIE_ID_FASCICOLO_SIEP = " + idFascicoloSiep
-				+ "   AND EVE.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS"
-				+ "   AND EVE.ID_EVENTO = P.ID_EVENTO_GENERATO(+)"
-				+ "   AND EVE.COD_TIPO_PROVVEDIMENTO IN ('02')" +
+				+ " AND EVE.FAS_SIE_ID_FASCICOLO_SIEP = " + idFascicoloSiep
+				+ " AND EVE.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS"
+				+ " AND EVE.ID_EVENTO = P.ID_EVENTO_GENERATO(+)"
+				+ " AND EVE.COD_TIPO_PROVVEDIMENTO IN ('02')" +
 				// 20190919 [SG]: modificata condizione per mancanza codici
 				// + " AND EVE.COD_MOTIVO IN"
 				// + " ('0428', '0429', '0430', '0431', '0432', '0433', '2550', '2551', '2552', '2553',
@@ -988,10 +992,10 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 				+ " AND ESITO_PROVVEDIMENTO.RV_LOW_VALUE = EVE.COD_ESITO"
 				+ " AND MA.FAS_SIE_ID_FASCICOLO_SIEP(+) =  " + idFascicoloSiep
 				+ "	AND MA.EVE_ID_EVENTO(+) = EVE.ID_EVENTO "
-				+ "    AND FS.ID_FASCICOLO_SIEP=FASC.FAS_SIE_ID_FASCICOLO_SIEP  AND FS.ID_FASCICOLO_SIEP NOT IN("
+				+ " AND FS.ID_FASCICOLO_SIEP=FASC.FAS_SIE_ID_FASCICOLO_SIEP AND FS.ID_FASCICOLO_SIEP NOT IN("
 				+ " (SELECT EE.FAS_SIE_ID_FASCICOLO_SIEP  FROM EVENTO EE WHERE"
 				+ " EE.FAS_SIE_ID_FASCICOLO_SIEP = FS.ID_FASCICOLO_SIEP"
-				+ "  AND EE.COD_MOTIVO IN ('1132') AND EE.FLAG_DOCUMENTO_REGISTRATO <> 'A' )  )"
+				+ " AND EE.COD_MOTIVO IN ('1132') AND EE.FLAG_DOCUMENTO_REGISTRATO <> 'A'))"
 				+ " ORDER BY FASC.CHIAVE_ANNO, FASC.CHIAVE_PROGR, FASC.ID_FASCICOLO_SIUS";
 
 		setStatement(lSql);

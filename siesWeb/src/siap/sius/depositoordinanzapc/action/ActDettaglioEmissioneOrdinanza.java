@@ -11,6 +11,7 @@ import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.magistrato.controller.IMagistrato;
 import siap.sico.magistrato.model.MagistratoModel;
 import siap.sico.template.action.ICostantiTemplate;
+import siap.sico.template.model.TemplateModel;
 import siap.sico.template.util.UtilTemplate;
 import siap.sico.ufficio.controller.IUfficio;
 import siap.sico.ufficio.model.UfficioModel;
@@ -273,6 +274,31 @@ public class ActDettaglioEmissioneOrdinanza extends ActionSius
 			ricercaPeriodoAltraMisura();
 			// return PG_DETTAGLIO_ORD_SOSPENSIONE_EMS;
 		}
+
+		// INIZIO: MEV_9 (D.lgs. 123/2018)
+		if (mOrdEveTenPreMod != null && mOrdEveTenPreMod.getOrdinanza() != null
+				&& MISURA_ALTERNATIVA_AMMISSIONE_DL_123_2018
+						.equals(mOrdEveTenPreMod.getOrdinanza().getCodTipoOrdinanza())) {
+			// Nuovo caricamento combo Template
+			siesLogger.debug("Ordinanza di ammissione provvisoria filtro i template");
+
+			TemplateModel tempaletRicerca = new TemplateModel();
+			tempaletRicerca.setCodTipoEvento(mOrdEveTenPreMod.getEvento().getCodTipoEvento());
+			tempaletRicerca.setCodTipoProvvedimento(mOrdEveTenPreMod.getEvento().getCodTipoProvvedimento());
+			tempaletRicerca.setCodMotivo(mOrdEveTenPreMod.getEvento().getCodMotivo());
+			tempaletRicerca.setCodOggettoProcedimento(
+					mFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento());
+			tempaletRicerca.setFlagTemplate("1"); // presente solo per le provvisorie che hanno gli stessi
+													// codice dalle ordinarie
+
+			Option lOptTemplate = null;
+			lOptTemplate = UtilTemplate.listaCbxTemplate(tempaletRicerca);
+			setRequestAttribute(CAMPO_COMBO_TEMPLATE, "" + lOptTemplate);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("ElencoTemplate -> " + lOptTemplate);
+		}
+		// FINE: MEV_9
 
 		ricercaFascicoloOrigine();
 

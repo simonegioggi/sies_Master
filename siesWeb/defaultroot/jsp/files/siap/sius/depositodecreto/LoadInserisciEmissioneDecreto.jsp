@@ -29,6 +29,7 @@
 <jsp:useBean id="fascicoloSiusGP"    scope="session" class="siap.sius.fascicolo.model.FascicoloGPModel"/>
 <jsp:useBean id="UtenteConnesso"     scope="session" class="siap.sico.utente.model.UtenteModel"/>
 <jsp:useBean id="TornaQui"           scope="request" class="java.lang.String"/>
+<jsp:useBean id="isOrdApplMADL1232018"   scope="request" class="java.lang.String"/>
 
 <%
 /* Estrazione della data udienza  o data iscrizione */
@@ -113,7 +114,11 @@ if (UtenteConnesso.getUfficioUtente().getCodTipoUfficio().compareTo("TDS") == 0)
 	 	else
 	  	controlloAvvocato = false;
 	} // endif Decreto/Ordinanza
-    if (controlloAvvocato) {
+
+	// MEV_2019-09 (D.lgs. 123/2018) - L'avvocato è obbligatorio
+	if ("SI".equals(isOrdApplMADL1232018))
+		controlloAvvocato = true;
+	if (controlloAvvocato) {
 		int numAvvocati = avvocato.size();
 		if (numAvvocati == 0) {
 %>
@@ -153,6 +158,11 @@ String lActRet = null;
 if (flagOrdinanza != null && flagOrdinanza.compareTo("ordinanza") == 0) {
     lAction = new String("siap.sius.depositoordinanzapc.action.ActInserisciEmissioneOrdinanzaUDS");
     lDocumento = new String("ordinanza");
+    if ("SI".equals(isOrdApplMADL1232018))
+    	// MEV_2024-092: modificata etichetta
+    	// lTitolo = new String("Emissione Ordinanza Applicazione ex art. 678 comma 1 ter cpp Misura Alternativa");
+    	lTitolo = new String("Emissione Ordinanza Applicazione Misure Alternative DL 123/2018");
+    else
     	lTitolo = new String("Emissione Ordinanza");
     lActRet = new String("siap.sius.depositoordinanzapc.action.ActLoadEmissioneOrdinanzaUDS");
 } else if(flagOrdinanza != null && flagOrdinanza.compareTo("sentenza") == 0) {
@@ -228,7 +238,7 @@ if (flagOrdinanza != null && flagOrdinanza.compareTo("ordinanza") == 0) {
 <input type="HIDDEN" name="<%=ICostantiFascicoloSius.CAMPO_COD_OGGETTO%>" value="<%=codOggetti%>">
 <input type="HIDDEN" name="<%=ICostantiFascicoloSius.CAMPO_COD_DETTAGLIO_OGGETTO%>" value="<%=codDettagli%>">
 <input type="HIDDEN" name="<%=IWebConstants.LINK_RITORNO%>" value="<%=TornaQui%>">
-
+<input type="HIDDEN" name="isOrdApplMADL1232018" value="<%=isOrdApplMADL1232018%>">
 </FORM>
 <script language="JavaScript" type="text/javascript">
 var frmvalidator = new Validator("LoadInserisciEmissioneDecreto");

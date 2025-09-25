@@ -19,6 +19,7 @@ import siap.sico.camponota.dao.CampoNotaDAO;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.dao.EventoDAO;
 import siap.sico.evento.dao.EventoSqlDAO;
+import siap.sico.evento.model.EventoDepositoModel;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.XModel;
 import siap.sico.template.controller.TemplateManager;
@@ -33,6 +34,7 @@ import siap.sius.depositodecreto.model.DepositoDecretoModel;
 import siap.sius.depositoordinanzapc.controller.IDepositoOrdinanzaPc;
 //Set di import per DepositoOrdinanzaPc
 import siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel;
+import siap.sius.fascicolo.action.ICostantiFascicoloSius;
 import siap.sius.fascicolo.controller.IFascicoloSius;
 import siap.sius.fascicolo.dao.FascicoloSiusDAO;
 import siap.sius.fascicolo.model.FascicoloGPModel;
@@ -768,7 +770,12 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 
 			// Aggiornamento COD_STATO_FASCICOLO.
 			lFasSiuDAO = new FascicoloSiusDAO(lConn);
-			lFasSiuDAO.setCodStatoFascicolo("02");
+			// @since MEV_9: aggiunto metodo
+			String codStatoFascicolo = analsiStatoFascicolo(aGenProc.getFasSiuIdFascicoloSius());
+			lFasSiuDAO.setCodStatoFascicolo(codStatoFascicolo);
+			lFasSiuDAO.setDataAggiornamento(aGenProc.getDataAggiornamento());
+			lFasSiuDAO.setCodOperatoreAggiornamento(aGenProc.getCodOperatoreAggiornamento());
+			lFasSiuDAO.setCodUfficioAggiornamento(aGenProc.getCodUfficioAggiornamento());
 			lFasSiuDAO.setCondizioneUpdate(aGenProc.getFasSiuIdFascicoloSius());
 			lFasSiuDAO.update();
 			lFasSiuDAO.stop();
@@ -789,6 +796,42 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 			cleanup(lConn);
 		}
 		return aNuovaUdienzaProc;
+	}
+
+	/**
+	 * aggiunto metodo per impostazione stato fascicolo quando si prefissa un'udoenza
+	 * 
+	 * @author sgioggi
+	 * @since MEV_9
+	 * 
+	 * @param 	idFascicoloSius
+	 * @return 	String
+	 * @throws 	F3BException
+	 */
+	private String analsiStatoFascicolo(BigDecimal idFascicoloSius) throws F3BException {
+
+		String ret = ICostantiFascicoloSius.COD_ISCRITTO;
+		// Ricerco evento del fascicolo:
+		IEvento ie = SICOLookupRemote.getEventoRemote();
+		Vector<?> v = ie.ExRicercaEventoByFascicoloSius(idFascicoloSius, null);
+		// STATO_FASCICOLO 22 Emesso Decreto Designazione
+		// STATO_FASCICOLO 24 Emessa Ordinanza Applicazione MA DL 123/2018
+		// ESITO_PROVVEDIMENTO 0270 Applica ex art. 678 comma 1 ter cpp
+		// ESITO_PROVVEDIMENTO 0271 Conferma Decisione del Magistrato Relatore
+		// ESITO_PROVVEDIMENTO 0610 Designa Magistrato art. 678 1-ter
+		for (int i = 0; i < v.size(); i++) {
+			EventoDepositoModel edm = (EventoDepositoModel) v.elementAt(i);
+			if ("S".equals(edm.getFlagDocumentoRegistrato()) && edm.getNumAllValidati() > 0) {
+				if ("0610".equals(edm.getCodEsito()))
+					ret = ICostantiFascicoloSius.COD_EMESSO_DECRETO_DESIGNAZIONE;
+				else if ("0270".equals(edm.getCodEsito()) || "0271".equals(edm.getCodEsito()))
+					ret = ICostantiFascicoloSius.COD_EMESSA_ORDINANZA_APPLICAZIONE_PROVVISORIA;
+				break;
+			}
+		}
+
+		// valore di ritorno
+		return ret;
 	}
 
 	/**

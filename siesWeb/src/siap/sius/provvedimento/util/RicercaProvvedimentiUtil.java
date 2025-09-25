@@ -41,15 +41,20 @@ public class RicercaProvvedimentiUtil {
 
 	// Tipi di decreti da escludere dalla ricerca perchè di tipo non definitorio.
 	String[] mTipiDecretoDaEscludere = { ICostantiDepositoDecreto.CITAZIONE,
-			ICostantiDepositoDecreto.IRREPERIBILITA };
+			ICostantiDepositoDecreto.IRREPERIBILITA,
+			// MEV_9: aggiunta casistica per nuova tipologia
+			ICostantiDepositoDecreto.DECRETO_DESIGNAZIONE_MAGISTRATO_RELATORE_PER_MA };
 	// Tipi di Ordinanza da escludere. Nessuna perchè sono tutte di tipo declaratorio.
-	// String[] mTipiOrdinanzaDaEscludere = new String[0];
 	// Il tipo di Ordinanza da escludere è RU ( Rinvio Udienza ) poichè non è di tipo definitorio.
 	String[] mTipiOrdinanzaDaEscludere = { ICostantiDepositoOrdinanzaPc.RINVIO_UDIENZA,
-			ICostantiDepositoOrdinanzaPc.RIMESSIONE_ATTI };
-	// Il tipo di Ordinanza da escludere opzionalmente è SO ( Sospenziome ) poichè non è di tipo definitorio.
-	String[] mTipiOrdinanzaDaEscludereSospesa = { ICostantiDepositoOrdinanzaPc.RINVIO_UDIENZA };
-	// Il tipo di Sentenza da escludere è RU ( Rinvio Udienza ) poichè non è di tipo definitorio.
+			ICostantiDepositoOrdinanzaPc.RIMESSIONE_ATTI,
+			// MEV_9: aggiunta casistica per nuova tipologia (CONFERMA_DECISIONE_MAGISTRATO_RELATORE???)
+			ICostantiDepositoOrdinanzaPc.MISURA_ALTERNATIVA_AMMISSIONE_DL_123_2018 };
+	// Il tipo di Ordinanza da escludere opzionalmente è SO ( Sospenziome ) poichè non è di tipo definitorio
+	String[] mTipiOrdinanzaDaEscludereSospesa = { ICostantiDepositoOrdinanzaPc.RINVIO_UDIENZA,
+			// MEV_9: aggiunta casistica per nuova tipologia (CONFERMA_DECISIONE_MAGISTRATO_RELATORE???)
+			ICostantiDepositoOrdinanzaPc.MISURA_ALTERNATIVA_AMMISSIONE_DL_123_2018 };
+	// Il tipo di Sentenza da escludere è RU ( Rinvio Udienza ) poichè non è di tipo definitorio
 	String[] mTipiSentenzaDaEscludere = { ICostantiDepositoSentenza.RINVIO_UDIENZA,
 			ICostantiDepositoSentenza.RIMESSIONE_ATTI };
 	// Il tipo di Sentenza da escludere opzionalmente è RU ( Rinvio udienza ) poichè non è di tipo

@@ -19,7 +19,6 @@
 <jsp:useBean id="lCalcoloPenaMod"  scope="request" class="siap.siep.calcolopena.model.CalcoloPenaModel" />
 <jsp:useBean id="lPenComplMod"     scope="request" class="siap.siep.penacomplessiva.model.PenaComplessivaModel" />
 <jsp:useBean id="lUltimaPenResVal" scope="request" class="siap.siep.penaresidua.model.PenaResiduaModel" />
-<jsp:useBean id="lPresoffertoMod"  scope="request" class="siap.siep.misuracautelare.model.MisuraCautelareModel" />
 
 <%
 //==============================================================================
@@ -282,11 +281,7 @@ totMCComputabili = lCalcoloPenaMod.getMisureCautelariReclusioneInSentenza();
       <tr>
         <td class="l">Presofferto</td>
         <td class="l">
-          <% if (lPresoffertoMod.getIdMisuraCautelare()!=null) { %>
-            Anni&nbsp;  <input Title="Anni Presofferto"   value="<%= lPresoffertoMod.getNumAnni()  %>" type="text" name="<%=ICostantiCalcoloPena.CAMPO_NUM_ANNI_PRESOFFERTO%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
-            Mesi&nbsp;  <input Title="Mesi Presofferto"   value="<%= lPresoffertoMod.getNumMesi()  %>" type="text" name="<%=ICostantiCalcoloPena.CAMPO_NUM_MESI_PRESOFFERTO%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
-            Giorni&nbsp;<input Title="Giorni Presofferto" value="<%= lPresoffertoMod.getNumGiorni()%>" type="text" name="<%=ICostantiCalcoloPena.CAMPO_NUM_GIORNI_PRESOFFERTO%>" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
-          <% } else if ( !totMCComputabili.isQuantumZero() ) { %>
+          <% if ( !totMCComputabili.isQuantumZero() ) { %>
             Anni&nbsp;  <input Title="Anni Presofferto"   value="<%= totMCComputabili.getNumAnni()  %>" type="text" name="<%=ICostantiCalcoloPena.CAMPO_NUM_ANNI_PRESOFFERTO%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
             Mesi&nbsp;  <input Title="Mesi Presofferto"   value="<%= totMCComputabili.getNumMesi()  %>" type="text" name="<%=ICostantiCalcoloPena.CAMPO_NUM_MESI_PRESOFFERTO%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
             Giorni&nbsp;<input Title="Giorni Presofferto" value="<%= totMCComputabili.getNumGiorni()%>" type="text" name="<%=ICostantiCalcoloPena.CAMPO_NUM_GIORNI_PRESOFFERTO%>" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >

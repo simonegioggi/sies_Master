@@ -6,6 +6,9 @@ import java.util.Date;
 import f3b.util.DateUtils;
 import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
+import siap.sico.evento.controller.IEvento;
+import siap.sico.evento.model.EventoModel;
+import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 
@@ -31,6 +34,13 @@ public class ActLoadRichiestaCumulo extends ActionSiap implements ICostantiRichi
 
 		// setRequestAttribute("codTipoUfficioS","PM");
 		// setRequestAttribute("descTipoUfficioS",DecodificheUtils.getDescbyCode(lCol,"PM"));
+		
+		// INIZIO: MEV_9 (D.lgs. 123/2018)
+		IEvento lEveCtrl = SICOLookupRemote.getEventoRemote();
+		EventoModel lUltimoEventoRichAtti = lEveCtrl.ricercaUltimoEventoRichiestaAttiIsruttoriByIdFasc (((FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"))
+				.getFascicoloSiusModel().getIdFascicoloSius());
+		setRequestAttribute("ultimoEventoRichAtti", lUltimoEventoRichAtti);
+		// FINE: MEV_9 (D.lgs. 123/2018)
 
 		return PG_LOAD_RICHIESTACUMULO; // restituisce la jsp di VIEW
 	}

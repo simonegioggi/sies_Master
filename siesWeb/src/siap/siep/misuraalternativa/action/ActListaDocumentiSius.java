@@ -56,6 +56,11 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 
 			setRequestAttribute("documentiSius", lListaEventiOrdinanze);
 
+			// MEV_9-SIEP
+			setRequestAttribute(CAMPO_TIPO_MA, lTipoMA);
+			setRequestAttribute(CAMPO_NATURA_MA, lNaturaMA);
+			// MEV_9-SIEP - FINE
+
 			return PG_LISTA_DOCUMENTI_SIUS;
 		} else {
 			// new 05/2014 la ricerca viene effettuata per tutti i fascicoli presenti
@@ -144,8 +149,14 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 
 		if (aTipoMA.equals(AFFIDAMENTO_IN_PROVA)) {
 			if (aNaturaMA.equals(CONCESSIONE)) {
-				lCodMotivi = estraiCodiciDecodifiche(
-						DecodificheManager.getInstance().getMotivoProvvedimentoMAffP());
+				// MEV_9-SIEP: si differenzia per PM e PMM
+				if (isUfficioMinorenni())
+					lCodMotivi = estraiCodiciDecodifiche(
+							DecodificheManager.getInstance().getMotivoProvvedimentoMAffPMinor());
+				else
+					lCodMotivi = estraiCodiciDecodifiche(
+							DecodificheManager.getInstance().getMotivoProvvedimentoMAffP());
+				// FINE MEV_9-SIEP
 			} else if (aNaturaMA.equals(SOSPENSIONE_PROVVISORIA)) {
 				lCodMotivi = estraiCodiciDecodifiche(
 						DecodificheManager.getInstance().getMotivoProvvedimentoSospProvvMAffP());
@@ -186,8 +197,14 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 				lCodMotivi = estraiCodiciDecodifiche(
 						DecodificheManager.getInstance().getMotivoProvvedimentoProsecProvvMAAffPro());
 			} else if (aNaturaMA.equals(AMMISSIONE_PROVVISORIA)) {
-				lCodMotivi = estraiCodiciDecodifiche(
-						DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvAffi());
+				// MEV_9 si differenzia per PM e PMM
+				if (isUfficioMinorenni())
+					lCodMotivi = estraiCodiciDecodifiche(
+							DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvAffiPmm());
+				else
+					lCodMotivi = estraiCodiciDecodifiche(
+							DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvAffi());
+				// MEV_9 - FINE
 			} else if (aNaturaMA.equals(PROSECUZIONE_51BIS) || aNaturaMA.equals(PROSECUZIONE_51BIS_CUMULO)) {
 				// Prosecuzione MDS+TDS
 				Collection<DecodificheModel> lOggettoMDS51bis = DecodificheManager.getInstance()
@@ -200,8 +217,14 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 			}
 		} else if (aTipoMA.equals(DETENZIONE_DOMICILIARE)) {
 			if (aNaturaMA.equals(CONCESSIONE)) {
-				lCodMotivi = estraiCodiciDecodifiche(
-						DecodificheManager.getInstance().getMotivoProvvedimentoMADDom());
+				// MEV_9-SIEP: si differenzia per PM e PMM
+				if (isUfficioMinorenni())
+					lCodMotivi = estraiCodiciDecodifiche(
+							DecodificheManager.getInstance().getMotivoProvvedimentoMADDomMinor());
+				else
+					lCodMotivi = estraiCodiciDecodifiche(
+							DecodificheManager.getInstance().getMotivoProvvedimentoMADDom());
+				// FINE MEV_9-SIEP
 			} else if (aNaturaMA.equals(SOSPENSIONE_PROVVISORIA)) {
 				lCodMotivi = estraiCodiciDecodifiche(
 						DecodificheManager.getInstance().getMotivoProvvedimentoSospProvvMADetDom());
@@ -249,6 +272,16 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 			} else if (aNaturaMA.equals(AMMISSIONE_PROVVISORIA)) {
 				lCodMotivi = estraiCodiciDecodifiche(
 						DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvDetDom());
+				// MEV_9 si differenzia per PM e PMM
+				// lCodMotivi =
+				// estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvAffi());
+				if (isUfficioMinorenni())
+					lCodMotivi = estraiCodiciDecodifiche(
+							DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvDetDomPmm());
+				else
+					lCodMotivi = estraiCodiciDecodifiche(
+							DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvDetDom());
+				// MEV_9 - FINE
 			} else if (aNaturaMA.equals(PROSECUZIONE_51BIS) || aNaturaMA.equals(PROSECUZIONE_51BIS_CUMULO)) {
 				// lCodMotivi =
 				// estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoProsecMADetDomMDS51Bis());
@@ -262,8 +295,14 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 			}
 		} else if (aTipoMA.equals(SEMILIBERTA)) {
 			if (aNaturaMA.equals(CONCESSIONE)) {
-				lCodMotivi = estraiCodiciDecodifiche(
-						DecodificheManager.getInstance().getMotivoProvvedimentoMASemiL());
+				// MEV_9-SIEP: si differenzia per PM e PMM
+				if (isUfficioMinorenni())
+					lCodMotivi = estraiCodiciDecodifiche(
+							DecodificheManager.getInstance().getMotivoProvvedimentoMASemiLMinor());
+				else
+					lCodMotivi = estraiCodiciDecodifiche(
+							DecodificheManager.getInstance().getMotivoProvvedimentoMASemiL());
+				// FINE MEV_9-SIEP
 			} else if (aNaturaMA.equals(SOSPENSIONE_PROVVISORIA)) {
 				lCodMotivi = estraiCodiciDecodifiche(
 						DecodificheManager.getInstance().getMotivoProvvedimentoSospProvvMASemiL());
@@ -318,6 +357,15 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 				Collection lOggetti = new Vector(lOggettoTDS);
 				lOggetti.addAll(lOggettoMDS51bis);
 				lCodMotivi = estraiCodiciDecodifiche(lOggetti);
+				// MEV_9 - SIEP si aggiunge la ammissione porvv per la semiliberta
+			} else if (aNaturaMA.equals((AMMISSIONE_PROVVISORIA))) {
+				if (isUfficioMinorenni())
+					lCodMotivi = estraiCodiciDecodifiche(
+							DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvSemilibPmm());
+				else
+					lCodMotivi = estraiCodiciDecodifiche(
+							DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvSemilibPm());
+				// MEV_9 - SIEP - FINE
 			}
 		} else if (aTipoMA.equals(INDULTINO)) {
 			if (aNaturaMA.equals(CONCESSIONE)) {
@@ -465,8 +513,19 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 			}
 		}
 		if (aNaturaMA.equals(CONCESSIONE_SOSPENSIONE)) {
-			lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance().getOggettoDecisione());
-			}
+			// MEV_9-SIEP: si differenzia per PM e PMM
+			if (isUfficioMinorenni())
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getOggettoDecisioneMinor());
+			else
+				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance().getOggettoDecisione());
+			// FINE MEV_9-SIEP
+		}
+		// MEV_9-SIEP
+		if (aNaturaMA.equals(CONCESSIONE_SOSPENSIONE678)) {
+			lCodMotivi = estraiCodiciDecodifiche(
+					DecodificheManager.getInstance().getOggettiDecisioneSosp678());
+		}
 
 		// valore di ritorno
 		return lCodMotivi;
@@ -522,9 +581,10 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 				// MERGE v10 COLLAUDO: aggiunte casistiche per gestire gli arresti domiciliari
 				|| (aNaturaMA.equals(SOSPENSIONE_PROVVISORIA) && aTipoMA.equals(ARRESTI_DOMICILIARI))
 				|| (aNaturaMA.equals(PERDITA_EFFICACIA) && aTipoMA.equals(DETENZIONE_DOMICILIARE))
-				|| (aNaturaMA.equals(SOSPENSIONE_PROVVISORIA_51_BIS) && aTipoMA
-						.equals(DETENZIONE_DOMICILIARE))
-				|| (aNaturaMA.equals(AMMISSIONE_PROVVISORIA) && aTipoMA.equals(DETENZIONE_DOMICILIARE))
+				|| (aNaturaMA.equals(SOSPENSIONE_PROVVISORIA_51_BIS)
+						&& aTipoMA.equals(DETENZIONE_DOMICILIARE))
+				// MEV_09|| (aNaturaMA.equals(AMMISSIONE_PROVVISORIA) &&
+				// aTipoMA.equals(DETENZIONE_DOMICILIARE))
 				// || (aNaturaMA.equals(AMMISSIONE_PROVVISORIA) && aTipoMA.equals(AFFIDAMENTO_IN_PROVA))
 				|| (aNaturaMA.equals(SOSPENSIONE_PROVVISORIA) && aTipoMA.equals(SEMILIBERTA))
 				|| (aNaturaMA.equals(PERDITA_EFFICACIA) && aTipoMA.equals(SEMILIBERTA))
@@ -547,15 +607,15 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 			lCodTipoDecisione = new String[1];
 			lCodTipoDecisione[0] = "02";
 		} else if (aNaturaMA.equals(CONCESSIONE_SOSPENSIONE)
-				|| (aNaturaMA.equals(AMMISSIONE_PROVVISORIA) && aTipoMA.equals(AFFIDAMENTO_IN_PROVA)) // 22/01/2014
-																										// DL
-																										// 146
-																										// Può
-																										// essere
-																										// concessa
-																										// anche
-																										// con
-																										// ordinanza
+				// 22/01/2014 DL 146 Può essere concessa anche con ordinanza
+				|| (aNaturaMA.equals(AMMISSIONE_PROVVISORIA) && aTipoMA.equals(AFFIDAMENTO_IN_PROVA))
+				// MEV_9 anche per la deetenzione domiciliare - ammissione provvisoria si prevedono sia
+				// decreti che ordinanze
+				// MEV_9 - SIEP - Si aggiunge la gestione della semilibertà
+				|| (aNaturaMA.equals(AMMISSIONE_PROVVISORIA) && aTipoMA.equals(SEMILIBERTA))
+				|| (aNaturaMA.equals(CONCESSIONE_SOSPENSIONE678))
+				// MEV_9 - SIEP - FINE
+				|| (aNaturaMA.equals(AMMISSIONE_PROVVISORIA) && aTipoMA.equals(DETENZIONE_DOMICILIARE))
 				|| (aNaturaMA.equals(PROSECUZIONE_51BIS)) // DL 146/20113
 				|| (aNaturaMA.equals(PROSECUZIONE_51BIS_CUMULO)) // DL 146/20113
 				|| (aNaturaMA.equals(CESSAZIONE_51BIS_MDS)) // DL 146/20113
@@ -629,6 +689,8 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 			lCodNatura = new String[2];
 			lCodNatura[0] = "ED"; // ED sia per MDS che TDS
 			lCodNatura[1] = "EC"; // EC solo per MDS iscritte SIEP
+		} else if (lNaturaMA.equals(CONCESSIONE_SOSPENSIONE678)) {
+			lCodNatura[0] = "CO"; // MEV_9-SIEP
 		}
 
 		// else if(lNaturaMA.equals(PROSECUZIONE_51BIS_CUMULO)){

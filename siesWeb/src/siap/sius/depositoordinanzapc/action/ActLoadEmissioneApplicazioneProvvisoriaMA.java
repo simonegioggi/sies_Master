@@ -1,11 +1,20 @@
 package siap.sius.depositoordinanzapc.action;
 
+import java.math.BigDecimal;
+
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
+import f3b.util.Utils;
+import siap.sico.evento.controller.IEvento;
+import siap.sico.evento.model.EventoModel;
+import siap.sico.util.SICOLookupRemote;
 import siap.sius.SIUSException;
 import siap.sius.depositodecreto.action.ActLoadEmissioneDecreto;
+import siap.sius.depositodecreto.controller.IDepositoDecreto;
+import siap.sius.depositodecreto.model.DepositoDecretoModel;
 import siap.sius.fascicolo.model.FascicoloGPModel;
+import siap.sius.util.SIUSLookupRemote;
 
 public class ActLoadEmissioneApplicazioneProvvisoriaMA extends ActLoadEmissioneDecreto {
 
@@ -35,39 +44,36 @@ public class ActLoadEmissioneApplicazioneProvvisoriaMA extends ActLoadEmissioneD
 		}
 
 		// Verifica esistenza di un deposito decreto per il fascicolo sius selezionato e tipo decreto
-		// BigDecimal idGP = lFascicoloGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento();
-		// IDepositoDecreto idd = SIUSLookupRemote.getDepositoDecretoRemote();
-		// if (idd.ExVerificaEsistenzaDepositoDecretoByIdGenProcCodTipoDec(idGP,
-		// DECRETO_DESIGNAZIONE_MAGISTRATO_RELATORE_PER_MA)) {
-		// // Se già esiste un decreto viene chiamato il dettaglio.
-		// DepositoDecretoModel ddm = idd.ExRicercaDepositoDecretoByGenProc(idGP,
-		// DECRETO_DESIGNAZIONE_MAGISTRATO_RELATORE_PER_MA);
-		//
-		// // Ricerco l'evento legato al deposito decreto
-		// IEvento ie = SICOLookupRemote.getEventoRemote();
-		// EventoModel em = ie.ExRicercaEventoByKey(ddm.getIdEventoGenerato());
-		// String codEsito = !Utils.isNullObj(em.getCodEsito()) ? em.getCodEsito() : "";
-		//
-		// if (!"S".equals(em.getFlagDocumentoRegistrato()))
-		// throw new SIUSException(SIUSException.USER_MESSAGE,
-		// "Per il procedimento indicato non è stato emesso il provvedimento di designazione Magistrato
-		// Relatore");
-		//
-		// if (!"0610".equals(codEsito))
-		// throw new SIUSException(SIUSException.USER_MESSAGE,
-		// "Per il procedimento indicato non è stato emesso il provvedimento di designazione Magistrato
-		// Relatore!");
-		//
-		// if (!"22".equals(lFascicoloGPModel.getFascicoloSiusModel().getCodStatoFascicolo()))
-		// throw new SIUSException(SIUSException.USER_MESSAGE,
-		// "Stato Procedimento non coerente con l'emissione dell'Applicazione Provvisoria!");
-		// } else {
-		// throw new SIUSException(SIUSException.USER_MESSAGE,
-		// "Per il procedimento indicato non è stato emesso il provvedimento di designazione Magistrato
-		// Relatore!");
-		// }
+		BigDecimal idGP = lFascicoloGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento();
+		IDepositoDecreto idd = SIUSLookupRemote.getDepositoDecretoRemote();
+		if (idd.ExVerificaEsistenzaDepositoDecretoByIdGenProcCodTipoDec(idGP,
+				DECRETO_DESIGNAZIONE_MAGISTRATO_RELATORE_PER_MA)) {
+			// Se già esiste un decreto viene chiamato il dettaglio.
+			DepositoDecretoModel ddm = idd.ExRicercaDepositoDecretoByGenProc(idGP,
+					DECRETO_DESIGNAZIONE_MAGISTRATO_RELATORE_PER_MA);
 
-		//setRequestAttribute("isOrdProvvisoria", "SI"); // AM Ammissione Provvisoria
+			// Ricerco l'evento legato al deposito decreto
+			IEvento ie = SICOLookupRemote.getEventoRemote();
+			EventoModel em = ie.ExRicercaEventoByKey(ddm.getIdEventoGenerato());
+			String codEsito = !Utils.isNullObj(em.getCodEsito()) ? em.getCodEsito() : "";
+
+			if (!"S".equals(em.getFlagDocumentoRegistrato()))
+				throw new SIUSException(SIUSException.USER_MESSAGE,
+						"Per il procedimento indicato non è stato emesso il provvedimento di designazione Magistrato Relatore");
+
+			if (!"0610".equals(codEsito))
+				throw new SIUSException(SIUSException.USER_MESSAGE,
+						"Per il procedimento indicato non è stato emesso il provvedimento di designazione Magistrato Relatore!");
+
+			if (!"22".equals(lFascicoloGPModel.getFascicoloSiusModel().getCodStatoFascicolo()))
+				throw new SIUSException(SIUSException.USER_MESSAGE,
+						"Stato Procedimento non coerente con l'emissione dell'Applicazione Provvisoria!");
+		} else {
+			throw new SIUSException(SIUSException.USER_MESSAGE,
+					"Per il procedimento indicato non è stato emesso il provvedimento di designazione Magistrato Relatore!");
+		}
+
+		setRequestAttribute("isOrdApplMADL1232018", "SI"); // AM Ammissione Provvisoria
 		// Verifica esistenza di un eventuale rigetto
 
 		setRequestAttribute("flagOrdinanza", "ordinanza");

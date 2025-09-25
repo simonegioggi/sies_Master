@@ -223,7 +223,6 @@ public class IspEstrazioneOggettiTribDAO extends TableDAO {
 	}
 
 	public GenericModel getModel() throws DAOException {
-
 		return new IspEstrazioneOggettiModel(getFasSiuIdFascicoloSius(), getFasSiuChiaveAnno(),
 				getFasSiuChiaveUfficio(), getFasSiuChiaveProgr(), getFasSiuCodStatoFascicolo(),
 				getFasSiuDataIscrizione(), getFasSiuDataDefinizione(), getCodOggettoTenore(),
@@ -233,10 +232,10 @@ public class IspEstrazioneOggettiTribDAO extends TableDAO {
 				getCodOggettoProcedimento(), getDepOpidDepositoOrdinanzaPc(), getDepDecIdDepositoDecreto(),
 				getTenData(), getTenDataFine(), getTenDataIns(), getCodEsitoStatistica(),
 				decodificaEsitoStatistica(getCodEsitoStatistica()), getDataDeposito(), getDefinito());
+
 	}
 
 	public void setDAOFromModel(IspEstrazioneOggettiModel aModel) throws DAOException {
-
 		setFasSiuIdFascicoloSius(aModel.getFasSiuIdFascicoloSius());
 		setFasSiuChiaveAnno(aModel.getFasSiuChiaveAnno());
 		setFasSiuChiaveUfficio(aModel.getFasSiuChiaveUfficio());
@@ -277,6 +276,12 @@ public class IspEstrazioneOggettiTribDAO extends TableDAO {
 				lEsito = "Cancellato";
 			else if (aCodEsito.equalsIgnoreCase("7"))
 				lEsito = "Unificato";
+			// MEV_9 si aggiunge la decodifica per gli Accolti ex art.678 c.1 ter c.p.p.
+			else if (aCodEsito.equalsIgnoreCase("9"))
+				// MEV_2024-092: modificata la dicitura da "Accolti Provvisoriamente" a "Accolti ex art.678
+				// c.1 ter c.p.p."
+				// lEsito = "Applicato Provvisoriamente"; ???? Applicato ????
+				lEsito = "Accolto ex art.678 c.1 ter c.p.p.";
 			else
 				lEsito = "Altro";
 		}
@@ -284,7 +289,6 @@ public class IspEstrazioneOggettiTribDAO extends TableDAO {
 	}
 
 	public void setCondizione(IspEstrazioneOggettiModel aModel) {
-
 		boolean lInserito = false;
 		String lCondizioni = "";
 		String lCodOggetto = aModel.getCodOggettoTenore();
@@ -324,7 +328,6 @@ public class IspEstrazioneOggettiTribDAO extends TableDAO {
 	}
 
 	public void setCondizioneOrdinataPerOggetto(IspEstrazioneOggettiModel aModel) {
-
 		boolean lInserito = false;
 		String lCondizioni = "";
 		String lCodOggetto = aModel.getCodOggettoTenore();
@@ -370,7 +373,6 @@ public class IspEstrazioneOggettiTribDAO extends TableDAO {
 	 * @param aModel
 	 */
 	public void setCondizioneOrdinataPerOggetti(IspEstrazioneOggettiModel aModel) {
-
 		boolean lInserito = false;
 		String lCondizioni = "";
 		String lCodOggetti = aModel.getCodOggettoTenore();
@@ -411,7 +413,6 @@ public class IspEstrazioneOggettiTribDAO extends TableDAO {
 	}
 
 	public void setCondizioneMagNull(String lCodUfficio) {
-
 		String lCondizioni = "";
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -432,7 +433,6 @@ public class IspEstrazioneOggettiTribDAO extends TableDAO {
 	}
 
 	public void setCondizioneTenDataFineNotNull(String lCodUfficio, String lCodMagistrato) {
-
 		String lCondizioni = "";
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di

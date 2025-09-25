@@ -1,17 +1,23 @@
 package siap.siep.sospensione.model;
 
+/**
+* <p>Title: SospensioneModel</p>
+* <p>Description: Classe Model che rappresenta il Sospensione</p>
+* <p>Copyright: Copyright (c) 2002</p>
+* <p>Company: Bull</p>
+* @version 1.0
+*/
+
 import java.math.BigDecimal;
 import java.util.Date;
 
 import f3b.model.GenericModel;
 
-/**
- * SospensioneModel - Classe Model che rappresenta il Sospensione
- *
- * @version 1.0
- */
 public class SospensioneModel extends GenericModel {
 
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = -8659112782452125482L;
 
 	private BigDecimal mIdSospensione;
@@ -534,6 +540,23 @@ public class SospensioneModel extends GenericModel {
 		this.mNumGiorniInterruzione = new BigDecimal(0);
 	}
 
+	// MEV_9-SIEP aggiunto metodo di comodo per jsp
+	public boolean isQuantumEspiataZero() {
+		return (getNumAnniPenaEspiata().intValue() == 0 && getNumMesiPenaEspiata().intValue() == 0
+				&& getNumGiorniPenaEspiata().intValue() == 0);
+	}
+	
+	public boolean isQuantumReclusioneResiduoZero() {
+		return (getNumAnniPenaResiduaReclus().intValue() == 0 && getNumMesiPenaResiduaReclus().intValue() == 0
+				&& getNumGiorniPenaResiduaReclus().intValue() == 0);
+	}
+	
+	public boolean isQuantumArrestoResiduoZero() {
+		return (getNumAnniPenaResiduaArres().intValue() == 0 && getNumMesiPenaResiduaArres().intValue() == 0
+				&& getNumGiorniPenaResiduaArres().intValue() == 0);
+	}
+	// MEV_9-SIEP - FINE
+	
 	/*****************************************************************************
 	 * Metodo toString() che restituisce il contenuto del Model opportunamente formattato. Utile per il debug.
 	 ****************************************************************************/

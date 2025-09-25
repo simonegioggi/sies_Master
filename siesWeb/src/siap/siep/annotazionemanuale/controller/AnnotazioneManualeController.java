@@ -623,7 +623,7 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 			lAnnDao.update();
 			lAnnDao.stop();
 
-			// MEV 9 -- Lego l'ANNMAN della Richiesta all'ANNMAN del provvedimento con UPDATE
+			// MEV9 -- Lego l'ANNMAN della Richiesta all'ANNMAN del provvedimento con UPDATE
 
 			lAnnRichDao = new AnnotazioneManualeDAO(lConn);
 

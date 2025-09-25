@@ -80,12 +80,13 @@ import siap.sius.documentoallegato.dao.DocumentoAllegatoSqlDAO;
 import siap.sius.documentoallegato.model.DocumentoAllegatoModel;
 
 /**
- * Title: ProvvedimentoSigeController Description: Classe Controller per ProvvedimentoSige
+ * ProvvedimentoSigeController - Classe Controller per ProvvedimentoSige
  *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ProvvedimentoSigeController extends GenericController implements IProvvedimentoSige {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
@@ -1872,15 +1873,15 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 			// Cancellazione ai riferimenti tramite EVE_ID_EVENTO E EVE_ID_EVENTO_REVOCA
 			lEveDao.updateDAOFromModelForResetRifEve(lEvento);
 
-			//====================
+			// ====================
 			// Ticket#202509050120 - Si cancellano anche eventuali DOCUMENTI_ALLEGATI altrimenti va in errore
 			lDocAllDAO = new DocumentoAllegatoDAO(aConn);
 			lDocAllDAO.setCondizioneByEve(lIdEvento);
 			lDocAllDAO.delete();
 			lDocAllDAO.stop();
 			// Ticket#202509050120 - FINE
-			//====================			
-			
+			// ====================
+
 			// cancellazione Evento collegato al Decreto
 			lEveDao.selCondizioneUpdate(lIdEvento);
 			lEveDao.delete();
@@ -2283,10 +2284,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 
 				/*
 				 * ISSUE MEV : Gestito il recupero dell'Udienza Sige nel caso di
-				 * "Ordinanza Conflitto di Competenza" 
-				 * Numero MEV : 15_S4 
-				 * Autore : sessa 
-				 * Data : 29/gen/2016
+				 * "Ordinanza Conflitto di Competenza" Numero MEV : 15_S4 Autore : sessa Data : 29/gen/2016
 				 * Branch : MEV_15_S4
 				 */
 				if (lUdiMod != null || (lProvModel != null && lProvModel.getUdiIdUdienzaSige() != null)) {
@@ -2647,7 +2645,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 				// allora --> Stato Fascicolo: Decreto Fissazione Udienza
 				// Se iscrivo Ordinanza/Decreto poi annullo --> lo statpo del fascicolo non dovrebbe tornare
 				// in "02" Iscritto
-				boolean  existDecretoFissazioneUdienza = existDecretoFissazioneUdienza(aIdFascicoloSige);
+				boolean existDecretoFissazioneUdienza = existDecretoFissazioneUdienza(aIdFascicoloSige);
 				// Iscritto ("02"); Decreto Fissazione Udienza ("20"); Emesso Provvedimento ("07");
 				if (existDecretoFissazioneUdienza)
 					lFasSigeDao.setCodStatoFascicolo("20");
@@ -2749,10 +2747,10 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 
 	/**
 	 * 20250911 [SG]: controllo se esiste Decreto Fissazione Udienza (anche solo iscritto)
-	 * 
+	 *
 	 * @param aIdFascicoloSige
 	 * @return boolean
-	 * @throws F3BException 
+	 * @throws F3BException
 	 */
 	private boolean existDecretoFissazioneUdienza(BigDecimal aIdFascicoloSige) throws F3BException {
 
@@ -3226,11 +3224,8 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 			}
 
 			/*
-			 * ISSUE MEV : Viene aggiornata la Data Definizione del Fascicolo Sige 
-			 * Numero MEV : 15_S4 
-			 * Autore : sessa 
-			 * Data : 01/feb/2016 
-			 * Branch : MEV_15_S4
+			 * ISSUE MEV : Viene aggiornata la Data Definizione del Fascicolo Sige Numero MEV : 15_S4 Autore :
+			 * sessa Data : 01/feb/2016 Branch : MEV_15_S4
 			 */
 			lFasSigeDao = new FascicoloSigeDAO(lConn);
 			lFasSigeDao.setDAOFromModelForUpdate(aFasSige);

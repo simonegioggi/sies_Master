@@ -828,13 +828,13 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 
 						lPosSql.ricercaPosGiuCorrenteByIdFascicolo(aEvento.getFasSieIdFascicoloSiep());
 						lPosizioni = new Vector(lPosSql.getModels());
-						
-						// Ticket#20231003017 - Non è detto che esista una PG precendente per cui in alcuni casi
+
+						// Ticket#20231003017 - Non è detto che esista una PG precendente per cui in alcuni
+						// casi
 						// lPosizioni.get(0) genera un arrayIndexOutOfBoundException
-						if (lPosizioni.size()>0) 
-						{
+						if (lPosizioni.size() > 0) {
 							PosizioneGiuridicaModel lPosPrec = (PosizioneGiuridicaModel) lPosizioni.get(0);
-	
+
 							// ---------------------------------------------------------
 							// ripristino posizione giuridica pecedente
 							// ---------------------------------------------------------
@@ -842,7 +842,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 							lPosPrec.setCodUfficioAggiornamento(aCampoNota.getCodUfficioInserimento());
 							lPosPrec.setCodOperatoreAggiornamento(aCampoNota.getCodOperatoreInserimento());
 							lPosPrec.setDataAggiornamento(aCampoNota.getDataInserimento());
-	
+
 							lPosDAO.setDAOFromModelForUpdate(lPosPrec);
 							lPosDAO.update();
 							lPosDAO.stop();
@@ -1000,13 +1000,12 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 
 					lPosSql.ricercaPosGiuCorrenteByIdFascicolo(aEvento.getFasSieIdFascicoloSiep());
 					lPosizioni = new Vector(lPosSql.getModels());
-					
+
 					// Ticket#20231003017 - Non è detto che esista una PG precendente per cui in alcuni casi
 					// lPosizioni.get(0) genera un arryIndexoutOfBoundException
-					if (lPosizioni.size()>0) 
-					{
+					if (lPosizioni.size() > 0) {
 						PosizioneGiuridicaModel lPosPrec = (PosizioneGiuridicaModel) lPosizioni.get(0);
-	
+
 						// ---------------------------------------------------------
 						// ripristino posizione giuridica pecedente
 						// ---------------------------------------------------------
@@ -1014,11 +1013,11 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 						lPosPrec.setCodUfficioAggiornamento(aCampoNota.getCodUfficioInserimento());
 						lPosPrec.setCodOperatoreAggiornamento(aCampoNota.getCodOperatoreInserimento());
 						lPosPrec.setDataAggiornamento(aCampoNota.getDataInserimento());
-	
+
 						lPosDAO.setDAOFromModelForUpdate(lPosPrec);
 						lPosDAO.update();
 						lPosDAO.stop();
-	
+
 						// Elenco Provvedimenti PM
 						// azione: cancella Provvedimento
 						// aggiornamento FLAG_ALTRA_CAUSA nella tabella FASCICOLO_SIEP='S' se
@@ -2175,12 +2174,15 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 							&& "01".equals(em.getCodTipoEvento()) && em.getDataTrasmissioneAtti() != null
 							&& em.getDataTrasmissioneAtti().compareTo(em.getDataEmissione()) == 0
 							&& em.getCodOperatoreInserimento().equals(aEvento.getCodOperatoreInserimento())) {
+
 						// 2024.02.14 posso cancellare il decreto/ordinanza solo se non puntato da altri eventi
 						// Es ammissione provvisoria ad affidamento o detenzione
 						// lEventoProc.setIdEvento(lEveRet.getEveIdEvento());
 						// lEventoProc.execute();
+
 						lEveSqlDAO.ricercaEventoByEveIdEvento(em.getIdEvento());
-						Vector <EventoModel> listaEventiCollegati = new Vector <EventoModel>(lEveSqlDAO.getModels());
+						Vector<EventoModel> listaEventiCollegati = new Vector<EventoModel>(
+								lEveSqlDAO.getModels());
 						if (listaEventiCollegati.size() == 0) {
 							lEventoProc.setIdEvento(lEveRet.getEveIdEvento());
 							lEventoProc.execute();

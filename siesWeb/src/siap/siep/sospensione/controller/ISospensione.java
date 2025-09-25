@@ -19,7 +19,18 @@ import siap.siep.sospensione.model.SospensioneModel;
 import siap.siep.verbale.model.VerbaleModel;
 
 /**
- * SospensioneController - Classe Controller per Sospensione
+ * <p>
+ * Title: SospensioneController
+ * </p>
+ * <p>
+ * Description: Classe Controller per Sospensione
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2002
+ * </p>
+ * <p>
+ * Company: Bull
+ * </p>
  * 
  * @version 1.0
  */
@@ -175,4 +186,7 @@ public interface ISospensione {
 	public EventoModel ExUpdateValidaEspulsione(EventoModel aEvento, FascicoloSiepModel aFascicolo,
 			String aPosGiu, String aNomProv, String aStatoProc) throws F3BException;
 
+	// MEV_9-SIEP
+	public EventoModel ExUpdateValidaSospensioneDecisioniSorveglianza678(EventoModel aEvento,
+			FascicoloSiepModel aFascicolo) throws F3BException;
 }

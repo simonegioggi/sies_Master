@@ -9,7 +9,8 @@ import siap.dao.SIAPSqlDAO;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 
 /**
- * FascicoloSiusSqlDAO - Classe SqlDAO che rappresenta la tabella FascicoloSius
+ * Title: FascicoloSiusSqlDAO
+ * Description: Classe SqlDAO che rappresenta la tabella FascicoloSius
  * 
  * @version 1.0
  */
@@ -98,6 +99,8 @@ public class FascicoloGPSqlDAO extends SIAPSqlDAO {
 		aModel.getGeneraleProcedimentoModel().setTipoDefinizione(getString("TIPO_DEFINIZIONE"));
 		aModel.getGeneraleProcedimentoModel().setDescrDefinizione(getString("DESCR_DEFINIZIONE"));
 		aModel.getGeneraleProcedimentoModel().setDataDefinizione(getDate("DATA_DEFINIZIONE"));
+		// MEV_): aggiunta estrazione data_restituzione
+		aModel.getGeneraleProcedimentoModel().setDataRestituzione(getDate("DATA_RESTITUZIONE"));
 		return aModel;
 	}
 
@@ -202,7 +205,7 @@ public class FascicoloGPSqlDAO extends SIAPSqlDAO {
 		lStatement += " GP.COD_TIPO_MITTENTE_ATTO, MITTENTE_ATTO.RV_MEANING DESCR_TIPO_MITTENTE,"
 				+ " NVL(UD.DATA_UDIENZA, GP.DATA_CAMERA_CONSIGLIO) DATA_UDIENZA,";
 		lStatement += " GP.COD_SEDE_MITTENTE, DESCR_COM_MIT.DESCRIZIONE DESCR_SEDE_MITTENTE,"
-				+ " GP.ANNOTAZIONE,";
+				+ " GP.ANNOTAZIONE, GP.DATA_RESTITUZIONE,"; // MEV_9: estraggo DATA_RESTITUZIONE
 		lStatement += " GP.COD_OPERATORE_AGGIORNAMENTO GP_COD_OP_AGG,"
 				+ " GP.COD_UFFICIO_AGGIORNAMENTO GP_COD_UFF_AGG, GP.DATA_AGGIORNAMENTO GP_D_AGG,";
 		lStatement += " GP.SEZIONE SEZIONE, GP.DATA_FINE_PENA DATA_FINE_PENA,"
@@ -263,7 +266,7 @@ public class FascicoloGPSqlDAO extends SIAPSqlDAO {
 		lStatement += " GP.ID_GENERALE_PROCEDIMENTO, GP.ANNO_S1, GP.PROGR_S1, GP.COD_OGGETTO_PROCEDIMENTO,"
 				+ " GP.COD_TIPO_REGISTRO, TIPO_REGISTRO.RV_MEANING DESCR_TIPO_REGISTRO, ";
 		lStatement += " OGGETTO_PROCEDIMENTO.RV_MEANING DESCR_OGGETTO_PROCEDIMENTO, GP.DATA_RICHIESTA,"
-				+ " GP.UDI_ID_UDIENZA,";
+				+ " GP.UDI_ID_UDIENZA, GP.DATA_RESTITUZIONE,"; // MEV_9: estraggo DATA_RESTITUZIONE
 		lStatement += " GP.DATA_ARRIVO_CANCELLERIA, GP.DATA_CAMERA_CONSIGLIO, GP.COD_TIPO_ATTO,"
 				+ " TIPO_ATTO.RV_MEANING DESCR_TIPO_ATTO,";
 		lStatement += " GP.DATA_DEFINIZIONE, GP.TIPO_DEFINIZIONE, GP.DESCR_DEFINIZIONE,";

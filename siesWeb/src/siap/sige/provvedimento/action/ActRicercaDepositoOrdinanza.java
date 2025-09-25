@@ -18,7 +18,7 @@ import siap.sige.util.SIGELookupRemote;
  *
 =======
  * 
->>>>>>> MEV_2024-092_FASE-1
+>>>>>>> MEV_2024_092_FASE-1
  * @version 1.0
  */
 public class ActRicercaDepositoOrdinanza extends ActRicercaFSigePuntuale

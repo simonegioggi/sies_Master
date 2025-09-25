@@ -5,10 +5,28 @@
 <%@ page import="siap.sius.depositoordinanzapc.model.OrdinanzaEventoTenoriPrescrizioniModel"%>
 <%@ page import="siap.sius.depositoordinanzapc.action.ICostantiDepositoOrdinanzaPc"%>
 
+
+<%@ page import="siap.sius.fascicolo.model.FascicoloGPModel"%>
+<%@ page import="siap.sius.generaleprocedimento.model.GeneraleProcedimentoModel"%>
+<%@ page import="f3b.web.IWebConstants"%>
+
+
 <jsp:useBean id="datiOrdinanza" scope="request" class="siap.sius.depositoordinanzapc.model.OrdinanzaEventoTenoriPrescrizioniModel"/>
 <%-- MEV10-s3: aggiunto riferimento all'oggetto "codTipoUfficio" --%>
 <jsp:useBean id="codTipoUfficio" scope="request" class="java.lang.String"/>
 
+
+<%
+//INIZIO: MEV_9 (D.lgs. 123/2018)
+FascicoloGPModel mFasGPMod = (FascicoloGPModel) session.getAttribute("fascicoloSiusGP");
+GeneraleProcedimentoModel mGeneraleProcedimentoModel = mFasGPMod.getGeneraleProcedimentoModel();
+
+boolean is678 = false;
+if (ICostantiDepositoOrdinanzaPc.MISURA_ALTERNATIVA_AMMISSIONE_DL_123_2018.equals(datiOrdinanza.getOrdinanza().getCodTipoOrdinanza())) {
+	is678 = true;
+}
+//FINE: MEV_9
+%>
 <table cellspacing="2" cellpadding="2">
 
 	<tr>
@@ -55,6 +73,15 @@
       <td class="l">Servizio terapeutico competente </td>
       <td class="l"><font class="campo"> <%=StringUtils.toStringJSP(  datiOrdinanza.getOrdinanza().getServizioTerapeuticoComp(), "-")%></font></td>
     </tr>
+
+<% if (is678) { %>    
+     <tr>
+      <td class="l">Data Esecutivita' </td>
+      <td class="l"><font class="campo"> <%=StringUtils.toStringJSP( DateUtils.getDateToString(datiOrdinanza.getOrdinanza().getDataEsecutivita(),"dd/MM/yyyy"), "-")%></font></td>
+    </tr>
+<% } %>
+
+<% if (!is678) { %>    
      <tr>
       <td class="l">Data Termine Misura </td>
       <td class="l"><font class="campo"> <%=StringUtils.toStringJSP( DateUtils.getDateToString(datiOrdinanza.getOrdinanza().getDataFineMisura(),"dd/MM/yyyy"), "-")%></font></td>
@@ -67,6 +94,7 @@
       </font>
        </td>
     </tr>
+<% } %>     
     <tr>
 			<td>
 				<br>

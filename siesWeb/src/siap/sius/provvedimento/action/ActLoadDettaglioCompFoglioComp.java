@@ -89,17 +89,14 @@ public class ActLoadDettaglioCompFoglioComp extends ActionSiap implements ICosta
 							|| fgpm.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
 									.compareTo("C051") == 0)
 					&& ("0270".equals(em.getCodEsito()) && "03".equals(em.getCodTipoProvvedimento()))) {
-				siesLogger.debug("Non è possibile emettere il Foglio Complementare per un provvedimento di "
-						+ "Applicazione Misure Alternative DL 123/2018 senza Data di Esecutivit&agrave; "
-						+ "valorizzata!");
-				// IDepositoOrdinanzaPc idopc = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
-				// DepositoOrdinanzaPcModel dopcm = idopc.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd(
-				// fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), "AM");
-				// if (!Utils.isNullObj(dopcm) && Utils.isNullObj(dopcm.getDataEsecutivita()))
-				// throw new SIUSException(F3BException.USER_MESSAGE,
-				// "Non è possibile emettere il Foglio Complementare per un provvedimento di "
-				// + "Applicazione Misure Alternative DL 123/2018 senza Data di Esecutivit&agrave; "
-				// + "valorizzata!");
+				IDepositoOrdinanzaPc idopc = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
+				DepositoOrdinanzaPcModel dopcm = idopc.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd(
+						fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), "AM");
+				if (!Utils.isNullObj(dopcm) && Utils.isNullObj(dopcm.getDataEsecutivita()))
+					throw new SIUSException(F3BException.USER_MESSAGE,
+							"Non è possibile emettere il Foglio Complementare per un provvedimento di "
+							+ "Applicazione Misure Alternative DL 123/2018 senza Data di Esecutivit&agrave; "
+							+ "valorizzata!");
 			}
 
 			// Valorizzazione del Documento Allegato

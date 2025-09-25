@@ -20,11 +20,11 @@ import siap.siep.util.SIEPLookupRemote;
 
 /**
  * ActInserisciResidenza - Classe Action per l'inserimento di Residenza
- * 
+ *
  * @version 1.0
  */
 public class ActInserisciResidenzaFascicolo extends ActionSiap implements ICostantiResidenza {
-	
+
 	/**
 	 * Azione di Inserimento della Residenza
 	 *
@@ -111,5 +111,4 @@ public class ActInserisciResidenzaFascicolo extends ActionSiap implements ICosta
 				+ ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP + "="
 				+ ((FascicoloSiepModel) getSessionAttribute("fascicolo")).getIdFascicoloSiep();
 	}
-
 }

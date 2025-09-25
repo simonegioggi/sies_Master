@@ -7,10 +7,14 @@ import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import siap.sico.calendar.model.CalendarModel;
 import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.evento.action.ICostantiEvento;
+import siap.sico.evento.controller.IEvento;
+import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.misuraalternativa.controller.IMisuraAlternativa;
 import siap.sico.misuraalternativa.model.MisuraAlternativaModel;
@@ -22,6 +26,7 @@ import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.misuraalternativa.action.ActMisuraAlternativa;
 import siap.siep.misuraalternativa.action.ICostantiMisuraAlternativa;
 import siap.siep.notifica.model.NotificaModel;
+import siap.siep.ordineesecuzione.controller.IOrdineEsecuzione;
 import siap.siep.penacomplessiva.controller.IPenaComplessiva;
 import siap.siep.penacomplessiva.model.PenaComplessivaModel;
 import siap.siep.penaresidua.action.ICostantiPenaResidua;
@@ -293,6 +298,9 @@ public class ActInserisciSospensioneDecisioniSorv extends ActMisuraAlternativa
 					getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO), lUfficioScarc);
 			lMisMod.setDataScarcerazione(lDataSospensione);
 
+			// MEV_9-SIEP: aggiunto metodo
+			settaDatiOrdinanzaProvvisoria(lMisMod);
+
 			/*
 			 * nel momento in cui inserisco la misura alternativa e calcolo la pena richiamo la maschera
 			 * d'inserimento di chi mi ha chiamato per visualizzare la seconda parte della maschera ossia i
@@ -312,6 +320,24 @@ public class ActInserisciSospensioneDecisioniSorv extends ActMisuraAlternativa
 					+ ICostantiMisuraAlternativa.CAMPO_ID_DOCUMENTO_SIUS + "="
 					+ lMisuraModel.getEveIdEvento();
 		} else {
+			// MEV_9-SIEP: aggiunta nuova gestione per modifica
+			// qui entro sia al primo giro che al secondo
+			String tipoOperazione = null;
+			if (!isRequestParameterNullObj("tipoOperazione"))
+				tipoOperazione = getRequestStringParameter("tipoOperazione");
+			if ("MODIFICA".equals(tipoOperazione)) {
+				BigDecimal idEventoOld = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
+				if (!Utils.isNullObj(idEventoOld)) {
+					siesLogger.debug(
+							"Sono in MODIFICA Sospensione procedo alla cancellazione dell'evento con id = "
+									+ idEventoOld);
+					IEvento ie = SICOLookupRemote.getEventoRemote();
+					EventoModel lEveModRic = ie.ExRicercaEventoByKey(idEventoOld);
+					IOrdineEsecuzione ioe = SIEPLookupRemote.getOrdineEsecuzioneRemote();
+					ioe.ExCancellaEventoConStoreProcedure(lEveModRic);
+					siesLogger.debug("Evento cancellato proseguo con un nuovo inserimento Sospensione");
+				}
+			}
 			// la misura esiste
 			// ========================================================================
 			// O esiste la misura oppure sto inserendo il provvedimento, secondo giro
@@ -319,7 +345,24 @@ public class ActInserisciSospensioneDecisioniSorv extends ActMisuraAlternativa
 			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE))
 				lSospensione.setNote(getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE));
 
-			if (this.isRequestParameterNullObj("presenzanuovopenaricalcolata")) {
+			// MEV_9-SIEP: aggiunto metodo ed impostazione della data scarcerazione
+			settaDatiOrdinanzaProvvisoria(lSospensione);
+			if (Utils.isNullObj(lDataSospensione)) {
+				if (!isRequestParameterNullEmptyObj(
+						ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE)
+						&& !isRequestParameterNullEmptyObj(
+								ICostantiMisuraAlternativa.CAMPO_MESE_DATA_SCARCERAZIONE)
+						&& !isRequestParameterNullEmptyObj(
+								ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_SCARCERAZIONE))
+					lDataSospensione = getRequestDateParameter(
+							ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_SCARCERAZIONE,
+							ICostantiMisuraAlternativa.CAMPO_MESE_DATA_SCARCERAZIONE,
+							ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE);
+			}
+			lSospensione.setDataScarcerazione(lDataSospensione);
+
+			if (isRequestParameterNullObj("presenzanuovopenaricalcolata")) {
+				// primo giro
 				lMisAltCtrl.ExModificaMisuraAlternativa(lSospensione);
 				lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
 						+ "=siap.siep.sospensione.action.ActLoadInserisciSospensioneDecisioniSorv&"
@@ -346,6 +389,15 @@ public class ActInserisciSospensioneDecisioniSorv extends ActMisuraAlternativa
 					lEve.getEvento().setCodMotivo("0263");
 				else if (codiceMotivo.equals("2480"))
 					lEve.getEvento().setCodMotivo("0241");
+				// MEV_9-SIEP: aggiunte casistiche
+				else if ("0724".equals(codiceMotivo))
+					lEve.getEvento().setCodMotivo("5469");
+				else if ("0735".equals(codiceMotivo))
+					lEve.getEvento().setCodMotivo("5496");
+				else if (codiceMotivo.equals("0684"))
+			        lEve.getEvento().setCodMotivo(codiceMotivo);
+			      else if (codiceMotivo.equals("0695"))
+			        lEve.getEvento().setCodMotivo(codiceMotivo);
 
 				lEve.setEvento(setEventoProvvedimentoMisuraAlternativa(lEve.getEvento()));
 				lEve.getMagistrato().setCodMagistrato(calcolaMagistrato());
@@ -386,6 +438,24 @@ public class ActInserisciSospensioneDecisioniSorv extends ActMisuraAlternativa
 
 		// pagina di ritorno
 		return lPage;
+	}
+
+	// MEV_9-SIEP: aggiunto metodo
+	private void settaDatiOrdinanzaProvvisoria(MisuraAlternativaModel mam) throws F3BException {
+
+		if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT))
+			mam.setAnnoRegistroMaAt(
+					getRequestBigDecimalParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT));
+		if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT))
+			mam.setNumeroRegistroMaAt(
+					getRequestBigDecimalParameter(ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT));
+		if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT)
+				&& !isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT)
+				&& !isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT))
+			mam.setDataDecisioneMaAt(
+					getRequestDateParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT,
+							ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT,
+							ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT));
 	}
 
 }

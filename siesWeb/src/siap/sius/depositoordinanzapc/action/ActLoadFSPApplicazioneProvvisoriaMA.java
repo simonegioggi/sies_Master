@@ -3,7 +3,8 @@ package siap.sius.depositoordinanzapc.action;
 import siap.sius.fascicolo.action.ActLoadRicercaFSPuntuale;
 
 /**
- * ActLoadFSPApplicazioneProvvisoriaMA - Classe per il caricamento dell'applicazione provvisoria di MA
+ * ActLoadFSPApplicazioneProvvisoriaMA - Classe per il caricamento della action di Emissione Applicazione MA DL
+ * 123/2018
  *
  * @author d.fiorletta
  * @since MEV_9
@@ -12,8 +13,9 @@ public class ActLoadFSPApplicazioneProvvisoriaMA extends ActLoadRicercaFSPuntual
 
 	public String processRequest() throws Exception {
 
-		setRequestAttribute("functionName", "Applicazione Misure Alternative DL 123/2018");
-		setRequestAttribute("nextAction", "siap.sius.depositoordinanzapc.action.ActLoadEmissioneApplicazioneProvvisoriaMA");
+		setRequestAttribute("functionName", "Applicazione M.A. DL 123/2018");
+		setRequestAttribute("nextAction",
+				"siap.sius.depositoordinanzapc.action.ActLoadEmissioneApplicazioneProvvisoriaMA");
 		String lPage = super.processRequest();
 		return lPage;
 	}

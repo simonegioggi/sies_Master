@@ -12,7 +12,8 @@ import siap.sius.generaleprocedimento.dao.GeneraleProcedimentoSqlDAO;
 import siap.sius.generaleprocedimento.model.GeneraleProcedimentoModel;
 
 /**
- * GeneraleProcedimentoController - Classe Controller per GeneraleProcedimento
+ * Title: GeneraleProcedimentoController 
+ * Description: Classe Controller per GeneraleProcedimento
  *
  * @version 1.0
  */
@@ -88,5 +89,35 @@ public class GeneraleProcedimentoController extends SiapController implements IG
 		}
 		return lGenMod;
 	}
+
+	/*
+	 * ISSUE MEV : aggiunto metodo di aggiornamento 
+	 * Numero MEV : 9 
+	 * Autore : sgioggi 
+	 * Data : 29 nov 2022 
+	 * Branch : MEV_9
+	 */
+	public void ExModificaDatiRestituzioneGeneraleProcedimento(GeneraleProcedimentoModel gpm)
+			throws F3BException {
+
+		Connection c = null;
+		GeneraleProcedimentoDAO gpDAO = null;
+
+		try {
+			c = getDBConnection();
+			gpDAO = new GeneraleProcedimentoDAO(c);
+			gpDAO.setDAOFromModelForUpdateParziale(gpm);
+			gpDAO.update();
+			commit(c);
+		} catch (DAOException ex) {
+			rollback(c);
+			throw new F3BException(
+					"GeneraleProcedimentoController.ExModificaDatiRestituzioneGeneraleProcedimento: " + ex);
+		} finally {
+			cleanup(gpDAO);
+			cleanup(c);
+		}
+	}
+	// ***** FINE INTERVENTO MEV_9 *****//
 
 }
