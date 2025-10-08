@@ -17,7 +17,7 @@
 
 <jsp:useBean id="documentiSius" scope="request" class="java.util.ArrayList"/>
 <%-- MEV_9-SIEP --%>
-<jsp:useBean id="TipoMA"   		scope="request" class="java.lang.String"/>
+<%-- <jsp:useBean id="TipoMA"   scope="request" class="java.lang.String"/> --%>
 <jsp:useBean id="NaturaMA" 		scope="request" class="java.lang.String"/>
 <%-- FINE MEV_9-SIEP --%>
 
@@ -79,19 +79,7 @@ function insertIT(
 		mesiMisura,
 		anniMisura,
 		flagDecisioneTribunale,
-		sedeTdsCompetente,
-		<%-- MEV_9 (x3) --%>
-		giornoEsecutivita, 
-		meseEsecutivita,
-		annoEsecutivita,
-		<%-- MEV_9-SIEP (x7) --%>
-		giornoDecisione, 
-		meseDecisione,
-		annoDecisione,
-		annoOrdinanzaProvvisoria,
-		numeroOrdinanzaProvvisoria,
-		idOrdinanzaProvvisoria,
-		isOrdinanzaProvvisoria) {
+		sedeTdsCompetente) {
 	if (annoSius != '-')
 		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_CHIAVE_ANNO_FASCICOLO_SIUS%>.value = annoSius;
 	else
@@ -131,6 +119,11 @@ function insertIT(
 	else
   		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiEvento.CAMPO_COD_MOTIVO%>.value = "";
 
+  	<%-- MEV_2024-092: rework. FAccio scattare l'onchange sulla combo --%>
+	try {
+		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiEvento.CAMPO_COD_MOTIVO%>.onchange();
+	} catch (err) { }
+
 	if (giorno != '-')
   		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>.value = giorno;
 	else
@@ -161,71 +154,71 @@ function insertIT(
 	} catch (err) { }
 
 	// MEV_9 si aggiunge la data esecutivita
-	try {
-    	if (giornoEsecutivita != '-')
-      		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA%>.value = giornoEsecutivita;
-		else
-  			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA%>.value = "";
+// 	try {
+//     	if (giornoEsecutivita != '-')
+<%--       		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA%>.value = giornoEsecutivita; --%>
+// 		else
+<%--   			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA%>.value = ""; --%>
 
-		if (meseEsecutivita != '-' )
-  			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_ESECUTIVITA%>.value = meseEsecutivita;
-		else
-  			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_ESECUTIVITA%>.value = "";
+// 		if (meseEsecutivita != '-' )
+<%--   			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_ESECUTIVITA%>.value = meseEsecutivita; --%>
+// 		else
+<%--   			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_ESECUTIVITA%>.value = ""; --%>
 
-		if (annoEsecutivita != '-')
-  			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA%>.value = annoEsecutivita;
-		else
-  			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA%>.value = "";
-	} catch (err) { }
+// 		if (annoEsecutivita != '-')
+<%--   			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA%>.value = annoEsecutivita; --%>
+// 		else
+<%--   			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA%>.value = ""; --%>
+// 	} catch (err) { }
 
 	// MEV_9-SIEP: aggiunti campi in estrazione
-	try {
-    	if (giornoDecisione != '-')
-      		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value = giornoDecisione;
-		else
-  			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value = "";
+// 	try {
+//     	if (giornoDecisione != '-')
+<%--       		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value = giornoDecisione; --%>
+// 		else
+<%--   			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value = ""; --%>
 
-		if (meseDecisione != '-' )
-  			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.value = meseDecisione;
-		else
-  			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.value = "";
+// 		if (meseDecisione != '-' )
+<%--   			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.value = meseDecisione; --%>
+// 		else
+<%--   			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.value = ""; --%>
 
-		if (annoDecisione != '-')
-  			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>.value = annoDecisione;
-		else
-  			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>.value = "";
+// 		if (annoDecisione != '-')
+<%--   			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>.value = annoDecisione; --%>
+// 		else
+<%--   			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>.value = ""; --%>
 
-		if (annoOrdinanzaProvvisoria != '-')
-	  		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>.value = annoOrdinanzaProvvisoria;
-		else
-	  		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>.value = "";
+// 		if (annoOrdinanzaProvvisoria != '-')
+<%-- 	  		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>.value = annoOrdinanzaProvvisoria; --%>
+// 		else
+<%-- 	  		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>.value = ""; --%>
 
-		if (numeroOrdinanzaProvvisoria != '-')
-	 		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT%>.value = numeroOrdinanzaProvvisoria;
-		else
-	  		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT%>.value = "";
+// 		if (numeroOrdinanzaProvvisoria != '-')
+<%-- 	 		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT%>.value = numeroOrdinanzaProvvisoria; --%>
+// 		else
+<%-- 	  		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT%>.value = ""; --%>
 
-  		if (idOrdinanzaProvvisoria != '-')
-	 		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_EVE_ID_EVENTO%>.value = idOrdinanzaProvvisoria;
-		else
-	  		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_EVE_ID_EVENTO%>.value = "";
+//   		if (idOrdinanzaProvvisoria != '-')
+<%-- 	 		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_EVE_ID_EVENTO%>.value = idOrdinanzaProvvisoria; --%>
+// 		else
+<%-- 	  		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_EVE_ID_EVENTO%>.value = ""; --%>
 
-	  	if (isOrdinanzaProvvisoria != 'false') {
-<%-- 	  		window.parent.opener.document.<%=request.getParameter("formname")%>.getElementById('divOrdinanzaProvvisoria').style.visibility = 'visible'; --%>
-			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>.disabled = false;
-			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT%>.disabled = false;
-			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.disabled = false;
-			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.disabled = false;
-			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>.disabled = false;
-	  	} else {
+// 	  	if (isOrdinanzaProvvisoria != 'false') {
+<%--	  		window.parent.opener.document.<%=request.getParameter("formname")%>.getElementById('divOrdinanzaProvvisoria').style.visibility = 'visible'; --%>
+<%-- 			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>.disabled = false; --%>
+<%-- 			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT%>.disabled = false; --%>
+<%-- 			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.disabled = false; --%>
+<%-- 			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.disabled = false; --%>
+<%-- 			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>.disabled = false; --%>
+// 	  	} else {
 <%--   			window.parent.opener.document.<%=request.getParameter("formname")%>.getElementById('divOrdinanzaProvvisoria').style.visibility = 'hidden'; --%>
-			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>.disabled = true;
-			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT%>.disabled = true;
-			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.disabled = true;
-			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.disabled = true;
-			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>.disabled = true;
-	  	}
-	} catch (err) { }
+<%-- 			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>.disabled = true; --%>
+<%-- 			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT%>.disabled = true; --%>
+<%-- 			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.disabled = true; --%>
+<%-- 			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.disabled = true; --%>
+<%-- 			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>.disabled = true; --%>
+// 	  	}
+// 	} catch (err) { }
 	// FINE MEV_9-SIEP
 
 	// PP = PROSECUZIONE_PROVVISORIA
@@ -526,7 +519,7 @@ if (!documentiSius.isEmpty()) {
 		<td class="int">Anno/Numero Sius</td>
 		<td class="int">Autorità Emittente</td>
 		<td class="int">Oggetto</td>
-		<td class="int">Anno/Numero Ordinanza Provvisoria</td>	<%-- MEV_9-SIEP: aggiunta colonna --%>
+		<%-- <td class="int">Anno/Numero Ordinanza Provvisoria</td>	MEV_9-SIEP: aggiunta colonna --%>
 		<td class="int" width=5%>Azioni</td>
     </tr>
 <%
@@ -547,11 +540,9 @@ if (!documentiSius.isEmpty()) {
         // poichè non individua i codici TDSM e UDSM
         String lUfficio = StringUtils.toStringJSP(eventoModel.getCodTipoUfficioEmittente(), "-");
         // MEV_9-SIEP: aggiunto controllo per escludere dalla visualizzazione
-        if (   !"AMMISSIONE_PROVVISORIA".equals(NaturaMA)
-            && !"CONCESSIONE_SOSPENSIONE".equals(NaturaMA)
-            && !"CONCESSIONE_SOSPENSIONE678".equals(NaturaMA)          
-           ) 
-        {
+        if (!"AMMISSIONE_PROVVISORIA".equals(NaturaMA)
+        		&& !"CONCESSIONE_SOSPENSIONE".equals(NaturaMA)
+        		&& !"CONCESSIONE_SOSPENSIONE678".equals(NaturaMA)) {
 			if ((("TDS".equals(lUfficio)
 					&& ("0680".equals(misuraModel.getCodTipoMisura())					// AFFIDAMENTO
 							|| "0681".equals(misuraModel.getCodTipoMisura())			// AFFIDAMENTO
@@ -568,19 +559,15 @@ if (!documentiSius.isEmpty()) {
 					&& "0270".equals(eventoModel.getCodEsito()))
 				continue;
 		}
-
         // MEV_9-SIEP per le sospe 678 provvisorie prendo solo quelle con esito 0270 Applica ex art. 678 comma 1 ter cpp
         if ("CONCESSIONE_SOSPENSIONE678".equals(NaturaMA)) {  
         	if (!"0270".equals(eventoModel.getCodEsito()))
         		continue;
         }
-        
         if ("CONCESSIONE_SOSPENSIONE".equals(NaturaMA)) {  
           if ("0270".equals(eventoModel.getCodEsito()))
             continue;
         }
-        
-        
 %>
 	<tr>
 		<td class="c">
@@ -627,7 +614,7 @@ if (!documentiSius.isEmpty()) {
 				|| "0695".equals(misuraModel.getCodTipoMisura()))	// SOSPENSIONE
 				&& "0270".equals(eventoModel.getCodEsito())) {
 %>
-			Applicazione Provvisoria 
+			Applicazione 
 <%
 		}
 %>
@@ -696,11 +683,11 @@ if (!documentiSius.isEmpty()) {
 				}
 			}
 %>
-		<td class="c">
-			<%=StringUtils.toStringJSP(annoOrdinanzaProvvisoria, "-")%>
-			/
-			<%=StringUtils.toStringJSP(numeroOrdinanzaProvvisoria, "-")%>
-		</td>
+<!-- 		<td class="c"> -->
+<%-- 			<%=StringUtils.toStringJSP(annoOrdinanzaProvvisoria, "-")%> --%>
+<!-- 			/ -->
+<%-- 			<%=StringUtils.toStringJSP(numeroOrdinanzaProvvisoria, "-")%> --%>
+<!-- 		</td> -->
 		<td class="c">
 			<a href="Javascript:insertIT('<%=StringUtils.toStringJSP(eventoModel.getIdEvento(), "-")%>',
                                          '<%=StringUtils.toStringJSP(misuraModel.getChiaveAnnoFascicoloSius(), "-")%>',
@@ -740,26 +727,14 @@ if (!documentiSius.isEmpty()) {
                                          '<%=StringUtils.toStringJSP(misuraModel.getNumMesiMisura(), "-")%>',
                                          '<%=StringUtils.toStringJSP(misuraModel.getNumAnniMisura(), "-")%>',
                                          '<%=StringUtils.toStringJSP(misuraModel.getFlagDecisioneTribunale(), "-")%>',
-                                         '<%=StringUtils.cStrForJS(misuraModel.getDescSedeTdsCompetente())%>',
-                                         <%-- MEV_9 --%>
-                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataEsecutivita(), "dd"), "-")%>',
-                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataEsecutivita(), "MM"), "-")%>',
-                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataEsecutivita(), "yyyy"), "-")%>',
-                                         <%-- MEV_9-SIEP: aggiunti campi in estrazione: ID + anno/numero ordinanza provvisoria + data emissione provvedimento --%>
-                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataOrdinanzaProvvisoria, "dd"), "-")%>',
-                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataOrdinanzaProvvisoria, "MM"), "-")%>',
-                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataOrdinanzaProvvisoria, "yyyy"), "-")%>',
-                                         '<%=StringUtils.toStringJSP(annoOrdinanzaProvvisoria, "-")%>',
-                                         '<%=StringUtils.toStringJSP(numeroOrdinanzaProvvisoria, "-")%>',
-                                         '<%=StringUtils.toStringJSP(idOrdinanzaProvvisoria, "-")%>',
-                                         '<%=StringUtils.toStringJSP(isOrdinanzaProvvisoria, "-")%>'
+                                         '<%=StringUtils.cStrForJS(misuraModel.getDescSedeTdsCompetente())%>'
                                          );">
 				<img align="middle" src="/images/fileselected.gif" border=0>
 			</a>
 <%
 		} else {
 %>
-		<td class="c">-</td>
+<!-- 		<td class="c">-</td> -->
 		<td class="c">
 			<a href="Javascript:insertIT('<%=StringUtils.toStringJSP(eventoModel.getIdEvento(), "-")%>',
                                          '<%=StringUtils.toStringJSP(misuraModel.getChiaveAnnoFascicoloSius(), "-")%>',
@@ -799,19 +774,7 @@ if (!documentiSius.isEmpty()) {
                                          '<%=StringUtils.toStringJSP(misuraModel.getNumMesiMisura(), "-")%>',
                                          '<%=StringUtils.toStringJSP(misuraModel.getNumAnniMisura(), "-")%>',
                                          '<%=StringUtils.toStringJSP(misuraModel.getFlagDecisioneTribunale(), "-")%>',
-                                         '<%=StringUtils.cStrForJS(misuraModel.getDescSedeTdsCompetente())%>',
-                                         <%-- MEV_9 --%>
-                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataEsecutivita(), "dd"), "-")%>',
-                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataEsecutivita(), "MM"), "-")%>',
-                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataEsecutivita(), "yyyy"), "-")%>',
-                                         <%-- MEV_9-SIEP: aggiunti campi in estrazione: ID + anno/numero ordinanza provvisoria + data emissione provvedimento --%>
-                                         '',
-                                         '',
-                                         '',
-                                         '',
-                                         '',
-                                         '',
-                                         '<%=StringUtils.toStringJSP(isOrdinanzaProvvisoria, "-")%>'
+                                         '<%=StringUtils.cStrForJS(misuraModel.getDescSedeTdsCompetente())%>'
                                          );">
 				<img align="middle" src="/images/fileselected.gif" border=0>
 			</a>

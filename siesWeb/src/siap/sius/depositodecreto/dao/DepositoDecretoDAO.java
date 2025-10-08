@@ -13,18 +13,7 @@ import siap.dao.SIAPTableDAO;
 import siap.sius.depositodecreto.model.DepositoDecretoModel;
 
 /**
- * <p>
- * Title: DepositoDecretoDAO
- * </p>
- * <p>
- * Description: Classe DAO che rappresenta la tabella DepositoDecreto
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * DepositoDecretoDAO - Classe DAO che rappresenta la tabella DepositoDecreto
  *
  * @version 1.0
  */
@@ -538,12 +527,10 @@ public class DepositoDecretoDAO extends SIAPTableDAO {
 	}
 
 	/**
-	 * Ritorna il model popolato con i dati del record.
+	 * Ritorna il model popolato con i dati del record
 	 *
-	 * @return model popolato.
-	 *         <p>
-	 * @throws DAOException
-	 *             propaga errore di eccezione.
+	 * @return model popolato
+	 * @throws DAOException propaga errore di eccezione
 	 */
 	public GenericModel getModel() throws DAOException {
 
@@ -646,13 +633,10 @@ public class DepositoDecretoDAO extends SIAPTableDAO {
 	}
 
 	/**
-	 * Imposta il DAO con i dati del model passato come argomento, per la fase di update.
-	 * <p>
+	 * Imposta il DAO con i dati del model passato come argomento, per la fase di update
 	 *
-	 * @param aModel
-	 *            model dei dati da impostare nel DAO.
-	 * @throws DAOException
-	 *             propaga errore di eccezione.
+	 * @param aModel model dei dati da impostare nel DAO
+	 * @throws DAOException propaga errore di eccezione
 	 */
 	public void setDAOFromModelForUpdate(DepositoDecretoModel aModel) throws DAOException {
 
@@ -715,11 +699,9 @@ public class DepositoDecretoDAO extends SIAPTableDAO {
 	}
 
 	/**
-	 * Imposta le condizioni per Update e Delete.
-	 * <p>
+	 * Imposta le condizioni per Update e Delete
 	 *
-	 * @param key
-	 *            id del record.
+	 * @param key id del record
 	 */
 	public void setCondizioneUpdate(BigDecimal key) {
 		setCondition(" ID_DEPOSITO_DECRETO = " + key);

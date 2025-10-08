@@ -262,11 +262,11 @@ public class ActLoadInserisciMAAmmProvSemiliberta extends ActAmmissioneProvvisor
 			DecodeModel lDecodeNew = new DecodeModel();
 			lDecodeNew.setCode(lDecode.getCode());
 
-			// AFFIDAMENTO
+			// AFFIDAMENTO	/* ELIMINATA la parola "Provvisoria" da "Applicazione Provvisoria"*/
 			if ("0683".equals(lDecode.getCode()))
-				lDecodeNew.setDescription("Applicazione Provvisoria " + lDecode.getDescription());
+				lDecodeNew.setDescription("Applicazione " + lDecode.getDescription());
 			else if ("0694".equals(lDecode.getCode()))
-				lDecodeNew.setDescription("Applicazione Provvisoria " + lDecode.getDescription());
+				lDecodeNew.setDescription("Applicazione " + lDecode.getDescription());
 			else
 				lDecodeNew.setDescription(lDecode.getDescription());
 

@@ -48,11 +48,11 @@ public class RicercaProvvedimentiUtil {
 	// Il tipo di Ordinanza da escludere è RU ( Rinvio Udienza ) poichè non è di tipo definitorio.
 	String[] mTipiOrdinanzaDaEscludere = { ICostantiDepositoOrdinanzaPc.RINVIO_UDIENZA,
 			ICostantiDepositoOrdinanzaPc.RIMESSIONE_ATTI,
-			// MEV_9: aggiunta casistica per nuova tipologia (CONFERMA_DECISIONE_MAGISTRATO_RELATORE???)
+			// MEV_9: aggiunta casistica per nuova tipologia
 			ICostantiDepositoOrdinanzaPc.MISURA_ALTERNATIVA_AMMISSIONE_DL_123_2018 };
 	// Il tipo di Ordinanza da escludere opzionalmente è SO ( Sospenziome ) poichè non è di tipo definitorio
 	String[] mTipiOrdinanzaDaEscludereSospesa = { ICostantiDepositoOrdinanzaPc.RINVIO_UDIENZA,
-			// MEV_9: aggiunta casistica per nuova tipologia (CONFERMA_DECISIONE_MAGISTRATO_RELATORE???)
+			// MEV_9: aggiunta casistica per nuova tipologia
 			ICostantiDepositoOrdinanzaPc.MISURA_ALTERNATIVA_AMMISSIONE_DL_123_2018 };
 	// Il tipo di Sentenza da escludere è RU ( Rinvio Udienza ) poichè non è di tipo definitorio
 	String[] mTipiSentenzaDaEscludere = { ICostantiDepositoSentenza.RINVIO_UDIENZA,

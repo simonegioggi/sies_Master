@@ -13,8 +13,7 @@ import f3b.model.GenericModel;
 import siap.sico.misuraalternativa.model.MisuraAlternativaModel;
 
 /**
- * Title: MisuraAlternativaDAO
- * Description: Classe DAO che rappresenta la tabella MisuraAlternativa
+ * MisuraAlternativaDAO - Classe DAO che rappresenta la tabella MisuraAlternativa
  *
  * @version 1.0
  */

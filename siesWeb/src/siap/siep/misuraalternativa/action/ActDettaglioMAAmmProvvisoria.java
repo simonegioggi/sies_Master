@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Set;
 
+import f3b.util.F3BException;
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.controller.IEventoSimeone;
@@ -30,22 +31,10 @@ import siap.siep.util.MinorMask;
 import siap.siep.util.SIEPLookupRemote;
 import siap.siep.verbale.controller.IVerbale;
 import siap.siep.verbale.model.VerbaleModel;
-import f3b.util.F3BException;
 
 /**
- * <p>
- * Title: ActDettaglioMAAmmProvvisoria
- * </p>
- * <p>
- * Description: Classe Action per la load dettaglio di Ammissione provvisoria
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ * ActDettaglioMAAmmProvvisoria - Classe Action per la load dettaglio di Ammissione provvisoria
+ *
  * @version 1.0
  */
 
@@ -118,10 +107,10 @@ public class ActDettaglioMAAmmProvvisoria extends ActMisuraAlternativa implement
 		if (lDecreto != null) {
 			EventoModel lEveVer = new EventoModel();
 			IEventoSimeone lCtrlEven = SICOLookupRemote.getEventoSimeoneRemote();
-			lEveVer = lCtrlEven.ExRicercaEventoByEveIdEventoTipoProvCodMotivo(lDecreto.getEveIdEvento(),
-					"07", "18", "0314");
+			lEveVer = lCtrlEven.ExRicercaEventoByEveIdEventoTipoProvCodMotivo(lDecreto.getEveIdEvento(), "07",
+					"18", "0314");
 
-//			VerbaleModel lVerMod = new VerbaleModel();
+			// VerbaleModel lVerMod = new VerbaleModel();
 			IVerbale lCtrlVe = SIEPLookupRemote.getVerbaleRemote();
 			VerbaleModel lVerbMod = lCtrlVe.ExRicercaVerbaleObblighiByIdEvento(lEveVer.getIdEvento());
 			setRequestAttribute("verbale", lVerbMod);
@@ -185,7 +174,7 @@ public class ActDettaglioMAAmmProvvisoria extends ActMisuraAlternativa implement
 		// Ricerca Magistrato
 		IMagistrato lCtrlM = SICOLookupRemote.getMagistratoRemote();
 		MagistratoModel lMagi = lCtrlM.ExRicercaMagistratoByCod(lEveMod.getEvento().getCodMagistrato());
-		
+
 		setRequestAttribute("magistrato", lMagi);
 
 		// Sede Ufficio di Sorveglianza
@@ -201,26 +190,26 @@ public class ActDettaglioMAAmmProvvisoria extends ActMisuraAlternativa implement
 		 */
 
 		// MEV_9 Si gestiscono i nuovi codici
-		Set<String> codiciAffidamento = new HashSet<String>(Arrays.asList(new String[]{"2006","2008","0680","0681","0690","0691","0692"}));
-		Set<String> codiciDetenzione  = new HashSet<String>(Arrays.asList(new String[]{"2005","0682","0693"}));
+		Set<String> codiciAffidamento = new HashSet<>(
+				Arrays.asList(new String[] { "2006", "2008", "0680", "0681", "0690", "0691", "0692" }));
+		Set<String> codiciDetenzione = new HashSet<>(
+				Arrays.asList(new String[] { "2005", "0682", "0693" }));
 		if (lDecreto != null) {
 			if (codiciAffidamento.contains(lDecreto.getCodTipoMisura()))
 				setRequestAttribute("tipoMisura", "AFFIDAMENTO");
-			else if (codiciDetenzione.contains(lDecreto.getCodTipoMisura())) 
+			else if (codiciDetenzione.contains(lDecreto.getCodTipoMisura()))
 				setRequestAttribute("tipoMisura", "DETENZIONE");
 		}
 		/*
-		if (lDecreto != null) {
-			if ("2005".equals(lDecreto.getCodTipoMisura()))
-				setRequestAttribute("tipoMisura", "DETENZIONE");
-			else if ("2006".equals(lDecreto.getCodTipoMisura()) || "2008".equals(lDecreto.getCodTipoMisura()) // new
-																												// DL
-																												// 146
-																												// 2013
-			)
-				setRequestAttribute("tipoMisura", "AFFIDAMENTO");
-		}*/
+		 * if (lDecreto != null) { if ("2005".equals(lDecreto.getCodTipoMisura()))
+		 * setRequestAttribute("tipoMisura", "DETENZIONE"); else if
+		 * ("2006".equals(lDecreto.getCodTipoMisura()) || "2008".equals(lDecreto.getCodTipoMisura()) // new //
+		 * DL // 146 // 2013 ) setRequestAttribute("tipoMisura", "AFFIDAMENTO"); }
+		 */
 		// MEV_9 - FINE
+
+		// pagina di ritorno
 		return PG_LOAD_DETTAGLIO_MA_AMM_PROVVISORIA;
 	}
+
 }

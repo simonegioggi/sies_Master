@@ -7,9 +7,8 @@ import f3b.model.GenericModel;
 import f3b.util.DateUtils;
 
 /**
- * Title: MisuraAlternativaModel
- * Description: Classe Model che rappresenta il MisuraAlternativa
- * 
+ * MisuraAlternativaModel - Classe Model che rappresenta il MisuraAlternativa
+ *
  * @version 1.0
  */
 public class MisuraAlternativaModel extends GenericModel {
@@ -1158,9 +1157,8 @@ public class MisuraAlternativaModel extends GenericModel {
 				+ "[ mCodTdsCompetente            = " + mCodTdsCompetente + " ]\n"
 				+ "[ mFlagSituazione              = " + mFlagSituazione + " ]\n"
 				+ "[ mDescTdsCompetente           = " + mDescTdsCompetente + " ]\n"
-				+ "[ mDescSedeTdsCompetente       = " + mDescSedeTdsCompetente + " ]\n" +
-
-				"[ mCodTipoDecisioneMaAt       = " + mCodTipoDecisioneMaAt + " ]\n"
+				+ "[ mDescSedeTdsCompetente       = " + mDescSedeTdsCompetente + " ]\n"
+				+ "[ mCodTipoDecisioneMaAt       = " + mCodTipoDecisioneMaAt + " ]\n"
 				+ "[ mDescrTipoDecisioneMaAt     = " + mDescrTipoDecisioneMaAt + " ]\n"
 				+ "[ mCodTipoMisuraMaAt          = " + mCodTipoMisuraMaAt + " ]\n"
 				+ "[ mDescrTipoMisuraMaAt        = " + mDescrTipoMisuraMaAt + " ]\n"

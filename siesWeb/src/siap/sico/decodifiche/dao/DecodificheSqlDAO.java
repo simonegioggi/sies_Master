@@ -475,9 +475,9 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// Ticket#20211006019 - FINE
 		// MEV_9-SIEP: aggiunta condizione di estrazione x SOSPENSIONE ESECUZIONE PENA ed ordinamento
 		if ("PMM".equals(aCodTipoUfficio))
-			lStatement += "OR RV_LOW_VALUE = '0695' OR RV_LOW_VALUE = '0735') ";
+			lStatement += "OR RV_LOW_VALUE = '0695') "; // OR RV_LOW_VALUE = '0735'
 		else
-			lStatement += "OR RV_LOW_VALUE = '0684' OR RV_LOW_VALUE = '0724') ";
+			lStatement += "OR RV_LOW_VALUE = '0684') "; // OR RV_LOW_VALUE = '0724'
 		lStatement += "ORDER BY RV_MEANING";
 
 		setStatement(lStatement);
@@ -595,30 +595,30 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 			// lStatement += "AND (RV_LOW_VALUE = '0005' OR RV_LOW_VALUE = '0010' OR RV_LOW_VALUE = '0013') ";
 			if ("PMM".equals(aCodTipoUfficio))
 				lStatement += "AND (RV_LOW_VALUE = '0005' OR RV_LOW_VALUE = '0010' OR RV_LOW_VALUE = '0013' "
-						+ "OR RV_LOW_VALUE = '0693' OR RV_LOW_VALUE = '0733') ";
+						+ "OR RV_LOW_VALUE = '0693') "; // OR RV_LOW_VALUE = '0733'
 			else
 				lStatement += "AND (RV_LOW_VALUE = '0005' OR RV_LOW_VALUE = '0010' OR RV_LOW_VALUE = '0013' "
-						+ "OR RV_LOW_VALUE = '0682' OR RV_LOW_VALUE = '0722') ";
+						+ "OR RV_LOW_VALUE = '0682') "; // OR RV_LOW_VALUE = '0722'
 		else if (aMisAlt.equals("AFFIDAMENTO")) {
 			// MEV_9-SIEP: aggiunta condizione di estrazione x AFFIDAMENTO IN PROVA
 			// lStatement += "AND (RV_LOW_VALUE = '0001' OR RV_LOW_VALUE = '0002' OR RV_LOW_VALUE = '0003')";
 			if ("PMM".equals(aCodTipoUfficio))
 				lStatement += "AND (RV_LOW_VALUE = '0001' OR RV_LOW_VALUE = '0002' OR RV_LOW_VALUE = '0003' "
-						+ "OR RV_LOW_VALUE = '0690' OR RV_LOW_VALUE = '0691' OR RV_LOW_VALUE = '0692' "
-						+ "OR RV_LOW_VALUE = '0730' OR RV_LOW_VALUE = '0731' OR RV_LOW_VALUE = '0732') ";
+						+ "OR RV_LOW_VALUE = '0690' OR RV_LOW_VALUE = '0691' OR RV_LOW_VALUE = '0692') ";
+			// + "OR RV_LOW_VALUE = '0730' OR RV_LOW_VALUE = '0731' OR RV_LOW_VALUE = '0732') ";
 			else
 				lStatement += "AND (RV_LOW_VALUE = '0001' OR RV_LOW_VALUE = '0002' OR RV_LOW_VALUE = '0003' "
-						+ "OR RV_LOW_VALUE = '0680' OR RV_LOW_VALUE = '0681' "
-						+ "OR RV_LOW_VALUE = '0720' OR RV_LOW_VALUE = '0721') ";
+						+ "OR RV_LOW_VALUE = '0680' OR RV_LOW_VALUE = '0681') ";
+			// + "OR RV_LOW_VALUE = '0720' OR RV_LOW_VALUE = '0721') ";
 		} else if (aMisAlt.equals("SEMILIBERTA"))
 			// MEV_9-SIEP: aggiunta condizione di estrazione x SEMILIBERTA'
 			// lStatement += "AND (RV_LOW_VALUE = '0004') ";
 			if ("PMM".equals(aCodTipoUfficio))
 				lStatement += "AND (RV_LOW_VALUE = '0004' "
-						+ "OR RV_LOW_VALUE = '0694' OR RV_LOW_VALUE = '0734') ";
+						+ "OR RV_LOW_VALUE = '0694') "; // OR RV_LOW_VALUE = '0734'
 			else
 				lStatement += "AND (RV_LOW_VALUE = '0004' "
-						+ "OR RV_LOW_VALUE = '0683' OR RV_LOW_VALUE = '0723') ";
+						+ "OR RV_LOW_VALUE = '0683') "; // OR RV_LOW_VALUE = '0723'
 		else if (aMisAlt.equals("INDULTINO"))
 			lStatement += "AND (RV_LOW_VALUE = '2245') ";
 		else if (aMisAlt.equals(ICostantiMisuraAlternativa.ESP_PRESSO_DOM))

@@ -85,7 +85,8 @@ public class ActLoadInserisciMAAffidamentoInProva extends ActConcessione {
 			String[] lProvv = { "04", "09", "12" };
 			// carica nel model il tipo motivo
 			String[] lMotivo = null;
-			if ("29".equals(lCodPosizione)) {// Pos Giu 29 Detenzione Domiciliare Provvisoria
+			// Pos Giu 29 Detenzione Domiciliare Provvisoria
+			if ("29".equals(lCodPosizione)) {
 				// carica nel model il tipo motivo
 				lMotivo = new String[] { "2005" };
 			} else {
@@ -129,6 +130,7 @@ public class ActLoadInserisciMAAffidamentoInProva extends ActConcessione {
 		// LogF3B.getLogger()
 		siesLogger.debug(getClass().getName() + ".processRequest: fine");
 
+		// pagina di ritorno
 		return PG_LOAD_INSERISCI_MA_CONCESSIONE;
 	}
 

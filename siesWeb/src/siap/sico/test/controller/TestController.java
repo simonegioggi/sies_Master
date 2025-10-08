@@ -42,8 +42,8 @@ import siap.sico.versione.util.VersionProperties;
 import siap.sico.webservice.config.NscProperties;
 
 /**
- * Title: TestController Description: Classe che realizza il test del sistema SIES interrogando varie
- * componenti del nostro sistema e compilando il documento di test
+ * TestController - Classe che realizza il test del sistema SIES interrogando varie componenti del nostro
+ * sistema e compilando il documento di test
  */
 @SuppressWarnings("rawtypes")
 public class TestController {
@@ -389,11 +389,8 @@ public class TestController {
 	}
 
 	/*
-	 * ISSUE MEV : aggiunti metodi di test connessione per PagoPA - PST 
-	 * Numero MEV : 2023-33 
-	 * Autore : sgioggi
-	 * Data : 8 giu 2023 
-	 * Branch : MEV_2023-33
+	 * ISSUE MEV : aggiunti metodi di test connessione per PagoPA - PST Numero MEV : 2023-33 Autore : sgioggi
+	 * Data : 8 giu 2023 Branch : MEV_2023-33
 	 */
 	private String[] testConnectionPagoPA(String endpointAddress) throws MalformedURLException, IOException {
 

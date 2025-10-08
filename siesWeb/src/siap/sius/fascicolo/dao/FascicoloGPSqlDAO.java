@@ -9,8 +9,7 @@ import siap.dao.SIAPSqlDAO;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 
 /**
- * Title: FascicoloSiusSqlDAO
- * Description: Classe SqlDAO che rappresenta la tabella FascicoloSius
+ * FascicoloSiusSqlDAO - Classe SqlDAO che rappresenta la tabella FascicoloSius
  * 
  * @version 1.0
  */
@@ -99,7 +98,7 @@ public class FascicoloGPSqlDAO extends SIAPSqlDAO {
 		aModel.getGeneraleProcedimentoModel().setTipoDefinizione(getString("TIPO_DEFINIZIONE"));
 		aModel.getGeneraleProcedimentoModel().setDescrDefinizione(getString("DESCR_DEFINIZIONE"));
 		aModel.getGeneraleProcedimentoModel().setDataDefinizione(getDate("DATA_DEFINIZIONE"));
-		// MEV_): aggiunta estrazione data_restituzione
+		// MEV_9: aggiunta estrazione data_restituzione
 		aModel.getGeneraleProcedimentoModel().setDataRestituzione(getDate("DATA_RESTITUZIONE"));
 		return aModel;
 	}

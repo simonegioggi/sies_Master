@@ -1,10 +1,10 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ page import="java.math.BigDecimal"%>
-<%@ page import="f3b.web.IWebConstants"%>
+
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
+<%@ page import="f3b.web.IWebConstants"%>
 
-<%@ page import="siap.web.ISIAPCostantiWeb"%>
 <%@ page import="siap.sico.evento.model.EventoModel"%>
 <%@ page import="siap.sico.evento.action.ICostantiEvento"%>
 <%@ page import="siap.siep.luogodetenzione.model.LuogoDetenzioneModel"%>
@@ -15,40 +15,29 @@
 <%@ page import="siap.siep.notifica.model.NotificaModel"%>
 <%@ page import="siap.siep.avvocato.model.AvvocatoSiepModel"%>
 <%@ page import="siap.siep.autoritaesterna.model.AutoritaEsternaModel"%>
-<%@ page import="siap.siep.istitutodetenzione.model.IstitutoDetenzioneModel" %>
+<%@ page import="siap.siep.istitutodetenzione.model.IstitutoDetenzioneModel"%>
+<%@ page import="siap.web.ISIAPCostantiWeb"%>
 
-<jsp:useBean id="eventonotifica"     scope="request" class="siap.sico.evento.model.EventoNotificaModel"/>
-<jsp:useBean id="misuraalternativa"  scope="request" class="siap.sico.misuraalternativa.model.MisuraAlternativaModel"/>
-<jsp:useBean id="verbale"            scope="request" class="siap.siep.verbale.model.VerbaleModel"/>
-
-<jsp:useBean id="posizioneluogoaltra" scope="request" class="siap.siep.posizione.model.PosizioneGiuridicaLuogoDetenzioneAltraCausaModel"/>
-<jsp:useBean id="magistrato"         scope="request" class="siap.sico.magistrato.model.MagistratoModel"/>
-<jsp:useBean id="penaresidua"        scope="request" class="siap.siep.penaresidua.model.PenaResiduaModel"/>
-
-
-<jsp:useBean id="tipoMisura"      scope="request" class="java.lang.String"/>
-
-
-<jsp:useBean id="autoritaEsternaE"   scope="request" class="siap.siep.autoritaesterna.model.AutoritaEsternaModel"/>
-<jsp:useBean id="NoteAutE"      scope="request" class="java.lang.String"/>
-
-<jsp:useBean id="autoritaEsternaC"   scope="request" class="siap.siep.autoritaesterna.model.AutoritaEsternaModel"/>
-<jsp:useBean id="NoteAutC"      scope="request" class="java.lang.String"/>
-
-<jsp:useBean id="UffTDS"       scope="request" class="java.lang.String"/>
-<jsp:useBean id="NoteTDS"      scope="request" class="java.lang.String"/>
-
-<jsp:useBean id="UffUDS"       scope="request" class="java.lang.String"/>
-<jsp:useBean id="NoteUDS"      scope="request" class="java.lang.String"/>
-
-<jsp:useBean id="daticssa"      scope="request" class="siap.sico.cssa.model.CSSAModel"/>
-<jsp:useBean id="NoteCssa"      scope="request" class="java.lang.String"/>
-
-
-<jsp:useBean id="UfficioEmittente"   scope="request" class="siap.sico.ufficio.model.UfficioModel"/>
-
+<jsp:useBean id="eventonotifica"     	scope="request" class="siap.sico.evento.model.EventoNotificaModel"/>
+<jsp:useBean id="misuraalternativa"  	scope="request" class="siap.sico.misuraalternativa.model.MisuraAlternativaModel"/>
+<jsp:useBean id="verbale"            	scope="request" class="siap.siep.verbale.model.VerbaleModel"/>
+<jsp:useBean id="posizioneluogoaltra"	scope="request" class="siap.siep.posizione.model.PosizioneGiuridicaLuogoDetenzioneAltraCausaModel"/>
+<jsp:useBean id="magistrato"         	scope="request" class="siap.sico.magistrato.model.MagistratoModel"/>
+<jsp:useBean id="penaresidua"        	scope="request" class="siap.siep.penaresidua.model.PenaResiduaModel"/>
+<jsp:useBean id="tipoMisura"      		scope="request" class="java.lang.String"/>
+<jsp:useBean id="autoritaEsternaE"   	scope="request" class="siap.siep.autoritaesterna.model.AutoritaEsternaModel"/>
+<jsp:useBean id="NoteAutE"      		scope="request" class="java.lang.String"/>
+<jsp:useBean id="autoritaEsternaC"   	scope="request" class="siap.siep.autoritaesterna.model.AutoritaEsternaModel"/>
+<jsp:useBean id="NoteAutC"      		scope="request" class="java.lang.String"/>
+<jsp:useBean id="UffTDS"       			scope="request" class="java.lang.String"/>
+<jsp:useBean id="NoteTDS"      			scope="request" class="java.lang.String"/>
+<jsp:useBean id="UffUDS"       			scope="request" class="java.lang.String"/>
+<jsp:useBean id="NoteUDS"      			scope="request" class="java.lang.String"/>
+<jsp:useBean id="daticssa"      		scope="request" class="siap.sico.cssa.model.CSSAModel"/>
+<jsp:useBean id="NoteCssa"      		scope="request" class="java.lang.String"/>
+<jsp:useBean id="UfficioEmittente"   	scope="request" class="siap.sico.ufficio.model.UfficioModel"/>
 <%-- MEV10-s3: aggiunto useBean --%>
-<jsp:useBean id="codiceTipoUfficio" scope="request" class="java.lang.String"/>
+<jsp:useBean id="codiceTipoUfficio" 	scope="request" class="java.lang.String"/>
 
 <%
 //==============================================================================
@@ -58,34 +47,29 @@
 // al decreto/ordinanza, sia per il dettaglio del provvedimento collegato al
 // verbale di sottomissione agli obblighi dopo la registrazione data inizio misura
 //==============================================================================
-
 FascicoloSiepModel lFascicoloAssociato = (FascicoloSiepModel)session.getAttribute("fascicolo");
-
 PosizioneGiuridicaModel lPosizione = posizioneluogoaltra.getPosizioneGiuridica();
 LuogoDetenzioneModel lLuogoDetenzione = posizioneluogoaltra.getLuogoDetenzione();
 AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
-if(lPosizione == null)
-  lPosizione = new PosizioneGiuridicaModel();
-
-if(lLuogoDetenzione == null)
-  lLuogoDetenzione = new LuogoDetenzioneModel();
-
-if(lAltraCausa == null)
-  lAltraCausa = new AltraCausaModel();
+if (lPosizione == null)
+	lPosizione = new PosizioneGiuridicaModel();
+if (lLuogoDetenzione == null)
+	lLuogoDetenzione = new LuogoDetenzioneModel();
+if (lAltraCausa == null)
+	lAltraCausa = new AltraCausaModel();
 %>
 <html>
 <head>
-  <title>[S.I.E.S.] - Gestione evento </title>
-  <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
-  <script language="JavaScript" src="<%=IWebConstants.JS_CONFIRM%>"></script>
-  <script language="JavaScript" src="<%=ISIAPCostantiWeb.JS_CONTROL_UPLOAD%>"></script>
-
-  <script language="JavaScript">
-  <%-- MEV_9 si aggiunge il tasto di modifica --%>
-    function modifica() {
-      document.modifica.submit();
-    }
-  </script>
+<title>[S.I.E.S.] - Gestione evento </title>
+<link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
+<script language="JavaScript" src="<%=IWebConstants.JS_CONFIRM%>"></script>
+<script language="JavaScript" src="<%=ISIAPCostantiWeb.JS_CONTROL_UPLOAD%>"></script>
+<script language="JavaScript">
+<%-- MEV_9 si aggiunge il tasto di modifica --%>
+function modifica() {
+	document.modifica.submit();
+}
+</script>
 </head>
 <body class="corpo">
 
@@ -93,7 +77,7 @@ if(lAltraCausa == null)
   <tr>
     <td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
     <td class="LBG"><font class="label">Funzione :</font>&nbsp;&nbsp;
-      <font class="campo">Dettaglio Ammissone/Applicazione Provvisoria Semilibertà</font>
+      <font class="campo">Dettaglio Ammissone Provvisoria/Applicazione Semilibertà</font>
     </td>
 
 <%
@@ -358,11 +342,11 @@ else if("03".equals(misuraalternativa.getCodTipoDecisione() )) {
   <td class="l">Data Emissione <%=lTipoProvvedimento %> </td>
   <td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisione(),"dd-MM-yyyy"))%></font></td>
 </tr>
-
-<tr>
-  <td class="l">Data Esecutivita'</td>
-  <td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataEsecutivita(),"dd-MM-yyyy"),"&nbsp;")%></font></td>
-</tr>
+<%-- MEV_2024-092: rimossa la data di esecutivita' --%>
+<!-- <tr> -->
+<!--   <td class="l">Data Esecutivita'</td> -->
+<%--   <td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataEsecutivita(),"dd-MM-yyyy"),"&nbsp;")%></font></td> --%>
+<!-- </tr> -->
 
 <%if(verbale.getDataEmissione()!= null) {%>
 <tr>

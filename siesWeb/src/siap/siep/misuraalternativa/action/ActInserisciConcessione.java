@@ -272,7 +272,6 @@ public class ActInserisciConcessione extends ActConcessione {
 						ICostantiPenaResidua.CAMPO_MESE_DATA_FINE,
 						ICostantiPenaResidua.CAMPO_GIORNO_DATA_FINE));
 
-			siesLogger.debug("TEST 1");
 			if (!lPosMod.isLibero())
 				lMisMod = SettaReclusioneArresto(lPenaResMod, lMisMod);
 
@@ -354,7 +353,6 @@ public class ActInserisciConcessione extends ActConcessione {
 			if (lDataInizio != null)
 				lMisAlModConcessa.setDataInizioMisura(lDataInizio);
 
-			siesLogger.debug("TEST 2");
 			if (!lPosMod.isLibero())
 				lMisAlModConcessa = SettaReclusioneArresto(lPenaResMod, lMisAlModConcessa);
 

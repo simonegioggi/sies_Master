@@ -347,7 +347,6 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
-			daoEx.printStackTrace();
 			throw new SIUSException(
 					"DepositoOrdinanzaPcController.ExInserisciOrdinanza: Non posso leggere : " + daoEx);
 		} catch (SQLException sqlEx) {
@@ -355,7 +354,6 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("SQLException: " + sqlEx);
-			sqlEx.printStackTrace();
 			throw new SIUSException(
 					"DepositoOrdinanzaPcController.ExInserisciOrdinanza: Non posso leggere  : " + sqlEx);
 		} catch (Exception e) {
@@ -363,7 +361,6 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + e);
-			e.printStackTrace();
 			throw new SIUSException("DepositoOrdinanzaPcController.ExInserisciOrdinanza:" + e);
 		} finally {
 			cleanup(lConn);
@@ -410,7 +407,6 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + e);
-			e.printStackTrace();
 			throw new SIUSException("DepositoOrdinanzaPcController.ExInserisciOrdinanza:" + e);
 		} finally {
 			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati

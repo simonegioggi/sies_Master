@@ -452,8 +452,8 @@ public class DifensoreSqlDao extends SIAPSqlDAO {
 		// 20250618 [SG]: controllo di consistenza per la sentenza
 		String fasSieIdFascicoloSiep = (Utils.isNullObj(sentenza)
 				&& Utils.isNullObj(sentenza.getFasSieIdFascicoloSiep()))
-						? sentenza.getFasSieIdFascicoloSiep().toString()
-						: "0";
+						? "0"
+						: sentenza.getFasSieIdFascicoloSiep().toString();
 		lStatement += "	FAS_SIE_ID_FASCICOLO_SIEP=" + fasSieIdFascicoloSiep + " AND";
 		lStatement += "	FLAG_CANCELLATO ='N' and data_fine_validita is NULL";
 		// INIZIO: MEV_21 (avvocati)

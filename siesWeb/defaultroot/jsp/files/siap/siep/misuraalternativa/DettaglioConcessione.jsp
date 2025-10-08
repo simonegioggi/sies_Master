@@ -97,11 +97,11 @@ if (tipoMisura.equals("AFFIDAMENTO")) {
 <%
 } else if (tipoMisura.equals("SEMILIBERTA")) {
 %>
-			<font class="campo">Dettaglio Concessione Semilibertà</font>
+			<font class="campo">Dettaglio Concessione Semilibert&agrave;</font>
 <%
 } else if (tipoMisura.equals("INDULTINO")) {
 %>
-			<font class="campo">Dettaglio Concessione L:207/2003</font>
+			<font class="campo">Dettaglio Concessione L.207/2003</font>
 <%
 } else if (tipoMisura.equals(ICostantiMisuraAlternativa.ESP_PRESSO_DOM)) {
 %>
@@ -516,16 +516,17 @@ if (verbale.getDataEmissione() != null) {
 <%
 	if (misuraalternativa.getDataInizioMisura() != null) {
 		// MEV_9-SIEP: aggiunta diversificazione dell'etichetta
+		// MEV_2024-092: rimossa diversificazione dell'etichetta
 		boolean testDataFineMisura = misuraalternativa.getDataFineMisura() == null;
-		if (tipoMisura.equals("AFFIDAMENTO")) {
+//		if (tipoMisura.equals("AFFIDAMENTO")) {
 %>
-		<td class="l">Data Applicazione Provvisoria</td>
+<!-- 		<td class="l">Data Applicazione Provvisoria</td> -->
 <%
-		} else {
+//		} else {
 %>
 		<td class="l">Data Inizio Misura</td>
 <%
-		}
+//		}
 %>
 		<td class="l" <%if (testDataFineMisura){%>colspan="3"<%}%>>
 			<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataInizioMisura(),"dd-MM-yyyy"))%></font>

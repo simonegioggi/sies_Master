@@ -9,20 +9,8 @@ import siap.sico.decodifiche.model.DecodificheModel;
 import siap.sico.decodifiche.util.DecodificheUtils;
 
 /**
- * <p>
- * Title: FascicoloUtils
- * </p>
- * <p>
- * Description: Classe di utilita' per il package FascicoloSius
- * </p>
- * <p>
- * Copyright: Copyright (c) 2004
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * FascicoloUtils - Classe di utilita' per il package FascicoloSius
  *
- * @author Vincenzo
  * @version 1.0
  */
 @SuppressWarnings("rawtypes")

@@ -46,18 +46,7 @@ import siap.sius.avvocato.dao.AvvocatoFascicoloSiusSqlDAO;
 import siap.sius.avvocato.model.AvvocatoSiusModel;
 
 /**
- * <p>
- * Title: NotificaController
- * </p>
- * <p>
- * Description: Classe Controller per Notifica
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * NotificaController - Classe Controller per Notifica
  *
  * @version 1.0
  */
@@ -1363,12 +1352,12 @@ public class NotificaController extends SiapController implements INotifica {
 		return lNotifiche;
 	}
 
-	/* 
+	/*
 	 * ISSUE MEV : AGGIUNTO METODO DI AGGIORNAMENTO DATI NOTIFICHE
 	 * Numero MEV : 9
-	 * Autore    : sgioggi
-	 * Data      : 18 apr 2023
-	 * Branch    : MEV_9
+	 * Autore : sgioggi
+	 * Data : 18 apr 2023
+	 * Branch : MEV_9
 	 */
 	@Override
 	public void ExModificaNotifiche(Vector<NotificaModel> notifiche, String[] check) throws F3BException {
@@ -1446,6 +1435,6 @@ public class NotificaController extends SiapController implements INotifica {
 			cleanup(c);
 		}
 	}
-	//***** FINE INTERVENTO MEV_9 *****//
+	// ***** FINE INTERVENTO MEV_9 *****//
 
 }

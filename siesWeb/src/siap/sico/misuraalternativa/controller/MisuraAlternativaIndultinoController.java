@@ -58,18 +58,7 @@ import siap.siep.statoprocedimento.model.StatoProcedimentoModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * <p>
- * Title: MisuraAlternativaController
- * </p>
- * <p>
- * Description: Classe Controller per MisuraAlternativa
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * MisuraAlternativaController - Classe Controller per MisuraAlternativa
  *
  * @version 1.0
  */
@@ -1835,28 +1824,53 @@ public class MisuraAlternativaIndultinoController extends SiapController
 				lCodTipoPosGiuridicaAltraCausa = lPosAltra.getAltraCausa().getCodTipoPosGiuridica();
 			}
 
-			// MEV-9 si aggiungono gli ulteriori codici motivo (sorveglianza)
-			Set<String> codiciAffidamentoSorv = new HashSet<String>(Arrays.asList(new String[]{"2006","2008","0680","0681","0690","0691","0692"}));
-			Set<String> codiciDetenzioneSorv  = new HashSet<String>(Arrays.asList(new String[]{"2005","0682","0693"}));
-			
+			// MERGE MEV-092 into MEV_9
+			// // MEV_9 si aggiungono gli ulteriori codici motivo (sorveglianza)
+			// Set<String> codiciAffidamentoSorv = new HashSet<>(
+			// Arrays.asList(new String[] { "2006", "2008", "0680", "0681", "0690", "0691", "0692" }));
+			// Set<String> codiciDetenzioneSorv = new HashSet<>(
+			// Arrays.asList(new String[] { "2005", "0682", "0693" }));
+			// MEV_2024-092: rework. L'applicazione non è più provvisoria per cui la PG di arrivo va
+			// differenziata tra ammissione provvisoria e applicazione
+			Set<String> codiciAffidamentoAppl = new HashSet<>(
+					Arrays.asList(new String[] { "0680", "0681", "0690", "0691", "0692" }));
+			Set<String> codiciDetenzioneAppl = new HashSet<>(
+					Arrays.asList(new String[] { "2005", "0682", "0693" }));
+			// MEV_2024-092: rework - FINE
 			// se la misura è eseguita da SORV cambio sempre la posizione giuridica
 			String lPosizioneDiArrivo = null;
 			boolean lCambioPos = false;
 			if (lMisModelOrder.getCodTipoUfficioScarcerazione().equals("SORV")) {
 				lCambioPos = true;
-				// MEV_9 - Gestiti i nuovi codici
-//				if ("2006".equals(lMisModelOrder.getCodTipoMisura()) || "2008".equals(lMisModelOrder.getCodTipoMisura()) // dl 146 2013
-//				) // Per Tipo Misura "AFFIDAMENTO"
-				if (codiciAffidamentoSorv.contains(lMisModelOrder.getCodTipoMisura()))
-				{
-					lPosizioneDiArrivo = "54"; // Affidamento in Prova Provvisorio - Cambio da 51 a 54
+				// // MEV_9 - Gestiti i nuovi codici
+				// // if ("2006".equals(lMisModelOrder.getCodTipoMisura()) ||
+				// // "2008".equals(lMisModelOrder.getCodTipoMisura()) // dl 146 2013
+				// // ) // Per Tipo Misura "AFFIDAMENTO"
+				// if (codiciAffidamentoSorv.contains(lMisModelOrder.getCodTipoMisura())) {
+				// lPosizioneDiArrivo = "54"; // Affidamento in Prova Provvisorio - Cambio da 51 a 54
+				// }
+				//
+				// // MEV_9 - Gestiti i nuovi codici
+				// // if ("2005".equals(lMisModelOrder.getCodTipoMisura())) // Per Tipo Misura "DETENZIONE"
+				// if (codiciDetenzioneSorv.contains(lMisModelOrder.getCodTipoMisura())) {
+				// lPosizioneDiArrivo = "29"; // Detenzione Domiciliare Provvisoria
+				// }
+				if ("2006".equals(lMisModelOrder.getCodTipoMisura())
+						|| "2008".equals(lMisModelOrder.getCodTipoMisura()) // dl 146 2013
+				) { // Per Tipo Misura "AFFIDAMENTO"
+					// MEV_2024-092: rework. si distingue tra provvisoria e definitiva
+					if (codiciAffidamentoAppl.contains(lMisModelOrder.getCodTipoMisura()))
+						lPosizioneDiArrivo = "13"; // Espiazione Pena in Regime di Affidamento in Prova
+					else
+						lPosizioneDiArrivo = "54"; // Affidamento in Prova Provvisorio - Cambio da 51 a 54
 				}
 
-			  // MEV_9 - Gestiti i nuovi codici
-				//if ("2005".equals(lMisModelOrder.getCodTipoMisura())) // Per Tipo Misura "DETENZIONE"
-				if (codiciDetenzioneSorv.contains(lMisModelOrder.getCodTipoMisura()))
-				{
-					lPosizioneDiArrivo = "29"; // Detenzione Domiciliare Provvisoria
+				if ("2005".equals(lMisModelOrder.getCodTipoMisura())) { // Per Tipo Misura "DETENZIONE"
+					// MEV_2024-092: rework. si distingue tra provvisoria e definitiva
+					if (codiciDetenzioneAppl.contains(lMisModelOrder.getCodTipoMisura()))
+						lPosizioneDiArrivo = "12"; // Espiazione Pena in Regime di Detenzione Domiciliare
+					else
+						lPosizioneDiArrivo = "29"; // Detenzione Domiciliare Provvisoria
 				}
 			}
 
@@ -1884,24 +1898,41 @@ public class MisuraAlternativaIndultinoController extends SiapController
 									|| lCodTipoPosGiuridicaAltraCausa.equals("76")
 									|| lCodTipoPosGiuridicaAltraCausa.equals("77"))))) {
 				lCambioPos = true;
-				// MEV_9 - Gestiti i nuovi codici
-				//if (("2006".equals(lMisModelOrder.getCodTipoMisura()) || "2008".equals(lMisModelOrder.getCodTipoMisura()))
-				if (   codiciAffidamentoSorv.contains(lMisModelOrder.getCodTipoMisura())					
-						&& !"54".equals(lPosMod.getCodPosizioneGiuridica())) // Per Tipo Misura "AFFIDAMENTO"
-				{
-					lPosizioneDiArrivo = "54"; // Affidamento in Prova Provvisorio - Cambio da 51 a 54
+				// // MEV_9 - Gestiti i nuovi codici
+				// // if (("2006".equals(lMisModelOrder.getCodTipoMisura()) ||
+				// // "2008".equals(lMisModelOrder.getCodTipoMisura()))
+				// if (codiciAffidamentoSorv.contains(lMisModelOrder.getCodTipoMisura())
+				// && !"54".equals(lPosMod.getCodPosizioneGiuridica())) { // Per Tipo Misura "AFFIDAMENTO"
+				// lPosizioneDiArrivo = "54"; // Affidamento in Prova Provvisorio - Cambio da 51 a 54
+				// }
+				// // MEV_9 - Gestiti i nuovi codici
+				// // if ("2005".equals(lMisModelOrder.getCodTipoMisura())
+				// if (codiciDetenzioneSorv.contains(lMisModelOrder.getCodTipoMisura())
+				// && !"29".equals(lPosMod.getCodPosizioneGiuridica())) { // Per Tipo Misura "DETENZIONE"
+				// lPosizioneDiArrivo = "29"; // Detenzione Domiciliare Provvisoria
+				// }
+				if (("2006".equals(lMisModelOrder.getCodTipoMisura())
+						|| "2008".equals(lMisModelOrder.getCodTipoMisura()))
+						&& !"54".equals(lPosMod.getCodPosizioneGiuridica())) {
+					// Per Tipo Misura "AFFIDAMENTO"
+					// MEV_2024-092: rework. si distingue tra provvisoria e definitiva
+					if (codiciAffidamentoAppl.contains(lMisModelOrder.getCodTipoMisura()))
+						lPosizioneDiArrivo = "13"; // Espiazione Pena in Regime di Affidamento in Prova
+					else
+						lPosizioneDiArrivo = "54"; // Affidamento in Prova Provvisorio - Cambio da 51 a 54
 				}
 
-				// MEV_9 - Gestiti i nuovi codici
-				//if ("2005".equals(lMisModelOrder.getCodTipoMisura())
-				if (   codiciDetenzioneSorv.contains(lMisModelOrder.getCodTipoMisura())	
-						&& !"29".equals(lPosMod.getCodPosizioneGiuridica())) // Per Tipo Misura "DETENZIONE"
-				{
-					lPosizioneDiArrivo = "29"; // Detenzione Domiciliare Provvisoria
+				if ("2005".equals(lMisModelOrder.getCodTipoMisura())
+						&& !"29".equals(lPosMod.getCodPosizioneGiuridica())) { // Per Tipo Misura "DETENZIONE"
+					// MEV_2024-092: rework. si distingue tra provvisoria e definitiva
+					if (codiciDetenzioneAppl.contains(lMisModelOrder.getCodTipoMisura()))
+						lPosizioneDiArrivo = "12"; // Espiazione Pena in Regime di Detenzione Domiciliare
+					else
+						lPosizioneDiArrivo = "29"; // Detenzione Domiciliare Provvisoria
 				}
 			}
 
-			// ambrosino - vECCHIA VERSIONE
+			// ambrosino - Vecchia Versione
 			/*
 			 * // Per Tipo Misura "AFFIDAMENTO" e "DETENZIONE" if((lCambioPos) ||
 			 * ("2006".equals(lMisModelOrder.getCodTipoMisura()) &&( lCodPosizione.equals("03") ||
@@ -1923,19 +1954,23 @@ public class MisuraAlternativaIndultinoController extends SiapController
 			// SETTA LO STATO PROCEDIMENTO
 			String lStato = null;
 
-			// MEV_9 - si aggiungono gli ulteriori codici
-			//if ("2006".equals(lMisModelOrder.getCodTipoMisura()) || "2008".equals(lMisModelOrder.getCodTipoMisura())) {
-			if (codiciAffidamentoSorv.contains(lMisModelOrder.getCodTipoMisura())) {
+			// // MEV_9 - si aggiungono gli ulteriori codici
+			// // if ("2006".equals(lMisModelOrder.getCodTipoMisura()) ||
+			// // "2008".equals(lMisModelOrder.getCodTipoMisura())) {
+			// if (codiciAffidamentoSorv.contains(lMisModelOrder.getCodTipoMisura())) {
+			if ("2006".equals(lMisModelOrder.getCodTipoMisura())
+					|| "2008".equals(lMisModelOrder.getCodTipoMisura())
+					|| codiciAffidamentoAppl.contains(lMisModelOrder.getCodTipoMisura())) {
 				// Per Tipo Misura "AFFIDAMENTO"
 				if (lEveModel.getCodMotivo().equals("5420"))
 					lStato = "0522"; // Richiesto Verbale per codice 2006 (affidamento Terapeutica)
 				else if (lEveModel.getCodMotivo().equals("5421"))
-					lStato = "0523"; // Richiesto Verbale per codice 2008 ()				
-				// MEV_9 - nuovi codici		
+					lStato = "0523"; // Richiesto Verbale per codice 2008 ()
+				// MEV_9 - nuovi codici
 				else if (lEveModel.getCodMotivo().equals("1400"))
-					lStato = "0560"; 
+					lStato = "0560";
 				else if (lEveModel.getCodMotivo().equals("1401"))
-					lStato = "0561"; 
+					lStato = "0561";
 				else if (lEveModel.getCodMotivo().equals("1410"))
 					lStato = "0562";
 				else if (lEveModel.getCodMotivo().equals("1411"))
@@ -1944,30 +1979,31 @@ public class MisuraAlternativaIndultinoController extends SiapController
 					lStato = "0564";
 				// Nel caso di richiesta verbale
 				else if (lEveModel.getCodMotivo().equals("5422"))
-					lStato = "0565"; 
+					lStato = "0565";
 				else if (lEveModel.getCodMotivo().equals("5423"))
-					lStato = "0566"; 
+					lStato = "0566";
 				else if (lEveModel.getCodMotivo().equals("5424"))
 					lStato = "0567";
 				else if (lEveModel.getCodMotivo().equals("5425"))
 					lStato = "0568";
 				else if (lEveModel.getCodMotivo().equals("5426"))
-					lStato = "0569";				
+					lStato = "0569";
 				// MEV_9 - FINE
 				else if ("2006".equals(lMisModelOrder.getCodTipoMisura()))
 					lStato = "0520"; // Tutti gli altri eventi
 				else if ("2008".equals(lMisModelOrder.getCodTipoMisura()))
 					lStato = "0521"; // Tutti gli altri eventi
 				// lStato = "0173";
-			} else if (codiciDetenzioneSorv.contains(lMisModelOrder.getCodTipoMisura())) {	
-			//} else if ("2005".equals(lMisModelOrder.getCodTipoMisura())) { // Per Tipo Misura "DETENZIONE"
-				if ("2005".equals(lMisModelOrder.getCodTipoMisura())) 
+			} else if (codiciDetenzioneAppl.contains(lMisModelOrder.getCodTipoMisura())) {
+				// } else if ("2005".equals(lMisModelOrder.getCodTipoMisura())) { // Per Tipo Misura
+				// "DETENZIONE"
+				if ("2005".equals(lMisModelOrder.getCodTipoMisura()))
 					lStato = "0068";
-				else if (lEveModel.getCodMotivo().equals("1402")) 
+				else if (lEveModel.getCodMotivo().equals("1402"))
 					lStato = "0570";
-				else if (lEveModel.getCodMotivo().equals("1413")) 
-				  lStato = "0571";			
-		  }
+				else if (lEveModel.getCodMotivo().equals("1413"))
+					lStato = "0571";
+			}
 
 			InserimentoCancellazioneStatoProcedimento(lConn, aFascicolo.getIdFascicoloSiep(), lEveMod,
 					lStato);
@@ -2517,234 +2553,225 @@ public class MisuraAlternativaIndultinoController extends SiapController
 		}
 	}
 
-	
 	/**
 	 * Metodo di validazione dei provvdimenti legati all'applicazione provvosiria della semilibertà
-	 * 
+	 *
 	 * @since MEV_9-SIEP
 	 */
-  public EventoModel ExUpdateValidaMAAmmProvSemiliberta (EventoModel aEvento, FascicoloSiepModel aFascicolo)
-      throws F3BException {
+	public EventoModel ExUpdateValidaMAAmmProvSemiliberta(EventoModel aEvento, FascicoloSiepModel aFascicolo)
+			throws F3BException {
 
-    Connection lConn = null;
+		Connection lConn = null;
 
-    EventoSqlDAO lEveSqlDao = null;
-    PenaResiduaSqlDAO lPenResSqlDao = null;
-    MisuraAlternativaDAO lMiDAO = null;
-    MisuraAlternativaSqlDAO lMisSqlDAO = null;
-    LuogoDetenzioneDAO lLuogoDAO = null;
-    EventoDAO lEveDaoMisAlt = null;
+		EventoSqlDAO lEveSqlDao = null;
+		PenaResiduaSqlDAO lPenResSqlDao = null;
+		MisuraAlternativaDAO lMiDAO = null;
+		MisuraAlternativaSqlDAO lMisSqlDAO = null;
+		LuogoDetenzioneDAO lLuogoDAO = null;
+		EventoDAO lEveDaoMisAlt = null;
 
-    EventoModel lEveMod = new EventoModel(aEvento);
-    EventoDAO lEveDaoBlob = null;
+		EventoModel lEveMod = new EventoModel(aEvento);
+		EventoDAO lEveDaoBlob = null;
 
-    try {
-      lConn = getDBTransaction();
+		try {
+			lConn = getDBTransaction();
 
-      // 
-      lEveSqlDao = new EventoSqlDAO(lConn);
-      lEveSqlDao.ricercaEventoByKey(aEvento.getIdEvento());
-      EventoModel lEveModel = (EventoModel) lEveSqlDao.getModelByKey();
+			//
+			lEveSqlDao = new EventoSqlDAO(lConn);
+			lEveSqlDao.ricercaEventoByKey(aEvento.getIdEvento());
+			EventoModel lEveModel = (EventoModel) lEveSqlDao.getModelByKey();
 
-      // cerca Misura Alternariva by Evento
-      lMisSqlDAO = new MisuraAlternativaSqlDAO(lConn);
-      lMisSqlDAO.ricercaMisuraAlternativaCorrenteByIdEvento(lEveModel.getEveIdEvento());
-      MisuraAlternativaModel lMisModelOrder = (MisuraAlternativaModel) lMisSqlDAO.getModelByKey();
+			// cerca Misura Alternariva by Evento
+			lMisSqlDAO = new MisuraAlternativaSqlDAO(lConn);
+			lMisSqlDAO.ricercaMisuraAlternativaCorrenteByIdEvento(lEveModel.getEveIdEvento());
+			MisuraAlternativaModel lMisModelOrder = (MisuraAlternativaModel) lMisSqlDAO.getModelByKey();
 
-      // Valido l'evento riferito alla misura alternativa (decsreto/ordinanza)
-      if (   lMisModelOrder != null 
-      		&& lMisModelOrder.getIdMisuraAlternativa() != null) 
-      {
-        lEveSqlDao.ricercaEventoByKey(lMisModelOrder.getEveIdEvento());
-        EventoModel lEveModelMDS = (EventoModel) lEveSqlDao.getModelByKey();
-        lEveDaoMisAlt = new EventoDAO(lConn);
+			// Valido l'evento riferito alla misura alternativa (decsreto/ordinanza)
+			if (lMisModelOrder != null && lMisModelOrder.getIdMisuraAlternativa() != null) {
+				lEveSqlDao.ricercaEventoByKey(lMisModelOrder.getEveIdEvento());
+				EventoModel lEveModelMDS = (EventoModel) lEveSqlDao.getModelByKey();
+				lEveDaoMisAlt = new EventoDAO(lConn);
 
-        if (   lEveModelMDS != null 
-        		&& (lEveModelMDS.getFlagDocumentoRegistrato() == null
-            || lEveModelMDS.getFlagDocumentoRegistrato().equals("N"))) {
-          lEveModelMDS.setFlagDocumentoRegistrato("S");
-          lEveModelMDS.setCodOperatoreAggiornamento(aEvento.getCodOperatoreAggiornamento());
-          lEveModelMDS.setCodUfficioAggiornamento(aEvento.getCodUfficioAggiornamento());
-          lEveModelMDS.setDataAggiornamento(DateUtils.getSysDate());
+				if (lEveModelMDS != null && (lEveModelMDS.getFlagDocumentoRegistrato() == null
+						|| lEveModelMDS.getFlagDocumentoRegistrato().equals("N"))) {
+					lEveModelMDS.setFlagDocumentoRegistrato("S");
+					lEveModelMDS.setCodOperatoreAggiornamento(aEvento.getCodOperatoreAggiornamento());
+					lEveModelMDS.setCodUfficioAggiornamento(aEvento.getCodUfficioAggiornamento());
+					lEveModelMDS.setDataAggiornamento(DateUtils.getSysDate());
 
-          lEveDaoMisAlt.setDAOFromModelForUpdate(lEveModelMDS);
-          lEveDaoMisAlt.update();
-          lEveDaoMisAlt.stop();
-        }
-      }
+					lEveDaoMisAlt.setDAOFromModelForUpdate(lEveModelMDS);
+					lEveDaoMisAlt.update();
+					lEveDaoMisAlt.stop();
+				}
+			}
 
-      // Cerca POSIZIONE_GIURIDICA corrente
-      PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lPosAltra = null;
-      PosizioneGiuridicaModel lPosGiuModel = null;
-      
-      IPosizioneGiuridica lPosCtrl = SIEPLookupRemote.getPosizioneGiuridicaRemote();
-      lPosAltra = lPosCtrl.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicolo(
-          aFascicolo.getIdFascicoloSiep());
-          
-      lPosGiuModel = lPosAltra.getPosizioneGiuridica();
+			// Cerca POSIZIONE_GIURIDICA corrente
+			PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lPosAltra = null;
+			PosizioneGiuridicaModel lPosGiuModel = null;
 
-      String lCodTipoPosGiuridicaAltraCausa = "";
-      if (   lPosAltra.getAltraCausa() != null
-          && lPosAltra.getAltraCausa().getCodTipoPosGiuridica() != null
-          && !lPosAltra.getAltraCausa().getCodTipoPosGiuridica().equals("")) {
-        lCodTipoPosGiuridicaAltraCausa = lPosAltra.getAltraCausa().getCodTipoPosGiuridica();
-      }
+			IPosizioneGiuridica lPosCtrl = SIEPLookupRemote.getPosizioneGiuridicaRemote();
+			lPosAltra = lPosCtrl.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicolo(
+					aFascicolo.getIdFascicoloSiep());
 
-      
-      // se la misura è eseguita da SORV cambio sempre la posizione giuridica
-      String lPosizioneDiArrivo = null;
-      boolean lCambioPos = false;
-      if (lMisModelOrder.getCodTipoUfficioScarcerazione().equals("SORV")) {
-        lCambioPos = true;
-        lPosizioneDiArrivo = "14"; // Nuova PG
-      }
+			lPosGiuModel = lPosAltra.getPosizioneGiuridica();
 
-      // se la misura è eseguita da PROC cambio la posizione giuridica solo se non è libero
-      // da libero occorre fare prima il verbale, è il verbale che cambia la posizione
+			String lCodTipoPosGiuridicaAltraCausa = "";
+			if (lPosAltra.getAltraCausa() != null
+					&& lPosAltra.getAltraCausa().getCodTipoPosGiuridica() != null
+					&& !lPosAltra.getAltraCausa().getCodTipoPosGiuridica().equals("")) {
+				lCodTipoPosGiuridicaAltraCausa = lPosAltra.getAltraCausa().getCodTipoPosGiuridica();
+			}
 
-      // 20/05/2015
-      // MEV 10 S3 Minori - viene aggiunta una ulteriore condizione per i fascicoli
-      // la cui posizione giuridica è uguale a 07 (Libero) sulla tabella
-      // POSIZIONE_GIURICA e il codice tipo posizione giuridica (COD_TIPO_POS_GIURIDICA)
-      // presente sulla tabella ALTRA_CAUSA è uguale a 70, 71, 72, 78, 79, 80, 81
-      // oppure uguale a 73, 74, 75, 76, 77
-      if (   lMisModelOrder.getCodTipoUfficioScarcerazione().equals("PROC") 
-          && (   !lPosGiuModel.isLibero()
-              || (   lPosGiuModel.getCodPosizioneGiuridica().equals("07") 
-                  && (   lCodTipoPosGiuridicaAltraCausa.equals("70")
-                      || lCodTipoPosGiuridicaAltraCausa.equals("71")
-                      || lCodTipoPosGiuridicaAltraCausa.equals("72")
-                      || lCodTipoPosGiuridicaAltraCausa.equals("78")
-                      || lCodTipoPosGiuridicaAltraCausa.equals("79")
-                      || lCodTipoPosGiuridicaAltraCausa.equals("80")
-                      || lCodTipoPosGiuridicaAltraCausa.equals("81")
-                      || lCodTipoPosGiuridicaAltraCausa.equals("73")
-                      || lCodTipoPosGiuridicaAltraCausa.equals("74")
-                      || lCodTipoPosGiuridicaAltraCausa.equals("75")
-                      || lCodTipoPosGiuridicaAltraCausa.equals("76")
-                      || lCodTipoPosGiuridicaAltraCausa.equals("77")
-                     )
-                  )
-             )
-         ) 
-      {
-        lCambioPos = true;
-        lPosizioneDiArrivo = "14"; //FIXME verificare se gestire una nuova PG es 91
-      }
+			// se la misura è eseguita da SORV cambio sempre la posizione giuridica
+			String lPosizioneDiArrivo = null;
+			boolean lCambioPos = false;
+			if (lMisModelOrder.getCodTipoUfficioScarcerazione().equals("SORV")) {
+				lCambioPos = true;
+				lPosizioneDiArrivo = "14"; // Nuova PG
+			}
 
-      if (lCambioPos) {
-        InserimentoAggiornamentoPosizioneGiuridica(lConn, lPosizioneDiArrivo,
-        		lPosGiuModel, lEveModel.getDataEmissione(), lEveMod, aFascicolo.getIdFascicoloSiep(),
-            aEvento.getIdEvento());
-      }
+			// se la misura è eseguita da PROC cambio la posizione giuridica solo se non è libero
+			// da libero occorre fare prima il verbale, è il verbale che cambia la posizione
 
-      // SETTA LO STATO PROCEDIMENTO
-      String lStato = null;
-      if (lEveModel.getCodMotivo().equals("2007")) {
-        if (lEveModel.getCodTipoProvvedimento().equals("09"))
-        	lStato = "0576";
-        else 
-        	lStato = "0572";   
-      }
-      else if (lEveModel.getCodMotivo().equals("1403"))
-        lStato = "0573";    
-      else if (lEveModel.getCodMotivo().equals("1414"))
-        lStato = "0574";       
+			// 20/05/2015
+			// MEV 10 S3 Minori - viene aggiunta una ulteriore condizione per i fascicoli
+			// la cui posizione giuridica è uguale a 07 (Libero) sulla tabella
+			// POSIZIONE_GIURICA e il codice tipo posizione giuridica (COD_TIPO_POS_GIURIDICA)
+			// presente sulla tabella ALTRA_CAUSA è uguale a 70, 71, 72, 78, 79, 80, 81
+			// oppure uguale a 73, 74, 75, 76, 77
+			if (lMisModelOrder.getCodTipoUfficioScarcerazione().equals("PROC")
+					&& (!lPosGiuModel.isLibero() || (lPosGiuModel.getCodPosizioneGiuridica().equals("07")
+							&& (lCodTipoPosGiuridicaAltraCausa.equals("70")
+									|| lCodTipoPosGiuridicaAltraCausa.equals("71")
+									|| lCodTipoPosGiuridicaAltraCausa.equals("72")
+									|| lCodTipoPosGiuridicaAltraCausa.equals("78")
+									|| lCodTipoPosGiuridicaAltraCausa.equals("79")
+									|| lCodTipoPosGiuridicaAltraCausa.equals("80")
+									|| lCodTipoPosGiuridicaAltraCausa.equals("81")
+									|| lCodTipoPosGiuridicaAltraCausa.equals("73")
+									|| lCodTipoPosGiuridicaAltraCausa.equals("74")
+									|| lCodTipoPosGiuridicaAltraCausa.equals("75")
+									|| lCodTipoPosGiuridicaAltraCausa.equals("76")
+									|| lCodTipoPosGiuridicaAltraCausa.equals("77"))))) {
+				lCambioPos = true;
+				lPosizioneDiArrivo = "14"; // FIXME verificare se gestire una nuova PG es 91
+			}
 
-      // Delete/Insert
-      InserimentoCancellazioneStatoProcedimento(lConn, aFascicolo.getIdFascicoloSiep(), lEveMod, lStato);
+			if (lCambioPos) {
+				InserimentoAggiornamentoPosizioneGiuridica(lConn, lPosizioneDiArrivo, lPosGiuModel,
+						lEveModel.getDataEmissione(), lEveMod, aFascicolo.getIdFascicoloSiep(),
+						aEvento.getIdEvento());
+			}
 
-      // aggancio/duplico l'ultima PR a sistema
-      InserimentoAggiornamentoPenResMisuraAlternativa(lConn, lEveMod, aFascicolo.getIdFascicoloSiep(), "N");
+			// SETTA LO STATO PROCEDIMENTO
+			String lStato = null;
+			if (lEveModel.getCodMotivo().equals("2007")) {
+				if (lEveModel.getCodTipoProvvedimento().equals("09"))
+					lStato = "0576";
+				else
+					lStato = "0572";
+			} else if (lEveModel.getCodMotivo().equals("1403"))
+				lStato = "0573";
+			else if (lEveModel.getCodMotivo().equals("1414"))
+				lStato = "0574";
 
-      // aggiorna misura alternativa - Data Inizio Misura - Data Fine Misura
-      lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
-      lPenResSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiep(aFascicolo.getIdFascicoloSiep());
-      PenaResiduaModel lPenResMod = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
+			// Delete/Insert
+			InserimentoCancellazioneStatoProcedimento(lConn, aFascicolo.getIdFascicoloSiep(), lEveMod,
+					lStato);
 
-      // aggiorna misura alternativa - Data Inizio Misura - Data Fine Misura
-      lMiDAO = new MisuraAlternativaDAO(lConn);
-      String lAggiorna = "N";
-      if (lMisModelOrder != null) {
-        lMiDAO.setCondizioneUpdate(lMisModelOrder.getIdMisuraAlternativa());
+			// aggancio/duplico l'ultima PR a sistema
+			InserimentoAggiornamentoPenResMisuraAlternativa(lConn, lEveMod, aFascicolo.getIdFascicoloSiep(),
+					"N");
 
-        if (lMisModelOrder.getDataInizioMisura() == null && !lPosGiuModel.isLibero()) {
-          if (lMisModelOrder.getDataScarcerazione() != null) {
-            lMiDAO.setDataInizioMisura(lMisModelOrder.getDataScarcerazione());
-            lAggiorna = "S";
-          } else {
-            lMiDAO.setDataInizioMisura(lMisModelOrder.getDataDecisione());
-            lAggiorna = "S";
-          }
-        }
+			// aggiorna misura alternativa - Data Inizio Misura - Data Fine Misura
+			lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
+			lPenResSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiep(aFascicolo.getIdFascicoloSiep());
+			PenaResiduaModel lPenResMod = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
 
-        if (lPenResMod != null && lPenResMod.getDataFine() != null) {
-          lMiDAO.setDataFineMisura(lPenResMod.getDataFine());
-          lAggiorna = "S";
-        }
+			// aggiorna misura alternativa - Data Inizio Misura - Data Fine Misura
+			lMiDAO = new MisuraAlternativaDAO(lConn);
+			String lAggiorna = "N";
+			if (lMisModelOrder != null) {
+				lMiDAO.setCondizioneUpdate(lMisModelOrder.getIdMisuraAlternativa());
 
-        if (lAggiorna.equals("S")) {
-          lMiDAO.update();
-        }
+				if (lMisModelOrder.getDataInizioMisura() == null && !lPosGiuModel.isLibero()) {
+					if (lMisModelOrder.getDataScarcerazione() != null) {
+						lMiDAO.setDataInizioMisura(lMisModelOrder.getDataScarcerazione());
+						lAggiorna = "S";
+					} else {
+						lMiDAO.setDataInizioMisura(lMisModelOrder.getDataDecisione());
+						lAggiorna = "S";
+					}
+				}
 
-        lMiDAO.stop();
-      }
+				if (lPenResMod != null && lPenResMod.getDataFine() != null) {
+					lMiDAO.setDataFineMisura(lPenResMod.getDataFine());
+					lAggiorna = "S";
+				}
 
-      // ** Aggiorna SCADENZARIO** 13 - Misura Altrenativa
-      // Se presente si aggiorna data:
-      // -- Data Inizio = lData
-      // -- Data Fine   = lPenResMod.getDataFine()
-      if (   lMisModelOrder != null 
-          && lMisModelOrder.getDataInizioMisura() != null
-          && lMisModelOrder.getDataFineMisura() == null) // ????
-      {
-        Date lData = lMisModelOrder.getDataInizioMisura();
-        InserimentoAggiornamentoScadenzarioMisuraAlternativa(lConn, lData, lPenResMod, lEveModel,
-            aFascicolo.getIdFascicoloSiep());
-      }
+				if (lAggiorna.equals("S")) {
+					lMiDAO.update();
+				}
 
-      // aggiorna il luogo detenzione
-      if (lMisModelOrder != null && lMisModelOrder.getDescrLuogoProva() != null) {
-        lLuogoDAO = new LuogoDetenzioneDAO(lConn);
-        lLuogoDAO.setDataInserimento(aEvento.getDataAggiornamento());
-        lLuogoDAO.setCodUfficioInserimento(aEvento.getCodUfficioAggiornamento());
-        lLuogoDAO.setFasSieIdFascicoloSiep(aFascicolo.getIdFascicoloSiep());
-        lLuogoDAO.setAltroLuogo(lMisModelOrder.getDescrLuogoProva());
-        lLuogoDAO.setCondizioneIdPosizioneGiuridica(lPosGiuModel.getIdPosizioneGiuridica());
-        lLuogoDAO.insert();
-        lLuogoDAO.stop();
-      }
+				lMiDAO.stop();
+			}
 
-      // ------- EVENTO-------
-      lEveDaoBlob = new EventoDAO(lConn);
-      lEveDaoBlob.setDAOFromModelForUpdateBlob(aEvento);
+			// ** Aggiorna SCADENZARIO** 13 - Misura Altrenativa
+			// Se presente si aggiorna data:
+			// -- Data Inizio = lData
+			// -- Data Fine = lPenResMod.getDataFine()
+			if (lMisModelOrder != null && lMisModelOrder.getDataInizioMisura() != null
+					&& lMisModelOrder.getDataFineMisura() == null) // ????
+			{
+				Date lData = lMisModelOrder.getDataInizioMisura();
+				InserimentoAggiornamentoScadenzarioMisuraAlternativa(lConn, lData, lPenResMod, lEveModel,
+						aFascicolo.getIdFascicoloSiep());
+			}
 
-      lEveDaoBlob.selCondizioneUpdate(aEvento.getIdEvento());
-      lEveDaoBlob.update();
-      lEveDaoBlob.stop();
-      // ---------------------
-      commit(lConn);
-    } catch (DAOException daoEx) {
-      siesLogger.error("DAOException: ", daoEx);
-      rollback(lConn);
-      throw new F3BException("MisuraAternativaIndultinoController.ExUpdateValidaMAAmmProvSemiliberta : " + daoEx);
-    } catch (Exception ex) {
-      siesLogger.error("Exception: ", ex);
-      rollback(lConn);
-      throw new F3BException("MisuraAternativaIndultinoController.ExUpdateValidaMAAmmProvSemiliberta : " + ex);
-    } finally {
-      cleanup(lEveSqlDao);
-      cleanup(lPenResSqlDao);
-      cleanup(lMiDAO);
-      cleanup(lLuogoDAO);
-      cleanup(lMisSqlDAO);
-      cleanup(lEveDaoMisAlt);
-      
-      cleanup(lConn);
+			// aggiorna il luogo detenzione
+			if (lMisModelOrder != null && lMisModelOrder.getDescrLuogoProva() != null) {
+				lLuogoDAO = new LuogoDetenzioneDAO(lConn);
+				lLuogoDAO.setDataInserimento(aEvento.getDataAggiornamento());
+				lLuogoDAO.setCodUfficioInserimento(aEvento.getCodUfficioAggiornamento());
+				lLuogoDAO.setFasSieIdFascicoloSiep(aFascicolo.getIdFascicoloSiep());
+				lLuogoDAO.setAltroLuogo(lMisModelOrder.getDescrLuogoProva());
+				lLuogoDAO.setCondizioneIdPosizioneGiuridica(lPosGiuModel.getIdPosizioneGiuridica());
+				lLuogoDAO.insert();
+				lLuogoDAO.stop();
+			}
 
-      cleanup(lEveDaoBlob);
-    }
+			// ------- EVENTO-------
+			lEveDaoBlob = new EventoDAO(lConn);
+			lEveDaoBlob.setDAOFromModelForUpdateBlob(aEvento);
 
-    return lEveMod;
-  }
+			lEveDaoBlob.selCondizioneUpdate(aEvento.getIdEvento());
+			lEveDaoBlob.update();
+			lEveDaoBlob.stop();
+			// ---------------------
+			commit(lConn);
+		} catch (DAOException daoEx) {
+			siesLogger.error("DAOException: ", daoEx);
+			rollback(lConn);
+			throw new F3BException(
+					"MisuraAternativaIndultinoController.ExUpdateValidaMAAmmProvSemiliberta : " + daoEx);
+		} catch (Exception ex) {
+			siesLogger.error("Exception: ", ex);
+			rollback(lConn);
+			throw new F3BException(
+					"MisuraAternativaIndultinoController.ExUpdateValidaMAAmmProvSemiliberta : " + ex);
+		} finally {
+			cleanup(lEveSqlDao);
+			cleanup(lPenResSqlDao);
+			cleanup(lMiDAO);
+			cleanup(lLuogoDAO);
+			cleanup(lMisSqlDAO);
+			cleanup(lEveDaoMisAlt);
+
+			cleanup(lConn);
+
+			cleanup(lEveDaoBlob);
+		}
+
+		return lEveMod;
+	}
 }

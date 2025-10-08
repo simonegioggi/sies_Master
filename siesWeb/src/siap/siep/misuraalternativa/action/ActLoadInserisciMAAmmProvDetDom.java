@@ -259,11 +259,11 @@ public class ActLoadInserisciMAAmmProvDetDom extends ActAmmissioneProvvisoria {
 			DecodeModel lDecodeNew = new DecodeModel();
 			lDecodeNew.setCode(lDecode.getCode());
 
-			// DETENZIONE
+			// DETENZIONE	/* ELIMINATA la parola "Provvisoria" da "Applicazione Provvisoria"*/
 			if ("0682".equals(lDecode.getCode()))
-				lDecodeNew.setDescription("Applicazione Provvisoria " + lDecode.getDescription());
+				lDecodeNew.setDescription("Applicazione " + lDecode.getDescription());
 			else if ("0693".equals(lDecode.getCode()))
-				lDecodeNew.setDescription("Applicazione Provvisoria " + lDecode.getDescription());
+				lDecodeNew.setDescription("Applicazione " + lDecode.getDescription());
 			else
 				lDecodeNew.setDescription(lDecode.getDescription());
 

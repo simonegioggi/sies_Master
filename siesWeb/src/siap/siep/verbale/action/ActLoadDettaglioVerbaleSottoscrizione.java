@@ -5,6 +5,9 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
+import f3b.web.IWebConstants;
 import siap.sico.cssa.controller.ICSSA;
 import siap.sico.cssa.model.CSSAModel;
 import siap.sico.evento.controller.IEvento;
@@ -21,28 +24,14 @@ import siap.siep.util.SIEPLookupRemote;
 import siap.siep.verbale.controller.IVerbale;
 import siap.siep.verbale.model.VerbaleModel;
 import siap.siep.web.ActSIESDettaglioProvvedimento;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
-import f3b.web.IWebConstants;
 
 /**
- * <p>
- * Title: ActLoadDettaglioVerbaleSottoscrizione
- * </p>
- * <p>
- * Description: Classe Action per la load dettaglio di Verbale di Sottoscrizione
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ * ActLoadDettaglioVerbaleSottoscrizione - Classe Action per la load dettaglio di Verbale di Sottoscrizione
+ *
  * @version 1.0
  */
-public class ActLoadDettaglioVerbaleSottoscrizione extends ActSIESDettaglioProvvedimento implements
-		ICostantiVerbale {
+public class ActLoadDettaglioVerbaleSottoscrizione extends ActSIESDettaglioProvvedimento
+		implements ICostantiVerbale {
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
@@ -57,13 +46,15 @@ public class ActLoadDettaglioVerbaleSottoscrizione extends ActSIESDettaglioProvv
 		IVerbale lCtrl = SIEPLookupRemote.getVerbaleRemote();
 		String lDettaglioProvvedimento = "SI";
 
-		if (isRequestParameterNullObj(CAMPO_ID_VERBALE)) { // NOn esiste Verbale - Siamo nel caso del
-																// dettalgio dell'evento da elenco PM. -
-																// In generale il processo termina con la Form
-																// del Dettaglio - Dettaglio = SI
-																// Esiste solo l'id dell'evento, ricerco il
-																// verbale da quello
-			lIdEvento = getRequestBigDecimalParameter(siap.sico.evento.action.ICostantiEvento.CAMPO_ID_EVENTO);
+		// NOn esiste Verbale - Siamo nel caso del
+		// dettalgio dell'evento da elenco PM. -
+		// In generale il processo termina con la Form
+		// del Dettaglio - Dettaglio = SI
+		// Esiste solo l'id dell'evento, ricerco il
+		// verbale da quello
+		if (isRequestParameterNullObj(CAMPO_ID_VERBALE)) {
+			lIdEvento = getRequestBigDecimalParameter(
+					siap.sico.evento.action.ICostantiEvento.CAMPO_ID_EVENTO);
 			lVerMod = lCtrl.ExRicercaVerbaleObblighiByIdEvento(lIdEvento);
 			setRequestAttribute("dettaglioProvvedimento", "SI");
 			lDettaglioProvvedimento = "SI";
@@ -109,18 +100,19 @@ public class ActLoadDettaglioVerbaleSottoscrizione extends ActSIESDettaglioProvv
 		IMisuraAlternativa lCtrlMisAlt = SICOLookupRemote.getMisuraAlternativaRemote();
 		lMisAltMod = lCtrlMisAlt.ExRicercaMisuraAlternativaByIdEvento(lEveMod.getEveIdEvento());
 
-	  // MEV_9-SIEP mi serve anche l'evento decreto/ord puntato dalla MA per testare l'esito
+		// MEV_9-SIEP mi serve anche l'evento decreto/ord puntato dalla MA per testare l'esito
 		EventoModel provvSorv = lCtrlEve.ExRicercaEventoByKey(lMisAltMod.getEveIdEvento());
 		setRequestAttribute("provvSorv", provvSorv);
-	  // MEV_9-SIEP - FINE
-		
+		// MEV_9-SIEP - FINE
+
 		// posizione giuridica corrente ???
-		/*PosizioneGiuridicaModel lPosMododel = */getPosizioneGiuridica(lIdEvento, lIdFasc);
+		/* PosizioneGiuridicaModel lPosMododel = */getPosizioneGiuridica(lIdEvento, lIdFasc);
 
 		// posizione giuridica precedente ???
-//		PosizioneGiuridicaModel lPosPre = null;
+		// PosizioneGiuridicaModel lPosPre = null;
 		IPosizioneGiuridica lCtrlPos = SIEPLookupRemote.getPosizioneGiuridicaRemote();
-		/*lPosPre = */lCtrlPos.ExRicercaPosizioneGiuridicaPrecedenteByIdFascicolo(lFascMod.getIdFascicoloSiep());
+		/* lPosPre = */lCtrlPos
+				.ExRicercaPosizioneGiuridicaPrecedenteByIdFascicolo(lFascMod.getIdFascicoloSiep());
 
 		setRequestAttribute("verbale", lVerMod);
 		setRequestAttribute("misuraalternativa", lMisAltMod);
@@ -186,7 +178,7 @@ public class ActLoadDettaglioVerbaleSottoscrizione extends ActSIESDettaglioProvv
 		}
 
 		/*
-		 * 
+		 *
 		 * if (lPosMododel != null && lPosPre != null && lPosMododel.getCodPosizioneGiuridica() != null &&
 		 * lPosPre.getCodPosizioneGiuridica() != null && (lPosMododel.getCodPosizioneGiuridica().equals("12")
 		 * || lPosMododel.getCodPosizioneGiuridica().equals("13") ||
@@ -195,30 +187,30 @@ public class ActLoadDettaglioVerbaleSottoscrizione extends ActSIESDettaglioProvv
 		 * lPosMododel.getCodPosizioneGiuridica().equals("29") ||
 		 * lPosMododel.getCodPosizioneGiuridica().equals("51")) && (lPosPre.isLibero() ||
 		 * lPosPre.getCodPosizioneGiuridica().equals("03"))) {
-		 * 
+		 *
 		 * // setRequestAttribute("dettaglioProvvedimento", "NO");
-		 * 
-		 * 
+		 *
+		 *
 		 * lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD +
 		 * "=siap.siep.verbale.action.ActCalcoloPenaVerbaleSottoscrizione"; } else {
-		 * 
+		 *
 		 * // setRequestAttribute("dettaglioProvvedimento", "SI");
-		 * 
-		 * 
-		 * 
-		 * 
+		 *
+		 *
+		 *
+		 *
 		 * PenaResiduaModel lPenMod = getPenaResidua(lIdEvento, lIdFasc);
-		 * 
+		 *
 		 * if (lPenMod != null && lPenMod.getFlagValidato() != null && !lPenMod.getFlagValidato().equals("S"))
 		 * setRequestAttribute("dettaglioProvvedimento", "NO");
-		 * 
+		 *
 		 * setRequestAttribute("penaresidua", lPenMod);
-		 * 
+		 *
 		 * if (lPenMod != null && lPenMod.getDataFinePresunta() != null && lPenMod.getDataFineReclusione() !=
 		 * null) { vedoDataIntermedia = "S"; } if (!isRequestAttributeNullObj("vedoDataIntermedia")) {
 		 * setRequestAttribute("vedoDataIntermedia", getRequestAttribute("vedoDataIntermedia")); } else {
 		 * setRequestAttribute("DettaglioDaElenco", "SI"); }
-		 * 
+		 *
 		 * lPage = PG_LOAD_DETTAGLIO_PENA_RESIDUA_VERBALE_SOTTOSCRIZIONE; }
 		 */
 		return lPage;

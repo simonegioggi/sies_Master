@@ -15,18 +15,7 @@ import siap.sius.fascicolo.model.FascicoloSiusModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * <p>
- * Title: ActCancellaDepositoDecreto
- * </p>
- * <p>
- * Description: Classe Action per cancellare il decreto depositato
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * ActCancellaDepositoDecreto - Classe Action per cancellare il decreto depositato
  *
  * @version 1.0
  */

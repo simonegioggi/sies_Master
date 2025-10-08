@@ -2284,7 +2284,10 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 
 				/*
 				 * ISSUE MEV : Gestito il recupero dell'Udienza Sige nel caso di
-				 * "Ordinanza Conflitto di Competenza" Numero MEV : 15_S4 Autore : sessa Data : 29/gen/2016
+				 * "Ordinanza Conflitto di Competenza" 
+				 * Numero MEV : 15_S4 
+				 * Autore : sessa 
+				 * Data : 29/gen/2016
 				 * Branch : MEV_15_S4
 				 */
 				if (lUdiMod != null || (lProvModel != null && lProvModel.getUdiIdUdienzaSige() != null)) {
@@ -3224,8 +3227,11 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 			}
 
 			/*
-			 * ISSUE MEV : Viene aggiornata la Data Definizione del Fascicolo Sige Numero MEV : 15_S4 Autore :
-			 * sessa Data : 01/feb/2016 Branch : MEV_15_S4
+			 * ISSUE MEV : Viene aggiornata la Data Definizione del Fascicolo Sige 
+			 * Numero MEV : 15_S4 
+			 * Autore : sessa 
+			 * Data : 01/feb/2016 
+			 * Branch : MEV_15_S4
 			 */
 			lFasSigeDao = new FascicoloSigeDAO(lConn);
 			lFasSigeDao.setDAOFromModelForUpdate(aFasSige);

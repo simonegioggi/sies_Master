@@ -252,6 +252,30 @@ if (!lPosizione.isLibero() || ("S".equals(lFascicoloAssociato.getFlagAltraCausa(
 <%-- 		}
 <%-- FINE MEV_2024-092
 <%-- FINE MEV_2019-09-SIEP --%>
+
+<%-- 2024.12 Si aggiunge obbligatorietà campo Luogo della prova per affidamento in prova --%>
+<%
+if (tipoMisura.equals("AFFIDAMENTO") || tipoMisura.equals("DETENZIONE")) {
+%>
+		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA%>.value == "") {
+<%
+	if (tipoMisura.equals("AFFIDAMENTO")) {
+%>		
+			alert("Il campo Luogo della Prova e' obbligatorio");
+<%
+	} else if (tipoMisura.equals("DETENZIONE")) {
+%>
+			alert("Il campo Luogo della Detenzione Domiciliare e' obbligatorio");
+<%
+}
+%>
+			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA%>.focus();
+			return false;
+		}
+<%
+}
+%>
+<%-- 2024.12 - FINE --%>
 	} <%-- fine if (document.LoadInserisciMisuraAlternativa.flagmisura.value == "N") --%>
 <%
 // AMBROSINO   - 23-12-2010
@@ -298,7 +322,8 @@ if (lPosizione.isLibero() && tipoMisura.equals("AFFIDAMENTO")) {
 				|| lPosizione.getCodPosizioneGiuridica().equals("14") // Espiazione Pena in Regime di Semilibertà
         		|| lPosizione.getCodPosizioneGiuridica().equals("04")) { // Arresti Domiciliari ex art. 656/10
 %>
-	if (document.LoadInserisciMisuraAlternativa.tipo[1].checked == true) {
+	if (document.getElementById('tipo') && document.LoadInserisciMisuraAlternativa.tipo[1]
+			&& document.LoadInserisciMisuraAlternativa.tipo[1].checked == true) {
   		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE%>.value == "") {
 			alert("La data di Scarcerazione/Esecuzione e' obbligatoria")
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE%>.focus();
@@ -430,11 +455,11 @@ else if (lPosizione.getCodPosizioneGiuridica().equals("29")) { // Detenzione Dom
 <%
 if (lPosizione.isLibero() && (verbale == null || verbale.getIdVerbale() == null)) {
 %>
-			alert("Il Campo Destinatario per esecuzione è obbligatorio");
+			alert("Il Campo Destinatario per esecuzione e' obbligatorio");
 <%
 } else {
 %>
-			alert("Il Campo Autorità competente per territorio è obbligatorio");
+			alert("Il Campo Autorita' competente per territorio e' obbligatorio");
 <%
 }
 %>
@@ -666,7 +691,7 @@ if (tipoMisura.equals("SEMILIBERTA")) {
 		nodecssa.style.visibility = 'hidden';
 		nodesor.style.visibility = 'hidden';
 		nodeautoritaC.style.visibility = 'hidden';
-		<%-- MEV10-s3: modificati valori proprietà top --%>
+		<%-- MEV10-s3: modificati valori proprieta top --%>
 		nodeavvocati.style.top = '-340px';
 		nodebottone.style.top = '-360px';
 		document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E%>.disabled = false;
@@ -743,7 +768,7 @@ else {
 			nodesor.style.visibility = 'hidden';
 			// nodeavvocati.style.top = '-210px';
 			// nodebottone.style.top = '-210px';
-			<%-- MEV10-s3: modificati valori proprietà top --%>
+			<%-- MEV10-s3: modificati valori proprieta top --%>
 			nodeavvocati.style.top = '-330px';
 			nodebottone.style.top = '-330px';
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E%>.disabled = false;
@@ -757,7 +782,8 @@ else {
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_SEDE_TDS%>.disabled = true;
 <%
 	} else if ((tipoMisura.equals("DETENZIONE") && lPosizione.getCodPosizioneGiuridica().equals("29"))
-			|| (tipoMisura.equals("AFFIDAMENTO") && lPosizione.getCodPosizioneGiuridica().equals("29"))) { // MEV29 gestione affidamento da posizione 29
+			// MEV29 gestione affidamento da posizione 29
+			|| (tipoMisura.equals("AFFIDAMENTO") && lPosizione.getCodPosizioneGiuridica().equals("29"))) {
 %>
 			nodeautoritaE.style.visibility = 'visible';
 			nodecssa.style.visibility = 'visible';
@@ -778,7 +804,7 @@ else {
 			nodesor.style.visibility = 'hidden';
 			nodeautoritaE.style.visibility = 'visible';
 			nodeavvocati.style.visibility = 'visible';
-			<%-- MEV10-s3: modificati valori proprietà top --%>
+			<%-- MEV10-s3: modificati valori proprieta top --%>
 			nodeavvocati.style.top = '-260px';
 			nodebottone.style.top = '-280px';
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E%>.disabled = false;
@@ -796,7 +822,9 @@ else {
 			nodeavvocati.style.visibility = 'hidden';
 			nodesor.style.visibility = 'hidden';
 			nodecssa.style.top = '-105px';
-			if (pos == "07" || pos == "54") <%-- MEV_2019-09-SIEP: aggiunto 54 --%>
+			<%-- MEV_2024-092: aggiunti 10 e 47 --%>
+			<%-- MEV_2019-09-SIEP: aggiunto 54 --%>
+			if (pos == "07" || pos == "10" || pos == "47" || pos == "54")
 				nodebottone.style.top = '-460px';
 	      	else
 				nodebottone.style.top = '-340px';
@@ -840,7 +868,8 @@ else {
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_C%>.disabled = true;
 		} else if ((pos == "03") || (flagsanzione == "S" && pos=="19")
 				|| (pos == "14" && (tipomisuraJS != "INDULTINO" && tipomisuraJS != "ESP_PRESSO_DOM"))) {
-			if (document.LoadInserisciMisuraAlternativa.tipo[0].checked) {
+			if (document.getElementById('tipo') && document.LoadInserisciMisuraAlternativa.tipo[0]
+					&& document.LoadInserisciMisuraAlternativa.tipo[0].checked) {
 				nodeistituto.style.visibility = 'visible';
 				nodecssa.style.visibility = 'visible';
 				nodesor.style.visibility = 'visible';
@@ -1036,10 +1065,11 @@ else {
 	}
 %>
 			}
-			} <%--- fine ELSE di else if ((pos == "03") ||(flagsanzione == "S" && pos=="19") || (pos == "14" && (tipomisuraJS != "INDULTINO" && tipomisuraJS != "ESP_PRESSO_DOM"))) --%>
+		} <%--- fine ELSE di else if ((pos == "03") ||(flagsanzione == "S" && pos=="19") || (pos == "14" && (tipomisuraJS != "INDULTINO" && tipomisuraJS != "ESP_PRESSO_DOM"))) --%>
 		// Paolo Cherubini aggiungo controllo poiche da pos semiliberta se concedo AFFIDAMENTO
-		// si sovrappone l'istituto con l'autorità competente
+		// si sovrappone l'istituto con l'autorita competente
 		if (pos == "14" && tipomisuraJS == "AFFIDAMENTO" && lEveAmmProvAff == null
+				&& typeof (document.LoadInserisciMisuraAlternativa.tipo) != "undefined"
 				&& document.LoadInserisciMisuraAlternativa.tipo[1].checked) {
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>.disabled = true;
 			nodeistituto.style.visibility = 'hidden';
@@ -1122,11 +1152,11 @@ else {
 					if (document.LoadInserisciMisuraAlternativa.UDSE)
 					   	document.LoadInserisciMisuraAlternativa.UDSE.disabled = false;
 				  	document.LoadInserisciMisuraAlternativa.notificaSemiliberta.disabled = false;
-					<%-- MEV10-s3: modificati valori proprietà top --%>
+					<%-- MEV10-s3: modificati valori proprieta top --%>
 					// Modifica del 06/11/2015
 					// Risolta anomalia sovrapposizione div
-					// nodesor.style.top = '-135px'; --> nodesor.style.top = '-0px';
-					// nodeautoritaC.style.top = '-135px'; --> nodeautoritaC.style.top = '-250px';
+					// nodesor.style.top = '-135px';
+					// nodeautoritaC.style.top = '-135px';
 					// nodecssa.style.top = '-0px';
 					// 20170905: [SG] modifica risoluzione video
 					// casistica: ESP_PRESSO_DOM + document.LoadInserisciMisuraAlternativa.tipo[1].checked (SCARCERATO)
@@ -1149,27 +1179,29 @@ else {
 			} // d.f. chiusura (typeof)
 		} // chiusura (pos != "13" && tipomisuraJS != "AFFIDAMENTO" && lEveAmmProvAff == null)
 		<%-- 20170908: [SG] aggiunta impostazione --%>
-		else if (pos == "13"  && tipomisuraJS == "AFFIDAMENTO" && lEveAmmProvAff == null) {
+		else if ((pos == "13" || pos == "14") && tipomisuraJS == "AFFIDAMENTO" && lEveAmmProvAff == null) {
 			nodebottone.style.top = '-460px';
 		}
 <%
-	// AMBROSINO - Veniva SedeAut_c e SedeAut_e  Hidden 
+	// AMBROSINO - Veniva SedeAut_c e SedeAut_e Hidden 
 	if (tipoMisura.equals("AFFIDAMENTO")) {
 %>
-		if (pos == "03" && document.LoadInserisciMisuraAlternativa.tipo[1].checked) {
+		if (pos == "03"
+				&& document.getElementById('tipo') && document.LoadInserisciMisuraAlternativa.tipo[1]
+				&& document.LoadInserisciMisuraAlternativa.tipo[1].checked) {
 			nodeautoritaC.style.visibility = 'visible';
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_C%>.disabled = false;
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_SEDE_POL_C%>.disabled = false;
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_NOTE_POL_C%>.disabled = false;
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_COD_UDS%>.disabled = false;
-		} else {
-			if (pos == "04" && document.LoadInserisciMisuraAlternativa.tipo[1].checked) {
-					nodeautoritaE.style.visibility = 'visible';
-  					document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E%>.disabled = false;
+		} else if (pos == "04"
+					&& document.getElementById('tipo') && document.LoadInserisciMisuraAlternativa.tipo[1]
+					&& document.LoadInserisciMisuraAlternativa.tipo[1].checked) {
+				nodeautoritaE.style.visibility = 'visible';
+				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E%>.disabled = false;
 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_SEDE_POL_E%>.disabled = false;
 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_NOTE_POL_E%>.disabled = false;
 				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_COD_UDS%>.disabled = false;
-			}
 		}
 <%
 	}
@@ -1266,7 +1298,7 @@ if (tipoMisura.equals("AFFIDAMENTO")) {
 <input type="HIDDEN" name="tipomisura" value="INDULTINO">
 <%
 }
-// inizio if per semilibertà
+// inizio if per semiliberta'
 String scarceratodisabilita = null;
 String dascarceraredisabilita = null;
 String disabilitaData = null;
@@ -1308,7 +1340,7 @@ if (!tipoMisura.equals("SEMILIBERTA")) {
     		disabilitaData ="readonly";
    		}
 	}
-} //fine if per semilibertà %>
+} //fine if per semiliberta %>
 
 <input type="HIDDEN" value="<%=idmisuraalternativa%>" name="<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>">
 <input type="HIDDEN" value="<%=StringUtils.toStringJSP(lPosizione.getCodPosizioneGiuridica())%>" name="<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>">
@@ -2019,7 +2051,7 @@ if (isModifica) {
 // Controllo per posizione giuridica
 // SONO STATI USATI GLI STESSI CAMPI DELLA SCARCERAZIONE CAMBIANDO SOLO LE LABEL
 // PER QUANTO RIGURDA I VALUE DEL RADION BOTTON SONO RIMASTI GLI STESSI DELLA SCARCERAZIONE
-// PER UNIFORMITA' CON TUTTI GLI ALTRI INSERIMENTI DI CONCESSIONE.
+// PER UNIFORMITA CON TUTTI GLI ALTRI INSERIMENTI DI CONCESSIONE.
 
 // Se Libero nulla 0 tipo misura semiliberta	X
 // caso Is detenuto + pos SEML : Data  Da Scarcerare (Da aggiungere)	X
@@ -2027,7 +2059,7 @@ if (isModifica) {
 // le 2 eccezione di ammissione provvisoria
 // tutti gli altri casi  Data  Da Scarcerare (Da aggiungere)
 //==============================================================================
-// Sezione con i check:Da eseguire/eseguita o da scarcerare/già scarcerato
+// Sezione con i check:Da eseguire/eseguita o da scarcerare/gia scarcerato
 //==============================================================================
 // MEV_2019-09-SIEP: aggiunta diversificazione
 // MEV_2024-092: rimossa la diversificazione
@@ -2085,7 +2117,7 @@ if (lPosizione.isLibero()) {
 		<td class="l" width="25%">
 			Da eseguire&nbsp;
 			<input type="radio" name="tipo" value="scarcerare" checked onclick="radio();">
-			&nbsp;Gia' eseguito &nbsp;
+			&nbsp;Gi&agrave; eseguito &nbsp;
 			<input type="radio" name="tipo" value="scarcerato" onclick="radio();">
 		</td>
 		<td class="l">Data Esecuzione&nbsp;
@@ -2095,12 +2127,13 @@ if (lPosizione.isLibero()) {
 		</td>
 	</tr>
 <%
-} else if (lPosizione.isDetenuto()
-		// MEV_2024-092: elimino PG 14
-		// || lPosizione.getCodPosizioneGiuridica().equals("14") // Espiazione Pena in Regime di Semilibertà
-		// Espiazione Pena in Regime di Semilibertà in Prosec.Provv. 51 Bis
+// MEV_2024-092: se PG 14 || isDetenuto non faccio nulla per semilibertà
+} else if (tipoMisura.equals("SEMILIBERTA") && (lPosizione.isDetenuto() || lPosizione.getCodPosizioneGiuridica().equals("14"))) {
+	// do Nothing
+} else if (lPosizione.isDetenuto() || lPosizione.getCodPosizioneGiuridica().equals("14")
+		// Espiazione Pena in Regime di Semiliberta in Prosec.Provv. 51 Bis
 		|| lPosizione.getCodPosizioneGiuridica().equals("43")) {
-		// Paolo Cherubini 24/03/2011 vedi commento sopra	|| lPosizione.getCodPosizioneGiuridica().equals("04") // Arresti Domiciliari ex art. 656/10
+		// || lPosizione.getCodPosizioneGiuridica().equals("04") // Arresti Domiciliari ex art. 656/10
 		// || lPosizione.getCodPosizioneGiuridica().equals("12") // Espiazione Pena in Regime di Detenzione Domiciliare
 		// || lPosizione.getCodPosizioneGiuridica().equals("50") // Esecuzione presso domicilio della pena detentiva
 		// || lPosizione.getCodPosizioneGiuridica().equals("53") //  Arresti domiciliari - Esecuzione presso domicilio della pena detentiva
@@ -2215,7 +2248,7 @@ else if ((lPosizione.getCodPosizioneGiuridica().equals("13") && lEventoAmmProvvA
     	<td class="Titolo" style="width: 100%;" colspan=6> Magistrato Firmatario </td>
    	</tr>
    	<tr>
-		<%-- MEV10-s3: aggiunta proprietà width --%>
+		<%-- MEV10-s3: aggiunta proprieta width --%>
      	<td class="l" width="25%">Magistrato Firmatario</td>
      	<td class="L">
 			<input type="HIDDEN" title="CodiceMagistratoNuovo" value="<%=StringUtils.toStringJSP(magistratocompetente.getMagistrato().getCodMagistrato())%>" type="text" name="<%=ICostantiMagistrato.CAMPO_COD_MAGISTRATO%>"  maxlength="35" size="35">
@@ -2234,13 +2267,13 @@ else if ((lPosizione.getCodPosizioneGiuridica().equals("13") && lEventoAmmProvvA
 </table>
 <%
 //==============================================================================
-// Autorità di polizia  
+// Autorita di polizia  
 //==============================================================================
 %>
 <div id="divautoritacompetenteE" style="width: 95%; visibility: hidden; position: relative;">
 <table style="width: 100%;">
 	<tr>
-	<!--autorità di polizia-->
+	<%-- autorita di polizia --%>
 <%
 if ((lPosizione.isLibero()) && (verbale == null || verbale.getIdVerbale() == null)) {
 %>
@@ -2248,7 +2281,7 @@ if ((lPosizione.isLibero()) && (verbale == null || verbale.getIdVerbale() == nul
 <%
 } else {
 %>
-		<td class="l" width="25%">Autorita' Competente per territorio <font class=ob>(*)</font></td>
+		<td class="l" width="25%">Autorit&agrave; Competente per territorio <font class=ob>(*)</font></td>
 <%
 }
 %>
@@ -2309,23 +2342,51 @@ if (eventonotifica != null && eventonotifica.getNotifiche() != null && eventonot
      	<td class="l" width="25%">Istituto di Detenzione <font class=ob>(*)</font></td>
   		<td class="l">
 <%
+boolean testNotificheIstituto = false;
 if (posizioneluogoaltra != null &&  posizioneluogoaltra .getLuogoDetenzione()!= null
 		&& posizioneluogoaltra .getLuogoDetenzione().getIstitutoDetenzione() != null) {
+	testNotificheIstituto = true;
 %>
-			<input readonly Title="Istituto" name="Comune" value="<%=StringUtils.toStringJSP(posizioneluogoaltra.getLuogoDetenzione().getIstitutoDetenzione().getDescrTipoIstituto())%> di <%=StringUtils.toStringJSP(posizioneluogoaltra.getLuogoDetenzione().getIstitutoDetenzione().getDescrComune())%>" size=50>
-			<input type="hidden" Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="<%=posizioneluogoaltra.getLuogoDetenzione().getIstDetIdIstitutoDetenzione()%>" size=50>
+			<input readonly Title="Istituto" name="Comune" value="<%=StringUtils.toStringJSP(posizioneluogoaltra.getLuogoDetenzione().getIstitutoDetenzione().getDescrTipoIstituto())%> di <%=StringUtils.toStringJSP(posizioneluogoaltra.getLuogoDetenzione().getIstitutoDetenzione().getDescrComune())%>" size="50">
+			<input type="hidden" Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="<%=posizioneluogoaltra.getLuogoDetenzione().getIstDetIdIstitutoDetenzione()%>">
+			<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciMisuraAlternativa','<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>','Comune');">
+				<img src="/images/filefolder.gif" border=0>
+			</a>
+<%
+// MEV_2024-092: aggiunto ramo elseif con ciclo sulle notifiche come nel dettaglioConcessione.jsp
+} else if (eventonotifica != null && eventonotifica.getNotifiche() != null && eventonotifica.getNotifiche().length > 0) {
+	for (int n = 0; n < eventonotifica.getNotifiche().length; n++) {
+		if (eventonotifica.getNotifiche()[n].getCodTipoNotifica().equals("E")
+				&& eventonotifica.getNotifiche()[n].getIstitutoDetenzione() != null) {
+%>
+			<input readonly Title="Istituto" name="Comune" value="<%=StringUtils.toStringJSP(eventonotifica.getNotifiche()[n].getIstitutoDetenzione().getDescrTipoIstituto())%>&nbsp;di&nbsp;<%=StringUtils.toStringJSP(eventonotifica.getNotifiche()[n].getIstitutoDetenzione().getDescrComune())%>" size="50">
+			<input type="hidden" Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="<%=eventonotifica.getNotifiche()[n].getIstitutoDetenzione().getIdIstitutoDetenzione()%>">
 			<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciMisuraAlternativa','<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
 				<img src="/images/filefolder.gif" border=0>
 			</a>
 <%
+			testNotificheIstituto = true;
+			break;
+		}
+	}
 } else {
+	testNotificheIstituto = true;
 %>
-			<input readonly Title="Istituto" name="Comune" value="" size=50>
-			<input type="hidden" Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="" size=35>
+			<input readonly Title="Istituto" name="Comune" value="" size="50">
+			<input type="hidden" Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="">
 			<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciMisuraAlternativa','<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
 				<img src="/images/filefolder.gif" border=0>
 			</a>
 <%
+}
+if (!testNotificheIstituto) {
+%>
+			<input readonly Title="Istituto" name="Comune" value="" size="50">
+			<input type="hidden" Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="">
+			<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciMisuraAlternativa','<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
+				<img src="/images/filefolder.gif" border=0>
+			</a>
+<%	
 }
 %>
 		</td>
@@ -2453,14 +2514,14 @@ if (isModifica) {
 </div>
 <%
 //==============================================================================
-// Autorità Competente per territorio
+// Autorita Competente per territorio
 //==============================================================================
 %>
 <div id="divautoritacompetenteC" style="width: 95%; visibility: hidden; position: relative;">
 <table style="width: 100%;">
 	<tr>
-		<!--autorità di polizia-->
-    	<td class="l" width="25%">Autorita' Competente per territorio <font class=ob>(*)</font></td>
+		<!--autorita di polizia-->
+    	<td class="l" width="25%">Autorit&agrave; Competente per territorio <font class=ob>(*)</font></td>
     	<td class="L" colspan="3">
       		<select Title="Autorita Esterna" class="small" name="<%=ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_C%>">
         		<%=codiceAutoritaC%>
@@ -2509,7 +2570,7 @@ Iterator lItxAvv = avvocati.iterator();
 while(lItxAvv.hasNext()) {
 	AvvocatoSiepModel lAvv = (AvvocatoSiepModel) lItxAvv.next();
 %>
-<!-- <table> -->
+<%-- <table> --%>
 	<tr>
    		<td class="l" colspan="4">Per Avvocato&nbsp;
 			<font class="campo">
@@ -2522,10 +2583,10 @@ while(lItxAvv.hasNext()) {
 			<input type="HIDDEN" title="Codice Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep())%>" type="text" name="<%=ICostantiAvvocato.CAMPO_ID_AVVOCATO %>"  maxlength="35" size="35">
    		</td>
 	</tr>
-<!-- </table> -->
-<!-- <table> -->
+<%-- </table> --%>
+<%-- <table> --%>
 	<tr>
-		<td class="l" width="25%">Autorita' Destinazione</td>
+		<td class="l" width="25%">Autorit&agrave; Destinazione</td>
 		<td class="L" colspan="3">
    			<select Title="Autorita Esterna" class="small" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>">
 				<%=autoritaEsternaAvv%>
@@ -2535,7 +2596,8 @@ while(lItxAvv.hasNext()) {
 	<tr>
 		<td class="l">Sede</td>
 		<td class="L">
-			<input title="Sede Foro Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocato().getForo())%>" type="text" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>" maxlength="35" size="35">
+   				<%-- MEV_21 (avvocati) Sostituzione di getAvvocato().getForo() con getAvvocato().getDescComuneSedeForo() --%>
+				<input title="Sede Foro Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescComuneSedeForo())%>" type="text" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>" maxlength="35" size="35">
 			<a href="Javascript:ListaComuni('LoadInserisciMisuraAlternativa','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>[<%=lIdxAvv%>]');">
   				<img src="/images/filefolder.gif" border=0>
 			</a>
@@ -2553,7 +2615,7 @@ while(lItxAvv.hasNext()) {
 }
 %>
 	</tr>
-<!-- </table> -->
+<%-- </table> --%>
 </table>
 </div>
 <div id="divbottone" style="width: 100%; visibility:visible; position:relative;">

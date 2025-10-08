@@ -88,9 +88,9 @@
     <td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
     <td class="LBG"><font class="label">Funzione :</font>&nbsp;&nbsp;
       <% if(tipoMisura.equals("AFFIDAMENTO")) {%>
-      <font class="campo">Dettaglio Ammissone/Applicazione Provvisoria ad Affidamento in Prova</font>
+      <font class="campo">Dettaglio Ammissione Provvisoria/Applicazione ad Affidamento in Prova</font>
       <% } else if(tipoMisura.equals("DETENZIONE")) {%>
-      <font class="campo">Dettaglio Ammissione/Applicazione Provvisoria Detenzione Domiciliare</font>
+      <font class="campo">Dettaglio Ammissione Provvisoria/Applicazione Detenzione Domiciliare</font>
       <% } %>
     </td>
 
@@ -431,12 +431,12 @@ else if("03".equals(misuraalternativa.getCodTipoDecisione() )) {
    <td class="l">Data Emissione <%=lTipoProvvedimento %> </td>
    <td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisione(),"dd-MM-yyyy"))%></font></td>
  </tr>
-
+<%-- MEV_9 si aggiunge la data esecutivita'
  <tr>
    <td class="l">Data Esecutivita'</td>
    <td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataEsecutivita(),"dd-MM-yyyy"))%></font></td>
  </tr>
-
+--%>
  <%if(verbale.getDataEmissione()!= null) {%>
   <tr>
       <td class="l">Data Sottoscrizione Verbale Obblighi</td>

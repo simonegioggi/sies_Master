@@ -463,8 +463,9 @@ function Verifica() {
       return false;
     } 
   }
-  
-<% if ( misuraalternativa.getIdMisuraAlternativa() == null) { %>
+<%
+if ( misuraalternativa.getIdMisuraAlternativa() == null) {
+%>
   // Esegue MDS la Data Inizio Misura è obbligatoria
   if (document.LoadInserisciMisuraAlternativa.tipo[1].checked == true) 
   {  
@@ -507,31 +508,29 @@ function Verifica() {
       return false;
     }
   }
-<% } %>
-
-  <%-- MEV_9 Si aggiunge la data di esecutività --%>
-  if (   document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA%>.value != ""
-      || document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_ESECUTIVITA%>.value != ""
-      || document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA%>.value != "") 
-  {
-    if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA%>.value.length == 1)
-      document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA%>.value = '0'
-      + document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA%>.value;
-    
-    if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_ESECUTIVITA%>.value.length == 1)
-      document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_ESECUTIVITA%>.value = '0' 
-      + document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_ESECUTIVITA%>.value;
-    
-    var data_to_verify = document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA%>.value + '-' +
-                         document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_ESECUTIVITA%>.value + '-' +
-                         document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA%>.value;
-    if (!ControllaDataPassaVuota(data_to_verify)) {
-      alert("La data esecutivita' è errata");
-      document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA %>.focus();
-      return false;
-    }
-  }
-
+<%
+}
+%>
+<%-- MEV_2024-092: rimossa la data di esecutivita' --%>
+<%-- MEV_9 Si aggiunge la data di esecutivita' --%>
+<%-- if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA%>.value != "" --%>
+<%-- 		|| document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_ESECUTIVITA%>.value != "" --%>
+<%-- 		|| document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA%>.value != "") { --%>
+<%-- 	if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA%>.value.length == 1) --%>
+<%-- 		document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA%>.value = '0' --%>
+<%-- 		+ document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA%>.value; --%>
+<%-- 	if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_ESECUTIVITA%>.value.length == 1) --%>
+<%-- 		document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_ESECUTIVITA%>.value = '0'  --%>
+<%-- 		+ document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_ESECUTIVITA%>.value; --%>
+<%-- 	var data_to_verify = document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA%>.value + '-' + --%>
+<%-- 	document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_ESECUTIVITA%>.value + '-' + --%>
+<%-- 	document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA%>.value; --%>
+// 	if (!ControllaDataPassaVuota(data_to_verify)) {
+// 		alert("La data esecutivita' è errata");
+<%-- 		document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA %>.focus(); --%>
+// 		return false;
+//   	}
+// }
 
   if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMagistrato.CAMPO_COGNOME %>.value == ""
       && document.LoadInserisciMisuraAlternativa.<%=ICostantiMagistrato.CAMPO_NOME %>.value == "") {
@@ -630,7 +629,7 @@ if ("MODIFICA".equals(tipoOperazione))
 	    </td>
 	    <td class="LBG">
 	      <font class="label">Funzione :</font>&nbsp;&nbsp;          
-	      <font class="campo"><%=tipoOperazioneView%> AMMISSIONE/APPLICAZIONE PROVVISORIA SEMILIBERTA' (ART 678 C.1 TER C.P.P.)</font>
+	      <font class="campo"><%=tipoOperazioneView%> AMMISSIONE PROVVISORIA/APPLICAZIONE SEMILIBERTA' (ART 678 C.1 TER C.P.P.)</font>
 	    </td>
 	  </tr>
 	</table>
@@ -972,13 +971,14 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
     </td>
   </tr>
   <tr>
-    <td class="l">Data Esecutivita'</td>
-    <td class="l" colspan="3">
-      <font class="campo">
-        <%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataEsecutivita(), "dd-MM-yyyy"),"&nbsp;")%>
-      </font>
-    </td>
-  </tr>
+<%-- MEV_2024-092: elimino la Data Esecutivita' --%>
+<!--     <td class="l">Data Esecutivita'</td> -->
+<!--     <td class="l" colspan="3"> -->
+<!--       <font class="campo"> -->
+<%--         <%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataEsecutivita(), "dd-MM-yyyy"),"&nbsp;")%> --%>
+<!--       </font> -->
+<!--     </td> -->
+<!--   </tr> -->
 
   
 <% if (verbale.getDataEmissione() != null) { %>
@@ -1107,121 +1107,112 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
       </font>
     </td>
   </tr>
-    
-  <tr>
-    <td class="l">Data Esecutivita' <font class=ob id="dataEsecObbl" style="display:none;">(*)</font></td>
-    <td class="l" colspan="3">
-      <font class="campo">
-        <input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativaToChange.getDataEsecutivita(),"dd"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)" onChange="pulisciId();"> -
-        <input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativaToChange.getDataEsecutivita(),"MM"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_ESECUTIVITA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)" onChange="pulisciId();"> -
-        <input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativaToChange.getDataEsecutivita(),"yyyy"))%>" type="text" size="4" maxlength="4" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)" onChange="pulisciId();">
-      </font>
-    </td>
-  </tr>
- 
-  <tr>
-    <td class="l">Note</td>
-    <td class="L" colspan="3">
-      <TEXTAREA title="Note" name="<%=ICostantiMisuraAlternativa.CAMPO_NOTE %>"  cols=80 rows=2><%=StringUtils.toStringJSP(misuraalternativaToChange.getNote())%></textarea>
-    </td>
-  </tr>
+<%-- MEV_2024-092: elimino Data Esecutivita' --%>
+<!--   	<tr> -->
+<!--     	<td class="l">Data Esecutivita' <font class=ob id="dataEsecObbl" style="display:none;">(*)</font></td> -->
+<!--     	<td class="l" colspan="3"> -->
+<!--       		<font class="campo"> -->
+<%-- 				<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativaToChange.getDataEsecutivita(),"dd"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)" onChange="pulisciId();"> - --%>
+<%-- 				<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativaToChange.getDataEsecutivita(),"MM"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_ESECUTIVITA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)" onChange="pulisciId();"> - --%>
+<%-- 				<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativaToChange.getDataEsecutivita(),"yyyy"))%>" type="text" size="4" maxlength="4" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)" onChange="pulisciId();"> --%>
+<!--       		</font> -->
+<!--     	</td> -->
+<!-- 	</tr> -->
+	<tr>
+	    <td class="l">Note</td>
+	    <td class="L" colspan="3">
+      		<TEXTAREA title="Note" name="<%=ICostantiMisuraAlternativa.CAMPO_NOTE %>"  cols=80 rows=2><%=StringUtils.toStringJSP(misuraalternativaToChange.getNote())%></textarea>
+    	</td>
+  	</tr>
 <%
 }
 %>
 </table>
 
 <%
-if (misuraalternativa.getIdMisuraAlternativa() == null) 
-{  
-  String radioProcura = "";
-  String radioSorv = "";
-  radioProcura="checked";
-  Date dataInizioMisura = null;
-  if ("SORV".equals(misuraalternativaToChange.getCodTipoUfficioScarcerazione())) {
-    radioProcura = "";
-    radioSorv = "checked";
-    dataInizioMisura = misuraalternativaToChange.getDataInizioMisura();
-  }  
+if (misuraalternativa.getIdMisuraAlternativa() == null) {  
+	String radioProcura = "";
+	String radioSorv = "";
+	radioProcura="checked";
+	Date dataInizioMisura = null;
+	if ("SORV".equals(misuraalternativaToChange.getCodTipoUfficioScarcerazione())) {
+		radioProcura = "";
+		radioSorv = "checked";
+		dataInizioMisura = misuraalternativaToChange.getDataInizioMisura();
+	}
 %>
 <table width="100%">
-  <tr>
-    <td class="l">Eseguita da Procura&nbsp;
-      <input type="radio" name="tipo" value="procura" <%=radioProcura%> onClick="javascript:radio();">&nbsp;&nbsp;
-      Eseguita dalla Sorveglianza&nbsp;
-      <input type="radio" name="tipo" value="mds" onClick="javascript:radio();" <%=radioSorv%>>
-    </td>
-    <td class="l">Data Inizio Misura &nbsp; 
-      <input type="text" size="2" maxlength="2" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataInizioMisura,"dd"))%>" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> -
-      <input type="text" size="2" maxlength="2" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataInizioMisura,"MM"))%>" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_SCARCERAZIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> -
-      <input type="text" size="4" maxlength="4" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataInizioMisura,"yyyy"))%>" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_SCARCERAZIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
-    </td>
-  </tr>
+	<tr>
+    	<td class="l">Eseguita da Procura&nbsp;
+      		<input type="radio" name="tipo" value="procura" <%=radioProcura%> onClick="javascript:radio();">&nbsp;&nbsp;
+      		Eseguita dalla Sorveglianza&nbsp;
+     		<input type="radio" name="tipo" value="mds" onClick="javascript:radio();" <%=radioSorv%>>
+		</td>
+		<td class="l">Data Inizio Misura &nbsp; 
+			<input type="text" size="2" maxlength="2" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataInizioMisura,"dd"))%>" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> -
+			<input type="text" size="2" maxlength="2" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataInizioMisura,"MM"))%>" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_SCARCERAZIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> -
+			<input type="text" size="4" maxlength="4" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataInizioMisura,"yyyy"))%>" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_SCARCERAZIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
+    	</td>
+  	</tr>
 </table>
 <%
 }
 %>
-
 <table width="100%">
-  <tr>
-    <td class="Titolo" width="100%" colspan=6> Magistrato Firmatario </td>
-  </tr>
-  <tr>
-    <td class="l" width="30%">Magistrato Firmatario
-    <td class="L">
-      <input type="HIDDEN" title="CodiceMagistratoNuovo" value="<%=StringUtils.toStringJSP(magistratocompetente.getMagistrato().getCodMagistrato() )%>" type="text" name="<%=ICostantiMagistrato.CAMPO_COD_MAGISTRATO %>"  maxlength="35" size="35" >
-      <input readonly title="Cognome Magistrato" value="<%=StringUtils.toStringJSP(magistratocompetente.getMagistrato().getCognome() )%>" type="text" name="<%=ICostantiMagistrato.CAMPO_COGNOME %>" maxlength="35" size="25">
-      <input readonly title= "Nome Magistrato"    value="<%=StringUtils.toStringJSP(magistratocompetente.getMagistrato().getNome() )%>" type="text" name="<%=ICostantiMagistrato.CAMPO_NOME %>"   maxlength="35" size="25">
-      <a href="Javascript:ListaMagistrati('LoadInserisciMisuraAlternativa','<%=ICostantiMagistrato.CAMPO_COD_MAGISTRATO%>','<%=ICostantiMagistrato.CAMPO_COGNOME %>','<%=ICostantiMagistrato.CAMPO_NOME %>');">
-        <img src="/images/filefolder.gif" border=0>
-      </a>
-    </td>
-  </tr>
+	<tr>
+    	<td class="Titolo" width="100%" colspan=6> Magistrato Firmatario </td>
+  	</tr>
+ 	<tr>
+	    <td class="l" width="30%">Magistrato Firmatario
+	    <td class="L">
+			<input type="HIDDEN" title="CodiceMagistratoNuovo" value="<%=StringUtils.toStringJSP(magistratocompetente.getMagistrato().getCodMagistrato() )%>" type="text" name="<%=ICostantiMagistrato.CAMPO_COD_MAGISTRATO %>"  maxlength="35" size="35" >
+			<input readonly title="Cognome Magistrato" value="<%=StringUtils.toStringJSP(magistratocompetente.getMagistrato().getCognome() )%>" type="text" name="<%=ICostantiMagistrato.CAMPO_COGNOME %>" maxlength="35" size="25">
+			<input readonly title= "Nome Magistrato"    value="<%=StringUtils.toStringJSP(magistratocompetente.getMagistrato().getNome() )%>" type="text" name="<%=ICostantiMagistrato.CAMPO_NOME %>"   maxlength="35" size="25">
+			<a href="Javascript:ListaMagistrati('LoadInserisciMisuraAlternativa','<%=ICostantiMagistrato.CAMPO_COD_MAGISTRATO%>','<%=ICostantiMagistrato.CAMPO_COGNOME %>','<%=ICostantiMagistrato.CAMPO_NOME %>');">
+			  	<img src="/images/filefolder.gif" border=0>
+			</a>
+    	</td>
+  	</tr>
 </table>
-
 <br>
 <table width="100%">
-  <tr>
-    <td class="Titolo" width="100%" >Destinatari</td>
-  </tr>
+  	<tr><td class="Titolo" width="100%" >Destinatari</td></tr>
 </table>
-
 <%-- 
 ================================================================================
   autorità di polizia per l'esecuzione
 ================================================================================
 --%>
 <div id="divautoritacompetenteE" style="width: 100%; display:block;">
-  <table width="100%">
-    <tr>
-      <td class="l" width=30%>Autorità Competente per territorio <font class=ob>(*)</font></td>
-      <td class="L" colspan="3">
-          <select Title="Autorita Esterna" class="small" name="<%=ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E%>">
-          <%=codiceAutoritaE%>
-          </select>
+<table width="100%">
+	<tr>
+      	<td class="l" width=30%>Autorità Competente per territorio <font class=ob>(*)</font></td>
+      	<td class="L" colspan="3">
+          	<select Title="Autorita Esterna" class="small" name="<%=ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E%>">
+          		<%=codiceAutoritaE%>
+          	</select>
         </td>
-    </tr>
+	</tr>
     <tr>
-      <td class="l">Sede</td>
-      <td class="L">
-        <% 
-        String lDescrSede = "";
-        if (autoritaEsternaE != null && autoritaEsternaE.getDescrSede() != null) 
-            lDescrSede = autoritaEsternaE.getDescrSede();
-        %>
-        <input type="text"  value="<%=StringUtils.toStringJSP(lDescrSede)%>" name="<%=ICostantiMisuraAlternativa.CAMPO_SEDE_POL_E%>" maxlength="35" size="35" title="Sede Autorita Esterna">
-
-        <a href="Javascript:ListaComuni('LoadInserisciMisuraAlternativa','<%=ICostantiMisuraAlternativa.CAMPO_SEDE_POL_E%>');">
-            <img src="/images/filefolder.gif" border=0>
-        </a>
-      </td>
-      <td class="l">Indirizzo</td>
-      <td class="L">
-          <TEXTAREA title="Note" name="<%=ICostantiMisuraAlternativa.CAMPO_NOTE_POL_E%>" cols=30><%=StringUtils.toStringJSP(NotificaAutoritaEsternaE.getNote())%></textarea>
-      </td>
-    </tr>
-  </table>
+		<td class="l">Sede</td>
+      	<td class="L">
+<% 
+String lDescrSede = "";
+if (autoritaEsternaE != null && autoritaEsternaE.getDescrSede() != null)
+	lDescrSede = autoritaEsternaE.getDescrSede();
+%>
+			<input type="text"  value="<%=StringUtils.toStringJSP(lDescrSede)%>" name="<%=ICostantiMisuraAlternativa.CAMPO_SEDE_POL_E%>" maxlength="35" size="35" title="Sede Autorita Esterna">
+        	<a href="Javascript:ListaComuni('LoadInserisciMisuraAlternativa','<%=ICostantiMisuraAlternativa.CAMPO_SEDE_POL_E%>');">
+            	<img src="/images/filefolder.gif" border=0>
+        	</a>
+		</td>
+      	<td class="l">Indirizzo</td>
+      	<td class="L">
+			<TEXTAREA title="Note" name="<%=ICostantiMisuraAlternativa.CAMPO_NOTE_POL_E%>" cols=30><%=StringUtils.toStringJSP(NotificaAutoritaEsternaE.getNote())%></textarea>
+      	</td>
+	</tr>
+</table>
 </div>
-
 <%-- 
 ================================================================================
   Istituto di detenzione

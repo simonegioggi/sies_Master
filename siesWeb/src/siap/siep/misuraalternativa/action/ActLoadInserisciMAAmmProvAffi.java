@@ -64,6 +64,10 @@ public class ActLoadInserisciMAAmmProvAffi extends ActAmmissioneProvvisoria {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public String processRequest() throws F3BException {
 
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
+
 		// tutti i controlli e la maggior parte delle request si trovano nel padre
 		String lRitorno = getAmmissioneProvvisoria();
 		if (!lRitorno.equals(""))
@@ -283,17 +287,17 @@ public class ActLoadInserisciMAAmmProvAffi extends ActAmmissioneProvvisoria {
 			DecodeModel lDecodeNew = new DecodeModel();
 			lDecodeNew.setCode(lDecode.getCode());
 
-			// AFFIDAMENTO
+			// AFFIDAMENTO /* ELIMINATA la parola "Provvisoria" da "Applicazione Provvisoria"*/
 			if ("0680".equals(lDecode.getCode()))
-				lDecodeNew.setDescription("Applicazione Provvisoria " + lDecode.getDescription());
+				lDecodeNew.setDescription("Applicazione " + lDecode.getDescription());
 			else if ("0681".equals(lDecode.getCode()))
-				lDecodeNew.setDescription("Applicazione Provvisoria " + lDecode.getDescription());
+				lDecodeNew.setDescription("Applicazione " + lDecode.getDescription());
 			else if ("0690".equals(lDecode.getCode()))
-				lDecodeNew.setDescription("Applicazione Provvisoria " + lDecode.getDescription());
+				lDecodeNew.setDescription("Applicazione " + lDecode.getDescription());
 			else if ("0691".equals(lDecode.getCode()))
-				lDecodeNew.setDescription("Applicazione Provvisoria " + lDecode.getDescription());
+				lDecodeNew.setDescription("Applicazione " + lDecode.getDescription());
 			else if ("0692".equals(lDecode.getCode()))
-				lDecodeNew.setDescription("Applicazione Provvisoria " + lDecode.getDescription());
+				lDecodeNew.setDescription("Applicazione " + lDecode.getDescription());
 			else
 				lDecodeNew.setDescription(lDecode.getDescription());
 
@@ -314,6 +318,10 @@ public class ActLoadInserisciMAAmmProvAffi extends ActAmmissioneProvvisoria {
 
 		// MEV 10 - filtro sui minorenni
 		setRequestAttribute("filtroMinorenni", getFiltroMinorenni());
+
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.debug(getClass().getName() + ".processRequest: fine");
 
 		return PG_LOAD_INSERISCI_MA_AMM_PROVVISORIA;
 	}

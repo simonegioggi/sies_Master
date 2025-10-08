@@ -7,26 +7,12 @@ import f3b.model.GenericModel;
 import siap.sico.ufficio.model.UfficioModel;
 
 /**
- * <p>
- * Title: DepositoDecretoModel
- * </p>
- * <p>
- * Description: Classe Model che rappresenta il DepositoDecreto
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * DepositoDecretoModel - Classe Model che rappresenta il DepositoDecreto
  *
  * @version 1.0
  */
 public class DepositoDecretoModel extends GenericModel {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = -2057270908061067016L;
 
 	private BigDecimal mIdDepositoDecreto;

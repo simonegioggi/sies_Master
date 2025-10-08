@@ -29,18 +29,7 @@ import siap.sius.sanzionesostitutiva.model.PeriodoAltraSanzioneModel;
 import siap.sius.scadenzario.model.ScadenzarioSiusModel;
 
 /**
- * <p>
- * Title: DepositoDecretoController
- * </p>
- * <p>
- * Description: Classe Controller per DepositoDecreto
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * DepositoDecretoController - Classe Controller per DepositoDecreto
  *
  * @version 1.0
  */

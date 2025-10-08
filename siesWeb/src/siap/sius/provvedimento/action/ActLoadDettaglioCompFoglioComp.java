@@ -92,11 +92,15 @@ public class ActLoadDettaglioCompFoglioComp extends ActionSiap implements ICosta
 				IDepositoOrdinanzaPc idopc = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
 				DepositoOrdinanzaPcModel dopcm = idopc.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd(
 						fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), "AM");
-				if (!Utils.isNullObj(dopcm) && Utils.isNullObj(dopcm.getDataEsecutivita()))
+				if (!Utils.isNullObj(dopcm) && Utils.isNullObj(dopcm.getDataEsecutivita())) {
+					siesLogger.debug("Non è possibile emettere il Foglio Complementare per un provvedimento di "
+							+ "Applicazione Misure Alternative DL 123/2018 senza Data di Esecutivit&agrave; "
+							+ "valorizzata!");
 					throw new SIUSException(F3BException.USER_MESSAGE,
 							"Non è possibile emettere il Foglio Complementare per un provvedimento di "
 							+ "Applicazione Misure Alternative DL 123/2018 senza Data di Esecutivit&agrave; "
 							+ "valorizzata!");
+				}
 			}
 
 			// Valorizzazione del Documento Allegato
