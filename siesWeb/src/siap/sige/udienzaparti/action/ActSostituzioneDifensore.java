@@ -26,23 +26,11 @@ import siap.sige.util.SIGELookupRemote;
 import siap.sius.luogodetenzione.action.ICostantiLuogoDetenzione;
 
 /**
- * <p>
- * Title: ActSostituzioneDifensore
- * </p>
- * <p>
- * Description: Classe Action per la Sostituzione di un Difensore
- * </p>
- * <p>
- * Copyright: Copyright (c) 2008
- * </p>
- * <p>
- * Company: Engineering S.p.A.
- * </p>
+ * ActSostituzioneDifensore - Classe Action per la Sostituzione di un Difensore
  *
  * @version 1.0
  */
 public class ActSostituzioneDifensore extends ActionSiap implements ICostantiPartiUdienza  {
-
 	
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);

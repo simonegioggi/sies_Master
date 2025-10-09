@@ -25,18 +25,7 @@ import siap.sige.util.SIGELookupRemote;
 import siap.sius.luogodetenzione.action.ICostantiLuogoDetenzione;
 
 /**
- * <p>
- * Title: ActInserisciAvvocato
- * </p>
- * <p>
- * Description: Classe Action per l'inserimento di Avvocato
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Engineering S.p.A.
- * </p>
+ * ActInserisciAvvocato - Classe Action per l'inserimento di Avvocato
  *
  * @version 1.0
  */
