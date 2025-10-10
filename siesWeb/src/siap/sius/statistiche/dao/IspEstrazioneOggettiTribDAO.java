@@ -276,7 +276,7 @@ public class IspEstrazioneOggettiTribDAO extends TableDAO {
 				lEsito = "Cancellato";
 			else if (aCodEsito.equalsIgnoreCase("7"))
 				lEsito = "Unificato";
-			// MEV_9 si aggiunge la decodifica per gli Accolti ex art.678 c.1 ter c.p.p.
+			// MEV_2019-09 si aggiunge la decodifica per gli Accolti ex art.678 c.1 ter c.p.p.
 			else if (aCodEsito.equalsIgnoreCase("9"))
 				// MEV_2024-092: modificata la dicitura da "Accolti Provvisoriamente" a "Accolti ex art.678
 				// c.1 ter c.p.p."

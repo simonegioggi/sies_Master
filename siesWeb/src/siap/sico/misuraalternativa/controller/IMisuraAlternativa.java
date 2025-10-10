@@ -150,7 +150,7 @@ public interface IMisuraAlternativa {
 	public MisuraAlternativaModel ExInserisciMisuraAlternativa(MisuraAlternativaModel aMisuraAlternativa)
 			throws F3BException;
 
-	// MEV_9-SIEP si aggiunge metodo generico che inserisce si deposoto decreto o deposito ordinanza
+	// MEV_2019-09-SIEP si aggiunge metodo generico che inserisce si deposoto decreto o deposito ordinanza
   public MisuraAlternativaModel ExInserisciDecretoOrdinanzaMisAlt (EventoNotificaModel aEveNotMod,
       DepositoDecretoModel lDepDecMod, DepositoOrdinanzaPcModel lDepOrdMod, TenoreModel lTenMod
       , MisuraAlternativaModel aMisuraAlternativa)

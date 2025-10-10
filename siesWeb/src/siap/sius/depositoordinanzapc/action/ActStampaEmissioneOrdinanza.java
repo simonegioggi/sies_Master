@@ -72,11 +72,11 @@ public class ActStampaEmissioneOrdinanza extends ActionSiap implements ICostanti
 			// LogF3B.getLogger()
 			siesLogger.info("Nome del template di stampa ordinanza assente");
 
-		// MEV_9: se stampo dal "Dettaglio Esecutivita' Ordinanza Applicazione M.A. DL 123/2018"
+		// MEV_2019-09: se stampo dal "Dettaglio Esecutivita' Ordinanza Applicazione M.A. DL 123/2018"
 		// allora non devo svalidare!
 		if ("SIUS_OR_0270".equals(enm.getNomeTemplate()))
 			enm.getEvento().setFlagDocumentoRegistrato("S");
-		// FINE MEV_9
+		// FINE MEV_2019-09
 
 		IDepositoOrdinanzaPc idop = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
 		ByteArrayOutputStream baos = idop.ExStampEmissioneOrdinanza(enm.getEvento(),

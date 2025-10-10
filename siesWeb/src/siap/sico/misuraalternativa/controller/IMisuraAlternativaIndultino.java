@@ -52,7 +52,7 @@ public interface IMisuraAlternativaIndultino
   public EventoModel ExUpdateValidaVariazioneMAAmmProvvisoria(EventoModel aEvento, FascicoloSiepModel aFascicolo)
   throws F3BException;
   
-  // MEV_9-SIEP - aggiunto metodo di validazione per la semilibertà provvisoria
+  // MEV_2019-09-SIEP - aggiunto metodo di validazione per la semilibertà provvisoria
   public EventoModel ExUpdateValidaMAAmmProvSemiliberta (EventoModel aEvento, FascicoloSiepModel aFascicolo)
       throws F3BException;
 }

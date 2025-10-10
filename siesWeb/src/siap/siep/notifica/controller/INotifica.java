@@ -78,7 +78,7 @@ public interface INotifica {
 
 	public Vector ExRicercaNotificaByIdParteUdienza(BigDecimal aIdParteUdienza) throws F3BException;
 
-	// MEV_9: AGGIUNTO METODO DI AGGIORNAMENTO DATI NOTIFICHE
+	// MEV_2019-09: AGGIUNTO METODO DI AGGIORNAMENTO DATI NOTIFICHE
 	public void ExModificaNotifiche(Vector<NotificaModel> notifiche, String[] check) throws F3BException;
 
 }

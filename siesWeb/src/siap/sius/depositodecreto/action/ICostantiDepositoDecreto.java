@@ -460,7 +460,7 @@ public interface ICostantiDepositoDecreto {
 	public static final String PG_DETTAGLIO_RINVIO_ESECUZIONE_MS = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/depositodecreto/DettaglioDecretoRinvioMisureSicurezza.jsp";
 
-	// MEV_9: create nuove pagine
+	// MEV_2019-09: create nuove pagine
 	public static final String PG_LOAD_INSERISCI_DESIGNAZIONE_MAGISTRATO_RELATORE = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/depositodecreto/LoadInserisciDesignazioneMagistratoRelatore.jsp";
 	public static final String COD_OGGETTO_CONCESSIONE_MISURE_ALTERNATIVE_ALLA_DETENZIONE = "C050";
@@ -475,6 +475,6 @@ public interface ICostantiDepositoDecreto {
 			+ "files/siap/sius/depositodecreto/LoadModificaDesignazioneMagistratoRelatore.jsp";
 	public static final String TEMPLATE_DECRETO_DESIGNAZIONE_MAGISTRATO_RELATORE = "SIUS_DE_0610";
 	public static final String CAMPO_NUMERO_GIORNI_TERMINE_EMISSIONE = "NumeroGiorniTermineEmissione";
-	// FINE MEV_9
+	// FINE MEV_2019-09
 
 }

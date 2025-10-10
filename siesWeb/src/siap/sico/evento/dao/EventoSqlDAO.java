@@ -959,7 +959,7 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 
 		lStatement += " AND (EVENTO.COD_TIPO_EVENTO = '01')";
 		lStatement += " AND (EVENTO.COD_TIPO_PROVVEDIMENTO = '04'"
-				// MEV_9-SIEP: aggiunta or condition per gestire conferma applicazione provvisoria
+				// MEV_2019-09-SIEP: aggiunta or condition per gestire conferma applicazione provvisoria
 				+ " OR EVENTO.COD_MOTIVO in" // affidamento in prova provvisorio=12; libero=26
 				// AFFIDAMENTO
 				+ " ('5443', '5444', '5445', '5446', '5447', '5460', '5461', '5462', '5463', '5464',"
@@ -1848,7 +1848,7 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		lStatement += " UFF_EMI.COD_TIPO_UFFICIO as TIPO_COD_UFFICIO_EMITTENTE, ";
 		lStatement += " TIPOLOGIA_INVIO_ATTI ";
 
-		// MEV_9 (D.lgs. 123/2018)
+		// MEV_2019-09 (D.lgs. 123/2018)
 		lStatement += " , DATA_RESTITUZIONE_AI ";
 
 		lStatement += " FROM EVENTO, cg_ref_codes CODESI,cg_ref_codes CODMOV,UFFICIO UFF_EMI, CG_REF_CODES UFF_TIPO_EMI,";
@@ -1939,7 +1939,7 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		lStatement += " EVENTO.ISTR_ID_ISTRUTTORIA_CUMULO, ";
 		lStatement += " EVENTO.ESTREMI_SOGG_RICH_ISTR, ";
 		lStatement += " KEY_ESEC_NSC ";
-		// MEV_9 (D.lgs. 123/2018)
+		// MEV_2019-09 (D.lgs. 123/2018)
 		lStatement += " , DATA_RESTITUZIONE_AI ";
 
 		lStatement += " FROM EVENTO, cg_ref_codes CODESI,cg_ref_codes CODMOV,UFFICIO UFF_EMI, CG_REF_CODES UFF_TIPO_EMI,";
@@ -2022,7 +2022,7 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		lStatement += " DATA_RICHIESTA, ";
 		lStatement += " KEY_ESEC_NSC ";
 
-		// MEV_9 (D.lgs. 123/2018)
+		// MEV_2019-09 (D.lgs. 123/2018)
 		lStatement += " , DATA_RESTITUZIONE_AI ";
 
 		lStatement += " FROM EVENTO, FASCICOLO_SIEP fasc, cg_ref_codes CODESI,cg_ref_codes CODMOV,UFFICIO UFF_EMI, CG_REF_CODES UFF_TIPO_EMI,";
@@ -2106,7 +2106,7 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		lStatement += " EVENTO.ESTREMI_SOGG_RICH_ISTR, ";
 		lStatement += " KEY_ESEC_NSC ";
 
-		// MEV_9 (D.lgs. 123/2018)
+		// MEV_2019-09 (D.lgs. 123/2018)
 		lStatement += " , DATA_RESTITUZIONE_AI ";
 
 		lStatement += " FROM EVENTO";
@@ -2168,7 +2168,7 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		lStatement += " EVENTO.ISTR_ID_ISTRUTTORIA_CUMULO, ";
 		lStatement += " EVENTO.ESTREMI_SOGG_RICH_ISTR, ";
 		lStatement += " KEY_ESEC_NSC ";
-		// MEV_9 (D.lgs. 123/2018)
+		// MEV_2019-09 (D.lgs. 123/2018)
 		lStatement += " , DATA_RESTITUZIONE_AI ";
 
 		lStatement += " FROM EVENTO, cg_ref_codes CODESI,cg_ref_codes CODMOV,UFFICIO UFF_EMI, CG_REF_CODES UFF_TIPO_EMI,";
@@ -2216,7 +2216,7 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		lStatement += " DATA_RICHIESTA, ";
 		lStatement += " KEY_ESEC_NSC ";
 
-		// MEV_9 (D.lgs. 123/2018)
+		// MEV_2019-09 (D.lgs. 123/2018)
 		lStatement += " , DATA_RESTITUZIONE_AI ";
 
 		lStatement += " FROM EVENTO, cg_ref_codes CODESI,cg_ref_codes CODMOV,UFFICIO UFF_EMI, CG_REF_CODES UFF_TIPO_EMI, CG_REF_CODES UFF_TIPO_DES,";
@@ -2336,7 +2336,7 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		if (findColumn("TIPO_COD_UFFICIO_EMITTENTE"))
 			aModel.setCodTipoUfficioEmittente(getString("TIPO_COD_UFFICIO_EMITTENTE"));
 
-		// MEV_9 (D.lgs. 123/2018)
+		// MEV_2019-09 (D.lgs. 123/2018)
 		if (findColumn("DATA_RESTITUZIONE_AI"))
 			aModel.setDataRestituzioneAi(getDate("DATA_RESTITUZIONE_AI"));
 
@@ -2412,7 +2412,7 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		} catch (Exception sqex) {
 		}
 
-		// MEV_9 (D.lgs. 123/2018)
+		// MEV_2019-09 (D.lgs. 123/2018)
 		if (findColumn("DATA_RESTITUZIONE_AI"))
 			aModel.setDataRestituzioneAi(getDate("DATA_RESTITUZIONE_AI"));
 
@@ -2483,7 +2483,7 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		aModel.setDataRichiesta(getDate("DATA_RICHIESTA"));
 		aModel.setKeyEsecNsc(getBigDecimal("KEY_ESEC_NSC"));
 
-		// MEV_9 (D.lgs. 123/2018)
+		// MEV_2019-09 (D.lgs. 123/2018)
 		if (findColumn("DATA_RESTITUZIONE_AI"))
 			aModel.setDataRestituzioneAi(getDate("DATA_RESTITUZIONE_AI"));
 
@@ -2574,7 +2574,7 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		lStatement += " DATA_RICHIESTA, ";
 		lStatement += " KEY_ESEC_NSC ";
 
-		// MEV_9 (D.lgs. 123/2018)
+		// MEV_2019-09 (D.lgs. 123/2018)
 		lStatement += " , DATA_RESTITUZIONE_AI ";
 
 		lStatement += " FROM EVENTO,DEPOSITO_DECRETO,DEPOSITO_ORDINANZA_PC, cg_ref_codes CODESI,cg_ref_codes CODMOV,UFFICIO UFF_EMI, CG_REF_CODES UFF_TIPO_EMI,";
@@ -3129,7 +3129,7 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		lStatement += " DATA_RICHIESTA, ";
 		lStatement += " KEY_ESEC_NSC ";
 
-		// MEV_9 (D.lgs. 123/2018)
+		// MEV_2019-09 (D.lgs. 123/2018)
 		lStatement += " , DATA_RESTITUZIONE_AI ";
 
 		lStatement += " FROM EVENTO";
@@ -3187,7 +3187,7 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		// MERGE v10 --> MEV10-s3: aggiunto campo in estrazione
 		lStatement += " '' COD_TIPO_UFFICIO_EMITTENTE ";
 
-		// MEV_9 (D.lgs. 123/2018)
+		// MEV_2019-09 (D.lgs. 123/2018)
 		lStatement += " , DATA_RESTITUZIONE_AI ";
 
 		lStatement += " FROM EVENTO EV, PROVVEDIMENTO_SIGE PROVV, CG_REF_CODES CRC";
@@ -3292,7 +3292,7 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		lStatement += " EVENTO.ISTR_ID_ISTRUTTORIA_CUMULO, ";
 		lStatement += " VER.IST_DET_ID_ISTITUTO_DETENZIONE, NUMERO_PROTOCOLLO ";
 
-		// MEV_9 (D.lgs. 123/2018)
+		// MEV_2019-09 (D.lgs. 123/2018)
 		lStatement += " , DATA_RESTITUZIONE_AI ";
 
 		lStatement += " FROM EVENTO, VERBALE VER, UFFICIO UFF_EMI, CG_REF_CODES CODTIPPRO,CG_REF_CODES CODEVE, CG_REF_CODES CODMOV,";
@@ -3472,7 +3472,7 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		lStatement += " EVE_ID_EVENTO,  ";
 		lStatement += " DATA_RICHIESTA, ";
 		lStatement += " ISTR_ID_ISTRUTTORIA_CUMULO ";
-		// MEV_9 (D.lgs. 123/2018)
+		// MEV_2019-09 (D.lgs. 123/2018)
 		lStatement += " , DATA_RESTITUZIONE_AI ";
 
 		lStatement += " FROM EVENTO, cg_ref_codes CODMOV,";
@@ -3642,7 +3642,7 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 	// ***** FINE INTERVENTO MEV_2023-33 *****//
 
 	/**
-	 * MEV_9 (D.lgs. 123/2018). Ricerca ultimo evento di Fase istruttoria » Richiesta Atti in cui è
+	 * MEV_2019-09 (D.lgs. 123/2018). Ricerca ultimo evento di Fase istruttoria » Richiesta Atti in cui è
 	 * valorizzata la DATA_RESTITUZIONE_AI per poterla precaricare nelle successive richieste dove prevista
 	 *
 	 * @param aIdFascicoloSius

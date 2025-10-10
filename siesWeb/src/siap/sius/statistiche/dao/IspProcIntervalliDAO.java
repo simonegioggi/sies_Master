@@ -292,11 +292,11 @@ public class IspProcIntervalliDAO extends TableDAO {
 		lProcIntervalliModel.setDescrOggettoTenore(DecodificheUtils.getDescbyCode(
 				DecodificheManager.getInstance().getMotivoProvvedimento(), getCodOggettoTenore()));
 		lProcIntervalliModel.setCodEsitoTenore(getCodEsitoTenore());
-		// MEV_9: cambiato dominio di estrazione
+		// MEV_2019-09: cambiato dominio di estrazione
 		// DecodificheUtils.getDescbyCode(DecodificheManager.getInstance().getEsitoTenore(),
 		// getCodEsitoTenore()),
 		// calcolaEsitoProvvedimento(getCodEsitoTenore());
-		// FINE MEV_9
+		// FINE MEV_2019-09
 		// TICKET#202409020116 - si decodifica dal dominio ESITO_PROVVEDIMENTO e non ESITO_TENORE
 		try {
 			lProcIntervalliModel.setDescrEsitoTenore(DecodificheUtils.getDescbyCode(
@@ -333,7 +333,7 @@ public class IspProcIntervalliDAO extends TableDAO {
 	 * Numero MEV : 9 
 	 * Autore : sgioggi
 	 * Data : 19 apr 2023 
-	 * Branch : MEV_9
+	 * Branch : MEV_2019-09
 	 */
 	// private String calcolaEsitoProvvedimento(String codEsitoTenore) throws DAOException {
 	//
@@ -346,7 +346,7 @@ public class IspProcIntervalliDAO extends TableDAO {
 	// throw new DAOException(e.getMessage());
 	// }
 	// }
-	// ***** FINE INTERVENTO MEV_9 *****//
+	// ***** FINE INTERVENTO MEV_2019-09 *****//
 
 	public void setDAOFromModel(IspProcIntervalliModel aModel) throws DAOException {
 

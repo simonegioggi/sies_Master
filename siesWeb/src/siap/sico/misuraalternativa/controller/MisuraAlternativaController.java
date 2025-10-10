@@ -1689,19 +1689,19 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			if (lMisModelOrder.getCodTipoMisura().equals("0005")
 					|| lMisModelOrder.getCodTipoMisura().equals("0010")
 					|| lMisModelOrder.getCodTipoMisura().equals("0013")
-					// MEV_9-SIEP: aggiunti codici tipo misura x DETENZIONE
+					// MEV_2019-09-SIEP: aggiunti codici tipo misura x DETENZIONE
 					|| "0722".equals(lMisModelOrder.getCodTipoMisura())
 					|| "0733".equals(lMisModelOrder.getCodTipoMisura())
 					|| "0682".equals(lMisModelOrder.getCodTipoMisura())
 					|| "0693".equals(lMisModelOrder.getCodTipoMisura())
 					|| "5465".equals(lMisModelOrder.getCodTipoMisura())
 					|| "5466".equals(lMisModelOrder.getCodTipoMisura())) {
-				// MEV_9-SIEP: aggiunta impostazione stato proc x DETENZIONE
+				// MEV_2019-09-SIEP: aggiunta impostazione stato proc x DETENZIONE
 				if ("0722".equals(lMisModelOrder.getCodTipoMisura())
 						|| "0733".equals(lMisModelOrder.getCodTipoMisura())
 						|| "5465".equals(lMisModelOrder.getCodTipoMisura())
 						|| "5466".equals(lMisModelOrder.getCodTipoMisura()))
-					// MEV_9-SIEP: gestione nuovi codici tipo misura x DETENZIONE
+					// MEV_2019-09-SIEP: gestione nuovi codici tipo misura x DETENZIONE
 					lStatoProcMod = "0581";
 				else if (lPosMod != null && lPosMod.getCodPosizioneGiuridica() != null
 				// new 50 Espiazione presso il domicilio
@@ -1746,7 +1746,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 					|| lMisModelOrder.getCodTipoMisura().equals("0002")
 					|| lMisModelOrder.getCodTipoMisura().equals("0003")
 					|| lMisModelOrder.getCodTipoMisura().equals("0030")
-					// MEV_9-SIEP: aggiunti codici tipo misura x AFFIDAMENTO
+					// MEV_2019-09-SIEP: aggiunti codici tipo misura x AFFIDAMENTO
 					|| "0720".equals(lMisModelOrder.getCodTipoMisura())
 					|| "0721".equals(lMisModelOrder.getCodTipoMisura())
 					|| "0730".equals(lMisModelOrder.getCodTipoMisura())
@@ -1762,7 +1762,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 					|| "5462".equals(lMisModelOrder.getCodTipoMisura())
 					|| "5463".equals(lMisModelOrder.getCodTipoMisura())
 					|| "5464".equals(lMisModelOrder.getCodTipoMisura())) {
-				// MEV_9-SIEP: aggiunta impostazione stato proc x AFFIDAMENTO
+				// MEV_2019-09-SIEP: aggiunta impostazione stato proc x AFFIDAMENTO
 				if ("0720".equals(lMisModelOrder.getCodTipoMisura())
 						|| "0721".equals(lMisModelOrder.getCodTipoMisura())
 						|| "0730".equals(lMisModelOrder.getCodTipoMisura())
@@ -1804,14 +1804,14 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			}
 			// Controllo per "SEMILIBERTA"
 			else if (lMisModelOrder.getCodTipoMisura().equals("0004")
-					// MEV_9-SIEP: aggiunti codici tipo misura x SEMILIBERTA'
+					// MEV_2019-09-SIEP: aggiunti codici tipo misura x SEMILIBERTA'
 					|| "0723".equals(lMisModelOrder.getCodTipoMisura())
 					|| "0734".equals(lMisModelOrder.getCodTipoMisura())
 					|| "0683".equals(lMisModelOrder.getCodTipoMisura())
 					|| "0694".equals(lMisModelOrder.getCodTipoMisura())
 					|| "5467".equals(lMisModelOrder.getCodTipoMisura())
 					|| "5468".equals(lMisModelOrder.getCodTipoMisura())) {
-				// MEV_9-SIEP: aggiunta impostazione stato proc x SEMILIBERTA'
+				// MEV_2019-09-SIEP: aggiunta impostazione stato proc x SEMILIBERTA'
 				if ("0723".equals(lMisModelOrder.getCodTipoMisura())
 						|| "0734".equals(lMisModelOrder.getCodTipoMisura())
 						|| "5467".equals(lMisModelOrder.getCodTipoMisura())
@@ -2130,7 +2130,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 					|| lMisModelOrder.getCodTipoMisura().equals("0010")
 					// Detenzione Domiciliare art. 47 quater o.p.
 					|| lMisModelOrder.getCodTipoMisura().equals("0013")
-					// MEV_9-SIEP: aggiunti codici tipo misura x DETENZIONE
+					// MEV_2019-09-SIEP: aggiunti codici tipo misura x DETENZIONE
 					|| "0722".equals(lMisModelOrder.getCodTipoMisura())
 					|| "0733".equals(lMisModelOrder.getCodTipoMisura())
 					|| "0682".equals(lMisModelOrder.getCodTipoMisura())
@@ -2212,7 +2212,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			} else
 			// Controllo per SEMILIBERTA
 			if (lMisModelOrder.getCodTipoMisura().equals("0004")
-					// MEV_9-SIEP: aggiunti codici tipo misura x SEMILIBERTA'
+					// MEV_2019-09-SIEP: aggiunti codici tipo misura x SEMILIBERTA'
 					|| "0723".equals(lMisModelOrder.getCodTipoMisura())
 					|| "0734".equals(lMisModelOrder.getCodTipoMisura())
 					|| "0683".equals(lMisModelOrder.getCodTipoMisura())
@@ -2263,7 +2263,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 					|| lMisModelOrder.getCodTipoMisura().equals("0003")
 					// Differimento Pena facoltativo attesa grazia
 					|| lMisModelOrder.getCodTipoMisura().equals("0030")
-					// MEV_9-SIEP: aggiunti codici tipo misura x AFFIDAMENTO
+					// MEV_2019-09-SIEP: aggiunti codici tipo misura x AFFIDAMENTO
 					|| "0720".equals(lMisModelOrder.getCodTipoMisura())
 					|| "0721".equals(lMisModelOrder.getCodTipoMisura())
 					|| "0730".equals(lMisModelOrder.getCodTipoMisura())
@@ -2427,7 +2427,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 					|| lMisModelOrder.getCodTipoMisura().equals("0002")
 					|| lMisModelOrder.getCodTipoMisura().equals("0003")
 					|| lMisModelOrder.getCodTipoMisura().equals("0030")
-					// MEV_9-SIEP: aggiunti codici tipo misura x AFFIDAMENTO
+					// MEV_2019-09-SIEP: aggiunti codici tipo misura x AFFIDAMENTO
 					|| "0720".equals(lMisModelOrder.getCodTipoMisura())
 					|| "0721".equals(lMisModelOrder.getCodTipoMisura())
 					|| "0730".equals(lMisModelOrder.getCodTipoMisura())
@@ -2494,7 +2494,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			if (lMisModelOrder.getCodTipoMisura().equals("0005")
 					|| lMisModelOrder.getCodTipoMisura().equals("0010")
 					|| lMisModelOrder.getCodTipoMisura().equals("0013")
-					// MEV_9-SIEP: aggiunti codici tipo misura x DETENZIONE
+					// MEV_2019-09-SIEP: aggiunti codici tipo misura x DETENZIONE
 					|| "0722".equals(lMisModelOrder.getCodTipoMisura())
 					|| "0733".equals(lMisModelOrder.getCodTipoMisura())
 					|| "0682".equals(lMisModelOrder.getCodTipoMisura())
@@ -2517,7 +2517,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			}
 			// Controllo per SEMILIBERTA
 			else if (lMisModelOrder.getCodTipoMisura().equals("0004")
-					// MEV_9-SIEP: aggiunti codici tipo misura x SEMILIBERTA'
+					// MEV_2019-09-SIEP: aggiunti codici tipo misura x SEMILIBERTA'
 					|| "0723".equals(lMisModelOrder.getCodTipoMisura())
 					|| "0734".equals(lMisModelOrder.getCodTipoMisura())
 					|| "0683".equals(lMisModelOrder.getCodTipoMisura())
@@ -2541,7 +2541,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 					|| lMisModelOrder.getCodTipoMisura().equals("0002")
 					|| lMisModelOrder.getCodTipoMisura().equals("0003")
 					|| lMisModelOrder.getCodTipoMisura().equals("0030")
-					// MEV_9-SIEP: aggiunti codici tipo misura x AFFIDAMENTO
+					// MEV_2019-09-SIEP: aggiunti codici tipo misura x AFFIDAMENTO
 					|| "0720".equals(lMisModelOrder.getCodTipoMisura())
 					|| "0721".equals(lMisModelOrder.getCodTipoMisura())
 					|| "0730".equals(lMisModelOrder.getCodTipoMisura())
@@ -5570,21 +5570,21 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 				lEveDao.ricercaEventoByKey(lMisMod.getEveIdEvento());
 				EventoModel lEvento = (EventoModel) lEveDao.getModelByKey();
 
-				// MEV_9-SIEP: scarto solo se esito NON è "Concede" (0001) oppure "Conferma Decisione del
+				// MEV_2019-09-SIEP: scarto solo se esito NON è "Concede" (0001) oppure "Conferma Decisione del
 				// Magistrato Relatore" (0271)
 				// boolean testEsito = "0001".equals(lEvento.getCodEsito())
 				// || "0271".equals(lEvento.getCodEsito());
 				// if (!testEsito) {
-				// // MEV_9 scarto le ammissioni provvisorie se non valorizzato il nuovo campo
+				// // MEV_2019-09 scarto le ammissioni provvisorie se non valorizzato il nuovo campo
 				// // DATA_ESECUTIVITA
 				// Set<String> mySet = new HashSet<>(Arrays
 				// .asList(new String[] { "0680", "0681", "0690", "0691", "0692", "0682", "0693" }));
 				// if (lMisMod.getDataEsecutivita() == null && mySet.contains(lMisMod.getCodTipoMisura()))
 				// continue;
-				// // MEV_9 - FINE
+				// // MEV_2019-09 - FINE
 				// }
 				// NON SCARTO PIù poiché la data esecutività non è più obbligatoria!!!
-				// MEV_9-SIEP - FINE
+				// MEV_2019-09-SIEP - FINE
 
 				if (lEvento != null && lEvento.getFlagDocumentoRegistrato() != null
 						&& !"A".equals(lEvento.getFlagDocumentoRegistrato())
@@ -6122,7 +6122,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 	 * Metodo generico per inserire sia su deposito Ordinanza che su Deposito decreto le MA iscritte da SIEP.
 	 * Non scrive sulle Notifiche
 	 *
-	 * @since MEV_9-SIEP 03.2024
+	 * @since MEV_2019-09-SIEP 03.2024
 	 *
 	 */
 	public MisuraAlternativaModel ExInserisciDecretoOrdinanzaMisAlt(EventoNotificaModel aEveNotMod,

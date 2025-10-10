@@ -23,7 +23,7 @@
 <jsp:useBean id="fascicoloSiusGP" 			scope="request" class="siap.sius.fascicolo.model.FascicoloGPModel"/>
 <jsp:useBean id="flag_valida"  				scope="request" class="java.lang.String"/>
 <jsp:useBean id="isModificabile"			scope="request" class="java.lang.String"/>
-<%-- MEV_9: aggiunto useBean --%>
+<%-- MEV_2019-09: aggiunto useBean --%>
 <jsp:useBean id="depositoOrdinanzaVector"	scope="request" class="java.util.Vector"/>
 
 <html>
@@ -109,7 +109,7 @@ if (provvedimenti.size() == 0) {
 		<td class="int">Motivo provvedimento</td>
 		<td class="int">Esito provvedimento</td>
 		<td class="int" nowrap>Data Deposito</td>
-		<%-- MEV_9: aggiunta data esecutivita e gestita nella pagina solo per C050 e C051 --%>
+		<%-- MEV_2019-09: aggiunta data esecutivita e gestita nella pagina solo per C050 e C051 --%>
 <%
 	if (!Utils.isNullObj(fascicoloSiusGP) && !Utils.isNullObj(fascicoloSiusGP.getGeneraleProcedimentoModel())
 			&& !Utils.isNullObj(fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento())
@@ -294,7 +294,7 @@ il provv. non appartiene ad uno dei seguenti tipi:
 	Fissazione Udienza (cod. Esito = 0601),
 	Irreperibilità (cod. Esito = 0602),
 	Rinvio Udienza (cod. Esito = 0603),
-	// MEV_9: aggiungo 3 nuovi esiti per il decreto di designazione magistrato relatore
+	// MEV_2019-09: aggiungo 3 nuovi esiti per il decreto di designazione magistrato relatore
 	ESITO_PROVVEDIMENTO 0270 Applica ex art. 678 comma 1 ter cpp,			NON PIU'
 	ESITO_PROVVEDIMENTO 0271 Conferma Decisione del Magistrato Relatore,	NON PIU'
 	ESITO_PROVVEDIMENTO 0610 Magistrato Designato art. 678 1-ter;

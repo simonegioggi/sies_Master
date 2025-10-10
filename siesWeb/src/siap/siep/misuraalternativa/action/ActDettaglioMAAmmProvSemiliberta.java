@@ -32,7 +32,7 @@ import siap.siep.verbale.controller.IVerbale;
 import siap.siep.verbale.model.VerbaleModel;
 
 /**
- * @since MEV_9-SIEP 2024
+ * @since MEV_2019-09-SIEP 2024
  */
 public class ActDettaglioMAAmmProvSemiliberta extends ActMisuraAlternativa
 		implements ICostantiMisuraAlternativa {
@@ -158,7 +158,7 @@ public class ActDettaglioMAAmmProvSemiliberta extends ActMisuraAlternativa
 		lUffEmiMod = lCtrlUffEmi.getUfficioByKey(lMisura.getChiaveUfficioFascicoloSius());
 		setRequestAttribute("sedeUfficioEmittente", lUffEmiMod);
 
-		// MEV_9 Si gestiscono i nuovi codici
+		// MEV_2019-09 Si gestiscono i nuovi codici
 		Set<String> codiciAffidamento = new HashSet<>(
 				Arrays.asList(new String[] { "2006", "2008", "0680", "0681", "0690", "0691", "0692" }));
 		Set<String> codiciDetenzione = new HashSet<>(

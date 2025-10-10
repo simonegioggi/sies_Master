@@ -19,7 +19,7 @@
 <jsp:useBean id="estremiFoglioComp"         scope="request" class="java.util.Vector"/>
 <jsp:useBean id="impugnazioniEvento"  		scope="request" class="java.util.Hashtable"/>
 <jsp:useBean id="opposizioniEvento"   		scope="request" class="java.util.Hashtable"/>
-<%-- MEV_9: aggiunti useBean --%>
+<%-- MEV_2019-09: aggiunti useBean --%>
 <jsp:useBean id="fascicoloSiusGP" 			scope="request" class="siap.sius.fascicolo.model.FascicoloGPModel"/>
 <jsp:useBean id="depositoOrdinanzaVector"	scope="request" class="java.util.Vector"/>
 
@@ -40,7 +40,7 @@ if (provvedimenti.size() == 0) {
 		<td class="int">Motivo</td>
 		<td class="int">Esito</td>
 		<td class="int" nowrap>Data Deposito</td>
-		<%-- MEV_9: aggiunta data esecutivita e gestita nella pagina solo per C050 e C051 --%>
+		<%-- MEV_2019-09: aggiunta data esecutivita e gestita nella pagina solo per C050 e C051 --%>
 <%
 	if (!Utils.isNullObj(fascicoloSiusGP) && !Utils.isNullObj(fascicoloSiusGP.getGeneraleProcedimentoModel())
 			&& !Utils.isNullObj(fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento())

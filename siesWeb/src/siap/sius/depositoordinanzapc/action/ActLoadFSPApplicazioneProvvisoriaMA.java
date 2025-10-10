@@ -7,7 +7,7 @@ import siap.sius.fascicolo.action.ActLoadRicercaFSPuntuale;
  * 123/2018
  *
  * @author d.fiorletta
- * @since MEV_9
+ * @since MEV_2019-09
  */
 public class ActLoadFSPApplicazioneProvvisoriaMA extends ActLoadRicercaFSPuntuale {
 

@@ -32,7 +32,7 @@ import siap.siep.util.SIEPLookupRemote;
 /**
  *
  * 
- * @since MEV_9-SIEP
+ * @since MEV_2019-09-SIEP
  */
 
 public class ActLoadDettaglioSospensioneDecisioniSorv678 extends ActMisuraAlternativa implements

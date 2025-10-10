@@ -14,7 +14,7 @@ import siap.sius.generaleprocedimento.model.GeneraleProcedimentoModel;
 import siap.sius.statistiche.model.EveFasGepSogProvModel;
 import siap.sius.statistiche.model.RicercaProcedimentoModel;
 
-// MEV_9: aggiunta classe per le statistiche di Misure Alternative
+// MEV_2019-09: aggiunta classe per le statistiche di Misure Alternative
 public class ProcPerStatisticaMisureAlternativeSqlDAO extends SIAPSqlDAO {
 
 	public ProcPerStatisticaMisureAlternativeSqlDAO(Connection aCon) {

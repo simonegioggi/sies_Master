@@ -62,11 +62,11 @@ public class GeneraleProcedimentoDAO extends SIAPTableDAO {
 		 * Numero MEV : 9
 		 * Autore    : sgioggi
 		 * Data      : 22 nov 2022
-		 * Branch    : MEV_9
+		 * Branch    : MEV_2019-09
 		 */
 		setField("DATA_RESTITUZIONE", DATE);
 		setField("DESCR_RESTITUZIONE", STRING);
-		//***** FINE INTERVENTO MEV_9 *****//
+		//***** FINE INTERVENTO MEV_2019-09 *****//
 	}
 
 	//

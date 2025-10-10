@@ -37,7 +37,7 @@ public class ActLoadInserisciMASemiliberta extends ActConcessione {
 		if (!lRitorno.equals(""))
 			return lRitorno;
 
-		// MEV_9-SIEP: modificata gestione della action
+		// MEV_2019-09-SIEP: modificata gestione della action
 		// setto il campo codice motivo
 		// Collection lmotivo = DecodificheManager.getInstance().getMotivoProvvedimentoMASemiL();
 		// String lDesMotivo = "";
@@ -51,12 +51,12 @@ public class ActLoadInserisciMASemiliberta extends ActConcessione {
 		// setRequestAttribute("motivoProvv", lDesMotivo);
 		// setRequestAttribute("codicemotivo", lCodiceMotivo);
 		Option lOption = null;
-		// MEV_9-SIEP: si differenzia per PM e PMM
+		// MEV_2019-09-SIEP: si differenzia per PM e PMM
 		if (isUfficioMinorenni())
 			lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoMASemiLMinor());
 		else
 			lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoMASemiL());
-		// FINE MEV_9-SIEP
+		// FINE MEV_2019-09-SIEP
 		setRequestAttribute("motivoProvv", "" + lOption);
 
 		setRequestAttribute("tipoMisura", "SEMILIBERTA");
@@ -66,7 +66,7 @@ public class ActLoadInserisciMASemiliberta extends ActConcessione {
 		// Instanzia il model dell'evento
 		EventoModel lEvent = new EventoModel();
 
-		// MEV_9-SIEP: aggiunta nuova gestione per modifica
+		// MEV_2019-09-SIEP: aggiunta nuova gestione per modifica
 		IEvento ie = SICOLookupRemote.getEventoRemote();
 		EventoModel lEve = null;
 		String tipoOperazione = "";
@@ -101,7 +101,7 @@ public class ActLoadInserisciMASemiliberta extends ActConcessione {
 			// setta la risposta della ricerca nella request
 			setRequestAttribute("maammissioneprovvisoria", mam);
 
-			// MEV_9-SIEP: aggiunta impostazione per il campo codice motivo
+			// MEV_2019-09-SIEP: aggiunta impostazione per il campo codice motivo
 			if (!Utils.isNullObj(mam)) {
 				lOption.setSelected(mam.getCodTipoMisura());
 				setRequestAttribute("motivoProvv", "" + lOption);

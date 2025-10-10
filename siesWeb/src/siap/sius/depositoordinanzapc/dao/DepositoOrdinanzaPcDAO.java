@@ -90,10 +90,10 @@ public class DepositoOrdinanzaPcDAO extends SIAPTableDAO {
 		setField("TIPO_CONTROLLO_ESECUZIONE", STRING);
 		// 10102014 - DL 92 2014 Violazione CEDU
 		setField("SOMMA_RISARC_DANNI", BIG_DECIMAL);
-		// INIZIO: MEV_9 (D.lgs. 123/2018)
+		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 		setField("DATA_ESECUTIVITA", DATE);
 		setField("NOTE_DATA_ESECUTIVITA", STRING);
-		// FINE: MEV_9
+		// FINE: MEV_2019-09
 		// MEV_2023-35: aggiunti campi
 		setField("COD_TIPO_SANZIONE", STRING);
 		setField("COD_TIPO_PENA_ACCESSORIA", STRING);
@@ -330,7 +330,7 @@ public class DepositoOrdinanzaPcDAO extends SIAPTableDAO {
 		return getBigDecimal("SOMMA_RISARC_DANNI");
 	}
 
-	// INIZIO: MEV_9 (D.lgs. 123/2018)
+	// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 	public Date getDataEsecutivita() throws DAOException {
 		return getDate("DATA_ESECUTIVITA");
 	}
@@ -338,7 +338,7 @@ public class DepositoOrdinanzaPcDAO extends SIAPTableDAO {
 	public String getNoteDataEsecutivita() throws DAOException {
 		return getString("NOTE_DATA_ESECUTIVITA");
 	}
-	// FINE: MEV_9
+	// FINE: MEV_2019-09
 
 	public String getCodTipoSanzione() throws DAOException {
 		return getString("COD_TIPO_SANZIONE");
@@ -591,7 +591,7 @@ public class DepositoOrdinanzaPcDAO extends SIAPTableDAO {
 		setBigDecimal("SOMMA_RISARC_DANNI", aValore);
 	}
 
-	// INIZIO: MEV_9 (D.lgs. 123/2018)
+	// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 	public void setDataEsecutivita(Date aValore) throws DAOException {
 		setDate("DATA_ESECUTIVITA", aValore);
 	}
@@ -599,7 +599,7 @@ public class DepositoOrdinanzaPcDAO extends SIAPTableDAO {
 	public void setNoteDataEsecutivita(String aValore) throws DAOException {
 		setString("NOTE_DATA_ESECUTIVITA", aValore);
 	}
-	// FINE: MEV_9
+	// FINE: MEV_2019-09
 
 	public void setCodTipoSanzione(String aValore) {
 		setString("COD_TIPO_SANZIONE", aValore);
@@ -650,7 +650,7 @@ public class DepositoOrdinanzaPcDAO extends SIAPTableDAO {
 				getCodTipoControlloEsecuzione(), "",
 				// 10102014 - DL 92 2014 Violazione CEDU
 				getSommaRisarcimento(),
-				// MEV_9 (D.lgs. 123/2018)
+				// MEV_2019-09 (D.lgs. 123/2018)
 				getDataEsecutivita(), getNoteDataEsecutivita(),
 				getCodTipoSanzione(), getCodTipoPenaAccessoria(), "", getDurata(), "",
 				getNumAnni(), getNumMesi(), getNumGiorni());
@@ -716,10 +716,10 @@ public class DepositoOrdinanzaPcDAO extends SIAPTableDAO {
 		setCodTipoControlloEsecuzione(aModel.getCodTipoControlloEsecuzione());
 		// 10102014 - DL 92 2014
 		setSommaRisarcimento(aModel.getSommaRisarcimento());
-		// INIZIO: MEV_9 (D.lgs. 123/2018)
+		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 		setDataEsecutivita(aModel.getDataEsecutivita());
 		setNoteDataEsecutivita(aModel.getNoteDataEsecutivita());
-		// FINE: MEV_9
+		// FINE: MEV_2019-09
 		setCodTipoSanzione(aModel.getCodTipoSanzione());
 		setCodTipoPenaAccessoria(aModel.getCodTipoPenaAccessoria());
 		setDurata(aModel.getDurata());
@@ -785,10 +785,10 @@ public class DepositoOrdinanzaPcDAO extends SIAPTableDAO {
 		setCodTipoControlloEsecuzione(aModel.getCodTipoControlloEsecuzione());
 		// 10102014 - DL 92 2014 Violazione CEDU
 		setSommaRisarcimento(aModel.getSommaRisarcimento());
-		// INIZIO: MEV_9 (D.lgs. 123/2018)
+		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 		setDataEsecutivita(aModel.getDataEsecutivita());
 		setNoteDataEsecutivita(aModel.getNoteDataEsecutivita());
-		// FINE: MEV_9
+		// FINE: MEV_2019-09
 		setCodTipoSanzione(aModel.getCodTipoSanzione());
 		setCodTipoPenaAccessoria(aModel.getCodTipoPenaAccessoria());
 		setDurata(aModel.getDurata());

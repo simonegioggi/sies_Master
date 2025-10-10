@@ -31,12 +31,12 @@ public class ActLoadRichiestaAccertamentoProgrTerapeutico extends ActionSiap
 		setRequestAttribute("codTipoUfficioS", "29");
 		setRequestAttribute("descTipoUfficioS", DecodificheUtils.getDescbyCode(lCol, "29"));
 		
-		// INIZIO: MEV_9 (D.lgs. 123/2018)
+		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 		IEvento lEveCtrl = SICOLookupRemote.getEventoRemote();
 		EventoModel lUltimoEventoRichAtti = lEveCtrl.ricercaUltimoEventoRichiestaAttiIsruttoriByIdFasc (((FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"))
 				.getFascicoloSiusModel().getIdFascicoloSius());
 		setRequestAttribute("ultimoEventoRichAtti", lUltimoEventoRichAtti);
-		// FINE: MEV_9 (D.lgs. 123/2018)
+		// FINE: MEV_2019-09 (D.lgs. 123/2018)
 
 		return PG_LOAD_RICHIESTAACCERTPROGTERAPEUT; // restituisce la jsp di VIEW
 	}

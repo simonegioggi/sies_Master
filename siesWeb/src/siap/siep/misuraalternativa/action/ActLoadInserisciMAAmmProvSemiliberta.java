@@ -42,7 +42,7 @@ import siap.siep.verbale.controller.IVerbale;
 import siap.siep.verbale.model.VerbaleModel;
 
 /**
- * MEV_9-SIEP Si agggiunge la gestione dell'ammissione provvisoria anche per la semilibertà.
+ * MEV_2019-09-SIEP Si agggiunge la gestione dell'ammissione provvisoria anche per la semilibertà.
  *
  * Da verificare:questa action viene richiamata -- dalla griglia della semilibertà -- dalla funzione di
  * modifica -- dal dettaglio del verbale di sottomissione (verificare se previsto)
@@ -187,7 +187,7 @@ public class ActLoadInserisciMAAmmProvSemiliberta extends ActAmmissioneProvvisor
 			EventoModel lEveVer = new EventoModel();
 			IEventoSimeone lCtrlEven = SICOLookupRemote.getEventoSimeoneRemote();
 			lEveVer = lCtrlEven.ExRicercaEventoByEveIdEventoTipoProvCodMotivo(
-					lMisAlModToChange.getEveIdEvento(), "07", "16", "0314", "S"); // MEV_9 mi interessano i
+					lMisAlModToChange.getEveIdEvento(), "07", "16", "0314", "S"); // MEV_2019-09 mi interessano i
 																					// validati!!!
 
 			IVerbale lCtrlVe = SIEPLookupRemote.getVerbaleRemote();

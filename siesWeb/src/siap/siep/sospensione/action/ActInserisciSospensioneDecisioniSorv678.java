@@ -41,7 +41,7 @@ import siap.sius.tenore.model.TenoreModel;
  * <p>Title: ActInserisciSospensioneDecisioniSorv678</p>
  * <p>Description: Classe Action per l'inserimento di Decisione della sorveglianza di Sospensione della pena art. 678</p>
 
- * @since MEV_9-SIEP 03.2024
+ * @since MEV_2019-09-SIEP 03.2024
  */
 public class ActInserisciSospensioneDecisioniSorv678 extends ActMisuraAlternativa
     implements ICostantiSospensione {

@@ -55,7 +55,7 @@ public class GeneraleProcedimentoSqlDAO extends SIAPSqlDAO {
 				+ "COD_TIPO_ATTO, " + "COD_SEDE_MITTENTE, " + "COD_TIPO_MITTENTE_ATTO, "
 				+ "FAS_SIU_ID_FASCICOLO_SIUS, " + "SEZIONE, " + "DATA_FINE_PENA, "
 				+ "COD_POSIZIONE_GIURIDICA, " + "UDI_ID_UDIENZA, " + "DESCR_MITTENTE, "
-				// MEV_9: aggiunti campi in estrazione
+				// MEV_2019-09: aggiunti campi in estrazione
 				+ "DATA_RESTITUZIONE, " + "DESCR_RESTITUZIONE";
 
 		lStatement += " FROM GENERALE_PROCEDIMENTO";

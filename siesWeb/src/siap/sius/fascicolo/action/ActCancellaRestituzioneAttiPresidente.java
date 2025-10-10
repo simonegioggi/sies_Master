@@ -18,7 +18,7 @@ import siap.sius.generaleprocedimento.model.GeneraleProcedimentoModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * MEV_9: aggiunta action di cancellazione dati
+ * MEV_2019-09: aggiunta action di cancellazione dati
  *
  * @author Gioggi
  */

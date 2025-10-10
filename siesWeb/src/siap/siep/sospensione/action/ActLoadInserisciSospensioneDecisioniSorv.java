@@ -114,7 +114,7 @@ public class ActLoadInserisciSospensioneDecisioniSorv extends ActionSiap impleme
 		IPenaResidua lPenResCtrl = SIEPLookupRemote.getPenaResiduaRemote();
 		PenaResiduaModel lPenaResMod = new PenaResiduaModel();
 
-		// MEV_9-SIEP: aggiunta impostazione parametro
+		// MEV_2019-09-SIEP: aggiunta impostazione parametro
 		String tipoOperazione = "";
 		if (!isRequestParameterNullObj("tipoOperazione")) {
 			tipoOperazione = getRequestStringParameter("tipoOperazione");
@@ -220,7 +220,7 @@ public class ActLoadInserisciSospensioneDecisioniSorv extends ActionSiap impleme
 			if (lIdOrdinanza != null && !lIdOrdinanza.toString().equals(""))
 				lMisSospesa = lMisAltCtrl.ExRicercaMisuraAlternativaByIdEvento(lIdOrdinanza);
 		} else if ("MODIFICA".equals(tipoOperazione)) {
-			// MEV_9-SIEP: aggiunta nuova gestione per modifica
+			// MEV_2019-09-SIEP: aggiunta nuova gestione per modifica
 			IEvento ie = SICOLookupRemote.getEventoRemote();
 			EventoModel em = null;
 			if (!isRequestParameterNullObj(ICostantiEvento.CAMPO_ID_EVENTO)) {
@@ -232,7 +232,7 @@ public class ActLoadInserisciSospensioneDecisioniSorv extends ActionSiap impleme
 			UfficioModel lUffMod = new UfficioModel();
 			lUffMod = lCtrlUffEmi.getUfficioByKey(lMisSospesa.getChiaveUfficioFascicoloSius());
 			setRequestAttribute("UfficioEmittente", lUffMod);
-			// MEV_9-SIEP: aggiunto controllo per diversificare la setRequestAttribute
+			// MEV_2019-09-SIEP: aggiunto controllo per diversificare la setRequestAttribute
 			if ("MODIFICA".equals(tipoOperazione)) {
 				Collection<DecodificheModel> c = DecodificheManager.getInstance()
 						.getTipoUfficioSiepTDSMUDSM();
@@ -251,7 +251,7 @@ public class ActLoadInserisciSospensioneDecisioniSorv extends ActionSiap impleme
 		// tipo provvedimento
 		Option lOption = new Option(DecodificheManager.getInstance().getTipoProvvedimenti());
 		lOption.setFilter(new String[] { "02", "03" }); // solo DECRETO o ORDINANZA
-		// MEV_9-SIEP: aggiunta impostazione per il campo tipo provvedimento
+		// MEV_2019-09-SIEP: aggiunta impostazione per il campo tipo provvedimento
 		if (!Utils.isNullObj(lMisSospesa))
 			lOption.setSelected(lMisSospesa.getCodTipoDecisione());
 		setRequestAttribute("tipoprovvedimento", "" + lOption);
@@ -259,7 +259,7 @@ public class ActLoadInserisciSospensioneDecisioniSorv extends ActionSiap impleme
 		IMagistratoCompetente imc = SICOLookupRemote.getMagistratoCompetenteRemote();
 		MagistratoCompetenteMagistratoModel mcmm = imc
 				.ExRicercaMagistratoCompetenteByFascicolo(lFascMod.getIdFascicoloSiep());
-		// MEV_9-SIEP: per la modifica (se non esiste il MAGISTRATO nel fascicolo ma solo nell'evento)
+		// MEV_2019-09-SIEP: per la modifica (se non esiste il MAGISTRATO nel fascicolo ma solo nell'evento)
 		// oppure se siamo in modifica
 		if (Utils.isNullObj(mcmm) || "MODIFICA".equals(tipoOperazione)) {
 			if (!Utils.isNullObj(lMisSospesa) && !Utils.isNullObj(lMisSospesa.getCodMagistrato())) {
@@ -276,7 +276,7 @@ public class ActLoadInserisciSospensioneDecisioniSorv extends ActionSiap impleme
 		if (mcmm != null)
 			setRequestAttribute("magistratocompetente", mcmm);
 
-		// MEV_9-SIEP: aggiunta ricerca evento notifica
+		// MEV_2019-09-SIEP: aggiunta ricerca evento notifica
 		IEvento ie = SICOLookupRemote.getEventoRemote();
 		EventoNotificaModel enm = new EventoNotificaModel();
 		if ("MODIFICA".equals(tipoOperazione)) {
@@ -388,7 +388,7 @@ public class ActLoadInserisciSospensioneDecisioniSorv extends ActionSiap impleme
 			// setRequestAttribute("autoritaEsternaAvv", "" + lOption);
 		}
 		setRequestAttribute("eventonotifica", enm);
-		// FINE MEV_9
+		// FINE MEV_2019-09
 
 		// Autorità esterna
 		Option lOptionAutoritaE = new Option(DecodificheManager.getInstance().getTipoAutorita());
@@ -400,15 +400,15 @@ public class ActLoadInserisciSospensioneDecisioniSorv extends ActionSiap impleme
 
 		// OGGETTO DECISIONE
 		Option lOptionOggetto = null;
-		// MEV_9-SIEP: si differenzia per PM e PMM
+		// MEV_2019-09-SIEP: si differenzia per PM e PMM
 		if (isUfficioMinorenni())
 			lOptionOggetto = new Option(DecodificheManager.getInstance().getOggettoDecisioneMinor());
 		else
 			lOptionOggetto = new Option(DecodificheManager.getInstance().getOggettoDecisione());
-		// MEV_9-SIEP: aggiunta impostazione per il campo codice motivo
+		// MEV_2019-09-SIEP: aggiunta impostazione per il campo codice motivo
 		if (!Utils.isNullObj(lMisSospesa))
 			lOptionOggetto.setSelected(lMisSospesa.getCodTipoMisura());
-		// FINE MEV_9-SIEP
+		// FINE MEV_2019-09-SIEP
 		setRequestAttribute("motivoProvv", "" + lOptionOggetto);
 
 		// MEV 10 - filtro sui minorenni

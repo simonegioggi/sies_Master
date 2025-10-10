@@ -420,9 +420,9 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		// 10102014 - DL 92 2014 Violazione CEDU
 		lStatement += ", SOMMA_RISARC_DANNI";
 		lStatement += ", COD_USSM";
-		// INIZIO: MEV_9 (D.lgs. 123/2018)
+		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 		lStatement += ", DATA_ESECUTIVITA, NOTE_DATA_ESECUTIVITA";
-		// FINE: MEV_9
+		// FINE: MEV_2019-09
 		// MEV_2023-35
 		lStatement += ", COD_TIPO_SANZIONE";
 		lStatement += ", COD_TIPO_PENA_ACCESSORIA, DURATA, NUM_ANNI, NUM_MESI, NUM_GIORNI";
@@ -513,9 +513,9 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		// 10102014 - DL 92 2014 Violazione CEDU
 		lStatement += ", SOMMA_RISARC_DANNI";
 		lStatement += ", COD_USSM";
-		// INIZIO: MEV_9 (D.lgs. 123/2018)
+		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 		lStatement += ", DATA_ESECUTIVITA, NOTE_DATA_ESECUTIVITA";
-		// FINE: MEV_9
+		// FINE: MEV_2019-09
 		// MEV_2023-35
 		lStatement += ", COD_TIPO_SANZIONE";
 		lStatement += ", COD_TIPO_PENA_ACCESSORIA, DURATA, NUM_ANNI, NUM_MESI, NUM_GIORNI";
@@ -597,9 +597,9 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		lStatement += ", TIPO_CONTROLLO_ESECUZIONE, "
 				+ "CODTIPOCONTROLLOESECUZIONE.RV_MEANING AS DESC_TIPO_CONTROLLO_ESECUZIONE";
 		lStatement += ", SOMMA_RISARC_DANNI";
-		// INIZIO: MEV_9 (D.lgs. 123/2018)
+		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 		lStatement += ", DATA_ESECUTIVITA, NOTE_DATA_ESECUTIVITA";
-		// FINE: MEV_9
+		// FINE: MEV_2019-09
 		// MEV_2023-35
 		lStatement += ", COD_TIPO_SANZIONE";
 		lStatement += ", COD_TIPO_PENA_ACCESSORIA, DURATA, NUM_ANNI, NUM_MESI, NUM_GIORNI";
@@ -687,9 +687,9 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		// 10102014 - DL 92 2014 Violazione CEDU
 		lStatement += ", SOMMA_RISARC_DANNI";
 		lStatement += ", COD_USSM";
-		// INIZIO: MEV_9 (D.lgs. 123/2018)
+		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 		lStatement += ", DATA_ESECUTIVITA, NOTE_DATA_ESECUTIVITA";
-		// FINE: MEV_9
+		// FINE: MEV_2019-09
 		// MEV_2023-35
 		lStatement += ", COD_TIPO_SANZIONE";
 		lStatement += ", COD_TIPO_PENA_ACCESSORIA, DURATA, NUM_ANNI, NUM_MESI, NUM_GIORNI ";
@@ -774,10 +774,10 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		aModel.setDescrTipoControlloEsecuzione(getString("DESC_TIPO_CONTROLLO_ESECUZIONE"));
 		// 10102014 - DL 92 2014 Violazione CEDU
 		aModel.setSommaRisarcimento(getBigDecimal("SOMMA_RISARC_DANNI"));
-		// INIZIO: MEV_9 (D.lgs. 123/2018)
+		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 		aModel.setDataEsecutivita(getDate("DATA_ESECUTIVITA"));
 		aModel.setNoteDataEsecutivita(getString("NOTE_DATA_ESECUTIVITA"));
-		// FINE: MEV_9
+		// FINE: MEV_2019-09
 		// MEV_2023-35
 		if (findColumn("COD_TIPO_SANZIONE"))
 			aModel.setCodTipoSanzione(getString("COD_TIPO_SANZIONE"));
@@ -807,7 +807,7 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		 * Numero MEV : 9
 		 * Autore    : sgioggi
 		 * Data      : 16 dic 2022
-		 * Branch    : MEV_9
+		 * Branch    : MEV_2019-09
 		 */
 		if (aModel.getIdDepositoOrdinanzaPc() != null)
 			lCondizioni = lCondizioni + " AND ID_DEPOSITO_ORDINANZA_PC = " + aModel.getIdDepositoOrdinanzaPc();
@@ -817,7 +817,7 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 
 		if (aModel.getIdEventoGenerato() != null)
 			lCondizioni = lCondizioni + " AND ID_EVENTO_GENERATO = " + aModel.getIdEventoGenerato();
-		//***** FINE INTERVENTO MEV_9 *****//
+		//***** FINE INTERVENTO MEV_2019-09 *****//
 
 		return lCondizioni;
 	}

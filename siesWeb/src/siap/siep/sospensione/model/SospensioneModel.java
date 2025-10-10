@@ -534,7 +534,7 @@ public class SospensioneModel extends GenericModel {
 		this.mNumGiorniInterruzione = new BigDecimal(0);
 	}
 
-	// MEV_9-SIEP aggiunto metodo di comodo per jsp
+	// MEV_2019-09-SIEP aggiunto metodo di comodo per jsp
 	public boolean isQuantumEspiataZero() {
 		return (getNumAnniPenaEspiata().intValue() == 0 && getNumMesiPenaEspiata().intValue() == 0
 				&& getNumGiorniPenaEspiata().intValue() == 0);
@@ -549,7 +549,7 @@ public class SospensioneModel extends GenericModel {
 		return (getNumAnniPenaResiduaArres().intValue() == 0 && getNumMesiPenaResiduaArres().intValue() == 0
 				&& getNumGiorniPenaResiduaArres().intValue() == 0);
 	}
-	// MEV_9-SIEP - FINE
+	// MEV_2019-09-SIEP - FINE
 
 	/*****************************************************************************
 	 * Metodo toString() che restituisce il contenuto del Model opportunamente formattato. Utile per il debug.

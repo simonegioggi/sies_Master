@@ -30,7 +30,7 @@ import siap.siep.util.SIEPLookupRemote;
  *
  * n.b. si opera sulla falsa riga della stampa della concessione Semilibertà (0004)
  *
- * @since MEV_9-SIEP 03.2024
+ * @since MEV_2019-09-SIEP 03.2024
  */
 public class ActStampaMAAmmProvSemiliberta extends ActConcessione implements ICostantiMisuraAlternativa {
 

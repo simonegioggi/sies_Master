@@ -38,11 +38,11 @@ public class ActCancellaDepositoDecreto extends ActionSiap implements ICostantiD
 		 * Numero MEV : 9
 		 * Autore : Gioggi
 		 * Data : 19 nov 2020
-		 * Branch : MEV_9
+		 * Branch : MEV_2019-09
 		 */
 		IEvento ie = SICOLookupRemote.getEventoRemote();
 		EventoModel em = ie.ExRicercaEventoByKey(lDepDec.getIdEventoGenerato());
-		// ***** FINE INTERVENTO MEV_9 *****//
+		// ***** FINE INTERVENTO MEV_2019-09 *****//
 
 		// Nel Model del DepositoDecreto vengono valorizzati i dati necessari agli aggiornamenti
 		lDepDec.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
@@ -57,7 +57,7 @@ public class ActCancellaDepositoDecreto extends ActionSiap implements ICostantiD
 		 * Numero MEV : 9
 		 * Autore : Gioggi
 		 * Data : 19 nov 2020
-		 * Branch : MEV_9
+		 * Branch : MEV_2019-09
 		 */
 		if ("0610".equals(em.getCodEsito()) || "0271".equals(em.getCodEsito())) {
 			IFascicoloSius ifs = SIUSLookupRemote.getFascicoloSiusRemote();
@@ -69,7 +69,7 @@ public class ActCancellaDepositoDecreto extends ActionSiap implements ICostantiD
 			fsm.setIdFascicoloSius(em.getFasSiuIdFascicoloSius());
 			ifs.aggiornaStatoFascicoloSius(fsm);
 		}
-		// ***** FINE INTERVENTO MEV_9 *****//
+		// ***** FINE INTERVENTO MEV_2019-09 *****//
 
 		String retPage = null;
 		String nextAct = null;

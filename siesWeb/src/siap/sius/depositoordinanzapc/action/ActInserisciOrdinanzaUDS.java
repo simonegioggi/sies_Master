@@ -168,7 +168,7 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 		if (lMagRel != null && lMagRel.getMagistrato() != null)
 			mCodMagistrato = lMagRel.getMagistrato().getCodMagistrato();
 
-		// MEV_9: aggiunto controllo preventivo poichè qui la data emissione è manuale
+		// MEV_2019-09: aggiunto controllo preventivo poichè qui la data emissione è manuale
 		Date lDataEmissione = null;
 		if (CONFERMA_DECISIONE_MAGISTRATO_RELATORE
 				.equals(getRequestStringParameter(CAMPO_COD_TIPO_ORDINANZA)))
@@ -177,7 +177,7 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 		else
 			lDataEmissione = getRequestDateParameter(CAMPO_DATA_EMISSIONE, "dd/MM/yyyy");
 
-		// INIZIO: MEV_9 (D.lgs. 123/2018)
+		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 		// Se selezionata la "Restituzione Atti Al presidente" non viene emesso evento ma
 		// aggiornato solo lo stato del fascicolo a 23 =
 		// GP.DATA_RESTITUZIONE = data emissione
@@ -196,7 +196,7 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 					mFasGPMod.getFascicoloSiusModel().getIdFascicoloSius().toString());
 			return lRedirectTo.toString();
 		}
-		// FINE: MEV_9
+		// FINE: MEV_2019-09
 
 		try {
 			OrdinanzaEventoTenoriGProcModel lOrdEveTenGP = new OrdinanzaEventoTenoriGProcModel();
@@ -1967,14 +1967,14 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 	 * ordinanza
 	 *
 	 * @param fascicoloGPModel
-	 * @since MEV_9
+	 * @since MEV_2019-09
 	 */
 	private void elaboraAttiAlPresidente(FascicoloGPModel fascicoloGPModel) throws F3BException {
 
 		Date lDataRestituzione = getRequestDateParameter(CAMPO_DATA_EMISSIONE, "dd/MM/yyyy");
 		String lDescRestituzione = getRequestStringParameter(CAMPO_ULTERIORE_DESCRIZIONE);
 
-		// INIZIO: MEV_9 (D.lgs. 123/2018)
+		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 		// Se selezionata la "Restituzione Atti Al presidente" non viene emesso evento ma
 		// aggiornato solo lo stato del fasciclo a 23 =
 		// GP.DATA_RESTITUZIONE = data emissione

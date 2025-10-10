@@ -770,7 +770,7 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 
 			// Aggiornamento COD_STATO_FASCICOLO.
 			lFasSiuDAO = new FascicoloSiusDAO(lConn);
-			// @since MEV_9: aggiunto metodo
+			// @since MEV_2019-09: aggiunto metodo
 			String codStatoFascicolo = analsiStatoFascicolo(aGenProc.getFasSiuIdFascicoloSius());
 			lFasSiuDAO.setCodStatoFascicolo(codStatoFascicolo);
 			lFasSiuDAO.setDataAggiornamento(aGenProc.getDataAggiornamento());
@@ -802,7 +802,7 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 	 * aggiunto metodo per impostazione stato fascicolo quando si prefissa un'udoenza
 	 * 
 	 * @author sgioggi
-	 * @since MEV_9
+	 * @since MEV_2019-09
 	 * 
 	 * @param 	idFascicoloSius
 	 * @return 	String

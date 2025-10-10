@@ -212,7 +212,7 @@ public interface IStatisticheSius {
 	 */
 	public Vector ExRicercaMagistratiProcIntervalli(String aCodUfficio) throws F3BException;
 
-	// MEV_9: aggiunti metodi per le statistiche di Misure Alternative
+	// MEV_2019-09: aggiunti metodi per le statistiche di Misure Alternative
 	public Collection<EveFasGepSogProvModel> ProcPerStatisticaMisureAlternative(RicercaProcedimentoModel rpm)
 			throws F3BException;
 
@@ -227,6 +227,6 @@ public interface IStatisticheSius {
 	public BigDecimal ExGetNumRicercaAttiIstruttoriDataRestPaginata(RicercaProcedimentoModel aModel)
 			throws F3BException;
 
-	// FINE MEV_9
+	// FINE MEV_2019-09
 
 }

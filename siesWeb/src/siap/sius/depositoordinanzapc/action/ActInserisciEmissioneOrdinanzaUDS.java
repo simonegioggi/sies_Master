@@ -167,16 +167,16 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 		} else if (lCodTipoDec.compareTo(MISURA_ALTERNATIVA) == 0) {
 			// Ordinanza di Misurs Alternativa
 			mRetPage = PG_LOAD_INSERISCI_ORDINANZA_MA;
-			// INIZIO: MEV_9 (D.lgs. 123/2018)
+			// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 			Option lOptionUffPM = new Option();
 			lOptionUffPM = new Option(DecodificheManager.getInstance().getTipoUfficioPM());
 			lOptionUffPM.setFilter(new String[] { "-", "PM", "PMM", "PGCAP" });
 			setRequestAttribute("tipoUfficioProcure", "" + lOptionUffPM);
-			// FINE: MEV_9
+			// FINE: MEV_2019-09
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("Ordinanza Misurs Alternativa " + lCodTipoDec);
-			// INIZIO: MEV_9 (D.lgs. 123/2018)
+			// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 			if (!isRequestParameterNullEmptyObj("isOrdApplMADL1232018")) {
 				// verifico che la data emissione sia >= data emissione decreto di designazione
 				if (verificaDataDecretoDesignazione()) {
@@ -192,7 +192,7 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 							+ "emissione del decreto di designazione.");
 				}
 			}
-			// FINE: MEV_9
+			// FINE: MEV_2019-09
 		} else if (lCodTipoDec.compareTo(INDULTINO) == 0) {
 			// Ordinanza di Indultino
 			mRetPage = PG_LOAD_INSERISCI_ORDINANZA_INDULTINO;
@@ -939,7 +939,7 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 	 * decreto di designazione
 	 *
 	 * @return true se il controllo è OK false se KO
-	 * @since MEV_9
+	 * @since MEV_2019-09
 	 */
 	private boolean verificaDataDecretoDesignazione() throws F3BException {
 		FascicoloGPModel lFasGPMod = new FascicoloGPModel(

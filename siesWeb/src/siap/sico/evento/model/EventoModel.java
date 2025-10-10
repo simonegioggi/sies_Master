@@ -142,7 +142,7 @@ public class EventoModel extends GenericModel {
 	// mev56
 	private String mDescEsitoTemplate;
 
-	// MEV_9 (D.lgs. 123/2018)
+	// MEV_2019-09 (D.lgs. 123/2018)
 	private Date mDataRestituzioneAi;
 	
 	
@@ -236,7 +236,7 @@ public class EventoModel extends GenericModel {
 		this.mEstremiSoggRichIstr = null;
 		this.mDescEsitoTemplate = null;
 		
-		// MEV_9 (D.lgs. 123/2018)
+		// MEV_2019-09 (D.lgs. 123/2018)
 		this.mDataRestituzioneAi = null;
 	}
 
@@ -332,7 +332,7 @@ public class EventoModel extends GenericModel {
 		this.mEstremiSoggRichIstr = aModel.mEstremiSoggRichIstr;
 		this.mDescEsitoTemplate = aModel.mDescEsitoTemplate;
 		
-		// MEV_9 (D.lgs. 123/2018)
+		// MEV_2019-09 (D.lgs. 123/2018)
 		this.mDataRestituzioneAi = aModel.mDataRestituzioneAi;
 	}
 
@@ -365,7 +365,7 @@ public class EventoModel extends GenericModel {
 			String aCodTipologiaInvioAtti, String aDescrizioneInvioAtti,
 			String aDescrizioneTipologiaInvioAtti, BigDecimal aIstruIdIstruttoriaCumulo,
 			String aEstremiSoggRichIstr, String aDescEsitoTemplate
-			, Date aDataRestituzioneAi  // MEV_9 (D.lgs. 123/2018)
+			, Date aDataRestituzioneAi  // MEV_2019-09 (D.lgs. 123/2018)
 			) {
 		this.mIdEvento = aIdEvento;
 		this.mCodTipoEvento = aCodTipoEvento;
@@ -440,7 +440,7 @@ public class EventoModel extends GenericModel {
 		this.mIstruIdIstruttoriaCumulo = aIstruIdIstruttoriaCumulo;
 		this.mEstremiSoggRichIstr = aEstremiSoggRichIstr;
 		this.mDescEsitoTemplate = aDescEsitoTemplate;
-		// MEV_9 (D.lgs. 123/2018)
+		// MEV_2019-09 (D.lgs. 123/2018)
 		this.mDataRestituzioneAi = aDataRestituzioneAi;
 	}
 
@@ -784,7 +784,7 @@ public class EventoModel extends GenericModel {
 		return mDescEsitoTemplate;
 	}
 
-	// MEV_9 (D.lgs. 123/2018)
+	// MEV_2019-09 (D.lgs. 123/2018)
 	public Date getDataRestituzioneAi() {
 		return this.mDataRestituzioneAi;
 	}
@@ -1115,7 +1115,7 @@ public class EventoModel extends GenericModel {
 		this.mDescEsitoTemplate = mDescEsitoTemplate;
 	}
 	
-	// MEV_9 (D.lgs. 123/2018)
+	// MEV_2019-09 (D.lgs. 123/2018)
 	public void setDataRestituzioneAi(Date aValore) {
 		mDataRestituzioneAi = aValore;
 	}

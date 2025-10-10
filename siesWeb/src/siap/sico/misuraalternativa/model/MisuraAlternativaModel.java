@@ -104,7 +104,7 @@ public class MisuraAlternativaModel extends GenericModel {
 	private String mIs51Bis;
 	private BigDecimal mFlFormaMisura;
 	private String mDescrizioneComunita;
-	// MEV_9
+	// MEV_2019-09
 	private Date mDataEsecutivita;
 
 	// COSTRUTTORE DI DEFAULT
@@ -186,7 +186,7 @@ public class MisuraAlternativaModel extends GenericModel {
 		this.mDescrChiaveUfficioFascicoloSiusMaAt = "";
 		this.mAnnoRegistroMaAt = null;
 		this.mNumeroRegistroMaAt = null;
-		// MEV_9
+		// MEV_2019-09
 		this.mDataEsecutivita = null;
 	}
 
@@ -271,7 +271,7 @@ public class MisuraAlternativaModel extends GenericModel {
 		this.mNumeroRegistroMaAt = aModel.mNumeroRegistroMaAt;
 		this.mFlFormaMisura = aModel.mFlFormaMisura;
 		this.mDescrizioneComunita = aModel.mDescrizioneComunita;
-		// MEV_9
+		// MEV_2019-09
 		this.mDataEsecutivita = aModel.mDataEsecutivita;
 	}
 
@@ -301,7 +301,7 @@ public class MisuraAlternativaModel extends GenericModel {
 			BigDecimal aChiaveProgrFascicoloSiusMaAt, String aChiaveUfficioFascicoloSiusMaAt,
 			String aDescrChiaveUfficioFascicoloSiusMaAt, BigDecimal aAnnoRegistroMaAt,
 			BigDecimal aNumeroRegistroMaAt, BigDecimal flFormaMisura, String descrizioneComunita,
-			// MEV_9
+			// MEV_2019-09
 			Date aDataEsecutivita) {
 
 		this.mIdMisuraAlternativa = aIdMisuraAlternativa;
@@ -374,7 +374,7 @@ public class MisuraAlternativaModel extends GenericModel {
 		this.mDescrChiaveUfficioFascicoloSiusMaAt = aDescrChiaveUfficioFascicoloSiusMaAt;
 		this.mAnnoRegistroMaAt = aAnnoRegistroMaAt;
 		this.mNumeroRegistroMaAt = aNumeroRegistroMaAt;
-		// MEV_9
+		// MEV_2019-09
 		this.mDataEsecutivita = aDataEsecutivita;
 	}
 
@@ -714,7 +714,7 @@ public class MisuraAlternativaModel extends GenericModel {
 		return mFlFormaMisura;
 	}
 
-	// MEV_9
+	// MEV_2019-09
 	public Date getDataEsecutivita() {
 		return mDataEsecutivita;
 	}
@@ -1054,7 +1054,7 @@ public class MisuraAlternativaModel extends GenericModel {
 		this.mFlFormaMisura = mFlFormaMisura;
 	}
 
-	// MEV_9
+	// MEV_2019-09
 	public void setDataEsecutivita(Date aValore) {
 		mDataEsecutivita = aValore;
 	}

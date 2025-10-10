@@ -175,7 +175,7 @@ public class ActStampaMAAmmProvvisoria extends ActConcessione implements ICostan
 					// il motivo evento non è più il 2006 ma il 5420
 					flagTemplate = "4";
 				}
-				// MEV_9-SIEP si aggiungono gli ulteriori codici per le richieste verbale
+				// MEV_2019-09-SIEP si aggiungono gli ulteriori codici per le richieste verbale
 				else if (lEventoModel.getCodMotivo().equals("5422")
 						|| lEventoModel.getCodMotivo().equals("5423")
 						|| lEventoModel.getCodMotivo().equals("5424")
@@ -223,7 +223,7 @@ public class ActStampaMAAmmProvvisoria extends ActConcessione implements ICostan
 					else
 						flagTemplate = "5";
 				}
-				// MEV_9-SIEP - FINE
+				// MEV_2019-09-SIEP - FINE
 				else if (lEventoModel.getCodMotivo().equals("2006")) {
 					// Vecchia gestione per il codice 2006 affidamento Terapeutico
 					if (lflagScarcerato.equals("SORV")) {
@@ -258,7 +258,7 @@ public class ActStampaMAAmmProvvisoria extends ActConcessione implements ICostan
 					}
 				}
 			} else if (lTipoMisura.equals("DETENZIONE")) {
-				// MEV_9-SIEP si aggiungono gli ulteriori codici
+				// MEV_2019-09-SIEP si aggiungono gli ulteriori codici
 				if (lEventoModel.getCodMotivo().equals("1402")
 						|| lEventoModel.getCodMotivo().equals("1413")) {
 					// 2024.10.07 "Libero esegue PROC dopo verbale" e "Detenuto esegue PROC"
@@ -297,7 +297,7 @@ public class ActStampaMAAmmProvvisoria extends ActConcessione implements ICostan
 					else if (lflagScarcerato.equals("SORV"))
 						flagTemplate = "5";
 				}
-				// MEV_9-SIEP - FINE
+				// MEV_2019-09-SIEP - FINE
 				else if (lflagScarcerato.equals("SORV") && (lPosizioneGiu.equals("03"))) {
 					flagTemplate = "1";
 				} else if (lflagScarcerato.equals("PROC") && (lPosizioneGiu.equals("03"))) {

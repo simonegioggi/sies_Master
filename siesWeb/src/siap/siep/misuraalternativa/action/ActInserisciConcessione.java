@@ -118,7 +118,7 @@ public class ActInserisciConcessione extends ActConcessione {
 
 		FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 
-		// MEV_9-SIEP: aggiunta nuova gestione per modifica
+		// MEV_2019-09-SIEP: aggiunta nuova gestione per modifica
 		String tipoOperazione = null;
 		if (!isRequestParameterNullObj("tipoOperazione"))
 			tipoOperazione = getRequestStringParameter("tipoOperazione");
@@ -275,8 +275,9 @@ public class ActInserisciConcessione extends ActConcessione {
 			if (!lPosMod.isLibero())
 				lMisMod = SettaReclusioneArresto(lPenaResMod, lMisMod);
 
-			// MEV_9-SIEP: aggiunto metodo
-			settaDatiOrdinanzaProvvisoria(lMisMod);
+			// MEV_2019-09-SIEP: aggiunto metodo
+			// MEV_2024-092: rimosso metodo
+			// settaDatiOrdinanzaProvvisoria(lMisMod);
 
 			// MEV10-s3: anticipo questo metodo per prevenire errore inserimento dati ufficio UDS / TDS
 			NotificaModel[] lNotificheMod = setNotificheMisuraAlternativa();
@@ -369,13 +370,14 @@ public class ActInserisciConcessione extends ActConcessione {
 			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE))
 				lMisAlModConcessa.setNote(getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE));
 
-			// MEV_9-SIEP: aggiunta impostazione di variabile
+			// MEV_2019-09-SIEP: aggiunta impostazione di variabile
 			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA))
 				lMisAlModConcessa.setDescrLuogoProva(
 						getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA));
 
-			// MEV_9-SIEP: aggiunto metodo
-			settaDatiOrdinanzaProvvisoria(lMisAlModConcessa);
+			// MEV_2019-09-SIEP: aggiunto metodo
+			// MEV_2024-092: rimosso metodo
+			// settaDatiOrdinanzaProvvisoria(lMisAlModConcessa);
 
 			// model di ritorno
 			lRetModel = lMisAltCtrl.ExInserisciOModificaMANotifica(lEveNot, prm, lMisAlModConcessa, null);
@@ -393,23 +395,24 @@ public class ActInserisciConcessione extends ActConcessione {
 		return lPage;
 	}
 
-	// MEV_9-SIEP: aggiunto metodo
-	private void settaDatiOrdinanzaProvvisoria(MisuraAlternativaModel mam) throws F3BException {
-
-		if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT))
-			mam.setAnnoRegistroMaAt(
-					getRequestBigDecimalParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT));
-		if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT))
-			mam.setNumeroRegistroMaAt(
-					getRequestBigDecimalParameter(ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT));
-		if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT)
-				&& !isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT)
-				&& !isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT))
-			mam.setDataDecisioneMaAt(
-					getRequestDateParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT,
-							ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT,
-							ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT));
-	}
+	// MEV_2019-09-SIEP: aggiunto metodo
+	// MEV_2024-092: rimosso metodo
+	// private void settaDatiOrdinanzaProvvisoria(MisuraAlternativaModel mam) throws F3BException {
+	//
+	// if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT))
+	// mam.setAnnoRegistroMaAt(
+	// getRequestBigDecimalParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT));
+	// if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT))
+	// mam.setNumeroRegistroMaAt(
+	// getRequestBigDecimalParameter(ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT));
+	// if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT)
+	// && !isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT)
+	// && !isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT))
+	// mam.setDataDecisioneMaAt(
+	// getRequestDateParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT,
+	// ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT,
+	// ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT));
+	// }
 
 	/**
 	 * SettaReclusioneArresto
@@ -472,7 +475,7 @@ public class ActInserisciConcessione extends ActConcessione {
 			aEveNot = getProvvedimentoMotivoDetDom(aPosizione, aFlagAffi,
 					aMisMod.getCodTipoUfficioScarcerazione(), aCodice);
 		else if (atipoMisura.equals("SEMILIBERTA"))
-			// MEV_9-SIEP: cambiata firma al metodo aggiunto codMotivo
+			// MEV_2019-09-SIEP: cambiata firma al metodo aggiunto codMotivo
 			aEveNot = getProvvedimentoMotivoSemiliberta(aPosizione, aFlagAffi, aCodice);
 		else if (atipoMisura.equals("INDULTINO"))
 			aEveNot = getProvvedimentoMotivoIndultino(aPosizione, aFlagAffi,
@@ -507,7 +510,8 @@ public class ActInserisciConcessione extends ActConcessione {
 		// mantengo la stessa data inizio misura della detenzione domiciliare provvisoria (precedentemente
 		// caricata in maschera)
 		if ((aPosMod.getCodPosizioneGiuridica().equals("29") && atipoMisura.equals("DETENZIONE"))
-				// MEV_9-SIEP: aggiunta or condition per gestione ordinanza applicazione MA DL 123/2018
+				// MEV_2019-09-SIEP: aggiunta or condition per gestione Ordinanza Applicazione ex art. 678
+				// comma 1 ter cpp
 				|| (aPosMod.isLibero() && atipoMisura.equals("AFFIDAMENTO"))) {
 			if (!isRequestParameterNullEmptyObj(ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA))
 				aDataInizio = getRequestDateParameter(
@@ -525,7 +529,8 @@ public class ActInserisciConcessione extends ActConcessione {
 		// maschera)
 		else if (atipoMisura.equals("AFFIDAMENTO")
 				&& (!isRequestParameterNullEmptyObj(ICostantiEvento.CAMPO_ID_EVENTO)
-						// MEV_9-SIEP: aggiunta or condition per gestione ordinanza applicazione MA DL 123/2018
+						// MEV_2019-09-SIEP: aggiunta or condition per gestione Ordinanza Applicazione ex art.
+						// 678 comma 1 ter cpp
 						|| !isRequestParameterNullEmptyObj(ICostantiMisuraAlternativa.CAMPO_EVE_ID_EVENTO))
 				&& (aPosMod.getCodPosizioneGiuridica().equals("13") // Affidamento in prova
 						|| aPosMod.getCodPosizioneGiuridica().equals("54") // Affidamento Provvisorio

@@ -791,7 +791,7 @@ public class ActLoadDettaglioFascicolo extends ActionSiap implements ICostantiFa
 		setRequestAttribute("dettagliofascicolo", lDettaglio);
 
 		// MEV_2024-092: rework --> elimino questa aggiunta di descrizione PG
-		// MEV_9-SIEP
+		// MEV_2019-09-SIEP
 		// in caso di PG - 14 = Espiazione Pena in Regime di Semiliberta'
 		// provo a capire se trattasi della provvisoria a partire dell'evento che la ha generata
 		// o meglio all'ordinanza collegata all'evento
@@ -837,7 +837,7 @@ public class ActLoadDettaglioFascicolo extends ActionSiap implements ICostantiFa
 		// }
 		// }
 		// }
-		// MEV_9-SIEP - FINE
+		// MEV_2019-09-SIEP - FINE
 
 		// Inserisce nella session il fascicolo (contenente Soggetto e Sentenza)
 		setSessionAttribute("fascicolo", lFasMod);

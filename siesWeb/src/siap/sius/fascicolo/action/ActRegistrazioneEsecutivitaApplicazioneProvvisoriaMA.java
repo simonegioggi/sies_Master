@@ -42,7 +42,7 @@ import siap.sius.util.SIUSLookupRemote;
  * Aggiunta classe action di inserimento dati
  *
  * @author Gioggi
- * @since MEV_9
+ * @since MEV_2019-09
  * @version 1.0
  */
 public class ActRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends ActionSius
@@ -113,7 +113,7 @@ public class ActRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Action
 		IDepositoOrdinanzaPc idopc = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
 		DepositoOrdinanzaPcModel dopm = idopc.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd(
 				fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), "AM");
-		// MEV_9-SIEP: nella ricerca sostituisco "MA" (Ordinanza di Misura Alternativa) con
+		// MEV_2019-09-SIEP: nella ricerca sostituisco "MA" (Ordinanza di Misura Alternativa) con
 		// "CM" (Ordinanza Conferma Applicazione Provvisoria Misura D.Lgs. 123/2018)
 		DepositoOrdinanzaPcModel dopcmCM = idopc.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd(
 				fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), "CM");

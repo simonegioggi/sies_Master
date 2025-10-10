@@ -460,7 +460,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		setStatement(lStatement);
 	}
 
-	// MEV_9-SIEP: cambiata firma del metodo per gestione maggiorenni/minorenni
+	// MEV_2019-09-SIEP: cambiata firma del metodo per gestione maggiorenni/minorenni
 	public void listaOggettiSospensioneDecisioneSor(String aCodTipoUfficio) throws DAOException {
 
 		String lStatement = new String();
@@ -473,7 +473,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// lStatement += " AND (RV_HIGH_VALUE = 'U001' OR RV_HIGH_VALUE = 'U071')";
 		lStatement += "AND (RV_HIGH_VALUE = 'X001' OR RV_HIGH_VALUE = 'U071' ";
 		// Ticket#20211006019 - FINE
-		// MEV_9-SIEP: aggiunta condizione di estrazione x SOSPENSIONE ESECUZIONE PENA ed ordinamento
+		// MEV_2019-09-SIEP: aggiunta condizione di estrazione x SOSPENSIONE ESECUZIONE PENA ed ordinamento
 		if ("PMM".equals(aCodTipoUfficio))
 			lStatement += "OR RV_LOW_VALUE = '0695') "; // OR RV_LOW_VALUE = '0735'
 		else
@@ -585,13 +585,13 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		setStatement(lStatement);
 	}
 
-	// MEV_9-SIEP: cambiata firma del metodo per distinguere PM da PMM
+	// MEV_2019-09-SIEP: cambiata firma del metodo per distinguere PM da PMM
 	public void listaMotivoProvvMA(String aMisAlt, String aCodTipoUfficio) throws DAOException {
 
 		String lStatement = new String();
 		lStatement = "SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
 		if (aMisAlt.equals("DETENZIONE"))
-			// MEV_9-SIEP: aggiunta condizione di estrazione x DETENZIONE DOMICILIARE
+			// MEV_2019-09-SIEP: aggiunta condizione di estrazione x DETENZIONE DOMICILIARE
 			// lStatement += "AND (RV_LOW_VALUE = '0005' OR RV_LOW_VALUE = '0010' OR RV_LOW_VALUE = '0013') ";
 			if ("PMM".equals(aCodTipoUfficio))
 				lStatement += "AND (RV_LOW_VALUE = '0005' OR RV_LOW_VALUE = '0010' OR RV_LOW_VALUE = '0013' "
@@ -600,7 +600,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 				lStatement += "AND (RV_LOW_VALUE = '0005' OR RV_LOW_VALUE = '0010' OR RV_LOW_VALUE = '0013' "
 						+ "OR RV_LOW_VALUE = '0682') "; // OR RV_LOW_VALUE = '0722'
 		else if (aMisAlt.equals("AFFIDAMENTO")) {
-			// MEV_9-SIEP: aggiunta condizione di estrazione x AFFIDAMENTO IN PROVA
+			// MEV_2019-09-SIEP: aggiunta condizione di estrazione x AFFIDAMENTO IN PROVA
 			// lStatement += "AND (RV_LOW_VALUE = '0001' OR RV_LOW_VALUE = '0002' OR RV_LOW_VALUE = '0003')";
 			if ("PMM".equals(aCodTipoUfficio))
 				lStatement += "AND (RV_LOW_VALUE = '0001' OR RV_LOW_VALUE = '0002' OR RV_LOW_VALUE = '0003' "
@@ -611,7 +611,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 						+ "OR RV_LOW_VALUE = '0680' OR RV_LOW_VALUE = '0681') ";
 			// + "OR RV_LOW_VALUE = '0720' OR RV_LOW_VALUE = '0721') ";
 		} else if (aMisAlt.equals("SEMILIBERTA"))
-			// MEV_9-SIEP: aggiunta condizione di estrazione x SEMILIBERTA'
+			// MEV_2019-09-SIEP: aggiunta condizione di estrazione x SEMILIBERTA'
 			// lStatement += "AND (RV_LOW_VALUE = '0004') ";
 			if ("PMM".equals(aCodTipoUfficio))
 				lStatement += "AND (RV_LOW_VALUE = '0004' "
@@ -624,7 +624,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		else if (aMisAlt.equals(ICostantiMisuraAlternativa.ESP_PRESSO_DOM))
 			lStatement += "AND (RV_LOW_VALUE = '" + ICostantiMisuraAlternativa.ESP_PRESSO_DOM_MOTIVO
 					+ "' OR RV_LOW_VALUE = '0610') ";
-		// MEV_9-SIEP: modificato ordinamento
+		// MEV_2019-09-SIEP: modificato ordinamento
 		// lStatement += "ORDER BY RV_ABBREVIATION ";
 		lStatement += "ORDER BY RV_MEANING";
 
@@ -955,7 +955,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		 * lStatement += " AND (RV_LOW_VALUE = '2006') "; //mod d.f.
 		 *
 		 */
-		// MEV_9: si differenziano i codici per PM e PMM aggiungendo i nuovi codici
+		// MEV_2019-09: si differenziano i codici per PM e PMM aggiungendo i nuovi codici
 		lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
 		if (aTipo.equals("AMMISSIONE_PROV_DET_DOM_PM"))
 			lStatement += " AND (RV_LOW_VALUE in ('2005','0682')) ";
@@ -1663,7 +1663,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 
 	}
 
-	// MEV_9-SIEP
+	// MEV_2019-09-SIEP
 	public void listaMotivoProvvSosp678() throws DAOException {
 		String lStatement = new String();
 

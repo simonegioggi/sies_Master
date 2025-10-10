@@ -45,7 +45,7 @@
 <jsp:useBean id="filtroMinorenni" 		scope="request" class="java.lang.String"/>
 <%-- MEV10-s3: aggiunto useBean --%>
 <jsp:useBean id="codiceTipoUfficio" 	scope="request" class="java.lang.String"/>
-<%-- MEV_9-SIEP: aggiunti useBean --%>
+<%-- MEV_2019-09-SIEP: aggiunti useBean --%>
 <jsp:useBean id="tipoOperazione" 		scope="request" class="java.lang.String"/>
 <jsp:useBean id="comboUfficioEmittenteModif"	scope="request" class="java.lang.String"/>
 <jsp:useBean id="eventonotifica"      	scope="request" class="siap.sico.evento.model.EventoNotificaModel"/>
@@ -62,7 +62,7 @@ if (lLuogoDetenzione == null)
 	lLuogoDetenzione = new LuogoDetenzioneModel();
 if (lAltraCausa == null)
 	lAltraCausa = new AltraCausaModel();
-// MEV_9-SIEP: aggiunta valorizzazione identificativo evento
+// MEV_2019-09-SIEP: aggiunta valorizzazione identificativo evento
 String idEvento = "";
 if (!Utils.isNullObj(eventonotifica) && !Utils.isNullObj(eventonotifica.getEvento())
 		&& !Utils.isNullObj(eventonotifica.getEvento().getIdEvento()))
@@ -161,7 +161,7 @@ if (nuovapenaresidua != null && nuovapenaresidua.getIdPenaResidua() != null) {
 <%
 }
 %>
-	// MEV_9-SIEP: aggiunta variabile
+	// MEV_2019-09-SIEP: aggiunta variabile
 	var codMotivo = document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiEvento.CAMPO_COD_MOTIVO%>.value;
 	var campo = document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA %>.value;
 	if (document.LoadInserisciSospensioneDecisioniSorv.flagmisura.value == "N") {
@@ -170,7 +170,7 @@ if (nuovapenaresidua != null && nuovapenaresidua.getIdPenaResidua() != null) {
 			document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_SEDE_TDS_EMITT %>.focus();
 			return false;
 		}
-   		// MEV_9-SIEP: aggiunti controlli per determinati codici di SOSPENSIONE
+   		// MEV_2019-09-SIEP: aggiunti controlli per determinati codici di SOSPENSIONE
 		if (codMotivo == "0724" || codMotivo == "0735") {
 			if (document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>.value == ""
 					|| document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT%>.value == "") {
@@ -204,7 +204,7 @@ if (nuovapenaresidua != null && nuovapenaresidua.getIdPenaResidua() != null) {
 				return false;
 			}
 		}
-		// FINE MEV_9-SIEP
+		// FINE MEV_2019-09-SIEP
 		if (document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiSospensione.CAMPO_GIORNO_DATA_INIZIO%>.value == ""
 				|| document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiSospensione.CAMPO_MESE_DATA_INIZIO%>.value == ""
 				|| document.LoadInserisciSospensioneDecisioniSorv.<%=ICostantiSospensione.CAMPO_ANNO_DATA_INIZIO%>.value == "") {
@@ -319,7 +319,7 @@ function radio() {
 if (misuraalternativa!= null && misuraalternativa.getCodTipoMisura() != null) {
  	if (misuraalternativa.getCodTipoMisura().equals("2000")
  			|| misuraalternativa.getCodTipoMisura().equals("2001")
- 			// MEV_9-SIEP: aggiunti nuovi codici
+ 			// MEV_2019-09-SIEP: aggiunti nuovi codici
  			|| "0684".equals(misuraalternativa.getCodTipoMisura())
  			|| "0695".equals(misuraalternativa.getCodTipoMisura())
  			|| "0724".equals(misuraalternativa.getCodTipoMisura())
@@ -410,7 +410,7 @@ if (misuraalternativa!= null && misuraalternativa.getIdMisuraAlternativa() != nu
 	  			<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border="0">
 	  		</a>
 	  	</td>
-	  	<%-- MEV_9-SIEP: modificato nome funzione --%>
+	  	<%-- MEV_2019-09-SIEP: modificato nome funzione --%>
 	    <td class="LBG"><font class="label">Funzione :</font>&nbsp;&nbsp;
 	   		<font class="campo">Concessione / Ratifica Sospensione dell'esecuzione della pena</font>
 	  	</td>
@@ -432,13 +432,13 @@ if (misuraalternativa != null && misuraalternativa.getEveIdEvento() != null) {
 <input type="HIDDEN" name="posizionegiuridica" value="<%=posizioneluogoaltra.getPosizioneGiuridica().getCodPosizioneGiuridica()%>">
 <input type="HIDDEN" name="<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>" value="<%=StringUtils.toStringJSP(lPosizione.getCodPosizioneGiuridica())%>">
 <input type="HIDDEN" name="<%=ICostantiPenaResidua.CAMPO_ID_PENA_RESIDUA%>" value="<%=StringUtils.toStringJSP(penaresidua.getIdPenaResidua())%>">
-<%-- MEV_9-SIEP: aggiunta impostazione campi nascosti --%>
+<%-- MEV_2019-09-SIEP: aggiunta impostazione campi nascosti --%>
 <INPUT type="HIDDEN" name="tipoOperazione" value="<%=tipoOperazione%>">
 <INPUT type="HIDDEN" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%=StringUtils.toStringJSP(idEvento)%>">
 <%
-// MEV_9-SIEP: aggiunta gestione modifica
+// MEV_2019-09-SIEP: aggiunta gestione modifica
 boolean isModifica = "MODIFICA".equals(tipoOperazione);
-// MEV_9-SIEP: aggiunta OR condition
+// MEV_2019-09-SIEP: aggiunta OR condition
 if (misuraalternativa == null || misuraalternativa.getIdMisuraAlternativa() == null || isModifica) {
 %>
 <input type="HIDDEN" name="flagmisura" value="N">
@@ -723,7 +723,7 @@ if (nuovapenaresidua != null && nuovapenaresidua.getIdPenaResidua() != null) {
        		<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisione(), "dd-MM-yyyy"))%></font>
     	</td>
 	</tr>
-	<%-- MEV_9-SIEP: aggiunte due nuove sezioni x SOSPENSIONE --%>
+	<%-- MEV_2019-09-SIEP: aggiunte due nuove sezioni x SOSPENSIONE --%>
 	<tr>
 		<td class="l" width="20%">Anno / Numero Ordinanza Provvisoria</td>
 		<td class="l" colspan="3">
@@ -740,7 +740,7 @@ if (nuovapenaresidua != null && nuovapenaresidua.getIdPenaResidua() != null) {
 			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getYearToString(misuraalternativa.getDataDecisioneMaAt()))%>">
 	  	</td>
 	</tr>
-	<%-- FINE MEV_9-SIEP --%>
+	<%-- FINE MEV_2019-09-SIEP --%>
 	<tr>
 	  	<td class="l">Motivazioni</td>
 	  	<td class="L" colspan="3">
@@ -823,7 +823,7 @@ if (nuovapenaresidua != null && nuovapenaresidua.getIdPenaResidua() != null) {
       	</td>
     </tr>
 <%
-	// MEV_9-SIEP: aggiunta gestione modifica
+	// MEV_2019-09-SIEP: aggiunta gestione modifica
 	String giornoDEP = DateUtils.getSysDate("dd"), meseDEP = DateUtils.getSysDate("MM"), annoDEP = DateUtils.getSysDate("yyyy");
 	if (!Utils.isNullObj(misuraalternativa)) {
 		if (!Utils.isNullObj(misuraalternativa.getDataDecisione())) {
@@ -832,7 +832,7 @@ if (nuovapenaresidua != null && nuovapenaresidua.getIdPenaResidua() != null) {
 			annoDEP = DateUtils.getDateToString(misuraalternativa.getDataDecisione(), "yyyy");
 		}
 	}
-	// FINE MEV_9-SIEP
+	// FINE MEV_2019-09-SIEP
 %>
     <tr>
       	<td class="l">Data Emissione Provvedimento</td>
@@ -844,7 +844,7 @@ if (nuovapenaresidua != null && nuovapenaresidua.getIdPenaResidua() != null) {
         	</font>
       	</td>
     </tr>
-	<%-- MEV_9-SIEP: aggiunte due nuove sezioni x SOSPENSIONE --%>
+	<%-- MEV_2019-09-SIEP: aggiunte due nuove sezioni x SOSPENSIONE --%>
 	<tr>
 		<td class="l" width="20%">Anno / Numero Ordinanza Provvisoria</td>
 		<td class="l" colspan="3">
@@ -872,7 +872,7 @@ if (nuovapenaresidua != null && nuovapenaresidua.getIdPenaResidua() != null) {
 				value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "yyyy"))%>">
 	  	</td>
 	</tr>
-	<%-- FINE MEV_9-SIEP --%>
+	<%-- FINE MEV_2019-09-SIEP --%>
     <tr>
      	<td class="l">Motivazioni</td>
       	<td class="L" colspan="3">
@@ -891,7 +891,7 @@ if (nuovapenaresidua != null && nuovapenaresidua.getIdPenaResidua() != null) {
 		<td  class="l" width="20%">Data Sospensione Esecuzione</td>
       	<td class="l">
       		<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataScarcerazione(),"dd-MM-yyyy"))%></font>
-      		<%-- MEV_9-SIEP: aggiunti campi data nascosti --%>
+      		<%-- MEV_2019-09-SIEP: aggiunti campi data nascosti --%>
 			<input type="hidden" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataScarcerazione(), "dd"))%>" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE%>">
 			<input type="hidden" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataScarcerazione(), "MM"))%>" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_SCARCERAZIONE%>">
 			<input type="hidden" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataScarcerazione(), "yyyy"))%>" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_SCARCERAZIONE%>">
@@ -1282,7 +1282,7 @@ if (misuraalternativa == null || misuraalternativa.getIdMisuraAlternativa() == n
 <%
 	}
 %>
-	// MEV_9-SIEP: aggiunti controlli
+	// MEV_2019-09-SIEP: aggiunti controlli
 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>","numeric");
 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>","gt=1900");
 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>","lt=2099");
@@ -1296,7 +1296,7 @@ if (misuraalternativa == null || misuraalternativa.getIdMisuraAlternativa() == n
 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>","numeric");
 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>","gt=1900");
 	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>","lt=2099");
-	// FINE MEV_9-SIEP
+	// FINE MEV_2019-09-SIEP
 <%
 }
 if (misuraalternativa == null || misuraalternativa.getIdMisuraAlternativa() == null) {

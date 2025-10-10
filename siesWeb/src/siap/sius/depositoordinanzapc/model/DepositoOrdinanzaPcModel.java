@@ -92,10 +92,10 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 	// 10102014 - D.L. 92 2014 Violazione CEDU
 	private BigDecimal mSommaRisarcimento;
 
-	// INIZIO: MEV_9 (D.lgs. 123/2018)
+	// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 	private Date mDataEsecutivita;
 	private String mNoteDataEsecutivita;
-	// FINE: MEV_9
+	// FINE: MEV_2019-09
 
 	// MEV_2023-35: aggiunta variabile di classe per memorizzare il tipo di sanzione comminata
 	private String mCodTipoSanzione;
@@ -180,10 +180,10 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 		this.mDescrTipoControlloEsecuzione = null;
 		// 10102014 - D.L. 92 2014 Violazione CEDU
 		this.mSommaRisarcimento = null;
-		// INIZIO: MEV_9 (D.lgs. 123/2018)
+		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 		this.mDataEsecutivita = null;
 		this.mNoteDataEsecutivita = "";
-		// FINE: MEV_9
+		// FINE: MEV_2019-09
 		this.mCodTipoSanzione = "";
 		this.mCodTipoPenaAccessoria = "-";
 		this.mDescrTipoPenaAccessoria = null;
@@ -267,10 +267,10 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 		this.mDescrTipoControlloEsecuzione = aModel.mDescrTipoControlloEsecuzione;
 		// 10102014 - D.L. 92 2014 Violazione CEDU
 		this.mSommaRisarcimento = aModel.mSommaRisarcimento;
-		// INIZIO: MEV_9 (D.lgs. 123/2018)
+		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 		this.mDataEsecutivita = aModel.mDataEsecutivita;
 		this.mNoteDataEsecutivita = aModel.mNoteDataEsecutivita;
-		// FINE: MEV_9
+		// FINE: MEV_2019-09
 		this.mCodTipoSanzione = aModel.mCodTipoSanzione;
 		this.mCodTipoPenaAccessoria = aModel.mCodTipoPenaAccessoria;
 		this.mDescrTipoPenaAccessoria = aModel.mDescrTipoPenaAccessoria;
@@ -381,10 +381,10 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 		this.mDescrTipoControlloEsecuzione = aDescrTipoControlloEsecuzione;
 		// 10102014 - D.L. 92 2014 Violazione CEDU
 		this.mSommaRisarcimento = aSommaRisarcimento;
-		// INIZIO: MEV_9 (D.lgs. 123/2018)
+		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 		this.mDataEsecutivita = aDataEsecutivita;
 		this.mNoteDataEsecutivita = aNoteDataEsecutivita;
-		// FINE: MEV_9
+		// FINE: MEV_2019-09
 		this.mCodTipoSanzione = aCodTipoSanzione;
 		this.mCodTipoPenaAccessoria = aCodTipoPenaAccessoria;
 		this.mDescrTipoPenaAccessoria = aDescrTipoPenaAccessoria;
@@ -689,7 +689,7 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 			return new BigDecimal(0);
 	}
 
-	// INIZIO: MEV_9 (D.lgs. 123/2018)
+	// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 	public Date getDataEsecutivita() {
 		return mDataEsecutivita;
 	}
@@ -697,7 +697,7 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 	public String getNoteDataEsecutivita() {
 		return mNoteDataEsecutivita;
 	}
-	// FINE: MEV_9
+	// FINE: MEV_2019-09
 
 	public String getCodTipoSanzione() {
 		return mCodTipoSanzione;
@@ -1013,7 +1013,7 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 		this.mSommaRisarcimento = aValore;
 	}
 
-	// INIZIO: MEV_9 (D.lgs. 123/2018)
+	// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
 	public void setDataEsecutivita(Date mDataEsecutivita) {
 		this.mDataEsecutivita = mDataEsecutivita;
 	}
@@ -1021,7 +1021,7 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 	public void setNoteDataEsecutivita(String mNoteDataEsecutivita) {
 		this.mNoteDataEsecutivita = mNoteDataEsecutivita;
 	}
-	// FINE: MEV_9
+	// FINE: MEV_2019-09
 
 	public void setCodTipoSanzione(String aValore) {
 		this.mCodTipoSanzione = aValore;
@@ -1088,7 +1088,7 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 				mCodTipoControlloEsecuzione + " - " + mDescrTipoControlloEsecuzione + " - " +
 				// 10102014 - D.L. 92 2014 Violazione CEDU
 				mSommaRisarcimento + " - " +
-				// MEV_9 (D.lgs. 123/2018)
+				// MEV_2019-09 (D.lgs. 123/2018)
 				mDataEsecutivita + " - " + mNoteDataEsecutivita + " - " +
 				mCodTipoSanzione + " - " + mCodTipoPenaAccessoria + " - "
 				+ mDescrTipoPenaAccessoria + " - " + mDurata + " - " + mDescrDurata + " - " + mNumAnni + " - "

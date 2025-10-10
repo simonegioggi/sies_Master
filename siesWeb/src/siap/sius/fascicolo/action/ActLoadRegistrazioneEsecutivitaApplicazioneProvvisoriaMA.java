@@ -46,7 +46,7 @@ import siap.sius.util.SIUSLookupRemote;
  * Aggiunta classe action di caricamento dati
  *
  * @author Gioggi
- * @since MEV_9
+ * @since MEV_2019-09
  * @version 1.0
  */
 public class ActLoadRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends ActionSius
@@ -185,7 +185,7 @@ public class ActLoadRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Ac
 		DepositoOrdinanzaPcModel dopm = idopc.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd(
 				fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), "AM");
 
-		// MEV_9-SIEP: aggiunto controllo altrimenti faceva un finto inserimento
+		// MEV_2019-09-SIEP: aggiunto controllo altrimenti faceva un finto inserimento
 		// boolean existConfermaDecisioneMR = false;
 		// DepositoOrdinanzaPcModel dopcmCM = idopc.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd(
 		// fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), "CM");

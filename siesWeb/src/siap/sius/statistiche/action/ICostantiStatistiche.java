@@ -278,7 +278,7 @@ public interface ICostantiStatistiche {
 	public static final String PG_LOAD_RICERCHE_DLGS_123_2018 = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/statistiche/LoadRicercaProcDlgs123_2018.jsp";
 
-	// MEV_9: aggiunta costante
+	// MEV_2019-09: aggiunta costante
 	public static final String PG_LOAD_RICERCA_STATISTICA_MISURE_ALTER_678C1TERCPP = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/statistiche/LoadRicercaStatisticaMisureAlter678c1tercpp.jsp";
 	public static final String RADIO_RICERCA_STATISTICA_MA = "RicercaProcedimentiMisureAlternative";
@@ -289,6 +289,6 @@ public interface ICostantiStatistiche {
 	public static final String VALUE_RICERCA_PROCEDIMENTI_PRIVI_PROVVEDIMENTI = "4";
 	public static final String PG_RICERCA_STATISTICA_MISURE_ALTER_678C1TERCPP = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/statistiche/RicercaStatisticaMisureAlter678c1tercpp.jsp";
-	// FINE MEV_9
+	// FINE MEV_2019-09
 
 }

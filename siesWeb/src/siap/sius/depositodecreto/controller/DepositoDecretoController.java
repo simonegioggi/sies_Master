@@ -2135,7 +2135,7 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 			// Fissazione Udienza.
 					(lEveMod.getCodEsito().compareTo("0601") != 0
 							&& lEveMod.getCodEsito().compareTo("0602") != 0
-							// MEV_9: anche per il decreto di designazione del magistrato relatore non
+							// MEV_2019-09: anche per il decreto di designazione del magistrato relatore non
 							// bisogna iscrivere la Misura Alternativa
 							// && lEveMod.getCodEsito().compareTo("0270") != 0
 							// && lEveMod.getCodEsito().compareTo("0271") != 0
@@ -2235,7 +2235,7 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 			// STUB 02-02-2006 Lo stato del fascicolo cambia se il Deposito non riguarda la Fissazione
 			// Udienza.
 			if (lEveMod.getCodEsito().compareTo("0601") != 0 && lEveMod.getCodEsito().compareTo("0602") != 0
-			// MEV_9: anche per il decreto di designazione del magistrato relatore non bisogna passare lo
+			// MEV_2019-09: anche per il decreto di designazione del magistrato relatore non bisogna passare lo
 			// stato ad "Emesso Provvedimento" (07)
 			// && lEveMod.getCodEsito().compareTo("0270") != 0
 			// && lEveMod.getCodEsito().compareTo("0271") != 0
@@ -3466,7 +3466,7 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 
 	/*
 	 * ISSUE MEV : Aggiunto metodo di inserimento decreto di designazione Magistrato relatore Numero MEV : 9
-	 * Autore : Gioggi Data : 17 nov 2020 Branch : MEV_9
+	 * Autore : Gioggi Data : 17 nov 2020 Branch : MEV_2019-09
 	 */
 	@Override
 	public DepositoDecretoEventoModel ExInserisciDecretoMagistratoRelatore(GPTenoreModel gptm,
@@ -3635,6 +3635,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 			cleanup(c);
 		}
 	}
-	// ***** FINE INTERVENTO MEV_9 *****//
+	// ***** FINE INTERVENTO MEV_2019-09 *****//
 
 }

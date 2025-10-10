@@ -16,7 +16,7 @@
 <jsp:useBean id="udienza"         		scope="request" class="siap.sius.udienza.model.UdienzaModel"/>
 <jsp:useBean id="TornaQui"        		scope="request" class="java.lang.String"/>
 <jsp:useBean id="fascicoloSiusGP"    	scope="session" class="siap.sius.fascicolo.model.FascicoloGPModel"/>
-<%-- MEV_9: aggiunto useBean --%>
+<%-- MEV_2019-09: aggiunto useBean --%>
 <jsp:useBean id="dataEsecutivitaStr"	scope="request" class="java.lang.String"/>
 
 <%
@@ -63,7 +63,7 @@ function Verify() {
 		return false;
   	}
 <%
-// MEV_9: aggiunto controllo che la data udienza sia >= data esecutività
+// MEV_2019-09: aggiunto controllo che la data udienza sia >= data esecutività
 if (Utils.isPresent(dataEsecutivitaStr)) {
 %>
 	var dataEsecutivita = '<%=dataEsecutivitaStr%>';

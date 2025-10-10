@@ -91,7 +91,7 @@ public class DepositoDecretoDAO extends SIAPTableDAO {
 		setField("SOMMA_RISARC_DANNI", BIG_DECIMAL);
 		// 02/2015 Mis. Sic.
 		setField("FLAG_ELABORATO", STRING);
-		// MEV_9 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
+		// MEV_2019-09 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
 		setField("DATA_TERMINE_EMISSIONE", DATE);
 		setField("NUM_GIORNI_TERMINE_EMISSIONE", BIG_DECIMAL);
 	}
@@ -301,12 +301,12 @@ public class DepositoDecretoDAO extends SIAPTableDAO {
 		return getString("FLAG_ELABORATO");
 	}
 
-	// MEV_9 aggiunto campo DATA_TERMINE_EMISSIONE
+	// MEV_2019-09 aggiunto campo DATA_TERMINE_EMISSIONE
 	public Date getDataTermineEmissione() throws DAOException {
 		return getDate("DATA_TERMINE_EMISSIONE");
 	}
 
-	// MEV_9 aggiunto campo NUM_GIORNI_TERMINE_EMISSIONE
+	// MEV_2019-09 aggiunto campo NUM_GIORNI_TERMINE_EMISSIONE
 	public BigDecimal getNumGiorniTermineEmissione() throws DAOException {
 		return getBigDecimal("NUM_GIORNI_TERMINE_EMISSIONE");
 	}
@@ -516,12 +516,12 @@ public class DepositoDecretoDAO extends SIAPTableDAO {
 		setString("FLAG_ELABORATO", aValore);
 	}
 
-	// MEV_9 aggiunto campo DATA_TERMINE_EMISSIONE
+	// MEV_2019-09 aggiunto campo DATA_TERMINE_EMISSIONE
 	public void setDataTermineEmissione(Date aValore) {
 		setDate("DATA_TERMINE_EMISSIONE", aValore);
 	}
 
-	// MEV_9 aggiunto campo NUM_GIORNI_TERMINE_EMISSIONE
+	// MEV_2019-09 aggiunto campo NUM_GIORNI_TERMINE_EMISSIONE
 	public void setNumGiorniTermineEmissione(BigDecimal aValore) {
 		setBigDecimal("NUM_GIORNI_TERMINE_EMISSIONE", aValore);
 	}
@@ -557,7 +557,7 @@ public class DepositoDecretoDAO extends SIAPTableDAO {
 				getNumeroGiorniRiduzionePena(), getSommaRisarcimentoDanni(),
 				// 02/2015 Mis.Sic.
 				getFlagElaborato(),
-				// MEV_9 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
+				// MEV_2019-09 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
 				getDataTermineEmissione(), getNumGiorniTermineEmissione());
 	}
 
@@ -627,7 +627,7 @@ public class DepositoDecretoDAO extends SIAPTableDAO {
 		setSommaRisarcimentoDanni(aModel.getSommaRisarcimentoDanni());
 		// 02/2015 Mis.Sic.
 		setFlagElaborato(aModel.getFlagElaborato());
-		// MEV_9 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
+		// MEV_2019-09 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
 		setDataTermineEmissione(aModel.getDataTermineEmissione());
 		setNumGiorniTermineEmissione(aModel.getNumGiorniTermineEmissione());
 	}
@@ -691,7 +691,7 @@ public class DepositoDecretoDAO extends SIAPTableDAO {
 		setSommaRisarcimentoDanni(aModel.getSommaRisarcimentoDanni());
 		// 02/2015
 		setFlagElaborato(aModel.getFlagElaborato());
-		// MEV_9 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
+		// MEV_2019-09 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
 		setDataTermineEmissione(aModel.getDataTermineEmissione());
 		setNumGiorniTermineEmissione(aModel.getNumGiorniTermineEmissione());
 

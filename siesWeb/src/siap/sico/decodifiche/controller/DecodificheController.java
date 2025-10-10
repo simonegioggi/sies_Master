@@ -634,7 +634,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 								|| "U066".equals(lContenuto.getCode()) || "U067".equals(lContenuto.getCode())
 								|| "U093".equals(lContenuto.getCode()))
 							continue;
-						// MEV_9: aggiunto contenuto solo x TDS
+						// MEV_2019-09: aggiunto contenuto solo x TDS
 						if ("TDSM".equals(aCodTipoUfficio) && "C050".equals(lContenuto.getCode()))
 							continue;
 					}
@@ -650,7 +650,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 								"U120".equals(lContenuto.getCode()) || "U121".equals(lContenuto.getCode())
 								|| "U122".equals(lContenuto.getCode()) || "U123".equals(lContenuto.getCode()))
 							continue;
-						// MEV_9: aggiunto contenuto solo x TDSM
+						// MEV_2019-09: aggiunto contenuto solo x TDSM
 						if ("TDS".equals(aCodTipoUfficio) && "C051".equals(lContenuto.getCode()))
 							continue;
 					}
@@ -739,7 +739,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 		return lContenuti;
 	}
 
-	// MEV_9-SIEP: cambiata firma del metodo per distinguere PM da PMM
+	// MEV_2019-09-SIEP: cambiata firma del metodo per distinguere PM da PMM
 	public Collection ExListaMotivoProvvMA(String aMisAlt, String aCodTipoUfficio) throws F3BException {
 
 		Connection lConn = null;
@@ -1978,7 +1978,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 		return lListaOggettiSospensione;
 	}
 
-	// MEV_9-SIEP: cambiata firma del metodo per distinguere PM da PMM
+	// MEV_2019-09-SIEP: cambiata firma del metodo per distinguere PM da PMM
 	public Collection ExListaOggettiSospensioneDecisioneSor(String aCodTipoUfficio) throws F3BException {
 
 		Connection lConn = null;
@@ -3560,7 +3560,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 	}
 
 	/**
-	 * MEV_9-SIEP
+	 * MEV_2019-09-SIEP
 	 */
 	public Collection ExListaMotivoProvvSosp678() throws F3BException {
 

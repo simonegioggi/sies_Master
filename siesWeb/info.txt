@@ -2,10 +2,10 @@ BRANCH SIES VERSIONE 12.8.3.0
 
 Nasce dal branch 12.8.2.0 in data 29/08/2025
 
-In data 09/09/2025 eseguito il merge con il branch MEV_9,
+In data 09/09/2025 eseguito il merge con il branch MEV_2019-09,
 ma senza il branch MEV_2024-DNA.
 
-MEV_9: 07/10/2020	-->	ID 09 SIES DLgs 123/18 e 121/18
+MEV_2019-09: 07/10/2020	-->	ID 09 SIES DLgs 123/18 e 121/18
 
 Le specifiche di intervento sono realizzate nell'ambito del sistema SIES al fine di soddisfare i requisiti
 espressi dall'Amministrazione in relazione alla richiesta di adeguamento normativo del Sistema, nella sua

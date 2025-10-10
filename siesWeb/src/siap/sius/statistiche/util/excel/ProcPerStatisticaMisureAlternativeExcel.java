@@ -22,7 +22,7 @@ import siap.sius.statistiche.model.RicercaProcedimentoModel;
 import siap.sius.util.SIUSLookupRemote;
 import siap.util.excel.SIAPExcelProducer;
 
-// MEV_9: aggiunta classe per le statistiche
+// MEV_2019-09: aggiunta classe per le statistiche
 public class ProcPerStatisticaMisureAlternativeExcel extends SIAPExcelProducer {
 
 	@SuppressWarnings("rawtypes")

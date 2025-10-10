@@ -114,7 +114,7 @@ if (tipoMisura.equals("AFFIDAMENTO")) {
 if ((eventonotifica.getEvento().getFlagDocumentoRegistrato() != null
 		&& eventonotifica.getEvento().getFlagDocumentoRegistrato().compareTo("N") == 0)
 		|| eventonotifica.getEvento().getFlagDocumentoRegistrato() == null) {
-	// MEV_9-SIEP: aggiunto pulsante di modifica diversificato per tipo misura
+	// MEV_2019-09-SIEP: aggiunto pulsante di modifica diversificato per tipo misura
 	String action = "ActLoadInserisciMAAffidamentoInProva";
 	if (tipoMisura.equals("DETENZIONE"))
 		action = "ActLoadInserisciMADetenzioneDomiciliare";
@@ -133,7 +133,7 @@ if ((eventonotifica.getEvento().getFlagDocumentoRegistrato() != null
    		<jsp:include page="<%=ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>">
      		<jsp:param name="ActionLink" value="<%="/jsp/Main.jsp?Action=siap.siep.misuraalternativa.action.ActStampaConcessione&IdEvento="+eventonotifica.getEvento().getIdEvento()+"&tipoMisura="+tipoMisura+"&IdEventoAmmProvvAff="+StringUtils.toStringJSP(lEventoAmmProvvAff.getIdEvento())%>"/>
 		</jsp:include>
-		<%-- MEV_9-SIEP: aggiunto pulsante di validazione diretta --%>
+		<%-- MEV_2019-09-SIEP: aggiunto pulsante di validazione diretta --%>
 		<!-- BOTTONE DI VALIDAZIONE DIRETTA -->
   		<td class="LBG">
     		<a href="/jsp/Main.jsp?Action=siap.siep.misuraalternativa.action.ActUploadMA&<%=ICostantiEvento.CAMPO_ID_EVENTO%>=<%=eventonotifica.getEvento().getIdEvento()%>&<%=ICostantiEvento.CAMPO_AZIONE_DETTAGLIO%>=siap.siep.misuraalternativa.action.ActDettaglioConcessione&<%=ICostantiEvento.CAMPO_VALIDA%>=S&noblob=S">
@@ -141,7 +141,7 @@ if ((eventonotifica.getEvento().getFlagDocumentoRegistrato() != null
     		</a>
   		</td>
 <%
-// MEV_9-SIEP: stava dentro if (eventonotifica.getEvento().getFlagDocumentoRegistrato() != null) quindi era dead code
+// MEV_2019-09-SIEP: stava dentro if (eventonotifica.getEvento().getFlagDocumentoRegistrato() != null) quindi era dead code
 // if (eventonotifica.getEvento().getFlagDocumentoRegistrato() == null)
 }
 %>
@@ -481,7 +481,7 @@ if (misuraalternativa.getDescrLuogoProva() != null) {
 	</tr>
 <%
 }
-// MEV_9-SIEP: aggiunte etichette x tre tipo misura
+// MEV_2019-09-SIEP: aggiunte etichette x tre tipo misura
 if ((tipoMisura.equals("AFFIDAMENTO") || tipoMisura.equals("DETENZIONE") || tipoMisura.equals("SEMILIBERTA"))
 		&&!Utils.isNullObj(misuraalternativa.getAnnoRegistroMaAt())) {
 %>
@@ -499,7 +499,7 @@ if ((tipoMisura.equals("AFFIDAMENTO") || tipoMisura.equals("DETENZIONE") || tipo
 	</tr>
 <%
 }
-// FINE MEV_9-SIEP
+// FINE MEV_2019-09-SIEP
 if (verbale.getDataEmissione() != null) {
 %>
 	<tr>
@@ -515,7 +515,7 @@ if (verbale.getDataEmissione() != null) {
 	<tr>
 <%
 	if (misuraalternativa.getDataInizioMisura() != null) {
-		// MEV_9-SIEP: aggiunta diversificazione dell'etichetta
+		// MEV_2019-09-SIEP: aggiunta diversificazione dell'etichetta
 		// MEV_2024-092: rimossa diversificazione dell'etichetta
 		boolean testDataFineMisura = misuraalternativa.getDataFineMisura() == null;
 //		if (tipoMisura.equals("AFFIDAMENTO")) {
