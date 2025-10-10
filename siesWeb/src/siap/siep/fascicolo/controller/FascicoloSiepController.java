@@ -128,17 +128,7 @@ import siap.siep.ulterioresanzionecumulo.controller.IUlterioreSanzioneCumulo;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * <p>
- * Title: FascicoloSiepModel
- * </p>
- * <p>
- * Description: Realizza il controller del Fascicolo Siep
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * FascicoloSiepModel - Realizza il controller del Fascicolo Siep
  *
  * @version 1.0
  */
@@ -3325,16 +3315,21 @@ public class FascicoloSiepController extends SiapController implements IFascicol
 	 * Ricerca l'elenco dei fascicoli correntemente assegnati a un magistrato su un particolare ufficio in
 	 * base allo stato del fascicolo
 	 *
+	 * 20251010 [SG]: paginata la ricerca
+	 *
 	 * @param aCodMagistrato
 	 *            - Codice CSM del magistrato
 	 * @param aCodUfficio
 	 *            - Codice ufficio di appartenenza del Procedimento
 	 * @param aStato
 	 *            - Array di COD_STATO_FASCICOLO
-	 * @return
+	 * @param aPage
+	 *            - Paginazione
+	 *
+	 * @return Vector
 	 */
 	public Vector ExRicercaFascicoliByMagistratoAssegnatario(String aCodMagistrato, String aCodUfficio,
-			String[] aStato) throws F3BException {
+			String[] aStato, int aPage) throws F3BException {
 
 		Connection lConn = null;
 		Vector lFascicoli = new Vector();
@@ -3345,7 +3340,8 @@ public class FascicoloSiepController extends SiapController implements IFascicol
 			lConn = getDBConnection();
 
 			lFasSqlDao = new FascicoloSiepSqlDAO(lConn);
-			lFasSqlDao.ricercaFascicoloSiepByMagistratoAssegnatario(aCodMagistrato, aCodUfficio, aStato);
+			lFasSqlDao.ricercaFascicoloSiepByMagistratoAssegnatario(aCodMagistrato, aCodUfficio, aStato,
+					aPage);
 
 			lFascicoli = new Vector(lFasSqlDao.getModels());
 
@@ -3361,6 +3357,33 @@ public class FascicoloSiepController extends SiapController implements IFascicol
 
 		return lFascicoli;
 
+	}
+
+	@Override
+	public BigDecimal ExGetCountProcedimenti(String lCodMagistrato, String lCodUfficio, String[] lStato)
+			throws F3BException {
+
+		BigDecimal lCount = new BigDecimal(0);
+		Connection lConn = null;
+
+		FascicoloSiepSqlDAO lFasSqlDao = null;
+		try {
+			lConn = getDBConnection();
+			lFasSqlDao = new FascicoloSiepSqlDAO(lConn);
+			lFasSqlDao.getCountProcedimenti(lCodMagistrato, lCodUfficio, lStato);
+			lFasSqlDao.start();
+			lFasSqlDao.next();
+			lCount = lFasSqlDao.getBigDecimal("HowManyRecords");
+			lFasSqlDao.stop();
+		} catch (DAOException daoEx) {
+			throw new SIEPException(SIEPException.USER_MESSAGE,
+					"FascicoloSiepController.ExGetCountProcedimenti: Non posso leggere gli elementi : "
+							+ daoEx);
+		} finally {
+			cleanup(lFasSqlDao);
+			cleanup(lConn);
+		}
+		return lCount;
 	}
 
 	public void ExModificaKeyNscByKey(FascicoloSiepModel aFascicoloSiep) throws F3BException {
@@ -3930,10 +3953,7 @@ public class FascicoloSiepController extends SiapController implements IFascicol
 				lFasDao.stop();
 			}
 
-			if (lByteArrayOut == null)
-				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Certificato Giudiziale Associato");
-
-			if (lByteArrayOut.size() == 0)
+			if ((lByteArrayOut == null) || (lByteArrayOut.size() == 0))
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Certificato Giudiziale Associato");
 		} catch (F3BException eF3b) {
 			throw eF3b;

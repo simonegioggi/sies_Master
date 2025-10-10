@@ -201,7 +201,9 @@ public class TemplateController extends SiapController implements ITemplate {
 				throw new F3BException(F3BException.USER_MESSAGE, "Template Inesistente");
 			}
 		} catch (DAOException daoEx) {
-			throw new F3BException("TemplateController.ExRicercaTemplate: Non posso leggere : " + daoEx);
+			throw new F3BException(
+					"TemplateController.ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplateCodOgg: Non posso leggere : "
+							+ daoEx);
 		} finally {
 			cleanup(lTemDao);
 			cleanup(lConn);
