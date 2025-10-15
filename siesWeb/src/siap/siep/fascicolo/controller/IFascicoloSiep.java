@@ -16,18 +16,7 @@ import siap.siep.sentenza.model.SentenzaModel;
 import siap.siep.statoprocedimento.model.StatoProcedimentoModel;
 
 /**
- * <p>
- * Title: IFascicoloSies
- * </p>
- * <p>
- * Description: Classe Controller per Fascicolo
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * IFascicoloSies - Classe Controller per Fascicolo
  *
  * @version 1.0
  */
@@ -203,8 +192,11 @@ public interface IFascicoloSiep {
 	 *
 	 * @return Vector
 	 */
-	public Vector ExRicercaFascicoliByMagistratoAssegnatario(String aCodMagistrato, String aCodUfficio,
+	public Vector ExRicercaFascicoliByMagistratoAssegnatarioPaged(String aCodMagistrato, String aCodUfficio,
 			String[] aStato, int aPage) throws F3BException;
+
+	public Vector ExRicercaFascicoliByMagistratoAssegnatario(String aCodMagistrato, String aCodUfficio,
+			String[] aStato) throws F3BException;
 
 	public BigDecimal ExGetCountProcedimenti(String lCodMagistrato, String lCodUfficio, String[] lStato)
 			throws F3BException;

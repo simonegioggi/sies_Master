@@ -1837,11 +1837,8 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 
 			/*
 			 * ISSUE MAC : Ticket#20200610014 — Anomalia SIES: modificato come in inserimento
-			 * FascicoloSiusUDSController.ExInserisciFascicoloSiusUDS 
-			 * Numero MAC : 20200610014 
-			 * Autore : Gioggi
-			 * Data : 11 giu 2020 
-			 * Branch : MAC_20200610014
+			 * FascicoloSiusUDSController.ExInserisciFascicoloSiusUDS Numero MAC : 20200610014 Autore : Gioggi
+			 * Data : 11 giu 2020 Branch : MAC_20200610014
 			 */
 			if (aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U004")
 					|| aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
@@ -4921,13 +4918,58 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 * Ricerca l'elenco dei fascicoli correntemente assegnati a un magistrato su un particolare ufficio in
 	 * base allo stato del fascicolo
 	 *
+	 * 20251010 [SG]: paginata la ricerca
+	 *
 	 * @param aCodMagistrato
 	 *            - Codice CSM del magistrato
 	 * @param aCodUfficio
 	 *            - Codice ufficio di appartenenza del Procedimento
 	 * @param aStato
 	 *            - Array di COD_STATO_FASCICOLO
+	 * @param aPage
+	 *            - Paginazione
+	 *
 	 * @return
+	 */
+	public Vector ExRicercaFascicoliByMagistratoSorvAssegnatarioPaged(String aCodMagistrato,
+			String aCodUfficio, String[] aStato, int aPage) throws F3BException {
+
+		Connection lConn = null;
+		Vector lFascicoli = new Vector();
+
+		FascicoloSiusSqlDAO lFasSqlDao = null;
+
+		try {
+			lConn = getDBConnection();
+
+			lFasSqlDao = new FascicoloSiusSqlDAO(lConn);
+			lFasSqlDao.ricercaFascicoloSiusByMagistratoSorvAssegnatarioPaged(aCodMagistrato, aCodUfficio,
+					aStato, aPage);
+			lFascicoli = new Vector(lFasSqlDao.getModels());
+		} catch (DAOException daoEx) {
+			throw new SIUSException(F3BException.USER_MESSAGE,
+					"FascicoloSiusController.ExRicercaFascicoliByMagistratoSorvAssegnatarioPaged: Non posso leggere : "
+							+ daoEx);
+		} finally {
+			cleanup(lFasSqlDao);
+			cleanup(lConn);
+		}
+
+		return lFascicoli;
+	}
+
+	/**
+	 * Ricerca l'elenco dei fascicoli correntemente assegnati a un magistrato su un particolare ufficio in
+	 * base allo stato del fascicolo
+	 *
+	 * @param aCodMagistrato
+	 *            - Codice CSM del magistrato
+	 * @param aCodUfficio
+	 *            - Codice ufficio di appartenenza del Procedimento
+	 * @param aStato
+	 *            - Array di COD_STATO_FASCICOLO
+	 *
+	 * @return Vector
 	 */
 	public Vector ExRicercaFascicoliByMagistratoSorvAssegnatario(String aCodMagistrato, String aCodUfficio,
 			String[] aStato) throws F3BException {
@@ -4954,6 +4996,33 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 		}
 
 		return lFascicoli;
+	}
+
+	@Override
+	public BigDecimal ExGetCountProcedimenti(String lCodMagistrato, String lCodUfficio, String[] lStato)
+			throws F3BException {
+
+		BigDecimal lCount = new BigDecimal(0);
+		Connection lConn = null;
+
+		FascicoloSiusSqlDAO lFasSqlDao = null;
+		try {
+			lConn = getDBConnection();
+			lFasSqlDao = new FascicoloSiusSqlDAO(lConn);
+			lFasSqlDao.getCountProcedimenti(lCodMagistrato, lCodUfficio, lStato);
+			lFasSqlDao.start();
+			lFasSqlDao.next();
+			lCount = lFasSqlDao.getBigDecimal("HowManyRecords");
+			lFasSqlDao.stop();
+		} catch (DAOException daoEx) {
+			throw new SIEPException(SIEPException.USER_MESSAGE,
+					"FascicoloSiusController.ExGetCountProcedimenti: Non posso leggere gli elementi : "
+							+ daoEx);
+		} finally {
+			cleanup(lFasSqlDao);
+			cleanup(lConn);
+		}
+		return lCount;
 	}
 
 	/**
@@ -5355,11 +5424,8 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	}
 
 	/*
-	 * ISSUE MEV : aggiunto aggiornamento stato fascicolo per decreto di tipo DM 
-	 * Numero MEV : 9 
-	 * Autore : Gioggi 
-	 * Data : 19 nov 2020 
-	 * Branch : MEV_2019-09
+	 * ISSUE MEV : aggiunto aggiornamento stato fascicolo per decreto di tipo DM Numero MEV : 9 Autore :
+	 * Gioggi Data : 19 nov 2020 Branch : MEV_2019-09
 	 */
 	public void aggiornaStatoFascicoloSius(FascicoloSiusModel fsm) throws F3BException {
 
@@ -5405,8 +5471,9 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	// ***** FINE INTERVENTO MEV_2019-09 *****//
 
 	/**
-	 * Aggiorna Generale procedimento con la data restituzione e il motivo
-	 * Aggiorna lo stato del fascicolo SIUS
+	 * Aggiorna Generale procedimento con la data restituzione e il motivo Aggiorna lo stato del fascicolo
+	 * SIUS
+	 *
 	 * @param aFasGPMod
 	 * @throws F3BException
 	 * @since MEV_2019-09
@@ -5429,11 +5496,11 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 			// Update del FASCICOLO_SIUS
 			lFasDao = new FascicoloSiusDAO(lConn);
 			lFasDao.setCodStatoFascicolo(lFasc.getCodStatoFascicolo());
-			
-			//lFasDao.setDataDefinizione(lFasc.getDataDefinizione());
-			
+
+			// lFasDao.setDataDefinizione(lFasc.getDataDefinizione());
+
 			lFasDao.setCondizioneUpdate(lFasc.getIdFascicoloSius());
-			
+
 			lFasDao.setCodOperatoreAggiornamento(lFasc.getCodOperatoreAggiornamento());
 			lFasDao.setCodUfficioAggiornamento(lFasc.getCodUfficioAggiornamento());
 			lFasDao.setDataAggiornamento(lFasc.getDataAggiornamento());
@@ -5444,9 +5511,9 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 			// Update del GENERALE_PROCEDIMENTO
 			lGenProcDao = new GeneraleProcedimentoDAO(lConn);
 			// lGenProcDao.setTipoDefinizione(lGenProc.getTipoDefinizione());
-			lGenProcDao.setDescrRestituzione (lGenProc.getDescrRestituzione());
-			lGenProcDao.setDataRestituzione  (lGenProc.getDataRestituzione());
-			
+			lGenProcDao.setDescrRestituzione(lGenProc.getDescrRestituzione());
+			lGenProcDao.setDataRestituzione(lGenProc.getDataRestituzione());
+
 			lGenProcDao.setCodOperatoreAggiornamento(lGenProc.getCodOperatoreAggiornamento());
 			lGenProcDao.setCodUfficioAggiornamento(lGenProc.getCodUfficioAggiornamento());
 			lGenProcDao.setDataAggiornamento(lGenProc.getDataAggiornamento());

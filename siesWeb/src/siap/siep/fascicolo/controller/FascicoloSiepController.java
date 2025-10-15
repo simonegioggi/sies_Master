@@ -3328,7 +3328,7 @@ public class FascicoloSiepController extends SiapController implements IFascicol
 	 *
 	 * @return Vector
 	 */
-	public Vector ExRicercaFascicoliByMagistratoAssegnatario(String aCodMagistrato, String aCodUfficio,
+	public Vector ExRicercaFascicoliByMagistratoAssegnatarioPaged(String aCodMagistrato, String aCodUfficio,
 			String[] aStato, int aPage) throws F3BException {
 
 		Connection lConn = null;
@@ -3340,8 +3340,37 @@ public class FascicoloSiepController extends SiapController implements IFascicol
 			lConn = getDBConnection();
 
 			lFasSqlDao = new FascicoloSiepSqlDAO(lConn);
-			lFasSqlDao.ricercaFascicoloSiepByMagistratoAssegnatario(aCodMagistrato, aCodUfficio, aStato,
+			lFasSqlDao.ricercaFascicoloSiepByMagistratoAssegnatarioPaged(aCodMagistrato, aCodUfficio, aStato,
 					aPage);
+
+			lFascicoli = new Vector(lFasSqlDao.getModels());
+
+			lFasSqlDao.stop();
+		} catch (DAOException daoEx) {
+			throw new SIEPException(F3BException.USER_MESSAGE,
+					"FascicoloSiepController.ricercaFascicoloSiepByMagistratoAssegnatarioPaged: Non posso leggere : "
+							+ daoEx);
+		} finally {
+			cleanup(lFasSqlDao);
+			cleanup(lConn);
+		}
+
+		return lFascicoli;
+	}
+
+	public Vector ExRicercaFascicoliByMagistratoAssegnatario(String aCodMagistrato, String aCodUfficio,
+			String[] aStato) throws F3BException {
+
+		Connection lConn = null;
+		Vector lFascicoli = new Vector();
+
+		FascicoloSiepSqlDAO lFasSqlDao = null;
+
+		try {
+			lConn = getDBConnection();
+
+			lFasSqlDao = new FascicoloSiepSqlDAO(lConn);
+			lFasSqlDao.ricercaFascicoloSiepByMagistratoAssegnatario(aCodMagistrato, aCodUfficio, aStato);
 
 			lFascicoli = new Vector(lFasSqlDao.getModels());
 
@@ -3356,7 +3385,6 @@ public class FascicoloSiepController extends SiapController implements IFascicol
 		}
 
 		return lFascicoli;
-
 	}
 
 	@Override

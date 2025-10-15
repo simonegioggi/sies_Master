@@ -37,7 +37,7 @@ public class ActRicercaProcedimentiAssegnati extends ActionSiap implements ICost
 		// Effettuo la ricerca dei fascicoli (Iscritti/Validati) dell'ufficio dell'utente
 		// connesso, assegnati attualmente al Magistrato specificato
 		// ==========================================================================
-		String lCodUfficio = this.getCodUfficioUtenteConnesso();
+		String lCodUfficio = getCodUfficioUtenteConnesso();
 		String lStato[] = { "02", "03" };
 
 		// 20251010 [SG]: paginata la ricerca
@@ -48,7 +48,7 @@ public class ActRicercaProcedimentiAssegnati extends ActionSiap implements ICost
 
 		Vector lListaProcedimenti = null;
 		IFascicoloSiep ifs = SIEPLookupRemote.getFascicoloSiepRemote();
-		lListaProcedimenti = ifs.ExRicercaFascicoliByMagistratoAssegnatario(lCodMagistrato, lCodUfficio,
+		lListaProcedimenti = ifs.ExRicercaFascicoliByMagistratoAssegnatarioPaged(lCodMagistrato, lCodUfficio,
 				lStato, Integer.parseInt(lPagina));
 		setRequestAttribute("aListaProcedimenti", lListaProcedimenti);
 
@@ -59,9 +59,11 @@ public class ActRicercaProcedimentiAssegnati extends ActionSiap implements ICost
 			CountRisultati = getRequestBigDecimalParameter("CountRisultati");
 
 		setRequestAttribute("CountRisultati", CountRisultati);
+		setRequestAttribute("totaleProcedimenti", "" + CountRisultati);
 		setRequestAttribute(IWebConstants.NUM_PAGE, lPagina);
 		setRequestAttribute(IWebConstants.REQUEST_FOR_PAGING, getCompleteRequestURL());
 
+		// pagina di ritorno
 		return PG_ESITO_RICERCAPROCEDIMENTI;
 	}
 

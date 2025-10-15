@@ -1122,7 +1122,7 @@ public class FascicoloSiepSqlDAO extends SIAPSqlDAO {
 	 * @param aPage
 	 * @throws DAOException
 	 */
-	public void ricercaFascicoloSiepByMagistratoAssegnatario(String aCodMagistrato, String aCodUfficio,
+	public void ricercaFascicoloSiepByMagistratoAssegnatarioPaged(String aCodMagistrato, String aCodUfficio,
 			String[] aStato, int aPage) throws DAOException {
 
 		String lStatement = new String();
@@ -1205,12 +1205,96 @@ public class FascicoloSiepSqlDAO extends SIAPSqlDAO {
 		lStatement += lCondizioni;
 		lStatement += " order by FASC.CHIAVE_ANNO asc, FASC.CHIAVE_PROGR asc";
 
-		// lStatement += " " + setCondizionePerInserimento(aModel);
 		lPaginedStatement = "SELECT * FROM (SELECT INNER.* , Rownum rn FROM (" + lStatement
 				+ "  ) INNER ) WHERE rn between  " + ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1)
 				+ " AND " + (aPage) * IWebConstants.RESULT_PER_PAGE;
 
 		setStatement(lPaginedStatement);
+	}
+
+	public void ricercaFascicoloSiepByMagistratoAssegnatario(String aCodMagistrato, String aCodUfficio,
+			String[] aStato) throws DAOException {
+
+		String lStatement = new String();
+
+		lStatement += "SELECT FASC.ANNO_FASCICOLO_UNIONE, FASC.CHIAVE_ANNO, FASC.CHIAVE_PROGR,";
+		lStatement += " FASC.CHIAVE_UFFICIO, DESCR_TIPO_UFF.RV_MEANING DESCR_TIPO_UFFICIO,"
+				+ " DESCR_COM_UFF.DESCRIZIONE DESCR_COMUNE_UFFICIO,";
+		lStatement += " DESCR_TIPO_UFF.RV_LOW_VALUE  COD_TIPO_UFFICIO,";
+		lStatement += " FASC.COD_MOTIVO_ARCHIVIAZIONE, MOTIVO_ARCHIVIAZIONE.RV_MEANING"
+				+ " DESCR_MOTIVO_ARCHIVIAZIONE,";
+		lStatement += " FASC.COD_OPERATORE_AGGIORNAMENTO, FASC.COD_OPERATORE_INSERIMENTO,";
+		lStatement += " FASC.COD_STATO_FASCICOLO, STATO_FASCICOLO.RV_MEANING DESCR_STATO_FASCICOLO,";
+		lStatement += " FASC.COD_TIPO_POS_LIBERO, TIPO_POS_LIBERO.RV_MEANING DESCR_TIPO_POS_LIBERO, ";
+		lStatement += " FASC.COD_UFFICIO_AGGIORNAMENTO, FASC.COD_UFFICIO_INSERIMENTO,"
+				+ " FASC.DATA_AGGIORNAMENTO,";
+		lStatement += " FASC.DATA_ARCHIVIAZIONE, FASC.DATA_INSERIMENTO,";
+		lStatement += " FASC.DATA_ISCRIZIONE, FASC.DATA_UNIONE, FASC.FAS_SIE_ID_FASCICOLO_SIEP,";
+		lStatement += " FASC.FLAG_VALIDATO, FASC.ID_FASCICOLO_SIEP, FASC.LETTERA_FASCICOLO,";
+		lStatement += " FASC.NOTE NOTE_FASCICOLO, FASC.NUM_FASCICOLO_UNIONE, FASC.SEN_ID_SENTENZA,"
+				+ " FASC.SOG_ID_SOGGETTO,";
+		lStatement += " FASC.FLAG_ALTRA_CAUSA, FASC.DATA_IRREVOCABILITA, ";
+		lStatement += " FASC.FLAG_CUMULANTE, ";
+		lStatement += " FASC.FLAG_CUMULATO, ";
+		lStatement += " FASC.COD_UFFICIO_UNIONE, DESCR_TIPO_UFFUNIONE.RV_MEANING DESCR_TIPO_UFFICIO_UNIONE,"
+				+ " DESCR_COM_UFFUNIONE.DESCRIZIONE DESCR_COMUNE_UFFICIO_UNIONE, FASC.KEY_PROVV_NSC ";
+		lStatement += " ,FASC.DATA_ARRIVO_ATTO ";
+		// Modifica Accorpamento Uffici
+		lStatement += " ,FASC.CHIAVE_PROGR_ORIG ";
+		lStatement += " ,UFFINSERIMENTO.COD_TIPO_UFFICIO COD_TIPO_UFFICIO_INS,"
+				+ " DESCR_TIPO_UFFINSERIMENTO.RV_MEANING DESCR_TIPO_UFFICIO_INS,"
+				+ " DESCR_COM_UFFINSERIMENTO.DESCRIZIONE DESCR_COMUNE_UFFICIO_INS";
+		lStatement += ", UFFINSERIMENTO.FLAG_ACCORP FLAG_UFFICIO_ACCORPATO";
+		lStatement += ", FASC.VISIBILITA_EX_MINORENNE ";
+		// Modifica MEV 12 (Richiesta Certificato Penale)
+		// lStatement += " ,CERTIFICATO_PENALE ";
+		lStatement += "FROM FASCICOLO_SIEP FASC";
+		// Modifica Accorpamento Uffici
+		lStatement += " LEFT OUTER JOIN UFFICIO UFFINSERIMENTO ON (FASC.Cod_Ufficio_Inserimento ="
+				+ " UFFINSERIMENTO.COD_UFFICIO )";
+		lStatement += " LEFT OUTER JOIN CG_REF_CODES DESCR_TIPO_UFFINSERIMENTO ON"
+				+ " (UFFINSERIMENTO.COD_TIPO_UFFICIO = DESCR_TIPO_UFFINSERIMENTO.RV_LOW_VALUE AND"
+				+ " DESCR_TIPO_UFFINSERIMENTO.RV_DOMAIN = 'TIPO_UFFICIO')";
+		lStatement += " LEFT OUTER JOIN COMUNE DESCR_COM_UFFINSERIMENTO ON (UFFINSERIMENTO.COD_COMUNE ="
+				+ " DESCR_COM_UFFINSERIMENTO.COD_COMUNE)";
+		lStatement += " LEFT OUTER JOIN UFFICIO UFF ON (FASC.CHIAVE_UFFICIO = UFF.COD_UFFICIO )";
+		lStatement += " LEFT OUTER JOIN CG_REF_CODES DESCR_TIPO_UFF ON (UFF.COD_TIPO_UFFICIO ="
+				+ " DESCR_TIPO_UFF.RV_LOW_VALUE AND DESCR_TIPO_UFF.RV_DOMAIN = 'TIPO_UFFICIO')";
+		lStatement += " LEFT OUTER JOIN COMUNE DESCR_COM_UFF ON (UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE)";
+		lStatement += " LEFT OUTER JOIN UFFICIO UFFUNIONE ON (FASC.COD_UFFICIO_UNIONE = UFFUNIONE.COD_UFFICIO)";
+		lStatement += " LEFT OUTER JOIN CG_REF_CODES DESCR_TIPO_UFFUNIONE ON (UFFUNIONE.COD_TIPO_UFFICIO ="
+				+ " DESCR_TIPO_UFFUNIONE.RV_LOW_VALUE AND DESCR_TIPO_UFFUNIONE.RV_DOMAIN = 'TIPO_UFFICIO')";
+		lStatement += " LEFT OUTER JOIN COMUNE DESCR_COM_UFFUNIONE ON (UFFUNIONE.COD_COMUNE ="
+				+ " DESCR_COM_UFFUNIONE.COD_COMUNE)";
+		lStatement += " LEFT OUTER JOIN CG_REF_CODES STATO_FASCICOLO ON (FASC.COD_STATO_FASCICOLO ="
+				+ " STATO_FASCICOLO.RV_LOW_VALUE AND STATO_FASCICOLO.RV_DOMAIN = 'STATO_FASCICOLO')";
+		lStatement += " LEFT OUTER JOIN CG_REF_CODES MOTIVO_ARCHIVIAZIONE ON (FASC.COD_MOTIVO_ARCHIVIAZIONE ="
+				+ " MOTIVO_ARCHIVIAZIONE.RV_LOW_VALUE AND MOTIVO_ARCHIVIAZIONE.RV_DOMAIN ="
+				+ " 'MOTIVO_ARCHIVIAZIONE')";
+		lStatement += " LEFT OUTER JOIN CG_REF_CODES TIPO_POS_LIBERO ON (FASC.COD_TIPO_POS_LIBERO ="
+				+ " TIPO_POS_LIBERO.RV_LOW_VALUE AND TIPO_POS_LIBERO.RV_DOMAIN = 'TIPO_POS_LIBERO')";
+		lStatement += " , MAGISTRATO_COMPETENTE ";
+		lStatement += " WHERE FASC.ID_FASCICOLO_SIEP is not NULL";
+		lStatement += "  AND (FASC.CHIAVE_UFFICIO = '" + aCodUfficio + "')";
+		lStatement += " AND FASC.ID_FASCICOLO_SIEP = MAGISTRATO_COMPETENTE.FAS_SIE_ID_FASCICOLO_SIEP ";
+		lStatement += " AND MAGISTRATO_COMPETENTE.MAG_COD_MAGISTRATO = '" + aCodMagistrato + "'";
+		lStatement += " AND MAGISTRATO_COMPETENTE.DATA_FINE is null ";
+
+		String lCondizioni = "";
+		if (aStato != null && aStato.length > 0) {
+			lCondizioni += " AND FASC.COD_STATO_FASCICOLO IN (";
+			for (int i = 0; i < aStato.length; i++) {
+				lCondizioni += "'" + aStato[i] + "'";
+				if (aStato.length > 1 && i < aStato.length - 1)
+					lCondizioni += ",";
+			}
+			lCondizioni += ")";
+		}
+
+		lStatement += lCondizioni;
+		lStatement += " order by FASC.CHIAVE_ANNO asc, FASC.CHIAVE_PROGR asc";
+
+		setStatement(lStatement);
 	}
 
 	public void getCountProcedimenti(String lCodMagistrato, String lCodUfficio, String[] lStato) {
