@@ -115,11 +115,25 @@ function selezionaTuttiProcedimenti() {
 		document.ElencoProcedimentiPerMagistratoRelatore.nomeSelezionaAll.value = 'Deseleziona Tutti i ' + <%=totaleProcedimenti%> + ' Procedimenti del Magistrato Competente';
 		document.ElencoProcedimentiPerMagistratoRelatore.nomeSelezionaTutti.disabled = true;
 		document.ElencoProcedimentiPerMagistratoRelatore.nomeDeselezionaTutti.disabled = true;
+		if (typeof (document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.length) == "undefined") {
+			document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.disabled = true;
+	    } else {
+		  	for (var i = 0; i < document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.length; i++) {
+		    	document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare[i].disabled = true;
+		  	}
+	    }
 	} else {
 		document.ElencoProcedimentiPerMagistratoRelatore.selezionaAll.checked = false;
 		document.ElencoProcedimentiPerMagistratoRelatore.nomeSelezionaAll.value = 'Seleziona Tutti i ' + <%=totaleProcedimenti%> + ' Procedimenti del Magistrato Competente';
 		document.ElencoProcedimentiPerMagistratoRelatore.nomeSelezionaTutti.disabled = false;
 		document.ElencoProcedimentiPerMagistratoRelatore.nomeDeselezionaTutti.disabled = false;
+		if (typeof (document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.length) == "undefined") {
+			document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.disabled = false;
+	    } else {
+		  	for (var i = 0; i < document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.length; i++) {
+		    	document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare[i].disabled = false;
+		  	}
+	    }
 	}
 }
 
@@ -129,10 +143,24 @@ function selezionaTuttiProcedimentiDaCheckbox() {
 		document.ElencoProcedimentiPerMagistratoRelatore.nomeSelezionaAll.value = 'Deseleziona Tutti i ' + <%=totaleProcedimenti%> + ' Procedimenti del Magistrato Competente';
 		document.ElencoProcedimentiPerMagistratoRelatore.nomeSelezionaTutti.disabled = true;
 		document.ElencoProcedimentiPerMagistratoRelatore.nomeDeselezionaTutti.disabled = true;
+		if (typeof (document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.length) == "undefined") {
+			document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.disabled = true;
+	    } else {
+		  	for (var i = 0; i < document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.length; i++) {
+		    	document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare[i].disabled = true;
+		  	}
+	    }
 	} else {
 		document.ElencoProcedimentiPerMagistratoRelatore.nomeSelezionaAll.value = 'Seleziona Tutti i ' + <%=totaleProcedimenti%> + ' Procedimenti del Magistrato Competente';
 		document.ElencoProcedimentiPerMagistratoRelatore.nomeSelezionaTutti.disabled = false;
 		document.ElencoProcedimentiPerMagistratoRelatore.nomeDeselezionaTutti.disabled = false;
+		if (typeof (document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.length) == "undefined") {
+			document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.disabled = false;
+	    } else {
+		  	for (var i = 0; i < document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.length; i++) {
+		    	document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare[i].disabled = false;
+		  	}
+	    }
 	}
 }
 <%
@@ -244,7 +272,7 @@ if (aListaProcedimenti.size() > 0) {
 if (aListaProcedimenti.size() == 0) {
 %>
 	<tr>
-	  	<td class="c" colspan="3">
+	  	<td class="c" colspan="4">
 	  		<font class="label">Nessun procedimento risulta attualmente assegnato al Magistrato <%=StringUtils.toStringJSP(aMagistrato.getCognome())%>&nbsp;<%=StringUtils.toStringJSP(aMagistrato.getNome())%></font>
 	  	</td>
 	</tr>

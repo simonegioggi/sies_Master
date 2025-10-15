@@ -86,7 +86,6 @@ public class FascicoloSiusSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Esegue la ricerca di un fascicolo tramite Chiave
-	 * <p>
 	 *
 	 * @param aIdFascicoloSius
 	 *            id del fascicolo SIUS da ricercare.
@@ -103,7 +102,6 @@ public class FascicoloSiusSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Ritorna la select per estrazione dati del fascicolo sius.
-	 * <p>
 	 *
 	 * @return select SQL.
 	 */
@@ -126,7 +124,6 @@ public class FascicoloSiusSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Ritorna campi essenziali per elenco fascicoli
-	 * <p>
 	 *
 	 * @return select SQL.
 	 */
@@ -164,7 +161,6 @@ public class FascicoloSiusSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Calcola il Massimo Progressivo relativo ad un certo ufficio e all'anno in corso. Il massimo progressivo
 	 * rappresenta anche l'ultimo progressivo inserito all'intenro dell'ufficio trattato.
-	 * <p>
 	 *
 	 * @param aFascSiusModel
 	 *            istanza model del fascicolo SIUS.
@@ -185,7 +181,6 @@ public class FascicoloSiusSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Ricerca per Id_fasciolo_sius_Origine ed il campo cod_oggetto_procedimento
-	 * <p>
 	 *
 	 * @param idFasOrigine
 	 *            id del fascicolo sius.
@@ -206,7 +201,6 @@ public class FascicoloSiusSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Metodo di ricerca di un FASCICOLO_SIUS con stessi: CHIAVE_ANNO, CHIAVE_PROGR, CHIAVE_UFFICIO.
-	 * <p>
 	 *
 	 * @param aChiaveAnno
 	 * @param aChiaveProgr
@@ -238,7 +232,6 @@ public class FascicoloSiusSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Metodo che verifica l'esistenza di FASCICOLI SIUS e/o SIEP per un ID_SOGGETTO.
-	 * <p>
 	 *
 	 * @param aIdSoggetto
 	 * @throws DAOException

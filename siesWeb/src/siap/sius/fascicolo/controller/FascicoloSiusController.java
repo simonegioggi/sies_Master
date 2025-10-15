@@ -47,7 +47,6 @@ import siap.sico.ufficio.model.UfficioModel;
 import siap.sico.utente.model.UtenteModel;
 import siap.sico.util.SICOLookupRemote;
 import siap.sico.util.report.ReportGenerator;
-import siap.siep.SIEPException;
 import siap.siep.altracausa.dao.AltraCausaSqlDAO;
 import siap.siep.altracausa.model.AltraCausaModel;
 import siap.siep.luogodetenzione.dao.LuogoDetenzioneDAO;
@@ -5015,7 +5014,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 			lCount = lFasSqlDao.getBigDecimal("HowManyRecords");
 			lFasSqlDao.stop();
 		} catch (DAOException daoEx) {
-			throw new SIEPException(SIEPException.USER_MESSAGE,
+			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"FascicoloSiusController.ExGetCountProcedimenti: Non posso leggere gli elementi : "
 							+ daoEx);
 		} finally {
@@ -5154,7 +5153,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new SIEPException(F3BException.USER_MESSAGE,
+			throw new SIUSException(F3BException.USER_MESSAGE,
 					"FascicoloSiusController.ExRicercaLengthCertPenaleByIdFascicolo: Non posso leggere : "
 							+ daoEx);
 		} finally {
@@ -5194,7 +5193,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + ex);
-			throw new SIEPException("FascicoloSiepController.ExModificaNoteFascicoloSiep: " + ex);
+			throw new SIUSException("FascicoloSiepController.ExModificaNoteFascicoloSiep: " + ex);
 		} finally {
 			cleanup(lFasDao);
 			cleanup(lConn);
@@ -5412,7 +5411,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 			// info per il log
 			avvocaturaLogger.error("DAOException: " + ex);
 			// lancio nuova eccezione
-			throw new SIEPException("FascicoloSiusController.ricercaCodUfficioAppartenenza: " + ex);
+			throw new SIUSException("FascicoloSiusController.ricercaCodUfficioAppartenenza: " + ex);
 		} finally {
 			// stop degli oggetti di tipo "GenericDAO"
 			cleanup(asd);

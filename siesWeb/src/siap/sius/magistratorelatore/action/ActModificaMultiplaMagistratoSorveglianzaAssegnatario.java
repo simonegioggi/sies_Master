@@ -10,8 +10,8 @@ import f3b.util.F3BException;
 import siap.sico.magistrato.action.ICostantiMagistrato;
 import siap.sico.magistrato.model.MagistratoModel;
 import siap.sico.web.ActionSiap;
-import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.sius.fascicolo.controller.IFascicoloSius;
+import siap.sius.fascicolo.model.FascicoloSiusModel;
 import siap.sius.magistratorelatore.controller.IMagistratoRelatore;
 import siap.sius.magistratorelatore.model.MagistratoRelatoreModel;
 import siap.sius.util.SIUSLookupRemote;
@@ -33,7 +33,6 @@ public class ActModificaMultiplaMagistratoSorveglianzaAssegnatario extends Actio
 		// ==========================================================================
 		MagistratoRelatoreModel lMagRelModel = new MagistratoRelatoreModel();
 		lMagRelModel.setMagCodMagistrato(getRequestStringParameter(ICostantiMagistrato.CAMPO_COD_MAGISTRATO));
-		// lMagCompModel.setFasSieIdFascicoloSiep(lFascicoloModel.getIdFascicoloSiep());
 		lMagRelModel.setDataInizio(getRequestDateParameter(ICostantiMagistratoRelatore.CAMPO_ANNO_DATA_INIZIO,
 				ICostantiMagistratoRelatore.CAMPO_MESE_DATA_INIZIO,
 				ICostantiMagistratoRelatore.CAMPO_GIORNO_DATA_INIZIO));
@@ -66,9 +65,9 @@ public class ActModificaMultiplaMagistratoSorveglianzaAssegnatario extends Actio
 			siesLogger.debug("Numero Fascicoli trasferiti = " + lListaProcedimenti.size());
 			for (int i = 0; i < lListaProcedimenti.size(); i++) {
 				String idFascicolo = ""
-						+ ((FascicoloSiepModel) lListaProcedimenti.get(i)).getIdFascicoloSiep();
-				String lAnnoNumero = "" + ((FascicoloSiepModel) lListaProcedimenti.get(i)).getChiaveAnno()
-						+ "/" + ((FascicoloSiepModel) lListaProcedimenti.get(i)).getChiaveProgr();
+						+ ((FascicoloSiusModel) lListaProcedimenti.get(i)).getIdFascicoloSius();
+				String lAnnoNumero = "" + ((FascicoloSiusModel) lListaProcedimenti.get(i)).getChiaveAnno()
+						+ "/" + ((FascicoloSiusModel) lListaProcedimenti.get(i)).getChiaveProgr();
 				lListaIdFascicoli[i] = idFascicolo;
 				lListaAnnoNumero.add(lAnnoNumero);
 			}

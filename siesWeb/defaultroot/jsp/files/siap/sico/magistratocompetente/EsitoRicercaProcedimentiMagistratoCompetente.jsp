@@ -113,11 +113,25 @@ function selezionaTuttiProcedimenti() {
 		document.ElencoProcedimentiPerMagistratoCompetente.nomeSelezionaAll.value = 'Deseleziona Tutti i ' + <%=totaleProcedimenti%> + ' Procedimenti del Magistrato Competente';
 		document.ElencoProcedimentiPerMagistratoCompetente.nomeSelezionaTutti.disabled = true;
 		document.ElencoProcedimentiPerMagistratoCompetente.nomeDeselezionaTutti.disabled = true;
+		if (typeof (document.ElencoProcedimentiPerMagistratoCompetente.idFascicoloDaAggiornare.length) == "undefined") {
+			document.ElencoProcedimentiPerMagistratoCompetente.idFascicoloDaAggiornare.disabled = true;
+	    } else {
+		  	for (var i = 0; i < document.ElencoProcedimentiPerMagistratoCompetente.idFascicoloDaAggiornare.length; i++) {
+		    	document.ElencoProcedimentiPerMagistratoCompetente.idFascicoloDaAggiornare[i].disabled = true;
+		  	}
+	    }
 	} else {
 		document.ElencoProcedimentiPerMagistratoCompetente.selezionaAll.checked = false;
 		document.ElencoProcedimentiPerMagistratoCompetente.nomeSelezionaAll.value = 'Seleziona Tutti i ' + <%=totaleProcedimenti%> + ' Procedimenti del Magistrato Competente';
 		document.ElencoProcedimentiPerMagistratoCompetente.nomeSelezionaTutti.disabled = false;
 		document.ElencoProcedimentiPerMagistratoCompetente.nomeDeselezionaTutti.disabled = false;
+		if (typeof (document.ElencoProcedimentiPerMagistratoCompetente.idFascicoloDaAggiornare.length) == "undefined") {
+			document.ElencoProcedimentiPerMagistratoCompetente.idFascicoloDaAggiornare.disabled = false;
+	    } else {
+		  	for (var i = 0; i < document.ElencoProcedimentiPerMagistratoCompetente.idFascicoloDaAggiornare.length; i++) {
+		    	document.ElencoProcedimentiPerMagistratoCompetente.idFascicoloDaAggiornare[i].disabled = false;
+		  	}
+	    }
 	}
 }
 
@@ -127,10 +141,24 @@ function selezionaTuttiProcedimentiDaCheckbox() {
 		document.ElencoProcedimentiPerMagistratoCompetente.nomeSelezionaAll.value = 'Deseleziona Tutti i ' + <%=totaleProcedimenti%> + ' Procedimenti del Magistrato Competente';
 		document.ElencoProcedimentiPerMagistratoCompetente.nomeSelezionaTutti.disabled = true;
 		document.ElencoProcedimentiPerMagistratoCompetente.nomeDeselezionaTutti.disabled = true;
+		if (typeof (document.ElencoProcedimentiPerMagistratoCompetente.idFascicoloDaAggiornare.length) == "undefined") {
+			document.ElencoProcedimentiPerMagistratoCompetente.idFascicoloDaAggiornare.disabled = true;
+	    } else {
+		  	for (var i = 0; i < document.ElencoProcedimentiPerMagistratoCompetente.idFascicoloDaAggiornare.length; i++) {
+		    	document.ElencoProcedimentiPerMagistratoCompetente.idFascicoloDaAggiornare[i].disabled = true;
+		  	}
+	    }
 	} else {
 		document.ElencoProcedimentiPerMagistratoCompetente.nomeSelezionaAll.value = 'Seleziona Tutti i ' + <%=totaleProcedimenti%> + ' Procedimenti del Magistrato Competente';
 		document.ElencoProcedimentiPerMagistratoCompetente.nomeSelezionaTutti.disabled = false;
 		document.ElencoProcedimentiPerMagistratoCompetente.nomeDeselezionaTutti.disabled = false;
+		if (typeof (document.ElencoProcedimentiPerMagistratoCompetente.idFascicoloDaAggiornare.length) == "undefined") {
+			document.ElencoProcedimentiPerMagistratoCompetente.idFascicoloDaAggiornare.disabled = false;
+	    } else {
+		  	for (var i = 0; i < document.ElencoProcedimentiPerMagistratoCompetente.idFascicoloDaAggiornare.length; i++) {
+		    	document.ElencoProcedimentiPerMagistratoCompetente.idFascicoloDaAggiornare[i].disabled = false;
+		  	}
+	    }
 	}
 }
 <%
