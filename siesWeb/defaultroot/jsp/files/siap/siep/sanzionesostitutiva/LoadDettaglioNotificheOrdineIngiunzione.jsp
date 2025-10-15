@@ -50,6 +50,15 @@ if (lListaNotObbligati.size() > 0)
     listaIdNotObbl = "[" + listaIdNotObbl.substring(1) + "]";
 else
 	listaIdNotObbl = "[]";
+
+if (lPosizione == null)
+	lPosizione = new PosizioneGiuridicaModel();
+
+if (lLuogoDetenzione == null)
+	lLuogoDetenzione = new LuogoDetenzioneModel();
+
+if (lAltraCausa == null)
+	lAltraCausa = new AltraCausaModel();
 %>
 
 <html>

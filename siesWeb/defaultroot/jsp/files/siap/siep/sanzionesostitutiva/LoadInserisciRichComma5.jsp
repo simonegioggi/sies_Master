@@ -33,6 +33,12 @@
 FascicoloSiepModel lFascicoloAssociato = (FascicoloSiepModel) session.getAttribute("fascicolo");
 PosizioneGiuridicaModel lPosizione = posizioneluogoaltra.getPosizioneGiuridica();
 AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
+
+if (lPosizione == null)
+	lPosizione = new PosizioneGiuridicaModel();
+
+if (lAltraCausa == null)
+	lAltraCausa = new AltraCausaModel();
 %>
 
 <% 
