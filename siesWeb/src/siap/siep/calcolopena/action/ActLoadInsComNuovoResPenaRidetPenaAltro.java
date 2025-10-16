@@ -33,25 +33,14 @@ import siap.siep.util.SIEPLookupRemote;
 import siap.web.ISIAPCostantiWeb;
 
 /**
- * <p>
- * Title: ActLoadInsComNuovoResPenaRidetPenaAltro
- * </p>
- * <p>
- * Description: Classe Action per la Load Inserimento Comunicazione Nuovo residuo pena nel caso di
- * Rideterminazione Pena Altro Questa Action viene invocata dalla form della griglia dei provvedimenti
- * (stampe) della rideterminazione pena.
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * ActLoadInsComNuovoResPenaRidetPenaAltro - Classe Action per la Load Inserimento Comunicazione Nuovo residuo
+ * pena nel caso di Rideterminazione Pena Altro Questa Action viene invocata dalla form della griglia dei
+ * provvedimenti (stampe) della rideterminazione pena.
  *
  * @version 1.0
  */
-
 public class ActLoadInsComNuovoResPenaRidetPenaAltro extends ActionSiap implements ICostantiCalcoloPena {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
@@ -141,16 +130,14 @@ public class ActLoadInsComNuovoResPenaRidetPenaAltro extends ActionSiap implemen
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("lUltimoEve = " + lUltimoEve);
-		if (lUltimoEve != null && lUltimoEve.getIdEvento().compareTo(lEveComputo.getIdEvento()) != 0 // escludo
-																										// l'evento
-																										// di
-																										// computo
-				&& !lUltimoEve.getCodTipoEvento().equals("05") // Richiesta Istruttoria
-				&& lUltimoEve.getCodMotivo() != null && !lUltimoEve.getCodMotivo().equals("0076") // 0076 =
-																									// Concessione
-																									// Liberazione
-																									// Anticipata
-				&& !lUltimoEve.getCodMotivo().equals("2130") // 2130 = Concessione Liberazione Anticipata
+		// escludo l'evento di computo
+		if (lUltimoEve != null && lUltimoEve.getIdEvento().compareTo(lEveComputo.getIdEvento()) != 0
+		// Richiesta Istruttoria
+				&& !lUltimoEve.getCodTipoEvento().equals("05")
+				// 0076 = Concessione Liberazione Anticipata
+				&& lUltimoEve.getCodMotivo() != null && !lUltimoEve.getCodMotivo().equals("0076")
+				// 2130 = Concessione Liberazione Anticipata
+				&& !lUltimoEve.getCodMotivo().equals("2130")
 				&& (lUltimoEve.getFlagDocumentoRegistrato() == null
 						|| "N".equals(lUltimoEve.getFlagDocumentoRegistrato()))) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -299,28 +286,29 @@ public class ActLoadInsComNuovoResPenaRidetPenaAltro extends ActionSiap implemen
 		// ==========================================================================
 		boolean isPenaGiaEspiata = false;
 		if (lPos != null && lPos.getPosizioneGiuridica() != null
-				&& (!lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("16") // Libero in
-																							// Differimento
-																							// Pena
-						&& !lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("17") // Libero in
-																									// Differimento
-																									// Pena
-																									// (Provvisorio)
-						&& !lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("46") // Libero in
-																									// Sospensione
-						&& !lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("47") // Libero in
-																									// Sospensione
-																									// DPR
-																									// 309/90
-						&& !lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("49") // Sospensione
-																									// provvisoria
-																									// Arresti
-																									// Domiciliari
-																									// (??)
-						&& !lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("10") // Libero
-																									// (Commento
-																									// 07/06/2010)
-				)) {
+		// Libero in Differimento Pena
+				&& (!lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("16")
+						// Libero in Differimento Pena (Provvisorio)
+						&& !lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("17")
+						// Libero in Sospensione
+						&& !lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("46")
+						// Libero in Sospensione DPR 309/90
+						&& !lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("47")
+						// Sospensione provvisoria Arresti Domiciliari (???)
+						&& !lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("49")
+						// Libero
+						&& !lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("10")
+						// 20250829 [SG]: aggiunta PG libero; da isLibero():
+						// ("07") // LIBERO
+						// ("10") // LIBERO
+						// ("16") // LIBERO IN DIFFERIMENTO PENA
+						// ("17") // LIBERO IN DIFFERIMENTO PENA (PROVVISORIA)
+						// ("46") // LIBERO in Sospensione
+						// ("47") // LIBERO in Sospensione DPR 309/90
+						// ("20") // EVASO
+						// ("26") // ESPULSO
+						// ("30") // ESTRADATO
+						&& !lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("07"))) {
 			if (!lPos.getPosizioneGiuridica().isLibero() && lPenaResMod.getDataFine() != null
 					&& DateUtils.isGreater(DateUtils.getSysDate(), lPenaResMod.getDataFine())) {
 				// new d.f. 16/09/2014 su segnalazione di Nunzia
@@ -334,7 +322,9 @@ public class ActLoadInsComNuovoResPenaRidetPenaAltro extends ActionSiap implemen
 				lRedirigi.setPage(IWebConstants.PG_MAIN);
 				setRequestAttribute(IWebConstants.MESSAGE_TEXT,
 						"Posizione Giuridica non gestita, impossibile procedere!");
-
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("Posizione Giuridica non gestita, impossibile procedere!");
 				return IWebConstants.PG_MESSAGE;
 			}
 		}
@@ -393,12 +383,9 @@ public class ActLoadInsComNuovoResPenaRidetPenaAltro extends ActionSiap implemen
 			lOption = new Option(DecodificheManager.getInstance().getTipoAutorita());
 
 		setRequestAttribute("autoritaEsternaE", "" + lOption);
-
-		// ======================
-		//
-		// ======================
 		setRequestAttribute("penaresidua", lPenaResMod);
 
 		return PG_LOAD_INS_COM_NUOVO_RES_PENA_RIDET_PENA_ALTRO;
 	}
+
 }

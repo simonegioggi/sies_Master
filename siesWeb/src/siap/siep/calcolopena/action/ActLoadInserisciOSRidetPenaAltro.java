@@ -33,20 +33,9 @@ import siap.siep.util.SIEPLookupRemote;
 import siap.web.ISIAPCostantiWeb;
 
 /**
- * <p>
- * Title: ActLoadInserisciOSRidetPenaAltro
- * </p>
- * <p>
- * Description: Classe Action per la Load Inserimento Odine di Scarcerazione per Nuovo residuo pena nel caso
- * di Rideterminazione Pena Altro Questa Action viene invocata dalla form della griglia dei provvedimenti
- * (stampe) della rideterminazione pena.
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * ActLoadInserisciOSRidetPenaAltro - Classe Action per la Load Inserimento Odine di Scarcerazione per Nuovo
+ * residuo pena nel caso di Rideterminazione Pena Altro Questa Action viene invocata dalla form della griglia
+ * dei provvedimenti (stampe) della rideterminazione pena.
  *
  * @version 1.0
  */
@@ -82,7 +71,10 @@ public class ActLoadInserisciOSRidetPenaAltro extends ActionSiap implements ICos
 			lRedirigi.setAction("siap.siep.fascicolo.action.ActLoadRicercaFascicoloUnivoco&"
 					+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
 			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
-
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Il Procedimento N." + lFascMod.getChiaveAnno() + "/" + lFascMod.getChiaveProgr()
+					+ " non è stato Validato. Impossibile procedere!");
 			return IWebConstants.PG_MESSAGE;
 		}
 
@@ -96,7 +88,10 @@ public class ActLoadInserisciOSRidetPenaAltro extends ActionSiap implements ICos
 			lRedirigi.setAction("siap.siep.fascicolo.action.ActLoadRicercaFascicoloUnivoco&"
 					+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
 			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
-
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Il Procedimento N." + lFascMod.getChiaveAnno() + "/" + lFascMod.getChiaveProgr()
+					+ " risulta Definito. Impossibile procedere!");
 			return IWebConstants.PG_MESSAGE;
 		}
 
@@ -142,15 +137,12 @@ public class ActLoadInserisciOSRidetPenaAltro extends ActionSiap implements ICos
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("lUltimoEve = " + lUltimoEve);
-		if (lUltimoEve != null && lUltimoEve.getIdEvento().compareTo(lEveComputo.getIdEvento()) != 0 // escludo
-																										// l'evento
-																										// di
-																										// computo
-				&& !lUltimoEve.getCodTipoEvento().equals("05") // Richiesta Istruttoria
-				&& lUltimoEve.getCodMotivo() != null && !lUltimoEve.getCodMotivo().equals("0076") // 0076 =
-																									// Concessione
-																									// Liberazione
-																									// Anticipata
+		// escludo l'evento di computo
+		if (lUltimoEve != null && lUltimoEve.getIdEvento().compareTo(lEveComputo.getIdEvento()) != 0
+		// Richiesta Istruttoria
+				&& !lUltimoEve.getCodTipoEvento().equals("05")
+				// 0076 = Concessione Liberazione Anticipata
+				&& lUltimoEve.getCodMotivo() != null && !lUltimoEve.getCodMotivo().equals("0076")
 				&& !lUltimoEve.getCodMotivo().equals("2130") // 2130 = Concessione Liberazione Anticipata
 				&& (lUltimoEve.getFlagDocumentoRegistrato() == null
 						|| "N".equals(lUltimoEve.getFlagDocumentoRegistrato()))) {
@@ -207,7 +199,9 @@ public class ActLoadInserisciOSRidetPenaAltro extends ActionSiap implements ICos
 			lRedirigi.setAction("siap.siep.avvocato.action.ActLoadInserisciAvvocato&"
 					+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
 			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
-
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Impossibile eseguire l'Ordine di Esecuzione.");
 			return IWebConstants.PG_MESSAGE;
 		}
 		// Passo gli avvocati alla form
@@ -229,7 +223,10 @@ public class ActLoadInserisciOSRidetPenaAltro extends ActionSiap implements ICos
 			lRedirigi.setAction("siap.siep.posizione.action.ActLoadInserisciPosizioneGiuridica&"
 					+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
 			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
-
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Al Procedimento N." + lFascMod.getChiaveAnno() + "/" + lFascMod.getChiaveProgr()
+					+ " non è stata associata una Posizione Giuridica.");
 			return IWebConstants.PG_MESSAGE;
 		}
 
@@ -240,43 +237,25 @@ public class ActLoadInserisciOSRidetPenaAltro extends ActionSiap implements ICos
 		// In Sospensione Misura (27,31,32,33,34,35,36,37,38,39,40,45) isMisSosp
 		// ==========================================================================
 		if (lPos != null && lPos.getPosizioneGiuridica() != null
-				&& (!lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("01") // Custodia
-																							// Cautelare per
-																							// Questa Causa in
-																							// Regime di
-																							// Detenzione
-						&& !lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("02") // Custodia
-																									// Cautelare
-																									// per
-																									// Questa
-																									// Causa
-																									// in
-																									// Regime
-																									// di
-																									// Arresti
-																									// Domiciliari
-						&& !lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("03") // Espiazione
-																									// Pena in
-																									// Regime
-																									// Carcerario
-						&& !lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("04") // Arresti
-																									// Domiciliari
-																									// ex art.
-																									// 656/10
-						&& !lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("23") // Custodia
-																									// Cautelare
-																									// in
-																									// Regime
-																									// di
-																									// Arresti
-																									// Domiciliari
+		// Custodia Cautelare per Questa Causa in Regime di Detenzione
+				&& (!lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("01")
+						// Custodia Cautelare per Questa Causa in Regime di Arresti Domiciliari
+						&& !lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("02")
+						// Espiazione Pena in Regime Carcerario
+						&& !lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("03")
+						// Arresti Domiciliari ex art. 656/10
+						&& !lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("04")
+						// Custodia Cautelare in Regime di Arresti Domiciliari
+						&& !lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("23")
 						&& !lPos.getPosizioneGiuridica().isMisSosp()
 						&& !lPos.getPosizioneGiuridica().isMisuraAlternativa())) {
 			RedirectTo lRedirigi = new RedirectTo();
 			lRedirigi.setPage(IWebConstants.PG_MAIN);
 			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
 					"Posizione Giuridica non gestita, impossibile procedere!");
-
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Posizione Giuridica non gestita, impossibile procedere!");
 			return IWebConstants.PG_MESSAGE;
 		}
 
@@ -335,7 +314,8 @@ public class ActLoadInserisciOSRidetPenaAltro extends ActionSiap implements ICos
 			lRedirigi.setPage(IWebConstants.PG_MAIN);
 			setRequestAttribute(IWebConstants.MESSAGE_TEXT, "La pena risulta già interamente espiata (il "
 					+ DateUtils.getDateToString(lPenaResMod.getDataFine(), "dd/MM/yyyy")
-					+ "), non è possibile emettere un Ordine di Scarcerazione. E' possibile emettere solo una Comunicazione o procedere alla Validazione del Provvedimento di rideterminazione.");
+					+ "), non è possibile emettere un Ordine di Scarcerazione. E' possibile emettere solo "
+					+ "una Comunicazione o procedere alla Validazione del Provvedimento di rideterminazione.");
 
 			return IWebConstants.PG_MESSAGE;
 
@@ -400,15 +380,14 @@ public class ActLoadInserisciOSRidetPenaAltro extends ActionSiap implements ICos
 		}
 
 		setRequestAttribute("autoritaEsternaE", "" + lAutoritaEsternaE);
-
-		// ======================
-		//
-		// ======================
 		setRequestAttribute("penaresidua", lPenaResMod);
 
 		/*
-		 * ISSUE MAC : filtro sui minorenni Numero MAC : 20191129017 Autore : monica Data : 05/dic/2019 Branch
-		 * : 11.2.4
+		 * ISSUE MAC : filtro sui minorenni 
+		 * Numero MAC : 20191129017 
+		 * Autore : monica 
+		 * Data : 05/dic/2019 
+		 * Branch : 11.2.4
 		 */
 		setRequestAttribute("filtroMinorenni", this.getFiltroMinorenni());
 		// ***** FINE INTERVENTO MAC_numero_MAC *****//

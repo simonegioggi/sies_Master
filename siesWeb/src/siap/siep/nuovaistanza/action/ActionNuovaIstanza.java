@@ -710,7 +710,7 @@ public class ActionNuovaIstanza extends ActionSiap
 		}
 	}
 
-	// 20210811 MEV_21 Inserimento Avvocato da associare all'Istanza in inserimento.
+	// 20210811 MEV_21 Inserimento Avvocato da associare all'Istanza in inserimento
 	/**
 	 * getIdAvvocatoInserito
 	 *
@@ -849,6 +849,7 @@ public class ActionNuovaIstanza extends ActionSiap
 				// al vecchio Foro (con FLAG_REGINDE="NO") e si inserisce un nuovo Avvocato.
 				// Se non cambia il foro si aggiornano solo i dati provenienti da REGINDE o non si
 				// interviene(Avv. presente solo in SIES).
+				if (lAvvCertRegSies != null) {
 				if (lAvvCertRegSies.getForo().equals(avvReginde.getForo())) {
 					avvReginde.setIdAvvocato(lAvvCertRegSies.getIdAvvocato());
 					avvReginde.setCodOperatoreAggiornamento(getCodUtenteConnesso());
@@ -866,6 +867,7 @@ public class ActionNuovaIstanza extends ActionSiap
 					lAvvCertRegSies = lCtrl.ExAggiornaAvvocatoDaReginde(lAvvCertRegSies);
 					avvReginde = lCtrl.ExInserisciAvvocato(avvReginde);
 				}
+			}
 			}
 			idAvvocato = avvReginde.getIdAvvocato();
 
@@ -1035,6 +1037,7 @@ public class ActionNuovaIstanza extends ActionSiap
 				// al vecchio Foro (con FLAG_REGINDE="NO") e si inserisce un nuovo Avvocato.
 				// Se non cambia il foro si aggiornano solo i dati provenienti da REGINDE o non si
 				// interviene(Avv. presente solo in SIES).
+				if (lAvvCertRegSies != null) {
 				if (lAvvCertRegSies.getForo().equals(avvReginde.getForo())) {
 					avvReginde.setIdAvvocato(lAvvCertRegSies.getIdAvvocato());
 					avvReginde.setCodOperatoreAggiornamento(getCodUtenteConnesso());
@@ -1052,6 +1055,7 @@ public class ActionNuovaIstanza extends ActionSiap
 					lAvvCertRegSies = lCtrl.ExAggiornaAvvocatoDaReginde(lAvvCertRegSies);
 					avvReginde = lCtrl.ExInserisciAvvocato(avvReginde);
 				}
+			}
 			}
 			idAvvocato = avvReginde.getIdAvvocato();
 

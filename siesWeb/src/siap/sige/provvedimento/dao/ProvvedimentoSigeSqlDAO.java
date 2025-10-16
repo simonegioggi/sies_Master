@@ -600,8 +600,10 @@ public class ProvvedimentoSigeSqlDAO extends SIAPSqlDAO {
 		// anche 04 - Ordinanza Rinvio Udienza
 		// e 50 - Rinvio udienza da verbale
 		lStatement += "AND p.COD_TIPO_PROVVEDIMENTO_SIGE not in ("
-				+ ICostantiProvvedimentoSige.TIPI_PROVVEDIMENTI_UDIENZE + ") ";
+				+ ICostantiProvvedimentoSige.TIPI_PROVVEDIMENTI_UDIENZE + ","
+				+ ICostantiProvvedimentoSige.TIPI_PROVVEDIMENTI_DECRETI_NO_DEFINITORI + ")";
 		// lStatement += "AND p.COD_TIPO_PROVVEDIMENTO_SIGE <> '01' ";
+		// lStatement += "AND p.DEFINITORIO	= 'S'";
 		lStatement += " AND p.DATA_DEPOSITO  IS NOT NULL ";
 		lStatement += " AND p.ID_EVENTO_GENERATO = e.ID_EVENTO ";
 		lStatement += " AND e.FLAG_DOCUMENTO_REGISTRATO = 'S' ";

@@ -5,8 +5,8 @@ import f3b.web.IWebConstants;
 /**
  * ICostantiProvvedimentoSige - Classe di costanti di ProvvedimentoSige
  *
-* @version 1.0
-*/
+ * @version 1.0
+ */
 public interface ICostantiProvvedimentoSige {
 
 	public static final String CAMPO_ID_PROVVEDIMENTO_SIGE = "IdProvvedimentoSige";
@@ -43,7 +43,7 @@ public interface ICostantiProvvedimentoSige {
 	public static final String SEDE_MAGISTRATO_COMPETENTE = "SedeMagistratoCompetente"; // 10/01/2010
 	public static final String CAMPO_COD_UFFICIO_COMPETENTE = "CodUfficioCompetente";
 	public static final String CAMPO_COD_TIPO_PROV_SIGE = "CodTipoProvSige";
-	public static final String CAMPO_ELENCO_DECRETI= "ElencoDecreti";
+	public static final String CAMPO_ELENCO_DECRETI = "ElencoDecreti";
 
 	public static final String PG_LOAD_EMISSIONE_ORDINANZA = IWebConstants.ROOT_DIR
 			+ "files/siap/sige/provvedimento/LoadEmissioneOrdinanza.jsp";
@@ -147,18 +147,18 @@ public interface ICostantiProvvedimentoSige {
 	public static final String NOTIFICA_SIGE_ESEGUITA = "01";
 	public static final String MOTIVO_FISSAZIONE_UDIENZA = "0601";
 	public static final String DEFINIZIONE_MANUALE = "62";
-	
-	public static final String 	COD_DECRETO_CITAZIONE_TESTI="17";
-	public static final String 	COD_DECRETO_FISSAZIONE_UDIENZA="01";
-	public static final String 	COD_DECRETO_INAMISSIBILITA="05";
-	
-	public static final String 	COD_ORDINANZA_CONFLITTO_COMPETENZA1="14";	
-	public static final String 	COD_ORDINANZA_CONFLITTO_COMPETENZA2="18";
-	public static final String COD_ORDINANZA_INCOPETENZA="07";
-	public static final String COD_ORIDINANZA_SOSPENSIONE_PRECEDENTE_ORDINANZA="10";
 
-	public static final String 	COD_DECRETO_UNIFICAZIONE="55";
-	public static final String 	COD_VERBALE_UNIFICAZIONE="56";
+	public static final String COD_DECRETO_CITAZIONE_TESTI = "17";
+	// public static final String COD_DECRETO_FISSAZIONE_UDIENZA = "01";
+	public static final String COD_DECRETO_INAMISSIBILITA = "05";
+
+	public static final String COD_ORDINANZA_CONFLITTO_COMPETENZA1 = "14";
+	public static final String COD_ORDINANZA_CONFLITTO_COMPETENZA2 = "18";
+	public static final String COD_ORDINANZA_INCOPETENZA = "07";
+	public static final String COD_ORIDINANZA_SOSPENSIONE_PRECEDENTE_ORDINANZA = "10";
+
+	public static final String COD_DECRETO_UNIFICAZIONE = "55";
+	public static final String COD_VERBALE_UNIFICAZIONE = "56";
 
 	public static final String TIPI_PROVVEDIMENTI = "'" + COD_DECRETO_GENERICO + "'," + "'"
 			+ COD_ORDINANZA_GENERICA + "'," + "'" + COD_ORDINANZA_RINVIO_UDIENZA + "'," + "'"
@@ -168,7 +168,7 @@ public interface ICostantiProvvedimentoSige {
 	public static final String TIPI_PROVVEDIMENTI_DM = "'" + COD_DECRETO_GENERICO + "'," + "'"
 			+ COD_ORDINANZA_GENERICA + "'," + "'" + COD_ORDINANZA_RINVIO_UDIENZA + "'," + "'"
 			+ COD_RINVIO_UDIENZA_VERBALE + "'," + "'" + DEFINIZIONE_MANUALE + "'";
-	
+
 	public static final String TIPI_PROVVEDIMENTI_DECRETI = "'" + COD_DECRETO_GENERICO + "','"
 			+ COD_DECRETO_IRREPERIBILITA + "','" + COD_DECRETO_LATITANZA + "','" + COD_DECRETO_INAMISSIBILITA
 			+ "','" + COD_DECRETO_INAMISSIBILITA + "','" + COD_FISSAZIONE_UDIENZA + "','"
@@ -181,9 +181,11 @@ public interface ICostantiProvvedimentoSige {
 	public static final String TIPI_PROVVEDIMENTI_UNIFICAZIONI = "'" + COD_DECRETO_UNIFICAZIONE + "'," + "'"
 			+ COD_VERBALE_UNIFICAZIONE + "'";
 	public static final String TIPI_PROVVEDIMENTI_UDIENZE = "'" + COD_ORDINANZA_RINVIO_UDIENZA + "'," + "'"
-			+ COD_RINVIO_UDIENZA_VERBALE + "','" + COD_FISSAZIONE_UDIENZA + "','"
-			+ COD_DECRETO_FISSAZIONE_UDIENZA + "'";
-	
+			+ COD_RINVIO_UDIENZA_VERBALE + "','" + COD_FISSAZIONE_UDIENZA + "'";
+
+	public static final String TIPI_PROVVEDIMENTI_DECRETI_NO_DEFINITORI = "'" + COD_DECRETO_IRREPERIBILITA
+			+ "','" + COD_DECRETO_LATITANZA + "'";
+
 	public static final String COD_ISTRUTTORIE = "52";
 	public static final String FASCICOLO_ARCHIVIATO = "01";
 	public static final String SCADENZARIO_SIGE_IRREVOCABILITA = "90";
@@ -216,9 +218,9 @@ public interface ICostantiProvvedimentoSige {
 			+ "files/siap/sige/provvedimento/IncTipoGiudizioCollegioDecretoIrreperibilita.jsp";
 	public static final String INC_TIPO_GIUDIZIO_COLLEGIO_DECRETO_INAMMISSIBILITA = IWebConstants.ROOT_DIR
 			+ "files/siap/sige/provvedimento/IncTipoGiudizioCollegioDecretoInammissibilita.jsp";
-	
+
 	public static final String COD_EVENTO_RICH_ISTRUTTORIA = "05";
 	public static final String COD_EVENTO_PROVV_RICH_ISTRUTTORIA = "'" + COD_EVENTO_PROVVEDIMENTO + "'," + "'"
 			+ COD_EVENTO_RICH_ISTRUTTORIA + "'";
-	
+
 }
