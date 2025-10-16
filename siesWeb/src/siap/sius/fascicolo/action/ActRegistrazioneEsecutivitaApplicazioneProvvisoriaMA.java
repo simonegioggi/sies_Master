@@ -161,10 +161,10 @@ public class ActRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Action
 				dopm.setDataEsecutivita(getRequestDateParameter(CAMPO_ANNO_DATA_ESECUTIVITA,
 						CAMPO_MESE_DATA_ESECUTIVITA, CAMPO_GIORNO_DATA_ESECUTIVITA));
 
-				// MEV9 si aggiorna anche Misura Alternativa
+				// MEV_2019-09 si aggiorna anche Misura Alternativa
 				// idopc.ExModificaDepositoOrdinanzaPc(dopm);
 				idopc.ExAggiornaDataEsecutivitaDepositoOrdinanzaPc(dopm);
-				// MEV9 - FINE
+				// MEV_2019-09 - FINE
 
 				INotifica in = SIEPLookupRemote.getNotificaRemote();
 				if ("modifica".equals(getRequestStringParameter("provenienza"))) {

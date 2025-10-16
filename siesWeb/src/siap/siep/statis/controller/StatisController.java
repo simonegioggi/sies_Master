@@ -2732,9 +2732,9 @@ public class StatisController extends GenericController {
 		sheet.setColumnWidth(numCol++, (10 * 256)); // Pendenti Inizio Periodo
 		sheet.setColumnWidth(numCol++, (10 * 256)); // Sopravvenuti
 		sheet.setColumnWidth(numCol++, (10 * 256));   // Accolti		
-		// MEV9 - Si aggiunge Accolti ex art.678 c.1 ter c.p.p
+		// MEV_2019-09 - Si aggiunge Accolti ex art.678 c.1 ter c.p.p
 		sheet.setColumnWidth(numCol++, (10 * 256));   // Accolti ex art.678 c.1 ter c.p.p
-		// MEV9 - FINE		
+		// MEV_2019-09 - FINE		
 		sheet.setColumnWidth(numCol++, (10 * 256));   // Rigettati
 		sheet.setColumnWidth(numCol++, (10 * 256));   // Inammissibilita'
 		sheet.setColumnWidth(numCol++, (10 * 256));   // NLP/NDP
@@ -2807,9 +2807,9 @@ public class StatisController extends GenericController {
 		setCell(row, numCol++, "Pendenti Inizio Periodo", csCenter);
 		setCell(row, numCol++, "Sopravvenuti", csCenter);
 		setCell(row, numCol++, "Accolti", csCenter);
-		// MEV9 - Si aggiunge Accolti ex art.678 c.1 ter c.p.p
+		// MEV_2019-09 - Si aggiunge Accolti ex art.678 c.1 ter c.p.p
 		setCell(row, numCol++, "Accolti ex art.678 c.1 ter c.p.p", csCenter);
-		// MEV9 - FINE
+		// MEV_2019-09 - FINE
 		setCell(row, numCol++, "Rigettati", csCenter);
 		setCell(row, numCol++, "Inammissibilita'", csCenter);
 		setCell(row, numCol++, "NLP/NDP", csCenter);
@@ -2840,9 +2840,9 @@ public class StatisController extends GenericController {
 				setCell(row, numCol++, lMod.getNumPendentiInizio().doubleValue(), csCenter);
 				setCell(row, numCol++, lMod.getNumSopravvenuti().doubleValue(), csCenter);
 				setCell(row, numCol++, lMod.getNumDefEsito1().doubleValue(), csCenter); // Accolti
-				// MEV9 - Si aggiunge Accolti ex art.678 c.1 ter c.p.p
+				// MEV_2019-09 - Si aggiunge Accolti ex art.678 c.1 ter c.p.p
 				setCell(row, numCol++, lMod.getNumAccoltiProvv().doubleValue(), csCenter); // Accolti
-				// MEV9 - FINE
+				// MEV_2019-09 - FINE
 				setCell(row, numCol++, lMod.getNumDefEsito2().doubleValue(), csCenter); // Rigettati
 				setCell(row, numCol++, lMod.getNumDefEsito3().doubleValue(), csCenter); // Inammissibilita'
 				setCell(row, numCol++, lMod.getNumDefEsito4().doubleValue(), csCenter); // NLP/NDP
@@ -2865,7 +2865,7 @@ public class StatisController extends GenericController {
 		row = sheet.createRow(nRow++);
 		setCell(row, numCol++, "TOTALI", csCenter);
 		// 12 totali su 12 colonne
-		// MEV9 - Si aggiunge Accolti ex art.678 c.1 ter c.p.p le colonne diventano 13
+		// MEV_2019-09 - Si aggiunge Accolti ex art.678 c.1 ter c.p.p le colonne diventano 13
 		//for (int i = 0; i < 12; i++) {
 		for (int i = 0; i < 13; i++) {
 			formula = getStringaSomma(nRowIni, numCol, nRowFine, numCol);
@@ -2949,9 +2949,9 @@ public class StatisController extends GenericController {
 					setCell(row, numCol++, lMod.getNumPendentiInizio().doubleValue(), aCsCenter);
 					setCell(row, numCol++, lMod.getNumSopravvenuti().doubleValue(), aCsCenter);
 					setCell(row, numCol++, lMod.getNumDefEsito1().doubleValue(), aCsCenter);
-					// MEV9 - Accolti ex art.678 c.1 ter c.p.p
+					// MEV_2019-09 - Accolti ex art.678 c.1 ter c.p.p
 					setCell(row, numCol++, lMod.getNumAccoltiProvv().doubleValue(), aCsCenter);
-					// MEV9 - FINE
+					// MEV_2019-09 - FINE
 					setCell(row, numCol++, lMod.getNumDefEsito2().doubleValue(), aCsCenter);
 					setCell(row, numCol++, lMod.getNumDefEsito3().doubleValue(), aCsCenter);
 					setCell(row, numCol++, lMod.getNumDefEsito4().doubleValue(), aCsCenter);
@@ -3523,7 +3523,7 @@ public class StatisController extends GenericController {
 		nRow++;
 		row = sheet.createRow(nRow++);
 		setCell(row, numCol++, "TOTALI", csCenter);
-		// MEV9 Sono diventati 13
+		// MEV_2019-09 Sono diventati 13
 		// 12 totali su 12 colonne
 		//for (int i = 0; i < 12; i++) {
 		for (int i = 0; i < 13; i++) {	

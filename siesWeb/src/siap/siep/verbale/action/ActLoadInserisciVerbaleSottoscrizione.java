@@ -104,7 +104,7 @@ public class ActLoadInserisciVerbaleSottoscrizione extends ActionSiap
 			throw new SIEPException(SIEPException.USER_MESSAGE,
 					"Non esiste l'Ordinanza/Decreto del TDS/MDS.");
 
-		// MEV-9 si aggiungono gli ulteriori codici motivo (sorveglianza)
+		// MEV_2019-09 si aggiungono gli ulteriori codici motivo (sorveglianza)
 		Set<String> codiciAffidamentoSorvNew = new HashSet<>(
 				Arrays.asList(new String[] { "0680", "0681", "0690", "0691", "0692" }));
 		Set<String> codiciDetenzioneSorvNew = new HashSet<>(

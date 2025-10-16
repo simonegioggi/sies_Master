@@ -43,9 +43,9 @@ public class IspConteggioOggettiModel extends GenericModel {
 	private BigDecimal mNumCancellati;
 	private BigDecimal mNumUnificati;
 	
-	// MEV9 - Va aggiunto un nuovo campo per i provvisori
+	// MEV_2019-09 - Va aggiunto un nuovo campo per i provvisori
 	private BigDecimal mNumAccoltiProvv;
-	// MEV9 - FINE
+	// MEV_2019-09 - FINE
 
 	// COSTRUTTORE DI DEFAULT
 	public IspConteggioOggettiModel() {
@@ -65,7 +65,7 @@ public class IspConteggioOggettiModel extends GenericModel {
 		mFasSiuChiaveUfficio = ""; /* mod michele 2/12/2008 */
 		mNumCancellati = null;
 		mNumUnificati = null;
-		mNumAccoltiProvv = null; // MEV9
+		mNumAccoltiProvv = null; // MEV_2019-09
 	}
 
 	// COSTRUTTORE DI COPIA
@@ -86,7 +86,7 @@ public class IspConteggioOggettiModel extends GenericModel {
 		mFasSiuChiaveUfficio = aModel.mFasSiuChiaveUfficio; /* mod michele 2/12/2008 */
 		mNumCancellati = aModel.mNumCancellati;
 		mNumUnificati = aModel.mNumUnificati;
-		mNumAccoltiProvv = aModel.mNumAccoltiProvv; // MEV9
+		mNumAccoltiProvv = aModel.mNumAccoltiProvv; // MEV_2019-09
 	}
 
 	// COSTRUTTORE MODEL
@@ -96,7 +96,7 @@ public class IspConteggioOggettiModel extends GenericModel {
 			BigDecimal aNumDefEsito5, BigDecimal aNumDefEsito6, BigDecimal aNumDefIscErr,
 			BigDecimal aNumPendentiFine, String aFasSiuChiaveUfficio, /* mod michele 2/12/2008 */
 			BigDecimal aNumCancellati, BigDecimal aNumUnificati
-			, BigDecimal aNumAccoltiProvv // MEV9
+			, BigDecimal aNumAccoltiProvv // MEV_2019-09
 			) {
 		mCodOggetto = aCodOggetto;
 		mDescOggetto = aDescOggetto;
@@ -114,7 +114,7 @@ public class IspConteggioOggettiModel extends GenericModel {
 		mFasSiuChiaveUfficio = aFasSiuChiaveUfficio; /* mod michele 2/12/2008 */
 		mNumCancellati = aNumCancellati;
 		mNumUnificati = aNumUnificati;
-		mNumAccoltiProvv = aNumAccoltiProvv; // MEV9
+		mNumAccoltiProvv = aNumAccoltiProvv; // MEV_2019-09
 	}
 
 	//
@@ -185,7 +185,7 @@ public class IspConteggioOggettiModel extends GenericModel {
 		return mNumUnificati;
 	}
 
-	// MEV9
+	// MEV_2019-09
 	public BigDecimal getNumAccoltiProvv() {
 		return mNumAccoltiProvv;
 	}	
@@ -259,7 +259,7 @@ public class IspConteggioOggettiModel extends GenericModel {
 		mNumUnificati = aValore;
 	}
 
-	// MEV9
+	// MEV_2019-09
 	public void setNumAccoltiProvv(BigDecimal aValore) {
 		mNumAccoltiProvv = aValore;
 	}	
@@ -288,7 +288,7 @@ public class IspConteggioOggettiModel extends GenericModel {
 				lAppoggioMod.setNumPendentiFine(mNumPendentiFine.add(aModel.getNumPendentiFine()));
 				lAppoggioMod.setNumCancellati(mNumCancellati.add(aModel.getNumCancellati()));
 				lAppoggioMod.setNumUnificati(mNumUnificati.add(aModel.getNumUnificati()));
-				//MEV9
+				//MEV_2019-09
 				lAppoggioMod.setNumAccoltiProvv(mNumAccoltiProvv.add(aModel.getNumAccoltiProvv()));
 			} else
 				throw new F3BException(F3BException.USER_MESSAGE,

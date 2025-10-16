@@ -30,7 +30,7 @@
 <script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
 
 <% 
-// MEV-9 si aggiungono gli ulteriori codici motivo (sorveglianza)
+// MEV_2019-09 si aggiungono gli ulteriori codici motivo (sorveglianza)
 Set<String> codiciAffidamentoSorvNew = new HashSet<String>(Arrays.asList(new String[]{"0680","0681","0690","0691","0692"}));
 Set<String> codiciDetenzioneSorvNew  = new HashSet<String>(Arrays.asList(new String[]{"0682","0693"}));
 Set<String> codiciSemilibertaSorvNew = new HashSet<String>(Arrays.asList(new String[]{"2007","0683","0694"}));
