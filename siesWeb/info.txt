@@ -1,5 +1,9 @@
-BRANCH SIES VERSIONE 12.8.2.0_TFC
+BRANCH SIES VERSIONE 12.8.3.0
 
-Nasce dal branch 12.8.2.0 in data 25/07/2025
+Nasce dal branch 12.8.2.0 in data 29/08/2025
 
-Questa Release verrà rilasciata il 16/09/2025
+Questa Release verrà rilasciata il 24/10/2025 (Patch mesi di Settembre e Ottobre 2025)
+
+Comprende i seguenti Ticket MAC:
+
+1)	Ticket#
