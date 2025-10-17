@@ -125,12 +125,12 @@
 	
 	<properties>
 		<netbeans.hint.deploy.server>
-			Tomcat60
+			Red Hat JBoss EAP 6.1+
 		</netbeans.hint.deploy.server>
 		<project.build.sourceEncoding>
 			UTF-8
 		</project.build.sourceEncoding>
-		<java.version>1.5</java.version>
+		<java.version>1.8</java.version>
 		<!-- MEV 16: aggiunto ws -->
 		<webservice.wsdl>
 			http://localhost:7001/siesEsecuzione/iscriviProvvedimentoEsecuzione_NEW?WSDL
