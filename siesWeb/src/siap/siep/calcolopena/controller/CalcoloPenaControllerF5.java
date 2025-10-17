@@ -1256,6 +1256,10 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 					&& (aEveModel.getCodMotivo().equals("0900") || aEveModel.getCodMotivo().equals("0901")
 							|| aEveModel.getCodMotivo().equals("0902")
 							|| aEveModel.getCodMotivo().equals("0903")
+							|| aEveModel.getCodMotivo().equals("0921") // Ticket#202510170117 — FASCICOLO_201_24_PM_LOCRI
+							|| aEveModel.getCodMotivo().equals("0920") // Ticket#202510170117 — FASCICOLO_201_24_PM_LOCRI
+							|| aEveModel.getCodMotivo().equals("0947") // Ticket#202510170117 — FASCICOLO_201_24_PM_LOCRI
+							|| aEveModel.getCodMotivo().equals("0952") // Ticket#202510170117 — FASCICOLO_201_24_PM_LOCRI
 							|| aEveModel.getCodMotivo().equals("0937"))) {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
