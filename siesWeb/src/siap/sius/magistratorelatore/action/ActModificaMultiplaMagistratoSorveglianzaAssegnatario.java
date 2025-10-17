@@ -10,6 +10,8 @@ import f3b.util.F3BException;
 import siap.sico.magistrato.action.ICostantiMagistrato;
 import siap.sico.magistrato.model.MagistratoModel;
 import siap.sico.web.ActionSiap;
+import siap.sius.fascicolo.controller.IFascicoloSius;
+import siap.sius.fascicolo.model.FascicoloSiusModel;
 import siap.sius.magistratorelatore.controller.IMagistratoRelatore;
 import siap.sius.magistratorelatore.model.MagistratoRelatoreModel;
 import siap.sius.util.SIUSLookupRemote;
@@ -30,64 +32,64 @@ public class ActModificaMultiplaMagistratoSorveglianzaAssegnatario extends Actio
 		// Recupero i dati del nuovo magistrato relatore
 		// ==========================================================================
 		MagistratoRelatoreModel lMagRelModel = new MagistratoRelatoreModel();
-
-		lMagRelModel.setMagCodMagistrato(
-				this.getRequestStringParameter(ICostantiMagistrato.CAMPO_COD_MAGISTRATO));
-		// lMagCompModel.setFasSieIdFascicoloSiep(lFascicoloModel.getIdFascicoloSiep());
-		lMagRelModel.setDataInizio(
-				this.getRequestDateParameter(ICostantiMagistratoRelatore.CAMPO_ANNO_DATA_INIZIO,
+		lMagRelModel.setMagCodMagistrato(getRequestStringParameter(ICostantiMagistrato.CAMPO_COD_MAGISTRATO));
+		lMagRelModel.setDataInizio(getRequestDateParameter(ICostantiMagistratoRelatore.CAMPO_ANNO_DATA_INIZIO,
 						ICostantiMagistratoRelatore.CAMPO_MESE_DATA_INIZIO,
 						ICostantiMagistratoRelatore.CAMPO_GIORNO_DATA_INIZIO));
 		lMagRelModel.setCodRuoloMagistrato("02");
 
 		lMagRelModel.setDataInserimento(DateUtils.getSysDate());
-		lMagRelModel.setCodOperatoreInserimento(this.getCodUtenteConnesso());
-		lMagRelModel.setCodUfficioInserimento(this.getCodUfficioUtenteConnesso());
+		lMagRelModel.setCodOperatoreInserimento(getCodUtenteConnesso());
+		lMagRelModel.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("lMagRelModel = " + lMagRelModel);
 
+		IMagistratoRelatore lMagRelCtrl = SIUSLookupRemote.getMagistratoRelatoreRemote();
+
 		// ==========================================================================
 		// idFascicoloDaAggiornare = idFascicolo;anno/numero
 		// ==========================================================================
-		String[] lListaFascicoli = this.getRequestStringParameters("idFascicoloDaAggiornare");
-		String[] lListaIdFascicoli = new String[lListaFascicoli.length];
-
+		// 20251010 [SG]: paginata la ricerca
 		Vector lListaAnnoNumero = new Vector();
-
+		if (!isRequestParameterNullObj("selezionaAll") && isRequestChecked("selezionaAll")) {
+			String lStato[] = { "02", "03", "10" };
+			Vector lListaProcedimenti = null;
+			IFascicoloSius ifs = SIUSLookupRemote.getFascicoloSiusRemote();
+			lListaProcedimenti = ifs.ExRicercaFascicoliByMagistratoSorvAssegnatario(
+					getRequestStringParameter(ICostantiMagistrato.CAMPO_COD_MAGISTRATO + "_OLD"),
+					getCodUfficioUtenteConnesso(), lStato);
+			String[] lListaIdFascicoli = new String[lListaProcedimenti.size()];
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Numero Fascicoli trasferiti = " + lListaProcedimenti.size());
+			for (int i = 0; i < lListaProcedimenti.size(); i++) {
+				String idFascicolo = ""
+						+ ((FascicoloSiusModel) lListaProcedimenti.get(i)).getIdFascicoloSius();
+				String lAnnoNumero = "" + ((FascicoloSiusModel) lListaProcedimenti.get(i)).getChiaveAnno()
+						+ "/" + ((FascicoloSiusModel) lListaProcedimenti.get(i)).getChiaveProgr();
+				lListaIdFascicoli[i] = idFascicolo;
+				lListaAnnoNumero.add(lAnnoNumero);
+			}
+			lMagRelCtrl.ExModificaMultiplaMagistratoRelatore(lMagRelModel, lListaIdFascicoli);
+		} else {
+			String[] lListaFascicoli = getRequestStringParameters("idFascicoloDaAggiornare");
+		String[] lListaIdFascicoli = new String[lListaFascicoli.length];
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Numero Fascicoli trasferiti = " + lListaFascicoli.length);
 		for (int i = 0; i < lListaFascicoli.length; i++) {
-			//// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			//// LogF3B.getLogger()
-			// siesLogger.debug("id_fascicolo = "+lListaFascicoli[i]);
 			String idFascicolo = null;
 			String lAnnoNumero = null;
 			idFascicolo = lListaFascicoli[i].substring(0, lListaFascicoli[i].indexOf(';'));
 			lAnnoNumero = lListaFascicoli[i].substring(lListaFascicoli[i].indexOf(';') + 1,
 					lListaFascicoli[i].length());
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			siesLogger.debug("lListaFascicoli = " + lListaFascicoli[i]);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			siesLogger.debug("idFascicolo = " + idFascicolo);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			siesLogger.debug("lAnnoNumero = " + lAnnoNumero);
-
 			lListaIdFascicoli[i] = idFascicolo;
 			lListaAnnoNumero.add(lAnnoNumero);
 		}
-
-		// if (1==1) return "";
-
-		IMagistratoRelatore lMagRelCtrl = SIUSLookupRemote.getMagistratoRelatoreRemote();
 		lMagRelCtrl.ExModificaMultiplaMagistratoRelatore(lMagRelModel, lListaIdFascicoli);
-
-		// ==========================================================================
-		//
-		// ==========================================================================
-		// String[] lListaFascicoli = this.getRequestStringParameters("AnnoNumeroFascicolo");
+		}
 
 		MagistratoModel lMagistratoOld = new MagistratoModel();
 		lMagistratoOld.setCodMagistrato(
@@ -105,6 +107,7 @@ public class ActModificaMultiplaMagistratoSorveglianzaAssegnatario extends Actio
 		setRequestAttribute("aDataCompetenza",
 				DateUtils.getDateToString(lMagRelModel.getDataInizio(), "dd/MM/yyyy"));
 
+		// pagina di ritorno
 		return PG_ESITO_MODIFICAPROCEDIMENTI_SORVEGLIANZA;
 	}
 

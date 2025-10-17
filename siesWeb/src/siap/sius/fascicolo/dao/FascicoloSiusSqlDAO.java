@@ -5,29 +5,18 @@ import java.sql.Connection;
 
 import org.apache.log4j.Logger;
 
-import siap.dao.SIAPSqlDAO;
-import siap.sius.fascicolo.model.FascicoloSiusModel;
 import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.model.GenericModel;
 import f3b.util.DateUtils;
 import f3b.util.Utils;
 import f3b.web.IWebConstants;
+import siap.dao.SIAPSqlDAO;
+import siap.sius.fascicolo.model.FascicoloSiusModel;
 
 /**
- * <p>
- * Title: FascicoloSiusSqlDAO
- * </p>
- * <p>
- * Description: Classe SqlDAO che rappresenta la tabella FascicoloSius
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ * FascicoloSiusSqlDAO - Classe SqlDAO che rappresenta la tabella FascicoloSius
+ *
  * @version 1.0
  */
 public class FascicoloSiusSqlDAO extends SIAPSqlDAO {
@@ -97,8 +86,7 @@ public class FascicoloSiusSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Esegue la ricerca di un fascicolo tramite Chiave
-	 * <p>
-	 * 
+	 *
 	 * @param aIdFascicoloSius
 	 *            id del fascicolo SIUS da ricercare.
 	 * @throws DAOException
@@ -114,8 +102,7 @@ public class FascicoloSiusSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Ritorna la select per estrazione dati del fascicolo sius.
-	 * <p>
-	 * 
+	 *
 	 * @return select SQL.
 	 */
 	protected String getSqlQuery() {
@@ -137,8 +124,7 @@ public class FascicoloSiusSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Ritorna campi essenziali per elenco fascicoli
-	 * <p>
-	 * 
+	 *
 	 * @return select SQL.
 	 */
 	protected String getSqlQueryElenco() {
@@ -175,8 +161,7 @@ public class FascicoloSiusSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Calcola il Massimo Progressivo relativo ad un certo ufficio e all'anno in corso. Il massimo progressivo
 	 * rappresenta anche l'ultimo progressivo inserito all'intenro dell'ufficio trattato.
-	 * <p>
-	 * 
+	 *
 	 * @param aFascSiusModel
 	 *            istanza model del fascicolo SIUS.
 	 * @throws DAOException
@@ -196,8 +181,7 @@ public class FascicoloSiusSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Ricerca per Id_fasciolo_sius_Origine ed il campo cod_oggetto_procedimento
-	 * <p>
-	 * 
+	 *
 	 * @param idFasOrigine
 	 *            id del fascicolo sius.
 	 * @aCodOggetto codice oggetto procedimento.
@@ -217,8 +201,7 @@ public class FascicoloSiusSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Metodo di ricerca di un FASCICOLO_SIUS con stessi: CHIAVE_ANNO, CHIAVE_PROGR, CHIAVE_UFFICIO.
-	 * <p>
-	 * 
+	 *
 	 * @param aChiaveAnno
 	 * @param aChiaveProgr
 	 * @param aChiaveUfficio
@@ -249,8 +232,7 @@ public class FascicoloSiusSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Metodo che verifica l'esistenza di FASCICOLI SIUS e/o SIEP per un ID_SOGGETTO.
-	 * <p>
-	 * 
+	 *
 	 * @param aIdSoggetto
 	 * @throws DAOException
 	 * @return boolean
@@ -276,7 +258,76 @@ public class FascicoloSiusSqlDAO extends SIAPSqlDAO {
 	}
 
 	/**
-	 * 
+	 * ricercaFascicoloSiusByMagistratoSorvAssegnatarioPaged
+	 *
+	 * 20251010 [SG]: paginata la ricerca
+	 *
+	 * @param aCodMagistrato
+	 * @param aCodUfficio
+	 * @param aStato
+	 * @param aPage
+	 * @throws DAOException
+	 */
+	public void ricercaFascicoloSiusByMagistratoSorvAssegnatarioPaged(String aCodMagistrato,
+			String aCodUfficio, String[] aStato, int aPage) throws DAOException {
+
+		String lStatement = new String();
+		String lPaginedStatement = new String("");
+
+		lStatement += "SELECT FASC.CHIAVE_ANNO, FASC.CHIAVE_PROGR,";
+		lStatement += " FASC.CHIAVE_UFFICIO, DESCR_TIPO_UFF.RV_MEANING DESCR_TIPO_UFFICIO,"
+				+ " DESCR_COM_UFF.DESCRIZIONE DESCR_COMUNE_UFFICIO,";
+		lStatement += " DESCR_TIPO_UFF.RV_LOW_VALUE  COD_TIPO_UFFICIO,";
+		lStatement += " FASC.COD_OPERATORE_AGGIORNAMENTO, FASC.COD_OPERATORE_INSERIMENTO,";
+		lStatement += " FASC.COD_STATO_FASCICOLO, STATO_FASCICOLO.RV_MEANING DESCR_STATO_FASCICOLO,";
+		lStatement += " FASC.COD_UFFICIO_AGGIORNAMENTO, FASC.COD_UFFICIO_INSERIMENTO,"
+				+ " FASC.DATA_AGGIORNAMENTO,";
+		lStatement += " FASC.DATA_INSERIMENTO,";
+		lStatement += " FASC.DATA_ISCRIZIONE, FASC.FAS_SIE_ID_FASCICOLO_SIEP,"
+				+ " FASC.FAS_SIU_ID_FASCICOLO_SIUS, ";
+		lStatement += " FASC.ID_FASCICOLO_SIUS,";
+		lStatement += " FASC.ID_FASCICOLO_SIUS_ORIGINE, FASC.DATA_DEFINIZIONE,"
+				+ " FASC.NUMERO_FASCICOLI_UNIFICATI,";
+		// MEV10-s3: aggiunto campo in db per gestire età minore/maggiore
+		lStatement += " FASC.SOG_ID_SOGGETTO, FASC.VISIBILITA_EX_MINORENNE ";
+		lStatement += " FROM FASCICOLO_SIUS FASC";
+		lStatement += " LEFT OUTER JOIN UFFICIO UFF ON (FASC.CHIAVE_UFFICIO = UFF.COD_UFFICIO )";
+		lStatement += " LEFT OUTER JOIN CG_REF_CODES DESCR_TIPO_UFF ON (UFF.COD_TIPO_UFFICIO ="
+				+ " DESCR_TIPO_UFF.RV_LOW_VALUE AND DESCR_TIPO_UFF.RV_DOMAIN = 'TIPO_UFFICIO')";
+		lStatement += " LEFT OUTER JOIN COMUNE DESCR_COM_UFF ON (UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE)";
+		lStatement += " LEFT OUTER JOIN CG_REF_CODES STATO_FASCICOLO ON (FASC.COD_STATO_FASCICOLO ="
+				+ " STATO_FASCICOLO.RV_LOW_VALUE AND STATO_FASCICOLO.RV_DOMAIN = 'STATO_FASCICOLO')";
+		lStatement += " , MAGISTRATO_RELATORE ";
+		lStatement += " WHERE FASC.ID_FASCICOLO_SIUS is not NULL";
+		lStatement += "  AND (FASC.CHIAVE_UFFICIO = '" + aCodUfficio + "')";
+		lStatement += " AND FASC.ID_FASCICOLO_SIUS = MAGISTRATO_RELATORE.FAS_SIU_ID_FASCICOLO_SIUS";
+		lStatement += " AND MAGISTRATO_RELATORE.MAG_COD_MAGISTRATO = '" + aCodMagistrato + "'";
+		lStatement += " AND MAGISTRATO_RELATORE.DATA_FINE is null ";
+
+		String lCondizioni = "";
+		if (aStato != null && aStato.length > 0) {
+			lCondizioni += " AND FASC.COD_STATO_FASCICOLO IN (";
+			for (int i = 0; i < aStato.length; i++) {
+				lCondizioni += "'" + aStato[i] + "'";
+				if (aStato.length > 1 && i < aStato.length - 1)
+					lCondizioni += ",";
+			}
+			lCondizioni += ")";
+		}
+
+		lStatement += lCondizioni;
+		lStatement += " order by FASC.CHIAVE_ANNO asc, FASC.CHIAVE_PROGR asc";
+
+		lPaginedStatement = "SELECT * FROM (SELECT INNER.* , Rownum rn FROM (" + lStatement
+				+ "  ) INNER ) WHERE rn between  " + ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1)
+				+ " AND " + (aPage) * IWebConstants.RESULT_PER_PAGE;
+
+		setStatement(lPaginedStatement);
+	}
+
+	/**
+	 * ricercaFascicoloSiusByMagistratoSorvAssegnatario
+	 *
 	 * @param aCodMagistrato
 	 * @param aCodUfficio
 	 * @param aStato
@@ -284,25 +335,32 @@ public class FascicoloSiusSqlDAO extends SIAPSqlDAO {
 	 */
 	public void ricercaFascicoloSiusByMagistratoSorvAssegnatario(String aCodMagistrato, String aCodUfficio,
 			String[] aStato) throws DAOException {
+
 		String lStatement = new String();
 
 		lStatement += "SELECT FASC.CHIAVE_ANNO, FASC.CHIAVE_PROGR,";
-		lStatement += " FASC.CHIAVE_UFFICIO, DESCR_TIPO_UFF.RV_MEANING DESCR_TIPO_UFFICIO, DESCR_COM_UFF.DESCRIZIONE DESCR_COMUNE_UFFICIO,";
+		lStatement += " FASC.CHIAVE_UFFICIO, DESCR_TIPO_UFF.RV_MEANING DESCR_TIPO_UFFICIO,"
+				+ " DESCR_COM_UFF.DESCRIZIONE DESCR_COMUNE_UFFICIO,";
 		lStatement += " DESCR_TIPO_UFF.RV_LOW_VALUE  COD_TIPO_UFFICIO,";
 		lStatement += " FASC.COD_OPERATORE_AGGIORNAMENTO, FASC.COD_OPERATORE_INSERIMENTO,";
 		lStatement += " FASC.COD_STATO_FASCICOLO, STATO_FASCICOLO.RV_MEANING DESCR_STATO_FASCICOLO,";
-		lStatement += " FASC.COD_UFFICIO_AGGIORNAMENTO, FASC.COD_UFFICIO_INSERIMENTO, FASC.DATA_AGGIORNAMENTO,";
+		lStatement += " FASC.COD_UFFICIO_AGGIORNAMENTO, FASC.COD_UFFICIO_INSERIMENTO,"
+				+ " FASC.DATA_AGGIORNAMENTO,";
 		lStatement += " FASC.DATA_INSERIMENTO,";
-		lStatement += " FASC.DATA_ISCRIZIONE, FASC.FAS_SIE_ID_FASCICOLO_SIEP, FASC.FAS_SIU_ID_FASCICOLO_SIUS, ";
+		lStatement += " FASC.DATA_ISCRIZIONE, FASC.FAS_SIE_ID_FASCICOLO_SIEP,"
+				+ " FASC.FAS_SIU_ID_FASCICOLO_SIUS, ";
 		lStatement += " FASC.ID_FASCICOLO_SIUS,";
-		lStatement += " FASC.ID_FASCICOLO_SIUS_ORIGINE, FASC.DATA_DEFINIZIONE, FASC.NUMERO_FASCICOLI_UNIFICATI,";
+		lStatement += " FASC.ID_FASCICOLO_SIUS_ORIGINE, FASC.DATA_DEFINIZIONE,"
+				+ " FASC.NUMERO_FASCICOLI_UNIFICATI,";
 		// MEV10-s3: aggiunto campo in db per gestire età minore/maggiore
 		lStatement += " FASC.SOG_ID_SOGGETTO, FASC.VISIBILITA_EX_MINORENNE ";
 		lStatement += " FROM FASCICOLO_SIUS FASC";
 		lStatement += " LEFT OUTER JOIN UFFICIO UFF ON (FASC.CHIAVE_UFFICIO = UFF.COD_UFFICIO )";
-		lStatement += " LEFT OUTER JOIN CG_REF_CODES DESCR_TIPO_UFF ON (UFF.COD_TIPO_UFFICIO = DESCR_TIPO_UFF.RV_LOW_VALUE AND DESCR_TIPO_UFF.RV_DOMAIN = 'TIPO_UFFICIO')";
+		lStatement += " LEFT OUTER JOIN CG_REF_CODES DESCR_TIPO_UFF ON (UFF.COD_TIPO_UFFICIO ="
+				+ " DESCR_TIPO_UFF.RV_LOW_VALUE AND DESCR_TIPO_UFF.RV_DOMAIN = 'TIPO_UFFICIO')";
 		lStatement += " LEFT OUTER JOIN COMUNE DESCR_COM_UFF ON (UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE)";
-		lStatement += " LEFT OUTER JOIN CG_REF_CODES STATO_FASCICOLO ON (FASC.COD_STATO_FASCICOLO = STATO_FASCICOLO.RV_LOW_VALUE AND STATO_FASCICOLO.RV_DOMAIN = 'STATO_FASCICOLO')";
+		lStatement += " LEFT OUTER JOIN CG_REF_CODES STATO_FASCICOLO ON (FASC.COD_STATO_FASCICOLO ="
+				+ " STATO_FASCICOLO.RV_LOW_VALUE AND STATO_FASCICOLO.RV_DOMAIN = 'STATO_FASCICOLO')";
 		lStatement += " , MAGISTRATO_RELATORE ";
 		lStatement += " WHERE FASC.ID_FASCICOLO_SIUS is not NULL";
 		lStatement += "  AND (FASC.CHIAVE_UFFICIO = '" + aCodUfficio + "')";
@@ -325,12 +383,44 @@ public class FascicoloSiusSqlDAO extends SIAPSqlDAO {
 		lStatement += " order by FASC.CHIAVE_ANNO asc, FASC.CHIAVE_PROGR asc ";
 
 		setStatement(lStatement);
+	}
 
+	public void getCountProcedimenti(String aCodMagistrato, String aCodUfficio, String[] aStato) {
+
+		String lStatement = new String();
+
+		lStatement += "SELECT count(*) as HowManyRecords FROM FASCICOLO_SIUS FASC";
+		lStatement += " LEFT OUTER JOIN UFFICIO UFF ON (FASC.CHIAVE_UFFICIO = UFF.COD_UFFICIO )";
+		lStatement += " LEFT OUTER JOIN CG_REF_CODES DESCR_TIPO_UFF ON (UFF.COD_TIPO_UFFICIO ="
+				+ " DESCR_TIPO_UFF.RV_LOW_VALUE AND DESCR_TIPO_UFF.RV_DOMAIN = 'TIPO_UFFICIO')";
+		lStatement += " LEFT OUTER JOIN COMUNE DESCR_COM_UFF ON (UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE)";
+		lStatement += " LEFT OUTER JOIN CG_REF_CODES STATO_FASCICOLO ON (FASC.COD_STATO_FASCICOLO ="
+				+ " STATO_FASCICOLO.RV_LOW_VALUE AND STATO_FASCICOLO.RV_DOMAIN = 'STATO_FASCICOLO')";
+		lStatement += " , MAGISTRATO_RELATORE ";
+		lStatement += " WHERE FASC.ID_FASCICOLO_SIUS is not NULL";
+		lStatement += "  AND (FASC.CHIAVE_UFFICIO = '" + aCodUfficio + "')";
+		lStatement += " AND FASC.ID_FASCICOLO_SIUS = MAGISTRATO_RELATORE.FAS_SIU_ID_FASCICOLO_SIUS";
+		lStatement += " AND MAGISTRATO_RELATORE.MAG_COD_MAGISTRATO = '" + aCodMagistrato + "'";
+		lStatement += " AND MAGISTRATO_RELATORE.DATA_FINE is null ";
+
+		String lCondizioni = "";
+		if (aStato != null && aStato.length > 0) {
+			lCondizioni += " AND FASC.COD_STATO_FASCICOLO IN (";
+			for (int i = 0; i < aStato.length; i++) {
+				lCondizioni += "'" + aStato[i] + "'";
+				if (aStato.length > 1 && i < aStato.length - 1)
+					lCondizioni += ",";
+			}
+			lCondizioni += ")";
+		}
+
+		lStatement += lCondizioni;
+		setStatement(lStatement);
 	}
 
 	/**
 	 * Ritorna la lunghezza del certificato penale associato ad un Fascicolo
-	 * 
+	 *
 	 * @param aIdFascicolo
 	 *            id Fascicolo
 	 * @throws DAOException
@@ -346,7 +436,7 @@ public class FascicoloSiusSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Ritorna il certificato penale associato ad un Fascicolo
-	 * 
+	 *
 	 * @param aIdFascicolo
 	 *            id Fascicolo
 	 * @throws DAOException
@@ -362,7 +452,7 @@ public class FascicoloSiusSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * MEV_65: aggiunto metodo per gestire nuova funzionalita'
-	 * 
+	 *
 	 * @param fsm
 	 * @param pagine
 	 * @throws DAOException
@@ -422,7 +512,7 @@ public class FascicoloSiusSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * MEV_65: aggiunto metodo per gestire nuova funzionalita'
-	 * 
+	 *
 	 * @return GenericModel
 	 * @throws DAOException
 	 */
