@@ -159,10 +159,18 @@ public interface IIstruttoriaCumulo {
 	public CalcoloPenaCumuloModel ExCalcolaPenaCumuloByIstruttoria(BigDecimal aIdIstruttoriaCumulo,
 			BigDecimal aIdTitolo, boolean aComputaRichieste) throws F3BException;
 
+	/* MEV_2025-52 - Aggiunta ricerca per chiaveAnno/chiaveProgr e ufficio accorpato: Aggiunto FascicoloSiepModel */
+//	public BigDecimal ExCountFascicoliBySoggettoProprioUfficioPaged(SoggettoModel aSogModel,
+//			String lCodUfficioUtenteConnesso, int aPage) throws F3BException;
 	public BigDecimal ExCountFascicoliBySoggettoProprioUfficioPaged(SoggettoModel aSogModel,
+			FascicoloSiepModel aFascModel,
 			String lCodUfficioUtenteConnesso, int aPage) throws F3BException;
 
+	/* MEV_2025-52 - Aggiunta ricerca per chiaveAnno/chiaveProgr e ufficio accorpato: Aggiunto FascicoloSiepModel */
+//	public Vector<FascicoloSiepModel> ExRicercaFascicoliBySoggettoProprioUfficioPaged(SoggettoModel aSogModel,
+//			String lCodUfficioUtenteConnesso, int aPage, BigDecimal lIdIstru) throws F3BException;
 	public Vector<FascicoloSiepModel> ExRicercaFascicoliBySoggettoProprioUfficioPaged(SoggettoModel aSogModel,
+			FascicoloSiepModel aFascModel,
 			String lCodUfficioUtenteConnesso, int aPage, BigDecimal lIdIstru) throws F3BException;
 
 	public Vector<EsitoArchiviazioniCumuloModel> ExRicercaEsitoArchiviazionideiCumulatiByIdEvento(
