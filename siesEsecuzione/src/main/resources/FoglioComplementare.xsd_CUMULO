@@ -19,6 +19,8 @@
 				<xs:element name="azione" type="Azione"/>
 				<xs:element ref="Anagrafica"/>
 				<xs:element ref="FoglioComplementare"/>
+				<!-- MEV 16 CUMULO: aggiunto elemento -->
+				<xs:element name="azioneCumulo" type="xs:string" nillable="true"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -35,6 +37,8 @@
 				<xs:element ref="ArrayOmonimi" minOccurs="0"/>
 				<xs:element name="Estratto" type="xs:base64Binary" nillable="true"/>
 				<xs:element name="AnagraficaCancellata" type="xs:boolean" nillable="false"/>
+				<!-- MEV 16 CUMULO: aggiunto elemento -->
+				<xs:element ref="ProvvedimentoNSC" minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -144,11 +148,6 @@
 					<xs:simpleType>
 						<xs:restriction base="xs:string">
 							<xs:maxLength value="60"/>
-							<xs:enumeration value=""/>
-							<xs:enumeration value=""/>
-							<xs:enumeration value=""/>
-							<xs:enumeration value=""/>
-							<xs:enumeration value=""/>
 						</xs:restriction>
 					</xs:simpleType>
 				</xs:element>
@@ -194,7 +193,7 @@
 						</xs:restriction>
 					</xs:simpleType>
 				</xs:element>
-				<xs:element name="nsc" minOccurs="0">
+				<xs:element name="nsc" nillable="true">
 					<xs:annotation>
 						<xs:appinfo>Rappresenta l'identificativo del Foglio Complementare sul sistema NSC.</xs:appinfo>
 					</xs:annotation>
@@ -325,8 +324,8 @@
 	<xs:element name="FoglioComplementare">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="annoSiep" type="xs:int" nillable="false" minOccurs="0"/>
-				<xs:element name="numeroSiep" type="xs:long" nillable="false" minOccurs="0"/>
+				<xs:element name="annoSiep" type="xs:int" nillable="false"/>
+				<xs:element name="numeroSiep" type="xs:long" nillable="false"/>
 				<xs:element name="flagPrincipale" type="xs:boolean" nillable="false"/>
 				<xs:element ref="ProvvedimentoGiudiziario" maxOccurs="unbounded"/>
 				<xs:element ref="ChiaviProvvedimentoEsecutivo"/>
@@ -338,6 +337,18 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="ChiaviProvvedimentoGiudiziario"/>
+				<!-- MEV 16 CUMULO: aggiunti elementi -->
+				<xs:element name="codiceEsito" nillable="true">
+					<xs:annotation>
+						<xs:appinfo>Codice dell'esito del trasferimento del cumulo.</xs:appinfo>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="2"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element ref="Anagrafica"/>
 				<xs:element name="numeroSentenza" type="xs:string" nillable="true"/>
 				<xs:element name="flagCumulante" type="xs:boolean"/>
 				<xs:element name="annoSentenza" type="xs:string" nillable="true"/>
@@ -458,6 +469,14 @@
 				<xs:element ref="dataFinePena"/>
 				<xs:element ref="dataFinePenaDal"/>
 				<xs:element ref="dataFinePenaAl"/>
+				<!-- MEV 16 CUMULO: aggiunti elementi -->
+				<xs:element ref="MisuraSicurezza" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="PenaAccessoria" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="SanzioniSostitutive"/>
+				<xs:element ref="LiberazioneAnticipataConcessaDetrarreCumulo"/>
+				<xs:element ref="PenaConversionePenaPecuniaria"/>
+				<xs:element ref="SanzioniGiudicePace"/>
+				<xs:element ref="RichiesteGEAnticipazioneEffetti" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -654,6 +673,14 @@
 					</xs:appinfo>
 				</xs:annotation>
 			</xs:enumeration>
+			<!-- MEV 16 CUMULO: aggiunto elemento -->
+			<xs:enumeration value="414">
+				<xs:annotation>
+					<xs:appinfo>
+						<jaxb:typesafeEnumMember name="ELENCO_PROVVEDIMENTI_CUMULATI_NSC"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:enumeration>
 			<xs:enumeration value="500">
 				<xs:annotation>
 					<xs:appinfo>
@@ -696,7 +723,7 @@
 			<xs:sequence>
 				<xs:element name="nsc" nillable="true">
 					<xs:annotation>
-						<xs:appinfo>Rappresenta lidentificativo del soggetto sul sistema NSC.</xs:appinfo>
+						<xs:appinfo>Rappresenta identificativo del soggetto sul sistema NSC.</xs:appinfo>
 					</xs:annotation>
 					<xs:simpleType>
 						<xs:restriction base="xs:integer">
@@ -706,7 +733,7 @@
 				</xs:element>
 				<xs:element name="sies">
 					<xs:annotation>
-						<xs:appinfo>Rappresenta lidentificativo del soggetto sul sistema SIES.</xs:appinfo>
+						<xs:appinfo>Rappresenta identificativo del soggetto sul sistema SIES.</xs:appinfo>
 					</xs:annotation>
 					<xs:simpleType>
 						<xs:restriction base="xs:integer">
@@ -727,6 +754,234 @@
 							<xs:element name="CertificatoControllo" type="xs:base64Binary"/>
 						</xs:sequence>
 					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!-- MEV 16 CUMULO: aggiunti elementi -->
+	<xs:element name="ProvvedimentoNSC">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ProvvedimentoGiudiziario" maxOccurs="unbounded"/>
+				<xs:element ref="Esito"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="MisuraSicurezza" nillable="true">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="codiceTipoMS" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="3"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="codiceTipoDurataMS" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="1"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="numeroAnniMS" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:totalDigits value="2"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="numeroMesiMS" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:totalDigits value="3"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="numeroGiorniMS" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:totalDigits value="3"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="PenaAccessoria" nillable="true">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="codiceTipoPA" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="3"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="codiceTipoDurataPA" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="1"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="numeroAnniPA" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:totalDigits value="2"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="numeroMesiPA" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:totalDigits value="3"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="numeroGiorniPA" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:totalDigits value="3"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="SanzioniSostitutive" nillable="true">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="semiDetenzione" type="Durata" nillable="true"/>
+				<xs:element name="libertaControllata" type="Durata" nillable="true"/>
+				<xs:element name="importoAmmenda" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:decimal">
+							<xs:totalDigits value="14"/>
+							<xs:fractionDigits value="2"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="importoMulta" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:decimal">
+							<xs:totalDigits value="14"/>
+							<xs:fractionDigits value="2"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="espulsioneStato" type="Durata" nillable="true"/>
+				<xs:element name="tipoEspulsioneStato" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="1"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="lavoroPubblicaUtilita" type="Durata" nillable="true"/>
+				<xs:element name="numeroOreLPU" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:totalDigits value="4"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="tipoLPU" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="10"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="LiberazioneAnticipataConcessaDetrarreCumulo" nillable="true">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="giorniLAOrdinaria" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:totalDigits value="4"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="giorniLASpeciale" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:totalDigits value="4"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="giorniLAIntegrazione" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:totalDigits value="4"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="giorniLARisarcimento" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:totalDigits value="4"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="PenaConversionePenaPecuniaria" nillable="true">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="lavoroSostitutivo" type="Durata" nillable="true"/>
+				<xs:element name="libertaControllata" type="Durata" nillable="true"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="SanzioniGiudicePace" nillable="true">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="permanenzaDomiciliare" type="Durata" nillable="true"/>
+				<xs:element name="lavoroPubblicaUtilita" type="Durata" nillable="true"/>
+				<xs:element name="lavoroSostitutivo" type="Durata" nillable="true"/>
+				<xs:element name="espulsioneStato" type="Durata" nillable="true"/>
+				<xs:element name="tipoEspulsioneStato" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="1"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="RichiesteGEAnticipazioneEffetti" nillable="true">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="reclusione" type="Durata" nillable="true"/>
+				<xs:element name="arresto" type="Durata" nillable="true"/>
+				<xs:element name="importoAmmenda" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:decimal">
+							<xs:totalDigits value="14"/>
+							<xs:fractionDigits value="2"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="importoMulta" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:decimal">
+							<xs:totalDigits value="14"/>
+							<xs:fractionDigits value="2"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="tipoRichiesta">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="3"/>
+						</xs:restriction>
+					</xs:simpleType>
 				</xs:element>
 			</xs:sequence>
 		</xs:complexType>

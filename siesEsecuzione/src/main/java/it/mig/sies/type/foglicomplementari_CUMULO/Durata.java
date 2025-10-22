@@ -1,5 +1,12 @@
+//
+// Questo file ï¿½ stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
+// Vedere <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
+// Qualsiasi modifica a questo file andrï¿½ persa durante la ricompilazione dello schema di origine. 
+// Generato il: 2016.10.26 alle 04:01:02 PM CEST 
+//
 
-package it.mig.sies.type.foglicomplementari;
+
+package it.mig.sies.type.foglicomplementari_CUMULO;
 
 import java.math.BigInteger;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -63,7 +70,7 @@ public class Durata {
     protected BigInteger giorni;
 
     /**
-     * Recupera il valore della proprietà anni.
+     * Recupera il valore della proprietï¿½ anni.
      * 
      * @return
      *     possible object is
@@ -75,7 +82,7 @@ public class Durata {
     }
 
     /**
-     * Imposta il valore della proprietà anni.
+     * Imposta il valore della proprietï¿½ anni.
      * 
      * @param value
      *     allowed object is
@@ -87,7 +94,7 @@ public class Durata {
     }
 
     /**
-     * Recupera il valore della proprietà mesi.
+     * Recupera il valore della proprietï¿½ mesi.
      * 
      * @return
      *     possible object is
@@ -99,7 +106,7 @@ public class Durata {
     }
 
     /**
-     * Imposta il valore della proprietà mesi.
+     * Imposta il valore della proprietï¿½ mesi.
      * 
      * @param value
      *     allowed object is
@@ -111,7 +118,7 @@ public class Durata {
     }
 
     /**
-     * Recupera il valore della proprietà giorni.
+     * Recupera il valore della proprietï¿½ giorni.
      * 
      * @return
      *     possible object is
@@ -123,7 +130,7 @@ public class Durata {
     }
 
     /**
-     * Imposta il valore della proprietà giorni.
+     * Imposta il valore della proprietï¿½ giorni.
      * 
      * @param value
      *     allowed object is

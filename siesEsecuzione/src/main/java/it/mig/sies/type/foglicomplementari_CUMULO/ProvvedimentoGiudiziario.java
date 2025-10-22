@@ -1,5 +1,12 @@
+//
+// Questo file ï¿½ stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
+// Vedere <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
+// Qualsiasi modifica a questo file andrï¿½ persa durante la ricompilazione dello schema di origine. 
+// Generato il: 2016.10.26 alle 04:01:02 PM CEST 
+//
 
-package it.mig.sies.type.foglicomplementari;
+
+package it.mig.sies.type.foglicomplementari_CUMULO;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -20,6 +27,14 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element ref="{http://it/mig/sies/type/fogliComplementari}ChiaviProvvedimentoGiudiziario"/>
+ *         &lt;element name="codiceEsito">
+ *           &lt;simpleType>
+ *             &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
+ *               &lt;maxLength value="2"/>
+ *             &lt;/restriction>
+ *           &lt;/simpleType>
+ *         &lt;/element>
+ *         &lt;element ref="{http://it/mig/sies/type/fogliComplementari}Anagrafica"/>
  *         &lt;element name="numeroSentenza" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="flagCumulante" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
  *         &lt;element name="annoSentenza" type="{http://www.w3.org/2001/XMLSchema}string"/>
@@ -56,6 +71,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "chiaviProvvedimentoGiudiziario",
+    "codiceEsito",
+    "anagrafica",
     "numeroSentenza",
     "flagCumulante",
     "annoSentenza",
@@ -68,6 +85,10 @@ public class ProvvedimentoGiudiziario {
 
     @XmlElement(name = "ChiaviProvvedimentoGiudiziario", required = true, nillable = true)
     protected ChiaviProvvedimentoGiudiziario chiaviProvvedimentoGiudiziario;
+    @XmlElement(required = true, nillable = true)
+    protected String codiceEsito;
+    @XmlElement(name = "Anagrafica", required = true)
+    protected Anagrafica anagrafica;
     @XmlElement(required = true, nillable = true)
     protected String numeroSentenza;
     protected boolean flagCumulante;
@@ -84,7 +105,7 @@ public class ProvvedimentoGiudiziario {
     protected String codiceSedeAutoritaPrincipale;
 
     /**
-     * Recupera il valore della proprietà chiaviProvvedimentoGiudiziario.
+     * Recupera il valore della proprietï¿½ chiaviProvvedimentoGiudiziario.
      * 
      * @return
      *     possible object is
@@ -96,7 +117,7 @@ public class ProvvedimentoGiudiziario {
     }
 
     /**
-     * Imposta il valore della proprietà chiaviProvvedimentoGiudiziario.
+     * Imposta il valore della proprietï¿½ chiaviProvvedimentoGiudiziario.
      * 
      * @param value
      *     allowed object is
@@ -108,7 +129,55 @@ public class ProvvedimentoGiudiziario {
     }
 
     /**
-     * Recupera il valore della proprietà numeroSentenza.
+     * Recupera il valore della proprietï¿½ codiceEsito.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getCodiceEsito() {
+        return codiceEsito;
+    }
+
+    /**
+     * Imposta il valore della proprietï¿½ codiceEsito.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setCodiceEsito(String value) {
+        this.codiceEsito = value;
+    }
+
+    /**
+     * Recupera il valore della proprietï¿½ anagrafica.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Anagrafica }
+     *     
+     */
+    public Anagrafica getAnagrafica() {
+        return anagrafica;
+    }
+
+    /**
+     * Imposta il valore della proprietï¿½ anagrafica.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Anagrafica }
+     *     
+     */
+    public void setAnagrafica(Anagrafica value) {
+        this.anagrafica = value;
+    }
+
+    /**
+     * Recupera il valore della proprietï¿½ numeroSentenza.
      * 
      * @return
      *     possible object is
@@ -120,7 +189,7 @@ public class ProvvedimentoGiudiziario {
     }
 
     /**
-     * Imposta il valore della proprietà numeroSentenza.
+     * Imposta il valore della proprietï¿½ numeroSentenza.
      * 
      * @param value
      *     allowed object is
@@ -132,7 +201,7 @@ public class ProvvedimentoGiudiziario {
     }
 
     /**
-     * Recupera il valore della proprietà flagCumulante.
+     * Recupera il valore della proprietï¿½ flagCumulante.
      * 
      */
     public boolean isFlagCumulante() {
@@ -140,7 +209,7 @@ public class ProvvedimentoGiudiziario {
     }
 
     /**
-     * Imposta il valore della proprietà flagCumulante.
+     * Imposta il valore della proprietï¿½ flagCumulante.
      * 
      */
     public void setFlagCumulante(boolean value) {
@@ -148,7 +217,7 @@ public class ProvvedimentoGiudiziario {
     }
 
     /**
-     * Recupera il valore della proprietà annoSentenza.
+     * Recupera il valore della proprietï¿½ annoSentenza.
      * 
      * @return
      *     possible object is
@@ -160,7 +229,7 @@ public class ProvvedimentoGiudiziario {
     }
 
     /**
-     * Imposta il valore della proprietà annoSentenza.
+     * Imposta il valore della proprietï¿½ annoSentenza.
      * 
      * @param value
      *     allowed object is
@@ -172,7 +241,7 @@ public class ProvvedimentoGiudiziario {
     }
 
     /**
-     * Recupera il valore della proprietà dataProvvedimento.
+     * Recupera il valore della proprietï¿½ dataProvvedimento.
      * 
      * @return
      *     possible object is
@@ -184,7 +253,7 @@ public class ProvvedimentoGiudiziario {
     }
 
     /**
-     * Imposta il valore della proprietà dataProvvedimento.
+     * Imposta il valore della proprietï¿½ dataProvvedimento.
      * 
      * @param value
      *     allowed object is
@@ -196,7 +265,7 @@ public class ProvvedimentoGiudiziario {
     }
 
     /**
-     * Recupera il valore della proprietà codiceAutorita.
+     * Recupera il valore della proprietï¿½ codiceAutorita.
      * 
      * @return
      *     possible object is
@@ -208,7 +277,7 @@ public class ProvvedimentoGiudiziario {
     }
 
     /**
-     * Imposta il valore della proprietà codiceAutorita.
+     * Imposta il valore della proprietï¿½ codiceAutorita.
      * 
      * @param value
      *     allowed object is
@@ -220,7 +289,7 @@ public class ProvvedimentoGiudiziario {
     }
 
     /**
-     * Recupera il valore della proprietà codiceSedeAutoritaPrincipaleDistaccata.
+     * Recupera il valore della proprietï¿½ codiceSedeAutoritaPrincipaleDistaccata.
      * 
      * @return
      *     possible object is
@@ -232,7 +301,7 @@ public class ProvvedimentoGiudiziario {
     }
 
     /**
-     * Imposta il valore della proprietà codiceSedeAutoritaPrincipaleDistaccata.
+     * Imposta il valore della proprietï¿½ codiceSedeAutoritaPrincipaleDistaccata.
      * 
      * @param value
      *     allowed object is
@@ -244,7 +313,7 @@ public class ProvvedimentoGiudiziario {
     }
 
     /**
-     * Recupera il valore della proprietà codiceSedeAutoritaPrincipale.
+     * Recupera il valore della proprietï¿½ codiceSedeAutoritaPrincipale.
      * 
      * @return
      *     possible object is
@@ -256,7 +325,7 @@ public class ProvvedimentoGiudiziario {
     }
 
     /**
-     * Imposta il valore della proprietà codiceSedeAutoritaPrincipale.
+     * Imposta il valore della proprietï¿½ codiceSedeAutoritaPrincipale.
      * 
      * @param value
      *     allowed object is

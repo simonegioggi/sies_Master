@@ -1,12 +1,12 @@
 //
-// Questo file è stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
+// Questo file ï¿½ stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
 // Vedere <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Qualsiasi modifica a questo file andrà persa durante la ricompilazione dello schema di origine. 
+// Qualsiasi modifica a questo file andrï¿½ persa durante la ricompilazione dello schema di origine. 
 // Generato il: 2017.02.06 alle 11:58:26 AM CET 
 //
 
 
-package it.mig.sies.type.foglicomplementari;
+package it.mig.sies.type.foglicomplementari_CUMULO;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -65,7 +65,7 @@ public class SanzioniGiudicePace {
     protected String tipoEspulsioneStato;
 
     /**
-     * Recupera il valore della proprietà permanenzaDomiciliare.
+     * Recupera il valore della proprietï¿½ permanenzaDomiciliare.
      * 
      * @return
      *     possible object is
@@ -77,7 +77,7 @@ public class SanzioniGiudicePace {
     }
 
     /**
-     * Imposta il valore della proprietà permanenzaDomiciliare.
+     * Imposta il valore della proprietï¿½ permanenzaDomiciliare.
      * 
      * @param value
      *     allowed object is
@@ -89,7 +89,7 @@ public class SanzioniGiudicePace {
     }
 
     /**
-     * Recupera il valore della proprietà lavoroPubblicaUtilita.
+     * Recupera il valore della proprietï¿½ lavoroPubblicaUtilita.
      * 
      * @return
      *     possible object is
@@ -101,7 +101,7 @@ public class SanzioniGiudicePace {
     }
 
     /**
-     * Imposta il valore della proprietà lavoroPubblicaUtilita.
+     * Imposta il valore della proprietï¿½ lavoroPubblicaUtilita.
      * 
      * @param value
      *     allowed object is
@@ -113,7 +113,7 @@ public class SanzioniGiudicePace {
     }
 
     /**
-     * Recupera il valore della proprietà lavoroSostitutivo.
+     * Recupera il valore della proprietï¿½ lavoroSostitutivo.
      * 
      * @return
      *     possible object is
@@ -125,7 +125,7 @@ public class SanzioniGiudicePace {
     }
 
     /**
-     * Imposta il valore della proprietà lavoroSostitutivo.
+     * Imposta il valore della proprietï¿½ lavoroSostitutivo.
      * 
      * @param value
      *     allowed object is
@@ -137,7 +137,7 @@ public class SanzioniGiudicePace {
     }
 
     /**
-     * Recupera il valore della proprietà espulsioneStato.
+     * Recupera il valore della proprietï¿½ espulsioneStato.
      * 
      * @return
      *     possible object is
@@ -149,7 +149,7 @@ public class SanzioniGiudicePace {
     }
 
     /**
-     * Imposta il valore della proprietà espulsioneStato.
+     * Imposta il valore della proprietï¿½ espulsioneStato.
      * 
      * @param value
      *     allowed object is
@@ -161,7 +161,7 @@ public class SanzioniGiudicePace {
     }
 
     /**
-     * Recupera il valore della proprietà tipoEspulsioneStato.
+     * Recupera il valore della proprietï¿½ tipoEspulsioneStato.
      * 
      * @return
      *     possible object is
@@ -173,7 +173,7 @@ public class SanzioniGiudicePace {
     }
 
     /**
-     * Imposta il valore della proprietà tipoEspulsioneStato.
+     * Imposta il valore della proprietï¿½ tipoEspulsioneStato.
      * 
      * @param value
      *     allowed object is

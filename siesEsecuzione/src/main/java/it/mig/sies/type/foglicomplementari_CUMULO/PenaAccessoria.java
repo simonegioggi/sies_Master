@@ -1,12 +1,12 @@
 //
-// Questo file è stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
+// Questo file ï¿½ stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
 // Vedere <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Qualsiasi modifica a questo file andrà persa durante la ricompilazione dello schema di origine. 
+// Qualsiasi modifica a questo file andrï¿½ persa durante la ricompilazione dello schema di origine. 
 // Generato il: 2017.02.06 alle 11:58:26 AM CET 
 //
 
 
-package it.mig.sies.type.foglicomplementari;
+package it.mig.sies.type.foglicomplementari_CUMULO;
 
 import java.math.BigInteger;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -90,7 +90,7 @@ public class PenaAccessoria {
     protected BigInteger numeroGiorniPA;
 
     /**
-     * Recupera il valore della proprietà codiceTipoPA.
+     * Recupera il valore della proprietï¿½ codiceTipoPA.
      * 
      * @return
      *     possible object is
@@ -102,7 +102,7 @@ public class PenaAccessoria {
     }
 
     /**
-     * Imposta il valore della proprietà codiceTipoPA.
+     * Imposta il valore della proprietï¿½ codiceTipoPA.
      * 
      * @param value
      *     allowed object is
@@ -114,7 +114,7 @@ public class PenaAccessoria {
     }
 
     /**
-     * Recupera il valore della proprietà codiceTipoDurataPA.
+     * Recupera il valore della proprietï¿½ codiceTipoDurataPA.
      * 
      * @return
      *     possible object is
@@ -126,7 +126,7 @@ public class PenaAccessoria {
     }
 
     /**
-     * Imposta il valore della proprietà codiceTipoDurataPA.
+     * Imposta il valore della proprietï¿½ codiceTipoDurataPA.
      * 
      * @param value
      *     allowed object is
@@ -138,7 +138,7 @@ public class PenaAccessoria {
     }
 
     /**
-     * Recupera il valore della proprietà numeroAnniPA.
+     * Recupera il valore della proprietï¿½ numeroAnniPA.
      * 
      * @return
      *     possible object is
@@ -150,7 +150,7 @@ public class PenaAccessoria {
     }
 
     /**
-     * Imposta il valore della proprietà numeroAnniPA.
+     * Imposta il valore della proprietï¿½ numeroAnniPA.
      * 
      * @param value
      *     allowed object is
@@ -162,7 +162,7 @@ public class PenaAccessoria {
     }
 
     /**
-     * Recupera il valore della proprietà numeroMesiPA.
+     * Recupera il valore della proprietï¿½ numeroMesiPA.
      * 
      * @return
      *     possible object is
@@ -174,7 +174,7 @@ public class PenaAccessoria {
     }
 
     /**
-     * Imposta il valore della proprietà numeroMesiPA.
+     * Imposta il valore della proprietï¿½ numeroMesiPA.
      * 
      * @param value
      *     allowed object is
@@ -186,7 +186,7 @@ public class PenaAccessoria {
     }
 
     /**
-     * Recupera il valore della proprietà numeroGiorniPA.
+     * Recupera il valore della proprietï¿½ numeroGiorniPA.
      * 
      * @return
      *     possible object is
@@ -198,7 +198,7 @@ public class PenaAccessoria {
     }
 
     /**
-     * Imposta il valore della proprietà numeroGiorniPA.
+     * Imposta il valore della proprietï¿½ numeroGiorniPA.
      * 
      * @param value
      *     allowed object is

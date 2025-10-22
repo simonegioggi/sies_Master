@@ -1,8 +1,17 @@
+//
+// Questo file ï¿½ stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
+// Vedere <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
+// Qualsiasi modifica a questo file andrï¿½ persa durante la ricompilazione dello schema di origine. 
+// Generato il: 2017.02.06 alle 11:58:26 AM CET 
+//
 
-package it.mig.sies.type.foglicomplementari;
+
+package it.mig.sies.type.foglicomplementari_CUMULO;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -90,6 +99,13 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *         &lt;element ref="{http://it/mig/sies/type/fogliComplementari}dataFinePena"/>
  *         &lt;element ref="{http://it/mig/sies/type/fogliComplementari}dataFinePenaDal"/>
  *         &lt;element ref="{http://it/mig/sies/type/fogliComplementari}dataFinePenaAl"/>
+ *         &lt;element ref="{http://it/mig/sies/type/fogliComplementari}MisuraSicurezza" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element ref="{http://it/mig/sies/type/fogliComplementari}PenaAccessoria" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element ref="{http://it/mig/sies/type/fogliComplementari}SanzioniSostitutive"/>
+ *         &lt;element ref="{http://it/mig/sies/type/fogliComplementari}LiberazioneAnticipataConcessaDetrarreCumulo"/>
+ *         &lt;element ref="{http://it/mig/sies/type/fogliComplementari}PenaConversionePenaPecuniaria"/>
+ *         &lt;element ref="{http://it/mig/sies/type/fogliComplementari}SanzioniGiudicePace"/>
+ *         &lt;element ref="{http://it/mig/sies/type/fogliComplementari}RichiesteGEAnticipazioneEffetti" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -123,7 +139,14 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "isolamentoDiurno",
     "dataFinePena",
     "dataFinePenaDal",
-    "dataFinePenaAl"
+    "dataFinePenaAl",
+    "misuraSicurezza",
+    "penaAccessoria",
+    "sanzioniSostitutive",
+    "liberazioneAnticipataConcessaDetrarreCumulo",
+    "penaConversionePenaPecuniaria",
+    "sanzioniGiudicePace",
+    "richiesteGEAnticipazioneEffetti"
 })
 @XmlRootElement(name = "DatiPubblicoMinistero")
 public class DatiPubblicoMinistero {
@@ -178,9 +201,23 @@ public class DatiPubblicoMinistero {
     @XmlElement(required = true, nillable = true)
     @XmlSchemaType(name = "date")
     protected XMLGregorianCalendar dataFinePenaAl;
+    @XmlElement(name = "MisuraSicurezza", nillable = true)
+    protected List<MisuraSicurezza> misuraSicurezza;
+    @XmlElement(name = "PenaAccessoria", nillable = true)
+    protected List<PenaAccessoria> penaAccessoria;
+    @XmlElement(name = "SanzioniSostitutive", required = true, nillable = true)
+    protected SanzioniSostitutive sanzioniSostitutive;
+    @XmlElement(name = "LiberazioneAnticipataConcessaDetrarreCumulo", required = true, nillable = true)
+    protected LiberazioneAnticipataConcessaDetrarreCumulo liberazioneAnticipataConcessaDetrarreCumulo;
+    @XmlElement(name = "PenaConversionePenaPecuniaria", required = true, nillable = true)
+    protected PenaConversionePenaPecuniaria penaConversionePenaPecuniaria;
+    @XmlElement(name = "SanzioniGiudicePace", required = true, nillable = true)
+    protected SanzioniGiudicePace sanzioniGiudicePace;
+    @XmlElement(name = "RichiesteGEAnticipazioneEffetti", nillable = true)
+    protected List<RichiesteGEAnticipazioneEffetti> richiesteGEAnticipazioneEffetti;
 
     /**
-     * Recupera il valore della proprietà chiaveSies.
+     * Recupera il valore della proprietï¿½ chiaveSies.
      * 
      */
     public long getChiaveSies() {
@@ -188,7 +225,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà chiaveSies.
+     * Imposta il valore della proprietï¿½ chiaveSies.
      * 
      */
     public void setChiaveSies(long value) {
@@ -196,7 +233,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà chiaveNsc.
+     * Recupera il valore della proprietï¿½ chiaveNsc.
      * 
      */
     public long getChiaveNsc() {
@@ -204,7 +241,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà chiaveNsc.
+     * Imposta il valore della proprietï¿½ chiaveNsc.
      * 
      */
     public void setChiaveNsc(long value) {
@@ -212,7 +249,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà dataProvvedimento.
+     * Recupera il valore della proprietï¿½ dataProvvedimento.
      * 
      * @return
      *     possible object is
@@ -224,7 +261,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà dataProvvedimento.
+     * Imposta il valore della proprietï¿½ dataProvvedimento.
      * 
      * @param value
      *     allowed object is
@@ -236,7 +273,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà annoOrdinanza.
+     * Recupera il valore della proprietï¿½ annoOrdinanza.
      * 
      * @return
      *     possible object is
@@ -248,7 +285,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà annoOrdinanza.
+     * Imposta il valore della proprietï¿½ annoOrdinanza.
      * 
      * @param value
      *     allowed object is
@@ -260,7 +297,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà numeroOrdinanza.
+     * Recupera il valore della proprietï¿½ numeroOrdinanza.
      * 
      * @return
      *     possible object is
@@ -272,7 +309,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà numeroOrdinanza.
+     * Imposta il valore della proprietï¿½ numeroOrdinanza.
      * 
      * @param value
      *     allowed object is
@@ -284,7 +321,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà codiceSedePM.
+     * Recupera il valore della proprietï¿½ codiceSedePM.
      * 
      * @return
      *     possible object is
@@ -296,7 +333,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà codiceSedePM.
+     * Imposta il valore della proprietï¿½ codiceSedePM.
      * 
      * @param value
      *     allowed object is
@@ -308,7 +345,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà annoSIEP.
+     * Recupera il valore della proprietï¿½ annoSIEP.
      * 
      * @return
      *     possible object is
@@ -320,7 +357,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà annoSIEP.
+     * Imposta il valore della proprietï¿½ annoSIEP.
      * 
      * @param value
      *     allowed object is
@@ -332,7 +369,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà numeroSIEP.
+     * Recupera il valore della proprietï¿½ numeroSIEP.
      * 
      * @return
      *     possible object is
@@ -344,7 +381,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà numeroSIEP.
+     * Imposta il valore della proprietï¿½ numeroSIEP.
      * 
      * @param value
      *     allowed object is
@@ -356,7 +393,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà annoSentenza.
+     * Recupera il valore della proprietï¿½ annoSentenza.
      * 
      * @return
      *     possible object is
@@ -368,7 +405,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà annoSentenza.
+     * Imposta il valore della proprietï¿½ annoSentenza.
      * 
      * @param value
      *     allowed object is
@@ -380,7 +417,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà numeroSentenza.
+     * Recupera il valore della proprietï¿½ numeroSentenza.
      * 
      * @return
      *     possible object is
@@ -392,7 +429,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà numeroSentenza.
+     * Imposta il valore della proprietï¿½ numeroSentenza.
      * 
      * @param value
      *     allowed object is
@@ -404,7 +441,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà codiceAutorita.
+     * Recupera il valore della proprietï¿½ codiceAutorita.
      * 
      * @return
      *     possible object is
@@ -416,7 +453,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà codiceAutorita.
+     * Imposta il valore della proprietï¿½ codiceAutorita.
      * 
      * @param value
      *     allowed object is
@@ -428,7 +465,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà sedeAutoritaPrinDist.
+     * Recupera il valore della proprietï¿½ sedeAutoritaPrinDist.
      * 
      * @return
      *     possible object is
@@ -440,7 +477,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà sedeAutoritaPrinDist.
+     * Imposta il valore della proprietï¿½ sedeAutoritaPrinDist.
      * 
      * @param value
      *     allowed object is
@@ -452,7 +489,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà sedeAutoritaPrinc.
+     * Recupera il valore della proprietï¿½ sedeAutoritaPrinc.
      * 
      * @return
      *     possible object is
@@ -464,7 +501,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà sedeAutoritaPrinc.
+     * Imposta il valore della proprietï¿½ sedeAutoritaPrinc.
      * 
      * @param value
      *     allowed object is
@@ -476,7 +513,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà codiceUnivocoProvvedimento.
+     * Recupera il valore della proprietï¿½ codiceUnivocoProvvedimento.
      * 
      * @return
      *     possible object is
@@ -488,7 +525,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà codiceUnivocoProvvedimento.
+     * Imposta il valore della proprietï¿½ codiceUnivocoProvvedimento.
      * 
      * @param value
      *     allowed object is
@@ -500,7 +537,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà tipoProvvedimento.
+     * Recupera il valore della proprietï¿½ tipoProvvedimento.
      * 
      * @return
      *     possible object is
@@ -512,7 +549,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà tipoProvvedimento.
+     * Imposta il valore della proprietï¿½ tipoProvvedimento.
      * 
      * @param value
      *     allowed object is
@@ -524,7 +561,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà importoAmmenda.
+     * Recupera il valore della proprietï¿½ importoAmmenda.
      * 
      * @return
      *     possible object is
@@ -536,7 +573,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà importoAmmenda.
+     * Imposta il valore della proprietï¿½ importoAmmenda.
      * 
      * @param value
      *     allowed object is
@@ -548,7 +585,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà importoMulta.
+     * Recupera il valore della proprietï¿½ importoMulta.
      * 
      * @return
      *     possible object is
@@ -560,7 +597,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà importoMulta.
+     * Imposta il valore della proprietï¿½ importoMulta.
      * 
      * @param value
      *     allowed object is
@@ -572,7 +609,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà arresto.
+     * Recupera il valore della proprietï¿½ arresto.
      * 
      * @return
      *     possible object is
@@ -584,7 +621,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà arresto.
+     * Imposta il valore della proprietï¿½ arresto.
      * 
      * @param value
      *     allowed object is
@@ -596,7 +633,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà reclusione.
+     * Recupera il valore della proprietï¿½ reclusione.
      * 
      * @return
      *     possible object is
@@ -608,7 +645,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà reclusione.
+     * Imposta il valore della proprietï¿½ reclusione.
      * 
      * @param value
      *     allowed object is
@@ -620,7 +657,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà ergastolo.
+     * Recupera il valore della proprietï¿½ ergastolo.
      * 
      * @return
      *     possible object is
@@ -632,7 +669,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà ergastolo.
+     * Imposta il valore della proprietï¿½ ergastolo.
      * 
      * @param value
      *     allowed object is
@@ -644,7 +681,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà isolamentoDiurno.
+     * Recupera il valore della proprietï¿½ isolamentoDiurno.
      * 
      * @return
      *     possible object is
@@ -656,7 +693,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà isolamentoDiurno.
+     * Imposta il valore della proprietï¿½ isolamentoDiurno.
      * 
      * @param value
      *     allowed object is
@@ -668,7 +705,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà dataFinePena.
+     * Recupera il valore della proprietï¿½ dataFinePena.
      * 
      * @return
      *     possible object is
@@ -680,7 +717,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà dataFinePena.
+     * Imposta il valore della proprietï¿½ dataFinePena.
      * 
      * @param value
      *     allowed object is
@@ -692,7 +729,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà dataFinePenaDal.
+     * Recupera il valore della proprietï¿½ dataFinePenaDal.
      * 
      * @return
      *     possible object is
@@ -704,7 +741,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà dataFinePenaDal.
+     * Imposta il valore della proprietï¿½ dataFinePenaDal.
      * 
      * @param value
      *     allowed object is
@@ -716,7 +753,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà dataFinePenaAl.
+     * Recupera il valore della proprietï¿½ dataFinePenaAl.
      * 
      * @return
      *     possible object is
@@ -728,7 +765,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà dataFinePenaAl.
+     * Imposta il valore della proprietï¿½ dataFinePenaAl.
      * 
      * @param value
      *     allowed object is
@@ -737,6 +774,189 @@ public class DatiPubblicoMinistero {
      */
     public void setDataFinePenaAl(XMLGregorianCalendar value) {
         this.dataFinePenaAl = value;
+    }
+
+    /**
+     * Gets the value of the misuraSicurezza property.
+     * 
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the misuraSicurezza property.
+     * 
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getMisuraSicurezza().add(newItem);
+     * </pre>
+     * 
+     * 
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link MisuraSicurezza }
+     * 
+     * 
+     */
+    public List<MisuraSicurezza> getMisuraSicurezza() {
+        if (misuraSicurezza == null) {
+            misuraSicurezza = new ArrayList<MisuraSicurezza>();
+        }
+        return this.misuraSicurezza;
+    }
+
+    /**
+     * Gets the value of the penaAccessoria property.
+     * 
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the penaAccessoria property.
+     * 
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getPenaAccessoria().add(newItem);
+     * </pre>
+     * 
+     * 
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link PenaAccessoria }
+     * 
+     * 
+     */
+    public List<PenaAccessoria> getPenaAccessoria() {
+        if (penaAccessoria == null) {
+            penaAccessoria = new ArrayList<PenaAccessoria>();
+        }
+        return this.penaAccessoria;
+    }
+
+    /**
+     * Recupera il valore della proprietï¿½ sanzioniSostitutive.
+     * 
+     * @return
+     *     possible object is
+     *     {@link SanzioniSostitutive }
+     *     
+     */
+    public SanzioniSostitutive getSanzioniSostitutive() {
+        return sanzioniSostitutive;
+    }
+
+    /**
+     * Imposta il valore della proprietï¿½ sanzioniSostitutive.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link SanzioniSostitutive }
+     *     
+     */
+    public void setSanzioniSostitutive(SanzioniSostitutive value) {
+        this.sanzioniSostitutive = value;
+    }
+
+    /**
+     * Recupera il valore della proprietï¿½ liberazioneAnticipataConcessaDetrarreCumulo.
+     * 
+     * @return
+     *     possible object is
+     *     {@link LiberazioneAnticipataConcessaDetrarreCumulo }
+     *     
+     */
+    public LiberazioneAnticipataConcessaDetrarreCumulo getLiberazioneAnticipataConcessaDetrarreCumulo() {
+        return liberazioneAnticipataConcessaDetrarreCumulo;
+    }
+
+    /**
+     * Imposta il valore della proprietï¿½ liberazioneAnticipataConcessaDetrarreCumulo.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link LiberazioneAnticipataConcessaDetrarreCumulo }
+     *     
+     */
+    public void setLiberazioneAnticipataConcessaDetrarreCumulo(LiberazioneAnticipataConcessaDetrarreCumulo value) {
+        this.liberazioneAnticipataConcessaDetrarreCumulo = value;
+    }
+
+    /**
+     * Recupera il valore della proprietï¿½ penaConversionePenaPecuniaria.
+     * 
+     * @return
+     *     possible object is
+     *     {@link PenaConversionePenaPecuniaria }
+     *     
+     */
+    public PenaConversionePenaPecuniaria getPenaConversionePenaPecuniaria() {
+        return penaConversionePenaPecuniaria;
+    }
+
+    /**
+     * Imposta il valore della proprietï¿½ penaConversionePenaPecuniaria.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link PenaConversionePenaPecuniaria }
+     *     
+     */
+    public void setPenaConversionePenaPecuniaria(PenaConversionePenaPecuniaria value) {
+        this.penaConversionePenaPecuniaria = value;
+    }
+
+    /**
+     * Recupera il valore della proprietï¿½ sanzioniGiudicePace.
+     * 
+     * @return
+     *     possible object is
+     *     {@link SanzioniGiudicePace }
+     *     
+     */
+    public SanzioniGiudicePace getSanzioniGiudicePace() {
+        return sanzioniGiudicePace;
+    }
+
+    /**
+     * Imposta il valore della proprietï¿½ sanzioniGiudicePace.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link SanzioniGiudicePace }
+     *     
+     */
+    public void setSanzioniGiudicePace(SanzioniGiudicePace value) {
+        this.sanzioniGiudicePace = value;
+    }
+
+    /**
+     * Gets the value of the richiesteGEAnticipazioneEffetti property.
+     * 
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the richiesteGEAnticipazioneEffetti property.
+     * 
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getRichiesteGEAnticipazioneEffetti().add(newItem);
+     * </pre>
+     * 
+     * 
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link RichiesteGEAnticipazioneEffetti }
+     * 
+     * 
+     */
+    public List<RichiesteGEAnticipazioneEffetti> getRichiesteGEAnticipazioneEffetti() {
+        if (richiesteGEAnticipazioneEffetti == null) {
+            richiesteGEAnticipazioneEffetti = new ArrayList<RichiesteGEAnticipazioneEffetti>();
+        }
+        return this.richiesteGEAnticipazioneEffetti;
     }
 
 }

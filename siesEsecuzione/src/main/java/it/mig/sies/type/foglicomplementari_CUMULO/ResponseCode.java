@@ -1,5 +1,12 @@
+//
+// Questo file � stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
+// Vedere <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
+// Qualsiasi modifica a questo file andr� persa durante la ricompilazione dello schema di origine. 
+// Generato il: 2016.10.26 alle 04:01:02 PM CEST 
+//
 
-package it.mig.sies.type.foglicomplementari;
+
+package it.mig.sies.type.foglicomplementari_CUMULO;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
@@ -35,6 +42,7 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;enumeration value="411"/>
  *     &lt;enumeration value="412"/>
  *     &lt;enumeration value="413"/>
+ *     &lt;enumeration value="414"/>
  *     &lt;enumeration value="500"/>
  *     &lt;enumeration value="501"/>
  *     &lt;enumeration value="502"/>
@@ -91,6 +99,8 @@ public enum ResponseCode {
     PROVVEDIMENTO_NON_ASSOCIABILE_AL_SOGGETTO("412"),
     @XmlEnumValue("413")
     TROVATI_SOGGETTI_SINONIMI("413"),
+    @XmlEnumValue("414")
+    ELENCO_PROVVEDIMENTI_CUMULATI_NSC("414"),
     @XmlEnumValue("500")
     ERRORE_INASPETTATO("500"),
     @XmlEnumValue("501")
