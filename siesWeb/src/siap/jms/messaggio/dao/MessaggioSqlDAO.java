@@ -328,11 +328,32 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
       if (aModel.getCodUfficioMittente() != null && aModel.getCodUfficioMittente().trim().length() > 0)
         lCondizioni += " AND COD_UFFICIO_MITTENTE = '" + aModel.getCodUfficioMittente() + "' ";
       
-      if (aModel.getChiaveAnnoFasCumulante() != null && aModel.getChiaveProgrFasCumulante()!= null)
-      {
+      /* MEV_2025-48 – Atti pervenuti per competenza al cumulo */
+      /*               Si aggiunge ricerca anche per ANNO e NUMERO fascicolo trasmesso */
+      if (aModel.getChiaveAnnoSiep() != null)
+        lCondizioni += " AND CHIAVE_ANNO_SIEP =" + aModel.getChiaveAnnoSiep();
+
+      if (aModel.getChiaveProgrSiep()!= null)
+        lCondizioni += " AND CHIAVE_PROGR_SIEP =" + aModel.getChiaveProgrSiep();
+
+      if (aModel.getChiaveAnnoFasCumulante() != null )
         lCondizioni += " AND CHIAVE_ANNO_FAS_CUMULANTE =" + aModel.getChiaveAnnoFasCumulante();
+
+      if (aModel.getChiaveProgrFasCumulante()!= null)
         lCondizioni += " AND CHIAVE_PROGR_FAS_CUMULANTE =" + aModel.getChiaveProgrFasCumulante();
-      }
+      
+      if (aModel.getCognomeSoggetto()!= null && aModel.getCognomeSoggetto().trim().length() > 0)
+          lCondizioni += " AND UPPER(COGNOME_SOGGETTO) = '" + aModel.getCognomeSoggetto().toUpperCase()+"' ";
+
+      if (aModel.getNomeSoggetto()!= null && aModel.getNomeSoggetto().trim().length() > 0)
+          lCondizioni += " AND UPPER(NOME_SOGGETTO) = '" + aModel.getNomeSoggetto().toUpperCase()+"' ";
+      
+//      if (aModel.getChiaveAnnoFasCumulante() != null && aModel.getChiaveProgrFasCumulante()!= null)
+//      {
+//        lCondizioni += " AND CHIAVE_ANNO_FAS_CUMULANTE =" + aModel.getChiaveAnnoFasCumulante();
+//        lCondizioni += " AND CHIAVE_PROGR_FAS_CUMULANTE =" + aModel.getChiaveProgrFasCumulante();
+//      }
+      /* MEV_2025-48 – FINE */
       
       if (aModel.getChiaveUfficioFasCumulante() != null && !"".equals(aModel.getChiaveUfficioFasCumulante()))
     	  lCondizioni += " AND CHIAVE_UFFICIO_FAS_CUMULANTE = '" + aModel.getChiaveUfficioFasCumulante()+"'";
@@ -1565,6 +1586,7 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 		// Settaggio del TreeModel
 		ByteArrayOutputStream lStr = new ByteArrayOutputStream();
 		lStr = aModel.getBlobOut();
+
 		if (lStr != null) {
 			if (lStr.size() > 0) {
 				byte[] lBuffer = new byte[lStr.size()];
@@ -1597,6 +1619,7 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 					siesLogger.error("STAMPO ECCEZIONE: " + ex.getMessage(), ex);
 			   }
 			}
+
 		}
 		return aModel;
 	}
@@ -1662,10 +1685,19 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
   public String setCondizioneDataInvio(Date aDaIni, Date aDaFine)
   {
 	  String lCondizioni = new String();
+
+	  /* MEV_2025-10 – Requisito H */
+	  // Le date possono essere anche null
+	  //lCondizioni += " AND TO_CHAR(DATA_INVIO,'YYYYMMDD') >= '" + DateUtils.getDateToString(aDaIni, "yyyyMMdd" )+"'" ;
+	  //lCondizioni += " AND TO_CHAR(DATA_INVIO,'YYYYMMDD') <= '" + DateUtils.getDateToString(aDaFine, "yyyyMMdd" )+"'" ;
 	  
-	  lCondizioni += " AND TO_CHAR(DATA_INVIO,'YYYYMMDD') >= '" + DateUtils.getDateToString(aDaIni, "yyyyMMdd" )+"'" ;
-	  lCondizioni += " AND TO_CHAR(DATA_INVIO,'YYYYMMDD') <= '" + DateUtils.getDateToString(aDaFine, "yyyyMMdd" )+"'" ;
-    
+	  if (aDaIni!=null)
+		  lCondizioni += " AND TO_CHAR(DATA_INVIO,'YYYYMMDD') >= '" + DateUtils.getDateToString(aDaIni, "yyyyMMdd" )+"'" ;
+	  
+	  if (aDaFine!=null)
+		  lCondizioni += " AND TO_CHAR(DATA_INVIO,'YYYYMMDD') <= '" + DateUtils.getDateToString(aDaFine, "yyyyMMdd" )+"'" ;
+	  /* FINE - MEV_2025-10 – Requisito H */
+	  
 	  return lCondizioni;
   }
 

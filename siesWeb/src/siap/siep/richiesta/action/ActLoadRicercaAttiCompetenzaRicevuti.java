@@ -11,6 +11,7 @@ import f3b.util.DateUtils;
 import f3b.util.F3BException;
 import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
+import f3b.web.html.Option;
 import siap.jms.ICostantiJMS;
 import siap.jms.JMSLookupRemote;
 import siap.jms.SIAPReceiver;
@@ -18,7 +19,12 @@ import siap.jms.config.JMSProperties;
 import siap.jms.messaggio.action.ICostantiMessaggio;
 import siap.jms.messaggio.controller.IMessaggio;
 import siap.jms.messaggio.model.MessaggioModel;
+import siap.sico.decodifiche.controller.DecodificheManager;
+import siap.sico.jms.action.ICostantiSicoJMS;
+import siap.sico.soggetto.action.ICostantiSoggetto;
+import siap.sico.ufficio.action.ICostantiUfficio;
 import siap.sico.web.ActionSiap;
+import siap.siep.fascicolo.action.ICostantiFascicoloSiep;
 import siap.siep.fascicolo.controller.IFascicoloSiep;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.istruttoriacumulo.action.ICostantiIstruttoriaCumulo;
@@ -89,8 +95,9 @@ public class ActLoadRicercaAttiCompetenzaRicevuti extends ActionSiap implements 
 		lListaTipoOperazione.add(ICostantiJMS.COMUNICAZIONE_CUMULO_PROCURE_COMPETENTI);
 
 		// MEV26 - CUMULO. Se provengo dall'istruttoria filtro direttamente i
-		// fascicolo trasmessi destinati al fascicolo Cumulante
-		if (!isRequestParameterNullObj(ICostantiIstruttoriaCumulo.CAMPO_ID_ISTRUTTORIA_CUMULO)) {
+		// fascicolo trasmessi destinati al fascicolo Cumulante		
+		// if (!isRequestParameterNullObj(ICostantiIstruttoriaCumulo.CAMPO_ID_ISTRUTTORIA_CUMULO)) {
+		if (!isRequestParameterNullEmptyObj(ICostantiIstruttoriaCumulo.CAMPO_ID_ISTRUTTORIA_CUMULO)) {
 			BigDecimal lIdIstruttoria = getRequestBigDecimalParameter(
 					ICostantiIstruttoriaCumulo.CAMPO_ID_ISTRUTTORIA_CUMULO);
 
@@ -116,12 +123,17 @@ public class ActLoadRicercaAttiCompetenzaRicevuti extends ActionSiap implements 
 
 			lMessaggio.setChiaveAnnoFasCumulante(lFascModel.getChiaveAnno());
 			lMessaggio.setChiaveProgrFasCumulante(lFascModel.getChiaveProgr());
+			
+			setRequestAttribute("ChiaveAnnoCumulante", lFascModel.getChiaveAnno().toString());
+			setRequestAttribute("ChiaveProgrCumulante", lFascModel.getChiaveProgr().toString());
 
 		}
 
 		// Filtro sulla data di trasmissione
 		Date lDataInizio = null;
 		Date lDataFine = null;
+		/* MEV_2025-48 – Atti pervenuti per competenza al cumulo */
+		/*
 		if (!isRequestParameterNullObj(ICostantiPresaincarico.CAMPO_ANNO_DATA_RICEZIONE_ATTI)) {
 			lDataInizio = getRequestDateParameter(ICostantiPresaincarico.CAMPO_ANNO_DATA_RICEZIONE_ATTI,
 					ICostantiPresaincarico.CAMPO_MESE_DATA_RICEZIONE_ATTI,
@@ -129,8 +141,88 @@ public class ActLoadRicercaAttiCompetenzaRicevuti extends ActionSiap implements 
 			lDataFine = getRequestDateParameter(ICostantiPresaincarico.CAMPO_ANNO_DATA_TRASMISSIONE_ATTI,
 					ICostantiPresaincarico.CAMPO_MESE_DATA_TRASMISSIONE_ATTI,
 					ICostantiPresaincarico.CAMPO_GIORNO_DATA_TRASMISSIONE_ATTI);
+		}*/
+		
+		if (!isRequestParameterNullObj(ICostantiSicoJMS.CAMPO_ANNO_DATA_TRASMISSIONE_INIZIO)) {
+			lDataInizio = getRequestDateParameter(ICostantiSicoJMS.CAMPO_ANNO_DATA_TRASMISSIONE_INIZIO,
+					ICostantiSicoJMS.CAMPO_MESE_DATA_TRASMISSIONE_INIZIO,
+					ICostantiSicoJMS.CAMPO_GIORNO_DATA_TRASMISSIONE_INIZIO);
+			lDataFine = getRequestDateParameter(ICostantiSicoJMS.CAMPO_ANNO_DATA_TRASMISSIONE_FINE,
+					ICostantiSicoJMS.CAMPO_MESE_DATA_TRASMISSIONE_FINE,
+					ICostantiSicoJMS.CAMPO_GIORNO_DATA_TRASMISSIONE_FINE);			
+		}
+		else {
+			if (lDataInizio == null)
+				lDataInizio = DateUtils.getEnneMonthBefore(DateUtils.getSysDate(), 2);
+
+			// Se la data fine non viene valorizzata si imposta con quella odierna.
+			if (lDataFine == null)
+				lDataFine = DateUtils.getSysDate();
+			
+		}
+		
+		setRequestAttribute(ICostantiSicoJMS.CAMPO_GIORNO_DATA_TRASMISSIONE_INIZIO, DateUtils.getDateToString(lDataInizio, "dd"));
+		setRequestAttribute(ICostantiSicoJMS.CAMPO_MESE_DATA_TRASMISSIONE_INIZIO, DateUtils.getDateToString(lDataInizio, "MM"));
+		setRequestAttribute(ICostantiSicoJMS.CAMPO_ANNO_DATA_TRASMISSIONE_INIZIO, DateUtils.getDateToString(lDataInizio, "yyyy"));
+		
+		setRequestAttribute(ICostantiSicoJMS.CAMPO_GIORNO_DATA_TRASMISSIONE_FINE, DateUtils.getDateToString(lDataFine, "dd"));
+		setRequestAttribute(ICostantiSicoJMS.CAMPO_MESE_DATA_TRASMISSIONE_FINE, DateUtils.getDateToString(lDataFine, "MM"));
+		setRequestAttribute(ICostantiSicoJMS.CAMPO_ANNO_DATA_TRASMISSIONE_FINE, DateUtils.getDateToString(lDataFine, "yyyy"));
+		
+		// Filtro per - Ufficio Mittente
+		String lCodTipoUfficio = null;
+		String lDescrComuneUfficio = null;
+		String lCodUfficioMitt = null;
+		if (!isRequestParameterNullObj(ICostantiUfficio.CAMPO_TIPO_UFFICIO)
+				&& !getRequestStringParameter(ICostantiUfficio.CAMPO_TIPO_UFFICIO).equals("")
+				&& !getRequestStringParameter(ICostantiUfficio.CAMPO_TIPO_UFFICIO).equals("-")) {
+			lCodTipoUfficio = getRequestStringParameter(ICostantiUfficio.CAMPO_TIPO_UFFICIO);
+			lDescrComuneUfficio = getRequestStringParameter(ICostantiUfficio.CAMPO_SEDE_UFFICIO);
+
+			lCodUfficioMitt = getCodUfficioByCodTipoUfficioDescrComune(lCodTipoUfficio, lDescrComuneUfficio);
+			lMessaggio.setCodUfficioMittente(lCodUfficioMitt);
+		}
+		
+		
+		// Estremi procedimento Trasmesso
+		if (!isRequestParameterNullObj(ICostantiJMS.CHIAVE_ANNO_SIEP)
+				&& !getRequestStringParameter(ICostantiJMS.CHIAVE_ANNO_SIEP).equals("")) {
+			lMessaggio.setChiaveAnnoSiep (getRequestBigDecimalParameter(ICostantiJMS.CHIAVE_ANNO_SIEP));
 		}
 
+		if (!isRequestParameterNullObj(ICostantiJMS.CHIAVE_PROGR_SIEP)
+				&& !getRequestStringParameter(ICostantiJMS.CHIAVE_PROGR_SIEP).equals("")) {
+			lMessaggio.setChiaveProgrSiep(getRequestBigDecimalParameter(ICostantiJMS.CHIAVE_PROGR_SIEP));
+		}
+		
+		// Estremi procedimento cumulante
+		if (!isRequestParameterNullObj(ICostantiJMS.CHIAVE_ANNO_FAS_CUMULANTE)
+				&& !getRequestStringParameter(ICostantiJMS.CHIAVE_ANNO_FAS_CUMULANTE).equals("")) {
+			lMessaggio.setChiaveAnnoFasCumulante(getRequestBigDecimalParameter(ICostantiJMS.CHIAVE_ANNO_FAS_CUMULANTE));
+		}
+
+		if (!isRequestParameterNullObj(ICostantiJMS.CHIAVE_PROGR_FAS_CUMULANTE)
+				&& !getRequestStringParameter(ICostantiJMS.CHIAVE_PROGR_FAS_CUMULANTE).equals("")) {
+			lMessaggio.setChiaveProgrFasCumulante(getRequestBigDecimalParameter(ICostantiJMS.CHIAVE_PROGR_FAS_CUMULANTE));
+		}		
+
+		// Estremi del soggetto
+		if (!isRequestParameterNullObj(ICostantiSoggetto.CAMPO_COGNOME)
+				&& !getRequestStringParameter(ICostantiSoggetto.CAMPO_COGNOME).equals("")) {
+			lMessaggio.setCognomeSoggetto (getRequestStringParameter(ICostantiSoggetto.CAMPO_COGNOME));
+		}
+
+		if (!isRequestParameterNullObj(ICostantiSoggetto.CAMPO_NOME)
+				&& !getRequestStringParameter(ICostantiSoggetto.CAMPO_NOME).equals("")) {
+			lMessaggio.setNomeSoggetto(getRequestStringParameter(ICostantiSoggetto.CAMPO_NOME));
+		}		
+		
+		siesLogger.debug("lMessaggio = "+lMessaggio.toString());
+		/* MEV_2025-48 – FINE */
+
+		siesLogger.debug("Data Inizio = "+lDataInizio);
+		siesLogger.debug("Data Fine   = "+lDataFine);
+/*		
 		// Se la Data inizio non viene valorizzata si imposta a 2 mesi mesi precedenti.
 		if (lDataInizio == null)
 			lDataInizio = DateUtils.getEnneMonthBefore(DateUtils.getSysDate(), 2);
@@ -138,7 +230,7 @@ public class ActLoadRicercaAttiCompetenzaRicevuti extends ActionSiap implements 
 		// Se la data fine non viene valorizzata si imposta con quella odierna.
 		if (lDataFine == null)
 			lDataFine = DateUtils.getSysDate();
-
+*/
 		// Ricerca Messaggi
 		IMessaggio lCrtl = JMSLookupRemote.getMessaggioRemote();
 
@@ -166,6 +258,16 @@ public class ActLoadRicercaAttiCompetenzaRicevuti extends ActionSiap implements 
 		setRequestAttribute(IWebConstants.NUM_PAGE, lPagina);
 		setRequestAttribute(IWebConstants.REQUEST_FOR_PAGING, getCompleteRequestURL());
 
+		/* MEV_2025-48 – Atti pervenuti per competenza al cumulo */
+		Option lOption = new Option(DecodificheManager.getInstance().getTipoUfficioPerCodice());
+		lOption.setFilter(new String[] { "-", "PM", "PGCAP", "PMM" });
+		if (lCodTipoUfficio != null)
+			lOption.setSelected(lCodTipoUfficio);
+		else
+			lOption.setSelected("-");
+		setRequestAttribute("tipoUfficioRichiedente", "" + lOption);
+		/* MEV_2025-48 – FINE */
+		
 		if (chiamanteMenu) {
 			if (lVect != null)
 				setRequestAttribute("contaAttiRicevuti", lVect.size() + "");
