@@ -2,6 +2,7 @@
 <%@ page import="java.util.Iterator" %>
 <%@ page import="java.util.Vector" %>
 <%@ page import="java.lang.Integer" %>
+<%@ page import="java.math.BigDecimal" %>
 
 <%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.DateUtils"%>
@@ -17,14 +18,35 @@
 <%@ page import="siap.siep.fascicolo.action.ICostantiFascicoloSiep"%>
 <%@ page import="siap.siep.modulocumulo.model.TitoloCumulatoModel"%>
 
+<%@ page import="siap.siep.fascicolo.action.ICostantiFascicoloSiep"%>
+<%@ page import="siap.sico.ufficio.model.UfficioAccorpatoModel"%>
+
 <jsp:useBean id="TornaQui" scope="request" class="java.lang.String"/>
 
 <jsp:useBean id="ListaProcedimenti" scope="request" class="java.util.Vector"/>
 
 <jsp:useBean id="IstruttoriaCumulo" scope="request" class="siap.siep.istruttoriacumulo.model.IstruttoriaCumuloModel"/>
 <jsp:useBean id="lsoggetto" 		scope="request" class="siap.sico.soggetto.model.SoggettoModel"/>
-<jsp:useBean id="StatoNaschita" 	scope="request" class="java.lang.String"/>
+<jsp:useBean id="StatoNascita" 	scope="request" class="java.lang.String"/>
 <jsp:useBean id="ListaTitoliInIstruttoria"  scope="request" class="java.util.Vector"/>
+ 
+ 
+<%-- MEV_2025-48 - Ricerca soggetto da Iscrizione proprio titolo --%>
+<jsp:useBean id="checkRicercaProvvVal"	scope="request" class="java.lang.String"/>
+<jsp:useBean id="chiaveAnnoRich" 	    scope="request" class="java.lang.String"/>
+<jsp:useBean id="chiaveProgRich" 	    scope="request" class="java.lang.String"/>
+<jsp:useBean id="offsetUffAccorpato"    scope="request" class="java.lang.String"/>
+<jsp:useBean id="elencoUfficiAccorpati" scope="request" class="java.util.Vector" /> 
+<jsp:useBean id="primoCaricamento"      scope="request" class="java.lang.String"/>
+
+
+<jsp:useBean id="isCheckCognome"        scope="request" class="java.lang.String"/>
+<jsp:useBean id="isCheckNome"           scope="request" class="java.lang.String"/>
+<jsp:useBean id="isCheckCUI"            scope="request" class="java.lang.String"/>
+<jsp:useBean id="isCheckDataNascita"    scope="request" class="java.lang.String"/>
+<jsp:useBean id="isCheckComune"         scope="request" class="java.lang.String"/>
+<jsp:useBean id="isCheckStato"          scope="request" class="java.lang.String"/>
+<%-- MEV_2025-48 --%>
  
 <%
 //==============================================================================
@@ -84,10 +106,88 @@ for (int k=0; k<ListaProcedimenti.size();k++){
       
       var desktop;
       
-      function ListaComuni(a_formname,a_fieldname)
+      <%-- MEV_2025-48 - Ricerca soggetto da Iscrizione proprio titolo --%>
+      <%
+      SoggettoModel soggettoSessione = (SoggettoModel) session.getAttribute("soggetto");
+      %>
+      var cognome     = '<%=soggettoSessione.getCognome()%>';
+      var nome        = '<%=soggettoSessione.getNome()%>';
+      var codCUI      = '<%=soggettoSessione.getCodAfis()%>';
+      var descComune  = '<%=soggettoSessione.getDescrComuneNascita()%>';
+      var codStato    = '<%=soggettoSessione.getCodStatoNascita()%>';
+      
+      $(document).ready(function(){
+          <%if (checkRicercaProvvVal.equals("checked") && 1==1) { %>
+            checkAbilitaRicercaProcedimento($('[name="checkRicercaProvv"]'));
+          <% } %>
+
+          //checkAbilitaRicercaProcedimento($('[name="checkRicercaProvv"]'));
+          
+          <%if ("true".equals(primoCaricamento)){ %>
+          if (codCUI.length > 0 ) {
+              $('[name="checkCognome"]').prop('checked',true);
+              $('[name="checkNome"]').prop('checked',true);
+              $('[name="checkDataNascita"]').prop('checked',true);
+              $('[name="checkComune"]').prop('checked',true);
+              $('[name="checkStato"]').prop('checked',true);
+              checkAbilitaDisabilitaCampi($('[name="checkCognome"]'),'<%=ICostantiSoggetto.CAMPO_COGNOME%>' );
+              checkAbilitaDisabilitaCampi($('[name="checkNome"]'),'<%=ICostantiSoggetto.CAMPO_NOME%>' );
+              checkAbilitaDisabilitaDataNascita($('[name="checkDataNascita"]'));
+              checkAbilitaDisabilitaCampi($('[name="checkComune"]'),'<%=ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA%>' );
+              checkAbilitaDisabilitaCampi($('[name="checkStato"]'),'<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>' );        	  
+          }
+          <% } else { %>
+          	<%-- if (request.getParameter("checkCognome")!=null) { %>$('[name="<%=ICostantiSoggetto.CAMPO_COGNOME%>"]').val('<%=request.getParameter("checkCognome")%>')<% } --%>
+          	<% if ("checked".equals(isCheckCognome)) { %>
+          	    $('[name="<%=ICostantiSoggetto.CAMPO_COGNOME%>"]').val('<%=request.getParameter("checkCognome")%>');
+          		$('[name="checkCognome"]').prop('checked',true);
+          		checkAbilitaDisabilitaCampi($('[name="checkCognome"]'),'<%=ICostantiSoggetto.CAMPO_COGNOME%>' );
+          	<% } %>
+          	<% if ("checked".equals(isCheckNome)) { %>
+	      	    $('[name="<%=ICostantiSoggetto.CAMPO_NOME%>"]').val('<%=request.getParameter("checkNome")%>');
+	      		$('[name="checkNome"]').prop('checked',true);
+	      		checkAbilitaDisabilitaCampi($('[name="checkNome"]'),'<%=ICostantiSoggetto.CAMPO_NOME%>' );
+      		<% } %>
+          	<% if ("checked".equals(isCheckCUI)) { %>
+	      	    $('[name="<%=ICostantiSoggetto.CAMPO_COD_AFIS%>"]').val('<%=request.getParameter("checkCUI")%>');
+	      		$('[name="checkCUI"]').prop('checked',true);
+	      		checkAbilitaDisabilitaCampi($('[name="checkCUI"]'),'<%=ICostantiSoggetto.CAMPO_COD_AFIS%>' );
+  			<% } %> 
+          	<% if ("checked".equals(isCheckDataNascita)) { %>
+          		var dataNascita = '<%=request.getParameter("checkDataNascita")%>';
+          		var parti = dataNascita.split('/');
+        		$('[name="<%=ICostantiSoggetto.CAMPO_GIORNO_DATA_NASCITA%>"]').val(parti[0]);
+        		$('[name="<%=ICostantiSoggetto.CAMPO_MESE_DATA_NASCITA %>"]').val(parti[1]);
+        		$('[name="<%=ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>"]').val(parti[2]);
+        		
+	      		$('[name="checkDataNascita"]').prop('checked',true);
+	      		checkAbilitaDisabilitaDataNascita($('[name="checkDataNascita"]'));
+      		<% } %>
+          	<% if ("checked".equals(isCheckComune)) { %>
+	      	    $('[name="<%=ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA%>"]').val('<%=request.getParameter("checkComune")%>');
+	      		$('[name="checkComune"]').prop('checked',true);
+	      		checkAbilitaDisabilitaCampi($('[name="checkComune"]'),'<%=ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA%>' );
+			<% } %>
+          	<% if ("checked".equals(isCheckStato)) { %>
+	      	    $('[name="<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>"]').val('<%=request.getParameter("checkStato")%>');
+	      		$('[name="checkStato"]').prop('checked',true);
+	      		checkAbilitaDisabilitaCampi($('[name="checkStato"]'),'<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>' );
+			<% } %>
+          	
+          <% } %>
+      });
+      
+      <%-- MEV_2025-48 - FINE --%>
+      
+      <%-- MEV_2025-48 - Ricerca soggetto da Iscrizione proprio titolo --%>
+      <%--function ListaComuni(a_formname,a_fieldname)
       {
         desktop = window.open("/jsp/Main.jsp?Action=siap.sico.decodifiche.action.ActLoadRicercaComune&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=300,height=500");
+      }--%>
+      function ListaComuniNascita(a_formname,a_fieldname) {
+    		desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComuneNascita&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=400,height=500");
       }
+      <%-- MEV_2025-48 - FINE --%>
       
       // Torna indietro su ElencoFascicoli coinvolti
       function eseguiFunzione(action)
@@ -161,40 +261,79 @@ for (int k=0; k<ListaProcedimenti.size();k++){
       
       function Verify()
       {
-        //alert('Verify - Start');
-         if(document.f.<%=ICostantiSoggetto.CAMPO_COGNOME%>.value == "" && 
-   		    document.f.<%=ICostantiSoggetto.CAMPO_COD_AFIS%>.value == "" &&  
-   		    document.f.<%=ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>.value == "" )
-      	 {
-         	alert('Per impostare la Ricerca inserire almeno uno tra: \nCognome, Codice CUI, Data Nascita');      
+    	<%-- MEV_2025-48 - Ricerca soggetto da Iscrizione proprio titolo --%>
+        if ($('[name="checkRicercaProvv"]').prop('checked')) {
+          var anno = document.f.<%=ICostantiFascicoloSiep.CAMPO_CHIAVE_ANNO%>.value;
+          if(anno.length<4)
+          { 
+            alert('Per la ricerca per procedimento è necessario specificare sia anno che numero procedimento');      
+            document.f.<%=ICostantiFascicoloSiep.CAMPO_CHIAVE_ANNO%>.focus();
+            return false;
+          }
+          if(document.f.<%=ICostantiFascicoloSiep.CAMPO_CHIAVE_PROGR%>.value == "")
+          {
+            alert('Per la ricerca per procedimento è necessario specificare sia anno che numero procedimento');      
+            document.f.<%=ICostantiFascicoloSiep.CAMPO_CHIAVE_PROGR%>.focus();
+            return false;
+          }            
+        } 
+        else 
+        {   
+        	var cognome = $('[name="<%=ICostantiSoggetto.CAMPO_COGNOME%>"]').val();
+        	var codCUI = $('[name="<%=ICostantiSoggetto.CAMPO_COD_AFIS%>"]').val();
+        	var ggNascita = $('[name="<%=ICostantiSoggetto.CAMPO_GIORNO_DATA_NASCITA%>"]').val();
+
+            if(   (!$('[name="<%=ICostantiSoggetto.CAMPO_COGNOME%>"]').prop('disabled')
+                    && $.trim(cognome)!='')
+                || (!$('[name="<%=ICostantiSoggetto.CAMPO_COD_AFIS%>"]').prop('disabled')
+                    && $.trim(codCUI)!='')
+                || (!$('[name="<%=ICostantiSoggetto.CAMPO_GIORNO_DATA_NASCITA%>"]').prop('disabled')
+                    && $.trim(ggNascita)!='')
+                ){
+           	  // alert("valorizzato");
+            }
+             else  {
+                 alert('Per impostare la Ricerca inserire almeno uno tra: \nCognome, Codice CUI, Data Nascita');      
+                 document.f.<%=ICostantiSoggetto.CAMPO_COGNOME%>.focus();
+                 return false;
+             }
+
+          
+          <%--if(document.f.<%=ICostantiSoggetto.CAMPO_COGNOME%>.value == "" && 
+             document.f.<%=ICostantiSoggetto.CAMPO_COD_AFIS%>.value == "" &&  
+             document.f.<%=ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>.value == "" )
+          {
+            alert('Per impostare la Ricerca inserire almeno uno tra: \nCognome, Codice CUI, Data Nascita');      
             document.f.<%=ICostantiSoggetto.CAMPO_COGNOME%>.focus();
             return false;
-      	 } 
+          } --%>
+          <%-- MEV_2025-48 - FINE --%>
         
-        var dataOdierna = '<%=DateUtils.getSysDate("dd/MM/yyyy")%>';
+          var dataOdierna = '<%=DateUtils.getSysDate("dd/MM/yyyy")%>';
         
-        // Data Nascita
-        var data_nasc =     document.f.<%=ICostantiSoggetto.CAMPO_GIORNO_DATA_NASCITA%>.value
-                        +'/'+document.f.<%=ICostantiSoggetto.CAMPO_MESE_DATA_NASCITA%>.value
-                        +'/'+document.f.<%=ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>.value;
-        if (!ControllaDataPassaVuota(data_nasc))
-        {
-          alert('Data Nascita non corretta');      
-          document.f.<%=ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>.focus();
-          return false;
+          // Data Nascita
+          var data_nasc =     document.f.<%=ICostantiSoggetto.CAMPO_GIORNO_DATA_NASCITA%>.value
+                          +'/'+document.f.<%=ICostantiSoggetto.CAMPO_MESE_DATA_NASCITA%>.value
+                          +'/'+document.f.<%=ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>.value;
+          if (!ControllaDataPassaVuota(data_nasc))
+          {
+            alert('Data Nascita non corretta');      
+            document.f.<%=ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>.focus();
+            return false;
+          }
+        
+          // Comune e Stato Nascita
+          if( document.f.<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>.value !="" &&
+              document.f.<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>.value !="-")
+          {
+            if( document.f.<%=ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA%>.value !="" &&
+                document.f.<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>[document.f.<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>.selectedIndex].value != '039')
+            {
+                alert('Il campo Stato Nascita e comune nascita incongruenti');
+                return false;
+            }
+          }   
         }
-        
-        // Comune e Stato Nascita
-    	if( document.f.<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>.value !="" &&
-    		document.f.<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>.value !="-")
-    	{
-        	if( document.f.<%=ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA%>.value !="" &&
-       			document.f.<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>[document.f.<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>.selectedIndex].value != '039')
-   			{
-       			alert('Il campo Stato Nascita e comune nascita incongruenti');
-				return false;
-    		}
-    	}	
 
         // Ripulisco la lista
         $('#divRisultatoRicerca').hide();
@@ -238,7 +377,11 @@ for (int k=0; k<ListaProcedimenti.size();k++){
         var contaSelezionati = 0;
         
         for (var j = 0; j < <%=aTitoli.length%>; j++) {
+          <% if (aTitoli.length==1) {%>
+          if (document.f.<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>.checked)
+          <% } else { %>
           if (document.f.<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>[j].checked)
+          <% }%>
           {
             contaSelezionati++;
             // Testo se in istruttoria
@@ -250,7 +393,11 @@ for (int k=0; k<ListaProcedimenti.size();k++){
             }
             
             // Testo se iscritto a NSC
+			<% if (aTitoli.length==1) {%>
+            if( document.f.<%=ICostantiFascicoloSiep.CAMPO_KEY_PROVV_NSC%>.value != "SI" )
+			<% } else { %>
             if( document.f.<%=ICostantiFascicoloSiep.CAMPO_KEY_PROVV_NSC%>[j].value != "SI" )
+			<% }%>
             {
               NSC = "NO";
             }
@@ -493,6 +640,110 @@ for (int k=0; k<ListaProcedimenti.size();k++){
 	 }	
 	  Ticket#20220127012 --%>
 
+	  <%-- MEV_2025-48 - Ricerca soggetto da Iscrizione proprio titolo --%>
+      function checkAbilitaDisabilitaCampi(checkObject, nomeCampo){
+
+		var jQueryObj = $(checkObject);
+		if (jQueryObj.prop('checked')){
+			jQueryObj.val($('[name="'+nomeCampo+'"]').val());
+			$('[name="'+nomeCampo+'"]').prop('disabled',true);
+		}
+		else {
+			$('[name="'+nomeCampo+'"]').prop('disabled',false);
+		}
+      }      
+
+      function checkAbilitaDisabilitaDataNascita(checkObject){
+    	var jQueryObj = $(checkObject);
+    	
+    	if (jQueryObj.prop('checked')){
+    		var valore = "";
+    		var gg = $('[name="<%=ICostantiSoggetto.CAMPO_GIORNO_DATA_NASCITA%>"]').val();
+    		gg = gg.length==1 ? '0'+gg : gg;
+    		valore = gg+'/';
+    		var mm = $('[name="<%=ICostantiSoggetto.CAMPO_MESE_DATA_NASCITA%>"]').val();
+    		mm = mm.length==1 ? '0'+mm : mm;
+    		valore = valore+mm+'/';
+    		var yyyy = $('[name="<%=ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>"]').val();
+    		yyyy = yyyy.length==4 ? yyyy : (yyyy.length==2 ? '20'+yyyy : yyyy);
+    		valore = valore+yyyy;
+    		
+			jQueryObj.val(valore);
+
+    		$('[name="<%=ICostantiSoggetto.CAMPO_GIORNO_DATA_NASCITA%>"]').prop('disabled',true);
+    		$('[name="<%=ICostantiSoggetto.CAMPO_MESE_DATA_NASCITA %>"]').prop('disabled',true);
+    		$('[name="<%=ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>"]').prop('disabled',true);
+  		}
+  		else {
+    		$('[name="<%=ICostantiSoggetto.CAMPO_GIORNO_DATA_NASCITA%>"]').prop('disabled',false);
+    		$('[name="<%=ICostantiSoggetto.CAMPO_MESE_DATA_NASCITA %>"]').prop('disabled',false);
+    		$('[name="<%=ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>"]').prop('disabled',false);
+    	}
+      }
+	        
+      function ripristinaValori(valore, nomeCampo){
+  		$('[name="'+nomeCampo+'"]').val(valore);
+      }
+      
+      function ripristinaValoriDataNascita(){
+    	  var ggNascita = '<%=StringUtils.toStringJSP(DateUtils.getDateToString(lsoggetto.getDataNascita(),"dd" ),"")%>';
+    	  var mmNascita = '<%=StringUtils.toStringJSP(DateUtils.getDateToString(lsoggetto.getDataNascita(),"MM" ),"")%>';
+    	  var aaNascita = '<%=StringUtils.toStringJSP(DateUtils.getDateToString(lsoggetto.getDataNascita(),"yyyy" ),"")%>';
+    	  
+  		  $('[name="<%=ICostantiSoggetto.CAMPO_GIORNO_DATA_NASCITA%>"]').val(ggNascita);
+		  $('[name="<%=ICostantiSoggetto.CAMPO_MESE_DATA_NASCITA %>"]').val(mmNascita);
+		  $('[name="<%=ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>"]').val(aaNascita);
+      }
+      
+      function checkAbilitaRicercaProcedimento(checkObject){
+          var jQueryObj = $(checkObject);
+          if (jQueryObj.prop('checked')){
+              $('[name="<%=ICostantiFascicoloSiep.CAMPO_CHIAVE_ANNO%>"]').prop('disabled',false);
+              $('[name="<%=ICostantiFascicoloSiep.CAMPO_CHIAVE_PROGR%>"]').prop('disabled',false);
+              $('[name="<%=ICostantiFascicoloSiep.CAMPO_CHIAVE_ACCORPATO%>"]').prop('disabled',false);
+              
+              $('[name="checkCognome"]').prop('checked',true);
+              $('[name="checkNome"]').prop('checked',true);
+              $('[name="checkCUI"]').prop('checked',true);
+              $('[name="checkDataNascita"]').prop('checked',true);
+              $('[name="checkComune"]').prop('checked',true);
+              $('[name="checkStato"]').prop('checked',true);
+              
+              $('[name="checkCognome"]').prop('disabled',true);
+              $('[name="checkNome"]').prop('disabled',true);
+              $('[name="checkCUI"]').prop('disabled',true);
+              $('[name="checkDataNascita"]').prop('disabled',true);
+              $('[name="checkComune"]').prop('disabled',true);
+              $('[name="checkStato"]').prop('disabled',true);
+          }
+          else {
+              $('[name="<%=ICostantiFascicoloSiep.CAMPO_CHIAVE_ANNO%>"]').prop('disabled',true);
+              $('[name="<%=ICostantiFascicoloSiep.CAMPO_CHIAVE_PROGR%>"]').prop('disabled',true);              
+              $('[name="<%=ICostantiFascicoloSiep.CAMPO_CHIAVE_ACCORPATO%>"]').prop('disabled',true);
+              
+              $('[name="checkCognome"]').prop('checked',false);
+              $('[name="checkNome"]').prop('checked',false);
+              $('[name="checkCUI"]').prop('checked',false);
+              $('[name="checkDataNascita"]').prop('checked',false);
+              $('[name="checkComune"]').prop('checked',false);
+              $('[name="checkStato"]').prop('checked',false);
+              
+              
+              $('[name="checkCognome"]').prop('disabled',false);
+              $('[name="checkNome"]').prop('disabled',false);
+              $('[name="checkCUI"]').prop('disabled',false);
+              $('[name="checkDataNascita"]').prop('disabled',false);
+              $('[name="checkComune"]').prop('disabled',false);
+              $('[name="checkStato"]').prop('disabled',false);
+          }
+          checkAbilitaDisabilitaCampi($('[name="checkCognome"]'),'<%=ICostantiSoggetto.CAMPO_COGNOME%>' );
+          checkAbilitaDisabilitaCampi($('[name="checkNome"]'),'<%=ICostantiSoggetto.CAMPO_NOME%>' );
+          checkAbilitaDisabilitaCampi($('[name="checkCUI"]'),'<%=ICostantiSoggetto.CAMPO_COD_AFIS%>' );
+          checkAbilitaDisabilitaDataNascita($('[name="checkDataNascita"]'));
+          checkAbilitaDisabilitaCampi($('[name="checkComune"]'),'<%=ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA%>' );
+          checkAbilitaDisabilitaCampi($('[name="checkStato"]'),'<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>' );
+      }
+      <%-- MEV_2025-48: FINE --%>
     </script>
   </head>
   
@@ -541,21 +792,39 @@ for (int k=0; k<ListaProcedimenti.size();k++){
         <input type="text" title="Cognome" maxlength="35" size="35"
                name="<%=ICostantiSoggetto.CAMPO_COGNOME%>" 
                value="<%=StringUtils.toStringJSP(lsoggetto.getCognome(),"")%>" >
-        <a href="Javascript:pulisciCogno();">
-		 <img src="/images/delete.gif" border=0></a>       
+        <%-- MEV_2025-48 - Ricerca soggetto da Iscrizione proprio titolo --%>
+        <%-- a href="Javascript:pulisciCogno();"><img src="/images/delete.gif" border=0></a>  --%>
+        <a href="Javascript:ripristinaValori(cognome,'<%=ICostantiSoggetto.CAMPO_COGNOME%>');" title="Ripristina Valore anagrafica Soggetto cumulante">
+		   <img src="/images/ActiveSession.gif" border=0 width="12px" height="12px"></a>				
+		<input type="checkbox" <%=isCheckCognome %> name="checkCognome" value="checkCognome" 
+			   title="Escludi campo dalla ricerca"
+		       onClick="Javascript:checkAbilitaDisabilitaCampi(this,'<%=ICostantiSoggetto.CAMPO_COGNOME%>');">  
+		<%-- MEV_2025-48 - FINE --%>		          
       </td>
       <td class="l">Nome &nbsp;
         <input type="text" title="Nome"  maxlength="35" size="35"
                name="<%=ICostantiSoggetto.CAMPO_NOME%>"
                value="<%=StringUtils.toStringJSP(lsoggetto.getNome(),"")%>" >
-        <a href="Javascript:pulisciNome();">
-		 <img src="/images/delete.gif" border=0></a>       
+               <%-- MEV_2025-48 - Ricerca soggetto da Iscrizione proprio titolo --%>
+        <%-- <a href="Javascript:pulisciNome();"><img src="/images/delete.gif" border=0></a> --%>
+        <a href="Javascript:ripristinaValori(nome,'<%=ICostantiSoggetto.CAMPO_NOME%>');" title="Ripristina Valore anagrafica Soggetto cumulante">
+		   <img src="/images/ActiveSession.gif" border=0 width="12px" height="12px"></a>
+		<input type="checkbox" name="checkNome" 
+		       title="Escludi campo dalla ricerca"
+		       onClick="Javascript:checkAbilitaDisabilitaCampi(this,'<%=ICostantiSoggetto.CAMPO_NOME%>');">     
+		<%-- MEV_2025-48 - FINE --%>		       
       </td>
       <td class="l" colspan="2">Codice CUI &nbsp;
           <input title="Codice CUI" type="text" name="<%=ICostantiSoggetto.CAMPO_COD_AFIS %>" 
           	value="<%=StringUtils.toStringJSP(lsoggetto.getCodAfis(),"")%>" maxlength="7" size="7">
-          <a href="Javascript:pulisciCui();">
-		   <img src="/images/delete.gif" border=0></a>	
+          	<%-- MEV_2025-48 - Ricerca soggetto da Iscrizione proprio titolo --%>
+        <%--  <a href="Javascript:pulisciCui();"><img src="/images/delete.gif" border=0></a>	 --%>
+          <a href="Javascript:ripristinaValori(codCUI,'<%=ICostantiSoggetto.CAMPO_COD_AFIS%>');" title="Ripristina Valore anagrafica Soggetto cumulante">
+		   <img src="/images/ActiveSession.gif" border=0 width="12px" height="12px"></a>
+		<input type="checkbox" name="checkCUI" 
+		       title="Escludi campo dalla ricerca"
+		       onClick="Javascript:checkAbilitaDisabilitaCampi(this,'<%=ICostantiSoggetto.CAMPO_COD_AFIS%>');">
+		<%-- MEV_2025-48 - FINE --%>
       </td>
     </tr>
     
@@ -576,25 +845,95 @@ for (int k=0; k<ListaProcedimenti.size();k++){
                value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lsoggetto.getDataNascita(),"yyyy" ),"")%>"
                name="<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>" 
                onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)"
-         >&nbsp;<a href="Javascript:pulisciData();"><img src="/images/delete.gif" border=0></a>	
+         >&nbsp;
+         <%-- MEV_2025-48 - Ricerca soggetto da Iscrizione proprio titolo --%>
+         <%-- <a href="Javascript:pulisciData();"><img src="/images/delete.gif" border=0></a> --%>
+         <a href="Javascript:ripristinaValoriDataNascita();" title="Ripristina Valore anagrafica Soggetto cumulante">
+		   <img src="/images/ActiveSession.gif" border=0 width="12px" height="12px"></a> 
+         <input type="checkbox" name="checkDataNascita" 
+                title="Escludi campo dalla ricerca"
+                onClick="Javascript:checkAbilitaDisabilitaDataNascita(this);"> 
+         <%-- MEV_2025-48 - FINE --%>
       </td>
       
       <td class="l">Comune di nascita  &nbsp;
         <input title="Comune di Nascita" value="<%=StringUtils.toStringJSP(lsoggetto.getDescrComuneNascita(),"")%>" type="text" 
-        	name="<%=ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA %>" maxlength="30" size="30">
-         <a href="Javascript:ListaComuni('f','<%=ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA%>');">
-        <img src="/images/filefolder.gif" border=0></a>
-         <a href="Javascript:pulisciComune();"><img src="/images/delete.gif" border=0></a>
+        	   name="<%=ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA %>" maxlength="30" size="30">
+         <a href="Javascript:ListaComuniNascita('f','<%=ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA%>');">
+        	<img src="/images/filefolder.gif" border=0></a>
+         <%-- MEV_2025-48 - Ricerca soggetto da Iscrizione proprio titolo --%>
+         <%-- <a href="Javascript:pulisciComune();"><img src="/images/delete.gif" border=0></a> --%>
+         <a href="Javascript:ripristinaValori(descComune,'<%=ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA%>');" title="Ripristina Valore anagrafica Soggetto cumulante">
+		   <img src="/images/ActiveSession.gif" border=0 width="12px" height="12px"></a>
+         <input type="checkbox" name="checkComune" 
+                title="Escludi campo dalla ricerca"
+                onClick="Javascript:checkAbilitaDisabilitaCampi(this,'<%=ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA%>');"> 
+         <%-- MEV_2025-48 - FINE --%>       
       </td>
 
       <td class="l">Stato di Nascita</td>
       <td class="L">
         <select  title="Stato di Nascita" name=<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA %> >
-    	<%=StatoNaschita%>
+    	<%=StatoNascita%>
         </select>
-         <a href="Javascript:pulisciStato();"><img src="/images/delete.gif" border=0></a>
+        <%-- MEV_2025-48 - Ricerca soggetto da Iscrizione proprio titolo --%>
+        <%--  <a href="Javascript:pulisciStato();"><img src="/images/delete.gif" border=0></a> --%>
+         <a href="Javascript:ripristinaValori(codStato,'<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>');" title="Ripristina Valore anagrafica Soggetto cumulante">
+		   <img src="/images/ActiveSession.gif" border=0 width="12px" height="12px"></a>        
+         <input type="checkbox" name="checkStato" 
+                title="Escludi campo dalla ricerca"
+                onClick="Javascript:checkAbilitaDisabilitaCampi(this,'<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>');"> 
+        <%-- MEV_2025-48 - FINE --%>
       </td>
     </tr>
+ 
+ <%-- MEV_2025-48 - Ricerca soggetto da Iscrizione proprio titolo --%>
+      <tr>
+       <td class="l">Ricerca per Procedimento &nbsp;<input type="checkbox" name="checkRicercaProvv" onClick="Javascript:checkAbilitaRicercaProcedimento(this);" <%=checkRicercaProvvVal%>> </td>
+      </tr>
+      
+     <tr>
+      <td class="l">Anno/Numero Procedimento</td>
+      <td class="L">
+        <input type="text"  maxlength="4" size="4"  
+               title="Anno Procedimento"
+               onkeypress="return TicTabNumField(this,event)" 
+               onBlur="javascript:value=FillYear(value)"
+               name="<%=ICostantiFascicoloSiep.CAMPO_CHIAVE_ANNO %>"
+               value="<%=chiaveAnnoRich%>" 
+               disabled
+        	 >
+        <input type="text"  maxlength="14" size="14" 
+               title="Numero Procedimento" 
+               onkeypress="return TicTabNumField(this,event)"
+               name="<%=ICostantiFascicoloSiep.CAMPO_CHIAVE_PROGR %>"
+               value="<%=chiaveProgRich%>" 
+               disabled
+        	 >
+      </td>
+    </tr>
+ 	<tr>
+	    <td class="L">Ufficio Accorpato</td>
+	    <td class="l">
+	        <select name="<%=ICostantiFascicoloSiep.CAMPO_CHIAVE_ACCORPATO%>" disabled>
+	            <option value="0" >-</option>
+	
+	            <%
+	            Iterator it = elencoUfficiAccorpati.iterator();
+	            while (it.hasNext())  {
+	                UfficioAccorpatoModel ua = (UfficioAccorpatoModel) it.next();
+	                String selected= "";  //offsetUffAccorpato
+	                if (ua.getIncrProgressivo().equals(offsetUffAccorpato) )
+	                   selected= "selected";
+	                %>
+	                <option value="<%=ua.getIncrProgressivo()%>" <%=selected %> ><%=ua.getDescrizione()%></option>
+	                <%
+	            }
+	        %>
+	        </select>
+	    </td>
+	</tr>
+ <%-- MEV_2025-48 - FINE --%>
  
     <tr>
       <td>
@@ -651,6 +990,30 @@ for (int k=0; k<ListaProcedimenti.size();k++){
 		SentenzaModel lsentenza = lfascicolo.getSentenza();
 		lNsc="";
 		
+		// 
+        String lAnnoNumeroSIEP = "";
+        if (lfascicolo.getChiaveProgrOrig()==null)             
+        {
+            lAnnoNumeroSIEP =  "<font class='campo'>"+StringUtils.toStringJSP(lfascicolo.getChiaveAnno()) 
+                                               +" / "+StringUtils.toStringJSP(lfascicolo.getChiaveProgr())+"</font>";
+        }            
+        else if (lfascicolo.getChiaveProgrOrig()!=null) 
+        {
+            lAnnoNumeroSIEP =  "<font class='campo'>"+StringUtils.toStringJSP(lfascicolo.getChiaveAnno()) 
+                                               +" / "+StringUtils.toStringJSP(lfascicolo.getChiaveProgrOrig())+"</font>";
+
+            BigDecimal offset = lfascicolo.getChiaveProgr().subtract(lfascicolo.getChiaveProgrOrig());
+            
+            UfficioAccorpatoModel uffAccFasc = null;
+            
+            Iterator itUA = elencoUfficiAccorpati.iterator();
+            while (itUA.hasNext())  {
+                UfficioAccorpatoModel ua = (UfficioAccorpatoModel) itUA.next();
+                if (offset.toString().equals(ua.getIncrProgressivo()) )
+                    uffAccFasc = ua;
+            }
+            lAnnoNumeroSIEP += "<br> <font class=\"cRosso\">(Ex " + uffAccFasc.getCodTipoUfficio() + " di " + uffAccFasc.getDescrizione() + ")</font>";
+        }
 %>  
 	    <tr>
 	      <td class="c"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lsentenza.getDataProvvedimento(),"dd-MM-yyyy"))%>
@@ -665,7 +1028,7 @@ for (int k=0; k<ListaProcedimenti.size();k++){
 	      		di&nbsp;<font class="campo"><%=StringUtils.toStringJSP(lsentenza.getDescrLuogoEmittente() )%></font>
 	      </td>		 
 	      <td class="c"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lfascicolo.getDataIrrevocabilita(),"dd-MM-yyyy"))%></font></td>
-	      <td class="c" nowrap><font class="campo"><%=StringUtils.toStringJSP(lfascicolo.getChiaveAnno())%> / <%=StringUtils.toStringJSP(lfascicolo.getChiaveProgr())%></font></td>
+	      <td class="c" nowrap><%=lAnnoNumeroSIEP%></td>
 	      <td class="c"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lfascicolo.getDataIscrizione(),"dd-MM-yyyy"))%></font></td>
 <% 		if("02".equals(lfascicolo.getCodStatoFascicolo()) )	
 		{	%>

@@ -3118,7 +3118,11 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 		return lCalcoloPenaModel;
 	}
 
+	/* MEV_2025-48 - Aggiunta ricerca per chiaveAnno/chiaveProgr e ufficio accorpato: Aggiunto FascicoloSiepModel */
+//	public BigDecimal ExCountFascicoliBySoggettoProprioUfficioPaged(SoggettoModel aSogModel,
+//			String lCodUfficioUtenteConnesso, int aPage) throws F3BException {
 	public BigDecimal ExCountFascicoliBySoggettoProprioUfficioPaged(SoggettoModel aSogModel,
+			FascicoloSiepModel aFascModel,
 			String lCodUfficioUtenteConnesso, int aPage) throws F3BException {
 
 		siesLogger.debug("--XX-- ExCountFascicoliBySoggettoProprioUfficioPaged ...... INIZIO  ");
@@ -3129,8 +3133,11 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 		try {
 			lConn = getDBConnection();
 			lFSoggSqlDao = new FascicoloSiepSoggettoSqlDAO(lConn);
-			lFSoggSqlDao.RicercaFascicoliBySoggettoProprioUfficioPaged(aSogModel, lCodUfficioUtenteConnesso,
-					aPage);
+			/* MEV_2025-48 - Aggiunta ricerca per chiaveAnno/chiaveProgr e ufficio accorpato: Aggiunto FascicoloSiepModel */
+//			lFSoggSqlDao.RicercaFascicoliBySoggettoProprioUfficioPaged(aSogModel, lCodUfficioUtenteConnesso,
+//					aPage);
+			lFSoggSqlDao.RicercaFascicoliBySoggettoProprioUfficioPaged(aSogModel, aFascModel, lCodUfficioUtenteConnesso,
+					aPage);			
 			lFSoggSqlDao.start();
 			lFSoggSqlDao.next();
 			HowManyRecords = lFSoggSqlDao.getBigDecimal("HowManyRecords");
@@ -3153,8 +3160,14 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 		return HowManyRecords;
 	}
 
+	/* MEV_2025-48 - Aggiunta ricerca per chiaveAnno/chiaveProgr e ufficio accorpato: Aggiunto FascicoloSiepModel */
+//	public Vector<FascicoloSiepModel> ExRicercaFascicoliBySoggettoProprioUfficioPaged(SoggettoModel aSogModel,
+//			String lCodUfficioUtenteConnesso, int aPage, BigDecimal lIdIstruttoria
+//			) throws F3BException {
 	public Vector<FascicoloSiepModel> ExRicercaFascicoliBySoggettoProprioUfficioPaged(SoggettoModel aSogModel,
-			String lCodUfficioUtenteConnesso, int aPage, BigDecimal lIdIstruttoria) throws F3BException {
+			FascicoloSiepModel aFascModel, // Aggiunto parametro
+			String lCodUfficioUtenteConnesso, int aPage, BigDecimal lIdIstruttoria
+			) throws F3BException {
 
 		siesLogger.debug("--XX-- ExRicercaFascicoliBySoggettoProprioUfficioPaged ...... INIZIO  ");
 		Connection lConn = null;
@@ -3170,8 +3183,10 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 
 			lFSoggSqlDao = new FascicoloSiepSoggettoSqlDAO(lConn);
 			lProcSqlDao = new ProcedimentoCumulatoSqlDAO(lConn);
-
-			lFSoggSqlDao.RicercaFascicoliBySoggettoProprioUfficioPaged(aSogModel, lCodUfficioUtenteConnesso,
+			/* MEV_2025-48 - Aggiunta ricerca per chiaveAnno/chiaveProgr e ufficio accorpato: Aggiunto FascicoloSiepModel */
+//			lFSoggSqlDao.RicercaFascicoliBySoggettoProprioUfficioPaged(aSogModel, lCodUfficioUtenteConnesso,
+//					aPage);
+			lFSoggSqlDao.RicercaFascicoliBySoggettoProprioUfficioPaged(aSogModel, aFascModel, lCodUfficioUtenteConnesso,
 					aPage);
 			lFSoggSqlDao.start();
 			while (lFSoggSqlDao.next()) {
