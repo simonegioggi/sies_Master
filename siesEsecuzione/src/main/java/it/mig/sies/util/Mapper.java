@@ -1,15 +1,20 @@
 package it.mig.sies.util;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+
 import it.mig.sies.exception.LoadException;
-import it.mig.sies.model.ConversionePPCumulo;
 import it.mig.sies.model.DatiPubblicoMinistero;
 import it.mig.sies.model.DettagliFascicolo;
-import it.mig.sies.model.LiberazioneAnticipataCumulo;
-import it.mig.sies.model.MisuraSicurezzaCumulo;
-import it.mig.sies.model.PenaAccessoriaCumulo;
-import it.mig.sies.model.RichiesteGECumulo;
-import it.mig.sies.model.SanzioniGPCumulo;
-import it.mig.sies.model.SanzioniSostitutiveCumulo;
 import it.mig.sies.model.Sinonimo;
 import it.mig.sies.model.Soggetto;
 import it.mig.sies.model.TitoloGiudiziario;
@@ -25,33 +30,14 @@ import it.mig.sies.type.esecuzione_NEW.ProvvedimentoGiudiziario;
 import it.mig.sies.type.esecuzione_NEW.ResponseData;
 import it.mig.sies.type.esecuzione_NEW.Ufficio;
 import it.mig.sies.type.foglicomplementari.ArrayOmonimi.Omonimo;
-import it.mig.sies.type.foglicomplementari.LiberazioneAnticipataConcessaDetrarreCumulo;
-import it.mig.sies.type.foglicomplementari.PenaAccessoria;
-import it.mig.sies.type.foglicomplementari.PenaConversionePenaPecuniaria;
-import it.mig.sies.type.foglicomplementari.RichiesteGEAnticipazioneEffetti;
-import it.mig.sies.type.foglicomplementari.SanzioniGiudicePace;
-import it.mig.sies.type.foglicomplementari.SanzioniSostitutive;
 import it.mig.sies.type.foglicomplementari.Utente;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
 
 /**
  * SIES FASE 2 - Classe di utility per il mapping tra model SIES e model richiesto per la trasmissione dei
  * dati
- * 
+ *
  * @author Federico Paparoni
- * 
+ *
  */
 public class Mapper {
 
@@ -59,9 +45,9 @@ public class Mapper {
 
 	/**
 	 * Effettua il mapping tra l'utente estratto e la struttura utente da inviare
-	 * 
+	 *
 	 * @param utenteSies
-	 * */
+	 */
 	public static it.mig.sies.type.esecuzione_NEW.Utente map(it.mig.sies.model.Utente utenteSies) {
 		// Ufficio relativo all'utente SIES
 		Ufficio ufficio = new Ufficio();
@@ -82,9 +68,9 @@ public class Mapper {
 
 	/**
 	 * Effettua il mapping tra il titolo giudiziario estratto e la struttura dati da inviare
-	 * 
+	 *
 	 * @param titoloGiudiziario
-	 * */
+	 */
 	public static ProvvedimentoGiudiziario map(TitoloGiudiziario titoloGiudiziario)
 			throws DatatypeConfigurationException {
 		ProvvedimentoGiudiziario provvedimentoGiudiziario = new ProvvedimentoGiudiziario();
@@ -96,19 +82,19 @@ public class Mapper {
 		provvedimentoGiudiziario.setCodiceAutorita(titoloGiudiziario.getCodiceAutoritaCentrale());
 		// Informazione non gestita
 		provvedimentoGiudiziario.setCodiceSedeAutoritaPrincipale(null);
-		provvedimentoGiudiziario.setCodiceSedeAutoritaPrincipaleDistaccata(titoloGiudiziario
-				.getSedeAutorita());
+		provvedimentoGiudiziario
+				.setCodiceSedeAutoritaPrincipaleDistaccata(titoloGiudiziario.getSedeAutorita());
 
 		GregorianCalendar calendar = new GregorianCalendar();
 		calendar.setTime(titoloGiudiziario.getDataProvvedimento());
-		provvedimentoGiudiziario.setDataProvvedimento(DatatypeFactory.newInstance().newXMLGregorianCalendar(
-				calendar));
+		provvedimentoGiudiziario
+				.setDataProvvedimento(DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar));
 		// MEV_ENG_31_BIS: aggiunto campo in impostazione
 		if (titoloGiudiziario.getDataImpugnazione() != null) {
 			GregorianCalendar calendarImp = new GregorianCalendar();
 			calendarImp.setTime(titoloGiudiziario.getDataImpugnazione());
-			provvedimentoGiudiziario.setDataImpugnazione(DatatypeFactory.newInstance()
-					.newXMLGregorianCalendar(calendarImp));
+			provvedimentoGiudiziario
+					.setDataImpugnazione(DatatypeFactory.newInstance().newXMLGregorianCalendar(calendarImp));
 		}
 		provvedimentoGiudiziario.setNumeroSentenza(titoloGiudiziario.getNumeroSentenza());
 		// Informazione non gestita
@@ -132,10 +118,10 @@ public class Mapper {
 
 	/**
 	 * Effettua il mapping tra i dati del tribunale di sorveglianza estratti e la struttura dati da inviare
-	 * 
+	 *
 	 * @param datiTribunaleSorveglianza
 	 * @param dettagliFascicolo
-	 * */
+	 */
 	public static it.mig.sies.type.esecuzione_NEW.DatiTribunaleSorveglianza map(
 			it.mig.sies.model.DatiTribunaleSorveglianza datiTribunaleSorveglianza,
 			DettagliFascicolo dettagliFascicolo) throws LoadException {
@@ -144,15 +130,16 @@ public class Mapper {
 
 			dts.setCodiceAutorita(datiTribunaleSorveglianza.getCodiceAutorita());
 			dts.setCodiceSedeAutoritaPrincipale(datiTribunaleSorveglianza.getSedeAutoritaPrinc());
-			dts.setCodiceSedeAutoritaPrincipaleDistaccata(datiTribunaleSorveglianza.getSedeAutoritaPrinDist());
+			dts.setCodiceSedeAutoritaPrincipaleDistaccata(
+					datiTribunaleSorveglianza.getSedeAutoritaPrinDist());
 			dts.setCodiceUnivocoProvvedimento(datiTribunaleSorveglianza.getCodiceUnivocoProvvedimento());
 			dts.setTipoProvvedimento(datiTribunaleSorveglianza.getTipoProvvedimento());
-			dts.setGiorniLibertaAnticipata(BigInteger.valueOf(datiTribunaleSorveglianza
-					.getGiorniLibertaAnticipata()));
-			dts.setGiorniLibertaAnticipataLs(BigInteger.valueOf(datiTribunaleSorveglianza
-					.getGiorniLibertaAnticipataLs()));
-			dts.setGiorniLibertaAnticipataLi(BigInteger.valueOf(datiTribunaleSorveglianza
-					.getGiorniLibertaAnticipataLi()));
+			dts.setGiorniLibertaAnticipata(
+					BigInteger.valueOf(datiTribunaleSorveglianza.getGiorniLibertaAnticipata()));
+			dts.setGiorniLibertaAnticipataLs(
+					BigInteger.valueOf(datiTribunaleSorveglianza.getGiorniLibertaAnticipataLs()));
+			dts.setGiorniLibertaAnticipataLi(
+					BigInteger.valueOf(datiTribunaleSorveglianza.getGiorniLibertaAnticipataLi()));
 
 			// Mapping di tutte le date
 			// presenti nel DatiTribunaleSorveglianza
@@ -165,17 +152,16 @@ public class Mapper {
 			dts.setNote(datiTribunaleSorveglianza.getNote());
 
 			if (datiTribunaleSorveglianza.getPeriodoLibertaAnticipataList() != null) {
-				dts.getPeriodoLibertaAnticipata().addAll(
-						mapLA(datiTribunaleSorveglianza.getPeriodoLibertaAnticipataList()));
+				dts.getPeriodoLibertaAnticipata()
+						.addAll(mapLA(datiTribunaleSorveglianza.getPeriodoLibertaAnticipataList()));
 			}
 
 			// Terzo collegato
 			// MEV 23010 - Viene mappato anche l'id SIES per il provv collegato ma non viene passato a NSC
-			if ((datiTribunaleSorveglianza.getProvvedimentoCollegato() != null)
-					&& (PropertyUtil.isPresent(datiTribunaleSorveglianza.getProvvedimentoCollegato()
-							.getChiaveNSC())))
-				dts.setIdProvvedimentoRevocato(BigInteger.valueOf(Long.parseLong(datiTribunaleSorveglianza
-						.getProvvedimentoCollegato().getChiaveNSC())));
+			if ((datiTribunaleSorveglianza.getProvvedimentoCollegato() != null) && (PropertyUtil
+					.isPresent(datiTribunaleSorveglianza.getProvvedimentoCollegato().getChiaveNSC())))
+				dts.setIdProvvedimentoRevocato(BigInteger.valueOf(Long
+						.parseLong(datiTribunaleSorveglianza.getProvvedimentoCollegato().getChiaveNSC())));
 
 			return dts;
 		} catch (Exception e) {
@@ -185,10 +171,10 @@ public class Mapper {
 
 	/**
 	 * Metodo di mapping relativo alle informazioni di durata per i DatiTribunaleSorveglianza
-	 * 
+	 *
 	 * @param dts
 	 * @param datiTribunaleSorveglianza
-	 * */
+	 */
 	private static void mapDurata(DatiTribunaleSorveglianza dts,
 			it.mig.sies.model.DatiTribunaleSorveglianza datiTribunaleSorveglianza) {
 		dts.setDurataMisura(evaluateDurata(datiTribunaleSorveglianza.getGiorniDurataMisura(),
@@ -197,21 +183,21 @@ public class Mapper {
 		dts.setPenaRideterminataArresto(evaluateDurata(datiTribunaleSorveglianza.getGiorniPenaRidetArresto(),
 				datiTribunaleSorveglianza.getMesiPenaRidetArresto(),
 				datiTribunaleSorveglianza.getAnniPenaRidetArresto()));
-		dts.setPenaRideterminataReclusione(evaluateDurata(
-				datiTribunaleSorveglianza.getGiorniPenaRidetReclusione(),
-				datiTribunaleSorveglianza.getMesiPenaRidetReclusione(),
-				datiTribunaleSorveglianza.getAnniPenaRidetReclusione()));
+		dts.setPenaRideterminataReclusione(
+				evaluateDurata(datiTribunaleSorveglianza.getGiorniPenaRidetReclusione(),
+						datiTribunaleSorveglianza.getMesiPenaRidetReclusione(),
+						datiTribunaleSorveglianza.getAnniPenaRidetReclusione()));
 		dts.setDurataBeneficio(evaluateDurata(datiTribunaleSorveglianza.getGiorniDurataBeneficio(),
 				datiTribunaleSorveglianza.getMesiDurataBeneficio(),
 				datiTribunaleSorveglianza.getAnniDurataBeneficio()));
-		dts.setPenaDetentivaDaEspiareArresto(evaluateDurata(
-				datiTribunaleSorveglianza.getGiorniPenaDetArresto(),
-				datiTribunaleSorveglianza.getMesiPenaDetArresto(),
-				datiTribunaleSorveglianza.getAnniPenaDetArresto()));
-		dts.setPenaDetentivaDaEspiareReclusione(evaluateDurata(
-				datiTribunaleSorveglianza.getGiorniPenaDetReclusione(),
-				datiTribunaleSorveglianza.getMesiPenaDetReclusione(),
-				datiTribunaleSorveglianza.getAnniPenaDetReclusione()));
+		dts.setPenaDetentivaDaEspiareArresto(
+				evaluateDurata(datiTribunaleSorveglianza.getGiorniPenaDetArresto(),
+						datiTribunaleSorveglianza.getMesiPenaDetArresto(),
+						datiTribunaleSorveglianza.getAnniPenaDetArresto()));
+		dts.setPenaDetentivaDaEspiareReclusione(
+				evaluateDurata(datiTribunaleSorveglianza.getGiorniPenaDetReclusione(),
+						datiTribunaleSorveglianza.getMesiPenaDetReclusione(),
+						datiTribunaleSorveglianza.getAnniPenaDetReclusione()));
 		dts.setPenaRideterminata(evaluateDurata(datiTribunaleSorveglianza.getGiorniPenaRideterminata(),
 				datiTribunaleSorveglianza.getMesiPenaRideterminata(),
 				datiTribunaleSorveglianza.getAnniPenaRideterminata()));
@@ -219,10 +205,10 @@ public class Mapper {
 
 	/**
 	 * Metodo di mapping relativo alle date per il DatiTribunaleSorveglianza
-	 * 
+	 *
 	 * @param dts
 	 * @param datiTribunaleSorveglianza
-	 * */
+	 */
 	private static void mapDate(DatiTribunaleSorveglianza dts,
 			it.mig.sies.model.DatiTribunaleSorveglianza datiTribunaleSorveglianza)
 			throws DatatypeConfigurationException {
@@ -234,19 +220,21 @@ public class Mapper {
 		dts.setDataDecorrenzaRevoca(evaluateDate(datiTribunaleSorveglianza.getDataDecorrenzaRevoca()));
 		dts.setDataInizioNonEspiata(evaluateDate(datiTribunaleSorveglianza.getDataInizioNonEspiata()));
 		dts.setDataFineNonEspiata(evaluateDate(datiTribunaleSorveglianza.getDataFineNonEspiata()));
-		dts.setDataInizioDifferimentoPena(evaluateDate(datiTribunaleSorveglianza
-				.getDataInizioDifferimentoPena()));
-		dts.setDataFineDifferimentoPena(evaluateDate(datiTribunaleSorveglianza.getDataFineDifferimentoPena()));
+		dts.setDataInizioDifferimentoPena(
+				evaluateDate(datiTribunaleSorveglianza.getDataInizioDifferimentoPena()));
+		dts.setDataFineDifferimentoPena(
+				evaluateDate(datiTribunaleSorveglianza.getDataFineDifferimentoPena()));
 		dts.setDataInizioRevoca(evaluateDate(datiTribunaleSorveglianza.getDataInizioRevoca()));
 	}
 
 	/**
 	 * Metodo di mapping relativo ai dettagli del fascicolo per il DatiTribunaleSorveglianza
-	 * 
+	 *
 	 * @param dts
 	 * @param dettagliFascicolo
-	 * */
-	private static void evaluateFascicolo(DettagliFascicolo dettagliFascicolo, DatiTribunaleSorveglianza dts) {
+	 */
+	private static void evaluateFascicolo(DettagliFascicolo dettagliFascicolo,
+			DatiTribunaleSorveglianza dts) {
 		// Il dettaglio del fascicolo non e' presente per ogni provvedimento
 		// dell'esecuzione
 		if (dettagliFascicolo != null) {
@@ -262,10 +250,10 @@ public class Mapper {
 
 	/**
 	 * Metodo di mapping relativo ai dettagli del fascicolo per il DatiUfficioSorveglianza
-	 * 
+	 *
 	 * @param dus
 	 * @param dettagliFascicolo
-	 * */
+	 */
 	private static void evaluateFascicolo(DettagliFascicolo dettagliFascicolo, DatiUfficioSorveglianza dus) {
 		// Il dettaglio del fascicolo non e' presente per ogni provvedimento
 		// dell'esecuzione
@@ -282,11 +270,11 @@ public class Mapper {
 
 	/**
 	 * Crea un oggetto Durata in base ai parametri in input
-	 * 
+	 *
 	 * @param giorniDurata
 	 * @param mesiDurata
 	 * @param anniDurata
-	 * */
+	 */
 	private static Durata evaluateDurata(int giorniDurata, int mesiDurata, int anniDurata) {
 		Durata durata = new Durata();
 		durata.setGiorni(BigInteger.valueOf(giorniDurata));
@@ -297,9 +285,9 @@ public class Mapper {
 
 	/**
 	 * Crea un XMLGregorianCalendar in base alla data passata come input
-	 * 
+	 *
 	 * @param date
-	 * */
+	 */
 	private static XMLGregorianCalendar evaluateDate(Date date) throws DatatypeConfigurationException {
 		XMLGregorianCalendar xmlCalendar = null;
 		if (date != null) {
@@ -312,10 +300,10 @@ public class Mapper {
 
 	/**
 	 * Effettua il mapping tra i dati dell'ufficio di sorveglianza estratti e la struttura dati da inviare
-	 * 
+	 *
 	 * @param datiUfficioSorveglianza
 	 * @param dettagliFascicolo
-	 * */
+	 */
 	public static it.mig.sies.type.esecuzione_NEW.DatiUfficioSorveglianza map(
 			it.mig.sies.model.DatiUfficioSorveglianza datiUfficioSorveglianza,
 			DettagliFascicolo dettagliFascicolo) throws LoadException {
@@ -331,49 +319,49 @@ public class Mapper {
 			dus.setCodiceUnivocoProvvedimento(datiUfficioSorveglianza.getCodiceUnivocoProvvedimento());
 			dus.setTipoProvvedimento(datiUfficioSorveglianza.getTipoProvvedimento());
 			dus.setTestoLibero(datiUfficioSorveglianza.getTestoLibero());
-			dus.setGiorniLibertaAnticipata(new BigInteger(""
-					+ datiUfficioSorveglianza.getNumGiorniLibAnticipata()));
-			dus.setGiorniLibertaAnticipataLs(new BigInteger(""
-					+ datiUfficioSorveglianza.getNumGiorniLibAnticipataLs()));
-			dus.setGiorniLibertaAnticipataLi(new BigInteger(""
-					+ datiUfficioSorveglianza.getNumGiorniLibAnticipataLi()));
-			dus.setImportoAmmenda(new BigDecimal(Double.valueOf(datiUfficioSorveglianza.getImportoAmmenda())
-					.toString()));
-			dus.setImportoMulta(new BigDecimal(Double.valueOf(datiUfficioSorveglianza.getImportoMulta())
-					.toString()));
+			dus.setGiorniLibertaAnticipata(
+					new BigInteger("" + datiUfficioSorveglianza.getNumGiorniLibAnticipata()));
+			dus.setGiorniLibertaAnticipataLs(
+					new BigInteger("" + datiUfficioSorveglianza.getNumGiorniLibAnticipataLs()));
+			dus.setGiorniLibertaAnticipataLi(
+					new BigInteger("" + datiUfficioSorveglianza.getNumGiorniLibAnticipataLi()));
+			dus.setImportoAmmenda(
+					new BigDecimal(Double.valueOf(datiUfficioSorveglianza.getImportoAmmenda()).toString()));
+			dus.setImportoMulta(
+					new BigDecimal(Double.valueOf(datiUfficioSorveglianza.getImportoMulta()).toString()));
 
-			dus.setDurataLibertaControllata(evaluateDurata(
-					datiUfficioSorveglianza.getGiorniDurataLibControllata(),
-					datiUfficioSorveglianza.getMesiDurataLibControllata(),
-					datiUfficioSorveglianza.getAnniDurataLibControllata()));
+			dus.setDurataLibertaControllata(
+					evaluateDurata(datiUfficioSorveglianza.getGiorniDurataLibControllata(),
+							datiUfficioSorveglianza.getMesiDurataLibControllata(),
+							datiUfficioSorveglianza.getAnniDurataLibControllata()));
 
-			dus.setDurataLavoroSostitutivo(evaluateDurata(
-					datiUfficioSorveglianza.getGiorniDurataLavoroSost(),
+			dus.setDurataLavoroSostitutivo(evaluateDurata(datiUfficioSorveglianza.getGiorniDurataLavoroSost(),
 					datiUfficioSorveglianza.getMesiDurataLavoroSost(),
 					datiUfficioSorveglianza.getAnniDurataLavoroSost()));
 
-			dus.setDataDecorrenzaPrimaRata(evaluateDate(datiUfficioSorveglianza.getDataDecorrenzaPrimaRata()));
-			dus.setDataDecorrenzaSospensione(evaluateDate(datiUfficioSorveglianza
-					.getDataDecorrenzaSospensione()));
+			dus.setDataDecorrenzaPrimaRata(
+					evaluateDate(datiUfficioSorveglianza.getDataDecorrenzaPrimaRata()));
+			dus.setDataDecorrenzaSospensione(
+					evaluateDate(datiUfficioSorveglianza.getDataDecorrenzaSospensione()));
 
 			dus.setNumeroRate(new BigInteger("" + datiUfficioSorveglianza.getNumeroRate()));
-			dus.setImportoRata(new BigDecimal(Double.valueOf(datiUfficioSorveglianza.getImportoRate())
-					.toString()));
-			dus.setImportoUltimaRata(new BigDecimal(Double.valueOf(
-					datiUfficioSorveglianza.getImportoUltimaRata()).toString()));
+			dus.setImportoRata(
+					new BigDecimal(Double.valueOf(datiUfficioSorveglianza.getImportoRate()).toString()));
+			dus.setImportoUltimaRata(new BigDecimal(
+					Double.valueOf(datiUfficioSorveglianza.getImportoUltimaRata()).toString()));
 			dus.setGiorniDallaNotifica(new BigInteger("" + datiUfficioSorveglianza.getGiorniDallaNotifica()));
 
 			if (datiUfficioSorveglianza.getPeriodoLibertaAnticipataList() != null) {
-				dus.getPeriodoLibertaAnticipata().addAll(
-						mapLA(datiUfficioSorveglianza.getPeriodoLibertaAnticipataList()));
+				dus.getPeriodoLibertaAnticipata()
+						.addAll(mapLA(datiUfficioSorveglianza.getPeriodoLibertaAnticipataList()));
 			}
 
 			// Gestione del dettaglio fascicolo
 			evaluateFascicolo(dettagliFascicolo, dus);
 			// Terzo collegato
 			if (datiUfficioSorveglianza.getIdProvvRevocato() != 0)
-				dus.setIdProvvedimentoRevocato(new BigInteger(""
-						+ datiUfficioSorveglianza.getIdProvvRevocato()));
+				dus.setIdProvvedimentoRevocato(
+						new BigInteger("" + datiUfficioSorveglianza.getIdProvvRevocato()));
 
 			return dus;
 		} catch (Exception e) {
@@ -383,26 +371,27 @@ public class Mapper {
 
 	/**
 	 * Metodo di mapping relativo alla lista di PeriodoLibertaAnticipata
-	 * 
+	 *
 	 * @param periodoList
-	 * */
+	 */
 	public static List<PeriodoLibertaAnticipata> mapLA(
 			List<it.mig.sies.model.PeriodoLibertaAnticipata> periodoList)
 			throws DatatypeConfigurationException {
-		List<PeriodoLibertaAnticipata> periodoLibertaAnticipataList = new ArrayList<PeriodoLibertaAnticipata>();
+		List<PeriodoLibertaAnticipata> periodoLibertaAnticipataList = new ArrayList<>();
 		/**
 		 * E' possibile avere una lista di PeriodoLibertaAnticipata dove ogni istanza ha una coppia di
 		 * informazioni data inizio-data fine
-		 * */
+		 */
 		for (it.mig.sies.model.PeriodoLibertaAnticipata pla : periodoList) {
 			PeriodoLibertaAnticipata temp = new PeriodoLibertaAnticipata();
 			GregorianCalendar calendar = new GregorianCalendar();
 			GregorianCalendar calendar2 = new GregorianCalendar();
 			calendar.setTime(pla.getDataLibertaAnticipataFine());
 			calendar2.setTime(pla.getDataLibertaAnticipataInizio());
-			temp.setDataLibertaAnticipataFine(DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar));
-			temp.setDataLibertaAnticipataInizio(DatatypeFactory.newInstance().newXMLGregorianCalendar(
-					calendar2));
+			temp.setDataLibertaAnticipataFine(
+					DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar));
+			temp.setDataLibertaAnticipataInizio(
+					DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar2));
 			temp.setStatoPermesso(pla.getStatoPermesso());
 			periodoLibertaAnticipataList.add(temp);
 		}
@@ -412,9 +401,9 @@ public class Mapper {
 
 	/**
 	 * Metodo di mapping relativo alla Soggetto estratto che deve essere inviato
-	 * 
+	 *
 	 * @param soggetto
-	 * */
+	 */
 	public static Anagrafica map(Soggetto soggetto) throws DatatypeConfigurationException {
 		Anagrafica anagrafica = new Anagrafica();
 		anagrafica.setCodiceFiscale(soggetto.getCodiceFiscale());
@@ -439,13 +428,13 @@ public class Mapper {
 	/**
 	 * MEV 31: modificata firma del metodo per gestire la sinonimia Effettua il mapping relativo alla response
 	 * tornata dal webservice, popolando la risposta con i dati del soggetto,titolo principale ed esecutivo.
-	 * 
+	 *
 	 * @param idEvento
 	 * @param operazione
 	 * @param responseData
 	 * @param soggetto
 	 * @param dao
-	 * */
+	 */
 	public static it.mig.sies.model.ResponseData map(String idEvento, String operazione,
 			it.mig.sies.type.esecuzione_NEW.ResponseData responseData, SiesDAO dao, Soggetto soggetto) {
 		it.mig.sies.model.ResponseData response = new it.mig.sies.model.ResponseData();
@@ -456,7 +445,7 @@ public class Mapper {
 		/**
 		 * Nel caso in cui l'esito ha un codice numerico della classe 2XX il trasferimento e' avvenuto con
 		 * successo, quindi vengono settate le informazioni da visualizzare all'utente
-		 * */
+		 */
 		if (responseData.getEsito().getCodice().value().startsWith("2")) {
 			response.setCompleted(true);
 			response.setChiaveNSC(responseData.getChiaviProvvedimentoEsecutivo().getNsc().longValue());
@@ -471,8 +460,8 @@ public class Mapper {
 			// MEV 31: SINONIMIA
 			if (responseData.getArrayOmonimi() != null
 					&& responseData.getArrayOmonimi().getOmonimo().size() > 0)
-				response.setElencoSinonimi(mapOmonimoToSinonimo(responseData.getArrayOmonimi().getOmonimo(),
-						dao, soggetto));
+				response.setElencoSinonimi(
+						mapOmonimoToSinonimo(responseData.getArrayOmonimi().getOmonimo(), dao, soggetto));
 		}
 
 		return response;
@@ -482,7 +471,7 @@ public class Mapper {
 			List<it.mig.sies.type.esecuzione_NEW.ArrayOmonimi.Omonimo> elencoOmonimi, SiesDAO dao,
 			Soggetto soggetto) {
 
-		List<Sinonimo> sinonimi = new ArrayList<Sinonimo>();
+		List<Sinonimo> sinonimi = new ArrayList<>();
 		for (it.mig.sies.type.esecuzione_NEW.ArrayOmonimi.Omonimo omonimo : elencoOmonimi) {
 			Sinonimo sinonimo = new Sinonimo();
 			// scrivo sempre nel campo CF (anche per gli stranieri anche se hanno il CI)
@@ -502,13 +491,13 @@ public class Mapper {
 			String descLuogoNascitaSinonimo = "", descNazioneNascitaSinonimo = "";
 			if ("03900".equals(omonimo.getAnagrafica().getCodiceStatoEsteroNascita()))
 				try {
-					descLuogoNascitaSinonimo = dao.getDescComune(omonimo.getAnagrafica()
-							.getCodiceLuogoNascita());
+					descLuogoNascitaSinonimo = dao
+							.getDescComune(omonimo.getAnagrafica().getCodiceLuogoNascita());
 				} catch (Exception e) {
 					descLuogoNascitaSinonimo = "-";
 				}
-			descNazioneNascitaSinonimo = dao.getDescNazione(omonimo.getAnagrafica()
-					.getCodiceStatoEsteroNascita());
+			descNazioneNascitaSinonimo = dao
+					.getDescNazione(omonimo.getAnagrafica().getCodiceStatoEsteroNascita());
 			sinonimo.setDescLuogoNascitaSinonimo(descLuogoNascitaSinonimo);
 			sinonimo.setDescNazioneNascitaSinonimo(descNazioneNascitaSinonimo);
 			sinonimo.setIdSinonimo(omonimo.getAnagrafica().getChiaviAnagrafica().getNsc());
@@ -548,8 +537,9 @@ public class Mapper {
 			sinonimo.setIsEqualLuogoNascita("" + descLNSoggetto.equals(descLNSinonimo));
 
 			if (soggetto.getDataNascita() != null && sinonimo.getDataNascitaSinonimo() != null)
-				sinonimo.setIsEqualDataNascita(soggetto.getDataNascita().compareTo(
-						sinonimo.getDataNascitaSinonimo()) == 0 ? "true" : "false");
+				sinonimo.setIsEqualDataNascita(
+						soggetto.getDataNascita().compareTo(sinonimo.getDataNascitaSinonimo()) == 0 ? "true"
+								: "false");
 			else if (soggetto.getDataNascita() == null && sinonimo.getDataNascitaSinonimo() == null)
 				sinonimo.setIsEqualDataNascita("true");
 			else
@@ -558,8 +548,8 @@ public class Mapper {
 			sinonimo.setIsEqualSesso("" + soggetto.getSesso().equals(sinonimo.getSessoSinonimo()));
 
 			if (soggetto.getPaternita() != null && sinonimo.getPaternitaSinonimo() != null)
-				sinonimo.setIsEqualPaternita(""
-						+ soggetto.getPaternita().equals(sinonimo.getPaternitaSinonimo()));
+				sinonimo.setIsEqualPaternita(
+						"" + soggetto.getPaternita().equals(sinonimo.getPaternitaSinonimo()));
 			else if (soggetto.getPaternita() == null && sinonimo.getPaternitaSinonimo() == null)
 				sinonimo.setIsEqualPaternita("true");
 			else
@@ -568,16 +558,16 @@ public class Mapper {
 			// per italiani CF, per stranieri CI
 			if ("03900".equals(soggetto.getNazioneNascita())) {
 				if (soggetto.getCodiceFiscale() != null && sinonimo.getCodiceFiscaleSinonimo() != null)
-					sinonimo.setIsEqualCodiceFiscale(""
-							+ soggetto.getCodiceFiscale().equals(sinonimo.getCodiceFiscaleSinonimo()));
+					sinonimo.setIsEqualCodiceFiscale(
+							"" + soggetto.getCodiceFiscale().equals(sinonimo.getCodiceFiscaleSinonimo()));
 				else if (soggetto.getCodiceFiscale() == null && sinonimo.getCodiceFiscaleSinonimo() == null)
 					sinonimo.setIsEqualCodiceFiscale("true");
 				else
 					sinonimo.setIsEqualCodiceFiscale("false");
 			} else {
 				if (soggetto.getCodiceAfis() != null && sinonimo.getCodiceIdentificativoSinonimo() != null)
-					sinonimo.setIsEqualCodiceFiscale(""
-							+ soggetto.getCodiceAfis().equals(sinonimo.getCodiceIdentificativoSinonimo()));
+					sinonimo.setIsEqualCodiceFiscale(
+							"" + soggetto.getCodiceAfis().equals(sinonimo.getCodiceIdentificativoSinonimo()));
 				else if (soggetto.getCodiceAfis() == null
 						&& sinonimo.getCodiceIdentificativoSinonimo() == null)
 					sinonimo.setIsEqualCodiceFiscale("true");
@@ -624,13 +614,13 @@ public class Mapper {
 
 	/**
 	 * Effettua il mapping relativo alle misure di sicurezza presenti sul provvedimento dell'esecuzione
-	 * 
+	 *
 	 * @param idEvento
 	 * @param operazione
 	 * @param responseData
-	 * */
+	 */
 	public static Collection<MisuraSicurezza> mapMS(List<it.mig.sies.model.MisuraSicurezza> msList) {
-		List<MisuraSicurezza> misuraSicurezzaList = new ArrayList<MisuraSicurezza>();
+		List<MisuraSicurezza> misuraSicurezzaList = new ArrayList<>();
 		for (it.mig.sies.model.MisuraSicurezza ms : msList) {
 			MisuraSicurezza misuraSicurezza = new MisuraSicurezza();
 			Durata durataMisura = new Durata();
@@ -653,7 +643,7 @@ public class Mapper {
 
 	/**
 	 * MEV 16: Effettua il mapping tra i dati del Pubblico Ministero estratti e la struttura dati da inviare
-	 * 
+	 *
 	 * @param datiPubblicoMinistero
 	 * @param dettagliFascicolo
 	 */
@@ -674,17 +664,17 @@ public class Mapper {
 				datiPubblicoMinistero.setCodiceUnivocoProvvedimento("0083SC-LIBAR");
 			// MEV 16 CUMULO: aggiungo casistiche particolari
 			else if (datiPubblicoMinistero.getCodiceUnivocoProvvedimento().endsWith("_NEW"))
-				datiPubblicoMinistero.setCodiceUnivocoProvvedimento(datiPubblicoMinistero
-						.getCodiceUnivocoProvvedimento().replace("_NEW", ""));
+				datiPubblicoMinistero.setCodiceUnivocoProvvedimento(
+						datiPubblicoMinistero.getCodiceUnivocoProvvedimento().replace("_NEW", ""));
 			dpm.setCodiceUnivocoProvvedimento(datiPubblicoMinistero.getCodiceUnivocoProvvedimento());
 			dpm.setTipoProvvedimento(datiPubblicoMinistero.getTipoProvvedimento());
 			dpm.setErgastolo(datiPubblicoMinistero.getErgastolo());
 			if (datiPubblicoMinistero.getImportoAmmenda() != 0)
-				dpm.setImportoAmmenda(new BigDecimal(Double.valueOf(datiPubblicoMinistero.getImportoAmmenda())
-						.toString()));
+				dpm.setImportoAmmenda(
+						new BigDecimal(Double.valueOf(datiPubblicoMinistero.getImportoAmmenda()).toString()));
 			if (datiPubblicoMinistero.getImportoMulta() != 0)
-				dpm.setImportoMulta(new BigDecimal(Double.valueOf(datiPubblicoMinistero.getImportoMulta())
-						.toString()));
+				dpm.setImportoMulta(
+						new BigDecimal(Double.valueOf(datiPubblicoMinistero.getImportoMulta()).toString()));
 
 			// Mapping di tutte le date presenti nel model datiPubblicoMinistero
 			mapDatePMFC(dpm, datiPubblicoMinistero);
@@ -694,37 +684,39 @@ public class Mapper {
 			evaluateFascicoloPMFC(dettagliFascicolo, dpm);
 
 			// MEV 16 CUMULO: aggiunta associazione valori MS & PA per il cumulo
-			if (PropertyUtil.isPresent(datiPubblicoMinistero.getListaMisureSicurezzaCumulo())) {
-				for (MisuraSicurezzaCumulo msc : datiPubblicoMinistero.getListaMisureSicurezzaCumulo()) {
-					it.mig.sies.type.foglicomplementari.MisuraSicurezza ms = mapDatiMS(msc);
-					dpm.getMisuraSicurezza().add(ms);
-				}
-			}
-			if (PropertyUtil.isPresent(datiPubblicoMinistero.getListaPeneAccessorieCumulo())) {
-				for (PenaAccessoriaCumulo pac : datiPubblicoMinistero.getListaPeneAccessorieCumulo()) {
-					it.mig.sies.type.foglicomplementari.PenaAccessoria pa = mapDatiPA(pac);
-					dpm.getPenaAccessoria().add(pa);
-				}
-			}
+			// if (PropertyUtil.isPresent(datiPubblicoMinistero.getListaMisureSicurezzaCumulo())) {
+			// for (MisuraSicurezzaCumulo msc : datiPubblicoMinistero.getListaMisureSicurezzaCumulo()) {
+			// it.mig.sies.type.foglicomplementari.MisuraSicurezza ms = mapDatiMS(msc);
+			// dpm.getMisuraSicurezza().add(ms);
+			// }
+			// }
+			// if (PropertyUtil.isPresent(datiPubblicoMinistero.getListaPeneAccessorieCumulo())) {
+			// for (PenaAccessoriaCumulo pac : datiPubblicoMinistero.getListaPeneAccessorieCumulo()) {
+			// it.mig.sies.type.foglicomplementari.PenaAccessoria pa = mapDatiPA(pac);
+			// dpm.getPenaAccessoria().add(pa);
+			// }
+			// }
 
 			// associazione altri dati
-			if (datiPubblicoMinistero.getLiberazioneAnticipataCumulo() != null)
-				dpm.setLiberazioneAnticipataConcessaDetrarreCumulo(mapDatiLiberazioneAnticipataCumulo(datiPubblicoMinistero
-						.getLiberazioneAnticipataCumulo()));
-			if (datiPubblicoMinistero.getSanzioniGPCumulo() != null)
-				dpm.setSanzioniGiudicePace(mapDatiSanzioniGPCumulo(datiPubblicoMinistero.getSanzioniGPCumulo()));
-			if (datiPubblicoMinistero.getSanzioniSostitutiveCumulo() != null)
-				dpm.setSanzioniSostitutive(mapDatiSanzioniSostitutiveCumulo(datiPubblicoMinistero
-						.getSanzioniSostitutiveCumulo()));
-			if (datiPubblicoMinistero.getConversionePPCumulo() != null)
-				dpm.setPenaConversionePenaPecuniaria(mapDatiConversionePPCumulo(datiPubblicoMinistero
-						.getConversionePPCumulo()));
-			if (PropertyUtil.isPresent(datiPubblicoMinistero.getListaRichiesteGECumulo())) {
-				for (RichiesteGECumulo rgec : datiPubblicoMinistero.getListaRichiesteGECumulo()) {
-					it.mig.sies.type.foglicomplementari.RichiesteGEAnticipazioneEffetti rgeae = mapDatiRichiestaGE(rgec);
-					dpm.getRichiesteGEAnticipazioneEffetti().add(rgeae);
-				}
-			}
+			// if (datiPubblicoMinistero.getLiberazioneAnticipataCumulo() != null)
+			// dpm.setLiberazioneAnticipataConcessaDetrarreCumulo(mapDatiLiberazioneAnticipataCumulo(
+			// datiPubblicoMinistero.getLiberazioneAnticipataCumulo()));
+			// if (datiPubblicoMinistero.getSanzioniGPCumulo() != null)
+			// dpm.setSanzioniGiudicePace(
+			// mapDatiSanzioniGPCumulo(datiPubblicoMinistero.getSanzioniGPCumulo()));
+			// if (datiPubblicoMinistero.getSanzioniSostitutiveCumulo() != null)
+			// dpm.setSanzioniSostitutive(mapDatiSanzioniSostitutiveCumulo(
+			// datiPubblicoMinistero.getSanzioniSostitutiveCumulo()));
+			// if (datiPubblicoMinistero.getConversionePPCumulo() != null)
+			// dpm.setPenaConversionePenaPecuniaria(
+			// mapDatiConversionePPCumulo(datiPubblicoMinistero.getConversionePPCumulo()));
+			// if (PropertyUtil.isPresent(datiPubblicoMinistero.getListaRichiesteGECumulo())) {
+			// for (RichiesteGECumulo rgec : datiPubblicoMinistero.getListaRichiesteGECumulo()) {
+			// it.mig.sies.type.foglicomplementari.RichiesteGEAnticipazioneEffetti rgeae = mapDatiRichiestaGE(
+			// rgec);
+			// dpm.getRichiesteGEAnticipazioneEffetti().add(rgeae);
+			// }
+			// }
 
 			// valore di ritorno
 			return dpm;
@@ -735,7 +727,7 @@ public class Mapper {
 
 	/**
 	 * MEV 16: Metodo di mapping relativo ai dettagli del fascicolo per il DatiPubblicoMinistero
-	 * 
+	 *
 	 * @param dpm
 	 * @param dettagliFascicolo
 	 */
@@ -756,7 +748,7 @@ public class Mapper {
 
 	/**
 	 * MEV 16: Metodo di mapping relativo alle date per il DatiPubblicoMinistero
-	 * 
+	 *
 	 * @param dpm
 	 * @param datiPubblicoMinistero
 	 */
@@ -771,7 +763,7 @@ public class Mapper {
 
 	/**
 	 * MEV 16: Metodo di mapping relativo alle informazioni di durata per i DatiPubblicoMinistero
-	 * 
+	 *
 	 * @param dpm
 	 * @param datiPubblicoMinistero
 	 */
@@ -789,7 +781,7 @@ public class Mapper {
 
 	/**
 	 * MEV 16: metodo di mappatura dati utente
-	 * 
+	 *
 	 * @param utenteSies
 	 * @return
 	 */
@@ -814,7 +806,7 @@ public class Mapper {
 
 	/**
 	 * MEV 16: metodo di mappatura dati soggetto
-	 * 
+	 *
 	 * @param soggetto
 	 * @param idSinonimo
 	 * @return Anagrafica
@@ -854,11 +846,11 @@ public class Mapper {
 
 	/**
 	 * MEV 16: Crea un oggetto Durata in base ai parametri in input
-	 * 
+	 *
 	 * @param giorniDurata
 	 * @param mesiDurata
 	 * @param anniDurata
-	 * */
+	 */
 	private static it.mig.sies.type.foglicomplementari.Durata evaluateDurataPMFC(int giorniDurata,
 			int mesiDurata, int anniDurata) {
 
@@ -871,7 +863,7 @@ public class Mapper {
 
 	/**
 	 * MEV 16: Effettua il mapping tra il titolo giudiziario estratto e la struttura dati da inviare
-	 * 
+	 *
 	 * @param titoloGiudiziario
 	 * @param idSoggetto
 	 * @param dao
@@ -893,13 +885,13 @@ public class Mapper {
 		provvedimentoGiudiziario.setCodiceAutorita(titoloGiudiziario.getCodiceAutoritaCentrale());
 		// Informazione non gestita
 		provvedimentoGiudiziario.setCodiceSedeAutoritaPrincipale(null);
-		provvedimentoGiudiziario.setCodiceSedeAutoritaPrincipaleDistaccata(titoloGiudiziario
-				.getSedeAutorita());
+		provvedimentoGiudiziario
+				.setCodiceSedeAutoritaPrincipaleDistaccata(titoloGiudiziario.getSedeAutorita());
 
 		GregorianCalendar calendar = new GregorianCalendar();
 		calendar.setTime(titoloGiudiziario.getDataProvvedimento());
-		provvedimentoGiudiziario.setDataProvvedimento(DatatypeFactory.newInstance().newXMLGregorianCalendar(
-				calendar));
+		provvedimentoGiudiziario
+				.setDataProvvedimento(DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar));
 		provvedimentoGiudiziario.setNumeroSentenza(titoloGiudiziario.getNumeroSentenza());
 
 		// Questo flag indica se il provvedimento e' un cumulo di provvedimenti
@@ -915,16 +907,16 @@ public class Mapper {
 		provvedimentoGiudiziario.setChiaviProvvedimentoGiudiziario(chiaviProvvedimentoGiudiziario);
 
 		// MEV 16 CUMULO: recupero nuovi dati
-		Soggetto soggetto = null;
-		if (PropertyUtil.isPresent(titoloGiudiziario.getChiaveAnagraficaSies())) {
-			// trattasi di cumulo
-			soggetto = dao.getSoggettoByID(titoloGiudiziario.getChiaveAnagraficaSies().toString());
-			provvedimentoGiudiziario.setAnagrafica(mapSoggettoFC(soggetto, idSinonimo));
-		} else {
-			// trattasi di a.e.p. oppure s.p.
-			soggetto = dao.getSoggettoByID("" + idSoggetto);
-			provvedimentoGiudiziario.setAnagrafica(mapSoggettoFC(soggetto, ""));
-		}
+		// Soggetto soggetto = null;
+		// if (PropertyUtil.isPresent(titoloGiudiziario.getChiaveAnagraficaSies())) {
+		// // trattasi di cumulo
+		// soggetto = dao.getSoggettoByID(titoloGiudiziario.getChiaveAnagraficaSies().toString());
+		// provvedimentoGiudiziario.setAnagrafica(mapSoggettoFC(soggetto, idSinonimo));
+		// } else {
+		// // trattasi di a.e.p. oppure s.p.
+		// soggetto = dao.getSoggettoByID("" + idSoggetto);
+		// provvedimentoGiudiziario.setAnagrafica(mapSoggettoFC(soggetto, ""));
+		// }
 
 		// valore di ritorno
 		return provvedimentoGiudiziario;
@@ -933,7 +925,7 @@ public class Mapper {
 	/**
 	 * MEV 16: Effettua il mapping relativo alla response tornata dal webservice, popolando la risposta con i
 	 * dati del soggetto,titolo principale ed esecutivo
-	 * 
+	 *
 	 * @param idEvento
 	 * @param operazione
 	 * @param responseData
@@ -948,16 +940,16 @@ public class Mapper {
 		String esito = decodeEsitoFC(operazione, responseData);
 		response.setEsito(esito);
 		// MEV 16 CUMULO: aggiunta impostazione di proprietà
-		ApplicationProperties properties = ApplicationProperties.getIstance();
-		if (PropertyUtil.isPresent(responseData.getProvvedimentoNSC())
-				&& PropertyUtil.isPresent(responseData.getProvvedimentoNSC().getEsito().getCodice())) {
-			String codEsito = responseData.getProvvedimentoNSC().getEsito().getCodice().value();
-			response.setCodiceEsito(codEsito);
-			response.setDescCodiceEsito(properties.getProperty(SUFFISSO_MESSAGGI + codEsito));
-		} else {
-			response.setCodiceEsito(responseData.getEsito().getCodice().value());
-			response.setDescCodiceEsito(esito);
-		}
+		// ApplicationProperties properties = ApplicationProperties.getIstance();
+		// if (PropertyUtil.isPresent(responseData.getProvvedimentoNSC())
+		// && PropertyUtil.isPresent(responseData.getProvvedimentoNSC().getEsito().getCodice())) {
+		// String codEsito = responseData.getProvvedimentoNSC().getEsito().getCodice().value();
+		// response.setCodiceEsito(codEsito);
+		// response.setDescCodiceEsito(properties.getProperty(SUFFISSO_MESSAGGI + codEsito));
+		// } else {
+		response.setCodiceEsito(responseData.getEsito().getCodice().value());
+		response.setDescCodiceEsito(esito);
+		// }
 		// Nel caso in cui l'esito ha un codice numerico della classe 2XX
 		// il trasferimento e' avvenuto con successo, quindi vengono settate
 		// le informazioni da visualizzare all'utente
@@ -977,15 +969,15 @@ public class Mapper {
 			// SINONIMIA
 			if (responseData.getArrayOmonimi() != null
 					&& responseData.getArrayOmonimi().getOmonimo().size() > 0) {
-				response.setElencoSinonimi(mapOmonimoToSinonimoFC(
-						responseData.getArrayOmonimi().getOmonimo(), dao, soggetto));
+				response.setElencoSinonimi(
+						mapOmonimoToSinonimoFC(responseData.getArrayOmonimi().getOmonimo(), dao, soggetto));
 			}
 			// MEV 16 CUMULO: aggiunte impostazioni elenco provvedimenti cumulabili e chiave NSC
-			if (responseData.getProvvedimentoNSC() != null
-					&& responseData.getProvvedimentoNSC().getProvvedimentoGiudiziario() != null
-					&& responseData.getProvvedimentoNSC().getProvvedimentoGiudiziario().size() > 0)
-				response.setElencoProvvedimentiNSC(mapProvvedimentoToTitoloFC(responseData
-						.getProvvedimentoNSC().getProvvedimentoGiudiziario(), dao, response));
+			// if (responseData.getProvvedimentoNSC() != null
+			// && responseData.getProvvedimentoNSC().getProvvedimentoGiudiziario() != null
+			// && responseData.getProvvedimentoNSC().getProvvedimentoGiudiziario().size() > 0)
+			// response.setElencoProvvedimentiNSC(mapProvvedimentoToTitoloFC(
+			// responseData.getProvvedimentoNSC().getProvvedimentoGiudiziario(), dao, response));
 			if (PropertyUtil.isPresent(responseData.getChiaviAnagrafica())
 					&& PropertyUtil.isPresent(responseData.getChiaviAnagrafica().getNsc()))
 				soggetto.setChiaveNSC(responseData.getChiaviAnagrafica().getNsc().longValue());
@@ -997,107 +989,107 @@ public class Mapper {
 
 	/**
 	 * MEV 16 CUMULO: aggiunto metodo di mappatura
-	 * 
+	 *
 	 * @param provvedimentiGiudiziari
 	 * @param dao
 	 * @param response
 	 * @return List<TitoloGiudiziario>
 	 */
-	private static List<TitoloGiudiziario> mapProvvedimentoToTitoloFC(
-			List<it.mig.sies.type.foglicomplementari.ProvvedimentoGiudiziario> provvedimentiGiudiziari,
-			SiesDAO dao, it.mig.sies.model.ResponseData response) {
-
-		List<TitoloGiudiziario> ltg = new ArrayList<TitoloGiudiziario>();
-		for (it.mig.sies.type.foglicomplementari.ProvvedimentoGiudiziario pg : provvedimentiGiudiziari) {
-			TitoloGiudiziario tg = new TitoloGiudiziario();
-			if (PropertyUtil.isPresent(pg.getAnnoSentenza()))
-				tg.setAnnoSentenza(new Integer(pg.getAnnoSentenza()).intValue());
-			tg.setNumeroSentenza(pg.getNumeroSentenza());
-			if (PropertyUtil.isPresent(pg.getCodiceAutorita())) {
-				String codiceAutorita = pg.getCodiceAutorita();
-				tg.setCodiceAutoritaCentrale(codiceAutorita);
-				String ca = codiceAutorita;
-				List<String> codiciAutorita = Arrays.asList("024", "063");
-				if (ca.startsWith("0") && !codiciAutorita.contains(ca))
-					ca = ca.substring(1);
-				tg.setDescrizioneAutorita(dao.getDescAutorita(ca));
-			}
-			tg.setSedeAutorita(pg.getCodiceSedeAutoritaPrincipaleDistaccata());
-			tg.setDescrizioneSedeAutorita(dao.getDescSedeAutorita(pg
-					.getCodiceSedeAutoritaPrincipaleDistaccata()));
-			GregorianCalendar dp = pg.getDataProvvedimento().toGregorianCalendar();
-			tg.setDataProvvedimento(dp.getTime());
-			if (pg.getChiaviProvvedimentoGiudiziario() != null) {
-				tg.setChiaveNSC(pg.getChiaviProvvedimentoGiudiziario().getNsc());
-				tg.setChiaveSies(pg.getChiaviProvvedimentoGiudiziario().getSies());
-			}
-			if (PropertyUtil.isPresent(pg.getCodiceEsito()) && pg.getCodiceEsito().length() == 2) {
-				// il valore di ritorno è del tipo "V1"
-				String stato = pg.getCodiceEsito().substring(0, 1);
-				String presente = pg.getCodiceEsito().substring(1);
-				tg.setPresenteSIC(mapResultProcedure(presente));
-				tg.setStatoTitoloEsecSIC(mapResultProcedure(stato));
-				tg.setCodiceEsito(pg.getCodiceEsito());
-				String alNomeDi = "";
-				if ("4".equals(presente) || "5".equals(presente)) {
-					if (PropertyUtil.isPresent(pg.getAnagrafica())) {
-						String soggetto = pg.getAnagrafica().getCognome() + " "
-								+ pg.getAnagrafica().getNome();
-						String sesso = pg.getAnagrafica().getSesso();
-						if ("M".equals(sesso))
-							sesso = "nato";
-						else
-							sesso = "nata";
-						Date dn = pg.getAnagrafica().getDataNascita().toGregorianCalendar().getTime();
-						String dataNascita = PropertyUtil.getDateToString(dn, "dd/MM/yyyy");
-						String descNazioneNascita = "", luogoNascita = "";
-						descNazioneNascita = dao.getDescNazione(pg.getAnagrafica()
-								.getCodiceStatoEsteroNascita());
-						String descComuneEsteroNascita = pg.getAnagrafica().getDescrizioneComuneEstero();
-						if ("03900".equals(pg.getAnagrafica().getCodiceStatoEsteroNascita())) {
-							luogoNascita = dao.getDescComune(pg.getAnagrafica().getCodiceLuogoNascita());
-						} else {
-							if (PropertyUtil.isPresent(descComuneEsteroNascita))
-								luogoNascita = descComuneEsteroNascita + "(" + descNazioneNascita + ")";
-							else
-								luogoNascita = descNazioneNascita;
-						}
-
-						alNomeDi = soggetto + " " + sesso + " il " + dataNascita + " in " + luogoNascita;
-					}
-					// MEV 16 CUMULO: aggiunta impostazione variabile
-					if ("4".equals(presente))
-						response.setDescEsitoCumulo("REPLICA");
-				}
-				tg.setAlNomeDi(alNomeDi);
-			}
-
-			// aggiungo alla lista
-			ltg.add(tg);
-		}
-
-		// valore di ritorno
-		return ltg;
-	}
+	// private static List<TitoloGiudiziario> mapProvvedimentoToTitoloFC(
+	// List<it.mig.sies.type.foglicomplementari.ProvvedimentoGiudiziario> provvedimentiGiudiziari,
+	// SiesDAO dao, it.mig.sies.model.ResponseData response) {
+	//
+	// List<TitoloGiudiziario> ltg = new ArrayList<>();
+	// for (it.mig.sies.type.foglicomplementari.ProvvedimentoGiudiziario pg : provvedimentiGiudiziari) {
+	// TitoloGiudiziario tg = new TitoloGiudiziario();
+	// if (PropertyUtil.isPresent(pg.getAnnoSentenza()))
+	// tg.setAnnoSentenza(new Integer(pg.getAnnoSentenza()).intValue());
+	// tg.setNumeroSentenza(pg.getNumeroSentenza());
+	// if (PropertyUtil.isPresent(pg.getCodiceAutorita())) {
+	// String codiceAutorita = pg.getCodiceAutorita();
+	// tg.setCodiceAutoritaCentrale(codiceAutorita);
+	// String ca = codiceAutorita;
+	// List<String> codiciAutorita = Arrays.asList("024", "063");
+	// if (ca.startsWith("0") && !codiciAutorita.contains(ca))
+	// ca = ca.substring(1);
+	// tg.setDescrizioneAutorita(dao.getDescAutorita(ca));
+	// }
+	// tg.setSedeAutorita(pg.getCodiceSedeAutoritaPrincipaleDistaccata());
+	// tg.setDescrizioneSedeAutorita(
+	// dao.getDescSedeAutorita(pg.getCodiceSedeAutoritaPrincipaleDistaccata()));
+	// GregorianCalendar dp = pg.getDataProvvedimento().toGregorianCalendar();
+	// tg.setDataProvvedimento(dp.getTime());
+	// if (pg.getChiaviProvvedimentoGiudiziario() != null) {
+	// tg.setChiaveNSC(pg.getChiaviProvvedimentoGiudiziario().getNsc());
+	// tg.setChiaveSies(pg.getChiaviProvvedimentoGiudiziario().getSies());
+	// }
+	// if (PropertyUtil.isPresent(pg.getCodiceEsito()) && pg.getCodiceEsito().length() == 2) {
+	// // il valore di ritorno è del tipo "V1"
+	// String stato = pg.getCodiceEsito().substring(0, 1);
+	// String presente = pg.getCodiceEsito().substring(1);
+	// tg.setPresenteSIC(mapResultProcedure(presente));
+	// tg.setStatoTitoloEsecSIC(mapResultProcedure(stato));
+	// tg.setCodiceEsito(pg.getCodiceEsito());
+	// String alNomeDi = "";
+	// if ("4".equals(presente) || "5".equals(presente)) {
+	// if (PropertyUtil.isPresent(pg.getAnagrafica())) {
+	// String soggetto = pg.getAnagrafica().getCognome() + " "
+	// + pg.getAnagrafica().getNome();
+	// String sesso = pg.getAnagrafica().getSesso();
+	// if ("M".equals(sesso))
+	// sesso = "nato";
+	// else
+	// sesso = "nata";
+	// Date dn = pg.getAnagrafica().getDataNascita().toGregorianCalendar().getTime();
+	// String dataNascita = PropertyUtil.getDateToString(dn, "dd/MM/yyyy");
+	// String descNazioneNascita = "", luogoNascita = "";
+	// descNazioneNascita = dao
+	// .getDescNazione(pg.getAnagrafica().getCodiceStatoEsteroNascita());
+	// String descComuneEsteroNascita = pg.getAnagrafica().getDescrizioneComuneEstero();
+	// if ("03900".equals(pg.getAnagrafica().getCodiceStatoEsteroNascita())) {
+	// luogoNascita = dao.getDescComune(pg.getAnagrafica().getCodiceLuogoNascita());
+	// } else {
+	// if (PropertyUtil.isPresent(descComuneEsteroNascita))
+	// luogoNascita = descComuneEsteroNascita + "(" + descNazioneNascita + ")";
+	// else
+	// luogoNascita = descNazioneNascita;
+	// }
+	//
+	// alNomeDi = soggetto + " " + sesso + " il " + dataNascita + " in " + luogoNascita;
+	// }
+	// // MEV 16 CUMULO: aggiunta impostazione variabile
+	// if ("4".equals(presente))
+	// response.setDescEsitoCumulo("REPLICA");
+	// }
+	// tg.setAlNomeDi(alNomeDi);
+	// }
+	//
+	// // aggiungo alla lista
+	// ltg.add(tg);
+	// }
+	//
+	// // valore di ritorno
+	// return ltg;
+	// }
 
 	/**
 	 * MEV 16 CUMULO: aggiunto metodo per mappare i risultari della procedure di ricerca cumulo
-	 * 
+	 *
 	 * @param codEsito
 	 * @return String
 	 */
-	private static String mapResultProcedure(String codEsito) {
-
-		ApplicationProperties properties = ApplicationProperties.getIstance();
-		String result = properties.getProperty(SUFFISSO_MESSAGGI + codEsito);
-
-		// valore di ritorno
-		return result;
-	}
+	// private static String mapResultProcedure(String codEsito) {
+	//
+	// ApplicationProperties properties = ApplicationProperties.getIstance();
+	// String result = properties.getProperty(SUFFISSO_MESSAGGI + codEsito);
+	//
+	// // valore di ritorno
+	// return result;
+	// }
 
 	/**
 	 * MEV 16: metodo per la mappatura dei dati tra omonimo e sinonimo
-	 * 
+	 *
 	 * @param elencoOmonimi
 	 * @param dao
 	 * @param soggetto
@@ -1106,7 +1098,7 @@ public class Mapper {
 	private static List<Sinonimo> mapOmonimoToSinonimoFC(List<Omonimo> elencoOmonimi, SiesDAO dao,
 			Soggetto soggetto) {
 
-		List<Sinonimo> sinonimi = new ArrayList<Sinonimo>();
+		List<Sinonimo> sinonimi = new ArrayList<>();
 		for (Omonimo omonimo : elencoOmonimi) {
 			Sinonimo sinonimo = new Sinonimo();
 			// scrivo sempre nel campo CF (anche per gli stranieri anche se hanno il CI)
@@ -1126,13 +1118,13 @@ public class Mapper {
 			String descLuogoNascitaSinonimo = "", descNazioneNascitaSinonimo = "";
 			if ("03900".equals(omonimo.getAnagrafica().getCodiceStatoEsteroNascita()))
 				try {
-					descLuogoNascitaSinonimo = dao.getDescComune(omonimo.getAnagrafica()
-							.getCodiceLuogoNascita());
+					descLuogoNascitaSinonimo = dao
+							.getDescComune(omonimo.getAnagrafica().getCodiceLuogoNascita());
 				} catch (Exception e) {
 					descLuogoNascitaSinonimo = "-";
 				}
-			descNazioneNascitaSinonimo = dao.getDescNazione(omonimo.getAnagrafica()
-					.getCodiceStatoEsteroNascita());
+			descNazioneNascitaSinonimo = dao
+					.getDescNazione(omonimo.getAnagrafica().getCodiceStatoEsteroNascita());
 			sinonimo.setDescLuogoNascitaSinonimo(descLuogoNascitaSinonimo);
 			sinonimo.setDescNazioneNascitaSinonimo(descNazioneNascitaSinonimo);
 			sinonimo.setIdSinonimo(omonimo.getAnagrafica().getChiaviAnagrafica().getNsc());
@@ -1172,8 +1164,9 @@ public class Mapper {
 			sinonimo.setIsEqualLuogoNascita("" + descLNSoggetto.equals(descLNSinonimo));
 
 			if (soggetto.getDataNascita() != null && sinonimo.getDataNascitaSinonimo() != null)
-				sinonimo.setIsEqualDataNascita(soggetto.getDataNascita().compareTo(
-						sinonimo.getDataNascitaSinonimo()) == 0 ? "true" : "false");
+				sinonimo.setIsEqualDataNascita(
+						soggetto.getDataNascita().compareTo(sinonimo.getDataNascitaSinonimo()) == 0 ? "true"
+								: "false");
 			else if (soggetto.getDataNascita() == null && sinonimo.getDataNascitaSinonimo() == null)
 				sinonimo.setIsEqualDataNascita("true");
 			else
@@ -1182,8 +1175,8 @@ public class Mapper {
 			sinonimo.setIsEqualSesso("" + soggetto.getSesso().equals(sinonimo.getSessoSinonimo()));
 
 			if (soggetto.getPaternita() != null && sinonimo.getPaternitaSinonimo() != null)
-				sinonimo.setIsEqualPaternita(""
-						+ soggetto.getPaternita().equals(sinonimo.getPaternitaSinonimo()));
+				sinonimo.setIsEqualPaternita(
+						"" + soggetto.getPaternita().equals(sinonimo.getPaternitaSinonimo()));
 			else if (soggetto.getPaternita() == null && sinonimo.getPaternitaSinonimo() == null)
 				sinonimo.setIsEqualPaternita("true");
 			else
@@ -1192,16 +1185,16 @@ public class Mapper {
 			// per italiani CF, per stranieri CI
 			if ("03900".equals(soggetto.getNazioneNascita())) {
 				if (soggetto.getCodiceFiscale() != null && sinonimo.getCodiceFiscaleSinonimo() != null)
-					sinonimo.setIsEqualCodiceFiscale(""
-							+ soggetto.getCodiceFiscale().equals(sinonimo.getCodiceFiscaleSinonimo()));
+					sinonimo.setIsEqualCodiceFiscale(
+							"" + soggetto.getCodiceFiscale().equals(sinonimo.getCodiceFiscaleSinonimo()));
 				else if (soggetto.getCodiceFiscale() == null && sinonimo.getCodiceFiscaleSinonimo() == null)
 					sinonimo.setIsEqualCodiceFiscale("true");
 				else
 					sinonimo.setIsEqualCodiceFiscale("false");
 			} else {
 				if (soggetto.getCodiceAfis() != null && sinonimo.getCodiceIdentificativoSinonimo() != null)
-					sinonimo.setIsEqualCodiceFiscale(""
-							+ soggetto.getCodiceAfis().equals(sinonimo.getCodiceIdentificativoSinonimo()));
+					sinonimo.setIsEqualCodiceFiscale(
+							"" + soggetto.getCodiceAfis().equals(sinonimo.getCodiceIdentificativoSinonimo()));
 				else if (soggetto.getCodiceAfis() == null
 						&& sinonimo.getCodiceIdentificativoSinonimo() == null)
 					sinonimo.setIsEqualCodiceFiscale("true");
@@ -1228,7 +1221,7 @@ public class Mapper {
 
 	/**
 	 * MEV 16: metodo di decodifica
-	 * 
+	 *
 	 * @param operazione
 	 * @param responseData
 	 * @return String
@@ -1254,161 +1247,164 @@ public class Mapper {
 
 	/**
 	 * MEV 16 CUMULO: aggiunto metodo di associazione model-type
-	 * 
+	 *
 	 * @param msc
 	 * @return MisuraSicurezza
 	 */
-	private static it.mig.sies.type.foglicomplementari.MisuraSicurezza mapDatiMS(MisuraSicurezzaCumulo msc) {
-
-		it.mig.sies.type.foglicomplementari.MisuraSicurezza ms = new it.mig.sies.type.foglicomplementari.MisuraSicurezza();
-		ms.setCodiceTipoDurataMS(msc.getCodiceTipoDurataMS());
-		ms.setCodiceTipoMS(msc.getCodiceTipoMS());
-		ms.setNumeroAnniMS(new BigInteger("" + msc.getNumeroAnniMS()));
-		ms.setNumeroGiorniMS(new BigInteger("" + msc.getNumeroGiorniMS()));
-		ms.setNumeroMesiMS(new BigInteger("" + msc.getNumeroMesiMS()));
-
-		// valore di ritorno
-		return ms;
-	}
+	// private static it.mig.sies.type.foglicomplementari.MisuraSicurezza mapDatiMS(MisuraSicurezzaCumulo msc)
+	// {
+	//
+	// it.mig.sies.type.foglicomplementari.MisuraSicurezza ms = new
+	// it.mig.sies.type.foglicomplementari.MisuraSicurezza();
+	// ms.setCodiceTipoDurataMS(msc.getCodiceTipoDurataMS());
+	// ms.setCodiceTipoMS(msc.getCodiceTipoMS());
+	// ms.setNumeroAnniMS(new BigInteger("" + msc.getNumeroAnniMS()));
+	// ms.setNumeroGiorniMS(new BigInteger("" + msc.getNumeroGiorniMS()));
+	// ms.setNumeroMesiMS(new BigInteger("" + msc.getNumeroMesiMS()));
+	//
+	// // valore di ritorno
+	// return ms;
+	// }
 
 	/**
 	 * MEV 16 CUMULO: aggiunto metodo di associazione model-type
-	 * 
+	 *
 	 * @param pac
 	 * @return PenaAccessoria
 	 */
-	private static PenaAccessoria mapDatiPA(PenaAccessoriaCumulo pac) {
-
-		it.mig.sies.type.foglicomplementari.PenaAccessoria pa = new it.mig.sies.type.foglicomplementari.PenaAccessoria();
-		pa.setCodiceTipoDurataPA(pac.getCodiceTipoDurataPA());
-		pa.setCodiceTipoPA(pac.getCodiceTipoPA());
-		pa.setNumeroAnniPA(new BigInteger("" + pac.getNumeroAnniPA()));
-		pa.setNumeroGiorniPA(new BigInteger("" + pac.getNumeroGiorniPA()));
-		pa.setNumeroMesiPA(new BigInteger("" + pac.getNumeroMesiPA()));
-
-		boolean existDurata = PropertyUtil.isPresent(pa.getNumeroAnniPA())
-				|| PropertyUtil.isPresent(pa.getNumeroMesiPA())
-				|| PropertyUtil.isPresent(pa.getNumeroGiorniPA());
-
-		if (existDurata)
-			pa.setCodiceTipoDurataPA("T");
-		if ("1".equals(pa.getCodiceTipoPA()) && existDurata)
-			pa.setCodiceTipoPA("10");
-
-		// valore di ritorno
-		return pa;
-	}
+	// private static PenaAccessoria mapDatiPA(PenaAccessoriaCumulo pac) {
+	//
+	// it.mig.sies.type.foglicomplementari.PenaAccessoria pa = new
+	// it.mig.sies.type.foglicomplementari.PenaAccessoria();
+	// pa.setCodiceTipoDurataPA(pac.getCodiceTipoDurataPA());
+	// pa.setCodiceTipoPA(pac.getCodiceTipoPA());
+	// pa.setNumeroAnniPA(new BigInteger("" + pac.getNumeroAnniPA()));
+	// pa.setNumeroGiorniPA(new BigInteger("" + pac.getNumeroGiorniPA()));
+	// pa.setNumeroMesiPA(new BigInteger("" + pac.getNumeroMesiPA()));
+	//
+	// boolean existDurata = PropertyUtil.isPresent(pa.getNumeroAnniPA())
+	// || PropertyUtil.isPresent(pa.getNumeroMesiPA())
+	// || PropertyUtil.isPresent(pa.getNumeroGiorniPA());
+	//
+	// if (existDurata)
+	// pa.setCodiceTipoDurataPA("T");
+	// if ("1".equals(pa.getCodiceTipoPA()) && existDurata)
+	// pa.setCodiceTipoPA("10");
+	//
+	// // valore di ritorno
+	// return pa;
+	// }
 
 	/**
 	 * MEV 16 CUMULO: aggiunto metodo di associazione model-type
-	 * 
+	 *
 	 * @param rgec
 	 * @return RichiesteGEAnticipazioneEffetti
 	 */
-	private static RichiesteGEAnticipazioneEffetti mapDatiRichiestaGE(RichiesteGECumulo rgec) {
-
-		RichiesteGEAnticipazioneEffetti rgeae = new RichiesteGEAnticipazioneEffetti();
-		rgeae.setArresto(evaluateDurataPMFC(rgec.getGiorniArresto(), rgec.getMesiArresto(),
-				rgec.getAnniArresto()));
-		rgeae.setReclusione(evaluateDurataPMFC(rgec.getGiorniReclusione(), rgec.getMesiReclusione(),
-				rgec.getAnniReclusione()));
-		if (rgec.getImportoAmmenda() != 0)
-			rgeae.setImportoAmmenda(new BigDecimal(Double.valueOf(rgec.getImportoAmmenda()).toString()));
-		if (rgec.getImportoMulta() != 0)
-			rgeae.setImportoMulta(new BigDecimal(Double.valueOf(rgec.getImportoMulta()).toString()));
-		rgeae.setTipoRichiesta(rgec.getCodiceTipoRichiesta());
-
-		// valore di ritorno
-		return rgeae;
-	}
+	// private static RichiesteGEAnticipazioneEffetti mapDatiRichiestaGE(RichiesteGECumulo rgec) {
+	//
+	// RichiesteGEAnticipazioneEffetti rgeae = new RichiesteGEAnticipazioneEffetti();
+	// rgeae.setArresto(
+	// evaluateDurataPMFC(rgec.getGiorniArresto(), rgec.getMesiArresto(), rgec.getAnniArresto()));
+	// rgeae.setReclusione(evaluateDurataPMFC(rgec.getGiorniReclusione(), rgec.getMesiReclusione(),
+	// rgec.getAnniReclusione()));
+	// if (rgec.getImportoAmmenda() != 0)
+	// rgeae.setImportoAmmenda(new BigDecimal(Double.valueOf(rgec.getImportoAmmenda()).toString()));
+	// if (rgec.getImportoMulta() != 0)
+	// rgeae.setImportoMulta(new BigDecimal(Double.valueOf(rgec.getImportoMulta()).toString()));
+	// rgeae.setTipoRichiesta(rgec.getCodiceTipoRichiesta());
+	//
+	// // valore di ritorno
+	// return rgeae;
+	// }
 
 	/**
 	 * MEV 16 CUMULO: aggiunto metodo di associazione model-type
-	 * 
+	 *
 	 * @param ssc
 	 * @return SanzioniSostitutiveCumulo
 	 */
-	private static SanzioniSostitutive mapDatiSanzioniSostitutiveCumulo(SanzioniSostitutiveCumulo ssc) {
-
-		SanzioniSostitutive ss = new SanzioniSostitutive();
-		ss.setEspulsioneStato(evaluateDurataPMFC(ssc.getGiorniEspulsioneStato(),
-				ssc.getMesiEspulsioneStato(), ssc.getAnniEspulsioneStato()));
-		if (ssc.getImportoAmmenda() != 0)
-			ss.setImportoAmmenda(new BigDecimal(Double.valueOf(ssc.getImportoAmmenda()).toString()));
-		if (ssc.getImportoMulta() != 0)
-			ss.setImportoMulta(new BigDecimal(Double.valueOf(ssc.getImportoMulta()).toString()));
-		ss.setLavoroPubblicaUtilita(evaluateDurataPMFC(ssc.getGiorniLavoroPubblicaUtilita(),
-				ssc.getMesiLavoroPubblicaUtilita(), ssc.getAnniLavoroPubblicaUtilita()));
-		ss.setLibertaControllata(evaluateDurataPMFC(ssc.getGiorniLibertaControllata(),
-				ssc.getMesiLibertaControllata(), ssc.getAnniLibertaControllata()));
-		ss.setNumeroOreLPU(new BigInteger("" + ssc.getOreLavoroPubblicaUtilita()));
-		ss.setSemiDetenzione(evaluateDurataPMFC(ssc.getGiorniSemidetenzione(), ssc.getMesiSemidetenzione(),
-				ssc.getAnniSemidetenzione()));
-		ss.setTipoEspulsioneStato(ssc.getCodiceTipoEspulsioneStato());
-		ss.setTipoLPU(ssc.getCodTipoLavoroPubblicaUtilita());
-
-		// valore di ritorno
-		return ss;
-	}
+	// private static SanzioniSostitutive mapDatiSanzioniSostitutiveCumulo(SanzioniSostitutiveCumulo ssc) {
+	//
+	// SanzioniSostitutive ss = new SanzioniSostitutive();
+	// ss.setEspulsioneStato(evaluateDurataPMFC(ssc.getGiorniEspulsioneStato(), ssc.getMesiEspulsioneStato(),
+	// ssc.getAnniEspulsioneStato()));
+	// if (ssc.getImportoAmmenda() != 0)
+	// ss.setImportoAmmenda(new BigDecimal(Double.valueOf(ssc.getImportoAmmenda()).toString()));
+	// if (ssc.getImportoMulta() != 0)
+	// ss.setImportoMulta(new BigDecimal(Double.valueOf(ssc.getImportoMulta()).toString()));
+	// ss.setLavoroPubblicaUtilita(evaluateDurataPMFC(ssc.getGiorniLavoroPubblicaUtilita(),
+	// ssc.getMesiLavoroPubblicaUtilita(), ssc.getAnniLavoroPubblicaUtilita()));
+	// ss.setLibertaControllata(evaluateDurataPMFC(ssc.getGiorniLibertaControllata(),
+	// ssc.getMesiLibertaControllata(), ssc.getAnniLibertaControllata()));
+	// ss.setNumeroOreLPU(new BigInteger("" + ssc.getOreLavoroPubblicaUtilita()));
+	// ss.setSemiDetenzione(evaluateDurataPMFC(ssc.getGiorniSemidetenzione(), ssc.getMesiSemidetenzione(),
+	// ssc.getAnniSemidetenzione()));
+	// ss.setTipoEspulsioneStato(ssc.getCodiceTipoEspulsioneStato());
+	// ss.setTipoLPU(ssc.getCodTipoLavoroPubblicaUtilita());
+	//
+	// // valore di ritorno
+	// return ss;
+	// }
 
 	/**
 	 * MEV 16 CUMULO: aggiunto metodo di associazione model-type
-	 * 
+	 *
 	 * @param sgpc
 	 * @return SanzioniGiudicePace
 	 */
-	private static SanzioniGiudicePace mapDatiSanzioniGPCumulo(SanzioniGPCumulo sgpc) {
-
-		SanzioniGiudicePace sgp = new SanzioniGiudicePace();
-		sgp.setEspulsioneStato(evaluateDurataPMFC(sgpc.getGiorniEspulsioneStato(),
-				sgpc.getMesiEspulsioneStato(), sgpc.getAnniEspulsioneStato()));
-		sgp.setLavoroPubblicaUtilita(evaluateDurataPMFC(sgpc.getGiorniLavoroPubblicaUtilita(),
-				sgpc.getMesiLavoroPubblicaUtilita(), sgpc.getAnniLavoroPubblicaUtilita()));
-		sgp.setLavoroSostitutivo(evaluateDurataPMFC(sgpc.getGiorniLavoroSostitutivo(),
-				sgpc.getMesiLavoroSostitutivo(), sgpc.getAnniLavoroSostitutivo()));
-		sgp.setPermanenzaDomiciliare(evaluateDurataPMFC(sgpc.getGiorniPermanenzaDomiciliare(),
-				sgpc.getMesiPermanenzaDomiciliare(), sgpc.getAnniPermanenzaDomiciliare()));
-		sgp.setTipoEspulsioneStato(sgpc.getCodiceTipoEspulsioneStato());
-
-		// valore di ritorno
-		return sgp;
-	}
+	// private static SanzioniGiudicePace mapDatiSanzioniGPCumulo(SanzioniGPCumulo sgpc) {
+	//
+	// SanzioniGiudicePace sgp = new SanzioniGiudicePace();
+	// sgp.setEspulsioneStato(evaluateDurataPMFC(sgpc.getGiorniEspulsioneStato(),
+	// sgpc.getMesiEspulsioneStato(), sgpc.getAnniEspulsioneStato()));
+	// sgp.setLavoroPubblicaUtilita(evaluateDurataPMFC(sgpc.getGiorniLavoroPubblicaUtilita(),
+	// sgpc.getMesiLavoroPubblicaUtilita(), sgpc.getAnniLavoroPubblicaUtilita()));
+	// sgp.setLavoroSostitutivo(evaluateDurataPMFC(sgpc.getGiorniLavoroSostitutivo(),
+	// sgpc.getMesiLavoroSostitutivo(), sgpc.getAnniLavoroSostitutivo()));
+	// sgp.setPermanenzaDomiciliare(evaluateDurataPMFC(sgpc.getGiorniPermanenzaDomiciliare(),
+	// sgpc.getMesiPermanenzaDomiciliare(), sgpc.getAnniPermanenzaDomiciliare()));
+	// sgp.setTipoEspulsioneStato(sgpc.getCodiceTipoEspulsioneStato());
+	//
+	// // valore di ritorno
+	// return sgp;
+	// }
 
 	/**
 	 * MEV 16 CUMULO: aggiunto metodo di associazione model-type
-	 * 
+	 *
 	 * @param lac
 	 * @return LiberazioneAnticipataCumulo
 	 */
-	private static LiberazioneAnticipataConcessaDetrarreCumulo mapDatiLiberazioneAnticipataCumulo(
-			LiberazioneAnticipataCumulo lac) {
-
-		LiberazioneAnticipataConcessaDetrarreCumulo lacdc = new LiberazioneAnticipataConcessaDetrarreCumulo();
-		lacdc.setGiorniLAIntegrazione(new BigInteger("" + lac.getGiorniLAIntegrazione()));
-		lacdc.setGiorniLAOrdinaria(new BigInteger("" + lac.getGiorniLAOrdinaria()));
-		lacdc.setGiorniLARisarcimento(new BigInteger("" + lac.getGiorniLARisarcimento()));
-		lacdc.setGiorniLASpeciale(new BigInteger("" + lac.getGiorniLASpeciale()));
-
-		// valore di ritorno
-		return lacdc;
-	}
+	// private static LiberazioneAnticipataConcessaDetrarreCumulo mapDatiLiberazioneAnticipataCumulo(
+	// LiberazioneAnticipataCumulo lac) {
+	//
+	// LiberazioneAnticipataConcessaDetrarreCumulo lacdc = new LiberazioneAnticipataConcessaDetrarreCumulo();
+	// lacdc.setGiorniLAIntegrazione(new BigInteger("" + lac.getGiorniLAIntegrazione()));
+	// lacdc.setGiorniLAOrdinaria(new BigInteger("" + lac.getGiorniLAOrdinaria()));
+	// lacdc.setGiorniLARisarcimento(new BigInteger("" + lac.getGiorniLARisarcimento()));
+	// lacdc.setGiorniLASpeciale(new BigInteger("" + lac.getGiorniLASpeciale()));
+	//
+	// // valore di ritorno
+	// return lacdc;
+	// }
 
 	/**
 	 * MEV 16 CUMULO: aggiunto metodo di associazione model-type
-	 * 
+	 *
 	 * @param cppc
 	 * @return ConversionePPCumulo
 	 */
-	private static PenaConversionePenaPecuniaria mapDatiConversionePPCumulo(ConversionePPCumulo cppc) {
-
-		PenaConversionePenaPecuniaria pcpp = new PenaConversionePenaPecuniaria();
-		pcpp.setLavoroSostitutivo(evaluateDurataPMFC(cppc.getGiorniLavoroSostitutivo(),
-				cppc.getMesiLavoroSostitutivo(), cppc.getAnniLavoroSostitutivo()));
-		pcpp.setLibertaControllata(evaluateDurataPMFC(cppc.getGiorniLibertaControllata(),
-				cppc.getMesiLibertaControllata(), cppc.getAnniLibertaControllata()));
-
-		// valore di ritorno
-		return pcpp;
-	}
+	// private static PenaConversionePenaPecuniaria mapDatiConversionePPCumulo(ConversionePPCumulo cppc) {
+	//
+	// PenaConversionePenaPecuniaria pcpp = new PenaConversionePenaPecuniaria();
+	// pcpp.setLavoroSostitutivo(evaluateDurataPMFC(cppc.getGiorniLavoroSostitutivo(),
+	// cppc.getMesiLavoroSostitutivo(), cppc.getAnniLavoroSostitutivo()));
+	// pcpp.setLibertaControllata(evaluateDurataPMFC(cppc.getGiorniLibertaControllata(),
+	// cppc.getMesiLibertaControllata(), cppc.getAnniLibertaControllata()));
+	//
+	// // valore di ritorno
+	// return pcpp;
+	// }
 
 }

@@ -91,7 +91,7 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento implemen
 	 * @return
 	 * @throws F3BException
 	 */
-	protected EventoModel setEventoOrdinazaDecretoMisuraAlternativa(EventoModel aEvento, String aTipoprovv,
+	protected EventoModel setEventoOrdinanzaDecretoMisuraAlternativa(EventoModel aEvento, String aTipoprovv,
 			String aCodiceUffEmi, ComuneModel aComMod, Date aDataEmiTra) throws F3BException {
 		FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 		String lCodiceOperatore = this.getCodUtenteConnesso();

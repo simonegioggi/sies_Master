@@ -89,7 +89,7 @@ public class ActInserisciCessazioneMA extends ActMisuraAlternativa implements IC
 			String lTipoDecisione = getRequestStringParameter(
 					ICostantiMisuraAlternativa.CAMPO_COD_TIPO_DECISIONE);
 
-			lEveMod.setEvento(setEventoOrdinazaDecretoMisuraAlternativa(lEveMod.getEvento(), lTipoDecisione,
+			lEveMod.setEvento(setEventoOrdinanzaDecretoMisuraAlternativa(lEveMod.getEvento(), lTipoDecisione,
 					lCodiceUffEmi, lComModAutEmi, lDataEmisTras));
 
 			// setto il deposito ordinanza

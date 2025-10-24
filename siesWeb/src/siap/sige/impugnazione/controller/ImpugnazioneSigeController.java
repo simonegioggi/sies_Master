@@ -534,22 +534,22 @@ public class ImpugnazioneSigeController extends SiapController implements IImpug
 				// inserita una Impugnazione(Opposizione/Ricorso), ma deve essere impostata nuovamente
 				// se l'Impugnazione viene annullata, con la Data di Deposito dell'Ordinanza
 				if (!testDataDef) {
-					Date dataDeposito = null;
-					lProvSqlDao = new ProvvedimentoSigeSqlDAO(lConn);
+				Date dataDeposito = null;
+				lProvSqlDao = new ProvvedimentoSigeSqlDAO(lConn);
 					lProvSqlDao.ricercaProvvSigePerIdFasSigeTipiProvv(aFascicoloSige.getIdFascicoloSige(),
 							"03");
-					lProvSqlDao.start();
-					while (lProvSqlDao.next()) {
-						ProvvedimentoSigeModel lProvModel = (ProvvedimentoSigeModel) lProvSqlDao.getModel();
-						dataDeposito = lProvModel.getDataDeposito();
-					}
-					lFasDao.setDataDefinizione(dataDeposito);
+				lProvSqlDao.start();
+				while (lProvSqlDao.next()) {
+					ProvvedimentoSigeModel lProvModel = (ProvvedimentoSigeModel) lProvSqlDao.getModel();
+					dataDeposito = lProvModel.getDataDeposito();
+				}
+
+				lFasDao.setDataDefinizione(dataDeposito);
 				} else {
 					lFasDao.setDataDefinizione(null);
 					lFasDao.setCodTipoDefinizione(null);
 					lFasDao.setDescrDefinizione("");
 				}
-
 				// Set del DAO e aggiornamento del FascicoloSige.
 				lFasDao.setCondizioneUpdate(aFascicoloSige.getIdFascicoloSige());
 				lFasDao.update();

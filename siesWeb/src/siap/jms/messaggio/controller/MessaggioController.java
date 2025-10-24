@@ -25,18 +25,7 @@ import siap.sico.evento.model.EventoNotificaModel;
 import siap.siepe.ricezioneatti.model.CruscottoModel;
 
 /**
- * <p>
- * Title: MessaggioController
- * </p>
- * <p>
- * Description: Classe Controller per Messaggio
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * MessaggioController - Classe Controller per Messaggio
  *
  * @version 1.0
  */
@@ -47,7 +36,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	private static Logger siesLogger = Logger.getLogger(LogF3B.JMS_LOG);
 
 	/**
-	 * Inserisce MEssaggio
+	 * Inserisce Messaggio
 	 *
 	 * @param aMessaggio
 	 * @return

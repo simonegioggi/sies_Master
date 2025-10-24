@@ -3,10 +3,12 @@
 <%@ page import="java.util.Vector"%>
 <%@ page import="java.util.List"%>
 
-<%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="siap.web.ISIAPCostantiWeb" %>
+
+<%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
+<%@ page import="f3b.util.Utils"%>
 
 <%@ page import="siap.sius.fascicolo.action.ICostantiFascicoloSius"%>
 <%@ page import="siap.sius.depositodecreto.model.DepositoDecretoEventoMotivazioniModel"%>
@@ -32,8 +34,7 @@
 
 <script language="JavaScript" src="/html/conferma.js"></script>
  <script language="JavaScript">
-    function lookUpload()
-    {
+function lookUpload() {
       var node;
       node=document.getElementById('upld');
                         node.style.visibility='visible';
@@ -43,17 +44,22 @@
 
   <body class="corpo">
     <table>
-      <tr><td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
-        <td class="LBG"><font class="label">Funzione : </font>
-          <font class="campo">Dettaglio Decreto Irreperibilità</font>&nbsp;
+	<tr>
+		<td class="LBG">
+			<a href="Javascript:window.print();">
+				<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0>
+			</a>
+		</td>
+		<td class="LBG">
+			<font class="label">Funzione:&nbsp;</font>
+  			<font class="campo">Dettaglio Decreto Irreperibilità</font>
         </td>
 
 <%
-  if(depositoDecretoMotivazioni != null && depositoDecretoMotivazioni.getDepositoDecreto() != null && depositoDecretoMotivazioni.getEvento() != null)
-  {
-     if( depositoDecretoMotivazioni.getEvento().getFlagDocumentoRegistrato() == null  ||
-      depositoDecretoMotivazioni.getEvento().getFlagDocumentoRegistrato().compareTo("N")==0 )
-    {
+if (depositoDecretoMotivazioni != null && depositoDecretoMotivazioni.getDepositoDecreto() != null
+		&& depositoDecretoMotivazioni.getEvento() != null) {
+	if (depositoDecretoMotivazioni.getEvento().getFlagDocumentoRegistrato() == null
+			|| depositoDecretoMotivazioni.getEvento().getFlagDocumentoRegistrato().compareTo("N") == 0) {
 %>
   <!-- BOTTONE DI STAMPA -->
     <jsp:include page="<%=ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIUS%>">
@@ -61,8 +67,7 @@
           <jsp:param name="ValoreIdEntita" value="<%=depositoDecretoMotivazioni.getEvento().getIdEvento()%>"/>
           </jsp:include>
 <%
-      if( depositoDecretoMotivazioni.getDepositoDecreto().getDataDeposito()== null )
-      {
+		if (depositoDecretoMotivazioni.getDepositoDecreto().getDataDeposito() == null) {
 %>
     <!-- BOTTONE DI CANCELLAZIONE -->
     <td class="LBG">
@@ -107,8 +112,7 @@
 
 <%
   Iterator lInd = tenori.iterator();
-  while (lInd.hasNext())
-  {
+while (lInd.hasNext()) {
 %>
    <tr>
       <%
@@ -124,7 +128,8 @@
   </tr>
    <tr>
         <td class="l">Informative</td>
-        <td class="l"><%=depositoDecretoMotivazioni.getDepositoDecreto().getNote()%></td>
+        <%-- [SG]: gestione informative nulle --%>
+        <td class="l"><%=!Utils.isNullObj(depositoDecretoMotivazioni.getDepositoDecreto().getNote()) ? depositoDecretoMotivazioni.getDepositoDecreto().getNote() : ""%></td>
    </tr>
 
   </table>
@@ -135,7 +140,9 @@
           <jsp:include page="<%=ISIAPCostantiWeb.CAMPI_VALIDA_UPLOAD%>" />
     <tr>
     <td>&nbsp;</td>
+    	<td>
     <input Title="Id Evento" type="hidden" name="<%=ICostantiEvento.CAMPO_ID_EVENTO %>" value="<%=depositoDecretoMotivazioni.getEvento().getIdEvento()%>" >
+  		</td>
   </tr>
     <tr>
       <td class="L">

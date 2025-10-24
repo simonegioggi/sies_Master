@@ -1,17 +1,8 @@
-//
-// Questo file è stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
-// Vedere <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Qualsiasi modifica a questo file andrà persa durante la ricompilazione dello schema di origine. 
-// Generato il: 2017.02.06 alle 11:58:26 AM CET 
-//
-
 
 package it.mig.sies.type.foglicomplementari;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -99,13 +90,6 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *         &lt;element ref="{http://it/mig/sies/type/fogliComplementari}dataFinePena"/>
  *         &lt;element ref="{http://it/mig/sies/type/fogliComplementari}dataFinePenaDal"/>
  *         &lt;element ref="{http://it/mig/sies/type/fogliComplementari}dataFinePenaAl"/>
- *         &lt;element ref="{http://it/mig/sies/type/fogliComplementari}MisuraSicurezza" maxOccurs="unbounded" minOccurs="0"/>
- *         &lt;element ref="{http://it/mig/sies/type/fogliComplementari}PenaAccessoria" maxOccurs="unbounded" minOccurs="0"/>
- *         &lt;element ref="{http://it/mig/sies/type/fogliComplementari}SanzioniSostitutive"/>
- *         &lt;element ref="{http://it/mig/sies/type/fogliComplementari}LiberazioneAnticipataConcessaDetrarreCumulo"/>
- *         &lt;element ref="{http://it/mig/sies/type/fogliComplementari}PenaConversionePenaPecuniaria"/>
- *         &lt;element ref="{http://it/mig/sies/type/fogliComplementari}SanzioniGiudicePace"/>
- *         &lt;element ref="{http://it/mig/sies/type/fogliComplementari}RichiesteGEAnticipazioneEffetti" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -139,14 +123,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "isolamentoDiurno",
     "dataFinePena",
     "dataFinePenaDal",
-    "dataFinePenaAl",
-    "misuraSicurezza",
-    "penaAccessoria",
-    "sanzioniSostitutive",
-    "liberazioneAnticipataConcessaDetrarreCumulo",
-    "penaConversionePenaPecuniaria",
-    "sanzioniGiudicePace",
-    "richiesteGEAnticipazioneEffetti"
+    "dataFinePenaAl"
 })
 @XmlRootElement(name = "DatiPubblicoMinistero")
 public class DatiPubblicoMinistero {
@@ -201,20 +178,6 @@ public class DatiPubblicoMinistero {
     @XmlElement(required = true, nillable = true)
     @XmlSchemaType(name = "date")
     protected XMLGregorianCalendar dataFinePenaAl;
-    @XmlElement(name = "MisuraSicurezza", nillable = true)
-    protected List<MisuraSicurezza> misuraSicurezza;
-    @XmlElement(name = "PenaAccessoria", nillable = true)
-    protected List<PenaAccessoria> penaAccessoria;
-    @XmlElement(name = "SanzioniSostitutive", required = true, nillable = true)
-    protected SanzioniSostitutive sanzioniSostitutive;
-    @XmlElement(name = "LiberazioneAnticipataConcessaDetrarreCumulo", required = true, nillable = true)
-    protected LiberazioneAnticipataConcessaDetrarreCumulo liberazioneAnticipataConcessaDetrarreCumulo;
-    @XmlElement(name = "PenaConversionePenaPecuniaria", required = true, nillable = true)
-    protected PenaConversionePenaPecuniaria penaConversionePenaPecuniaria;
-    @XmlElement(name = "SanzioniGiudicePace", required = true, nillable = true)
-    protected SanzioniGiudicePace sanzioniGiudicePace;
-    @XmlElement(name = "RichiesteGEAnticipazioneEffetti", nillable = true)
-    protected List<RichiesteGEAnticipazioneEffetti> richiesteGEAnticipazioneEffetti;
 
     /**
      * Recupera il valore della proprietà chiaveSies.
@@ -774,189 +737,6 @@ public class DatiPubblicoMinistero {
      */
     public void setDataFinePenaAl(XMLGregorianCalendar value) {
         this.dataFinePenaAl = value;
-    }
-
-    /**
-     * Gets the value of the misuraSicurezza property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the misuraSicurezza property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getMisuraSicurezza().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link MisuraSicurezza }
-     * 
-     * 
-     */
-    public List<MisuraSicurezza> getMisuraSicurezza() {
-        if (misuraSicurezza == null) {
-            misuraSicurezza = new ArrayList<MisuraSicurezza>();
-        }
-        return this.misuraSicurezza;
-    }
-
-    /**
-     * Gets the value of the penaAccessoria property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the penaAccessoria property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getPenaAccessoria().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link PenaAccessoria }
-     * 
-     * 
-     */
-    public List<PenaAccessoria> getPenaAccessoria() {
-        if (penaAccessoria == null) {
-            penaAccessoria = new ArrayList<PenaAccessoria>();
-        }
-        return this.penaAccessoria;
-    }
-
-    /**
-     * Recupera il valore della proprietà sanzioniSostitutive.
-     * 
-     * @return
-     *     possible object is
-     *     {@link SanzioniSostitutive }
-     *     
-     */
-    public SanzioniSostitutive getSanzioniSostitutive() {
-        return sanzioniSostitutive;
-    }
-
-    /**
-     * Imposta il valore della proprietà sanzioniSostitutive.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link SanzioniSostitutive }
-     *     
-     */
-    public void setSanzioniSostitutive(SanzioniSostitutive value) {
-        this.sanzioniSostitutive = value;
-    }
-
-    /**
-     * Recupera il valore della proprietà liberazioneAnticipataConcessaDetrarreCumulo.
-     * 
-     * @return
-     *     possible object is
-     *     {@link LiberazioneAnticipataConcessaDetrarreCumulo }
-     *     
-     */
-    public LiberazioneAnticipataConcessaDetrarreCumulo getLiberazioneAnticipataConcessaDetrarreCumulo() {
-        return liberazioneAnticipataConcessaDetrarreCumulo;
-    }
-
-    /**
-     * Imposta il valore della proprietà liberazioneAnticipataConcessaDetrarreCumulo.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link LiberazioneAnticipataConcessaDetrarreCumulo }
-     *     
-     */
-    public void setLiberazioneAnticipataConcessaDetrarreCumulo(LiberazioneAnticipataConcessaDetrarreCumulo value) {
-        this.liberazioneAnticipataConcessaDetrarreCumulo = value;
-    }
-
-    /**
-     * Recupera il valore della proprietà penaConversionePenaPecuniaria.
-     * 
-     * @return
-     *     possible object is
-     *     {@link PenaConversionePenaPecuniaria }
-     *     
-     */
-    public PenaConversionePenaPecuniaria getPenaConversionePenaPecuniaria() {
-        return penaConversionePenaPecuniaria;
-    }
-
-    /**
-     * Imposta il valore della proprietà penaConversionePenaPecuniaria.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link PenaConversionePenaPecuniaria }
-     *     
-     */
-    public void setPenaConversionePenaPecuniaria(PenaConversionePenaPecuniaria value) {
-        this.penaConversionePenaPecuniaria = value;
-    }
-
-    /**
-     * Recupera il valore della proprietà sanzioniGiudicePace.
-     * 
-     * @return
-     *     possible object is
-     *     {@link SanzioniGiudicePace }
-     *     
-     */
-    public SanzioniGiudicePace getSanzioniGiudicePace() {
-        return sanzioniGiudicePace;
-    }
-
-    /**
-     * Imposta il valore della proprietà sanzioniGiudicePace.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link SanzioniGiudicePace }
-     *     
-     */
-    public void setSanzioniGiudicePace(SanzioniGiudicePace value) {
-        this.sanzioniGiudicePace = value;
-    }
-
-    /**
-     * Gets the value of the richiesteGEAnticipazioneEffetti property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the richiesteGEAnticipazioneEffetti property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getRichiesteGEAnticipazioneEffetti().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link RichiesteGEAnticipazioneEffetti }
-     * 
-     * 
-     */
-    public List<RichiesteGEAnticipazioneEffetti> getRichiesteGEAnticipazioneEffetti() {
-        if (richiesteGEAnticipazioneEffetti == null) {
-            richiesteGEAnticipazioneEffetti = new ArrayList<RichiesteGEAnticipazioneEffetti>();
-        }
-        return this.richiesteGEAnticipazioneEffetti;
     }
 
 }

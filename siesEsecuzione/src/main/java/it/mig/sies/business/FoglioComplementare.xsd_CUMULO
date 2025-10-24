@@ -1,0 +1,989 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- MEV 16: SIMONE GIOGGI -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+			xmlns="http://it/mig/sies/type/fogliComplementari" 
+			xmlns:xdb="http://xmlns.oracle.com/xdb" 
+			xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" 
+			targetNamespace="http://it/mig/sies/type/fogliComplementari" 
+			elementFormDefault="qualified" 
+			attributeFormDefault="unqualified" 
+			xdb:storeVarrayAsTable="true" 
+			jaxb:version="2.0">
+	<xs:element name="RequestData">
+		<xs:annotation>
+			<xs:documentation>Elemento contenente i dati della chiamata al servizio</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Utente"/>
+				<xs:element name="azione" type="Azione"/>
+				<xs:element ref="Anagrafica"/>
+				<xs:element ref="FoglioComplementare"/>
+				<!-- MEV 16 CUMULO: aggiunto elemento -->
+				<xs:element name="azioneCumulo" type="xs:string" nillable="true"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ResponseData">
+		<xs:annotation>
+			<xs:documentation>Elemento contenente i dati della risposta al servizio</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Esito"/>
+				<xs:element ref="ChiaviAnagrafica"/>
+				<xs:element ref="ChiaviProvvedimentoEsecutivo"/>
+				<xs:element ref="ChiaviProvvedimentoGiudiziario" maxOccurs="unbounded"/>
+				<xs:element ref="ArrayOmonimi" minOccurs="0"/>
+				<xs:element name="Estratto" type="xs:base64Binary" nillable="true"/>
+				<xs:element name="AnagraficaCancellata" type="xs:boolean" nillable="false"/>
+				<!-- MEV 16 CUMULO: aggiunto elemento -->
+				<xs:element ref="ProvvedimentoNSC" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Utente">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Ufficio">
+					<xs:annotation>
+						<xs:appinfo>Rappresenta un tipo contenitore di informazioni relative all'ufficio in cui è impiegato un utente.</xs:appinfo>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Username">
+					<xs:annotation>
+						<xs:appinfo>Definisce il nome con il quale l'utente viene riconosciuto dal sistema.</xs:appinfo>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="128"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="Cognome">
+					<xs:annotation>
+						<xs:appinfo>Rappresenta il cognome dell'utente.</xs:appinfo>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="35"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="Nome">
+					<xs:annotation>
+						<xs:appinfo>Rappresenta il nome dell'utente.</xs:appinfo>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="35"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ipServer" type="xs:string" nillable="true"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:simpleType name="Azione">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="INSERT"/>
+			<xs:enumeration value="UPDATE"/>
+			<xs:enumeration value="DELETE"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="Ufficio">
+		<xs:annotation>
+			<xs:appinfo>Rappresenta un tipo contenitore di informazioni relative all'ufficio in cui è impiegato un utente.</xs:appinfo>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="codiceTipo">
+					<xs:annotation>
+						<xs:appinfo>Rappresenta il codice identificativo della tipologia di ufficio presso cui è impiegato l'utente.</xs:appinfo>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="10"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="codiceSede">
+					<xs:annotation>
+						<xs:appinfo>Rappresenta il codice identificativo della sede dell'ufficio presso cui è impiegato l'utente.</xs:appinfo>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="6"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="codiceDistretto" nillable="false">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="6"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="codiceSistema" nillable="false">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="4"/>
+							<xs:enumeration value="SIGE"/>
+							<xs:enumeration value="SIUS"/>
+							<xs:enumeration value="SIEP"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Esito">
+		<xs:annotation>
+			<xs:appinfo>E l'elemento che contiene il codice e la descrizione dell'esito del servizio chiamato.</xs:appinfo>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="codice" type="ResponseCode"/>
+				<xs:element name="descrizione">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="60"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ChiaviProvvedimentoGiudiziario" nillable="true">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="sies" nillable="true">
+					<xs:annotation>
+						<xs:appinfo>Rappresenta l'identificativo del Foglio Complementare sul sistema SIES.</xs:appinfo>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:totalDigits value="15"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="nsc" nillable="true">
+					<xs:annotation>
+						<xs:appinfo>Rappresenta l'identificativo del Foglio Complementare sul sistema NSC.</xs:appinfo>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:totalDigits value="15"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ChiaviProvvedimentoEsecutivo" nillable="true">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="sies" nillable="false">
+					<xs:annotation>
+						<xs:appinfo>Rappresenta l'identificativo del Foglio Complementare sul sistema SIES.</xs:appinfo>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:totalDigits value="15"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="nsc" nillable="true">
+					<xs:annotation>
+						<xs:appinfo>Rappresenta l'identificativo del Foglio Complementare sul sistema NSC.</xs:appinfo>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:totalDigits value="15"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Anagrafica">
+		<xs:annotation>
+			<xs:appinfo>E' l'elemento che contiene i dati anagrafici del Soggetto.</xs:appinfo>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ChiaviAnagrafica"/>
+				<xs:element name="cognome">
+					<xs:annotation>
+						<xs:appinfo>Rappresenta il cognome del Soggetto.</xs:appinfo>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="35"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="nome">
+					<xs:annotation>
+						<xs:appinfo>Rappresenta il nome del Soggetto.</xs:appinfo>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="35"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="codiceLuogoNascita" nillable="true">
+					<xs:annotation>
+						<xs:appinfo>Rappresenta il codice corrispondente al luogo di nascita del Soggetto.</xs:appinfo>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="6"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="codiceStatoEsteroNascita" nillable="true">
+					<xs:annotation>
+						<xs:appinfo>Rappresenta il codice corrispondente allo stato estero di nascita del Soggetto.</xs:appinfo>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="8"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="descrizioneComuneEstero" nillable="true">
+					<xs:annotation>
+						<xs:appinfo>E' il comune estero di nascita del Soggetto.</xs:appinfo>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="60"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="dataNascita" type="xs:date" nillable="true">
+					<xs:annotation>
+						<xs:appinfo>Rappresenta la data di nascita del Soggetto.</xs:appinfo>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="sesso">
+					<xs:annotation>
+						<xs:appinfo>Flag che indica il sesso del Soggetto.</xs:appinfo>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="1"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="codiceFiscale" nillable="true">
+					<xs:annotation>
+						<xs:appinfo>Rappresenta il codice fiscale del Soggetto.</xs:appinfo>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="16"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="codiceImprontaDigitale" nillable="true">
+					<xs:annotation>
+						<xs:appinfo>Codice alfanumerico dell'impronta digitale.</xs:appinfo>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="7"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="nomePadre" nillable="true">
+					<xs:annotation>
+						<xs:appinfo>E' il nome della paternità del Soggetto.</xs:appinfo>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="35"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="flagAliasRichiamo" nillable="true">
+					<xs:annotation>
+						<xs:appinfo>Flag che indica se il Soggetto è un alias od un richiamo.</xs:appinfo>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="1"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="FoglioComplementare">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="annoSiep" type="xs:int" nillable="false"/>
+				<xs:element name="numeroSiep" type="xs:long" nillable="false"/>
+				<xs:element name="flagPrincipale" type="xs:boolean" nillable="false"/>
+				<xs:element ref="ProvvedimentoGiudiziario" maxOccurs="unbounded"/>
+				<xs:element ref="ChiaviProvvedimentoEsecutivo"/>
+				<xs:element ref="DatiPubblicoMinistero"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ProvvedimentoGiudiziario" nillable="true">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ChiaviProvvedimentoGiudiziario"/>
+				<!-- MEV 16 CUMULO: aggiunti elementi -->
+				<xs:element name="codiceEsito" nillable="true">
+					<xs:annotation>
+						<xs:appinfo>Codice dell'esito del trasferimento del cumulo.</xs:appinfo>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="2"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element ref="Anagrafica"/>
+				<xs:element name="numeroSentenza" type="xs:string" nillable="true"/>
+				<xs:element name="flagCumulante" type="xs:boolean"/>
+				<xs:element name="annoSentenza" type="xs:string" nillable="true"/>
+				<xs:element name="dataProvvedimento" type="xs:date"/>
+				<xs:element name="codiceAutorita">
+					<xs:annotation>
+						<xs:appinfo>Codice dell'autorità che ha emesso il Foglio Complementare.</xs:appinfo>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="3"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="codiceSedeAutoritaPrincipaleDistaccata" nillable="true">
+					<xs:annotation>
+						<xs:appinfo>Codice della sede dell'autorità principale o distaccata che ha emesso il Foglio Complementare.</xs:appinfo>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="6"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="codiceSedeAutoritaPrincipale" nillable="true">
+					<xs:annotation>
+						<xs:appinfo>Codice della sede dell’autorità principale che ha emesso il Foglio Complementare nel caso di distaccata in codi_sede_autorita_prin_dist.</xs:appinfo>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="6"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DatiPubblicoMinistero">
+		<xs:annotation>
+			<xs:documentation>Elemento contenente i dati del Foglio Complementare del Pubblico Ministero.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="chiaveSies"/>
+				<xs:element ref="chiaveNsc"/>
+				<xs:element name="dataProvvedimento" type="xs:date"/>
+				<xs:element ref="annoOrdinanza"/>
+				<xs:element ref="numeroOrdinanza"/>
+				<xs:element ref="codiceSedePM"/>
+				<xs:element ref="annoSIEP"/>
+				<xs:element ref="numeroSIEP"/>
+				<xs:element ref="annoSentenza"/>
+				<xs:element ref="numeroSentenza"/>
+				<xs:element name="codiceAutorita">
+					<xs:annotation>
+						<xs:appinfo>Codice dell'autorità che ha emesso il Foglio Complementare.</xs:appinfo>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="3"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="sedeAutoritaPrinDist" nillable="true">
+					<xs:annotation>
+						<xs:appinfo>Codice della sede dell'autorità principale o distaccata che ha emesso il Foglio Complementare.</xs:appinfo>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="6"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="sedeAutoritaPrinc" nillable="true">
+					<xs:annotation>
+						<xs:appinfo>Codice della sede dell'autorità principale che ha emesso il Foglio Complementare nel caso di distaccata in codi_sede_autorita_prin_dist.</xs:appinfo>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="6"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="codiceUnivocoProvvedimento">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="12"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="tipoProvvedimento">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="2"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="importoAmmenda" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:decimal">
+							<xs:totalDigits value="14"/>
+							<xs:fractionDigits value="2"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="importoMulta" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:decimal">
+							<xs:totalDigits value="14"/>
+							<xs:fractionDigits value="2"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element ref="arresto"/>
+				<xs:element ref="reclusione"/>
+				<xs:element ref="ergastolo"/>
+				<xs:element ref="isolamentoDiurno"/>
+				<xs:element ref="dataFinePena"/>
+				<xs:element ref="dataFinePenaDal"/>
+				<xs:element ref="dataFinePenaAl"/>
+				<!-- MEV 16 CUMULO: aggiunti elementi -->
+				<xs:element ref="MisuraSicurezza" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="PenaAccessoria" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="SanzioniSostitutive"/>
+				<xs:element ref="LiberazioneAnticipataConcessaDetrarreCumulo"/>
+				<xs:element ref="PenaConversionePenaPecuniaria"/>
+				<xs:element ref="SanzioniGiudicePace"/>
+				<xs:element ref="RichiesteGEAnticipazioneEffetti" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="Durata">
+		<xs:annotation>
+			<xs:appinfo>E l'elemento contenitore dei dati di un durata. E composto da anni, mesi, giorni.</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="anni" nillable="true">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:totalDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="mesi">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:totalDigits value="3"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="giorni">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:totalDigits value="3"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="chiaveSies" type="xs:long" nillable="false"/>
+	<xs:element name="chiaveNsc" type="xs:long" nillable="false"/>
+	<xs:element name="arresto" type="Durata" nillable="true"/>
+	<xs:element name="reclusione" type="Durata" nillable="true"/>
+	<xs:element name="ergastolo" type="xs:string" nillable="true"/>
+	<xs:element name="isolamentoDiurno" type="Durata" nillable="true"/>
+	<xs:element name="annoOrdinanza" type="xs:integer" nillable="true"/>
+	<xs:element name="numeroOrdinanza" type="xs:integer" nillable="true"/>
+	<xs:element name="codiceSedePM" type="xs:string" nillable="true"/>
+	<xs:element name="annoSIEP" type="xs:integer" nillable="true"/>
+	<xs:element name="numeroSIEP" type="xs:integer" nillable="true"/>
+	<xs:element name="annoSentenza" type="xs:integer" nillable="true"/>
+	<xs:element name="numeroSentenza" type="xs:integer" nillable="true"/>
+	<xs:element name="dataFinePena" type="xs:date" nillable="true"/>
+	<xs:element name="dataFinePenaDal" type="xs:date" nillable="true"/>
+	<xs:element name="dataFinePenaAl" type="xs:date" nillable="true"/>
+	<xs:simpleType name="ResponseCode">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="201">
+				<xs:annotation>
+					<xs:appinfo>
+						<jaxb:typesafeEnumMember name="INSERT_EFFETTUATA"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="202">
+				<xs:annotation>
+					<xs:appinfo>
+						<jaxb:typesafeEnumMember name="UPDATE_EFFETTUATA"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="203">
+				<xs:annotation>
+					<xs:appinfo>
+						<jaxb:typesafeEnumMember name="DELETE_EFFETTUATA"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="204">
+				<xs:annotation>
+					<xs:appinfo>
+						<jaxb:typesafeEnumMember name="WARNING_IN_FASE_DI_INSERIMENTO"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="205">
+				<xs:annotation>
+					<xs:appinfo>
+						<jaxb:typesafeEnumMember name="PROBLEMI_CON_LA_GENERAZIONE_ESTRATTO"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="206">
+				<xs:annotation>
+					<xs:appinfo>
+						<jaxb:typesafeEnumMember name="ERRORI_IN_CALCOLO_MENZIONABILITA"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="207">
+				<xs:annotation>
+					<xs:appinfo>
+						<jaxb:typesafeEnumMember name="ERRORI_IN_VERIFICA_PROVVEDIMENTO"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="400">
+				<xs:annotation>
+					<xs:appinfo>
+						<jaxb:typesafeEnumMember name="ERRORE_VALIDAZIONE"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="401">
+				<xs:annotation>
+					<xs:appinfo>
+						<jaxb:typesafeEnumMember name="SOGGETTO_NON_TROVATO"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="402">
+				<xs:annotation>
+					<xs:appinfo>
+						<jaxb:typesafeEnumMember name="TROVATI_SOGGETTI_MULTIPLI"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="403">
+				<xs:annotation>
+					<xs:appinfo>
+						<jaxb:typesafeEnumMember name="INCONGRUENZA_SOGGETTO"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="404">
+				<xs:annotation>
+					<xs:appinfo>
+						<jaxb:typesafeEnumMember name="INCONGRUENZA_SOGGETTO_PROVVEDIMENTI_ASSOCIATI"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="405">
+				<xs:annotation>
+					<xs:appinfo>
+						<jaxb:typesafeEnumMember name="PROVVEDIMENTO_ESECUTIVO_PRESENTE_NEL_DATABASE"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="406">
+				<xs:annotation>
+					<xs:appinfo>
+						<jaxb:typesafeEnumMember name="ANAGRAFICA_SIES_NON_COERENTE_CON_ANAGRAFICA_NSC"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="407">
+				<xs:annotation>
+					<xs:appinfo>
+						<jaxb:typesafeEnumMember name="UFFICIO_NON_ABILITATO_ALLA_MODIFICA"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="408">
+				<xs:annotation>
+					<xs:appinfo>
+						<jaxb:typesafeEnumMember name="PROVVEDIMENTO_ESECUTIVO_COLLEGATO_AD_ALTRO_PROVVEDIMENTO"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="409">
+				<xs:annotation>
+					<xs:appinfo>
+						<jaxb:typesafeEnumMember name="INCONGRUENZA_CHIAVI_PROVVEDIMENTO_NSC_SIES"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="410">
+				<xs:annotation>
+					<xs:appinfo>
+						<jaxb:typesafeEnumMember name="CUMULO_NON_TRASFERIBILE"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="411">
+				<xs:annotation>
+					<xs:appinfo>
+						<jaxb:typesafeEnumMember name="PROVVEDIMENTO_ESECUTIVO_NON_ASSOCIABILE"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="412">
+				<xs:annotation>
+					<xs:appinfo>
+						<jaxb:typesafeEnumMember name="PROVVEDIMENTO_NON_ASSOCIABILE_AL_SOGGETTO"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="413">
+				<xs:annotation>
+					<xs:appinfo>
+						<jaxb:typesafeEnumMember name="TROVATI_SOGGETTI_SINONIMI"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:enumeration>
+			<!-- MEV 16 CUMULO: aggiunto elemento -->
+			<xs:enumeration value="414">
+				<xs:annotation>
+					<xs:appinfo>
+						<jaxb:typesafeEnumMember name="ELENCO_PROVVEDIMENTI_CUMULATI_NSC"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="500">
+				<xs:annotation>
+					<xs:appinfo>
+						<jaxb:typesafeEnumMember name="ERRORE_INASPETTATO"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="501">
+				<xs:annotation>
+					<xs:appinfo>
+						<jaxb:typesafeEnumMember name="ERRORE_IN_DECODIFICA_CODICI_UNIVOCI"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="502">
+				<xs:annotation>
+					<xs:appinfo>
+						<jaxb:typesafeEnumMember name="ERRORE_DURANTE_INSERT"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="503">
+				<xs:annotation>
+					<xs:appinfo>
+						<jaxb:typesafeEnumMember name="ERRORE_DURANTE_UPDATE"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="504">
+				<xs:annotation>
+					<xs:appinfo>
+						<jaxb:typesafeEnumMember name="ERRORE_DURANTE_DELETE"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="ChiaviAnagrafica" nillable="true">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="nsc" nillable="true">
+					<xs:annotation>
+						<xs:appinfo>Rappresenta identificativo del soggetto sul sistema NSC.</xs:appinfo>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:totalDigits value="15"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="sies">
+					<xs:annotation>
+						<xs:appinfo>Rappresenta identificativo del soggetto sul sistema SIES.</xs:appinfo>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:totalDigits value="15"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ArrayOmonimi">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Omonimo" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="Anagrafica"/>
+							<xs:element name="CertificatoControllo" type="xs:base64Binary"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!-- MEV 16 CUMULO: aggiunti elementi -->
+	<xs:element name="ProvvedimentoNSC">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ProvvedimentoGiudiziario" maxOccurs="unbounded"/>
+				<xs:element ref="Esito"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="MisuraSicurezza" nillable="true">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="codiceTipoMS" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="3"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="codiceTipoDurataMS" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="1"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="numeroAnniMS" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:totalDigits value="2"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="numeroMesiMS" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:totalDigits value="3"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="numeroGiorniMS" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:totalDigits value="3"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="PenaAccessoria" nillable="true">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="codiceTipoPA" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="3"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="codiceTipoDurataPA" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="1"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="numeroAnniPA" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:totalDigits value="2"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="numeroMesiPA" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:totalDigits value="3"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="numeroGiorniPA" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:totalDigits value="3"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="SanzioniSostitutive" nillable="true">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="semiDetenzione" type="Durata" nillable="true"/>
+				<xs:element name="libertaControllata" type="Durata" nillable="true"/>
+				<xs:element name="importoAmmenda" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:decimal">
+							<xs:totalDigits value="14"/>
+							<xs:fractionDigits value="2"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="importoMulta" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:decimal">
+							<xs:totalDigits value="14"/>
+							<xs:fractionDigits value="2"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="espulsioneStato" type="Durata" nillable="true"/>
+				<xs:element name="tipoEspulsioneStato" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="1"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="lavoroPubblicaUtilita" type="Durata" nillable="true"/>
+				<xs:element name="numeroOreLPU" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:totalDigits value="4"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="tipoLPU" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="10"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="LiberazioneAnticipataConcessaDetrarreCumulo" nillable="true">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="giorniLAOrdinaria" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:totalDigits value="4"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="giorniLASpeciale" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:totalDigits value="4"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="giorniLAIntegrazione" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:totalDigits value="4"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="giorniLARisarcimento" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:totalDigits value="4"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="PenaConversionePenaPecuniaria" nillable="true">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="lavoroSostitutivo" type="Durata" nillable="true"/>
+				<xs:element name="libertaControllata" type="Durata" nillable="true"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="SanzioniGiudicePace" nillable="true">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="permanenzaDomiciliare" type="Durata" nillable="true"/>
+				<xs:element name="lavoroPubblicaUtilita" type="Durata" nillable="true"/>
+				<xs:element name="lavoroSostitutivo" type="Durata" nillable="true"/>
+				<xs:element name="espulsioneStato" type="Durata" nillable="true"/>
+				<xs:element name="tipoEspulsioneStato" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="1"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="RichiesteGEAnticipazioneEffetti" nillable="true">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="reclusione" type="Durata" nillable="true"/>
+				<xs:element name="arresto" type="Durata" nillable="true"/>
+				<xs:element name="importoAmmenda" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:decimal">
+							<xs:totalDigits value="14"/>
+							<xs:fractionDigits value="2"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="importoMulta" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:decimal">
+							<xs:totalDigits value="14"/>
+							<xs:fractionDigits value="2"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="tipoRichiesta">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="3"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

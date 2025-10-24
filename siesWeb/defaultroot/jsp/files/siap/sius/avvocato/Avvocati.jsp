@@ -17,18 +17,13 @@
   String retParam = retFlag ? ("&TornaQui=" + TornaQui) : "";
 %>
 
-
-
-
-<table cellspacing=2 cellpadding=2 width="95%">
+<table cellspacing="2" cellpadding="2" width="95%">
  <tr>
-      <td class="Titolo" colspan=6 > Difensori </td>
+		<td class="Titolo" colspan="4"> Difensori </td>
  </tr>
 <%
         Iterator itx = avvocato.iterator();
-
-        while ( itx.hasNext())
-        {
+while (itx.hasNext()) {
         AvvocatoSiusModel lAvv = (AvvocatoSiusModel)itx.next();
 %>
         <tr style="width: 100%;">
@@ -39,17 +34,17 @@
         </tr>
 <%
         }
-  if (request.getParameter("AvvRitorno") != null)
-  {
+if (request.getParameter("AvvRitorno") != null) {
 %>
     <tr>
-      <td class="L" colspan=3>
+      	<td class="L" colspan="4">
         <a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.avvocato.action.ActLoadInserisciAvvocato<%=retParam%>">
           Inserimento Difensore&nbsp;<font class="ob">(*)</font>
         </a>
       </td>
     </tr>
-<% }
+<%
+}
 %>
-    <tr><td>&nbsp;</td></tr>
+<!-- <tr><td>&nbsp;</td></tr> -->
     </table>

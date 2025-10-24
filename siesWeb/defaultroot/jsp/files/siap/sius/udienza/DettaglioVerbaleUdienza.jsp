@@ -31,12 +31,11 @@
 
 <html>
   <head>
-    <title> [S.I.E.S.] - Dettaglio Verbale Udienza- </title>
+<title> [S.I.E.S.] - Dettaglio Verbale Udienza </title>
     <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
     <script language="JavaScript" src="<%=IWebConstants.JS_CONFIRM%>"></script>
     <script language="JavaScript" >
-      function lookUpload()
-      {
+function lookUpload() {
         var node;
         node=document.getElementById('upld');
 			  node.style.visibility='visible';
@@ -45,17 +44,13 @@
   </head>
 
   <%
-  if(lEve.getFlagDocumentoRegistrato()!= null)
-  {
-    if (lEve.getFlagDocumentoRegistrato().compareTo("N") == 0)
-    {
+if (lEve.getFlagDocumentoRegistrato() != null) {
+	if (lEve.getFlagDocumentoRegistrato().compareTo("N") == 0) {
   %>
    <BODY class="corpo" onload="javascript:lookUpload();">
   <%
     }
-  }
-  else
-  {
+} else {
   %>
    <BODY class="corpo">
   <%
@@ -69,8 +64,7 @@
         </td>
 
   <%
-  if (lEve.getFlagDocumentoRegistrato()==null || lEve.getFlagDocumentoRegistrato().compareTo("N")==0)
-  {
+if (lEve.getFlagDocumentoRegistrato() == null || lEve.getFlagDocumentoRegistrato().compareTo("N") == 0) {
   %>
 
   <!-- BOTTONE DI STAMPA -->
@@ -94,9 +88,7 @@
     </tr>
 <%
   	Iterator itx = avvocato.iterator();
-
-  	while ( itx.hasNext())
-  	{
+while (itx.hasNext()) {
       	AvvocatoModel lAvv = (AvvocatoModel)itx.next();
 %>
       	<tr style="width: 100%;">
@@ -137,13 +129,14 @@
           <input class="bottone"  type="submit" value="Conferma">
           <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.sico.evento.action.ActUploadDocument">
           <input type="HIDDEN" name="IdEvento"  value="<%= lEve.getIdEvento() %>">
+			<%-- [SG]: refactoring della pagina --%>
+			<input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_AZIONE_DETTAGLIO%>" value="siap.sius.udienza.action.ActLoadDettaglioVerbaleUdienza">
         </td>
       </tr>
     </table>
 
     </FORM>
     </div>
-    <br>
   </body>
 
 </html>

@@ -255,7 +255,7 @@ public interface ICostantiFascicoloSius {
 	public static final String COD_DEFINITO = "01";
 	public static final String COD_ISCRITTO = "02";
 	public static final String COD_UNIFICATO = "05";
-	public static final String COD_EMESSO_PROVVEDIMENTOO = "07";
+	public static final String COD_EMESSO_PROVVEDIMENTO = "07";
 	public static final String COD_RINVIATO_NUOVO_RUOLO = "10";
 
 	public static final String PG_SINTESIPROCEDIMENTOORIGINESIUS = IWebConstants.ROOT_DIR

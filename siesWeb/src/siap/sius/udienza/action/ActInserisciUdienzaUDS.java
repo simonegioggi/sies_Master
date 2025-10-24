@@ -1,25 +1,29 @@
 package siap.sius.udienza.action;
 
-/**
- * <p>Title: ActInserisciUdienza</p>
- * <p>Description: Classe Action per l'inserimento di Udienza</p>
- * <p>Copyright: Copyright (c) 2002</p>
- * <p>Company: Bull</p>
- * @version 1.0
- */
+import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.web.IWebConstants;
 import siap.sico.web.ActionSiap;
 import siap.sius.udienza.controller.IUdienza;
 import siap.sius.udienza.model.UdienzaModel;
 import siap.sius.util.SIUSLookupRemote;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.web.IWebConstants;
 
+/**
+ * ActInserisciUdienza - Classe Action per l'inserimento di Udienza
+ *
+ * @version 1.0
+ */
 public class ActInserisciUdienzaUDS extends ActionSiap implements ICostantiUdienza {
+
+	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+
 	/**
 	 * Azione di Inserimento del Udienza
-	 * 
+	 *
 	 * @return Nome della pagina JSP da visualizzare al termine dell'elaborazione
 	 * @throws F3BException
 	 */
@@ -56,8 +60,12 @@ public class ActInserisciUdienzaUDS extends ActionSiap implements ICostantiUdien
 		IUdienza lCtrl = SIUSLookupRemote.getUdienzaRemote();
 		UdienzaModel lUdiModRet = lCtrl.ExInserisciUdienza(lUdiMod); // setta la risposta nella request
 
-		System.out
-				.println("====>>> Mi trovo in ActInserisciUdienzaUDS dopo di ExInserisciUdienzaUDS e CAMPO_ID_UDIENZA = "
+		// System.out
+		// .println("====>>> Mi trovo in ActInserisciUdienzaUDS dopo di ExInserisciUdienzaUDS e
+		// CAMPO_ID_UDIENZA = "
+		// + lUdiModRet.getIdUdienza().toString());
+		siesLogger.debug(
+				"====>>> Mi trovo in ActInserisciUdienzaUDS dopo di ExInserisciUdienzaUDS e CAMPO_ID_UDIENZA = "
 						+ lUdiModRet.getIdUdienza().toString());
 
 		setRequestAttribute("udienza", lUdiModRet);
