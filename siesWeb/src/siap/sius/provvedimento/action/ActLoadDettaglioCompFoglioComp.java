@@ -5,11 +5,6 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.util.Utils;
-import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
@@ -26,27 +21,37 @@ import siap.sius.depositosentenza.model.DepositoSentenzaModel;
 import siap.sius.documentoallegato.action.ICostantiDocumentoAllegato;
 import siap.sius.documentoallegato.controller.IDocumentoAllegato;
 import siap.sius.documentoallegato.model.DocumentoAllegatoModel;
-import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.util.SIUSLookupRemote;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.web.html.Option;
 
 /**
- * ActLoadDettaglioCompFoglioComp - Azione specializzazione per la visualizzazione del Dettaglio di un Foglio
- * Complementare
- *
+ * <p>
+ * Title: ActLoadDettaglioCompFoglioComp
+ * </p>
+ * <p>
+ * Description: Azione specializzazione per la visualizzazione del Dettaglio di un Foglio Complementare.
+ * <p>
+ * Copyright: Bull Italia S.p.A.Copyright (c) 2002
+ * </p>
+ * <p>
+ * Company: Bull Italia S.p.A.
+ * </p>
+ * 
  * @version 1.0
  */
-public class ActLoadDettaglioCompFoglioComp extends ActionSiap implements ICostantiProvvedimento {
 
+public class ActLoadDettaglioCompFoglioComp extends ActionSiap implements ICostantiProvvedimento {
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
-	DocumentoAllegatoModel dam = null;
-	IDocumentoAllegato ida = null;
+	DocumentoAllegatoModel mDocAll = null;
+	IDocumentoAllegato mDocAllCtrl = null;
 
 	public String processRequest() throws Exception {
-
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
 		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
 
 		// Parametro per individuare se provengo dall'icona "Compilazione Foglio Complementare".
@@ -58,100 +63,78 @@ public class ActLoadDettaglioCompFoglioComp extends ActionSiap implements ICosta
 
 		// Inserimento Foglio Complementare sulla tabella DOCUMENTO_ALLEGATO
 		if (provenienza != null && provenienza.equals("InsertFC")) {
-			BigDecimal idEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
+
+			BigDecimal lIdEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
 
 			// Controller del DocumentoAllegato
-			ida = SIUSLookupRemote.getDocumentoAllegatoRemote();
+			mDocAllCtrl = SIUSLookupRemote.getDocumentoAllegatoRemote();
 
-			dam = ida.ExRicercaDocumentoAllegatoByIdEventoCodTipo(idEvento, "06");
+			mDocAll = mDocAllCtrl.ExRicercaDocumentoAllegatoByIdEventoCodTipo(lIdEvento, "06");
 
-			ricercaAnnullate(idEvento);
+			ricercaAnnullate(lIdEvento);
 
 			// Evento. Leggo l'evento collegato al decreto.
-			EventoModel em = new EventoModel();
-			IEvento ie = SICOLookupRemote.getEventoRemote();
-			em = ie.ExRicercaEventoByKey(idEvento);
+			EventoModel lEveMod = new EventoModel();
+			IEvento lCtrl = SICOLookupRemote.getEventoRemote();
+			lEveMod = lCtrl.ExRicercaEventoByKey(lIdEvento);
 
 			// 25/09/2007 Anomalia SIUS - Compilazione Foglio Complementare inibito per provvedimento
 			// annullato.
-			if (em.getFlagDocumentoRegistrato().compareTo("A") == 0)
+			if (lEveMod.getFlagDocumentoRegistrato().compareTo("A") == 0)
 				throw new SIUSException(F3BException.USER_MESSAGE,
 						"Non è possibile emettere il Foglio Complementare per un provvedimento annullato");
 
-			// MEV_2024-092: per i procedimenti con contenuto 'Concessione Misure Alternative alla Detenzione
-			// (art. 678 comma 1 ter c.p.p.)' (C050 e C051), la possibilità di inserire il Foglio
-			// complementare solo se sull'ordinanza di definizione del procedimento e' presente la data di
-			// esecutivita'
-			FascicoloGPModel fgpm = (FascicoloGPModel) getSessionAttribute("fascicoloSiusGP");
-			if (!Utils.isNullObj(fgpm) && !Utils.isNullObj(fgpm.getGeneraleProcedimentoModel())
-					&& !Utils.isNullObj(fgpm.getGeneraleProcedimentoModel().getCodOggettoProcedimento())
-					&& (fgpm.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("C050") == 0
-							|| fgpm.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
-									.compareTo("C051") == 0)
-					&& ("0270".equals(em.getCodEsito()) && "03".equals(em.getCodTipoProvvedimento()))) {
-				IDepositoOrdinanzaPc idopc = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
-				DepositoOrdinanzaPcModel dopcm = idopc.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd(
-						fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), "AM");
-				if (!Utils.isNullObj(dopcm) && Utils.isNullObj(dopcm.getDataEsecutivita())) {
-					siesLogger.debug("Non è possibile emettere il Foglio Complementare per un provvedimento di "
-							+ "Applicazione Misure Alternative DL 123/2018 senza Data di Esecutivit&agrave; "
-							+ "valorizzata!");
-					throw new SIUSException(F3BException.USER_MESSAGE,
-							"Non è possibile emettere il Foglio Complementare per un provvedimento di "
-							+ "Applicazione Misure Alternative DL 123/2018 senza Data di Esecutivit&agrave; "
-							+ "valorizzata!");
-				}
-			}
-
 			// Valorizzazione del Documento Allegato
-			DocumentoAllegatoModel damNew = new DocumentoAllegatoModel();
-			damNew.setDataEmissione(DateUtils.getDate((DateUtils.getSysDate("dd/MM/yyyy")), "dd/MM/yyyy"));
-			damNew.setCodTipoDocumento("06");
-			damNew.setAnnoFoglioComplementare(new BigDecimal(DateUtils.getSysDate("yyyy")));
-			damNew.setDataTrasmissione(null);
-			damNew.setEveIdEvento(idEvento);
-			damNew.setCodOperatoreInserimento(this.getCodUtenteConnesso());
-			damNew.setCodUfficioInserimento(this.getCodUfficioUtenteConnesso());
-			damNew.setDataInserimento(DateUtils.getSysDate());
-			damNew.setComuneSedeGiudiziaria(null);
+			DocumentoAllegatoModel aDocAllegato = new DocumentoAllegatoModel();
+			aDocAllegato.setDataEmissione(DateUtils.getDate((DateUtils.getSysDate("dd/MM/yyyy")),
+					"dd/MM/yyyy"));
+
+			aDocAllegato.setCodTipoDocumento("06");
+			aDocAllegato.setAnnoFoglioComplementare(new BigDecimal(DateUtils.getSysDate("yyyy")));
+			aDocAllegato.setDataTrasmissione(null);
+			aDocAllegato.setEveIdEvento(lIdEvento);
+			aDocAllegato.setCodOperatoreInserimento(this.getCodUtenteConnesso());
+			aDocAllegato.setCodUfficioInserimento(this.getCodUfficioUtenteConnesso());
+			aDocAllegato.setDataInserimento(DateUtils.getSysDate());
+			aDocAllegato.setComuneSedeGiudiziaria(null);
 
 			// MEV10-s3: per i minori è possibile gestire la sentenza come FC
 			// Prelevo Sentenza
 			String codTipoUff = getUfficioUtenteConnesso().getCodTipoUfficio();
 			if ("TDSM".equalsIgnoreCase(codTipoUff) || "UDSM".equalsIgnoreCase(codTipoUff)) {
-				DepositoSentenzaModel dsm = null;
-				if (em.getCodTipoProvvedimento().equals("01")) {
-					IDepositoSentenza ids = SIUSLookupRemote.getDepositoSentenzaRemote();
-					dsm = ids.ExRicercaDepositoSentenzaByEvento(idEvento);
-					damNew = ida.ExInserisciFoglioComplementare(damNew, em.getCodTipoProvvedimento(),
-							dsm.getIdDepositoSentenza());
-					setRequestAttribute("depositoSentenza", dsm);
+				DepositoSentenzaModel depSenMod = null;
+				if (lEveMod.getCodTipoProvvedimento().equals("01")) {
+					IDepositoSentenza lCtrlDS = SIUSLookupRemote.getDepositoSentenzaRemote();
+					depSenMod = lCtrlDS.ExRicercaDepositoSentenzaByEvento(lIdEvento);
+					aDocAllegato = mDocAllCtrl.ExInserisciFoglioComplementare(aDocAllegato,
+							lEveMod.getCodTipoProvvedimento(), depSenMod.getIdDepositoSentenza());
+					setRequestAttribute("depositoSentenza", depSenMod);
 					setRequestAttribute("depositoDecreto", null);
 					setRequestAttribute("depositoordinanzapc", null);
 				}
 			}
 
 			// Prelevo Decreto
-			DepositoDecretoModel ddm = null;
-			if (em.getCodTipoProvvedimento().equals("02")) {
+			DepositoDecretoModel llDecMod = null;
+			if (lEveMod.getCodTipoProvvedimento().equals("02")) {
 				IDepositoDecreto lCtrlDD = SIUSLookupRemote.getDepositoDecretoRemote();
-				ddm = lCtrlDD.ExRicercaDepositoDecretoByIdEvento(idEvento);
-				damNew = ida.ExInserisciFoglioComplementare(damNew, em.getCodTipoProvvedimento(),
-						ddm.getIdDepositoDecreto());
-				setRequestAttribute("depositoDecreto", ddm);
+				llDecMod = lCtrlDD.ExRicercaDepositoDecretoByIdEvento(lIdEvento);
+				aDocAllegato = mDocAllCtrl.ExInserisciFoglioComplementare(aDocAllegato,
+						lEveMod.getCodTipoProvvedimento(), llDecMod.getIdDepositoDecreto());
+				setRequestAttribute("depositoDecreto", llDecMod);
 				setRequestAttribute("depositoordinanzapc", null);
 				// MEV10-s3: aggiunta impostazione di attributo nella richiesta
 				setRequestAttribute("depositoSentenza", null);
 			}
 
 			// Prelevo Ordinanza
-			DepositoOrdinanzaPcModel dopcm = null;
-			if (em.getCodTipoProvvedimento().equals("03")) {
-				IDepositoOrdinanzaPc idop = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
-				dopcm = idop.ExRicercaDepositoOrdinanzaPcByEvento(idEvento);
-				damNew = ida.ExInserisciFoglioComplementare(damNew, em.getCodTipoProvvedimento(),
-						dopcm.getIdDepositoOrdinanzaPc());
-				setRequestAttribute("depositoordinanzapc", ddm);
+			DepositoOrdinanzaPcModel llDepMod = null;
+			if (lEveMod.getCodTipoProvvedimento().equals("03")) {
+				IDepositoOrdinanzaPc lCtrlOrd = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
+				llDepMod = lCtrlOrd.ExRicercaDepositoOrdinanzaPcByEvento(lIdEvento);
+				aDocAllegato = mDocAllCtrl.ExInserisciFoglioComplementare(aDocAllegato,
+						lEveMod.getCodTipoProvvedimento(), llDepMod.getIdDepositoOrdinanzaPc());
+				setRequestAttribute("depositoordinanzapc", llDecMod);
 				setRequestAttribute("depositoDecreto", null);
 				// MEV10-s3: aggiunta impostazione di attributo nella richiesta
 				setRequestAttribute("depositoSentenza", null);
@@ -160,78 +143,82 @@ public class ActLoadDettaglioCompFoglioComp extends ActionSiap implements ICosta
 			// Imposta la Combo contenente le Motivazioni non Inviato FC.
 			Option lOption = new Option(DecodificheManager.getInstance().getMotivoNonInvio());
 			setRequestAttribute("motivoNonInvio", "" + lOption);
-			setRequestAttribute("documentoAllegato", damNew);
-			setRequestAttribute("evento", em);
+			setRequestAttribute("documentoAllegato", aDocAllegato);
+			setRequestAttribute("evento", lEveMod);
 
 			// return IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD +
-			// "=siap.sius.provvedimento.action.ActLoadInserisciCompFoglioComp&"+
-			// ICostantiEvento.CAMPO_ID_EVENTO+"="+em.getIdEvento().toString();
+			// "=siap.sius.provvedimento.action.ActLoadInserisciCompFoglioComp&"+ICostantiEvento.CAMPO_ID_EVENTO+"="+lEveMod.getIdEvento().toString();
 			return PG_LOADDETTAGLIOCOMPFOGLIOCOMP;
+
 		} else {
+
 			// ********************************* DETTAGLIO
+
 			// Gestione del punto di ritorno
 			setLinkRitorno();
 			// UC passo1
-			IDocumentoAllegato idaNew = SIUSLookupRemote.getDocumentoAllegatoRemote();
-			DocumentoAllegatoModel damNew = null;
-			BigDecimal idEvento = null;
+			IDocumentoAllegato lDocAllCtrl = SIUSLookupRemote.getDocumentoAllegatoRemote();
+			DocumentoAllegatoModel lDocAll = null;
+			BigDecimal lIdEvento = null;
+
 			if (!isRequestParameterNullObj(ICostantiDocumentoAllegato.CAMPO_ID_DOCUMENTO_ALLEGATO)) {
 				// Ricerca del Foglio Complementare
-				BigDecimal idDocAll = this.getRequestBigDecimalParameter(
-						ICostantiDocumentoAllegato.CAMPO_ID_DOCUMENTO_ALLEGATO);
-				damNew = idaNew.ExRicercaDocumentoAllegatoByKey(idDocAll);
-				idEvento = damNew.getEveIdEvento();
+				BigDecimal idDocAll = this
+						.getRequestBigDecimalParameter(ICostantiDocumentoAllegato.CAMPO_ID_DOCUMENTO_ALLEGATO);
+				lDocAll = lDocAllCtrl.ExRicercaDocumentoAllegatoByKey(idDocAll);
+				lIdEvento = lDocAll.getEveIdEvento();
 			} else {
 				// Ricerca del Foglio Complementare
-				idEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
-				damNew = idaNew.ExRicercaDocumentoAllegatoByIdEventoCodTipo(idEvento, "06");
+				lIdEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
+				lDocAll = lDocAllCtrl.ExRicercaDocumentoAllegatoByIdEventoCodTipo(lIdEvento, "06");
 			}
 
 			// Evento. Leggo l'evento collegato al decreto/ordinanza.
-			EventoModel em = null;
-			IEvento ie = SICOLookupRemote.getEventoRemote();
-			em = ie.ExRicercaEventoByKey(idEvento);
-			if (em == null)
+			EventoModel lEveMod = null;
+			IEvento lCtrl = SICOLookupRemote.getEventoRemote();
+			lEveMod = lCtrl.ExRicercaEventoByKey(lIdEvento);
+			if (lEveMod == null)
 				throw new SIUSException(SIUSException.USER_MESSAGE, "Documento Allegato assente");
 
 			// Prelevo Decreto
-			DepositoDecretoModel ddm = null;
-			if (em.getCodTipoProvvedimento().equals("02")) {
+			DepositoDecretoModel llDecMod = null;
+			if (lEveMod.getCodTipoProvvedimento().equals("02")) {
 				IDepositoDecreto lCtrlDD = SIUSLookupRemote.getDepositoDecretoRemote();
-				ddm = lCtrlDD.ExRicercaDepositoDecretoByIdEvento(em.getIdEvento());
+				llDecMod = lCtrlDD.ExRicercaDepositoDecretoByIdEvento(lEveMod.getIdEvento());
 			}
 
 			// Prelevo Ordinanza
-			DepositoOrdinanzaPcModel dopm = null;
-			if (em.getCodTipoProvvedimento().equals("03")) {
-				IDepositoOrdinanzaPc idop = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
-				dopm = idop.ExRicercaDepositoOrdinanzaPcByEvento(em.getIdEvento());
+			DepositoOrdinanzaPcModel llDepMod = null;
+			if (lEveMod.getCodTipoProvvedimento().equals("03")) {
+				IDepositoOrdinanzaPc lCtrlOrd = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
+				llDepMod = lCtrlOrd.ExRicercaDepositoOrdinanzaPcByEvento(lEveMod.getIdEvento());
 			}
 
-			setRequestAttribute("evento", em);
-			setRequestAttribute("documentoAllegato", damNew);
-			setRequestAttribute("depositoDecreto", ddm);
-			setRequestAttribute("depositoordinanzapc", dopm);
+			setRequestAttribute("evento", lEveMod);
+			setRequestAttribute("documentoAllegato", lDocAll);
+			setRequestAttribute("depositoDecreto", llDecMod);
+			setRequestAttribute("depositoordinanzapc", llDepMod);
 
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
 			siesLogger.debug(getClass().getName() + ".processRequest: fine");
 
 			return PG_LOADDETTAGLIOCOMPFOGLIOCOMP;
+
 		}
+
 	}
 
 	@SuppressWarnings("rawtypes")
 	private void ricercaAnnullate(BigDecimal aIdEvento) throws Exception {
-
 		// Ricerca eventuali impugnazioni annullate solo se l'impugnazione stessa non annullata
-		if (dam == null || dam.getDataAnnullamento() == null) {
-			Vector lCFCAnnullati = ida.ExRicercaDocAllAnnulatiByIdEventoCodTipo(aIdEvento, "06");
+		if (mDocAll == null || mDocAll.getDataAnnullamento() == null) {
+			Vector lCFCAnnullati = mDocAllCtrl.ExRicercaDocAllAnnulatiByIdEventoCodTipo(aIdEvento, "06");
 			setRequestAttribute("DocAllNulli", lCFCAnnullati);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
 			siesLogger.debug(getClass().getName() + ".ricercaAnnullate: fine");
+
 		}
+
 	}
 
 }

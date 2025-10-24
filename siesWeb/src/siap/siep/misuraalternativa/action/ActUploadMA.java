@@ -3,12 +3,6 @@ package siap.siep.misuraalternativa.action;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import org.apache.log4j.Logger;
-
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.web.IWebConstants;
-import f3b.web.RedirectTo;
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoModel;
@@ -16,71 +10,70 @@ import siap.sico.misuraalternativa.controller.IMisuraAlternativa;
 import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
+import f3b.util.DateUtils;
+import f3b.web.IWebConstants;
+import f3b.web.RedirectTo;
 
 /**
- * ActUploadMA - Classe per la Validazione della misura alternativa
- *
+ * <p>Title: ActUploadMA</p>
+ * <p>Description: Validazione della misura alternativa</p>
+ * <p>Copyright: Copyright (c) 2002</p>
+ * <p>Company: </p>
+ * @author not attributable
  * @version 1.0
  */
-public class ActUploadMA extends ActionSiap implements ICostantiEvento {
+public class ActUploadMA extends ActionSiap implements ICostantiEvento
+{
+  public String processRequest() throws Exception
+  {
+    FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSessionAttribute("fascicolo");
+    EventoModel lModel = new EventoModel();
+    lModel.setIdEvento(getRequestBigDecimalParameter(CAMPO_ID_EVENTO));
 
-	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
-	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+    InputStream lInput = getFile(ICostantiEvento.CAMPO_BLOB);
 
-	public String processRequest() throws Exception {
+    if (lInput != null)
+    {
+      byte[] lBuffer = new byte[lInput.available()];
 
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
+      lInput.read(lBuffer);
+      ByteArrayInputStream lSt = new ByteArrayInputStream(lBuffer);
+      lModel.setDocBlobIn(lSt);
+    }
 
-		FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSessionAttribute("fascicolo");
-		EventoModel lModel = new EventoModel();
-		lModel.setIdEvento(getRequestBigDecimalParameter(CAMPO_ID_EVENTO));
+    lModel.setDataAggiornamento(DateUtils.getSysDate());
 
-		InputStream lInput = getFile(ICostantiEvento.CAMPO_BLOB);
+    lModel.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
+    lModel.setCodOperatoreAggiornamento(getCodUtenteConnesso());
 
-		if (lInput != null) {
-			byte[] lBuffer = new byte[lInput.available()];
-			lInput.read(lBuffer);
-			ByteArrayInputStream lSt = new ByteArrayInputStream(lBuffer);
-			lModel.setDocBlobIn(lSt);
-		}
+    if (isRequestChecked(ICostantiEvento.CAMPO_VALIDA))
+    {
+      lModel.setFlagDocumentoRegistrato("S");
+      IMisuraAlternativa lCtrl = SICOLookupRemote.getMisuraAlternativaRemote();
+      //String tipoMisura = getRequestStringParameter("tipoMisura");
 
-		lModel.setDataAggiornamento(DateUtils.getSysDate());
-		lModel.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
-		lModel.setCodOperatoreAggiornamento(getCodUtenteConnesso());
+      //lCtrl.ExUpdateValidaMA(lModel, lFascMod, tipoMisura, getRequestStringParameter("IdEventoAmmProvvAff"));
+      lCtrl.ExUpdateValidaMA(lModel, lFascMod);
+    }
+    else
+    {
+      lModel.setFlagDocumentoRegistrato("N");
 
-		if (isRequestChecked(ICostantiEvento.CAMPO_VALIDA)) {
-			lModel.setFlagDocumentoRegistrato("S");
-			IMisuraAlternativa lCtrl = SICOLookupRemote.getMisuraAlternativaRemote();
-			// String tipoMisura = getRequestStringParameter("tipoMisura");
-			// lCtrl.ExUpdateValidaMA(lModel, lFascMod, tipoMisura,
-			// getRequestStringParameter("IdEventoAmmProvvAff"));
-			lCtrl.ExUpdateValidaMA(lModel, lFascMod);
-		} else {
-			lModel.setFlagDocumentoRegistrato("N");
+      IEvento lCtrl = SICOLookupRemote.getEventoRemote();
+      lCtrl.ExUpdateDocument(lModel);
+    }
 
-			IEvento lCtrl = SICOLookupRemote.getEventoRemote();
-			lCtrl.ExUpdateDocument(lModel);
-		}
+    //Prepara la "pagina" di destinAction
+    setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Aggiornamento Documento Avvenuto Correttamente!");
 
-		// Prepara la "pagina" di destinAction
-		setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Aggiornamento Documento Avvenuto Correttamente!");
+    if (!isRequestParameterNullObj(CAMPO_AZIONE_DETTAGLIO))
+    {
+      RedirectTo lRedirigi = new RedirectTo();
+      lRedirigi.setPage(IWebConstants.PG_MAIN);
+      lRedirigi.setAction(getRequestStringParameter(CAMPO_AZIONE_DETTAGLIO) + "&" + CAMPO_ID_EVENTO + "=" + getRequestStringParameter(ICostantiEvento.CAMPO_ID_EVENTO));
+      setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
+    }
 
-		if (!isRequestParameterNullObj(CAMPO_AZIONE_DETTAGLIO)) {
-			RedirectTo lRedirigi = new RedirectTo();
-			lRedirigi.setPage(IWebConstants.PG_MAIN);
-			lRedirigi.setAction(getRequestStringParameter(CAMPO_AZIONE_DETTAGLIO) + "&" + CAMPO_ID_EVENTO
-					+ "=" + getRequestStringParameter(ICostantiEvento.CAMPO_ID_EVENTO));
-			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
-		}
-
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getName() + ".processRequest: fine");
-
-		// messaggio di ritorno
-		return IWebConstants.PG_MESSAGE;
-	}
-
+    return IWebConstants.PG_MESSAGE;
+  }
 }

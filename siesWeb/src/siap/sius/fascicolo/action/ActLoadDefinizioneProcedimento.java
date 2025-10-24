@@ -2,8 +2,6 @@ package siap.sius.fascicolo.action;
 
 import org.apache.log4j.Logger;
 
-import f3b.log.LogF3B;
-import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.util.DecodificheUtils;
 import siap.sico.lock.controller.LockController;
@@ -18,17 +16,32 @@ import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.generaleprocedimento.controller.IGeneraleProcedimento;
 import siap.sius.generaleprocedimento.model.GeneraleProcedimentoModel;
 import siap.sius.util.SIUSLookupRemote;
+import f3b.log.LogF3B;
+import f3b.web.html.Option;
 
 /**
- * Description: Azione adibita all'operazione di Definizione del Procedimento SIUS. Se il Fascicolo risulta
- * già Definito viene presentato il Dettaglio della Definizione. Se il Fascicolo è in uno degli stati:
- * Unificato o Emesso Provvedimento, viene lanciata una Eccezione di Warning, negli altri casi viene 
- * presentata la form di input per la Definizione.
  *
+ * <p>
+ * Title: ActLoadDefinizioneProcedimento
+ * </p>
+ * <p>
+ * Description: Azione adibita all'operazione di Definizione del Procedimento SIUS.
+ * </p>
+ * Se il Fascicolo risulta già Definito viene presentato il Dettaglio della Definizione.</p> Se il Fascicolo è
+ * in uno degli stati: Unificato o Emesso Provvedimento,</p> viene lanciata una Eccezione di Warning,</p>
+ * negli altri casi viene presentata la form di input per la Definizione.
+ * 
+ * @throws Exception
+ *             <p>
+ *             Copyright: Copyright (c) 2004
+ *             </p>
+ *             <p>
+ *             Company:
+ *             </p>
+ * @author not attributable
  * @version 1.0
  */
 public class ActLoadDefinizioneProcedimento extends ActionSius implements ICostantiFascicoloSius {
-
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
@@ -36,8 +49,7 @@ public class ActLoadDefinizioneProcedimento extends ActionSius implements ICosta
 
 	public String processRequest() throws Exception {
 
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
 		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
 		this.gestioneRitorno();
 
@@ -66,8 +78,7 @@ public class ActLoadDefinizioneProcedimento extends ActionSius implements ICosta
 			setSessionAttribute("fascicolo", mFasSIEP);
 		}
 
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
 		siesLogger.debug(getClass().getName() + ".processRequest: fine");
 
 		return lRetPage;
@@ -89,8 +100,8 @@ public class ActLoadDefinizioneProcedimento extends ActionSius implements ICosta
 		if (lFasGPMod != null && lFasGPMod.getFascicoloSiusModel() != null
 				&& lFasGPMod.getFascicoloSiusModel().getFasSieIdFascicoloSiep() != null) {
 			IFascicoloSiep lCtrlSIEP = SIEPLookupRemote.getFascicoloSiepRemote();
-			mFasSIEP = lCtrlSIEP.ExRicercaFascicoloByKeyNoError(
-					lFasGPMod.getFascicoloSiusModel().getFasSieIdFascicoloSiep());
+			mFasSIEP = lCtrlSIEP.ExRicercaFascicoloByKeyNoError(lFasGPMod.getFascicoloSiusModel()
+					.getFasSieIdFascicoloSiep());
 		}
 
 		return lFasGPMod;
@@ -98,11 +109,11 @@ public class ActLoadDefinizioneProcedimento extends ActionSius implements ICosta
 
 	/**
 	 * La funzione analizza il Fascicolo SIUS ed in base allo stato prepara la form da presentare. I casi
-	 * sono: 1) STATO = COD_UNIFICATO, COD_EMESSO_PROVVEDIMENTO : viene lanciata un'eccezione, l'operazione
+	 * sono: 1) STATO = COD_UNIFICATO, COD_EMESSO_PROVVEDIMENTOO : viene lanciata un'eccezione, l'operazione
 	 * non può essere eseguita. 2) STATO = COD_DEFINITO : il fascicolo è già in stato definito, viene
 	 * visualizzato il dettaglio della definizione. 3) Negli altri casi viene preparata la form di input per
 	 * la definizione del procedimento.
-	 *
+	 * 
 	 * @param aFasGPMod
 	 * @return String pagina di input o di dettaglio
 	 * @throws Exception
@@ -122,13 +133,12 @@ public class ActLoadDefinizioneProcedimento extends ActionSius implements ICosta
 					"Operazione non consentita su Procedimento Unificato!");
 
 		if (aFasGPMod.getFascicoloSiusModel().getCodStatoFascicolo()
-				.equalsIgnoreCase(COD_EMESSO_PROVVEDIMENTO))
+				.equalsIgnoreCase(COD_EMESSO_PROVVEDIMENTOO))
 			// passo 4a
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Operazione non consentita su Procedimento con Provvedimento!");
 
-		if (getCodUfficioUtenteConnesso()
-				.compareTo(aFasGPMod.getFascicoloSiusModel().getChiaveUfficio()) != 0)
+		if (getCodUfficioUtenteConnesso().compareTo(aFasGPMod.getFascicoloSiusModel().getChiaveUfficio()) != 0)
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Operazione non consentita per Procedimento di altro ufficio !");
 
@@ -137,29 +147,31 @@ public class ActLoadDefinizioneProcedimento extends ActionSius implements ICosta
 		String codTipoUfficio = getUfficioUtenteConnesso().getCodTipoUfficio();
 		if ("UDSM".equals(codTipoUfficio))
 			codTipoUfficio = "UDS";
-		Option lOption = new Option(DecodificheUtils.getDecodificheFiltrateByCodAlt(
-				DecodificheManager.getInstance().getTipoDefinizione(), codTipoUfficio));
+		Option lOption = new Option(DecodificheUtils.getDecodificheFiltrateByCodAlt(DecodificheManager
+				.getInstance().getTipoDefinizione(), codTipoUfficio));
 
 		if (aFasGPMod.getFascicoloSiusModel().getCodStatoFascicolo().equalsIgnoreCase(COD_DEFINITO)) {
-			// passo 4b) Il Procedimento è già definito, si richiama il dettaglio
+			// passo 4b Il Procedimento è già definito, si richiama il dettaglio
+
 			IGeneraleProcedimento lGenProcCtrl = SIUSLookupRemote.getGeneraleProcedimentoRemote();
-			GeneraleProcedimentoModel lGenProc = lGenProcCtrl.ExRicercaGeneraleProcedimentoByFascicolo(
-					aFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
+			GeneraleProcedimentoModel lGenProc = lGenProcCtrl
+					.ExRicercaGeneraleProcedimentoByFascicolo(aFasGPMod.getFascicoloSiusModel()
+							.getIdFascicoloSius());
 
 			lcodTipoDefinizione = lGenProc.getTipoDefinizione();
 			lOption.setSelected(lcodTipoDefinizione);
 			lmodalita = "dettaglio";
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
 			siesLogger.debug(" Dettaglio : " + lcodTipoDefinizione);
 
 			setRequestAttribute("descrizione", lGenProc.getDescrDefinizione());
 			setRequestAttribute("data_definizione", lGenProc.getDataDefinizione());
-		} else {
-			// possibile inserire Definizione Procedimento e quindi lock
+		} else
+		// possibile inserire Definizione Procedimento e quindi lock
+		{
 			// Lock per evitare più definizioni contemporanee del Fascicolo
-			LockModel lck = LockController.lockIfNotLocked(getServletContext(), "ProcedimentoSIUS",
-					aFasGPMod.getFascicoloSiusModel().getIdFascicoloSius().toString(), getCodUtenteConnesso(),
+			LockModel lck = LockController.lockIfNotLocked(getServletContext(), "ProcedimentoSIUS", aFasGPMod
+					.getFascicoloSiusModel().getIdFascicoloSius().toString(), getCodUtenteConnesso(),
 					getSession().getId());
 			if (lck != null)
 				throw new SIUSException(SIUSException.USER_MESSAGE, "Il  " + lck.getEntity()
@@ -172,5 +184,4 @@ public class ActLoadDefinizioneProcedimento extends ActionSius implements ICosta
 
 		return lRetPage;
 	}
-
 }

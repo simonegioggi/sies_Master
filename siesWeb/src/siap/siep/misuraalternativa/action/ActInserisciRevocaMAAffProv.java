@@ -357,7 +357,7 @@ public class ActInserisciRevocaMAAffProv extends ActMisuraAlternativa implements
 			Date lDataEmisTras = getRequestDateParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE,
 					ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE,
 					ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE);
-			lEveMod.setEvento(setEventoOrdinanzaDecretoMisuraAlternativa(lEveMod.getEvento(), "03",
+			lEveMod.setEvento(setEventoOrdinazaDecretoMisuraAlternativa(lEveMod.getEvento(), "03",
 					lCodiceUffEmi, lComModAutEmi, lDataEmisTras));
 
 			// setto il deposito ordinanza

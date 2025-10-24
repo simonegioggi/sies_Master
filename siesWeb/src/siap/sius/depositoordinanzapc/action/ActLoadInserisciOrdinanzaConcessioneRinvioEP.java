@@ -69,7 +69,7 @@ public class ActLoadInserisciOrdinanzaConcessioneRinvioEP extends ActionSiap
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
 				siesLogger.debug("ID del Generale Procedimento ->" + lGenProc1.getIdGeneraleProcedimento());
-				// MEV_2023-35: intervento pro collaudo, aggiunto parametro di passaggio x diversificare la
+				// MEV_2023-035: intervento pro collaudo, aggiunto parametro di passaggio x diversificare la
 				// ricerca del decreto di origine
 				String codOggettoProc = lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento();
 				lDepDecMod = RicercaDecreto(lGenProc1.getIdGeneraleProcedimento(), codOggettoProc);
@@ -110,7 +110,7 @@ public class ActLoadInserisciOrdinanzaConcessioneRinvioEP extends ActionSiap
 		String lCodUff = null;
 
 		lDepDecCtrl = SIUSLookupRemote.getDepositoDecretoRemote();
-		// MEV_2023-35: intervento pro collaudo, aggiunto controllo x diversificare la
+		// MEV_2023-035: intervento pro collaudo, aggiunto controllo x diversificare la
 		// ricerca del decreto di origine
 		if ("C065".equals(codOggettoProc))
 			lDepDecMod = lDepDecCtrl.ExRicercaDepositoDecretoByGenProc(aIdGenProc,

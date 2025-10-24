@@ -23,6 +23,11 @@ import siap.sige.web.ActionSige;
 
 /**
  * ActRicercaProvvedimenti - Azione specializzata per la ricerca dei Provvedimenti legati al fascicolo SIGE
+ * <<<<<<< HEAD
+ *
+ * =======
+ *
+ * >>>>>>> MEV_2024_092_FASE-1
  *
  * @version 1.0
  */

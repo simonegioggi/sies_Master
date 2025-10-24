@@ -1,3 +1,10 @@
+//
+// Questo file è stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
+// Vedere <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
+// Qualsiasi modifica a questo file andrà persa durante la ricompilazione dello schema di origine. 
+// Generato il: 2016.10.26 alle 04:01:02 PM CEST 
+//
+
 
 package it.mig.sies.type.foglicomplementari;
 
@@ -20,6 +27,14 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element ref="{http://it/mig/sies/type/fogliComplementari}ChiaviProvvedimentoGiudiziario"/>
+ *         &lt;element name="codiceEsito">
+ *           &lt;simpleType>
+ *             &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
+ *               &lt;maxLength value="2"/>
+ *             &lt;/restriction>
+ *           &lt;/simpleType>
+ *         &lt;/element>
+ *         &lt;element ref="{http://it/mig/sies/type/fogliComplementari}Anagrafica"/>
  *         &lt;element name="numeroSentenza" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="flagCumulante" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
  *         &lt;element name="annoSentenza" type="{http://www.w3.org/2001/XMLSchema}string"/>
@@ -56,6 +71,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "chiaviProvvedimentoGiudiziario",
+    "codiceEsito",
+    "anagrafica",
     "numeroSentenza",
     "flagCumulante",
     "annoSentenza",
@@ -68,6 +85,10 @@ public class ProvvedimentoGiudiziario {
 
     @XmlElement(name = "ChiaviProvvedimentoGiudiziario", required = true, nillable = true)
     protected ChiaviProvvedimentoGiudiziario chiaviProvvedimentoGiudiziario;
+    @XmlElement(required = true, nillable = true)
+    protected String codiceEsito;
+    @XmlElement(name = "Anagrafica", required = true)
+    protected Anagrafica anagrafica;
     @XmlElement(required = true, nillable = true)
     protected String numeroSentenza;
     protected boolean flagCumulante;
@@ -105,6 +126,54 @@ public class ProvvedimentoGiudiziario {
      */
     public void setChiaviProvvedimentoGiudiziario(ChiaviProvvedimentoGiudiziario value) {
         this.chiaviProvvedimentoGiudiziario = value;
+    }
+
+    /**
+     * Recupera il valore della proprietà codiceEsito.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getCodiceEsito() {
+        return codiceEsito;
+    }
+
+    /**
+     * Imposta il valore della proprietà codiceEsito.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setCodiceEsito(String value) {
+        this.codiceEsito = value;
+    }
+
+    /**
+     * Recupera il valore della proprietà anagrafica.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Anagrafica }
+     *     
+     */
+    public Anagrafica getAnagrafica() {
+        return anagrafica;
+    }
+
+    /**
+     * Imposta il valore della proprietà anagrafica.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Anagrafica }
+     *     
+     */
+    public void setAnagrafica(Anagrafica value) {
+        this.anagrafica = value;
     }
 
     /**

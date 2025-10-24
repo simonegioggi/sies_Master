@@ -19,8 +19,19 @@ import siap.siep.sospensione.model.SospensioneModel;
 import siap.siep.verbale.model.VerbaleModel;
 
 /**
- * SospensioneController - Classe Controller per Sospensione
- *
+ * <p>
+ * Title: SospensioneController
+ * </p>
+ * <p>
+ * Description: Classe Controller per Sospensione
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2002
+ * </p>
+ * <p>
+ * Company: Bull
+ * </p>
+ * 
  * @version 1.0
  */
 @SuppressWarnings("rawtypes")
@@ -56,7 +67,7 @@ public interface ISospensione {
 
 	/**
 	 * ExInserisciEventoNotificaVerbale
-	 *
+	 * 
 	 * @param aEventoNot
 	 * @param aPena
 	 * @param aEvento
@@ -80,7 +91,7 @@ public interface ISospensione {
 	 * Effettua l'aggiornamento del Provvedimento (blob) e la validazione del Differimento. Vale a dire del
 	 * DECRETO_ORDINANZA_SIEP, EVENTO(sius), PENA_RESIDUA, EVENTO (siep)..... aggiorna la posizione giuridica
 	 * aggiorna lo stato del provvedimento
-	 *
+	 * 
 	 * @param aEvento
 	 *            - EventoModel contenente i soli dati da aggiornare (idEvento,blob,dataAgg,uffAgg,operAgg)
 	 * @param aFascicolo
@@ -109,17 +120,13 @@ public interface ISospensione {
 			DecretoOrdinanzaSiepModel aDecreto) throws F3BException;
 
 	/**
-	 * Effettua la validazione e dei provvedimenti collegati a una <b>Interruzione</b><br>
-	 * - Valida l'evento<br>
-	 * - Valida la pena residua<br>
-	 * - Valida il decreto ordinanza siep<br>
-	 * - Effettua l'aggiornamento dello Stato del Procedimento, dello Scadenzario Vane Ricerche, del Nome
-	 * Provvedimento<br>
-	 * <br>
+	 * Effettua la validazione e dei provvedimenti collegati a una <b>Interruzione</b><br> - Valida
+	 * l'evento<br> - Valida la pena residua<br> - Valida il decreto ordinanza siep<br> - Effettua
+	 * l'aggiornamento dello Stato del Procedimento, dello Scadenzario Vane Ricerche, del Nome
+	 * Provvedimento<br><br>
 	 *
-	 * @param aEvento
-	 *            @param aFascicolo @param aNomProv - nome provvedimento @param aStatoProc - stato
-	 *            procedimento @return @throws
+	 * @param aEvento @param aFascicolo @param aNomProv - nome provvedimento @param aStatoProc - stato
+	 * procedimento @return @throws
 	 */
 	public EventoModel ExUpdateValidaSospensioneOE(EventoModel aEvento, FascicoloSiepModel aFascicolo,
 			String aNomProv, String aStatoProc) throws F3BException;
@@ -127,7 +134,7 @@ public interface ISospensione {
 	/**
 	 * Effettua la <b>SVALIDAZIONE</b> dell'evento e della pena residua. Cancellando le eventuali vecchie
 	 * annotazioni (Quali?) e sostituendole con quelle passare in input.
-	 *
+	 * 
 	 * @param aEvento
 	 * @return
 	 * @throws F3BException
@@ -149,7 +156,7 @@ public interface ISospensione {
 	/**
 	 * Effettua l'inserimento del Provvedimento conseguente un Differimento. Eventualmente calcola la pena
 	 * residua e la sospensione.
-	 *
+	 * 
 	 * @param aTipoDifferimento
 	 *            - indica il tipo di Differimento che si sta registrando
 	 * @param aEventoNotifica
@@ -178,9 +185,5 @@ public interface ISospensione {
 
 	public EventoModel ExUpdateValidaEspulsione(EventoModel aEvento, FascicoloSiepModel aFascicolo,
 			String aPosGiu, String aNomProv, String aStatoProc) throws F3BException;
-
-	// MEV_2019-09-SIEP
-	public EventoModel ExUpdateValidaSospensioneDecisioniSorveglianza678(EventoModel aEvento,
-			FascicoloSiepModel aFascicolo) throws F3BException;
 
 }

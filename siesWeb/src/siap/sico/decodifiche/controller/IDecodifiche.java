@@ -38,8 +38,7 @@ public interface IDecodifiche {
 
 	public Collection ExListaContenuti(String aCodTipoUfficio) throws F3BException;
 
-	// MEV_2019-09-SIEP: cambiata firma del metodo per distinguere PM da PMM
-	public Collection ExListaMotivoProvvMA(String aMisAlt, String aCodTipoUfficio) throws F3BException;
+	public Collection ExListaMotivoProvvMA(String aMisAlt) throws F3BException;
 
 	public Collection ExListaMotivoOS(String aOSLibAnt) throws F3BException;
 
@@ -176,9 +175,6 @@ public interface IDecodifiche {
 	 * @throws F3BException
 	 */
 	public Collection ExListaMotivoProvvRigettoDifferimento() throws F3BException;
-	
-	// MEV_2019-09-SIEP
-	public Collection ExListaMotivoProvvSosp678() throws F3BException;
 
 	public Collection ExListaMotivoProvvedimentoRigettoMA() throws F3BException;
 
@@ -189,8 +185,7 @@ public interface IDecodifiche {
 	public Collection ExListaMotiviInammissibilitaxSottoSistema(String aTipoUff, String aSottoSistema)
 			throws Exception;
 
-	// MEV_2019-09-SIEP: cambiata firma del metodo per distinguere PM da PMM
-	public Collection ExListaOggettiSospensioneDecisioneSor(String aCodTipoUfficio) throws F3BException;
+	public Collection ExListaOggettiSospensioneDecisioneSor() throws F3BException;
 
 	public Collection ExListaMotiviInammissibilitaCPP(String aTipoUff) throws Exception;
 

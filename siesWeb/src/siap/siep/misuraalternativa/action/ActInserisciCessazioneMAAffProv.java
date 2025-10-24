@@ -348,7 +348,7 @@ public class ActInserisciCessazioneMAAffProv extends ActMisuraAlternativa
 
 			String lTipoDecisione = getRequestStringParameter(
 					ICostantiMisuraAlternativa.CAMPO_COD_TIPO_DECISIONE);
-			lEveMod.setEvento(setEventoOrdinanzaDecretoMisuraAlternativa(lEveMod.getEvento(), lTipoDecisione,
+			lEveMod.setEvento(setEventoOrdinazaDecretoMisuraAlternativa(lEveMod.getEvento(), lTipoDecisione,
 					lCodiceUffEmi, lComModAutEmi, lDataEmisTras));
 
 			//// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di

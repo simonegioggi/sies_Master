@@ -1,333 +1,249 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page import="f3b.web.IWebConstants"%>
+<%@ page import="siap.web.ISIAPCostantiWeb"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
-<%@ page import="f3b.web.IWebConstants"%>
+
 
 <%@ page import="siap.sico.magistrato.action.ICostantiMagistrato"%>
-<%@ page import="siap.sico.soggetto.model.SoggettoModel"%>
 <%@ page import="siap.sius.magistratorelatore.action.ICostantiMagistratoRelatore"%>
 <%@ page import="siap.sius.fascicolo.model.FascicoloSiusModel"%>
+<%@ page import="siap.sico.soggetto.model.SoggettoModel"%>
 <%@ page import="siap.sius.fascicolo.action.ICostantiFascicoloSius"%>
-<%@ page import="siap.web.ISIAPCostantiWeb"%>
 
-<jsp:useBean id="aMagistrato"        	scope="request" class="siap.sico.magistrato.model.MagistratoModel"/>
-<jsp:useBean id="aListaProcedimenti" 	scope="request" class="java.util.Vector"/>
-<jsp:useBean id="aListaSoggetti"		scope="request" class="java.util.Vector"/>
-<jsp:useBean id="AzioneChiamante"    	scope="request" class="java.lang.String"/>
-<%-- 20251010 [SG]: paginata la ricerca --%>
-<jsp:useBean id="totaleProcedimenti"	scope="request" class="java.lang.String"/>
+<jsp:useBean id="aMagistrato"        scope="request" class="siap.sico.magistrato.model.MagistratoModel"/>
+<jsp:useBean id="aListaProcedimenti" scope="request" class="java.util.Vector" />
+<jsp:useBean id="aListaSoggetti" scope="request" class="java.util.Vector" />
+
+<jsp:useBean id="AzioneChiamante"    scope="request" class="java.lang.String" />
 
 <%
 //==============================================================================
 // Form per la visualizzazione del risultato della ricerca dei procedimenti 
 // attivi per un certo magistrato
+//
 //==============================================================================
-int totale = new Integer(totaleProcedimenti).intValue();
 %>
 <html>
-<head>
-<title>[S.I.E.S.] - Elenco Procedimenti per Magistrato</title>
-<link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
-<script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
-<script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
-<script language="JavaScript">
-function Verify() {
-	if (document.ElencoProcedimentiPerMagistratoRelatore.<%=ICostantiMagistrato.CAMPO_COGNOME %>.value == "") {
-		alert("Il Cognome del Magistrato è obbligatorio");
-		return false;
-	}
-	if (document.ElencoProcedimentiPerMagistratoRelatore.<%=ICostantiMagistrato.CAMPO_NOME %>.value == "") {
-		alert("Il Nome del Magistrato è obbligatorio");
-		return false;
-	}
-	if (document.ElencoProcedimentiPerMagistratoRelatore.<%=ICostantiMagistratoRelatore.CAMPO_GIORNO_DATA_INIZIO%>.value.length == 1)
-		document.ElencoProcedimentiPerMagistratoRelatore.<%=ICostantiMagistratoRelatore.CAMPO_GIORNO_DATA_INIZIO%>.value = '0' +
-		document.ElencoProcedimentiPerMagistratoRelatore.<%=ICostantiMagistratoRelatore.CAMPO_GIORNO_DATA_INIZIO%>.value;
-	if (document.ElencoProcedimentiPerMagistratoRelatore.<%=ICostantiMagistratoRelatore.CAMPO_MESE_DATA_INIZIO%>.value.length == 1)
-		document.ElencoProcedimentiPerMagistratoRelatore.<%=ICostantiMagistratoRelatore.CAMPO_MESE_DATA_INIZIO%>.value = '0' +
-		document.ElencoProcedimentiPerMagistratoRelatore.<%=ICostantiMagistratoRelatore.CAMPO_MESE_DATA_INIZIO%>.value;
-	var data_to_verify = document.ElencoProcedimentiPerMagistratoRelatore.<%=ICostantiMagistratoRelatore.CAMPO_GIORNO_DATA_INIZIO%>.value
-		+ '/' + document.ElencoProcedimentiPerMagistratoRelatore.<%=ICostantiMagistratoRelatore.CAMPO_MESE_DATA_INIZIO%>.value
-		+ '/' + document.ElencoProcedimentiPerMagistratoRelatore.<%=ICostantiMagistratoRelatore.CAMPO_ANNO_DATA_INIZIO%>.value;
-	if (!ControllaDataPassaVuota(data_to_verify)) {
-    	alert('Data di inzio competenza non valida');
-    	return false;
-  	}
-	var contaSelezionati = 0;
-	if (typeof (document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.length) == "undefined") {
-		contaSelezionati = contaSelezionati + 1;
-    } else {
-		for (var i = 0; i < document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.length; i++) {
-	    	if (document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare[i].checked)
-	      		contaSelezionati=contaSelezionati + 1;
-		}
-  	}
-<%
-if (totale > 20) {
-%>
-	if (contaSelezionati == 0 && !document.ElencoProcedimentiPerMagistratoRelatore.selezionaAll.checked) {
-<%
-} else {
-%>
-	if (contaSelezionati == 0) {
-<%
-}
-%>
-	    alert('Selezionare almeno un procedimento');
-	    return false;
-	}
-  	return true;
-}
+  <head>
+    <title>[S.I.E.S.] - Elenco Procedimenti per Magistrato </title>
+    <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
+    <script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
+    <script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
+    <script language="JavaScript">
+      function Verify()
+      {
+        if(document.ElencoProcedimentiPerMagistratoRelatore.<%=ICostantiMagistrato.CAMPO_COGNOME %>.value=="")
+        {
+          alert("Il Cognome del Magistrato è obbligatorio");
+          return false;
+        }
 
-function ListaMagistrati(a_formname) {
-	var desktop;
-  	// n.b. viene passato il parametro codnum=xxx per evitare che la pop up precarichi il campo Data Inizio Competenza
-  	desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.magistrato.action.ActLoadRicercaMagistratoAssegnazioneLista&formname="+a_formname+"&codnum=xxx", "Ricerca_WMagistrato","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=500,height=500");
-}
+        if(document.ElencoProcedimentiPerMagistratoRelatore.<%=ICostantiMagistrato.CAMPO_NOME %>.value=="")
+        {
+          alert("Il Nome del Magistrato è obbligatorio");
+          return false;
+        }
 
-function selezionaTutti() {
-	if (typeof (document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.length) == "undefined") {
-		document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.checked = true;
-	} else {
-		for (var i = 0; i < document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.length; i++) {
-    		document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare[i].checked = true;
-  		}
-	}
-}
+        if (document.ElencoProcedimentiPerMagistratoRelatore.<%=ICostantiMagistratoRelatore.CAMPO_GIORNO_DATA_INIZIO%>.value.length==1)
+          document.ElencoProcedimentiPerMagistratoRelatore.<%=ICostantiMagistratoRelatore.CAMPO_GIORNO_DATA_INIZIO%>.value='0'+document.ElencoProcedimentiPerMagistratoRelatore.<%=ICostantiMagistratoRelatore.CAMPO_GIORNO_DATA_INIZIO%>.value;
+        if (document.ElencoProcedimentiPerMagistratoRelatore.<%=ICostantiMagistratoRelatore.CAMPO_MESE_DATA_INIZIO%>.value.length==1)
+          document.ElencoProcedimentiPerMagistratoRelatore.<%=ICostantiMagistratoRelatore.CAMPO_MESE_DATA_INIZIO%>.value='0'+document.ElencoProcedimentiPerMagistratoRelatore.<%=ICostantiMagistratoRelatore.CAMPO_MESE_DATA_INIZIO%>.value;
 
-function deselezionaTutti() {
-	if (typeof (document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.length) == "undefined") {
-		document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.checked = false;
-    } else {
-  		for (var i = 0; i < document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.length; i++) {
-    		document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare[i].checked = false;
-  		}
-    }
-}
+        var data_to_verify =      document.ElencoProcedimentiPerMagistratoRelatore.<%=ICostantiMagistratoRelatore.CAMPO_GIORNO_DATA_INIZIO%>.value
+                             +'/'+document.ElencoProcedimentiPerMagistratoRelatore.<%=ICostantiMagistratoRelatore.CAMPO_MESE_DATA_INIZIO%>.value
+                             +'/'+document.ElencoProcedimentiPerMagistratoRelatore.<%=ICostantiMagistratoRelatore.CAMPO_ANNO_DATA_INIZIO%>.value;
 
-<%
-if (totale > 20) {
-%>
-function selezionaTuttiProcedimenti() {
-	if (!document.ElencoProcedimentiPerMagistratoRelatore.selezionaAll.checked) {
-		deselezionaTutti();
-		document.ElencoProcedimentiPerMagistratoRelatore.selezionaAll.checked = true;
-		document.ElencoProcedimentiPerMagistratoRelatore.nomeSelezionaAll.value = 'Deseleziona Tutti i ' + <%=totaleProcedimenti%> + ' Procedimenti del Magistrato Competente';
-		document.ElencoProcedimentiPerMagistratoRelatore.nomeSelezionaTutti.disabled = true;
-		document.ElencoProcedimentiPerMagistratoRelatore.nomeDeselezionaTutti.disabled = true;
-		if (typeof (document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.length) == "undefined") {
-			document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.disabled = true;
-	    } else {
-		  	for (var i = 0; i < document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.length; i++) {
-		    	document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare[i].disabled = true;
-		  	}
-	    }
-	} else {
-		document.ElencoProcedimentiPerMagistratoRelatore.selezionaAll.checked = false;
-		document.ElencoProcedimentiPerMagistratoRelatore.nomeSelezionaAll.value = 'Seleziona Tutti i ' + <%=totaleProcedimenti%> + ' Procedimenti del Magistrato Competente';
-		document.ElencoProcedimentiPerMagistratoRelatore.nomeSelezionaTutti.disabled = false;
-		document.ElencoProcedimentiPerMagistratoRelatore.nomeDeselezionaTutti.disabled = false;
-		if (typeof (document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.length) == "undefined") {
-			document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.disabled = false;
-	    } else {
-		  	for (var i = 0; i < document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.length; i++) {
-		    	document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare[i].disabled = false;
-		  	}
-	    }
-	}
-}
+        if (!ControllaDataPassaVuota(data_to_verify) )
+        {
+          alert('Data di inzio competenza non valida');
 
-function selezionaTuttiProcedimentiDaCheckbox() {
-	if (document.ElencoProcedimentiPerMagistratoRelatore.selezionaAll.checked) {
-		deselezionaTutti();
-		document.ElencoProcedimentiPerMagistratoRelatore.nomeSelezionaAll.value = 'Deseleziona Tutti i ' + <%=totaleProcedimenti%> + ' Procedimenti del Magistrato Competente';
-		document.ElencoProcedimentiPerMagistratoRelatore.nomeSelezionaTutti.disabled = true;
-		document.ElencoProcedimentiPerMagistratoRelatore.nomeDeselezionaTutti.disabled = true;
-		if (typeof (document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.length) == "undefined") {
-			document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.disabled = true;
-	    } else {
-		  	for (var i = 0; i < document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.length; i++) {
-		    	document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare[i].disabled = true;
-		  	}
-	    }
-	} else {
-		document.ElencoProcedimentiPerMagistratoRelatore.nomeSelezionaAll.value = 'Seleziona Tutti i ' + <%=totaleProcedimenti%> + ' Procedimenti del Magistrato Competente';
-		document.ElencoProcedimentiPerMagistratoRelatore.nomeSelezionaTutti.disabled = false;
-		document.ElencoProcedimentiPerMagistratoRelatore.nomeDeselezionaTutti.disabled = false;
-		if (typeof (document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.length) == "undefined") {
-			document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.disabled = false;
-	    } else {
-		  	for (var i = 0; i < document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.length; i++) {
-		    	document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare[i].disabled = false;
-		  	}
-	    }
-	}
-}
-<%
-}
-%>
-</script>
+          return false;
+        }
+
+        var contaSelezionati = 0;
+        for (var i = 0; i <document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.length; i++)
+        {
+          if (document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare[i].checked)
+            contaSelezionati=contaSelezionati+1;
+        }
+        
+        if (contaSelezionati==0)
+        {
+          alert('Selezionare almeno un procedimento');
+          return false;
+        }
+
+        return true;
+      }
+
+      function ListaMagistrati(a_formname)
+      {
+        var desktop;
+        //n.b. viene passato il parametro codnum=xxx per evitare che la pop up 
+        //     precarichi il campo Data Inizio Competenza
+        desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.magistrato.action.ActLoadRicercaMagistratoAssegnazioneLista&formname="+a_formname+"&codnum=xxx", "Ricerca_WMagistrato","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=500,height=500");
+      }
+      
+      function selezionaTutti()
+      {
+        for (var i = 0; i <document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.length; i++)
+        {
+          document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare[i].checked=true;
+        }
+      }
+      
+      function deselezionaTutti()
+      {
+        for (var i = 0; i <document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare.length; i++)
+        {
+          document.ElencoProcedimentiPerMagistratoRelatore.idFascicoloDaAggiornare[i].checked=false;
+        }
+      }
+  </script>
 </head>
-
+  
 <body class="corpo">
-<table>
-	<tr>
-      	<td class="LBG">
-      		<a href="Javascript:window.print();">
-      			<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border="0">
-      		</a>
-      	</td>
-      	<td class="LBG">
-	        <font class="label">Funzione :</font>&nbsp;&nbsp;
-	        <font class="campo">Cambio Magistrato Relatore</font>
-      	</td>
-      	<td class="LBG">
-        	<a href="javascript:history.back()">
-          		<img align="middle" src="/images/arrowleft24.gif" alt="ritorna su" width="24" height="24" border="0">
-        	</a>
-      	</td>
-	</tr>
-</table>
-<FORM method="POST" name="ElencoProcedimentiPerMagistratoRelatore" action="<%= IWebConstants.PG_MAIN%>">
-<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.sius.magistratorelatore.action.ActModificaMultiplaMagistratoSorveglianzaAssegnatario">
-<input type="HIDDEN" name="<%=ISIAPCostantiWeb.CAMPO_AZIONE_CHIAMANTE%>" value=<%=AzioneChiamante%>>
-<input type="HIDDEN" name="<%=ICostantiMagistrato.CAMPO_COD_MAGISTRATO%>" value="">
-<input type="HIDDEN" name="<%=ICostantiMagistrato.CAMPO_COD_MAGISTRATO%>_OLD" value="<%=StringUtils.toStringJSP(aMagistrato.getCodMagistrato())%>">
-<input type="HIDDEN" name="<%=ICostantiMagistrato.CAMPO_NOME%>_OLD" value="<%=StringUtils.toStringJSP(aMagistrato.getNome())%>">
-<input type="HIDDEN" name="<%=ICostantiMagistrato.CAMPO_COGNOME%>_OLD" value="<%=StringUtils.toStringJSP(aMagistrato.getCognome())%>">
-<table>
-<%
-if (aListaProcedimenti.size() > 0) {
-%>
-	<tr>
-		<td class="Titolo" colspan="2">
-			Elenco Procedimenti Assegnati a: <%=StringUtils.toStringJSP(aMagistrato.getCognome())%>&nbsp;<%=StringUtils.toStringJSP(aMagistrato.getNome())%>
-		</td>
-	</tr>
-	<tr><td>&nbsp;</td></tr>
-	<tr>
-        <td class="Titolo" colspan="2"> Nuovo Magistrato Assegnatario </td>
-	</tr>
-	<tr>
+  <table>
+    <tr>
+      <td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
+      <td class="LBG">
+        <font class="label">Funzione :</font>&nbsp;&nbsp;
+        <font class="campo">Cambio Magistrato Relatore</font>
+      </td>
+      <td class="LBG">
+        <a href="javascript:history.back()">
+          <img align="middle" src="/images/arrowleft24.gif" alt="ritorna su" width="24" height="24" border="0">
+        </a>
+      </td>
+    </tr>
+  </table>
+  
+  
+  <FORM method="POST" name="ElencoProcedimentiPerMagistratoRelatore" action="<%= IWebConstants.PG_MAIN%>">
+    <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.sius.magistratorelatore.action.ActModificaMultiplaMagistratoSorveglianzaAssegnatario">
+    <input type="HIDDEN" name="<%=ISIAPCostantiWeb.CAMPO_AZIONE_CHIAMANTE%>" value=<%=AzioneChiamante%>>
+    
+    <input type="HIDDEN" name="<%=ICostantiMagistrato.CAMPO_COD_MAGISTRATO %>" value="" >
+
+    <input type="HIDDEN" name="<%=ICostantiMagistrato.CAMPO_COD_MAGISTRATO %>_OLD" value="<%=StringUtils.toStringJSP(aMagistrato.getCodMagistrato())%>" >
+    <input type="HIDDEN" name="<%=ICostantiMagistrato.CAMPO_NOME %>_OLD"    value="<%=StringUtils.toStringJSP(aMagistrato.getNome())%>" >
+    <input type="HIDDEN" name="<%=ICostantiMagistrato.CAMPO_COGNOME %>_OLD" value="<%=StringUtils.toStringJSP(aMagistrato.getCognome())%>" >
+
+    
+    <table>
+      <% if (aListaProcedimenti.size()>0) { %>
+      <tr>
+        <td class="Titolo" colspan=6> Nuovo Magistrato Assegnatario </td>
+      </tr>
+      <tr>
         <td class="l">Magistrato</td>
-		<td class="L">
-          	<input title="Cognome Magistrato" readonly value="" type="text" name="<%=ICostantiMagistrato.CAMPO_COGNOME%>" maxlength="35" size="25">
-          	<input title="Nome Magistrato" readonly value="" type="text" name="<%=ICostantiMagistrato.CAMPO_NOME%>" maxlength="35" size="25">
-          	<a href="Javascript:ListaMagistrati('ElencoProcedimentiPerMagistratoRelatore');">
-            	<img src="/images/filefolder.gif" border=0>
-			</a>
+        <td class="L">
+          <input title="Cognome Magistrato" readonly value="" type="text" name="<%=ICostantiMagistrato.CAMPO_COGNOME%>"   maxlength="35" size="25" >
+          <input title= "Nome Magistrato"   readonly value="" type="text" name="<%=ICostantiMagistrato.CAMPO_NOME%>"      maxlength="35" size="25">
+          <a href="Javascript:ListaMagistrati('ElencoProcedimentiPerMagistratoRelatore');">
+            <img src="/images/filefolder.gif" border=0>
+          </a>
         </td>
-	</tr>
-	<tr>
-		<td class="l">Data Inizio Competenza</td>
-		<td class="L">
-			<input value="<%=DateUtils.getDateToString(DateUtils.getSysDate(), "dd")%>" type="text" size="2" maxlength="2" name="<%=ICostantiMagistratoRelatore.CAMPO_GIORNO_DATA_INIZIO %>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> -
-			<input value="<%=DateUtils.getDateToString(DateUtils.getSysDate(), "MM")%>" type="text" size="2" maxlength="2" name="<%=ICostantiMagistratoRelatore.CAMPO_MESE_DATA_INIZIO %>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> -
-			<input value="<%=DateUtils.getDateToString(DateUtils.getSysDate(), "yyyy")%>" type="text" size="4" maxlength="4" name="<%=ICostantiMagistratoRelatore.CAMPO_ANNO_DATA_INIZIO %>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
-		</td>
-	</tr>
-</table>
-<br>
-<%
-//========================================================================
-// Elenco dei fascicoli assegnati
-//========================================================================
-%>
-<%-- 20251010 [SG]: paginata la ricerca --%>
-<jsp:include page="<%=IWebConstants.PAGINAZIONE_RICERCA%>"></jsp:include>
-<br>
-<table>
-	<tr>
-	  	<td class="c">
-	    	<input type="button" onclick="javascript:selezionaTutti();" name="nomeSelezionaTutti" value="Seleziona Tutti nella pagina">
-			&nbsp;
-			<input type="button" onclick="javascript:deselezionaTutti();" name="nomeDeselezionaTutti" value="Deseleziona Tutti nella pagina">
-<%
-	if (totale > 20) {
-%>
-          	&nbsp;oppure&nbsp;
-          	<input type="button" onclick="javascript:selezionaTuttiProcedimenti();" name="nomeSelezionaAll" value="Seleziona Tutti i <%=totaleProcedimenti%> Procedimenti del Magistrato Competente">
-          	&nbsp;<input type="checkbox" name="selezionaAll" value="selezionaAll" onclick="javascript:selezionaTuttiProcedimentiDaCheckbox();">
-<%
-	}
-%>
-	  	</td>
-	</tr>
-</table>
-<%
-}
-%>
-<br>
-<table cellspacing="2" cellpadding="2" align="center" width="95%">
-	<tr>
-		<td class="int" colspan="4">Totale Procedimenti Trovati: <%=aListaProcedimenti.size()%></td>
-	</tr>
-	<tr>
-		<td class="int">Numero SIUS</td>
-		<td class="int">Soggetto</td>
-		<td class="int">Magistrato Assegnatario</td>
-		<td class="int">Cambio Magistrato</td>
-	</tr>
-<%
-if (aListaProcedimenti.size() == 0) {
-%>
-	<tr>
-	  	<td class="c" colspan="4">
-	  		<font class="label">Nessun procedimento risulta attualmente assegnato al Magistrato <%=StringUtils.toStringJSP(aMagistrato.getCognome())%>&nbsp;<%=StringUtils.toStringJSP(aMagistrato.getNome())%></font>
-	  	</td>
-	</tr>
-<%
-}
-for (int i = 0; i < aListaProcedimenti.size(); i++) {
-	FascicoloSiusModel lFascicolo = (FascicoloSiusModel) aListaProcedimenti.elementAt(i);
-	SoggettoModel lSoggetto = (SoggettoModel) aListaSoggetti.elementAt(i);
-%>
-	<tr>
-		<td class="c"><font class="label"><%=StringUtils.toStringJSP(lFascicolo.getChiaveAnno(),"")%>/<%=StringUtils.toStringJSP(lFascicolo.getChiaveProgr(),"")%></font></td>
-		<td class="c"><font class="label"><%=StringUtils.toStringJSP(lSoggetto.getCognome())%>&nbsp;<%=StringUtils.toStringJSP(lSoggetto.getNome())%></font></td>
-		<td class="c"><font class="label"><%=StringUtils.toStringJSP(aMagistrato.getCognome())%>&nbsp;<%=StringUtils.toStringJSP(aMagistrato.getNome())%></font></td>
-		<td class="c"><font class="label"><input type="checkbox" name="idFascicoloDaAggiornare" value="<%=StringUtils.toStringJSP(lFascicolo.getIdFascicoloSius())%>;<%=StringUtils.toStringJSP(lFascicolo.getChiaveAnno(),"")%>/<%=StringUtils.toStringJSP(lFascicolo.getChiaveProgr(), "")%>"></font></td>
-	</tr>
-<%
-}
-%>
-	<tr><td>&nbsp;</td></tr>
-<%
-if (aListaProcedimenti.size() > 0) {
-%>
-	<tr>
-		<td class="lNoBord" colspan="2">
-          	<INPUT class="bottone" type="submit" name="I" value="Conferma">
+      </tr>
+      <tr>
+        <td class="l">Data Inizio Competenza</td>
+        <td class="L">
+          <input value="<%=DateUtils.getDateToString(DateUtils.getSysDate(), "dd")%>"   type="text" size="2" maxlength="2" name="<%=ICostantiMagistratoRelatore.CAMPO_GIORNO_DATA_INIZIO %>"  onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)"> -
+          <input value="<%=DateUtils.getDateToString(DateUtils.getSysDate(), "MM")%>"   type="text" size="2" maxlength="2" name="<%=ICostantiMagistratoRelatore.CAMPO_MESE_DATA_INIZIO %>"  onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)"> -
+          <input value="<%=DateUtils.getDateToString(DateUtils.getSysDate(), "yyyy")%>" type="text" size="4" maxlength="4" name="<%=ICostantiMagistratoRelatore.CAMPO_ANNO_DATA_INIZIO %>"  onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
         </td>
-	</tr>
-<%
-}
-%>
-</table>
-</form>
-<%
-if (aListaProcedimenti.size() > 0) {
-%>
+      </tr>
+      
+      <tr><td colspan=8 ><hr></td></tr>
+
+      <% } %>
+      <%
+      //========================================================================
+      // Elenco dei fascicoli assegnati
+      //========================================================================
+      %>
+      <% if (aListaProcedimenti.size()>0) { %>
+      <tr>
+        <td class="c" colspan="100%">
+          <input type="button" onclick="javascript:selezionaTutti();" value="Seleziona Tutti">
+          &nbsp;
+          <input type="button" onclick="javascript:deselezionaTutti();" value="Deseleziona Tutti">
+        </td>
+      </tr>
+      <% } %>
+      
+      <tr>
+        <td colspan="100%">
+          <table cellspacing="2" cellpadding="2" align="center" width="95%">
+            <tr>
+              <td class="int" colspan="3"> Totale Procedimenti Trovati: <%=aListaProcedimenti.size()%></td>
+            </tr>
+            <tr>
+              <td class="int">Numero SIUS</td>
+              <td class="int">Soggetto</td>
+              <td class="int">Magistrato Assegnatario</td>
+              <td class="int">Cambio Magistrato</td>
+            </tr>
+            
+            <%
+            if (aListaProcedimenti.size()==0)
+            {
+              %>
+              <tr>
+                <td class="c" colspan="3"><font class="label">Nessun procedimento risulta attualmente assegnato al Magistrato <%=StringUtils.toStringJSP(aMagistrato.getCognome())%>&nbsp;<%=StringUtils.toStringJSP(aMagistrato.getNome())%></font></td>
+              </tr>
+              <%
+            }
+            
+            for (int i=0; i<aListaProcedimenti.size();i++)
+            {
+              FascicoloSiusModel lFascicolo = (FascicoloSiusModel) aListaProcedimenti.elementAt(i);
+              SoggettoModel lSoggetto = (SoggettoModel) aListaSoggetti.elementAt(i);
+              
+              %>
+              <tr>
+                <td class="c"><font class="label"><%=StringUtils.toStringJSP(lFascicolo.getChiaveAnno(),"")%>/<%=StringUtils.toStringJSP(lFascicolo.getChiaveProgr(),"")%></font></td>
+                <td class="c"><font class="label"><%=StringUtils.toStringJSP(lSoggetto.getCognome())%>&nbsp;<%=StringUtils.toStringJSP(lSoggetto.getNome())%></font></td>
+                <td class="c"><font class="label"><%=StringUtils.toStringJSP(aMagistrato.getCognome())%>&nbsp;<%=StringUtils.toStringJSP(aMagistrato.getNome())%></font></td>
+                <td class="c"><font class="label"><input type="checkbox" name="idFascicoloDaAggiornare" value="<%=StringUtils.toStringJSP(lFascicolo.getIdFascicoloSius())%>;<%=StringUtils.toStringJSP(lFascicolo.getChiaveAnno(),"")%>/<%=StringUtils.toStringJSP(lFascicolo.getChiaveProgr(),"")%>"></font></td>
+              </tr>
+              <%
+            }
+            %>
+      
+      
+      <tr><td>&nbsp;</td></tr>
+      <% if (aListaProcedimenti.size()>0) { %>
+      <tr>
+        <td class="lNoBord" colspan="2">
+          <INPUT class="bottone" type="submit" name="I" value="Conferma">
+        </td>
+      </tr>
+      <% } %>
+    </table>
+  </form>
+  
+  
+  <% if (aListaProcedimenti.size()>0) { %>
 <script language="JavaScript" type="text/javascript">
-var frmvalidator = new Validator("ElencoProcedimentiPerMagistratoRelatore");
+  var frmvalidator = new Validator("ElencoProcedimentiPerMagistratoRelatore");
 
-frmvalidator.addValidation("<%=ICostantiMagistrato.CAMPO_COGNOME %>","req","Il Cognome del Magistrato è obbligatorio");
-frmvalidator.addValidation("<%=ICostantiMagistrato.CAMPO_COGNOME %>","req","Il Nome del Magistrato è obbligatorio");
+  frmvalidator.addValidation("<%=ICostantiMagistrato.CAMPO_COGNOME %>","req","Il Cognome del Magistrato è obbligatorio");
+  frmvalidator.addValidation("<%=ICostantiMagistrato.CAMPO_COGNOME %>","req","Il Nome del Magistrato è obbligatorio");
 
-frmvalidator.addValidation("<%=ICostantiMagistratoRelatore.CAMPO_ANNO_DATA_INIZIO%>","numeric");
-frmvalidator.addValidation("<%=ICostantiMagistratoRelatore.CAMPO_ANNO_DATA_INIZIO%>","gt=1900");
-frmvalidator.addValidation("<%=ICostantiMagistratoRelatore.CAMPO_ANNO_DATA_INIZIO%>","lt=3000");
+  frmvalidator.addValidation("<%=ICostantiMagistratoRelatore.CAMPO_ANNO_DATA_INIZIO%>","numeric");
+  frmvalidator.addValidation("<%=ICostantiMagistratoRelatore.CAMPO_ANNO_DATA_INIZIO%>","gt=1900");
+  frmvalidator.addValidation("<%=ICostantiMagistratoRelatore.CAMPO_ANNO_DATA_INIZIO%>","lt=3000");
 
-frmvalidator.addValidation("<%= ICostantiMagistratoRelatore.CAMPO_GIORNO_DATA_INIZIO%>","req","Il campo Giorno Inizio Validità è obbligatorio");
-frmvalidator.addValidation("<%= ICostantiMagistratoRelatore.CAMPO_GIORNO_DATA_INIZIO%>","numeric");
+  frmvalidator.addValidation("<%= ICostantiMagistratoRelatore.CAMPO_GIORNO_DATA_INIZIO%>","req","Il campo Giorno Inizio Validità è obbligatorio");
+  frmvalidator.addValidation("<%= ICostantiMagistratoRelatore.CAMPO_GIORNO_DATA_INIZIO%>","numeric");
 
-frmvalidator.addValidation("<%= ICostantiMagistratoRelatore.CAMPO_MESE_DATA_INIZIO%>","req","Il campo Mese Inizio Validità è obbligatorio");
-frmvalidator.addValidation("<%= ICostantiMagistratoRelatore.CAMPO_MESE_DATA_INIZIO%>","numeric");
+  frmvalidator.addValidation("<%= ICostantiMagistratoRelatore.CAMPO_MESE_DATA_INIZIO%>","req","Il campo Mese Inizio Validità è obbligatorio");
+  frmvalidator.addValidation("<%= ICostantiMagistratoRelatore.CAMPO_MESE_DATA_INIZIO%>","numeric");
 
-frmvalidator.setAddnlValidationFunction("Verify");
+  frmvalidator.setAddnlValidationFunction("Verify");
 </script>
-<%
-}
-%>
+<% } %>
 </body>
 </html>

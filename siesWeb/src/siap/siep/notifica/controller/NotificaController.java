@@ -46,7 +46,18 @@ import siap.sius.avvocato.dao.AvvocatoFascicoloSiusSqlDAO;
 import siap.sius.avvocato.model.AvvocatoSiusModel;
 
 /**
- * NotificaController - Classe Controller per Notifica
+ * <p>
+ * Title: NotificaController
+ * </p>
+ * <p>
+ * Description: Classe Controller per Notifica
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2002
+ * </p>
+ * <p>
+ * Company: Bull
+ * </p>
  *
  * @version 1.0
  */
@@ -1351,90 +1362,5 @@ public class NotificaController extends SiapController implements INotifica {
 		}
 		return lNotifiche;
 	}
-
-	/*
-	 * ISSUE MEV : AGGIUNTO METODO DI AGGIORNAMENTO DATI NOTIFICHE
-	 * Numero MEV : 9
-	 * Autore : sgioggi
-	 * Data : 18 apr 2023
-	 * Branch : MEV_2019-09
-	 */
-	@Override
-	public void ExModificaNotifiche(Vector<NotificaModel> notifiche, String[] check) throws F3BException {
-
-		Connection c = null;
-		NotificaDAO ndao = null;
-		NotificaDAO ndaoCanc = null;
-		AutoritaEsternaDAO aedao = null;
-
-		try {
-			c = getDBTransaction();
-
-			// Update delle Notifiche
-			aedao = new AutoritaEsternaDAO(c);
-			BigDecimal keyAutorita = null;
-			if (notifiche != null) {
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-				// LogF3B.getLogger()
-				siesLogger.debug("Presenti " + notifiche.size() + " notifiche");
-
-				Iterator<NotificaModel> listaNotifiche = notifiche.iterator();
-				while (listaNotifiche.hasNext()) {
-					NotificaModel nm = listaNotifiche.next();
-					if (nm.getAutoritaEsterna() != null) {
-						aedao.setRicercaByAutSede(nm.getAutoritaEsterna());
-						AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
-						lAutMod = (AutoritaEsternaModel) aedao.getModelByKey();
-						if (lAutMod == null) {
-							aedao.setDAOFromModel(nm.getAutoritaEsterna());
-							keyAutorita = aedao.insert();
-							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
-							// posto di LogF3B.getLogger()
-							siesLogger.debug("Inserita AUTORITA con ID = " + keyAutorita);
-							nm.setAutEstIdAutoritaEsterna(keyAutorita);
-						} else {
-							keyAutorita = lAutMod.getIdAutoritaEsterna();
-							nm.setAutEstIdAutoritaEsterna(keyAutorita);
-						}
-					}
-					ndao = new NotificaDAO(c);
-					ndao.setDAOFromModelForUpdate(nm);
-					ndao.update();
-				}
-
-				// Cancellazione delle notifiche preesistenti per le notifiche selezionate.
-				ndaoCanc = new NotificaDAO(c);
-				if (check != null) {
-					for (int z = 0; z < check.length; z++) {
-						ndaoCanc.start();
-						ndaoCanc.setCondizioneUpdate(new BigDecimal(check[z].toUpperCase()));
-						ndaoCanc.delete();
-						ndaoCanc.stop();
-					}
-				}
-			}
-
-			commit(c);
-		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			siesLogger.debug("DAOException: " + daoEx);
-			rollback(c);
-			throw new F3BException("NotificaController.ExModificaNotifiche: " + daoEx);
-		} catch (Exception ex) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			siesLogger.debug("Exception: " + ex);
-			ex.printStackTrace();
-			rollback(c);
-			throw new F3BException("NotificaController.ExModificaNotifiche: " + ex);
-		} finally {
-			cleanup(ndao);
-			cleanup(ndaoCanc);
-
-			cleanup(c);
-		}
-	}
-	// ***** FINE INTERVENTO MEV_2019-09 *****//
 
 }

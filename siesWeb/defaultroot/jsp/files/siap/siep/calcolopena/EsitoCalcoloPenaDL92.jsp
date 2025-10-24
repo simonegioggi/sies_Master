@@ -33,14 +33,6 @@
   <script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
   
   <script language="JavaScript">
-  
-  function tornaIndietro()
-  {
-    //document.CalcoloPenaDL92.tipoOutput.value = "indirtro";
-    document.CalcoloPenaDL92.<%=IWebConstants.ACTION_FIELD%>.value = "siap.siep.calcolopena.action.ActLoadCalcoloPenaDL92";
-    document.CalcoloPenaDL92.submit();
-  }
-  
   function stampaSiep()
   {
     document.CalcoloPenaDL92.tipoOutput.value = "stampaTemplate";
@@ -52,20 +44,6 @@
     document.CalcoloPenaDL92.tipoOutput.value = "stampaExcel";
     document.CalcoloPenaDL92.submit();
   }    
-  
-  function calcolaDL92() {      
-    document.CalcoloPenaDL92.tipoOutput.value = "dettaglio";
-    document.CalcoloPenaDL92.submit();
-  }
-  
-  function checkSel (checkObj, idSemestre) {
-	if (checkObj.checked) {
-      document.getElementById(idSemestre).value = "S";
-	}
-	else {
-      document.getElementById(idSemestre).value = "N";
-    }
-  }
   </script>
 </head>
 
@@ -88,7 +66,7 @@
         </a>
       </td>            
       <td class="LBG">
-        <a href="Javascript:tornaIndietro();">
+        <a href="Javascript:history.go(-1);">
           <img align="middle" src="<%=IWebConstants.IMAGES_DIR%>arrowleft24.gif" alt="ritorna su" width="24" height="24" border="0">
         </a>
       </td>
@@ -131,21 +109,6 @@
 	<input type="hidden" name="<%=ICostantiPenaResidua.CAMPO_GIORNO_DATA_DECORRENZA_PENA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString (EsitoCalcolo.getDataInizioPena(), "dd")) %>" >
 	<input type="hidden" name="<%=ICostantiPenaResidua.CAMPO_MESE_DATA_DECORRENZA_PENA%>"   value="<%=StringUtils.toStringJSP(DateUtils.getDateToString (EsitoCalcolo.getDataInizioPena(), "MM")) %>" >
 	<input type="hidden" name="<%=ICostantiPenaResidua.CAMPO_ANNO_DATA_DECORRENZA_PENA%>"   value="<%=StringUtils.toStringJSP(DateUtils.getDateToString (EsitoCalcolo.getDataInizioPena(), "yyyy")) %>" >   
-  
-    <input type="hidden" name="numSemestriElaborati" value="<%=StringUtils.toStringJSP(EsitoCalcolo.getListaSemetri().size()) %>" >   
-  
-    <%
-      Vector <SemestreDL92Model> mListaSemestri = EsitoCalcolo.getListaSemetri();
-      for (int i = 0; i<mListaSemestri.size(); i++) {
-        SemestreDL92Model lSemestreUtile = mListaSemestri.elementAt(i);
-        %>
-        <input type="hidden" name="<%="prgSemestre_"+lSemestreUtile.getProgressivo()%>"   
-                               id="<%="prgSemestre_"+lSemestreUtile.getProgressivo()%>"   
-                            value="<%=StringUtils.toStringJSP(lSemestreUtile.getIsCompreso(), "S") %>" >   
-        <%
-      }
-    %>   
-  
   </form>
   
     <!-- ===================================================================== -->
@@ -156,7 +119,7 @@
       // Presofferto
       SemestreDL92Model lCalcoloPresofferto = EsitoCalcolo.getSemestrePresofferto();      
     %>
-    <table cellspacing="4" cellpadding="4" width="55%">
+    <table cellspacing="4" cellpadding="4" width="50%">
       <tr>
         <td class="Titolo" colspan="4"><font class="label">Custodia cautelare (presofferto)</font></td>
       </tr>
@@ -210,10 +173,8 @@
       <%
       int lLAApplicate = EsitoCalcolo.getLAApplicate().intValue();
       int lPenaInEccesso = EsitoCalcolo.getLAFungibili().intValue();
-      String colorFung = "";
-      if (lPenaInEccesso>0) colorFung =  "style='color=red'";
-      String colorNonConcessi = "";
-      if (EsitoCalcolo.getLANonConcesse().intValue()>0) colorNonConcessi =  "style='color=red'";
+      String color = "";
+      if (lPenaInEccesso>0) color =  "style='color=red'";
       
      // int numGiorniLAMaturataInPenaresidua = lLAApplicate - EsitoCalcolo.getSemestrePresofferto().getLAApplicate().intValue();
       %>
@@ -227,12 +188,8 @@
       </tr>
       <tr>
         <td class="l" width="90%"><font class="label" >Giorni di L.A. maturabili e non usufruibili in pena ipotetica:</font></td>
-        <td class="r" colspan="3"><font class="label" <%=colorFung %> ><%=StringUtils.toStringJSP(lPenaInEccesso,"") %></font></td>
+        <td class="r" colspan="3"><font class="label" <%=color %> ><%=StringUtils.toStringJSP(lPenaInEccesso,"") %></font></td>
       </tr>   
-      <tr>
-        <td class="l" width="90%"><font class="label" >Giorni di L.A. maturabili e non concessi in pena ipotetica:</font></td>
-        <td class="r" colspan="3"><font class="label" <%=colorNonConcessi %> ><%=StringUtils.toStringJSP(EsitoCalcolo.getLANonConcesse(),"")%></font></td>
-      </tr>         
       
       <%-- ================================================================ --%>
       <%--       DATI DA INDICARE NEL PROVVEDIMENTO DI ESECUZIONE           --%>
@@ -241,7 +198,7 @@
         <td colspan="4"><font class="label">&nbsp;</font></td>
       </tr> 
       <tr>
-        <td class1="Titolo" colspan="4" style="BACKGROUND-COLOR: green; text-align:center;">
+        <td class="Titolo" colspan="4" style="BACKGROUND-COLOR: green; text-align:center;">
             <font class="label" style="COLOR: white">Dati da indicare nei provvedimenti di esecuzione</font>
         </td>
       </tr>
@@ -272,28 +229,28 @@
         <td colspan="4"><font class="label">&nbsp;</font></td>
       </tr> 
       <tr>
-        <td class1="Titolo" colspan="4" style="BACKGROUND-COLOR: green; text-align:center;">
+        <td class="Titolo" colspan="4" style="BACKGROUND-COLOR: green; text-align:center;">
           <font class="label" style="COLOR: white">CALCOLI CON DATA DI ESECUZIONE</font>
         </td>
       </tr>  
       <tr>
-        <td class="r"><font class="label">Data decorrenza pena:</font></td>
-        <td class="r" colspan="3"><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString (EsitoCalcolo.getDataInizioPena(), "dd/MM/yyyy")) %></font>&nbsp;</td>
+        <td class="r"><font class="label">data decorrenza pena:</font></td>
+        <td class="r" colspan="3"><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString (EsitoCalcolo.getDataInizioPena(), "dd/MM/yyyy")) %></font></td>
       </tr> 
       <tr>
-        <td class="r"><font class="label">Data scarcerazione senza calcolare la liberazione anticipata:</font></td>
-        <td class="r" colspan="3"><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString (EsitoCalcolo.getDataScarcerazioneNoLA(), "dd/MM/yyyy")) %></font>&nbsp;</td>
+        <td class="r"><font class="label">data scarcerazione senza L.A.:</font></td>
+        <td class="r" colspan="3"><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString (EsitoCalcolo.getDataScarcerazioneNoLA(), "dd/MM/yyyy")) %></font></td>
       </tr>
       <tr>
-        <td class="r"><font class="label">Data scarcerazione con giorni Liberazione Anticipata applicata per intero (data fine pena calcolata con giorni non usufruibili):</font></td>
-        <td class="r" colspan="3"><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString (EsitoCalcolo.getDataScarcerazioneLAFung(), "dd/MM/yyyy")) %></font>&nbsp;</td>
+        <td class="r"><font class="label">data scarcerazione con L.A. applicati (data fine pena calcolata CON fungibilita'):</font></td>
+        <td class="r" colspan="3"><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString (EsitoCalcolo.getDataScarcerazioneLAFung(), "dd/MM/yyyy")) %></font></td>
       </tr>
       <tr>
-        <td class="r"><font class="label">Data scarcerazione con giorni Liberazione Anticipata concessi (data fine pena calcolata con giorni di fungibilita'):</font></td>
-        <td class="r" colspan="3"><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString (EsitoCalcolo.getDataScarcerazioneLANoFung(), "dd/MM/yyyy")) %></font>&nbsp;</td>
+        <td class="r"><font class="label">data scarcerazione con L.A. concessi (data fine pena calcolata SENZA fungibilita'):</font></td>
+        <td class="r" colspan="3"><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString (EsitoCalcolo.getDataScarcerazioneLANoFung(), "dd/MM/yyyy")) %></font></td>
       </tr>
       <tr>
-        <td class="r"><font class="label">Data scarcerazione senza applicare l'ultimo semestre di Liberazione:</font></td>
+        <td class="r"><font class="label">data scarcerazione senza applicare l'ultimo semestre (nei soli casi in cui ci sarebbe un credito di L.A.):</font></td>
         <% if (EsitoCalcolo.getLAFungibili().intValue()>0) { %>
         <td class="r" colspan="3"><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString (EsitoCalcolo.getDataScarcerazionePenultimoSemestre(), "dd/MM/yyyy")) %></font></td>
         <% } else { %>
@@ -310,20 +267,19 @@
   <%--       SEZIONE CON IL DETTAGLO DEI SEMESTRI                           --%>
   <%-- ==================================================================== --%>  
   <div>
-    <table cellspacing="4" cellpadding="4" width="55%">
+    <table cellspacing="4" cellpadding="4" width="50%">
       <tr>
-        <td class="Titolo" colspan="9"><font class="label">Dettaglio per Semestri</font></td>
+        <td class="Titolo" colspan="8"><font class="label">Dettaglio per Semestri</font></td>
       </tr>
       <tr>
-        <td class="Titolo" nowrap><font class="label">&nbsp;</font></td>
-        <td class="Titolo" nowrap><font class="label">&nbsp;</font></td>
-        <td class="Titolo" nowrap><font class="label">L.A. APPLICATA</font></td>
-        <td class="Titolo" nowrap style="display:none1;"><font class="label">COMPRESA</font></td>
+        <td class="Titolo"><font class="label">&nbsp;</font></td>
+        <td class="Titolo"><font class="label">&nbsp;</font></td>
+        <td class="Titolo"><font class="label">L.A. APPLICATA</font></td>
         <% if (EsitoCalcolo.getPosizioneGiuridica().equals(ICostantiCalcoloPena.POSIZIONE_GIURIDICA_DETENUTO)) {%>
-        <td class="Titolo" nowrap><font class="label">Data Maturazione L.A.</font></td>
-        <td class="Titolo" nowrap><font class="label">Nuova Data Scadenza</font></td>
+        <td class="Titolo"><font class="label">Data Maturazione L.A.</font></td>
+        <td class="Titolo"><font class="label">Nuova Data Scadenza</font></td>
         <% } %>
-        <td class="Titolo" nowrap colspan="3"><font class="label">RESIUDO PENA</font></td>
+        <td class="Titolo" colspan="3"><font class="label">RESIUDO PENA</font></td>
       </tr>      
       
 
@@ -331,17 +287,16 @@
       <%--                         Presofferto                              --%>
       <%-- ================================================================ --%>        
       <tr>
-        <td class="r" nowrap><font class="label"><%=lCalcoloPresofferto.getNumSemestriMaturati()%></font></td>
-        <td class="l" nowrap><font class="label">SEMESTRI ESPIATI IN C.C.</font></td>
-        <td class="c" nowrap><font class="label"><%=lCalcoloPresofferto.getLAApplicate() %></font></td>
-        <td class="c" nowrap style="display:none1;"><font class="label">&nbsp;</font></td>
+        <td class="r"><font class="label"><%=lCalcoloPresofferto.getNumSemestriMaturati()%></font></td>
+        <td class="l"><font class="label">SEMESTRI ESPIATI IN C.C.</font></td>
+        <td class="c"><font class="label"><%=lCalcoloPresofferto.getLAApplicate() %></font></td>
         <% if (EsitoCalcolo.getPosizioneGiuridica().equals(ICostantiCalcoloPena.POSIZIONE_GIURIDICA_DETENUTO)) {%>
-        <td class="c" nowrap><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString (lCalcoloPresofferto.getDataMaturazioneLA(), "dd/MM/yyyy"),"&nbsp") %></font></td>
-        <td class="c" nowrap><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString (lCalcoloPresofferto.getNuovaDataScadenzaPena(), "dd/MM/yyyy"),"&nbsp") %></font></td>
+        <td class="c"><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString (lCalcoloPresofferto.getDataMaturazioneLA(), "dd/MM/yyyy"),"&nbsp") %></font></td>
+        <td class="c"><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString (lCalcoloPresofferto.getNuovaDataScadenzaPena(), "dd/MM/yyyy"),"&nbsp") %></font></td>
         <% } %>
-        <td class="r" nowrap><font class="label"><%=lCalcoloPresofferto.getResiduoNumAnni()+" anni" %></font></td>
-        <td class="r" nowrap><font class="label"><%=lCalcoloPresofferto.getResiduoNumMesi()+" mesi" %></font></td>
-        <td class="r" nowrap><font class="label"><%=lCalcoloPresofferto.getResiduoNumGiorni()+" giorni" %></font></td>
+        <td class="r"><font class="label"><%=lCalcoloPresofferto.getResiduoNumAnni()+" anni" %></font></td>
+        <td class="r"><font class="label"><%=lCalcoloPresofferto.getResiduoNumMesi()+" mesi" %></font></td>
+        <td class="r"><font class="label"><%=lCalcoloPresofferto.getResiduoNumGiorni()+" giorni" %></font></td>
       </tr> 
       
       <%
@@ -359,24 +314,16 @@
       	
       %>
       <tr>
-        <td class="l" nowrap><font class="label"><%=lSemestreUtile.getProgressivo()%>&deg;</font></td>
-        <td class="l" nowrap><font class="label">semestre utile per L.A.</font></td>
-        <td class="c" nowrap><font class="label" <%=lColorLastSem%> ><%=lSemestreUtile.getLAApplicate() %></font></td>
-        
-        <td class="c" nowrap style="display:none1;">
-            <input type="checkbox" 
-                   name="xx" 
-                   <%="S".equals(lSemestreUtile.getIsCompreso())?"checked":""%> 
-                   onCLick="javascript:checkSel(this, '<%="prgSemestre_"+lSemestreUtile.getProgressivo()%>')">
-        </td>
-        
+        <td class="l"><font class="label"><%=lSemestreUtile.getProgressivo()%>&deg;</font></td>
+        <td class="l"><font class="label">semestre utile per L.A.</font></td>
+        <td class="c"><font class="label" <%=lColorLastSem%> ><%=lSemestreUtile.getLAApplicate() %></font></td>
         <% if (EsitoCalcolo.getPosizioneGiuridica().equals(ICostantiCalcoloPena.POSIZIONE_GIURIDICA_DETENUTO)) {%>
-        <td class="c" nowrap><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString (lSemestreUtile.getDataMaturazioneLA(), "dd/MM/yyyy"),"&nbsp") %></font></td>
-        <td class="c" nowrap><font class="label" <%=lColorLastSem%> ><%=StringUtils.toStringJSP(DateUtils.getDateToString (lSemestreUtile.getNuovaDataScadenzaPena(), "dd/MM/yyyy"),"&nbsp") %></font></td>
+        <td class="c"><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString (lSemestreUtile.getDataMaturazioneLA(), "dd/MM/yyyy"),"&nbsp") %></font></td>
+        <td class="c"><font class="label" <%=lColorLastSem%> ><%=StringUtils.toStringJSP(DateUtils.getDateToString (lSemestreUtile.getNuovaDataScadenzaPena(), "dd/MM/yyyy"),"&nbsp") %></font></td>
         <% } %>
-        <td class="r" nowrap><font class="label" <%=lColorLastSem%> ><%=lSemestreUtile.getResiduoNumAnni()+" anni"%></font></td>
-        <td class="r" nowrap><font class="label" <%=lColorLastSem%> ><%=lSemestreUtile.getResiduoNumMesi()+" mesi " %></font></td>
-        <td class="r" nowrap><font class="label" <%=lColorLastSem%> ><%=lSemestreUtile.getResiduoNumGiorni()+" giorni" %></font></td>
+        <td class="r"><font class="label" <%=lColorLastSem%> ><%=lSemestreUtile.getResiduoNumAnni()+" anni"%></font></td>
+        <td class="r"><font class="label" <%=lColorLastSem%> ><%=lSemestreUtile.getResiduoNumMesi()+" mesi " %></font></td>
+        <td class="r"><font class="label" <%=lColorLastSem%> ><%=lSemestreUtile.getResiduoNumGiorni()+" giorni" %></font></td>
       </tr>
       <% } %>     
       
@@ -390,17 +337,6 @@
         <td class="r"><font class="label"></font></td>
       </tr> 
     </table>
-    
-    <table>
-      <tr><td>&nbsp;</td></tr>
-      <tr>
-        <td colspan="3">
-          <input class="bottone" type="submit" name="INSERISCI" value="Ricalcola"
-               onClick="javascript:calcolaDL92();">
-        </td>
-      </tr>
-    </table>
-    
   </div>
   
   <br>  
@@ -414,13 +350,13 @@ else
 	lDataScarcerazione = EsitoCalcolo.getDataScarcerazioneNoLA();
 %>
   <div>
-    <table cellspacing="4" cellpadding="4" width="55%"> 
+    <table cellspacing="4" cellpadding="4" width="50%"> 
       <% if (EsitoCalcolo.getPosizioneGiuridica().equals(ICostantiCalcoloPena.POSIZIONE_GIURIDICA_LIBERO)) { %>
       <tr>
         <td class="Titolo" colspan="4"><font class="label">L.A. MATURATA MA NON APPLICATA / PENA ESPIATA IN ECCESSO</font></td>
       </tr>
       <tr>
-        <td class="c"><font class="label" <%=colorFung %>><%=EsitoCalcolo.getLAFungibili() %></font></td>
+        <td class="c"><font class="label" <%=color %>><%=lPenaInEccesso%></font></td>
       </tr> 
       <% } else if (EsitoCalcolo.getPosizioneGiuridica().equals(ICostantiCalcoloPena.POSIZIONE_GIURIDICA_DETENUTO)) { %> 
       <tr>
@@ -433,7 +369,7 @@ else
         <td class="Titolo" colspan="4"><font class="label">SURPLUS DETENZIONE (GIORNI DI FUNGIBILITA')</font></td>
       </tr>
       <tr>
-        <td class="c"><font class="label" <%=colorFung %>><%=EsitoCalcolo.getLAFungibili() %></font></td>
+        <td class="c"><font class="label" <%=color %>><%=lPenaInEccesso %></font></td>
       </tr>            
       <% } %> 
       <tr>
@@ -442,12 +378,6 @@ else
       <tr>
         <td class="c"><font class="label"><%=EsitoCalcolo.getLAMaturate() %></font></td>
       </tr>        
-      <tr>
-        <td class="Titolo" colspan="4"><font class="label">GIORNI L.A. NON CONCESSI (MATURATI)</font></td>
-      </tr>    
-      <tr>
-        <td class="c"><font class="label"  <%=colorNonConcessi%>><%=EsitoCalcolo.getLANonConcesse() %></font></td>
-      </tr>            
     </table>
   </div>
  

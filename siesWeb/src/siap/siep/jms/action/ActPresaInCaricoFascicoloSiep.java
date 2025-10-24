@@ -15,15 +15,24 @@ import siap.siep.jms.controller.IPresaInCaricoJMS;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * ActPresaInCaricoFascicoloSiep - Azione di presa in Carico di un fascicolo ricercato all'interno di un'altra
- * BDI
- *
+ * <p>
+ * Title: ActPresaInCaricoFascicoloSiep
+ * </p>
+ * <p>
+ * Description: Azione di presa in Carico di un fascicolo ricercato all'interno di un'altra BDI
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2002
+ * </p>
+ * <p>
+ * Company:
+ * </p>
+ * 
+ * @author not attributable
  * @version 1.0
  */
 public class ActPresaInCaricoFascicoloSiep extends ActionSiap implements ICostantiJMS {
-
 	public String processRequest() throws Exception {
-
 		// Controllo che non si stia lavorando su una entità in modifica ad altri
 		LockModel lck = lockIfNotLocked("caricofascicolo",
 				getRequestStringParameter(ICostantiMessaggio.CAMPO_ID_MESSAGGIO), getCodUtenteConnesso());

@@ -1,7 +1,7 @@
-BRANCH MASTER di SIESWEB
+BRANCH MASTER
 
 Allineato al:
 
-BRANCH SIES VERSIONE 12.8.3.0
+BRANCH SIES VERSIONE 12.8.2.0
 
-Questa release è stata rilasciata il 24/10/2025
+Questa release è stata rilasciata il 29/08/2025

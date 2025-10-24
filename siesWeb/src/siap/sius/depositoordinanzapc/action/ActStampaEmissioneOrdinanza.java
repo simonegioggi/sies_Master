@@ -5,9 +5,6 @@ import java.math.BigDecimal;
 
 import org.apache.log4j.Logger;
 
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.web.IWebConstants;
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoNotificaModel;
@@ -19,6 +16,9 @@ import siap.sius.SIUSException;
 import siap.sius.depositoordinanzapc.controller.IDepositoOrdinanzaPc;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.util.SIUSLookupRemote;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.web.IWebConstants;
 
 public class ActStampaEmissioneOrdinanza extends ActionSiap implements ICostantiDepositoOrdinanzaPc {
 
@@ -27,69 +27,72 @@ public class ActStampaEmissioneOrdinanza extends ActionSiap implements ICostanti
 
 	/**
 	 * Azione di Stampa dell'Ordinanza
-	 *
+	 * 
 	 * @return Nome della pagina JSP da visualizzare al termine dell'elaborazione
 	 * @throws Exception
 	 */
 	public String processRequest() throws Exception {
 
-		FascicoloGPModel fgpm = new FascicoloGPModel();
-		fgpm = (FascicoloGPModel) getSessionAttribute("fascicoloSiusGP");
+		FascicoloGPModel lFasGPMod = new FascicoloGPModel();
+		lFasGPMod = (FascicoloGPModel) getSessionAttribute("fascicoloSiusGP");
 
-		String idEvento = getRequestStringParameter(ICostantiEvento.CAMPO_ID_EVENTO);
+		String lId = getRequestStringParameter(ICostantiEvento.CAMPO_ID_EVENTO);
 
-		EventoNotificaModel enm = new EventoNotificaModel();
+		EventoNotificaModel lEveMod = new EventoNotificaModel();
 		// chiama il controller
-		IEvento ie = SICOLookupRemote.getEventoRemote();
-		enm = ie.ExRicercaEventoNotificaByKey(new BigDecimal(idEvento));
-		enm.getEvento().setIdEvento(new BigDecimal(idEvento));
-		enm.getEvento()
-				.setFasSieIdFascicoloSiep(fgpm.getFascicoloSiusModel().getFasSieIdFascicoloSiep());
-		UfficioModel um = new UfficioModel(getUfficioUtenteConnesso());
-		enm.getEvento().setDescrLuogoEmittente(um.getDescrComune());
-		enm.getEvento().setDescrUfficioEmittente(um.getDescrTipoUfficio());
-		enm.getEvento().setDataAggiornamento(DateUtils.getSysDate());
-		enm.getEvento().setCodUfficioAggiornamento(um.getCodUfficio());
-		enm.getEvento().setCodOperatoreAggiornamento(getCodUtenteConnesso());
-		enm.getEvento().setFlagDocumentoRegistrato("N");
+		IEvento lCtrlEve = SICOLookupRemote.getEventoRemote();
+		lEveMod = lCtrlEve.ExRicercaEventoNotificaByKey(new BigDecimal(lId));
+
+		lEveMod.getEvento().setIdEvento(new BigDecimal(lId));
+		lEveMod.getEvento().setFasSieIdFascicoloSiep(
+				lFasGPMod.getFascicoloSiusModel().getFasSieIdFascicoloSiep());
+
+		UfficioModel lUff = new UfficioModel(this.getUfficioUtenteConnesso());
+
+		lEveMod.getEvento().setDescrLuogoEmittente(lUff.getDescrComune());
+		lEveMod.getEvento().setDescrUfficioEmittente(lUff.getDescrTipoUfficio());
+
+		lEveMod.getEvento().setDataAggiornamento(DateUtils.getSysDate());
+		lEveMod.getEvento().setCodUfficioAggiornamento(lUff.getCodUfficio());
+		lEveMod.getEvento().setCodOperatoreAggiornamento(this.getCodUtenteConnesso());
+		lEveMod.getEvento().setFlagDocumentoRegistrato("N");
 
 		// Se il template non è stato definito sono in un Emissione Ordinanza UDS
-		if (enm.getEvento().getTemIdTemplate() == null
-				|| enm.getEvento().getTemIdTemplate().trim().length() < 1) {
+		if (lEveMod.getEvento().getTemIdTemplate() == null
+				|| lEveMod.getEvento().getTemIdTemplate().trim().length() < 1) {
 			if (!isRequestParameterNullObj(ICostantiTemplate.CAMPO_ID_TEMPLATE)) {
-				enm.getEvento()
-						.setTemIdTemplate(getRequestStringParameter(ICostantiTemplate.CAMPO_ID_TEMPLATE));
+				lEveMod.getEvento().setTemIdTemplate(
+						this.getRequestStringParameter(ICostantiTemplate.CAMPO_ID_TEMPLATE));
 			}
 		}
 
-		enm.setNomeTemplate(enm.getEvento().getTemIdTemplate());
-		if (enm.getNomeTemplate() != null)
+		// lEveMod.setNomeTemplate(TEMPLATE_ORDINANZA_AFFIDAMENTO);
+		lEveMod.setNomeTemplate(lEveMod.getEvento().getTemIdTemplate());
+		if (lEveMod.getNomeTemplate() != null)
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.info("Nome del template di stampa ordinanza : " + enm.getNomeTemplate());
+			siesLogger.info("Nome del template di stampa ordinanza : " + lEveMod.getNomeTemplate());
 		else
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.info("Nome del template di stampa ordinanza assente");
 
-		// MEV_2019-09: se stampo dal "Dettaglio Esecutivita' Ordinanza Applicazione M.A. DL 123/2018"
-		// allora non devo svalidare!
-		if ("SIUS_OR_0270".equals(enm.getNomeTemplate()))
-			enm.getEvento().setFlagDocumentoRegistrato("S");
-		// FINE MEV_2019-09
+		IDepositoOrdinanzaPc lCtrl = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
 
-		IDepositoOrdinanzaPc idop = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
-		ByteArrayOutputStream baos = idop.ExStampEmissioneOrdinanza(enm.getEvento(),
+		// ByteArrayOutputStream lReport = lCtrl.ExStampaDocumento(lFasGPMod,lEveMod);
+		// .......Sostituzione
+		ByteArrayOutputStream lReport = lCtrl.ExStampEmissioneOrdinanza(lEveMod.getEvento(),
 				getCodUfficioUtenteConnesso(), super.getUtenteConnesso());
+
 		// Prepara la pagina di destinazione
-		if (baos != null)
-			setRequestAttribute("report", baos);
+		if (lReport != null)
+			setRequestAttribute("report", lReport);
 		else
 			throw new SIUSException(SIUSException.USER_MESSAGE, "Nessun documento è stato generato!");
 
-		setRequestAttribute("eventonotifica", enm);
+		setRequestAttribute("eventonotifica", lEveMod);
 
-		// valore di ritorno
+		// return IWebConstants.PG_DOWNLOAD;
 		return IWebConstants.PG_DOWNLOAD_NEW;
 	}
 

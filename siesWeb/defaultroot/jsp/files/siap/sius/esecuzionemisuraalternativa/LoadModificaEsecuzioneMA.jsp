@@ -70,14 +70,15 @@
       </font></td> </font></td>
       </tr>
       <tr>
-        <td class="c">Soggetto: <font class="campo"><%=fascicoloEsecuzione.getFascicoloSiusModel().getSoggetto().getCognome()%>&nbsp;
+        <td class="c">Soggetto: <font class="campo"><%=fascicoloEsecuzione.getFascicoloSiusModel().getSoggetto().getCognome()%>
         <%=fascicoloEsecuzione.getFascicoloSiusModel().getSoggetto().getNome()%>
         <td class="c" colspan="2"><font class="label">  nato/a il: </font><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(fascicoloEsecuzione.getFascicoloSiusModel().getSoggetto().getDataNascita(),"dd-MM-yyyy"),"-")%>
         </font><font class="label">in : </font><font class="campo"><%=fascicoloEsecuzione.getFascicoloSiusModel().getSoggetto().getDescrComuneNascita()%>
         </font></td> </font></td>
       </tr>
 
-<%    if (dettaglioFascSiep != null) {
+<%    if ( dettaglioFascSiep !=null  )
+      {
 %>
         <tr>
           <td class="c">Titolo Esecutivo N.ro Siep : <font class="campo"><%=dettaglioFascSiep.getFascicoloSiep().getChiaveAnno()%>/<%=dettaglioFascSiep.getFascicoloSiep().getChiaveProgr()%></font></td>

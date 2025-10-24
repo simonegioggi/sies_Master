@@ -149,7 +149,7 @@ public class ActInserisciMAProsecuzione51Bis extends ActMisuraAlternativa
 			String lTipoProvv = getRequestStringParameter(
 					ICostantiMisuraAlternativa.CAMPO_COD_TIPO_DECISIONE);
 
-			lEveMod.setEvento(setEventoOrdinanzaDecretoMisuraAlternativa(lEveMod.getEvento(), lTipoProvv,
+			lEveMod.setEvento(setEventoOrdinazaDecretoMisuraAlternativa(lEveMod.getEvento(), lTipoProvv,
 					lCodiceUffEmi, lComModAutEmi, lDataEmisTras));
 
 			String lTipoUffSorv = getRequestStringParameter(

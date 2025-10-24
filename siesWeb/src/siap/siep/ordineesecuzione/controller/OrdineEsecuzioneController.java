@@ -2175,7 +2175,8 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 							&& em.getDataTrasmissioneAtti().compareTo(em.getDataEmissione()) == 0
 							&& em.getCodOperatoreInserimento().equals(aEvento.getCodOperatoreInserimento())) {
 
-						// 2024.02.14 posso cancellare il decreto/ordinanza solo se non puntato da altri eventi
+						// 2024.02.14 posso cancellare il decreto/ordinanza solo se non puntato da altri
+						// eventi
 						// Es ammissione provvisoria ad affidamento o detenzione
 						// lEventoProc.setIdEvento(lEveRet.getEveIdEvento());
 						// lEventoProc.execute();

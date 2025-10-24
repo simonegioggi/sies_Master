@@ -1,12 +1,12 @@
 //
-// Questo file ï¿½ stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
+// Questo file è stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
 // Vedere <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Qualsiasi modifica a questo file andrï¿½ persa durante la ricompilazione dello schema di origine. 
+// Qualsiasi modifica a questo file andrà persa durante la ricompilazione dello schema di origine. 
 // Generato il: 2017.02.06 alle 11:58:26 AM CET 
 //
 
 
-package it.mig.sies.type.foglicomplementari_CUMULO;
+package it.mig.sies.type.foglicomplementari;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -109,7 +109,7 @@ public class SanzioniSostitutive {
     protected String tipoLPU;
 
     /**
-     * Recupera il valore della proprietï¿½ semiDetenzione.
+     * Recupera il valore della proprietà semiDetenzione.
      * 
      * @return
      *     possible object is
@@ -121,7 +121,7 @@ public class SanzioniSostitutive {
     }
 
     /**
-     * Imposta il valore della proprietï¿½ semiDetenzione.
+     * Imposta il valore della proprietà semiDetenzione.
      * 
      * @param value
      *     allowed object is
@@ -133,7 +133,7 @@ public class SanzioniSostitutive {
     }
 
     /**
-     * Recupera il valore della proprietï¿½ libertaControllata.
+     * Recupera il valore della proprietà libertaControllata.
      * 
      * @return
      *     possible object is
@@ -145,7 +145,7 @@ public class SanzioniSostitutive {
     }
 
     /**
-     * Imposta il valore della proprietï¿½ libertaControllata.
+     * Imposta il valore della proprietà libertaControllata.
      * 
      * @param value
      *     allowed object is
@@ -157,7 +157,7 @@ public class SanzioniSostitutive {
     }
 
     /**
-     * Recupera il valore della proprietï¿½ importoAmmenda.
+     * Recupera il valore della proprietà importoAmmenda.
      * 
      * @return
      *     possible object is
@@ -169,7 +169,7 @@ public class SanzioniSostitutive {
     }
 
     /**
-     * Imposta il valore della proprietï¿½ importoAmmenda.
+     * Imposta il valore della proprietà importoAmmenda.
      * 
      * @param value
      *     allowed object is
@@ -181,7 +181,7 @@ public class SanzioniSostitutive {
     }
 
     /**
-     * Recupera il valore della proprietï¿½ importoMulta.
+     * Recupera il valore della proprietà importoMulta.
      * 
      * @return
      *     possible object is
@@ -193,7 +193,7 @@ public class SanzioniSostitutive {
     }
 
     /**
-     * Imposta il valore della proprietï¿½ importoMulta.
+     * Imposta il valore della proprietà importoMulta.
      * 
      * @param value
      *     allowed object is
@@ -205,7 +205,7 @@ public class SanzioniSostitutive {
     }
 
     /**
-     * Recupera il valore della proprietï¿½ espulsioneStato.
+     * Recupera il valore della proprietà espulsioneStato.
      * 
      * @return
      *     possible object is
@@ -217,7 +217,7 @@ public class SanzioniSostitutive {
     }
 
     /**
-     * Imposta il valore della proprietï¿½ espulsioneStato.
+     * Imposta il valore della proprietà espulsioneStato.
      * 
      * @param value
      *     allowed object is
@@ -229,7 +229,7 @@ public class SanzioniSostitutive {
     }
 
     /**
-     * Recupera il valore della proprietï¿½ tipoEspulsioneStato.
+     * Recupera il valore della proprietà tipoEspulsioneStato.
      * 
      * @return
      *     possible object is
@@ -241,7 +241,7 @@ public class SanzioniSostitutive {
     }
 
     /**
-     * Imposta il valore della proprietï¿½ tipoEspulsioneStato.
+     * Imposta il valore della proprietà tipoEspulsioneStato.
      * 
      * @param value
      *     allowed object is
@@ -253,7 +253,7 @@ public class SanzioniSostitutive {
     }
 
     /**
-     * Recupera il valore della proprietï¿½ lavoroPubblicaUtilita.
+     * Recupera il valore della proprietà lavoroPubblicaUtilita.
      * 
      * @return
      *     possible object is
@@ -265,7 +265,7 @@ public class SanzioniSostitutive {
     }
 
     /**
-     * Imposta il valore della proprietï¿½ lavoroPubblicaUtilita.
+     * Imposta il valore della proprietà lavoroPubblicaUtilita.
      * 
      * @param value
      *     allowed object is
@@ -277,7 +277,7 @@ public class SanzioniSostitutive {
     }
 
     /**
-     * Recupera il valore della proprietï¿½ numeroOreLPU.
+     * Recupera il valore della proprietà numeroOreLPU.
      * 
      * @return
      *     possible object is
@@ -289,7 +289,7 @@ public class SanzioniSostitutive {
     }
 
     /**
-     * Imposta il valore della proprietï¿½ numeroOreLPU.
+     * Imposta il valore della proprietà numeroOreLPU.
      * 
      * @param value
      *     allowed object is
@@ -301,7 +301,7 @@ public class SanzioniSostitutive {
     }
 
     /**
-     * Recupera il valore della proprietï¿½ tipoLPU.
+     * Recupera il valore della proprietà tipoLPU.
      * 
      * @return
      *     possible object is
@@ -313,7 +313,7 @@ public class SanzioniSostitutive {
     }
 
     /**
-     * Imposta il valore della proprietï¿½ tipoLPU.
+     * Imposta il valore della proprietà tipoLPU.
      * 
      * @param value
      *     allowed object is

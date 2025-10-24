@@ -2725,25 +2725,22 @@ public class StatisController extends GenericController {
 		// settaggio della larghezza
 		// delle colonne
 		numCol = 0;
-		sheet.setColumnWidth(numCol++, (20 * 256));  // CONTENUTO
+		sheet.setColumnWidth(numCol++, (20 * 256));
 		// Nel caso di Aggregato non c'e' la colonna OGGETTO
 		if (!isAggregato)
-			sheet.setColumnWidth(numCol++, (30 * 256)); // OGGETTO
-		sheet.setColumnWidth(numCol++, (10 * 256)); // Pendenti Inizio Periodo
-		sheet.setColumnWidth(numCol++, (10 * 256)); // Sopravvenuti
-		sheet.setColumnWidth(numCol++, (10 * 256));   // Accolti		
-		// MEV_2019-09 - Si aggiunge Accolti ex art.678 c.1 ter c.p.p
-		sheet.setColumnWidth(numCol++, (10 * 256));   // Accolti ex art.678 c.1 ter c.p.p
-		// MEV_2019-09 - FINE		
-		sheet.setColumnWidth(numCol++, (10 * 256));   // Rigettati
-		sheet.setColumnWidth(numCol++, (10 * 256));   // Inammissibilita'
-		sheet.setColumnWidth(numCol++, (10 * 256));   // NLP/NDP
-		sheet.setColumnWidth(numCol++, (10 * 256));   // Incompetenza
-		sheet.setColumnWidth(numCol++, (10 * 256)); // Iscritti per errore
-		sheet.setColumnWidth(numCol++, (10 * 256)); // Unificati
-		sheet.setColumnWidth(numCol++, (10 * 256)); // Cancellati
-		sheet.setColumnWidth(numCol++, (10 * 256)); // Altro
-		sheet.setColumnWidth(numCol++, (10 * 256)); // Pendenti Fine Periodo 
+			sheet.setColumnWidth(numCol++, (30 * 256));
+		sheet.setColumnWidth(numCol++, (10 * 256));
+		sheet.setColumnWidth(numCol++, (10 * 256));
+		sheet.setColumnWidth(numCol++, (10 * 256));
+		sheet.setColumnWidth(numCol++, (10 * 256));
+		sheet.setColumnWidth(numCol++, (10 * 256));
+		sheet.setColumnWidth(numCol++, (10 * 256));
+		sheet.setColumnWidth(numCol++, (10 * 256));
+		sheet.setColumnWidth(numCol++, (10 * 256));
+		sheet.setColumnWidth(numCol++, (10 * 256));
+		sheet.setColumnWidth(numCol++, (10 * 256));
+		sheet.setColumnWidth(numCol++, (10 * 256));
+		sheet.setColumnWidth(numCol++, (10 * 256));
 
 		// N.ro riga corrente
 		int nRow = 0;
@@ -2807,9 +2804,6 @@ public class StatisController extends GenericController {
 		setCell(row, numCol++, "Pendenti Inizio Periodo", csCenter);
 		setCell(row, numCol++, "Sopravvenuti", csCenter);
 		setCell(row, numCol++, "Accolti", csCenter);
-		// MEV_2019-09 - Si aggiunge Accolti ex art.678 c.1 ter c.p.p
-		setCell(row, numCol++, "Accolti ex art.678 c.1 ter c.p.p", csCenter);
-		// MEV_2019-09 - FINE
 		setCell(row, numCol++, "Rigettati", csCenter);
 		setCell(row, numCol++, "Inammissibilita'", csCenter);
 		setCell(row, numCol++, "NLP/NDP", csCenter);
@@ -2821,7 +2815,7 @@ public class StatisController extends GenericController {
 		setCell(row, numCol++, "Pendenti Fine Periodo", csCenter);
 
 		nRow++;
-		// Viene memorizzato il n.ro di riga dove iniziano i dati
+		// Viene memorizzato il n.ro di riga dovo iniziano i dati
 		nRowIni = nRow;
 		if (tipo_estrazione == 1)
 			nRow = scriviAggregato(aVect, sheet, nRow, csCenter);
@@ -2840,9 +2834,6 @@ public class StatisController extends GenericController {
 				setCell(row, numCol++, lMod.getNumPendentiInizio().doubleValue(), csCenter);
 				setCell(row, numCol++, lMod.getNumSopravvenuti().doubleValue(), csCenter);
 				setCell(row, numCol++, lMod.getNumDefEsito1().doubleValue(), csCenter); // Accolti
-				// MEV_2019-09 - Si aggiunge Accolti ex art.678 c.1 ter c.p.p
-				setCell(row, numCol++, lMod.getNumAccoltiProvv().doubleValue(), csCenter); // Accolti
-				// MEV_2019-09 - FINE
 				setCell(row, numCol++, lMod.getNumDefEsito2().doubleValue(), csCenter); // Rigettati
 				setCell(row, numCol++, lMod.getNumDefEsito3().doubleValue(), csCenter); // Inammissibilita'
 				setCell(row, numCol++, lMod.getNumDefEsito4().doubleValue(), csCenter); // NLP/NDP
@@ -2865,9 +2856,7 @@ public class StatisController extends GenericController {
 		row = sheet.createRow(nRow++);
 		setCell(row, numCol++, "TOTALI", csCenter);
 		// 12 totali su 12 colonne
-		// MEV_2019-09 - Si aggiunge Accolti ex art.678 c.1 ter c.p.p le colonne diventano 13
-		//for (int i = 0; i < 12; i++) {
-		for (int i = 0; i < 13; i++) {
+		for (int i = 0; i < 12; i++) {
 			formula = getStringaSomma(nRowIni, numCol, nRowFine, numCol);
 			setFormulaCell(row, numCol++, formula, csCenter);
 		}
@@ -2949,9 +2938,6 @@ public class StatisController extends GenericController {
 					setCell(row, numCol++, lMod.getNumPendentiInizio().doubleValue(), aCsCenter);
 					setCell(row, numCol++, lMod.getNumSopravvenuti().doubleValue(), aCsCenter);
 					setCell(row, numCol++, lMod.getNumDefEsito1().doubleValue(), aCsCenter);
-					// MEV_2019-09 - Accolti ex art.678 c.1 ter c.p.p
-					setCell(row, numCol++, lMod.getNumAccoltiProvv().doubleValue(), aCsCenter);
-					// MEV_2019-09 - FINE
 					setCell(row, numCol++, lMod.getNumDefEsito2().doubleValue(), aCsCenter);
 					setCell(row, numCol++, lMod.getNumDefEsito3().doubleValue(), aCsCenter);
 					setCell(row, numCol++, lMod.getNumDefEsito4().doubleValue(), aCsCenter);
@@ -3420,12 +3406,11 @@ public class StatisController extends GenericController {
 		// settaggio della larghezza
 		// delle colonne
 		numCol = 0;
-		sheet.setColumnWidth(numCol++, (40 * 256)); // 
-		sheet.setColumnWidth(numCol++, (10 * 256)); // 
-		sheet.setColumnWidth(numCol++, (10 * 256)); // 
-		sheet.setColumnWidth(numCol++, (10 * 256)); // 
-		sheet.setColumnWidth(numCol++, (10 * 256)); // Accolti ex art.678 c.1 ter c.p.p - MEV 9
-		sheet.setColumnWidth(numCol++, (10 * 256)); // 
+		sheet.setColumnWidth(numCol++, (40 * 256));
+		sheet.setColumnWidth(numCol++, (10 * 256));
+		sheet.setColumnWidth(numCol++, (10 * 256));
+		sheet.setColumnWidth(numCol++, (10 * 256));
+		sheet.setColumnWidth(numCol++, (10 * 256));
 		sheet.setColumnWidth(numCol++, (10 * 256));
 		sheet.setColumnWidth(numCol++, (10 * 256));
 		sheet.setColumnWidth(numCol++, (10 * 256));
@@ -3448,7 +3433,6 @@ public class StatisController extends GenericController {
 		setCell(row, numCol++, "Pendenti Inizio Periodo", csCenter);
 		setCell(row, numCol++, "Sopravvenuti", csCenter);
 		setCell(row, numCol++, "Accolti", csCenter);
-		setCell(row, numCol++, "Accolti ex art.678 c.1 ter c.p.p", csCenter); // MEV 9
 		setCell(row, numCol++, "Rigettati", csCenter);
 		setCell(row, numCol++, "Inammissibilita'", csCenter);
 		setCell(row, numCol++, "NLP/NDP", csCenter);
@@ -3502,7 +3486,6 @@ public class StatisController extends GenericController {
 			setCell(row, numCol++, lMod.getNumPendentiInizio().doubleValue(), csCenter);
 			setCell(row, numCol++, lMod.getNumSopravvenuti().doubleValue(), csCenter);
 			setCell(row, numCol++, lMod.getNumDefEsito1().doubleValue(), csCenter);
-			setCell(row, numCol++, lMod.getNumAppProvv().doubleValue(), csCenter); // MEV 9			
 			setCell(row, numCol++, lMod.getNumDefEsito2().doubleValue(), csCenter);
 			setCell(row, numCol++, lMod.getNumDefEsito3().doubleValue(), csCenter);
 			setCell(row, numCol++, lMod.getNumDefEsito4().doubleValue(), csCenter);
@@ -3523,10 +3506,8 @@ public class StatisController extends GenericController {
 		nRow++;
 		row = sheet.createRow(nRow++);
 		setCell(row, numCol++, "TOTALI", csCenter);
-		// MEV_2019-09 Sono diventati 13
 		// 12 totali su 12 colonne
-		//for (int i = 0; i < 12; i++) {
-		for (int i = 0; i < 13; i++) {	
+		for (int i = 0; i < 12; i++) {
 			formula = getStringaSomma(nRowIni, numCol, nRowFine, numCol);
 			setFormulaCell(row, numCol++, formula, csCenter);
 		}

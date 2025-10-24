@@ -2,7 +2,6 @@ package siap.sius.depositoordinanzapc.action;
 
 import java.math.BigDecimal;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -37,7 +36,6 @@ import siap.siep.util.SIEPLookupRemote;
 import siap.sius.SIUSException;
 import siap.sius.depositodecreto.action.ActInserisciEmissioneDecreto;
 import siap.sius.depositodecreto.action.ICostantiDepositoDecreto;
-import siap.sius.depositodecreto.controller.IDepositoDecreto;
 import siap.sius.depositodecreto.model.DepositoDecretoModel;
 import siap.sius.depositoordinanzapc.model.OrdinanzaEventoTenoriPrescrizioniModel;
 import siap.sius.depositoordinanzapc.util.RicercaProvvedimentiCollegati;
@@ -167,32 +165,9 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 		} else if (lCodTipoDec.compareTo(MISURA_ALTERNATIVA) == 0) {
 			// Ordinanza di Misurs Alternativa
 			mRetPage = PG_LOAD_INSERISCI_ORDINANZA_MA;
-			// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
-			Option lOptionUffPM = new Option();
-			lOptionUffPM = new Option(DecodificheManager.getInstance().getTipoUfficioPM());
-			lOptionUffPM.setFilter(new String[] { "-", "PM", "PMM", "PGCAP" });
-			setRequestAttribute("tipoUfficioProcure", "" + lOptionUffPM);
-			// FINE: MEV_2019-09
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("Ordinanza Misurs Alternativa " + lCodTipoDec);
-			// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
-			if (!isRequestParameterNullEmptyObj("isOrdApplMADL1232018")) {
-				// verifico che la data emissione sia >= data emissione decreto di designazione
-				if (verificaDataDecretoDesignazione()) {
-					siesLogger.debug(
-							"Ordinanza Applicazione Misura Alternativa DL 123/2018 forzo il codice tipo "
-							+ "ordinanza in AM");
-					lCodTipoDec = MISURA_ALTERNATIVA_AMMISSIONE_DL_123_2018;
-					// cambio jsp
-					mRetPage = PG_LOAD_INSERISCI_ORDINANZA_MA_AMM_DL_123_2018;
-				} else {
-					throw new SIUSException(SIUSException.USER_MESSAGE,
-							"La data emissione dell'ordinanza non puo' essere antecedente alla data "
-							+ "emissione del decreto di designazione.");
-				}
-			}
-			// FINE: MEV_2019-09
 		} else if (lCodTipoDec.compareTo(INDULTINO) == 0) {
 			// Ordinanza di Indultino
 			mRetPage = PG_LOAD_INSERISCI_ORDINANZA_INDULTINO;
@@ -555,8 +530,7 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 				setRequestAttribute("TipoPenaAccessoria", "" + o);
 				o = new Option(DecodificheManager.getInstance().getDurataPeneAccessorie());
 				setRequestAttribute("DurataPeneAccessorie", "" + o);
-				setRequestAttribute("Action",
-						"siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaUDS");
+				setRequestAttribute("Action", "siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaUDS");
 			}
 		} else if (lCodTipoDec.compareTo(REVOCA_SANZIONE_SOSTITUTIVA) == 0) {
 			// Ordinanza Revoca Sanzione Sostitutiva
@@ -932,37 +906,6 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 				"CAPMID", "CSS", "GIPMI", "GIP", "GIPM", "GP", "GUP", "GUPM", "GUPMI", "PT", "PM", "PMM",
 				"PMPT", "PGCAP", "PGMI", "PGMID", "PMI", "TRIBSD", "CAPSM", "TMI", "DIB", "DIBM" });
 		setRequestAttribute("tipoUfficioCompetente", "" + lOption);
-	}
-
-	/**
-	 * Verifica se la data di emissione dell'ordinanza di ammissione provvisorie è >= della data emissione del
-	 * decreto di designazione
-	 *
-	 * @return true se il controllo è OK false se KO
-	 * @since MEV_2019-09
-	 */
-	private boolean verificaDataDecretoDesignazione() throws F3BException {
-		FascicoloGPModel lFasGPMod = new FascicoloGPModel(
-				(FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"));
-
-		// Verifica esistenza di un deposito decreto per il fascicolo sius selezionato e tipo decreto
-		BigDecimal idGP = lFasGPMod.getGeneraleProcedimentoModel().getIdGeneraleProcedimento();
-		IDepositoDecreto idd = SIUSLookupRemote.getDepositoDecretoRemote();
-		DepositoDecretoModel ddm = idd.ExRicercaDepositoDecretoByGenProc(idGP,
-				DECRETO_DESIGNAZIONE_MAGISTRATO_RELATORE_PER_MA);
-
-		Date lDataEmissioneDecreto = ddm.getDataEmissione();
-
-		// Preleva data di emissione
-		Date lDataEmissioneOrdinanza = getRequestDateParameter(
-				ICostantiDepositoDecreto.CAMPO_ANNO_DATA_EMISSIONE,
-				ICostantiDepositoDecreto.CAMPO_MESE_DATA_EMISSIONE,
-				ICostantiDepositoDecreto.CAMPO_GIORNO_DATA_EMISSIONE);
-
-		if (DateUtils.isLower(lDataEmissioneOrdinanza, lDataEmissioneDecreto))
-			return false; // controlllo non passato
-		else
-			return true;
 	}
 
 	// MEV_2023-35 Recupero Se Presente la Rateizzazione collegata all'ultimo avviso mancato pagamento

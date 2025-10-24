@@ -3,8 +3,6 @@
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
 
-<%@ page import="java.util.Date"%>
-
 <%@ page import="siap.sius.richiestaatti.action.ICostantiRichiestaAtti"%>
 <%@ page import="siap.sius.fascicolo.action.ICostantiFascicoloSius"%>
 
@@ -12,15 +10,9 @@
 <jsp:useBean id="TipiIstituti1"  scope="request" class="java.lang.String"/>
 <jsp:useBean id="TipiIstituti2"  scope="request" class="java.lang.String"/>
 
-<%-- MEV_2019-09 (D.lgs. 123/2018) --%>
-<jsp:useBean id="ultimoEventoRichAtti"   scope="request" class="siap.sico.evento.model.EventoModel"/>
-
 <%
   // Azione da chiamare per l'inserimento dei dati.
   String lAzione = "siap.sius.richiestaatti.action.ActInserisciInformazioniart474c";
-
-  //MEV_2019-09 (D.lgs. 123/2018)
-  Date lUltimaDataRestitAttiIstruttori = ultimoEventoRichAtti.getDataRestituzioneAi();
 %>
 
 
@@ -53,22 +45,6 @@
 </script>
 
 <script language="JavaScript">
-
-	<%-- INIZIO: MEV_2019-09 (D.lgs. 123/2018) --%>
-	function abilitaCampiDataRestituzione() {
-		if (document.LoadInserisciInformazioniart474c.<%=ICostantiRichiestaAtti.CHECK_DATA_RESTITUZIONE%>.checked){
-	   		document.LoadInserisciInformazioniart474c.<%=ICostantiRichiestaAtti.CAMPO_GIORNO_DATA_RESTITUZIONE%>.disabled = false;
-	   		document.LoadInserisciInformazioniart474c.<%=ICostantiRichiestaAtti.CAMPO_MESE_DATA_RESTITUZIONE%>.disabled = false;
-	   		document.LoadInserisciInformazioniart474c.<%=ICostantiRichiestaAtti.CAMPO_ANNO_DATA_RESTITUZIONE%>.disabled = false;
-		}
-		else {
-	   		document.LoadInserisciInformazioniart474c.<%=ICostantiRichiestaAtti.CAMPO_GIORNO_DATA_RESTITUZIONE%>.disabled = true;
-	   		document.LoadInserisciInformazioniart474c.<%=ICostantiRichiestaAtti.CAMPO_MESE_DATA_RESTITUZIONE%>.disabled = true;
-	   		document.LoadInserisciInformazioniart474c.<%=ICostantiRichiestaAtti.CAMPO_ANNO_DATA_RESTITUZIONE%>.disabled = true;
-		}    	
-		}
-	<%-- FINE: MEV_2019-09 (D.lgs. 123/2018) --%>
-
     function Verify()
     {
       // Controlla che le coppie di campi Destinatario/Sede siano riempiti
@@ -128,25 +104,6 @@
         alert('Data Emissione minore della data di inserimento del fascicolo SIUS!');
         return false;
       }
-      
-      <%-- INIZIO: MEV_2019-09 (D.lgs. 123/2018) --%>
-      if (document.LoadInserisciInformazioniart474c.<%=ICostantiRichiestaAtti.CHECK_DATA_RESTITUZIONE%>.checked){
-	      var data_restituzione = document.LoadInserisciInformazioniart474c.<%=ICostantiRichiestaAtti.CAMPO_GIORNO_DATA_RESTITUZIONE%>.value
-	                        +'/'+ document.LoadInserisciInformazioniart474c.<%=ICostantiRichiestaAtti.CAMPO_MESE_DATA_RESTITUZIONE%>.value
-	                        +'/'+ document.LoadInserisciInformazioniart474c.<%=ICostantiRichiestaAtti.CAMPO_ANNO_DATA_RESTITUZIONE%>.value;
-	      if (! ControllaData(data_restituzione))
-	      {
-	        alert('Data Restituzione atti non valida');
-	        return false;
-	      }
-	      
-	      if ( ! CompareDate( data_emissione, data_restituzione) )
-	      {
-	        alert('Data Emissione maggiore della Data Restituzione atti!');
-	        return false;
-	      }
-	  }       
-      <%-- FINE: MEV_2019-09 (D.lgs. 123/2018) --%>
 
       return true;
     }
@@ -189,29 +146,6 @@
             <input Title="Mese"   value="<%=DateUtils.getSysDate("MM")%>"   type="text" size="2" maxlength="2" name="<%= ICostantiRichiestaAtti.CAMPO_MESE_DATA_EMISSIONE %>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"  > /
             <input Title="Anno"   value="<%=DateUtils.getSysDate("yyyy")%>" type="text" size="4" maxlength="4" name="<%= ICostantiRichiestaAtti.CAMPO_ANNO_DATA_EMISSIONE %>"  onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillYear(value)" >
           </td>
-          
-        <%-- INIZIO: MEV_2019-09 (D.lgs. 123/2018) --%>
-        <td class="l"><input value="S" type="checkbox" name="<%=ICostantiRichiestaAtti.CHECK_DATA_RESTITUZIONE%>" 
-                             onClick="abilitaCampiDataRestituzione()"
-                             >  Atti da restituire entro il </font></td>
-        <td class="L">
-          <input Title="Giorno"  type="text" size="2" maxlength="2" 
-                 name="<%= ICostantiRichiestaAtti.CAMPO_GIORNO_DATA_RESTITUZIONE%>" 
-                 value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lUltimaDataRestitAttiIstruttori,"dd"),"")%>" 
-                 onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  
-                 onBlur="javascript:value=FillDM(value)" disabled> /
-          <input Title="Mese" type="text" size="2" maxlength="2" 
-                 name="<%= ICostantiRichiestaAtti.CAMPO_MESE_DATA_RESTITUZIONE%>" 
-                 value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lUltimaDataRestitAttiIstruttori,"MM"),"")%>" 
-                 onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  
-                 onBlur="javascript:value=FillDM(value)" disabled> /
-          <input Title="Anno" type="text" size="4" maxlength="4" 
-                 name="<%= ICostantiRichiestaAtti.CAMPO_ANNO_DATA_RESTITUZIONE %>"  
-                 value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lUltimaDataRestitAttiIstruttori,"yyyy"),"")%>" 
-          		 onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  
-          		 onBlur="javascript:value=FillYear(value)" disabled>
-        </td>     
-        <%-- FINE: MEV_2019-09 (D.lgs. 123/2018) --%>           
         </tr>
 
         <!-- Primo destinatario + luogo -->

@@ -222,7 +222,7 @@ for (int i = 0; i < tenori.length; i++) {
 		<td class="l">
 		  	<input readonly="<%=isReadOnly%>" title="<%=labelUfficio%>" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP%>" value="" size="35">
 <%
-// MEV_2023-35: aggiunto controllo se siamo in sola lettura
+// MEV_2023-035: aggiunto controllo se siamo in sola lettura
 if (!Utils.isPresent(isReadOnly)) {
 %>
 			<a href="Javascript:ListaUDS('InserisciOrdinanzaConcessioneRinvioEP','<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP%>','<%=codUff%>');">

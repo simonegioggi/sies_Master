@@ -5,11 +5,11 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import f3b.dao.DAOException;
-import f3b.model.GenericModel;
 import siap.dao.SIAPSqlDAO;
 import siap.sico.decodifiche.model.DecodificheModel;
 import siap.siep.misuraalternativa.action.ICostantiMisuraAlternativa;
+import f3b.dao.DAOException;
+import f3b.model.GenericModel;
 
 public class DecodificheSqlDAO extends SIAPSqlDAO {
 
@@ -19,7 +19,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Ricerca gli Esiti Tenore raggrupati per il RV_HIGH_VALUE
-	 *
+	 * 
 	 * @param lCodOggetto
 	 */
 	public void ricercaEsitiByOggetto(String lCodOggetto) {
@@ -27,7 +27,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// " SELECT RV_DOMAIN,RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
 		// "
 		// +
-		String lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'ESITO_TENORE' AND "
+		String lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'ESITO_TENORE' AND "
 				+ " RV_HIGH_VALUE IN (SELECT  RV_HIGH_VALUE FROM CG_REF_CODES WHERE "
 				+ " RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' AND RV_LOW_VALUE='" + lCodOggetto + "') ";
 
@@ -37,7 +37,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Ricerca gli Esiti Tenore raggrupati per il RV_HIGH_VALUE e l'ALT2_VALUE relativo all'esito
-	 *
+	 * 
 	 * @param lCodOggetto
 	 */
 	public void ricercaEsitiCompatibiliByEsitoOggetto(String lCodOggetto, String lCodEsito) {
@@ -45,7 +45,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// " SELECT RV_DOMAIN,RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
 		// "
 		// +
-		String lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'ESITO_TENORE' AND "
+		String lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'ESITO_TENORE' AND "
 				+ " RV_HIGH_VALUE IN (SELECT  RV_HIGH_VALUE FROM CG_REF_CODES WHERE "
 				+ " RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' AND RV_LOW_VALUE='" + lCodOggetto + "')  AND "
 				+ " RV_ALT2_VALUE IN (SELECT  RV_ALT2_VALUE FROM CG_REF_CODES WHERE "
@@ -58,7 +58,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Dal Codice dell'EsitoTenore mi ricavo il codice nell'RV_ABBREVIATION che rappresenta il COdice
 	 * Provvedimento corrispondente
-	 *
+	 * 
 	 * @param lCodEsito
 	 */
 	public void ricercaCodEsitoByEsitoTenore(String lCodEsito) {
@@ -66,7 +66,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// " SELECT RV_DOMAIN,RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
 		// "
 		// +
-		String lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'ESITO_TENORE' AND "
+		String lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'ESITO_TENORE' AND "
 				+ " RV_LOW_VALUE = '" + lCodEsito + "'";
 
 		setStatement(lStatement);
@@ -78,7 +78,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// " SELECT RV_DOMAIN,RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
 		// "
 		// +
-		String lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'OGGETTO_SOSPENSIONI' AND "
+		String lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'OGGETTO_SOSPENSIONI' AND "
 				+ " RV_ABBREVIATION = '" + lOggSosp + "'";
 
 		setStatement(lStatement);
@@ -90,7 +90,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// " SELECT RV_DOMAIN,RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
 		// "
 		// +
-		String lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' "
+		String lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' "
 				+ " AND RV_HIGH_VALUE = 'ANN_MAN' " + " AND RV_LOW_VALUE = '" + lCodice + "'";
 
 		setStatement(lStatement);
@@ -144,7 +144,8 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Lista Oggetti per parametro Contenuto
-	 *
+	 * <p>
+	 * 
 	 * @param aContenuto
 	 *            per cui filtrare.
 	 * @param aCodTipoUfficio
@@ -200,7 +201,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 					// MAC 2017/04/01 Ripristinati i codici (2741,2742,2743,2756), tali codici non sono
 					// visibili a UDSM e neppure a UDS
 					// 20170922: [SG] rimosso un oggetto per contenuto 'U004' = Esecuzione MA
-					// MEV63 GLI OGGETTI 2235 E 2236 DEVONO ESSERE VISIBILI AGLI UFFICI UDSM
+					//MEV63 GLI OGGETTI 2235 E 2236 DEVONO ESSERE VISIBILI AGLI UFFICI UDSM
 					lStatement += " AND CG_RC2.RV_LOW_VALUE NOT IN ('2245','2280','2290','2291','2310','2311','2348','2349','2350','2351','2353','2354','2355','2356','2357','2358','2404','2405','2406','2407','2430','2440','2441','2442','2694','2741','2742','2743','2756','2368','2292') ";
 				}
 				// MERGE v10 COLLAUDO fine ********
@@ -233,10 +234,10 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 						lStatement += " AND CG_RC2.RV_LOW_VALUE NOT IN ('2294') ";
 				}
 				// MEV63: IL CONTENUTO ED I RELATIVI OGGETTI DEVONO ESSERE VISIBIIAD UFFICI UDSM
-				// if ("U043".equals(aContenuto)) {
-				// if ("UDSM".equals(aCodTipoUfficio))
-				// lStatement += " AND CG_RC2.RV_LOW_VALUE NOT IN ('2235','2236') ";
-				// }
+//				if ("U043".equals(aContenuto)) {
+//					if ("UDSM".equals(aCodTipoUfficio))
+//						lStatement += " AND CG_RC2.RV_LOW_VALUE NOT IN ('2235','2236') ";
+//				}
 				if ("U045".equals(aContenuto)) {
 					if ("UDSM".equals(aCodTipoUfficio))
 						lStatement += " AND CG_RC2.RV_LOW_VALUE NOT IN ('2245') ";
@@ -365,7 +366,8 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Lista Contenuti per parametro CodTipoUfficio
-	 *
+	 * <p>
+	 * 
 	 * @param aCodTipoUfficio
 	 *            per cui filtrare.
 	 * @throws DAOException
@@ -378,7 +380,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
 		// "
 		// +
-		lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'OGGETTO_PROCEDIMENTO' ";
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'OGGETTO_PROCEDIMENTO' ";
 		// MEV10-s3: aggiunte OR condition per gestire la casistica dei minori
 		if ("TDS".equals(aCodTipoUfficio) || "TDSM".equals(aCodTipoUfficio))
 			lStatement += " AND (RV_LOW_VALUE LIKE 'C%' OR RV_LOW_VALUE = '-') ";
@@ -392,7 +394,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Restituisce la lista degli oggetti del differimento (C014, U003)
-	 *
+	 * 
 	 * @throws DAOException
 	 */
 	public void listaOggettoSospDifferimento() throws DAOException {
@@ -408,7 +410,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Restituisce la lista dei soli oggetti del differimento <b>Provvisorio</b> (U003)
-	 *
+	 * 
 	 * @throws DAOException
 	 */
 	public void listaOggettoSospDifferimentoProvv() throws DAOException {
@@ -418,7 +420,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
 		// "
 		// +
-		lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'OGGETTO_SOSPENSIONI' ";
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'OGGETTO_SOSPENSIONI' ";
 		lStatement += " AND RV_ABBREVIATION = 'U003'";
 
 		setStatement(lStatement);
@@ -426,7 +428,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Restituisce la lista dei soli oggetti del differimento <b>Provvisorio</b> (U003)
-	 *
+	 * 
 	 * @throws DAOException
 	 */
 	public void listaOggettoSospDifferimentoDef() throws DAOException {
@@ -436,7 +438,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
 		// "
 		// +
-		lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'OGGETTO_SOSPENSIONI' ";
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'OGGETTO_SOSPENSIONI' ";
 		lStatement += " AND RV_ABBREVIATION = 'C014'";
 
 		setStatement(lStatement);
@@ -444,7 +446,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Restituisce la lista dei soli oggetti della <b>Revoca</b> del differimento (C025)
-	 *
+	 * 
 	 * @throws DAOException
 	 */
 	public void listaOggettoRevocaDifferimento() throws DAOException {
@@ -454,38 +456,30 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
 		// "
 		// +
-		lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'OGGETTO_SOSPENSIONI' ";
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'OGGETTO_SOSPENSIONI' ";
 		lStatement += " AND RV_ABBREVIATION = 'C025'";
 
 		setStatement(lStatement);
 	}
 
-	// MEV_2019-09-SIEP: cambiata firma del metodo per gestione maggiorenni/minorenni
-	public void listaOggettiSospensioneDecisioneSor(String aCodTipoUfficio) throws DAOException {
-
+	public void listaOggettiSospensioneDecisioneSor() throws DAOException {
 		String lStatement = new String();
 		// 09/10/2009 lStatement =
-		// "SELECT RV_DOMAIN,RV_LOW_VALUE,RV_MEANING,RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE"
-		lStatement = "SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
-		// Ticket#20211006019 - Sostituito il dominio U001 in X001 a seguito dell'aggiornamento della
-		// CG_REF_CODES
+		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
+		// "
+		// +
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		// Ticket#20211006019 - Sostituito il dominio U001 in X001 a seguito dell'aggiornamento della CG_REF_CODES
 		// E' cambiato l'oggetto per le sospensioni
-		// lStatement += " AND (RV_HIGH_VALUE = 'U001' OR RV_HIGH_VALUE = 'U071')";
-		lStatement += "AND (RV_HIGH_VALUE = 'X001' OR RV_HIGH_VALUE = 'U071' ";
+		//lStatement += " AND (RV_HIGH_VALUE = 'U001' OR RV_HIGH_VALUE = 'U071')";
+		lStatement += " AND (RV_HIGH_VALUE = 'X001' OR RV_HIGH_VALUE = 'U071')";
 		// Ticket#20211006019 - FINE
-		// MEV_2019-09-SIEP: aggiunta condizione di estrazione x SOSPENSIONE ESECUZIONE PENA ed ordinamento
-		if ("PMM".equals(aCodTipoUfficio))
-			lStatement += "OR RV_LOW_VALUE = '0695') "; // OR RV_LOW_VALUE = '0735'
-		else
-			lStatement += "OR RV_LOW_VALUE = '0684') "; // OR RV_LOW_VALUE = '0724'
-		lStatement += "ORDER BY RV_MEANING";
-
 		setStatement(lStatement);
 	}
 
 	/**
 	 * Imposta la query per il caricamento della lista dei Motivi Provvedimento per il Differimneto
-	 *
+	 * 
 	 * @throws DAOException
 	 */
 	public void listaMotivoProvvSospDifferimento() throws DAOException {
@@ -502,7 +496,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Imposta la query per il caricamento della lista dei Motivi Provvedimento per il Differimneto
 	 * Provvisorio
-	 *
+	 * 
 	 * @throws DAOException
 	 */
 	public void listaMotivoProvvSospDifferimentoProvv() throws DAOException {
@@ -520,7 +514,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Imposta la query per il caricamento della lista dei Motivi Provvedimento per il Differimneto Definitivo
-	 *
+	 * 
 	 * @throws DAOException
 	 */
 	public void listaMotivoProvvSospDifferimentoDef() throws DAOException {
@@ -539,7 +533,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Imposta la query per il caricamento della lista dei Motivi Provvedimento per la Revoca del Differimneto
-	 *
+	 * 
 	 * @throws DAOException
 	 */
 	public void listaMotivoProvvRevocaDifferimento() throws DAOException {
@@ -556,7 +550,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Imposta la query per il caricamento della lista dei Motivi Provvedimento per la Rigetto del
 	 * Differimneto
-	 *
+	 * 
 	 * @throws DAOException
 	 */
 	public void listaMotivoProvvRigettoDifferimento() throws DAOException {
@@ -577,56 +571,37 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		String lStatement = new String();
 
 		// 09/10/2009 lStatement =
-		// "SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE"
-		lStatement = "SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'ESITO_TENORE' AND RV_HIGH_VALUE = 'C014' ";
-		lStatement += "AND (RV_ABBREVIATION IN ('0002','0003','0004','0005','0115')) ";
-		lStatement += "ORDER BY RV_ABBREVIATION ";
+		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
+		// "
+		// +
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE "
+				+ " RV_DOMAIN = 'ESITO_TENORE'  AND RV_HIGH_VALUE = 'C014' ";
+		lStatement += " AND (RV_ABBREVIATION IN ('0002','0003','0004','0005','0115')) ";
+		lStatement += " ORDER BY RV_ABBREVIATION ";
 
 		setStatement(lStatement);
 	}
 
-	// MEV_2019-09-SIEP: cambiata firma del metodo per distinguere PM da PMM
-	public void listaMotivoProvvMA(String aMisAlt, String aCodTipoUfficio) throws DAOException {
-
+	public void listaMotivoProvvMA(String aCodTipoUfficio) throws DAOException {
 		String lStatement = new String();
-		lStatement = "SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
-		if (aMisAlt.equals("DETENZIONE"))
-			// MEV_2019-09-SIEP: aggiunta condizione di estrazione x DETENZIONE DOMICILIARE
-			// lStatement += "AND (RV_LOW_VALUE = '0005' OR RV_LOW_VALUE = '0010' OR RV_LOW_VALUE = '0013') ";
-			if ("PMM".equals(aCodTipoUfficio))
-				lStatement += "AND (RV_LOW_VALUE = '0005' OR RV_LOW_VALUE = '0010' OR RV_LOW_VALUE = '0013' "
-						+ "OR RV_LOW_VALUE = '0693') "; // OR RV_LOW_VALUE = '0733'
-			else
-				lStatement += "AND (RV_LOW_VALUE = '0005' OR RV_LOW_VALUE = '0010' OR RV_LOW_VALUE = '0013' "
-						+ "OR RV_LOW_VALUE = '0682') "; // OR RV_LOW_VALUE = '0722'
-		else if (aMisAlt.equals("AFFIDAMENTO")) {
-			// MEV_2019-09-SIEP: aggiunta condizione di estrazione x AFFIDAMENTO IN PROVA
-			// lStatement += "AND (RV_LOW_VALUE = '0001' OR RV_LOW_VALUE = '0002' OR RV_LOW_VALUE = '0003')";
-			if ("PMM".equals(aCodTipoUfficio))
-				lStatement += "AND (RV_LOW_VALUE = '0001' OR RV_LOW_VALUE = '0002' OR RV_LOW_VALUE = '0003' "
-						+ "OR RV_LOW_VALUE = '0690' OR RV_LOW_VALUE = '0691' OR RV_LOW_VALUE = '0692') ";
-			// + "OR RV_LOW_VALUE = '0730' OR RV_LOW_VALUE = '0731' OR RV_LOW_VALUE = '0732') ";
-			else
-				lStatement += "AND (RV_LOW_VALUE = '0001' OR RV_LOW_VALUE = '0002' OR RV_LOW_VALUE = '0003' "
-						+ "OR RV_LOW_VALUE = '0680' OR RV_LOW_VALUE = '0681') ";
-			// + "OR RV_LOW_VALUE = '0720' OR RV_LOW_VALUE = '0721') ";
-		} else if (aMisAlt.equals("SEMILIBERTA"))
-			// MEV_2019-09-SIEP: aggiunta condizione di estrazione x SEMILIBERTA'
-			// lStatement += "AND (RV_LOW_VALUE = '0004') ";
-			if ("PMM".equals(aCodTipoUfficio))
-				lStatement += "AND (RV_LOW_VALUE = '0004' "
-						+ "OR RV_LOW_VALUE = '0694') "; // OR RV_LOW_VALUE = '0734'
-			else
-				lStatement += "AND (RV_LOW_VALUE = '0004' "
-						+ "OR RV_LOW_VALUE = '0683') "; // OR RV_LOW_VALUE = '0723'
-		else if (aMisAlt.equals("INDULTINO"))
-			lStatement += "AND (RV_LOW_VALUE = '2245') ";
-		else if (aMisAlt.equals(ICostantiMisuraAlternativa.ESP_PRESSO_DOM))
-			lStatement += "AND (RV_LOW_VALUE = '" + ICostantiMisuraAlternativa.ESP_PRESSO_DOM_MOTIVO
-					+ "' OR RV_LOW_VALUE = '0610') ";
-		// MEV_2019-09-SIEP: modificato ordinamento
-		// lStatement += "ORDER BY RV_ABBREVIATION ";
-		lStatement += "ORDER BY RV_MEANING";
+
+		// 10/09/2009 lStatement =
+		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
+		// "
+		// +
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		if (aCodTipoUfficio.equals("DETENZIONE"))
+			lStatement += " AND (RV_LOW_VALUE = '0005' OR RV_LOW_VALUE = '0010' OR RV_LOW_VALUE = '0013') ";
+		else if (aCodTipoUfficio.equals("AFFIDAMENTO"))
+			lStatement += " AND (RV_LOW_VALUE = '0001' OR RV_LOW_VALUE = '0002' OR RV_LOW_VALUE = '0003') ";
+		else if (aCodTipoUfficio.equals("SEMILIBERTA"))
+			lStatement += " AND (RV_LOW_VALUE = '0004') ";
+		else if (aCodTipoUfficio.equals("INDULTINO"))
+			lStatement += " AND (RV_LOW_VALUE = '2245') ";
+		else if (aCodTipoUfficio.equals(ICostantiMisuraAlternativa.ESP_PRESSO_DOM))
+			lStatement += " AND (RV_LOW_VALUE = '" + ICostantiMisuraAlternativa.ESP_PRESSO_DOM_MOTIVO + "' OR RV_LOW_VALUE = '0610' ) ";
+
+		lStatement += " ORDER BY RV_ABBREVIATION ";
 
 		setStatement(lStatement);
 	}
@@ -638,7 +613,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
 		// "
 		// +
-		lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
 		if (aCodTipoUfficio.equals("OS_LIBERAZIONE_ANTICIPATA"))
 			lStatement += " AND RV_LOW_VALUE = '0081'";
 
@@ -654,7 +629,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
 		// "
 		// +
-		lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
 		if (aCodTipoUfficio.equals("OS_LIBERAZIONE_ANTICIPATA_MA"))
 			lStatement += " AND RV_LOW_VALUE = '0083'";
 
@@ -670,7 +645,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
 		// "
 		// +
-		lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
 		if (aCodTipoUfficio.equals("DETENZIONE"))
 			lStatement += " AND (RV_LOW_VALUE = '2149' OR RV_LOW_VALUE = '2150' OR RV_LOW_VALUE = '2151' OR RV_LOW_VALUE = '2293' OR RV_LOW_VALUE = '2153') ";
 		else if (aCodTipoUfficio.equals("AFFIDAMENTO"))
@@ -698,14 +673,14 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
 		// "
 		// +
-		lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
 		if (aCodTipoUfficio.equals("DETENZIONE"))
-			// MERGE v10 COLLAUDO: aggiunto codice per revoca arresti domiciliari
-			// PEC m_dg.DOG07.01-10-2018.0030206.U (deve essere censito anche i codice 2291)
-			lStatement += " AND (RV_LOW_VALUE = '2756' OR RV_LOW_VALUE = '2741' OR RV_LOW_VALUE = '2742' OR RV_LOW_VALUE = '2743' OR RV_LOW_VALUE = '2291') ";
-		// MAC 2017/04/01 Ripristinati i codici (2741,2742,2743,2756)
-		// lStatement += " AND (RV_LOW_VALUE = '2756' OR RV_LOW_VALUE = '2741' OR RV_LOW_VALUE = '2742' OR
-		// RV_LOW_VALUE = '2743') ";
+			// MERGE v10 COLLAUDO: aggiunto codice per revoca arresti domiciliari			
+			//PEC m_dg.DOG07.01-10-2018.0030206.U (deve essere censito anche i codice 2291)			
+			lStatement +=
+		    " AND (RV_LOW_VALUE = '2756' OR RV_LOW_VALUE = '2741' OR RV_LOW_VALUE = '2742' OR RV_LOW_VALUE = '2743' OR RV_LOW_VALUE = '2291') ";
+			// MAC 2017/04/01 Ripristinati i codici (2741,2742,2743,2756)
+			//lStatement += " AND (RV_LOW_VALUE = '2756' OR RV_LOW_VALUE = '2741' OR RV_LOW_VALUE = '2742' OR RV_LOW_VALUE = '2743') ";		
 		else if (aCodTipoUfficio.equals(ICostantiMisuraAlternativa.ESP_PRESSO_DOM))
 			lStatement += " AND (RV_LOW_VALUE = '" + ICostantiMisuraAlternativa.SOSP_ESP_PRESSO_DOM_MOTIVO
 					+ "') ";
@@ -721,7 +696,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 	public void listaMotivoProvvRipristinoArrestiDom(String aCodTipoUfficio) throws DAOException {
 		String lStatement = new String();
 
-		lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
 		if (aCodTipoUfficio.equals("DETENZIONE"))
 			lStatement += " AND (RV_LOW_VALUE = '-' OR RV_LOW_VALUE = '2748' OR RV_LOW_VALUE = '2749' OR RV_LOW_VALUE = '2758' OR RV_LOW_VALUE = '2759' OR RV_LOW_VALUE = '2752' OR RV_LOW_VALUE = '2753' OR RV_LOW_VALUE = '2754' OR RV_LOW_VALUE = '2755') ";
 		else if (aCodTipoUfficio.equals(ICostantiMisuraAlternativa.ESP_PRESSO_DOM))
@@ -739,7 +714,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 	public void listaMotivoProvvRevocaArrestiDom(String aCodTipoUfficio) throws DAOException {
 		String lStatement = new String();
 
-		lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
 		if (aCodTipoUfficio.equals("DETENZIONE"))
 			// MERGE v10 COLLAUDO: aggiunto codice per revoca arresti domiciliari
 			lStatement += " AND (RV_LOW_VALUE = '2744' OR RV_LOW_VALUE = '2757' OR RV_LOW_VALUE = '2746' OR RV_LOW_VALUE = '2747' OR RV_LOW_VALUE = '0232') ";
@@ -762,7 +737,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
 		// "
 		// +
-		lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
 		if (aCodTipoUfficio.equals("DETENZIONE"))
 			lStatement += " AND (RV_LOW_VALUE = '0016' OR RV_LOW_VALUE = '0087' OR RV_LOW_VALUE = '0089' OR RV_LOW_VALUE = '0088') ";
 		else if (aCodTipoUfficio.equals("AFFIDAMENTO"))
@@ -789,7 +764,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
 		// "
 		// +
-		lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
 		if (aTipo.equals("AMMISSIONE_PERIODO"))
 			lStatement += " AND (RV_LOW_VALUE = '0012') ";
 		if (aTipo.equals("SOSPENSIONE_PROVVISORIA"))
@@ -807,7 +782,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
 		// "
 		// +
-		lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
 		if (aCodTipoUfficio.equals("AFFIDAMENTO"))
 			lStatement += " AND (RV_LOW_VALUE = '0021' OR RV_LOW_VALUE = '0190' OR RV_LOW_VALUE = '0191') ";
 
@@ -824,7 +799,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
 		// "
 		// +
-		lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
 		if (aMisAlt.equals("DETENZIONE"))
 			lStatement += " AND (RV_LOW_VALUE = '2270' OR RV_LOW_VALUE = '0016' OR RV_LOW_VALUE = '0087' OR RV_LOW_VALUE = '0089' OR RV_LOW_VALUE = '0088' ) ";
 		else if (aMisAlt.equals("AFFIDAMENTO"))
@@ -903,7 +878,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
 		// "
 		// +
-		lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
 		if (aTipo.equals("PROROGA_ULT_PERIODO"))
 			lStatement += " AND (RV_LOW_VALUE = '0077') ";
 
@@ -919,7 +894,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
 		// "
 		// +
-		lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
 		if (aTipo.equals("AMMISSIONE_AFFIDAMENTO"))
 			lStatement += " AND (RV_LOW_VALUE = '0192') ";
 
@@ -935,7 +910,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
 		// "
 		// +
-		lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
 		if (aTipo.equals("RIPRISTINO_DET_DOM_SPEC"))
 			lStatement += " AND (RV_LOW_VALUE = '0194') ";
 
@@ -946,29 +921,17 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 
 	public void listaMotivoProvvAmmProvvisoria(String aTipo) throws DAOException {
 		String lStatement = new String();
-		/*
-		 * // 09/10/2009 lStatement = // " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING,
-		 * RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE // " // + lStatement =
-		 * " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' "; if
-		 * (aTipo.equals("AMMISSIONE_PROV_DET_DOM")) lStatement += " AND (RV_LOW_VALUE = '2005') "; else if
-		 * (aTipo.equals("AMMISSIONE_PROV_AFFI")) lStatement += " AND (RV_LOW_VALUE in ('2006','2008')) "; //
-		 * lStatement += " AND (RV_LOW_VALUE = '2006') "; //mod d.f.
-		 *
-		 */
-		// MEV_2019-09: si differenziano i codici per PM e PMM aggiungendo i nuovi codici
-		lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
-		if (aTipo.equals("AMMISSIONE_PROV_DET_DOM_PM"))
-			lStatement += " AND (RV_LOW_VALUE in ('2005','0682')) ";
-		else if (aTipo.equals("AMMISSIONE_PROV_DET_DOM_PMM"))
-			lStatement += " AND (RV_LOW_VALUE in ('2005','0693')) ";
-		else if (aTipo.equals("AMMISSIONE_PROV_AFFI_PM"))
-			lStatement += " AND (RV_LOW_VALUE in ('2006','2008','0680','0681')) ";
-		else if (aTipo.equals("AMMISSIONE_PROV_AFFI_PMM"))
-			lStatement += " AND (RV_LOW_VALUE in ('2006','2008','0690','0691','0692')) ";
-		else if (aTipo.equals("AMMISSIONE_PROV_SEMILIB_PMM"))
-			lStatement += " AND (RV_LOW_VALUE in ('2007','0694')) ";
-		else if (aTipo.equals("AMMISSIONE_PROV_SEMILIB_PM"))
-			lStatement += " AND (RV_LOW_VALUE in ('2007','0683')) ";
+
+		// 09/10/2009 lStatement =
+		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
+		// "
+		// +
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		if (aTipo.equals("AMMISSIONE_PROV_DET_DOM"))
+			lStatement += " AND (RV_LOW_VALUE = '2005') ";
+		else if (aTipo.equals("AMMISSIONE_PROV_AFFI"))
+			lStatement += " AND (RV_LOW_VALUE in ('2006','2008')) ";
+		// lStatement += " AND (RV_LOW_VALUE = '2006') "; //mod d.f.
 
 		lStatement += " ORDER BY RV_ABBREVIATION ";
 
@@ -982,7 +945,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
 		// "
 		// +
-		lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
 		if (aTipo.equals("AMMISSIONE_PROV_DET_DOM_TEMP")) {
 			lStatement += " AND (RV_LOW_VALUE = '0011') ";
 		} else if (aTipo.equals("PROROGA_AMMISSIONE_PROV_DET_DOM_TEMP")) {
@@ -1003,7 +966,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
 		// "
 		// +
-		lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
 		if (aTipo.equals("ULT_PERIODO_MA"))
 			lStatement += " AND (RV_LOW_VALUE = '0101') ";
 
@@ -1019,7 +982,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
 		// "
 		// +
-		lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
 		if (aTipo.equals("AFFIDAMENTO"))
 			lStatement += " AND (RV_LOW_VALUE IN ('2160','2161','2162')) ";
 
@@ -1048,7 +1011,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
 		// "
 		// +
-		lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
 
 		if (aTipo.equals("AFFIDAMENTO"))
 			lStatement += " AND (RV_LOW_VALUE IN ('2205','2281','2282')) ";
@@ -1072,7 +1035,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 	}
 
 	/**
-	 *
+	 * 
 	 * @param aTipo
 	 * @throws DAOException
 	 * @since feb-2014
@@ -1080,7 +1043,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 	public void listaMotivoProvvedimentoProsecMA51Bis(String aTipo) throws DAOException {
 		String lStatement = new String();
 
-		lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
 
 		// ====================================
 		// Magistrato
@@ -1130,7 +1093,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
 		// "
 		// +
-		lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
 		if (aTipo.equals("AFFIDAMENTO"))
 			lStatement += " AND (RV_LOW_VALUE IN ('0020','0092','0093')) ";
 
@@ -1152,7 +1115,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
 		// "
 		// +
-		lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
 		if (aTipo.equals("CONCESSIONE"))
 			lStatement += " AND (RV_LOW_VALUE IN ('2140')) ";
 		else if (aTipo.equals("ACCOGLIE") || aTipo.equals("RIFIUTA"))
@@ -1170,7 +1133,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
 		// "
 		// +
-		lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
 		lStatement += " AND (RV_LOW_VALUE IN ('9000','9001','9002')) ";
 
 		lStatement += " ORDER BY RV_ABBREVIATION ";
@@ -1185,7 +1148,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
 		// "
 		// +
-		lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
 		if (aTipo.equals("AMMISSIONE_PROV_RE_LIB_COND"))
 			lStatement += " AND (RV_LOW_VALUE = '0026') ";
 
@@ -1201,7 +1164,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
 		// "
 		// +
-		lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
 		if (aTipo.equals("AMMISSIONE_CO_LIB_COND"))
 			lStatement += " AND (RV_LOW_VALUE = '0025') ";
 
@@ -1217,7 +1180,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
 		// "
 		// +
-		lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'TIPO_UFFICIO_SOSP' ";
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'TIPO_UFFICIO_SOSP' ";
 		lStatement += " AND (RV_HIGH_VALUE = 'UDS' OR RV_HIGH_VALUE = 'TDS') ";
 		lStatement += " ORDER BY RV_ABBREVIATION ";
 
@@ -1228,7 +1191,8 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 	 * Query per recupero dei tipi ufficio cumulo per : - RV_DOMAIN = 'TIPO_UFFICIO_CUMULO' - E (
 	 * RV_HIGH_VALUE = 'T' OR RV_HIGH_VALUE = 'S' OR RV_HIGH_VALUE = 'C' ). Le occorrenze sono ordinate per il
 	 * campo RV_MEANING
-	 *
+	 * <p>
+	 * 
 	 * @throws DAOException
 	 */
 	public void listaTipoUfficioCumuloRifSiep() throws DAOException {
@@ -1248,7 +1212,8 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 	 * Query per recupero dei tipi ufficio cumulo per : - RV_DOMAIN = 'TIPO_UFFICIO_CUMULO' e RV_DOMAIN =
 	 * 'UFFICIO_LOGIN' - E ( RV_HIGH_VALUE = 'T' OR RV_HIGH_VALUE = 'S' OR RV_HIGH_VALUE = 'C' ). - E
 	 * RV_ABBREVIATION pari ='V' Le occorrenze sono ordinate per il campo RV_MEANING
-	 *
+	 * <p>
+	 * 
 	 * @throws DAOException
 	 */
 	public void listaTipoUfficioCumuloUfficioLoginRifSiep() throws DAOException {
@@ -1276,7 +1241,8 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 	 * Query per recupero dei tipi ufficio cumulo per : - RV_DOMAIN = 'TIPO_UFFICIO_CUMULO' - E (
 	 * RV_HIGH_VALUE = 'T' OR RV_HIGH_VALUE = 'S' OR RV_HIGH_VALUE = 'C' OR RV_HIGH_VALUE = 'D'). Le
 	 * occorrenze sono ordinate per il campo RV_MEANING
-	 *
+	 * <p>
+	 * 
 	 * @throws DAOException
 	 */
 	public void listaTipoUfficioCumuloRifMSic() throws DAOException {
@@ -1290,7 +1256,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		lStatement += " WHERE RV_DOMAIN = 'UFFICIO_LOGIN'";
 		lStatement += " AND RV_ABBREVIATION ='V'";
 		// MEV10-s3: refactoring della query, aggiunta union e tolta and condition inutile
-		// lStatement += " and RV_ABBREVIATION IS NOT NULL ";
+		// lStatement += " and RV_ABBREVIATION IS NOT NULL  ";
 		lStatement += " union";
 		lStatement += " SELECT * FROM CG_REF_CODES";
 		lStatement += " WHERE RV_DOMAIN = 'UFFICIO_LOGIN'";
@@ -1307,14 +1273,15 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
 		// "
 		// +
-		lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'TIPO_DECRETO' ";
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'TIPO_DECRETO' ";
 
 		setStatement(lStatement);
 	}
 
 	/**
 	 * Lista Oggetti con parametro Contenuto diverso da quello di input.
-	 *
+	 * <p>
+	 * 
 	 * @param aContenuto
 	 *            per cui filtrare.
 	 * @param aCodTipoUfficio
@@ -1433,7 +1400,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Dal Codice dell'Incarico si ricava la lista delle Attività previste. SIEPE
-	 *
+	 * 
 	 * @param Cod
 	 *            Incarico
 	 */
@@ -1451,7 +1418,8 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Lista Oggetti-Contenuti SIGE. La funzione restituisce l'elenco di tutti gli Oggetti SIGE ed i loro
 	 * Contenuti
-	 *
+	 * <p>
+	 * 
 	 * @throws DAOException
 	 *             propaga errore di eccezione.
 	 */
@@ -1474,7 +1442,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Ricerca gli Esiti Tenore Sige raggrupati per il RV_HIGH_VALUE
-	 *
+	 * 
 	 * @param lCodOggettoSige
 	 */
 	public void ricercaEsitiByOggettoSige(String lCodOggettoSige) {
@@ -1482,7 +1450,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// " SELECT RV_DOMAIN,RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
 		// "
 		// +
-		String lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'ESITO_TENORE_SIGE' AND "
+		String lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'ESITO_TENORE_SIGE' AND "
 				+ " RV_HIGH_VALUE IN (SELECT  RV_HIGH_VALUE FROM CG_REF_CODES WHERE "
 				+ " RV_DOMAIN = 'OGGETTO_SIGE' AND RV_LOW_VALUE='" + lCodOggettoSige + "') ";
 
@@ -1492,7 +1460,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Ricerca gli Dati Provvedimento Sige raggrupati per il RV_HIGH_VALUE
-	 *
+	 * 
 	 * @param lCodOggettoSige
 	 */
 	public void ricercaDatiProvvSigeByOggetto(String lCodOggettoSige) {
@@ -1509,14 +1477,14 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 	}
 
 	public void ricercaTipoAutorita() {
-		String lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'TIPO_AUTORITA' AND "
+		String lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'TIPO_AUTORITA' AND "
 				+ " (RV_HIGH_VALUE is NULL or RV_HIGH_VALUE != 'AUTORITA_MINORENNI') ";
 
 		setStatement(lStatement);
 	}
 
 	public void ricercaDecodificheTipoMisureMinorenni() {
-		String lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'TIPO_MISURA_SICUREZZA' AND "
+		String lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'TIPO_MISURA_SICUREZZA' AND "
 				// + " rv_low_value in ('02','08','13','14','17','18') ORDER BY RV_MEANING ";
 				// Per gli utenti UDSM devono essere selezionabili solo i seguenti Tipo Misura
 				+ " rv_low_value in ('02','08','17','18') ORDER BY RV_MEANING ";
@@ -1526,11 +1494,11 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * MEV10-s3: aggiunto metodo per estrazione dati condizionati dal parametro di passaggio
-	 *
+	 * 
 	 * @param codice
 	 */
 	public void ricercaDecodificheTipoMSMinorenniByNatura(String codice) {
-		String lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'TIPO_MISURA_SICUREZZA' AND "
+		String lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'TIPO_MISURA_SICUREZZA' AND "
 				// + " rv_low_value in ('02','08','13','14','17','18') AND RV_ABBREVIATION = '" + codice
 				// Per gli utenti UDSM devono essere selezionabili solo i seguenti Tipo Misura
 				+ " rv_low_value in ('02','08','17','18') AND RV_ABBREVIATION = '" + codice
@@ -1540,7 +1508,8 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Lista Contenuti SIGE. La funzione restituisce l'elenco di tutti i Contenuti SIGE
-	 *
+	 * <p>
+	 * 
 	 * @throws DAOException
 	 *             propaga errore di eccezione.
 	 */
@@ -1559,7 +1528,8 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Lista Oggetti SIGE per Contenuto. La funzione restituisce l'elenco di tutti gli Oggetti SIGE per
 	 * Contenuto
-	 *
+	 * <p>
+	 * 
 	 * @throws DAOException
 	 *             propaga errore di eccezione.
 	 */
@@ -1580,96 +1550,94 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Recupera il campo RV_MEANING nella tabella CG_REF_CODES corrispondente al codOggettoSige passato in
 	 * ingresso
-	 *
+	 * 
 	 * @param codOggettoSige
 	 *            codice oggetto sige
 	 */
 	public void ricercaDescrByCodOggettoSige(String codOggettoSige) {
-		String lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'OGGETTO_SIGE' AND "
+		String lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'OGGETTO_SIGE' AND "
 				+ " RV_LOW_VALUE = '" + codOggettoSige + "'";
 
 		setStatement(lStatement);
 
 	}
-
-	/**
-	 * Ricerca tutte le autorità escludendo quelle passate nella lista listaNotInValue //intervento post
-	 * COLLAUDO 11.2
-	 *
+	
+	 /**
+	 * Ricerca tutte le autorità escludendo quelle passate nella lista listaNotInValue
+	 * //intervento post COLLAUDO 11.2 
+	 * 
 	 * @throws DAOException
 	 */
-	public void ricercaAllTipoAutoritaNotIn(String[] listaNotInValue) throws DAOException {
-		String lStatement = " SELECT * FROM CG_REF_CODES  WHERE RV_DOMAIN = 'TIPO_AUTORITA' ";
+	public void  ricercaAllTipoAutoritaNotIn(String [] listaNotInValue) throws  DAOException {
+		String lStatement = " SELECT * FROM CG_REF_CODES  WHERE " + " RV_DOMAIN = 'TIPO_AUTORITA' ";
+	  
+		if(listaNotInValue!=null && listaNotInValue.length>0){
+		   lStatement += " AND RV_LOW_VALUE NOT IN ( ";
+		  // List<String>listValue =  (ArrayList<String>) Arrays.asList(listaNotInValue);
+		   List<String> listValue = Arrays.asList(listaNotInValue);
 
-		if (listaNotInValue != null && listaNotInValue.length > 0) {
-			lStatement += " AND RV_LOW_VALUE NOT IN ( ";
-			// List<String>listValue = (ArrayList<String>) Arrays.asList(listaNotInValue);
-			List<String> listValue = Arrays.asList(listaNotInValue);
-
-			Iterator<String> lItx = listValue.iterator();
+		   Iterator<String> lItx = listValue.iterator();
 			while (lItx.hasNext()) {
-				lStatement += " '" + lItx.next() + "'";
-				if (lItx.hasNext())
-					lStatement += " ,";
-			}
+				lStatement += " '" + (String) lItx.next() + "'";
+				if(lItx.hasNext())
+					lStatement += " ," ;				
+			}			
 			lStatement += " ) ORDER BY RV_MEANING ";
-		}
+		}		
 		setStatement(lStatement);
-	}
+	  }
+	
 
 	/**
 	 * @param lCodOggetto
 	 * @param lCodEsito
-	 *
-	 *            emma: 28/08/2018 : intervento post-collaudo
+	 * 
+	 * emma: 28/08/2018 : intervento post-collaudo
 	 */
-	public void ricercaEsitiCompatibiliByEsitoOggettoU023(String lCodOggetto, String lCodEsito) {
-		String[] esitiConMS = new String[] { "0051", "0052", "0193", "0194", "0195", "0351" };
-		String[] esitiSenzaMS = new String[] { "0002", "0003", "0004", "0005", "0350", "0387" };
-
-		String lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'ESITO_TENORE' AND "
+	public void ricercaEsitiCompatibiliByEsitoOggettoU023(String lCodOggetto,  String lCodEsito) {
+		String[]esitiConMS = new String[]{"0051", "0052", "0193", "0194", "0195", "0351"};
+		String[]esitiSenzaMS = new String[]{"0002", "0003", "0004", "0005",  "0350", "0387"};
+		
+		String lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'ESITO_TENORE' AND "
 				+ " RV_HIGH_VALUE IN (SELECT  RV_HIGH_VALUE FROM CG_REF_CODES WHERE "
 				+ " RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' AND RV_LOW_VALUE='" + lCodOggetto + "')  AND "
 				+ " RV_ALT2_VALUE IN (SELECT  RV_ALT2_VALUE FROM CG_REF_CODES WHERE "
 				+ " RV_DOMAIN = 'ESITO_TENORE' AND RV_ABBREVIATION ='" + lCodEsito + "')";
-
-		if (Arrays.binarySearch(esitiConMS, lCodEsito) >= 0) {
-			lStatement += " MINUS SELECT *  FROM CG_REF_CODES a" + " WHERE RV_DOMAIN = 'ESITO_TENORE'"
+		
+		if(Arrays.binarySearch(esitiConMS, lCodEsito) >= 0){
+			lStatement += " MINUS SELECT *  FROM CG_REF_CODES a"
+					+ " WHERE RV_DOMAIN = 'ESITO_TENORE'"
 					+ " AND a.rv_high_value = 'U023'"
 					+ " and a.rv_low_value in ('1207', '1203', '1193', '1192', '2751', '2722') ";
 
-		} else if (Arrays.binarySearch(esitiSenzaMS, lCodEsito) >= 0) {
-
-			lStatement += " MINUS SELECT *  FROM CG_REF_CODES a" + " WHERE RV_DOMAIN = 'ESITO_TENORE'"
+			
+		}
+		else if(Arrays.binarySearch(esitiSenzaMS, lCodEsito) >= 0){
+			
+			lStatement += " MINUS SELECT *  FROM CG_REF_CODES a"
+					+ " WHERE RV_DOMAIN = 'ESITO_TENORE'"
 					+ " AND a.rv_high_value = 'U023'"
 					+ " and a.rv_low_value in ('1190', '1191', '1991', '1992', '1993', '2720') ";
-
+			
+			
 		}
 		setStatement(lStatement);
 	}
 
+	
 	/**
 	 * Recupera il campo RV_MEANING nella tabella CG_REF_CODES corrispondente al codContenutoSige passato in
 	 * ingresso
-	 *
+	 * 
 	 * @param codContenutoSige
 	 *            codice contenuto sige
 	 */
 	public void ExRicercaDescrByCodContenutoSige(String codContenutoSige) {
-		String lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'OGGETTO_PROCEDIMENTO' AND "
+		String lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'OGGETTO_PROCEDIMENTO' AND "
 				+ " RV_LOW_VALUE = '" + codContenutoSige + "'";
 
 		setStatement(lStatement);
 
 	}
 
-	// MEV_2019-09-SIEP
-	public void listaMotivoProvvSosp678() throws DAOException {
-		String lStatement = new String();
-
-		lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
-		lStatement += " AND RV_LOW_VALUE in ('0684', '0695')";
-
-		setStatement(lStatement);
-	}
 }

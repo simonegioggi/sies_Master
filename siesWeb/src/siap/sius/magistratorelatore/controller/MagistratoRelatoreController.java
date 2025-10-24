@@ -10,7 +10,6 @@ import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
-import it.giustizia.www.serviziTelematici.reginde.interrogazioniInt.SearchLimitException;
 import siap.controller.SiapController;
 import siap.sico.magistrato.controller.IMagistrato;
 import siap.sico.util.SICOLookupRemote;
@@ -299,17 +298,6 @@ public class MagistratoRelatoreController extends SiapController implements IMag
 			siesLogger.error("DAOException: " + ex);
 			throw new F3BException(
 					"MagistratoRelatoreController.ExModificaMultiplaMagistratoRelatore: " + ex);
-		} catch (Exception e) { // 20251010 [SG]: paginata la ricerca
-			rollback(lConn);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			siesLogger.error("Exception: " + e);
-			if (e instanceof SearchLimitException)
-				throw new SIUSException(
-						"Attenzione: con i parametri inseriti la ricerca ritrova troppe occorrenze, "
-						+ "restringere i criteri di ricerca!");
-			else
-				throw new SIUSException(F3BException.USER_MESSAGE, e.getMessage());
 		} finally {
 			cleanup(lMagRelDao);
 			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
