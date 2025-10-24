@@ -3,10 +3,22 @@ package siap.siep.misuraalternativa.action;
 import f3b.web.IWebConstants;
 
 /**
- * ICostantiMisuraAlternativa - Classe di costanti di MisuraAlternativa
- *
+ * <p>
+ * Title: ICostantiMisuraAlternativa
+ * </p>
+ * <p>
+ * Description: Classe di costanti di MisuraAlternativa
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2002
+ * </p>
+ * <p>
+ * Company: Bull
+ * </p>
+ * 
  * @version 1.0
  */
+
 public interface ICostantiMisuraAlternativa {
 
 	public static final String CAMPO_ID_MISURA_ALTERNATIVA = "IdMisuraAlternativa";
@@ -120,16 +132,16 @@ public interface ICostantiMisuraAlternativa {
 	public static final String CAMPO_ID_DOCUMENTO_SIUS = "IdDocumentoSius";
 	public static final String CAMPO_NATURA_MA = "NaturaMA";
 	public static final String CAMPO_TIPO_MA = "TipoMA";
-
+	
 	public static final String CAMPO_FLAG_DECISIONE_TRIBUNALE_MINORI = "FlagDecisioneTribunaleMinori";
 	public static final String CAMPO_TDS_GIORNO_DATA_INIZIO_MISURA = "TdsGiornoDataInizioMisura";
 	public static final String CAMPO_TDS_MESE_DATA_INIZIO_MISURA = "TdsMeseDataInizioMisura";
 	public static final String CAMPO_TDS_ANNO_DATA_INIZIO_MISURA = "TdsAnnoDataInizioMisura";
-
+	
 	public static final String CAMPO_TDS_GIORNO_DATA_FINE_MISURA = "TdsGiornoDataFineMisura";
 	public static final String CAMPO_TDS_MESE_DATA_FINE_MISURA = "TdsMeseDataFineMisura";
 	public static final String CAMPO_TDS_ANNO_DATA_FINE_MISURA = "TdsAnnoDataFineMisura";
-
+	
 	public static final String CAMPO_TDS_NUM_ANNI_MISURA = "TdsNumAnniMisura";
 	public static final String CAMPO_TDS_NUM_MESI_MISURA = "TdsNumMesiMisura";
 	public static final String CAMPO_TDS_NUM_GIORNI_MISURA = "TdsNumGiorniMisura";
@@ -152,12 +164,7 @@ public interface ICostantiMisuraAlternativa {
 	public static final String CAMPO_ANNO_DATA_DECISIONE_MA_AT = "AnnoDataDecisioneMAAltroTitolo";
 
 	public static final String CAMPO_COD_LUOGO_EMITTENTE = "CodLuogoEmittente";
-
-	// MEV_2019-09
-	public static final String CAMPO_GIORNO_DATA_ESECUTIVITA = "GiornoDataEsecutivita";
-	public static final String CAMPO_MESE_DATA_ESECUTIVITA = "MeseDataEsecutivita";
-	public static final String CAMPO_ANNO_DATA_ESECUTIVITA = "AnnoDataEsecutivita";
-	// FINE MEV_2019-09
+	//
 
 	public static final String PG_LOAD_INSERISCI_MA_CONCESSIONE = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/misuraalternativa/LoadInserisciConcessione.jsp";
@@ -287,6 +294,7 @@ public interface ICostantiMisuraAlternativa {
 	public static final String PG_DETTAGLIO_MA_PROSECUZIONE = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/misuraalternativa/DettaglioMAProsecuzione.jsp";
 
+	// ============================================================================
 	// new DL 146/2013
 	public static final String PG_LOAD_INSERISCI_MA_PROSECUZIONE_51_BIS = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/misuraalternativa/LoadInserisciMAProsecuzione51bis.jsp";
@@ -297,6 +305,8 @@ public interface ICostantiMisuraAlternativa {
 			+ "files/siap/siep/misuraalternativa/LoadInserisciMACessazione51bis.jsp";
 	public static final String PG_DETTAGLIO_MA_CESSAZIONE_51BIS = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/misuraalternativa/DettaglioMACessazione51bis.jsp";
+	//
+	// ============================================================================
 
 	public static final String PG_LOAD_INSERISCI_MA_EST_DEF = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/misuraalternativa/LoadInserisciEstensioneDefinitiva.jsp";
@@ -330,13 +340,6 @@ public interface ICostantiMisuraAlternativa {
 	public static final String PG_BUTTONS_SORVEGLIANZA = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/misuraalternativa/buttonsSorveglianza.jsp";
 
-	// MEV_2019-09-SIEP
-	public static final String PG_LOAD_INSERISCI_MA_AMM_PROVV_SEMILIBERTA = IWebConstants.ROOT_DIR
-			+ "files/siap/siep/misuraalternativa/LoadInserisciMAAmmProvvSemiliberta.jsp";
-	public static final String PG_LOAD_DETTAGLIO_MA_AMM_PROVV_SEMILIBERTA = IWebConstants.ROOT_DIR
-			+ "files/siap/siep/misuraalternativa/DettaglioMAAmmProvvSemiliberta.jsp";
-	// MEV_2019-09-SIEP - FINE
-
 	// TEMPLATE VUOTO
 	public static final String TEMPLATE_VUOTO = "SIEP_VUOTO";
 
@@ -352,16 +355,16 @@ public interface ICostantiMisuraAlternativa {
 
 	// Ammissione ad Affidamento
 	public static final String TEMPLATE_DDS_MOTIVO_0192 = "SIEP_MA_090";
-	// Modificare con il template effettivo
-	public static final String TEMPLATE_DDS_MOTIVO_0192_BIS = "SIEP_MA_090";
+	public static final String TEMPLATE_DDS_MOTIVO_0192_BIS = "SIEP_MA_090"; // Modificare con il template
+																				// effettivo
 
 	// PROROGA ULTERIORE PERIODO
 	public static final String TEMPLATE_PROROGA_ULT_PERIODO = "SIEP_MA_089";
 
 	// SOSPENSIONE PROVVISORIA
 	public static final String TEMPLATE_DDS_MOTIVO_2152 = "SIEP_MA_092";
-	// Modificare con il template effettivo
-	public static final String TEMPLATE_DDS_MOTIVO_2152_BIS = "SIEP_MA_092";
+	public static final String TEMPLATE_DDS_MOTIVO_2152_BIS = "SIEP_MA_092"; // Modificare con il template
+																				// effettivo
 
 	// RIPRISTINO DET DOM SPEC
 	public static final String TEMPLATE_SCARCERATO = "SIEP_MA_093";
@@ -390,9 +393,7 @@ public interface ICostantiMisuraAlternativa {
 	public static final String PROSECUZIONE_51BIS_CUMULO = "PROSECUZIONE_51BIS_CUMULO";
 	public static final String PROSECUZIONE_PROVVISORIA_CUMULO = "PROSECUZIONE_PROVVISORIA_CUMULO";
 	public static final String CONCESSIONE_SOSPENSIONE = "CONCESSIONE_SOSPENSIONE";
-	// MEV_2019-09-SIEP
-	public static final String CONCESSIONE_SOSPENSIONE678 = "CONCESSIONE_SOSPENSIONE678";
-	// MEV_2019-09-SIEP - FINE
+
 	public static final String AFFIDAMENTO_IN_PROVA = "AFFIDAMENTO_IN_PROVA";
 	public static final String DETENZIONE_DOMICILIARE = "DETENZIONE_DOMICILIARE";
 	public static final String SEMILIBERTA = "SEMILIBERTA";

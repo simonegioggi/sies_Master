@@ -4,23 +4,36 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Date;
 
-import f3b.dao.DAOException;
-import f3b.model.GenericModel;
 import siap.dao.SIAPTableDAO;
 import siap.sius.depositodecreto.model.DepositoDecretoModel;
 import siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel;
 import siap.sius.depositosentenza.model.DepositoSentenzaModel;
 import siap.sius.tenore.model.TenoreModel;
+import f3b.dao.DAOException;
+import f3b.model.GenericModel;
+
+// STUB 04/11/2003 Rework x Dettaglio Motivo Provvedimento:
+// Aggiunti riferimenti a "COD_DETTAGLIO_OGGETTO" e a "CodDettaglioOggetto"
 
 /**
- * Title: TenoreDAO Description: Classe DAO che rappresenta la tabella Tenore
- *
+ * <p>
+ * Title: TenoreDAO
+ * </p>
+ * <p>
+ * Description: Classe DAO che rappresenta la tabella Tenore
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2002
+ * </p>
+ * <p>
+ * Company: Bull
+ * </p>
+ * 
  * @version 1.0
  */
 public class TenoreDAO extends SIAPTableDAO {
 
 	public TenoreDAO(Connection con) {
-
 		// Setto la Sequence e i campi chiave
 		super(con);
 		setTable("TENORE");
@@ -136,6 +149,7 @@ public class TenoreDAO extends SIAPTableDAO {
 	//
 	// METODI SET()
 	//
+
 	public void setIdTenore(BigDecimal aValore) {
 		setBigDecimal("ID_TENORE", aValore);
 	}
@@ -217,17 +231,15 @@ public class TenoreDAO extends SIAPTableDAO {
 	}
 
 	public GenericModel getModel() throws DAOException {
-
 		return new TenoreModel(getIdTenore(), getCodEsitoTenore(), "", getData(), getCodMagistrato(), "",
 				getNote(), getCodOggettoTenore(), "", getProgrTenore(), getCodOperatoreInserimento(),
 				getDataInserimento(), getCodUfficioInserimento(), "", getCodOperatoreAggiornamento(),
 				getDataAggiornamento(), getCodUfficioAggiornamento(), "", getGenPridGeneraleProcedimento(),
 				getDepOpidDepositoOrdinanzaPc(), getImpIdImpugnazione(), getDepDecIdDepositoDecreto(),
-				getCodDettaglioOggetto(), "", getDataFine(), "", getDepIdDepositoSentenza());
+				getCodDettaglioOggetto(), "", this.getDataFine(), "", getDepIdDepositoSentenza());
 	}
 
 	public void setDAOFromModel(TenoreModel aModel) throws DAOException {
-
 		setIdTenore(aModel.getIdTenore());
 		setCodEsitoTenore(aModel.getCodEsitoTenore());
 		setData(aModel.getData());
@@ -246,12 +258,11 @@ public class TenoreDAO extends SIAPTableDAO {
 		setImpIdImpugnazione(aModel.getImpIdImpugnazione());
 		setDepDecIdDepositoDecreto(aModel.getDepDecIdDepositoDecreto());
 		setCodDettaglioOggetto(aModel.getCodDettaglioOggetto());
-		setDataFine(aModel.getDataFine());
+		this.setDataFine(aModel.getDataFine());
 		setDepIdDepositoSentenza(aModel.getDepIdDepositoSentenza());
 	}
 
 	public void setDAOFromModelForUpdate(TenoreModel aModel) throws DAOException {
-
 		setIdTenore(aModel.getIdTenore());
 		setCodEsitoTenore(aModel.getCodEsitoTenore());
 		setData(aModel.getData());
@@ -273,7 +284,6 @@ public class TenoreDAO extends SIAPTableDAO {
 	}
 
 	public void setDAOFromModelForUpdateDepOrd(TenoreModel aModel) throws DAOException {
-
 		// setIdTenore( aModel.getIdTenore() );
 		setCodEsitoTenore(aModel.getCodEsitoTenore());
 		setData(aModel.getData());
@@ -297,7 +307,6 @@ public class TenoreDAO extends SIAPTableDAO {
 
 	// Vincenzo 05-01-2007
 	public void setDAOFromModelForDeleteStralcio(TenoreModel aModel) throws DAOException {
-
 		setCodEsitoTenore("-");
 		setCodMagistrato("-");
 		setData(null);
@@ -311,7 +320,6 @@ public class TenoreDAO extends SIAPTableDAO {
 	}
 
 	public void setCondizione(TenoreModel aModel) {
-
 		String lCondizioni = new String();
 
 		boolean lInserito = false;
@@ -321,23 +329,23 @@ public class TenoreDAO extends SIAPTableDAO {
 
 	/**
 	 * Imposta condizione di update per la chiave id_tenore.
-	 *
+	 * <p>
+	 * 
 	 * @param key
 	 *            valore chiave id_tenore per update.
 	 */
 	public void setCondizioneUpdate(BigDecimal key) {
-
 		setCondition(" ID_TENORE = " + key);
 	}
 
 	/**
 	 * Imposta condizione di delete per la chiave generale procedimento.
-	 *
+	 * <p>
+	 * 
 	 * @param key
 	 *            valore chiave id_tenore per update.
 	 */
 	public void setCondizioneDelete(BigDecimal key) {
-
 		setCondition(" GEN_PRID_GENERALE_PROCEDIMENTO = " + key);
 	}
 
@@ -345,17 +353,17 @@ public class TenoreDAO extends SIAPTableDAO {
 	 * Setta le condizioni di update per annullare il riferimento al record Deposito Ordinanza PC da
 	 * cancellare
 	 */
-	public void setDAOForDeleteDepOrd(DepositoOrdinanzaPcModel aDepOrd) {
 
-		setDepOpidDepositoOrdinanzaPc(null);
-		setDataAggiornamento(aDepOrd.getDataAggiornamento());
-		setCodOperatoreAggiornamento(aDepOrd.getCodOperatoreAggiornamento());
-		setCodUfficioAggiornamento(aDepOrd.getCodUfficioAggiornamento());
+	public void setDAOForDeleteDepOrd(DepositoOrdinanzaPcModel aDepOrd) {
+		this.setDepOpidDepositoOrdinanzaPc(null);
+		this.setDataAggiornamento(aDepOrd.getDataAggiornamento());
+		this.setCodOperatoreAggiornamento(aDepOrd.getCodOperatoreAggiornamento());
+		this.setCodUfficioAggiornamento(aDepOrd.getCodUfficioAggiornamento());
 
 		// 30/01/2008 Bonifica Aggiornamento Tenori in casi di Cancellazione/modifica provvedimenti
-		setCodEsitoTenore("-");
-		setData(null);
-		setCodMagistrato(null);
+		this.setCodEsitoTenore("-");
+		this.setData(null);
+		this.setCodMagistrato(null);
 
 		setCondition(" DEP_OPID_DEPOSITO_ORDINANZA_PC = " + aDepOrd.getIdDepositoOrdinanzaPc());
 	}
@@ -363,17 +371,17 @@ public class TenoreDAO extends SIAPTableDAO {
 	/*
 	 * Setta le condizioni di update per annullare il riferimento al record Deposito Decreto da cancellare
 	 */
-	public void setDAOForDeleteDepDec(DepositoDecretoModel aDepDec) {
 
-		setDepDecIdDepositoDecreto(null);
-		setDataAggiornamento(aDepDec.getDataAggiornamento());
-		setCodOperatoreAggiornamento(aDepDec.getCodOperatoreAggiornamento());
-		setCodUfficioAggiornamento(aDepDec.getCodUfficioAggiornamento());
+	public void setDAOForDeleteDepDec(DepositoDecretoModel aDepDec) {
+		this.setDepDecIdDepositoDecreto(null);
+		this.setDataAggiornamento(aDepDec.getDataAggiornamento());
+		this.setCodOperatoreAggiornamento(aDepDec.getCodOperatoreAggiornamento());
+		this.setCodUfficioAggiornamento(aDepDec.getCodUfficioAggiornamento());
 
 		// 30/01/2008 Bonifica Aggiornamento Tenori in casi di Cancellazione/modifica provvedimenti
-		setCodEsitoTenore("-");
-		setData(null);
-		setCodMagistrato(null);
+		this.setCodEsitoTenore("-");
+		this.setData(null);
+		this.setCodMagistrato(null);
 
 		setCondition(" DEP_DEC_ID_DEPOSITO_DECRETO = " + aDepDec.getIdDepositoDecreto());
 	}
@@ -382,8 +390,8 @@ public class TenoreDAO extends SIAPTableDAO {
 	 * Setta le condizioni di update per valorizzare data_fine per tutti i record collegati al generale
 	 * procedimento
 	 */
-	public void setDAOFromModelForUpdateDataFine(TenoreModel aModel) {
 
+	public void setDAOFromModelForUpdateDataFine(TenoreModel aModel) {
 		setCodOperatoreAggiornamento(aModel.getCodOperatoreAggiornamento());
 		setDataAggiornamento(aModel.getDataAggiornamento());
 		setCodUfficioAggiornamento(aModel.getCodUfficioAggiornamento());
@@ -396,8 +404,8 @@ public class TenoreDAO extends SIAPTableDAO {
 	 * Setta le condizioni di update per valorizzare data_fine per tutti i record collegati al generale
 	 * procedimento esclusi i tenori della lista indicata
 	 */
-	public void setDAOFromModelForUpdateDataFine(TenoreModel aModel, String listaTenori) {
 
+	public void setDAOFromModelForUpdateDataFine(TenoreModel aModel, String listaTenori) {
 		setCodOperatoreAggiornamento(aModel.getCodOperatoreAggiornamento());
 		setDataAggiornamento(aModel.getDataAggiornamento());
 		setCodUfficioAggiornamento(aModel.getCodUfficioAggiornamento());
@@ -413,7 +421,6 @@ public class TenoreDAO extends SIAPTableDAO {
 	}
 
 	public void setDAOFromModelForUpdateSenzaDataFine(TenoreModel aModel) {
-
 		setCodOperatoreAggiornamento(aModel.getCodOperatoreAggiornamento());
 		setDataAggiornamento(aModel.getDataAggiornamento());
 		setCodUfficioAggiornamento(aModel.getCodUfficioAggiornamento());
@@ -427,7 +434,6 @@ public class TenoreDAO extends SIAPTableDAO {
 
 	// Vincenzo 19-12-2006
 	public void setDAOFromModelForUpdateStralcio(TenoreModel aModel) throws DAOException {
-
 		setCodEsitoTenore(aModel.getCodEsitoTenore());
 		setCodMagistrato(aModel.getCodMagistrato());
 		setData(aModel.getData());
@@ -444,11 +450,11 @@ public class TenoreDAO extends SIAPTableDAO {
 	/**
 	 * Preposto alla modifica del condice magistrato del tenore. ( decidere se gneralizzarlo oppure fissarlo
 	 * per il deposito ord )
-	 *
+	 * <p>
+	 * 
 	 * @param aModel
 	 */
 	public void setDAOFromModelForUpdateMagistratoByOrdinanza(TenoreModel aModel) {
-
 		setCodMagistrato(aModel.getCodMagistrato());
 		setCodOperatoreAggiornamento(aModel.getCodOperatoreAggiornamento());
 		setCodUfficioAggiornamento(aModel.getCodUfficioAggiornamento());
@@ -460,11 +466,11 @@ public class TenoreDAO extends SIAPTableDAO {
 	/**
 	 * Preposto alla modifica del condice magistrato del tenore. ( decidere se gneralizzarlo oppure fissarlo
 	 * per il deposito decreto )
-	 *
+	 * <p>
+	 * 
 	 * @param aModel
 	 */
 	public void setDAOFromModelForUpdateMagistratoByDecreto(TenoreModel aModel) {
-
 		setCodMagistrato(aModel.getCodMagistrato());
 		setCodOperatoreAggiornamento(aModel.getCodOperatoreAggiornamento());
 		setCodUfficioAggiornamento(aModel.getCodUfficioAggiornamento());
@@ -475,47 +481,27 @@ public class TenoreDAO extends SIAPTableDAO {
 	/*
 	 * Setta le condizioni di update per annullare il riferimento al record Deposito Sentenza da cancellare
 	 */
-	public void setDAOForDeleteDepSen(DepositoSentenzaModel aDepSen) {
 
-		setDepIdDepositoSentenza(null);
-		setDataAggiornamento(aDepSen.getDataAggiornamento());
-		setCodOperatoreAggiornamento(aDepSen.getCodOperatoreAggiornamento());
-		setCodUfficioAggiornamento(aDepSen.getCodUfficioAggiornamento());
+	public void setDAOForDeleteDepSen(DepositoSentenzaModel aDepSen) {
+		this.setDepIdDepositoSentenza(null);
+		this.setDataAggiornamento(aDepSen.getDataAggiornamento());
+		this.setCodOperatoreAggiornamento(aDepSen.getCodOperatoreAggiornamento());
+		this.setCodUfficioAggiornamento(aDepSen.getCodUfficioAggiornamento());
 
 		// 30/01/2008 Bonifica Aggiornamento Tenori in casi di Cancellazione/modifica provvedimenti
-		setCodEsitoTenore("-");
-		setData(null);
-		setCodMagistrato(null);
+		this.setCodEsitoTenore("-");
+		this.setData(null);
+		this.setCodMagistrato(null);
 
 		setCondition(" DEP_ID_DEPOSITO_SENTENZA = " + aDepSen.getIdDepositoSentenza());
 	}
 
 	public void setDAOFromModelForUpdateMagistratoBySentenza(TenoreModel aModel) {
-
 		setCodMagistrato(aModel.getCodMagistrato());
 		setCodOperatoreAggiornamento(aModel.getCodOperatoreAggiornamento());
 		setCodUfficioAggiornamento(aModel.getCodUfficioAggiornamento());
 		setDataAggiornamento(aModel.getDataAggiornamento());
 		setCondition(" DEP_ID_DEPOSITO_SENTENZA =" + aModel.getDepIdDepositoSentenza());
 	}
-
-	/* 
-	 * ISSUE MEV : aggiunto metodo di update
-	 * Numero MEV : 9
-	 * Autore    : sgioggi
-	 * Data      : 20 gen 2023
-	 * Branch    : MEV_2019-09
-	 */
-	public void setDAOFromModelForUpdateDataFineCM(TenoreModel aModel) {
-
-		setCodOperatoreAggiornamento(aModel.getCodOperatoreAggiornamento());
-		setDataAggiornamento(aModel.getDataAggiornamento());
-		setCodUfficioAggiornamento(aModel.getCodUfficioAggiornamento());
-		setDataFine(aModel.getDataFine());
-		setCondition("DATA_FINE IS NULL AND GEN_PRID_GENERALE_PROCEDIMENTO = "
-				+ aModel.getGenPridGeneraleProcedimento() + " AND DEP_OPID_DEPOSITO_ORDINANZA_PC = "
-				+ aModel.getDepOpidDepositoOrdinanzaPc());
-	}
-	//***** FINE INTERVENTO MEV_2019-09 *****//
 
 }

@@ -35,8 +35,12 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	/**
-	 * ExInserisciAvvocato - Metodo che permette l'inserimento di un avvovato nella tabella
-	 * AVVOCATO_FASCICOLO_SIGE
+	 * <p>
+	 * Title: ExInserisciAvvocato
+	 * </p>
+	 * <p>
+	 * Description: Metodo che permette l'inserimento di un avvovato nella tabella AVVOCATO_FASCICOLO_SIGE
+	 * </p>
 	 */
 	public AvvocatoSigeModel ExInserisciAvvocato(AvvocatoModel aAvvocato,
 			AvvocatoFascicoloSigeModel aAvvFascMod) throws F3BException {
@@ -110,7 +114,12 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 	}
 
 	/**
-	 * ExRicercaAvvocato - Metodo che permette la ricerca di un avvovato
+	 * <p>
+	 * Title: ExRicercaAvvocato
+	 * </p>
+	 * <p>
+	 * Description: Metodo che permette la ricerca di un avvovato
+	 * </p>
 	 *
 	 * @version 1.0
 	 */
@@ -180,8 +189,13 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 	}
 
 	/**
-	 * ExRicercaAvvocato - Metodo che permette la ricerca di un avvovato tra quelli che già stanno seguendo un
+	 * <p>
+	 * Title: ExRicercaAvvocato
+	 * </p>
+	 * <p>
+	 * Description: Metodo che permette la ricerca di un avvovato tra quelli che già stanno seguendo un
 	 * procedimento Sige
+	 * </p>
 	 *
 	 * @version 1.0
 	 */
@@ -304,8 +318,14 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 	}
 
 	/**
-	 * ExRicercaAvvocato - Metodo che permette la ricerca di un avvovato
+	 * <p>
+	 * Title: ExRicercaAvvocato
+	 * </p>
+	 * <p>
+	 * Description: Metodo che permette la ricerca di un avvovato
+	 * </p>
 	 */
+
 	public Vector ExRicercaAvvocato(AvvocatoModel aAvvocato) throws F3BException {
 
 		Connection lConn = null;
@@ -341,7 +361,18 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 	}
 
 	/**
-	 * ExRicercaAvvocatoProcedimento - Classe che permette la ricerca di un avvocato
+	 * <p>
+	 * Title: ExRicercaAvvocatoProcedimento
+	 * </p>
+	 * <p>
+	 * Description: Classe che permette la ricerca di un avvocato
+	 * </p>
+	 * <p>
+	 * Copyright: Copyright (c) 2008
+	 * </p>
+	 * <p>
+	 * Company: Bull
+	 * </p>
 	 *
 	 * @version 1.0
 	 */
@@ -428,6 +459,7 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 
 	/**
 	 * Effettua la concellazione di un avvocato.
+	 * <p>
 	 *
 	 * @param aAvvocato
 	 *            AvvocatoModel.
@@ -463,6 +495,7 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 
 	/**
 	 * Effettua la concellazione di un avvocato FascicoloSige.
+	 * <p>
 	 *
 	 * @param aAvvocato
 	 *            AvvocatoModel.

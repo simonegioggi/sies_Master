@@ -3,11 +3,6 @@ package siap.siep.sospensione.action;
 import java.math.BigDecimal;
 import java.util.Hashtable;
 
-import org.apache.log4j.Logger;
-
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
-import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
@@ -31,38 +26,55 @@ import siap.siep.posizione.model.PosizioneGiuridicaLuogoDetenzioneAltraCausaMode
 import siap.siep.sospensione.controller.ISospensione;
 import siap.siep.sospensione.model.SospensioneModel;
 import siap.siep.util.SIEPLookupRemote;
+import f3b.util.F3BException;
+import f3b.web.html.Option;
 
 /**
- * ActLoadDettaglioSospensioneDecisioniSorv - Classe Action per la load dettaglio di sospensione della pena
- *
+ * <p>
+ * Title: ActLoadDettaglioSospensioneDecisioniSorv
+ * </p>
+ * <p>
+ * Description: Classe Action per la load dettaglio di sospensione della pena
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2006
+ * </p>
+ * <p>
+ * Company: Bull
+ * </p>
+ * 
  * @version 1.0
  */
-public class ActLoadDettaglioSospensioneDecisioniSorv extends ActMisuraAlternativa
-		implements ICostantiSospensione {
 
-	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
-	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
-
+public class ActLoadDettaglioSospensioneDecisioniSorv extends ActMisuraAlternativa implements
+		ICostantiSospensione {
 	@SuppressWarnings("rawtypes")
 	public String processRequest() throws F3BException {
-
-		// info per il log
-		siesLogger.info(getClass().getName() + "processRequest: inizio");
-
 		FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 
 		// id dell'evento inserito
-		BigDecimal lIdEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
+		BigDecimal lIdEvento = this.getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
 
 		// Esistenza pena residua non validata per quel fascicolo
-		PenaResiduaModel lPenaResMod = getPenaResidua(lIdEvento, lFascMod.getIdFascicoloSiep());
+		/*
+		 * REWORK DETTAGLIO PenaResiduaModel lPenaResMod = new PenaResiduaModel(); IPenaResidua lPenResCtrl =
+		 * SIEPLookupRemote.getPenaResiduaRemote(); lPenaResMod =
+		 * lPenResCtrl.ExRicercaPenaResiduaCorrenteByFascicoloSiep(lFascMod.getIdFascicoloSiep());
+		 */
+		PenaResiduaModel lPenaResMod = this.getPenaResidua(lIdEvento, lFascMod.getIdFascicoloSiep());
 
 		setRequestAttribute("nuovapenaresidua", lPenaResMod);
 
 		// ---Si deve cercare la pena precedente a quella appena inserita.
 		// Oppure nel caso di dettaglio da elenco si deve far riferiemnto alla pena
 		// precedente all'evento corrente
-		PenaResiduaModel lPenValidata = getPenaResiduaPrecedenteValidata(lIdEvento,
+
+		/*
+		 * REWORK IPenaResidua lPenResCtrl = SIEPLookupRemote.getPenaResiduaRemote(); PenaResiduaModel
+		 * lPenValidata = new PenaResiduaModel(); lPenValidata =
+		 * lPenResCtrl.ExRicercaPenaResiduaUltimaValidata(lFascMod.getIdFascicoloSiep());
+		 */
+		PenaResiduaModel lPenValidata = this.getPenaResiduaPrecedenteValidata(lIdEvento,
 				lFascMod.getIdFascicoloSiep());
 		setRequestAttribute("penaresidua", lPenValidata);
 
@@ -77,6 +89,15 @@ public class ActLoadDettaglioSospensioneDecisioniSorv extends ActMisuraAlternati
 		setRequestAttribute("sospensione", lSospMod);
 
 		// ricerca posizione giuridica
+		/*
+		 * REWORK DETTAGLIO IPosizioneGiuridica lPosCtrl = SIEPLookupRemote.getPosizioneGiuridicaRemote();
+		 * PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lPos = new
+		 * PosizioneGiuridicaLuogoDetenzioneAltraCausaModel(); PosizioneGiuridicaModel lPosGiuModificata = new
+		 * PosizioneGiuridicaModel(); lPos =
+		 * lPosCtrl.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicolo
+		 * (lFascMod.getIdFascicoloSiep());
+		 */
+
 		PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lPos = this
 				.getPosizioneGiuridicaLuogoDetenzioneAltraCausa(lIdEvento, lFascMod.getIdFascicoloSiep());
 
@@ -87,13 +108,13 @@ public class ActLoadDettaglioSospensioneDecisioniSorv extends ActMisuraAlternati
 		EventoNotificaModel lEveMod = new EventoNotificaModel();
 
 		lEveMod = lCtrlEvento.ExRicercaEventoNotificaByKey(lIdEvento);
-		setRequestAttribute("eventonotifica", lEveMod);
-		Hashtable lTable = ricercaNotifiche(lEveMod.getNotifiche());
+		this.setRequestAttribute("eventonotifica", lEveMod);
+		Hashtable lTable = this.ricercaNotifiche(lEveMod.getNotifiche());
 
 		// ricerca misura per il fascicolo
 		IMisuraAlternativa lMisAltCtrl = SICOLookupRemote.getMisuraAlternativaRemote();
-		MisuraAlternativaModel lMisura = lMisAltCtrl
-				.ExRicercaMisuraAlternativaByIdEvento(lEveMod.getEvento().getEveIdEvento());
+		MisuraAlternativaModel lMisura = lMisAltCtrl.ExRicercaMisuraAlternativaByIdEvento(lEveMod.getEvento()
+				.getEveIdEvento());
 		setRequestAttribute("misuraalternativa", lMisura);
 
 		// Autorità esterna C
@@ -105,11 +126,12 @@ public class ActLoadDettaglioSospensioneDecisioniSorv extends ActMisuraAlternati
 			NoteAutC = ((NotificaModel) lTable.get("AutC")).getNote();
 			setRequestAttribute("NoteAutC", NoteAutC);
 			setRequestAttribute("autoritaEsternaC", lAutC);
+
 		}
 
 		// Cssa
 		String lCssa = null;
-		// String NoteCssa = null;
+//		String NoteCssa = null;
 		if (lTable.get("NotCssa") != null) {
 			lCssa = ((NotificaModel) lTable.get("NotCssa")).getCSSA().getComune() + " "
 					+ ((NotificaModel) lTable.get("NotCssa")).getCSSA().getIndirizzo();
@@ -119,7 +141,7 @@ public class ActLoadDettaglioSospensioneDecisioniSorv extends ActMisuraAlternati
 
 		// Ufficio TDS
 		String UffTDS = null;
-		// String NoteTDS = null;
+//		String NoteTDS = null;
 		// MEV10-s3: aggiunta variabile e set di attributo nella richiesta
 		String descrTipoUfficioTDS = null;
 		if (lTable.get("UffTDS") != null) {
@@ -131,7 +153,7 @@ public class ActLoadDettaglioSospensioneDecisioniSorv extends ActMisuraAlternati
 
 		// Ufficio UDS
 		String UffUDS = null;
-		// String NoteUDS = null;
+//		String NoteUDS = null;
 		// MEV10-s3: aggiunte variabili e set di attributi nella richiesta
 		String descrTipoUfficioUDS = null;
 		String codTipoUfficioUDS = null;
@@ -172,11 +194,6 @@ public class ActLoadDettaglioSospensioneDecisioniSorv extends ActMisuraAlternati
 		Option lOption = new Option(DecodificheManager.getInstance().getTipoIstituto());
 		setRequestAttribute("tipoIstituto", "" + lOption);
 
-		// info per il log
-		siesLogger.info(getClass().getName() + "processRequest: fine");
-
-		// pagina di ritorno
 		return PG_LOAD_DETTAGLIO_SOSPENSIONE_DECISIONI_SORVEGLIANZA;
 	}
-	
 }

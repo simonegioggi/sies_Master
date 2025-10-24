@@ -1,12 +1,12 @@
 //
-// Questo file ï¿½ stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
+// Questo file è stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
 // Vedere <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Qualsiasi modifica a questo file andrï¿½ persa durante la ricompilazione dello schema di origine. 
+// Qualsiasi modifica a questo file andrà persa durante la ricompilazione dello schema di origine. 
 // Generato il: 2017.02.06 alle 11:58:26 AM CET 
 //
 
 
-package it.mig.sies.type.foglicomplementari_CUMULO;
+package it.mig.sies.type.foglicomplementari;
 
 import java.math.BigInteger;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -90,7 +90,7 @@ public class MisuraSicurezza {
     protected BigInteger numeroGiorniMS;
 
     /**
-     * Recupera il valore della proprietï¿½ codiceTipoMS.
+     * Recupera il valore della proprietà codiceTipoMS.
      * 
      * @return
      *     possible object is
@@ -102,7 +102,7 @@ public class MisuraSicurezza {
     }
 
     /**
-     * Imposta il valore della proprietï¿½ codiceTipoMS.
+     * Imposta il valore della proprietà codiceTipoMS.
      * 
      * @param value
      *     allowed object is
@@ -114,7 +114,7 @@ public class MisuraSicurezza {
     }
 
     /**
-     * Recupera il valore della proprietï¿½ codiceTipoDurataMS.
+     * Recupera il valore della proprietà codiceTipoDurataMS.
      * 
      * @return
      *     possible object is
@@ -126,7 +126,7 @@ public class MisuraSicurezza {
     }
 
     /**
-     * Imposta il valore della proprietï¿½ codiceTipoDurataMS.
+     * Imposta il valore della proprietà codiceTipoDurataMS.
      * 
      * @param value
      *     allowed object is
@@ -138,7 +138,7 @@ public class MisuraSicurezza {
     }
 
     /**
-     * Recupera il valore della proprietï¿½ numeroAnniMS.
+     * Recupera il valore della proprietà numeroAnniMS.
      * 
      * @return
      *     possible object is
@@ -150,7 +150,7 @@ public class MisuraSicurezza {
     }
 
     /**
-     * Imposta il valore della proprietï¿½ numeroAnniMS.
+     * Imposta il valore della proprietà numeroAnniMS.
      * 
      * @param value
      *     allowed object is
@@ -162,7 +162,7 @@ public class MisuraSicurezza {
     }
 
     /**
-     * Recupera il valore della proprietï¿½ numeroMesiMS.
+     * Recupera il valore della proprietà numeroMesiMS.
      * 
      * @return
      *     possible object is
@@ -174,7 +174,7 @@ public class MisuraSicurezza {
     }
 
     /**
-     * Imposta il valore della proprietï¿½ numeroMesiMS.
+     * Imposta il valore della proprietà numeroMesiMS.
      * 
      * @param value
      *     allowed object is
@@ -186,7 +186,7 @@ public class MisuraSicurezza {
     }
 
     /**
-     * Recupera il valore della proprietï¿½ numeroGiorniMS.
+     * Recupera il valore della proprietà numeroGiorniMS.
      * 
      * @return
      *     possible object is
@@ -198,7 +198,7 @@ public class MisuraSicurezza {
     }
 
     /**
-     * Imposta il valore della proprietï¿½ numeroGiorniMS.
+     * Imposta il valore della proprietà numeroGiorniMS.
      * 
      * @param value
      *     allowed object is

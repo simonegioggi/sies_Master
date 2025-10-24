@@ -283,7 +283,7 @@ public class ActInserisciMAProsecuzione extends ActMisuraAlternativa implements 
 				lTipoProvv = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_TIPO_DECISIONE);
 			}
 
-			lEveMod.setEvento(setEventoOrdinanzaDecretoMisuraAlternativa(lEveMod.getEvento(), lTipoProvv,
+			lEveMod.setEvento(setEventoOrdinazaDecretoMisuraAlternativa(lEveMod.getEvento(), lTipoProvv,
 					lCodiceUffEmi, lComModAutEmi, lDataEmisTras));
 
 			// setto il deposito decreto

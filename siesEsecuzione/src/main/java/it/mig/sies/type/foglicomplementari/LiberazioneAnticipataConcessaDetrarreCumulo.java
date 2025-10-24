@@ -1,12 +1,12 @@
 //
-// Questo file ï¿½ stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
+// Questo file è stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
 // Vedere <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Qualsiasi modifica a questo file andrï¿½ persa durante la ricompilazione dello schema di origine. 
+// Qualsiasi modifica a questo file andrà persa durante la ricompilazione dello schema di origine. 
 // Generato il: 2017.02.06 alle 11:58:26 AM CET 
 //
 
 
-package it.mig.sies.type.foglicomplementari_CUMULO;
+package it.mig.sies.type.foglicomplementari;
 
 import java.math.BigInteger;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -80,7 +80,7 @@ public class LiberazioneAnticipataConcessaDetrarreCumulo {
     protected BigInteger giorniLARisarcimento;
 
     /**
-     * Recupera il valore della proprietï¿½ giorniLAOrdinaria.
+     * Recupera il valore della proprietà giorniLAOrdinaria.
      * 
      * @return
      *     possible object is
@@ -92,7 +92,7 @@ public class LiberazioneAnticipataConcessaDetrarreCumulo {
     }
 
     /**
-     * Imposta il valore della proprietï¿½ giorniLAOrdinaria.
+     * Imposta il valore della proprietà giorniLAOrdinaria.
      * 
      * @param value
      *     allowed object is
@@ -104,7 +104,7 @@ public class LiberazioneAnticipataConcessaDetrarreCumulo {
     }
 
     /**
-     * Recupera il valore della proprietï¿½ giorniLASpeciale.
+     * Recupera il valore della proprietà giorniLASpeciale.
      * 
      * @return
      *     possible object is
@@ -116,7 +116,7 @@ public class LiberazioneAnticipataConcessaDetrarreCumulo {
     }
 
     /**
-     * Imposta il valore della proprietï¿½ giorniLASpeciale.
+     * Imposta il valore della proprietà giorniLASpeciale.
      * 
      * @param value
      *     allowed object is
@@ -128,7 +128,7 @@ public class LiberazioneAnticipataConcessaDetrarreCumulo {
     }
 
     /**
-     * Recupera il valore della proprietï¿½ giorniLAIntegrazione.
+     * Recupera il valore della proprietà giorniLAIntegrazione.
      * 
      * @return
      *     possible object is
@@ -140,7 +140,7 @@ public class LiberazioneAnticipataConcessaDetrarreCumulo {
     }
 
     /**
-     * Imposta il valore della proprietï¿½ giorniLAIntegrazione.
+     * Imposta il valore della proprietà giorniLAIntegrazione.
      * 
      * @param value
      *     allowed object is
@@ -152,7 +152,7 @@ public class LiberazioneAnticipataConcessaDetrarreCumulo {
     }
 
     /**
-     * Recupera il valore della proprietï¿½ giorniLARisarcimento.
+     * Recupera il valore della proprietà giorniLARisarcimento.
      * 
      * @return
      *     possible object is
@@ -164,7 +164,7 @@ public class LiberazioneAnticipataConcessaDetrarreCumulo {
     }
 
     /**
-     * Imposta il valore della proprietï¿½ giorniLARisarcimento.
+     * Imposta il valore della proprietà giorniLARisarcimento.
      * 
      * @param value
      *     allowed object is

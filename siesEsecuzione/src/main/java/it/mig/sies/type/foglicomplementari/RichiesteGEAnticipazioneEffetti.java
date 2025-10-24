@@ -1,12 +1,12 @@
 //
-// Questo file ï¿½ stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
+// Questo file è stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
 // Vedere <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Qualsiasi modifica a questo file andrï¿½ persa durante la ricompilazione dello schema di origine. 
+// Qualsiasi modifica a questo file andrà persa durante la ricompilazione dello schema di origine. 
 // Generato il: 2017.02.06 alle 11:58:26 AM CET 
 //
 
 
-package it.mig.sies.type.foglicomplementari_CUMULO;
+package it.mig.sies.type.foglicomplementari;
 
 import java.math.BigDecimal;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -80,7 +80,7 @@ public class RichiesteGEAnticipazioneEffetti {
     protected String tipoRichiesta;
 
     /**
-     * Recupera il valore della proprietï¿½ reclusione.
+     * Recupera il valore della proprietà reclusione.
      * 
      * @return
      *     possible object is
@@ -92,7 +92,7 @@ public class RichiesteGEAnticipazioneEffetti {
     }
 
     /**
-     * Imposta il valore della proprietï¿½ reclusione.
+     * Imposta il valore della proprietà reclusione.
      * 
      * @param value
      *     allowed object is
@@ -104,7 +104,7 @@ public class RichiesteGEAnticipazioneEffetti {
     }
 
     /**
-     * Recupera il valore della proprietï¿½ arresto.
+     * Recupera il valore della proprietà arresto.
      * 
      * @return
      *     possible object is
@@ -116,7 +116,7 @@ public class RichiesteGEAnticipazioneEffetti {
     }
 
     /**
-     * Imposta il valore della proprietï¿½ arresto.
+     * Imposta il valore della proprietà arresto.
      * 
      * @param value
      *     allowed object is
@@ -128,7 +128,7 @@ public class RichiesteGEAnticipazioneEffetti {
     }
 
     /**
-     * Recupera il valore della proprietï¿½ importoAmmenda.
+     * Recupera il valore della proprietà importoAmmenda.
      * 
      * @return
      *     possible object is
@@ -140,7 +140,7 @@ public class RichiesteGEAnticipazioneEffetti {
     }
 
     /**
-     * Imposta il valore della proprietï¿½ importoAmmenda.
+     * Imposta il valore della proprietà importoAmmenda.
      * 
      * @param value
      *     allowed object is
@@ -152,7 +152,7 @@ public class RichiesteGEAnticipazioneEffetti {
     }
 
     /**
-     * Recupera il valore della proprietï¿½ importoMulta.
+     * Recupera il valore della proprietà importoMulta.
      * 
      * @return
      *     possible object is
@@ -164,7 +164,7 @@ public class RichiesteGEAnticipazioneEffetti {
     }
 
     /**
-     * Imposta il valore della proprietï¿½ importoMulta.
+     * Imposta il valore della proprietà importoMulta.
      * 
      * @param value
      *     allowed object is
@@ -176,7 +176,7 @@ public class RichiesteGEAnticipazioneEffetti {
     }
 
     /**
-     * Recupera il valore della proprietï¿½ tipoRichiesta.
+     * Recupera il valore della proprietà tipoRichiesta.
      * 
      * @return
      *     possible object is
@@ -188,7 +188,7 @@ public class RichiesteGEAnticipazioneEffetti {
     }
 
     /**
-     * Imposta il valore della proprietï¿½ tipoRichiesta.
+     * Imposta il valore della proprietà tipoRichiesta.
      * 
      * @param value
      *     allowed object is

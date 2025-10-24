@@ -3,12 +3,8 @@ package siap.siep.sospensione.action;
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 
-import org.apache.log4j.Logger;
-
-import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
-import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoModel;
@@ -27,20 +23,24 @@ import siap.siep.posizione.model.PosizioneGiuridicaLuogoDetenzioneAltraCausaMode
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * ActStampaSospensioneDecisioniSorv - Classe Action per la Stampa Sospensione della pena
- *
+ * <p>
+ * Title: ActStampaSospensioneDecisioniSorv
+ * </p>
+ * <p>
+ * Description: Classe Action per la Stampa Sospensione della pena
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2002
+ * </p>
+ * <p>
+ * Company: Bull
+ * </p>
+ * 
  * @version 1.0
  */
 public class ActStampaSospensioneDecisioniSorv extends ActionSiap implements ICostantiSospensione {
 
-	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
-	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
-
 	public String processRequest() throws F3BException {
-
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
 
 		FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 		UtenteModel lUtenteMod = this.getUtenteConnesso();
@@ -99,39 +99,18 @@ public class ActStampaSospensioneDecisioniSorv extends ActionSiap implements ICo
 			}
 		}
 
-		// MEV_2024-092: per questi codici cerco il cod_motivo per eve_id_evento
-		if ("1420".equals(lMotivo) || "1426".equals(lMotivo)) {
-			EventoModel em = new EventoModel();
-			if (!Utils.isNullObj(lEventoModel) && !Utils.isNullObj(lEventoModel.getEveIdEvento())) {
-				em = lCtrl.ExRicercaEventoByKey(lEventoModel.getEveIdEvento());
-				if (!Utils.isNullObj(em.getCodMotivo()))
-					lMotivo = em.getCodMotivo();
-			}
-		}
-		// FINE MEV_2024-092
-
 		ITemplate lCtrlTem = SICOLookupRemote.getTemplateRemote();
 		TemplateModel lTemMod = new TemplateModel();
-		// MEV_2019-09-SIEP: imposto flag_template e codTipoMisura e codTipoProvvedimento
-		if ("5469".equals(lMotivo) || "5496".equals(lMotivo))
-			lTemMod = lCtrlTem.ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplate(
-					lEventoModel.getCodTipoEvento(), "12", lMotivo, "1");
-		else
-			lTemMod = lCtrlTem.ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplate(
-					lEventoModel.getCodTipoEvento(), lEventoModel.getCodTipoProvvedimento(), lMotivo,
-					flagTemplate);
+		lTemMod = lCtrlTem.ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplate(
+				lEventoModel.getCodTipoEvento(), lEventoModel.getCodTipoProvvedimento(), lMotivo,
+				flagTemplate);
 		lEveMod.setNomeTemplate(lTemMod.getIdTemplate());
 
-		ByteArrayOutputStream lReport = lCtrl.ExStampaDocumento(lEveMod, lUtenteMod);
+		ByteArrayOutputStream lReport = lCtrl.ExStampaDocumento(lEveMod, lUtenteMod); // setta la risposta
+																						// nella request
 
-		// setta la risposta nella request
 		setRequestAttribute("report", lReport);
 
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getName() + ".processRequest: fine");
-
-		// pagina di ritorno
 		return IWebConstants.PG_DOWNLOAD;
 	}
 

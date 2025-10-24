@@ -62,15 +62,6 @@ public class ActInserisciAccertProgTerapeut extends ActInserisciRicAtti implemen
 		lEveNot.getEvento().setCodTipoUfficioDestinatario("-");
 
 		lEveNot.getEvento().setFasSiuIdFascicoloSius(lFasSius.getIdFascicoloSius());
-		
-		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
-		if (!isRequestParameterNullObj(CAMPO_ANNO_DATA_RESTITUZIONE)) {
-			Date lDataRestituzioneAtti = getRequestDateParameter(CAMPO_ANNO_DATA_RESTITUZIONE
-					                                           , CAMPO_MESE_DATA_RESTITUZIONE
-				                                               , CAMPO_GIORNO_DATA_RESTITUZIONE  );
-			lEveNot.getEvento().setDataRestituzioneAi(lDataRestituzioneAtti);
-		}
-		// FINE: MEV_2019-09 (D.lgs. 123/2018)
 
 		// Imposta i dati necessari per la gestione delle Notifica
 		NotificaModel lNotifica = new NotificaModel();
@@ -127,7 +118,7 @@ public class ActInserisciAccertProgTerapeut extends ActInserisciRicAtti implemen
 		// Chiamata al Controller
 		IEvento lCtrl = SICOLookupRemote.getEventoRemote();
 		lEveNot = lCtrl.ExInserisciEventoNotifica(lEveNot);
-		
+
 		return getPaginaDettaglio(lEveNot.getEvento().getIdEvento());
 	}
 

@@ -32,7 +32,6 @@ public class IspConteggioRelatoriMagistratiSqlDAO extends SIAPSqlDAO {
         				  + " NUM_DEF_ESITO4, "
         				  + " NUM_DEF_ESITO5, "
         				  + " NUM_DEF_ESITO6, "
-        				  + " NUM_APP_PROVV, " // MEV_2019-09        				   
         				  + " NUM_UNIFICATI, "
         				  + " NUM_SOPRAVVENUTI, "
         				  + " NUM_DEF_ISC_ERR,  "
@@ -125,7 +124,6 @@ public class IspConteggioRelatoriMagistratiSqlDAO extends SIAPSqlDAO {
 		lModel.setNumDefEsito4(getBigDecimal("NUM_DEF_ESITO4"));
 		lModel.setNumDefEsito5(getBigDecimal("NUM_DEF_ESITO5"));
 		lModel.setNumDefEsito6(getBigDecimal("NUM_DEF_ESITO6"));
-		lModel.setNumAppProvv(getBigDecimal("NUM_APP_PROVV"));   // MEV_2019-09
 		lModel.setNumPendentiFine( getBigDecimal("NUM_PENDENTI_FINE") ); 
 		lModel.setFasSiuChiaveUfficio(getString("FAS_SIU_CHIAVE_UFFICIO"));
 		lModel.setNumDefIscErr(getBigDecimal("NUM_DEF_ISC_ERR"));

@@ -159,6 +159,7 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		lSql += " AND EVE.COD_TIPO_PROVVEDIMENTO IN ('02','03')";
 		// lSql+=" AND EVE.COD_MOTIVO IN ('2440','2441','2110','2111','2113','2670')";
 		// lSql+=" AND EVE.COD_MOTIVO IN ('2440','2441','2110','2111','2113','2114','2670')";
+
 		// MEV 39: APPELLO CONTRO: OCCORRE CONSIDERARE ANCHE MOTIVO 0258, 0259 E 0260
 		// Ticket#20220404012 - Si aggiungono anche i codici 9073 e 9074 usati da UDSM
 		// lSql += " AND EVE.COD_MOTIVO IN ('2440','2441','2110','2111','2113','2114','2670','2697','2698',
@@ -168,8 +169,10 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		//Ticket#20220404012 - FINE
 		// lSql+=" AND EVE.COD_ESITO IN ('0052','0054','0118','0193','0194','0195','0350','0351','0387')";
 		// lSql+=" AND EVE.COD_ESITO IN ('0052','0193','0194','0195','0350','0351','0387')";
+
 		// MEV 39: APPELLO CONTRO: OCCORRE CONSIDERARE ANCHE ESITO 0209 (Accoglie Appello e Revoca
 		// Provvedimento Mds)
+		
 		// Ticket#20220404012 - Si aggiunge anche il codice 0054 - Dichiara cessata la pericolosità sociale
 		// e revoca la misura
 		// lSql += " AND EVE.COD_ESITO IN ('0052','0193','0194','0195','0350','0351','0387','0324','0329','0209')";
@@ -420,9 +423,6 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		// 10102014 - DL 92 2014 Violazione CEDU
 		lStatement += ", SOMMA_RISARC_DANNI";
 		lStatement += ", COD_USSM";
-		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
-		lStatement += ", DATA_ESECUTIVITA, NOTE_DATA_ESECUTIVITA";
-		// FINE: MEV_2019-09
 		// MEV_2023-35
 		lStatement += ", COD_TIPO_SANZIONE";
 		lStatement += ", COD_TIPO_PENA_ACCESSORIA, DURATA, NUM_ANNI, NUM_MESI, NUM_GIORNI";
@@ -513,9 +513,6 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		// 10102014 - DL 92 2014 Violazione CEDU
 		lStatement += ", SOMMA_RISARC_DANNI";
 		lStatement += ", COD_USSM";
-		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
-		lStatement += ", DATA_ESECUTIVITA, NOTE_DATA_ESECUTIVITA";
-		// FINE: MEV_2019-09
 		// MEV_2023-35
 		lStatement += ", COD_TIPO_SANZIONE";
 		lStatement += ", COD_TIPO_PENA_ACCESSORIA, DURATA, NUM_ANNI, NUM_MESI, NUM_GIORNI";
@@ -597,9 +594,6 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		lStatement += ", TIPO_CONTROLLO_ESECUZIONE, "
 				+ "CODTIPOCONTROLLOESECUZIONE.RV_MEANING AS DESC_TIPO_CONTROLLO_ESECUZIONE";
 		lStatement += ", SOMMA_RISARC_DANNI";
-		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
-		lStatement += ", DATA_ESECUTIVITA, NOTE_DATA_ESECUTIVITA";
-		// FINE: MEV_2019-09
 		// MEV_2023-35
 		lStatement += ", COD_TIPO_SANZIONE";
 		lStatement += ", COD_TIPO_PENA_ACCESSORIA, DURATA, NUM_ANNI, NUM_MESI, NUM_GIORNI";
@@ -687,9 +681,6 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		// 10102014 - DL 92 2014 Violazione CEDU
 		lStatement += ", SOMMA_RISARC_DANNI";
 		lStatement += ", COD_USSM";
-		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
-		lStatement += ", DATA_ESECUTIVITA, NOTE_DATA_ESECUTIVITA";
-		// FINE: MEV_2019-09
 		// MEV_2023-35
 		lStatement += ", COD_TIPO_SANZIONE";
 		lStatement += ", COD_TIPO_PENA_ACCESSORIA, DURATA, NUM_ANNI, NUM_MESI, NUM_GIORNI ";
@@ -774,10 +765,6 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		aModel.setDescrTipoControlloEsecuzione(getString("DESC_TIPO_CONTROLLO_ESECUZIONE"));
 		// 10102014 - DL 92 2014 Violazione CEDU
 		aModel.setSommaRisarcimento(getBigDecimal("SOMMA_RISARC_DANNI"));
-		// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
-		aModel.setDataEsecutivita(getDate("DATA_ESECUTIVITA"));
-		aModel.setNoteDataEsecutivita(getString("NOTE_DATA_ESECUTIVITA"));
-		// FINE: MEV_2019-09
 		// MEV_2023-35
 		if (findColumn("COD_TIPO_SANZIONE"))
 			aModel.setCodTipoSanzione(getString("COD_TIPO_SANZIONE"));
@@ -802,23 +789,6 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 	public String setCondizione(DepositoOrdinanzaPcModel aModel) {
 
 		String lCondizioni = new String();
-		/* 
-		 * ISSUE MEV : aggiunte condizioni
-		 * Numero MEV : 9
-		 * Autore    : sgioggi
-		 * Data      : 16 dic 2022
-		 * Branch    : MEV_2019-09
-		 */
-		if (aModel.getIdDepositoOrdinanzaPc() != null)
-			lCondizioni = lCondizioni + " AND ID_DEPOSITO_ORDINANZA_PC = " + aModel.getIdDepositoOrdinanzaPc();
-
-		if (aModel.getGenPridGeneraleProcedimento() != null)
-			lCondizioni = lCondizioni + " AND GEN_PRID_GENERALE_PROCEDIMENTO = " + aModel.getGenPridGeneraleProcedimento();
-
-		if (aModel.getIdEventoGenerato() != null)
-			lCondizioni = lCondizioni + " AND ID_EVENTO_GENERATO = " + aModel.getIdEventoGenerato();
-		//***** FINE INTERVENTO MEV_2019-09 *****//
-
 		return lCondizioni;
 	}
 

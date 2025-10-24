@@ -169,7 +169,7 @@ public class ActInserisciMACessazione51Bis extends ActMisuraAlternativa
 			String lTipoDecisione = getRequestStringParameter(
 					ICostantiMisuraAlternativa.CAMPO_COD_TIPO_DECISIONE);
 
-			lEveMod.setEvento(setEventoOrdinanzaDecretoMisuraAlternativa(lEveMod.getEvento(), lTipoDecisione,
+			lEveMod.setEvento(setEventoOrdinazaDecretoMisuraAlternativa(lEveMod.getEvento(), lTipoDecisione,
 					lCodiceUffEmi, lComModAutEmi, lDataEmisTras));
 
 			// =======================

@@ -12,7 +12,18 @@ import siap.sico.template.dao.TemplateSqlDAO;
 import siap.sico.template.model.TemplateModel;
 
 /**
- * TemplateController - Classe Controller per Template
+ * <p>
+ * Title: TemplateController
+ * </p>
+ * <p>
+ * Description: Classe Controller per Template
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2002
+ * </p>
+ * <p>
+ * Company: Bull
+ * </p>
  *
  * @version 1.0
  */
@@ -176,40 +187,6 @@ public class TemplateController extends SiapController implements ITemplate {
 			cleanup(lConn);
 		}
 		return lTemplati;
-	}
-
-	// MEV_2024-092: aggiunto metodo di ricerca
-	@Override
-	public TemplateModel ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplateCodOgg(String aTipoEvento,
-			String aTipoProv, String aCodMotivo, String aFlagTemplate) throws F3BException {
-
-		Connection lConn = null;
-
-		TemplateSqlDAO lTemDao = null;
-		TemplateModel lTemMod;
-
-		try {
-			lConn = getDBConnection();
-
-			lTemDao = new TemplateSqlDAO(lConn);
-
-			lTemDao.ricercaTemplateByTipEveTipoProvCodMotivoFlagTemplateCodOgg(aTipoEvento, aTipoProv,
-					aCodMotivo, aFlagTemplate);
-			lTemMod = (TemplateModel) lTemDao.getModelByKey();
-
-			if (lTemMod == null) {
-				throw new F3BException(F3BException.USER_MESSAGE, "Template Inesistente");
-			}
-		} catch (DAOException daoEx) {
-			throw new F3BException(
-					"TemplateController.ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplateCodOgg: Non posso leggere : "
-							+ daoEx);
-		} finally {
-			cleanup(lTemDao);
-			cleanup(lConn);
-		}
-
-		return lTemMod;
 	}
 
 }

@@ -228,8 +228,7 @@ public class CalendarUtil {
 					}
 				} else
 					lModRet.setNumAnni(aaF - aaI);
-			} else {
-				// mmI > mmF
+			} else { // mmI > mmF
 				if (Integer.parseInt(DateUtils.getDayToString(DateUtils.getEndOfMonth(aaI, mmI))) == lModRet
 						.getNumGiorni()) {
 					// Il numero di GG calcolati coincide con il numero di gg del mese di partenza.

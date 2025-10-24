@@ -145,10 +145,10 @@ if (lRicerca.verificaEsistenzaSospensione())
       </td>
     </tr>
 
-	<tr>
-	    <td class="l">Contenuto</td>
-	    <td class="L"> <%=contenuto%></td>
-  	</tr>
+  <tr>
+    <td class="l">Contenuto</font></td>
+    <td class="L"> <%=contenuto%></td>
+  </tr>
 
     <tr>
       <td class="l">Oggetto<font class="ob">(*)</font></td>

@@ -48,7 +48,7 @@ public class ManageSeguitoAtti implements ICostantiJMS {
 	/**
 	 * Metodo preposto all'elaborazione automatica del messaggio di Seguito Atti. Tale elaborazione prevede
 	 * l'aggiornamento dei dati del fascicolo ricevuto senza l'intervento dell'operatore.
-	 *
+	 * 
 	 *
 	 * @param aJmsMessage
 	 *            - Messaggio JMS
@@ -137,7 +137,7 @@ public class ManageSeguitoAtti implements ICostantiJMS {
 	}
 
 	/**
-	 *
+	 * 
 	 * @param lMess
 	 *            * @deprecated 07/2018 non più utilizzato
 	 */
@@ -211,7 +211,7 @@ public class ManageSeguitoAtti implements ICostantiJMS {
 	 * presente su TITOLO_CUMULATO (data ultima prese in carico) con EVENTO.DATA_INSERIMENTO Alla fine
 	 * della'aggiornamento dello STATO esecuzione viene aggiornata la TITOLO_CUMULATO.DATA_PRESA_IN_CARICO Se
 	 * DATA_PRESA_IN_CARICO = null (cumulo steop 1) il test viene fatto su TITOLO_CUMULATO.DATA_INSERIMENTO
-	 *
+	 * 
 	 * @param aIdFascicoloCumulato
 	 */
 	public void aggiornaStatoEsecuzioneTitolo(BigDecimal aIdFascicoloCumulato, BigDecimal aIdIstruttoria,
@@ -315,7 +315,7 @@ public class ManageSeguitoAtti implements ICostantiJMS {
 
 	/**
 	 * Verifica se nelo stato esecuzione del titolo esiste già un evento estratto con stesso aIdEvento
-	 *
+	 * 
 	 * @param aStatoEsecuzioneCaricato
 	 *            - Lista evento dello stato esecuzione Titolo
 	 * @param aIdEvento

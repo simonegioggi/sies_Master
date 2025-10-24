@@ -10,7 +10,7 @@ import siap.sico.decodifiche.model.DecodificheModel;
 import siap.sico.util.SICOLookupRemote;
 
 /**
- * DecodificheManagerBean - Classe con le piu' vecchie decodifiche
+ * Classe con le piu' vecchie decodifiche
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class DecodificheManagerBean {
@@ -235,16 +235,6 @@ public class DecodificheManagerBean {
 	private Collection mMotivoProvvedimentoRipristinoDetDomSpec;
 	private Collection mMotivoProvvedimentoAmmProvDetDom;
 	private Collection mMotivoProvvedimentoAmmProvAffi;
-	// MEV_2019-09-SIEP
-	private Collection mMotivoProvvedimentoAmmProvDetDomPmm;
-	private Collection mMotivoProvvedimentoAmmProvAffiPmm;
-	private Collection mMotivoProvvedimentoAmmProvSemilibPm;
-	private Collection mMotivoProvvedimentoAmmProvSemilibPmm;
-	private Collection mMotivoProvvedimentoMAAffPMinor;
-	private Collection mMotivoProvvedimentoMADDomMinor;
-	private Collection mMotivoProvvedimentoMASemiLMinor;
-	// MEV_2019-09-SIEP - FINE
-
 	private Collection mMotivoProvvedimentoMADetDomTemp;
 	private Collection mMotivoProvvedimentoMADetDomTempProroga;
 	private Collection mMotivoProvvedimentoMADetDomTempProrogaProvvisoria;
@@ -339,10 +329,6 @@ public class DecodificheManagerBean {
 	private Collection mTipoProvvSorveglianza;
 	private Collection mMotivoSospensionePm;
 	private Collection mOggettoDecisione;
-	// MEV_2019-09-SIEP - nuovi oggetti sospensione art 678 e minori
-	private Collection mOggettoDecisioneMinor;
-	private Collection mOggettiDecisioneSosp678;
-	// MEV_2019-09-SIEP - FIME
 	// private Collection mEsitoSiep;
 	private Collection mTipoPermesso; // 23/07/2004
 	private Collection mStatoProcedimento; // 8/9/2004
@@ -1361,13 +1347,12 @@ public class DecodificheManagerBean {
 			mOggettoProcedimentoUDSM = lDecodifiche.ExListaContenuti("UDSM");
 			mOggettoProcedimento = lDecodifiche.ExListaContenuti("");
 
-			// MEV_2019-09-SIEP: cambiata firma del metodo per distinguere PM da PMM (x3)
 			// Gestione motivo provvedimento MA
-			mMotivoProvvedimentoMADDom = lDecodifiche.ExListaMotivoProvvMA("DETENZIONE", "PM");
+			mMotivoProvvedimentoMADDom = lDecodifiche.ExListaMotivoProvvMA("DETENZIONE");
 
-			mMotivoProvvedimentoMAAffP = lDecodifiche.ExListaMotivoProvvMA("AFFIDAMENTO", "PM");
+			mMotivoProvvedimentoMAAffP = lDecodifiche.ExListaMotivoProvvMA("AFFIDAMENTO");
 
-			mMotivoProvvedimentoMASemiL = lDecodifiche.ExListaMotivoProvvMA("SEMILIBERTA", "PM");
+			mMotivoProvvedimentoMASemiL = lDecodifiche.ExListaMotivoProvvMA("SEMILIBERTA");
 
 			mMotivoProvvedimentoOS = lDecodifiche.ExListaMotivoOS("OS_LIBERAZIONE_ANTICIPATA");
 
@@ -1447,27 +1432,11 @@ public class DecodificheManagerBean {
 			mMotivoProvvedimentoRipristinoDetDomSpec = lDecodifiche
 					.ExListaMotivoProvvRipristinoDetDomSpeciale("RIPRISTINO_DET_DOM_SPEC");
 
-			// MEV_2019-09-SIEP: aggiunti metodi di estrazione dati
-			// mMotivoProvvedimentoAmmProvDetDom = lDecodifiche
-			// .ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_DET_DOM");
-			// mMotivoProvvedimentoAmmProvAffi = lDecodifiche
-			// .ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_AFFI");
 			mMotivoProvvedimentoAmmProvDetDom = lDecodifiche
-					.ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_DET_DOM_PM");
-			mMotivoProvvedimentoAmmProvDetDomPmm = lDecodifiche
-					.ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_DET_DOM_PMM");
+					.ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_DET_DOM");
+
 			mMotivoProvvedimentoAmmProvAffi = lDecodifiche
-					.ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_AFFI_PM");
-			mMotivoProvvedimentoAmmProvAffiPmm = lDecodifiche
-					.ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_AFFI_PMM");
-			mMotivoProvvedimentoAmmProvSemilibPm = lDecodifiche
-					.ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_SEMILIB_PM");
-			mMotivoProvvedimentoAmmProvSemilibPmm = lDecodifiche
-					.ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_SEMILIB_PMM");
-			mMotivoProvvedimentoMAAffPMinor = lDecodifiche.ExListaMotivoProvvMA("AFFIDAMENTO", "PMM");
-			mMotivoProvvedimentoMADDomMinor = lDecodifiche.ExListaMotivoProvvMA("DETENZIONE", "PMM");
-			mMotivoProvvedimentoMASemiLMinor = lDecodifiche.ExListaMotivoProvvMA("SEMILIBERTA", "PMM");
-			// MEV_2019-09-SIEP - FINE
+					.ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_AFFI");
 
 			mMotivoProvvedimentoMADetDomTemp = lDecodifiche
 					.ExListaMotivoProvvMADetDomTemp("AMMISSIONE_PROV_DET_DOM_TEMP");
@@ -1493,6 +1462,8 @@ public class DecodificheManagerBean {
 
 			mMotivoProvvedimentoMAPreEffSemli = lDecodifiche.ExListaMotivoMAPreEff("SEMILIBERTA");
 
+			mMotivoProvvedimentoMAConIndultino = lDecodifiche.ExListaMotivoProvvMA("INDULTINO");
+
 			mMotivoProvvedimentoMARipristinoIndultino = lDecodifiche.ExListaMotivoRipristinoMA("INDULTINO");
 
 			mMotivoProvvedimentoSospProvvMAIndultino = lDecodifiche
@@ -1502,11 +1473,8 @@ public class DecodificheManagerBean {
 
 			mMotivoProvvedimentoRevocaIndultino = lDecodifiche.ExListaMotivoRevocaProvvMA("INDULTINO");
 
-			// MEV_2019-09-SIEP: cambiata firma del metodo per distinguere PM da PMM (x2)
-			mMotivoProvvedimentoMAConIndultino = lDecodifiche.ExListaMotivoProvvMA("INDULTINO", "PM");
 			// 27/09/2010 Espiazione Presso Domicilio
-			mMotivoProvvedimentoMAEspPressoDom = lDecodifiche.ExListaMotivoProvvMA("ESP_PRESSO_DOM", "PM");
-
+			mMotivoProvvedimentoMAEspPressoDom = lDecodifiche.ExListaMotivoProvvMA("ESP_PRESSO_DOM");
 			mMotivoProvvedimentoMASospEspPressoDom = lDecodifiche
 					.ExListaMotivoProvvSospProvvMA("ESP_PRESSO_DOM");
 			mMotivoProvvedimentoMAPerEfficEspPressoDom = lDecodifiche.ExListaMotivoMAPreEff("ESP_PRESSO_DOM");
@@ -1580,12 +1548,7 @@ public class DecodificheManagerBean {
 			mTipologiaDecisioneSospensioneDiffDef = lDecodifiche.ExListaMotivoProvvSospDifferimentoDef();
 			mTipologiaDecisioneRevocaDiff = lDecodifiche.ExListaMotivoProvvRevocaDifferimento();
 			mTipologiaDecisioneRigettoDiff = lDecodifiche.ExListaMotivoProvvRigettoDifferimento();
-			// MEV_2019-09-SIEP: cambiata firma del metodo per distinguere PM da PMM
-			mOggettoDecisione = lDecodifiche.ExListaOggettiSospensioneDecisioneSor("PM");
-			// MEV_2019-09-SIEP: aggiunto metodo per i minori
-			mOggettoDecisioneMinor = lDecodifiche.ExListaOggettiSospensioneDecisioneSor("PMM");
-
-			mOggettiDecisioneSosp678 = lDecodifiche.ExListaMotivoProvvSosp678();
+			mOggettoDecisione = lDecodifiche.ExListaOggettiSospensioneDecisioneSor();
 
 			// Oggetti dell'espulsione
 			mMotivoProvvedimentoEspulsione = lDecodifiche.ExListaMotivoProvvedimentoEspulsione("CONCESSIONE");
@@ -2727,36 +2690,6 @@ public class DecodificheManagerBean {
 		return mMotivoProvvedimentoAmmProvAffi;
 	}
 
-	// MEV_2019-09-SIEP
-	public Collection getMotivoProvvedimentoAmmProvDetDomPmm() {
-		return mMotivoProvvedimentoAmmProvDetDomPmm;
-	}
-
-	public Collection getMotivoProvvedimentoAmmProvAffiPmm() {
-		return mMotivoProvvedimentoAmmProvAffiPmm;
-	}
-
-	public Collection getMotivoProvvedimentoMAffPMinor() {
-		return mMotivoProvvedimentoMAAffPMinor;
-	}
-
-	public Collection getMotivoProvvedimentoAmmProvSemilibPmm() {
-		return mMotivoProvvedimentoAmmProvSemilibPmm;
-	}
-
-	public Collection getMotivoProvvedimentoAmmProvSemilibPm() {
-		return mMotivoProvvedimentoAmmProvSemilibPm;
-	}
-
-	public Collection getMotivoProvvedimentoMADDomMinor() {
-		return mMotivoProvvedimentoMADDomMinor;
-	}
-
-	public Collection getMotivoProvvedimentoMASemiLMinor() {
-		return mMotivoProvvedimentoMASemiLMinor;
-	}
-	// MEV_2019-09-SIEP - FINE
-
 	public Collection getMotivoProvvedimentoMADetDomTemp() {
 		return mMotivoProvvedimentoMADetDomTemp;
 	}
@@ -2968,16 +2901,6 @@ public class DecodificheManagerBean {
 	public Collection getOggettoDecisione() {
 		return mOggettoDecisione;
 	}
-
-	// MEV_2019-09-SIEP: aggiunti metodi GET
-	public Collection getOggettoDecisioneMinor() {
-		return mOggettoDecisioneMinor;
-	}
-
-	public Collection getOggettiDecisioneSosp678() {
-		return mOggettiDecisioneSosp678;
-	}
-	// FINE MEV_2019-09-SIEP
 
 	public Collection getStatoProcedimento() {
 		return this.mStatoProcedimento;

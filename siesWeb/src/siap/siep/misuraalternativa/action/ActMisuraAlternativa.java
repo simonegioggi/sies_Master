@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
 import siap.sico.cssa.action.ICostantiCSSA;
 import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.evento.action.ICostantiEvento;
@@ -24,28 +22,35 @@ import siap.siep.web.ActSIESDettaglioProvvedimento;
 import siap.sius.depositodecreto.model.DepositoDecretoModel;
 import siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel;
 import siap.sius.tenore.model.TenoreModel;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
 
 /**
- * ActMisuraAlternativa - Azione Generalizzata di tutte le Action delle Misure Alternative
  *
- * @version 1.0
+ * <p>
+ * Title: ActMisuraAlternativa
+ * </p>
+ * <p>
+ * Description: Azione Generalizzata di tutte le Action delle Misure Alternative.
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2002
+ * </p>
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
-		implements ICostantiMisuraAlternativa {
+public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento implements ICostantiMisuraAlternativa {
 
 	/**
 	 * Imposta tutti gli attributi dell'Evento
-	 *
+	 * 
 	 * @param aEvento
 	 * @return
 	 * @throws F3BException
 	 */
 	protected EventoModel setEventoProvvedimentoMisuraAlternativa(EventoModel aEvento) throws F3BException {
-
 		FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
-		String lCodiceOperatore = getCodUtenteConnesso();
-		String lCodiceUfficio = getCodUfficioUtenteConnesso();
+		String lCodiceOperatore = this.getCodUtenteConnesso();
+		String lCodiceUfficio = this.getCodUfficioUtenteConnesso();
 
 		EventoModel lEve = new EventoModel(aEvento);
 		lEve.setCodTipoEvento("01");
@@ -57,7 +62,7 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 				ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE, ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE);
 		lEve.setDataEmissione(lDataEmissione);
 		lEve.setCodOperatoreInserimento(lCodiceOperatore);
-		lEve.setCodLuogoEmittente(getCodComuneUtenteConnesso());
+		lEve.setCodLuogoEmittente(this.getCodComuneUtenteConnesso());
 		lEve.setDataInserimento(DateUtils.getSysDate());
 		lEve.setCodUfficioInserimento(lCodiceUfficio);
 		lEve.setAnnoProtocollo(new BigDecimal(DateUtils.getSysDate("yyyy")));
@@ -77,21 +82,20 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 
 	/**
 	 * setta Evento Ordinaza Decreto MisuraAlternativa
-	 *
+	 * 
 	 * @param aEvento
 	 * @param aTipoprovv
 	 * @param aCodiceUffEmi
 	 * @param aComMod
 	 * @param aDataEmiTra
-	 * @return EventoModel
+	 * @return
 	 * @throws F3BException
 	 */
-	protected EventoModel setEventoOrdinanzaDecretoMisuraAlternativa(EventoModel aEvento, String aTipoprovv,
+	protected EventoModel setEventoOrdinazaDecretoMisuraAlternativa(EventoModel aEvento, String aTipoprovv,
 			String aCodiceUffEmi, ComuneModel aComMod, Date aDataEmiTra) throws F3BException {
-
 		FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
-		String lCodiceOperatore = getCodUtenteConnesso();
-		String lCodiceUfficio = getCodUfficioUtenteConnesso();
+		String lCodiceOperatore = this.getCodUtenteConnesso();
+		String lCodiceUfficio = this.getCodUfficioUtenteConnesso();
 
 		EventoModel lEve = new EventoModel(aEvento);
 		lEve.setCodTipoEvento("01");
@@ -122,16 +126,15 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 
 	/**
 	 * Imposta tutte le notifiche associate all'evento prodotto
-	 *
+	 * 
 	 * @param
 	 * @return NotificaModel[]
 	 * @throws F3BException
 	 */
 	protected NotificaModel[] setNotificheMisuraAlternativa() throws F3BException {
-
 		// FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
-		String lCodiceOperatore = getCodUtenteConnesso();
-		String lCodiceUfficio = getCodUfficioUtenteConnesso();
+		String lCodiceOperatore = this.getCodUtenteConnesso();
+		String lCodiceUfficio = this.getCodUfficioUtenteConnesso();
 		Date lDataEmissione = getRequestDateParameter(ICostantiNotifica.CAMPO_ANNO_DATA_INVIO,
 				ICostantiNotifica.CAMPO_MESE_DATA_INVIO, ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO);
 		String posizionegiuridica = getRequestStringParameter("posizionegiuridica");
@@ -139,14 +142,16 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 		ArrayList lNotifiche = new ArrayList();
 
 		// SETTO NOTIFICA AUTORITA E
-		if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E)
-				&& getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E) != null
-				&& !getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E).equals("-")) {
-			String lPolizia = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E);
-			String lSedePolizia = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_POL_E);
+		if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E)
+				&& this.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E) != null
+				&& !this.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E)
+						.equals("-")) {
+			String lPolizia = this.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E);
+			String lSedePolizia = this.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_POL_E);
 			NotificaModel lNotModPol = new NotificaModel();
-			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_E)) {
-				String lNotePolizia = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_E);
+			if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_E)) {
+				String lNotePolizia = this
+						.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_E);
 				lNotModPol.setNote(lNotePolizia);
 			}
 
@@ -171,17 +176,17 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 		}
 
 		// SETTO ISTITUTO DETENZIONE
-		if (!isRequestParameterNullObj(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE)
-				&& getRequestStringParameter(
-						ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE) != null
+		if (!this.isRequestParameterNullObj(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE)
+				&& getRequestStringParameter(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE) != null
 				&& !getRequestStringParameter(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE)
 						.equals("")) {
 
 			NotificaModel lNotModIst = new NotificaModel();
-			String lIstituto = getRequestStringParameter(
-					ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE);
-			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE_IST)) {
-				String lNoteIstituto = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE_IST);
+			String lIstituto = this
+					.getRequestStringParameter(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE);
+			if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE_IST)) {
+				String lNoteIstituto = this
+						.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE_IST);
 				lNotModIst.setNote(lNoteIstituto);
 			}
 			lNotModIst.setCodEsito("-");
@@ -198,23 +203,26 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 		// SETTO UDS ad E
 		if (!isRequestParameterNullObj("UDSE") && getRequestStringParameter("UDSE") != null
 				&& getRequestStringParameter("UDSE").equals("S")) {
-			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_UDS)
+			if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_UDS)
 					&& getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS) != null
 					&& !getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS).equals("")) {
 				NotificaModel lNotModTDS = new NotificaModel();
 
 				String lTipoUfficio = "UDS";
-				if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO)
+				if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO)
 						&& getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO) != null
-						&& !getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO)
-								.equals("")) {
-					lTipoUfficio = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO);
+						&& !getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO).equals(
+								"")) {
+					lTipoUfficio = this
+							.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO);
 				}
-				String lSedeUfficio = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS);
-				String lUDS = getCodUfficioByCodTipoUfficioDescrComune(lTipoUfficio, lSedeUfficio);
+				String lSedeUfficio = this
+						.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS);
+				String lUDS = this.getCodUfficioByCodTipoUfficioDescrComune(lTipoUfficio, lSedeUfficio);
 
-				if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE_UDS)) {
-					String lNoteUDS = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE_UDS);
+				if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE_UDS)) {
+					String lNoteUDS = this
+							.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE_UDS);
 					lNotModTDS.setNote(lNoteUDS);
 				}
 				lNotModTDS.setCodEsito("-");
@@ -229,19 +237,22 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 		}
 
 		// SETTO NOTIFICA AUTORITA C solo per ripristino semilibertà
-		if (!isRequestParameterNullObj("notificaSemiliberta")
-				&& getRequestStringParameter("notificaSemiliberta").equals("S")) {
-			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_C)
-					&& getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_C) != null
-					&& !getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_C).equals("-"))
+		if (!this.isRequestParameterNullObj("notificaSemiliberta")
+				&& this.getRequestStringParameter("notificaSemiliberta").equals("S")) {
+			if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_C)
+					&& this.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_C) != null
+					&& !this.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_C)
+							.equals("-"))
 
 			{
-				String lPolizia = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_C);
-				String lSedePolizia = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_POL_C);
+				String lPolizia = this
+						.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_C);
+				String lSedePolizia = this
+						.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_POL_C);
 				NotificaModel lNotModPol = new NotificaModel();
-				if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_C)) {
-					String lNotePolizia = getRequestStringParameter(
-							ICostantiMisuraAlternativa.CAMPO_NOTE_POL_C);
+				if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_C)) {
+					String lNotePolizia = this
+							.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_C);
 					lNotModPol.setNote(lNotePolizia);
 				}
 				lNotModPol.setCodEsito("-");
@@ -265,16 +276,15 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 		}
 
 		// SETTO CSSA
-		if (!isRequestParameterNullObj(ICostantiCSSA.CAMPO_ID_CSSA)
+		if (!this.isRequestParameterNullObj(ICostantiCSSA.CAMPO_ID_CSSA)
 				&& getRequestBigDecimalParameter(ICostantiCSSA.CAMPO_ID_CSSA) != null
-				&& getRequestBigDecimalParameter(ICostantiCSSA.CAMPO_ID_CSSA)
-						.compareTo(new BigDecimal(0)) != 0
+				&& getRequestBigDecimalParameter(ICostantiCSSA.CAMPO_ID_CSSA).compareTo(new BigDecimal(0)) != 0
 				&& !getRequestBigDecimalParameter(ICostantiCSSA.CAMPO_ID_CSSA).toString().equals("-")) {
 			NotificaModel lNotModCSSA = new NotificaModel();
-			BigDecimal lCssa = getRequestBigDecimalParameter(ICostantiCSSA.CAMPO_ID_CSSA);
+			BigDecimal lCssa = this.getRequestBigDecimalParameter(ICostantiCSSA.CAMPO_ID_CSSA);
 
-			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE_CSSA)) {
-				String lNoteCssa = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE_CSSA);
+			if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE_CSSA)) {
+				String lNoteCssa = this.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE_CSSA);
 				lNotModCSSA.setNote(lNoteCssa);
 			}
 			lNotModCSSA.setCodEsito("-");
@@ -297,23 +307,26 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 
 		// SETTO UDS
 		if (isRequestParameterNullObj("UDSE")) {
-			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_UDS)
+			if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_UDS)
 					&& getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS) != null
 					&& !getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS).equals("")) {
 				NotificaModel lNotModTDS = new NotificaModel();
 
 				String lTipoUfficio = "UDS";
-				if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO)
+				if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO)
 						&& getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO) != null
-						&& !getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO)
-								.equals("")) {
-					lTipoUfficio = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO);
+						&& !getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO).equals(
+								"")) {
+					lTipoUfficio = this
+							.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO);
 				}
-				String lSedeUfficio = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS);
-				String lUDS = getCodUfficioByCodTipoUfficioDescrComune(lTipoUfficio, lSedeUfficio);
+				String lSedeUfficio = this
+						.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS);
+				String lUDS = this.getCodUfficioByCodTipoUfficioDescrComune(lTipoUfficio, lSedeUfficio);
 
-				if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE_UDS)) {
-					String lNoteUDS = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE_UDS);
+				if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE_UDS)) {
+					String lNoteUDS = this
+							.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE_UDS);
 					lNotModTDS.setNote(lNoteUDS);
 				}
 				lNotModTDS.setCodEsito("-");
@@ -328,16 +341,18 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 		}
 
 		// SETTO TDS
-		if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_TRIBUNALE)
-				&& !isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_SEDE_TDS)
+		if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_TRIBUNALE)
+				&& !this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_SEDE_TDS)
 				&& getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_TDS) != null
 				&& !getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_TDS).equals("")) {
 
 			NotificaModel lNotModTDS = new NotificaModel();
-			String lTribunale = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_TRIBUNALE);
-			String lSedeTribunale = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_TDS);
-			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE_TDS)) {
-				String lNoteTribunale = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE_TDS);
+			String lTribunale = this
+					.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_TRIBUNALE);
+			String lSedeTribunale = this.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_TDS);
+			if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE_TDS)) {
+				String lNoteTribunale = this
+						.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE_TDS);
 				lNotModTDS.setNote(lNoteTribunale);
 			}
 			lNotModTDS.setCodEsito("-");
@@ -353,13 +368,14 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 		}
 
 		// SETTO NOTIFICA AUTORITA N
-		if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_N)) {
+		if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_N)) {
 
-			String lPolizia = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_N);
-			String lSedePolizia = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_POL_N);
+			String lPolizia = this.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_N);
+			String lSedePolizia = this.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_POL_N);
 			NotificaModel lNotModPol = new NotificaModel();
-			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_N)) {
-				String lNotePolizia = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_N);
+			if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_N)) {
+				String lNotePolizia = this
+						.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_N);
 				lNotModPol.setNote(lNotePolizia);
 			}
 
@@ -383,18 +399,20 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 		}
 
 		// SETTO NOTIFICA AUTORITA C
-		if (isRequestParameterNullObj("notificaSemiliberta")) {
-			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_C)
-					&& getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_C) != null
-					&& !getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_C)
+		if (this.isRequestParameterNullObj("notificaSemiliberta")) {
+			if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_C)
+					&& this.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_C) != null
+					&& !this.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_C)
 							.equals("-")) {
 
-				String lPolizia = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_C);
-				String lSedePolizia = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_POL_C);
+				String lPolizia = this
+						.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_C);
+				String lSedePolizia = this
+						.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_POL_C);
 				NotificaModel lNotModPol = new NotificaModel();
-				if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_C)) {
-					String lNotePolizia = getRequestStringParameter(
-							ICostantiMisuraAlternativa.CAMPO_NOTE_POL_C);
+				if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_C)) {
+					String lNotePolizia = this
+							.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_C);
 					lNotModPol.setNote(lNotePolizia);
 				}
 				lNotModPol.setCodEsito("-");
@@ -420,15 +438,16 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 		}
 
 		// SETTO NOTIFICA AUTORITA preposta al controllo
-		if (!isRequestParameterNullObj(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_C)
-				&& getRequestStringParameter(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_C) != null
-				&& !getRequestStringParameter(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_C)
+		if (!this.isRequestParameterNullObj(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_C)
+				&& this.getRequestStringParameter(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_C) != null
+				&& !this.getRequestStringParameter(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_C)
 						.equals("-")) {
-			String lPolizia = getRequestStringParameter(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_C);
-			String lSedePolizia = getRequestStringParameter(ICostantiAutoritaEsterna.CAMPO_COD_SEDE_C);
+			String lPolizia = this
+					.getRequestStringParameter(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_C);
+			String lSedePolizia = this.getRequestStringParameter(ICostantiAutoritaEsterna.CAMPO_COD_SEDE_C);
 			NotificaModel lNotModPol = new NotificaModel();
-			if (!isRequestParameterNullObj(ICostantiNotifica.CAMPO_NOTE)) {
-				String lNotePolizia = getRequestStringParameter(ICostantiNotifica.CAMPO_NOTE);
+			if (!this.isRequestParameterNullObj(ICostantiNotifica.CAMPO_NOTE)) {
+				String lNotePolizia = this.getRequestStringParameter(ICostantiNotifica.CAMPO_NOTE);
 				lNotModPol.setNote(lNotePolizia);
 			}
 
@@ -453,15 +472,15 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 		}
 
 		// SETTO AUTORITA ESTERNA PER OS
-		if (!isRequestParameterNullObj(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E)) {
+		if (!this.isRequestParameterNullObj(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E)) {
 			if ((!posizionegiuridica.equals("03") || !posizionegiuridica.equals("14"))
-					&& (!isRequestParameterNullObj(
-							ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE))) {
+					&& (!this
+							.isRequestParameterNullObj(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE))) {
 				NotificaModel lNotModIst = new NotificaModel();
-				String lIstituto = getRequestStringParameter(
-						ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE);
-				if (!isRequestParameterNullObj(ICostantiNotifica.CAMPO_NOTE_IST)) {
-					String lNoteIstituto = getRequestStringParameter(ICostantiNotifica.CAMPO_NOTE_IST);
+				String lIstituto = this
+						.getRequestStringParameter(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE);
+				if (!this.isRequestParameterNullObj(ICostantiNotifica.CAMPO_NOTE_IST)) {
+					String lNoteIstituto = this.getRequestStringParameter(ICostantiNotifica.CAMPO_NOTE_IST);
 					lNotModIst.setNote(lNoteIstituto);
 				}
 				lNotModIst.setCodEsito("-");
@@ -474,13 +493,13 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 				lNotModIst.setIstDetIdIstitutoDetenzione(lIstituto);
 				lNotifiche.add(lNotModIst);
 			}
-			String lTipoAutoritaEsternaE = getRequestStringParameter(
-					ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E);
-			String lSedeAutoritaEsternaE = getRequestStringParameter(
-					ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E);
+			String lTipoAutoritaEsternaE = this
+					.getRequestStringParameter(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E);
+			String lSedeAutoritaEsternaE = this
+					.getRequestStringParameter(ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E);
 			NotificaModel lNotModPolE = new NotificaModel();
-			if (!isRequestParameterNullObj(ICostantiNotifica.CAMPO_NOTE_E)) {
-				String lSedeNoteE = getRequestStringParameter(ICostantiNotifica.CAMPO_NOTE_E);
+			if (!this.isRequestParameterNullObj(ICostantiNotifica.CAMPO_NOTE_E)) {
+				String lSedeNoteE = this.getRequestStringParameter(ICostantiNotifica.CAMPO_NOTE_E);
 				lNotModPolE.setNote(lSedeNoteE);
 			}
 
@@ -506,12 +525,12 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 		}
 
 		// SETTO PARAMETRI DELLA MASCHERA CON FUNGIBILITA
-		if (!isRequestParameterNullObj(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_FUNGI)) {
-			String lDestinatario_F = getRequestStringParameter(
-					ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_FUNGI);
-			String lSedeDestinatario_F = getRequestStringParameter(
-					ICostantiAutoritaEsterna.CAMPO_COD_SEDE_FUNGI);
-			String lNote_F = getRequestStringParameter(ICostantiNotifica.CAMPO_NOTE_FUNGI);
+		if (!this.isRequestParameterNullObj(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_FUNGI)) {
+			String lDestinatario_F = this
+					.getRequestStringParameter(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_FUNGI);
+			String lSedeDestinatario_F = this
+					.getRequestStringParameter(ICostantiAutoritaEsterna.CAMPO_COD_SEDE_FUNGI);
+			String lNote_F = this.getRequestStringParameter(ICostantiNotifica.CAMPO_NOTE_FUNGI);
 
 			NotificaModel lNotModFungi = new NotificaModel();
 
@@ -542,32 +561,35 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 		// Prova' DL 146 20/01/2014 d.f.
 		// ==========================================================================
 		if (!isRequestParameterNullObj(ICostantiSospensione.CAMPO_RESTITUZIONE_OE)) {
-			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_R)
-					&& getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_R) != null
-					&& !getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_R).equals("")
-					&& !getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_R)
+			if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_R)
+					&& this.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_R) != null
+					&& !this.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_R)
+							.equals("")
+					&& !this.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_R)
 							.equals("-")) {
 
 				NotificaModel lNotModPol = new NotificaModel();
 
-				if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_R)) {
-					String lNotePolizia = getRequestStringParameter(
-							ICostantiMisuraAlternativa.CAMPO_NOTE_POL_R);
+				if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_R)) {
+					String lNotePolizia = this
+							.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_R);
 					lNotModPol.setNote(lNotePolizia);
 				}
 
 				lNotModPol.setCodEsito("-");
 				lNotModPol.setCodTipoNotifica("R");
-				lNotModPol.setDataInvio(
-						getRequestDateParameter(ICostantiEvento.CAMPO_DATA_EMISSIONE, "dd-MM-yyyy"));
+				lNotModPol.setDataInvio(getRequestDateParameter(ICostantiEvento.CAMPO_DATA_EMISSIONE,
+						"dd-MM-yyyy"));
 
 				lNotModPol.setCodOperatoreInserimento(lCodiceOperatore);
 				lNotModPol.setDataInserimento(DateUtils.getSysDate());
 				lNotModPol.setCodUfficioInserimento(lCodiceUfficio);
 
 				AutoritaEsternaModel lAut = new AutoritaEsternaModel();
-				String lPolizia = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_R);
-				String lSedePolizia = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_POL_R);
+				String lPolizia = this
+						.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_R);
+				String lSedePolizia = this
+						.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_POL_R);
 
 				lAut.setCodTipoAutorita(lPolizia);
 
@@ -589,8 +611,8 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 
 		// AVVOCATI
 		int lIndex = 0;
-		if (!isRequestParameterNullObj(ICostantiAvvocato.CAMPO_ID_AVVOCATO)) {
-			String[] lAvvocati = getRequestStringParameters(ICostantiAvvocato.CAMPO_ID_AVVOCATO);
+		if (!this.isRequestParameterNullObj(ICostantiAvvocato.CAMPO_ID_AVVOCATO)) {
+			String[] lAvvocati = this.getRequestStringParameters(ICostantiAvvocato.CAMPO_ID_AVVOCATO);
 			for (lIndex = 0; lIndex < lAvvocati.length; lIndex++) {
 				if ("".equals(lAvvocati[lIndex])) {
 					// 23-01-2014 d.f. per gestire il caso di Avvocati presenti in maschera
@@ -609,14 +631,14 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 				lNotAvv.setCodUfficioInserimento(lCodiceUfficio);
 				lNotAvv.setAvvIdAvvocatoFascicoloSiep(new BigDecimal(lAvvocati[lIndex]));
 
-				if (!isRequestParameterNullObj(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA)) {
-					String[] lTipoAutoritaEsternaAvvocato = getRequestStringParameters(
-							ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA);
-					String[] lSedeAutoritaEsternaAvvocato = getRequestStringParameters(
-							ICostantiAutoritaEsterna.CAMPO_COD_SEDE);
+				if (!this.isRequestParameterNullObj(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA)) {
+					String[] lTipoAutoritaEsternaAvvocato = this
+							.getRequestStringParameters(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA);
+					String[] lSedeAutoritaEsternaAvvocato = this
+							.getRequestStringParameters(ICostantiAutoritaEsterna.CAMPO_COD_SEDE);
 
-					String[] lNoteAvvocato = getRequestStringParameters(
-							ICostantiMisuraAlternativa.CAMPO_NOTE_AVVOCATI);
+					String[] lNoteAvvocato = this
+							.getRequestStringParameters(ICostantiMisuraAlternativa.CAMPO_NOTE_AVVOCATI);
 					lNotAvv.setNote(lNoteAvvocato[lIndex]);
 					AutoritaEsternaModel lAut = new AutoritaEsternaModel();
 					lAut = new AutoritaEsternaModel();
@@ -643,17 +665,15 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 
 	/**
 	 * Imposta tutte le notifiche associate all'evento prodotto
-	 *
+	 * 
 	 * @param
 	 * @return NotificaModel[]
 	 * @throws F3BException
 	 */
-	protected NotificaModel[] setNotificheRipristinoArrestiDomiciliariMisuraAlternativa()
-			throws F3BException {
-
+	protected NotificaModel[] setNotificheRipristinoArrestiDomiciliariMisuraAlternativa() throws F3BException {
 		// FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
-		String lCodiceOperatore = getCodUtenteConnesso();
-		String lCodiceUfficio = getCodUfficioUtenteConnesso();
+		String lCodiceOperatore = this.getCodUtenteConnesso();
+		String lCodiceUfficio = this.getCodUfficioUtenteConnesso();
 		Date lDataEmissione = getRequestDateParameter(ICostantiNotifica.CAMPO_ANNO_DATA_INVIO,
 				ICostantiNotifica.CAMPO_MESE_DATA_INVIO, ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO);
 		// String posizionegiuridica = getRequestStringParameter("posizionegiuridica");
@@ -661,9 +681,9 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 		ArrayList lNotifiche = new ArrayList();
 
 		String lUfficioScarc = "-";
-		if (getRequestStringParameter("tipo").equals("mds"))
+		if (this.getRequestStringParameter("tipo").equals("mds"))
 			lUfficioScarc = "SORV"; // Eseguita da Magistrato di Sorveglianza
-		else if (getRequestStringParameter("tipo").equals("procura"))
+		else if (this.getRequestStringParameter("tipo").equals("procura"))
 			lUfficioScarc = "PROC";// Esegue Procura
 
 		NotificaModel lNotMod = new NotificaModel();
@@ -685,9 +705,10 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 			// CSS_ID_CSSA
 			lNotMod.setCssIdCssa(null);
 			// IST_DET_ID_ISTITUTO_DETENZIONE
-			if (!isRequestParameterNullObj(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE)) {
-				String istituto = getRequestStringParameter(
-						ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE);
+			if (!this
+					.isRequestParameterNullObj(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE)) {
+				String istituto = this
+						.getRequestStringParameter(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE);
 				lNotMod.setIstDetIdIstitutoDetenzione(istituto);
 			} else {
 				lNotMod.setIstDetIdIstitutoDetenzione(null);
@@ -708,20 +729,22 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 			// AUT_EST_ID_AUTORITA_ESTERNA(Autorità competente per territorio)
 			AutoritaEsternaModel aut = new AutoritaEsternaModel();
 			String tipoAutoritaEsternaE = "";
-			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E)) {
-				tipoAutoritaEsternaE = getRequestStringParameter(
-						ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E);
+			if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E)) {
+				tipoAutoritaEsternaE = this
+						.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E);
 			} else {
 				tipoAutoritaEsternaE = "-";
 			}
 			String sedeAutoritaEsternaE = "";
-			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_SEDE_E)) {
-				sedeAutoritaEsternaE = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_SEDE_E);
+			if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_SEDE_E)) {
+				sedeAutoritaEsternaE = this
+						.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_SEDE_E);
 			} else {
 				sedeAutoritaEsternaE = "-";
 			}
-			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_E)) {
-				String lSedeNoteE = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_E);
+			if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_E)) {
+				String lSedeNoteE = this
+						.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_E);
 				lNotMod.setNote(lSedeNoteE);// Indirizzo
 			}
 			aut = new AutoritaEsternaModel();
@@ -759,8 +782,8 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 		lNotMod.setAvvIdAvvocatoFascicoloSiep(null);
 		// CSS_ID_CSSA(UEPE)
 		BigDecimal lCssa = null;
-		if (!isRequestParameterNullObj(ICostantiCSSA.CAMPO_ID_CSSA)) {
-			lCssa = getRequestBigDecimalParameter(ICostantiCSSA.CAMPO_ID_CSSA);
+		if (!this.isRequestParameterNullObj(ICostantiCSSA.CAMPO_ID_CSSA)) {
+			lCssa = this.getRequestBigDecimalParameter(ICostantiCSSA.CAMPO_ID_CSSA);
 		}
 		lNotMod.setCssIdCssa(lCssa);
 		// IST_DET_ID_ISTITUTO_DETENZIONE
@@ -789,19 +812,19 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 		// IST_DET_ID_ISTITUTO_DETENZIONE
 		lNotMod.setIstDetIdIstitutoDetenzione(null);
 		// Magistrato di Sorveglianza
-		if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_UDS)
+		if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_UDS)
 				&& getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS) != null
 				&& !getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS).equals("")) {
 			// NotificaModel lNotModTDS = new NotificaModel();
 			String lTipoUfficio = "UDS";
 			// MEV10-s3: aggiunto controllo altrimenti invia sempre UDS
-			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO)
+			if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO)
 					&& getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO) != null
 					&& !getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO).equals("")) {
-				lTipoUfficio = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO);
+				lTipoUfficio = this.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO);
 			}
-			String lSedeUfficio = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS);
-			String lUDS = getCodUfficioByCodTipoUfficioDescrComune(lTipoUfficio, lSedeUfficio);
+			String lSedeUfficio = this.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS);
+			String lUDS = this.getCodUfficioByCodTipoUfficioDescrComune(lTipoUfficio, lSedeUfficio);
 			lNotMod.setUffCodUfficio(lUDS);
 		}
 		lNotMod.setNote(null);
@@ -826,16 +849,17 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 		// IST_DET_ID_ISTITUTO_DETENZIONE
 		lNotMod.setIstDetIdIstitutoDetenzione(null);
 		// Tribunale di Sorveglianza
-		if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_TRIBUNALE)
-				&& !isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_SEDE_TDS)
+		if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_TRIBUNALE)
+				&& !this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_SEDE_TDS)
 				&& getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_TDS) != null
 				&& !getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_TDS).equals("")) {
 			// NotificaModel lNotModTDS = new NotificaModel();
-			String lTribunale = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_TRIBUNALE);
-			String lSedeTribunale = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_TDS);
+			String lTribunale = this
+					.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_TRIBUNALE);
+			String lSedeTribunale = this.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_TDS);
 			String lCodiceUff = getCodUfficioByCodTipoUfficioDescrComune(lTribunale, lSedeTribunale);
-			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE)) {
-				String lSedeNoteE = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE);
+			if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE)) {
+				String lSedeNoteE = this.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE);
 				lNotMod.setNote(lSedeNoteE);
 			}
 			lNotMod.setUffCodUfficio(lCodiceUff);
@@ -850,12 +874,13 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 			// COD_TIPO_NOTIFICA
 			lNotMod.setCodTipoNotifica("C");
 			// AUT_EST_ID_AUTORITA_ESTERNA
-			String tipoAutoritaEsternaE = getRequestStringParameter(
-					ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E);
-			String sedeAutoritaEsternaE = getRequestStringParameter(
-					ICostantiMisuraAlternativa.CAMPO_COD_SEDE_E);
-			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_E)) {
-				String lSedeNoteE = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_E);
+			String tipoAutoritaEsternaE = this
+					.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E);
+			String sedeAutoritaEsternaE = this
+					.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_SEDE_E);
+			if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_E)) {
+				String lSedeNoteE = this
+						.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_E);
 				lNotMod.setNote(lSedeNoteE);// Indirizzo
 			}
 			lNotMod.setCodEsito("-");
@@ -890,26 +915,25 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 
 	/**
 	 * Imposta tutte le notifiche associate all'evento prodotto
-	 *
+	 * 
 	 * @param
 	 * @return NotificaModel[]
 	 * @throws F3BException
 	 */
 	protected NotificaModel[] setNotificheSospensioneArrestiDomiciliariMisuraAlternativa()
 			throws F3BException {
-
 		// FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
-		String lCodiceOperatore = getCodUtenteConnesso();
-		String lCodiceUfficio = getCodUfficioUtenteConnesso();
+		String lCodiceOperatore = this.getCodUtenteConnesso();
+		String lCodiceUfficio = this.getCodUfficioUtenteConnesso();
 		Date lDataEmissione = getRequestDateParameter(ICostantiNotifica.CAMPO_ANNO_DATA_INVIO,
 				ICostantiNotifica.CAMPO_MESE_DATA_INVIO, ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO);
 		// String posizionegiuridica = getRequestStringParameter("posizionegiuridica");
 
 		ArrayList lNotifiche = new ArrayList();
 		String lUfficioScarc = "-";
-		if (getRequestStringParameter("tipo").equals("mds"))
+		if (this.getRequestStringParameter("tipo").equals("mds"))
 			lUfficioScarc = "SORV"; // Eseguita da Magistrato di Sorveglianza
-		else if (getRequestStringParameter("tipo").equals("procura"))
+		else if (this.getRequestStringParameter("tipo").equals("procura"))
 			lUfficioScarc = "PROC";// Esegue Procura
 
 		// INIZIO NOTIFICA AUTORITA E
@@ -919,8 +943,9 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 		// AUT_EST_ID_AUTORITA_ESTERNA
 		if (lUfficioScarc.equalsIgnoreCase("PROC")) {
 			AutoritaEsternaModel aut = new AutoritaEsternaModel();
-			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_E)) {
-				String lSedeNoteE = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_E);
+			if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_E)) {
+				String lSedeNoteE = this
+						.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_E);
 				lNotMod.setNote(lSedeNoteE);
 			}
 			lNotMod.setCodEsito("-");
@@ -928,16 +953,15 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 			lNotMod.setDataInserimento(DateUtils.getSysDate());
 			lNotMod.setCodUfficioInserimento(lCodiceUfficio);
 			lNotMod.setDataInvio(lDataEmissione);
-			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E)) {
-				aut.setCodTipoAutorita(
-						getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E));
+			if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E)) {
+				aut.setCodTipoAutorita(getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E));
 			} else {
 				aut.setCodTipoAutorita("-");
 			}
-			ComuneModel lComMod = new ComuneModel(getCodComuneByDescrFlagVal(
-					getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_POL_E)));
+			ComuneModel lComMod = new ComuneModel(
+					getCodComuneByDescrFlagVal(getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_POL_E)));
 			aut.setCodSede(lComMod.getCodComune());
-			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_SEDE_POL_E)) {
+			if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_SEDE_POL_E)) {
 				aut.setDescrSede(getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_POL_E));
 			} else {
 				aut.setDescrSede(null);
@@ -962,9 +986,9 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 		lNotMod.setCssIdCssa(null);
 		// IST_DET_ID_ISTITUTO_DETENZIONE
 		String istituto = "";
-		if (!isRequestParameterNullObj(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE)) {
-			istituto = getRequestStringParameter(
-					ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE);
+		if (!this.isRequestParameterNullObj(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE)) {
+			istituto = this
+					.getRequestStringParameter(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE);
 			lNotMod.setIstDetIdIstitutoDetenzione(istituto);
 		} else {
 			lNotMod.setIstDetIdIstitutoDetenzione(null);
@@ -995,19 +1019,19 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 		// IST_DET_ID_ISTITUTO_DETENZIONE
 		lNotMod.setIstDetIdIstitutoDetenzione(null);
 		// Magistrato di Sorveglianza
-		if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_UDS)
+		if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_UDS)
 				&& getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS) != null
 				&& !getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS).equals("")) {
 			// NotificaModel lNotModTDS = new NotificaModel();
 			String lTipoUfficio = "UDS";
 			// MEV10-s3: aggiunto controllo altrimenti invia sempre UDS
-			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO)
+			if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO)
 					&& getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO) != null
 					&& !getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO).equals("")) {
-				lTipoUfficio = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO);
+				lTipoUfficio = this.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO);
 			}
-			String lSedeUfficio = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS);
-			String lUDS = getCodUfficioByCodTipoUfficioDescrComune(lTipoUfficio, lSedeUfficio);
+			String lSedeUfficio = this.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS);
+			String lUDS = this.getCodUfficioByCodTipoUfficioDescrComune(lTipoUfficio, lSedeUfficio);
 			lNotMod.setUffCodUfficio(lUDS);
 		}
 		lNotMod.setNote(null);
@@ -1032,13 +1056,14 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 		// IST_DET_ID_ISTITUTO_DETENZIONE
 		lNotMod.setIstDetIdIstitutoDetenzione(null);
 		// Tribunale di Sorveglianza
-		if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_TRIBUNALE)
-				&& !isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_SEDE_TDS)
+		if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_TRIBUNALE)
+				&& !this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_SEDE_TDS)
 				&& getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_TDS) != null
 				&& !getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_TDS).equals("")) {
 			// NotificaModel lNotModTDS = new NotificaModel();
-			String lTribunale = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_TRIBUNALE);
-			String lSedeTribunale = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_TDS);
+			String lTribunale = this
+					.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_TRIBUNALE);
+			String lSedeTribunale = this.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_TDS);
 			String lCodiceUff = getCodUfficioByCodTipoUfficioDescrComune(lTribunale, lSedeTribunale);
 			lNotMod.setUffCodUfficio(lCodiceUff);
 		}
@@ -1051,24 +1076,22 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 
 	/**
 	 * Imposta tutte le notifiche associate all'evento prodotto
-	 *
+	 * 
 	 * @param
 	 * @return NotificaModel[]
 	 * @throws F3BException
 	 */
 	protected NotificaModel[] setNotificheRevocaArrestiDomiciliariMisuraAlternativa() throws F3BException {
-
 		// FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
-		String lCodiceOperatore = getCodUtenteConnesso();
-		String lCodiceUfficio = getCodUfficioUtenteConnesso();
+		String lCodiceOperatore = this.getCodUtenteConnesso();
+		String lCodiceUfficio = this.getCodUfficioUtenteConnesso();
 		Date lDataEmissione = getRequestDateParameter(ICostantiNotifica.CAMPO_ANNO_DATA_INVIO,
 				ICostantiNotifica.CAMPO_MESE_DATA_INVIO, ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO);
 		// String posizionegiuridica = getRequestStringParameter("posizionegiuridica");
 
 		// revocaDopoSospensioneProvvisoria = "dopoSospensione";//indiretta
 		// revocaDopoSospensioneProvvisoria = "direttamente";
-		String revocaDopoSospensioneProvvisoria = getRequestStringParameter(
-				"revocaDopoSospensioneProvvisoria");
+		String revocaDopoSospensioneProvvisoria = getRequestStringParameter("revocaDopoSospensioneProvvisoria");
 
 		ArrayList lNotifiche = new ArrayList();
 
@@ -1077,8 +1100,8 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 		// COD_TIPO_NOTIFICA
 		lNotMod.setCodTipoNotifica("E");
 		// AUT_EST_ID_AUTORITA_ESTERNA(Autorità competente per territorio)
-		if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_E)) {
-			String lSedeNoteE = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_E);
+		if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_E)) {
+			String lSedeNoteE = this.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_E);
 			lNotMod.setNote(lSedeNoteE);
 		}
 		lNotMod.setCodEsito("-");
@@ -1090,18 +1113,20 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 		if (revocaDopoSospensioneProvvisoria.equalsIgnoreCase("direttamente")) {
 			// AUT_EST_ID_AUTORITA_ESTERNA
 			String tipoAutoritaEsternaE;
-			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E)) {
-				tipoAutoritaEsternaE = getRequestStringParameter(
-						ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E);
+			if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E)) {
+				tipoAutoritaEsternaE = this
+						.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E);
 			} else {
 				tipoAutoritaEsternaE = "-";
 			}
 			String sedeAutoritaEsternaE = "-";
-			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_SEDE_POL_E)) {
-				sedeAutoritaEsternaE = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_POL_E);
+			if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_SEDE_POL_E)) {
+				sedeAutoritaEsternaE = this
+						.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_POL_E);
 			}
-			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_E)) {
-				String lSedeNoteE = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_E);
+			if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_E)) {
+				String lSedeNoteE = this
+						.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE_POL_E);
 				lNotMod.setNote(lSedeNoteE);
 			}
 			lNotMod.setCodEsito("-");
@@ -1128,9 +1153,10 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 		// IST_DET_ID_ISTITUTO_DETENZIONE
 		String istituto = "";
 		if (revocaDopoSospensioneProvvisoria.equalsIgnoreCase("dopoSospensione")) {
-			if (!isRequestParameterNullObj(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE)) {
-				istituto = getRequestStringParameter(
-						ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE);
+			if (!this
+					.isRequestParameterNullObj(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE)) {
+				istituto = this
+						.getRequestStringParameter(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE);
 				lNotMod.setIstDetIdIstitutoDetenzione(istituto);
 			}
 		} else {
@@ -1160,13 +1186,14 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 		// IST_DET_ID_ISTITUTO_DETENZIONE
 		lNotMod.setIstDetIdIstitutoDetenzione(null);
 		// Tribunale di Sorveglianza
-		if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_TRIBUNALE)
-				&& !isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_SEDE_TDS)
+		if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_TRIBUNALE)
+				&& !this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_SEDE_TDS)
 				&& getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_TDS) != null
 				&& !getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_TDS).equals("")) {
 			// NotificaModel lNotModTDS = new NotificaModel();
-			String lTribunale = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_TRIBUNALE);
-			String lSedeTribunale = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_TDS);
+			String lTribunale = this
+					.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_TRIBUNALE);
+			String lSedeTribunale = this.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_TDS);
 			String lCodiceUff = getCodUfficioByCodTipoUfficioDescrComune(lTribunale, lSedeTribunale);
 			lNotMod.setUffCodUfficio(lCodiceUff);
 		}
@@ -1186,18 +1213,19 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 		// AUT_EST_ID_AUTORITA_ESTERNA
 		// nel caso"N" l'autorita' esterna è "Ufficio di Destinazione"
 		String tipoAutoritaEsternaE;
-		if (!isRequestParameterNullObj(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA)) {
-			tipoAutoritaEsternaE = getRequestStringParameter(
-					ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA);
+		if (!this.isRequestParameterNullObj(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA)) {
+			tipoAutoritaEsternaE = this
+					.getRequestStringParameter(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA);
 		} else {
 			tipoAutoritaEsternaE = "-";
 		}
 		String sedeAutoritaEsternaE = "-";
-		if (!isRequestParameterNullObj(ICostantiAutoritaEsterna.CAMPO_COD_SEDE)) {
-			sedeAutoritaEsternaE = getRequestStringParameter(ICostantiAutoritaEsterna.CAMPO_COD_SEDE);
+		if (!this.isRequestParameterNullObj(ICostantiAutoritaEsterna.CAMPO_COD_SEDE)) {
+			sedeAutoritaEsternaE = this.getRequestStringParameter(ICostantiAutoritaEsterna.CAMPO_COD_SEDE);
 		}
-		if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE_AVVOCATI)) {
-			String lSedeNoteE = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE_AVVOCATI);
+		if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE_AVVOCATI)) {
+			String lSedeNoteE = this
+					.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE_AVVOCATI);
 			lNotMod.setNote(lSedeNoteE);
 		}
 		lNotMod.setCodEsito("-");
@@ -1215,7 +1243,7 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 		aut.setDataInserimento(DateUtils.getSysDate());
 		lNotMod.setAutoritaEsterna(aut);
 		// AVV_ID_AVVOCATO_FASCICOLO_SIEP
-		String avvocato = getRequestStringParameter(ICostantiAvvocato.CAMPO_ID_AVVOCATO);
+		String avvocato = this.getRequestStringParameter(ICostantiAvvocato.CAMPO_ID_AVVOCATO);
 		lNotMod.setAvvIdAvvocatoFascicoloSiep(new BigDecimal(avvocato));
 		// CSS_ID_CSSA
 		lNotMod.setCssIdCssa(null);
@@ -1299,19 +1327,19 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 		// IST_DET_ID_ISTITUTO_DETENZIONE
 		lNotMod.setIstDetIdIstitutoDetenzione(null);
 		// Magistrato di Sorveglianza
-		if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_UDS)
+		if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_UDS)
 				&& getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS) != null
 				&& !getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS).equals("")) {
 			// NotificaModel lNotModTDS = new NotificaModel();
 			String lTipoUfficio = "UDS";
 			// MEV10-s3: aggiunto controllo altrimenti invia sempre UDS
-			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO)
+			if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO)
 					&& getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO) != null
 					&& !getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO).equals("")) {
-				lTipoUfficio = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO);
+				lTipoUfficio = this.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO);
 			}
-			String lSedeUfficio = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS);
-			String lUDS = getCodUfficioByCodTipoUfficioDescrComune(lTipoUfficio, lSedeUfficio);
+			String lSedeUfficio = this.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS);
+			String lUDS = this.getCodUfficioByCodTipoUfficioDescrComune(lTipoUfficio, lSedeUfficio);
 			lNotMod.setUffCodUfficio(lUDS);
 		}
 		lNotMod.setNote(null);
@@ -1322,12 +1350,11 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 
 	/**
 	 * ricerca notifiche
-	 *
+	 * 
 	 * @param aNotifiche
 	 * @return
 	 */
 	protected Hashtable ricercaNotifiche(NotificaModel[] aNotifiche) {
-
 		Hashtable lTable = new Hashtable();
 
 		for (int i = 0; i < aNotifiche.length; i++) {
@@ -1406,25 +1433,24 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 
 	/**
 	 * set DepositoOrdinanzaPc
-	 *
+	 * 
 	 * @param aUfficioEmittente
 	 * @return
 	 * @throws F3BException
 	 */
 	protected DepositoOrdinanzaPcModel setDepositoOrdinanzaPc(String aUfficioEmittente) throws F3BException {
-
 		// FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
-		String lCodiceOperatore = getCodUtenteConnesso();
-		String lCodiceUfficio = getCodUfficioUtenteConnesso();
+		String lCodiceOperatore = this.getCodUtenteConnesso();
+		String lCodiceUfficio = this.getCodUfficioUtenteConnesso();
 
 		DepositoOrdinanzaPcModel lDepOrdMod = new DepositoOrdinanzaPcModel();
 		lDepOrdMod.setAnnoS3(getRequestBigDecimalParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO));
 		lDepOrdMod.setNumS3(getRequestBigDecimalParameter(ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO));
 
-		lDepOrdMod
-				.setDataUdienza(getRequestDateParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE,
-						ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE,
-						ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE));
+		lDepOrdMod.setDataUdienza(getRequestDateParameter(
+				ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE,
+				ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE,
+				ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE));
 
 		lDepOrdMod.setCodUfficioInserimento(lCodiceUfficio);
 		lDepOrdMod.setCodOperatoreInserimento(lCodiceOperatore);
@@ -1444,18 +1470,17 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 	 * @throws F3BException
 	 */
 	protected DepositoDecretoModel setDepositoDecreto(String aUfficioEmittente) throws F3BException {
-
 		// FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
-		String lCodiceOperatore = getCodUtenteConnesso();
-		String lCodiceUfficio = getCodUfficioUtenteConnesso();
+		String lCodiceOperatore = this.getCodUtenteConnesso();
+		String lCodiceUfficio = this.getCodUfficioUtenteConnesso();
 
 		DepositoDecretoModel lDepDecMod = new DepositoDecretoModel();
 		lDepDecMod.setAnnoS72(getRequestBigDecimalParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO));
 		lDepDecMod.setNumS72(getRequestBigDecimalParameter(ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO));
-		lDepDecMod.setDataEmissione(
-				getRequestDateParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE,
-						ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE,
-						ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE));
+		lDepDecMod.setDataEmissione(getRequestDateParameter(
+				ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE,
+				ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE,
+				ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE));
 		lDepDecMod.setCodUfficioInserimento(lCodiceUfficio);
 		lDepDecMod.setCodOperatoreInserimento(lCodiceOperatore);
 		lDepDecMod.setDataInserimento(DateUtils.getSysDate());
@@ -1474,9 +1499,8 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 	 * @throws F3BException
 	 */
 	protected TenoreModel setTenore(BigDecimal aProgre, String aEsito) throws F3BException {
-
-		String lCodiceOperatore = getCodUtenteConnesso();
-		String lCodiceUfficio = getCodUfficioUtenteConnesso();
+		String lCodiceOperatore = this.getCodUtenteConnesso();
+		String lCodiceUfficio = this.getCodUfficioUtenteConnesso();
 
 		TenoreModel lTenMod = new TenoreModel();
 		lTenMod.setCodEsitoTenore(aEsito);
@@ -1505,9 +1529,8 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 	 */
 	protected TenoreModel setTenoreRipristinoArrestoDom(BigDecimal aProgre, String aEsito)
 			throws F3BException {
-
-		String lCodiceOperatore = getCodUtenteConnesso();
-		String lCodiceUfficio = getCodUfficioUtenteConnesso();
+		String lCodiceOperatore = this.getCodUtenteConnesso();
+		String lCodiceUfficio = this.getCodUfficioUtenteConnesso();
 
 		TenoreModel lTenMod = new TenoreModel();
 		lTenMod.setCodEsitoTenore(aEsito);
@@ -1517,14 +1540,12 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 				ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE));
 
 		// lTenMod.setCodOggettoTenore(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO));
-		if (!isRequestParameterNullObj(ICostantiEvento.CAMPO_COD_MOTIVO_TRIBUNALE)
+		if (!this.isRequestParameterNullObj(ICostantiEvento.CAMPO_COD_MOTIVO_TRIBUNALE)
 				&& getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO_TRIBUNALE) != null)
-			lTenMod.setCodOggettoTenore(
-					getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO_TRIBUNALE));
-		else if (!isRequestParameterNullObj(ICostantiEvento.CAMPO_COD_MOTIVO_MAGISTRATO)
+			lTenMod.setCodOggettoTenore(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO_TRIBUNALE));
+		else if (!this.isRequestParameterNullObj(ICostantiEvento.CAMPO_COD_MOTIVO_MAGISTRATO)
 				&& getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO_MAGISTRATO) != null)
-			lTenMod.setCodOggettoTenore(
-					getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO_MAGISTRATO));
+			lTenMod.setCodOggettoTenore(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO_MAGISTRATO));
 
 		lTenMod.setProgrTenore(aProgre);
 		lTenMod.setCodUfficioInserimento(lCodiceUfficio);
@@ -1548,45 +1569,31 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento
 	 */
 	protected MisuraAlternativaModel setMisuraAlternativa(String aTipoDecisione, String aNaturaDecisione,
 			String aChiaveUff, String aMotivo, String aUfficioScarcerazione) throws F3BException {
-
 		FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
-		String lCodiceOperatore = getCodUtenteConnesso();
-		String lCodiceUfficio = getCodUfficioUtenteConnesso();
+		String lCodiceOperatore = this.getCodUtenteConnesso();
+		String lCodiceUfficio = this.getCodUfficioUtenteConnesso();
 
 		MisuraAlternativaModel lMisMod = new MisuraAlternativaModel();
 
 		lMisMod.setCodTipoDecisione(aTipoDecisione);
 		lMisMod.setCodNaturaDecisione(aNaturaDecisione);
 		lMisMod.setCodTipoMisura(aMotivo);
-		lMisMod.setDataDecisione(getRequestDateParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE,
+		lMisMod.setDataDecisione(getRequestDateParameter(
+				ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE,
 				ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE,
 				ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE));
 		lMisMod.setChiaveUfficioFascicoloSius(aChiaveUff);
 		lMisMod.setNote(getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE));
-		lMisMod.setAnnoRegistro(
-				getRequestBigDecimalParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO));
-		lMisMod.setNumeroRegistro(
-				getRequestBigDecimalParameter(ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO));
-		lMisMod.setChiaveProgrFascicoloSius(
-				getRequestBigDecimalParameter(ICostantiMisuraAlternativa.CAMPO_CHIAVE_PROGR_FASCICOLO_SIUS));
-		lMisMod.setChiaveAnnoFascicoloSius(
-				getRequestBigDecimalParameter(ICostantiMisuraAlternativa.CAMPO_CHIAVE_ANNO_FASCICOLO_SIUS));
+		lMisMod.setAnnoRegistro(getRequestBigDecimalParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO));
+		lMisMod.setNumeroRegistro(getRequestBigDecimalParameter(ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO));
+		lMisMod.setChiaveProgrFascicoloSius(getRequestBigDecimalParameter(ICostantiMisuraAlternativa.CAMPO_CHIAVE_PROGR_FASCICOLO_SIUS));
+		lMisMod.setChiaveAnnoFascicoloSius(getRequestBigDecimalParameter(ICostantiMisuraAlternativa.CAMPO_CHIAVE_ANNO_FASCICOLO_SIUS));
 		lMisMod.setFasSieIdFascicoloSiep(lFascicoloModel.getIdFascicoloSiep());
 		lMisMod.setCodUfficioInserimento(lCodiceUfficio);
 		lMisMod.setCodOperatoreInserimento(lCodiceOperatore);
 		lMisMod.setCodTipoUfficioScarcerazione(aUfficioScarcerazione);
 		lMisMod.setDataInserimento(DateUtils.getSysDate());
 		lMisMod.setFlagUfficioInserimento("P");
-
-		// MEV_2019-09 - SI aggiunge la data Esecutività
-		if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA)
-				&& getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA) != null
-				&& !getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA)
-						.equals("-"))
-			lMisMod.setDataEsecutivita(
-					getRequestDateParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA,
-							ICostantiMisuraAlternativa.CAMPO_MESE_DATA_ESECUTIVITA,
-							ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA));
 
 		return lMisMod;
 	}

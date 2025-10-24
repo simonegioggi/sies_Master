@@ -1,12 +1,5 @@
 package it.mig.sies.business;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
-
-import org.apache.log4j.Logger;
-
 import it.mig.sies.exception.ControlException;
 import it.mig.sies.exception.LoadException;
 import it.mig.sies.exception.ProfileException;
@@ -25,11 +18,19 @@ import it.mig.sies.type.foglicomplementari.FoglioComplementare;
 import it.mig.sies.type.foglicomplementari.RequestData;
 import it.mig.sies.util.ApplicationProperties;
 import it.mig.sies.util.Mapper;
+import it.mig.sies.util.PropertyUtil;
 import it.mig.sies.util.SiesDAO;
+
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+
+import org.apache.log4j.Logger;
 
 /**
  * MEV 16 - Servizio di caricamento dei dati necessari per effettuare la richiesta
- *
+ * 
  * @author Simone Gioggi
  *
  */
@@ -51,7 +52,7 @@ public class LoadTrasferisciFCService {
 
 	/**
 	 * Costuttore
-	 *
+	 * 
 	 * @param idEvento
 	 */
 	public LoadTrasferisciFCService(String idEvento) {
@@ -63,7 +64,7 @@ public class LoadTrasferisciFCService {
 
 	/**
 	 * Costruttore usato solo per il trasferimento massivo senza un utente...da modificare
-	 *
+	 * 
 	 * @param idEvento
 	 * @param action
 	 */
@@ -77,7 +78,7 @@ public class LoadTrasferisciFCService {
 
 	/**
 	 * Costruttore
-	 *
+	 * 
 	 * @param idEvento
 	 * @param action
 	 * @param idUtente
@@ -102,7 +103,7 @@ public class LoadTrasferisciFCService {
 
 	/**
 	 * Metodo principale del servizio di caricamento
-	 *
+	 * 
 	 * @return List<RequestData>
 	 * @throws LoadException
 	 * @throws ProfileException
@@ -118,7 +119,7 @@ public class LoadTrasferisciFCService {
 
 	/**
 	 * Verifica che l'utente sia abilitato al trasferimento
-	 *
+	 * 
 	 * @throws ProfileException
 	 * @throws LoadException
 	 */
@@ -136,8 +137,8 @@ public class LoadTrasferisciFCService {
 		} else if (action.equals(Azione.DELETE.toString())) {
 			profiliAbilitati = ApplicationProperties.getIstance().getProperty("profili.abilitati.modifica");
 		} else if (action.equals(Azione.UPDATE.toString())) {
-			profiliAbilitati = ApplicationProperties.getIstance()
-					.getProperty("profili.abilitati.cancellazione");
+			profiliAbilitati = ApplicationProperties.getIstance().getProperty(
+					"profili.abilitati.cancellazione");
 		} else if (action.equals(LOCAL_SEARCH)) {
 			profiliAbilitati = ApplicationProperties.getIstance().getProperty("profili.abilitati.storico");
 		} else {
@@ -162,7 +163,7 @@ public class LoadTrasferisciFCService {
 
 	/**
 	 * Caricamento delle varie entity
-	 *
+	 * 
 	 * @param action
 	 * @return List<RequestData>
 	 * @throws LoadException
@@ -171,7 +172,7 @@ public class LoadTrasferisciFCService {
 	private List<RequestData> loadData(String action) throws LoadException, ControlException {
 
 		try {
-			List<RequestData> requestDataList = new ArrayList<>();
+			List<RequestData> requestDataList = new ArrayList<RequestData>();
 			// Caricamento utente
 			it.mig.sies.model.Utente utente = loadUtente();
 			// Caricamento soggetto
@@ -179,8 +180,7 @@ public class LoadTrasferisciFCService {
 			// controllo se trattasi di cumulo
 			DettagliFascicolo df = dao.getFascicoloByID(idEvento);
 			if (df == null) {
-				logger.error(
-						"Validare il Procedimento prima di procedere con la trasmissione del Foglio Complementare!");
+				logger.error("Validare il Procedimento prima di procedere con la trasmissione del Foglio Complementare!");
 				String responseCode = "messaggio.errore.controllo.procedimento.non.validato";
 				String responseMessage = ApplicationProperties.getIstance().getProperty(responseCode);
 				throw new ControlException(responseMessage);
@@ -196,8 +196,8 @@ public class LoadTrasferisciFCService {
 			// pena: se si valorizzo una variabile booleana
 			boolean isAvvenutaEsecuzionePena = false;
 			if (!isForCumulo) {
-				String codiciAvvenutaEsecuzionePena = ApplicationProperties.getIstance()
-						.getProperty("codici.avvenutaesecuzionepena");
+				String codiciAvvenutaEsecuzionePena = ApplicationProperties.getIstance().getProperty(
+						"codici.avvenutaesecuzionepena");
 				// Verifica della presenza del profilo
 				StringTokenizer tokenizerAEP = new StringTokenizer(codiciAvvenutaEsecuzionePena, "|");
 				while (tokenizerAEP.hasMoreTokens()) {
@@ -210,7 +210,7 @@ public class LoadTrasferisciFCService {
 
 			// Caricamento lista titoli principali
 			List<TitoloGiudiziario> titoloGiudiziarioList = dao.getTitoloGiudiziarioByID(idSentenza,
-					// MEV 16 CUMULO: aggiunto parametro di passaggio
+			// MEV 16 CUMULO: aggiunto parametro di passaggio
 					idFascicoloSiep, isForCumulo, idEvento);
 			// Caricamento titolo esecutivo
 			TitoloEsecutivo titoloEsecutivo = dao.getTitoloEsecutivoByID(idEvento);
@@ -220,7 +220,7 @@ public class LoadTrasferisciFCService {
 			this.riepilogoOperazione.setTitoloGiudiziarioList(titoloGiudiziarioList);
 
 			// Mapping per l'invio dei dati
-			List<FoglioComplementare> foglioComplementareList = new ArrayList<>();
+			List<FoglioComplementare> foglioComplementareList = new ArrayList<FoglioComplementare>();
 			// Caricamento provvedimento esecutivo
 			loadDettagliProvvedimentoEsecutivo(foglioComplementareList, utente, isForCumulo, df,
 					isAvvenutaEsecuzionePena);
@@ -253,13 +253,13 @@ public class LoadTrasferisciFCService {
 				requestData.setAnagrafica(anagrafica);
 				requestData.setUtente(utenteRequest);
 				// MEV 16 CUMULO: aggiunto controllo
-				// if (PropertyUtil.isPresent(idSinonimo) && idSinonimo.contains("#TFCCUM")) {
-				// String[] split = idSinonimo.split("#");
-				// if (split.length < 3)
-				// requestData.setAzioneCumulo(split[1]);
-				// else
-				// requestData.setAzioneCumulo(split[1] + "#" + split[2]);
-				// }
+				if (PropertyUtil.isPresent(idSinonimo) && idSinonimo.contains("#TFCCUM")) {
+					String[] split = idSinonimo.split("#");
+					if (split.length < 3)
+						requestData.setAzioneCumulo(split[1]);
+					else
+						requestData.setAzioneCumulo(split[1] + "#" + split[2]);
+				}
 				// Gestione della azione da inviare
 				manageAction(action, requestData);
 				// aggiungo alla lista
@@ -280,7 +280,7 @@ public class LoadTrasferisciFCService {
 
 	/**
 	 * Caricamento dei dati relativi al provvedimento esecutivo
-	 *
+	 * 
 	 * @param foglioComplementareList
 	 * @param utente
 	 * @param isForCumulo
@@ -296,14 +296,14 @@ public class LoadTrasferisciFCService {
 		if ("301".equals(utente.getCodiceTipoUfficio()) || "302".equals(utente.getCodiceTipoUfficio())) {
 			loadDatiProvvedimentoPM(foglioComplementareList, df, isForCumulo, isAvvenutaEsecuzionePena);
 		} else {
-			throw new LoadException(
-					"Codice Tipo Ufficio dell'utente non riconosciuto: " + utente.getCodiceTipoUfficio());
+			throw new LoadException("Codice Tipo Ufficio dell'utente non riconosciuto: "
+					+ utente.getCodiceTipoUfficio());
 		}
 	}
 
 	/**
 	 * Carica i dati del Pubblico Ministero
-	 *
+	 * 
 	 * @param foglioComplementareList
 	 * @param dettagliFascicolo
 	 * @param isForCumulo
@@ -328,7 +328,8 @@ public class LoadTrasferisciFCService {
 		logger.info("Dettaglio fascicolo: " + dettagliFascicolo.toString());
 		// ciclo sul risultato del caricamento dati
 		for (int index = 0; index < datiPubblicoMinisteroList.size(); index++) {
-			DatiPubblicoMinistero datiPubblicoMinistero = datiPubblicoMinisteroList.get(index);
+			DatiPubblicoMinistero datiPubblicoMinistero = (DatiPubblicoMinistero) datiPubblicoMinisteroList
+					.get(index);
 			String chiaveSies = "", chiaveNSC = "";
 			try {
 				chiaveSies = "" + datiPubblicoMinistero.getChiaveSies();
@@ -357,7 +358,7 @@ public class LoadTrasferisciFCService {
 
 	/**
 	 * Gestione della action
-	 *
+	 * 
 	 * @param action
 	 * @param requestData
 	 * @throws LoadException
@@ -378,7 +379,7 @@ public class LoadTrasferisciFCService {
 
 	/**
 	 * Caricamento del soggetto
-	 *
+	 * 
 	 * @return Soggetto
 	 * @throws LoadException
 	 */
@@ -397,7 +398,7 @@ public class LoadTrasferisciFCService {
 
 	/**
 	 * Caricamento dell'utente che ha inserito il provvedimento dell'esecuzione
-	 *
+	 * 
 	 * @return Utente
 	 * @throws LoadException
 	 */
@@ -417,7 +418,7 @@ public class LoadTrasferisciFCService {
 
 	/**
 	 * Caricamento della risposta storicizzata su database
-	 *
+	 * 
 	 * @return ResponseData
 	 */
 	public ResponseData loadResponse() {

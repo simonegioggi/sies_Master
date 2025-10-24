@@ -1,3 +1,10 @@
+//
+// Questo file è stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
+// Vedere <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
+// Qualsiasi modifica a questo file andrà persa durante la ricompilazione dello schema di origine. 
+// Generato il: 2016.10.26 alle 04:01:02 PM CEST 
+//
+
 
 package it.mig.sies.type.foglicomplementari;
 
@@ -27,6 +34,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element ref="{http://it/mig/sies/type/fogliComplementari}ArrayOmonimi" minOccurs="0"/>
  *         &lt;element name="Estratto" type="{http://www.w3.org/2001/XMLSchema}base64Binary"/>
  *         &lt;element name="AnagraficaCancellata" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
+ *         &lt;element ref="{http://it/mig/sies/type/fogliComplementari}ProvvedimentoNSC" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -43,7 +51,8 @@ import javax.xml.bind.annotation.XmlType;
     "chiaviProvvedimentoGiudiziario",
     "arrayOmonimi",
     "estratto",
-    "anagraficaCancellata"
+    "anagraficaCancellata",
+    "provvedimentoNSC"
 })
 @XmlRootElement(name = "ResponseData")
 public class ResponseData {
@@ -62,6 +71,8 @@ public class ResponseData {
     protected byte[] estratto;
     @XmlElement(name = "AnagraficaCancellata")
     protected boolean anagraficaCancellata;
+    @XmlElement(name = "ProvvedimentoNSC")
+    protected ProvvedimentoNSC provvedimentoNSC;
 
     /**
      * Recupera il valore della proprietà esito.
@@ -224,6 +235,30 @@ public class ResponseData {
      */
     public void setAnagraficaCancellata(boolean value) {
         this.anagraficaCancellata = value;
+    }
+
+    /**
+     * Recupera il valore della proprietà provvedimentoNSC.
+     * 
+     * @return
+     *     possible object is
+     *     {@link ProvvedimentoNSC }
+     *     
+     */
+    public ProvvedimentoNSC getProvvedimentoNSC() {
+        return provvedimentoNSC;
+    }
+
+    /**
+     * Imposta il valore della proprietà provvedimentoNSC.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link ProvvedimentoNSC }
+     *     
+     */
+    public void setProvvedimentoNSC(ProvvedimentoNSC value) {
+        this.provvedimentoNSC = value;
     }
 
 }

@@ -529,12 +529,6 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 					lEventiNot.add(lEveNotModel);
 				}
 				lDettFascicolo.setEventi(lEventiNot);
-
-				// Ticket#202509260133 - SIUS - errore: Impossibile ricostruire pena da espiare
-				// Si aggiungono tutti i dati, anche le pene residue altrimenti va in errore la presa in
-				// carico in caso di eventi di pena iniziale. Il sistema non riesce a ricostruire la pena.
-				lDettFascicolo = lFasc.ExAltriDatiFascicoloSiep(lDettFascicolo, aKeyFascicolo);
-				// Ticket#202509260133 - FINE
 				lTreeRoot = new TreeModel(lDettFascicolo);
 			}
 		} catch (DAOException ex) {

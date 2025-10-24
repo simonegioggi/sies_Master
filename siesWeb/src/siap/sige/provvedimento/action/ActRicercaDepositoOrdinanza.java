@@ -14,7 +14,11 @@ import siap.sige.util.SIGELookupRemote;
 
 /**
  * ActRicercaDepositoOrdinanza - Classe Action per la Ricerca delle Ordinanze Emesse per un Procedimento SIGE
+<<<<<<< HEAD
  *
+=======
+ * 
+>>>>>>> MEV_2024_092_FASE-1
  * @version 1.0
  */
 public class ActRicercaDepositoOrdinanza extends ActRicercaFSigePuntuale

@@ -1,5 +1,13 @@
 package siap.siep.sospensione.action;
 
+/**
+ * <p>Title: ActInserisciSospensioneDecisioniSorv</p>
+ * <p>Description: Classe Action per l'inserimento di Decisione della sorveglianza di Sospensione della pena</p>
+ * <p>Copyright: Copyright (c) 2006</p>
+ * <p>Company: Bull</p>
+ * @version 1.0
+ */
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -7,14 +15,10 @@ import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import siap.sico.calendar.model.CalendarModel;
 import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.evento.action.ICostantiEvento;
-import siap.sico.evento.controller.IEvento;
-import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.misuraalternativa.controller.IMisuraAlternativa;
 import siap.sico.misuraalternativa.model.MisuraAlternativaModel;
@@ -26,7 +30,6 @@ import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.misuraalternativa.action.ActMisuraAlternativa;
 import siap.siep.misuraalternativa.action.ICostantiMisuraAlternativa;
 import siap.siep.notifica.model.NotificaModel;
-import siap.siep.ordineesecuzione.controller.IOrdineEsecuzione;
 import siap.siep.penacomplessiva.controller.IPenaComplessiva;
 import siap.siep.penacomplessiva.model.PenaComplessivaModel;
 import siap.siep.penaresidua.action.ICostantiPenaResidua;
@@ -40,12 +43,6 @@ import siap.sius.depositodecreto.model.DepositoDecretoModel;
 import siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel;
 import siap.sius.tenore.model.TenoreModel;
 
-/**
- * ActInserisciSospensioneDecisioniSorv - Classe Action per l'inserimento di Decisione della sorveglianza di
- * Sospensione della pena
- *
- * @version 1.0
- */
 public class ActInserisciSospensioneDecisioniSorv extends ActMisuraAlternativa
 		implements ICostantiSospensione {
 
@@ -54,24 +51,20 @@ public class ActInserisciSospensioneDecisioniSorv extends ActMisuraAlternativa
 
 	public String processRequest() throws Exception {
 
-		// info per il log
-		siesLogger.info(getClass().getName() + "processRequest: inizio");
-
 		/*
 		 * Quest'azione viene chiamata due volte, la prima per inserire la misura e calcolare la penaresidua
 		 * che metterà in sessione e la seconda volta per inserire il provvedimento e la pena che era in
-		 * sessione!
+		 * sessione!!
 		 */
 		MisuraAlternativaModel lMisMod = new MisuraAlternativaModel();
 		EventoNotificaModel lRetModel = new EventoNotificaModel();
 
 		FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
-
-		String lCodiceOperatore = getCodUtenteConnesso();
-		String lCodiceUfficio = getCodUfficioUtenteConnesso();
+		String lCodiceOperatore = this.getCodUtenteConnesso();
+		String lCodiceUfficio = this.getCodUfficioUtenteConnesso();
 
 		Date lDataSospensione = null;
-		if (!isRequestParameterNullObj(ICostantiSospensione.CAMPO_ANNO_DATA_INIZIO)) {
+		if (!this.isRequestParameterNullObj(ICostantiSospensione.CAMPO_ANNO_DATA_INIZIO)) {
 			lDataSospensione = getRequestDateParameter(ICostantiSospensione.CAMPO_ANNO_DATA_INIZIO,
 					ICostantiSospensione.CAMPO_MESE_DATA_INIZIO,
 					ICostantiSospensione.CAMPO_GIORNO_DATA_INIZIO);
@@ -79,19 +72,20 @@ public class ActInserisciSospensioneDecisioniSorv extends ActMisuraAlternativa
 
 		String PosizioneGiu = getRequestStringParameter(
 				ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA);
-		setRequestAttribute("posizionegiuridica", PosizioneGiu);
+		this.setRequestAttribute("posizionegiuridica", PosizioneGiu);
 		PosizioneGiuridicaModel lPosMod = new PosizioneGiuridicaModel();
 		lPosMod.setCodPosizioneGiuridica(PosizioneGiu);
 
 		BigDecimal lIdPenaRes = getRequestBigDecimalParameter(ICostantiPenaResidua.CAMPO_ID_PENA_RESIDUA);
 		IMisuraAlternativa lMisAltCtrl = SICOLookupRemote.getMisuraAlternativaRemote();
 
-		/************************************************
-		 * INIZIO CALCOLO DELLA PENA PER LA SOSPENSIONE *
-		 ************************************************/
+		/***************************
+		 * INIZIO CALCOLO DELLA PENA PER LA SOSPENSIONE
+		 ***********************************/
+
 		boolean isPenaRicalcolata = true;
 		// se la penaresidua non è in sessione vuol dire che la devo ancora calcolare e quindi la calcolo
-		if (isSessionAttributeNullObj("SOSPpenaresidua")) {
+		if (this.isSessionAttributeNullObj("SOSPpenaresidua")) {
 			isPenaRicalcolata = false;
 			// Pena Complessiva
 			IPenaComplessiva lCtrlPenComp = SIEPLookupRemote.getPenaComplessivaRemote();
@@ -153,9 +147,9 @@ public class ActInserisciSospensioneDecisioniSorv extends ActMisuraAlternativa
 				lPenaResiduaNuova.setFlagValidato("N");
 				lPenaResiduaNuova.setFlagPenaSospesa("S");
 				lPenaResiduaNuova.setEveIdEvento(null);
-			} else {
-				// Se Ergastolo non ricalcolo la pena, ma copio i dati dell'ultimo record
+			} else { // Se Ergastolo non ricalcolo la pena, ma copio i dati dell'ultimo record
 				lPenaResiduaNuova = lUltimaPenaResidua;
+
 				lPenaResiduaNuova.setMisAltIdMisuraAlternativa(null);
 				lPenaResiduaNuova.setEveIdEvento(null);
 				lPenaResiduaNuova.setFlagPenaSospesa("S");
@@ -183,7 +177,7 @@ public class ActInserisciSospensioneDecisioniSorv extends ActMisuraAlternativa
 			// LogF3B.getLogger()
 			siesLogger.debug("lPenaResiduaNuova completa: " + lPenaResiduaNuova);
 
-			setSessionAttribute("SOSPpenaresidua", lPenaResiduaNuova);
+			this.setSessionAttribute("SOSPpenaresidua", lPenaResiduaNuova);
 
 			// ============================
 			// INSERIMENTO SOSPENSIONE
@@ -210,8 +204,8 @@ public class ActInserisciSospensioneDecisioniSorv extends ActMisuraAlternativa
 					lSospModel.setNumAnniPenaEspiata(new BigDecimal(lPenaEspiataSosp.getNumAnni()));
 					lSospModel.setNumMesiPenaEspiata(new BigDecimal(lPenaEspiataSosp.getNumMesi()));
 					lSospModel.setNumGiorniPenaEspiata(new BigDecimal(lPenaEspiataSosp.getNumGiorni()));
-				} else {
-					// Nel caso di ergastolo
+				} else // Nel caso di ergastolo
+				{
 					// Calcolo la pena espiata come intervallo tra la data inizio e la data
 					// di sospensione (considerato come giorno espiato)
 					CalendarModel lCalPenaEspiataCalcoloErg = new CalendarModel();
@@ -236,7 +230,7 @@ public class ActInserisciSospensioneDecisioniSorv extends ActMisuraAlternativa
 				lSospModel.setCodUfficioInserimento(lCodiceUfficio);
 				lSospModel.setDataInserimento(DateUtils.getSysDate());
 
-				setSessionAttribute("SOSPENSIONE", lSospModel);
+				this.setSessionAttribute("SOSPENSIONE", lSospModel);
 			}
 		}
 		/*************************** FINE CALCOLO DELLA PENA ***********************************/
@@ -270,7 +264,7 @@ public class ActInserisciSospensioneDecisioniSorv extends ActMisuraAlternativa
 			EventoNotificaModel lEveMod = new EventoNotificaModel();
 			lEveMod.getEvento().setCodMotivo(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO));
 
-			lEveMod.setEvento(setEventoOrdinanzaDecretoMisuraAlternativa(lEveMod.getEvento(), lTipoDecisione,
+			lEveMod.setEvento(setEventoOrdinazaDecretoMisuraAlternativa(lEveMod.getEvento(), lTipoDecisione,
 					lCodiceUffEmi, lComModAutEmi, lDataEmisTras));
 
 			// setto il deposito ordinanza
@@ -287,10 +281,10 @@ public class ActInserisciSospensioneDecisioniSorv extends ActMisuraAlternativa
 
 			// misura alternativa
 			String lUfficioScarc = "-";
-			if (!isRequestParameterNullObj("tipo")) {
-				if (getRequestStringParameter("tipo").equals("scarcerato"))
+			if (!this.isRequestParameterNullObj("tipo")) {
+				if (this.getRequestStringParameter("tipo").equals("scarcerato"))
 					lUfficioScarc = "SORV";
-				else if (getRequestStringParameter("tipo").equals("scarcerare"))
+				else if (this.getRequestStringParameter("tipo").equals("scarcerare"))
 					lUfficioScarc = "PROC";
 			}
 
@@ -298,14 +292,12 @@ public class ActInserisciSospensioneDecisioniSorv extends ActMisuraAlternativa
 					getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO), lUfficioScarc);
 			lMisMod.setDataScarcerazione(lDataSospensione);
 
-			// MEV_2019-09-SIEP: aggiunto metodo
-			settaDatiOrdinanzaProvvisoria(lMisMod);
-
 			/*
 			 * nel momento in cui inserisco la misura alternativa e calcolo la pena richiamo la maschera
 			 * d'inserimento di chi mi ha chiamato per visualizzare la seconda parte della maschera ossia i
 			 * destinatari
 			 */
+
 			MisuraAlternativaModel lMisuraModel = null;
 			if (lTipoDecisione.equals("03"))
 				lMisuraModel = lMisAltCtrl.ExInserisciMisuraAlternativaEventoNotifica(lEveMod, lDepOrdMod,
@@ -319,59 +311,24 @@ public class ActInserisciSospensioneDecisioniSorv extends ActMisuraAlternativa
 					+ ICostantiPenaResidua.CAMPO_ID_PENA_RESIDUA + "=" + lIdPenaRes + "&"
 					+ ICostantiMisuraAlternativa.CAMPO_ID_DOCUMENTO_SIUS + "="
 					+ lMisuraModel.getEveIdEvento();
-		} else {
-			// MEV_2019-09-SIEP: aggiunta nuova gestione per modifica
-			// qui entro sia al primo giro che al secondo
-			String tipoOperazione = null;
-			if (!isRequestParameterNullObj("tipoOperazione"))
-				tipoOperazione = getRequestStringParameter("tipoOperazione");
-			if ("MODIFICA".equals(tipoOperazione)) {
-				BigDecimal idEventoOld = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
-				if (!Utils.isNullObj(idEventoOld)) {
-					siesLogger.debug(
-							"Sono in MODIFICA Sospensione procedo alla cancellazione dell'evento con id = "
-									+ idEventoOld);
-					IEvento ie = SICOLookupRemote.getEventoRemote();
-					EventoModel lEveModRic = ie.ExRicercaEventoByKey(idEventoOld);
-					IOrdineEsecuzione ioe = SIEPLookupRemote.getOrdineEsecuzioneRemote();
-					ioe.ExCancellaEventoConStoreProcedure(lEveModRic);
-					siesLogger.debug("Evento cancellato proseguo con un nuovo inserimento Sospensione");
-				}
-			}
-			// la misura esiste
+		} else // la misura esiste
+		{
 			// ========================================================================
 			// O esiste la misura oppure sto inserendo il provvedimento, secondo giro
 			// ========================================================================
-			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE))
+			if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE))
 				lSospensione.setNote(getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE));
 
-			// MEV_2019-09-SIEP: aggiunto metodo ed impostazione della data scarcerazione
-			settaDatiOrdinanzaProvvisoria(lSospensione);
-			if (Utils.isNullObj(lDataSospensione)) {
-				if (!isRequestParameterNullEmptyObj(
-						ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE)
-						&& !isRequestParameterNullEmptyObj(
-								ICostantiMisuraAlternativa.CAMPO_MESE_DATA_SCARCERAZIONE)
-						&& !isRequestParameterNullEmptyObj(
-								ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_SCARCERAZIONE))
-					lDataSospensione = getRequestDateParameter(
-							ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_SCARCERAZIONE,
-							ICostantiMisuraAlternativa.CAMPO_MESE_DATA_SCARCERAZIONE,
-							ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE);
-			}
-			lSospensione.setDataScarcerazione(lDataSospensione);
-
-			if (isRequestParameterNullObj("presenzanuovopenaricalcolata")) {
-				// primo giro
+			if (this.isRequestParameterNullObj("presenzanuovopenaricalcolata")) {
 				lMisAltCtrl.ExModificaMisuraAlternativa(lSospensione);
+
 				lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
 						+ "=siap.siep.sospensione.action.ActLoadInserisciSospensioneDecisioniSorv&"
 						+ ICostantiPenaResidua.CAMPO_ID_PENA_RESIDUA + "=" + lIdPenaRes;
 			} else {
-				// secondo giro
-				if (getRequestStringParameter("tipo").equals("scarcerato"))
+				if (this.getRequestStringParameter("tipo").equals("scarcerato"))
 					lSospensione.setCodTipoUfficioScarcerazione("SORV");
-				else if (getRequestStringParameter("tipo").equals("scarcerare"))
+				else if (this.getRequestStringParameter("tipo").equals("scarcerare"))
 					lSospensione.setCodTipoUfficioScarcerazione("PROC");
 
 				String codiceMotivo = lSospensione.getCodTipoMisura();
@@ -389,35 +346,26 @@ public class ActInserisciSospensioneDecisioniSorv extends ActMisuraAlternativa
 					lEve.getEvento().setCodMotivo("0263");
 				else if (codiceMotivo.equals("2480"))
 					lEve.getEvento().setCodMotivo("0241");
-				// MEV_2019-09-SIEP: aggiunte casistiche
-				else if ("0724".equals(codiceMotivo))
-					lEve.getEvento().setCodMotivo("5469");
-				else if ("0735".equals(codiceMotivo))
-					lEve.getEvento().setCodMotivo("5496");
-				else if (codiceMotivo.equals("0684"))
-			        lEve.getEvento().setCodMotivo(codiceMotivo);
-			      else if (codiceMotivo.equals("0695"))
-			        lEve.getEvento().setCodMotivo(codiceMotivo);
 
 				lEve.setEvento(setEventoProvvedimentoMisuraAlternativa(lEve.getEvento()));
-				lEve.getMagistrato().setCodMagistrato(calcolaMagistrato());
+				lEve.getMagistrato().setCodMagistrato(this.calcolaMagistrato());
 				lEve.getEvento().setEveIdEvento(lIdOrdinanza);
 
-				NotificaModel[] lNotifiche = setNotificheMisuraAlternativa();
+				NotificaModel[] lNotifiche = this.setNotificheMisuraAlternativa();
 				lEve.setNotifiche(lNotifiche);
 
 				// inserisco la pena contestualmente al provvedimento
-				PenaResiduaModel lPenaRes = (PenaResiduaModel) getSessionAttribute("SOSPpenaresidua");
+				PenaResiduaModel lPenaRes = (PenaResiduaModel) this.getSessionAttribute("SOSPpenaresidua");
 				lPenaRes.setIdPenaResidua(null);
 
 				// inserisco la sospensione contestualmente al provvedimento
 				SospensioneModel lSospModel = null;
-				if (!isSessionAttributeNullObj("SOSPENSIONE"))
-					lSospModel = (SospensioneModel) getSessionAttribute("SOSPENSIONE");
+				if (!this.isSessionAttributeNullObj("SOSPENSIONE"))
+					lSospModel = (SospensioneModel) this.getSessionAttribute("SOSPENSIONE");
 
 				// rimuovo la pena dalla sessione
-				removeSessionAttribute("SOSPpenaresidua");
-				removeSessionAttribute("SOSPENSIONE");
+				this.removeSessionAttribute("SOSPpenaresidua");
+				this.removeSessionAttribute("SOSPENSIONE");
 
 				if (!isRequestParameterNullObj(ICostantiPenaResidua.CAMPO_ANNO_DATA_FINE))
 					lPenaRes.setDataFine(getRequestDateParameter(ICostantiPenaResidua.CAMPO_ANNO_DATA_FINE,
@@ -432,30 +380,7 @@ public class ActInserisciSospensioneDecisioniSorv extends ActMisuraAlternativa
 						+ ICostantiEvento.CAMPO_ID_EVENTO + "=" + lRetModel.getEvento().getIdEvento();
 			}
 		}
-
-		// info per il log
-		siesLogger.info(getClass().getName() + "processRequest: fine");
-
-		// pagina di ritorno
 		return lPage;
-	}
-
-	// MEV_2019-09-SIEP: aggiunto metodo
-	private void settaDatiOrdinanzaProvvisoria(MisuraAlternativaModel mam) throws F3BException {
-
-		if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT))
-			mam.setAnnoRegistroMaAt(
-					getRequestBigDecimalParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT));
-		if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT))
-			mam.setNumeroRegistroMaAt(
-					getRequestBigDecimalParameter(ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT));
-		if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT)
-				&& !isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT)
-				&& !isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT))
-			mam.setDataDecisioneMaAt(
-					getRequestDateParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT,
-							ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT,
-							ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT));
 	}
 
 }

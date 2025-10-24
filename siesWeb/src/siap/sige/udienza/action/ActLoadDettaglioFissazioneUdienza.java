@@ -43,7 +43,11 @@ import siap.sige.web.ActionSige;
 
 /**
  * ActLoadDettaglioFissazioneUdienza - Classe Action per la load della jsp di dettaglio Fissazione Udienza
+<<<<<<< HEAD
+ *
+=======
  * 
+>>>>>>> MEV_2024_092_FASE-1
  * @version 1.0
  */
 public class ActLoadDettaglioFissazioneUdienza extends ActionSige implements ICostantiUdienzaSige {

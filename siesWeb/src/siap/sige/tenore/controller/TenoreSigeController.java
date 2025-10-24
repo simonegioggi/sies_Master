@@ -37,7 +37,18 @@ import siap.sige.tenore.model.TenoreSigeModel;
 import siap.sige.util.SIGELookupRemote;
 
 /**
- * TenoreSigeController - Classe Controller per TenoreSige
+ * <p>
+ * Title: TenoreSigeController
+ * </p>
+ * <p>
+ * Description: Classe Controller per TenoreSige
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2008
+ * </p>
+ * <p>
+ * Company:
+ * </p>
  *
  * @version 1.0
  */
@@ -757,7 +768,8 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 				lAnnDao.stop();
 				cleanup(lAnnDao);
 
-				// MEV_2019-09 - NON VIENE più eseguito l'aggiornamento delle richieste con il legame all'ordinanza
+				// MEV 9 - NON VIENE più eseguita la l'aggiornamento delle richieste con il legame
+				// all'ordinanza
 
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()

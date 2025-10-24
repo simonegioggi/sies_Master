@@ -25,7 +25,18 @@ import siap.sius.luogodetenzione.action.ICostantiLuogoDetenzione;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * ActInserisciAvvocato - Classe Action per l'inserimento di Avvocato
+ * <p>
+ * Title: ActInserisciAvvocato
+ * </p>
+ * <p>
+ * Description: Classe Action per l'inserimento di Avvocato
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2002
+ * </p>
+ * <p>
+ * Company: Bull
+ * </p>
  *
  * @version 1.0
  */
@@ -38,6 +49,7 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
 	 * Azione di Inserimento del Avvocato
 	 *
 	 * @return Nome della pagina JSP da visualizzare al termine dell'elaborazione
+	 *         <p>
 	 * @throws F3BException
 	 */
 
@@ -449,7 +461,6 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
 	 * restituisce solo l'id Se inserimento manuale lo inserisce non certificato
 	 */
 	private BigDecimal inserisciAggiornaAvvocato() throws F3BException {
-
 		IAvvocato lCtrl = SIUSLookupRemote.getAvvocatoRemote();
 
 		BigDecimal idAvvocato = null;
@@ -461,7 +472,8 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
 		AvvocatoModel amReginde = new AvvocatoModel();
 
 		if (getRequestStringParameter(CAMPO_ID_AVVOCATO).contains("COA") // Reginde
-				|| getRequestStringParameter(CAMPO_ID_AVVOCATO).equals("")) { // Iscrizione manuale
+				|| getRequestStringParameter(CAMPO_ID_AVVOCATO).equals("") // Iscrizione manuale
+		) {
 			// Si recuperano tutte le informazioni dalla Form solo se avvocato selezionato reginde o inserito
 			// manualmente. Se selezionao SIEP i dati NON servono
 			siesLogger.debug("Iscrizione manuale o Reginde: CAMPO_ID_AVVOCATO = "

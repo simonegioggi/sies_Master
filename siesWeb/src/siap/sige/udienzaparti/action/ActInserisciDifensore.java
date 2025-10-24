@@ -19,12 +19,22 @@ import siap.sige.util.SIGELookupRemote;
 import siap.sige.web.ActionSige;
 
 /**
- * ActInserisciDifensore - Classe Action per l'inserimento di un Difensore
+ * <p>
+ * Title: ActInserisciDifensore
+ * </p>
+ * <p>
+ * Description: Classe Action per l'inserimento di un Difensore
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2002
+ * </p>
+ * <p>
+ * Company: Engineering
+ * </p>
  * 
  * @version 1.0
  */
 public class ActInserisciDifensore extends ActionSige implements ICostantiAvvocato {
-
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
@@ -32,11 +42,11 @@ public class ActInserisciDifensore extends ActionSige implements ICostantiAvvoca
 	 * Azione di Inserimento del Difensore
 	 * 
 	 * @return Nome della pagina JSP da visualizzare al termine dell'elaborazione
+	 *         <p>
 	 * @throws F3BException
 	 */
 	@SuppressWarnings("rawtypes")
 	public String processRequest() throws F3BException, Exception {
-
 		String idSoggetto = "";
 
 		if (!this.isRequestParameterNullObj(ICostantiPartiUdienza.CAMPO_ID_SOGGETTO)) {
@@ -119,7 +129,9 @@ public class ActInserisciDifensore extends ActionSige implements ICostantiAvvoca
 				setRequestAttribute(IWebConstants.ACTION_FIELD, "" + getClass().getName());
 				setRequestAttribute(IWebConstants.MESSAGE_TEXT,
 						"L'avvocato risulta già registrato.Continuare con l'inserimento?");
+
 				return "/jsp/files/siap/siep/avvocato/warningAvvocato.jsp";
+
 			}
 		}
 

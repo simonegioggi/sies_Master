@@ -114,7 +114,7 @@ public class ActInserisciDifferimentoSORV extends ActMisuraAlternativa
 			// Combo 'Oggetto Decisione'
 			lEveMod.getEvento().setCodMotivo(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO));
 
-			lEveMod.setEvento(setEventoOrdinanzaDecretoMisuraAlternativa(lEveMod.getEvento(), lTipoDecisione,
+			lEveMod.setEvento(setEventoOrdinazaDecretoMisuraAlternativa(lEveMod.getEvento(), lTipoDecisione,
 					lCodiceUffEmi, lComModAutEmi, lDataEmisTras));
 
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di

@@ -3,13 +3,10 @@ package siap.siep.verbale.controller;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -515,12 +512,6 @@ public class VerbaleController extends SiapController implements IVerbale {
 				lEveMod = (EventoModel) lEveDao.getModelByKey();
 			}
 
-			
-			// MEV_2019-09 si aggiungono gli ulteriori codici motivo (sorveglianza)
-			Set<String> codiciAffidamentoSorvNew = new HashSet<String>(Arrays.asList(new String[]{"0680","0681","0690","0691","0692"}));
-			Set<String> codiciDetenzioneSorvNew  = new HashSet<String>(Arrays.asList(new String[]{"0682","0693"}));
-			Set<String> codiciSemilibertaSorvNew = new HashSet<String>(Arrays.asList(new String[]{"2007","0683","0694"}));
-			
 			if (lEveMod != null && lEveMod.getCodMotivo() != null && lEveMod.getCodTipoProvvedimento() != null
 					&& (lEveMod.getCodTipoProvvedimento().equals("03") // Ordinanza
 							|| lEveMod.getCodTipoProvvedimento().equals("02")) // Decreto
@@ -538,9 +529,6 @@ public class VerbaleController extends SiapController implements IVerbale {
 							|| lEveMod.getCodMotivo().equals("2630") // 29/09/2010 Espiazione Pena presso
 																		// Domicilio
 							|| lEveMod.getCodMotivo().equals("0011")
-							|| codiciAffidamentoSorvNew.contains(lEveMod.getCodMotivo()) // MEV_2019-09-SIEP
-							|| codiciDetenzioneSorvNew.contains(lEveMod.getCodMotivo())  // MEV_2019-09-SIEP		
-							|| codiciSemilibertaSorvNew.contains(lEveMod.getCodMotivo()) // MEV_2019-09-SIEP			
 							// 20191120 [SG]: aggiunto codice per gestione ticket
 							// Ticket#20191114019 — SIES - mancata registrazione data inizio misura
 							// Ticket#20191112019 — 2019/11 Ancona Procura Minori non fa caricare inizio
@@ -552,9 +540,7 @@ public class VerbaleController extends SiapController implements IVerbale {
 				lEventoDao.setCodTipoEvento("07");
 
 				if (lEveMod.getCodMotivo().equals("0005") || lEveMod.getCodMotivo().equals("0010")
-						|| lEveMod.getCodMotivo().equals("0013") 
-						|| lEveMod.getCodMotivo().equals("0004") // semilibertà
-						|| codiciSemilibertaSorvNew.contains(lEveMod.getCodMotivo()) // MEV_2019-09-SIEP	
+						|| lEveMod.getCodMotivo().equals("0013") || lEveMod.getCodMotivo().equals("0004")
 						|| lEveMod.getCodMotivo().equals("0011")) {
 					lEventoDao.setCodTipoProvvedimento("16");
 				} else {
@@ -645,21 +631,14 @@ public class VerbaleController extends SiapController implements IVerbale {
 				}
 
 				if (lEveMod.getCodMotivo().equals("0001") || lEveMod.getCodMotivo().equals("0002")
-						|| lEveMod.getCodMotivo().equals("0003")  
-						|| (   codiciAffidamentoSorvNew.contains(lEveMod.getCodMotivo())      
-			  				&& !"0270".equals(lEveMod.getCodEsito()))) {
+						|| lEveMod.getCodMotivo().equals("0003")) {
 					lPosDao.setCodPosizioneGiuridica("13");
 				}
-				if (lEveMod.getCodMotivo().equals("0004")
-						|| codiciSemilibertaSorvNew.contains(lEveMod.getCodMotivo()) // MEV_2019-09-SIEP	
-						) 
-			  {
+				if (lEveMod.getCodMotivo().equals("0004")) {
 					lPosDao.setCodPosizioneGiuridica("14");
 				}
 				if (lEveMod.getCodMotivo().equals("0005") || lEveMod.getCodMotivo().equals("0010")
-						|| lEveMod.getCodMotivo().equals("0013") || lEveMod.getCodMotivo().equals("0011")
-						|| (codiciDetenzioneSorvNew.contains(lEveMod.getCodMotivo()) 
-			  				&& !"0270".equals(lEveMod.getCodEsito()))) {
+						|| lEveMod.getCodMotivo().equals("0013") || lEveMod.getCodMotivo().equals("0011")) {
 					lPosDao.setCodPosizioneGiuridica("12");
 				}
 				if (lEveMod.getCodMotivo().equals("2245")) {
@@ -669,20 +648,10 @@ public class VerbaleController extends SiapController implements IVerbale {
 				if (lEveMod.getCodMotivo().equals("2630")) {
 					lPosDao.setCodPosizioneGiuridica("50");
 				}
-				
-				//MEV_2019-09-SIEP si aggiungono i nuovi codici
-//				if (lEveMod.getCodMotivo().equals("2005") ) {
-			  if (lEveMod.getCodMotivo().equals("2005") 
-			  		|| (codiciDetenzioneSorvNew.contains(lEveMod.getCodMotivo()) 
-			  				&& "0270".equals(lEveMod.getCodEsito()))) {
+				if (lEveMod.getCodMotivo().equals("2005")) {
 					lPosDao.setCodPosizioneGiuridica("29"); // Detenzione domiciliare provvisoria
 				}
-			  
-			  //MEV_2019-09-SIEP si aggiungono i nuovi codici
-				//if (lEveMod.getCodMotivo().equals("2006") || lEveMod.getCodMotivo().equals("2008")  ) {
-			  if (lEveMod.getCodMotivo().equals("2006") || lEveMod.getCodMotivo().equals("2008") 
-			  		|| (   codiciAffidamentoSorvNew.contains(lEveMod.getCodMotivo())      
-			  				&& "0270".equals(lEveMod.getCodEsito()))) {
+				if (lEveMod.getCodMotivo().equals("2006") || lEveMod.getCodMotivo().equals("2008")) {
 					lPosDao.setCodPosizioneGiuridica("54"); // AFFIDAMENTO in prova ammiss provvisoria
 				}
 				// 20191120 [SG]: aggiunto codice per gestione ticket

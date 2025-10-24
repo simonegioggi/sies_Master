@@ -32,7 +32,6 @@ public class IspConteggioOggettiSqlDAO extends SqlDAO {
         						" NUM_SOPRAVVENUTI, " +
         						" NUM_CANCELLATI, " +
         						" DESC_CONTENUTO_STATIS, " +
-        						" NUM_APP_PROVV, " + //MEV_2019-09
         						" NULL FAS_SIU_CHIAVE_UFFICIO " +
         					" FROM " +
         						" ISP_CONTEGGIO_OGGETTI " + 
@@ -63,7 +62,6 @@ public class IspConteggioOggettiSqlDAO extends SqlDAO {
 		        " nvl(num_cancellati,0) as num_cancellati , " +
 		        " isp_oggetto_procedimento.isp_cod_oggetto_procedimento desc_contenuto_statis, " +
 		        " ISP_CONTEGGIO_OGGETTI.FAS_SIU_CHIAVE_UFFICIO " +
-		        " , nvl(NUM_APP_PROVV,0) as NUM_APP_PROVV " + // MEV_2019-09
 		   " FROM ISP_MOTIVO_OGGETTO_SELEZIONATI " +
 		        " LEFT JOIN ISP_CONTEGGIO_OGGETTI " +
 		           " ON ISP_MOTIVO_OGGETTO_SELEZIONATI.COD_MOTIVO = ISP_CONTEGGIO_OGGETTI.COD_OGGETTO " +
@@ -103,10 +101,6 @@ public class IspConteggioOggettiSqlDAO extends SqlDAO {
         aModel.setNumCancellati(getBigDecimal("NUM_CANCELLATI"));
         aModel.setDescContenutoStatis(getString("DESC_CONTENUTO_STATIS"));
         aModel.setFasSiuChiaveUfficio(getString("FAS_SIU_CHIAVE_UFFICIO"));
-        
-        //MEV_2019-09
-        aModel.setNumAccoltiProvv(getBigDecimal("NUM_APP_PROVV"));
-        
 
         return aModel;
     }

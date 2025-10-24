@@ -33,7 +33,6 @@ import siap.sius.SIUSException;
  * BDI che altra BDI.
  *
  * @author d.fiorletta
- * @version 1.0
  */
 public class ActConfermaPresaInCaricoAttiSiep extends ActionSiap implements ICostantiJMS {
 

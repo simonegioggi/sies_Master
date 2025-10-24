@@ -449,11 +449,11 @@ public class DifensoreSqlDao extends SIAPSqlDAO {
 		lStatement += "	DESNASCITA.COD_COMUNE = COD_LUOGO_NASCITA AND";
 		lStatement += "	CG.RV_DOMAIN  = 'NON_ATTIVITA' AND";
 		lStatement += "	CG.RV_LOW_VALUE = COD_NON_ATTIVITA AND";
-		// 20250618 [SG]: controllo di consistenza per la sentenza (rivisto il 20251007)
+		// 20250618 [SG]: controllo di consistenza per la sentenza
 		String fasSieIdFascicoloSiep = (Utils.isNullObj(sentenza)
 				&& Utils.isNullObj(sentenza.getFasSieIdFascicoloSiep()))
-						? "0"
-						: sentenza.getFasSieIdFascicoloSiep().toString();
+						? sentenza.getFasSieIdFascicoloSiep().toString()
+						: "0";
 		lStatement += "	FAS_SIE_ID_FASCICOLO_SIEP=" + fasSieIdFascicoloSiep + " AND";
 		lStatement += "	FLAG_CANCELLATO ='N' and data_fine_validita is NULL";
 		// INIZIO: MEV_21 (avvocati)

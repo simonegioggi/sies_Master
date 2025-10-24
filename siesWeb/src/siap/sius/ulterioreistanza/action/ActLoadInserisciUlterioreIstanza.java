@@ -23,7 +23,7 @@ public class ActLoadInserisciUlterioreIstanza extends ActionSius implements ICos
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	/**
-	 * Azione di Caricamento della form d'inserimento
+	 * Azione di Caricamento della form d'inserimento.
 	 *
 	 * @return Nome della pagina JSP da visualizzare al termine dell'elaborazione
 	 * @throws Exception
@@ -33,7 +33,7 @@ public class ActLoadInserisciUlterioreIstanza extends ActionSius implements ICos
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getName() + ".processRequest(): inizio");
+		siesLogger.debug(this.getClass().getName() + ".processRequest(): inizio");
 
 		// Verifica se esiste il fascicolo in Sessione.
 		if (isSessionAttributeNullObj("fascicoloSiusGP"))
@@ -46,7 +46,7 @@ public class ActLoadInserisciUlterioreIstanza extends ActionSius implements ICos
 				|| lFasGPMod.getFascicoloSiusModel().getCodStatoFascicolo()
 						.compareTo(ICostantiFascicoloSius.COD_UNIFICATO) == 0
 				|| lFasGPMod.getFascicoloSiusModel().getCodStatoFascicolo()
-						.compareTo(ICostantiFascicoloSius.COD_EMESSO_PROVVEDIMENTO) == 0)
+						.compareTo(ICostantiFascicoloSius.COD_EMESSO_PROVVEDIMENTOO) == 0)
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"L'inserimento di ulteriori istanze " + "non è consentito per i procedimenti definiti!");
 
@@ -81,12 +81,12 @@ public class ActLoadInserisciUlterioreIstanza extends ActionSius implements ICos
 
 		// Redirect per tornare indietro.
 		String lTornaQui = StringUtils.urlEncode(IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
-				+ "=" + getRequest().getParameter(IWebConstants.ACTION_FIELD));
+				+ "=" + this.getRequest().getParameter(IWebConstants.ACTION_FIELD));
 		setRequestAttribute("TornaQui", lTornaQui);
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getName() + ".processRequest(): fine");
+		siesLogger.debug(this.getClass().getName() + ".processRequest(): fine");
 
 		// restituisce la jsp di VIEW
 		return PG_LOAD_INSERISCIULTERIOREISTANZA;
