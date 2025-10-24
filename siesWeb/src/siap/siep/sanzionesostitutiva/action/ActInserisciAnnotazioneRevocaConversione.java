@@ -97,7 +97,7 @@ public class ActInserisciAnnotazioneRevocaConversione extends ActMisuraAlternati
 					ICostantiSanzioneSostitutiva.CAMPO_ANNO_DATA_EMISSIONE,
 					ICostantiSanzioneSostitutiva.CAMPO_MESE_DATA_EMISSIONE,
 					ICostantiSanzioneSostitutiva.CAMPO_GIORNO_DATA_EMISSIONE);
-			lEveUffMod.setEvento(setEventoOrdinazaDecretoMisuraAlternativa(lEveUffMod.getEvento(),
+			lEveUffMod.setEvento(setEventoOrdinanzaDecretoMisuraAlternativa(lEveUffMod.getEvento(),
 					lTipoProvvedimento, lCodiceUffEmi, lComModAutEmi, lDataEmisTras));
 			lEveUffMod.getEvento().setFlagDocumentoRegistrato("S");
 

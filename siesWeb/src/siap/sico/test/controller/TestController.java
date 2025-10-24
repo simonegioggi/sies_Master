@@ -42,8 +42,8 @@ import siap.sico.versione.util.VersionProperties;
 import siap.sico.webservice.config.NscProperties;
 
 /**
- * Title: TestController Description: Classe che realizza il test del sistema SIES interrogando varie
- * componenti del nostro sistema e compilando il documento di test
+ * TestController - Classe che realizza il test del sistema SIES interrogando varie componenti del nostro
+ * sistema e compilando il documento di test
  */
 @SuppressWarnings("rawtypes")
 public class TestController {

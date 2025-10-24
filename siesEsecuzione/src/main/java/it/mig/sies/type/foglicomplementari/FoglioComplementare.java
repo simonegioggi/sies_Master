@@ -1,10 +1,3 @@
-//
-// Questo file è stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
-// Vedere <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Qualsiasi modifica a questo file andrà persa durante la ricompilazione dello schema di origine. 
-// Generato il: 2016.10.26 alle 04:01:02 PM CEST 
-//
-
 
 package it.mig.sies.type.foglicomplementari;
 
@@ -27,8 +20,8 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="annoSiep" type="{http://www.w3.org/2001/XMLSchema}int"/>
- *         &lt;element name="numeroSiep" type="{http://www.w3.org/2001/XMLSchema}long"/>
+ *         &lt;element name="annoSiep" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
+ *         &lt;element name="numeroSiep" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
  *         &lt;element name="flagPrincipale" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
  *         &lt;element ref="{http://it/mig/sies/type/fogliComplementari}ProvvedimentoGiudiziario" maxOccurs="unbounded"/>
  *         &lt;element ref="{http://it/mig/sies/type/fogliComplementari}ChiaviProvvedimentoEsecutivo"/>
@@ -53,8 +46,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "FoglioComplementare")
 public class FoglioComplementare {
 
-    protected int annoSiep;
-    protected long numeroSiep;
+    protected Integer annoSiep;
+    protected Long numeroSiep;
     protected boolean flagPrincipale;
     @XmlElement(name = "ProvvedimentoGiudiziario", required = true, nillable = true)
     protected List<ProvvedimentoGiudiziario> provvedimentoGiudiziario;
@@ -66,32 +59,48 @@ public class FoglioComplementare {
     /**
      * Recupera il valore della proprietà annoSiep.
      * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
      */
-    public int getAnnoSiep() {
+    public Integer getAnnoSiep() {
         return annoSiep;
     }
 
     /**
      * Imposta il valore della proprietà annoSiep.
      * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
      */
-    public void setAnnoSiep(int value) {
+    public void setAnnoSiep(Integer value) {
         this.annoSiep = value;
     }
 
     /**
      * Recupera il valore della proprietà numeroSiep.
      * 
+     * @return
+     *     possible object is
+     *     {@link Long }
+     *     
      */
-    public long getNumeroSiep() {
+    public Long getNumeroSiep() {
         return numeroSiep;
     }
 
     /**
      * Imposta il valore della proprietà numeroSiep.
      * 
+     * @param value
+     *     allowed object is
+     *     {@link Long }
+     *     
      */
-    public void setNumeroSiep(long value) {
+    public void setNumeroSiep(Long value) {
         this.numeroSiep = value;
     }
 

@@ -173,7 +173,7 @@
 		</tr>
 		<tr>
 			<td class="L">
-				<select title="oggettoProcedimento" class=small name="<%=ICostantiStatistiche.CAMPO_COD_OGGETTO%>"  multiple size="15">
+				<select title="oggettoProcedimento" class="small" name="<%=ICostantiStatistiche.CAMPO_COD_OGGETTO%>"  multiple size="15">
 					<%= oggettoProcedimento %>
 				</select>
 			</td>

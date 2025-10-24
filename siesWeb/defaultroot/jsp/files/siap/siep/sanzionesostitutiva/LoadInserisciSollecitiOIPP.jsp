@@ -44,14 +44,14 @@ if (lAltraCausa == null)
 int contaRinnovi = listaSolleciti.size();
 int contaDaValidare = 0;
 for (int i = 0; i < listaSolleciti.size(); i++) {
-	RinnovoModel lRinnovo = (RinnovoModel) listaSolleciti.elementAt(i);
-  	if (lRinnovo.getFlagDocumentoRegistrato() == null 
-       		|| lRinnovo.getFlagDocumentoRegistrato().equals("N") )
-    	contaDaValidare++; 
-}
-String strDaValidare = "";
-if (contaDaValidare > 0)
-	strDaValidare = " (da validare "+contaDaValidare+")";
+     RinnovoModel lRinnovo = (RinnovoModel) listaSolleciti.elementAt(i);
+     if (lRinnovo.getFlagDocumentoRegistrato()==null 
+          || lRinnovo.getFlagDocumentoRegistrato().equals("N") )
+       contaDaValidare++; 
+   }
+   String strDaValidare = "";
+   if (contaDaValidare > 0)
+     strDaValidare = " (da validare "+contaDaValidare+")";
 %>
 
 <html>

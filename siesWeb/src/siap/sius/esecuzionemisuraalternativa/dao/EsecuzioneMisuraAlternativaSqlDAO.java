@@ -69,13 +69,13 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 				+ "EMA.COD_UFFICIO_AGGIORNAMENTO, GEN_PRID_GENERALE_PROCEDIMENTO, "
 				+ "NVL(LUOGO_ESECUZIONE_MISURA, '') LUOGO_ESECUZIONE_MISURA ";
 		// JOIN per la descrizione dei campi
-		lStatement += "FROM ESECUZIONE_MISURA_ALTERNATIVA EMA ";
-		lStatement += "LEFT OUTER JOIN UFFICIO UFF ON EMA.COD_AUTORITA_EMITT_ORD = UFF.COD_UFFICIO ";
+		lStatement += " FROM ESECUZIONE_MISURA_ALTERNATIVA EMA";
+		lStatement += " LEFT OUTER JOIN UFFICIO UFF ON EMA.COD_AUTORITA_EMITT_ORD = UFF.COD_UFFICIO";
 		lStatement += "LEFT OUTER JOIN CG_REF_CODES DESCR_TIPO_MISURA ON (EMA.COD_TIPO_MISURA = "
 				+ "DESCR_TIPO_MISURA.RV_LOW_VALUE AND DESCR_TIPO_MISURA.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO')";
 		lStatement += " INNER JOIN CG_REF_CODES DESCR_TIPO_UFF ON (UFF.COD_TIPO_UFFICIO = "
 				+ "DESCR_TIPO_UFF.RV_LOW_VALUE AND DESCR_TIPO_UFF.RV_DOMAIN = 'TIPO_UFFICIO')";
-		lStatement += " INNER JOIN COMUNE DESCR_COM_UFF ON (UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE) ";
+		lStatement += " INNER  JOIN COMUNE DESCR_COM_UFF ON (UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE) ";
 		return lStatement;
 	}
 
@@ -491,7 +491,7 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * getFascicoloSiusGPModel
-	 * 
+	 *
 	 * @Restituisce Il Model del FascicoloGPModel.
 	 * @throws DAOException
 	 */
@@ -677,7 +677,7 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 		lStatement += " '-' DESCR_PROVVEDIMENTO, '-'  DESCR_DEFINIZIONE, DESCR_COD_PROCEDIMENTO.RV_MEANING "
 				+ "DESCR_COD_PROCEDIMENTO, ";
 		// lStatement += " NVL(EMA.LUOGO_ESECUZIONE_MISURA, '') LUOGO_ESECUZIONE_MISURA ";
-		lStatement += "NULL LUOGO_ESECUZIONE_MISURA "; // 11/04/2008 Soluzione MAC a8/rr/086
+		lStatement += "     NULL LUOGO_ESECUZIONE_MISURA "; // 11/04/2008 Soluzione MAC a8/rr/086
 		// STUB 02/11/2005 Rework EMA.
 		lStatement += ", 0 NUM_FIGLI, null ID_FASCICOLO_SIUS_FIGLIO, null ID_FASCICOLO_SIUS_ORIGINE ";
 		lStatement += "FROM ESECUZIONE_MISURA_ALTERNATIVA EMA, GENERALE_PROCEDIMENTO GP_PADRE, "
@@ -697,11 +697,11 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 		lStatement += " AND DESCR_MISURA_ALTERNATIVA.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO'";
 		lStatement += " AND EMA.COD_TIPO_MISURA = DESCR_MISURA_ALTERNATIVA.RV_LOW_VALUE";
 		lStatement += " AND FASC.CHIAVE_UFFICIO ='" + lUfficioUtenteConnesso + "'";
-		lStatement += " AND DESCR_COD_PROCEDIMENTO.RV_DOMAIN ='OGGETTO_PROCEDIMENTO'";
-		lStatement += " AND GP.COD_OGGETTO_PROCEDIMENTO = DESCR_COD_PROCEDIMENTO.RV_LOW_VALUE";
-		lStatement += " AND UFF.COD_UFFICIO = FASC.CHIAVE_UFFICIO";
-		lStatement += " AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE";
-		lStatement += " AND (FASC.ID_FASCICOLO_SIUS) NOT IN (select FASC2.ID_FASCICOLO_SIUS";
+		lStatement += " AND DESCR_COD_PROCEDIMENTO.RV_DOMAIN ='OGGETTO_PROCEDIMENTO'  ";
+		lStatement += " AND GP.COD_OGGETTO_PROCEDIMENTO = DESCR_COD_PROCEDIMENTO.RV_LOW_VALUE ";
+		lStatement += " AND UFF.COD_UFFICIO = FASC.CHIAVE_UFFICIO  ";
+		lStatement += " AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE ";
+		lStatement += " AND (FASC.ID_FASCICOLO_SIUS) NOT IN (select FASC2.ID_FASCICOLO_SIUS  ";
         // 20250731: [DF] si esclude la condizione sul max data_ins non necessaria per la NOT IN
 //		lStatement += " FROM FASCICOLO_SIUS FASC2, SOGGETTO  SOGG, GENERALE_PROCEDIMENTO GP, EVENTO EV";
 //		lStatement += " WHERE FASC2.SOG_ID_SOGGETTO = SOGG.ID_SOGGETTO";
@@ -709,9 +709,9 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 		lStatement += " FROM FASCICOLO_SIUS FASC2, EVENTO EV";
 		lStatement += " WHERE EV.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS";
 		lStatement += " AND FASC2.CHIAVE_UFFICIO = '" + lUfficioUtenteConnesso + "'";
-		lStatement += " AND (EV.COD_TIPO_PROVVEDIMENTO = '02'  OR EV.COD_TIPO_PROVVEDIMENTO = '03')";
-		lStatement += " AND EV.FAS_SIU_ID_FASCICOLO_SIUS = FASC2.ID_FASCICOLO_SIUS";
-        lStatement += " ) ";
+		lStatement += " AND (EV.COD_TIPO_PROVVEDIMENTO = '02'  OR EV.COD_TIPO_PROVVEDIMENTO = '03')  ";
+		lStatement += " AND EV.FAS_SIU_ID_FASCICOLO_SIUS = FASC2.ID_FASCICOLO_SIUS ";
+		lStatement += " ) ";
         // 20250731: [DF]--------------------------------------------------------
         
 //		// 20250731: [SG] aggiunta condizione sull'ufficio
@@ -857,13 +857,13 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 		lStatement += " AND FASC2.ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS ";
 		lStatement += " AND (EV.DATA_INSERIMENTO,ID_FASCICOLO_SIUS) = (select EV2.DATA_INSERIMENTO, "
 				+ "FAS_SIU_ID_FASCICOLO_SIUS from EVENTO EV2 ";
-		lStatement += " where EV2.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS";
-		lStatement += " AND (EV2.COD_TIPO_PROVVEDIMENTO = '02'  OR EV2.COD_TIPO_PROVVEDIMENTO = '03')";
-		lStatement += " AND EV2.DATA_INSERIMENTO = (select max (EV3.DATA_INSERIMENTO) from EVENTO EV3";
-		lStatement += " where EV3.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS";
-		lStatement += " AND (EV3.COD_TIPO_PROVVEDIMENTO = '02'  OR EV3.COD_TIPO_PROVVEDIMENTO = '03')))";
-		lStatement += " AND (EV.COD_TIPO_PROVVEDIMENTO = '02'  OR EV.COD_TIPO_PROVVEDIMENTO = '03')";
-		lStatement += " AND EV.FAS_SIU_ID_FASCICOLO_SIUS = FASC2.ID_FASCICOLO_SIUS";
+		lStatement += " where EV2.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS ";
+		lStatement += " AND (EV2.COD_TIPO_PROVVEDIMENTO = '02'  OR EV2.COD_TIPO_PROVVEDIMENTO = '03') ";
+		lStatement += " AND EV2.DATA_INSERIMENTO = (select max (EV3.DATA_INSERIMENTO) from EVENTO EV3 ";
+		lStatement += " where EV3.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS  ";
+		lStatement += " AND (EV3.COD_TIPO_PROVVEDIMENTO = '02'  OR EV3.COD_TIPO_PROVVEDIMENTO = '03') ) ) ";
+		lStatement += " AND (EV.COD_TIPO_PROVVEDIMENTO = '02'  OR EV.COD_TIPO_PROVVEDIMENTO = '03')  ";
+		lStatement += " AND EV.FAS_SIU_ID_FASCICOLO_SIUS = FASC2.ID_FASCICOLO_SIUS ";
 		lStatement += " ) ";
 		return lStatement;
 	}

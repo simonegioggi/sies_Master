@@ -172,12 +172,12 @@ public class ActInsRipristinoArrestiDomiciliari extends ActRipristino {
 			lDataEmisTras = getRequestDateParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE,
 					ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE,
 					ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE);
-			// lEveMod.setEvento(setEventoOrdinazaDecretoMisuraAlternativa(lEveMod.getEvento(),"03",lCodiceUffEmi,lComModAutEmi,lDataEmisTras));
+			// lEveMod.setEvento(setEventoOrdinanzaDecretoMisuraAlternativa(lEveMod.getEvento(),"03",lCodiceUffEmi,lComModAutEmi,lDataEmisTras));
 
 			String lTipoProvv = "";
 			if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_TIPO_DECISIONE))
 				lTipoProvv = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_TIPO_DECISIONE);
-			lEveMod.setEvento(setEventoOrdinazaDecretoMisuraAlternativa(lEveMod.getEvento(), lTipoProvv,
+			lEveMod.setEvento(setEventoOrdinanzaDecretoMisuraAlternativa(lEveMod.getEvento(), lTipoProvv,
 					lCodiceUffEmi, lComModAutEmi, lDataEmisTras));
 
 			// setto il deposito decreto

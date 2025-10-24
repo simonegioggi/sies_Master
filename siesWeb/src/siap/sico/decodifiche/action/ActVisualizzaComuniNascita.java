@@ -17,7 +17,9 @@ public class ActVisualizzaComuniNascita extends ActionSiap implements ICostantiC
 		ComuneModel lCMod = new ComuneModel();
 
 		if (getRequestStringParameter("comune").length() > 0) {
-			lCMod.setDescrizione(getRequestStringParameter("comune").toUpperCase());
+			// Ticket#202510210160 - SIES: Anomalia nomi comuni - PROV. BOLZANO
+			// uppercase trasforma VILLNÖß in VILLNOSS e non lo trova
+			lCMod.setDescrizione(getRequestStringParameter("comune")/*.toUpperCase()*/);
 			setRequestAttribute("comune", lCMod.getDescrizione());
 		} else
 			setRequestAttribute("comune", " ");

@@ -146,7 +146,7 @@ if (lRicerca.verificaEsistenzaSospensione())
     </tr>
 
   <tr>
-    <td class="l">Contenuto</font></td>
+	    <td class="l">Contenuto</td>
     <td class="L"> <%=contenuto%></td>
   </tr>
 

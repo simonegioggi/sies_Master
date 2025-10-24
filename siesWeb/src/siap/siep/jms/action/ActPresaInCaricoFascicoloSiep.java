@@ -15,20 +15,9 @@ import siap.siep.jms.controller.IPresaInCaricoJMS;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * <p>
- * Title: ActPresaInCaricoFascicoloSiep
- * </p>
- * <p>
- * Description: Azione di presa in Carico di un fascicolo ricercato all'interno di un'altra BDI
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company:
- * </p>
+ * ActPresaInCaricoFascicoloSiep - Azione di presa in Carico di un fascicolo ricercato all'interno di un'altra
+ * BDI
  * 
- * @author not attributable
  * @version 1.0
  */
 public class ActPresaInCaricoFascicoloSiep extends ActionSiap implements ICostantiJMS {

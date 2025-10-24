@@ -47,49 +47,51 @@ if ("TDSM".equals(CodUff) || "UDSM".equals(CodUff))
 
 <script language="JavaScript">
 function AbilitaCampiEsiti() {
-	nodeRevocaNuovaPena = document.getElementById('idDivRevocaNuovaPena');
-  	var isRevoca="false";
+  nodeRevocaNuovaPena = document.getElementById('idDivRevocaNuovaPena');
+  var isRevoca="false";
   	if (typeof(document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[0][0]) == "undefined") {
     	for (j = 0; j < document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.length ; j++) {
-      		if (document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].selected
-      				&& (document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value == "3114"
-      						|| document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value == "3115"
-              				|| document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value == "3120"
+      if (   document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].selected   
+          && (   document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value =="3114"
+              || document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value =="3115"
+              || document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value =="3120"
               				|| document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value == "3121")) {
-        		isRevoca="true";
-      		}
-    	} // fine ciclo for
+        isRevoca="true";
+      }
+    } // fine ciclo for
   	} else { // Fine caso singolo oggetto
   		// Nel caso di più oggetti, la div d rideterminazione è visibile se almeno un esito è di Revoca
-    	// Scorro gli Oggetti
+    // Scorro gli Oggetti
     	for (j = 0; j < document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.length ; j++) {
-      		// Scorro gli esiti
+      // Scorro gli esiti
       		for (i = 0; i < document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].length ; i++) {
-        		if (document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j][i].selected
-        				&& (document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j][i].value == "3114" 
-								|| document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j][i].value == "3115" 
-								|| document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j][i].value == "3120" 
+        if (   document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j][i].selected
+            && (   document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j][i].value == "3114" 
+                || document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j][i].value == "3115" 
+                || document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j][i].value == "3120" 
 								|| document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j][i].value == "3121")) {
-          			isRevoca="true";
-        		}
-      		} 
-   		}
-	} // Fine caso più oggetti
-  	if (isRevoca == "true")
-    	nodeRevocaNuovaPena.style.display = "block";
-  	else
-    	nodeRevocaNuovaPena.style.display = "none";
-}
+          isRevoca="true";
+        }
+      } 
+    }
+  } // Fine caso più oggetti
+  
+  
+  if (isRevoca=="true")
+    nodeRevocaNuovaPena.style.display="block";
+  else
+    nodeRevocaNuovaPena.style.display="none";
+}     
 </script>
 
 <script language="JavaScript">
 function Verify() {
-	var lEsiti = document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>;
-    var ritorno = VerifyCombo(lEsiti, "Esito");
+    var lEsiti=document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>;
+    var ritorno = VerifyCombo(lEsiti,"Esito");
     // 20250805 [SG]: su mail gasbarri eliminati i controlli dei quantum
 //     nodeRevocaNuovaPena = document.getElementById('idDivRevocaNuovaPena');
 //     if (nodeRevocaNuovaPena.style.display == 'block') {
-		// Controllo quantum Pena Revocata
+      // Controllo quantum Pena Revocata
 <%-- 		anniRevocata   = document.InserisciOrdinanzaRevocaPenaSostitutiva.<%= ICostantiDepositoOrdinanzaPc.CAMPO_NUM_ANNI_ARRESTO_REV%>.value; --%>
 <%-- 		mesiRevocata   = document.InserisciOrdinanzaRevocaPenaSostitutiva.<%= ICostantiDepositoOrdinanzaPc.CAMPO_NUM_MESI_ARRESTO_REV%>.value; --%>
 <%-- 		giorniRevocata = document.InserisciOrdinanzaRevocaPenaSostitutiva.<%= ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_ARRESTO_REV%>.value; --%>
@@ -98,7 +100,7 @@ function Verify() {
 <%--         	document.InserisciOrdinanzaRevocaPenaSostitutiva.<%= ICostantiDepositoOrdinanzaPc.CAMPO_NUM_ANNI_ARRESTO_REV%>.focus(); --%>
 //         		return false;
 //       	}
-		// Controllo della data decorrenza Revoca
+      // Controllo della data decorrenza Revoca
 <%--       	var data_decorrenza = document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiDepositoOrdinanzaPc.CAMPO_GIORNO_DATA_DECORRENZA%>.value --%>
 <%-- 			+ '/' + document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiDepositoOrdinanzaPc.CAMPO_MESE_DATA_DECORRENZA%>.value --%>
 <%-- 			+ '/' + document.InserisciOrdinanzaRevocaPenaSostitutiva.<%=ICostantiDepositoOrdinanzaPc.CAMPO_ANNO_DATA_DECORRENZA%>.value; --%>
@@ -113,7 +115,7 @@ function Verify() {
 <%-- 	        document.InserisciOrdinanzaRevocaPenaSostitutiva.<%= ICostantiEsecuzioneSS.CAMPO_COD_TIPO_SANZIONE%>.focus(); --%>
 //         	return false;
 //       	}
-      	// Quantum Pena Da Espiare
+      // Quantum Pena Da Espiare
 <%-- 		anniRideterminati   = document.InserisciOrdinanzaRevocaPenaSostitutiva.<%= ICostantiEsecuzioneSS.CAMPO_NUM_ANNI_SANZIONE%>.value; --%>
 <%-- 		mesiRideterminati   = document.InserisciOrdinanzaRevocaPenaSostitutiva.<%= ICostantiEsecuzioneSS.CAMPO_NUM_MESI_SANZIONE%>.value; --%>
 <%-- 		giorniRideterminati = document.InserisciOrdinanzaRevocaPenaSostitutiva.<%= ICostantiEsecuzioneSS.CAMPO_NUM_GIORNI_SANZIONE%>.value; --%>
@@ -129,19 +131,19 @@ function Verify() {
 </head>
 
 <body class="corpo">
-<table>
-	<tr>
+  <table>
+    <tr>
 	  	<td class="LBG">
 	  		<a href="Javascript:window.print();">
 	  			<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border="0">
 	  		</a>
-	  	</td>
+      </td>
 	  	<td class=LBG><font class="label">Funzione : </font> <font class="campo">Emissione Ordinanza Revoca Pena Sostitutiva</font></td>
-	</tr>
-	<tr>
-	   	<jsp:include page="<%=ICostantiFascicoloSius.PG_LOAD_SINTESIPROCEDIMENTOSIUS%>"/>
-	</tr>
-</table>
+    </tr>
+    <tr>
+       <jsp:include page="<%=ICostantiFascicoloSius.PG_LOAD_SINTESIPROCEDIMENTOSIUS%>"/>
+    </tr>
+  </table>
 
 <FORM method="POST" action="<%=IWebConstants.PG_MAIN%>" name="InserisciOrdinanzaRevocaPenaSostitutiva">
 <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaRevocaPS" >
@@ -150,22 +152,24 @@ function Verify() {
 <input type="HIDDEN" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_DATA_EMISSIONE%>" value=<%=DateUtils.getDateToString(data_emissione,"dd/MM/yyyy")%> >
 <input type="HIDDEN" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_ID_CSSA_COMP%>">
 
-<table cellspacing="2" cellpadding="2" width="50%">
-	<tr>
-	  	<td class="l" width="30%"> Data Emissione</td>
-	  	<td class="l" width="70%"> <%=DateUtils.getDateToString(data_emissione,"dd/MM/yyyy")%></td>
-	</tr>  
-	<tr>
-	  	<td class="l">Eventuale Motivazione</td>
-	  	<td class="l">
+  <table cellspacing="2" cellpadding="2" width="50%">
+    <tr>
+      <td class="l" width="30%"> Data Emissione</td>
+      <td class="l" width="70%"> <%=DateUtils.getDateToString(data_emissione,"dd/MM/yyyy")%></td>
+    </tr>  
+    <tr>
+      <td class="l">Eventuale Motivazione</td>
+      <td class="l">
 	    	<TEXTAREA title="Eventuale Motivazione" cols="70" rows="4" name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_ULTERIORE_DESCRIZIONE%>"></textarea>
-	  	</td>
-	</tr>
-</table>
-<br>     
-<table cellspacing="2" cellpadding="2" style="width: 90%;">
-	<tr>
-      	<td class="Titolo" colspan=6 > Specificare esito per ciascun oggetto: </td>
+      </td>
+    </tr>      
+  </table>
+
+  <br>     
+    
+  <table cellspacing="2" cellpadding="2" style="width: 90%;">
+    <tr>
+      <td class="Titolo" colspan=6 > Specificare esito per ciascun oggetto: </td>
     </tr>
     <tr>
       	<td class="l" colspan=2 > Oggetto </td>
@@ -175,16 +179,16 @@ function Verify() {
 for (int i = 0; i < tenori.length; i++) {
 %>
     <tr>
-      	<td class="l"colspan=2 >
+      <td class="l"colspan=2 >
 	        <input Title="Oggetto" name="<%=ICostantiTenore.CAMPO_DESCR_OGGETTO_TENORE %>" value="<%=tenori[i].getDescrOggettoTenore()%>" readonly size="100%">
-	        <input type="hidden" name="<%= ICostantiTenore.CAMPO_COD_OGGETTO_TENORE %>" value="<%=tenori[i].getCodOggettoTenore()%>">
-	        <input type="hidden" name="<%= ICostantiTenore.CAMPO_COD_DETTAGLIO_OGGETTO %>" value="<%=tenori[i].getCodDettaglioOggetto()%>">
-      	</td>
-      	<td class="l" colspan="2" >
-        	<select Title="Cod Esito" name="<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>" onchange="Javascript:return AbilitaCampiEsiti();">
-           		<%=esiti[i]%>
-        	</select>
-		</td>
+        <input type="hidden" name="<%= ICostantiTenore.CAMPO_COD_OGGETTO_TENORE %>" value="<%=tenori[i].getCodOggettoTenore()%>" >
+        <input type="hidden" name="<%= ICostantiTenore.CAMPO_COD_DETTAGLIO_OGGETTO %>" value="<%=tenori[i].getCodDettaglioOggetto()%>" >
+      </td>
+      <td class="l" colspan="2" >
+        <select Title="Cod Esito" name="<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>" onchange="Javascript:return AbilitaCampiEsiti();">
+           <%=esiti[i]%>
+        </select>
+      </td>
     </tr>
 <%
 }
@@ -193,27 +197,27 @@ for (int i = 0; i < tenori.length; i++) {
 <br>
 <%-- 
 ======================================================
-NUOVO Pena Riconvertita 
+    NUOVO Pena Riconvertita 
 ======================================================
-Revoca e converte in pena detentiva   (0267)
-Revoca e converte in altra pena sostitutiva   (0268)
---%>
-<div id="idDivRevocaNuovaPena" style="display:none;"> 
-<table cellspacing="2" cellpadding="2" width="90%">
-	<tr>
-		<td>
-          	<font class="label">Quantum pena revocata</font>
+  Revoca e converte in pena detentiva   (0267)
+  Revoca e converte in altra pena sostitutiva   (0268)
+  --%>
+  <div id="idDivRevocaNuovaPena" style="display:none;"> 
+    <table cellspacing="2" cellpadding="2" width="90%" >
+      <tr>
+        <td>
+          <font class="label">Quantum pena revocata</font>
         </td>
         <td>
-          	<font class="label">Anni</font>&nbsp;
+          <font class="label">Anni</font>&nbsp;
           	<input type="text" title="Anni" size="4" maxlength="2" name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_NUM_ANNI_ARRESTO_REV%>" value="" ONKEYPRESS="return TicTabNumField(this,event)">
-          	<font class="label">Mesi</font>&nbsp;
+          <font class="label">Mesi</font>&nbsp;
           	<input type="text" title="Mesi" size="4" maxlength="2" name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_NUM_MESI_ARRESTO_REV%>" value="" ONKEYPRESS="return TicTabNumField(this,event)">
-          	<font class="label">Giorni</font>&nbsp;
+          <font class="label">Giorni</font>&nbsp;
           	<input type="text" title="Giorni" size="4" maxlength="2" name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_ARRESTO_REV%>" value="" ONKEYPRESS="return TicTabNumField(this,event)">
-		</td>
-	</tr>
-	<tr>
+        </td>
+      </tr>
+      <tr>
         <td>
           	<font class="label">Data Decorrenza Revoca</font>
         </td>  
@@ -239,11 +243,11 @@ Revoca e converte in altra pena sostitutiva   (0268)
           	<font class="label">Rideterminazione Quantum Pena Da Espiare</font>
         </td>
         <td>
-			<font class="label">Anni</font>&nbsp;
+          <font class="label">Anni</font>&nbsp;
           	<input type="text" title="Anni" size="4" maxlength="2" name="<%= ICostantiEsecuzioneSS.CAMPO_NUM_ANNI_SANZIONE%>" value="" ONKEYPRESS="return TicTabNumField(this,event)">
-          	<font class="label">Mesi</font>&nbsp;
+          <font class="label">Mesi</font>&nbsp;
           	<input type="text" title="Mesi" size="4" maxlength="2" name="<%= ICostantiEsecuzioneSS.CAMPO_NUM_MESI_SANZIONE%>" value="" ONKEYPRESS="return TicTabNumField(this,event)">
-          	<font class="label">Giorni</font>&nbsp;
+          <font class="label">Giorni</font>&nbsp;
           	<input type="text" title="Giorni" size="4" maxlength="2" name="<%= ICostantiEsecuzioneSS.CAMPO_NUM_GIORNI_SANZIONE%>" value="" ONKEYPRESS="return TicTabNumField(this,event)">
         </td>
       </tr>

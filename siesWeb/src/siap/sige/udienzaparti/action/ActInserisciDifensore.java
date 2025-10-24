@@ -19,18 +19,7 @@ import siap.sige.util.SIGELookupRemote;
 import siap.sige.web.ActionSige;
 
 /**
- * <p>
- * Title: ActInserisciDifensore
- * </p>
- * <p>
- * Description: Classe Action per l'inserimento di un Difensore
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Engineering
- * </p>
+ * ActInserisciDifensore - Classe Action per l'inserimento di un Difensore
  * 
  * @version 1.0
  */
@@ -42,7 +31,6 @@ public class ActInserisciDifensore extends ActionSige implements ICostantiAvvoca
 	 * Azione di Inserimento del Difensore
 	 * 
 	 * @return Nome della pagina JSP da visualizzare al termine dell'elaborazione
-	 *         <p>
 	 * @throws F3BException
 	 */
 	@SuppressWarnings("rawtypes")

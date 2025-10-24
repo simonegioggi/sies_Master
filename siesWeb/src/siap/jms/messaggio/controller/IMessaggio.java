@@ -8,18 +8,7 @@ import f3b.util.F3BException;
 import siap.jms.messaggio.model.MessaggioModel;
 
 /**
- * <p>
- * Title: MessaggioController
- * </p>
- * <p>
- * Description: Classe Controller per Messaggio
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * MessaggioController - Classe Controller per Messaggio
  * 
  * @version 1.0
  */
