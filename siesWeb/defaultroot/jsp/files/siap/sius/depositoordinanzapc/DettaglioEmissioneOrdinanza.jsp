@@ -48,6 +48,8 @@
 <jsp:useBean id="misuraSicurezza"      	scope="request" class="siap.siep.misurasicurezza.model.MisuraSicurezzaModel"/>
 <jsp:useBean id="misuraAlternativa"		scope="request" class="siap.sico.misuraalternativa.model.MisuraAlternativaModel"/>
 <jsp:useBean id="LicenzePeriodi"      	scope="request" class="java.util.Vector"/>
+<%-- MEV_2019-09: aggiunto useBean --%>
+<jsp:useBean id="dopcm"					scope="request" class="siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel"/>
 
 <%
 //==============================================================================
@@ -740,6 +742,44 @@ if (!modificaOrdinanza) {
       	<td colspan="2">&nbsp;</td>
     </tr>
 </table>
+
+<%-- MEV_2019-09: aggiunta tabella x dati ORDINANZA APPLICAZIONE M.A. DL 123/2018 --%>
+<%
+if (ICostantiDepositoOrdinanzaPc.CONFERMA_DECISIONE_MAGISTRATO_RELATORE.equals(codice)
+		&& !Utils.isNullObj(dopcm) && Utils.isPresent(dopcm.getAnnoS3())) {
+%>
+<table cellspacing="4" cellpadding="4"  width="95%">
+<%
+	if (!modificaOrdinanza) {
+%>
+	<tr>
+      	<td class="l" width="25%">Ulteriore descrizione della decisione</td>
+      	<td class="l"><font class="campo"><%=StringUtils.toStringJSP(datiOrdinanza.getOrdinanza().getUlterioreDescrizione(), "-")%></font></td>
+    </tr>
+    <tr><td>&nbsp;</td></tr>
+<%
+	}
+%>
+	<tr>
+		<td class="l" colspan="2">Ordinanza N.&nbsp;
+      		<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.depositoordinanzapc.action.ActLoadInserisciDataDeposito&<%=ICostantiEvento.CAMPO_ID_EVENTO%>=<%=dopcm.getIdEventoGenerato()%><%=retParam%>">
+         		<%=StringUtils.toStringJSP(dopcm.getAnnoS3())%>/<%=StringUtils.toStringJSP(dopcm.getNumS3())%>
+      		</a>
+      		&nbsp;del&nbsp;<font class="campo"><%=DateUtils.getDateToString(dopcm.getDataDeposito(),"dd/MM/yyyy")%></font>
+    	</td>
+	</tr>
+	<tr>
+		<td class="l" colspan="2">
+			<%=dopcm.getDescrTipoOrdinanza()%>
+		</td>
+	</tr>
+</table>
+<br>
+<%
+}
+%>
+<%-- FINE MEV_2019-09 --%>
+
 <%
 // Controllo su tipo Ordinanza per determinare se visualizzare le Misure Sicurezza
 if (codice != null
@@ -937,6 +977,11 @@ if (!modificaOrdinanza) {
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_INDULTINO%>"/>
 <%
 		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.MISURA_ALTERNATIVA) == 0) {
+%>
+<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_MA%>"/>
+<%
+// INIZIO: MEV_2019-09 (D.lgs. 123/2018) gestito il caso di tipo ordinanza AM Si aggancia per ora lo stesso dettaglio della MA
+		} else if (codice.compareTo(ICostantiDepositoOrdinanzaPc.MISURA_ALTERNATIVA_AMMISSIONE_DL_123_2018) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_MA%>"/>
 <%

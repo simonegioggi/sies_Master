@@ -626,4 +626,17 @@ public interface ICostantiDepositoOrdinanzaPc {
 	public static final String PG_LOAD_DETTAGLIO_EMISSIONE_ORDINANZA_MS = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/depositoordinanzapc/DettaglioEmissioneOrdinanzaMS.jsp";
 
+	// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
+	public static final String COD_OGGETTO_CONCESSIONE_MISURE_ALTERNATIVA_678 = "C050";
+	public static final String COD_OGGETTO_CONCESSIONE_MISURE_ALTERNATIVA_678_MINORI = "C051";
+	public static final String CAMPO_CK_ATTI_AL_PRESIDENTE = "AttiAlPresidente";
+	public static final String CAMPO_PROCURA_COMPETENTE= "ProcuraCompetente";
+	public static final String MISURA_ALTERNATIVA_AMMISSIONE_DL_123_2018  = "AM";
+	public static final String PG_LOAD_INSERISCI_ORDINANZA_MA_AMM_DL_123_2018 = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/depositoordinanzapc/InserisciOrdinanzaMAAmmDL1232018.jsp";
+	public static final String PG_LOAD_INSERISCI_CONFERMA_DECISIONE_MAGISTRATO_RELATORE = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/depositoordinanzapc/LoadInserisciConfermaDecisioneMagistratoRelatore.jsp";
+	public static final String CONFERMA_DECISIONE_MAGISTRATO_RELATORE = "CM";
+	public static final String TEMPLATE_DECRETO_CONFERMA_DECISIONE_MAGISTRATO_RELATORE = "SIUS_DE_0271";
+	// FINE: MEV_2019-09
 }

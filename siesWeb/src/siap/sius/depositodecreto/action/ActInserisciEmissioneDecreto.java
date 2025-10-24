@@ -35,8 +35,7 @@ import siap.sius.util.SIUSLookupRemote;
 
 /**
  * ActInserisciEmissioneDecreto - Classe Action per l'inserimento dell'Emissione di un decreto generico.
- * L'azione legge contenuto ed oggetti relativi al procedimento scelto.
- * Legge il tipo di decreto da emettere.
+ * L'azione legge contenuto ed oggetti relativi al procedimento scelto. Legge il tipo di decreto da emettere.
  * Non effettua nesun inserimento nel DB ma passa i dati letti (tenori) alla form successiva.
  *
  * @version 1.0
@@ -133,9 +132,8 @@ public class ActInserisciEmissioneDecreto extends ActionSius implements ICostant
 		siesLogger.debug("N.ro Descr. oggetti ->" + lStDescr.countTokens());
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug("Descr. oggetti ->" +
-
-				getRequestStringParameter(ICostantiFascicoloSius.CAMPO_DESCR_OGGETTO));
+		siesLogger.debug(
+				"Descr. oggetti ->" + getRequestStringParameter(ICostantiFascicoloSius.CAMPO_DESCR_OGGETTO));
 
 		int lSizeVector = lStCodice.countTokens();
 
@@ -289,7 +287,7 @@ public class ActInserisciEmissioneDecreto extends ActionSius implements ICostant
 
 	/**
 	 * Metodo per la selezione
-	 * 
+	 *
 	 * @return
 	 * @throws Exception
 	 */
@@ -313,7 +311,7 @@ public class ActInserisciEmissioneDecreto extends ActionSius implements ICostant
 			throw new SIUSException(SIUSException.USER_MESSAGE, "Tipo decreto automatico non definito");
 
 		// MEV_2023-35 si aggiunge un nuovo codice per il decreto generico (GENERICO2=GE)
-		//if (lCodTipoDec.compareTo(GENERICO) == 0 ) {
+		// if (lCodTipoDec.compareTo(GENERICO) == 0 ) {
 		if (lCodTipoDec.compareTo(GENERICO) == 0 || lCodTipoDec.compareTo(GENERICO2) == 0) {
 			// Decreto Generico
 			mRetPage = PG_INSERISCI_GENERICO;
@@ -608,11 +606,8 @@ public class ActInserisciEmissioneDecreto extends ActionSius implements ICostant
 			siesLogger.debug("Decreto di Risarcimrnto Art. 3 CEDU " + lCodTipoDec);
 		}
 		/*
-		 * ISSUE MEV : aggiunta casistica per contenuto U082 
-		 * Numero MEV : 39 
-		 * Autore : Gioggi 
-		 * Data : 08/giu/2017 
-		 * Branch : MEV_39
+		 * ISSUE MEV : aggiunta casistica per contenuto U082 Numero MEV : 39 Autore : Gioggi Data :
+		 * 08/giu/2017 Branch : MEV_39
 		 */
 		else if (lCodTipoDec.compareTo(RINVIO_ESECUZIONE_MS) == 0) {
 			mRetPage = PG_RINVIO_ESECUZIONE_MS;
@@ -620,12 +615,12 @@ public class ActInserisciEmissioneDecreto extends ActionSius implements ICostant
 		}
 		// ***** FINE INTERVENTO MEV_39 *****//
 		// MEV_2023-35 - Revoca Autorizzazioni Pena Sostitutiva
-        else if (lCodTipoDec.compareTo(REVOCA_AUTORIZZAZIONE_PS) == 0) {
-          // Revoca Autorizzazione Pena Sostitutiva
-          mRetPage = PG_INSERISCI_REVOCA_AUTORIZZAZIONE_PENA_SOSTITUTIVA; 
-          ricercaFascicoloOrigine();
-          siesLogger.debug("Decreto Revoca Autorizzazione Pena Sostitutiva " + lCodTipoDec);
-        }
+		else if (lCodTipoDec.compareTo(REVOCA_AUTORIZZAZIONE_PS) == 0) {
+			// Revoca Autorizzazione Pena Sostitutiva
+			mRetPage = PG_INSERISCI_REVOCA_AUTORIZZAZIONE_PENA_SOSTITUTIVA;
+			ricercaFascicoloOrigine();
+			siesLogger.debug("Decreto Revoca Autorizzazione Pena Sostitutiva " + lCodTipoDec);
+		}
 		// MEV_2023-35 - FINE
 		else
 			throw new SIUSException(SIUSException.USER_MESSAGE,
@@ -640,7 +635,7 @@ public class ActInserisciEmissioneDecreto extends ActionSius implements ICostant
 
 	/**
 	 * Metodo per la ricerca di decreti da revocare
-	 * 
+	 *
 	 * @param aTipoDecreto
 	 * @param aTipoLicenza
 	 * @throws Exception
@@ -668,7 +663,7 @@ public class ActInserisciEmissioneDecreto extends ActionSius implements ICostant
 
 	/**
 	 * Metodo per la ricerca dek Fascicolo d'Origine
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	public void ricercaFascicoloOrigine() throws Exception {

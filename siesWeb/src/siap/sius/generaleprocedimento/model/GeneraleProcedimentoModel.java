@@ -1,23 +1,15 @@
 package siap.sius.generaleprocedimento.model;
 
-/**
-* <p>Title: GeneraleProcedimentoModel</p>
-* <p>Description: Classe Model che rappresenta il GeneraleProcedimento</p>
-* <p>Copyright: Copyright (c) 2002</p>
-* <p>Company: Bull</p>
-* @version 1.0
-*/
-
 import java.math.BigDecimal;
 import java.util.Date;
 
-import siap.sius.udienza.model.UdienzaModel;
 import f3b.model.GenericModel;
+import siap.sius.udienza.model.UdienzaModel;
 
 public class GeneraleProcedimentoModel extends GenericModel {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -5079531042764592283L;
 
@@ -78,8 +70,20 @@ public class GeneraleProcedimentoModel extends GenericModel {
 	// 20140113 - Aggiunto per la gestione dei dati di udienza per funzioni statistiche
 	private UdienzaModel mUdienza;
 
+	/* 
+	 * ISSUE MEV : aggiunte variabili per gestione restituzione atti al presidente
+	 * Numero MEV : 9
+	 * Autore    : sgioggi
+	 * Data      : 22 nov 2022
+	 * Branch    : MEV_2019-09
+	 */
+	private Date mDataRestituzione;
+	private String mDescrRestituzione;
+	//***** FINE INTERVENTO MEV_2019-09 *****//
+
 	// COSTRUTTORE DI DEFAULT
 	public GeneraleProcedimentoModel() {
+
 		this.mIdGeneraleProcedimento = null;
 		this.mAnnoS1 = null;
 		this.mProgrS1 = null;
@@ -130,12 +134,14 @@ public class GeneraleProcedimentoModel extends GenericModel {
 		this.mIdAltraCausa = "";
 		this.mDescrMittente = "";
 		this.mCodUfficioMittente = "";
-
 		this.mUdienza = null;
+		this.mDataRestituzione = null;
+		this.mDescrRestituzione = "";
 	}
 
 	// COSTRUTTORE DI COPIA
 	public GeneraleProcedimentoModel(GeneraleProcedimentoModel aModel) {
+
 		this.mIdGeneraleProcedimento = aModel.mIdGeneraleProcedimento;
 		this.mAnnoS1 = aModel.mAnnoS1;
 		this.mProgrS1 = aModel.mProgrS1;
@@ -186,8 +192,9 @@ public class GeneraleProcedimentoModel extends GenericModel {
 		this.mIdAltraCausa = aModel.mIdAltraCausa;
 		this.mDescrMittente = aModel.mDescrMittente;
 		this.mCodUfficioMittente = aModel.mCodUfficioMittente;
-
 		this.mUdienza = aModel.mUdienza;
+		this.mDataRestituzione = aModel.mDataRestituzione;
+		this.mDescrRestituzione = aModel.mDescrRestituzione;
 	}
 
 	// COSTRUTTORE MODEL
@@ -207,7 +214,8 @@ public class GeneraleProcedimentoModel extends GenericModel {
 			String aCodTipoMittenteAtto, String aDescrTipoMittenteAtto, BigDecimal aFasSiuIdFascicoloSius,
 			String aSezione, Date aDataFinePena, String aCodPosGiuridica, String aDescrPosGiuridica,
 			BigDecimal aUdiIdUdienza, String aIdLuogoDetenzione, String aIdAltraCausa, String aDescrMittente,
-			String aCodUfficioMittente) {
+			String aCodUfficioMittente, Date aDataRestituzione, String aDescrRestituzione) {
+
 		this.mIdGeneraleProcedimento = aIdGeneraleProcedimento;
 		this.mAnnoS1 = aAnnoS1;
 		this.mProgrS1 = aProgrS1;
@@ -257,12 +265,13 @@ public class GeneraleProcedimentoModel extends GenericModel {
 		this.mIdAltraCausa = aIdAltraCausa;
 		this.mDescrMittente = aDescrMittente;
 		this.mCodUfficioMittente = aCodUfficioMittente;
+		this.mDataRestituzione = aDataRestituzione;
+		this.mDescrRestituzione = aDescrRestituzione;
 	}
 
 	//
 	// METODI GET()
 	//
-
 	public BigDecimal getIdGeneraleProcedimento() {
 		return mIdGeneraleProcedimento;
 	}
@@ -466,10 +475,18 @@ public class GeneraleProcedimentoModel extends GenericModel {
 	public UdienzaModel getUdienza() {
 		return mUdienza;
 	}
+
+	public Date getDataRestituzione() {
+		return mDataRestituzione;
+	}
+
+	public void setDataRestituzione(Date mDataRestituzione) {
+		this.mDataRestituzione = mDataRestituzione;
+	}
+
 	//
 	// METODI SET()
 	//
-
 	public void setIdGeneraleProcedimento(BigDecimal aValore) {
 		mIdGeneraleProcedimento = aValore;
 	}
@@ -674,7 +691,16 @@ public class GeneraleProcedimentoModel extends GenericModel {
 		mUdienza = aValore;
 	}
 
+	public String getDescrRestituzione() {
+		return mDescrRestituzione;
+	}
+
+	public void setDescrRestituzione(String mDescrRestituzione) {
+		this.mDescrRestituzione = mDescrRestituzione;
+	}
+
 	public String toString() {
+
 		String lStr = new String();
 
 		lStr = "" + mIdGeneraleProcedimento + " - " + mAnnoS1 + " - " + mProgrS1 + " - " + mCodTipoRegistro
@@ -693,7 +719,8 @@ public class GeneraleProcedimentoModel extends GenericModel {
 				+ mDescrSedeMittente + " - " + mCodTipoMittenteAtto + " - " + mDescrTipoMittenteAtto + " - "
 				+ mFasSiuIdFascicoloSius + " - " + mSezione + " - " + mDataFinePena + " - " + mCodPosGiuridica
 				+ " - " + mDescrPosGiuridica + " - " + mUdiIdUdienza + " - " + mIdLuogoDetenzione + " - "
-				+ mIdAltraCausa + " - " + mDescrMittente + " - " + mCodUfficioMittente;
+				+ mIdAltraCausa + " - " + mDescrMittente + " - " + mCodUfficioMittente
+				+ " - " + mDataRestituzione + " - " + mDescrRestituzione;
 
 		return lStr;
 	}

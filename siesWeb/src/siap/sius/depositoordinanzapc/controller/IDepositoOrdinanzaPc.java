@@ -220,6 +220,10 @@ public interface IDepositoOrdinanzaPc {
 			throws F3BException;
 	// ***** FINE INTERVENTO MEV_39 *****//
 
+	// MEV_2019-09
+	public DepositoOrdinanzaPcModel ExAggiornaDataEsecutivitaDepositoOrdinanzaPc(
+			DepositoOrdinanzaPcModel aDepositoOrdinanzaPc) throws F3BException;
+
     // MEV_2023-35
     public OrdinanzaEventoTenoriGProcModel ExInserisciOrdinanzaRevocaConversionePPS (
          OrdinanzaEventoTenoriGProcModel aGProcOrdEveTenori,

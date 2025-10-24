@@ -2,14 +2,14 @@
 <%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
+<%@ page import="f3b.util.Utils"%>
+<%@ page import="f3b.log.LogF3B"%>
+<%@ page import="f3b.web.RedirectTo"%>
+
 <%@ page import="java.math.BigDecimal"%>
 <%@ page import="java.util.Iterator"%>
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="java.util.Collection"%>
-
-<%@ page import="f3b.util.Utils"%>
-<%@ page import="f3b.log.LogF3B"%>
-<%@ page import="f3b.web.RedirectTo"%>
 
 <%@ page import="siap.sico.security.action.ICostantiSecurity"%>
 <%@ page import="siap.sico.utente.model.UtenteModel"%>
@@ -39,6 +39,7 @@
 <%@ page import="siap.sius.tenore.model.TenoreModel"%>
 <%@ page import="siap.sius.cancassfascsius.model.CancAssFascSiusModel"%>
 <%@ page import="siap.sius.esperto.model.EspertoModel"%>
+<%@ page import="siap.sius.depositodecreto.action.ICostantiDepositoDecreto"%>
 
 <jsp:useBean id="UtenteConnesso" 			scope="session" class="siap.sico.utente.model.UtenteModel"/>
 <jsp:useBean id="fascicoloSiusGP" 			scope="request" class="siap.sius.fascicolo.model.FascicoloGPModel"/>
@@ -71,11 +72,13 @@
 <jsp:useBean id="etichettaEta" 				scope="request" class="java.lang.String"/>
 <jsp:useBean id="oscuraEta" 				scope="request" class="java.lang.String"/>
 <jsp:useBean id="esperto" 					scope="request" class="siap.sius.esperto.model.EspertoModel"/>
-
+<%-- MEV_2019-09: aggiunto useBean --%>
+<jsp:useBean id="dataRestituzioneStr" 		scope="request" class="java.lang.String"/>
 <%
 String isVALIGN = "top";
 String isBorder = "0";
-String lWidth = "96%";
+// [SG]: refactoring della pagina
+String lWidth = "94%";
 %>
 
 <html>
@@ -144,7 +147,7 @@ function disattiva(a_action, a_entityname, a_entityvalue) {
 if (fascicoloSiusGP != null && fascicoloSiusGP.getFascicoloSiusModel() != null && certificatoPenale != null
 		&& certificatoPenale.equals("SI")) {
 %>
-<table cellspacing=0 cellpadding=0 width=95% style="border: 0;">
+<table cellspacing=0 cellpadding=0 style="width: 95%; border: 0;">
 	<tr>
 		<td class="rNoBord">
 			<font class="campo">
@@ -156,7 +159,7 @@ if (fascicoloSiusGP != null && fascicoloSiusGP.getFascicoloSiusModel() != null &
 <%
 }
 %>
-<table cellspacing="1" cellpadding="1" width="100%" border=<%=isBorder%>>
+<table cellspacing="1" cellpadding="1" style="width: 100%;" border=<%=isBorder%>>
 	<tr>
 		<td class="label" width="15%" valign=<%=isVALIGN%>>Procedimento</td>
 		<td colspan="3">
@@ -224,10 +227,12 @@ if (licenza != null) {
   	// Permessi
 	// PP = Permesso Premio
 	// PI = Permesso Internato
-  	if ("LC".equalsIgnoreCase(lCodTipoLic) || "LI".equalsIgnoreCase(lCodTipoLic) || "LP".equalsIgnoreCase(lCodTipoLic)) { // Tipo Licenza
+  	if ("LC".equalsIgnoreCase(lCodTipoLic) || "LI".equalsIgnoreCase(lCodTipoLic) || "LP".equalsIgnoreCase(lCodTipoLic)) {
+  		// Tipo Licenza
 		lDescrLink = "Dettaglio Esecuzione Licenza";
 		lRedir.setAction("siap.sius.permesso.action.ActLoadDettaglioEsecuzioneLicenza");
-	} else if (lCodTipoLic.equalsIgnoreCase("PP") || lCodTipoLic.equalsIgnoreCase("PI")) { // Tipo Permesso 
+	} else if (lCodTipoLic.equalsIgnoreCase("PP") || lCodTipoLic.equalsIgnoreCase("PI")) {
+		// Tipo Permesso 
 		lDescrLink = "Dettaglio Esecuzione Permesso";
 		lRedir.setAction("siap.sius.permesso.action.ActLoadDettaglioEsecuzionePermesso");
 	}
@@ -376,7 +381,7 @@ if (elencoFasUnificati != null && fascicoloSiusGP.getFascicoloSiusModel().getNum
 		<td colspan="3">
 			<table cellspacing="1" cellpadding="1" width="85%" style="border: 0;">
 				<tr>
-					<td class="L" width="100%">
+					<td class="L">
 <%
 	Iterator itx4 = elencoFasUnificati.iterator();
     while (itx4.hasNext()) {
@@ -403,7 +408,7 @@ if (elencoFasCollegati != null && elencoFasCollegati.size() > 0) {
 		<td class="Label" colspan="3">
 			<table cellspacing="1" cellpadding="1" width="<%=lWidth%>" style="border: 0;">
 				<tr>
-					<td class="L" width="100%"><font class="label"></font>
+					<td class="L" ><font class="label"></font>
 <%
 	Iterator itx4 = elencoFasCollegati.iterator();
 	while (itx4.hasNext()) {
@@ -434,7 +439,7 @@ if (fascicoloPadre != null && fascicoloPadre.getFascicoloSiusModel().getChiaveAn
 		<td class="Label" colspan="3">
 			<table cellspacing="1" cellpadding="1" width="<%=lWidth%>" style="border: 0;">
 				<tr>
-					<td class="L" width="100%">
+					<td class="L" >
 						<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>=<%=fascicoloPadre.getFascicoloSiusModel().getIdFascicoloSius()%>&TornaQui=<%=TornaQui%>">
 							<%=fascicoloPadre.getFascicoloSiusModel().getChiaveAnno()%>/<%=fascicoloPadre.getFascicoloSiusModel().getChiaveProgr()%>&nbsp;
 							<font class="label">
@@ -455,7 +460,7 @@ if (fascicoloPadre != null && fascicoloPadre.getFascicoloSiusModel().getChiaveAn
 		<td colspan="3">
 			<table cellspacing="1" cellpadding="1" width="<%=lWidth%>" style="border: 0;">
 				<tr>
-					<td class="L" width="100%">
+					<td class="L" >
 						<font class="label">Data:</font>&nbsp;
 <%
 if (udienza.getDataUdienza() == null) {
@@ -555,7 +560,7 @@ if ("1".equals(colspanSoggetto)) {
 %>
 				</tr>
 				<tr>
-					<td class="L" colspan="2" width="100%">
+					<td class="L" colspan="2" >
 						<font class="label">Residenza:</font>&nbsp;
 <%
 boolean trovato = false;
@@ -591,7 +596,7 @@ trovato = false;
 					</td>
 				</tr>
 				<tr>
-					<td class="L" colspan="2" width="100%" valign=<%=isVALIGN%>>
+					<td class="L" colspan="2"  valign=<%=isVALIGN%>>
 						<font class="label">Domicilio:</font>&nbsp;
 <%
 if (residenza != null) {
@@ -621,7 +626,7 @@ if (residenza != null) {
 <%
     }
     trovato = false;
-}
+} // endif residenza
 %>
 					</td>
 				</tr>
@@ -1051,7 +1056,7 @@ if (fascicoloSiusGP.getFascicoloSiusModel().getFasSieIdFascicoloSiep() != null) 
 if (dettagliofascicolo.getFascicoloSiep() != null && dettagliofascicolo.getFascicoloSiep().getNote() != null) {
 %>
 					<td class="L" colspan="3">
-						<font class="label">Note Titolo Esecutivo:</font> 
+						<font class="label">Note Titolo Esecutivo:</font>
 						<font class="campo"><%=dettagliofascicolo.getFascicoloSiep().getNote()%></font>
 					</td>
 <%
@@ -1094,7 +1099,7 @@ if (dettagliofascicolo.getFascicoloSiep() != null && dettagliofascicolo.getFasci
 		<td colspan="3">
 			<table cellspacing="1" cellpadding="1" width="<%=lWidth%>" style="border: 0;">
 				<tr>
-					<td class="L" width="100%">
+					<td class="L">
 						<font class="campo"><%=fascicoloSiusGP.getGeneraleProcedimentoModel().getDescrOggettoProcedimento()%></font>
 					</td>
 				<tr>
@@ -1106,7 +1111,7 @@ if (dettagliofascicolo.getFascicoloSiep() != null && dettagliofascicolo.getFasci
 		<td colspan="3">
 			<table cellspacing="1" cellpadding="1" width="<%=lWidth%>" style="border: 0;">
 				<tr>
-					<td class="L" width="100%">
+					<td class="L">
 						<font class="campo">
 <%
 // 05/11/2003 REWORK FascicoloGPModel (Elenco Tenori)
@@ -1151,7 +1156,7 @@ if (elencoTenoriStralcio != null && elencoTenoriStralcio.size() > 0) {
 		<td class="Label" colspan="3">
 			<table cellspacing="1" cellpadding="1" width="<%=lWidth%>" style="border: 0;">
 				<tr>
-					<td class="L" width="100%">
+					<td class="L">
 						<font class="label"></font>
 <%
 	Iterator itx6 = elencoTenoriStralcio.iterator();
@@ -1193,7 +1198,7 @@ if (esperto != null && esperto.getIdEsperto() != null) {
 		<td colspan="3">
 			<table cellspacing="1" cellpadding="1" width="<%=lWidth%>" style="border: 0;">
 				<tr>
-					<td class="L" width="100%">
+					<td class="L">
 						<font class="campo">
 							<%=StringUtils.toStringJSP(esperto.getCognome()) + " " + StringUtils.toStringJSP(esperto.getNome())%>&nbsp;(Esperto)
 						</font>
@@ -1248,7 +1253,7 @@ if (esperto != null && esperto.getIdEsperto() != null) {
 	         	trovato = true;
 %>
 				<tr>
-					<td class="L" width="100%">
+					<td class="L">
 						<font class="campo"><%=StringUtils.toStringJSP(lMagistrato.getCognome()) + " " + StringUtils.toStringJSP(lMagistrato.getNome())%></font>
 					</td>
 				</tr>
@@ -1258,7 +1263,7 @@ if (esperto != null && esperto.getIdEsperto() != null) {
 		if (trovato == false) {
 %>
 				<tr>
-					<td class="L" width="100%">
+					<td class="L">
 						<font class="label">&nbsp;-&nbsp;</font>
 					</td>
 				</tr>
@@ -1279,7 +1284,7 @@ if (cancelleria_assegnataria != null && cancelleria_assegnataria.getDescCancelle
 		<td colspan="3">
 			<table cellspacing="1" cellpadding="1" width="<%=lWidth%>" style="border: 0;">
 				<tr>
-					<td class="L" width="100%">
+					<td class="L">
 						<font class="campo"><%=cancelleria_assegnataria.getDescCancelleriaAssegnataria()%></font>
 					</td>
 				</tr>
@@ -1290,13 +1295,13 @@ if (cancelleria_assegnataria != null && cancelleria_assegnataria.getDescCancelle
 }
 %>
 </table>
-<table cellspacing="1" cellpadding="1" width="100%" border=<%=isBorder%>>
+<table cellspacing="1" cellpadding="1" style="width: 100%;" border=<%=isBorder%>>
 	<tr>
 		<td class="label" width="15%" valign=<%=isVALIGN%>>Note</td>
 		<td colspan="3">
 			<table cellspacing="1" cellpadding="1" width="<%=lWidth%>" style="border: 0;">
 				<tr>
-					<td class="L" width="100%">
+					<td class="L">
 						<font class="campo">
 <%
 if (fascicoloSiusGP.getGeneraleProcedimentoModel().getAnnotazione() != null
@@ -1318,7 +1323,7 @@ if (fascicoloSiusGP.getGeneraleProcedimentoModel().getAnnotazione() != null
 if (elencoNote != null && elencoNote.size() > 0) {
 %>
 				<tr>
-					<td class="L" width="100%">
+					<td class="L">
 <%
 	Iterator itx5 = elencoNote.iterator();
 	while (itx5.hasNext()) {
@@ -1342,16 +1347,36 @@ if (elencoNote != null && elencoNote.size() > 0) {
 		</td>
 	</tr>
 </table>
+
+<%
+// MEV_2019-09: aggiunta riga per RESTITUZIONE ATTI AL PRESIDENTE
+if (Utils.isPresent(dataRestituzioneStr)) {
+%>
+<table cellspacing="1" cellpadding="1" style="width: 100%;" border=<%=isBorder%>>
+	<tr>
+		<td class="label" width="15%" valign=<%=isVALIGN%>>&nbsp;</td>
+		<td class="Label">
+			<font class="cRosso">
+				Atti Restituiti al Presidente il <a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.fascicolo.action.ActLoadGestioneRestituzioneAttiPresidente&<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>=<%=fascicoloSiusGP.getFascicoloSiusModel().getIdFascicoloSius()%>&TornaQui=<%=TornaQui%>"><%=dataRestituzioneStr%></a>
+			</font>
+		</td>
+	</tr>
+</table>
+<%
+}
+// FINE MEV_2019-09
+%>
+
 <%
 if (ulterioriistanze != null && ulterioriistanze.size() > 0) {
 %>
-<table cellspacing="1" cellpadding="1" width="100%" border=<%=isBorder%>>
+<table cellspacing="1" cellpadding="1" style="width: 100%;" border=<%=isBorder%>>
 	<tr>
 		<td class="label" width="15%" valign=<%=isVALIGN%>>Att.ne</td>
 		<td class="Label" colspan="3">
 			<table cellspacing="1" cellpadding="1" width="<%=lWidth%>" style="border: 0;">
 				<tr>
-					<td class="L" width="100%">
+					<td class="L">
 						<font class="label"></font>
 						<font class="campo">
 							<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.ulterioreistanza.action.ActRicercaUlterioreIstanza&<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>=<%=fascicoloSiusGP.getFascicoloSiusModel().getIdFascicoloSius()%>&TornaQui=<%=TornaQui%>">Presenza Ulteriori Istanze</a>
@@ -1378,15 +1403,11 @@ if (ulterioriistanze != null && ulterioriistanze.size() > 0) {
 		</td>
 	</tr>
 </table>
-<div id="elenco5" style="width: 100%; display: block">
-	<table cellspacing="1" cellpadding="1" width="100%" border=<%=isBorder%>>
-		<tr>
-			<jsp:include page="/jsp/files/siap/sius/rifasiep/ElencoRifFascicoloSiepShort.jsp"/>
-		</tr>
-	</table>
+<div id="elenco5" style="width: 95%; display: block">
+	<jsp:include page="/jsp/files/siap/sius/rifasiep/ElencoRifFascicoloSiepShort.jsp"/>
 	<br>
 </div>
-<table cellspacing="1" cellpadding="1" width="100%" border=<%=isBorder%>>
+<table cellspacing="1" cellpadding="1" style="width: 95%;" border=<%=isBorder%>>
 	<tr>
 		<td class="label" width="15%" colspan="2">
 			<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.avvocato.action.ActRicercaAvvocatoFascicoloSius&<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>=<%=fascicoloSiusGP.getFascicoloSiusModel().getIdFascicoloSius()%>&TornaQui=<%=TornaQui%>">Difensori</a>
@@ -1398,15 +1419,11 @@ if (ulterioriistanze != null && ulterioriistanze.size() > 0) {
 		</td>
 	</tr>
 </table>
-<div id="elenco4" style="width: 100%; display: block">
-	<table cellspacing="1" cellpadding="1" width="100%" border=<%=isBorder%>>
-		<tr>
+<div id="elenco4" style="width: 95%; display: block">
 			<jsp:include page="/jsp/files/siap/sius/avvocato/ElencoAvvocati.jsp"/>
-		</tr>
-	</table>
 	<br>
 </div>
-<table cellspacing="1" cellpadding="1" width="100%" border=<%=isBorder%>>
+<table cellspacing="1" cellpadding="1" style="width: 95%;" border=<%=isBorder%>>
 	<tr>
 		<td class="label" width="15%" colspan="2">
 			<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.provvedimento.action.ActRicercaProvvedimenti&<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>=<%=fascicoloSiusGP.getFascicoloSiusModel().getIdFascicoloSius()%>&TornaQui=<%=TornaQui%>">Provvedimenti</a>
@@ -1418,15 +1435,11 @@ if (ulterioriistanze != null && ulterioriistanze.size() > 0) {
 		</td>
 	</tr>
 </table>
-<div id="elenco3" style="width: 100%; display: block">
-	<table cellspacing="1" cellpadding="1" width="100%" border=<%=isBorder%>>
-		<tr>
-			<jsp:include page="/jsp/files/siap/sius/provvedimento/ElencoProvvedimentiShort.jsp"/>
-		</tr>
-	</table>
+<div id="elenco3" style="width: 95%; display: block">
+	<jsp:include page="/jsp/files/siap/sius/provvedimento/ElencoProvvedimentiShort.jsp"/>
 	<br>
 </div>
-<table cellspacing="1" cellpadding="1" width="100%" border=<%=isBorder%>>
+<table cellspacing="1" cellpadding="1" style="width: 95%;" border=<%=isBorder%>>
 	<tr>
 		<td class="label" width="15%" colspan="2">
 			<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.provvedimento.action.ActRicercaAltriProvvedimenti&<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>=<%=fascicoloSiusGP.getFascicoloSiusModel().getIdFascicoloSius()%>&TornaQui=<%=TornaQui%>">Altri Atti</a>
@@ -1438,15 +1451,11 @@ if (ulterioriistanze != null && ulterioriistanze.size() > 0) {
 		</td>
 	</tr>
 </table>
-<div id="elenco2" style="width: 100%; display: block">
-	<table cellspacing="1" cellpadding="1" width="100%" border=<%=isBorder%>>
-		<tr>
-			<jsp:include page="/jsp/files/siap/sius/provvedimento/ElencoAltriProvvedimentiShort.jsp"/>
-		</tr>
-	</table>
+<div id="elenco2" style="width: 95%; display: block">
+	<jsp:include page="/jsp/files/siap/sius/provvedimento/ElencoAltriProvvedimentiShort.jsp"/>
 	<br>
 </div>
-<table cellspacing="1" cellpadding="1" width="100%" border=<%=isBorder%>>
+<table cellspacing="1" cellpadding="1" style="width: 95%;" border=<%=isBorder%>>
 	<tr>
 		<td class="label" width="15%" colspan="2">
 			<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.richiestaatti.action.ActVisualizzaStatoAtti&<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>=<%=fascicoloSiusGP.getFascicoloSiusModel().getIdFascicoloSius()%>&TornaQui=<%=TornaQui%>">Richieste Istruttorie</a>
@@ -1458,15 +1467,11 @@ if (ulterioriistanze != null && ulterioriistanze.size() > 0) {
 		</td>
 	</tr>
 </table>
-<div id="elenco1" style="width: 100%; display: block">
-	<table cellspacing="1" cellpadding="1" width="100%" border=<%=isBorder%>>
-		<tr>
-			<jsp:include page="/jsp/files/siap/sius/richiestaatti/ElencoAttiRichiestiShort.jsp"/>
-		</tr>
-	</table>
+<div id="elenco1" style="width: 95%; display: block">
+	<jsp:include page="/jsp/files/siap/sius/richiestaatti/ElencoAttiRichiestiShort.jsp"/>
 	<br>
 </div>
-<table cellspacing="1" cellpadding="1" width="100%" border=<%=isBorder%>>
+<table cellspacing="1" cellpadding="1" style="width: 95%;" border=<%=isBorder%>>
 	<tr>
 		<td class="label" width="15%" colspan="2">
 			<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.udienzaprocedimento.action.ActElencoUdienzeProcedimento&TornaQui=<%=TornaQui%>">Movimenti Udienza</a>
@@ -1478,12 +1483,8 @@ if (ulterioriistanze != null && ulterioriistanze.size() > 0) {
 		</td>
 	</tr>
 </table>
-<div id="elenco6" style="width: 100%; display: block">
-	<table cellspacing="1" cellpadding="1" width="100%" border=<%=isBorder%>>
-		<tr>
-			<jsp:include page="<%=ICostantiUdienzaProcedimento.PG_LISTAUDIENZEXPROCEDIMENTO%>"/>
-		</tr>
-	</table>
+<div id="elenco6" style="width: 95%; display: block">
+	<jsp:include page="<%=ICostantiUdienzaProcedimento.PG_LISTAUDIENZEXPROCEDIMENTO%>"/>
 </div>
 </body>
 </html>

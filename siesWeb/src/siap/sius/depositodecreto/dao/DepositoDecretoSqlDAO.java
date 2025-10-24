@@ -399,6 +399,7 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 	 *            : Tipo decreto.
 	 */
 	public void ricercaEsistenzaDepositoDecretoByIdGenProcCodTipoDec(BigDecimal aKey, String aCod) {
+
 		String lStatement = "select count(*) as NUM_REC from DEPOSITO_DECRETO D join EVENTO E ON"
 				+ " (D.ID_EVENTO_GENERATO = E.ID_EVENTO  AND (E.FLAG_DOCUMENTO_REGISTRATO IS NULL OR"
 				+ " E.FLAG_DOCUMENTO_REGISTRATO <> 'A'))";
@@ -445,7 +446,6 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 				+ "D.ID_EVENTO_GENERATO = E.ID_EVENTO";
 		lStatement += " AND E.COD_ESITO = '" + aCod + "'";
 		lStatement += " AND D.GEN_PRID_GENERALE_PROCEDIMENTO = " + aKey;
-		// lStatement += " AND (E.FLAG_DOCUMENTO_REGISTRATO IS NULL OR E.FLAG_DOCUMENTO_REGISTRATO <> = 'A')"
 		setStatement(lStatement);
 
 		this.start();
@@ -567,7 +567,6 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 		lStatement += "GEN_PRID_GENERALE_PROCEDIMENTO, ";
 		lStatement += "SENTENZE_RIFERIMENTO, ";
 		lStatement += "ID_EVENTO_GENERATO, ";
-
 		// nuovi campi Luigi 17-11-2003
 		lStatement += "COD_UFFICIO_COMP, ";
 		lStatement += "COD_PROCURA_ESECUZIONE, ";
@@ -596,15 +595,15 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 		lStatement += "NUM_GIORNI_REVOCA_LA, ";
 		// DL 92 2014 Violazione CEDU
 		lStatement += "NUM_GIORNI_RIDUZIONE_PENA, SOMMA_RISARC_DANNI, ";
-		//
-		lStatement += "TIPO_CTRL_ES.RV_MEANING AS DESC_TIPO_CONTROLLO_ESECUZIONE ";
-
-		lStatement += " FROM DEPOSITO_DECRETO, CG_REF_CODES TIPO_DECRETO, CG_REF_CODES TIPO_CTRL_ES ";
-		lStatement += " WHERE TIPO_DECRETO.RV_DOMAIN = 'TIPO_DECRETO' AND COD_TIPO_DECRETO = TIPO_DECRETO.RV_LOW_VALUE ";
+		// MEV_2019-09 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
+		lStatement += "DATA_TERMINE_EMISSIONE, NUM_GIORNI_TERMINE_EMISSIONE, ";
+		lStatement += "TIPO_CTRL_ES.RV_MEANING AS DESC_TIPO_CONTROLLO_ESECUZIONE";
+		lStatement += " FROM DEPOSITO_DECRETO, CG_REF_CODES TIPO_DECRETO, CG_REF_CODES TIPO_CTRL_ES";
+		lStatement += " WHERE TIPO_DECRETO.RV_DOMAIN = 'TIPO_DECRETO' AND COD_TIPO_DECRETO = TIPO_DECRETO.RV_LOW_VALUE";
 		// lStatement +=
 		// " AND TIPO_CTRL_ES.RV_DOMAIN = 'TIPO_CONTROLLO_ESECUZIONE' AND TIPO_CONTROLLO_ESECUZIONE =
 		// TIPO_CTRL_ES.RV_LOW_VALUE ";
-		lStatement += "   AND (TIPO_CTRL_ES.RV_DOMAIN = 'TIPO_CONTROLLO_ESECUZIONE' AND NVL "
+		lStatement += " AND (TIPO_CTRL_ES.RV_DOMAIN = 'TIPO_CONTROLLO_ESECUZIONE' AND NVL "
 				+ "(TIPO_CONTROLLO_ESECUZIONE,'-') = TIPO_CTRL_ES.RV_LOW_VALUE) ";
 
 		return lStatement;
@@ -729,7 +728,6 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 		aModel.setSospensioneGGSS(getBigDecimal("SOSPENSIONE_GG"));
 		aModel.setSospensioneMMSS(getBigDecimal("SOSPENSIONE_MM"));
 		aModel.setSospensioneAASS(getBigDecimal("SOSPENSIONE_AA"));
-
 		aModel.setFlagNominaComActa(getString("FLAG_NOMINA_COMM_ACTA"));
 		aModel.setDescrCommActa(getString("DESCR_COMM_ACTA"));
 
@@ -750,7 +748,6 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 		DepositoDecretoModel aModel = new DepositoDecretoModel();
 
 		// Inserire le opportune set delle descrizioni!
-
 		aModel.setIdDepositoDecreto(getBigDecimal("ID_DEPOSITO_DECRETO"));
 		aModel.setAnnoS72(getBigDecimal("ANNO_S72"));
 		aModel.setNumS72(getBigDecimal("NUM_S72"));
@@ -769,7 +766,6 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 		aModel.setDataSentenzaImpugnazione(getDate("DATA_SENTENZA_IMPUGNAZIONE"));
 		aModel.setTenoreSentenzaImpugnazione(getString("TENORE_SENTENZA_IMPUGNAZIONE"));
 		aModel.setNote(getString("NOTE"));
-
 		aModel.setCodOperatoreInserimento(getString("COD_OPERATORE_INSERIMENTO"));
 		aModel.setDataInserimento(getDate("DATA_INSERIMENTO"));
 		aModel.setCodUfficioInserimento(getString("COD_UFFICIO_INSERIMENTO"));
@@ -779,7 +775,6 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 		aModel.setGenPridGeneraleProcedimento(getBigDecimal("GEN_PRID_GENERALE_PROCEDIMENTO"));
 		aModel.setSentenzeRiferimento(getString("SENTENZE_RIFERIMENTO"));
 		aModel.setIdEventoGenerato(getBigDecimal("ID_EVENTO_GENERATO"));
-
 		aModel.setCodUfficioCompetente(getString("COD_UFFICIO_COMP"));
 		// aModel.setDescrUfficioComp(getString("") );
 		aModel.setCodProcuraEsecuzione(getString("COD_PROCURA_ESECUZIONE"));
@@ -803,12 +798,9 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 		aModel.setSospensioneGGSS(getBigDecimal("SOSPENSIONE_GG"));
 		aModel.setSospensioneMMSS(getBigDecimal("SOSPENSIONE_MM"));
 		aModel.setSospensioneAASS(getBigDecimal("SOSPENSIONE_AA"));
-
 		aModel.setFlagNominaComActa(getString("FLAG_NOMINA_COMM_ACTA"));
 		aModel.setDescrCommActa(getString("DESCR_COMM_ACTA"));
-
 		aModel.setCodTipoControlloEsecuzione(getString("TIPO_CONTROLLO_ESECUZIONE"));
-
 		// if (super.mStatement.indexOf("DESC_TIPO_CONTROLLO_ESECUZIONE")>-1){
 		aModel.setDescrTipoControlloEsecuzione(getString("DESC_TIPO_CONTROLLO_ESECUZIONE"));
 		// }
@@ -816,6 +808,9 @@ public class DepositoDecretoSqlDAO extends SIAPSqlDAO {
 		// DL 92 2014 Violazione CEDU
 		aModel.setNumeroGiorniRiduzionePena(getBigDecimal("NUM_GIORNI_RIDUZIONE_PENA"));
 		aModel.setSommaRisarcimentoDanni(getBigDecimal("SOMMA_RISARC_DANNI"));
+		// MEV_2019-09 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
+		aModel.setDataTermineEmissione(getDate("DATA_TERMINE_EMISSIONE"));
+		aModel.setNumGiorniTermineEmissione(getBigDecimal("NUM_GIORNI_TERMINE_EMISSIONE"));
 
 		return aModel;
 	}

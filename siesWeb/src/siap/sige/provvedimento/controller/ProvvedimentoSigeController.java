@@ -80,12 +80,13 @@ import siap.sius.documentoallegato.dao.DocumentoAllegatoSqlDAO;
 import siap.sius.documentoallegato.model.DocumentoAllegatoModel;
 
 /**
- * Title: ProvvedimentoSigeController Description: Classe Controller per ProvvedimentoSige
+ * ProvvedimentoSigeController - Classe Controller per ProvvedimentoSige
  *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ProvvedimentoSigeController extends GenericController implements IProvvedimentoSige {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
@@ -1769,6 +1770,9 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 		TenoreSigeDAO lTenDao = null;
 		EventoDAO lEveDao = null;
 
+		// Ticket#202509050120 - Si cancellano anche eventuali DOCUMENTI_ALLEGATI altrimenti va in errore
+		DocumentoAllegatoDAO lDocAllDAO = null;
+
 		if (aProvvedimento == null)
 			throw new SIGEException("Provvedimento nullo");
 
@@ -1869,6 +1873,15 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 			// Cancellazione ai riferimenti tramite EVE_ID_EVENTO E EVE_ID_EVENTO_REVOCA
 			lEveDao.updateDAOFromModelForResetRifEve(lEvento);
 
+			// ====================
+			// Ticket#202509050120 - Si cancellano anche eventuali DOCUMENTI_ALLEGATI altrimenti va in errore
+			lDocAllDAO = new DocumentoAllegatoDAO(aConn);
+			lDocAllDAO.setCondizioneByEve(lIdEvento);
+			lDocAllDAO.delete();
+			lDocAllDAO.stop();
+			// Ticket#202509050120 - FINE
+			// ====================
+
 			// cancellazione Evento collegato al Decreto
 			lEveDao.selCondizioneUpdate(lIdEvento);
 			lEveDao.delete();
@@ -1879,6 +1892,8 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 			cleanup(lTenDao);
 			cleanup(lProvDao);
 			cleanup(lEveDao);
+			// Ticket#202509050120
+			cleanup(lDocAllDAO);
 			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
 			cleanup(lTenSenReaDAO);
 		}
@@ -2629,6 +2644,14 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 					// lFasSigeDao.setCondizioneUpdateStatoFascicolo(aIdFascicoloSige, "07,20");
 					lFasSigeDao.setCondizioneUpdateStatoFascicolo(aIdFascicoloSige, "07");
 				}
+				// 20250911 [SG]: se esiste Decreto Fissazione Udienza (anche solo iscritto)
+				// allora --> Stato Fascicolo: Decreto Fissazione Udienza
+				// Se iscrivo Ordinanza/Decreto poi annullo --> lo statpo del fascicolo non dovrebbe tornare
+				// in "02" Iscritto
+				boolean existDecretoFissazioneUdienza = existDecretoFissazioneUdienza(aIdFascicoloSige);
+				// Iscritto ("02"); Decreto Fissazione Udienza ("20"); Emesso Provvedimento ("07");
+				if (existDecretoFissazioneUdienza)
+					lFasSigeDao.setCodStatoFascicolo("20");
 				lFasSigeDao.update();
 				lFasSigeDao.stop();
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -2723,6 +2746,34 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 			cleanup(lConn);
 		}
 		return;
+	}
+
+	/**
+	 * 20250911 [SG]: controllo se esiste Decreto Fissazione Udienza (anche solo iscritto)
+	 *
+	 * @param aIdFascicoloSige
+	 * @return boolean
+	 * @throws F3BException
+	 */
+	private boolean existDecretoFissazioneUdienza(BigDecimal aIdFascicoloSige) throws F3BException {
+
+		IProvvedimentoSige ips = SIGELookupRemote.getProvvedimentoRemote();
+		Vector<ProvvedimentoSigeEventoModel> vpsem = ips
+				.ExRicercaProvvedimentiSigePerIdFasSige(aIdFascicoloSige);
+		boolean existDecFisUdi = false;
+		Iterator itx = vpsem.iterator();
+		while (itx.hasNext()) {
+			ProvvedimentoSigeEventoModel psem = (ProvvedimentoSigeEventoModel) itx.next();
+			if (psem.getEventoNotifica() != null && psem.getEventoNotifica().getEvento() != null) {
+				String flag = psem.getEventoNotifica().getEvento().getFlagDocumentoRegistrato();
+				String esito = psem.getEventoNotifica().getEvento().getCodEsito();
+				String tipoProvv = psem.getEventoNotifica().getEvento().getCodTipoProvvedimento();
+				if (!"A".equals(flag) && "0601".equals(esito) && "02".equals(tipoProvv))
+					existDecFisUdi = true;
+			}
+		}
+		// valore di ritorno
+		return existDecFisUdi;
 	}
 
 	/**

@@ -9,6 +9,10 @@ import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
 import f3b.util.Utils;
+import siap.sico.decodifiche.controller.DecodificheManager;
+import siap.sico.decodifiche.util.DecodificheUtils;
+import siap.sico.evento.controller.IEvento;
+import siap.sico.evento.model.EventoModel;
 import siap.sico.libertaanticipata.controller.ILicenzaPeriodiLibAnticipata;
 import siap.sico.misuraalternativa.controller.IMisuraAlternativa;
 import siap.sico.misuraalternativa.model.MisuraAlternativaModel;
@@ -430,13 +434,46 @@ public class ActLoadDettaglioOrdinanza extends ActDettaglioEmissioneOrdinanza
 		}
 		// ***** FINE INTERVENTO MEV_39 *****//
 
+		/*
+		 * ISSUE MEV : aggiunta ricerca dati ordinanza applicazione MA DL 123/2018 da scivere in dettaglio
+		 * Numero MEV : 9
+		 * Autore : sgioggi
+		 * Data : 17 gen 2023
+		 * Branch : MEV_2019-09
+		 */
+		if (mOrdEveTenPreMod != null && mOrdEveTenPreMod.getOrdinanza() != null
+				&& CONFERMA_DECISIONE_MAGISTRATO_RELATORE
+						.equals(mOrdEveTenPreMod.getOrdinanza().getCodTipoOrdinanza())) {
+			IEvento ie = SICOLookupRemote.getEventoRemote();
+			Vector<?> v = ie.ExRicercaEventoByFascicoloSius(
+					mFasGPMod.getFascicoloSiusModel().getIdFascicoloSius(),	null);
+			BigDecimal idEventoOrdinanza = null;
+			for (int i = 0; i < v.size(); i++) {
+				EventoModel em = (EventoModel) v.elementAt(i);
+				if ("0270".equals(em.getCodEsito()) && "S".equals(em.getFlagDocumentoRegistrato())
+						&& em.getNumAllValidati() > 0) {
+					idEventoOrdinanza = em.getIdEvento();
+					break;
+				}
+			}
+			IDepositoOrdinanzaPc idopc = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
+			DepositoOrdinanzaPcModel dopcm = idopc.ExRicercaDepositoOrdinanzaPcByEvento(idEventoOrdinanza);
+			// dati x l'ordinanza di Applicazione M.A. DL 123/2018
+			String descrTipoOrdinanza = (DecodificheUtils.getDescbyCode(
+					DecodificheManager.getInstance().getTipoOrdinanza(), dopcm.getCodTipoOrdinanza()));
+			dopcm.setDescrTipoOrdinanza(descrTipoOrdinanza);
+			setRequestAttribute("dopcm", dopcm);
+		}
+		// ***** FINE INTERVENTO MEV_2019-09 *****//
+
 		// MEV10-s3: aggiunto riferimento all'oggetto "codTipoUfficio"
 		String codTipoUfficio = lFasGPMod.getFascicoloSiusModel().getCodTipoUfficio();
 		setRequestAttribute("codTipoUfficio", codTipoUfficio);
 
-		// valore di ritorno
+		// info per il log
 		siesLogger.debug("ActLoadDettaglioOrdinanza retPage = " + retPage);
 
+		// valore di ritorno
 		return retPage;
 	}
 

@@ -51,7 +51,7 @@ public interface ICostantiDepositoDecreto {
 	public static final String CAMPO_SENTENZA_RIFERIMENTO = "SentenzaRiferimento";
 	public static final String CAMPO_ID_DOCUMENTO_ALLEGATO = "IdDocumentoAllegato";
 	public static final String ACTION_DOPO_CANCELLAZIONE = "ActDopoCanc";
-	// 20131201 - paolo ( modifica magistrato per decreto )
+	// 20131201 - paolo (modifica magistrato per decreto)
 	public static final String CAMPO_ID_EVENTO_GENERATO = "IdEventoGenerato";
 
 	// Emissione Decreto
@@ -459,5 +459,22 @@ public interface ICostantiDepositoDecreto {
 			+ "files/siap/sius/depositodecreto/InserisciDecretoRinvioMisureSicurezza.jsp";
 	public static final String PG_DETTAGLIO_RINVIO_ESECUZIONE_MS = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/depositodecreto/DettaglioDecretoRinvioMisureSicurezza.jsp";
+
+	// MEV_2019-09: create nuove pagine
+	public static final String PG_LOAD_INSERISCI_DESIGNAZIONE_MAGISTRATO_RELATORE = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/depositodecreto/LoadInserisciDesignazioneMagistratoRelatore.jsp";
+	public static final String COD_OGGETTO_CONCESSIONE_MISURE_ALTERNATIVE_ALLA_DETENZIONE = "C050";
+	public static final String COD_OGGETTO_CONCESSIONE_MISURE_PENALI_DI_COMUNITA_MISURE_ALTERNATIVE_ALLA_DETENZIONE = "C051";
+	public static final String DECRETO_DESIGNAZIONE_MAGISTRATO_RELATORE_PER_MA = "DM";
+	public static final String CAMPO_GIORNO_DATA_TERMINE_EMISSIONE = "GiornoDataTermineEmissione";
+	public static final String CAMPO_MESE_DATA_TERMINE_EMISSIONE = "MeseDataTermineEmissione";
+	public static final String CAMPO_ANNO_DATA_TERMINE_EMISSIONE = "AnnoDataTermineEmissione";
+	public static final String PG_LOAD_DETTAGLIO_DESIGNAZIONE_MAGISTRATO_RELATORE = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/depositodecreto/DettaglioDesignazioneMagistratoRelatore.jsp";
+	public static final String PG_LOAD_MODIFICA_DESIGNAZIONE_MAGISTRATO_RELATORE = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/depositodecreto/LoadModificaDesignazioneMagistratoRelatore.jsp";
+	public static final String TEMPLATE_DECRETO_DESIGNAZIONE_MAGISTRATO_RELATORE = "SIUS_DE_0610";
+	public static final String CAMPO_NUMERO_GIORNI_TERMINE_EMISSIONE = "NumeroGiorniTermineEmissione";
+	// FINE MEV_2019-09
 
 }

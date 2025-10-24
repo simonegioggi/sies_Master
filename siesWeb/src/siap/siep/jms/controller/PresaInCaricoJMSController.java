@@ -100,15 +100,9 @@ import siap.siep.ulterioresanzionecumulo.controller.IUlterioreSanzioneCumulo;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * <p>
- * Title: PresaInCaricoJMSController
- * </p>
- * <p>
- * Description: Classe che prende in carico i dati pervenuti da bdi remote.
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
+ * PresaInCaricoJMSController - Classe che prende in carico i dati pervenuti da bdi remote
+ * 
+ * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class PresaInCaricoJMSController extends SiapPresaInCaricoJMSController implements IPresaInCaricoJMS {
@@ -314,7 +308,6 @@ public class PresaInCaricoJMSController extends SiapPresaInCaricoJMSController i
 	 */
 	public MessaggioModel ExInserisciProvvedimentoTrasmesso(MessaggioModel aMessaggioModel)
 			throws F3BException {
-
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -434,7 +427,7 @@ public class PresaInCaricoJMSController extends SiapPresaInCaricoJMSController i
 				if (!lProc.getReturn().equals("0000")) {
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// LogF3B.getLogger()
-					siesLogger.error("ERRORE DURANTE LA STORE PROCEDURE..."+lProc.getReturn());
+					siesLogger.error("ERRORE DURANTE LA STORE PROCEDURE..." + lProc.getReturn());
 					throw new DAOException("Errore durante la chiamata alla Store Procedure");
 				}
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -549,9 +542,12 @@ public class PresaInCaricoJMSController extends SiapPresaInCaricoJMSController i
 			}
 
 			// inizioMEV_67 (SALVO L'INFORMAZIONE DI ALTRA_CAUSA)
-			// Ticket#20211019014 - in alcuni casi arrivano fascicoli con Posizione giuridica che punta (FK ALT_CAU_ID_ALTRA_CAUSA) 
-			// ALTRA_CAUSA ma il record ALTRA_CAUSA non viene trasferito perchè non recuprato dal metodo che carica il dettaglio fascicolo SIEP
-			// Quindi si testa se è stato trasferito il record AC e se l'id della PG coincide. In caso negativo si 
+			// Ticket#20211019014 - in alcuni casi arrivano fascicoli con Posizione giuridica che punta (FK
+			// ALT_CAU_ID_ALTRA_CAUSA)
+			// ALTRA_CAUSA ma il record ALTRA_CAUSA non viene trasferito perchè non recuprato dal metodo che
+			// carica il dettaglio fascicolo SIEP
+			// Quindi si testa se è stato trasferito il record AC e se l'id della PG coincide. In caso
+			// negativo si
 			// ripulisce il puntamento da PG
 			// Recupero idAltraCauso
 			BigDecimal idAltraCausa = null; // Ticket#20211019014
@@ -567,8 +563,10 @@ public class PresaInCaricoJMSController extends SiapPresaInCaricoJMSController i
 
 			if (lPars.getDettaglioFascicoloSiep().getPosizioneGiuridica() != null) {
 				// Ticket#20211019014 -
-				BigDecimal idAltraCausaPG = lPars.getDettaglioFascicoloSiep().getPosizioneGiuridica().getAltCauIdAltraCausa();
-				if (idAltraCausaPG!=null && (idAltraCausa==null || idAltraCausaPG.compareTo(idAltraCausa)!=0)) {
+				BigDecimal idAltraCausaPG = lPars.getDettaglioFascicoloSiep().getPosizioneGiuridica()
+						.getAltCauIdAltraCausa();
+				if (idAltraCausaPG != null
+						&& (idAltraCausa == null || idAltraCausaPG.compareTo(idAltraCausa) != 0)) {
 					lPars.getDettaglioFascicoloSiep().getPosizioneGiuridica().setAltCauIdAltraCausa(null);
 				}
 				// Ticket#20211019014 - FINE

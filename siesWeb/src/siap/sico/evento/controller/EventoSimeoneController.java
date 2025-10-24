@@ -64,8 +64,7 @@ import siap.sius.tenore.dao.TenoreSqlDAO;
 import siap.sius.tenore.model.TenoreModel;
 
 /**
- * Title: Evento Simeone Controller
- * Description: Classe Controller per Evento
+ * Evento Simeone Controller - Classe Controller per Evento
  *
  * @version 1.0
  */
@@ -1528,6 +1527,13 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 		return lEveMod;
 	}
 
+	
+	// MEV_2019-09 si evvettua l'override per aggiungere il parametro per filtrare solo gli eventi validati
+	public EventoModel ExRicercaEventoByEveIdEventoTipoProvCodMotivo(BigDecimal aEventoKey,
+			String aTipoEvento, String aTipoProvv, String aMotivo) throws F3BException {
+		return ExRicercaEventoByEveIdEventoTipoProvCodMotivo (aEventoKey, aTipoEvento, aTipoProvv, aMotivo, null);
+	}
+	
 	/**
 	 * Ricerca Evento By EveIdEvento TipoProv CodMotivo
 	 *
@@ -1539,7 +1545,7 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 	 * @throws F3BException
 	 */
 	public EventoModel ExRicercaEventoByEveIdEventoTipoProvCodMotivo(BigDecimal aEventoKey,
-			String aTipoEvento, String aTipoProvv, String aMotivo) throws F3BException {
+			String aTipoEvento, String aTipoProvv, String aMotivo, String flagDocRegistrato) throws F3BException {
 
 		Connection lConn = null;
 		EventoSimeoneSqlDAO lEveDao = null;
@@ -1550,7 +1556,7 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 
 			lEveDao = new EventoSimeoneSqlDAO(lConn);
 			lEveDao.ricercaEventoByEveIdEventoTipEveTipProvCodMotivo(aEventoKey, aTipoEvento, aTipoProvv,
-					aMotivo);
+					aMotivo, flagDocRegistrato);
 			lEveDao.start();
 
 			if (lEveDao.next())

@@ -107,10 +107,10 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.0.2</version>
+				<version>3.8.1</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -125,12 +125,12 @@
 	
 	<properties>
 		<netbeans.hint.deploy.server>
-			Tomcat60
+			Red Hat JBoss EAP 6.1+
 		</netbeans.hint.deploy.server>
 		<project.build.sourceEncoding>
 			UTF-8
 		</project.build.sourceEncoding>
-		<java.version>1.5</java.version>
+		<java.version>1.8</java.version>
 		<!-- MEV 16: aggiunto ws -->
 		<webservice.wsdl>
 			http://localhost:7001/siesEsecuzione/iscriviProvvedimentoEsecuzione_NEW?WSDL

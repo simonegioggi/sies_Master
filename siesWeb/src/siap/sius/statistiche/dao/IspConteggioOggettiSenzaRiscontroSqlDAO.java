@@ -32,6 +32,7 @@ public class IspConteggioOggettiSenzaRiscontroSqlDAO extends SqlDAO {
                            "0 AS NUM_DEF_ISC_ERR, " +
                            "0 AS NUM_SOPRAVVENUTI, " +
                            "0 AS NUM_CANCELLATI, " +
+                           "0 AS NUM_APP_PROVV, " + // MEV_2019-09
                            "NVL(ISP_OGGETTO_PROCEDIMENTO.ISP_COD_OGGETTO_PROCEDIMENTO, '') AS DESC_CONTENUTO_STATIS, " +
                            "'" + aFasSiuChiaveUfficio + "' AS FAS_SIU_CHIAVE_UFFICIO  " +
                        "FROM " +
@@ -81,6 +82,9 @@ public class IspConteggioOggettiSenzaRiscontroSqlDAO extends SqlDAO {
         aModel.setNumDefIscErr(getBigDecimal("NUM_DEF_ISC_ERR"));
         aModel.setNumSopravvenuti(getBigDecimal("NUM_SOPRAVVENUTI"));
         aModel.setNumCancellati(getBigDecimal("NUM_CANCELLATI"));
+        // MEV_2019-09
+        aModel.setNumAccoltiProvv(getBigDecimal("NUM_APP_PROVV"));
+        // MEV_2019-09 - FINE        
         aModel.setDescContenutoStatis(getString("DESC_CONTENUTO_STATIS"));
         aModel.setFasSiuChiaveUfficio(getString("FAS_SIU_CHIAVE_UFFICIO"));
 

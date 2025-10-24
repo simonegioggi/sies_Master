@@ -235,7 +235,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("DAOException: " + ex);
+			siesLogger.error("DAOException: " + ex);
 			throw new SIUSException(
 					"DepositoOrdinanzaPcController.ExInserisciEventoDepositoOrdinanzaPc: Non posso inserire: "
 							+ ex);
@@ -243,7 +243,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("Exception: " + ex);
+			siesLogger.error("Exception: " + ex);
 			throw new SIUSException(
 					"DepositoOrdinanzaPcController.ExInserisciEventoDepositoOrdinanzaPc: " + ex);
 		} finally {
@@ -302,7 +302,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("DAOException: " + ex);
+			siesLogger.error("DAOException: " + ex);
 			throw new F3BException("DepositoOrdinanzaPcController.ExInserisciDepositoOrdinanzaPc: " + ex);
 		} finally {
 			cleanup(lDepDao);
@@ -346,21 +346,21 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("DAOException: " + daoEx);
+			siesLogger.error("DAOException: " + daoEx);
 			throw new SIUSException(
 					"DepositoOrdinanzaPcController.ExInserisciOrdinanza: Non posso leggere : " + daoEx);
 		} catch (SQLException sqlEx) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("SQLException: " + sqlEx);
+			siesLogger.error("SQLException: " + sqlEx);
 			throw new SIUSException(
 					"DepositoOrdinanzaPcController.ExInserisciOrdinanza: Non posso leggere  : " + sqlEx);
 		} catch (Exception e) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("Exception: " + e);
+			siesLogger.error("Exception: " + e);
 			throw new SIUSException("DepositoOrdinanzaPcController.ExInserisciOrdinanza:" + e);
 		} finally {
 			cleanup(lConn);
@@ -406,7 +406,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("Exception: " + e);
+			siesLogger.error("Exception: " + e);
 			throw new SIUSException("DepositoOrdinanzaPcController.ExInserisciOrdinanza:" + e);
 		} finally {
 			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
@@ -471,14 +471,14 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("DAOException: " + daoEx);
+			siesLogger.error("DAOException: " + daoEx);
 			throw new SIUSException(
 					"DepositoOrdinanzaPcController.ExInserisciOrdinanzaLibAnt: Non posso leggere : " + daoEx);
 		} catch (SQLException sqlEx) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("SQLException: " + sqlEx);
+			siesLogger.error("SQLException: " + sqlEx);
 			throw new SIUSException(
 					"DepositoOrdinanzaPcController.ExInserisciOrdinanzaLibAnt: Non posso leggere  : "
 							+ sqlEx);
@@ -486,7 +486,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("Exception: " + e);
+			siesLogger.error("Exception: " + e);
 			throw new SIUSException("DepositoOrdinanzaPcController.ExInserisciOrdinanzaLibAnt:" + e);
 		} finally {
 			cleanup(lConn);
@@ -640,7 +640,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("DAOException: " + daoEx);
+			siesLogger.error("DAOException: " + daoEx);
 			throw new SIUSException(
 					"DepositoOrdinanzaPcController.Riscritto.ExInserisciOrdinanzaLibAnt: Non posso leggere : "
 							+ daoEx);
@@ -648,7 +648,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("SQLException: " + sqlEx);
+			siesLogger.error("SQLException: " + sqlEx);
 			throw new SIUSException(
 					"DepositoOrdinanzaPcController.Riscritto.ExInserisciOrdinanzaLibAnt: Non posso leggere  : "
 							+ sqlEx);
@@ -656,7 +656,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("Exception: " + e);
+			siesLogger.error("Exception: " + e);
 			throw new SIUSException("DepositoOrdinanzaPcController.ExInserisciOrdinanzaLibAnt:" + e);
 		} finally {
 			cleanup(lConn);
@@ -708,21 +708,32 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			// -- Parte Gestione Tenori --//
 			BigDecimal lIdGenProc = aGProcOrdEveTenori.getGeneraleProcedimento().getIdGeneraleProcedimento();
 
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			siesLogger.debug("Fase di apertura per il Tenore");
-			TenoreModel lTenore = new TenoreModel();
-			// Valorizzazione dei campi da aggiornare + update
-			lTenore.setCodOperatoreAggiornamento(
-					lGProcOrdEveTenori.getGeneraleProcedimento().getCodOperatoreAggiornamento());
-			lTenore.setCodUfficioAggiornamento(
-					lGProcOrdEveTenori.getGeneraleProcedimento().getCodUfficioAggiornamento());
-			lTenore.setDataAggiornamento(lGProcOrdEveTenori.getGeneraleProcedimento().getDataAggiornamento());
-			lTenore.setDataFine(lGProcOrdEveTenori.getGeneraleProcedimento().getDataAggiornamento());
-			lTenore.setGenPridGeneraleProcedimento(lIdGenProc);
-			lTenoreDao.setDAOFromModelForUpdateDataFine(lTenore);
-			lTenoreDao.update();
-			lTenoreDao.stop();
+			/*
+			 * ISSUE MEV : aggiunta gestione per ORDINANZA di conferma decisione MAGISTRATO RELATORE 
+			 * Numero MEV : 9 
+			 * Autore : sgioggi 
+			 * Data : 17 gen 2023 
+			 * Branch : MEV_2019-09
+			 */
+			if (!"CM".equals(lGProcOrdEveTenori.getOrdinanza().getCodTipoOrdinanza())) {
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("Fase di chiusura per il Tenore");
+				TenoreModel lTenore = new TenoreModel();
+				// Valorizzazione dei campi da aggiornare + update
+				lTenore.setCodOperatoreAggiornamento(
+						lGProcOrdEveTenori.getGeneraleProcedimento().getCodOperatoreAggiornamento());
+				lTenore.setCodUfficioAggiornamento(
+						lGProcOrdEveTenori.getGeneraleProcedimento().getCodUfficioAggiornamento());
+				lTenore.setDataAggiornamento(
+						lGProcOrdEveTenori.getGeneraleProcedimento().getDataAggiornamento());
+				lTenore.setDataFine(lGProcOrdEveTenori.getGeneraleProcedimento().getDataAggiornamento());
+				lTenore.setGenPridGeneraleProcedimento(lIdGenProc);
+				lTenoreDao.setDAOFromModelForUpdateDataFine(lTenore);
+				lTenoreDao.update();
+				lTenoreDao.stop();
+			}
+			// ***** FINE INTERVENTO MEV_2019-09 *****//
 
 			// Insert dei tenori.
 			TenoreModel[] lTenori = lGProcOrdEveTenori.getTenori();
@@ -820,7 +831,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("DAOException: " + daoEx);
+			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException(
 					"DepositoOrdinanzaPcController.ExRicercaDepositoOrdinanzaPc: Non posso leggere : "
 							+ daoEx);
@@ -845,7 +856,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("DAOException: " + daoEx);
+			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException(
 					"DepositoOrdinanzaPcController.ExRicercaDepositoOrdinanzaPc: Non posso leggere : "
 							+ daoEx);
@@ -871,7 +882,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("DAOException: " + daoEx);
+			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException(
 					"DepositoOrdinanzaPcController.ExRicercaDepositoOrdinanzaPc: Non posso leggere : "
 							+ daoEx);
@@ -900,11 +911,54 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("DAOException: " + ex);
+			siesLogger.error("DAOException: " + ex);
 			throw new F3BException("DepositoOrdinanzaPcController.ExModificaDepositoOrdinanzaPc: Non posso "
 					+ "inserire: " + ex);
 		} finally {
 			cleanup(lDepDao);
+			cleanup(lConn);
+		}
+		return lDepMod;
+	}
+
+	/**
+	 * Aggiorna il Deposito e anche il record MA per consentire a SIEP di vedere l'ordinanza MEV_2019-09 02.2024
+	 */
+	public DepositoOrdinanzaPcModel ExAggiornaDataEsecutivitaDepositoOrdinanzaPc(
+			DepositoOrdinanzaPcModel aDepositoOrdinanzaPc) throws F3BException {
+
+		Connection lConn = null;
+		DepositoOrdinanzaPcDAO lDepDao = null;
+		DepositoOrdinanzaPcModel lDepMod = new DepositoOrdinanzaPcModel(aDepositoOrdinanzaPc);
+
+		MisuraAlternativaDAO lMisAltDao = null;
+
+		try {
+			lConn = getDBConnection();
+
+			lDepDao = new DepositoOrdinanzaPcDAO(lConn);
+			lDepDao.setDAOFromModelForUpdate(aDepositoOrdinanzaPc);
+			lDepDao.update();
+
+			lMisAltDao = new MisuraAlternativaDAO(lConn);
+			if (aDepositoOrdinanzaPc.getIdEventoGenerato() != null) {
+				lMisAltDao.setDataEsecutivita(aDepositoOrdinanzaPc.getDataEsecutivita());
+
+				lMisAltDao.setCondizioneByIdEvento(aDepositoOrdinanzaPc.getIdEventoGenerato());
+
+				lMisAltDao.update();
+			}
+
+			commit(lConn);
+		} catch (DAOException ex) {
+			rollback(lConn);
+			siesLogger.error("DAOException: ", ex);
+			throw new F3BException(
+					"DepositoOrdinanzaPcController.ExAggiornaDataEsecutivitaDepositoOrdinanzaPc: Non posso inserire: "
+							+ ex);
+		} finally {
+			cleanup(lDepDao);
+			cleanup(lMisAltDao);
 			cleanup(lConn);
 		}
 		return lDepMod;
@@ -961,10 +1015,25 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			// LogF3B.getLogger()
 			siesLogger.debug(">>>> Cancellate prescrizioni collegate a DepOrdinanzaPC " + lIdDepOrd);
 
-			// update Tenori collegati
+			// TENORI COLLEGATI
 			lTenDao = new TenoreDAO(aConn);
 			lTenDao.setDAOForDeleteDepOrd(aDepOrd);
-			lTenDao.update();
+			/*
+			 * ISSUE MEV : cancello tenore se cancello ordinanza di conferma decisione magistrato relatore
+			 * Numero MEV : 9 
+			 * Autore : sgioggi 
+			 * Data : 18 gen 2023 
+			 * Branch : MEV_2019-09
+			 */
+			if (!"CM".equals(aDepOrd.getCodTipoOrdinanza())) {
+				// update Tenori collegati
+				lTenDao.update();
+			} else {
+				// delete Tenori collegati
+				lTenDao.delete();
+			}
+			// ***** FINE INTERVENTO MEV_2019-09 *****//
+
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug(">>>> Aggiornati tenori collegati a DepOrdinanzaPC " + lIdDepOrd);
@@ -1098,8 +1167,8 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 					GeneraleProcedimentoModel gpmFS = (GeneraleProcedimentoModel) vGP.firstElement();
 					if (!Utils.isNullObj(gpmFS) && !Utils.isNullObj(gpmFS.getFasSiuIdFascicoloSius())) {
 						IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
-						Vector<RateizzazionePPModel> rate = irpp.exRicercaRateizzazioniByIdFascicoloSius(
-								gpmFS.getFasSiuIdFascicoloSius());
+						Vector<RateizzazionePPModel> rate = irpp
+								.exRicercaRateizzazioniByIdFascicoloSius(gpmFS.getFasSiuIdFascicoloSius());
 						if (!Utils.isNullObj(rate) && !rate.isEmpty()) {
 							irpp.exCancellaRateizzazioniByIdFascicoloSius(gpmFS.getFasSiuIdFascicoloSius());
 							siesLogger.debug(">>>> Elimino i record RateizzazionePP al fascicolo SIUS "
@@ -1394,7 +1463,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("DAOException: " + ex);
+			siesLogger.error("DAOException: " + ex);
 			throw new F3BException("DepositoOrdinanzaPcController.ExInserisci: Non posso inserire: " + ex);
 		} finally {
 			cleanup(lGenDAO);
@@ -1457,13 +1526,13 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("SQLException: " + sqe);
+			siesLogger.error("SQLException: " + sqe);
 			throw new F3BException("DepositoOrdinanzaPcController.ExStampaDocumento: " + sqe);
 		} catch (Exception sqe) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("Exception: " + sqe);
+			siesLogger.error("Exception: " + sqe);
 			throw new F3BException("DepositoOrdinanzaPcController.ExStampaDocumento: " + sqe);
 		} finally {
 			cleanup(lEveDao);
@@ -1524,7 +1593,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("DAOException: " + daoex);
+			siesLogger.error("DAOException: " + daoex);
 			throw new F3BException("DepositoOrdinanzaPcController.ExStampEmissioneOrdinanza: " + daoex);
 		} finally {
 			cleanup(lEveDao);
@@ -1557,7 +1626,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 		} catch (Exception sqe) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("Exception: " + sqe);
+			siesLogger.error("Exception: " + sqe);
 			throw new F3BException("DepositoOrdinanzaPcController.ExStampaDocumentoModello: " + sqe);
 		}
 		return lByteArrayOut;
@@ -1587,7 +1656,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("DAOException: " + daoEx);
+			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException(
 					"DepositoOrdinanzaPcController.ExRicercaDepositoOrdinanzaPcByGenProc: Non posso leggere : "
 							+ daoEx);
@@ -1624,7 +1693,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("DAOException: " + daoEx);
+			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException(
 					"DepositoOrdinanzaPcController.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd: Non posso leggere : "
 							+ daoEx);
@@ -2035,9 +2104,15 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			if (lEveMod.getCodEsito().compareTo("0603") != 0) {
 				lFasSiusDao = new FascicoloSiusDAO(lConn);
 				lFasSiusDao.setDAOFromModelForUpdate(aFasGPMod.getFascicoloSiusModel());
-				if (lEveMod.getCodEsito().compareTo("0605") != 0)
+				// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
+				if (lEveMod.getCodEsito().compareTo("0605") != 0) {
+					// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
+					// if (lEveMod.getCodEsito().compareTo("0270") == 0) {
+					// lFasSiusDao.setCodStatoFascicolo("24");
+					// } // FINE: MEV_2019-09
+					// else
 					lFasSiusDao.setCodStatoFascicolo("07");
-				else if (aFasGPMod.getFascicoloSiusModel().getCodStatoFascicolo().compareTo("07") != 0)
+				} else if (aFasGPMod.getFascicoloSiusModel().getCodStatoFascicolo().compareTo("07") != 0)
 					lFasSiusDao.setCodStatoFascicolo("13");
 				lFasSiusDao.update();
 				lFasSiusDao.stop();
@@ -2048,9 +2123,9 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			// b) Si Inserisce opportunamente una occorrenza di SCAMBIO_SANZIONE.
 			if (lDepMod.getCodTipoOrdinanza()
 					.compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_PENE_PECUNIARIE) == 0
+					// 30/09/2015
 					|| lDepMod.getCodTipoOrdinanza().compareTo(
-							ICostantiDepositoOrdinanzaPc.DICHIARAZIONE_ESTINZIONE_LIB_CONTROLLATA) == 0) // 30/09/2015
-			{
+							ICostantiDepositoOrdinanzaPc.DICHIARAZIONE_ESTINZIONE_LIB_CONTROLLATA) == 0) {
 				lRicConvDao = new RichiestaConversioneDAO(lConn);
 				RichiestaConversioneModel lRCModel = new RichiestaConversioneModel();
 				lRCModel.setFasSiuIdFascicoloSius(aFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
@@ -2129,20 +2204,17 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			// FINE -- Aggiorna/Inserisce Scadenzario
 
 			commit(lConn);
-
-		}
-
-		catch (DAOException daoEx) {
+		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("DAOException: " + daoEx);
+			siesLogger.error("DAOException: " + daoEx);
 			rollback(lConn);
 			throw new SIUSException(
 					"DepositoOrdinanzaPcController.ExInserisciDataDepositoOrdinanza: " + daoEx);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("Exception: " + ex);
+			siesLogger.error("Exception: " + ex);
 			ex.printStackTrace();
 			rollback(lConn);
 			throw new SIUSException("DepositoOrdinanzaPcController.ExInserisciDataDepositoOrdinanza: " + ex);
@@ -2199,7 +2271,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("DAOException: " + daoEx);
+			siesLogger.error("DAOException: " + daoEx);
 			throw new SIUSException(
 					"DepositoOrdinanzaPcController.ExVerificaEsistenzaDepositoOrdinanzaByIdGenProc - Non posso leggere : "
 							+ daoEx);
@@ -2324,7 +2396,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("DAOException: " + daoEx);
+			siesLogger.error("DAOException: " + daoEx);
 			throw new SIUSException(
 					"DepositoOrdinanzaPcController.ExRicercaOrdinanzaEventoTenoriPrescrizioniByIdEvento - Non posso leggere : "
 							+ daoEx);
@@ -2372,7 +2444,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("DAOException: " + daoEx);
+			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException(
 					"DepositoOrdinanzaPcController.ExRicercaDepositoOrdinanzaPc: Non posso leggere : "
 							+ daoEx);
@@ -2423,13 +2495,13 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("SQLException: " + sqe);
+			siesLogger.error("SQLException: " + sqe);
 			throw new F3BException("DepositoOrdinanzaPcController.ExStampaDocumentoAllegato: " + sqe);
 		} catch (Exception sqe) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("Exception: " + sqe);
+			siesLogger.error("Exception: " + sqe);
 			throw new F3BException("DepositoOrdinanzaPcController.ExStampaDocumentoAllegato: " + sqe);
 		} finally {
 			cleanup(lDADao);
@@ -2497,7 +2569,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("DAOException: " + daoex);
+			siesLogger.error("DAOException: " + daoex);
 			throw new F3BException("DepositoOrdinanzaPcController.ExStampaFoglioComp: " + daoex);
 		} finally {
 			cleanup(lDASqlDao);
@@ -2529,7 +2601,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			lDepDao = new DepositoOrdinanzaPcSqlDAO(lConn);
 
 			/*
-			 * ISSUE MEV : eseguito merge tra 15 MEV: interpretazione con codice commentato 
+			 * ISSUE MEV : eseguito merge tra 15 MEV: interpretazione con codice commentato
 			 * Numero MEV : SIES v10 
 			 * Autore : gioggi 
 			 * Data : 27/gen/2016 
@@ -2545,7 +2617,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("DAOException: " + daoEx);
+			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException(
 					"DepositoOrdinanzaPcController.ExRicercaDepositoOrdinanzaPcByGenProc: Non posso leggere : "
 							+ daoEx);
@@ -2599,7 +2671,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("DAOException: " + daoEx);
+			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException(
 					"DepositoOrdinanzaPcController.ExRicercaDepositoOrdinanzaPcEventoByFascicoloSiep: Non posso leggere : "
 							+ daoEx);
@@ -2644,7 +2716,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("DAOException: " + daoEx);
+			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException(
 					"DepositoOrdinanzaPcController.ExRicercaEventoProvvediementiArchiviazioneSIUSByFascicoloSiep: Non posso leggere : "
 							+ daoEx);
@@ -2809,19 +2881,16 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 				// siesLogger.debug(">>>>>>> Fine Cancellazione Notifiche. ");
 			}
 			commit(lConn);
-
-		}
-
-		catch (DAOException daoEx) {
+		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("DAOException: " + daoEx);
+			siesLogger.error("DAOException: " + daoEx);
 			rollback(lConn);
 			throw new F3BException("DepositoOrdinanzaController.ExModificaDataDepositoOrdinanza: " + daoEx);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("Exception: " + ex);
+			siesLogger.error("Exception: " + ex);
 			ex.printStackTrace();
 			rollback(lConn);
 			throw new F3BException("DepositoOrdinanzaController.ExModificaDataDepositoOrdinanza: " + ex);
@@ -3379,7 +3448,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("DAOException: " + daoEx);
+			siesLogger.error("DAOException: " + daoEx);
 			throw new SIUSException(
 					"DepositoOrdinanzaPcController.ExInserisciOrdinanzaPeriodoAltraSanzioneModificaESS: "
 							+ daoEx);
@@ -3387,7 +3456,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("SQLException: " + sqlEx);
+			siesLogger.error("SQLException: " + sqlEx);
 			throw new SIUSException(
 					"DepositoOrdinanzaPcController.ExInserisciOrdinanzaPeriodoAltraSanzioneModificaESS: "
 							+ sqlEx);
@@ -3395,7 +3464,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("Exception: " + e);
+			siesLogger.error("Exception: " + e);
 			throw new SIUSException(
 					"DepositoOrdinanzaPcController.ExInserisciOrdinanzaPeriodoAltraSanzioneModificaESS: "
 							+ e);
@@ -3515,7 +3584,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("DAOException: " + daoEx);
+			siesLogger.error("DAOException: " + daoEx);
 			throw new SIUSException(
 					"DepositoOrdinanzaPcController.ExInserisciOrdinanzaConversioneRateizzazionePP : "
 							+ daoEx);
@@ -3523,7 +3592,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("SQLException: " + sqlEx);
+			siesLogger.error("SQLException: " + sqlEx);
 			throw new SIUSException(
 					"DepositoOrdinanzaPcController.ExInserisciOrdinanzaConversioneRateizzazionePP : "
 							+ sqlEx);
@@ -3531,7 +3600,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("Exception: " + e);
+			siesLogger.error("Exception: " + e);
 			throw new SIUSException(
 					"DepositoOrdinanzaPcController.ExInserisciOrdinanzaConversioneRateizzazionePP : " + e);
 		} finally {
@@ -3598,7 +3667,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("DAOException: " + daoEx);
+			siesLogger.error("DAOException: " + daoEx);
 			throw new SIUSException(
 					"DepositoOrdinanzaPcController.ExInserisciOrdinanzaPeriodoAltraMisuraModificaEMS: "
 							+ daoEx);
@@ -3606,7 +3675,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("SQLException: " + sqlEx);
+			siesLogger.error("SQLException: " + sqlEx);
 			throw new SIUSException(
 					"DepositoOrdinanzaPcController.ExInserisciOrdinanzaPeriodoAltraMisuraModificaEMS: "
 							+ sqlEx);
@@ -3614,7 +3683,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("Exception: " + e);
+			siesLogger.error("Exception: " + e);
 			throw new SIUSException(
 					"DepositoOrdinanzaPcController.ExInserisciOrdinanzaPeriodoAltraMisuraModificaEMS: " + e);
 		} finally {
@@ -3683,13 +3752,13 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("DAOException: " + daoex);
+			siesLogger.error("DAOException: " + daoex);
 			throw new SIUSException("DepositoOrdinanzaPcController.ExModificaMagistratoOrdinanza: " + daoex);
 		} catch (Exception ex) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("Exception: " + ex);
+			siesLogger.error("Exception: " + ex);
 			throw new SIUSException("DepositoOrdinanzaPcController.ExModificaMagistratoOrdinanza: " + ex);
 		} finally {
 			cleanup(lEventoDao);
@@ -3703,7 +3772,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 
 	/**
 	 * 13-11-2014 Misre Sicurezza Fuori Sentenza Query usata nella Gestione MISURE SICUREZZA dalla parte SIEP.
-	 * Esegue la CONTA dei provvedimenti SIUS ordinanza per DATA; // MEV_39: aggiunto parametro di passaggio
+	 * Esegue la CONTA dei provvedimenti SIUS ordinanza per DATA; MEV_39: aggiunto parametro di passaggio
 	 *
 	 * @param aData_inizio
 	 * @param aData_fine
@@ -3729,7 +3798,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("DAOException: " + daoEx);
+			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException(
 					"DepositoOrdinanzaPcController.ExCountProvvedimentiSoggettoPerMisuraFuoriSentenza: Non posso leggere : "
 							+ daoEx);
@@ -3743,7 +3812,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 
 	/**
 	 * 13-11-2014 Misre Sicurezza Fuori Sentenza Query usata nella Gestione MISURE SICUREZZA dalla parte SIEP.
-	 * Esegue la RICERCA dei provvedimenti SIUS ordinanza per DATA; // MEV_39: aggiunto parametro di passaggio
+	 * Esegue la RICERCA dei provvedimenti SIUS ordinanza per DATA; MEV_39: aggiunto parametro di passaggio
 	 *
 	 * @param aData_inizio
 	 * @param aData_fine
@@ -3779,7 +3848,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("DAOException: " + daoEx, daoEx);
+			siesLogger.error("DAOException: " + daoEx, daoEx);
 			daoEx.printStackTrace();
 			throw new F3BException(
 					"DepositoOrdinanzaPcController.ExRicercaProvvedimentiSoggettoPerMisuraFuoriSentenza: Non posso leggere : "
@@ -3919,7 +3988,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			}
 			lDepDao.stop();
 		} catch (DAOException daoEx) {
-			siesLogger.debug("DAOException: " + daoEx);
+			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException(
 					"DepositoOrdinanzaPcController.ExRicercaEventoProvvedimentiDifferimentoSIUSByFascicoloSiep: Non posso leggere: "
 							+ daoEx);
@@ -3949,7 +4018,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 				lDepMod = (OrdinanzaEventoTenoriFascicoloSiusModel) lDepDao.getModelEsitoDiffMisSic();
 			lDepDao.stop();
 		} catch (DAOException daoEx) {
-			siesLogger.debug("DAOException: " + daoEx);
+			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException(
 					"DepositoOrdinanzaPcController.ExRicercaEventoProvvDiffSIUSByFascSiepEFascSius: Non posso leggere: "
 							+ daoEx);

@@ -102,8 +102,10 @@ public class ActLoadDettaglioDecretoDeposito extends ActionSius
 		siesLogger.debug("ActLoadDettaglioDecretoDeposito tipo decreto: " + lTipoDecreto);
 
 		// Luigi 5-10-2004 Per i dettagli non standard non si fissa il Link di ritorno
-		if ((lTipoDecreto.compareTo(CITAZIONE) == 0) || (lTipoDecreto.compareTo(UNIFICAZIONE) == 0)
-				|| (lTipoDecreto.compareTo(IRREPERIBILITA) == 0))
+		if (lTipoDecreto.compareTo(CITAZIONE) == 0 || lTipoDecreto.compareTo(UNIFICAZIONE) == 0
+				|| lTipoDecreto.compareTo(IRREPERIBILITA) == 0
+				// MEV_2019-09: aggiunta gestione ritorno per decreti tipo DM
+				|| lTipoDecreto.compareTo(DECRETO_DESIGNAZIONE_MAGISTRATO_RELATORE_PER_MA) == 0)
 			gestioneRitorno();
 		else
 			setLinkRitorno();
@@ -482,6 +484,17 @@ public class ActLoadDettaglioDecretoDeposito extends ActionSius
         }
 		// MEV_2023-35 - FINE
 		// ***** FINE INTERVENTO MEV_39 *****//
+		/*
+		 * ISSUE MEV : aggiunta casistica per gestione Designazione Magistrato Relatore Numero MEV : 9 Autore
+		 * : Gioggi Data : 18 nov 2020 Branch : MEV_2019-09
+		 */
+		else if (lTipoDecreto.compareTo(DECRETO_DESIGNAZIONE_MAGISTRATO_RELATORE_PER_MA) == 0) {
+			// if ("0610".equals(mDepDecrMotMod.getEvento().getCodEsito()))
+			String action = "siap.sius.depositodecreto.action.ActLoadDettaglioDesignazioneMagistratoRelatore";
+			lRedirectTo.setAction(action);
+			lRetPage = lRedirectTo.toString();
+		}
+		// ***** FINE INTERVENTO MEV_2019-09 *****//
 		else {
 			lRetPage = IWebConstants.PG_MESSAGE;
 			setRequestAttribute(IWebConstants.MESSAGE_TEXT,

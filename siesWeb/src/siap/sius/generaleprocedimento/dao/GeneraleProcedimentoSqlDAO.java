@@ -4,29 +4,18 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Date;
 
-import siap.dao.SIAPSqlDAO;
-import siap.sius.generaleprocedimento.model.GeneraleProcedimentoModel;
 import f3b.dao.DAOException;
 import f3b.model.GenericModel;
 import f3b.util.DateUtils;
+import siap.dao.SIAPSqlDAO;
+import siap.sius.generaleprocedimento.model.GeneraleProcedimentoModel;
 
 /**
- * <p>
  * Title: GeneraleProcedimentoSqlDAO
- * </p>
- * <p>
  * Description: Classe SqlDAO che rappresenta la tabella GeneraleProcedimento
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
  * 
  * @version 1.0
  */
-
 public class GeneraleProcedimentoSqlDAO extends SIAPSqlDAO {
 
 	public GeneraleProcedimentoSqlDAO(Connection con) {
@@ -36,7 +25,6 @@ public class GeneraleProcedimentoSqlDAO extends SIAPSqlDAO {
 	//
 	// METODO RICERCA()
 	//
-
 	public void ricercaGeneraleProcedimento(GeneraleProcedimentoModel aModel) throws DAOException {
 		String lSql = getSqlQuery();
 
@@ -66,7 +54,10 @@ public class GeneraleProcedimentoSqlDAO extends SIAPSqlDAO {
 				+ "COD_OPERATORE_AGGIORNAMENTO, " + "DATA_AGGIORNAMENTO, " + "COD_UFFICIO_AGGIORNAMENTO, "
 				+ "COD_TIPO_ATTO, " + "COD_SEDE_MITTENTE, " + "COD_TIPO_MITTENTE_ATTO, "
 				+ "FAS_SIU_ID_FASCICOLO_SIUS, " + "SEZIONE, " + "DATA_FINE_PENA, "
-				+ "COD_POSIZIONE_GIURIDICA, " + "UDI_ID_UDIENZA, " + "DESCR_MITTENTE ";
+				+ "COD_POSIZIONE_GIURIDICA, " + "UDI_ID_UDIENZA, " + "DESCR_MITTENTE, "
+				// MEV_2019-09: aggiunti campi in estrazione
+				+ "DATA_RESTITUZIONE, " + "DESCR_RESTITUZIONE";
+
 		lStatement += " FROM GENERALE_PROCEDIMENTO";
 		// lStatement += " WHERE ";
 		return lStatement;
@@ -75,7 +66,6 @@ public class GeneraleProcedimentoSqlDAO extends SIAPSqlDAO {
 	//
 	// METODO GETMODEL()
 	//
-
 	public GenericModel getModel() throws DAOException {
 		GeneraleProcedimentoModel aModel = new GeneraleProcedimentoModel();
 
@@ -84,15 +74,12 @@ public class GeneraleProcedimentoSqlDAO extends SIAPSqlDAO {
 		aModel.setAnnoS1(getBigDecimal("ANNO_S1"));
 		aModel.setProgrS1(getBigDecimal("PROGR_S1"));
 		aModel.setCodTipoRegistro(getString("COD_TIPO_REGISTRO"));
-		// aModel.setDescrTipoRegistro(getString("") );
 		aModel.setCodOggettoProcedimento(getString("COD_OGGETTO_PROCEDIMENTO"));
-		// aModel.setDescrOggettoProcedimento(getString("") );
 		aModel.setDataRichiesta(getDate("DATA_RICHIESTA"));
 		aModel.setDataArrivoCancelleria(getDate("DATA_ARRIVO_CANCELLERIA"));
 		aModel.setDataCameraConsiglio(getDate("DATA_CAMERA_CONSIGLIO"));
 		aModel.setDescrRichiestaDelegazione(getString("DESCR_RICHIESTA_DELEGAZIONE"));
 		aModel.setCodAutoritaDelegata(getString("COD_AUTORITA_DELEGATA"));
-		// aModel.setDescrAutoritaDelegata(getString("") );
 		aModel.setDataRestituzDelegazione(getDate("DATA_RESTITUZ_DELEGAZIONE"));
 		aModel.setDataRicorsoImpugn(getDate("DATA_RICORSO_IMPUGN"));
 		aModel.setDataInvioAttiImpugn(getDate("DATA_INVIO_ATTI_IMPUGN"));
@@ -100,7 +87,6 @@ public class GeneraleProcedimentoSqlDAO extends SIAPSqlDAO {
 		aModel.setDataInvioEsecuzOrdinaria(getDate("DATA_INVIO_ESECUZ_ORDINARIA"));
 		aModel.setDataCompilazComplementare(getDate("DATA_COMPILAZ_COMPLEMENTARE"));
 		aModel.setCodTipoFoglioComplementare(getString("COD_TIPO_FOGLIO_COMPLEMENTARE"));
-		// aModel.setDescrTipoFoglioComplementare(getString("") );
 		aModel.setDataAnnotazione(getDate("DATA_ANNOTAZIONE"));
 		aModel.setAnnotazione(getString("ANNOTAZIONE"));
 		aModel.setTipoDefinizione(getString("TIPO_DEFINIZIONE"));
@@ -109,24 +95,22 @@ public class GeneraleProcedimentoSqlDAO extends SIAPSqlDAO {
 		aModel.setCodOperatoreInserimento(getString("COD_OPERATORE_INSERIMENTO"));
 		aModel.setDataInserimento(getDate("DATA_INSERIMENTO"));
 		aModel.setCodUfficioInserimento(getString("COD_UFFICIO_INSERIMENTO"));
-		// aModel.setDescrUfficioInserimento(getString("") );
 		aModel.setCodOperatoreAggiornamento(getString("COD_OPERATORE_AGGIORNAMENTO"));
 		aModel.setDataAggiornamento(getDate("DATA_AGGIORNAMENTO"));
 		aModel.setCodUfficioAggiornamento(getString("COD_UFFICIO_AGGIORNAMENTO"));
-		// aModel.setDescrUfficioAggiornamento(getString("") );
 		aModel.setCodTipoAtto(getString("COD_TIPO_ATTO"));
-		// aModel.setDescrTipoAtto(getString("") );
 		aModel.setCodSedeMittente(getString("COD_SEDE_MITTENTE"));
-		// aModel.setDescrSedeMittente(getString("") );
 		aModel.setCodTipoMittenteAtto(getString("COD_TIPO_MITTENTE_ATTO"));
-		// aModel.setDescrTipoMittenteAtto(getString("") );
 		aModel.setFasSiuIdFascicoloSius(getBigDecimal("FAS_SIU_ID_FASCICOLO_SIUS"));
 		aModel.setSezione(getString("SEZIONE"));
 		aModel.setDataFinePena(getDate("DATA_FINE_PENA"));
 		aModel.setCodPosGiuridica(getString("COD_POSIZIONE_GIURIDICA"));
-		// aModel.setDescrPosGiuridica (getString("") );
 		aModel.setUdiIdUdienza(getBigDecimal("UDI_ID_UDIENZA"));
 		aModel.setDescrMittente(getString("DESCR_MITTENTE"));
+		// MEV: aggiunti campi in estrazione
+		aModel.setDataRestituzione(getDate("DATA_RESTITUZIONE"));
+		aModel.setDescrRestituzione(getString("DESCR_RESTITUZIONE"));
+		
 		return aModel;
 	}
 
@@ -194,7 +178,7 @@ public class GeneraleProcedimentoSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Calcola il Massimo Progressivo relativo all'anno in corso. Il massimo progressivo rappresenta anche
 	 * l'ultimo progressivo inserito.
-	 * 
+	 *
 	 * @param aGPModel
 	 * @throws DAOException
 	 */
@@ -212,7 +196,7 @@ public class GeneraleProcedimentoSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Calcola il Massimo Progressivo relativo all'anno in corso. Il massimo progressivo rappresenta anche
 	 * l'ultimo progressivo inserito.
-	 * 
+	 *
 	 * @param aGPModel
 	 * @throws DAOException
 	 */
@@ -238,19 +222,19 @@ public class GeneraleProcedimentoSqlDAO extends SIAPSqlDAO {
 	 * lStatement+= " and GP.FAS_SIU_ID_FASCICOLO_SIUS = FS.ID_FASCICOLO_SIUS "; lStatement+=
 	 * " and FS.SOG_ID_SOGGETTO = SOG1.ID_SOGGETTO"; lStatement+= " and SOG2.ID_SOGGETTO='"+aIdSoggetto+"'";
 	 * lStatement+= " and SOG1.NOME = SOG2.NOME"; lStatement+= " and SOG1.COGNOME = SOG2.COGNOME";
-	 * 
+	 *
 	 * setStatement( lStatement );
-	 * 
+	 *
 	 * this.start();
-	 * 
+	 *
 	 * BigDecimal lCount = null; if( this.next() ) lCount = this.getBigDecimal("COUNT");
-	 * 
+	 *
 	 * if( lCount.intValue() > 0 ) return true; else return false; }
 	 */
 
 	/**
 	 * Verifica l'esistenza del procedimento di Esecuzione (MA, SS, o altri eventuali). 19/07/2007
-	 * 
+	 *
 	 * @param aChiaveAnno
 	 * @param aChiaveProgr
 	 * @param aCodContenuto
@@ -299,7 +283,7 @@ public class GeneraleProcedimentoSqlDAO extends SIAPSqlDAO {
 	 * Metodo di ricerca di un GENERALE_PROCEDIMENTO con stessi: COD_TIPO_ATTO, DATA_RICHIESTA,
 	 * COD_TIPO_MITTENTE_ATTO, COD_SEDE_MITTENTE, COD_OGGETTO_PROCEDIMENTO, DATA_ARRIVO_CANCELLERIA.
 	 * <p>
-	 * 
+	 *
 	 * @param aCodTipoAtto
 	 * @param aDataRichiesta
 	 * @param aCodTipoMittenteAtto

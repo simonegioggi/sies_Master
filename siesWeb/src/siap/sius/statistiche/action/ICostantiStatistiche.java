@@ -1,41 +1,43 @@
 package siap.sius.statistiche.action;
 
-import siap.sius.fascicolo.action.ICostantiFascicoloSius;
 import f3b.web.IWebConstants;
+import siap.sius.fascicolo.action.ICostantiFascicoloSius;
 
 /**
- * <p>
  * Title: ICostantiStatistiche
- * </p>
- * <p>
- * Description: Classe di costanti per le funzioni di Ricerche Statistiche e di Monitoraggio Procedimenti SIUS.
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ * Description: Classe di costanti per le funzioni di Ricerche Statistiche e di Monitoraggio Procedimenti
+ * SIUS.
+ *
  * @version 1.0
  */
 
 public interface ICostantiStatistiche {
 
-	public static final String PG_LOAD_GRIGLIA_RICERCHE = IWebConstants.ROOT_DIR + "files/siap/sius/provvedimento/GrigliaRicercheSius.jsp";
-	public static final String PG_LOAD_RICERCHE_ORDINANZA = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/LoadRicercaProcXOrdinanza.jsp";
-	public static final String DIV_RICERCHE_ORDINANZE_BASE = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/DivRicercaOrdinanzeBase.jsp";
-	public static final String DIV_RICERCHE_ORDINANZE_AVANZATA = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/DivRicercaOrdinanzeAvanzata.jsp";
-	public static final String PG_LOAD_RICERCHE_ESTREMI_SENTENZA = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/LoadRicercaProcXEstremiSentenza.jsp";
-	public static final String DIV_RICERCHE_ESTREMI_SENTENZA_BASE = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/DivRicercaEstremiSentenzaBase.jsp";
-	public static final String DIV_RICERCHE_ESTREMI_SENTENZA_AVANZATA = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/DivRicercaEstremiSentenzaAvanzata.jsp";
-	
-	public static final String PG_ELENCO_ORDINANZE = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/ElencoOrdinanze.jsp";
+	public static final String PG_LOAD_GRIGLIA_RICERCHE = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/provvedimento/GrigliaRicercheSius.jsp";
+	public static final String PG_LOAD_RICERCHE_ORDINANZA = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/LoadRicercaProcXOrdinanza.jsp";
+	public static final String DIV_RICERCHE_ORDINANZE_BASE = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/DivRicercaOrdinanzeBase.jsp";
+	public static final String DIV_RICERCHE_ORDINANZE_AVANZATA = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/DivRicercaOrdinanzeAvanzata.jsp";
+	public static final String PG_LOAD_RICERCHE_ESTREMI_SENTENZA = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/LoadRicercaProcXEstremiSentenza.jsp";
+	public static final String DIV_RICERCHE_ESTREMI_SENTENZA_BASE = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/DivRicercaEstremiSentenzaBase.jsp";
+	public static final String DIV_RICERCHE_ESTREMI_SENTENZA_AVANZATA = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/DivRicercaEstremiSentenzaAvanzata.jsp";
 
-	public static final String RICERCA_ORDINANZA_JS = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/RicercaOrdinanze.js";
+	public static final String PG_ELENCO_ORDINANZE = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/ElencoOrdinanze.jsp";
+
+	public static final String RICERCA_ORDINANZA_JS = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/RicercaOrdinanze.js";
 	// MEV10-s3: aggiunte costanti
-	public static final String PG_ELENCO_PROVVEDIMENTI = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/ElencoProvvedimenti.jsp";
-	public static final String RICERCA_PROVVEDIMENTO_JS = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/RicercaProvvedimenti.js";
+	public static final String PG_ELENCO_PROVVEDIMENTI = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/ElencoProvvedimenti.jsp";
+	public static final String RICERCA_PROVVEDIMENTO_JS = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/RicercaProvvedimenti.js";
 
 	public static final String CAMPO_TIPO_RICERCA = "TipoRicerca"; // Ricerca Avanzata o Base
 	public static final String CAMPO_TIPO_INTERVALLO = "TipoIntervallo";
@@ -94,7 +96,18 @@ public interface ICostantiStatistiche {
 	public static final String CAMPO_MESE_FINALE = "MeseFine";
 	public static final String CAMPO_ANNO_FINALE = "AnnoFine";
 
-	public static final String PG_LOAD_ESTRAZIONE_OGGETTI = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/LoadEstrazioneOggetti.jsp";
+	// MEV 9 
+	public static final String CAMPO_GIORNO_DATA_RESTITUZIONE_INI = "GiornoDataRestituzioneIni";
+	public static final String CAMPO_MESE_DATA_RESTITUZIONE_INI = "MeseDataRestituzioneIni";
+	public static final String CAMPO_ANNO_DATA_RESTITUZIONE_INI = "AnnoDataRestituzioneIni";
+
+	public static final String CAMPO_GIORNO_DATA_RESTITUZIONE_FINE = "GiornoDataRestituzioneFin";
+	public static final String CAMPO_MESE_DATA_RESTITUZIONE_FINE = "MeseDataRestituzioneFin";
+	public static final String CAMPO_ANNO_DATA_RESTITUZIONE_FINE = "AnnoDataRestituzioneFin";
+	// MEV 9 - FINE
+	
+	public static final String PG_LOAD_ESTRAZIONE_OGGETTI = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/LoadEstrazioneOggetti.jsp";
 
 	public static final String CB_LISTA_MAGISTRATI = "ListaMagistrati";
 	public static final String CB_LISTA_ESPERTI = "ListaEsperti";
@@ -102,11 +115,16 @@ public interface ICostantiStatistiche {
 	public static final String CB_LISTA_OGGETTI = "ListaOggetti";
 	public static final String CHK_DETTAGLIO = "ChkDettaglio";
 
-	public static final String PG_LOAD_ESTRAZIONE_TEMPI = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/LoadEstrazioneTempi.jsp";
-	public static final String PG_INCLUDE_COMBO_OGGETTI = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/ListaOggettiCombo.jsp";
-	public static final String PG_INCLUDE_INTERVALLO_DATE = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/IntervalloDate.jsp";
-	public static final String PG_INCLUDE_COLLABORATORE = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/Collaboratore.jsp";
-	public static final String PG_INCLUDE_POSIZIONE_GIURIDICA = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/PosizioneGiuridica.jsp";
+	public static final String PG_LOAD_ESTRAZIONE_TEMPI = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/LoadEstrazioneTempi.jsp";
+	public static final String PG_INCLUDE_COMBO_OGGETTI = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/ListaOggettiCombo.jsp";
+	public static final String PG_INCLUDE_INTERVALLO_DATE = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/IntervalloDate.jsp";
+	public static final String PG_INCLUDE_COLLABORATORE = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/Collaboratore.jsp";
+	public static final String PG_INCLUDE_POSIZIONE_GIURIDICA = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/PosizioneGiuridica.jsp";
 	public static final String FILTRO_COLLABORATORE = "filtroCollaboratore";
 	public static final String FILTRO_POSIZIONE_GIURIDICA = "filtroPosizioneGiuridica";
 
@@ -135,14 +153,25 @@ public interface ICostantiStatistiche {
 	public static final String CAMPO_COD_OGGETTO_PROCEDIMENTO = ICostantiFascicoloSius.CAMPO_COD_OGGETTO;
 	public static final String CAMPO_COD_POSIZIONE_GIURIDICA = ICostantiFascicoloSius.CAMPO_COD_POS_GIURIDICA;
 
-	public static final String PG_LOAD_RICERCA_PROC_DATA_UDI_FISS_NO_DEF = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/LoadRicercaProcDataUdienzaFissataNoDefiniti.jsp";
+	public static final String PG_LOAD_RICERCA_PROC_DATA_UDI_FISS_NO_DEF = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/LoadRicercaProcDataUdienzaFissataNoDefiniti.jsp";
 
-	public static final String PG_RICERCA_PROC_DATA_UDI_FISS_NO_DEF = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/RicercaProcDataUdienzaFissataNoDefiniti.jsp";
+	public static final String PG_RICERCA_PROC_DATA_UDI_FISS_NO_DEF = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/RicercaProcDataUdienzaFissataNoDefiniti.jsp";
 
-	public static final String PG_LOAD_RICERCA_PROC_PROVV_NO_VALIDATI_NO_DEP = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/LoadRicercaProcedimentiPerProvvNoValidatiNoDepositati.jsp";
+	public static final String PG_LOAD_RICERCA_PROC_PROVV_NO_VALIDATI_NO_DEP = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/LoadRicercaProcedimentiPerProvvNoValidatiNoDepositati.jsp";
 
-	public static final String PG_RICERCA_PROC_PROVV_NO_VALIDATI_NO_DEP = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/RicercaProcedimentiPerProvvNoValidatiNoDepositati.jsp";
+	public static final String PG_RICERCA_PROC_PROVV_NO_VALIDATI_NO_DEP = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/RicercaProcedimentiPerProvvNoValidatiNoDepositati.jsp";
 
+	// MEV_2019-09
+	public static final String PG_LOAD_ATTI_ISTRUTTORI_DATA_REST = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/LoadRicercaAttiIstruttoriDataRest.jsp";
+	public static final String PG_RICERCA_ATTI_ISTRUTTORI_DATA_REST = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/RicercaAttiIstruttoriDataRest.jsp";
+	// MEV_2019-09 - FINE
+	
 	// FR015, FA016 - Ricerca procedimenti con provvedimento emesso
 	public static final String RADIO_RICERCA_PER_STATO_PROVVEDIMENTO = "RicercaPerStatoProvvedimento";
 	public static final String VALUE_RICERCA_PER_STATO_PROVVEDIMENTO_NO = "0";
@@ -151,14 +180,18 @@ public interface ICostantiStatistiche {
 	public static final String VALUE_RICERCA_PER_STATO_PROVVEDIMENTO_DEP_NOVAL = "3";
 
 	// FR025-FA026
-	public static final String PG_LOAD_RICERCHE_PROC_AGGREGATI = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/LoadRicercaProcAggregati.jsp";
-	public static final String PG_RICERCA_PROC_AGGREGATI_INIZIALE_COGNOME = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/RicercaProcInizialeCognome.jsp";
+	public static final String PG_LOAD_RICERCHE_PROC_AGGREGATI = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/LoadRicercaProcAggregati.jsp";
+	public static final String PG_RICERCA_PROC_AGGREGATI_INIZIALE_COGNOME = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/RicercaProcInizialeCognome.jsp";
 
 	public static final String CAMPO_NUMERO_GIORNI = "CampoNumeroGiorni";
 
 	// FR017 - FA018
-	public static final String PG_LOAD_RICERCA_PROC_DATA_UDIENZA_FISSATA_NO_DEF_NUMGG = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/LoadRicercaProcDataUdienzaFissataNoDefinitiNumGG.jsp";
-	public static final String PG_RICERCA_PROC_DATA_UDIENZA_FISSATA_NO_DEF_NUMGG = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/RicercaProcDataUdienzaFissataNoDefinitiNumGG.jsp";
+	public static final String PG_LOAD_RICERCA_PROC_DATA_UDIENZA_FISSATA_NO_DEF_NUMGG = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/LoadRicercaProcDataUdienzaFissataNoDefinitiNumGG.jsp";
+	public static final String PG_RICERCA_PROC_DATA_UDIENZA_FISSATA_NO_DEF_NUMGG = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/RicercaProcDataUdienzaFissataNoDefinitiNumGG.jsp";
 
 	// FR019 - FA020
 	public static final String CAMPO_GIORNO_DATA_EMISSIONE_INIZIO = "GiornoDataEmissioneInizio";
@@ -167,8 +200,10 @@ public interface ICostantiStatistiche {
 	public static final String CAMPO_GIORNO_DATA_EMISSIONE_FINE = "GiornoDataEmissioneFine";
 	public static final String CAMPO_MESE_DATA_EMISSIONE_FINE = "MeseDataEmissioneFine";
 	public static final String CAMPO_ANNO_DATA_EMISSIONE_FINE = "AnnoDataEmissioneFine";
-	public static final String PG_LOAD_RICERCA_PROC_PROVV_EMESSI_NO_DEPOSITO_NUMGG = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/LoadRicercaProcProvvEmessiNoDepositoNumGG.jsp";
-	public static final String PG_RICERCA_PROC_PROVV_EMESSI_NO_DEPOSITO_NUMGG = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/RicercaProcProvvEmessiNoDepositoNumGG.jsp";
+	public static final String PG_LOAD_RICERCA_PROC_PROVV_EMESSI_NO_DEPOSITO_NUMGG = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/LoadRicercaProcProvvEmessiNoDepositoNumGG.jsp";
+	public static final String PG_RICERCA_PROC_PROVV_EMESSI_NO_DEPOSITO_NUMGG = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/RicercaProcProvvEmessiNoDepositoNumGG.jsp";
 
 	// FR034 - FA035
 	public static final String CAMPO_CHIAVE_UFFICIO = ICostantiFascicoloSius.CAMPO_CHIAVE_UFFICIO;
@@ -187,13 +222,17 @@ public interface ICostantiStatistiche {
 	public static final String CAMPO_MESE_ISCRIZIONE_FINALE = ICostantiFascicoloSius.CAMPO_MESE_ISCRIZIONE_FINALE;
 	public static final String CAMPO_ANNO_ISCRIZIONE_FINALE = ICostantiFascicoloSius.CAMPO_ANNO_ISCRIZIONE_FINALE;
 
-	public static final String PG_LOAD_RICERCA_PROCPOSZIONEGIURIDICA = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/LoadRicercaProcPosizioneGiuridica.jsp";
-	public static final String PG_RICERCA_PROCPOSZIONEGIURIDICA = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/RicercaProcPosizioneGiuridica.jsp";
+	public static final String PG_LOAD_RICERCA_PROCPOSZIONEGIURIDICA = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/LoadRicercaProcPosizioneGiuridica.jsp";
+	public static final String PG_RICERCA_PROCPOSZIONEGIURIDICA = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/RicercaProcPosizioneGiuridica.jsp";
 
 	// FI021, FR022, FA023, FA024
-	public static final String PG_LOAD_RICERCA_STATISTICA_COMPARATA_MAGISTRATI = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/LoadRicercaStatisticaComparataMagistrati.jsp";
+	public static final String PG_LOAD_RICERCA_STATISTICA_COMPARATA_MAGISTRATI = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/LoadRicercaStatisticaComparataMagistrati.jsp";
 
-	public static final String PG_RICERCA_STATISTICA_COMPARATA_MAGISTRATI = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/RicercaStatisticaComparataMagistrati.jsp";
+	public static final String PG_RICERCA_STATISTICA_COMPARATA_MAGISTRATI = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/RicercaStatisticaComparataMagistrati.jsp";
 
 	// Valori per la modalità di ricerca dei Fogli Complementari
 	public static final String RICERCA_FC_TRASMESSI = "FCT";
@@ -204,19 +243,29 @@ public interface ICostantiStatistiche {
 	// MEV10-s3: aggiunta costante
 	public static final String RICERCA_PROVVEDIMENTI_PRIVI_DI_FC = "PPFC";
 
-	public static final String PG_LOAD_GRIGLIA_RICERCHE_STAT = IWebConstants.ROOT_DIR + "files/siap/sius/provvedimento/GrigliaRicercheSiusStatistiche.jsp";
-	public static final String PG_LOAD_RICERCA_FC_TRASMESSI = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/LoadRicercaFCTrasmessi.jsp";
-	public static final String PG_LOAD_RICERCA_FC_DA_TRASMETTERE = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/LoadRicercaFCDaTrasmettere.jsp";
-	public static final String DIV_RICERCA_FC_TRASMESSI = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/DivRicercaFCTrasmessi.jsp";
-	public static final String DIV_RICERCA_ORD_PRIVE_DI_FC = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/DivRicercaOrdinanzePriveDiFC.jsp";
-	public static final String PG_ELENCO_FOGLI_COMPLEMENTARI = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/ElencoFogliComplementari.jsp";
-	public static final String PG_ELENCO_FC_DA_TRASMETTERE = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/ElencoFCDaTrasmettere.jsp";
-	public static final String PG_LOAD_RICERCA_ORD_PRIVE_DI_FC = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/LoadRicercaOrdinanzePriveDiFC.jsp";
+	public static final String PG_LOAD_GRIGLIA_RICERCHE_STAT = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/provvedimento/GrigliaRicercheSiusStatistiche.jsp";
+	public static final String PG_LOAD_RICERCA_FC_TRASMESSI = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/LoadRicercaFCTrasmessi.jsp";
+	public static final String PG_LOAD_RICERCA_FC_DA_TRASMETTERE = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/LoadRicercaFCDaTrasmettere.jsp";
+	public static final String DIV_RICERCA_FC_TRASMESSI = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/DivRicercaFCTrasmessi.jsp";
+	public static final String DIV_RICERCA_ORD_PRIVE_DI_FC = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/DivRicercaOrdinanzePriveDiFC.jsp";
+	public static final String PG_ELENCO_FOGLI_COMPLEMENTARI = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/ElencoFogliComplementari.jsp";
+	public static final String PG_ELENCO_FC_DA_TRASMETTERE = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/ElencoFCDaTrasmettere.jsp";
+	public static final String PG_LOAD_RICERCA_ORD_PRIVE_DI_FC = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/LoadRicercaOrdinanzePriveDiFC.jsp";
 	// MEV10-s3: aggiunte costanti
-	public static final String PG_LOAD_RICERCA_PROVV_PRIVI_DI_FC = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/LoadRicercaProvvedimentiPriviDiFC.jsp";
-	public static final String DIV_RICERCA_PROVV_PRIVI_DI_FC = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/DivRicercaProvvedimentiPriviDiFC.jsp";
-	
-    //20140603 - P.M. ( SIUS - implemntazione per il D.L. 146 )
+	public static final String PG_LOAD_RICERCA_PROVV_PRIVI_DI_FC = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/LoadRicercaProvvedimentiPriviDiFC.jsp";
+	public static final String DIV_RICERCA_PROVV_PRIVI_DI_FC = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/DivRicercaProvvedimentiPriviDiFC.jsp";
+
+	// 20140603 - P.M. ( SIUS - implemntazione per il D.L. 146 )
 	public static final String CAMPO_CK_MEZZI_ELETTRONICI = "CheckMezziElettronici";
 	public static final String CAMPO_CK_STRUMENTI_TECNICI = "CheckStrumentiTecnici";
 	// test
@@ -226,6 +275,20 @@ public interface ICostantiStatistiche {
 	public static final String MESSAGGIO_ERRORE_GENERICO = "Si è verificato un errore durante l'elaborazione.";
 
 	// MEV 73
-	public static final String PG_LOAD_RICERCHE_DLGS_123_2018 = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/LoadRicercaProcDlgs123_2018.jsp";
+	public static final String PG_LOAD_RICERCHE_DLGS_123_2018 = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/LoadRicercaProcDlgs123_2018.jsp";
 
- }
+	// MEV_2019-09: aggiunta costante
+	public static final String PG_LOAD_RICERCA_STATISTICA_MISURE_ALTER_678C1TERCPP = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/LoadRicercaStatisticaMisureAlter678c1tercpp.jsp";
+	public static final String RADIO_RICERCA_STATISTICA_MA = "RicercaProcedimentiMisureAlternative";
+	public static final String VALUE_RICERCA_ORD_NON_EMESSE_ATTI_AL_PRESIDENTE = "0";
+	public static final String VALUE_RICERCA_ORD_NON_EMESSE = "1";
+	public static final String VALUE_RICERCA_ORD_APPLICAZIONE_PROVVISORIA_EMESSE_NO_DATA_ESECUTIVITA = "2";
+	public static final String VALUE_RICERCA_ORD_APPLICAZIONE_PROVVISORIA_EMESSE_NO_DECISIONE_COLLEGIO = "3";
+	public static final String VALUE_RICERCA_PROCEDIMENTI_PRIVI_PROVVEDIMENTI = "4";
+	public static final String PG_RICERCA_STATISTICA_MISURE_ALTER_678C1TERCPP = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/RicercaStatisticaMisureAlter678c1tercpp.jsp";
+	// FINE MEV_2019-09
+
+}

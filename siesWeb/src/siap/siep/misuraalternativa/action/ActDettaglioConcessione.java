@@ -3,6 +3,9 @@ package siap.siep.misuraalternativa.action;
 import java.math.BigDecimal;
 import java.util.Hashtable;
 
+import org.apache.log4j.Logger;
+
+import f3b.log.LogF3B;
 import f3b.util.F3BException;
 import f3b.util.Utils;
 import siap.sico.evento.action.ICostantiEvento;
@@ -31,17 +34,21 @@ import siap.siep.verbale.controller.IVerbale;
 import siap.siep.verbale.model.VerbaleModel;
 
 /**
- * <p>
- * Title: ActDettaglioConcessione
- * <p>
- * Description: Classe Action per la load dettaglio Concessione
+ * ActDettaglioConcessione - Classe Action per la load dettaglio Concessione
  *
  * @version 1.0
  */
 public class ActDettaglioConcessione extends ActMisuraAlternativa implements ICostantiMisuraAlternativa {
 
+	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+
 	@SuppressWarnings("rawtypes")
 	public String processRequest() throws F3BException {
+
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
 
 		FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 
@@ -107,16 +114,38 @@ public class ActDettaglioConcessione extends ActMisuraAlternativa implements ICo
 		if (lMisAlModConcessa != null) {
 			if (lMisAlModConcessa.getCodTipoMisura().equals("0005")
 					|| lMisAlModConcessa.getCodTipoMisura().equals("0010")
-					|| lMisAlModConcessa.getCodTipoMisura().equals("0013")) {
+					|| lMisAlModConcessa.getCodTipoMisura().equals("0013")
+					// MEV_2019-09-SIEP: aggiunti codici tipo misura x DETENZIONE
+					|| "0682".equals(lMisAlModConcessa.getCodTipoMisura())
+					|| "0693".equals(lMisAlModConcessa.getCodTipoMisura())
+					|| "0722".equals(lMisAlModConcessa.getCodTipoMisura())
+					|| "0733".equals(lMisAlModConcessa.getCodTipoMisura())) {
 				setRequestAttribute("tipoMisura", "DETENZIONE");
 				lTipoProvvVerbale = "16";
 			} else if (lMisAlModConcessa.getCodTipoMisura().equals("0001")
 					|| lMisAlModConcessa.getCodTipoMisura().equals("0002")
 					|| lMisAlModConcessa.getCodTipoMisura().equals("0003")
-					|| lMisAlModConcessa.getCodTipoMisura().equals("0030")) {
+					|| lMisAlModConcessa.getCodTipoMisura().equals("0030")
+					// MEV_2019-09: aggiunti codici tipo misura
+					|| lMisAlModConcessa.getCodTipoMisura().equals("0680")
+					|| lMisAlModConcessa.getCodTipoMisura().equals("0681")
+					|| lMisAlModConcessa.getCodTipoMisura().equals("0690")
+					|| lMisAlModConcessa.getCodTipoMisura().equals("0691")
+					|| lMisAlModConcessa.getCodTipoMisura().equals("0692")
+					// MEV_2019-09-SIEP: aggiunti codici tipo misura x AFFIDAMENTO
+					|| lMisAlModConcessa.getCodTipoMisura().equals("0720")
+					|| lMisAlModConcessa.getCodTipoMisura().equals("0721")
+					|| lMisAlModConcessa.getCodTipoMisura().equals("0730")
+					|| lMisAlModConcessa.getCodTipoMisura().equals("0731")
+					|| lMisAlModConcessa.getCodTipoMisura().equals("0732")) {
 				setRequestAttribute("tipoMisura", "AFFIDAMENTO");
 				lTipoProvvVerbale = "18";
-			} else if (lMisAlModConcessa.getCodTipoMisura().equals("0004")) {
+			} else if (lMisAlModConcessa.getCodTipoMisura().equals("0004")
+					// MEV_2019-09-SIEP: aggiunti codici tipo misura x SEMILIBERTA'
+					|| "0683".equals(lMisAlModConcessa.getCodTipoMisura())
+					|| "0694".equals(lMisAlModConcessa.getCodTipoMisura())
+					|| "0723".equals(lMisAlModConcessa.getCodTipoMisura())
+					|| "0734".equals(lMisAlModConcessa.getCodTipoMisura())) {
 				setRequestAttribute("tipoMisura", "SEMILIBERTA");
 				lTipoProvvVerbale = "16";
 			} else if (lMisAlModConcessa.getCodTipoMisura().equals("2245")) {
@@ -257,6 +286,11 @@ public class ActDettaglioConcessione extends ActMisuraAlternativa implements ICo
 		// setta la risposta della ricerca nella request
 		setRequestAttribute("eventoammissioneprovvisoriaaffidamento", lEve);
 
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.debug(getClass().getName() + ".processRequest: fine");
+
+		// pagina di ritorno
 		return PG_LOAD_DETTAGLIO_MA_CONCESSIONE;
 	}
 

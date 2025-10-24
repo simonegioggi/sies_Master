@@ -733,17 +733,14 @@ public class ActLoadDettaglioFascicolo extends ActionSiap implements ICostantiFa
 								"Attenzione, pagina di dettaglio non visualizzabile! In caso di titolo esecutivo SIEP "
 										+ "importato da altra DBI, per visualizzare il dettaglio occorre scaricare anche i collegati relativi al titolo di classe I!");
 					}
-
 					if (fascIII.getCodStatoFascicolo().equals("01")) {
 						DettaglioFascicoloModel lDettaglio_fasIII = null;
 						lDettaglio_fasIII = lCtrl.ExDettaglioFascicoloSiep(fascIII.getIdFascicoloSiep());
-
-						java.util.List Eventi = lDettaglio_fasIII.getEventi();
+						List Eventi = lDettaglio_fasIII.getEventi();
 						// Paolo Cherubini per la seguente segnalazione
 						// b2/rr/012 22-02-2012 vedi sopra
 						if (Eventi != null && Eventi.size() > 0) { // fine modifica b2/rr/012
 							EventoNotificaModel evemod = (EventoNotificaModel) Eventi.get(0);
-
 							// 08/05/2019 MEV70 Per i fascicoli generati da classe III l'evento di riferimento
 							// ha COD_TIPO_PROVVEDIMENTO='25', COD_MOTIVO='1100' e FLAG_DOCUMENTO_REGISTRATO =
 							// 'S'.
@@ -756,7 +753,6 @@ public class ActLoadDettaglioFascicolo extends ActionSiap implements ICostantiFa
 									break;
 								}
 							}
-
 							if (evemod.getEvento().getAnnIdAnnotazioneManuale() != null) {
 								IAnnotazioneManuale lAnnCtrl = SIEPLookupRemote.getAnnotazioneManualeRemote();
 								Vector eve = lAnnCtrl.ExRicercaAnnotazioneManualeByIdEvento(
@@ -783,10 +779,8 @@ public class ActLoadDettaglioFascicolo extends ActionSiap implements ICostantiFa
 		// presente se la pena non è validata
 		if (lDettaglio.getPenaResidua() != null) {
 			// Inserisco la SS residua nel model della PR
-			if (lSSResiduaModel == null || lSSResiduaModel.getIdSanzioneSostResidua() == null) {
+			if (lSSResiduaModel == null || lSSResiduaModel.getIdSanzioneSostResidua() == null)
 				lSSResiduaModel = lSSCtrl.getUltimaSSResidua(aId, "N");
-			}
-
 			lDettaglio.getPenaResidua().setSanzSostResidua(lSSResiduaModel);
 		}
 
@@ -794,9 +788,56 @@ public class ActLoadDettaglioFascicolo extends ActionSiap implements ICostantiFa
 		Collection lReatiColl = lDettaglio.getReatiCircostanze();
 		Vector lReatiVect = new Vector(lReatiColl);
 		setRequestAttribute("continuazioni", lRCtrl.getTableContinuazioni(lReatiVect));
-
 		setRequestAttribute("dettagliofascicolo", lDettaglio);
-		// setRequestAttribute("flagDettaglio", flagDettaglio);
+
+		// MEV_2024-092: rework --> elimino questa aggiunta di descrizione PG
+		// MEV_2019-09-SIEP
+		// in caso di PG - 14 = Espiazione Pena in Regime di Semiliberta'
+		// provo a capire se trattasi della provvisoria a partire dell'evento che la ha generata
+		// o meglio all'ordinanza collegata all'evento
+		// anche per la 47 Sospensione
+		// 14 - Espiazione Pena in Regime di Semiliberta'
+		// if (lDettaglio.getPosizioneGiuridica() != null
+		// && "14".equals(lDettaglio.getPosizioneGiuridica().getCodPosizioneGiuridica())
+		// && lDettaglio.getPosizioneGiuridica().getIdEventoRiferimento() != null) {
+		// IEvento lCtrlEvento = SICOLookupRemote.getEventoRemote();
+		// EventoModel lEveSemilib = lCtrlEvento
+		// .ExRicercaEventoByKey(lDettaglio.getPosizioneGiuridica().getIdEventoRiferimento());
+		// if (lEveSemilib != null) {
+		// // n.b lEveSemilib potrebbe essere il verbale o il provvedimento. Entrambi puntano l'ordinanza
+		// // Recupero l'ordinanza
+		// EventoModel lEveOrd = lCtrlEvento.ExRicercaEventoByKey(lEveSemilib.getEveIdEvento());
+		// if (lEveOrd != null
+		// && "0270".equals(lEveOrd.getCodEsito())
+		// && ("2007".equals(lEveOrd.getCodMotivo())
+		// || "0683".equals(lEveOrd.getCodMotivo()) || "0694".equals(lEveOrd.getCodMotivo()))) {
+		// String descrPGNew = lDettaglio.getPosizioneGiuridica().getDescrPosizioneGiuridica()
+		// + " (a seguito Applicazione/Ammissione Provvisoria)";
+		// lDettaglio.getPosizioneGiuridica().setDescrPosizioneGiuridica(descrPGNew);
+		// }
+		// }
+		// }
+		// if (lDettaglio.getPosizioneGiuridica() != null
+		// // Libero in sospensione
+		// && "47".equals(lDettaglio.getPosizioneGiuridica().getCodPosizioneGiuridica())
+		// && lDettaglio.getPosizioneGiuridica().getIdEventoRiferimento() != null) {
+		// IEvento lCtrlEvento = SICOLookupRemote.getEventoRemote();
+		// EventoModel lEveSosp = lCtrlEvento
+		// .ExRicercaEventoByKey(lDettaglio.getPosizioneGiuridica().getIdEventoRiferimento());
+		// if (lEveSosp != null) {
+		// // n.b lEveSosp potrebbe essere il verbale o il provvedimento. Entrambi puntano l'ordinanza
+		// // Recupero l'ordinanza
+		// EventoModel lEveOrd = lCtrlEvento.ExRicercaEventoByKey(lEveSosp.getEveIdEvento());
+		// if (lEveOrd != null
+		// && "0270".equals(lEveOrd.getCodEsito())
+		// && ("0684".equals(lEveOrd.getCodMotivo()) || "0695".equals(lEveOrd.getCodMotivo()))) {
+		// String descrPGNew = lDettaglio.getPosizioneGiuridica().getDescrPosizioneGiuridica()
+		// + " (a seguito Applicazione/Ammissione Provvisoria)";
+		// lDettaglio.getPosizioneGiuridica().setDescrPosizioneGiuridica(descrPGNew);
+		// }
+		// }
+		// }
+		// MEV_2019-09-SIEP - FINE
 
 		// Inserisce nella session il fascicolo (contenente Soggetto e Sentenza)
 		setSessionAttribute("fascicolo", lFasMod);
@@ -1050,11 +1091,8 @@ public class ActLoadDettaglioFascicolo extends ActionSiap implements ICostantiFa
 		setRequestAttribute("vediLinkSorv", vediLinkFasSorv);
 
 		/*
-		 * ISSUE MEV : inserimento data comunicazione scadenza per provv. classe IV 
-		 * Numero MEV : 39 
-		 * Autore : Gioggi 
-		 * Data : 12/mag/2017 
-		 * Branch : MEV_39
+		 * ISSUE MEV : inserimento data comunicazione scadenza per provv. classe IV Numero MEV : 39 Autore :
+		 * Gioggi Data : 12/mag/2017 Branch : MEV_39
 		 */
 		if (NumFasc >= 40000 && NumFasc < 50000) {
 			IScadenzario is = SIEPLookupRemote.getScadenzarioRemote();
@@ -1156,11 +1194,8 @@ public class ActLoadDettaglioFascicolo extends ActionSiap implements ICostantiFa
 		// ***** FINE INTERVENTO MEV_39 *****//
 
 		/*
-		 * ISSUE MEV : aggiunta ricerca del Civilmente Obbligato ed elenco stato pagamenti 
-		 * Numero MEV : 2023-33 
-		 * Autore : sgioggi 
-		 * Data : 24 ago 2023 
-		 * Branch : MEV_2023-33
+		 * ISSUE MEV : aggiunta ricerca del Civilmente Obbligato ed elenco stato pagamenti Numero MEV :
+		 * 2023-33 Autore : sgioggi Data : 24 ago 2023 Branch : MEV_2023-33
 		 */
 		ICivilmenteObbligato ico = SIEPLookupRemote.getCivilmenteObbligatoRemote();
 		Vector<CivilmenteObbligatoModel> coms = ico.ExRicercaCivilmenteObbligatiByFasSieIdFascicoloSiep(aId);
@@ -1168,7 +1203,7 @@ public class ActLoadDettaglioFascicolo extends ActionSiap implements ICostantiFa
 
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 		Vector<EventoRateizzazionePPModel> listaRichiestaBollettini = irpp.exRicercaEventoRateizzazionePP(aId,
-				"ALL","S");
+				"ALL", "S");
 		boolean existPagamenti = false;
 		if (!listaRichiestaBollettini.isEmpty())
 			existPagamenti = true;

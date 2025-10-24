@@ -58,7 +58,8 @@ public class ActLoadRicercaStatisticaComparataMagistrati extends ActionSiap impl
 					"^[U]\\d{3}");
 		}
 
-		lOption = new Option(lOggettiProcedimento, 100);
+		//lOption = new Option(lOggettiProcedimento, 100);
+		lOption = new Option(lOggettiProcedimento);
 		setRequestAttribute("oggettoProcedimento", "" + lOption);
 
 		String lCodUfficio = getCodUfficioUtenteConnesso();

@@ -1,13 +1,5 @@
 package siap.siep.posizione.model;
 
-/**
-* <p>Title: PosizioneGiuridicaModel</p>
-* <p>Description: Classe Model che rappresenta il PosizioneGiuridica</p>
-* <p>Copyright: Copyright (c) 2002</p>
-* <p>Company: Bull</p>
-* @version 1.0
-*/
-
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Date;
@@ -16,10 +8,16 @@ import f3b.model.GenericModel;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.util.DecodificheUtils;
 
+/**
+ * PosizioneGiuridicaModel - Classe Model che rappresenta il PosizioneGiuridica
+ *
+ * @version 1.0
+ */
 @SuppressWarnings("rawtypes")
 public class PosizioneGiuridicaModel extends GenericModel {
+
 	/**
-	 *
+	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = -4983166343252905715L;
 	private BigDecimal mIdPosizioneGiuridica;
@@ -56,9 +54,6 @@ public class PosizioneGiuridicaModel extends GenericModel {
 	// MEV_2023_33 - Aggiunta decodifica COD_MASCHERA prelevata dalla CG.RV_ALT5_VALUE 
 	private String mCodMascheraCG;
 	
-
-	// private boolean mPrimaPosizione;
-
 	// COSTRUTTORE DI DEFAULT
 	public PosizioneGiuridicaModel() {
 		this.mIdPosizioneGiuridica = null;
@@ -81,8 +76,6 @@ public class PosizioneGiuridicaModel extends GenericModel {
 		this.mDescrUfficioAggiornamento = "";
 		this.mFasSieIdFascicoloSiep = null;
 		this.mIdEventoRiferimento = null;
-		// this.mPrimaPosizione = false;
-		// rege-sies
 		this.mFlagIsDetenuto = "";
 		this.mLuogoEspiazione = "";
 		this.mAutoritaCompetente = "";
@@ -116,10 +109,7 @@ public class PosizioneGiuridicaModel extends GenericModel {
 		this.mDescrUfficioAggiornamento = aModel.mDescrUfficioAggiornamento;
 		this.mFasSieIdFascicoloSiep = aModel.mFasSieIdFascicoloSiep;
 		this.mIdEventoRiferimento = aModel.mIdEventoRiferimento;
-		// rege-sies
 		this.mFlagIsDetenuto = aModel.mFlagIsDetenuto;
-
-		// this.mPrimaPosizione = aModel.mPrimaPosizione;
 		this.mLuogoEspiazione = aModel.mLuogoEspiazione;
 		this.mAutoritaCompetente = aModel.mAutoritaCompetente;
 		this.mAutoritaCompetenteSede = aModel.mAutoritaCompetenteSede;
@@ -162,10 +152,7 @@ public class PosizioneGiuridicaModel extends GenericModel {
 		this.mDescrUfficioAggiornamento = aDescrUfficioAggiornamento;
 		this.mFasSieIdFascicoloSiep = aFasSieIdFascicoloSiep;
 		this.mIdEventoRiferimento = aIdEventoRiferimento;
-		// rege-sies
 		this.mFlagIsDetenuto = aFlagIsDetenuto;
-
-		// this.mPrimaPosizione = false;
 		this.mLuogoEspiazione = aLuogoEspiazione;
 		this.mAutoritaCompetente = aAutoritaCompetente;
 		this.mAutoritaCompetenteSede = aAutoritaCompetenteSede;
@@ -295,7 +282,6 @@ public class PosizioneGiuridicaModel extends GenericModel {
 	  return mCodMascheraCG;
 	}
 	
-	// public boolean isPrimaPosizione() { return mPrimaPosizione; }
 	//
 	// METODI SET()
 	//
@@ -417,9 +403,8 @@ public class PosizioneGiuridicaModel extends GenericModel {
 	    mCodMascheraCG = aValore;
 	}
 	
-	// public void setPrimaPosizione(boolean aValore ) { mPrimaPosizione = aValore; }
-
 	public boolean isMisAlt() {
+
 		// L'Array contiene i codice corrispondenti
 		// all'rv_abbreviation 'MIS_ALT' del dominio POSIZIONE_GIURIDICA
 		// della CG_REF_CODES
@@ -543,4 +528,5 @@ public class PosizioneGiuridicaModel extends GenericModel {
 
 		return lStr;
 	}
+
 }

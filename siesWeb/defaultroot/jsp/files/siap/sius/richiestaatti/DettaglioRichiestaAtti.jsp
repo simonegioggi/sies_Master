@@ -99,6 +99,17 @@
         <font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(eventoNotifica.getEvento().getDataEmissione(),"dd-MM-yyyy"))%></font>&nbsp;
       </td>
     </tr>
+    
+    <%-- INIZIO: MEV_2019-09 (D.lgs. 123/2018) --%>
+    <% if (eventoNotifica.getEvento().getDataRestituzioneAi()!=null) {%>
+    <tr>
+      <td class="l">Atti da restituire entro il </td>
+      <td class="L" colspan="5">
+        <font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(eventoNotifica.getEvento().getDataRestituzioneAi(),"dd-MM-yyyy"))%></font>&nbsp;
+      </td>
+    </tr>
+    <% } %>
+    <%-- FINE: MEV_2019-09 (D.lgs. 123/2018) --%>
 
   <%
     int lSizeNotifiche = eventoNotifica.getNotifiche().length;

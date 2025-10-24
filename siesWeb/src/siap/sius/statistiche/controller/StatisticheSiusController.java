@@ -48,7 +48,9 @@ import siap.sius.statistiche.dao.ProcAggregatiCognomeElencoSqlDAO;
 import siap.sius.statistiche.dao.ProcAggregatiCognomeSqlDAO;
 import siap.sius.statistiche.dao.ProcAggregatiIstitutoDetenzioneSqlDAO;
 import siap.sius.statistiche.dao.ProcAggregatiProcuraMittenteSqlDAO;
+import siap.sius.statistiche.dao.ProcAttiIstruttoriDataRestSqlDAO;
 import siap.sius.statistiche.dao.ProcDataUdienzaFissataNoDefinitiNumGGSqlDAO;
+import siap.sius.statistiche.dao.ProcPerStatisticaMisureAlternativeSqlDAO;
 import siap.sius.statistiche.dao.ProcPosizioneGiuridicaSqlDAO;
 import siap.sius.statistiche.dao.ProcProvvEmessiNoDepositoNumGGSqlDAO;
 import siap.sius.statistiche.dao.ProcProvvNoValidatiNoDepositoSqlDAO;
@@ -72,18 +74,8 @@ import siap.sius.statistiche.model.RicercaProcedimentoModel;
 import siap.sius.statistiche.model.RicercaProvvedimentoModel;
 
 /**
- * <p>
- * Title: StatisticheSiusController
- * </p>
- * <p>
- * Description: Classe Controller per Notifica
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * Title: StatisticheSiusController 
+ * Description: Classe Controller per Statistiche SIUS
  *
  * @version 1.0
  */
@@ -596,7 +588,7 @@ public class StatisticheSiusController extends SiapController implements IStatis
 			lConn = getDBConnection(); // Preleva connessione dal dbase
 			lIspDao = new IspConteggioOggettiDAO(lConn);
 			/* Mod. Michele 4/12/2008 */
-			lIspDao.setCondizione("FAS_SIU_CHIAVE_UFFICIO = " + aCodUfficio);
+			lIspDao.setCondizione("FAS_SIU_CHIAVE_UFFICIO = '" + aCodUfficio+"'");
 			lIspDao.setOrdinamentoPerContenutoStatistico();
 			lStatistiche = new Vector(lIspDao.getModels()); // Recupera le occorrenze
 
@@ -2504,4 +2496,186 @@ public class StatisticheSiusController extends SiapController implements IStatis
 		return lMagistrati;
 	}
 
+	// MEV_2019-09: aggiunti metodi per le statistiche di Misure Alternative
+	@Override
+	public Collection<EveFasGepSogProvModel> ProcPerStatisticaMisureAlternative(RicercaProcedimentoModel rpm)
+			throws F3BException {
+
+		return ExRicercaProcPerStatisticaMisureAlternative(rpm, 0);
+	}
+
+	public Collection<EveFasGepSogProvModel> ExRicercaProcPerStatisticaMisureAlternative(
+			RicercaProcedimentoModel rpm, int pagina) throws F3BException {
+
+		Connection c = null;
+		Collection<EveFasGepSogProvModel> procedimenti = null;
+		ProcPerStatisticaMisureAlternativeSqlDAO ppsmasdao = null;
+
+		try {
+			c = getDBConnection(); // Preleva connessione dal DB
+			ppsmasdao = new ProcPerStatisticaMisureAlternativeSqlDAO(c);
+
+			switch (rpm.getStatoProcedimento()) {
+			case 0:
+				ppsmasdao.ricercaOrdinanzeNonEmesseAttiAlPresidente(rpm);
+				break;
+			case 1:
+				ppsmasdao.ricercaOrdinanzeNonEmesse(rpm);
+				break;
+			case 2:
+				ppsmasdao.ricercaOrdinanzeApplicazioneProvvisoriaEmesseNoDataEsecutivita(rpm);
+				break;
+			case 3:
+				ppsmasdao.ricercaOrdinanzeApplicazioneProvvisoriaEmesseNoDecisioneCollegio(rpm);
+				break;
+			case 4:
+				ppsmasdao.ricercaProcedimentiPriviProvvedimenti(rpm);
+				break;
+			default:
+				throw new F3BException(
+						"ExRicercaProcPerStatisticaMisureAlternative : Valore dell StatoProcedimento = "
+								+ rpm.getStatoProcedimento()
+								+ " non valido. Deve essere compreso nel range 0-4.");
+			}
+
+			if (pagina > 0) {
+				ppsmasdao.startPage(pagina);
+			} else {
+				ppsmasdao.start();
+			}
+
+			procedimenti = new ArrayList<>();
+			while (ppsmasdao.next()) {
+				EveFasGepSogProvModel lModel = (EveFasGepSogProvModel) ppsmasdao.getModel();
+				procedimenti.add(lModel);
+			}
+			ppsmasdao.stop();
+		} catch (Exception ex) {
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+			siesLogger.error("ExRicercaProcPerStatisticaMisureAlternative - Exception: " + ex);
+			throw new SIUSException(SIUSException.USER_MESSAGE,
+					ICostantiStatistiche.MESSAGGIO_ERRORE_GENERICO);
+		} finally {
+			cleanup(ppsmasdao);
+			cleanup(c);
+		}
+		return procedimenti;
+	}
+
+	@Override
+	public BigDecimal ExGetNumRicercaProcPerStatisticaMisureAlternative(RicercaProcedimentoModel rpm)
+			throws F3BException {
+
+		BigDecimal records = new BigDecimal(0);
+		Connection c = null;
+		ProcPerStatisticaMisureAlternativeSqlDAO ppsmasdao = null;
+
+		try {
+			c = getDBConnection(); // Preleva connessione dal dbase
+			ppsmasdao = new ProcPerStatisticaMisureAlternativeSqlDAO(c);
+
+			switch (rpm.getStatoProcedimento()) {
+			case 0:
+				ppsmasdao.ricercaOrdinanzeNonEmesseAttiAlPresidente(rpm);
+				break;
+			case 1:
+				ppsmasdao.ricercaOrdinanzeNonEmesse(rpm);
+				break;
+			case 2:
+				ppsmasdao.ricercaOrdinanzeApplicazioneProvvisoriaEmesseNoDataEsecutivita(rpm);
+				break;
+			case 3:
+				ppsmasdao.ricercaOrdinanzeApplicazioneProvvisoriaEmesseNoDecisioneCollegio(rpm);
+				break;
+			case 4:
+				ppsmasdao.ricercaProcedimentiPriviProvvedimenti(rpm);
+				break;
+			default:
+				throw new F3BException(
+						"ExGetNumRicercaProcPerStatisticaMisureAlternative : Valore dell StatoProcedimento = "
+								+ rpm.getStatoProcedimento()
+								+ " non valido. Deve essere compreso nel range 0-4.");
+			}
+
+			records = ppsmasdao.getNumRowsSelected();
+		} catch (Exception ex) {
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+			siesLogger.error("ExGetNumRicercaProcPerStatisticaMisureAlternative - Exception: " + ex);
+			throw new SIUSException(SIUSException.USER_MESSAGE,
+					ICostantiStatistiche.MESSAGGIO_ERRORE_GENERICO);
+		} finally {
+			cleanup(ppsmasdao);
+			cleanup(c);
+		}
+		return records;
+	}
+	// FINE MEV_2019-09
+
+	
+	// MEV_2019-09
+	public Collection<EveFasGepSogProvModel> ExRicercaAttiIstruttoriDataRestPaginata (
+			RicercaProcedimentoModel aModel, int aPagina) throws F3BException {
+
+		Connection lConn = null;
+		Collection<EveFasGepSogProvModel> lProcedimenti = null;
+		ProcAttiIstruttoriDataRestSqlDAO lSqlDao = null;
+
+		try {
+			lConn = getDBConnection();
+			lSqlDao = new ProcAttiIstruttoriDataRestSqlDAO(lConn);
+
+			lSqlDao.ricercaProcedimentiAttiIstruttoriDataRest(aModel);
+
+			if (aPagina > 0) {
+				lSqlDao.startPage(aPagina);
+			} else {
+				lSqlDao.start();
+			}
+
+			lProcedimenti = new ArrayList<>();
+			while (lSqlDao.next()) {
+				EveFasGepSogProvModel lModel = (EveFasGepSogProvModel) lSqlDao.getModel();
+				lProcedimenti.add(lModel);
+			}
+			lSqlDao.stop();
+		} catch (Exception ex) {
+			siesLogger.error("ExRicercaAttiIstruttoriDataRestPaginata - Exception: ",ex);
+			throw new SIUSException(SIUSException.USER_MESSAGE,
+					ICostantiStatistiche.MESSAGGIO_ERRORE_GENERICO);
+		} finally {
+			cleanup(lSqlDao);
+			cleanup(lConn);
+		}
+		return lProcedimenti;
+	}
+	
+	
+	public BigDecimal ExGetNumRicercaAttiIstruttoriDataRestPaginata (RicercaProcedimentoModel aModel)
+			throws F3BException {
+
+		BigDecimal lRecords = new BigDecimal(0);
+		Connection lConn = null;
+		ProcAttiIstruttoriDataRestSqlDAO lSqlDao = null;
+
+		try {
+			lConn = getDBConnection(); 
+			lSqlDao = new ProcAttiIstruttoriDataRestSqlDAO(lConn);
+
+			lSqlDao.ricercaProcedimentiAttiIstruttoriDataRest(aModel);
+
+			lRecords = lSqlDao.getNumRowsSelected();
+		} catch (Exception ex) {
+			siesLogger.error("ExGetNumRicercaAttiIstruttoriDataRestPaginata - Exception: ", ex);
+			throw new SIUSException(SIUSException.USER_MESSAGE,
+					ICostantiStatistiche.MESSAGGIO_ERRORE_GENERICO);
+		} finally {
+			cleanup(lSqlDao);
+			cleanup(lConn);
+		}
+		return lRecords;
+	}
+	// MEV_2019-09 - FINE
+	
+	
+	
 }

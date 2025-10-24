@@ -29,10 +29,13 @@
 <jsp:useBean id="depositoDecretoMotivazioni" 			scope="request" class="siap.sius.depositodecreto.model.DepositoDecretoEventoMotivazioniModel"/>
 <jsp:useBean id="tenori" 								scope="request" class="java.util.Vector"/>
 <jsp:useBean id="misuraSicurezza" 						scope="request" class="siap.siep.misurasicurezza.model.MisuraSicurezzaModel"/>
+<%-- INIZIO: MEV_2019-09 (D.lgs. 123/2018) --%>
+<jsp:useBean id="dataDecretoDesignazione" 				scope="request" class="java.lang.String"/>
+
 <%-- MEV_2023-35: aggiunto useBean per gestione Ordinanza Reclamo Avverso Revoca Pena Sostitutiva --%>
 <jsp:useBean id="tipoPeneSostitutive" 					scope="request" class="java.lang.String"/>
 <jsp:useBean id="esecuzioneSanzioneSostitutivaModel" 	scope="request" class="siap.sius.esecuzionesanzionesostitutiva.model.EsecuzioneSanzioneSostitutivaModel"/>
-  
+
 <%
 String[] esiti = (String[]) request.getAttribute("esiti");
 
@@ -80,7 +83,7 @@ if (request.getParameter("tipo_provvedimento") != null && request.getParameter("
 	// Modifica Decreto
 	data_emissione = depositoDecretoMotivazioni.getDepositoDecreto().getDataEmissione();
 	data_deposito = depositoDecretoMotivazioni.getDepositoDecreto().getDataDeposito();
-	lTenori = (TenoreModel[])  tenori.toArray(new TenoreModel[0]);
+	lTenori = (TenoreModel[]) tenori.toArray(new TenoreModel[0]);
 	lIdEvento = depositoDecretoMotivazioni.getEvento().getIdEvento().toString();
 	lIdOrdinanza = "";
 	lIdDecreto = depositoDecretoMotivazioni.getDepositoDecreto().getIdDepositoDecreto().toString();
@@ -104,19 +107,57 @@ if (data_deposito != null)
   	data2 = DateUtils.getDateToString(data_deposito,"dd/MM/yyyy");
 else
  	data2 = DateUtils.getSysDate("dd/MM/yyyy");
+
+// INIZIO: MEV_2019-09 (D.lgs. 123/2018)
+String contenuto = "";
+contenuto = fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento();
+boolean is678 = false;
+// String dataDecretoDesignazione = "";
+if (ICostantiDepositoOrdinanzaPc.MISURA_ALTERNATIVA_AMMISSIONE_DL_123_2018.equals(datiOrdinanza.getOrdinanza().getCodTipoOrdinanza())) {
+	is678 = true;
+}
+// FINE: MEV_2019-09
 %>
 <html>
-	<head>
-	<script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
-	<script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
-	    <script language="JavaScript">
-			function Verify() {
-		     	var flagDate = VerificaDate();
-		     	// MEV_39: aggiunto controllo
-		     	<% if ("42".equals(tipo) || "MS".equals(tipo)) { %>
-			     	node = document.getElementById("datarinvio");
-		      		if (node.style.display == 'none') {
-		      			<% if (Utils.isPresent(lIdDecreto)) { %>
+<head>
+<script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
+<script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
+<script language="JavaScript">
+function Verify() {
+	var flagDate = VerificaDate();
+<%-- INIZIO: MEV_2019-09 (D.lgs. 123/2018) --%>
+<%
+if (is678) {
+%>
+	var listComboEsiti = document.getElementsByName("<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>"); 
+	var contaProvvisorie = 0;
+	if (typeof (listComboEsiti[1]) != "undefined") {
+		for (idComboEsiti = 0; idComboEsiti < listComboEsiti.length; idComboEsiti++) {
+			var comboEsito = listComboEsiti[idComboEsiti];
+  		    if (comboEsito[comboEsito.selectedIndex].value == '0680'
+    				|| comboEsito[comboEsito.selectedIndex].value == '0690') {
+				contaProvvisorie++;
+  		    }
+	  	}
+	}
+	if (contaProvvisorie > 1) {
+		alert("Attenzione. Può essere selezionato 'Applica ex art. 678 comma 1 ter cpp' per un solo oggetto");
+  	    return false;
+	}
+<%
+}
+%>
+<%-- FINE: MEV_2019-09 (D.lgs. 123/2018) --%>
+
+// MEV_39: aggiunto controllo
+<%
+if ("42".equals(tipo) || "MS".equals(tipo)) {
+%>
+   	node = document.getElementById("datarinvio");
+	if (node.style.display == 'none') {
+<%
+	if (Utils.isPresent(lIdDecreto)) {
+%>
 			      			document.ModificaOrdinanza.<%=ICostantiDepositoDecreto.CAMPO_GIORNO_SOSPENSIONE_SS%>.value = "";
 			      			document.ModificaOrdinanza.<%=ICostantiDepositoDecreto.CAMPO_MESE_SOSPENSIONE_SS%>.value = "";
 			      			document.ModificaOrdinanza.<%=ICostantiDepositoDecreto.CAMPO_ANNO_SOSPENSIONE_SS%>.value = "";
@@ -127,7 +168,9 @@ else
 			      			document.ModificaOrdinanza.<%=ICostantiDepositoDecreto.CAMPO_SOSPENSIONE_MM_SS%>.value = "";
 			      			document.ModificaOrdinanza.<%=ICostantiDepositoDecreto.CAMPO_SOSPENSIONE_GG_SS%>.value = "";
 			      			document.ModificaOrdinanza.<%=ICostantiDepositoDecreto.CAMPO_LUOGO_SVOLGIMENTO_PROVA%>.value = "";
-			      		<% } else { %>
+<%
+	} else {
+%>
 				      		document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_GIORNO_DATA_INIZIO_PERIODO%>.value = "";
 			      			document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_MESE_DATA_INIZIO_PERIODO%>.value = "";
 			      			document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_ANNO_DATA_INIZIO_PERIODO%>.value = "";
@@ -138,279 +181,340 @@ else
 			      			document.ModificaOrdinanza.<%=ICostantiDepositoDecreto.CAMPO_SOSPENSIONE_MM_SS%>.value = "";
 			      			document.ModificaOrdinanza.<%=ICostantiDepositoDecreto.CAMPO_SOSPENSIONE_GG_SS%>.value = "";
 			      			document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_LUOGO_SVOLGIMENTO_PROVA%>.value = "";
-			      		<% } %>
-		      		}
-		     	<% } %>
-		     	if (!flagDate)
-		    	 	return flagDate;
-		     	var durata_misura='<%=durata_misura_ins%>';
-		     	if (durata_misura != null && durata_misura != "") {
-		         	divDurata.style.visibility='visible';
-		         	var numMesi=document.ModificaOrdinanza.<%=ICostantiSiusMisuraSicurezza.CAMPO_NUM_MESI_NUOVA_MISURA%>.value;
-		         	if (numMesi > 11) {
-		             	alert ("Il campo Mesi non deve essere maggiore di 11");
-		             	return false;
-		         	}
-					var numGiorni=document.ModificaOrdinanza.<%=ICostantiSiusMisuraSicurezza.CAMPO_NUM_GIORNI_NUOVA_MISURA%>.value;
-					if (numGiorni > 29) {
-						alert ("Il campo Giorni non deve essere maggiore di 29");
-			        	return false;
-			        }
-			        return true;
-				}
-		     	
-		     	return true;
-		    }
-		
-			function VerificaDate() {
-		      	var ritorno = true;
-		      	var data_camera = '<%=data1%>';
-		      	var data_deposito = '<%=data2%>';
-		      	var data_emissione = document.ModificaOrdinanza.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>.value;
-		      	var data_decorrenza;
-		      	var nodeDataDec;
-			  	nodeDataDec = document.getElementById('divDataDecorrenza');
-			  	if (nodeDataDec.style.visibility == 'visible'){
-		    	  	data_decorrenza = document.ModificaOrdinanza.<%=ICostantiSiusMisuraSicurezza.CAMPO_GIORNO_DATA_DECORRENZA%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiSiusMisuraSicurezza.CAMPO_MESE_DATA_DECORRENZA%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiSiusMisuraSicurezza.CAMPO_ANNO_DATA_DECORRENZA%>.value;
-		    	  	document.ModificaOrdinanza.<%=ICostantiSiusMisuraSicurezza.CAMPO_DATA_DECORRENZA%>.value='S';
-			  	}
-		      	// Controllo della data emissione.
-			  	if (!ControllaData(data_emissione)) {
-			        alert('Data emissione non valida!');
-			        ritorno =  false;
-		      	}
-		      	// Controllo data di sistema >= Data Emissione .
-		      	else if (!CompareDate(data_emissione, data_deposito)) {
-			        alert("La data di emissione non può essere maggiore della data di deposito o in assenza di essa, della data di Sistema!");
-			        ritorno =  false;
-		     	}
-		      	// Controllo della data deposito <= data camera di consiglio
-		      	else if (data_camera != null && !CompareDate(data_camera, data_emissione)) {
-			        alert("La data di emissione non può essere minore della Data Udienza!");
-			        ritorno =  false;
-		      	}
-		      	// Controllo della data decorrenza
-		      	else if (data_decorrenza != null && data_decorrenza.length > 2 && !ControllaData(data_decorrenza)) {
-			     	alert('Data Decorrenza per la Misura di Sicurezza non valida');
-			     	return false;
-			  	}
-				// MEV_39: aggiunti controlli su nuovi campi
-				<% if ("42".equals(tipo) || "MS".equals(tipo)) { %>
-				  	node = document.getElementById("datarinvio");
-	  				if (node.style.display == 'block') {
-	  					var data_sospensione;
-	  					var data_scadenza_sospensione;
-	  					var durata_periodo = document.ModificaOrdinanza.<%=ICostantiDepositoDecreto.CAMPO_SOSPENSIONE_GG_SS%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiDepositoDecreto.CAMPO_SOSPENSIONE_MM_SS%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiDepositoDecreto.CAMPO_SOSPENSIONE_AA_SS%>.value;
-	  					<% if (Utils.isPresent(lIdDecreto)) { %>
-							data_sospensione = document.ModificaOrdinanza.<%=ICostantiDepositoDecreto.CAMPO_GIORNO_SOSPENSIONE_SS%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiDepositoDecreto.CAMPO_MESE_SOSPENSIONE_SS%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiDepositoDecreto.CAMPO_ANNO_SOSPENSIONE_SS%>.value;
-							data_scadenza_sospensione = document.ModificaOrdinanza.<%=ICostantiDepositoDecreto.CAMPO_GIORNO_SCADENZA_SOSPENSIONE_SS%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiDepositoDecreto.CAMPO_MESE_SCADENZA_SOSPENSIONE_SS%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiDepositoDecreto.CAMPO_ANNO_SCADENZA_SOSPENSIONE_SS%>.value;
-						<% } else { %>
-	  						data_sospensione = document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_GIORNO_DATA_INIZIO_PERIODO%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_MESE_DATA_INIZIO_PERIODO%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_ANNO_DATA_INIZIO_PERIODO%>.value;
-							data_scadenza_sospensione = document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_GIORNO_DATA_FINE_MISURA%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_MESE_DATA_FINE_MISURA%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_ANNO_DATA_FINE_MISURA%>.value;
-						<% } %>
-			    		if (data_sospensione > 2) {
-			    			ritorno =  ControllaData(data_sospensione);
-			  			}
-		        		if (!ritorno) {
-		        			// MEV_39: modifica etichetta per U082 e U077
-		        			<% if ("42".equals(tipo) || "MS".equals(tipo)) { %>
-								alert("Data Decorrenza Differimento Esecuzione non valida");
-							<% } else {%>
-								alert("Data Differimento Esecuzione non valida");
-							<% } %>
-							<% if (Utils.isPresent(lIdDecreto)) { %>
-								document.ModificaOrdinanza.<%=ICostantiDepositoDecreto.CAMPO_GIORNO_SOSPENSIONE_SS%>.focus();
-							<% } else { %>
-								document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_GIORNO_DATA_INIZIO_PERIODO%>.focus();
-							<% } %>
-							return false;
-		        		} else {
-				            if (data_scadenza_sospensione.length > 2) {
-				            	ritorno = ControllaData(data_scadenza_sospensione);
-			          			if (!ritorno) {
-					           		alert("Data Rinvio fino al non valida");
-					           		<% if (Utils.isPresent(lIdDecreto)) { %>
-					           			document.ModificaOrdinanza.<%=ICostantiDepositoDecreto.CAMPO_GIORNO_SCADENZA_SOSPENSIONE_SS%>.focus();
-				           			<% } else { %>
-										document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_GIORNO_DATA_FINE_MISURA%>.focus();
-									<% } %>
-					           		ritorno = false;
-			           			} else {
-			           		 		if (CompareDate(data_scadenza_sospensione,data_sospensione)) {
-			           		 			// MEV_39: modifica etichetta per U082 e U077
-			           		 			<% if ("42".equals(tipo) || "MS".equals(tipo)) { %>
-					            			alert("La Data Decorrenza Differimento Esecuzione deve precedere la Data Rinvio fino al");
-					            		<% } else {%>
-					            			alert("La Data Differimento Esecuzione deve precedere la Data Rinvio fino al");
-					            		<% } %>
-					            		<% if (Utils.isPresent(lIdDecreto)) { %>
-											document.ModificaOrdinanza.<%=ICostantiDepositoDecreto.CAMPO_GIORNO_SOSPENSIONE_SS%>.focus();
-										<% } else { %>
-											document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_GIORNO_DATA_INIZIO_PERIODO%>.focus();
-										<% } %>
-					            		ritorno = false;
-			            			}
-			            		}
-			        		}
-		        		}
-		   			}
-	  			<% } %>
-			  	// FINE MEV_39
+<%
+	}
+%>
+	}
+<%
+}
+%>
+   	if (!flagDate)
+  	 	return flagDate;
+   	var durata_misura='<%=durata_misura_ins%>';
+   	if (durata_misura != null && durata_misura != "") {
+       	divDurata.style.visibility='visible';
+       	var numMesi=document.ModificaOrdinanza.<%=ICostantiSiusMisuraSicurezza.CAMPO_NUM_MESI_NUOVA_MISURA%>.value;
+       	if (numMesi > 11) {
+           	alert ("Il campo Mesi non deve essere maggiore di 11");
+           	return false;
+       	}
+		var numGiorni=document.ModificaOrdinanza.<%=ICostantiSiusMisuraSicurezza.CAMPO_NUM_GIORNI_NUOVA_MISURA%>.value;
+		if (numGiorni > 29) {
+			alert ("Il campo Giorni non deve essere maggiore di 29");
+	       	return false;
+       }
+       return true;
+	}
+   	return true;
+}
 
-			  	// valore di ritorno
-		      	return ritorno;
+function VerificaDate() {
+	var ritorno = true;
+	var data_camera = '<%=data1%>';
+	var data_deposito = '<%=data2%>';
+	var dataDecretoDesignazione = '<%=dataDecretoDesignazione%>'; <%-- MEV_2019-09 (D.lgs. 123/2018) --%>
+	var data_emissione = document.ModificaOrdinanza.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>.value;
+	var data_decorrenza;
+	var nodeDataDec;
+  	nodeDataDec = document.getElementById('divDataDecorrenza');
+  	if (nodeDataDec.style.visibility == 'visible') {
+   	  	data_decorrenza = document.ModificaOrdinanza.<%=ICostantiSiusMisuraSicurezza.CAMPO_GIORNO_DATA_DECORRENZA%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiSiusMisuraSicurezza.CAMPO_MESE_DATA_DECORRENZA%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiSiusMisuraSicurezza.CAMPO_ANNO_DATA_DECORRENZA%>.value;
+   	  	document.ModificaOrdinanza.<%=ICostantiSiusMisuraSicurezza.CAMPO_DATA_DECORRENZA%>.value='S';
+  	}
+   	// Controllo della data emissione.
+  	if (!ControllaData(data_emissione)) {
+        alert('Data emissione non valida!');
+        ritorno =  false;
+   	}
+   	// Controllo data di sistema >= Data Emissione .
+   	else if (!CompareDate(data_emissione, data_deposito)) {
+        alert("La data di emissione non può essere maggiore della data di deposito o in assenza di essa, della data di Sistema!");
+        ritorno =  false;
+	}
+<%-- INIZIO: MEV_2019-09 (D.lgs. 123/2018) --%>
+<%
+if (is678) {
+%>		      	
+	else if (dataDecretoDesignazione != "" && !CompareDate(dataDecretoDesignazione, data_emissione)) {
+        alert("La data di emissione non può essere minore della Data emissione del Decreto di Designazione!");
+        ritorno = false;
+   	}
+<%
+}
+if (ICostantiDepositoOrdinanzaPc.CONFERMA_DECISIONE_MAGISTRATO_RELATORE.equals(datiOrdinanza.getOrdinanza().getCodTipoOrdinanza())) {
+%>
+	// Controllo data di emissione >= data udienza
+	if (!CompareDate(data_camera, data_emissione)) {
+		alert('Data Emissione non può essere inferiore alla Data Udienza del ' + data_camera + '!');
+		ritorno = false;
+	}
+<%
+}
+%>
+<%-- FINE: MEV_2019-09 (D.lgs. 123/2018) --%>
+   	// Controllo della data deposito <= data camera di consiglio
+   	else if (data_camera != null && !CompareDate(data_camera, data_emissione)) {
+		alert("La data di emissione non può essere minore della Data Udienza!");
+		ritorno =  false;
+   	}
+   	// Controllo della data decorrenza
+   	else if (data_decorrenza != null && data_decorrenza.length > 2 && !ControllaData(data_decorrenza)) {
+	   	alert('Data Decorrenza per la Misura di Sicurezza non valida');
+	   	return false;
+  	}
+// MEV_39: aggiunti controlli su nuovi campi
+<%
+if ("42".equals(tipo) || "MS".equals(tipo)) {
+%>
+	node = document.getElementById("datarinvio");
+	if (node.style.display == 'block') {
+		var data_sospensione;
+		var data_scadenza_sospensione;
+		var durata_periodo = document.ModificaOrdinanza.<%=ICostantiDepositoDecreto.CAMPO_SOSPENSIONE_GG_SS%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiDepositoDecreto.CAMPO_SOSPENSIONE_MM_SS%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiDepositoDecreto.CAMPO_SOSPENSIONE_AA_SS%>.value;
+<%
+	if (Utils.isPresent(lIdDecreto)) {
+%>
+		data_sospensione = document.ModificaOrdinanza.<%=ICostantiDepositoDecreto.CAMPO_GIORNO_SOSPENSIONE_SS%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiDepositoDecreto.CAMPO_MESE_SOSPENSIONE_SS%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiDepositoDecreto.CAMPO_ANNO_SOSPENSIONE_SS%>.value;
+		data_scadenza_sospensione = document.ModificaOrdinanza.<%=ICostantiDepositoDecreto.CAMPO_GIORNO_SCADENZA_SOSPENSIONE_SS%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiDepositoDecreto.CAMPO_MESE_SCADENZA_SOSPENSIONE_SS%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiDepositoDecreto.CAMPO_ANNO_SCADENZA_SOSPENSIONE_SS%>.value;
+<%
+	} else {
+%>
+		data_sospensione = document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_GIORNO_DATA_INIZIO_PERIODO%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_MESE_DATA_INIZIO_PERIODO%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_ANNO_DATA_INIZIO_PERIODO%>.value;
+		data_scadenza_sospensione = document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_GIORNO_DATA_FINE_MISURA%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_MESE_DATA_FINE_MISURA%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_ANNO_DATA_FINE_MISURA%>.value;
+<%
+	}
+%>
+		if (data_sospensione > 2) {
+			ritorno =  ControllaData(data_sospensione);
+		}
+		if (!ritorno) {
+// MEV_39: modifica etichetta per U082 e U077
+<%
+	if ("42".equals(tipo) || "MS".equals(tipo)) {
+%>
+			alert("Data Decorrenza Differimento Esecuzione non valida");
+<%
+	} else {
+%>
+			alert("Data Differimento Esecuzione non valida");
+<%
+	}
+	if (Utils.isPresent(lIdDecreto)) {
+%>
+			document.ModificaOrdinanza.<%=ICostantiDepositoDecreto.CAMPO_GIORNO_SOSPENSIONE_SS%>.focus();
+<%
+	} else {
+%>
+			document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_GIORNO_DATA_INIZIO_PERIODO%>.focus();
+<%
+	}
+%>
+			return false;
+		} else {
+			if (data_scadenza_sospensione.length > 2) {
+	           	ritorno = ControllaData(data_scadenza_sospensione);
+	   			if (!ritorno) {
+	           		alert("Data Rinvio fino al non valida");
+<%
+	if (Utils.isPresent(lIdDecreto)) {
+%>
+					document.ModificaOrdinanza.<%=ICostantiDepositoDecreto.CAMPO_GIORNO_SCADENZA_SOSPENSIONE_SS%>.focus();
+<%
+	} else {
+%>
+					document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_GIORNO_DATA_FINE_MISURA%>.focus();
+<%
+	}
+%>
+	           		ritorno = false;
+	   			} else {
+					if (CompareDate(data_scadenza_sospensione,data_sospensione)) {
+// MEV_39: modifica etichetta per U082 e U077
+<%
+	if ("42".equals(tipo) || "MS".equals(tipo)) {
+%>
+						alert("La Data Decorrenza Differimento Esecuzione deve precedere la Data Rinvio fino al");
+<%
+	} else {
+%>
+           				alert("La Data Differimento Esecuzione deve precedere la Data Rinvio fino al");
+<%
+	}
+	if (Utils.isPresent(lIdDecreto)) {
+%>
+						document.ModificaOrdinanza.<%=ICostantiDepositoDecreto.CAMPO_GIORNO_SOSPENSIONE_SS%>.focus();
+<%
+	} else {
+%>
+						document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_GIORNO_DATA_INIZIO_PERIODO%>.focus();
+<%
+	}
+%>
+            			ritorno = false;
+	       			}
+	      		}
+	   		}
+		}
+	}
+<%
+}
+%>
+// FINE MEV_39
+
+  	// valore di ritorno
+	return ritorno;
+}
+
+function AbilitaDataDecorrenza() {
+	var esito = 0;
+ 	for (j = 0; j < document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.length ; j++) {
+		if ( document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].selected) {
+   			// Data Decorrenza della Misura di sicurezza
+			// viene visualizzata solo in corrispondenza di:
+			// inserimento Emissione "Inosservanza delle misure di sicurezza detentive"
+			// oggetto "Inosservanza delle Misure di Sicurezza  Detentive (art. 214 c.p.)"
+			// ed Esito "Dispone che ricominci a decorrere il periodo minimi della misura"
+   			if (document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value in { '2004':1 }) {
+				nodeDecorrenza=document.getElementById("divDataDecorrenza");
+	 			nodeDecorrenza.style.visibility='visible';
+	 			document.ModificaOrdinanza.<%=ICostantiSiusMisuraSicurezza.CAMPO_DATA_DECORRENZA%>.value='S';
+			}
+			if (document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value in { '-':1, '2005':1, '2006':1, '2007':1 }) {
+				nodeDecorrenza=document.getElementById("divDataDecorrenza");
+	 			nodeDecorrenza.style.visibility='hidden';
+	 			document.ModificaOrdinanza.<%=ICostantiSiusMisuraSicurezza.CAMPO_DATA_DECORRENZA%>.value='N';
 			}
 
-		    function AbilitaDataDecorrenza() {
-		 	   var esito = 0;
-		 	   for (j = 0; j < document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.length ; j++) {
-		 		   if ( document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].selected) {
-		 			    // Data Decorrenza della Misura di sicurezza
-			 			// viene visualizzata solo in corrispondenza di:
-			 			// inserimento Emissione "Inosservanza delle misure di sicurezza detentive"
-			 			// oggetto "Inosservanza delle Misure di Sicurezza  Detentive (art. 214 c.p.)"
-			 			// ed Esito "Dispone che ricominci a decorrere il periodo minimi della misura"
-		        		if (document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value in { '2004':1 }) {
-		        			nodeDecorrenza=document.getElementById("divDataDecorrenza");
-		          			nodeDecorrenza.style.visibility='visible';
-		          			document.ModificaOrdinanza.<%=ICostantiSiusMisuraSicurezza.CAMPO_DATA_DECORRENZA%>.value='S';
-		        		}
-		        		if (document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value in { '-':1, '2005':1, '2006':1, '2007':1 }) {
-		        			nodeDecorrenza=document.getElementById("divDataDecorrenza");
-		          			nodeDecorrenza.style.visibility='hidden';
-		          			document.ModificaOrdinanza.<%=ICostantiSiusMisuraSicurezza.CAMPO_DATA_DECORRENZA%>.value='N';
-		        		}
-	
-		        		// oppure in corrispondenza di:
-		        		// inserimento Emissione "Proposta di aggravamento della libertà vigilata per persone in stato di infermità 
-		        		// psichica (art.232 c.p.)" e l'oggetto "Proposta di aggravamento della libertà vigilata per persone in stato 
-		        		// di infermità psichica (art.232 c.p.)" ed esito "Sostituisce la libertà vigilata con la casa di cura
-		        		// e custodia"
-		        		if (document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value in { '2008':1 }) {
-		        			nodeDecorrenza=document.getElementById("divDataDecorrenza");
-		          			nodeDecorrenza.style.visibility='visible';
-		          			document.ModificaOrdinanza.<%=ICostantiSiusMisuraSicurezza.CAMPO_DATA_DECORRENZA%>.value='S';
-		        		}
-		        		if (document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value in { '-':1, '2009':1, '2010':1, '2011':1, '2012':1, '2013':1 }) {
-		        			nodeDecorrenza=document.getElementById("divDataDecorrenza");
-		          			nodeDecorrenza.style.visibility='hidden';
-		          			document.ModificaOrdinanza.<%=ICostantiSiusMisuraSicurezza.CAMPO_DATA_DECORRENZA%>.value='N';
-		        		}
-			        }
-		    	} // fine ciclo for
-		    }
-		
-		    function visualizza_data_decorrenza() {
-		      var data_decorrenza = '<%=data_decorrenza_ins%>';
-			  
-		      if(data_decorrenza != null && data_decorrenza != ""){
-		    	  divDataDecorrenza.style.visibility='visible';
-		      } else {
-		    	  divDataDecorrenza.style.visibility='hidden';
-		      } 
-		      
-		      var durata_misura='<%=durata_misura_ins%>';
-		      if(durata_misura != null && durata_misura != ""){
-		          divDurata.style.visibility='visible';
-		      } else {
-		          divDurata.style.visibility='hidden';
-		      }
-		    }
+       		// oppure in corrispondenza di:
+       		// inserimento Emissione "Proposta di aggravamento della libertà vigilata per persone in stato di infermità 
+       		// psichica (art.232 c.p.)" e l'oggetto "Proposta di aggravamento della libertà vigilata per persone in stato 
+       		// di infermità psichica (art.232 c.p.)" ed esito "Sostituisce la libertà vigilata con la casa di cura
+       		// e custodia"
+       		if (document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value in { '2008':1 }) {
+       			nodeDecorrenza=document.getElementById("divDataDecorrenza");
+         			nodeDecorrenza.style.visibility='visible';
+         			document.ModificaOrdinanza.<%=ICostantiSiusMisuraSicurezza.CAMPO_DATA_DECORRENZA%>.value='S';
+       		}
+       		if (document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value in { '-':1, '2009':1, '2010':1, '2011':1, '2012':1, '2013':1 }) {
+       			nodeDecorrenza=document.getElementById("divDataDecorrenza");
+         			nodeDecorrenza.style.visibility='hidden';
+         			document.ModificaOrdinanza.<%=ICostantiSiusMisuraSicurezza.CAMPO_DATA_DECORRENZA%>.value='N';
+       		}
+        }
+   	} // fine ciclo for
+}
 
-		    <%-- MERGE v10: nuova funzione per abilitare la modifica dell'esito per i minorenni --%>
-		    function abilitaModificaEsito() {
-		    	var nodeTableInforma = document.getElementById("tableInForma");
-	   			nodeTableInforma.style.visibility = 'hidden';
-	   			if (typeof (document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[0][0]) == "undefined") {
-	   				for (j = 0; j < document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.length ; j++) {
-	   					if (document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].selected) {
-	   						if (<%=isUffMinor%>) {
-	   							if (document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value in { '1190':1, '1198':1, '1206':1, '1741':1, '1743':1, '1960':1, '1990':1 }) {
-				       				nodeTableInforma.style.visibility = 'visible';
-				       				<%
-				       				if (!Utils.isNullObj(misuraSicurezza.getFlFormaMisura())) {
-					       				if (misuraSicurezza.getFlFormaMisura().compareTo(new BigDecimal(1)) == 0) {
-				       					%>
-					       					document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_FORMA_MISURA%>[0].checked = true;
-				       					<%
-					       				} else {
-				       					%>
-					       					document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_FORMA_MISURA%>[1].checked = true;
-					       				<%
-					       				}
-				       				}
-			       					%>
-				       			} else {
-				       				document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_FORMA_MISURA%>[0].checked = false;
-				       				document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_FORMA_MISURA%>[1].checked = false;
-				       				document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NOME_COMUNITA%>.value = '';
-				       			}
-				       		}
-       					}
-   	   				}
-	 			} else {
-		   			for (j = 0; j < document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.length ; j++) {
-						for (i = 0; i < document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].length ; i++) {
-				           	if (document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j][i].value in { '1190':1, '1198':1, '1206':1, '1741':1, '1743':1, '1960':1, '1990':1 }) {
-				           		if (<%=isUffMinor%>) {
-				      				nodeTableInforma.style.visibility = 'visible';
-				           		}
-				      		}
-						}
-					}
-     			}
-		    }
+function visualizza_data_decorrenza() {
+	var data_decorrenza = '<%=data_decorrenza_ins%>';
 
-		    <%-- MERGE v10: nuova funzione per abilitare la modifica dell'esito per i minorenni --%>
-		    function abilitaDisabilitaComunita() {
-		    	if (document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_FORMA_MISURA%>[0].checked)
-		    		document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NOME_COMUNITA%>.disabled = true;
-	    		else
-	    			document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NOME_COMUNITA%>.disabled = false;
-		    }
+ 	if (data_decorrenza != null && data_decorrenza != "") {
+  		divDataDecorrenza.style.visibility='visible';
+ 	} else {
+  		divDataDecorrenza.style.visibility='hidden';
+ 	} 
+
+	var durata_misura='<%=durata_misura_ins%>';
+  	if (durata_misura != null && durata_misura != "") {
+		divDurata.style.visibility='visible';
+  	} else {
+      	divDurata.style.visibility='hidden';
+  	}
+}
+
+<%-- MERGE v10: nuova funzione per abilitare la modifica dell'esito per i minorenni --%>
+function abilitaModificaEsito() {
+	var nodeTableInforma = document.getElementById("tableInForma");
+	nodeTableInforma.style.visibility = 'hidden';
+	if (typeof (document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[0][0]) == "undefined") {
+	for (j = 0; j < document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.length ; j++) {
+		if (document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].selected) {
+			if (<%=isUffMinor%>) {
+				if (document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value in { '1190':1, '1198':1, '1206':1, '1741':1, '1743':1, '1960':1, '1990':1 }) {
+    				nodeTableInforma.style.visibility = 'visible';
+    				<%
+    				if (!Utils.isNullObj(misuraSicurezza.getFlFormaMisura())) {
+     				if (misuraSicurezza.getFlFormaMisura().compareTo(new BigDecimal(1)) == 0) {
+    					%>
+     					document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_FORMA_MISURA%>[0].checked = true;
+    					<%
+     				} else {
+    					%>
+     					document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_FORMA_MISURA%>[1].checked = true;
+     				<%
+     				}
+    				}
+   					%>
+    			} else {
+    				document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_FORMA_MISURA%>[0].checked = false;
+    				document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_FORMA_MISURA%>[1].checked = false;
+    				document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NOME_COMUNITA%>.value = '';
+      			}
+      		}
+  					}
+  				}
+} else {
+			for (j = 0; j < document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.length ; j++) {
+for (i = 0; i < document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].length ; i++) {
+        	if (document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j][i].value in { '1190':1, '1198':1, '1206':1, '1741':1, '1743':1, '1960':1, '1990':1 }) {
+        		if (<%=isUffMinor%>) {
+     				nodeTableInforma.style.visibility = 'visible';
+          		}
+     		}
+	}
+}
+			}
+ }
+
+ <%-- MERGE v10: nuova funzione per abilitare la modifica dell'esito per i minorenni --%>
+function abilitaDisabilitaComunita() {
+	if (document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_FORMA_MISURA%>[0].checked)
+	document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NOME_COMUNITA%>.disabled = true;
+else
+	document.ModificaOrdinanza.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NOME_COMUNITA%>.disabled = false;
+}
 
 <%-- MEV_39: aggiunta funzione --%>
 function AbilitaCampiEsiti() {
 <%
 if ("42".equals(tipo) || "MS".equals(tipo)) {
 %>
-		        	var node = document.getElementById("datarinvio");
-		        	var ric = document.getElementById("ricovero");
-		     	   	if (typeof (document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[0][0]) == "undefined") {
-		     	   		for (j = 0; j < document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.length ; j++) {
-		     	   			if ( document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].selected) {
-		     	   				if (document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value in {'1836':1, '1900':1, '0259':1}
-		     	   						|| document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value in {'1905':1, '2745':1, '0260':1}) {
-		              				node.style.display = 'block';
-		              				if (document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value in {'1905':1, '2745':1, '0260':1})
-		              					ric.style.display = 'block';
-		              				else
-		              					ric.style.display = 'none';
-		            			}
-		            			if (!(document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value in {'1836':1, '1900':1, '0259':1})
-		            					&& !(document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value in {'1905':1, '2745':1, '0260':1})) {
-		              				node.style.display = 'none';
-		              				ric.style.display = 'none';
-		            			}
-		            		}
-		        		} // fine ciclo for
-		     	   	} // Fine caso singolo oggetto
-		     		// Nel caso di più oggetti, l'input di nuova misura è visibile se almeno un esito è di trasformazione
-		          	else {
-		      			node.style.display = 'none';
-		      			ric.style.display = 'none';
-		      			for (j = 0; j < document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.length ; j++) {
-		      				for (i = 0; i < document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].length ; i++) {
-		      					if ((document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j][i].selected)
-		      							&& (document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j][i].value in {'1836':1, '1900':1, '0259':1}
-		      									|| document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value in {'1905':1, '2745':1, '0260':1})) {
-		              				node.style.display = 'block';
-		              				if (document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value in {'1905':1, '2745':1, '0260':1})
-		              					ric.style.display = 'block';
-		                		}
-		              		}
-		            	}
-					} // Fine caso più oggetti
+   	var node = document.getElementById("datarinvio");
+   	var ric = document.getElementById("ricovero");
+   	if (typeof (document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[0][0]) == "undefined") {
+   		for (j = 0; j < document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.length ; j++) {
+   			if (document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].selected) {
+   				if (document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value in {'1836':1, '1900':1, '0259':1}
+   						|| document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value in {'1905':1, '2745':1, '0260':1}) {
+       				node.style.display = 'block';
+       				if (document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value in {'1905':1, '2745':1, '0260':1})
+       					ric.style.display = 'block';
+       				else
+       					ric.style.display = 'none';
+       			}
+       			if (!(document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value in {'1836':1, '1900':1, '0259':1})
+       					&& !(document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value in {'1905':1, '2745':1, '0260':1})) {
+       				node.style.display = 'none';
+       				ric.style.display = 'none';
+       			}
+   			}
+		} // fine ciclo for
+   	} // Fine caso singolo oggetto
+	// Nel caso di più oggetti, l'input di nuova misura è visibile se almeno un esito è di trasformazione
+   	else {
+		node.style.display = 'none';
+		ric.style.display = 'none';
+		for (j = 0; j < document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.length ; j++) {
+			for (i = 0; i < document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].length ; i++) {
+				if ((document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j][i].selected)
+						&& (document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j][i].value in {'1836':1, '1900':1, '0259':1}
+						|| document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value in {'1905':1, '2745':1, '0260':1})) {
+       				node.style.display = 'block';
+       				if (document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[j].value in {'1905':1, '2745':1, '0260':1})
+       					ric.style.display = 'block';
+           		}
+       		}
+       	}
+	} // Fine caso più oggetti
 <%
 }
 // MEV_2023-35: aggiunta gestione Ordinanza Reclamo Avverso Revoca Pena Sostitutiva (C063)
@@ -434,6 +538,39 @@ else if (tipo.equals(ICostantiDepositoOrdinanzaPc.RECLAMO_AVVERSO_REVOCA_PENA_SO
 }
 %>
 }
+
+<%-- INIZIO: MEV_2019-09 (D.lgs. 123/2018) --%>
+<%
+if (is678) {
+%>
+function checkEsiti() {
+	var listComboEsiti = document.getElementsByName("<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>");
+	if (typeof (listComboEsiti[1]) == "undefined") {
+		var comboEsito = document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>;
+      	for (j = 0; j < comboEsito.length; j++) {
+			if (comboEsito.options[j].value=='0685' || comboEsito.options[j].value == '0695') {
+				<%-- Si elimina CONCEDE--%>
+           		comboEsito.remove(j);
+           		j--;
+         	}
+      	}
+	} else {
+    	for (i = 0; i < listComboEsiti.length; i++) {
+      		var comboEsito = listComboEsiti[i];
+      		for (j = 0; j < comboEsito.length; j++) {
+         		if (comboEsito.options[j].value=='0685' || comboEsito.options[j].value == '0695') {
+         			<%-- Si elimina CONCEDE--%>
+           			comboEsito.remove(j);
+           			j--;
+         		}
+      		}
+    	}
+  	}
+}
+<%
+}
+%>
+<%-- FINE: MEV_2019-09 --%>
 </script>
 </head>
 <body class="corpo" onload="visualizza_data_decorrenza()">
@@ -502,24 +639,42 @@ for (int i=0; i < lTenori.length;i++) {
 }
 %>
 	<tr><td>&nbsp;</td></tr>
-	<table id="tableInForma" style="visibility:hidden" width="95%">
-		<tr>
-			<td class="l" width="40%">Indicare se la misura deve essere eseguita nelle forme della:</td>
-			<td class="l" width="30%">
-				<input value="1" type="radio" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_FORMA_MISURA%>" onclick="abilitaDisabilitaComunita();">Permanenza in casa
-			</td>
-			<td >&nbsp;</td>
-		</tr>
-		<tr>
-			<td width="40%">&nbsp;</td>
-			<td width="30%" class="l">
-				<input value="2" type="radio" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_FORMA_MISURA%>" onclick="abilitaDisabilitaComunita();">Collocamento in Comunità
-			</td>
-			<td class="l">
-				<input size="50" type="text" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_NOME_COMUNITA%>" value="<%=(misuraSicurezza.getDescrizioneComunita() == null ? "" : StringUtils.toStringJSP(misuraSicurezza.getDescrizioneComunita()))%>">
-			</td>
-		</tr>
-	</table>
+</table>
+
+<%-- MEV_2019-09: aggiunta tabella x "Ulteriore descrizione della decisione" --%>
+<%
+if (ICostantiDepositoOrdinanzaPc.CONFERMA_DECISIONE_MAGISTRATO_RELATORE.equals(datiOrdinanza.getOrdinanza().getCodTipoOrdinanza())) {
+%>
+<table cellspacing="4" cellpadding="4"  width="95%">
+	<tr>
+      	<td class="l" width="25%">Ulteriore descrizione della decisione</td>
+      	<td class="l">
+			<TEXTAREA title="Ulteriore descrizione della decisione" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_ULTERIORE_DESCRIZIONE%>" cols="70" rows="4"><%=StringUtils.toStringJSP(datiOrdinanza.getOrdinanza().getUlterioreDescrizione(), "")%></textarea>
+      	</td>
+    </tr>
+</table>
+<%
+}
+%>
+<%-- FINE MEV_2019-09 --%>
+
+<table id="tableInForma" style="visibility:hidden" width="95%" cellspacing="2" cellpadding="2">
+	<tr>
+		<td class="l" width="40%">Indicare se la misura deve essere eseguita nelle forme della:</td>
+		<td class="l" width="30%">
+			<input value="1" type="radio" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_FORMA_MISURA%>" onclick="abilitaDisabilitaComunita();">Permanenza in casa
+		</td>
+		<td >&nbsp;</td>
+	</tr>
+	<tr>
+		<td width="40%">&nbsp;</td>
+		<td width="30%" class="l">
+			<input value="2" type="radio" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_FORMA_MISURA%>" onclick="abilitaDisabilitaComunita();">Collocamento in Comunità
+		</td>
+		<td class="l">
+			<input size="50" type="text" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_NOME_COMUNITA%>" value="<%=(misuraSicurezza.getDescrizioneComunita() == null ? "" : StringUtils.toStringJSP(misuraSicurezza.getDescrizioneComunita()))%>">
+		</td>
+	</tr>
 </table>
 <%-- MEV_39: aggiunta sezione per U082 e U077 --%>
 <%
@@ -535,16 +690,17 @@ if ("42".equals(tipo) || "MS".equals(tipo)) {
 %>
 	<tr>
 <%
-				if(depositoDecretoMotivazioni.getDepositoDecreto().getCodTipoDecreto() != null && 
-				   (depositoDecretoMotivazioni.getDepositoDecreto().getCodTipoDecreto().equals("42") || depositoDecretoMotivazioni.getDepositoDecreto().getCodTipoDecreto().equals("MS")) ){
+		if (depositoDecretoMotivazioni.getDepositoDecreto().getCodTipoDecreto() != null
+				&& (depositoDecretoMotivazioni.getDepositoDecreto().getCodTipoDecreto().equals("42")
+						|| depositoDecretoMotivazioni.getDepositoDecreto().getCodTipoDecreto().equals("MS"))) {
 %>
 		<td class="l">Data Decorrenza Differimento Esecuzione</td>
 <%
-				} else {
+		} else {
 %>     			
 		<td class="l">Data Differimento Esecuzione</td>
 <%
-				}
+		}
 %>
 		<td class="L" colspan="2">
 			<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(depositoDecretoMotivazioni.getDepositoDecreto().getDataSospensioneSS(), "dd"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoDecreto.CAMPO_GIORNO_SOSPENSIONE_SS%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
@@ -579,17 +735,17 @@ if ("42".equals(tipo) || "MS".equals(tipo)) {
 %>
 	<tr>
 <%
-				if(datiOrdinanza.getOrdinanza().getCodTipoOrdinanza() != null && 
-				   (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().equals("42")
-						   || datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().equals("MS"))) {
+		if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza() != null
+				&& (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().equals("42")
+						|| datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().equals("MS"))) {
 %>
 		<td class="l">Data Decorrenza Differimento Esecuzione</td>
 <%
-				} else {
+		} else {
 %>     			
 		<td class="l">Data Differimento Esecuzione</td>
 <%
-				}
+		}
 %>
 		<td class="L" colspan="2">
 			<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(datiOrdinanza.getOrdinanza().getDataInizioPeriodo(), "dd"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_GIORNO_DATA_INIZIO_PERIODO%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
@@ -620,7 +776,7 @@ if ("42".equals(tipo) || "MS".equals(tipo)) {
 		</td>
 	</tr>
 <%
-	}
+}
 %>
 </table>
 <%
@@ -661,7 +817,7 @@ if (tipo.equals(ICostantiDepositoOrdinanzaPc.RECLAMO_AVVERSO_REVOCA_PENA_SOSTITU
 %>
 
 <br>
-<table>
+<table cellspacing="2" cellpadding="2" style="width: 95%;">
 	<tr>
 		<td class="label">
 			<input class="bottone" type="submit" name="Conferma" value="Conferma">
@@ -687,6 +843,15 @@ if (datiOrdinanza!=null && datiOrdinanza.getOrdinanza()!=null && datiOrdinanza.g
 abilitaModificaEsito();
 <%-- MEV_39: aggiunta chiamata a nuova funzione js --%>
 AbilitaCampiEsiti();
+<%-- INIZIO: MEV_2019-09 (D.lgs. 123/2018) --%>
+<%
+if (is678) {
+%>
+checkEsiti();
+<%
+}
+%>
+<%-- FINE: MEV_2019-09  --%>
 
 var frmvalidator  = new Validator("ModificaOrdinanza");
 

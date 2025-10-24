@@ -91,6 +91,7 @@
   BigDecimal totalePendentiInizio		= new BigDecimal("0");
   BigDecimal totaleSopravvenuti			= new BigDecimal("0");
   BigDecimal totaleAccolti					= new BigDecimal("0");
+  BigDecimal totaleAccoltiProvvisoriamente  = new BigDecimal("0"); // MEV_2019-09
   BigDecimal totaleRigettati				= new BigDecimal("0");
   BigDecimal totaleInammissibilita	= new BigDecimal("0");
   BigDecimal totaleNLPNDP						= new BigDecimal("0");
@@ -101,12 +102,22 @@
   BigDecimal totaleCancellati				= new BigDecimal("0");  
   BigDecimal totaleUnificati				= new BigDecimal("0");
 %>
+
+<style>
+	td.int {
+		padding-left:5px;
+		padding-right:5px
+	}
+</style>
+
   <table cellspacing="2" cellpadding="2">
     <tr>
       <td class="int">Magistrato</td>
-      <td class="int">Pendenti Inizio Perido</td>
+      <td class="int">Pendenti Inizio Periodo</td>
       <td class="int">Sopravvenuti</td>
       <td class="int">Accolti</td>
+      <%-- MEV_2024-092: modificata la dicitura da "Accolti Provvisoriamente" a "Accolti ex art.678 c.1 ter c.p.p." --%>
+      <td class="int">Accolti ex art.678 c.1 ter c.p.p</td>  <%-- MEV_2019-09 --%>
       <td class="int">Rigettati</td>
       <td class="int">Inammissibilità</td>
       <td class="int">NLP/NDP</td>
@@ -124,6 +135,9 @@
        totalePendentiInizio = totalePendentiInizio.add(elenco.getNumPendentiInizio());
        totaleSopravvenuti = totaleSopravvenuti.add(elenco.getNumSopravvenuti());
        totaleAccolti = totaleAccolti.add(elenco.getNumDefEsito1());
+       // MEV_2019-09
+       totaleAccoltiProvvisoriamente = totaleAccoltiProvvisoriamente.add(elenco.getNumAppProvv());
+       
        totaleRigettati = totaleRigettati.add(elenco.getNumDefEsito2());
        totaleInammissibilita = totaleInammissibilita.add(elenco.getNumDefEsito3());
        totaleNLPNDP = totaleNLPNDP.add(elenco.getNumDefEsito4());
@@ -154,6 +168,13 @@
         <td class="c">
         	<font class="label"><%=StringUtils.toStringJSP("" + elenco.getNumDefEsito1())%></font>
         </td>
+        
+        <%-- MEV_2019-09 Accolti ex art.678 c.1 ter c.p.p --%>
+        <td class="c">
+        	<font class="label"><%=StringUtils.toStringJSP("" + elenco.getNumAppProvv())%></font>
+        </td>
+        <%-- MEV_2019-09 - FINE --%>
+                
         <td class="c">
         	<font class="label"><%=StringUtils.toStringJSP("" + elenco.getNumDefEsito2())%></font>
         </td>
@@ -201,6 +222,13 @@
         <td class="c">
         	<font class="label"><%=StringUtils.toStringJSP("" + totaleAccolti)%></font>
         </td>
+        
+        <%-- MEV_2019-09 Accolti ex art.678 c.1 ter c.p.p --%>
+        <td class="c">
+        	<font class="label"><%=StringUtils.toStringJSP("" + totaleAccoltiProvvisoriamente)%></font>
+        </td>        
+        <%-- MEV_2019-09 - FINE --%>
+        
         <td class="c">
         	<font class="label"><%=StringUtils.toStringJSP("" + totaleRigettati)%></font>
         </td>

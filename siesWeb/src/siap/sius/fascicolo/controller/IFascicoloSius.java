@@ -1,13 +1,5 @@
 package siap.sius.fascicolo.controller;
 
-/**
- * <p>Title: IFascicoloSIUS</p>
- * <p>Description: Classe di Interfaccia per Controller Fascicolo SIUS</p>
- * <p>Copyright: Copyright (c) 2002</p>
- * <p>Company: Bull</p>
- * @version 1.0
- */
-
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -16,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Vector;
 
+import f3b.util.F3BException;
 import siap.sico.evento.model.XModel;
 import siap.sico.residenza.model.ResidenzaAssociataModel;
 import siap.sico.soggetto.model.SoggettoModel;
@@ -25,10 +18,15 @@ import siap.sius.cancassfascsius.model.CancAssFascSiusModel;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.fascicolo.model.FascicoloSiusModel;
 import siap.sius.produzioneatti.model.ParereModel;
-import f3b.util.F3BException;
 
+/**
+ * IFascicoloSIUS - Classe di Interfaccia per Controller Fascicolo SIUS
+ *
+ * @version 1.0
+ */
 @SuppressWarnings("rawtypes")
 public interface IFascicoloSius {
+
 	public FascicoloGPModel ExInserisciFascicoloSius(FascicoloGPModel aFascicoloGPModel) throws F3BException;
 
 	public FascicoloGPModel ExInserisciFascicoloDaSius(FascicoloGPModel aFascicoloGPModel,
@@ -154,8 +152,15 @@ public interface IFascicoloSius {
 
 	public FascicoloGPModel ExRicercaFascicoloCollegato(BigDecimal aIdFascicoloSius) throws F3BException;
 
+	// 20251010 [SG]: paginata la ricerca
+	public Vector ExRicercaFascicoliByMagistratoSorvAssegnatarioPaged(String aCodMagistrato, String aCodUfficio,
+			String[] aStato, int aPage) throws F3BException;
+
 	public Vector ExRicercaFascicoliByMagistratoSorvAssegnatario(String aCodMagistrato, String aCodUfficio,
 			String[] aStato) throws F3BException;
+
+	public BigDecimal ExGetCountProcedimenti(String lCodMagistrato, String lCodUfficio, String[] lStato)
+			throws F3BException;
 
 	public Date ExGetDataDefinizineFinale(BigDecimal aIdFascicoloSius, Connection aConn) throws Exception;
 
@@ -181,5 +186,11 @@ public interface IFascicoloSius {
 	// AVVOCATURA: aggiunto metodo di ricerca
 	public String ricercaCodUfficioAppartenenza(BigDecimal idFascicoloSius, String codiceFiscaleAvvocato,
 			String codDistretto, String codTipoUfficio) throws F3BException;
+
+	// MEV_2019-09: aggiunto metodo di aggiornamento per decreto di tipo DM
+	public void aggiornaStatoFascicoloSius(FascicoloSiusModel fsm) throws F3BException;
+
+	// MEV_2019-09: Aggiunto metodo per la restituzione atti
+	public void ExInserisciRestituzioneAttiAlPresidente(FascicoloGPModel aFasGPMod) throws F3BException;
 
 }
