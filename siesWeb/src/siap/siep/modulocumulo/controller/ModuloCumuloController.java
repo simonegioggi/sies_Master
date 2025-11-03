@@ -613,6 +613,17 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			} else {
 				siesLogger.debug(
 						"Nessun provvedimento di cumulo presente sul cumulato, estrazione dati terminata. ");
+//				// MEV_2025-48 – 2.14 Caricamento Istruttoria Annullata
+//				// TEST se non trovo una istruttoria chiusa valida Estraggo i dati dall'ultima istruttoria annullata
+//              // NON PIU implementata. Il trasferimento è esplicito solo dalla grgiglia delle istruttorie aperte
+				//				lIstruttoraSqlDao.ricercaIstruttoriaCumuloAnnullataByIdFas(aIdFascicoloSiep);
+//				lUltimaIstruttoria = (IstruttoriaCumuloModel) lIstruttoraSqlDao.getModelByKey();
+//				if (lUltimaIstruttoria != null) {
+//					siesLogger.debug("Trovata Istruttoria annullata la carico...");
+//					EstraiDaPrecedenteCumulo(lUltimaIstruttoria, aIdIstruttoriaCumulo, lFascicolo, aDatoOpModel,
+//							lConn, aTipoIscrizione);					
+//				}
+				// MEV_2025-48 – 2.14 FINE
 			}
 
 			if (aDBConnection == null) {
@@ -2833,7 +2844,10 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 	 *            - ??? Per ora non utilizzata
 	 * @throws F3BException
 	 */
-	private void EstraiDaPrecedenteCumulo(IstruttoriaCumuloModel aUltimaIstruttoria,
+	/* MEV_2025-48 – 2.14 Caricamento Istruttoria Annullata
+	 * il metodo diventa public per essere richiamato anche da IStruttoriaCumuloController */
+	//private void EstraiDaPrecedenteCumulo(IstruttoriaCumuloModel aUltimaIstruttoria,
+	public void EstraiDaPrecedenteCumulo(IstruttoriaCumuloModel aUltimaIstruttoria,
 			BigDecimal aIdIstruttoriaCumulo, FascicoloSiepModel aFascicoloSiepCumulato,
 			DatiOperazioneModel aDatoOpModel, Connection aDBConnection, String aTipoIscrizione)
 			throws F3BException {

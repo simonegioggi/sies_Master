@@ -128,7 +128,7 @@
         alert('Selezionare almeno un Ufficio destinatario');
         return false;
     }
-      
+    return true;
     }
   </script>
   

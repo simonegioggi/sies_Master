@@ -18,6 +18,7 @@ import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.magistrato.controller.IMagistrato;
 import siap.sico.magistrato.model.MagistratoModel;
+import siap.sico.ufficio.controller.IUfficio;
 import siap.sico.util.SICOLookupRemote;
 import siap.siep.SIEPException;
 import siap.siep.istruttoriacumulo.action.ICostantiIstruttoriaCumulo;
@@ -64,6 +65,11 @@ public class ActLoadDettaglioProvvedimentoCumulo extends ActionModuloCumulo impl
 			IIstruttoriaCumulo lctrlI = SIEPLookupRemote.getIstruttoriaCumuloRemote();
 			lEsiti = lctrlI.ExRicercaEsitoArchiviazionideiCumulatiByIdEvento(lIdEvento);
 			setRequestAttribute("Esiti", lEsiti);
+			String codUfficioUtente = getCodUfficioUtenteConnesso();
+
+			IUfficio lUACon = SICOLookupRemote.getUfficioRemote();
+			Vector lUffAcc = lUACon.ListaUfficiAccorpati("PM", codUfficioUtente);
+			setRequestAttribute("elencoUfficiAccorpati", lUffAcc);
 
 		} else {
 			lIstruttoriaModel = super.getDatiIstruttoria();
@@ -71,6 +77,27 @@ public class ActLoadDettaglioProvvedimentoCumulo extends ActionModuloCumulo impl
 		}
 
 		if (lDatiFinaliAggModel.getProvvedimentoCumulo() != null) {
+			// 2025.11 BUG non recuperava gli esiti trasferimento se si navigava l'istruttoria
+			// Ricerco lo Stato dei Fascicoli Cumulati e l'ESITO delle ARCHIVIAZIONI degli stessi fascicoli
+			// Cumulati;
+			// Queste informazioni saranno visualizzate nella successiva FORM di Dettaglio
+			if (   lDatiFinaliAggModel.getProvvedimentoCumulo().getEvento()!=null
+				&& lDatiFinaliAggModel.getProvvedimentoCumulo().getEvento().getIdEvento()!=null
+				)
+			{
+				BigDecimal lIdEveCumulo = lDatiFinaliAggModel.getProvvedimentoCumulo().getEvento().getIdEvento();
+				Vector<EsitoArchiviazioniCumuloModel> lEsiti = null;
+				IIstruttoriaCumulo lctrlI = SIEPLookupRemote.getIstruttoriaCumuloRemote();
+				lEsiti = lctrlI.ExRicercaEsitoArchiviazionideiCumulatiByIdEvento (lIdEveCumulo);
+				setRequestAttribute("Esiti", lEsiti);
+				
+				String codUfficioUtente = getCodUfficioUtenteConnesso();
+
+				IUfficio lUACon = SICOLookupRemote.getUfficioRemote();
+				Vector lUffAcc = lUACon.ListaUfficiAccorpati("PM", codUfficioUtente);
+				setRequestAttribute("elencoUfficiAccorpati", lUffAcc);
+			}
+			
 			// Verifico la congruenza della PG con il tipo provvedimento. Se non coerenti
 			// (PG modificata), forzo il caricamento del Provvedimento in Modifica.
 			boolean isCoerente = true;

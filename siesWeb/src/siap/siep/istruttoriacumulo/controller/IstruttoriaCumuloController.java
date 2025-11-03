@@ -145,8 +145,18 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
+	/* MEV_2025-48 – 2.14 Caricamento Istruttoria Annullata 
+	 * Modificata firma per gestire connessione in ingresso
+	 * 
+	 * ATTENZIONE CHE E' UNA UTOPIA.
+	 * ModuloCumuloController.ExInserisciTitoloInIstruttoria
+	 * pur prevedendo la connessione in ingresso committa almeno in 2 punti
+	 * 
+	 * */ 
+	//public IstruttoriaCumuloModel ExInserisciIstruttoriaCumulo(IstruttoriaCumuloModel aIstruttoriaCumulo,
+	//            FascicoloSiepModel aFascicoloSiep) throws F3BException {
 	public IstruttoriaCumuloModel ExInserisciIstruttoriaCumulo(IstruttoriaCumuloModel aIstruttoriaCumulo,
-			FascicoloSiepModel aFascicoloSiep) throws F3BException {
+			FascicoloSiepModel aFascicoloSiep, Connection aDBConnection) throws F3BException {
 
 		Connection lConn = null;
 		IstruttoriaCumuloDAO lIstruttoriaDao = null;
@@ -155,8 +165,19 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 		IstruttoriaCumuloModel lIstMod = null;
 
 		try {
-			lConn = getDBConnection();
-
+			
+		    // MEV_2025-48 – 2.14 Caricamento Istruttoria Annullata
+		    // lConn = getDBConnection();
+            if (aDBConnection != null) {
+                siesLogger.debug("Utilizzo connessione in input ");
+                lConn = aDBConnection;
+            } else {
+                siesLogger.debug("Apro nuova connessione");
+                lConn = getDBConnection();
+            }			
+            // MEV_2025-48 – 2.14 - FINE	
+			
+			
 			// Recupero il progressivo protocollo
 			lIstruttoriaSqlDao = new IstruttoriaCumuloSqlDAO(lConn);
 			BigDecimal lProgr = lIstruttoriaSqlDao
@@ -186,8 +207,14 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 
 			// ========================================================================
 
-			commit(lConn);
-
+			// MEV_2025-48 – 2.14 Caricamento Istruttoria Annullata
+            //commit(lConn);
+            if (aDBConnection == null) {
+                siesLogger.debug("ExInserisciIstruttoriaCumulo commit");
+                commit(lConn);
+            }
+            // MEV_2025-48 – 2.14 - FINE
+            
 			lIstMod = new IstruttoriaCumuloModel(aIstruttoriaCumulo);
 			lIstMod.setMessage("Inserimento avvenuto correttamente!");
 			lIstMod.setIdIstruttoriaCumulo(lIdIstruttoria);
@@ -200,7 +227,12 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 			cleanup(lIstruttoriaDao);
 			cleanup(lIstruttoriaSqlDao);
 
-			cleanup(lConn);
+			// MEV_2025-48 – 2.14 Caricamento Istruttoria Annullata
+            // cleanup(lConn);
+	        if (aDBConnection == null) {
+	           cleanup(lConn);
+	        }
+	        // MEV_2025-48 – 2.14 - FINE
 		}
 
 		return lIstMod;
@@ -3268,6 +3300,9 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 						if (lFascicoloMod != null && lFascicoloMod.getIdFascicoloSiep() != null) {
 							lEsiModel.setCodStatoFascAttuale(lFascicoloMod.getCodStatoFascicolo());
 							lEsiModel.setDescrizione(lFascicoloMod.getDescrStatoFascicolo());
+							
+							/* MEV_2025-48 */ 
+							lEsiModel.setChiaveProgrOrig(lFascicoloMod.getChiaveProgrOrig());
 						}
 					}
 				}
@@ -3906,4 +3941,200 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 		return titoliDoppi;
 	}
 
+	/**
+	 * MEV_2025-48 – 2.14 Caricamento Istruttoria Annullata
+	 * Nuovo metodo che trasferisce i dati dell'istruttoria corrente sul fascicolo indicato
+	 * Se sul fascicolo indicato NON è presente una istruttoria aperta
+	 *    - Apre l'istruttoria
+	 *    - Carica in istruttoria il fascicolo corrente 
+	 *    - Carica in istruttoria anche i dati dell'istruttoria corrente
+	 * Se esiste una istruttoria aperta
+	 *    - Carica in istruttoria il fascicolo corrente (se non presente)
+	 *    - Carica in istruttoria anche i dati dell'istruttoria corrente (anche se aperta)
+	 * Al termine del caricamento chiude l'istruttoria corrente (annulla)
+	 * 
+	 * Opera solo tra fascicoli dello STESSO ufficio
+	 * 
+	 * @param aIstruttoriaToAdd - Istruttoria targhet se non esiste viene creata
+	 * @param aIdIstruttoriaCorrente - idIstruttoria corrente da chiudere
+	 * @param aIdIstruttoriaCorrente - idIstruttoria corrente da chiudere
+	 * */
+     public IstruttoriaCumuloModel ExTrasferisciIstruttoriaCumulo (IstruttoriaCumuloModel aIstruttoriaToAdd,
+             IstruttoriaCumuloModel aIstruttoriaCorrente) throws F3BException {
+
+        Connection lConn = null;
+        IstruttoriaCumuloDAO lIstruttoriaDao = null;
+        IstruttoriaCumuloSqlDAO lIstruttoriaSqlDao = null;
+
+        IstruttoriaCumuloModel lIstMod = null;
+
+        FascicoloSiepSqlDAO lFascSqlDao = null;
+        EventoStoreProcedurePulisciDAO lEventoProcSqlDao = null;
+        
+        DatiFinaliCumuloDAO    lDatiFinaliCumuloDAO = null;
+        DatiFinaliCumuloSqlDAO lDatiFinaliSqlDAO = null;
+        EventoSqlDAO lEveSqlDao = null;
+        
+        try {
+            lConn = getDBConnection();
+            
+            lIstruttoriaSqlDao = new IstruttoriaCumuloSqlDAO(lConn);
+            lIstruttoriaDao = new IstruttoriaCumuloDAO(lConn);
+            
+            siesLogger.debug("Ricerco eventuale istruttoria Aperta sul fascicolo target "+aIstruttoriaToAdd.getFasSieIdFascicoloSiep());
+            IstruttoriaCumuloModel lIstrTarget = null;
+            // Verifico la presenza suil fasciolo di destinazione di una istruttoria aperta
+            
+            lIstruttoriaSqlDao.RicercaIstruttoriaCumuloApertaByIdFasSiep(aIstruttoriaToAdd.getFasSieIdFascicoloSiep());
+            lIstrTarget = (IstruttoriaCumuloModel) lIstruttoriaSqlDao.getModelByKey();
+            
+            
+            if (lIstrTarget==null){
+                siesLogger.debug("Istruttoria Aperta non trovata procedo ad aprirla"); 
+                
+                FascicoloSiepModel lFasc = new FascicoloSiepModel();
+                lFasc.setIdFascicoloSiep(aIstruttoriaToAdd.getFasSieIdFascicoloSiep());
+
+                siesLogger.debug("Chiamo ExInserisciIstruttoriaCumulo per il fascicolo target");
+                // crea l'istruttoria e carica il cumulante. Restituisce Istr con solo ID caricato
+                lIstrTarget = this.ExInserisciIstruttoriaCumulo (aIstruttoriaToAdd, lFasc, lConn);
+            }
+            else {
+                siesLogger.debug("Istruttoria Aperta trovata");
+            }
+
+            // ========================================================================
+            // Carico il procedimento corrente in istruttoria      
+            // Inserisco il fascicolo corrente ed estraggo i dati analitici
+            // Mi serve
+            // - IdIstruttoria Target
+            // - IdDel fascicolo da iscrivere
+            // ========================================================================
+            IModuloCumulo lCtrlModCum = SIEPLookupRemote.getModuloCumuloRemote();
+
+            DatiOperazioneModel lDatiOpModel = new DatiOperazioneModel();
+            lDatiOpModel.setCodOperatore(aIstruttoriaToAdd.getCodOperatoreInserimento());
+            lDatiOpModel.setCodUfficio(aIstruttoriaToAdd.getCodUfficioInserimento());
+            lDatiOpModel.setData(aIstruttoriaToAdd.getDataInserimento());
+                       
+            siesLogger.debug("Carico il fascicolo corrente in Istruttoria");
+            lCtrlModCum.ExInserisciTitoloInIstruttoria(lIstrTarget.getIdIstruttoriaCumulo()
+                    , aIstruttoriaCorrente.getFasSieIdFascicoloSiep()
+                    , lDatiOpModel, lConn, null, "00");
+
+            // Carico i dati dell'istruttoria corrente in quella del fascicolo nuovo
+            siesLogger.debug("Carico i dati dell'istruttoria aperta");
+            lFascSqlDao = new FascicoloSiepSqlDAO(lConn);
+            lFascSqlDao.ricercaFascicoloByKey(aIstruttoriaCorrente.getFasSieIdFascicoloSiep());
+            FascicoloSiepModel lFascicolo = (FascicoloSiepModel) lFascSqlDao.getModelByKey();
+            lCtrlModCum.EstraiDaPrecedenteCumulo(aIstruttoriaCorrente, lIstrTarget.getIdIstruttoriaCumulo()
+                    , lFascicolo, lDatiOpModel, lConn, "00");
+            
+            //
+            // Infine chiudo l'istruttoria Corrente eliminando l'evento se presente
+            //
+            siesLogger.debug("Chiudo l'istruttoria corrente [TODO]");
+            aIstruttoriaCorrente.setFlagStato     (ICostantiIstruttoriaCumulo.FLAG_STATO_ANNULLATA); // Annullato
+            aIstruttoriaCorrente.setDataChiusura  (DateUtils.getSysDate());
+            aIstruttoriaCorrente.setNote          ("Istruttoria chiusa per trasferimento su Fascicolo "+lFascicolo.getChiaveAnno()+" / "+lFascicolo.getChiaveProgr());
+            
+            aIstruttoriaCorrente.setCodOperatoreAggiornamento (aIstruttoriaToAdd.getCodOperatoreInserimento());
+            aIstruttoriaCorrente.setCodUfficioAggiornamento   (aIstruttoriaToAdd.getCodUfficioInserimento());
+            aIstruttoriaCorrente.setDataAggiornamento         (aIstruttoriaToAdd.getDataInserimento());
+            
+            lIstruttoriaDao = new IstruttoriaCumuloDAO(lConn);
+            lIstruttoriaDao.setDAOFromModel(aIstruttoriaCorrente);
+            lIstruttoriaDao.selCondizioneUpdate(aIstruttoriaCorrente.getIdIstruttoriaCumulo());
+            lIstruttoriaDao.update();
+            
+            siesLogger.debug("Elimino eventuale EVENTO non validato collegato all'istruttoria");
+            lDatiFinaliSqlDAO = new DatiFinaliCumuloSqlDAO(lConn);
+            lDatiFinaliSqlDAO.ricercaDatiFinaliCumuloByIdIstruttoria(aIstruttoriaCorrente.getIdIstruttoriaCumulo());
+
+            DatiFinaliCumuloModel lDatiFinaliModel = (DatiFinaliCumuloModel) lDatiFinaliSqlDAO.getModelByKey();
+
+            if (lDatiFinaliModel != null && lDatiFinaliModel.getEveIdEvento() != null) {
+                // pulisco il puntamento dalla DatiFinaliCumulo
+                lDatiFinaliCumuloDAO = new DatiFinaliCumuloDAO(lConn);
+                lDatiFinaliCumuloDAO.selCondizioneUpdate(lDatiFinaliModel.getIdDatiFinaliCumulo());
+                lDatiFinaliCumuloDAO.setEveIdEvento(null);
+                lDatiFinaliCumuloDAO.update();
+
+                // n.b. per sicurezza si testa la presenza effettiva dell'evento non essendo presente la FK
+                lEveSqlDao = new EventoSqlDAO(lConn);
+                lEveSqlDao.ricercaEventoByKey(lDatiFinaliModel.getEveIdEvento());
+                EventoModel lProvvedimento = (EventoModel) lEveSqlDao.getModelByKey();
+
+                if (lProvvedimento != null) {
+                    // se l'evento esiste lo elimino
+                    lEventoProcSqlDao = new EventoStoreProcedurePulisciDAO(lConn);
+                    lEventoProcSqlDao.setIdEvento(lProvvedimento.getIdEvento());
+                    lEventoProcSqlDao.execute();
+                }
+            }
+            // ========================================================================
+            commit(lConn);
+            
+            lIstMod = new IstruttoriaCumuloModel();
+            lIstruttoriaSqlDao.ricercaIstruttoriaCumuloByKey(lIstrTarget.getIdIstruttoriaCumulo());
+            lIstMod = (IstruttoriaCumuloModel) lIstruttoriaSqlDao.getModelByKey();
+            lIstMod.setMessage("Inserimento avvenuto correttamente!");
+        } catch (DAOException ex) {
+            rollback(lConn);
+            siesLogger.error("DAOException", ex);
+            throw new F3BException(
+                    "IstruttoriaCumuloController.ExInserisciIstruttoriaCumulo: Non posso inserire: " + ex);
+        } finally {
+            cleanup(lIstruttoriaDao);
+            cleanup(lIstruttoriaSqlDao);
+            
+            cleanup(lFascSqlDao);
+            cleanup(lEventoProcSqlDao);
+            cleanup(lDatiFinaliSqlDAO);
+            cleanup(lDatiFinaliCumuloDAO);
+            cleanup(lEveSqlDao);
+            
+            cleanup(lConn);
+        }
+
+        return lIstMod;
+    }
+	
+    /**
+     * Recupera l'istruttoria collegata all'ultimo provvedimento di cumulo validatao
+     * per il fascciolo in input
+     * 
+     */
+     public IstruttoriaCumuloModel ExRicercaIstruttoriaUltimoCumulo (BigDecimal aIdFascicoloSiep) throws F3BException {
+
+        Connection lConn = null;
+        IstruttoriaCumuloSqlDAO lIstruttoriaSqlDao = null;
+        IstruttoriaCumuloModel lUltimaIstruttoria = null;
+
+        try {
+            lConn = getDBConnection();
+            
+            lIstruttoriaSqlDao = new IstruttoriaCumuloSqlDAO(lConn);            
+            
+            siesLogger.debug("Ricerca eventuale presenza procedimento di cumulo...");
+            lIstruttoriaSqlDao = new IstruttoriaCumuloSqlDAO(lConn);
+            lIstruttoriaSqlDao.ricercaIstruttoriaCumuloByIdFas(aIdFascicoloSiep);
+            lUltimaIstruttoria = (IstruttoriaCumuloModel) lIstruttoriaSqlDao.getModelByKey();
+            if (lUltimaIstruttoria==null)
+                siesLogger.debug("Nessun cumulo validato collegato al fascicolo indicato.");
+
+        } catch (DAOException ex) {
+            siesLogger.error("DAOException", ex);
+            throw new F3BException(
+                    "IstruttoriaCumuloController.ExRicercaIstruttoriaUltimoCumulo: Non posso inserire: " + ex);
+        } finally {
+            cleanup(lIstruttoriaSqlDao);
+
+            cleanup(lConn);
+        }
+
+        return lUltimaIstruttoria;
+    }  
+     
+     
 } // Chiude Controller

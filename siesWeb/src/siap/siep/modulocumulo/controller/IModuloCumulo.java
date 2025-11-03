@@ -14,6 +14,7 @@ import siap.sico.utente.model.DatiOperazioneModel;
 import siap.sico.webservice.model.DatiNscToSiesModel;
 import siap.siep.competenza.model.CompetenzaModel;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
+import siap.siep.istruttoriacumulo.model.IstruttoriaCumuloModel;
 import siap.siep.modulocumulo.model.TitoloCumulatoModel;
 import siap.siep.sentenza.model.SentenzaModel;
 import siap.siep.sentenza.model.SentenzaSoggettoFascicoloModel;
@@ -181,4 +182,10 @@ public interface IModuloCumulo {
 	public void ExInserisciTitoloInIstruttoria(BigDecimal idIstruttoriaCumulo, DatiNscToSiesModel dntsm,
 			DatiOperazioneModel dom, String tipoIscrizione, Connection aDBConnection) throws Exception;
 
+	/* MEV_2025-48 – 2.14 Caricamento Istruttoria Annullata
+     * il metodo diventa public per essere richiamato anche da IStruttoriaCumuloController */
+    public void EstraiDaPrecedenteCumulo(IstruttoriaCumuloModel aUltimaIstruttoria,
+            BigDecimal aIdIstruttoriaCumulo, FascicoloSiepModel aFascicoloSiepCumulato,
+            DatiOperazioneModel aDatoOpModel, Connection aDBConnection, String aTipoIscrizione)
+            throws F3BException;
 }

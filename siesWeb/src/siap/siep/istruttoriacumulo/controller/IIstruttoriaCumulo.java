@@ -32,9 +32,15 @@ import siap.siep.modulocumulo.util.CalcoloPenaCumuloModel;
 @SuppressWarnings("rawtypes")
 public interface IIstruttoriaCumulo {
 
-	public IstruttoriaCumuloModel ExInserisciIstruttoriaCumulo(IstruttoriaCumuloModel aIstruttoriaCumulo,
-			FascicoloSiepModel aFascicoloSiep) throws F3BException;
-
+    /* MEV_2025-48 – 2.14 Caricamento Istruttoria Annullata 
+     * Modificata firma per gestire connessione in ingresso
+     * */ 
+	//public IstruttoriaCumuloModel ExInserisciIstruttoriaCumulo(IstruttoriaCumuloModel aIstruttoriaCumulo,
+	//		FascicoloSiepModel aFascicoloSiep) throws F3BException;
+    public IstruttoriaCumuloModel ExInserisciIstruttoriaCumulo(IstruttoriaCumuloModel aIstruttoriaCumulo,
+            FascicoloSiepModel aFascicoloSiep, Connection aDBConnection) throws F3BException;
+    /* MEV_2025-48 – 2.14 - FINE */
+    
 	public BigDecimal ExCountIstruttoriaCumuloPaged(IstruttoriaCumuloModel aIstruttoriaCumulo)
 			throws F3BException;
 
@@ -181,5 +187,11 @@ public interface IIstruttoriaCumulo {
 
 	public Vector<TitoloCumulatoModel> titoloDoppioInIstruttoria(BigDecimal aIdIstruttoria)
 			throws F3BException;
-  
+	
+	/* MEV_2025-48 2.14 Caricamento Istruttoria Annullata */
+    public IstruttoriaCumuloModel ExTrasferisciIstruttoriaCumulo (IstruttoriaCumuloModel aIstruttoriaToAdd,
+            IstruttoriaCumuloModel aIstruttoriaCorrente) throws F3BException;
+    
+    public IstruttoriaCumuloModel ExRicercaIstruttoriaUltimoCumulo (BigDecimal aIdFascicoloSiep) throws F3BException;
+    /* MEV_2025-48 2.14 Caricamento Istruttoria Annullata */
 }
