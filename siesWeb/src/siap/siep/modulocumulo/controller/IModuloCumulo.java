@@ -188,4 +188,10 @@ public interface IModuloCumulo {
             BigDecimal aIdIstruttoriaCumulo, FascicoloSiepModel aFascicoloSiepCumulato,
             DatiOperazioneModel aDatoOpModel, Connection aDBConnection, String aTipoIscrizione)
             throws F3BException;
+    
+    // Si aggiuge il metodo all'interfaccia (era presente nel ctrl public ma non nell'interfaccia)
+    public void ExInserisciEventoAnnotazioneEsitoTrasm(FascicoloSiepModel lFasCumulante,
+            BigDecimal aIdIstruttoriaCumulo, BigDecimal aIdFascicolo, DatiOperazioneModel aDatoOpModel,
+            Connection aDBConnection) throws F3BException;
+    /* MEV_2025-48 – 2.14 Caricamento Istruttoria Annullata*/ 
 }

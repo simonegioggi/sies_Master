@@ -3951,14 +3951,17 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 	 * Se esiste una istruttoria aperta
 	 *    - Carica in istruttoria il fascicolo corrente (se non presente)
 	 *    - Carica in istruttoria anche i dati dell'istruttoria corrente (anche se aperta)
+	 * Per i fascicoli proprio ufficio dell'istruttoria corrente aggiorna i puntamenti al nuovo 
+	 * fascicolo
+	 * 
 	 * Al termine del caricamento chiude l'istruttoria corrente (annulla)
 	 * 
 	 * Opera solo tra fascicoli dello STESSO ufficio
 	 * 
 	 * @param aIstruttoriaToAdd - Istruttoria targhet se non esiste viene creata
-	 * @param aIdIstruttoriaCorrente - idIstruttoria corrente da chiudere
-	 * @param aIdIstruttoriaCorrente - idIstruttoria corrente da chiudere
-	 * */
+	 * @param aIstruttoriaCorrente - istruttoria corrente da chiudere
+	 * @since MEV_2025-48
+ 	 * */
      public IstruttoriaCumuloModel ExTrasferisciIstruttoriaCumulo (IstruttoriaCumuloModel aIstruttoriaToAdd,
              IstruttoriaCumuloModel aIstruttoriaCorrente) throws F3BException {
 
@@ -3974,6 +3977,9 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
         DatiFinaliCumuloDAO    lDatiFinaliCumuloDAO = null;
         DatiFinaliCumuloSqlDAO lDatiFinaliSqlDAO = null;
         EventoSqlDAO lEveSqlDao = null;
+        
+        AnnotazioneEsitoTrasmissioneDAO lAnnEsiDao = null;
+        AnnotazioneEsitoTrasmissioneSqlDAO lAnnEsiSqlDao = null;
         
         try {
             lConn = getDBConnection();
@@ -4018,25 +4024,76 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
             lDatiOpModel.setData(aIstruttoriaToAdd.getDataInserimento());
                        
             siesLogger.debug("Carico il fascicolo corrente in Istruttoria");
+            // n.b. tipo 04 = proprio ufficio necessario in caso di rimozione dall'istruttoria
+            //      per cancellare l'evento di trasmissione
             lCtrlModCum.ExInserisciTitoloInIstruttoria(lIstrTarget.getIdIstruttoriaCumulo()
                     , aIstruttoriaCorrente.getFasSieIdFascicoloSiep()
-                    , lDatiOpModel, lConn, null, "00");
-
+                    , lDatiOpModel, lConn, null, "04");
+            
             // Carico i dati dell'istruttoria corrente in quella del fascicolo nuovo
             siesLogger.debug("Carico i dati dell'istruttoria aperta");
             lFascSqlDao = new FascicoloSiepSqlDAO(lConn);
             lFascSqlDao.ricercaFascicoloByKey(aIstruttoriaCorrente.getFasSieIdFascicoloSiep());
             FascicoloSiepModel lFascicolo = (FascicoloSiepModel) lFascSqlDao.getModelByKey();
             lCtrlModCum.EstraiDaPrecedenteCumulo(aIstruttoriaCorrente, lIstrTarget.getIdIstruttoriaCumulo()
-                    , lFascicolo, lDatiOpModel, lConn, "00");
+                    , lFascicolo, lDatiOpModel, lConn, "04");
+            
+            // Devo registrare l'evento di trasmissione sul fascicolo corrente
+            lFascSqlDao.ricercaFascicoloByKey (aIstruttoriaToAdd.getFasSieIdFascicoloSiep());
+            FascicoloSiepModel lFasCumulanteModel = (FascicoloSiepModel) lFascSqlDao.getModelByKey();;
+            
+            lCtrlModCum.ExInserisciEventoAnnotazioneEsitoTrasm (lFasCumulanteModel
+                    , lIstrTarget.getIdIstruttoriaCumulo()
+                    , aIstruttoriaCorrente.getFasSieIdFascicoloSiep()
+                    , lDatiOpModel, lConn);
+            
+
+            // Attenzione!! per i fascicoli nell'istruttoria corrente, stesso ufficio, devo aggiornare 
+            // i puntamenti dell'evento di trasmissione per farli risultare in istruttoria sul
+            // nuovo procedimento:
+            // - scorro i titoli dell'istuttoria corrente
+            // - se tipo iscrizione = 04 (e stesso ufficio!) provo a recuperare l'evento 
+            // - aggiorna il record ANNOTAZIONE_ESITO_TRASMISSIONE (anno e numero)
+            //  
+            siesLogger.debug("Aggiorno i record ANNOTAZIONE_ESITO_TRASMISSIONE per i titoli stesso ufficio");
+            Vector<TitoloCumulatoModel> lTitoliInIstrCorrente = null;
+            lTitoliInIstrCorrente = ExRicercaTitoliByIstruttoriaOrderBy (aIstruttoriaCorrente.getIdIstruttoriaCumulo(), null);
+            for (int k=0; k<lTitoliInIstrCorrente.size(); k++) {
+                TitoloCumulatoModel lTit = lTitoliInIstrCorrente.elementAt(k);
+                siesLogger.debug("Titolo "+lTit.getIdTitoloCumulato()+", Tipo iscrizione = "+lTit.getTipoIscrizione());
+                if ("04".equals(lTit.getTipoIscrizione())) {
+                    siesLogger.debug("Titolo "+lTit.getIdTitoloCumulato()+" iscritto da proprio uffiico");
+                    if (lTit.getProcedimentoCumulato()!=null && lTit.getProcedimentoCumulato().getEveIdEvento() != null) {
+                        siesLogger.debug("Aggiorno Anno e Progr sul record ANNOTAZIONE_ESITO_TRASMISSIONE");
+                        lAnnEsiSqlDao = new AnnotazioneEsitoTrasmissioneSqlDAO(lConn);
+                        lAnnEsiDao = new AnnotazioneEsitoTrasmissioneDAO(lConn);
+                        
+                        lAnnEsiSqlDao.ricercaAnnotazioneEsitoTrasmissioneByIdEvento(lTit.getProcedimentoCumulato().getEveIdEvento());
+                        AnnotazioneEsitoTrasmissioneModel lAnnMod = (AnnotazioneEsitoTrasmissioneModel) lAnnEsiSqlDao
+                                .getModelByKey();
+                        
+                        // Aggiorno Anno e Numero (se stesso ufficio)
+                        if ( lFasCumulanteModel.getChiaveUfficio().equals(lAnnMod.getChiaveUfficio())){
+                            lAnnEsiDao.setChiaveAnno(lFasCumulanteModel.getChiaveAnno());
+                            lAnnEsiDao.setChiaveProgr(lFasCumulanteModel.getChiaveProgr());
+                            
+                            lAnnEsiDao.selCondizioneUpdate(lAnnMod.getIdEsitoTrasmissione());
+                            
+                            lAnnEsiDao.update();
+                            lAnnEsiDao.stop();
+                        }
+                    } 
+                }
+            }
+            
             
             //
             // Infine chiudo l'istruttoria Corrente eliminando l'evento se presente
             //
-            siesLogger.debug("Chiudo l'istruttoria corrente [TODO]");
+            siesLogger.debug("Chiudo l'istruttoria corrente");
             aIstruttoriaCorrente.setFlagStato     (ICostantiIstruttoriaCumulo.FLAG_STATO_ANNULLATA); // Annullato
             aIstruttoriaCorrente.setDataChiusura  (DateUtils.getSysDate());
-            aIstruttoriaCorrente.setNote          ("Istruttoria chiusa per trasferimento su Fascicolo "+lFascicolo.getChiaveAnno()+" / "+lFascicolo.getChiaveProgr());
+            aIstruttoriaCorrente.setNote          ("Istruttoria chiusa per trasferimento su Fascicolo "+lFasCumulanteModel.getChiaveAnno()+" / "+lFasCumulanteModel.getChiaveProgr());
             
             aIstruttoriaCorrente.setCodOperatoreAggiornamento (aIstruttoriaToAdd.getCodOperatoreInserimento());
             aIstruttoriaCorrente.setCodUfficioAggiornamento   (aIstruttoriaToAdd.getCodUfficioInserimento());
@@ -4093,6 +4150,9 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
             cleanup(lDatiFinaliSqlDAO);
             cleanup(lDatiFinaliCumuloDAO);
             cleanup(lEveSqlDao);
+            
+            cleanup(lAnnEsiDao);
+            cleanup(lAnnEsiSqlDao);
             
             cleanup(lConn);
         }

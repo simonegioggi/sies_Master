@@ -22,7 +22,7 @@
 <jsp:useBean id="fascicoloTrovato"        scope="request" class="siap.siep.fascicolo.model.FascicoloSiepModel"/>
 <jsp:useBean id="ListaIstruttorieCumulo"  scope="request" class="java.util.Vector"/>
 
-
+<jsp:useBean id="ListaTitoli"             scope="request" class="java.util.Vector"/>
 <%
 //==============================================================================
 //             MEV_2025-48 – 2.14 Caricamento Istruttoria Annullata
@@ -99,6 +99,114 @@ else
   <br>
   <jsp:include page="/jsp/files/siap/siep/istruttoriacumulo/DettaglioIstruttoriaCumulo.jsp"/>
   <br>  
+ 
+ 
+
+  <table cellspacing="2" cellpadding="2" align="center" width="95%">
+    <tr>
+        <%-- Inserire qui le intestazioni delle colonne che si vogliono visualizzare --%>
+        <td class="int">Titolo</td><!-- Sentenza/Decreto/Cumulo-->
+        <td class="int">N&deg;</td>
+        <td class="int">Data Titolo</td>
+        <td class="int">Autorita' Emittente</td>
+        <td class="int">Anno/Numero <br>Reg.Gen.</td>
+        <td class="int">Definitivo il</td>
+        <td class="int">Anno/Numero <br>SIEP</td>
+        <td class="int">Autorita'</td>
+    </tr>
+<%
+{ // Apertura blocco per evitare duplicazone variabili
+boolean isTitoloManuale = false;
+int id_record = 0;
+Iterator itxTitoliInIstruttoriaCorrente = ListaTitoli.iterator();
+while (itxTitoliInIstruttoriaCorrente.hasNext()) {
+    id_record = id_record+1;
+    TitoloCumulatoModel lTitoloModel = (TitoloCumulatoModel) itxTitoliInIstruttoriaCorrente.next();
+    boolean isTitoloCumulante = false;
+    if (lTitoloModel.getProcedimentoCumulato() != null
+            && lTitoloModel.getProcedimentoCumulato().getIdFascicoloSiepOrigine() != null
+            && lTitoloModel.getProcedimentoCumulato().getIdFascicoloSiepOrigine().compareTo(IstruttoriaCumulo.getFasSieIdFascicoloSiep()) == 0) {
+        isTitoloCumulante = true;
+    }
+    String reg = StringUtils.toStringJSP(lTitoloModel.getTipoRegGen(), "");
+    String anno_reg = StringUtils.toStringJSP(lTitoloModel.getAnnoRegGen(), "");
+    String num_reg = StringUtils.toStringJSP(lTitoloModel.getNumeroRegGen(), "");
+    String AutEmi = lTitoloModel.getDescrTipoAutoritaEmittente() + " di " + lTitoloModel.getDescrLuogoEmittente();
+    if (lTitoloModel.getNumSezioneAutoritaEmittente() != null)
+        AutEmi += " - sez. "+lTitoloModel.getNumSezioneAutoritaEmittente();
+    String nSiep = "";
+    String AutoritaSiep = "";
+    ProcedimentoCumulatoModel lProcedimentoCumulatoModel = lTitoloModel.getProcedimentoCumulato();
+    if (lProcedimentoCumulatoModel != null) {
+        if ("S".equals(lProcedimentoCumulatoModel.getFlagAccorpato())) {
+            UfficioModel lUfficioOrigine = lProcedimentoCumulatoModel.getUfficioOrigine();
+            nSiep = lProcedimentoCumulatoModel.getChiaveAnnoFasCumulato() + "/" + lProcedimentoCumulatoModel.getChiaveProgrOrigine();
+            nSiep += "<br> <font class=\"cRosso\">(Ex " + lUfficioOrigine.getCodTipoUfficio() + " di " + lUfficioOrigine.getDescrComune() + ")</font>";
+        } else {
+            nSiep = lProcedimentoCumulatoModel.getChiaveAnnoFasCumulato() +"/"+ lProcedimentoCumulatoModel.getChiaveProgrFasCumulato();
+        }
+        AutoritaSiep = StringUtils.toStringJSP(lProcedimentoCumulatoModel.getDescrTipoUfficioFasCumulato())+" di "+StringUtils.toStringJSP(lProcedimentoCumulatoModel.getDescrLuogoUfficioFasCumulato());
+    }
+    
+    if (isTitoloCumulante) {
+%> 
+    <tr style="background-color: rgb(255,255,153);">
+<%
+    } else {
+%>
+    <tr>
+<%
+    }
+    // Grigio i dati dei procedimenti momentaneamente esclusi dal cumulo
+    String lFontColor = "";
+    if ("S".equals(lTitoloModel.getFlagEscluso())) {
+        lFontColor = "style='color:grey;'";
+    }
+%>
+        <td class="c" nowrap>
+<% 
+    String lDescrtipoTitolo = lTitoloModel.getDescrTipoProvvedimento();
+    if ("02".equals(lTitoloModel.getCodTipoProvvedimento())) {
+        String [] lUfficiSorv = new String[] {"UDS", "TDS", "UDSM"};
+        if (!Arrays.asList(lUfficiSorv).contains(lTitoloModel.getCodTipoAutoritaEmittente())) {
+            lDescrtipoTitolo = "Decreto Penale";
+        }
+    }
+    String tipoCaricamento = "";
+    if (lTitoloModel.getIdSentenzaOrigine() != null || "03".equals(lTitoloModel.getTipoIscrizione())) {
+        tipoCaricamento = "";
+    } else {
+        tipoCaricamento = " <font class=\"label\"  style=\"font-size:8px;vertical-align: super;\" >(*)</font>";
+        isTitoloManuale = true;
+    }
+%>
+                <%=lDescrtipoTitolo%><%=" " + tipoCaricamento%>
+        </td>
+        <td class="c" <%=lFontColor%> nowrap>          
+            <%=lTitoloModel.getAnnoSentenza()%> / <%=lTitoloModel.getNumeroSentenza()%>
+        </td>
+        <td class="c" <%=lFontColor%> nowrap>&nbsp;<%=StringUtils.toStringJSP(DateUtils.getDateToString(lTitoloModel.getDataProvvedimento(),"dd-MM-yyyy"),"-")%></td>
+        <td class="c" <%=lFontColor%>>&nbsp;<%=AutEmi%></td>
+        <td class="c" <%=lFontColor%> nowrap>&nbsp;<%=anno_reg%>/<%=num_reg%>&nbsp;<%=reg%></td>
+        <td class="c" <%=lFontColor%> nowrap>&nbsp;<%=StringUtils.toStringJSP(DateUtils.getDateToString(lTitoloModel.getDataIrrevocabilita(),"dd-MM-yyyy"))%></td>
+<%
+    if (lProcedimentoCumulatoModel != null) {
+%>
+        <td class="c" <%=lFontColor%> nowrap><%=nSiep%></td>
+<%
+    } else {
+%>
+        <td class="c" <%=lFontColor%> nowrap>&nbsp;</td>
+<%
+    }
+%>
+        <td class="c" <%=lFontColor%> >&nbsp;<%=AutoritaSiep%></td>
+    </tr>
+<%
+    } // End while
+} // chiusura blocco per evitare duplicazone variabili
+%>        
+  </table>
   
   <form action="<%=IWebConstants.PG_MAIN%>" method="post" name="TrasferisciIstruttoria">
     <input type="hidden" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.istruttoriacumulo.action.ActTrasferisciIstruttoria">

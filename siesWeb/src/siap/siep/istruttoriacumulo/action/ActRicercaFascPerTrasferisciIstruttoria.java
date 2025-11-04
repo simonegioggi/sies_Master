@@ -35,7 +35,13 @@ public class ActRicercaFascPerTrasferisciIstruttoria extends ActionSiap implemen
         IstruttoriaCumuloModel lIstruttoriaModel = null;
         lIstruttoriaModel = lIstrCtrl.ExRicercaIstruttoriaCumuloById(lIdIstruttoriaCumulo);	
         setRequestAttribute("IstruttoriaCumulo", lIstruttoriaModel);
-    
+          
+        // Ricerco i titoli dell'istruttoria corrente
+        String lOrdinamento = lIstruttoriaModel.getOrdinamentoTitoli();
+        Vector lListaTitoliCorrenti = lIstrCtrl.ExRicercaTitoliByIstruttoriaOrderBy(lIdIstruttoriaCumulo,
+                lOrdinamento);
+        setRequestAttribute("ListaTitoli", lListaTitoliCorrenti);        
+        
         // Ricerco il fascicolo 
         FascicoloSiepModel lFasMod = new FascicoloSiepModel();
         
