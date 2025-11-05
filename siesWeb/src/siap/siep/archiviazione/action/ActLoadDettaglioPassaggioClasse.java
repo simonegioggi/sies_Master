@@ -1,8 +1,10 @@
 package siap.siep.archiviazione.action;
 
 import java.math.BigDecimal;
+import java.util.Vector;
 
 import f3b.util.F3BException;
+import f3b.util.Utils;
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoNotificaModel;
@@ -26,6 +28,7 @@ import siap.siep.web.ActSIESDettaglioProvvedimento;
  */
 public class ActLoadDettaglioPassaggioClasse extends ActSIESDettaglioProvvedimento {
 
+	@SuppressWarnings("unchecked")
 	public String processRequest() throws F3BException {
 
 		FascicoloSiepModel fsm = (FascicoloSiepModel) getSessionAttribute("fascicolo");
@@ -87,14 +90,24 @@ public class ActLoadDettaglioPassaggioClasse extends ActSIESDettaglioProvvedimen
 
 		// NUOVO FASCICOLO per PASSAGGIO di CLASSE
 		BigDecimal idNuovoFascicolo = null;
-		if (!isRequestParameterNullObj(ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP))
-			idNuovoFascicolo = getRequestBigDecimalParameter(ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP);
-		else
-			// Se non ho l'id fascicolo ne sulla request ne in sessione restituisco la
-			// pagina di ricerca fascicolo
-			return ICostantiFascicoloSiep.REDIRECT_FASCICOLO_RICERCATO + getClass().getName();
 		IFascicoloSiep ifs = SIEPLookupRemote.getFascicoloSiepRemote();
-		FascicoloSiepModel fsmNew = ifs.ExRicercaFascicoloByKeyNoError(idNuovoFascicolo);
+		FascicoloSiepModel fsmNew = new FascicoloSiepModel();
+		if (!isRequestParameterNullObj(ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP)) {
+			idNuovoFascicolo = getRequestBigDecimalParameter(ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP);
+			fsmNew = ifs.ExRicercaFascicoloByKeyNoError(idNuovoFascicolo);
+		} else {
+			// Se vengo da elenco PM o dettaglio fascicolo il fascicolo è stato già iscritto
+			Vector<FascicoloSiepModel> fascicoliCollegati = new Vector<>();
+			FascicoloSiepModel fsmColl = new FascicoloSiepModel();
+			fsmColl.setFasSieIdFascicoloSiep(idFascicolo);
+			fsmColl.setChiaveUfficio(fsm.getChiaveUfficio());
+			fsmColl.setSenIdSentenza(fsm.getSenIdSentenza());
+			fsmColl.setDataIrrevocabilita(fsm.getDataIrrevocabilita());
+			fascicoliCollegati = ifs.ExRicercaFascicoloSiep(fsmColl);
+			if (!Utils.isNullObj(fascicoliCollegati) && !fascicoliCollegati.isEmpty())
+				fsmNew = fascicoliCollegati.firstElement();
+		}
+		
 		setRequestAttribute("fascicoloSiepModel", fsmNew);
 
 		// pagina di ritorno

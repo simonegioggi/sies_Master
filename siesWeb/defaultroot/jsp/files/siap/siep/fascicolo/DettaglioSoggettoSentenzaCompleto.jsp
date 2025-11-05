@@ -664,28 +664,37 @@ while (itxReg.hasNext()) {
 
 <table cellspacing="0" cellpadding="0" width="95%">
 <%
-int Conta = 0;
+// 20251105 [SG]: in caso di più collegati la pagina si scombinava (solo per i collegati a classe VII); infatti è un vettore <vectfasc>
+int conta = 0;
 FascicoloSiepModel lFasciMod = new FascicoloSiepModel();
 Iterator itx = vectfasc.iterator();
 while (itx.hasNext()) {
 	lFasciMod = (FascicoloSiepModel)itx.next();
 	if (lFasciMod.getChiaveProgr().intValue() > 70000 && lFasciMod.getChiaveProgr().intValue() < 80000) {
-		Conta = Conta + 1;
+		conta = conta + 1;
     }
 }
-if (Conta > 0) {
+if (conta > 0) {
 %>
 	<tr>
 		<td class="L">
-			<font class="label">Collegato al Procedimento: N.</font>
-<%            
+<%
+	if (conta > 1) {
+%>
+			<font class="label">Collegato ai Procedimenti: </font>
+<%
+	} else {
+%>
+			<font class="label">Collegato al Procedimento: </font>
+<%
+	}
 	lFasciMod = new FascicoloSiepModel();
 	itx = vectfasc.iterator();
     while (itx.hasNext()) {
 		lFasciMod = (FascicoloSiepModel)itx.next();
       	if (lFasciMod.getChiaveProgr().intValue() > 70000 && lFasciMod.getChiaveProgr().intValue() < 80000) {
 %>
-			<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>=<%=lFasciMod.getIdFascicoloSiep()%>" title="Procedimento">
+			N. <a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>=<%=lFasciMod.getIdFascicoloSiep()%>" title="Procedimento">
                 <%=StringUtils.toStringJSP(lFasciMod.getChiaveAnno())%>/
                 <%=StringUtils.toStringJSP(lFasciMod.getChiaveProgr())%>
            	</a>
@@ -722,14 +731,17 @@ if (Conta > 0) {
 %>
 			)
 <%
-}
+				}
 			}
-%>
-		</td>
-<%
 		}
+      	if (itx.hasNext()) {
+%>
+			&nbsp;&nbsp;&nbsp;
+<%
+      	}
 	}
 %>
+		</td>
 	</tr>
 <%    
 }
