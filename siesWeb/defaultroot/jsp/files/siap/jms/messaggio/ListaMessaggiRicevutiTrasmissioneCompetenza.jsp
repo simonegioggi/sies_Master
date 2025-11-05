@@ -15,7 +15,7 @@
 <%@ page import="siap.jms.messaggio.action.ICostantiMessaggio"%>
 <%@ page import="siap.siep.istruttoriacumulo.action.ICostantiIstruttoriaCumulo"%>
 
-<%-- MEV_2025-48 – Atti pervenuti per competenza al cumulo --%> 
+<%-- MEV_2025-48: Atti pervenuti per competenza al cumulo --%> 
 <%@ page import="siap.sico.jms.action.ICostantiSicoJMS"%>
 <%@ page import="siap.sico.ufficio.action.ICostantiUfficio"%>
 <%@ page import="siap.jms.ICostantiJMS"%>
@@ -66,7 +66,7 @@ if(IstruttoriaCumulo !=null && IstruttoriaCumulo.getIdIstruttoriaCumulo()!=null)
     <script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
     <script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
     
-    <%-- MEV_2025-48 – Atti pervenuti per competenza al cumulo --%> 
+    <%-- MEV_2025-48: Atti pervenuti per competenza al cumulo --%> 
     <script language="JavaScript" src="<%=IWebConstants.JS_JQUERY%>"></script>
     <script language="JavaScript">
     
@@ -194,7 +194,7 @@ if(IstruttoriaCumulo !=null && IstruttoriaCumulo.getIdIstruttoriaCumulo()!=null)
     		text-decoration: none;
     	}
     </style>
-    <%-- MEV_2025-48 – FINE --%> 
+    <%-- MEV_2025-48: FINE --%> 
   </head>
 
 <body class="corpo">
@@ -260,7 +260,7 @@ if(IstruttoriaCumulo !=null && IstruttoriaCumulo.getIdIstruttoriaCumulo()!=null)
 
 <%
 /* ===================================================== */
-/* MEV_2025-48 – Atti pervenuti per competenza al cumulo */
+/* MEV_2025-48: Atti pervenuti per competenza al cumulo */
 /* ===================================================== */
 %>
 <%
@@ -451,7 +451,7 @@ if(IstruttoriaCumulo !=null && IstruttoriaCumulo.getIdIstruttoriaCumulo()!=null)
 
 <% if (Messaggi.size() == 0) {%>
   <br>
-  <%-- MEV_2025-48 – Atti pervenuti per competenza al cumulo --%>
+  <%-- MEV_2025-48: Atti pervenuti per competenza al cumulo --%>
   <table cellspacing="2" cellpadding="2" width="98%">
     <tr>
       <td class="int">Anno/Numero SIEP</td>
@@ -466,7 +466,7 @@ if(IstruttoriaCumulo !=null && IstruttoriaCumulo.getIdIstruttoriaCumulo()!=null)
       <td class="c" colspan="7">  <br>Non sono presenti atti ricevuti che soddisfano i criteri di ricerca selezionati<br> </td>
     </tr>
   </table>
-  <%-- MEV_2025-48 –FINE --%>
+  <%-- MEV_2025-48:FINE --%>
 <% } else { %>
 
 <div align="left">
@@ -542,7 +542,7 @@ if(IstruttoriaCumulo !=null && IstruttoriaCumulo.getIdIstruttoriaCumulo()!=null)
   <table>
     <tr>
       <td>
-        <%-- MEV_2025-48 – Atti pervenuti per competenza al cumulo --%>
+        <%-- MEV_2025-48: Atti pervenuti per competenza al cumulo --%>
         <%--               Segnalazione BLOB non leggibili --%>        
       	<% if (ICostantiJMS.ERRORE_DEPLOY.equals(lMess.getCodEsito())){ %>
         <img src="/images/attenzione.jpg" width="12" height="12" class="alertIcon" alt="Attenzione. Il contenuto del messaggio ricevuto non risulta leggibile. Se necessario, richiedere una nuova trasmissione" border="0"></b></font>
@@ -574,10 +574,10 @@ if(IstruttoriaCumulo !=null && IstruttoriaCumulo.getIdIstruttoriaCumulo()!=null)
    </div> 
  
   </body>
-  <%-- MEV_2025-48 – Atti pervenuti per competenza al cumulo --%>
+  <%-- MEV_2025-48: Atti pervenuti per competenza al cumulo --%>
   <script language="JavaScript" type="text/javascript">
   var frmvalidator  = new Validator("f");
   frmvalidator.setAddnlValidationFunction("Verify"); 
   </script>
-  <%-- MEV_2025-48 – FINE --%>
+  <%-- MEV_2025-48: FINE --%>
 </html>

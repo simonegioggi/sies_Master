@@ -71,7 +71,7 @@
 	  }
   }
 
-  // Ticket#20231010019 â€” SIEP - Fascicolo trasmesso per errore - se fascicolo non di competenza vanno bloccati i tasti funzione
+  // Ticket#20231010019:€” SIEP - Fascicolo trasmesso per errore - se fascicolo non di competenza vanno bloccati i tasti funzione
   //                             sulla form di dettaglio
   boolean isFascicoloDiCompetenza = false;
   String lUffUtente = lUtenteMod.getUfficioUtente().getCodUfficio();
@@ -139,7 +139,7 @@
 
   <!-- TOOLBAR HEADER (per il tasto di TRASMISSIONE -->  
   <%
-if (isFascicoloDiCompetenza) { // Ticket#20231010019 â€” SIEP solo se di competenza  
+if (isFascicoloDiCompetenza) { // Ticket#20231010019:€” SIEP solo se di competenza  
   //if(eventonotifica.getEvento().getDataTrasmissioneAtti().equals(eventonotifica.getEvento().getDataEmissione())){
     if(eventonotifica.getEvento().getFlagDocumentoRegistrato()!=null && eventonotifica.getEvento().getFlagDocumentoRegistrato().equalsIgnoreCase("S")){
 	  String lModificabile = "NO";
@@ -491,7 +491,7 @@ if (isFascicoloDiCompetenza) { // Ticket#20231010019 â€” SIEP solo se di compete
 //==============================================================================
 %>
 <% 
-if (isFascicoloDiCompetenza) { // Ticket#20231010019 â€” SIEP solo se di competenza  
+if (isFascicoloDiCompetenza) { // Ticket#20231010019:€” SIEP solo se di competenza  
 EventoModel lEvento = eventonotifica.getEvento();
 if( (   "0340".equals(lEvento.getCodMotivo())
      || "5403".equals(lEvento.getCodMotivo())     
