@@ -1,4 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@page import="f3b.util.Utils"%>
 <%@ page import="java.util.Collection"%>
 <%@ page import="java.util.Date"%>
 <%@ page import="java.util.List"%>
@@ -1177,7 +1178,13 @@ if (!"S".equals(fascicolo.getFlagCumulante())) {
 %>
 		</td>
 	</tr>
+<%-- MEV_2025-48: aggiunta nuova sezione --%>
 <%
+				if (Utils.isPresent(lPenCompMod.getCodTipoRito()) && "E".equals(lPenCompMod.getCodTipoRito())) {
+%>
+	<tr><td class="L"><font color="red">Importo da Pagare Include Confisca per Equivalente</font></td></tr>
+<%
+				}
   			}
 		}
 	}

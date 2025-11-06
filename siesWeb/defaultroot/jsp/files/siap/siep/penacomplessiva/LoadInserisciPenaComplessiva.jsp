@@ -1,7 +1,9 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%@ page import="f3b.web.IWebConstants"%>
+<%@ page import="f3b.util.Utils"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
+<%@ page import="f3b.web.IWebConstants"%>
+
 <%@ page import="java.math.BigDecimal"%>
 
 <%@ page import="siap.siep.penacomplessiva.model.PenaComplessivaModel"%>
@@ -10,18 +12,17 @@
 <%@ page import="siap.siep.sanzionesostitutiva.action.ICostantiSanzioneSostitutiva"%>
 <%@ page import="siap.siep.continuazione.action.ICostantiContinuazione"%>
 
-<jsp:useBean id="penaComplessivaSanzioneSostitutiva" scope="request" class="siap.siep.penacomplessiva.model.PenaComplessivaSanzioneSostitutivaModel"/>
-<jsp:useBean id="modalita"                	scope="request" class="java.lang.String"/>
-<jsp:useBean id="tipoPenaDetentiva"       	scope="request" class="java.lang.String"/>
-<jsp:useBean id="valute"                  	scope="request" class="java.lang.String"/>
-<jsp:useBean id="autoritaSentenza"        	scope="request" class="java.lang.String"/>
-<jsp:useBean id="tipoSanzioneSostitutiva"	scope="request" class="java.lang.String"/>
-<jsp:useBean id="tipoContinuazione"       	scope="request" class="java.lang.String"/>
-<jsp:useBean id="lTipoFunzione"           	scope="request" class="java.lang.String"/>
-<jsp:useBean id="modo"       				scope="request" class="java.lang.String"/>
-<jsp:useBean id="TornaQui"     				scope="request" class="java.lang.String"/>
-
-<% //MEV_2023-13 %>
+<jsp:useBean id="penaComplessivaSanzioneSostitutiva" 	scope="request" class="siap.siep.penacomplessiva.model.PenaComplessivaSanzioneSostitutivaModel"/>
+<jsp:useBean id="modalita"                				scope="request" class="java.lang.String"/>
+<jsp:useBean id="tipoPenaDetentiva"       				scope="request" class="java.lang.String"/>
+<jsp:useBean id="valute"                  				scope="request" class="java.lang.String"/>
+<jsp:useBean id="autoritaSentenza"        				scope="request" class="java.lang.String"/>
+<jsp:useBean id="tipoSanzioneSostitutiva"				scope="request" class="java.lang.String"/>
+<jsp:useBean id="tipoContinuazione"       				scope="request" class="java.lang.String"/>
+<jsp:useBean id="lTipoFunzione"           				scope="request" class="java.lang.String"/>
+<jsp:useBean id="modo"       							scope="request" class="java.lang.String"/>
+<jsp:useBean id="TornaQui"     							scope="request" class="java.lang.String"/>
+<%-- MEV_2023-13 --%>
 <jsp:useBean id="tipoPenaSostitutiva"	scope="request" class="java.lang.String"/>
 
 <%
@@ -31,22 +32,20 @@
 // - Sanzione sostitutiva
 // - Continuazione
 //==============================================================================
-PenaComplessivaModel lPenCom = penaComplessivaSanzioneSostitutiva.getPenaComplessiva();
-SanzioneSostitutivaModel lSanSos = penaComplessivaSanzioneSostitutiva.getSanzioneSostitutiva();
+PenaComplessivaModel pcm = penaComplessivaSanzioneSostitutiva.getPenaComplessiva();
+SanzioneSostitutivaModel ssm = penaComplessivaSanzioneSostitutiva.getSanzioneSostitutiva();
 boolean flagSanzioneSostitutiva = false;
-boolean flagPenaSostitutiva = false; //MEV_2023-13
-if (lSanSos == null) {
-	lSanSos = new SanzioneSostitutivaModel();
+boolean flagPenaSostitutiva = false; // MEV_2023-13
+if (ssm == null) {
+	ssm = new SanzioneSostitutivaModel();
 	flagSanzioneSostitutiva = false;
-  flagPenaSostitutiva = false; //MEV_2023-13
-}
-else if (lSanSos.isPenaSostitutiva()) {
-  flagSanzioneSostitutiva = false;
-  flagPenaSostitutiva = true; 
-}
-else {
-  flagSanzioneSostitutiva = true;
-  flagPenaSostitutiva = false; 
+  	flagPenaSostitutiva = false; // MEV_2023-13
+} else if (ssm.isPenaSostitutiva()) {
+	flagSanzioneSostitutiva = false;
+	flagPenaSostitutiva = true; 
+} else {
+	flagSanzioneSostitutiva = true;
+	flagPenaSostitutiva = false; 
 }
 
 boolean flagPenaInContinuazione = false;
@@ -54,6 +53,11 @@ boolean flagPenaInContinuazione = false;
 boolean modoSIGE = false;
 if (modo != null && modo.equalsIgnoreCase("SIGE"))
 	modoSIGE = true;
+
+// MEV_2025-48: aggiunta nuova sezione
+boolean flagConfiscaEquivalente = false;
+if (!Utils.isNullObj(pcm) && Utils.isPresent(pcm.getCodTipoRito()))
+	flagConfiscaEquivalente = "E".equals(pcm.getCodTipoRito());
 %>
 
 <html>
@@ -71,7 +75,7 @@ function ListaComuni(a_formname,a_fieldname) {
 
 function Verify() {
 	// NEW
-	//TipoSanzione();
+	// TipoSanzione();
 	if (document.LoadInserisciPenaComplessiva.<%=ICostantiPenaComplessiva.CAMPO_FLAG_SANZIONE_SOSTITUTIVA%>.checked == true) {
 		if (document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_SANZIONE%>[document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_SANZIONE%>.selectedIndex].value == '-') {
 			alert('Selezionare il tipo di sanzione sostitutiva!');
@@ -97,34 +101,29 @@ function Verify() {
 				return false;
 	      	}     
 	  	}
-	}
-  else if (document.LoadInserisciPenaComplessiva.<%=ICostantiPenaComplessiva.CAMPO_FLAG_PENA_SOSTITUTIVA%>.checked == true) {
+	} else if (document.LoadInserisciPenaComplessiva.<%=ICostantiPenaComplessiva.CAMPO_FLAG_PENA_SOSTITUTIVA%>.checked == true) {
 		if (document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_PENA_SOSTITUTIVA%>[document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_PENA_SOSTITUTIVA%>.selectedIndex].value == '-') {
 			alert('Selezionare il tipo di pena sostitutiva!');
 			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_PENA_SOSTITUTIVA%>.focus();
 			return false;
-	  }
-      
-		if (document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_PENA_SOSTITUTIVA%>[document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_PENA_SOSTITUTIVA%>.selectedIndex].value == 'Z') 
-    {
-			if (   document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_INTERO_PENA_PECUNIARIA_SOSTITUTIVA%>.value == ''
-					&& document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_DECIMALE_PENA_PECUNIARIA_SOSTITUTIVA%>.value == '') 
-      {
-        alert('Pena Pecuniaria Sostitutiva obbligatoria!');
-        document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_INTERO_PENA_PECUNIARIA_SOSTITUTIVA%>.focus();
-        return false;
-      }			  
+		}
+		if (document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_PENA_SOSTITUTIVA%>[document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_PENA_SOSTITUTIVA%>.selectedIndex].value == 'Z') {
+			if (document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_INTERO_PENA_PECUNIARIA_SOSTITUTIVA%>.value == ''
+					&& document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_DECIMALE_PENA_PECUNIARIA_SOSTITUTIVA%>.value == '') {
+				alert('Pena Pecuniaria Sostitutiva obbligatoria!');
+				document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_INTERO_PENA_PECUNIARIA_SOSTITUTIVA%>.focus();
+				return false;
+      		}			  
 		} else {
-			if (   document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_ANNI_PENA_SOSTITUTIVA%>.value == ''
+			if (document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_ANNI_PENA_SOSTITUTIVA%>.value == ''
 					&& document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_MESI_PENA_SOSTITUTIVA%>.value == ''
-					&& document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_GIORNI_PENA_SOSTITUTIVA%>.value == '') 
-      {
+					&& document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_GIORNI_PENA_SOSTITUTIVA%>.value == '') {
 				alert('Durata Pena Sostitutiva obbligatoria!');
 				document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_ANNI_PENA_SOSTITUTIVA%>.focus();
 				return false;
-	    }     
-	  }    
-  }
+	    	}     
+		}    
+	}
 	// END NEW
 
 	// Controllo valorizzazione di almeno uno dei campi della sezione Pena
@@ -154,7 +153,7 @@ function Verify() {
 
 // 	var d1 = document.LoadInserisciPenaComplessiva.<!%=ICostantiPenaComplessiva.CAMPO_GIORNO_DATA_INIZIO_ISOLAMENTO_DIURNO%>.value 
 // 		+ '/' + document.LoadInserisciPenaComplessiva.<!%=ICostantiPenaComplessiva.CAMPO_MESE_DATA_INIZIO_ISOLAMENTO_DIURNO%>.value 
-<%-- 		+ '/' + document.LoadInserisciPenaComplessiva.<%=ICostantiPenaComplessiva.CAMPO_ANNO_DATA_INIZIO_ISOLAMENTO_DIURNO%>.value; --%>
+//		+ '/' + document.LoadInserisciPenaComplessiva.<!%=ICostantiPenaComplessiva.CAMPO_ANNO_DATA_INIZIO_ISOLAMENTO_DIURNO%>.value;
 //  	if (!ControllaData(d1) && d1.length > 2) {
 // 		alert('Data Inizio Isolamento Diurno non valida');
 // 		document.LoadInserisciPenaComplessiva.<!%=ICostantiPenaComplessiva.CAMPO_GIORNO_DATA_INIZIO_ISOLAMENTO_DIURNO%>.focus();
@@ -171,7 +170,7 @@ function Verify() {
 
 // 	var d1 = document.LoadInserisciPenaComplessiva.<!%=ICostantiPenaComplessiva.CAMPO_GIORNO_DATA_FINE_ISOLAMENTO_DIURNO%>.value 
 // 		+ '/' + document.LoadInserisciPenaComplessiva.<!%=ICostantiPenaComplessiva.CAMPO_MESE_DATA_FINE_ISOLAMENTO_DIURNO%>.value 
-<%-- 		+ '/' + document.LoadInserisciPenaComplessiva.<%=ICostantiPenaComplessiva.CAMPO_ANNO_DATA_FINE_ISOLAMENTO_DIURNO%>.value; --%>
+// 		+ '/' + document.LoadInserisciPenaComplessiva.<!%=ICostantiPenaComplessiva.CAMPO_ANNO_DATA_FINE_ISOLAMENTO_DIURNO%>.value;
 //   	if (!ControllaData(d1) && d1.length > 2) {
 // 		alert('Data Fine Isolamento Diurno non valida');
 // 		document.LoadInserisciPenaComplessiva.<!%=ICostantiPenaComplessiva.CAMPO_GIORNO_DATA_FINE_ISOLAMENTO_DIURNO%>.focus();
@@ -188,21 +187,20 @@ function Verify() {
 		return false;
  	}
   
-  if (document.LoadInserisciPenaComplessiva.<%=ICostantiPenaComplessiva.CAMPO_FLAG_PENA_IN_CONTINUAZIONE%>==undefined){
-  }
-  else {
-    if (document.LoadInserisciPenaComplessiva.<%=ICostantiPenaComplessiva.CAMPO_FLAG_PENA_IN_CONTINUAZIONE%>.checked == true) {
-      if (controlliobbligatorietacontinuazione('0') == false) {
-        return false;
-        } else {  
-          if (controlliobbligatorietacontinuazione('1') == false) return false;
-        }
-    }
-  }
+  	if (document.LoadInserisciPenaComplessiva.<%=ICostantiPenaComplessiva.CAMPO_FLAG_PENA_IN_CONTINUAZIONE%> == undefined) {
+		// do nothing;
+  	} else {
+    	if (document.LoadInserisciPenaComplessiva.<%=ICostantiPenaComplessiva.CAMPO_FLAG_PENA_IN_CONTINUAZIONE%>.checked == true) {
+      		if (controlliobbligatorietacontinuazione('0') == false) {
+        		return false;
+        	} else {  
+          		if (controlliobbligatorietacontinuazione('1') == false)
+          			return false;
+        	}
+    	}
+  	}
 	document.LoadInserisciPenaComplessiva.INSERISCI.disabled = true;
-  
-  
-  return true;
+	return true;
 }
   
 //============================================================================
@@ -221,9 +219,8 @@ function TipoSanzione(par) {
 	document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_INTERO_SANZIONE_PECUNIARIA_AMMENDA%>.disabled == false;
 	document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_DECIMALE_SANZIONE_PECUNIARIA_AMMENDA%>.disabled == false;
   
-	//document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_VALUTA_SANZIONE_PECUNIARIA%>.disabled == false;
-  $('select[name="<%=ICostantiSanzioneSostitutiva.CAMPO_VALUTA_SANZIONE_PECUNIARIA%>"]').prop( "disabled", false );
-
+	// document.LoadInserisciPenaComplessiva.<!%=ICostantiSanzioneSostitutiva.CAMPO_VALUTA_SANZIONE_PECUNIARIA%>.disabled == false;
+  	$('select[name="<%=ICostantiSanzioneSostitutiva.CAMPO_VALUTA_SANZIONE_PECUNIARIA%>"]').prop( "disabled", false );
 	if (document.LoadInserisciPenaComplessiva.<%=ICostantiPenaComplessiva.CAMPO_FLAG_SANZIONE_SOSTITUTIVA%>.checked == true) {
    		if (par == 'carica') {
      		if (document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_SANZIONE%>[document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_SANZIONE%>.selectedIndex].value == "L"
@@ -238,8 +235,8 @@ function TipoSanzione(par) {
 			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_GIORNI%>.disabled = true;
 			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_INTERO_SANZIONE_PECUNIARIA_MULTA%>.disabled = false;
 			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_DECIMALE_SANZIONE_PECUNIARIA_MULTA%>.disabled = false;
-			//document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_VALUTA_SANZIONE_PECUNIARIA%>.disabled = false; 
-      $('select[name="<%=ICostantiSanzioneSostitutiva.CAMPO_VALUTA_SANZIONE_PECUNIARIA%>"]').prop( "disabled", false );
+			// document.LoadInserisciPenaComplessiva.<!%=ICostantiSanzioneSostitutiva.CAMPO_VALUTA_SANZIONE_PECUNIARIA%>.disabled = false; 
+      		$('select[name="<%=ICostantiSanzioneSostitutiva.CAMPO_VALUTA_SANZIONE_PECUNIARIA%>"]').prop( "disabled", false );
 			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_INTERO_SANZIONE_PECUNIARIA_AMMENDA%>.disabled = false;
 			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_DECIMALE_SANZIONE_PECUNIARIA_AMMENDA%>.disabled = false;
 		} else if (document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_SANZIONE%>[document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_SANZIONE%>.selectedIndex].value == 'S'
@@ -256,8 +253,8 @@ function TipoSanzione(par) {
 			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_GIORNI%>.disabled = false;
 			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_INTERO_SANZIONE_PECUNIARIA_MULTA%>.disabled = true;
 			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_DECIMALE_SANZIONE_PECUNIARIA_MULTA%>.disabled = true;
-			// document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_VALUTA_SANZIONE_PECUNIARIA%>.disabled = true;
-      $('select[name="<%=ICostantiSanzioneSostitutiva.CAMPO_VALUTA_SANZIONE_PECUNIARIA%>"]').prop( "disabled", true );
+			// document.LoadInserisciPenaComplessiva.<!%=ICostantiSanzioneSostitutiva.CAMPO_VALUTA_SANZIONE_PECUNIARIA%>.disabled = true;
+      		$('select[name="<%=ICostantiSanzioneSostitutiva.CAMPO_VALUTA_SANZIONE_PECUNIARIA%>"]').prop( "disabled", true );
 			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_INTERO_SANZIONE_PECUNIARIA_AMMENDA%>.disabled = true;
 			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_DECIMALE_SANZIONE_PECUNIARIA_AMMENDA%>.disabled = true;
 		}
@@ -357,14 +354,13 @@ function normalizzaQuantum(anni,mesi,giorni) {
 // invocata sull'onChange
 function checkSanzione() {
 	if (document.LoadInserisciPenaComplessiva.<%=ICostantiPenaComplessiva.CAMPO_FLAG_SANZIONE_SOSTITUTIVA%>.checked == true) {
-    // Abilito tutti i campi
-    document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_SANZIONE%>.disabled = false;
-    if (document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_SANZIONE%>[document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_SANZIONE%>.selectedIndex].value == '-') {
-      // Non abilito nulla
-    }
-      
-    if (document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_SANZIONE%>[document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_SANZIONE%>.selectedIndex].value == 'P') {
-   	  // Pena Pecuniaria
+    	// Abilito tutti i campi
+    	document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_SANZIONE%>.disabled = false;
+   		if (document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_SANZIONE%>[document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_SANZIONE%>.selectedIndex].value == '-') {
+      		// Non abilito nulla
+    	}
+    	if (document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_SANZIONE%>[document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_SANZIONE%>.selectedIndex].value == 'P') {
+	   	  	// Pena Pecuniaria
 			// Quantum Disabilitati
 			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_ANNI%>.disabled = true;
 			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_MESI%>.disabled = true;
@@ -372,11 +368,11 @@ function checkSanzione() {
 			// Pena Pecuniaria Sostitutiva Abilitata
 			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_INTERO_SANZIONE_PECUNIARIA_MULTA%>.disabled = false;
 			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_DECIMALE_SANZIONE_PECUNIARIA_MULTA%>.disabled = false;
-      //document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_VALUTA_SANZIONE_PECUNIARIA%>.disabled = false; 
-      $('select[name="<%=ICostantiSanzioneSostitutiva.CAMPO_VALUTA_SANZIONE_PECUNIARIA%>"]').prop( "disabled", false );
+     		// document.LoadInserisciPenaComplessiva.<!%=ICostantiSanzioneSostitutiva.CAMPO_VALUTA_SANZIONE_PECUNIARIA%>.disabled = false; 
+      		$('select[name="<%=ICostantiSanzioneSostitutiva.CAMPO_VALUTA_SANZIONE_PECUNIARIA%>"]').prop( "disabled", false );
 			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_INTERO_SANZIONE_PECUNIARIA_AMMENDA%>.disabled = false;
 			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_DECIMALE_SANZIONE_PECUNIARIA_AMMENDA%>.disabled = false;
-    } else {
+    	} else {
 			// Quantum Abilitati
 			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_ANNI%>.disabled = false;
 			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_MESI%>.disabled = false;
@@ -384,15 +380,14 @@ function checkSanzione() {
 			// Pena Pecuniaria Sostitutiva Disabilitata
 			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_INTERO_SANZIONE_PECUNIARIA_MULTA%>.disabled = true;
 			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_DECIMALE_SANZIONE_PECUNIARIA_MULTA%>.disabled = true;
-      //document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_VALUTA_SANZIONE_PECUNIARIA%>.disabled = true; 
-      $('select[name="<%=ICostantiSanzioneSostitutiva.CAMPO_VALUTA_SANZIONE_PECUNIARIA%>"]').prop( "disabled", true );
+      		// document.LoadInserisciPenaComplessiva.<!%=ICostantiSanzioneSostitutiva.CAMPO_VALUTA_SANZIONE_PECUNIARIA%>.disabled = true; 
+      		$('select[name="<%=ICostantiSanzioneSostitutiva.CAMPO_VALUTA_SANZIONE_PECUNIARIA%>"]').prop( "disabled", true );
 			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_INTERO_SANZIONE_PECUNIARIA_AMMENDA%>.disabled = true;
 			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_DECIMALE_SANZIONE_PECUNIARIA_AMMENDA%>.disabled = true;
-    }
-    
-    // MEV_2023-13 - disabilito la sezione delle Pene sostitutive Pene Detentive Brevi 
-    document.LoadInserisciPenaComplessiva.<%=ICostantiPenaComplessiva.CAMPO_FLAG_PENA_SOSTITUTIVA%>.checked = false;
-    checkPenaSostitutiva();
+    	}
+	    // MEV_2023-13 - disabilito la sezione delle Pene sostitutive Pene Detentive Brevi 
+	    document.LoadInserisciPenaComplessiva.<%=ICostantiPenaComplessiva.CAMPO_FLAG_PENA_SOSTITUTIVA%>.checked = false;
+	    checkPenaSostitutiva();
  	} else {
 		// Disabilito tutti i campi
 		document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_SANZIONE%>.disabled = true;
@@ -403,8 +398,8 @@ function checkSanzione() {
 		// Pena Pecuniaria Sostitutiva
 		document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_INTERO_SANZIONE_PECUNIARIA_MULTA%>.disabled = true;
 		document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_DECIMALE_SANZIONE_PECUNIARIA_MULTA%>.disabled = true;
-    //document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_VALUTA_SANZIONE_PECUNIARIA%>.disabled = true;
-    $('select[name="<%=ICostantiSanzioneSostitutiva.CAMPO_VALUTA_SANZIONE_PECUNIARIA%>"]').prop( "disabled", true );
+    	// document.LoadInserisciPenaComplessiva.<!%=ICostantiSanzioneSostitutiva.CAMPO_VALUTA_SANZIONE_PECUNIARIA%>.disabled = true;
+    	$('select[name="<%=ICostantiSanzioneSostitutiva.CAMPO_VALUTA_SANZIONE_PECUNIARIA%>"]').prop( "disabled", true );
 		document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_INTERO_SANZIONE_PECUNIARIA_AMMENDA%>.disabled = true;
 		document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_DECIMALE_SANZIONE_PECUNIARIA_AMMENDA%>.disabled = true;
 	}
@@ -588,83 +583,69 @@ function controlliobbligatorietacontinuazione(ind) {
 			return false;		 
   		}
 	}
-} 
-
-
-
-
-<%// MEV_2023-13 %>
-function checkPenaSostitutiva() {
-  if (document.LoadInserisciPenaComplessiva.<%=ICostantiPenaComplessiva.CAMPO_FLAG_PENA_SOSTITUTIVA%>.checked == true) {
-    // Abilito tutti i campi
-    document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_PENA_SOSTITUTIVA%>.disabled = false;
-    
-    if (document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_PENA_SOSTITUTIVA%>[document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_PENA_SOSTITUTIVA%>.selectedIndex].value == '-') {
-      // Non abilito nulla
-    }
-    
-    if (document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_PENA_SOSTITUTIVA%>[document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_PENA_SOSTITUTIVA%>.selectedIndex].value == 'Z') {
-      //Pena Pecuniaria
-      // Quantum Disabilitati
-      document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_ANNI_PENA_SOSTITUTIVA%>.disabled = true;
-      document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_MESI_PENA_SOSTITUTIVA%>.disabled = true;
-      document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_GIORNI_PENA_SOSTITUTIVA%>.disabled = true;
-      // Pena Pecuniaria Sostitutiva Abilitata
-      document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_INTERO_PENA_PECUNIARIA_SOSTITUTIVA%>.disabled = false;
-      document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_DECIMALE_PENA_PECUNIARIA_SOSTITUTIVA%>.disabled = false;
- 
-    } else {
-      // Quantum Abilitati
-      document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_ANNI_PENA_SOSTITUTIVA%>.disabled = false;
-      document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_MESI_PENA_SOSTITUTIVA%>.disabled = false;
-      document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_GIORNI_PENA_SOSTITUTIVA%>.disabled = false;
-      // Pena Pecuniaria Sostitutiva Disabilitata
-      document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_INTERO_PENA_PECUNIARIA_SOSTITUTIVA%>.disabled = true;
-      document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_DECIMALE_PENA_PECUNIARIA_SOSTITUTIVA%>.disabled = true;
-    }
-    
-    // disabilito la sezione delle Sanzioni sostitutive
-    document.LoadInserisciPenaComplessiva.<%=ICostantiPenaComplessiva.CAMPO_FLAG_SANZIONE_SOSTITUTIVA%>.checked = false;
-    checkSanzione();
-  } else {
-    // Disabilito tutti i campi
-    document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_PENA_SOSTITUTIVA%>.disabled = true;
-    // Quantum
-    document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_ANNI_PENA_SOSTITUTIVA%>.disabled = true;
-    document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_MESI_PENA_SOSTITUTIVA%>.disabled = true;
-    document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_GIORNI_PENA_SOSTITUTIVA%>.disabled = true;
-    // Pena Pecuniaria Sostitutiva
-    document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_INTERO_PENA_PECUNIARIA_SOSTITUTIVA%>.disabled = true;
-    document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_DECIMALE_PENA_PECUNIARIA_SOSTITUTIVA%>.disabled = true;
-  }
 }
 
-
+<%-- MEV_2023-13 --%>
+function checkPenaSostitutiva() {
+	if (document.LoadInserisciPenaComplessiva.<%=ICostantiPenaComplessiva.CAMPO_FLAG_PENA_SOSTITUTIVA%>.checked == true) {
+	    // Abilito tutti i campi
+	    document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_PENA_SOSTITUTIVA%>.disabled = false;
+	    if (document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_PENA_SOSTITUTIVA%>[document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_PENA_SOSTITUTIVA%>.selectedIndex].value == '-') {
+			// Non abilito nulla
+	    }
+	    if (document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_PENA_SOSTITUTIVA%>[document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_PENA_SOSTITUTIVA%>.selectedIndex].value == 'Z') {
+			// Pena Pecuniaria
+			// Quantum Disabilitati
+			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_ANNI_PENA_SOSTITUTIVA%>.disabled = true;
+			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_MESI_PENA_SOSTITUTIVA%>.disabled = true;
+			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_GIORNI_PENA_SOSTITUTIVA%>.disabled = true;
+			// Pena Pecuniaria Sostitutiva Abilitata
+			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_INTERO_PENA_PECUNIARIA_SOSTITUTIVA%>.disabled = false;
+	      	document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_DECIMALE_PENA_PECUNIARIA_SOSTITUTIVA%>.disabled = false;
+		} else {
+			// Quantum Abilitati
+			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_ANNI_PENA_SOSTITUTIVA%>.disabled = false;
+			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_MESI_PENA_SOSTITUTIVA%>.disabled = false;
+			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_GIORNI_PENA_SOSTITUTIVA%>.disabled = false;
+			// Pena Pecuniaria Sostitutiva Disabilitata
+			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_INTERO_PENA_PECUNIARIA_SOSTITUTIVA%>.disabled = true;
+			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_DECIMALE_PENA_PECUNIARIA_SOSTITUTIVA%>.disabled = true;
+		}
+	    // disabilito la sezione delle Sanzioni sostitutive
+	    document.LoadInserisciPenaComplessiva.<%=ICostantiPenaComplessiva.CAMPO_FLAG_SANZIONE_SOSTITUTIVA%>.checked = false;
+	    checkSanzione();
+  	} else {
+	    // Disabilito tutti i campi
+	    document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_PENA_SOSTITUTIVA%>.disabled = true;
+	    // Quantum
+	    document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_ANNI_PENA_SOSTITUTIVA%>.disabled = true;
+	    document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_MESI_PENA_SOSTITUTIVA%>.disabled = true;
+	    document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_GIORNI_PENA_SOSTITUTIVA%>.disabled = true;
+	    // Pena Pecuniaria Sostitutiva
+	    document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_INTERO_PENA_PECUNIARIA_SOSTITUTIVA%>.disabled = true;
+	    document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_DECIMALE_PENA_PECUNIARIA_SOSTITUTIVA%>.disabled = true;
+	}
+}
 
 function TipoPenaSostitutiva() {
-  if (document.LoadInserisciPenaComplessiva.<%=ICostantiPenaComplessiva.CAMPO_FLAG_PENA_SOSTITUTIVA%>.checked == true) {
-    if (document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_PENA_SOSTITUTIVA%>[document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_PENA_SOSTITUTIVA%>.selectedIndex].value == 'Z') {
-      //Pena Pecuniaria
-      document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_ANNI_PENA_SOSTITUTIVA%>.disabled = true;
-      document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_MESI_PENA_SOSTITUTIVA%>.disabled = true;
-      document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_GIORNI_PENA_SOSTITUTIVA%>.disabled = true;
-      
-      document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_INTERO_PENA_PECUNIARIA_SOSTITUTIVA%>.disabled = false;
-      document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_DECIMALE_PENA_PECUNIARIA_SOSTITUTIVA%>.disabled = false;
-    } 
-    else
-    {
-      document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_ANNI_PENA_SOSTITUTIVA%>.disabled = false;
-      document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_MESI_PENA_SOSTITUTIVA%>.disabled = false;
-      document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_GIORNI_PENA_SOSTITUTIVA%>.disabled = false;
-      
-      document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_INTERO_PENA_PECUNIARIA_SOSTITUTIVA%>.disabled = true;
-      document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_DECIMALE_PENA_PECUNIARIA_SOSTITUTIVA%>.disabled = true;
-
-    }
-  }
+	if (document.LoadInserisciPenaComplessiva.<%=ICostantiPenaComplessiva.CAMPO_FLAG_PENA_SOSTITUTIVA%>.checked == true) {
+    	if (document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_PENA_SOSTITUTIVA%>[document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_PENA_SOSTITUTIVA%>.selectedIndex].value == 'Z') {
+			// Pena Pecuniaria
+			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_ANNI_PENA_SOSTITUTIVA%>.disabled = true;
+			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_MESI_PENA_SOSTITUTIVA%>.disabled = true;
+			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_GIORNI_PENA_SOSTITUTIVA%>.disabled = true;
+			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_INTERO_PENA_PECUNIARIA_SOSTITUTIVA%>.disabled = false;
+			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_DECIMALE_PENA_PECUNIARIA_SOSTITUTIVA%>.disabled = false;
+    	} else {
+			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_ANNI_PENA_SOSTITUTIVA%>.disabled = false;
+			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_MESI_PENA_SOSTITUTIVA%>.disabled = false;
+			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_GIORNI_PENA_SOSTITUTIVA%>.disabled = false;
+			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_INTERO_PENA_PECUNIARIA_SOSTITUTIVA%>.disabled = true;
+			document.LoadInserisciPenaComplessiva.<%=ICostantiSanzioneSostitutiva.CAMPO_DECIMALE_PENA_PECUNIARIA_SOSTITUTIVA%>.disabled = true;
+		}
+  	}
 }
-<%// MEV_2023-13 - FINE%>
+<%-- FINE MEV_2023-13 --%>
 </script>
 </head>
 
@@ -706,14 +687,11 @@ if (modalita.equals("I")) {
 		lAzione = "siap.sige.penacomplessiva.action.ActModificaPenaCompSige";
 	else
 		lAzione = "siap.siep.penacomplessiva.action.ActModificaPenaComplessiva";
-  
-    lPenaComplessiva = lPenCom;
-    
-  if (lSanSos.isPenaSostitutiva())
-    lPenaSostitutiva = lSanSos;    
-  else
-    lSanzioneSostitutiva = lSanSos;    
-  
+    lPenaComplessiva = pcm;
+  	if (ssm.isPenaSostitutiva())
+    	lPenaSostitutiva = ssm;    
+  	else
+    	lSanzioneSostitutiva = ssm;    
 %>
             <font class="campo">Modifica Pena Complessiva</font>
 <%
@@ -737,8 +715,6 @@ if (!modoSIGE) {
 %>
 <br>
 <form method="POST" action="<%=IWebConstants.PG_MAIN%>" name="LoadInserisciPenaComplessiva">
-
-
 <table cellspacing="2" cellpadding="2" width="80%">
 	<tr><td class="Titolo" colspan="4">Pena</td></tr>
 	<tr>
@@ -765,9 +741,7 @@ if (lIndexMulta == -1) {
 %>
 			<input Title="Multa" size="14" maxlength="14" value="<%=StringUtils.toZerotoStringaVuota(lParteInteraMulta,"")%>" type="text" name="<%=ICostantiPenaComplessiva.CAMPO_INTERO_IMPORTO_MULTA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">,
     		<input Title="Multa" size="2" maxlength="2" value="<%=lParteDecimaleMulta%>" type="text" name="<%=ICostantiPenaComplessiva.CAMPO_DECIMALE_IMPORTO_MULTA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
-    		<select name="<%=ICostantiPenaComplessiva.CAMPO_VALUTA_IMPORTO_MULTA%>">
-      			<%=valute%>
-    		</select>
+    		<select name="<%=ICostantiPenaComplessiva.CAMPO_VALUTA_IMPORTO_MULTA%>"><%=valute%></select>
   		</td>
 	</tr>
 	<tr>
@@ -794,17 +768,13 @@ if (lIndexAmmenda == -1) {
 %>
 			<input Title="Ammenda" size="14" maxlength="14" value="<%=StringUtils.toZerotoStringaVuota(lParteInteraAmmenda,"")%>" type="text" name="<%=ICostantiPenaComplessiva.CAMPO_INTERO_IMPORTO_AMMENDA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">,
     		<input Title="Ammenda" size="2" maxlength="2" value="<%=lParteDecimaleAmmenda%>" type="text" name="<%=ICostantiPenaComplessiva.CAMPO_DECIMALE_IMPORTO_AMMENDA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
-			<select name="<%=ICostantiPenaComplessiva.CAMPO_VALUTA_IMPORTO_AMMENDA%>">
-				<%=valute%>
-			</select>
+			<select name="<%=ICostantiPenaComplessiva.CAMPO_VALUTA_IMPORTO_AMMENDA%>"><%=valute%></select>
 		</td>
 	</tr>
 	<tr>
 		<td class="l">Ergastolo</td>
-		<td class="l">
-			<select Title="Pena Detentiva" name="<%=ICostantiPenaComplessiva.CAMPO_COD_TIPO_PENA_DETENTIVA%>">
-				<%=tipoPenaDetentiva%>
-			</select>
+		<td class="l" colspan="3">
+			<select Title="Pena Detentiva" name="<%=ICostantiPenaComplessiva.CAMPO_COD_TIPO_PENA_DETENTIVA%>"><%=tipoPenaDetentiva%></select>
 		</td>
 		<td colspan="2">&nbsp;</td>
 	</tr>
@@ -827,27 +797,25 @@ if (lIndexAmmenda == -1) {
 		</td>
   </tr>
 </table>
-
+<br>
 <%
 //==============================================================================
 //                             Sanzione Sostitutiva
 //==============================================================================
 %>      
 <table cellspacing="2" cellpadding="2">
-	<tr><td class="Titolo" colspan="4">Sanzione Sostitutiva</td></tr>
+	<tr><td class="Titolo" colspan="2">Sanzione Sostitutiva</td></tr>
 	<tr>
     	<td class="l">Sanzione Sostitutiva</td>
-    	<td class="label">
+    	<td class="l">
       		<input type="checkbox" name="<%=ICostantiPenaComplessiva.CAMPO_FLAG_SANZIONE_SOSTITUTIVA%>" value="S" <%=flagSanzioneSostitutiva ? "checked" : ""%> title="Check per selezionare la Sanzione Sostitutiva" onClick="Javascript:checkSanzione();">
   		</td>
 	</tr>
 	<tr>
 		<td class="l">Tipo </td>
-		<td class="l" colspan="3">
-		  	<select Title="Tipo Sanzione Sostitutiva" name="<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_SANZIONE%>" onChange="TipoSanzione('carica');">
-				<%=tipoSanzioneSostitutiva%>
-		  	</select>&nbsp;&nbsp;&nbsp;&nbsp;
-			Durata&nbsp;:&nbsp;&nbsp;&nbsp;
+		<td class="l">
+		  	<select Title="Tipo Sanzione Sostitutiva" name="<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_SANZIONE%>" onChange="TipoSanzione('carica');"><%=tipoSanzioneSostitutiva%></select>
+			&nbsp;&nbsp;&nbsp;&nbsp;Durata&nbsp;:&nbsp;&nbsp;&nbsp;
 		  	Anni&nbsp;<input Title="Anni Sanzione Sostitutiva" value="<%=StringUtils.toStringJSP(lSanzioneSostitutiva.getNumAnni())%>" type="text" name="<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_ANNI%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
 			Mesi&nbsp;<input Title="Mesi Sanzione Sostitutiva" value="<%=StringUtils.toStringJSP(lSanzioneSostitutiva.getNumMesi())%>" type="text" name="<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_MESI%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
 			Giorni&nbsp;<input Title="Giorni Sanzione Sostitutiva" value="<%=StringUtils.toStringJSP(lSanzioneSostitutiva.getNumGiorni())%>" type="text" name="<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_GIORNI%>" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
@@ -855,7 +823,7 @@ if (lIndexAmmenda == -1) {
 	</tr>
 	<tr>
 		<td class="l">Pena Pecuniaria </td>
-		<td class="l" colspan="3">MULTA&nbsp;&nbsp;
+		<td class="l">MULTA&nbsp;&nbsp;
 <%
 String lImportoPenaPecSost = StringUtils.toStringJSP(lSanzioneSostitutiva.getSanzionePecuniariaMulta());
 String lParteInteraPenaPecSost = "";
@@ -871,9 +839,7 @@ if (lIndexPenaPecSost == -1) {
 %>
     		<input Title="Pena Pecuniaria Sostitutiva" size="14" maxlength="14" value="<%=lParteInteraPenaPecSost%>" type="text" name="<%=ICostantiSanzioneSostitutiva.CAMPO_INTERO_SANZIONE_PECUNIARIA_MULTA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">,
     		<input Title="Pena Pecuniaria Sostitutiva" size="2" maxlength="2" value="<%=lParteDecimalePenaPecSost%>" type="text" name="<%=ICostantiSanzioneSostitutiva.CAMPO_DECIMALE_SANZIONE_PECUNIARIA_MULTA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
-   			<select name="<%=ICostantiSanzioneSostitutiva.CAMPO_VALUTA_SANZIONE_PECUNIARIA%>">
-      			<%=valute%>
-    		</select>&nbsp;&nbsp;&nbsp;&nbsp;
+   			<select name="<%=ICostantiSanzioneSostitutiva.CAMPO_VALUTA_SANZIONE_PECUNIARIA%>"><%=valute%></select>
 <%
 //**********************************************************
 // Federica - a9-rr-078
@@ -881,7 +847,7 @@ if (lIndexPenaPecSost == -1) {
 //**********************************************************
 %>      
 
-  			AMMENDA&nbsp;&nbsp;
+  			&nbsp;&nbsp;&nbsp;&nbsp;AMMENDA&nbsp;&nbsp;
 <%
 String lImportoPenaPecSostA = StringUtils.toStringJSP(lSanzioneSostitutiva.getSanzionePecuniariaAmmenda());
 String lParteInteraPenaPecSostA = "";
@@ -897,84 +863,89 @@ if (lIndexPenaPecSostA == -1) {
 %>
 			<input Title="Pena Pecuniaria Sostitutiva" size="14" maxlength="14" value="<%=lParteInteraPenaPecSostA%>" type="text" name="<%=ICostantiSanzioneSostitutiva.CAMPO_INTERO_SANZIONE_PECUNIARIA_AMMENDA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">,
     		<input Title="Pena Pecuniaria Sostitutiva" size="2" maxlength="2" value="<%=lParteDecimalePenaPecSostA%>" type="text" name="<%=ICostantiSanzioneSostitutiva.CAMPO_DECIMALE_SANZIONE_PECUNIARIA_AMMENDA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
-    		<select name="<%=ICostantiSanzioneSostitutiva.CAMPO_VALUTA_SANZIONE_PECUNIARIA%>">
-      			<%=valute%>
-    		</select>
+    		<select name="<%=ICostantiSanzioneSostitutiva.CAMPO_VALUTA_SANZIONE_PECUNIARIA%>"><%=valute%></select>
 		</td>
 	</tr>
 </table>
-
-
-
+<br>
 <%
 //==============================================================================
-//  MEV_2023-13         Pene sostitutive Pene Detentive Brevi
+// MEV_2023-13 - Pene sostitutive Pene Detentive Brevi
 //==============================================================================
 %>
 <table cellspacing="2" cellpadding="2">
-  <tr><td class="Titolo" colspan="4">Pene sostitutive Pene Detentive Brevi</td></tr>
-  <tr>
-    <td class="l">Pena Sostitutiva</td>
-    <td class="label">
-      <input type="checkbox" value="S" <%=flagPenaSostitutiva ? "checked" : ""%> 
-             name="<%=ICostantiPenaComplessiva.CAMPO_FLAG_PENA_SOSTITUTIVA%>" 
-             title="Check per selezionare la Pena Sostitutiva" onClick="Javascript:checkPenaSostitutiva();">
-    </td>
-  </tr>
-  <tr>
-    <td class="l">Tipo </td>
-    <td class="l" colspan="3">
-      <select Title="Tipo Pena Sostitutiva" name="<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_PENA_SOSTITUTIVA%>" onChange="TipoPenaSostitutiva('carica');">
-        <option value="-">-</option>
-        <%=tipoPenaSostitutiva%>
-      </select>&nbsp;&nbsp;&nbsp;&nbsp;
-      Durata&nbsp;:&nbsp;&nbsp;&nbsp;
-      Anni&nbsp;<input type="text" Title="Anni Pena Sostitutiva" maxlength="2" size="2"
-                       value="<%=StringUtils.toStringJSP(lPenaSostitutiva.getNumAnni())%>" 
-                       name="<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_ANNI_PENA_SOSTITUTIVA%>"  
-                       onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
-      Mesi&nbsp;<input type="text" maxlength="2" size="2"
-                       Title="Mesi Pena Sostitutiva" 
-                       value="<%=StringUtils.toStringJSP(lPenaSostitutiva.getNumMesi())%>"  
-                       name="<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_MESI_PENA_SOSTITUTIVA%>"  
-                       onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
-      Giorni&nbsp;<input type="text" maxlength="4" size="4"
-                         Title="Giorni Pena Sostitutiva" 
-                         value="<%=StringUtils.toStringJSP(lPenaSostitutiva.getNumGiorni())%>"  
-                         name="<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_GIORNI_PENA_SOSTITUTIVA%>"  
-                         onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
-    </td>
-  </tr>
-  <tr>
-    <td class="l">Pena Pecuniaria </td>
-    <td class="l" colspan="3">IMPORTO&nbsp;&nbsp;
-    <%
-    BigDecimal lImportoPenaPecPdb = lPenaSostitutiva.getSanzionePecuniariaMulta();
-    String lParteInteraPenaPecPdb   = StringUtils.getParteIntera   (lImportoPenaPecPdb);
-    String lParteDecimalePenaPecPdb = StringUtils.getParteDecimale (lImportoPenaPecPdb);
-    %>
-        <input type="text" size="14" maxlength="14" Title="Pena Pecuniaria Sostitutiva"
-               value="<%=lParteInteraPenaPecPdb%>"  
-               name="<%=ICostantiSanzioneSostitutiva.CAMPO_INTERO_PENA_PECUNIARIA_SOSTITUTIVA%>" 
-               onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">,
-        <input type="text" size="2" maxlength="2" Title="Pena Pecuniaria Sostitutiva"  
-               value="<%=lParteDecimalePenaPecPdb%>"  
-               name="<%=ICostantiSanzioneSostitutiva.CAMPO_DECIMALE_PENA_PECUNIARIA_SOSTITUTIVA%>" 
-               onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
-        &euro;
-    </td>
-  </tr>
+	<tr><td class="Titolo" colspan="2">Pene sostitutive Pene Detentive Brevi</td></tr>
+  	<tr>
+    	<td class="l">Pena Sostitutiva</td>
+    	<td class="l">
+      		<input type="checkbox" value="S" <%=flagPenaSostitutiva ? "checked" : ""%> name="<%=ICostantiPenaComplessiva.CAMPO_FLAG_PENA_SOSTITUTIVA%>" title="Check per selezionare la Pena Sostitutiva" onClick="Javascript:checkPenaSostitutiva();">
+    	</td>
+  	</tr>
+  	<tr>
+    	<td class="l">Tipo </td>
+    	<td class="l">
+      		<select Title="Tipo Pena Sostitutiva" name="<%=ICostantiSanzioneSostitutiva.CAMPO_COD_TIPO_PENA_SOSTITUTIVA%>" onChange="TipoPenaSostitutiva('carica');">
+      			<option value="-">-</option>
+       			<%=tipoPenaSostitutiva%>
+      		</select>
+      		&nbsp;&nbsp;&nbsp;&nbsp;Durata&nbsp;:&nbsp;&nbsp;&nbsp;
+      		Anni&nbsp;<input type="text" Title="Anni Pena Sostitutiva" maxlength="2" size="2"
+				value="<%=StringUtils.toStringJSP(lPenaSostitutiva.getNumAnni())%>" 
+				name="<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_ANNI_PENA_SOSTITUTIVA%>"  
+				onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
+     		Mesi&nbsp;<input type="text" maxlength="2" size="2"
+				Title="Mesi Pena Sostitutiva" 
+				value="<%=StringUtils.toStringJSP(lPenaSostitutiva.getNumMesi())%>"  
+				name="<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_MESI_PENA_SOSTITUTIVA%>"  
+				onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
+      		Giorni&nbsp;<input type="text" maxlength="4" size="4"
+				Title="Giorni Pena Sostitutiva" 
+				value="<%=StringUtils.toStringJSP(lPenaSostitutiva.getNumGiorni())%>"  
+				name="<%=ICostantiSanzioneSostitutiva.CAMPO_NUM_GIORNI_PENA_SOSTITUTIVA%>"  
+				onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
+    	</td>
+  	</tr>
+  	<tr>
+	    <td class="l">Pena Pecuniaria </td>
+	    <td class="l">IMPORTO&nbsp;&nbsp;
+<%
+BigDecimal lImportoPenaPecPdb = lPenaSostitutiva.getSanzionePecuniariaMulta();
+String lParteInteraPenaPecPdb = StringUtils.getParteIntera(lImportoPenaPecPdb);
+String lParteDecimalePenaPecPdb = StringUtils.getParteDecimale(lImportoPenaPecPdb);
+%>
+        	<input type="text" size="14" maxlength="14" Title="Pena Pecuniaria Sostitutiva"
+               	value="<%=lParteInteraPenaPecPdb%>"  
+               	name="<%=ICostantiSanzioneSostitutiva.CAMPO_INTERO_PENA_PECUNIARIA_SOSTITUTIVA%>" 
+               	onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">,
+        	<input type="text" size="2" maxlength="2" Title="Pena Pecuniaria Sostitutiva"  
+               	value="<%=lParteDecimalePenaPecPdb%>"  
+               	name="<%=ICostantiSanzioneSostitutiva.CAMPO_DECIMALE_PENA_PECUNIARIA_SOSTITUTIVA%>" 
+               	onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
+       		&euro;
+		</td>
+	</tr>
 </table>
-<% // MEV_2023-13 %>
-
-
+<%-- FINE MEV_2023-13 --%>
+<br>
+<%-- MEV_2025-48: aggiunta nuova sezione --%>
+<table cellspacing="2" cellpadding="2">
+ 	<tr><td class="Titolo">Selezionare se Importo da Pagare Include</td></tr>
+  	<tr>
+    	<td class="l">
+      		Confisca per equivalente&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      		<input type="checkbox" name="<%=ICostantiPenaComplessiva.CAMPO_FLAG_CONFISCA_PER_EQUIVALENTE%>" value="S" <%=flagConfiscaEquivalente ? "checked" : ""%>>
+  		</td>
+	</tr>
+</table>
+<br>
 <% 
 //==============================================================================
 // Sezione con la continuazione
 //==============================================================================
-if (modalita.equals("I") && (!modoSIGE)) { %>
+if (modalita.equals("I") && (!modoSIGE)) {
+%>
 <table cellspacing="2" cellpadding="2">
- 	<tr><td class="Titolo" colspan="4">Continuazione con altre sentenze</td></tr>
+ 	<tr><td class="Titolo">Continuazione con altre sentenze</td></tr>
   	<tr>
     	<td class="l">
       		Continuazione con altre sentenze&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -982,87 +953,77 @@ if (modalita.equals("I") && (!modoSIGE)) { %>
   		</td>
 	</tr>
 </table>
-
 <%
 	for (int i = 0; i < 2; i++) {
 %>
 <div id="continuazione<%=i%>" style="width: 100%; display:none; position:relative;">
 <table cellspacing="2" cellpadding="2" width="100%">
-  <tr>
-    <td class="l">Tipo Continuazione</td>
-    <td class="l" colspan="3">
-      <select Title="Tipo Continuazione" name="<%=ICostantiContinuazione.CAMPO_COD_TIPO_CONTINUAZIONE%>">
-      <%=tipoContinuazione%>
-      </select>
-    </td>
-  </tr>
-  <tr>
-    <td class="l">Anno/Numero Sentenza</td>
-    <td class="L">
-      <input Title="Anno Sentenza" value="<%=""%>" type="text" name="<%=ICostantiContinuazione.CAMPO_ANNO_SENTENZA%>" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
-      /
-      <input Title="Numero Sentenza" value="<%=""%>" type="text" name="<%=ICostantiContinuazione.CAMPO_NUM_SENTENZA%>" maxlength="6" size="6" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
-    </td>
-    <td class="l">Data Sentenza</td>
-    <td class="l">
-      <input Title="Giorno Data Sentenza" type="text" value="<%=""%>" name="<%=ICostantiContinuazione.CAMPO_GIORNO_DATA_SENTENZA%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
-      -
-      <input Title="Mese Data Sentenza" type="text" value="<%=""%>" name="<%=ICostantiContinuazione.CAMPO_MESE_DATA_SENTENZA%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
-      -
-      <input Title="Anno Data Sentenza" type="text" value="<%=""%>" name="<%=ICostantiContinuazione.CAMPO_ANNO_DATA_SENTENZA%>"maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
-    </td>
-  </tr>
-  
-  <tr>
-    <td class="l">Autorità Sentenza</td>
-    <td class="l" colspan="3">
-      <select Title="Autorità Sentenza" name="<%=ICostantiContinuazione.CAMPO_COD_TIPO_AUTORITA%>">
-        <%=autoritaSentenza%>
-      </select>
-    </td>
-  </tr>
-  
-  <tr>
-    <td class="l">Luogo Sentenza</td>
-    <td class="l" colspan="3">
-      <input Title="Luogo Sentenza" name="<%=ICostantiContinuazione.CAMPO_COD_LUOGO_AUTORITA%>" value="" type="text" maxlength="35" size="35">
-      <a href="Javascript:ListaComuni('LoadInserisciPenaComplessiva','<%=ICostantiContinuazione.CAMPO_COD_LUOGO_AUTORITA%>[<%=i%>]');">
-        <img src="/images/filefolder.gif" border="0">
-      </a>
-    </td>
-  </tr>
-  <tr>
-    <td class="l">Anno/Numero R.G.N.R.</td>
-    <td class="L">
-      <input Title="Anno R.G.N.R." value="" type="text" name="<%=ICostantiContinuazione.CAMPO_ANNO_REGE_PM%>" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
-      /
-      <input Title="Numero R.G.N.R." value="" type="text" name="<%=ICostantiContinuazione.CAMPO_NUM_REGE_PM%>" maxlength="6" size="6" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
-    </td>
-    <td class="l">Anno/Numero Reg.Gen.</td>
-    <td class="L">
-      <input Title="Anno Reg.Gen." value="" type="text" name="ARG" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
-      /
-      <input Title="Numero Reg.Gen." value="" type="text" name="NRG" maxlength="6" size="6" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
-      &nbsp;
-      <select name="TipoRG">
-        <option value="-">-</option>
-        <option value="gip">GIP</option>
-        <option value="dib">DIB</option>
-        <option value="cas">CAS</option>
-        <option value="cap">CAP</option>
-        <option value="casap">CASAP</option>
-      </select>
-    </td>
-  </tr>
+  	<tr>
+	    <td class="l">Tipo Continuazione</td>
+	    <td class="l" colspan="3">
+	      	<select Title="Tipo Continuazione" name="<%=ICostantiContinuazione.CAMPO_COD_TIPO_CONTINUAZIONE%>"><%=tipoContinuazione%></select>
+	    </td>
+  	</tr>
+  	<tr>
+		<td class="l">Anno/Numero Sentenza</td>
+		<td class="L">
+		  	<input Title="Anno Sentenza" value="<%=""%>" type="text" name="<%=ICostantiContinuazione.CAMPO_ANNO_SENTENZA%>" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
+			/
+			<input Title="Numero Sentenza" value="<%=""%>" type="text" name="<%=ICostantiContinuazione.CAMPO_NUM_SENTENZA%>" maxlength="6" size="6" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
+		</td>
+		<td class="l">Data Sentenza</td>
+		<td class="l">
+		  	<input Title="Giorno Data Sentenza" type="text" value="<%=""%>" name="<%=ICostantiContinuazione.CAMPO_GIORNO_DATA_SENTENZA%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
+			-
+			<input Title="Mese Data Sentenza" type="text" value="<%=""%>" name="<%=ICostantiContinuazione.CAMPO_MESE_DATA_SENTENZA%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
+			-
+			<input Title="Anno Data Sentenza" type="text" value="<%=""%>" name="<%=ICostantiContinuazione.CAMPO_ANNO_DATA_SENTENZA%>"maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
+		</td>
+	</tr>
+	<tr>
+		<td class="l">Autorità Sentenza</td>
+		<td class="l" colspan="3">
+	  		<select Title="Autorità Sentenza" name="<%=ICostantiContinuazione.CAMPO_COD_TIPO_AUTORITA%>"><%=autoritaSentenza%></select>
+	  	</td>
+	</tr>
+	<tr>
+		<td class="l">Luogo Sentenza</td>
+		<td class="l" colspan="3">
+		    <input Title="Luogo Sentenza" name="<%=ICostantiContinuazione.CAMPO_COD_LUOGO_AUTORITA%>" value="" type="text" maxlength="35" size="35">
+			<a href="Javascript:ListaComuni('LoadInserisciPenaComplessiva','<%=ICostantiContinuazione.CAMPO_COD_LUOGO_AUTORITA%>[<%=i%>]');">
+		      	<img src="/images/filefolder.gif" border="0">
+		    </a>
+		</td>
+	</tr>
+	<tr>
+		<td class="l">Anno/Numero R.G.N.R.</td>
+		<td class="L">
+		  	<input Title="Anno R.G.N.R." value="" type="text" name="<%=ICostantiContinuazione.CAMPO_ANNO_REGE_PM%>" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
+			/
+			<input Title="Numero R.G.N.R." value="" type="text" name="<%=ICostantiContinuazione.CAMPO_NUM_REGE_PM%>" maxlength="6" size="6" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
+		</td>
+		<td class="l">Anno/Numero Reg.Gen.</td>
+		<td class="L">
+		  	<input Title="Anno Reg.Gen." value="" type="text" name="ARG" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
+			/
+			<input Title="Numero Reg.Gen." value="" type="text" name="NRG" maxlength="6" size="6" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
+		  	&nbsp;
+		  	<select name="TipoRG">
+				<option value="-">-</option>
+				<option value="gip">GIP</option>
+				<option value="dib">DIB</option>
+				<option value="cas">CAS</option>
+				<option value="cap">CAP</option>
+				<option value="casap">CASAP</option>
+		  	</select>
+		</td>
+	</tr>
 </table>
 </div>
 <%
 	} // end for
 }  // end if
 %>     
-
-
-
 <table cellspacing="2" cellpadding="2" width="100%">
 	<tr>
 	  	<td colspan="2">
@@ -1074,7 +1035,7 @@ if (modalita.equals("I") && (!modoSIGE)) { %>
 
 <input type="HIDDEN" name="Action" value="<%=lAzione%>">
 <input type="HIDDEN" name="<%=ICostantiPenaComplessiva.CAMPO_ID_PENA_COMPLESSIVA%>" value="<%=StringUtils.toStringJSP(lPenaComplessiva.getIdPenaComplessiva())%>">
-<input type="HIDDEN" name="<%=ICostantiSanzioneSostitutiva.CAMPO_ID_SANZIONE_SOSTITUTIVA%>" value="<%=StringUtils.toStringJSP(lSanSos.getIdSanzioneSostitutiva())%>">
+<input type="HIDDEN" name="<%=ICostantiSanzioneSostitutiva.CAMPO_ID_SANZIONE_SOSTITUTIVA%>" value="<%=StringUtils.toStringJSP(ssm.getIdSanzioneSostitutiva())%>">
 <input type="HIDDEN" name="lTipoFunzione" value="<%=lTipoFunzione%>">
 <input type="HIDDEN" name="<%=IWebConstants.LINK_RITORNO%>" value="<%=TornaQui%>">
 
