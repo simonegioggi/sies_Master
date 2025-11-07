@@ -490,18 +490,14 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 	}
 
 	/**
-	 * getFascicoloSiusGPModel <<<<<<< HEAD
+	 * getFascicoloSiusGPModel
 	 *
-	 * =======
-	 *
-	 * >>>>>>> refs/heads/release_12.8.4.0
-	 *
-	 * @Restituisce Il Model del FascicoloGPModel.
+	 * @return GenericModel
 	 * @throws DAOException
 	 */
 	public GenericModel getFascicoloSiusGPModel() throws DAOException {
-		FascicoloGPModel lFascicolo = new FascicoloGPModel();
 
+		FascicoloGPModel lFascicolo = new FascicoloGPModel();
 		lFascicolo.getFascicoloSiusModel().setIdFascicoloSius(getBigDecimal("ID_FASCICOLO_SIUS"));
 		lFascicolo.getFascicoloSiusModel().setChiaveAnno(getBigDecimal("CHIAVE_ANNO"));
 		lFascicolo.getFascicoloSiusModel().setChiaveUfficio(getString("CHIAVE_UFFICIO"));
