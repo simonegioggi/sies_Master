@@ -48,6 +48,11 @@ public class ActDettaglioPeneRideterminate extends ActionModuloCumulo implements
     
     setRequestAttribute("ListaRichiesteAlGE", lElencoComputi);   
     
+    // MEV_2025-48 - 2.12 Alert su continuazione e revoche benefici
+    super.getListaTitContSganciate(null);
+    super.getListaTitConRevBenSganciati(null);
+    // MEV_2025-48 - 2.12 Alert su continuazione e revoche benefici
+    
     if (   lDatiAggregati.getPenaRideterminataCumulo()!=null
         || (   lDatiAggregati.getListaDatiFinaliUlterioriSanzioni()!=null
             && lDatiAggregati.getListaDatiFinaliUlterioriSanzioni().size()>0

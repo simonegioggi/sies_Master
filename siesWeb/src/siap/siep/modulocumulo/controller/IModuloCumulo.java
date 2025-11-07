@@ -194,4 +194,12 @@ public interface IModuloCumulo {
             BigDecimal aIdIstruttoriaCumulo, BigDecimal aIdFascicolo, DatiOperazioneModel aDatoOpModel,
             Connection aDBConnection) throws F3BException;
     /* MEV_2025-48 – 2.14 Caricamento Istruttoria Annullata*/ 
+
+    // MEV_2025-48 - 2.12 Alert su continuazione
+    public Vector <TitoloCumulatoModel> ExRicercaTitoliConContinuazioniSganciate (BigDecimal aIdIstruttoriaCumulo) 
+            throws F3BException;
+    
+    public Vector <TitoloCumulatoModel> ExRicercaTitoliConRevBenSganciati (BigDecimal aIdIstruttoriaCumulo) 
+            throws F3BException;
+    // MEV_2025-48 - 2.12 Alert su continuazione
 }

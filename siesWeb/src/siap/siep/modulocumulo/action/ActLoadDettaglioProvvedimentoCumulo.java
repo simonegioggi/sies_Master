@@ -42,7 +42,12 @@ public class ActLoadDettaglioProvvedimentoCumulo extends ActionModuloCumulo impl
 
 		IstruttoriaCumuloModel lIstruttoriaModel = null;
 		DatiFinaliCumuloAggregatoModel lDatiFinaliAggModel = null;
-
+        
+        // MEV_2025-48 - 2.12 Alert su continuazione e revoche benefici
+        super.getListaTitContSganciate(null);
+        super.getListaTitConRevBenSganciati(null);
+        // MEV_2025-48 - 2.12 Alert su continuazione e revoche benefici
+        
 		if (!isRequestParameterNullObj(ICostantiEvento.CAMPO_ID_EVENTO)
 				&& getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO) != null) {
 			// Provengo da elenco provvedimenti. Potrei non avere i dati dell'istruttoria
