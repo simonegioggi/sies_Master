@@ -1,14 +1,5 @@
-BRANCH SIES VERSIONE 12.8.3.0
+BRANCH SIES VERSIONE 12.8.3.1
 
-Nasce dal branch 12.8.2.0 in data 29/08/2025
+Nasce dal branch 12.8.3.0 in data 07/11/2025
 
-Questa Release verrà rilasciata il 24/10/2025 (Patch mesi di Settembre e Ottobre 2025)
-
-Comprende i seguenti Ticket MAC:
-
-1)	Ticket#202510090125 - Correzione template -SIEP_PP_PR_AVVPAGAM_PP
-	Per la risoluzione della problematica sono stati modificati i template relativi all'avvenuto pagamento della pena pecuniaria.
-	Il problema era legato al fatto che il significato di alcune frasi non era corretto.
-	Templates modificati:
-	-   NotificaAvvocati.rtf
-	-	SIEP_PP_PR_AVVPAGAM_PP.rtf
+Questa Release verrà rilasciata il 07/11/2025 (Patch mesi di Settembre e Ottobre 2025)

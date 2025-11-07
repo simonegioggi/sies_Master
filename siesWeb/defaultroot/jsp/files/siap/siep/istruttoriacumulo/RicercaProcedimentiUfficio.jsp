@@ -159,9 +159,7 @@ for (int k=0; k<ListaProcedimenti.size();k++){
         var tabella = $('#'+idTabella).fadeOut();
       }
       
-      function Verify()
-      {
-        //alert('Verify - Start');
+      function Verify() {
          if(document.f.<%=ICostantiSoggetto.CAMPO_COGNOME%>.value == "" && 
    		    document.f.<%=ICostantiSoggetto.CAMPO_COD_AFIS%>.value == "" &&  
    		    document.f.<%=ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>.value == "" )
@@ -204,8 +202,7 @@ for (int k=0; k<ListaProcedimenti.size();k++){
       } // Chiude Verify()
       
       <%-- Ticket#20220127012 - Funzione riscritta --%>
-      function IscrizioneinIstru()
-      {
+      function IscrizioneinIstru() {
         // 29/04/2019  MEV70 Elaborazione dell'Array contrenente i riferimenti ad eventuali titoli giàpresenti in Istruttoria.
         // - Se un procedimento e già presente in Istruttoria il relativo elemento nell'Array è contrassegnato con "p"; 
         // - Se un procedimento non e presente ma afferisce a un Titolo già presente in Istruttoria, il relativo elemento nell'Array è contrassegnato con "Anno/Numero procedimento"; 
@@ -238,7 +235,11 @@ for (int k=0; k<ListaProcedimenti.size();k++){
         var contaSelezionati = 0;
         
         for (var j = 0; j < <%=aTitoli.length%>; j++) {
+          <% if (aTitoli.length==1) {%>
+          if (document.f.<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>.checked)
+          <% } else { %>
           if (document.f.<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>[j].checked)
+          <% }%>
           {
             contaSelezionati++;
             // Testo se in istruttoria
@@ -250,7 +251,11 @@ for (int k=0; k<ListaProcedimenti.size();k++){
             }
             
             // Testo se iscritto a NSC
+			<% if (aTitoli.length==1) {%>
+            if( document.f.<%=ICostantiFascicoloSiep.CAMPO_KEY_PROVV_NSC%>.value != "SI" )
+			<% } else { %>
             if( document.f.<%=ICostantiFascicoloSiep.CAMPO_KEY_PROVV_NSC%>[j].value != "SI" )
+			<% }%>
             {
               NSC = "NO";
             }
@@ -311,8 +316,7 @@ for (int k=0; k<ListaProcedimenti.size();k++){
       <%-- Ticket#20220127012 - FINE --%>
       
       <%-- Ticket#20220127012 - Vecchia versione rimossa 
-      function IscrizioneinIstruOLD()
-      {
+      function IscrizioneinIstruOLD() {
     	 // 29/04/2019  MEV70 Elaborazione dell'Array contrenente i riferimenti ad eventuali titoli giàpresenti in Istruttoria.
     	 // - Se un procedimento e già presente in Istruttoria il relativo elemento nell'Array è contrassegnato con "p"; 
     	 // - Se un procedimento non e presente ma afferisce a un Titolo già presente in Istruttoria, il relativo elemento nell'Array è contrassegnato con "Anno/Numero procedimento"; 
