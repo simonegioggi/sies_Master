@@ -13,6 +13,7 @@
 <%@ page import="siap.siep.fascicolo.model.FascicoloSiepModel"%>
 <%@ page import="siap.sico.magistrato.action.ICostantiMagistrato"%>
 <%@ page import="siap.siep.notifica.action.ICostantiNotifica"%>
+<%@ page import="siap.siep.penaresidua.model.PenaResiduaModel"%>
 
 <jsp:useBean id="fascicolo"				scope="session" class="siap.siep.fascicolo.model.FascicoloSiepModel"/>
 <jsp:useBean id="dataArrivoAtto"		scope="request" class="java.util.Date"/>
@@ -25,6 +26,8 @@
 <jsp:useBean id="note"					scope="request" class="java.lang.String"/>
 <jsp:useBean id="magistratoFirmatario"	scope="request" class="java.lang.String"/>
 <jsp:useBean id="casellarioGiudiziale"	scope="request" class="java.lang.String"/>
+<jsp:useBean id="UtenteConnesso"        scope="session" class="siap.sico.utente.model.UtenteModel"/>
+<jsp:useBean id="penaresidua" 			scope="request" class="siap.siep.penaresidua.model.PenaResiduaModel"/>
 
 <html>
 <head>
@@ -117,6 +120,73 @@ function checkTipoClasse() {
 	</tr>
 </table>
 <br>
+<table cellspacing="0" cellpadding="0" width="95%">
+	<tr>
+      	<td class="L">
+        	<font class="label">Procedimento : N.</font>
+<%
+if ("90".equals(UtenteConnesso.getUserProfile().getProfileId().toString())) {
+%>
+			<%=fascicolo.getChiaveAnno()%> / <%=fascicolo.getChiaveProgr()%>
+<%
+} else {
+%>
+          	<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>=<%=fascicolo.getIdFascicoloSiep()%>" title="Procedimento">
+	            <%=fascicolo.getChiaveAnno()%>
+	            /
+	            <%=fascicolo.getChiaveProgr()%>
+          	</a>          
+<%
+}
+%>
+          	&nbsp;
+<%
+if (fascicolo.getFlagCumulante() != null && fascicolo.getFlagCumulante().equals("S")) {
+%>
+			<font class="cRossoCumulo"> &nbsp;C&nbsp; </font> &nbsp;
+<%
+}
+if (fascicolo.getCodOperatoreInserimento() != null && fascicolo.getCodOperatoreInserimento().startsWith("res-")) {
+%>
+            <font class="cRossoCumulo"> &nbsp;Migrato&nbsp; </font> &nbsp;
+<%
+}
+if (fascicolo.getCodStatoFascicolo() != null && (fascicolo.getCodStatoFascicolo().equals("01"))) {
+%>
+            <font class="cRossoCumulo"> &nbsp;Archiviato&nbsp;</font> &nbsp;
+<%
+}
+if ((penaresidua != null && penaresidua.getFlagPenaSospesa() != null && penaresidua.getFlagPenaSospesa().equals("S"))
+		|| (fascicolo != null && fascicolo.getChiaveProgr() != null && (fascicolo.getChiaveProgr().intValue() >= 30000 && fascicolo.getChiaveProgr().intValue() < 40000))) {
+	if (fascicolo!= null && fascicolo.getChiaveProgr() != null && (fascicolo.getChiaveProgr().intValue() >= 30000 && fascicolo.getChiaveProgr().intValue() < 40000)) {
+%>
+            <font class="cRossoCumulo"> &nbsp;Pena Sospesa Condizionalmente&nbsp;</font>&nbsp;
+<%
+	} else {
+%>
+			<font class="cRossoCumulo"> &nbsp;Esecuzione Sospesa&nbsp;</font>&nbsp;
+<%
+	}
+}
+if (penaresidua != null && penaresidua.getFlagPenaSospesa() != null && penaresidua.getFlagPenaSospesa().equals("I")) {
+%>
+          	<font class="cRossoCumulo"> &nbsp;Pena Interrotta&nbsp;</font>&nbsp;
+<%
+}
+if (penaresidua != null && penaresidua.getFlagPenaSospesa() != null && penaresidua.getFlagPenaSospesa().equals("D")) {
+%>
+          	<font class="cRossoCumulo"> &nbsp;Pena Differita&nbsp;</font>&nbsp;
+<%
+}
+if (!(UtenteConnesso.getUfficioUtente().getCodUfficio().equals(fascicolo.getChiaveUfficio()))) {
+%>
+			&nbsp;<font class="label"><%=fascicolo.getDescrTipoUfficio() + " DI " + fascicolo.getDescrComuneUfficio() %></font>
+<%
+}
+%>
+		</td>
+	</tr>
+</table>
 <jsp:include page="/jsp/files/siap/siep/fascicolo/DettaglioSoggettoSentenzaAttribuzione.jsp"/>
 <br>
 <FORM method="POST" action="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.archiviazione.action.ActInserisciPassaggioClasse" name="LoadSceltaPassaggioClasse">

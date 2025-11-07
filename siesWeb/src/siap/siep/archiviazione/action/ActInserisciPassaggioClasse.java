@@ -49,7 +49,7 @@ public class ActInserisciPassaggioClasse extends ActionSiap
 		BigDecimal idFascicolo = fsm.getIdFascicoloSiep();
 		DettaglioFascicoloModel dfm = null;
 		IFascicoloSiep ifs = SIEPLookupRemote.getFascicoloSiepRemote();
-		dfm = ifs.ExDettaglioFascicoloSiep(fsm.getIdFascicoloSiep());
+		dfm = ifs.ExDettaglioFascicoloSiep(idFascicolo);
 
 		// NUOVO FASCICOLO
 		FascicoloSiepModel fsmNew = new FascicoloSiepModel();
@@ -79,7 +79,7 @@ public class ActInserisciPassaggioClasse extends ActionSiap
 		fsmNew.setCodOperatoreAggiornamento(null);
 		fsmNew.setDataAggiornamento(null);
 		fsmNew.setCodUfficioAggiornamento(null);
-		fsmNew.setFasSieIdFascicoloSiep(fsm.getIdFascicoloSiep());
+		fsmNew.setFasSieIdFascicoloSiep(idFascicolo);
 		// Il flag altra causa viene gestito nella gestione della posizione giuridica
 		fsmNew.setFlagAltraCausa("N");
 		fsmNew.setDataIrrevocabilita(

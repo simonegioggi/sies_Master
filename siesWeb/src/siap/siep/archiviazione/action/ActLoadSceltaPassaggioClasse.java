@@ -1,12 +1,17 @@
 package siap.siep.archiviazione.action;
 
+import java.math.BigDecimal;
+
 import f3b.web.IWebConstants;
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.magistrato.action.ICostantiMagistrato;
 import siap.sico.web.ActionSiap;
 import siap.siep.autoritaesterna.action.ICostantiAutoritaEsterna;
+import siap.siep.fascicolo.controller.IFascicoloSiep;
+import siap.siep.fascicolo.model.DettaglioFascicoloModel;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.notifica.action.ICostantiNotifica;
+import siap.siep.util.SIEPLookupRemote;
 
 /**
  * ActLoadSceltaPassaggioClasse - Classe di caricamento scelte passaggio di classe
@@ -24,6 +29,12 @@ public class ActLoadSceltaPassaggioClasse extends ActionSiap {
 	public String processRequest() throws Exception {
 
 		FascicoloSiepModel fsm = (FascicoloSiepModel) getSessionAttribute("fascicolo");
+		BigDecimal idFascicolo = fsm.getIdFascicoloSiep();
+		DettaglioFascicoloModel dfm = null;
+		IFascicoloSiep ifs = SIEPLookupRemote.getFascicoloSiepRemote();
+		dfm = ifs.ExDettaglioFascicoloSiep(idFascicolo);
+		setRequestAttribute("penaresidua", dfm.getPenaResidua());
+
 		int chiaveProgr = fsm.getChiaveProgr().intValue();
 		int progressivo = 0;
 		if (chiaveProgr >= 0 && chiaveProgr < 20000)

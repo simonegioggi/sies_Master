@@ -111,11 +111,10 @@ public class ActLoadInserisciPassaggioClasse extends ActionSiap implements ICost
 			String lFlagErgastolo = "N";
 			// se la Pena Complessiva è un ergastolo motivoPC ergastolo con isolamento diurno
 			if (pcm.getCodTipoPenaDetentiva() != null && pcm.getCodTipoPenaDetentiva() != "") {
-				if (pcm.getCodTipoPenaDetentiva().equals("03")) {
+				if (pcm.getCodTipoPenaDetentiva().equals("03"))
 					lFlagErgastolo = "S";
-				} else if (pcm.getCodTipoPenaDetentiva().equals("04")) {
+				else if (pcm.getCodTipoPenaDetentiva().equals("04"))
 					lFlagErgastolo = "D";
-				}
 			}
 
 			setRequestAttribute("flagergastolo", lFlagErgastolo);
@@ -147,8 +146,6 @@ public class ActLoadInserisciPassaggioClasse extends ActionSiap implements ICost
 			setRequestAttribute("magistratocompetente", mcmm);
 
 		Option motivoPC = new Option(DecodificheManager.getInstance().getMotivoPC());
-		if (fsm.getFlagValidato().equalsIgnoreCase("N"))
-			motivoPC.setFilter(new String[] { "0353" });
 		setRequestAttribute("oggettodefinzione", "" + motivoPC);
 
 		// Altra Autorità
