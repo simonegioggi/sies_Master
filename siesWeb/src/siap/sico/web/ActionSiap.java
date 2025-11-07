@@ -217,8 +217,9 @@ public class ActionSiap extends Action {
 		siesLogger.debug("Action getCodComuneByDescr");
 
 		ComuneModel lComMod = new ComuneModel();
-
-		lComMod.setDescrizione(aDescrComune.toUpperCase());
+		// Ticket#202510210160 - SIES: Anomalia nomi comuni - PROV. BOLZANO
+		// uppercase trasforma VILLNÖß in VILLNOSS e non lo trova
+		lComMod.setDescrizione(aDescrComune/*.toUpperCase()*/);
 
 		IComune lComCtrl = SICOLookupRemote.getComuneRemote();
 		ComuneModel lComModRitorno = new ComuneModel(lComCtrl.ExGetCodiceComune(lComMod));
@@ -233,8 +234,9 @@ public class ActionSiap extends Action {
 		siesLogger.debug("Action getCodComuneByDescrFlagVal");
 
 		ComuneModel lComMod = new ComuneModel();
-
-		lComMod.setDescrizione(aDescrComune.toUpperCase());
+		// Ticket#202510210160 - SIES: Anomalia nomi comuni - PROV. BOLZANO
+		// uppercase trasforma VILLNÖß in VILLNOSS e non lo trova
+		lComMod.setDescrizione(aDescrComune/*.toUpperCase()*/);
 
 		IComune lComCtrl = SICOLookupRemote.getComuneRemote();
 		ComuneModel lComModRitorno = new ComuneModel(lComCtrl.ExGetCodiceComuneValidita(lComMod));
@@ -254,8 +256,9 @@ public class ActionSiap extends Action {
 	protected ComuneModel getDatiComuneByDescrOmonimia(String aDescrComune) throws F3BException {
 
 		ComuneModel lComMod = new ComuneModel();
-
-		lComMod.setDescrizione(aDescrComune.toUpperCase());
+		// Ticket#202510210160 - SIES: Anomalia nomi comuni - PROV. BOLZANO
+		// uppercase trasforma VILLNÖß in VILLNOSS e non lo trova
+		lComMod.setDescrizione(aDescrComune/*.toUpperCase()*/);
 		lComMod.setControlloOmonimi(true);
 
 		IComune lComCtrl = SICOLookupRemote.getComuneRemote();
@@ -268,8 +271,9 @@ public class ActionSiap extends Action {
 	protected ComuneModel getDatiComuneByDescrOmonimiaFlagVal(String aDescrComune) throws F3BException {
 
 		ComuneModel lComMod = new ComuneModel();
-
-		lComMod.setDescrizione(aDescrComune.toUpperCase());
+		// Ticket#202510210160 - SIES: Anomalia nomi comuni - PROV. BOLZANO
+		// uppercase trasforma VILLNÖß in VILLNOSS e non lo trova
+		lComMod.setDescrizione(aDescrComune/*.toUpperCase()*/);
 		lComMod.setControlloOmonimi(true);
 
 		IComune lComCtrl = SICOLookupRemote.getComuneRemote();
@@ -293,7 +297,9 @@ public class ActionSiap extends Action {
 		ComuneModel lComMod = new ComuneModel();
 
 		lComMod.setCodComune(aCodComune);
-		lComMod.setDescrizione(aDescrComune.toUpperCase());
+		// Ticket#202510210160 - SIES: Anomalia nomi comuni - PROV. BOLZANO
+		// uppercase trasforma VILLNÖß in VILLNOSS e non lo trova
+		lComMod.setDescrizione(aDescrComune/*.toUpperCase()*/);
 
 		IComune lComCtrl = SICOLookupRemote.getComuneRemote();
 		ComuneModel lComModRitorno = new ComuneModel(lComCtrl.ExGetCodiceComune(lComMod));
@@ -308,7 +314,9 @@ public class ActionSiap extends Action {
 		ComuneModel lComMod = new ComuneModel();
 
 		lComMod.setCodComune(aCodComune);
-		lComMod.setDescrizione(aDescrComune.toUpperCase());
+		// Ticket#202510210160 - SIES: Anomalia nomi comuni - PROV. BOLZANO
+		// uppercase trasforma VILLNÖß in VILLNOSS e non lo trova
+		lComMod.setDescrizione(aDescrComune/*.toUpperCase()*/);
 
 		IComune lComCtrl = SICOLookupRemote.getComuneRemote();
 		ComuneModel lComModRitorno = new ComuneModel(lComCtrl.ExGetCodiceComuneValidita(lComMod));
