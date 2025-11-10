@@ -74,11 +74,24 @@ String lProvvPresente = "";
 if (datiFinaliAggregatoModel.getDatiFinaliCumulo()!=null)                 lDFCPresente = " <img src='/images/V.gif' style='border:0px;'> ";
 if (datiFinaliAggregatoModel.getPenaRideterminataCumulo()!=null)          lPenRidetPresente = " <img src='/images/V.gif' style='border:0px;'> ";
 
+boolean lIsAlertMisureSicurezza = false;
+String lStrAlertMisureSicurezza = "<img src='/images/attenzione.jpg' style='border:0px; width:15px; height:15px;'> Non è stato ancora indicato se le Misure di Sicurezza selezionate vanno o meno iscritte in un fascicolo";
 if (    (datiFinaliAggregatoModel.getListaMisureSicurezza()!=null && datiFinaliAggregatoModel.getListaMisureSicurezza().size()>0)
      || (datiFinaliAggregatoModel.getListaPeneAccessorie()!=null && datiFinaliAggregatoModel.getListaPeneAccessorie().size()>0)
    )
-  lUltSanPresente = " <img src='/images/V.gif' style='border:0px;'> ";
-
+{
+    // MEV_2025-48 - ALTRO -
+    if (   datiFinaliAggregatoModel.getListaMisureSicurezza()!=null 
+        && datiFinaliAggregatoModel.getListaMisureSicurezza().size()>0
+        && datiFinaliAggregatoModel.getDatiFinaliCumulo().getFlagCreaFascicoloMs()==null
+       )
+    {
+        lIsAlertMisureSicurezza = true;
+        lUltSanPresente = " <img src='/images/attenzione.jpg' style='border:0px; width:15px; height:15px;'> "; // lUltSanPresente = " <img src='/images/V.gif' style='border:0px;'> ";
+    } else 
+        lUltSanPresente = " <img src='/images/V.gif' style='border:0px;'> ";
+} 
+  
 if (datiFinaliAggregatoModel.getPosizioneGiuridicaCumulo()!=null)         lPosPresente = " <img src='/images/V.gif' style='border:0px;'> ";
 if (datiFinaliAggregatoModel.getPenaResiduaCumulo()!=null)                lCalcPenaPresente = " <img src='/images/V.gif' style='border:0px;'> ";
 if (datiFinaliAggregatoModel.getProvvedimentoCumulo()!=null)              lProvvPresente = " <img src='/images/V.gif' style='border:0px;'>  ";
@@ -456,6 +469,16 @@ if (!"A".equals(IstruttoriaCumulo.getFlagStato()))
              <font class="cRosso">(*) <%=lAlertRevoche %></font>
            </td>
          </tr>
-      <% } %>  
+      <% } %>
+      
+      <!-- MEV_2025-48 - ALTRO -->
+      <% if(lIsAlertMisureSicurezza) { %>
+         <tr>
+           <td colspan="100%">
+             <font class="cRosso">(*) <%=lStrAlertMisureSicurezza %></font>
+           </td>
+         </tr>
+      <% } %>
+      
     </table>
   </form>
