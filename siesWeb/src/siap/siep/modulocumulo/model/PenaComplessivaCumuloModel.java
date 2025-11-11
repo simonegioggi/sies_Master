@@ -71,6 +71,11 @@ public class PenaComplessivaCumuloModel extends GenericModel {
 	private SanzioneSostitutivaCumuloModel mSanzioneSostitutivaCumulo;
 	private List<ContinuazioneCumuloModel> mListaContinuazioniCumulo;
 
+	
+	// MEV_2025-48 - ALTRO – Visualizzazione Pena Sospesa
+	// Si aggiunge il beneficio della sospensione che revoca la PS
+	private BeneficioCumuloModel mBeneficioSospensioneCumulo;
+	
 	/**
 	 * L'attributo mPenaResidua, se valorizzato, contiene l'ultima pena residua validata associata al
 	 * fascicolo. L'ultima pena residua contiene il campo flag ergastolo, che viene valorizzato anche se
@@ -122,6 +127,9 @@ public class PenaComplessivaCumuloModel extends GenericModel {
 		this.mSanzioneSostitutivaCumulo = null;
 		this.mListaContinuazioniCumulo = null;
 
+		// MEV_2025-48 - ALTRO – Visualizzazione Pena Sospesa
+		this.mBeneficioSospensioneCumulo = null;
+		
 		this.mPenaResidua = null;
 
 	}
@@ -466,7 +474,12 @@ public class PenaComplessivaCumuloModel extends GenericModel {
 	public List<ContinuazioneCumuloModel> getContinuazioniCumulo() {
 		return mListaContinuazioniCumulo;
 	}
-
+	
+	// MEV_2025-48 - ALTRO – Visualizzazione Pena Sospesa
+	public BeneficioCumuloModel getBeneficioSospensioneCumulo() {
+	    return mBeneficioSospensioneCumulo;
+	}
+	   
 	public String getStringaReclusione() {
 		return mStringaReclusione;
 	}
@@ -588,6 +601,11 @@ public class PenaComplessivaCumuloModel extends GenericModel {
 
 	public void setSanzioneSostitutivaCumulo(SanzioneSostitutivaCumuloModel aValore) {
 		mSanzioneSostitutivaCumulo = aValore;
+	}
+	
+	// MEV_2025-48 - ALTRO – Visualizzazione Pena Sospesa
+	public void setBeneficioSospensioneCumulo(BeneficioCumuloModel aValore) {
+	    mBeneficioSospensioneCumulo = aValore;
 	}
 
 	public void setContinuazioniCumulo(List<ContinuazioneCumuloModel> aValore) {

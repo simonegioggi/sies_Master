@@ -2767,19 +2767,28 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 				lPenSqlDao.stop();
 				if (lPenaComplMod != null) {
 					if (isPenaDetentivaSospesa) {
-						// Procedo ad azzerare i quantum, lascio solo la pecuniaria
+                        // MEV_2025-48 - ALTRO – Visualizzazione Pena Sospesa
+                        // Devo passare tutti i dati per poterli visualizzare
+                        lPenaComplMod.setBeneficioSospensioneCumulo(lBeneficioSosp);
+                        siesLogger.debug("isPenaDetentivaSospesa = " + isPenaInContinuazione);
+                        // Procedo ad azzerare i quantum, lascio solo la pecuniaria
 						// Reclusione
-						lPenaComplMod.setNumGiorniReclusione(null);
-						lPenaComplMod.setNumMesiReclusione(null);
-						lPenaComplMod.setNumAnniReclusione(null);
+						//lPenaComplMod.setNumGiorniReclusione(null);
+						//lPenaComplMod.setNumMesiReclusione(null);
+						//lPenaComplMod.setNumAnniReclusione(null);
 						// Arresto
-						lPenaComplMod.setNumGiorniArresto(null);
-						lPenaComplMod.setNumMesiArresto(null);
-						lPenaComplMod.setNumAnniArresto(null);
-
+						//lPenaComplMod.setNumGiorniArresto(null);
+						//lPenaComplMod.setNumMesiArresto(null);
+						//lPenaComplMod.setNumAnniArresto(null);
+						
 						lCalcoloPenaModel.addPenaComplessiva(lPenaComplMod);
 					} else if (isPenaInteramenteSospesa) {
 						// non aggiungo la pena al model
+                        // MEV_2025-48 - ALTRO – Visualizzazione Pena Sospesa
+                        // Devo passare tutti i dati per poterli visualizzare
+                        lPenaComplMod.setBeneficioSospensioneCumulo(lBeneficioSosp);
+                        lCalcoloPenaModel.addPenaComplessiva(lPenaComplMod);
+                        // MEV_2025-48 - ALTRO – Visualizzazione Pena Sospesa - FINE
 					} else if (isPenaInContinuazione) {
 						// La pena è in continuazione. Esiste un altro titolo la cui pena
 						// è dichiarata in continuazione con la pena corrente e il tipo

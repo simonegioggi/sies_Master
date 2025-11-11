@@ -108,6 +108,9 @@ public class RichiestePmInCumuloModel extends GenericModel {
 	private ProvvedimentoGeSorvCumModel mDecisioneGeSorvCum;
 	private String mAnnoSentenza;
 	private String mNumeroSentenza;
+    // MEV_2025-48 - ALTRO - Visualizza data Sentenza su Richieste PM
+	private Date mDataSentenza;
+	
 	private String mAltri;
 
 	private List<RichPMTitoloCumModel> mListaRichPmTitoloCum;
@@ -629,6 +632,11 @@ public class RichiestePmInCumuloModel extends GenericModel {
 	public String getNumeroSentenza() {
 		return mNumeroSentenza;
 	}
+	
+	// MEV_2025-48 - ALTRO - Visualizza data Sentenza su Richieste PM
+    public Date getDataSentenza() {
+        return mDataSentenza;
+    }	
 
 	public String getAltri() {
 		return mAltri;
@@ -933,6 +941,11 @@ public class RichiestePmInCumuloModel extends GenericModel {
 	public void setNumeroSentenza(String aValore) {
 		mNumeroSentenza = aValore;
 	}
+	
+	// MEV_2025-48 - ALTRO - Visualizza data Sentenza su Richieste PM
+    public void setDataSentenza(Date aValore) {
+        mDataSentenza = aValore;
+    }
 
 	public void setAltri(String aValore) {
 		mAltri = aValore;

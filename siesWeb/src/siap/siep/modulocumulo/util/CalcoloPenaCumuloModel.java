@@ -275,7 +275,7 @@ public class CalcoloPenaCumuloModel extends GenericModel {
 
 			if (isSostituita)
 				continue; // salto la PC nel calcolo
-
+			
 			CalendarModel lReclusioneMulta = new CalendarModel();
 			CalendarModel lArrestoAmmenda = new CalendarModel();
 
@@ -304,6 +304,24 @@ public class CalcoloPenaCumuloModel extends GenericModel {
 			siesLogger.debug("Reclusione: " + lReclusioneMulta.toString());
 			siesLogger.debug("Arresto:    " + lArrestoAmmenda.toString());
 
+            // MEV_2025-48 - ALTRO – Visualizzazione Pena Sospesa
+            //  -  se la PC è Sospensa non la calcolo o calcolo solo la pecuniaria
+            if (lPenaCompl.getBeneficioSospensioneCumulo()!=null) {
+              if ("02".equals(lPenaCompl.getBeneficioSospensioneCumulo().getCodSottotipoBeneficio())){
+                  // tengo solo la pecuniaria (la detentiva è sospesa)
+                  lReclusioneMulta.setNumAnni   (null);
+                  lReclusioneMulta.setNumMesi   (null);
+                  lReclusioneMulta.setNumGiorni (null);
+                  lArrestoAmmenda.setNumAnni    (null);
+                  lArrestoAmmenda.setNumMesi    (null);
+                  lArrestoAmmenda.setNumGiorni  (null);
+              }
+              else {
+                  continue; // salto la PC nel calcolo - Tutta la pena è sospesa
+              }
+            }
+            // MEV_2025-48 - ALTRO – Visualizzazione Pena Sospesa - FINE
+			
 			lCalReclusioneTotMod = lCalUtil.sommaGiornieValute(lCalReclusioneTotMod, lReclusioneMulta);
 			lCalArrestiTotMod = lCalUtil.sommaGiornieValute(lCalArrestiTotMod, lArrestoAmmenda);
 

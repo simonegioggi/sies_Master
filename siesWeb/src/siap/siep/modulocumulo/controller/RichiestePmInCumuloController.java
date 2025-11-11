@@ -690,6 +690,8 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 							if (i == 1) {
 								lRicMod.setAnnoSentenza(lTitMod.getAnnoSentenza().toString());
 								lRicMod.setNumeroSentenza(lTitMod.getNumeroSentenza());
+								// MEV_2025-48 - ALTRO - Visualizza data Sentenza su Richieste PM
+								lRicMod.setDataSentenza(lTitMod.getDataProvvedimento());
 							}
 						}
 					}
@@ -771,6 +773,9 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 										? lTitMod.getAnnoSentenza().toString()
 										: "");
 								lRicMod.setNumeroSentenza(lTitMod.getNumeroSentenza());
+								
+                                // MEV_2025-48 - ALTRO - Visualizza data Sentenza su Richieste PM
+                                lRicMod.setDataSentenza(lTitMod.getDataProvvedimento());								
 							}
 						}
 					}

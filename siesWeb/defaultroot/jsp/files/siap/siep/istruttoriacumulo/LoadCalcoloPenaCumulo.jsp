@@ -405,28 +405,48 @@
       
       String colorStyle ="";
       String lInfoSS = "";
+      String lInfoSosp = "";
+      String colorStyleMulta ="";
+      String colorStyleAmmenda ="";
       if (lPenaComp!=null && lPenaComp.getSanzioneSostitutivaCumulo()!=null
            && !lPenaComp.getSanzioneSostitutivaCumulo().getIsRevocata()      
          ) 
       {
         colorStyle = "style='color: grey;'";
-        
+        colorStyleMulta = colorStyle;
+        colorStyleAmmenda = colorStyle;
+
         SanzioneSostitutivaCumuloModel lSSModel = lPenaComp.getSanzioneSostitutivaCumulo();
         lSSModel.calcolaStringaSanzione();
         String lInfSSText = "Pena Sostituita con la sanzione sostitutiva "+lSSModel.getStringaSanzione();
         
         lInfoSS = "&nbsp;<img align='absmiddle' src='/images/info.gif' border=0 title='"+StringUtils.encodeHTML(lInfSSText)+"'>";
       }
+      else if (lPenaComp.getBeneficioSospensioneCumulo()!=null) 
+      {
+          //if ("02".equals(lBeneficioSosp.getCodSottotipoBeneficio()))
+          colorStyle = "style='color: grey;'";
+          colorStyleMulta = colorStyle;
+          colorStyleAmmenda = colorStyle;
+          String lInfSospText = "Pena Sospesa: "+lPenaComp.getBeneficioSospensioneCumulo().getDescrSottotipoBeneficio();
+          lInfoSosp = "&nbsp;<img align='absmiddle' src='/images/info.gif' border=0 title='"+StringUtils.encodeHTML(lInfSospText)+"'>";
+          if ("02".equals(lPenaComp.getBeneficioSospensioneCumulo().getCodSottotipoBeneficio())){
+              colorStyleMulta   = "style='color: red;'";
+              colorStyleAmmenda = "style='color: red;'";
+          }
+      }
       // MEV70
       else {
           colorStyle = "style='color: red;'";    	  
+          colorStyleMulta = colorStyle;
+          colorStyleAmmenda = colorStyle;
       }
       
       
       //TODO evidenziare le PP sostituite
     %>
 		<tr style="display: none" id="SI">
-			<td class="l" <%=colorStyle%> title="<%=lDescrTitleSentenza%>"><%=lDescTitolo%><%=lInfoSS%></td>
+			<td class="l" <%=colorStyle%> title="<%=lDescrTitleSentenza%>"><%=lDescTitolo%><%=lInfoSS%><%=lInfoSosp%></td>
 
 <%-- 			<% if (lPenaComp.isErgastolo() && 1==2){ %> --%>
 <%-- 			<td class="r" colspan="3"><font class='cRosso'><%=lPenaComp.getDescrTipoPenaDetentiva()%></font> --%>
@@ -448,11 +468,11 @@
 			<td class="r" <%=colorStyle%>><%=StringUtils.toStringJSP(lPenaComp.getNumAnniReclusione(),"&nbsp;")%></td>
 			<td class="r" <%=colorStyle%>><%=StringUtils.toStringJSP(lPenaComp.getNumMesiReclusione(),"&nbsp;")%></td>
 			<td class="r" <%=colorStyle%>><%=StringUtils.toStringJSP(lPenaComp.getNumGiorniReclusione(),"&nbsp;")%></td>
-			<td class="r" <%=colorStyle%>><%=(lPenaComp.getImportoMulta()==null) ? "&nbsp;":StringUtils.toEuroFormat(lPenaComp.getImportoMulta()) %></td>
+			<td class="r" <%=colorStyleMulta%>><%=(lPenaComp.getImportoMulta()==null) ? "&nbsp;":StringUtils.toEuroFormat(lPenaComp.getImportoMulta()) %></td>
 			<td class="r" <%=colorStyle%>><%=StringUtils.toStringJSP(lPenaComp.getNumAnniArresto(),"&nbsp;")%></td>
 			<td class="r" <%=colorStyle%>><%=StringUtils.toStringJSP(lPenaComp.getNumMesiArresto(),"&nbsp;")%></td>
 			<td class="r" <%=colorStyle%>><%=StringUtils.toStringJSP(lPenaComp.getNumGiorniArresto(),"&nbsp;")%></td>
-			<td class="r" <%=colorStyle%>><%=(lPenaComp.getImportoAmmenda()==null) ? "&nbsp;":StringUtils.toEuroFormat(lPenaComp.getImportoAmmenda()) %></td>
+			<td class="r" <%=colorStyleAmmenda%>><%=(lPenaComp.getImportoAmmenda()==null) ? "&nbsp;":StringUtils.toEuroFormat(lPenaComp.getImportoAmmenda()) %></td>
 <%-- 			<% } %> --%>
 		</tr>
 		<% } %>
