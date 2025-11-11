@@ -2664,7 +2664,10 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 		RichiestePmInCumuloSqlDAO lRichPmInCumuloSqlDao = null;
 		ProvvedimentoGeSorvCumSqlDAO lProvvGeSorvSqlDao = null;
 		UfficioSqlDAO lUffSqlDao = null;
-
+		// MEV_2025-48 - ALTRO - Ordinamento titoli come x Lista titoli
+		IstruttoriaCumuloSqlDAO lIstrSqlDao = null;
+		
+		
 		CalcoloPenaCumuloModel lCalcoloPenaModel = new CalcoloPenaCumuloModel();
 
 		Vector<TitoloCumulatoModel> lListaTitoli = null; // new Vector<TitoloCumulatoModel>();
@@ -2680,10 +2683,23 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 		try {
 			lConn = getDBConnection();
 
+			// MEV_2025-48 - ALTRO - Ordinamento titoli come x Lista titoli
+			lIstrSqlDao = new IstruttoriaCumuloSqlDAO (lConn);
+			lIstrSqlDao.ricercaIstruttoriaCumuloByKey(aIdIstruttoriaCumulo);
+			IstruttoriaCumuloModel lIstrCumulo = (IstruttoriaCumuloModel) lIstrSqlDao.getModelByKey();
+			String lOrdinamentoTitoli = ICostantiIstruttoriaCumulo.ORDER_BY_DATA_IRREVOCABILITA_DESC;
+			if (lIstrCumulo.getOrdinamentoTitoli()!=null)
+			    lOrdinamentoTitoli = lIstrCumulo.getOrdinamentoTitoli();
+			
 			// recupero l'elenco dei titoli
 			lTitoloSqlDao = new TitoloCumulatoSqlDAO(lConn);
-			lTitoloSqlDao.ricercaTitoloCumulatoByIstruttoriaOrderBy(aIdIstruttoriaCumulo,
-					ICostantiIstruttoriaCumulo.ORDER_BY_DATA_IRREVOCABILITA_DESC);
+			
+			// MEV_2025-48 - ALTRO - Ordinamento titoli come x Lista titoli
+			//lTitoloSqlDao.ricercaTitoloCumulatoByIstruttoriaOrderBy(aIdIstruttoriaCumulo,
+			//		ICostantiIstruttoriaCumulo.ORDER_BY_DATA_IRREVOCABILITA_DESC);
+            lTitoloSqlDao.ricercaTitoloCumulatoByIstruttoriaOrderBy(aIdIstruttoriaCumulo,
+                    lOrdinamentoTitoli);			
+            // MEV_2025-48 - ALTRO - Ordinamento titoli come x Lista titoli - FINE
 			lListaTitoli = new Vector<TitoloCumulatoModel>(lTitoloSqlDao.getModels());
 
 			lCalcoloPenaModel.setListaTitoli(lListaTitoli);
@@ -3153,6 +3169,9 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 			cleanup(lProvvGeSorvSqlDao);
 			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
 			cleanup(lUffSqlDao);
+			// MEV_2025-48 - ALTRO - Ordinamento titoli come x Lista titoli
+			cleanup(lIstrSqlDao);
+			
 			cleanup(lConn);
 		}
 
