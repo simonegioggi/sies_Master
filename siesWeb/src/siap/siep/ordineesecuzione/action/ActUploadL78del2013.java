@@ -31,7 +31,9 @@ public class ActUploadL78del2013 extends ActionSiap 	implements ICostantiEvento
 
 		EventoModel lModel = new EventoModel();
 		lModel.setIdEvento( getRequestBigDecimalParameter( CAMPO_ID_EVENTO) );
-		lModel.setCodMotivo(getRequestStringParameter("motivo"));
+		// Ticket#202511060155 — SIEP 
+		// si commenta il cod motivo altrimenti non è validabile dal cambio magistrato
+		// lModel.setCodMotivo(getRequestStringParameter("motivo"));
 
 		InputStream lInput = getFile(ICostantiEvento.CAMPO_BLOB);
 
