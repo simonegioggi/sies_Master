@@ -435,8 +435,14 @@ if (soggetto.getDescrComuneNascita().compareTo("-") == 0) {
 }
 %>
       		</font>
-      		<font class="label">Codice CUI : </font>
-      		<font class="campo"> <%=StringUtils.toStringJSP(soggetto.getCodAfis())%></font>&nbsp;&nbsp;&nbsp;
+<%
+if (Utils.isPresent(soggetto.getCodAfis())) {
+%>
+      		<font class="label"> Codice CUI : </font>
+      		<font class="campo"><%=StringUtils.toStringJSP(soggetto.getCodAfis())%></font>
+<%
+}
+%>
 		</td>
 <%
 if ("1".equals(colspanSoggetto)) {
@@ -473,20 +479,19 @@ if (fascicolo != null && fascicolo.getChiaveProgr() != null
 		&& (sentenza.getCodTipoProvvedimento().compareTo("02") == 0
 			|| sentenza.getCodTipoProvvedimento().compareTo("03") == 0)) {
 %>    
-			<font class="campo">
 				<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sentenza.action.ActLoadDettaglioDatiProvvedimentoMSFuoriSent&<%=ICostantiSentenza.CAMPO_ID_SENTENZA%>=<%=sentenza.getIdSentenza()%>" title="Sentenza">
+					<font class="campo"><%=StringUtils.toStringJSP(sentenza.getAnnoSentenza())%> / <%=StringUtils.toStringJSP(sentenza.getNumeroSentenza())%></font>
+          		</a>&nbsp;
 <%
 } else {
 %>
-        	<font class="campo">
         		<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sentenza.action.ActLoadDettaglioSentenza&<%=ICostantiSentenza.CAMPO_ID_SENTENZA%>=<%=sentenza.getIdSentenza()%>" title="Sentenza">
+        			<font class="campo"><%=StringUtils.toStringJSP(sentenza.getAnnoSentenza())%> / <%=StringUtils.toStringJSP(sentenza.getNumeroSentenza())%></font>
+          		</a>&nbsp;
 <%
 }
 %>        	
-          			<%=StringUtils.toStringJSP(sentenza.getAnnoSentenza())%> / <%=StringUtils.toStringJSP(sentenza.getNumeroSentenza())%>
-          		</a>&nbsp;
-          	</font>
-          	<font class="label">del</font>&nbsp;
+          	<font class="label">del&nbsp;
             	<%=DateUtils.getDateToString(sentenza.getDataProvvedimento(), "dd-MM-yyyy")%>
         	</font>
 <%

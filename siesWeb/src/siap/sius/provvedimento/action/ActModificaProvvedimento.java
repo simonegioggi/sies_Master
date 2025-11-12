@@ -754,11 +754,8 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 				// = L.A. ))
 
 			/*
-			 * ISSUE MEV : aggiunta nuova gestione campi rinvio 
-			 * Numero MEV : 39 
-			 * Autore : Gioggi 
-			 * Data : 09/giu/2017 
-			 * Branch : MEV_39
+			 * ISSUE MEV : aggiunta nuova gestione campi rinvio Numero MEV : 39 Autore : Gioggi Data :
+			 * 09/giu/2017 Branch : MEV_39
 			 */
 			String codTipoOrdinanza = "";
 			if (lOrdinanza != null)
@@ -837,11 +834,8 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 			// ***** FINE INTERVENTO MEV_39 *****//
 
 			/*
-			 * ISSUE MEV : aggiunto codice per gestione oggetto C029 
-			 * Numero MEV : 39 
-			 * Autore : Gioggi 
-			 * Data : 19/giu/2017 
-			 * Branch : MEV_39
+			 * ISSUE MEV : aggiunto codice per gestione oggetto C029 Numero MEV : 39 Autore : Gioggi Data :
+			 * 19/giu/2017 Branch : MEV_39
 			 */
 			if (codTipoOrdinanza.equalsIgnoreCase(ICostantiDepositoOrdinanzaPc.APPELLO_MS)) {
 				IMisuraSicurezza ims = SIEPLookupRemote.getMisuraSicurezzaRemote();
@@ -1008,11 +1002,8 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 				lLicenze = AggiornaLicenzePeriodiCEDU(mFasGPMod, GiorniRiduzione, SommaRisarcimento);
 			} // Chiude DECRETO VIOLAZIONE CEDU
 			/*
-			 * ISSUE MEV : aggiunta nuova gestione campi rinvio 
-			 * Numero MEV : 39 
-			 * Autore : Gioggi 
-			 * Data : 09/giu/2017 
-			 * Branch : MEV_39
+			 * ISSUE MEV : aggiunta nuova gestione campi rinvio Numero MEV : 39 Autore : Gioggi Data :
+			 * 09/giu/2017 Branch : MEV_39
 			 */
 			else if (codTipoDecreto.compareTo("42") == 0) {
 				// Data Decorrenza Sospensione
@@ -1082,6 +1073,11 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 				}
 			}
 			// ***** FINE INTERVENTO MEV_39 *****//
+			// MEV_2025-48: aggiunta nuova sezione - codice motivo detenzione
+			else if (codTipoDecreto.compareTo(ICostantiDepositoDecreto.PERMESSO) == 0) {
+				// Decreto di tipo Permesso
+				lLicenze = ricercaPermessi(lDecretoMod.getIdEventoGenerato());
+			}
 
 			lDecretoMod.setDataEmissione(mDataEmissione);
 			lDecretoMod.setCodOperatoreAggiornamento(getCodUtenteConnesso());
@@ -1103,9 +1099,7 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 
 		// Redirezione alla pagina di dettaglio Ordinanza, Decreto o Sentenza
 		if (lIdOrdinanza != null)
-			lRetPage =
-
-					dettaglioOrdinanza(lIdEvento);
+			lRetPage = dettaglioOrdinanza(lIdEvento);
 		else if (lIdSentenza != null)
 			lRetPage = dettaglioSentenza(lIdEvento);
 		else
@@ -1115,8 +1109,45 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 	}
 
 	/**
+	 * Metodo di ricerca Permessi
+	 * 
+	 * @param aIdEvento
+	 * @return LicenzaPeriodiLibAnticipataModel[]
+	 * @throws Exception
+	 * 
+	 * @author sgioggi
+	 * @since MEV_2025-48
+	 */
+	private LicenzaPeriodiLibAnticipataModel[] ricercaPermessi(BigDecimal aIdEvento) throws Exception {
+
+		Vector permessi = null;
+		LicenzaPeriodiLibAnticipataModel[] lplamArray = null;
+		Object[] oArray = null;
+		try {
+			// Ricerca Permessi
+			ILicenzaPeriodiLibAnticipata ilpla = SICOLookupRemote.getLicenzaPeriodiLibAntRemote();
+			permessi = ilpla.ExRicercaLicenzeByEve(aIdEvento);
+		} catch (F3BException e) {
+			// Si filtra l'eccezione per elementi non trovati
+			if (e.getErrorCode() == F3BException.USER_MESSAGE)
+				siesLogger.debug("ActModificaProvvedimento.ricercaPermessi : " + e);
+			else
+				throw e;
+		} catch (Exception ex) {
+			throw ex;
+		}
+		if (!Utils.isNullObj(permessi)) {
+			oArray = (Object[]) permessi.toArray();
+			lplamArray = new LicenzaPeriodiLibAnticipataModel[oArray.length];
+			LicenzaPeriodiLibAnticipataModel lplam = new LicenzaPeriodiLibAnticipataModel();
+			lplam.setLicenza((LicenzaLibAnticipataModel) oArray[0]);
+			lplamArray[0] = lplam;
+		}
+		return lplamArray;
+	}
+
+	/**
 	 * Prepara il Model per la Misura di Sicurezza da aggiornare.
-	 * <p>
 	 *
 	 * @param lMisSicuSius
 	 *            Misura di Sicurezza da aggiornare.
@@ -1158,7 +1189,6 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 
 	/**
 	 * Prepara il Model per l'evento da aggiornare.
-	 * <p>
 	 *
 	 * @param aDataEmissione
 	 *            Date data di emissione.

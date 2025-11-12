@@ -1,22 +1,19 @@
 package siap.sico.libertaanticipata.model;
 
-/**
- * <p>Title: LicenzaLibanticipataModel</p>
- * <p>Description: Classe Model che rappresenta il LicenzaLibanticipata</p>
- * <p>Copyright: Copyright (c) 2002</p>
- * <p>Company: Bull</p>
- * @version 1.0
- */
-
 import java.math.BigDecimal;
 import java.util.Date;
 
 import f3b.model.GenericModel;
 
+/**
+ * LicenzaLibanticipataModel - Classe Model che rappresenta il LicenzaLibanticipata
+ *
+ * @version 1.0
+ */
 public class LicenzaLibAnticipataModel extends GenericModel {
 
 	/**
-	 * 
+	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = 4398226880746754726L;
 
@@ -48,12 +45,10 @@ public class LicenzaLibAnticipataModel extends GenericModel {
 	private BigDecimal mFasSieIdFascicoloSiep;
 	private String mFlagConcesso;
 	private String mFlagElaborato;
-
 	private String mFlagScorta;
 	private String mCodStatoPermesso;
 	private String mDescrStatoPermesso;
 	private BigDecimal mNumeroOre;
-
 	private BigDecimal mAnnoSius;
 	private String mNumeroSius;
 	private BigDecimal mAnnoOrdinanza;
@@ -64,24 +59,17 @@ public class LicenzaLibAnticipataModel extends GenericModel {
 	private String mDescrLuogoEmittente;
 	// MEV10-s3: aggiunta variabile
 	private String mCodTipoUfficioEmittente;
-
 	private Date mDataEmissioneOrdinanza;
 	private String mGiorniScomputati;
-
 	private String mCodEsito;
 	private String mDescrEsito;
 	private Date mDataAnnotazioneEsito;
 	private String mAnnotazione;
-
 	private BigDecimal mNumeroGiorniNoFruiti;
 	private BigDecimal mNumeroOreNoFruite;
-
 	private boolean mConProvvedimentoValidato;
-
 	private BigDecimal mNumeroMesi;
-
 	private BigDecimal mSommaRisarcDanni;
-
 	// MERGE v10: aggiunti parametri per recupero informazioni del
 	// Rimedio Risarcitorio al quale è legato un Reclamo Rimedio Risarcitorio
 	private BigDecimal mAnnoProvvRR;
@@ -91,9 +79,13 @@ public class LicenzaLibAnticipataModel extends GenericModel {
 	private String mDescrLuogoEmittenteRR;
 	private Date mDataEmissioneRR;
 	// *****************************
+	// MEV_2025-48: aggiunta nuova sezione - codice motivo detenzione
+	private String mCodMotivoDetenzione;
+	private String mDescrMotivoDetenzione;
 
 	// COSTRUTTORE DI DEFAULT
 	public LicenzaLibAnticipataModel() {
+
 		this.mIdLicenzaLibanticipata = null;
 		this.mCodTipoLicenza = "";
 		this.mDescrTipoLicenza = "";
@@ -137,24 +129,23 @@ public class LicenzaLibAnticipataModel extends GenericModel {
 		// MEV10-s3: aggiunta impostazione di proprietà
 		this.mCodTipoUfficioEmittente = "";
 		this.mDataEmissioneOrdinanza = null;
-
 		this.mGiorniScomputati = "";
 		this.mCodEsito = "";
 		this.mDescrEsito = "";
 		this.mDataAnnotazioneEsito = null;
 		this.mAnnotazione = "";
-
 		this.mNumeroGiorniNoFruiti = null;
 		this.mNumeroOreNoFruite = null;
-
 		this.mConProvvedimentoValidato = false;
-
 		this.mNumeroMesi = null;
 		this.mSommaRisarcDanni = null;
+		// MEV_2025-48
+		this.mCodMotivoDetenzione = "";
 	}
 
 	// COSTRUTTORE DI COPIA
 	public LicenzaLibAnticipataModel(LicenzaLibAnticipataModel aModel) {
+
 		this.mIdLicenzaLibanticipata = aModel.mIdLicenzaLibanticipata;
 		this.mCodTipoLicenza = aModel.mCodTipoLicenza;
 		this.mDescrTipoLicenza = aModel.mDescrTipoLicenza;
@@ -198,20 +189,18 @@ public class LicenzaLibAnticipataModel extends GenericModel {
 		// MEV10-s3: aggiunta impostazione di proprietà
 		this.mCodTipoUfficioEmittente = aModel.mCodTipoUfficioEmittente;
 		this.mDataEmissioneOrdinanza = aModel.mDataEmissioneOrdinanza;
-
 		this.mGiorniScomputati = aModel.mGiorniScomputati;
 		this.mCodEsito = aModel.mCodEsito;
 		this.mDescrEsito = aModel.mDescrEsito;
 		this.mDataAnnotazioneEsito = aModel.mDataAnnotazioneEsito;
 		this.mAnnotazione = aModel.mAnnotazione;
-
 		this.mNumeroGiorniNoFruiti = aModel.mNumeroGiorniNoFruiti;
 		this.mNumeroOreNoFruite = aModel.mNumeroOreNoFruite;
-
 		this.mConProvvedimentoValidato = aModel.mConProvvedimentoValidato;
-
 		this.mNumeroMesi = aModel.mNumeroMesi;
 		this.mSommaRisarcDanni = aModel.mSommaRisarcDanni;
+		// MEV_2025-48
+		this.mCodMotivoDetenzione = aModel.mCodMotivoDetenzione;
 	}
 
 	// COSTRUTTORE MODEL
@@ -230,7 +219,8 @@ public class LicenzaLibAnticipataModel extends GenericModel {
 			String aDescrLuogoEmittente, String aCodTipoUfficioEmittente, Date aDataEmissioneOrdinanza,
 			String aGiorniScomputati, String aCodEsito, String aDescrEsito, Date aDataAnnotazioneEsito,
 			String aAnnotazione, BigDecimal aNumeroGiorniNoFruiti, BigDecimal aNumeroOreNoFruite,
-			BigDecimal aNumeroMesi, BigDecimal aSommaRisarcDanni) {
+			BigDecimal aNumeroMesi, BigDecimal aSommaRisarcDanni, String aCodMotivoDetenzione) {
+
 		this.mIdLicenzaLibanticipata = aIdLicenzaLibanticipata;
 		this.mCodTipoLicenza = aCodTipoLicenza;
 		this.mDescrTipoLicenza = aDescrTipoLicenza;
@@ -274,20 +264,18 @@ public class LicenzaLibAnticipataModel extends GenericModel {
 		// MEV10-s3: aggiunta impostazione di proprietà
 		this.mCodTipoUfficioEmittente = aCodTipoUfficioEmittente;
 		this.mDataEmissioneOrdinanza = aDataEmissioneOrdinanza;
-
 		this.mGiorniScomputati = aGiorniScomputati;
 		this.mCodEsito = aCodEsito;
 		this.mDescrEsito = aDescrEsito;
 		this.mDataAnnotazioneEsito = aDataAnnotazioneEsito;
 		this.mAnnotazione = aAnnotazione;
-
 		this.mNumeroGiorniNoFruiti = aNumeroGiorniNoFruiti;
 		this.mNumeroOreNoFruite = aNumeroOreNoFruite;
-
 		this.mConProvvedimentoValidato = false;
-
 		this.mNumeroMesi = aNumeroMesi;
 		this.mSommaRisarcDanni = aSommaRisarcDanni;
+		// MEV_2025-48
+		this.mCodMotivoDetenzione = aCodMotivoDetenzione;
 	}
 
 	//
@@ -508,6 +496,32 @@ public class LicenzaLibAnticipataModel extends GenericModel {
 		return mSommaRisarcDanni;
 	}
 
+	// MERGE v10: aggiunti parametri per recupero informazioni del
+	// Rimedio Risarcitorio al quale è legato un Reclamo Rimedio Risarcitorio
+	public BigDecimal getAnnoProvvRR() {
+		return mAnnoProvvRR;
+	}
+
+	public String getDescrUfficioEmittenteRR() {
+		return mDescrUfficioEmittenteRR;
+	}
+
+	public String getCodTipoUfficioEmittenteRR() {
+		return mCodTipoUfficioEmittenteRR;
+	}
+
+	public String getDescrLuogoEmittenteRR() {
+		return mDescrLuogoEmittenteRR;
+	}
+
+	public String getCodMotivoDetenzione() {
+		return mCodMotivoDetenzione;
+	}
+
+	public String getDescrMotivoDetenzione() {
+		return mDescrMotivoDetenzione;
+	}
+
 	//
 	// METODI SET()
 	//
@@ -720,12 +734,6 @@ public class LicenzaLibAnticipataModel extends GenericModel {
 		mSommaRisarcDanni = aValore;
 	}
 
-	// MERGE v10: aggiunti parametri per recupero informazioni del
-	// Rimedio Risarcitorio al quale è legato un Reclamo Rimedio Risarcitorio
-	public BigDecimal getAnnoProvvRR() {
-		return mAnnoProvvRR;
-	}
-
 	public void setAnnoProvvRR(BigDecimal mAnnoProvvRR) {
 		this.mAnnoProvvRR = mAnnoProvvRR;
 	}
@@ -738,24 +746,12 @@ public class LicenzaLibAnticipataModel extends GenericModel {
 		this.mNumeroProvvRR = mNumeroProvvRR;
 	}
 
-	public String getDescrUfficioEmittenteRR() {
-		return mDescrUfficioEmittenteRR;
-	}
-
-	public String getCodTipoUfficioEmittenteRR() {
-		return mCodTipoUfficioEmittenteRR;
-	}
-
 	public void setCodTipoUfficioEmittenteRR(String mCodTipoUfficioEmittenteRR) {
 		this.mCodTipoUfficioEmittenteRR = mCodTipoUfficioEmittenteRR;
 	}
 
 	public void setDescrUfficioEmittenteRR(String mDescrUfficioEmittenteRR) {
 		this.mDescrUfficioEmittenteRR = mDescrUfficioEmittenteRR;
-	}
-
-	public String getDescrLuogoEmittenteRR() {
-		return mDescrLuogoEmittenteRR;
 	}
 
 	public void setDescrLuogoEmittenteRR(String mDescrLuogoEmittenteRR) {
@@ -771,7 +767,16 @@ public class LicenzaLibAnticipataModel extends GenericModel {
 	}
 	// **********************************************
 
+	public void setCodMotivoDetenzione(String mCodMotivoDetenzione) {
+		this.mCodMotivoDetenzione = mCodMotivoDetenzione;
+	}
+
+	public void setDescrMotivoDetenzione(String mDescrMotivoDetenzione) {
+		this.mDescrMotivoDetenzione = mDescrMotivoDetenzione;
+	}
+
 	public String toString2() {
+
 		String lStr = new String();
 
 		lStr = "" + mIdLicenzaLibanticipata + " - " + mCodTipoLicenza + " - " + mDescrTipoLicenza + " - "
@@ -790,7 +795,9 @@ public class LicenzaLibAnticipataModel extends GenericModel {
 				// MEV10-s3: aggiunta proprietà
 				+ mCodTipoUfficioEmittente + " - " + mDataEmissioneOrdinanza + " - " + mGiorniScomputati
 				+ " - " + mCodEsito + " - " + mDescrEsito + " - " + mDataAnnotazioneEsito + " - "
-				+ mConProvvedimentoValidato + " - " + mNumeroMesi;
+				+ mConProvvedimentoValidato + " - " + mNumeroMesi
+				// MEV_2025-48
+				+ mCodMotivoDetenzione;
 
 		return lStr;
 	}
@@ -799,6 +806,7 @@ public class LicenzaLibAnticipataModel extends GenericModel {
 	 * Metodo toString() che restituisce il contenuto del Model opportunamente formattato. Utile per il debug.
 	 ****************************************************************************/
 	public String toString() {
+
 		String lStr = new String();
 
 		lStr = "LicenzaLibanticipataModel:\n" + "[ mIdLicenzaLibanticipata    = " + mIdLicenzaLibanticipata
@@ -848,7 +856,9 @@ public class LicenzaLibAnticipataModel extends GenericModel {
 				+ "[ mNumeroOreNoFruite         = " + mNumeroOreNoFruite + " ]\n"
 				+ "[ mConProvvedimentoValidato  = " + mConProvvedimentoValidato + " ]\n"
 				+ "[ mNumeroMesi                = " + mNumeroMesi + " ]\n" + "[ mSommaRisarcDanni          = "
-				+ mSommaRisarcDanni + " ]";
+				+ mSommaRisarcDanni + " ]\n"
+				// MEV_2025-48
+				+ "[ mCodMotivoDetenzione 		= " + mCodMotivoDetenzione + " ]";
 
 		return lStr;
 	}
