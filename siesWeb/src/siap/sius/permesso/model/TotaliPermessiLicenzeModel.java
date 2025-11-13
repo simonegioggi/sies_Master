@@ -22,6 +22,11 @@ public class TotaliPermessiLicenzeModel extends GenericModel {
 	int mNumLI = 0; // Licenze Internati.
 	// MEV_2023-35: aggiungo Licenza pene sostitutive (LP) E GESTITO NELLA CLASSE
 	int mNumLP = 0;
+	// MEV_2025-48: aggiunte 4 variabili per il motivo detenzione
+	int mNumPP51 = 0;
+	int mNumPP41bis = 0;
+	int mNumPN51 = 0;
+	int mNumPN41bis = 0;
 
 	// COSTRUTTORE DI DEFAULT
 	public TotaliPermessiLicenzeModel() {
@@ -36,10 +41,17 @@ public class TotaliPermessiLicenzeModel extends GenericModel {
 		mNumLC = aModel.mNumLC;
 		mNumLI = aModel.mNumLI;
 		mNumLP = aModel.mNumLP;
+		// MEV_2025-48: aggiunte 4 variabili per il motivo detenzione
+		mNumPP51 = aModel.mNumPP51;
+		mNumPP41bis = aModel.mNumPP41bis;
+		mNumPN51 = aModel.mNumPN51;
+		mNumPN41bis = aModel.mNumPN41bis;
 	}
 
 	// COSTRUTTORE MODEL
-	public TotaliPermessiLicenzeModel(int aNumPN, int aNumPP, int aNumPI, int aNumLC, int aNumLI, int aNumLP) {
+	public TotaliPermessiLicenzeModel(int aNumPN, int aNumPP, int aNumPI, int aNumLC, int aNumLI, int aNumLP,
+			// MEV_2025-48: aggiunte 4 variabili per il motivo detenzione
+			int aNumPP51, int aNumPP41bis, int aNumPN51, int aNumPN41bis) {
 
 		mNumPN = aNumPN;
 		mNumPP = aNumPP;
@@ -47,6 +59,11 @@ public class TotaliPermessiLicenzeModel extends GenericModel {
 		mNumLC = aNumLC;
 		mNumLI = aNumLI;
 		mNumLP = aNumLP;
+		// MEV_2025-48: aggiunte 4 variabili per il motivo detenzione
+		mNumPP51 = aNumPP51;
+		mNumPP41bis = aNumPP41bis;
+		mNumPN51 = aNumPN51;
+		mNumPN41bis = aNumPN41bis;
 	}
 
 	//
@@ -80,6 +97,23 @@ public class TotaliPermessiLicenzeModel extends GenericModel {
 		return mNumPN + mNumPP + mNumPI + mNumLC + mNumLI + mNumLP;
 	}
 
+	// MEV_2025-48: aggiunte 4 variabili per il motivo detenzione
+	public int getNumPP51() {
+		return mNumPP51;
+	}
+
+	public int getNumPP41bis() {
+		return mNumPP41bis;
+	}
+
+	public int getNumPN51() {
+		return mNumPN51;
+	}
+
+	public int getNumPN41bis() {
+		return mNumPN41bis;
+	}
+
 	//
 	// METODI SET()
 	//
@@ -105,6 +139,23 @@ public class TotaliPermessiLicenzeModel extends GenericModel {
 
 	public void setNumLP(int aValore) {
 		mNumLP = aValore;
+	}
+
+	// MEV_2025-48: aggiunte 4 variabili per il motivo detenzione
+	public void setNumPP51(int aValore) {
+		mNumPP51 = aValore;
+	}
+
+	public void setNumPP41bis(int aValore) {
+		mNumPP41bis = aValore;
+	}
+
+	public void setNumPN51(int aValore) {
+		mNumPN51 = aValore;
+	}
+
+	public void setNumPN41bis(int aValore) {
+		mNumPN41bis = aValore;
 	}
 
 }

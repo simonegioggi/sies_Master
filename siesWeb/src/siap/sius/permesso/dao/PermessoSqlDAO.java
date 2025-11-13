@@ -8,6 +8,7 @@ import f3b.dao.DAOException;
 import f3b.model.GenericModel;
 import f3b.util.DateUtils;
 import f3b.util.StringUtils;
+import f3b.web.IWebConstants;
 import siap.dao.SIAPSqlDAO;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.libertaanticipata.model.LicenzaLibAnticipataModel;
@@ -522,11 +523,11 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 	public void ricercaPermessoDepositato(BigDecimal aIdFascicoloSius) {
 		String lStatement = new String();
 
-		lStatement += this.getPermessoLicenzaSqlQuery();
-		lStatement += this.setPermessoLicenzaByIdFasSius(aIdFascicoloSius);
+		lStatement += getPermessoLicenzaSqlQuery();
+		lStatement += setPermessoLicenzaByIdFasSius(aIdFascicoloSius);
 		// 20110524 PM - Aggiunto codice "2680", per Permessi Internati
-		lStatement += this.setPermessoLicenzaCodMotivo("'2020','2021','2680'");
-		lStatement += this.setPermessoLicenzaCondComune();
+		lStatement += setPermessoLicenzaCodMotivo("'2020','2021','2680'");
+		lStatement += setPermessoLicenzaCondComune();
 
 		setStatement(lStatement);
 	}
@@ -541,13 +542,13 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 
 		String lStatement = new String();
 
-		lStatement += this.getPermessoLicenzaSqlQuery();
-		lStatement += this.setPermessoLicenzaByIdFasSius(aIdFascicoloSius);
+		lStatement += getPermessoLicenzaSqlQuery();
+		lStatement += setPermessoLicenzaByIdFasSius(aIdFascicoloSius);
 		// 20110524 - PM : Inclusione codici : 2450-2451-2452-2460-2461 per licenza internati
 		// MEV_2023-35: aggiungo per Licenza pene sostitutive (LP) i codici 3130, 3150 e 3151
-		lStatement += this.setPermessoLicenzaCodMotivo(
+		lStatement += setPermessoLicenzaCodMotivo(
 				"'2025','2450','2451','2452','2460','2461','3130','3150','3151'");
-		lStatement += this.setPermessoLicenzaCondComune();
+		lStatement += setPermessoLicenzaCondComune();
 
 		setStatement(lStatement);
 	}
@@ -561,9 +562,9 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 	public void ricercaPermessoLicenzaDepositati(BigDecimal aIdLicLibAnt) {
 		String lStatement = new String();
 
-		lStatement += this.getPermessoLicenzaSqlQuery();
-		lStatement += this.setPermessoLicenzaByIdLicLibAnt(aIdLicLibAnt);
-		lStatement += this.setPermessoLicenzaCondComune();
+		lStatement += getPermessoLicenzaSqlQuery();
+		lStatement += setPermessoLicenzaByIdLicLibAnt(aIdLicLibAnt);
+		lStatement += setPermessoLicenzaCondComune();
 
 		setStatement(lStatement);
 	}
@@ -583,18 +584,18 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 	public LicenzaLibAnticipataModel getTipoPermessoLicenzaDepositata(BigDecimal aIdFascicoloSius)
 			throws DAOException {
 
-		String lStatement = " SELECT " + " LL.ID_LICENZA_LIBANTICIPATA, " + " LL.COD_TIPO_LICENZA "
+		String lStatement = " SELECT LL.ID_LICENZA_LIBANTICIPATA, LL.COD_TIPO_LICENZA "
 				+ " FROM LICENZA_LIBANTICIPATA LL "
 				+ " INNER JOIN EVENTO EV ON EV.ID_EVENTO = LL.EVE_ID_EVENTO "
-				+ " INNER JOIN DEPOSITO_DECRETO DD ON DD.ID_EVENTO_GENERATO = EV.ID_EVENTO " + " WHERE ";
+				+ " INNER JOIN DEPOSITO_DECRETO DD ON DD.ID_EVENTO_GENERATO = EV.ID_EVENTO WHERE ";
 
-		lStatement += this.setPermessoLicenzaByIdFasSius(aIdFascicoloSius);
+		lStatement += setPermessoLicenzaByIdFasSius(aIdFascicoloSius);
 		// 20110524 PM - Aggiunto codice : "2680", per Permessi Internati
 		// 20110524 PM - Aggiunti codici : "2450,2451,2452,2460,2461", per Licenze per interati.
 		// MEV_2023-35: aggiungo per Licenza pene sostitutive (LP) i codici 3130, 3150 e 3151
-		lStatement += this.setPermessoLicenzaCodMotivo(
+		lStatement += setPermessoLicenzaCodMotivo(
 				"'2020','2021','2025','2680','2450','2451','2452','2460','2461','3130','3150','3151'");
-		lStatement += this.setPermessoLicenzaCondComune();
+		lStatement += setPermessoLicenzaCondComune();
 
 		setStatement(lStatement);
 
@@ -613,17 +614,16 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 	}
 
 	protected String getPermessoLicenzaSqlQuery() {
-		String lQuery = " SELECT " + " DD.ID_DEPOSITO_DECRETO, " + " DD.DATA_DEPOSITO, "
-				+ " DD.DATA_EMISSIONE, " + " DD.ANNO_S72, " + " DD.NUM_S72, " + " DD.NOTE, "
-				+ " EV.ID_EVENTO, " + " NVL( EV.COD_MOTIVO, '-' ) AS COD_MOTIVO, "
-				+ " MOTIVO_PROVVEDIMENTO.RV_MEANING AS DESCR_MOTIVO, " + " LL.ID_LICENZA_LIBANTICIPATA, "
-				+ " LL.COD_TIPO_LICENZA, " + " LL.NUMERO_GIORNI, " + " LL.NUMERO_ORE, "
+		String lQuery = " SELECT DD.ID_DEPOSITO_DECRETO, DD.DATA_DEPOSITO, "
+				+ " DD.DATA_EMISSIONE, DD.ANNO_S72, DD.NUM_S72, DD.NOTE, "
+				+ " EV.ID_EVENTO, NVL( EV.COD_MOTIVO, '-' ) AS COD_MOTIVO, "
+				+ " MOTIVO_PROVVEDIMENTO.RV_MEANING AS DESCR_MOTIVO, LL.ID_LICENZA_LIBANTICIPATA, "
+				+ " LL.COD_TIPO_LICENZA, LL.NUMERO_GIORNI, LL.NUMERO_ORE, "
 				+ " NVL( LL.COD_ESITO, '-' ) AS COD_ESITO, "
-				+ " ESITO_PERMESSO_LICENZA.RV_MEANING AS DESCR_ESITO, " + " LL.LUOGO_SVOLGIMENTO_PROVA, "
-				+ " LL.NUMERO_GIORNI_NO_FRUITI, " + " LL.NUMERO_ORE_NO_FRUITE, "
-				+ " LL.DATA_ANNOTAZIONE_ESITO, " + " LL.COD_UFFICIO_INSERIMENTO, " + " LL.DATA_INSERIMENTO, "
-				+ " LL.COD_UFFICIO_AGGIORNAMENTO, " + " LL.DATA_AGGIORNAMENTO "
-				+ " FROM LICENZA_LIBANTICIPATA LL "
+				+ " ESITO_PERMESSO_LICENZA.RV_MEANING AS DESCR_ESITO, LL.LUOGO_SVOLGIMENTO_PROVA, "
+				+ " LL.NUMERO_GIORNI_NO_FRUITI, LL.NUMERO_ORE_NO_FRUITE, "
+				+ " LL.DATA_ANNOTAZIONE_ESITO, LL.COD_UFFICIO_INSERIMENTO, LL.DATA_INSERIMENTO, "
+				+ " LL.COD_UFFICIO_AGGIORNAMENTO, LL.DATA_AGGIORNAMENTO FROM LICENZA_LIBANTICIPATA LL "
 				+ " INNER JOIN EVENTO EV ON EV.ID_EVENTO = LL.EVE_ID_EVENTO "
 				+ " INNER JOIN DEPOSITO_DECRETO DD ON DD.ID_EVENTO_GENERATO = EV.ID_EVENTO "
 				+ " INNER JOIN CG_REF_CODES ESITO_PERMESSO_LICENZA "
@@ -631,7 +631,7 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 				+ " AND NVL(LL.COD_ESITO, '-') = ESITO_PERMESSO_LICENZA.RV_LOW_VALUE "
 				+ " INNER JOIN CG_REF_CODES MOTIVO_PROVVEDIMENTO "
 				+ " ON MOTIVO_PROVVEDIMENTO.RV_DOMAIN ='MOTIVO_PROVVEDIMENTO' "
-				+ " AND NVL(EV.COD_MOTIVO, '-') = MOTIVO_PROVVEDIMENTO.RV_LOW_VALUE " + " WHERE ";
+				+ " AND NVL(EV.COD_MOTIVO, '-') = MOTIVO_PROVVEDIMENTO.RV_LOW_VALUE WHERE ";
 		return lQuery;
 	}
 
@@ -641,30 +641,30 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 	 * @return ritorna la stringa
 	 */
 	protected String getProvvPermessoLicenzaSqlQuery() {
-		String lQuery = " SELECT DD.ID_DEPOSITO_DECRETO, " + " DD.DATA_DEPOSITO, " + " SG.NOME, "
-				+ " SG.COGNOME, " + " SG.DATA_NASCITA, " + " ID.DESCRIZIONE, "
-				+ " LL.ID_LICENZA_LIBANTICIPATA, " + " LL.COD_TIPO_LICENZA, " + " LL.NUMERO_GIORNI, "
-				+ " LL.NUMERO_ORE, " + " LL.FLAG_SCORTA, "
-				+ " ESITO_PERMESSO_LICENZA.RV_MEANING DESCR_ESITO, "
-				+ " MOTIVO_PROVVEDIMENTO.RV_MEANING DESCR_MOTIVO, " + " FS.ID_FASCICOLO_SIUS, "
-				+ " FS.CHIAVE_ANNO, " + " FS.CHIAVE_PROGR, "
-				+ " ( CASE WHEN IMP.DEP_DEC_ID_DEPOSITO_DECRETO IS NULL THEN 'No' ELSE 'Si' END ) ESISTE_RICORSO "
-				+ " FROM DEPOSITO_DECRETO DD " + " INNER JOIN EVENTO EV "
-				+ " ON EV.ID_EVENTO = DD.ID_EVENTO_GENERATO " + " INNER JOIN LICENZA_LIBANTICIPATA LL "
-				+ " ON LL.EVE_ID_EVENTO = EV.ID_EVENTO " + " INNER JOIN FASCICOLO_SIUS FS "
-				+ " ON FS.ID_FASCICOLO_SIUS = LL.FAS_SIU_ID_FASCICOLO_SIUS " + " INNER JOIN SOGGETTO SG "
-				+ " ON FS.SOG_ID_SOGGETTO = SG.ID_SOGGETTO " + " LEFT JOIN LUOGO_DETENZIONE LD "
-				+ " ON LD.FAS_SIU_ID_FASCICOLO_SIUS = FS.ID_FASCICOLO_SIUS "
-				+ " AND LD.DATA_FINE_DETENZIONE IS NULL " + " LEFT JOIN ISTITUTO_DETENZIONE ID "
-				+ " ON ID.ID_ISTITUTO_DETENZIONE = LD.IST_DET_ID_ISTITUTO_DETENZIONE "
-				+ " LEFT JOIN IMPUGNAZIONE IMP "
-				+ " ON IMP.DEP_DEC_ID_DEPOSITO_DECRETO = DD.ID_DEPOSITO_DECRETO "
-				+ " INNER JOIN CG_REF_CODES ESITO_PERMESSO_LICENZA "
-				+ " ON ESITO_PERMESSO_LICENZA.RV_DOMAIN ='ESITO_PERMESSO_LICENZA' "
-				+ " AND NVL(LL.COD_ESITO, '-') = ESITO_PERMESSO_LICENZA.RV_LOW_VALUE "
-				+ " INNER JOIN CG_REF_CODES MOTIVO_PROVVEDIMENTO "
-				+ " ON MOTIVO_PROVVEDIMENTO.RV_DOMAIN ='MOTIVO_PROVVEDIMENTO'  "
-				+ " AND NVL(EV.COD_MOTIVO, '-') = MOTIVO_PROVVEDIMENTO.RV_LOW_VALUE " + " WHERE ";
+		String lQuery = "SELECT DD.ID_DEPOSITO_DECRETO, DD.DATA_DEPOSITO, SG.NOME,"
+				+ " SG.COGNOME, SG.DATA_NASCITA, ID.DESCRIZIONE,"
+				+ " LL.ID_LICENZA_LIBANTICIPATA, LL.COD_TIPO_LICENZA, LL.NUMERO_GIORNI,"
+				+ " LL.NUMERO_ORE, LL.FLAG_SCORTA, LL.COD_MOTIVO_DETENZIONE," // MEV_2025-48: aggiunto campo in estrazione
+				+ " ESITO_PERMESSO_LICENZA.RV_MEANING DESCR_ESITO,"
+				+ " MOTIVO_PROVVEDIMENTO.RV_MEANING DESCR_MOTIVO, FS.ID_FASCICOLO_SIUS,"
+				+ " FS.CHIAVE_ANNO, FS.CHIAVE_PROGR,"
+				+ " (CASE WHEN IMP.DEP_DEC_ID_DEPOSITO_DECRETO IS NULL THEN 'No' ELSE 'Si' END) ESISTE_RICORSO"
+				+ " FROM DEPOSITO_DECRETO DD INNER JOIN EVENTO EV"
+				+ " ON EV.ID_EVENTO = DD.ID_EVENTO_GENERATO INNER JOIN LICENZA_LIBANTICIPATA LL"
+				+ " ON LL.EVE_ID_EVENTO = EV.ID_EVENTO INNER JOIN FASCICOLO_SIUS FS"
+				+ " ON FS.ID_FASCICOLO_SIUS = LL.FAS_SIU_ID_FASCICOLO_SIUS INNER JOIN SOGGETTO SG"
+				+ " ON FS.SOG_ID_SOGGETTO = SG.ID_SOGGETTO LEFT JOIN LUOGO_DETENZIONE LD"
+				+ " ON LD.FAS_SIU_ID_FASCICOLO_SIUS = FS.ID_FASCICOLO_SIUS"
+				+ " AND LD.DATA_FINE_DETENZIONE IS NULL LEFT JOIN ISTITUTO_DETENZIONE ID"
+				+ " ON ID.ID_ISTITUTO_DETENZIONE = LD.IST_DET_ID_ISTITUTO_DETENZIONE"
+				+ " LEFT JOIN IMPUGNAZIONE IMP"
+				+ " ON IMP.DEP_DEC_ID_DEPOSITO_DECRETO = DD.ID_DEPOSITO_DECRETO"
+				+ " INNER JOIN CG_REF_CODES ESITO_PERMESSO_LICENZA"
+				+ " ON ESITO_PERMESSO_LICENZA.RV_DOMAIN ='ESITO_PERMESSO_LICENZA'"
+				+ " AND NVL(LL.COD_ESITO, '-') = ESITO_PERMESSO_LICENZA.RV_LOW_VALUE"
+				+ " INNER JOIN CG_REF_CODES MOTIVO_PROVVEDIMENTO"
+				+ " ON MOTIVO_PROVVEDIMENTO.RV_DOMAIN ='MOTIVO_PROVVEDIMENTO'"
+				+ " AND NVL(EV.COD_MOTIVO, '-') = MOTIVO_PROVVEDIMENTO.RV_LOW_VALUE WHERE ";
 		return lQuery;
 	}
 
@@ -674,20 +674,31 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 	 * @param aDataIniziale
 	 * @param aDataFinale
 	 * @param aCodMotivo
+	 * @param aCodUfficio
+	 * @param aPage
+	 *            MEV_2025-48: paginata la ricerca
 	 */
 	public void ricercaProvvedimentiPermessiLicenze(Date aDataIniziale, Date aDataFinale, String aCodMotivo,
-			String aCodUfficio) {
+			String aCodUfficio, int aPage) {
 
 		String lStatement = new String();
 
-		lStatement += this.getProvvPermessoLicenzaSqlQuery();
+		lStatement += getProvvPermessoLicenzaSqlQuery();
+		lStatement += setRangeDataDeposito(aDataIniziale, aDataFinale);
+		lStatement += setPermessoLicenzaCodMotivo(aCodMotivo);
+		lStatement += setPermessoLicenzaCondComune();
+		lStatement += setFascicoloChiaveUfficio(aCodUfficio);
+		lStatement += setGroupBy();
+		lStatement += setOrderByDataDepositoChiaveFascicolo();
 
-		lStatement += this.setRangeDataDeposito(aDataIniziale, aDataFinale);
-		lStatement += this.setPermessoLicenzaCodMotivo(aCodMotivo);
-		lStatement += this.setPermessoLicenzaCondComune();
-		lStatement += this.setFascicoloChiaveUfficio(aCodUfficio);
-		lStatement += this.setGroupBy();
-		lStatement += this.setOrderByDataDepositoChiaveFascicolo();
+		// MEV_2025-48: paginata la ricerca
+		if (aPage > 0) {
+			String lPaginedStatement = new String("");
+			lPaginedStatement = "SELECT * FROM (SELECT INNER.* , Rownum rn FROM (" + lStatement
+					+ "  ) INNER ) WHERE rn between  " + ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1)
+					+ " AND " + (aPage) * IWebConstants.RESULT_PER_PAGE;
+			lStatement = lPaginedStatement;
+		}
 
 		setStatement(lStatement);
 	}
@@ -703,7 +714,9 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 	 */
 	public int getNumProvvedimentiPermessiLicenze(Date aDataIniziale, Date aDataFinale, String aCodMotivo,
 			String aCodUfficio) throws DAOException {
-		ricercaProvvedimentiPermessiLicenze(aDataIniziale, aDataFinale, aCodMotivo, aCodUfficio);
+
+		// MEV_2025-48: paginata la ricerca
+		ricercaProvvedimentiPermessiLicenze(aDataIniziale, aDataFinale, aCodMotivo, aCodUfficio, 0);
 		return super.getNumRowsSelected().intValue();
 	}
 
@@ -714,6 +727,7 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 	 * @return
 	 */
 	public String setPermessoLicenzaCodMotivo(String aCodici) {
+
 		return " AND EV.COD_MOTIVO IN (" + aCodici + ") ";
 	}
 
@@ -724,6 +738,7 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 	 * @return
 	 */
 	public String setPermessoLicenzaByIdFasSius(BigDecimal aIdFascicoloSius) {
+
 		return " EV.FAS_SIU_ID_FASCICOLO_SIUS = " + aIdFascicoloSius + " ";
 	}
 
@@ -734,6 +749,7 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 	 * @return
 	 */
 	public String setPermessoLicenzaByIdLicLibAnt(BigDecimal aIdLicLibAnt) {
+
 		return " LL.ID_LICENZA_LIBANTICIPATA = " + aIdLicLibAnt + " ";
 	}
 
@@ -768,8 +784,8 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 		String lDataIniziale = DateUtils.getDateToString(aDataIniziale, "ddMMyyyy");
 		String lDataFinale = DateUtils.getDateToString(aDataFinale, "ddMMyyyy");
 
-		return " DD.DATA_DEPOSITO BETWEEN " + " TO_DATE('" + lDataIniziale + "','DDMMYYYY') "
-				+ " AND TO_DATE('" + lDataFinale + "','DDMMYYYY') ";
+		return " DD.DATA_DEPOSITO BETWEEN TO_DATE('" + lDataIniziale + "','DDMMYYYY') AND TO_DATE('"
+				+ lDataFinale + "','DDMMYYYY') ";
 	}
 
 	public String setFascicoloChiaveUfficio(String aCodUfficio) {
@@ -794,11 +810,12 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 
 	public String setGroupBy() {
 
-		return " GROUP BY DD.ID_DEPOSITO_DECRETO, " + " DD.DATA_DEPOSITO, " + " SG.NOME, " + " SG.COGNOME, "
-				+ " SG.DATA_NASCITA, " + " ID.DESCRIZIONE, " + " LL.ID_LICENZA_LIBANTICIPATA, "
-				+ " LL.COD_TIPO_LICENZA, " + " LL.NUMERO_GIORNI, " + " LL.NUMERO_ORE, " + " LL.FLAG_SCORTA, "
-				+ " ESITO_PERMESSO_LICENZA.RV_MEANING, " + " MOTIVO_PROVVEDIMENTO.RV_MEANING, "
-				+ " FS.ID_FASCICOLO_SIUS, " + " FS.CHIAVE_ANNO, " + " FS.CHIAVE_PROGR, "
+		return " GROUP BY DD.ID_DEPOSITO_DECRETO, DD.DATA_DEPOSITO, SG.NOME, SG.COGNOME,"
+				+ " SG.DATA_NASCITA, ID.DESCRIZIONE, LL.ID_LICENZA_LIBANTICIPATA,"
+				+ " LL.COD_TIPO_LICENZA, LL.NUMERO_GIORNI, LL.NUMERO_ORE, LL.FLAG_SCORTA,"
+				+ " LL.COD_MOTIVO_DETENZIONE," // MEV_2025-48: aggiunto campo in estrazione
+				+ " ESITO_PERMESSO_LICENZA.RV_MEANING, MOTIVO_PROVVEDIMENTO.RV_MEANING,"
+				+ " FS.ID_FASCICOLO_SIUS, FS.CHIAVE_ANNO, FS.CHIAVE_PROGR,"
 				+ " IMP.DEP_DEC_ID_DEPOSITO_DECRETO ";
 	}
 
@@ -908,6 +925,8 @@ public class PermessoSqlDAO extends SIAPSqlDAO {
 		lModel.getLicenza().setDescrEsito(getString("DESCR_ESITO"));
 		lModel.getLicenza().setCodTipoLicenza(getString("COD_TIPO_LICENZA"));
 		lModel.getLicenza().setFlagScorta(getString("FLAG_SCORTA"));
+		// MEV_2025-48: estratto nuovo campo
+		lModel.getLicenza().setCodMotivoDetenzione(getString("COD_MOTIVO_DETENZIONE"));
 
 		// Popola Fascicolo Sius
 		lModel.getFascicolo().setIdFascicoloSius(getBigDecimal("ID_FASCICOLO_SIUS"));
