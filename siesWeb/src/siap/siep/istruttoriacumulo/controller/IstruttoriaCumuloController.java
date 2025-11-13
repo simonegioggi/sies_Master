@@ -2667,7 +2667,9 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 		// MEV_2025-48 - ALTRO - Ordinamento titoli come x Lista titoli
 		IstruttoriaCumuloSqlDAO lIstrSqlDao = null;
 		
-		
+		// MEV_2025-48 - ALTRO - Visualizzazione Pena In Continuazione
+		ContinuazioneCumuloSqlDAO lContCumuloSqlDao = null;		
+		        
 		CalcoloPenaCumuloModel lCalcoloPenaModel = new CalcoloPenaCumuloModel();
 
 		Vector<TitoloCumulatoModel> lListaTitoli = null; // new Vector<TitoloCumulatoModel>();
@@ -2782,11 +2784,21 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 						.getModelByKey();
 				lPenSqlDao.stop();
 				if (lPenaComplMod != null) {
+				    
+				    
+			        // MEV_2025-48 - ALTRO - Visualizzazione Pena In Continuazione
+                    // recupero eventuali cntinuazioni (solo visualizzazione)
+				    lContCumuloSqlDao = new ContinuazioneCumuloSqlDAO(lConn);
+				    lContCumuloSqlDao.ricercaContinuazioneByIdTitolo(lPenaComplMod.getTitIdTitoloCumulato());
+				    Vector lListaCont =  new Vector(lContCumuloSqlDao.getModels());
+				    lPenaComplMod.setContinuazioniCumulo(lListaCont);
+				    // MEV_2025-48 - ALTRO - Visualizzazione Pena In Continuazione
+				    
 					if (isPenaDetentivaSospesa) {
                         // MEV_2025-48 - ALTRO – Visualizzazione Pena Sospesa
                         // Devo passare tutti i dati per poterli visualizzare
                         lPenaComplMod.setBeneficioSospensioneCumulo(lBeneficioSosp);
-                        siesLogger.debug("isPenaDetentivaSospesa = " + isPenaInContinuazione);
+                        siesLogger.debug("isPenaDetentivaSospesa = " + isPenaDetentivaSospesa);
                         // Procedo ad azzerare i quantum, lascio solo la pecuniaria
 						// Reclusione
 						//lPenaComplMod.setNumGiorniReclusione(null);
@@ -2812,6 +2824,26 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 						// quindi la pena su tale titolo già ingloba la pena del titolo corrente
 						// Non aggiungo la pena al model altrimenti verrebbe conteggiata 2 volte
 						siesLogger.debug("NON carico la pena = " + lPenaComplMod);
+						// MEV_2025-48 - ALTRO - Visualizzazione Pena In Continuazione
+						// Si deve visualizzzare comunque la pena in continuazione ma non conteggiarla
+						siesLogger.debug("isPenaInContinuazione carico la pena x la visualizzazione");
+                        // Procedo ad azzerare i quantum, multa e ammenda
+                        // Reclusione
+                        lPenaComplMod.setNumGiorniReclusione(null);
+                        lPenaComplMod.setNumMesiReclusione(null);
+                        lPenaComplMod.setNumAnniReclusione(null);
+                        // Arresto
+                        lPenaComplMod.setNumGiorniArresto(null);
+                        lPenaComplMod.setNumMesiArresto(null);
+                        lPenaComplMod.setNumAnniArresto(null);
+						// 
+                        lPenaComplMod.setImportoMulta(null);
+                        lPenaComplMod.setImportoAmmenda(null);
+                        
+						TitoloCumulatoModel lTitoloR = this.getTitoloContinuazioneR(lPenaComplMod.getTitIdTitoloCumulato(), lConn);
+						lPenaComplMod.setTitoloContinuazioneR(lTitoloR);
+						lCalcoloPenaModel.addPenaComplessiva(lPenaComplMod);
+						// MEV_2025-48 - ALTRO - Visualizzazione Pena In Continuazione - FINE
 					} else {
 						// Sospensiva non presente o revocata aggiungo la pena
 						siesLogger.debug("Carico la pena = " + lPenaComplMod);
@@ -3171,6 +3203,8 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 			cleanup(lUffSqlDao);
 			// MEV_2025-48 - ALTRO - Ordinamento titoli come x Lista titoli
 			cleanup(lIstrSqlDao);
+			// MEV_2025-48 - ALTRO - Visualizzazione Pena In Continuazione
+			cleanup(lContCumuloSqlDao);
 			
 			cleanup(lConn);
 		}
@@ -4224,5 +4258,69 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
         return lUltimaIstruttoria;
     }  
      
-     
+     /**
+      * Etrae i dati del Titolo che ASSORBE la pena in contiinuazione rendendola
+      * non computabile.
+      * Metodo aggiunto per visualizzare comunque la pena sulla popup di calcolo 
+      * 
+      * @since  MEV_2025-48 - ALTRO - Visualizzazione Pena In Continuazione 
+      * */
+     public TitoloCumulatoModel getTitoloContinuazioneR(BigDecimal aIdTitolo, Connection aConn) throws F3BException {
+
+
+         ContinuazioneCumuloSqlDAO lContinuazioneCumSqlDao = null;
+         TitoloCumulatoSqlDAO lTitoloSqlDao = null;
+         ProcedimentoCumulatoSqlDAO lProcCumSqlDao = null;
+         
+         TitoloCumulatoModel lTitoloModel = null;
+         
+         
+         try {
+             siesLogger.debug("getTitoloContinuazioneR recupero i dati del titolo che assorbe in continuazione la PC del titolo =" + aIdTitolo);
+
+             lContinuazioneCumSqlDao = new ContinuazioneCumuloSqlDAO(aConn);
+             lTitoloSqlDao  = new TitoloCumulatoSqlDAO(aConn);
+             lProcCumSqlDao = new ProcedimentoCumulatoSqlDAO(aConn);             
+
+             lContinuazioneCumSqlDao.ricercaContinuazioneByIdTitoloCont(aIdTitolo);
+
+             lContinuazioneCumSqlDao.start();
+
+             while (lContinuazioneCumSqlDao.next()) {
+                 ContinuazioneCumuloModel lConCumModel = (ContinuazioneCumuloModel) lContinuazioneCumSqlDao
+                         .getModel();
+
+                 if ("R".equals(lConCumModel.getCodTipoContinuazione())) {
+                     siesLogger.debug("Trovata continuazione " + lConCumModel.getIdContinuazioneCum() + " di tipo R ");
+                     
+                     //  recupera il titolo
+                     siesLogger.debug("recupera i dati del titolo "+lConCumModel.getTitIdTitoloCumulato()); 
+                     lTitoloSqlDao.ricercaTitoloCumulatoByKey(lConCumModel.getTitIdTitoloCumulato());
+                     lTitoloModel = (TitoloCumulatoModel) lTitoloSqlDao.getModelByKey();
+                     
+                     // recupero se presento il procedimento
+                     siesLogger.debug("recupera i dati del procedimento collegato ");
+                     lProcCumSqlDao.ricercaProcedimentoCumulatoByIdTitolo(lTitoloModel.getIdTitoloCumulato());
+                     ProcedimentoCumulatoModel lProcModel = (ProcedimentoCumulatoModel) lProcCumSqlDao.getModelByKey();
+                     lTitoloModel.setProcedimentoCumulato(lProcModel);
+                     break;
+                 }
+             }
+             lContinuazioneCumSqlDao.stop();
+         } catch (DAOException daoEx) {
+             siesLogger.error("DAOException: ", daoEx);
+             throw new SIEPException(F3BException.USER_MESSAGE,
+                     "IstruttoriaCumuloController.getTitoloContinuazioneR: " + daoEx);
+         } catch (Exception e) {
+             siesLogger.error("Exception: ", e);
+             throw new SIEPException(F3BException.USER_MESSAGE,
+                     "IstruttoriaCumuloController.getTitoloContinuazioneR" + e.getMessage());
+         } finally {
+             cleanup(lContinuazioneCumSqlDao);
+             cleanup(lProcCumSqlDao);
+             cleanup(lTitoloSqlDao);
+         }
+
+         return lTitoloModel;
+     }
 } // Chiude Controller

@@ -322,6 +322,17 @@ public class CalcoloPenaCumuloModel extends GenericModel {
             }
             // MEV_2025-48 - ALTRO – Visualizzazione Pena Sospesa - FINE
 			
+            
+            // MEV_2025-48 - ALTRO - Visualizzazione Pena In Continuazione
+            if (lPenaCompl.getTitoloContinuazioneR()!=null) {
+                // salto la PC nel calcolo - Tutta la pena è in continuazione R 
+                // e' stata inserita nel model SOLO per la visualizzazione
+                // in pene rideterminate
+               continue; 
+            }
+            // MEV_2025-48 - ALTRO - Visualizzazione Pena In Continuazione - FINE
+            
+            
 			lCalReclusioneTotMod = lCalUtil.sommaGiornieValute(lCalReclusioneTotMod, lReclusioneMulta);
 			lCalArrestiTotMod = lCalUtil.sommaGiornieValute(lCalArrestiTotMod, lArrestoAmmenda);
 
