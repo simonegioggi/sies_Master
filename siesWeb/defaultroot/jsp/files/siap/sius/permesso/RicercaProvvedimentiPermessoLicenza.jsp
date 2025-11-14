@@ -140,22 +140,26 @@ Collection elenco = (Collection) request.getAttribute("elenco");
 </table>
 <jsp:include page="<%=IWebConstants.PAGINAZIONE_RICERCA%>"></jsp:include>
 <table cellspacing="2" cellpadding="2" width="95%">
- 	<tr>
+<%
+Iterator itx = elenco.iterator();
+if (itx.hasNext()) {
+%>
+	<tr>
 		<td class="int" width="8%">Numero SIUS</td>
 		<td class="int" width="12%">Cognome Nome</td>
-		<td class="int" width="8%">Data di nascita</td>
+		<td class="int" width="10%">Data di nascita</td>
 		<td class="int" width="12%">Luogo Detenzione</td>
 		<td class="int" width="10%">Data Deposito</td>
 		<td class="int" width="14%">Oggetto</td>
-		<td class="int" width="10%">GG/ORE Concessi</td>
+		<td class="int" width="8%">GG/ORE Concessi</td>
 		<%-- MEV_2025-48: la colonna 'Esito' viene sostituita con una colonna 'Regime 41 bis O.P.' ed una colonna 'Reati 51 c. 3 bis e 3 quater c.p.p.' --%>
 <!-- 		<td class="int" width="15%">Esito</td> -->
-		<td class="int" width="10%">Regime 41 bis O.P.</td>
-		<td class="int" width="26%">Reati 51 c. 3 bis e 3 quater c.p.p.</td>
+		<td class="int" width="15%">Reati 51 c. 3 bis e 3 quater c.p.p.</td>
+		<td class="int" width="15%">Regime 41 bis O.P.</td>
 		<td class="int">Azioni</td>
-   </tr>
+	</tr>
 <%
-Iterator itx = elenco.iterator();
+}
 while (itx.hasNext()) {
 	ProvvedimentoPermessoLicenzaModel lModel = (ProvvedimentoPermessoLicenzaModel) itx.next();
 %>
@@ -193,10 +197,10 @@ while (itx.hasNext()) {
 		</td>
 <%-- 		<%=StringUtils.toStringJSP(lModel.getLicenza().getDescrEsito(), "-")%> --%>
 		<td class="c">
-			<%=StringUtils.toStringJSP(("02").equals(lModel.getLicenza().getCodMotivoDetenzione()) ? "SI" : "-")%>
-		</td>
-				<td class="c">
 			<%=StringUtils.toStringJSP(("01").equals(lModel.getLicenza().getCodMotivoDetenzione()) ? "SI" : "-")%>
+		</td>
+		<td class="c">
+			<%=StringUtils.toStringJSP(("02").equals(lModel.getLicenza().getCodMotivoDetenzione()) ? "SI" : "-")%>
 		</td>
 		<td class="c">
 <% 
