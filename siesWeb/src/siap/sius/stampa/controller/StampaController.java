@@ -5459,8 +5459,9 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 			StringTokenizer lStrToken = new StringTokenizer(aCriteriRicerca.getCodMotivo(), ",");
 			// MEV_2023-35: aggiungo due contatori
 			int li = 0, lp = 0;
-			// MEV_2025-48: aggiungo 4 contatori
+			// MEV_2025-48: aggiungo 4 contatori + variabile
 			int pp51 = 0, pp41bis = 0, pn51 = 0, pn41bis = 0;
+			String codMotivi = aCriteriRicerca.getCodMotivo();
 			while (lStrToken.hasMoreTokens()) {
 				String lCodMotivo = lStrToken.nextToken();
 				int lNum = lPermSqlDao.getNumProvvedimentiPermessiLicenze(
@@ -5519,7 +5520,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 			// Si recupera l'elenco.
 			lPermSqlDao.ricercaProvvedimentiPermessiLicenze(aCriteriRicerca.getDataDepositoIniziale(),
-					aCriteriRicerca.getDataDepositoFinale(), aCriteriRicerca.getCodMotivo(),
+					aCriteriRicerca.getDataDepositoFinale(), /*aCriteriRicerca.getCodMotivo()*/codMotivi,
 					aCriteriRicerca.getCodUfficio(), 0); // MEV_2025-48: paginata la ricerca
 			lPermSqlDao.start();
 
