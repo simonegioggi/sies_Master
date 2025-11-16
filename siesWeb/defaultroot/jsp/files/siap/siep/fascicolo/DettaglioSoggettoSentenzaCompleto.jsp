@@ -159,6 +159,7 @@ if (fascicolo.getCodOperatoreInserimento() != null && fascicolo.getCodOperatoreI
           	<font class="cRossoCumulo"> &nbsp;Migrato&nbsp; </font>&nbsp;
 <%
 }
+// MEV_2025-48: aggiunta sezione
 if (isCartabia) {
 %>
 			<font class="cRossoCumulo"> &nbsp;Cartabia&nbsp; </font>&nbsp;

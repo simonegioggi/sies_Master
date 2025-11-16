@@ -814,7 +814,7 @@ public class ActLoadDettaglioFascicolo extends ActionSiap implements ICostantiFa
 			if (dataReato != null) {
 				if (dataInizioReato == null)
 					dataInizioReato = dataReato;
-				else if (dataInizioReato.compareTo(dataReato) > 0)
+				else if (DateUtils.isLower(dataInizioReato, dataReato))
 					dataInizioReato = dataReato;
 				if (DateUtils.isGreater(dataInizioReato, dataCartabia))
 					isCartabia = true;
