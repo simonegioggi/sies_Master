@@ -140,6 +140,8 @@ if ("U142".equals(contenuto) || "U143".equals(contenuto) || "U145".equals(conten
 			|| document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3206'
 			|| document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3207'
 			|| document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3208'
+			// MEV_2025-48: aggiunto esito (3209) per Oggetto: 3180 - Contenuto: U142 - TIPO ORDINANZA: SR
+			|| document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3209'
 			|| document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3217') {
 		var importoDaPagare = document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_INTERO_PENA_PECUNIARIA_CONVERTITA%>.value
 			+ "." + document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_DECIMALE_PENA_PECUNIARIA_CONVERTITA%>.value;
@@ -186,7 +188,8 @@ function selectEsito() {
 	// Esito 'Dispone conversione...'
 	if (document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value in { '1770':1, '1771':1 }
 			// MEV_2023-35: aggiunti esisti
-			|| document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value in { '3205':1, '3206':1, '3207':1, '3208':1, '3217':1 }) {
+			// MEV_2025-48: aggiunto esito (3209) per Oggetto: 3180 - Contenuto: U142 - TIPO ORDINANZA: SR
+			|| document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value in { '3205':1, '3206':1, '3207':1, '3208':1, '3209':1, '3217':1 }) {
 		node = document.getElementById("divConversione");
 		node.style.display = 'block';
 		node = document.getElementById("divRateizzazione");
@@ -326,7 +329,8 @@ for (int i = 0; i < tenori.length; i++) {
 <table cellspacing="2" cellpadding="2" style="width: 90%;">
 	<tr>
 		<td class="l">Motivazione</td>
-	 	<td class="l"><TEXTAREA title="Motivazione della decisione" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_ULTERIORE_DESCRIZIONE%>" cols="70" rows="4"></textarea></td>
+		<%-- MEV_2025-48: aggiunta gestione "UlterioreDescrizione" --%>
+	 	<td class="l"><TEXTAREA title="Motivazione della decisione" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_MOTIVAZIONI%>" cols="70" rows="4"></textarea></td>
 	</tr>
 	<tr>
 		<td class="l">Ulteriore descrizione della decisione</td>
@@ -437,6 +441,7 @@ while (itx.hasNext()) {
 			<font class="label"> Giorni</font>&nbsp;&nbsp;&nbsp;
 			<font class="campo"> <input title="Giorni" type="text" size="4" maxlength="4" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_DETENZIONE_DOM%>"></font>
 <%
+	// MEV_2025-48: aggiungo "Permanenza Domiciliare" anche per U142
 	if (!"U143".equals(contenuto)) {
 %>
 			<font class="label"> Semilibert&agrave; </font>
@@ -445,6 +450,8 @@ while (itx.hasNext()) {
 			<input value="02" type="radio" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_FLAG_TIPO_SANZIONE%>">&nbsp;&nbsp;
 			<font class="label"> Lavoro Pubblica Utilit&agrave; </font>
 			<input value="03" type="radio" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_FLAG_TIPO_SANZIONE%>">
+			<font class="label"> Permanenza Domiciliare </font>
+			<input value="04" type="radio" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_FLAG_TIPO_SANZIONE%>">
 <%
 	} else {
 %>
