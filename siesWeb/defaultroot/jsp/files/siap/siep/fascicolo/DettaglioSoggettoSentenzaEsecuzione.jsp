@@ -1,34 +1,81 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%@ page import ="java.util.Date"%>
-<%@ page import ="java.util.List"%>
-<%@ page import ="java.util.Vector"%>
-<%@ page import ="java.math.BigDecimal"%>
+<%@ page import="siap.siep.util.SIEPLookupRemote"%>
+<%@ page import="java.util.Iterator"%>
+<%@ page import="siap.siep.reato.model.ReatoModel"%>
+<%@ page import="siap.siep.reato.model.ReatoCircostanzaModel"%>
+<%@ page import="java.util.Date"%>
+<%@ page import="siap.siep.fascicolo.model.DettaglioFascicoloModel"%>
+<%@ page import="siap.siep.fascicolo.controller.IFascicoloSiep"%>
+<%@ page import="java.util.Collection"%>
+<%@ page import="java.util.Vector"%>
+
+<%@ page import="java.util.Date"%>
+<%@ page import="java.util.List"%>
+<%@ page import="java.util.Vector"%>
+<%@ page import="java.math.BigDecimal"%>
 <%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.DateUtils"%>
-<%@ page import="f3b.util.StringUtils" %>
+<%@ page import="f3b.util.StringUtils"%>
 
-<%@ page import="siap.siep.fascicolo.action.ICostantiFascicoloSiep" %>
-<%@ page import="siap.sico.soggetto.action.ICostantiSoggetto" %>
-<%@ page import="siap.siep.sentenza.action.ICostantiSentenza" %>
-<%@ page import="siap.siep.sentenza.model.SentenzaModel" %>
-<%@ page import="siap.sico.soggetto.model.SoggettoModel" %>
-<%@ page import="siap.siep.avvocato.model.AvvocatoModel" %>
+<%@ page import="siap.siep.fascicolo.action.ICostantiFascicoloSiep"%>
+<%@ page import="siap.sico.soggetto.action.ICostantiSoggetto"%>
+<%@ page import="siap.siep.sentenza.action.ICostantiSentenza"%>
+<%@ page import="siap.siep.sentenza.model.SentenzaModel"%>
+<%@ page import="siap.sico.soggetto.model.SoggettoModel"%>
+<%@ page import="siap.siep.avvocato.model.AvvocatoModel"%>
 <%@ page import="siap.sico.util.CalendarUtil"%>
 <%@ page import=" siap.sico.calendar.model.CalendarModel"%>
-<%@ page import="siap.sico.misuraalternativa.model.MisuraAlternativaModel" %>
+<%@ page import="siap.sico.misuraalternativa.model.MisuraAlternativaModel"%>
 
-<%@ page import="siap.siep.penacomplessiva.model.PenaComplessivaSanzioneSostitutivaModel" %>
-<%@ page import="siap.siep.penacomplessiva.model.PenaComplessivaModel" %>
-<%@ page import="siap.siep.penaresidua.model.PenaResiduaModel" %>
-<%@ page import="siap.siep.penapresunta.model.PenaPresuntaModel" %>
+<%@ page import="siap.siep.penacomplessiva.model.PenaComplessivaSanzioneSostitutivaModel"%>
+<%@ page import="siap.siep.penacomplessiva.model.PenaComplessivaModel"%>
+<%@ page import="siap.siep.penaresidua.model.PenaResiduaModel"%>
+<%@ page import="siap.siep.penapresunta.model.PenaPresuntaModel"%>
 
-<jsp:useBean id="UtenteConnesso"     scope="session" class="siap.sico.utente.model.UtenteModel" />
-<jsp:useBean id="fascicolo"          scope="session" class="siap.siep.fascicolo.model.FascicoloSiepModel" />
-<jsp:useBean id="dettagliofascicolo" scope="request" class="siap.siep.fascicolo.model.DettaglioFascicoloModel" />
+<jsp:useBean id="UtenteConnesso"     scope="session" class="siap.sico.utente.model.UtenteModel"/>
+<jsp:useBean id="fascicolo"          scope="session" class="siap.siep.fascicolo.model.FascicoloSiepModel"/>
+<jsp:useBean id="dettagliofascicolo" scope="request" class="siap.siep.fascicolo.model.DettaglioFascicoloModel"/>
 
 <%
-  SoggettoModel soggetto = fascicolo.getSoggetto();
-  SentenzaModel sentenza = fascicolo.getSentenza();
+SoggettoModel soggetto = fascicolo.getSoggetto();
+SentenzaModel sentenza = fascicolo.getSentenza();
+
+// MEV_2025-48: dicitura CARTABIA se almeno uno dei reati collegati al procedimento ha una data inizio > 30/12/2022
+IFascicoloSiep ifs = SIEPLookupRemote.getFascicoloSiepRemote();
+DettaglioFascicoloModel dfm = ifs.ExDettaglioFascicoloSiepNew(fascicolo.getIdFascicoloSiep());
+Collection reatiCircostanzeColl = dfm.getReatiCircostanze();
+Vector reatiCircostanzeVect = new Vector(reatiCircostanzeColl);
+boolean isCartabia = false;
+final Date dataCartabia = DateUtils.getDate("30/12/2022", "dd/MM/yyyy");
+Date dataInizioReato = null;
+Iterator itx = reatiCircostanzeVect.iterator();
+while (itx.hasNext()) {
+	ReatoModel rm = null;
+	Object obj = itx.next();
+	if (obj instanceof ReatoModel) {
+		rm = (ReatoModel) obj;
+	} else if (obj instanceof ReatoCircostanzaModel) {
+		ReatoCircostanzaModel rcm = (ReatoCircostanzaModel) obj;
+		rm = rcm.getReato();
+	}
+	Date dataReato = null;
+	if (rm.getDataInizio() != null) {
+		dataReato = rm.getDataInizio();
+	} else if (rm.getMeseInizio() != null && rm.getAnnoInizio() != null) {
+		dataReato = DateUtils.getDate(rm.getAnnoInizio().intValue(), rm.getMeseInizio().intValue(), 1);
+	} else if (rm.getAnnoInizio() != null) {
+		dataReato = DateUtils.getDate(rm.getAnnoInizio().intValue(), 1, 1);
+	}
+	if (dataReato != null) {
+		if (dataInizioReato == null)
+			dataInizioReato = dataReato;
+		else if (DateUtils.isLower(dataInizioReato, dataReato))
+			dataInizioReato = dataReato;
+		if (DateUtils.isGreater(dataInizioReato, dataCartabia))
+			isCartabia = true;
+	}
+}
+// FINE MEV_2025-48
 %>
 
 <%
@@ -78,16 +125,21 @@
         if(fascicolo.getCodOperatoreInserimento() != null && fascicolo.getCodOperatoreInserimento().startsWith("res-"))
         {
 %>
-          <font class="cRossoCumulo"> &nbsp;Migrato&nbsp; </font>&nbsp;
+          	<font class="cRossoCumulo"> &nbsp;Migrato&nbsp; </font>&nbsp;
 <%
         }
-
+// MEV_2025-48: aggiunta sezione
+if (isCartabia) {
+%>
+			<font class="cRossoCumulo"> &nbsp;Cartabia&nbsp; </font>&nbsp;
+<%
+}
         if(   fascicolo.getCodStatoFascicolo() != null
            && (fascicolo.getCodStatoFascicolo().equals("01"))
            )
         {
 %>
-          <font class="cRossoCumulo"> &nbsp;Archiviato&nbsp;</font>&nbsp;
+          	<font class="cRossoCumulo"> &nbsp;Archiviato&nbsp;</font>&nbsp;
 <%
         }
 
