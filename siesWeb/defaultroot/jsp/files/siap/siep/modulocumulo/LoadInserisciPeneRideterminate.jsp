@@ -116,7 +116,7 @@ if (lPenaRideterminataCumulo.getIdPenaRideterminataCumulo()!=null) {
       %>
       desktop = window.open("<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.istruttoriacumulo.action.ActLoadCalcoloPenaCumulo&ParentFormName="+a_form_name+"&ParentFormType="+a_form_type+"<%=lStrParametri%>"    
                           , "CalcoloPenaCumulo"
-                          , "toolbar=no, location=no, status=no, menubar=no ,scrollbars=yes, resizable=yes, width=940, height=500");
+                          , "toolbar=no, location=no, status=no, menubar=no ,scrollbars=yes, resizable=yes, width=940, height=900");
     } 
   </script>  
 

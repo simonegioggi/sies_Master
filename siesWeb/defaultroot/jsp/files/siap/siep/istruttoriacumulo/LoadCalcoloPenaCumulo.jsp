@@ -29,6 +29,9 @@
 <%@ page import="siap.siep.modulocumulo.model.ProcedimentoCumulatoModel"%>
 <%@ page import="siap.siep.modulocumulo.model.LibAnticipataCumuloModel"%>
 
+<%@ page import="siap.siep.modulocumulo.util.PeriodiCarcerazioneSoffertiModel"%>
+
+
 <%@page import="org.apache.log4j.Logger"%>
 <% final Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG); %>
 
@@ -610,16 +613,135 @@
 
 	</table>
 
-	<%--
+
+<%--
+============================================================================== 
+  MEV_2025-48 - ALTRO - Ordinamento Periodi Carcerazione Sofferti
+============================================================================== 
+--%>
+    <br>
+    <table id="idTabMC" cellspacing="2" cellpadding="4" width="900px" style1="background-color:LightGreen;">
+        <tr>
+            <td class="Titolo" colspan="7">Dedotti i Periodi di carcerazione sofferti&nbsp;
+                <a href="Javascript:espandi('idTabMC','idExpCollMC');" id="idExpCollMC"><img align="middle" alt="Espandi"
+                    src="<%=IWebConstants.IMAGES_DIR%>expand.gif" border="0" />
+                </a>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="int" id="tdTipMisura">Tipo Misura</td>
+            <td class="int" id="tdPeriodoDa">Periodo dal</td>
+            <td class="int" id="tdPeriodoA">Periodo al</td>
+            <td class="int" style="padding-left:5px; padding-right:5px;">Anni</td>
+            <td class="int" style="padding-left:5px; padding-right:5px;">Mesi</td>
+            <td class="int" style="padding-left:5px; padding-right:5px;">Giorni</td>
+        </tr>
+        
+        <% 
+        Vector <PeriodiCarcerazioneSoffertiModel> lListaPeriodiCarcerazioneOrdinati;
+        lListaPeriodiCarcerazioneOrdinati = aCalcoloPenaModel.getPeriodiCarcerazioneOrdinati();
+        
+        for (int i=0; i<lListaPeriodiCarcerazioneOrdinati.size(); i++) 
+        {
+            PeriodiCarcerazioneSoffertiModel lPeriodoModel = lListaPeriodiCarcerazioneOrdinati.elementAt(i);
+            
+            CalendarModel lCalendar = lPeriodoModel.getCalendar();
+            String colorDataInizio = "" ; 
+            if (lPeriodoModel.isDataInizioEvidenziata())
+                colorDataInizio = "style='color:red'";
+            
+            String colorDataFine   = ""; 
+            if (lPeriodoModel.isDataFineEvidenziata())
+                colorDataFine = "style='color:red'";
+            
+            String lInfoAlert = "";
+            if (lPeriodoModel.getMsgAlert()!= null && lPeriodoModel.getMsgAlert().length()>0)
+                lInfoAlert = "&nbsp;<img align='absmiddle' src='/images/info.gif' border=0 title='"+StringUtils.encodeHTML(lPeriodoModel.getMsgAlert())+"'>";
+            
+            if (lPeriodoModel.isInContinuazione())
+                continue; // lo salto
+            %>
+            <tr style="display: block" id="SI">
+                <td class="l" Title="<%=lPeriodoModel.getDescTitolo()%>"><%=StringUtils.toStringJSP(lPeriodoModel.getDescrizione(),"&nbsp;")%><%=lInfoAlert%></td>
+                <td class="r" nowrap <%=colorDataInizio%> ><%=StringUtils.toStringJSP(DateUtils.getDateToString(lCalendar.getDataInizio(),"dd-MM-yyyy"),"")%></td>
+                <td class="r" nowrap <%=colorDataFine%>   ><%=StringUtils.toStringJSP(DateUtils.getDateToString(lCalendar.getDataFine(),"dd-MM-yyyy"),"")%></td>
+                <td class="c" nowrap><%=StringUtils.toStringJSP(lCalendar.getNumAnni(),"&nbsp;")%></td>
+                <td class="c" nowrap><%=StringUtils.toStringJSP(lCalendar.getNumMesi(),"&nbsp;")%></td>
+                <td class="c" nowrap><%=StringUtils.toStringJSP(lCalendar.getNumGiorni(),"&nbsp;")%></td>
+            </tr>
+            <%     
+            if (lPeriodoModel.isContinuativo()) {
+                for (PeriodiCarcerazioneSoffertiModel lPcfModel:lPeriodoModel.getListaPerInContinuazione()) {
+                    CalendarModel lCalendarCont = lPcfModel.getCalendar();  
+                    
+                    String colorDataInizioCont = "style='font-size=10px;'" ; 
+                    if (lPcfModel.isDataInizioEvidenziata())
+                        colorDataInizioCont = "style='font-size=10px;color:red'";
+                    
+                    String colorDataFineCont   = "style='font-size=10px;'"; 
+                    if (lPcfModel.isDataFineEvidenziata())
+                        colorDataFineCont = "style='font-size=10px;color:red'";    
+                    
+                    String lInfoAlertCont = "";
+                    if (lPcfModel.getMsgAlert()!= null && lPcfModel.getMsgAlert().length()>0)
+                        lInfoAlertCont = "&nbsp;<img align='absmiddle' src='/images/info.gif' border=0 title='"+StringUtils.encodeHTML(lPcfModel.getMsgAlert())+"'>";
+
+                    String tdStyle="style='font-size=10px'" ;
+                    %>
+			            <tr style="display: block" id="SI">
+			                <td class="l"  Title="<%=lPcfModel.getDescTitolo()%>" <%=tdStyle%>>
+			                     <ul style='margin-top:1px; margin-bottom:1px; padding-top:1px; padding-bottom:1px;'>
+			                         <li><%=StringUtils.toStringJSP(lPcfModel.getDescrizione(),"&nbsp;")%><%=lInfoAlertCont%></li>
+			                     </ul>			                     
+			                </td>
+			                <td class="r" <%=colorDataInizioCont%> nowrap><%=StringUtils.toStringJSP(DateUtils.getDateToString(lCalendarCont.getDataInizio(),"dd-MM-yyyy"),"")%></td>
+			                <td class="r" <%=colorDataFineCont%>   nowrap><%=StringUtils.toStringJSP(DateUtils.getDateToString(lCalendarCont.getDataFine(),"dd-MM-yyyy"),"")%></td>
+			                <%--
+			                <td class="c" <%=tdStyle%> nowrap><%=StringUtils.toStringJSP(lCalendarCont.getNumAnni(),"&nbsp;")%></td>
+			                <td class="c" <%=tdStyle%> nowrap><%=StringUtils.toStringJSP(lCalendarCont.getNumMesi(),"&nbsp;")%></td>
+			                <td class="c" <%=tdStyle%> nowrap><%=StringUtils.toStringJSP(lCalendarCont.getNumGiorni(),"&nbsp;")%></td>
+			                --%>
+			                <td class="c" <%=tdStyle%> nowrap>&nbsp;</td>
+                            <td class="c" <%=tdStyle%> nowrap>&nbsp;</td>
+                            <td class="c" <%=tdStyle%> nowrap>&nbsp;</td>
+                            
+			            </tr>                    
+                    <%
+                }
+            }
+        }
+        %>
+	    <%
+	    MisuraCautelareCumuloModel lTotMisCautModelN = aCalcoloPenaModel.getMisureCautelariTotaliCont();
+	    %>
+        <tr>
+            <td class="r" colspan="3" width="650px">Per un totale di</td>
+            <td class="c"><%=StringUtils.toStringJSP(lTotMisCautModelN.getNumAnni(),"&nbsp;")%></td>
+            <td class="c"><%=StringUtils.toStringJSP(lTotMisCautModelN.getNumMesi(),"&nbsp;")%></td>
+            <td class="c"><%=StringUtils.toStringJSP(lTotMisCautModelN.getNumGiorni(),"&nbsp;")%></td>
+        </tr>         
+    </table>
+
+<%--
+============================================================================== 
+  FINE - MEV_2025-48 - ALTRO - Ordinamento Periodi Carcerazione Sofferti
+============================================================================== 
+--%>
+
+<%--
   ============================================================================== 
   ==  Periodi di carcerazione sofferti
   ==   - Inserire le MISURE_CAUTELARI_CUMULO
   ==   - Inserire i Provvediment di Presofferto e Fungibilità
   ==   - Inserire l'Espiato
   ============================================================================== 
-  --%>
+--%>
+<%-- 
+// MEV_2025-48  ALTRO  Ordinamento Periodi Carcerazione Sofferti
+// codice sostituito dalla tabella precedente
 	<br>
-	<table id="idTabMC" cellspacing="2" cellpadding="4" width="900px">
+	<table id="idTabMCOld" cellspacing="2" cellpadding="4" width="900px" style="display:none;">
 		<tr>
 			<td class="Titolo" colspan="7">Dedotti i Periodi di carcerazione sofferti &nbsp;
 				<a href="Javascript:espandi('idTabMC','idExpCollMC');" id="idExpCollMC"><img align="middle" alt="Espandi"
@@ -630,9 +752,9 @@
 
 
 		<tr>
-			<td class="int" id="tdTipMisura"></td>
-			<td class="int" id="tdPeriodoDa"></td>
-			<td class="int" id="tdPeriodoA"></td>
+			<td class="int" id="tdTipMisuraOld"></td>
+			<td class="int" id="tdPeriodoDaOld"></td>
+			<td class="int" id="tdPeriodoAOld"></td>
 			<td class="int" style="padding-left:5px; padding-right:5px;">Anni</td>
 			<td class="int" style="padding-left:5px; padding-right:5px;">Mesi</td>
 			<td class="int" style="padding-left:5px; padding-right:5px;">Giorni</td>
@@ -662,9 +784,7 @@
 			<td class="c"><%=StringUtils.toStringJSP(lMCCumuloModel.getNumAnni(),"&nbsp;")%></td>
 			<td class="c"><%=StringUtils.toStringJSP(lMCCumuloModel.getNumMesi(),"&nbsp;")%></td>
 			<td class="c"><%=StringUtils.toStringJSP(lMCCumuloModel.getNumGiorni(),"&nbsp;")%></td>
-			<%-- td class="c"><%=StringUtils.toStringJSP(lMCCumuloModel.getGiorni(),"&nbsp;")%></td--%>
 		</tr>
-
 		<%
     }
     %>
@@ -705,7 +825,7 @@
           lDescrComputo += lComputo.getDescrTipoAnnotazione();
         else 
           lDescrComputo = "";
-        %>
+          
 		<tr style="display: none" id="SI">
 			<td class="l" Title="<%=lDescrProvv+" ["+lDescTitolo+"]"%> "><%=lDescrComputo%></td>
 
@@ -718,9 +838,11 @@
 			<td class="c" <%=lColorRevocati%>><%=StringUtils.toStringJSP(lComputo.getNumGiorniReclusione(),"&nbsp;")%></td>
 		</tr>
 		<% } %>
-		<% } %>
+	<% } %>
 
-		<%
+
+
+	<%
     //==========================================================================
     //  AGGIUNGERE ESPIATO
     //==========================================================================
@@ -775,6 +897,9 @@
 			<td class="c"><%=StringUtils.toStringJSP(lTotMisCautModel.getNumGiorni(),"&nbsp;")%></td>
 		</tr>
 	</table>
+	
+FINE  MEV_2025-48  ALTRO  Ordinamento Periodi Carcerazione Sofferti	
+--%>
 
   <%--
   =============================================================================== 

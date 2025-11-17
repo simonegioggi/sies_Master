@@ -1,6 +1,10 @@
 package siap.siep.modulocumulo.util;
 
 import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -18,6 +22,7 @@ import siap.siep.modulocumulo.model.LibAnticipataCumuloModel;
 import siap.siep.modulocumulo.model.MisuraCautelareCumuloModel;
 import siap.siep.modulocumulo.model.PenaComplessivaCumuloModel;
 import siap.siep.modulocumulo.model.PenaRideterminataCumuloModel;
+import siap.siep.modulocumulo.model.ProcedimentoCumulatoModel;
 import siap.siep.modulocumulo.model.ProvvedimentoGeSorvCumModel;
 import siap.siep.modulocumulo.model.RichiestePmInCumuloModel;
 import siap.siep.modulocumulo.model.SanzioneSostitutivaCumuloModel;
@@ -446,6 +451,51 @@ public class CalcoloPenaCumuloModel extends GenericModel {
 	}
 
 	/**
+	 * Come il metodo getMisureCautelariTotali ma prende in considerazione 
+	 * il vettore aggregato con la gestione dei periodi continuativi
+	 * 
+	 * @since MEV_2025-48 - ALTRO – Ordinamento Periodi Carcerazione Sofferti
+	 * */
+    public MisuraCautelareCumuloModel getMisureCautelariTotaliCont() {
+        MisuraCautelareCumuloModel lMisureCautaleriTot = new MisuraCautelareCumuloModel();
+        
+        Vector <PeriodiCarcerazioneSoffertiModel> lListaPeriodiCarcerazioneOrdinati;
+        lListaPeriodiCarcerazioneOrdinati = this.getPeriodiCarcerazioneOrdinati();        
+        
+        CalendarUtil lCalUtil = new CalendarUtil();
+        CalendarModel lCalMCTotMod = new CalendarModel();
+        
+        siesLogger.debug("lListaPeriodiCarcerazioneOrdinati.size() = "+lListaPeriodiCarcerazioneOrdinati.size());
+
+        
+        for (int i=0; i<lListaPeriodiCarcerazioneOrdinati.size(); i++) 
+        {
+            PeriodiCarcerazioneSoffertiModel lPeriodoModel = lListaPeriodiCarcerazioneOrdinati.elementAt(i);
+            if (lPeriodoModel.isInContinuazione())
+                continue; // lo salto
+            
+            CalendarModel lCalendarMisura = new CalendarModel();
+
+            lCalendarMisura.setNumAnni   (lPeriodoModel.getCalendar().getNumAnni());
+            lCalendarMisura.setNumMesi   (lPeriodoModel.getCalendar().getNumMesi());
+            lCalendarMisura.setNumGiorni (lPeriodoModel.getCalendar().getNumGiorni());
+
+            lCalMCTotMod = lCalUtil.sommaGiornieValute(lCalMCTotMod, lCalendarMisura);
+            
+        }
+
+        lMisureCautaleriTot.setNumAnni(lCalMCTotMod.getNumAnni() != 0 ? new BigDecimal(lCalMCTotMod
+                .getNumAnni()) : null);
+        lMisureCautaleriTot.setNumMesi(lCalMCTotMod.getNumMesi() != 0 ? new BigDecimal(lCalMCTotMod
+                .getNumMesi()) : null);
+        lMisureCautaleriTot.setNumGiorni(lCalMCTotMod.getNumGiorni() != 0 ? new BigDecimal(lCalMCTotMod
+                .getNumGiorni()) : null);
+
+        return lMisureCautaleriTot;
+    }	
+	
+	
+	/**
 	 * 
 	 * @param aTipoPena
 	 * @param aFlagConcesso
@@ -745,16 +795,21 @@ public class CalcoloPenaCumuloModel extends GenericModel {
 		// ==========================================================================
 		// Sottraggo alla pena totale le MC, prima dalla Reclusione e quindi dagli Arresti
 		// ==========================================================================
-    siesLogger.debug("=======================================================");
+        siesLogger.debug("=======================================================");
 		siesLogger.debug(" Sottraggo le Misure Cautelari dalla reclusione");
-    siesLogger.debug("=======================================================");
-		CalendarModel lMCTotali = this.getMisureCautelariTotali().getQuantumMisura();
+		siesLogger.debug("=======================================================");
+		
+		// MEV_2025-48 - ALTRO – Ordinamento Periodi Carcerazione Sofferti
+		// Utilizzo il nuovo metodo che ricalcola i periodi in continuazione come periodo unico
+		// CalendarModel lMCTotali = this.getMisureCautelariTotali().getQuantumMisura();
+		CalendarModel lMCTotali = this.getMisureCautelariTotaliCont().getQuantumMisura();
+		
 		siesLogger.debug("lMCTotali = "+lMCTotali);
 		lCalReclusioneTotMod = lCalUtil.sottraiGiorniValuteNew(lCalReclusioneTotMod, lMCTotali);
 
 		siesLogger.debug("Totali Parziali Aggiornati ==================");
-    siesLogger.debug("lCalReclusioneTotMod = "+lCalReclusioneTotMod);
-    siesLogger.debug("lCalArrestiTotMod = "+lCalArrestiTotMod);
+		siesLogger.debug("lCalReclusioneTotMod = "+lCalReclusioneTotMod);
+		siesLogger.debug("lCalArrestiTotMod = "+lCalArrestiTotMod);
     
 		if (!lCalUtil.isPositiveTime(lCalReclusioneTotMod)) {
 			siesLogger.debug("Attenzione Quantum di Reclusione Negativi: " + lCalReclusioneTotMod);
@@ -1994,4 +2049,332 @@ public class CalcoloPenaCumuloModel extends GenericModel {
 	  
 	  return lString;
 	}
+	
+	/**
+	 * Metodo di Utility per restituire un vettore unico di dati aggregati in cui 
+	 * sono caricati i periodi di carcerazione sofferti recuperandoli da:
+	 * - Misure Cautelari in sentenza
+	 * - Riconosciuti con provvedimento
+	 * - Espiazione pregressa
+	 * 
+	 * Le tre sezioni attuali contengono dati caricati in model disomogenei ed estratti per
+	 * titole e non per periodo.
+	 * Questo metodo estare i dati in un model unico rendendoli omogenei e li ordina
+	 * per periodo di espiazione
+	 * 
+	 * @since MEV_2025-48 - ALTRO – Ordinamento Periodi Carcerazione Sofferti
+	 * 
+	 * */
+	public Vector <PeriodiCarcerazioneSoffertiModel> getPeriodiCarcerazioneOrdinati(){
+	    Vector <PeriodiCarcerazioneSoffertiModel> lListaPeriodiOrdinati = null;
+	    
+	    lListaPeriodiOrdinati = new Vector <PeriodiCarcerazioneSoffertiModel>();
+	    
+	    // CalendarModel
+	    Vector <MisuraCautelareCumuloModel> lListaMisureCautelari = null;
+	    lListaMisureCautelari = this.getListaMisureCautelari();
+	    
+	    for (MisuraCautelareCumuloModel lMCCumuloModel:lListaMisureCautelari) {
+	        
+	        String lTotGGMessaAllaProva = "";
+	        if ("CL".equals(lMCCumuloModel.getCodTipoMisura())) {
+	          lTotGGMessaAllaProva = " (totale giorni "+StringUtils.toStringJSP(lMCCumuloModel.getGiorni(),"&nbsp;")+")";
+	        }
+	        String lDescrizione = StringUtils.toStringJSP(lMCCumuloModel.getDescrTipoMisura(),"&nbsp;")
+	                +lTotGGMessaAllaProva;
+	        
+	        TitoloCumulatoModel lTitolo = this.getTitoloCumulato (lMCCumuloModel.getTitIdTitoloCumulato());
+	        
+	        String lDescTitolo = lTitolo.getDescrTipoProvvedimento() + " N° " + lTitolo.getAnnoSentenza() + "/" + lTitolo.getNumeroSentenza();
+	        lDescTitolo += " - "+lTitolo.getCodTipoAutoritaEmittente() + " "+ lTitolo.getDescrLuogoEmittente();
+
+	        ProcedimentoCumulatoModel lProcedimentoCumulato = lTitolo.getProcedimentoCumulato();
+
+	        String lDescProcedimento = "";
+	        if (lProcedimentoCumulato!=null){
+	            lDescProcedimento += " - "+lProcedimentoCumulato.getChiaveAnnoFasCumulato() + "/"+ lProcedimentoCumulato.getChiaveProgrFasCumulato();
+	            lDescProcedimento += "  "+lProcedimentoCumulato.getCodTipoUfficioFasCumulato() + "/"+ lProcedimentoCumulato.getDescrLuogoUfficioFasCumulato();
+	        }	        
+	        lDescTitolo += lDescProcedimento;
+	        
+	        CalendarModel lCalendar = new CalendarModel();
+	        lCalendar.setDataInizio (lMCCumuloModel.getDataInizio());
+	        lCalendar.setDataFine   (lMCCumuloModel.getDataFine());
+	        lCalendar.setNumGiorni  (lMCCumuloModel.getNumGiorni());
+	        lCalendar.setNumMesi    (lMCCumuloModel.getNumMesi());
+	        lCalendar.setNumAnni    (lMCCumuloModel.getNumAnni());
+	        
+	        PeriodiCarcerazioneSoffertiModel lPcfModel = new PeriodiCarcerazioneSoffertiModel();
+	        lPcfModel.setDescrizione      (lDescrizione+lDescProcedimento);
+	        lPcfModel.setDescTitolo       (lDescTitolo);
+	        lPcfModel.setCalendar         (lCalendar);
+	        lPcfModel.setIdTitoloCumulato (lMCCumuloModel.getTitIdTitoloCumulato());
+	        lPcfModel.setDataInizio       (lMCCumuloModel.getDataInizio());
+	        
+	        lListaPeriodiOrdinati.add (lPcfModel);
+	    }
+	    
+	    // =======================================================
+	    // Periodi riconosciuti con provvedimento (Computi)
+        // =======================================================
+	    Vector <StatoEsecTitoloCumulatoModel> lListaProvvComputo = this.getProvvComputi();
+	    for (StatoEsecTitoloCumulatoModel lProvvedimento:lListaProvvComputo) {
+	        String lDescrProvv = "";
+	        lDescrProvv += "con "+lProvvedimento.getDescrTipoProvvedimento()
+	                     +" del "+StringUtils.toStringJSP (DateUtils.getDateToString(lProvvedimento.getDataEmissione(),"dd-MM-yyyy"));
+	        
+	        TitoloCumulatoModel lTitolo = this.getTitoloCumulato (lProvvedimento.getTitIdTitoloCumulato());
+	        
+	        String lDescTitolo = lTitolo.getDescrTipoProvvedimento() + " N° " + lTitolo.getAnnoSentenza() + "/" + lTitolo.getNumeroSentenza();
+	        lDescTitolo += " - "+lTitolo.getCodTipoAutoritaEmittente() + " "+ lTitolo.getDescrLuogoEmittente();
+
+	        ProcedimentoCumulatoModel lProcedimentoCumulato = lTitolo.getProcedimentoCumulato();
+
+	        String lDescProcedimento = "";
+	        if (lProcedimentoCumulato!=null){
+	            lDescProcedimento += " - "+lProcedimentoCumulato.getChiaveAnnoFasCumulato() + "/"+ lProcedimentoCumulato.getChiaveProgrFasCumulato();
+	            lDescProcedimento += "  "+lProcedimentoCumulato.getCodTipoUfficioFasCumulato() + "/"+ lProcedimentoCumulato.getDescrLuogoUfficioFasCumulato();
+	        }
+	        lDescTitolo += lDescProcedimento;
+	        
+	        Vector <ComputiCumuloModel> lListaComputi = lProvvedimento.getListaComputi();
+	        for (ComputiCumuloModel lComputo : lListaComputi) 
+	        {
+	            String lDescrComputo = "(P) "; // Con provedimento
+	            lDescrComputo += lComputo.getDescrTipoAnnotazione();
+	        
+	            CalendarModel lCalendar = new CalendarModel();
+	            lCalendar.setDataInizio (lComputo.getDataReclusioneDa());
+	            lCalendar.setDataFine   (lComputo.getDataReclusioneA());
+	            lCalendar.setNumGiorni  (lComputo.getNumGiorniReclusione());
+	            lCalendar.setNumMesi    (lComputo.getNumMesiReclusione());
+	            lCalendar.setNumAnni    (lComputo.getNumAnniReclusione());
+	            
+	            PeriodiCarcerazioneSoffertiModel lPcfModel = new PeriodiCarcerazioneSoffertiModel();
+	            lPcfModel.setDescrizione      (lDescrComputo);
+	            lPcfModel.setDescTitolo       (lDescrProvv+" ["+lDescTitolo+"]");
+	            lPcfModel.setCalendar         (lCalendar);
+	            lPcfModel.setIdTitoloCumulato (lTitolo.getIdTitoloCumulato());
+	            lPcfModel.setDataInizio       (lComputo.getDataReclusioneDa());
+	            
+	            lListaPeriodiOrdinati.add (lPcfModel);	            
+	        }
+	    }
+	    
+	    // =======================================================
+        // Periodi di Espiato
+        // =======================================================
+	    Vector <StatoEsecTitoloCumulatoModel> lListaProvvEspiato = this.getProvvEspiato();
+	    for (StatoEsecTitoloCumulatoModel lProvvedimento: lListaProvvEspiato) {	        String lDescrProvv = "";
+	        // lDescrProvv += " "+lProvvedimento.getDescrMotivo()
+	        lDescrProvv += "Provvedimento"
+	                   +" del "+StringUtils.toStringJSP (DateUtils.getDateToString(lProvvedimento.getDataEmissione(),"dd-MM-yyyy"));
+	      
+	        TitoloCumulatoModel lTitolo = this.getTitoloCumulato (lProvvedimento.getTitIdTitoloCumulato());
+	      
+	        String lDescTitolo = lTitolo.getDescrTipoProvvedimento() + " N° " + lTitolo.getAnnoSentenza() + "/" + lTitolo.getNumeroSentenza();
+	        lDescTitolo += " - "+lTitolo.getCodTipoAutoritaEmittente() + " "+ lTitolo.getDescrLuogoEmittente();
+
+            ProcedimentoCumulatoModel lProcedimentoCumulato = lTitolo.getProcedimentoCumulato();
+
+            String lDescProcedimento = "";
+            if (lProcedimentoCumulato!=null){
+                lDescProcedimento += " - "+lProcedimentoCumulato.getChiaveAnnoFasCumulato() + "/"+ lProcedimentoCumulato.getChiaveProgrFasCumulato();
+                lDescProcedimento += "  "+lProcedimentoCumulato.getCodTipoUfficioFasCumulato() + "/"+ lProcedimentoCumulato.getDescrLuogoUfficioFasCumulato();
+            }
+            lDescTitolo += lDescProcedimento;
+            
+	        if (lProvvedimento.getListaComputi()!=null && lProvvedimento.getListaComputi().size()==1) {
+	            ComputiCumuloModel lComputo = lProvvedimento.getListaComputi().elementAt(0);
+	            String lDescrComputo = "(P) "+lProvvedimento.getDescrMotivo();
+	            
+	            // Escludo i computi senza Quantum (legati a interruzioni del GE)
+	            if (!lComputo.isQuantumReclusioneZero() || !lComputo.isQuantumArrestoZero() ) {
+	                CalendarModel lCalendar = new CalendarModel();
+	                lCalendar.setDataInizio (lComputo.getDataReclusioneDa());
+	                lCalendar.setDataFine   (lComputo.getDataReclusioneA());
+	                lCalendar.setNumGiorni  (lComputo.getNumGiorniReclusione());
+	                lCalendar.setNumMesi    (lComputo.getNumMesiReclusione());
+	                lCalendar.setNumAnni    (lComputo.getNumAnniReclusione());
+	                
+	                PeriodiCarcerazioneSoffertiModel lPcfModel = new PeriodiCarcerazioneSoffertiModel();
+	                lPcfModel.setDescrizione      (lDescrComputo);
+	                lPcfModel.setDescTitolo       (lDescrProvv+" ["+lDescTitolo+"]");
+	                lPcfModel.setCalendar         (lCalendar);
+	                lPcfModel.setIdTitoloCumulato (lTitolo.getIdTitoloCumulato());
+	                lPcfModel.setDataInizio       (lComputo.getDataReclusioneDa());
+	                
+	                lListaPeriodiOrdinati.add (lPcfModel);	                
+	            }
+	        }
+	    }
+	    
+	    // =======================================================
+	    //   Ordino i periodi di carcerazione
+	    // =======================================================
+	    siesLogger.debug("Prima Ordinamento: lListaPeriodiOrdinati.size() = "+lListaPeriodiOrdinati.size());
+	    Collections.sort(lListaPeriodiOrdinati, Comparator.comparing(PeriodiCarcerazioneSoffertiModel::getDataInizio));
+	    
+	    // =======================================================
+        // Verifica Eventuali Sovrapposizioni
+	    // - Sono considerati sovrapposti i periodi che hanno almeno 2 giorni in comune
+	    // - es:
+	    //       15.10.2020 - 18.03.2020
+	    //       17.03.2020 - 25.08.2020 
+	    // Sono considerati "Continuativi" i periodi che Adiacento o con 1 giorno di sovrapposizione 
+	    // - es: 
+        //       05.01.2020 - 18.03.2020
+        //       19.03.2020 - 25.08.2020 	    
+        // - es:
+        //       05.01.2020 - 18.03.2020
+        //       18.03.2020 - 25.08.2020         
+	    // =======================================================
+        Vector <PeriodiCarcerazioneSoffertiModel> lListaPeriodiInContinuazione = null;        
+        lListaPeriodiInContinuazione = new Vector <PeriodiCarcerazioneSoffertiModel>();
+        
+        PeriodiCarcerazioneSoffertiModel lLastContinuazioneModel = null;
+        
+	    PeriodiCarcerazioneSoffertiModel lLastPcfModel = null;
+	    for (PeriodiCarcerazioneSoffertiModel lPcfModel:lListaPeriodiOrdinati) {
+            siesLogger.debug("Check_continuazioni: "+DateUtils.getDateToString(lPcfModel.getCalendar().getDataInizio(),"dd/MM/yyyy")
+                    +" - "+DateUtils.getDateToString(lPcfModel.getCalendar().getDataFine(),"dd/MM/yyyy"));
+	        
+	        if (lLastPcfModel!=null) {
+	            Date lDataInizio = lPcfModel.getCalendar().getDataInizio();
+	            if (   DateUtils.isEquals(lDataInizio, lLastPcfModel.getCalendar().getDataFine())
+	                || DateUtils.isEquals(lDataInizio, DateUtils.getDayAfter(lLastPcfModel.getCalendar().getDataFine()))
+	               )
+	            {
+	                siesLogger.debug("Periodo in continuazione: data FinePrec = "+DateUtils.getDateToString(lLastPcfModel.getCalendar().getDataFine(),"dd/MM/yyyy")
+	                        + ", Data InizioCorr = "+  DateUtils.getDateToString(lDataInizio,"dd/MM/yyyy")
+	                        );
+	                // Ultimo GG sovrappoosto: evidenzio sia Data Inizio che data fine del precedente periodo
+	                //lPcfModel.setColorDataInizio("style='color:red'");
+	                //lLastPcfModel.setColorDataFine("style='color:red'");
+	                //lPcfModel.setMsgAlert("L'inizio periodo coincide con la fine del periodo precedente");
+	                
+	                // Il periodo è in continuazione con il precedente
+	                if (lLastContinuazioneModel==null) {
+	                    siesLogger.debug("Istanzio lLastContinuazioneModel...");
+	                    lLastContinuazioneModel = new PeriodiCarcerazioneSoffertiModel();
+	                    lLastContinuazioneModel.setIsContinuativo(true);
+	                    lLastContinuazioneModel.setDescrizione("Periodo continuativo");
+	                    lLastContinuazioneModel.setDataInizio(lLastPcfModel.getDataInizio()); // x ordinamento
+	                    CalendarModel lCal = new CalendarModel();
+	                    lCal.setDataInizio(lLastPcfModel.getDataInizio());	                    
+	                    lLastContinuazioneModel.setCalendar(lCal);
+	                    
+	                    // Aggiungo il precedente al vettore dei periodi in continuazione
+	                    lLastContinuazioneModel.addPeriodoInContinuazione(lLastPcfModel);
+	                    
+	                    //Aggiungo il model al vettore dei periodi in continuazione
+	                    lListaPeriodiInContinuazione.add(lLastContinuazioneModel);
+	                }
+	                
+	                // Aggiorno la data fine
+	                lLastContinuazioneModel.getCalendar().setDataFine(lPcfModel.getCalendar().getDataFine());
+	                // Ricalcolo i quantum
+	                lLastContinuazioneModel.ricalcolaQuantum();
+	                // Marco il perido corrente come in continuazione
+	                lPcfModel.setIsInContinuazione(true);
+	                // Marco il periodo precedente come in continuazione
+	                lLastPcfModel.setIsInContinuazione(true);
+	                // Lo il periodo corrente al vettore dei periodi in continuazaione 
+	                lLastContinuazioneModel.addPeriodoInContinuazione(lPcfModel);
+	            }
+	            else {
+	                // Il periodo non è in continuazione con in precedente
+	                // Resetto i model
+	                lLastContinuazioneModel = null;
+	            }
+
+                if (DateUtils.isEquals (lPcfModel.getCalendar().getDataInizio()
+                                  , lLastPcfModel.getCalendar().getDataInizio())){
+                   // Stessa data inizio evidenzio le date inizio dei 2 periodi
+                   siesLogger.debug("Stessa data inizio evidenzio le date inizio dei 2 periodi"); 
+                   lPcfModel.setIsDataInizioEvidenziata(true);
+                   lLastPcfModel.setIsDataInizioEvidenziata(true);
+                   lPcfModel.setMsgAlert("Il periodo ha la stessa data inizio del perido precedente");
+                }
+	            
+	            if (DateUtils.isLower(lPcfModel.getCalendar().getDataInizio()
+	                                 ,lLastPcfModel.getCalendar().getDataFine())){
+	                // Data Inizio secondo periodo interna al primo perido
+	                siesLogger.debug("Data Inizio secondo periodo interna al primo perido");
+	                lPcfModel.setIsDataInizioEvidenziata(true);
+	            }
+	            
+	            if (DateUtils.isEquals(lPcfModel.getCalendar().getDataFine()
+                           , lLastPcfModel.getCalendar().getDataFine())){
+	                // Stessa data Fine, le evidenzio entrambi
+	                siesLogger.debug("Stessa data Fine, le evidenzio entrambi");
+	                lPcfModel.setIsDataFineEvidenziata(true);
+	                lLastPcfModel.setIsDataFineEvidenziata(true);
+	            }
+	            
+	            if (DateUtils.isLower(lPcfModel.getCalendar().getDataFine()
+                           , lLastPcfModel.getCalendar().getDataFine())){
+                    // Secondo periodo totalmente interno al primo
+	                siesLogger.debug("Secondo periodo totalmente interno al primo");
+                    lPcfModel.setIsDataFineEvidenziata(true);
+                }
+	            
+	            //==============================
+	            if (   DateUtils.isEquals(lPcfModel.getCalendar().getDataInizio()
+                               , lLastPcfModel.getCalendar().getDataInizio())
+	                && DateUtils.isEquals(lPcfModel.getCalendar().getDataFine()
+	                           , lLastPcfModel.getCalendar().getDataFine())
+	               )
+	            {
+                  lPcfModel.setMsgAlert("Il periodo corrente coincide con il periodo precedente");
+	            }
+	            else if (   DateUtils.isLower(lPcfModel.getCalendar().getDataInizio()
+                                        , lLastPcfModel.getCalendar().getDataFine())
+                         && !DateUtils.isGreater(lPcfModel.getCalendar().getDataFine()
+                                           , lLastPcfModel.getCalendar().getDataFine())
+                        )
+                {
+                   lPcfModel.setMsgAlert("Il periodo corrente è interamente contenuto nel periodo precedente");
+                }	            
+                else if ( DateUtils.isEquals(lPcfModel.getCalendar().getDataInizio()
+                                       , lLastPcfModel.getCalendar().getDataFine())
+                     )
+                {
+                   //lPcfModel.setMsgAlert("Il giorno iniziale del periodo corrente coincide con il giorno finale del periodo precedente");
+                }
+                else if ( DateUtils.isLower(lPcfModel.getCalendar().getDataInizio()
+                                      , lLastPcfModel.getCalendar().getDataFine())
+                    )
+                {
+                  lPcfModel.setMsgAlert("Il periodo corrente si sovrappone parzialmente al periodo precedente");
+                }	            
+	            
+	        }
+	         
+	        lLastPcfModel = lPcfModel;
+	    }
+	    
+	    // Aggiungo i periodi in continuazione se presenti	    
+	    if (lListaPeriodiInContinuazione!=null) {
+	        siesLogger.debug("Aggiungo i periodi in continuazione se presenti: "+lListaPeriodiInContinuazione.size());
+	        lListaPeriodiOrdinati.addAll(lListaPeriodiInContinuazione);
+	    }
+	    
+	    // =======================================================
+        //   Ordino nuovamente in caso abbia aggiunto i periodi continuativi
+        // =======================================================
+        Collections.sort(lListaPeriodiOrdinati, Comparator.comparing(PeriodiCarcerazioneSoffertiModel::getDataInizio));
+// x Solo debug
+//        for (PeriodiCarcerazioneSoffertiModel lPcfModel:lListaPeriodiOrdinati) {
+//            siesLogger.debug(DateUtils.getDateToString(lPcfModel.getCalendar().getDataInizio(),"dd/MM/yyyy")
+//              +" - "+DateUtils.getDateToString(lPcfModel.getCalendar().getDataFine(),"dd/MM/yyyy")
+//              +" - isInContinuazione = "+lPcfModel.isInContinuazione()
+//              +" - isContinuativo = "+lPcfModel.isContinuativo()
+//                    );
+//        }
+	    
+	    
+	    return lListaPeriodiOrdinati;
+	}
+	
 }
