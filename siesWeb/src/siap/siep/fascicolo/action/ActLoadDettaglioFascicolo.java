@@ -798,7 +798,7 @@ public class ActLoadDettaglioFascicolo extends ActionSiap implements ICostantiFa
 		// MEV_2025-48: dicitura CARTABIA se almeno uno dei reati collegati al procedimento ha una data inizio
 		// > 30/12/2022
 		boolean isCartabia = false;
-		final Date dataCartabia = DateUtils.getDate("31/12/2022", "dd/MM/yyyy");
+		final Date dataCartabia = DateUtils.getDate("30/12/2022", "dd/MM/yyyy");
 		Date dataInizioReato = null;
 		Iterator itx = lReatiVect.iterator();
 		while (itx.hasNext()) {
