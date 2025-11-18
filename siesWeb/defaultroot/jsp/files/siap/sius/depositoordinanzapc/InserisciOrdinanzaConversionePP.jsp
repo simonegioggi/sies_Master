@@ -141,6 +141,7 @@ if ("U142".equals(contenuto) || "U143".equals(contenuto) || "U145".equals(conten
 			|| document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3207'
 			|| document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3208'
 			// MEV_2025-48: aggiunto esito (3209) per Oggetto: 3180 - Contenuto: U142 - TIPO ORDINANZA: SR
+			// ESITO_PROVVEDIMENTO = 0287 (Dispone conversione pena irrogata dal GdP in permanenza domiciliare)
 			|| document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3209'
 			|| document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3217') {
 		var importoDaPagare = document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_INTERO_PENA_PECUNIARIA_CONVERTITA%>.value
@@ -169,6 +170,29 @@ if ("U142".equals(contenuto) || "U143".equals(contenuto) || "U145".equals(conten
 		}
 	}
 <%
+	// MEV_2025-48: aggiunto controllo
+	if ("U142".equals(contenuto)) {
+%>
+	if (document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3209'
+			&& document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_FLAG_TIPO_SANZIONE%>[3].checked == false) {
+		alert("Per l'esito 'Dispone conversione pena irrogata dal GdP in permanenza domiciliare' scegliere la Pena Sostitutiva 'Permanenza Domiciliare'");
+		return false;
+	} else if (document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3205'
+			&& document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_FLAG_TIPO_SANZIONE%>[0].checked == false) {
+		alert("Per l'esito 'Dispone conversione in Semilibertà Sostitutiva' scegliere la Pena Sostitutiva 'Semilibertà'");
+		return false;
+	} else if (document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3206'
+			&& document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_FLAG_TIPO_SANZIONE%>[1].checked == false) {
+		alert("Per l'esito 'Dispone conversione in Detenzione Domiciliare Sostitutiva' scegliere la Pena Sostitutiva 'Detenzione Domiciliare'");
+		return false;
+	} else if ((document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3207'
+			|| document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3208')
+			&& document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_FLAG_TIPO_SANZIONE%>[2].checked == false) {
+		alert("Per gli esiti 'Dispone conversione in Lavoro Pubblica Utilità Sostitutivo' e 'Dispone conversione pena irrogata dal GDP in Lavoro Pubblica Utilità' scegliere la Pena Sostitutiva 'Lavoro Pubblica Utilità'");
+		return false;
+	}
+<%
+	}
 }
 %>
 	return ritorno;
@@ -649,9 +673,9 @@ for (int i = 0; i < ICostantiRateizzazionePP.NUM_MAX_RATE; i++) {
 <input type="HIDDEN" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_ID_CSSA_COMP%>">
 <input type="HIDDEN" name="numeroRichiesteCPP" value="<%=richiesteconversioni.size()%>">
 </form>
-<script language="JavaScript" type="text/javascript">
-var frmvalidator = new Validator("InserisciOrdinanzaConversionePP");
-frmvalidator.setAddnlValidationFunction("Verify");
-</script>
+<!-- <script language="JavaScript" type="text/javascript"> -->
+<!-- var frmvalidator = new Validator("InserisciOrdinanzaConversionePP"); -->
+<!-- // frmvalidator.setAddnlValidationFunction("Verify"); -->
+<!-- </script> -->
 </body>
 </html>

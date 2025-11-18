@@ -269,7 +269,9 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 					TenoreModel tm = lTenori[i];
 					if ("0276".equals(tm.getCodEsitoTenore()) || "0277".equals(tm.getCodEsitoTenore())
 							|| "0278".equals(tm.getCodEsitoTenore()) || "0279".equals(tm.getCodEsitoTenore())
-							|| "0281".equals(tm.getCodEsitoTenore())) {
+							|| "0281".equals(tm.getCodEsitoTenore())
+							// MEV_2025-48: aggiunto esito (3209) per Oggetto: 3180 - Contenuto: U142
+							|| "0287".equals(tm.getCodEsitoTenore())) {
 						isConversione = true;
 						break;
 					}
@@ -1110,11 +1112,11 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 
 	/**
 	 * Metodo di ricerca Permessi
-	 * 
+	 *
 	 * @param aIdEvento
 	 * @return LicenzaPeriodiLibAnticipataModel[]
 	 * @throws Exception
-	 * 
+	 *
 	 * @author sgioggi
 	 * @since MEV_2025-48
 	 */
@@ -1137,7 +1139,7 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 			throw ex;
 		}
 		if (!Utils.isNullObj(permessi)) {
-			oArray = (Object[]) permessi.toArray();
+			oArray = permessi.toArray();
 			lplamArray = new LicenzaPeriodiLibAnticipataModel[oArray.length];
 			LicenzaPeriodiLibAnticipataModel lplam = new LicenzaPeriodiLibAnticipataModel();
 			lplam.setLicenza((LicenzaLibAnticipataModel) oArray[0]);
