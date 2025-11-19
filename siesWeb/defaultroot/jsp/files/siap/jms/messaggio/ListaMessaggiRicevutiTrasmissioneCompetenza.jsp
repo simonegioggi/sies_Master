@@ -117,7 +117,20 @@ if(IstruttoriaCumulo !=null && IstruttoriaCumulo.getIdIstruttoriaCumulo()!=null)
           document.f.<%=ICostantiSicoJMS.CAMPO_GIORNO_DATA_TRASMISSIONE_FINE%>.value = giorno; 
           document.f.<%=ICostantiSicoJMS.CAMPO_MESE_DATA_TRASMISSIONE_FINE%>.value = mese; 
           document.f.<%=ICostantiSicoJMS.CAMPO_ANNO_DATA_TRASMISSIONE_FINE%>.value = dataOdierna.getYear(); 
+          
+          var backGroupOriginal = $("[name='<%=ICostantiSicoJMS.CAMPO_GIORNO_DATA_TRASMISSIONE_INIZIO%>']").css('background-color');
+          $("[name='<%=ICostantiSicoJMS.CAMPO_GIORNO_DATA_TRASMISSIONE_INIZIO%>']").css('background-color','yellow');
+          $("[name='<%=ICostantiSicoJMS.CAMPO_MESE_DATA_TRASMISSIONE_INIZIO%>']").css('background-color','yellow');
+          $("[name='<%=ICostantiSicoJMS.CAMPO_ANNO_DATA_TRASMISSIONE_INIZIO%>']").css('background-color','yellow');
+          
+          setTimeout (function (){
+              $("[name='<%=ICostantiSicoJMS.CAMPO_GIORNO_DATA_TRASMISSIONE_INIZIO%>']").css('background-color',backGroupOriginal);
+              $("[name='<%=ICostantiSicoJMS.CAMPO_MESE_DATA_TRASMISSIONE_INIZIO%>']").css('background-color',backGroupOriginal);
+              $("[name='<%=ICostantiSicoJMS.CAMPO_ANNO_DATA_TRASMISSIONE_INIZIO%>']").css('background-color',backGroupOriginal);  
+          },500);
       } 
+      
+
       
       function ListaUfficiPerTipo(a_formname, a_fieldname )
       {
@@ -338,7 +351,7 @@ if(IstruttoriaCumulo !=null && IstruttoriaCumulo.getIdIstruttoriaCumulo()!=null)
     </tr>
     <% if(IstruttoriaCumulo.getIdIstruttoriaCumulo()==null){%>
     <tr>
-      <td class="l">Ufficio Richiedente</td>
+      <td class="l">Ufficio Mittente</td>
       <td class="l" colspan="2">
         <table>
           <tr>
