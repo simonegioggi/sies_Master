@@ -5,11 +5,13 @@ import java.sql.Connection;
 
 import f3b.dao.DAOException;
 import f3b.model.GenericModel;
+import f3b.util.DateUtils;
 import siap.dao.SIAPSqlDAO;
 import siap.sico.soggetto.model.SoggettoModel;
 import siap.sius.esecuzionemisuraalternativa.model.EMAFascGPModel;
 import siap.sius.esecuzionemisuraalternativa.model.EsecuzioneMisuraAlternativaModel;
 import siap.sius.fascicolo.model.FascicoloGPModel;
+import siap.sius.statistiche.model.RicercaProcedimentoModel;
 
 /**
  * EsecuzioneMisuraAlternativaSqlDAO - Classe SqlDAO che rappresenta la tabella EsecuzioneMisuraAlternativa
@@ -84,6 +86,7 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 	//
 
 	public GenericModel getModel() throws DAOException {
+
 		EsecuzioneMisuraAlternativaModel aModel = new EsecuzioneMisuraAlternativaModel();
 
 		// Inserire le opportune set delle descrizioni!
@@ -207,8 +210,8 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 	 */
 	public void ricercaEsecuzioneMisureAlternative(String lAnno, String lProgr, String lAnnoIniziale,
 			String lProgrIniziale, String lAnnoFinale, String lProgrFinale, String lUfficioUtenteConnesso) {
-		String EsecuzioneMisuraAlternativa = "";
 
+		String EsecuzioneMisuraAlternativa = "";
 		EsecuzioneMisuraAlternativa += getEsecuzioneMisuraAlternativa();
 		EsecuzioneMisuraAlternativa += setCondizioneEsecuzioneMisuraAlternativa(lAnno, lProgr, lAnnoIniziale,
 				lProgrIniziale, lAnnoFinale, lProgrFinale, lUfficioUtenteConnesso);
@@ -294,21 +297,21 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 				+ "COD_AUTORITA_DELEGATA, NVL(GP.DESCR_MITTENTE, '-') DESCR_MITTENTE, ";
 		lStatement += "GP.ANNO_S1 ANNO_S1, GP.PROGR_S1 PROGR_S1, NVL(EMA.LUOGO_ESECUZIONE_MISURA, '') "
 				+ "LUOGO_ESECUZIONE_MISURA, FASC.ID_FASCICOLO_SIUS_ORIGINE ID_FASCICOLO_SIUS_ORIGINE ";
-		lStatement += "FROM FASCICOLO_SIUS FASC, SOGGETTO  SOGG, GENERALE_PROCEDIMENTO GP, "
+		lStatement += "FROM FASCICOLO_SIUS FASC, SOGGETTO SOGG, GENERALE_PROCEDIMENTO GP, "
 				+ "FASCICOLO_SIEP FASC_SIEP, ";
 		lStatement += " UFFICIO UFF, CG_REF_CODES DESCR_MISURA_ALTERNATIVA, ";
 		lStatement += " COMUNE DESCR_COM_UFF, COMUNE DESCR_COM_NASCITA, ESECUZIONE_MISURA_ALTERNATIVA EMA, ";
 		lStatement += " COMUNE COMUNE_AUT, UFFICIO UFFICIO_AUT, CG_REF_CODES DESCR_TIPO_AUT ";
-		lStatement += " WHERE FASC.SOG_ID_SOGGETTO = SOGG.ID_SOGGETTO  ";
+		lStatement += " WHERE FASC.SOG_ID_SOGGETTO = SOGG.ID_SOGGETTO ";
 		lStatement += " AND GP.COD_OGGETTO_PROCEDIMENTO = 'U004' ";
-		lStatement += " AND FASC.FAS_SIE_ID_FASCICOLO_SIEP = FASC_SIEP.ID_FASCICOLO_SIEP(+)  ";
+		lStatement += " AND FASC.FAS_SIE_ID_FASCICOLO_SIEP = FASC_SIEP.ID_FASCICOLO_SIEP(+) ";
 		lStatement += " AND UFFICIO_AUT.COD_UFFICIO = EMA.COD_AUTORITA_EMITT_ORD ";
 		lStatement += " AND UFFICIO_AUT.COD_COMUNE = COMUNE_AUT.COD_COMUNE ";
 		lStatement += " AND DESCR_TIPO_AUT.RV_DOMAIN = 'TIPO_UFFICIO' ";
 		lStatement += " AND DESCR_TIPO_AUT.RV_LOW_VALUE = UFFICIO_AUT.COD_TIPO_UFFICIO ";
-		lStatement += " AND FASC.ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS  ";
-		lStatement += " AND DESCR_MISURA_ALTERNATIVA.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO'  ";
-		lStatement += " AND EMA.COD_TIPO_MISURA = DESCR_MISURA_ALTERNATIVA.RV_LOW_VALUE  ";
+		lStatement += " AND FASC.ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS ";
+		lStatement += " AND DESCR_MISURA_ALTERNATIVA.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		lStatement += " AND EMA.COD_TIPO_MISURA = DESCR_MISURA_ALTERNATIVA.RV_LOW_VALUE ";
 		lStatement += " AND UFF.COD_UFFICIO = FASC.CHIAVE_UFFICIO ";
 		lStatement += " AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE ";
 		lStatement += " AND SOGG.COD_COMUNE_NASCITA = DESCR_COM_NASCITA.COD_COMUNE ";
@@ -333,10 +336,10 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 			String lProgrIniziale, String lAnnoFinale, String lProgrFinale, String lUfficioUtenteConnesso) {
 
 		String s = new String();
-		s += " AND  UFF.COD_UFFICIO = '" + lUfficioUtenteConnesso + "'";
+		s += " AND UFF.COD_UFFICIO = '" + lUfficioUtenteConnesso + "'";
 		if (lAnno.length() > 2) {
-			s += " AND PROGR_S1  = nvl('" + lProgr + "',PROGR_S1)";
-			s += " AND ANNO_S1  = nvl('" + lAnno + "',ANNO_S1)";
+			s += " AND PROGR_S1 = nvl('" + lProgr + "',PROGR_S1)";
+			s += " AND ANNO_S1 = nvl('" + lAnno + "',ANNO_S1)";
 		} else {
 			// 20191023 [SG]: modificata query
 			if (lAnnoIniziale.length() > 2) {
@@ -363,6 +366,7 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 	 * @throws DAOException
 	 */
 	public GenericModel getEsecuzioneMisureAlternative() throws DAOException {
+
 		EMAFascGPModel lEMAFascGP = new EMAFascGPModel();
 
 		// Caricamento EsecuzioneMA.
@@ -401,6 +405,15 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 		lEMAFascGP.getEsecuzioneMAModel()
 				.setGenPridGeneraleProcedimento(getBigDecimal("GEN_PRID_GENERALE_PROCEDIMENTO"));
 		lEMAFascGP.getEsecuzioneMAModel().setLuogoEsecuzioneMisura(getString("LUOGO_ESECUZIONE_MISURA"));
+		// MEV_2025-48: aggiunti campi in estrazione
+		if (findColumn("DATA_INIZIO_MISURA_MA"))
+			lEMAFascGP.getEsecuzioneMAModel().setDataInizioMisura(getDate("DATA_INIZIO_MISURA_MA"));
+		if (findColumn("DATA_FINE_MISURA"))
+			lEMAFascGP.getEsecuzioneMAModel().setDataTermineAttuale(getDate("DATA_FINE_MISURA"));
+		if (findColumn("COD_TIPO_MISURA_MA"))
+			lEMAFascGP.getEsecuzioneMAModel().setCodTipoMisura(getString("COD_TIPO_MISURA_MA"));
+		if (findColumn("DATA_AGGIORNAMENTO"))
+			lEMAFascGP.getEsecuzioneMAModel().setDataAggiornamento(getDate("DATA_AGGIORNAMENTO"));
 
 		lEMAFascGP.getFascicoloSiusModel().setIdFascicoloSius(getBigDecimal("ID_FASCICOLO_SIUS"));
 		lEMAFascGP.getFascicoloSiusModel().setChiaveAnno(getBigDecimal("CHIAVE_ANNO"));
@@ -413,27 +426,24 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 		lEMAFascGP.getFascicoloSiusModel()
 				.setFasSieIdFascicoloSiep(getBigDecimal("FAS_SIE_ID_FASCICOLO_SIEP"));
 		lEMAFascGP.getFascicoloSiusModel().setDataIscrizione(getDate("DATA_ISCRIZIONE"));
-		// lEMAFascGP.getFascicoloSiusModel().setCodStatoFascicolo(getString("COD_STATO_FASCICOLO") );
-		// lEMAFascGP.getFascicoloSiusModel().setDescrStatoFascicolo(getString("") );
-		// lEMAFascGP.getFascicoloSiusModel().setCodOperatoreInserimento(getString("COD_OPERATORE_INSERIMENTO")
-		// );
+		// MEV_2025-48: aggiunti campi in estrazione
+		if (findColumn("COD_STATO_FASCICOLO"))
+			lEMAFascGP.getFascicoloSiusModel().setCodStatoFascicolo(getString("COD_STATO_FASCICOLO"));
+		if (findColumn("DESCR_STATO_FASCICOLO"))
+			lEMAFascGP.getFascicoloSiusModel().setDescrStatoFascicolo(getString("DESCR_STATO_FASCICOLO"));
 		lEMAFascGP.getFascicoloSiusModel().setDataInserimento(getDate("DATA_INSERIMENTO"));
 		lEMAFascGP.getFascicoloSiusModel().setDataIscrizione(getDate("DATA_ISCRIZIONE"));
-		// lEMAFascGP.getFascicoloSiusModel().setCodOperatoreAggiornamento(getString("COD_OPERATORE_AGGIORNAMENTO")
-		// );
-		// lEMAFascGP.getFascicoloSiusModel().setDataAggiornamento(getDate("DATA_AGGIORNAMENTO") );
+		// lEMAFascGP.getFascicoloSiusModel().setDataAggiornamento(getDate("DATA_AGGIORNAMENTO"));
 		lEMAFascGP.getFascicoloSiusModel().setSogIdSoggetto(getBigDecimal("ID_SOGGETTO"));
 
 		SoggettoModel lSoggetto = new SoggettoModel();
-
 		lSoggetto.setIdSoggetto(getBigDecimal("ID_SOGGETTO"));
 		lSoggetto.setCognome(getString("COGNOME"));
 		lSoggetto.setNome(getString("NOME"));
-
 		lSoggetto.setDataNascita(getDate("DATA_NASCITA"));
 		lSoggetto.setDescrComuneNascita(getString("DESCR_COMUNE_NASCITA"));
-
 		lEMAFascGP.getFascicoloSiusModel().setSoggetto(lSoggetto);
+
 		// Generale procedimento
 		lEMAFascGP.getGeneraleProcedimentoModel()
 				.setCodOggettoProcedimento(getString("COD_OGGETTO_PROCEDIMENTO"));
@@ -471,9 +481,9 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 				+ "NVL(GP.DESCR_MITTENTE, '-') DESCR_MITTENTE ";
 		lStatement += " NVL(EMA.LUOGO_ESECUZIONE_MISURA, '') LUOGO_ESECUZIONE_MISURA, "
 				+ "FASC.ID_FASCICOLO_SIUS_ORIGINE ID_FASCICOLO_SIUS_ORIGINE ";
-		lStatement += "FROM ESECUZIONE_MISURA_ALTERNATIVA EMA, FASCICOLO_SIUS FASC, SOGGETTO  SOGG, "
+		lStatement += "FROM ESECUZIONE_MISURA_ALTERNATIVA EMA, FASCICOLO_SIUS FASC, SOGGETTO SOGG, "
 				+ "GENERALE_PROCEDIMENTO GP, CG_REF_CODES DESCR_OGGETTO_PROCEDIMENTO,";
-		lStatement += " UFFICIO UFF,  COMUNE DESCR_COM_UFF,COMUNE DESCR_COM_NASCITA ";
+		lStatement += " UFFICIO UFF, COMUNE DESCR_COM_UFF,COMUNE DESCR_COM_NASCITA ";
 		lStatement += "WHERE EMA.ID_ESECUZIONE_MISURA_ALTERNATI (+) = '" + aEseMAKey + "' ";
 		lStatement += " AND EMA.GEN_PRID_GENERALE_PROCEDIMENTO (+) = GP.ID_GENERALE_PROCEDIMENTO ";
 		lStatement += " AND FASC.SOG_ID_SOGGETTO = SOGG.ID_SOGGETTO ";
@@ -496,8 +506,8 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 	 * @throws DAOException
 	 */
 	public GenericModel getFascicoloSiusGPModel() throws DAOException {
-		FascicoloGPModel lFascicolo = new FascicoloGPModel();
 
+		FascicoloGPModel lFascicolo = new FascicoloGPModel();
 		lFascicolo.getFascicoloSiusModel().setIdFascicoloSius(getBigDecimal("ID_FASCICOLO_SIUS"));
 		lFascicolo.getFascicoloSiusModel().setChiaveAnno(getBigDecimal("CHIAVE_ANNO"));
 		lFascicolo.getFascicoloSiusModel().setChiaveUfficio(getString("CHIAVE_UFFICIO"));
@@ -522,16 +532,13 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 		lFascicolo.getFascicoloSiusModel().setSogIdSoggetto(getBigDecimal("ID_SOGGETTO"));
 
 		SoggettoModel lSoggetto = new SoggettoModel();
-
 		lSoggetto.setIdSoggetto(getBigDecimal("ID_SOGGETTO"));
 		lSoggetto.setCognome(getString("COGNOME"));
 		lSoggetto.setNome(getString("NOME"));
-
 		lSoggetto.setDataNascita(getDate("DATA_NASCITA"));
 		lSoggetto.setDescrComuneNascita(getString("DESCR_COMUNE_NASCITA"));
 		lSoggetto.setCodProvinciaNascita(getString("COD_PROVINCIA_NASCITA"));
 		lSoggetto.setDescComuneNascitaEstero(getString("DESC_COMUNE_NASCITA_ESTERO"));
-
 		lFascicolo.getFascicoloSiusModel().setSoggetto(lSoggetto);
 
 		// Generale procedimento
@@ -545,12 +552,10 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 				.setDescrOggettoProcedimento(getString("DESCR_TIPO_PROCEDIMENTO"));
 		// Utilizzo DescrPosGiuridica per trasportare le informazioni relative a DESCR_COD_PROCEDIMENTO
 		lFascicolo.getGeneraleProcedimentoModel().setDescrPosGiuridica(getString("DESCR_COD_PROCEDIMENTO"));
-
 		// Utilizzo DescrTipoAtto momentaneamente per ospitare DESCR_PROVVEDIMENTO
 		// e DescrDefinizione per ospitare DESCR_DEFINIZIONE
 		lFascicolo.getGeneraleProcedimentoModel().setDescrTipoAtto(getString("DESCR_PROVVEDIMENTO"));
 		lFascicolo.getGeneraleProcedimentoModel().setDescrDefinizione(getString("DESCR_DEFINIZIONE"));
-
 		// Utilizzo "DATA_RICHIESTA " per riportare la DATA_EMISSIONE dell'evento
 		lFascicolo.getGeneraleProcedimentoModel().setDataRichiesta(getDate("DATA_RICHIESTA"));
 		lFascicolo.getGeneraleProcedimentoModel().setDataCameraConsiglio(getDate("DATA_CAMERA_CONSIGLIO"));
@@ -571,6 +576,7 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 
 	protected String getFascicoliConProvvedimentiDellaMisura(BigDecimal aEseMAKey,
 			String lUfficioUtenteConnesso) {
+
 		String lStatement = new String();
 
 		lStatement += "SELECT FASC.ID_FASCICOLO_SIUS ID_FASCICOLO_SIUS, FASC.CHIAVE_ANNO CHIAVE_ANNO, "
@@ -621,15 +627,15 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 		lStatement += " AND FASC.CHIAVE_UFFICIO ='" + lUfficioUtenteConnesso + "'";
 		lStatement += " AND FASC_PADRE.CHIAVE_UFFICIO = FASC.CHIAVE_UFFICIO";
 		lStatement += " AND FASC.SOG_ID_SOGGETTO = SOGG.ID_SOGGETTO";
-		lStatement += " AND DESCR_MISURA_ALTERNATIVA.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO'  ";
-		lStatement += " AND EMA.COD_TIPO_MISURA = DESCR_MISURA_ALTERNATIVA.RV_LOW_VALUE  ";
+		lStatement += " AND DESCR_MISURA_ALTERNATIVA.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		lStatement += " AND EMA.COD_TIPO_MISURA = DESCR_MISURA_ALTERNATIVA.RV_LOW_VALUE ";
 		lStatement += " AND FASC.ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS";
 		lStatement += " AND (EV.DATA_INSERIMENTO,FASC.ID_FASCICOLO_SIUS) = (select EV2.DATA_INSERIMENTO, "
 				+ "FAS_SIU_ID_FASCICOLO_SIUS from EVENTO EV2 ";
 		lStatement += " where EV2.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS ";
 		// 20250731: [SG] aggiunta condizione sull'ufficio
 		lStatement += " AND FASC.CHIAVE_UFFICIO = '" + lUfficioUtenteConnesso + "'";
-		lStatement += " AND (EV2.COD_TIPO_PROVVEDIMENTO = '02'  OR EV2.COD_TIPO_PROVVEDIMENTO = '03') ";
+		lStatement += " AND (EV2.COD_TIPO_PROVVEDIMENTO = '02' OR EV2.COD_TIPO_PROVVEDIMENTO = '03') ";
 		lStatement += " AND EV2.DATA_INSERIMENTO = (select max (EV3.DATA_INSERIMENTO) from EVENTO EV3 ";
 		lStatement += "	where EV3.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS ";
 		lStatement += "	AND (EV3.COD_TIPO_PROVVEDIMENTO = '02' OR EV3.COD_TIPO_PROVVEDIMENTO = '03')) ) ";
@@ -638,10 +644,10 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 		lStatement += " AND DESCR_ESITO_PROVVEDIMENTO.RV_DOMAIN ='ESITO_PROVVEDIMENTO'";
 		lStatement += " AND EV.COD_MOTIVO = DESCR_MOTIVO_PROVVEDIMENTO.RV_LOW_VALUE";
 		lStatement += " AND DESCR_MOTIVO_PROVVEDIMENTO.RV_DOMAIN ='MOTIVO_PROVVEDIMENTO' ";
-		lStatement += " AND EV.COD_ESITO = DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE  ";
+		lStatement += " AND EV.COD_ESITO = DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE ";
 		lStatement += " AND DESCR_COD_PROCEDIMENTO.RV_DOMAIN ='OGGETTO_PROCEDIMENTO'";
 		lStatement += " AND GP.COD_OGGETTO_PROCEDIMENTO = DESCR_COD_PROCEDIMENTO.RV_LOW_VALUE";
-		lStatement += " AND (EV.COD_TIPO_PROVVEDIMENTO = '02'  OR EV.COD_TIPO_PROVVEDIMENTO = '03') ";
+		lStatement += " AND (EV.COD_TIPO_PROVVEDIMENTO = '02' OR EV.COD_TIPO_PROVVEDIMENTO = '03') ";
 		lStatement += " AND UFF.COD_UFFICIO = FASC.CHIAVE_UFFICIO";
 		lStatement += " AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE";
 		lStatement += " AND SOGG.COD_COMUNE_NASCITA = DESCR_COM_NASCITA.COD_COMUNE";
@@ -674,15 +680,15 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 		lStatement += " '-' COD_STATO_FASCICOLO, FASC.COD_STATO_FASCICOLO DESCR_STATO_FASCICOLO, "
 				+ "null DATA_RICHIESTA, GP.ID_GENERALE_PROCEDIMENTO ID_GENERALE_PROCEDIMENTO, GP.ANNO_S1, "
 				+ "GP.PROGR_S1, ";
-		lStatement += " '-' DESCR_PROVVEDIMENTO, '-'  DESCR_DEFINIZIONE, DESCR_COD_PROCEDIMENTO.RV_MEANING "
+		lStatement += " '-' DESCR_PROVVEDIMENTO, '-' DESCR_DEFINIZIONE, DESCR_COD_PROCEDIMENTO.RV_MEANING "
 				+ "DESCR_COD_PROCEDIMENTO, ";
 		// lStatement += " NVL(EMA.LUOGO_ESECUZIONE_MISURA, '') LUOGO_ESECUZIONE_MISURA ";
-		lStatement += "     NULL LUOGO_ESECUZIONE_MISURA "; // 11/04/2008 Soluzione MAC a8/rr/086
+		lStatement += "  NULL LUOGO_ESECUZIONE_MISURA "; // 11/04/2008 Soluzione MAC a8/rr/086
 		// STUB 02/11/2005 Rework EMA.
 		lStatement += ", 0 NUM_FIGLI, null ID_FASCICOLO_SIUS_FIGLIO, null ID_FASCICOLO_SIUS_ORIGINE ";
 		lStatement += "FROM ESECUZIONE_MISURA_ALTERNATIVA EMA, GENERALE_PROCEDIMENTO GP_PADRE, "
 				+ "GENERALE_PROCEDIMENTO GP, FASCICOLO_SIUS FASC_PADRE, FASCICOLO_SIUS FASC, ";
-		lStatement += "SOGGETTO  SOGG, UFFICIO UFF, COMUNE DESCR_COM_UFF, "
+		lStatement += "SOGGETTO SOGG, UFFICIO UFF, COMUNE DESCR_COM_UFF, "
 				+ "CG_REF_CODES DESCR_COD_PROCEDIMENTO, CG_REF_CODES DESCR_MISURA_ALTERNATIVA";
 		lStatement += " WHERE EMA.ID_ESECUZIONE_MISURA_ALTERNATI = '" + aEseMAKey + "' ";
 		lStatement += " AND EMA.GEN_PRID_GENERALE_PROCEDIMENTO = GP_PADRE.ID_GENERALE_PROCEDIMENTO ";
@@ -694,41 +700,41 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 		lStatement += " AND FASC_PADRE.CHIAVE_UFFICIO = FASC.CHIAVE_UFFICIO";
 		lStatement += " AND FASC.SOG_ID_SOGGETTO = SOGG.ID_SOGGETTO";
 		lStatement += " AND FASC.ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS";
-		lStatement += " AND DESCR_MISURA_ALTERNATIVA.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO'  ";
-		lStatement += " AND EMA.COD_TIPO_MISURA = DESCR_MISURA_ALTERNATIVA.RV_LOW_VALUE  ";
+		lStatement += " AND DESCR_MISURA_ALTERNATIVA.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		lStatement += " AND EMA.COD_TIPO_MISURA = DESCR_MISURA_ALTERNATIVA.RV_LOW_VALUE ";
 		lStatement += " AND FASC.CHIAVE_UFFICIO ='" + lUfficioUtenteConnesso + "'";
-		lStatement += " AND DESCR_COD_PROCEDIMENTO.RV_DOMAIN ='OGGETTO_PROCEDIMENTO'  ";
+		lStatement += " AND DESCR_COD_PROCEDIMENTO.RV_DOMAIN ='OGGETTO_PROCEDIMENTO' ";
 		lStatement += " AND GP.COD_OGGETTO_PROCEDIMENTO = DESCR_COD_PROCEDIMENTO.RV_LOW_VALUE ";
-		lStatement += " AND UFF.COD_UFFICIO = FASC.CHIAVE_UFFICIO  ";
+		lStatement += " AND UFF.COD_UFFICIO = FASC.CHIAVE_UFFICIO ";
 		lStatement += " AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE ";
-		lStatement += " AND (FASC.ID_FASCICOLO_SIUS) NOT IN (select FASC2.ID_FASCICOLO_SIUS  ";
-        // 20250731: [DF] si esclude la condizione sul max data_ins non necessaria per la NOT IN
-//		lStatement += " FROM FASCICOLO_SIUS FASC2, SOGGETTO  SOGG, GENERALE_PROCEDIMENTO GP, EVENTO EV";
-//		lStatement += " WHERE FASC2.SOG_ID_SOGGETTO = SOGG.ID_SOGGETTO";
-//		lStatement += " AND FASC2.ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS";
+		lStatement += " AND (FASC.ID_FASCICOLO_SIUS) NOT IN (select FASC2.ID_FASCICOLO_SIUS ";
+		// 20250731: [DF] si esclude la condizione sul max data_ins non necessaria per la NOT IN
+		// lStatement += " FROM FASCICOLO_SIUS FASC2, SOGGETTO SOGG, GENERALE_PROCEDIMENTO GP, EVENTO EV";
+		// lStatement += " WHERE FASC2.SOG_ID_SOGGETTO = SOGG.ID_SOGGETTO";
+		// lStatement += " AND FASC2.ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS";
 		lStatement += " FROM FASCICOLO_SIUS FASC2, EVENTO EV";
 		lStatement += " WHERE EV.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS";
 		lStatement += " AND FASC2.CHIAVE_UFFICIO = '" + lUfficioUtenteConnesso + "'";
-		lStatement += " AND (EV.COD_TIPO_PROVVEDIMENTO = '02'  OR EV.COD_TIPO_PROVVEDIMENTO = '03')  ";
+		lStatement += " AND (EV.COD_TIPO_PROVVEDIMENTO = '02' OR EV.COD_TIPO_PROVVEDIMENTO = '03') ";
 		lStatement += " AND EV.FAS_SIU_ID_FASCICOLO_SIUS = FASC2.ID_FASCICOLO_SIUS ";
 		lStatement += " ) ";
-        // 20250731: [DF]--------------------------------------------------------
-        
-//		// 20250731: [SG] aggiunta condizione sull'ufficio
-//		lStatement += " AND FASC2.CHIAVE_UFFICIO = '" + lUfficioUtenteConnesso + "'";
-//		lStatement += " AND (EV.DATA_INSERIMENTO,ID_FASCICOLO_SIUS) = (select EV2.DATA_INSERIMENTO,"
-//				+ " FAS_SIU_ID_FASCICOLO_SIUS from EVENTO EV2";
-//		lStatement += " where EV2.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS";
-//		// 20250731: [SG] aggiunta condizione sull'ufficio
-//		lStatement += " AND FASC.CHIAVE_UFFICIO = '" + lUfficioUtenteConnesso + "'";
-//		lStatement += " AND (EV2.COD_TIPO_PROVVEDIMENTO = '02'  OR EV2.COD_TIPO_PROVVEDIMENTO = '03')";
-//		lStatement += " AND EV2.DATA_INSERIMENTO = (select max (EV3.DATA_INSERIMENTO) from EVENTO EV3";
-//		lStatement += " where EV3.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS";
-//		lStatement += " AND (EV3.COD_TIPO_PROVVEDIMENTO = '02'  OR EV3.COD_TIPO_PROVVEDIMENTO = '03')))";
-//		lStatement += " AND (EV.COD_TIPO_PROVVEDIMENTO = '02'  OR EV.COD_TIPO_PROVVEDIMENTO = '03')";
-//		lStatement += " AND EV.FAS_SIU_ID_FASCICOLO_SIUS = FASC2.ID_FASCICOLO_SIUS";
-//		lStatement += " ) ";
-        
+		// 20250731: [DF]--------------------------------------------------------
+
+		// // 20250731: [SG] aggiunta condizione sull'ufficio
+		// lStatement += " AND FASC2.CHIAVE_UFFICIO = '" + lUfficioUtenteConnesso + "'";
+		// lStatement += " AND (EV.DATA_INSERIMENTO,ID_FASCICOLO_SIUS) = (select EV2.DATA_INSERIMENTO,"
+		// + " FAS_SIU_ID_FASCICOLO_SIUS from EVENTO EV2";
+		// lStatement += " where EV2.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS";
+		// // 20250731: [SG] aggiunta condizione sull'ufficio
+		// lStatement += " AND FASC.CHIAVE_UFFICIO = '" + lUfficioUtenteConnesso + "'";
+		// lStatement += " AND (EV2.COD_TIPO_PROVVEDIMENTO = '02' OR EV2.COD_TIPO_PROVVEDIMENTO = '03')";
+		// lStatement += " AND EV2.DATA_INSERIMENTO = (select max (EV3.DATA_INSERIMENTO) from EVENTO EV3";
+		// lStatement += " where EV3.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS";
+		// lStatement += " AND (EV3.COD_TIPO_PROVVEDIMENTO = '02' OR EV3.COD_TIPO_PROVVEDIMENTO = '03')))";
+		// lStatement += " AND (EV.COD_TIPO_PROVVEDIMENTO = '02' OR EV.COD_TIPO_PROVVEDIMENTO = '03')";
+		// lStatement += " AND EV.FAS_SIU_ID_FASCICOLO_SIUS = FASC2.ID_FASCICOLO_SIUS";
+		// lStatement += " ) ";
+
 		return lStatement;
 	}
 
@@ -766,7 +772,7 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 		lStatement += " UFFICIO UFF, COMUNE DESCR_COM_UFF, COMUNE DESCR_COM_NASCITA, EVENTO EV,CG_REF_CODES "
 				+ "DESCR_ESITO_PROVVEDIMENTO, ";
 		lStatement += " CG_REF_CODES DESCR_MOTIVO_PROVVEDIMENTO, CG_REF_CODES DESCR_COD_PROCEDIMENTO, "
-				+ "CG_REF_CODES DESCR_MISURA_ALTERNATIVA, DEPOSITO_DECRETO DD  ";
+				+ "CG_REF_CODES DESCR_MISURA_ALTERNATIVA, DEPOSITO_DECRETO DD ";
 		lStatement += " WHERE EMA.GEN_PRID_GENERALE_PROCEDIMENTO = GP_PADRE.ID_GENERALE_PROCEDIMENTO ";
 		lStatement += " AND GP_PADRE.FAS_SIU_ID_FASCICOLO_SIUS = '" + aIdFascicolo + "' ";
 		lStatement += " AND FASC_PADRE.ID_FASCICOLO_SIUS = GP_PADRE.FAS_SIU_ID_FASCICOLO_SIUS ";
@@ -777,13 +783,13 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 		lStatement += " AND FASC.CHIAVE_UFFICIO ='" + lUfficioUtenteConnesso + "'";
 		lStatement += " AND FASC_PADRE.CHIAVE_UFFICIO = FASC.CHIAVE_UFFICIO";
 		lStatement += " AND FASC.SOG_ID_SOGGETTO = SOGG.ID_SOGGETTO";
-		lStatement += " AND DESCR_MISURA_ALTERNATIVA.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO'  ";
-		lStatement += " AND EMA.COD_TIPO_MISURA = DESCR_MISURA_ALTERNATIVA.RV_LOW_VALUE  ";
+		lStatement += " AND DESCR_MISURA_ALTERNATIVA.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		lStatement += " AND EMA.COD_TIPO_MISURA = DESCR_MISURA_ALTERNATIVA.RV_LOW_VALUE ";
 		lStatement += " AND FASC.ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS";
 		lStatement += " AND (EV.DATA_INSERIMENTO,FASC.ID_FASCICOLO_SIUS) = (select EV2.DATA_INSERIMENTO, "
 				+ "FAS_SIU_ID_FASCICOLO_SIUS from EVENTO EV2 ";
 		lStatement += " where EV2.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS ";
-		lStatement += " AND (EV2.COD_TIPO_PROVVEDIMENTO = '02'  OR EV2.COD_TIPO_PROVVEDIMENTO = '03') ";
+		lStatement += " AND (EV2.COD_TIPO_PROVVEDIMENTO = '02' OR EV2.COD_TIPO_PROVVEDIMENTO = '03') ";
 		lStatement += " AND EV2.DATA_INSERIMENTO = (select max (EV3.DATA_INSERIMENTO) from EVENTO EV3 ";
 		lStatement += "	where EV3.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS ";
 		lStatement += "	AND (EV3.COD_TIPO_PROVVEDIMENTO = '02' OR EV3.COD_TIPO_PROVVEDIMENTO = '03')) ) ";
@@ -792,10 +798,10 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 		lStatement += " AND DESCR_ESITO_PROVVEDIMENTO.RV_DOMAIN ='ESITO_PROVVEDIMENTO'";
 		lStatement += " AND EV.COD_MOTIVO = DESCR_MOTIVO_PROVVEDIMENTO.RV_LOW_VALUE";
 		lStatement += " AND DESCR_MOTIVO_PROVVEDIMENTO.RV_DOMAIN ='MOTIVO_PROVVEDIMENTO' ";
-		lStatement += " AND EV.COD_ESITO = DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE  ";
+		lStatement += " AND EV.COD_ESITO = DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE ";
 		lStatement += " AND DESCR_COD_PROCEDIMENTO.RV_DOMAIN ='OGGETTO_PROCEDIMENTO'";
 		lStatement += " AND GP.COD_OGGETTO_PROCEDIMENTO = DESCR_COD_PROCEDIMENTO.RV_LOW_VALUE";
-		lStatement += " AND (EV.COD_TIPO_PROVVEDIMENTO = '02'  OR EV.COD_TIPO_PROVVEDIMENTO = '03') ";
+		lStatement += " AND (EV.COD_TIPO_PROVVEDIMENTO = '02' OR EV.COD_TIPO_PROVVEDIMENTO = '03') ";
 		lStatement += " AND UFF.COD_UFFICIO = FASC.CHIAVE_UFFICIO";
 		lStatement += " AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE";
 		lStatement += " AND SOGG.COD_COMUNE_NASCITA = DESCR_COM_NASCITA.COD_COMUNE";
@@ -826,13 +832,13 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 		lStatement += " '-' COD_STATO_FASCICOLO, FASC.COD_STATO_FASCICOLO DESCR_STATO_FASCICOLO, "
 				+ "null DATA_RICHIESTA, GP.ID_GENERALE_PROCEDIMENTO ID_GENERALE_PROCEDIMENTO, GP.ANNO_S1, "
 				+ "GP.PROGR_S1, ";
-		lStatement += " '-' DESCR_PROVVEDIMENTO, '-'  DESCR_DEFINIZIONE, DESCR_COD_PROCEDIMENTO.RV_MEANING "
+		lStatement += " '-' DESCR_PROVVEDIMENTO, '-' DESCR_DEFINIZIONE, DESCR_COD_PROCEDIMENTO.RV_MEANING "
 				+ "DESCR_COD_PROCEDIMENTO, ";
 		lStatement += " NVL(EMA.LUOGO_ESECUZIONE_MISURA, '') LUOGO_ESECUZIONE_MISURA, "
 				+ "FASC_FIGLIO.ID_FASCICOLO_SIUS_ORIGINE ID_FASCICOLO_SIUS_ORIGINE ";
 		lStatement += "FROM ESECUZIONE_MISURA_ALTERNATIVA EMA, GENERALE_PROCEDIMENTO GP_PADRE, "
 				+ "GENERALE_PROCEDIMENTO GP, FASCICOLO_SIUS FASC_PADRE, FASCICOLO_SIUS FASC, ";
-		lStatement += " SOGGETTO  SOGG, UFFICIO UFF, COMUNE DESCR_COM_UFF, "
+		lStatement += " SOGGETTO SOGG, UFFICIO UFF, COMUNE DESCR_COM_UFF, "
 				+ "CG_REF_CODES DESCR_COD_PROCEDIMENTO, CG_REF_CODES DESCR_MISURA_ALTERNATIVA ";
 		lStatement += " WHERE EMA.GEN_PRID_GENERALE_PROCEDIMENTO = GP_PADRE.ID_GENERALE_PROCEDIMENTO ";
 		lStatement += " AND GP_PADRE.FAS_SIU_ID_FASCICOLO_SIUS = '" + aIdFascicolo + "' ";
@@ -844,25 +850,25 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 		lStatement += " AND FASC_PADRE.CHIAVE_UFFICIO = FASC.CHIAVE_UFFICIO";
 		lStatement += " AND FASC.SOG_ID_SOGGETTO = SOGG.ID_SOGGETTO";
 		lStatement += " AND FASC.ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS";
-		lStatement += " AND DESCR_MISURA_ALTERNATIVA.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO'  ";
-		lStatement += " AND EMA.COD_TIPO_MISURA = DESCR_MISURA_ALTERNATIVA.RV_LOW_VALUE  ";
+		lStatement += " AND DESCR_MISURA_ALTERNATIVA.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		lStatement += " AND EMA.COD_TIPO_MISURA = DESCR_MISURA_ALTERNATIVA.RV_LOW_VALUE ";
 		lStatement += " AND FASC.CHIAVE_UFFICIO ='" + lUfficioUtenteConnesso + "'";
-		lStatement += " AND DESCR_COD_PROCEDIMENTO.RV_DOMAIN ='OGGETTO_PROCEDIMENTO'  ";
+		lStatement += " AND DESCR_COD_PROCEDIMENTO.RV_DOMAIN ='OGGETTO_PROCEDIMENTO' ";
 		lStatement += " AND GP.COD_OGGETTO_PROCEDIMENTO = DESCR_COD_PROCEDIMENTO.RV_LOW_VALUE ";
-		lStatement += " AND UFF.COD_UFFICIO = FASC.CHIAVE_UFFICIO  ";
+		lStatement += " AND UFF.COD_UFFICIO = FASC.CHIAVE_UFFICIO ";
 		lStatement += " AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE ";
-		lStatement += " AND (FASC.ID_FASCICOLO_SIUS) NOT IN (select FASC2.ID_FASCICOLO_SIUS  ";
-		lStatement += " FROM FASCICOLO_SIUS FASC2, SOGGETTO  SOGG, GENERALE_PROCEDIMENTO GP,EVENTO EV ";
+		lStatement += " AND (FASC.ID_FASCICOLO_SIUS) NOT IN (select FASC2.ID_FASCICOLO_SIUS ";
+		lStatement += " FROM FASCICOLO_SIUS FASC2, SOGGETTO SOGG, GENERALE_PROCEDIMENTO GP,EVENTO EV ";
 		lStatement += " WHERE FASC2.SOG_ID_SOGGETTO = SOGG.ID_SOGGETTO ";
 		lStatement += " AND FASC2.ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS ";
 		lStatement += " AND (EV.DATA_INSERIMENTO,ID_FASCICOLO_SIUS) = (select EV2.DATA_INSERIMENTO, "
 				+ "FAS_SIU_ID_FASCICOLO_SIUS from EVENTO EV2 ";
 		lStatement += " where EV2.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS ";
-		lStatement += " AND (EV2.COD_TIPO_PROVVEDIMENTO = '02'  OR EV2.COD_TIPO_PROVVEDIMENTO = '03') ";
+		lStatement += " AND (EV2.COD_TIPO_PROVVEDIMENTO = '02' OR EV2.COD_TIPO_PROVVEDIMENTO = '03') ";
 		lStatement += " AND EV2.DATA_INSERIMENTO = (select max (EV3.DATA_INSERIMENTO) from EVENTO EV3 ";
-		lStatement += " where EV3.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS  ";
-		lStatement += " AND (EV3.COD_TIPO_PROVVEDIMENTO = '02'  OR EV3.COD_TIPO_PROVVEDIMENTO = '03') ) ) ";
-		lStatement += " AND (EV.COD_TIPO_PROVVEDIMENTO = '02'  OR EV.COD_TIPO_PROVVEDIMENTO = '03')  ";
+		lStatement += " where EV3.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS ";
+		lStatement += " AND (EV3.COD_TIPO_PROVVEDIMENTO = '02' OR EV3.COD_TIPO_PROVVEDIMENTO = '03') ) ) ";
+		lStatement += " AND (EV.COD_TIPO_PROVVEDIMENTO = '02' OR EV.COD_TIPO_PROVVEDIMENTO = '03') ";
 		lStatement += " AND EV.FAS_SIU_ID_FASCICOLO_SIUS = FASC2.ID_FASCICOLO_SIUS ";
 		lStatement += " ) ";
 		return lStatement;
@@ -897,7 +903,7 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 		lStatement += " NVL(DD.LUOGO_SVOLGIMENTO_PROVA, '') LUOGO_ESECUZIONE_MISURA ";
 		lStatement += ",0 NUM_FIGLI, null ID_FASCICOLO_SIUS_FIGLIO, FASC_FIGLIO.ID_FASCICOLO_SIUS_ORIGINE "
 				+ "ID_FASCICOLO_SIUS_ORIGINE ";
-		lStatement += " FROM GENERALE_PROCEDIMENTO GP_FIGLIO, FASCICOLO_SIUS FASC, SOGGETTO  SOGG, "
+		lStatement += " FROM GENERALE_PROCEDIMENTO GP_FIGLIO, FASCICOLO_SIUS FASC, SOGGETTO SOGG, "
 				+ "CG_REF_CODES DESCR_TIPO_PROCEDIMENTO, ";
 		lStatement += " UFFICIO UFF, COMUNE DESCR_COM_UFF, COMUNE DESCR_COM_NASCITA, EVENTO EV,CG_REF_CODES "
 				+ "DESCR_ESITO_PROVVEDIMENTO, ";
@@ -912,7 +918,7 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 		lStatement += " AND (EV.DATA_INSERIMENTO,FASC_FIGLIO.ID_FASCICOLO_SIUS) = (select EV2.DATA_INSERIMENTO, "
 				+ "FAS_SIU_ID_FASCICOLO_SIUS from EVENTO EV2 ";
 		lStatement += " where EV2.FAS_SIU_ID_FASCICOLO_SIUS = FASC_FIGLIO.ID_FASCICOLO_SIUS ";
-		lStatement += " AND (EV2.COD_TIPO_PROVVEDIMENTO = '02'  OR EV2.COD_TIPO_PROVVEDIMENTO = '03') ";
+		lStatement += " AND (EV2.COD_TIPO_PROVVEDIMENTO = '02' OR EV2.COD_TIPO_PROVVEDIMENTO = '03') ";
 		lStatement += " AND EV2.DATA_INSERIMENTO = (select max (EV3.DATA_INSERIMENTO) from EVENTO EV3 ";
 		lStatement += "	where EV3.FAS_SIU_ID_FASCICOLO_SIUS = FASC_FIGLIO.ID_FASCICOLO_SIUS ";
 		lStatement += "	AND (EV3.COD_TIPO_PROVVEDIMENTO = '02' OR EV3.COD_TIPO_PROVVEDIMENTO = '03')) ) ";
@@ -921,10 +927,10 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 		lStatement += " AND DESCR_ESITO_PROVVEDIMENTO.RV_DOMAIN ='ESITO_PROVVEDIMENTO'";
 		lStatement += " AND EV.COD_MOTIVO = DESCR_MOTIVO_PROVVEDIMENTO.RV_LOW_VALUE";
 		lStatement += " AND DESCR_MOTIVO_PROVVEDIMENTO.RV_DOMAIN ='MOTIVO_PROVVEDIMENTO' ";
-		lStatement += " AND EV.COD_ESITO = DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE  ";
+		lStatement += " AND EV.COD_ESITO = DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE ";
 		lStatement += " AND DESCR_COD_PROCEDIMENTO.RV_DOMAIN ='OGGETTO_PROCEDIMENTO'";
 		lStatement += " AND GP_FIGLIO.COD_OGGETTO_PROCEDIMENTO = DESCR_COD_PROCEDIMENTO.RV_LOW_VALUE";
-		lStatement += " AND (EV.COD_TIPO_PROVVEDIMENTO = '02'  OR EV.COD_TIPO_PROVVEDIMENTO = '03') ";
+		lStatement += " AND (EV.COD_TIPO_PROVVEDIMENTO = '02' OR EV.COD_TIPO_PROVVEDIMENTO = '03') ";
 		lStatement += " AND UFF.COD_UFFICIO = FASC_FIGLIO.CHIAVE_UFFICIO";
 		lStatement += " AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE";
 		lStatement += " AND SOGG.COD_COMUNE_NASCITA = DESCR_COM_NASCITA.COD_COMUNE";
@@ -957,7 +963,7 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 				+ "DESCR_COD_PROCEDIMENTO, '-' LUOGO_ESECUZIONE_MISURA ";
 		lStatement += ",0 NUM_FIGLI, null ID_FASCICOLO_SIUS_FIGLIO, FASC_FIGLIO.ID_FASCICOLO_SIUS_ORIGINE "
 				+ "ID_FASCICOLO_SIUS_ORIGINE ";
-		lStatement += " FROM GENERALE_PROCEDIMENTO GP_FIGLIO, FASCICOLO_SIUS FASC, SOGGETTO  SOGG, "
+		lStatement += " FROM GENERALE_PROCEDIMENTO GP_FIGLIO, FASCICOLO_SIUS FASC, SOGGETTO SOGG, "
 				+ "CG_REF_CODES DESCR_COD_PROCEDIMENTO, UFFICIO UFF, ";
 		lStatement += " COMUNE DESCR_COM_UFF, COMUNE DESCR_COM_NASCITA, FASCICOLO_SIUS FASC_FIGLIO ";
 		lStatement += " WHERE FASC.ID_FASCICOLO_SIUS = '" + aIdFascicoloEMA + "' ";
@@ -965,19 +971,19 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 		lStatement += " AND FASC_FIGLIO.ID_FASCICOLO_SIUS = GP_FIGLIO.FAS_SIU_ID_FASCICOLO_SIUS ";
 		lStatement += " AND FASC.CHIAVE_UFFICIO ='" + lUfficioUtenteConnesso + "'";
 		lStatement += " AND FASC.SOG_ID_SOGGETTO = SOGG.ID_SOGGETTO";
-		lStatement += " AND (FASC_FIGLIO.ID_FASCICOLO_SIUS) NOT IN (select FASC2.ID_FASCICOLO_SIUS  ";
-		lStatement += " FROM FASCICOLO_SIUS FASC2, SOGGETTO  SOGG, GENERALE_PROCEDIMENTO GP,EVENTO EV ";
+		lStatement += " AND (FASC_FIGLIO.ID_FASCICOLO_SIUS) NOT IN (select FASC2.ID_FASCICOLO_SIUS ";
+		lStatement += " FROM FASCICOLO_SIUS FASC2, SOGGETTO SOGG, GENERALE_PROCEDIMENTO GP,EVENTO EV ";
 		lStatement += " WHERE FASC2.SOG_ID_SOGGETTO = SOGG.ID_SOGGETTO ";
 		lStatement += " AND FASC2.ID_FASCICOLO_SIUS = GP_FIGLIO.FAS_SIU_ID_FASCICOLO_SIUS ";
 		lStatement += " AND (EV.DATA_INSERIMENTO,ID_FASCICOLO_SIUS) = (select EV2.DATA_INSERIMENTO, "
 				+ "FAS_SIU_ID_FASCICOLO_SIUS from EVENTO EV2 ";
 		lStatement += " where EV2.FAS_SIU_ID_FASCICOLO_SIUS = FASC_FIGLIO.ID_FASCICOLO_SIUS ";
-		lStatement += " AND (EV2.COD_TIPO_PROVVEDIMENTO = '02'  OR EV2.COD_TIPO_PROVVEDIMENTO = '03') ";
+		lStatement += " AND (EV2.COD_TIPO_PROVVEDIMENTO = '02' OR EV2.COD_TIPO_PROVVEDIMENTO = '03') ";
 		lStatement += " AND EV2.DATA_INSERIMENTO = (select max (EV3.DATA_INSERIMENTO) from EVENTO EV3 ";
-		lStatement += " where EV3.FAS_SIU_ID_FASCICOLO_SIUS = FASC_FIGLIO.ID_FASCICOLO_SIUS  ";
-		lStatement += " AND (EV3.COD_TIPO_PROVVEDIMENTO = '02'  OR EV3.COD_TIPO_PROVVEDIMENTO = '03') ) ) ";
-		lStatement += " AND (EV.COD_TIPO_PROVVEDIMENTO = '02'  OR EV.COD_TIPO_PROVVEDIMENTO = '03')  ";
-		lStatement += " AND EV.FAS_SIU_ID_FASCICOLO_SIUS = FASC2.ID_FASCICOLO_SIUS  ) ";
+		lStatement += " where EV3.FAS_SIU_ID_FASCICOLO_SIUS = FASC_FIGLIO.ID_FASCICOLO_SIUS ";
+		lStatement += " AND (EV3.COD_TIPO_PROVVEDIMENTO = '02' OR EV3.COD_TIPO_PROVVEDIMENTO = '03'))) ";
+		lStatement += " AND (EV.COD_TIPO_PROVVEDIMENTO = '02' OR EV.COD_TIPO_PROVVEDIMENTO = '03') ";
+		lStatement += " AND EV.FAS_SIU_ID_FASCICOLO_SIUS = FASC2.ID_FASCICOLO_SIUS ) ";
 		lStatement += " AND DESCR_COD_PROCEDIMENTO.RV_DOMAIN = 'OGGETTO_PROCEDIMENTO'";
 		lStatement += " AND GP_FIGLIO.COD_OGGETTO_PROCEDIMENTO = DESCR_COD_PROCEDIMENTO.RV_LOW_VALUE";
 		lStatement += " AND UFF.COD_UFFICIO = FASC_FIGLIO.CHIAVE_UFFICIO";
@@ -985,5 +991,118 @@ public class EsecuzioneMisuraAlternativaSqlDAO extends SIAPSqlDAO {
 		lStatement += " AND SOGG.COD_COMUNE_NASCITA = DESCR_COM_NASCITA.COD_COMUNE";
 		return lStatement;
 	}
+
+	// MEV_2025-48: aggiunti metodi di ricerca per Scadenzario monitoraggio misure alternative espiate
+	public void ricercaDataScadenzaProcEsecMA(RicercaProcedimentoModel rpm) {
+
+		String statement = "";
+
+		statement = "SELECT distinct EMA.ID_ESECUZIONE_MISURA_ALTERNATI, EMA.ANNO_S07,"
+				+ " EMA.PROGR_S07, EMA.DATA_ORDINANZA, EMA.COD_AUTORITA_EMITT_ORD,"
+				+ " UFFICIO_AUT.COD_TIPO_UFFICIO COD_TIPO_AUTORITA_EMITT_ORD,"
+				+ " UFFICIO_AUT.COD_COMUNE COD_LUOGO_AUTORITA_EMITT_ORD,"
+				+ " COMUNE_AUT.DESCRIZIONE DESCR_LUOGO_AUTORITA_EMITT_ORD,"
+				+ " DESCR_TIPO_AUT.RV_MEANING DESCR_TIPO_AUTORITA_EMITT_ORD,"
+				+ " EMA.COD_TIPO_AUTORITA_EMITT_ORD, EMA.COD_LUOGO_AUTORITA_EMITT_ORD,"
+				+ " EMA.COD_TIPO_MISURA, EMA.DATA_INIZIO_MISURA,"
+				+ " EMA.DATA_TERMINE_INIZIALE, EMA.DATA_TERMINE_ATTUALE,"
+				+ " EMA.DATA_DECLARATORIA_EP, EMA.DATA_TX_ATTI_EST_PENA,"
+				+ " EMA.DEP_DEC_ID_DEPOSITO_DECRETO, EMA.DEP_OPID_DEPOSITO_ORDINANZA_PC,"
+				+ " EMA.NOTE, EMA.COD_OPERATORE_INSERIMENTO,"
+				+ " EMA.DATA_INSERIMENTO, EMA.COD_UFFICIO_INSERIMENTO,"
+				+ " EMA.COD_OPERATORE_AGGIORNAMENTO, EMA.DATA_AGGIORNAMENTO,"
+				+ " EMA.COD_UFFICIO_AGGIORNAMENTO, EMA.GEN_PRID_GENERALE_PROCEDIMENTO,"
+				+ " DESCR_MISURA_ALTERNATIVA.RV_MEANING DESCR_MISURA_ALTERNATIVA,"
+				+ " FASC.ID_FASCICOLO_SIUS ID_FASCICOLO_SIUS, FASC.CHIAVE_ANNO CHIAVE_ANNO,"
+				+ " FASC.DATA_INSERIMENTO DATA_INSERIMENTO, FASC.DATA_ISCRIZIONE DATA_ISCRIZIONE,"
+				+ " FASC.CHIAVE_PROGR CHIAVE_PROGR, FASC.CHIAVE_UFFICIO CHIAVE_UFFICIO,"
+				+ " FASC.COD_STATO_FASCICOLO, DESCR_STATO_FASC.RV_MEANING DESCR_STATO_FASCICOLO,"
+				+ " UFF.COD_TIPO_UFFICIO DESCR_TIPO_UFFICIO, SOGG.COGNOME COGNOME,"
+				+ " SOGG.NOME NOME, SOGG.DATA_NASCITA DATA_NASCITA, SOGG.ID_SOGGETTO ID_SOGGETTO,"
+				+ " DESCR_COM_UFF.DESCRIZIONE DESCR_COMUNE_UFFICIO,"
+				+ " DESCR_COM_NASCITA.DESCRIZIONE DESCR_COMUNE_NASCITA,"
+				+ " FASC_SIEP.CHIAVE_ANNO ANNO_FASCICOLO_SIEP,"
+				+ " FASC_SIEP.CHIAVE_PROGR PROGR_FASCICOLO_SIEP,"
+				+ " FASC.FAS_SIE_ID_FASCICOLO_SIEP FAS_SIE_ID_FASCICOLO_SIEP,"
+				+ " GP.COD_OGGETTO_PROCEDIMENTO, GP.DATA_RICHIESTA,"
+				+ " NVL(GP.COD_AUTORITA_DELEGATA, '-') COD_AUTORITA_DELEGATA,"
+				+ " NVL(GP.DESCR_MITTENTE, '-') DESCR_MITTENTE, GP.ANNO_S1 ANNO_S1,"
+				+ " GP.PROGR_S1 PROGR_S1, NVL(EMA.LUOGO_ESECUZIONE_MISURA, '') LUOGO_ESECUZIONE_MISURA,"
+				+ " FASC.ID_FASCICOLO_SIUS_ORIGINE ID_FASCICOLO_SIUS_ORIGINE,"
+				+ " EMA.COD_TIPO_MISURA, MA.DATA_INIZIO_MISURA DATA_INIZIO_MISURA_MA,"
+				+ " MA.DATA_FINE_MISURA, MA.COD_TIPO_MISURA COD_TIPO_MISURA_MA,"
+				+ " MA.DATA_AGGIORNAMENTO DATA_AGGIORNAMENTO_MA "
+				+ " FROM FASCICOLO_SIUS FASC, SOGGETTO SOGG,"
+				+ " GENERALE_PROCEDIMENTO GP, FASCICOLO_SIEP FASC_SIEP, UFFICIO  UFF,"
+				+ " CG_REF_CODES DESCR_MISURA_ALTERNATIVA, COMUNE DESCR_COM_UFF,"
+				+ " COMUNE DESCR_COM_NASCITA, ESECUZIONE_MISURA_ALTERNATIVA EMA,"
+				+ " COMUNE COMUNE_AUT, UFFICIO  UFFICIO_AUT,"
+				+ " CG_REF_CODES DESCR_TIPO_AUT, MISURA_ALTERNATIVA MA, CG_REF_CODES DESCR_STATO_FASC"
+				+ " WHERE " + getCondizione(rpm)
+				+ " AND FASC.SOG_ID_SOGGETTO = SOGG.ID_SOGGETTO AND GP.COD_OGGETTO_PROCEDIMENTO = 'U004'"
+				+ " AND FASC.FAS_SIE_ID_FASCICOLO_SIEP = FASC_SIEP.ID_FASCICOLO_SIEP(+)"
+				+ " AND UFFICIO_AUT.COD_UFFICIO = EMA.COD_AUTORITA_EMITT_ORD"
+				+ " AND UFFICIO_AUT.COD_COMUNE = COMUNE_AUT.COD_COMUNE"
+				+ " AND DESCR_TIPO_AUT.RV_DOMAIN = 'TIPO_UFFICIO'"
+				+ " AND DESCR_TIPO_AUT.RV_LOW_VALUE = UFFICIO_AUT.COD_TIPO_UFFICIO"
+				+ " AND FASC.ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS"
+				+ " AND DESCR_MISURA_ALTERNATIVA.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO'"
+				+ " AND EMA.COD_TIPO_MISURA = DESCR_MISURA_ALTERNATIVA.RV_LOW_VALUE"
+				+ " AND UFF.COD_UFFICIO = FASC.CHIAVE_UFFICIO"
+				+ " AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE"
+				+ " AND DESCR_STATO_FASC.RV_DOMAIN = 'STATO_FASCICOLO'"
+				+ " AND DESCR_STATO_FASC.RV_LOW_VALUE = FASC.COD_STATO_FASCICOLO"
+				+ " AND SOGG.COD_COMUNE_NASCITA = DESCR_COM_NASCITA.COD_COMUNE"
+				+ " AND EMA.GEN_PRID_GENERALE_PROCEDIMENTO = GP.ID_GENERALE_PROCEDIMENTO"
+				+ " AND (MA.FAS_SIE_ID_FASCICOLO_SIEP = FASC.FAS_SIE_ID_FASCICOLO_SIEP(+))"
+				+ " AND MA.COD_TIPO_MISURA = EMA.COD_TIPO_MISURA"
+				+ " AND MA.COD_NATURA_DECISIONE = 'CO' AND MA.DATA_FINE_MISURA IS NOT NULL"
+				+ " AND MA.DATA_AGGIORNAMENTO IS NOT NULL"
+				+ " ORDER BY CHIAVE_ANNO, CHIAVE_PROGR ASC";
+
+		setStatement(statement);
+	}
+
+	private String getCondizione(RicercaProcedimentoModel rpm) {
+
+		String condizione = "";
+		String dataPattern = "yyyyMMdd";
+		condizione = "fasc.CHIAVE_UFFICIO = '" + rpm.getUtenteConnesso().getUfficioUtente().getCodUfficio()
+				+ "' ";
+		// intervallo estremi procedimento
+		if (rpm.getDataIscrizioneInizio() != null) {
+			condizione += "AND TO_CHAR (fasc.data_iscrizione, 'yyyyMMdd') >= '"
+					+ DateUtils.getDateToString(rpm.getDataIscrizioneInizio(), dataPattern) + "' ";
+		}
+		if (rpm.getDataIscrizioneFine() != null) {
+			condizione += "AND TO_CHAR (fasc.data_iscrizione, 'yyyyMMdd') <= '"
+					+ DateUtils.getDateToString(rpm.getDataIscrizioneFine(), dataPattern) + "' ";
+		}
+		// intervallo date iscrizione
+		if (rpm.getAnnoInizio() != null) {
+			condizione += "AND fasc.CHIAVE_ANNO >= " + rpm.getAnnoInizio() + " ";
+		}
+		if (rpm.getAnnoFine() != null) {
+			condizione += "AND fasc.CHIAVE_ANNO <= " + rpm.getAnnoFine() + " ";
+		}
+		if (rpm.getNumeroInizio() != null) {
+			condizione += "AND fasc.CHIAVE_PROGR >= " + rpm.getNumeroInizio() + " ";
+		}
+		if (rpm.getNumeroFine() != null) {
+			condizione += "AND fasc.CHIAVE_PROGR <= " + rpm.getNumeroFine() + " ";
+		}
+		// criteri di ricerca
+		if (rpm.getDataEmissioneInizio() != null) {
+			condizione += "AND TO_CHAR (ma.data_fine_misura, 'yyyyMMdd') >= '"
+					+ DateUtils.getDateToString(rpm.getDataEmissioneInizio(), dataPattern) + "' ";
+		}
+		if (rpm.getDataEmissioneFine() != null) {
+			condizione += "AND TO_CHAR (ma.data_fine_misura, 'yyyyMMdd') <= '"
+					+ DateUtils.getDateToString(rpm.getDataEmissioneFine(), dataPattern) + "' ";
+		}
+		// valore di ritorno
+		return condizione;
+	}
+	// FINE MEV_2025-48
 
 }
