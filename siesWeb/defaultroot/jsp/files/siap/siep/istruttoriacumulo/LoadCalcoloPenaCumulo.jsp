@@ -1546,9 +1546,9 @@ if (   (lBeneficio.isQuantumReclusioneZero())
 			<td class="r">&nbsp;</td>
 			<td class="r">&nbsp;</td>
 			<% } else { %>
-			<td class="r" <%=colorStyleTotaliRPArr%> ><%=lTotArrestoRP.getNumAnni()%></td>
-			<td class="r" <%=colorStyleTotaliRPArr%> ><%=lTotArrestoRP.getNumMesi()%></td>
-			<td class="r" <%=colorStyleTotaliRPArr%> ><%=lTotArrestoRP.getNumGiorni()%></td>
+			<td class="r" <%=colorStyleTotaliRPArr%> ><%=lTotArrestoRPToView.getNumAnni()%></td>
+			<td class="r" <%=colorStyleTotaliRPArr%> ><%=lTotArrestoRPToView.getNumMesi()%></td>
+			<td class="r" <%=colorStyleTotaliRPArr%> ><%=lTotArrestoRPToView.getNumGiorni()%></td>
 			<% } %>
       
       

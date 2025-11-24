@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import f3b.model.GenericModel;
+import f3b.util.StringUtils;
 import siap.sico.calendar.model.CalendarModel;
 
 public class ProvvedimentoGeSorvCumModel extends GenericModel {
@@ -73,7 +74,7 @@ public class ProvvedimentoGeSorvCumModel extends GenericModel {
 	private String mCodUfficioAggiornamento;
 	// Relazioni
 	private BigDecimal mRicIdRichiestePmInCumulo;
-
+	
 	/*****************************************************************************
 	 * Costruttore di default che inizializza i campi del model I campi String vengono inizializzati a "",
 	 * tutti gli altri campi a null
@@ -692,6 +693,53 @@ public class ProvvedimentoGeSorvCumModel extends GenericModel {
 			lCalArresto.setImportoAmmenda(this.mImportoAmmendaD.doubleValue());
 
 		return lCalArresto;
+	}
+	
+	// MEV_2025-48 - ALTRO 
+	public String getStringaQuantumXStampa() {
+        String lStringaQuantumXStampa = "";
+
+        String lStringReclusione = "";
+        if (mNumAnniReclusioneD != null && mNumAnniReclusioneD.intValue() != 0)
+            lStringReclusione = "Anni " + mNumAnniReclusioneD;
+
+        if (mNumMesiReclusioneD != null && mNumMesiReclusioneD.intValue() != 0)
+            lStringReclusione += " Mesi " + mNumMesiReclusioneD;
+
+        if (mNumGiorniReclusioneD != null && mNumGiorniReclusioneD.intValue() != 0)
+            lStringReclusione += " Giorni " + mNumGiorniReclusioneD;
+
+        lStringReclusione = lStringReclusione.trim();
+        
+
+        if (lStringReclusione != null)
+            lStringaQuantumXStampa += lStringReclusione+" Reclusione ";
+
+        if (mImportoMultaD != null && mImportoMultaD.intValue() > 0)
+            lStringaQuantumXStampa += " Euro " + StringUtils.toEuroFormat(mImportoMultaD)+" Multa";
+
+        // ARRESTI
+        String lStringArresto = "";
+        if (mNumAnniArrestoD != null && mNumAnniArrestoD.intValue() != 0)
+            lStringArresto = " Anni " + mNumAnniArrestoD;
+
+        if (mNumMesiArrestoD != null && mNumMesiArrestoD.intValue() != 0)
+            lStringArresto += " Mesi " + mNumMesiArrestoD;
+
+        if (mNumGiorniArrestoD != null && mNumGiorniArrestoD.intValue() != 0)
+            lStringArresto += " Giorni " + mNumGiorniArrestoD;
+
+        if (lStringArresto != null)
+            lStringaQuantumXStampa += lStringArresto+" Arresto ";
+
+        if (mImportoAmmendaD != null && mImportoAmmendaD.intValue() > 0)
+            lStringaQuantumXStampa += " Euro " + StringUtils.toEuroFormat(mImportoAmmendaD)+" Ammenda";
+        
+
+        lStringaQuantumXStampa = lStringaQuantumXStampa.trim();	    
+	    
+	    
+	    return lStringaQuantumXStampa;
 	}
 
 	/*****************************************************************************
