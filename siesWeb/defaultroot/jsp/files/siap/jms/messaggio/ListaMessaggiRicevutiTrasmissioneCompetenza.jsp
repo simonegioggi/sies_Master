@@ -118,15 +118,14 @@ if(IstruttoriaCumulo !=null && IstruttoriaCumulo.getIdIstruttoriaCumulo()!=null)
           document.f.<%=ICostantiSicoJMS.CAMPO_MESE_DATA_TRASMISSIONE_FINE%>.value = mese; 
           document.f.<%=ICostantiSicoJMS.CAMPO_ANNO_DATA_TRASMISSIONE_FINE%>.value = dataOdierna.getYear(); 
           
-          var backGroupOriginal = $("[name='<%=ICostantiSicoJMS.CAMPO_GIORNO_DATA_TRASMISSIONE_INIZIO%>']").css('background-color');
           $("[name='<%=ICostantiSicoJMS.CAMPO_GIORNO_DATA_TRASMISSIONE_INIZIO%>']").css('background-color','yellow');
           $("[name='<%=ICostantiSicoJMS.CAMPO_MESE_DATA_TRASMISSIONE_INIZIO%>']").css('background-color','yellow');
           $("[name='<%=ICostantiSicoJMS.CAMPO_ANNO_DATA_TRASMISSIONE_INIZIO%>']").css('background-color','yellow');
           
           setTimeout (function (){
-              $("[name='<%=ICostantiSicoJMS.CAMPO_GIORNO_DATA_TRASMISSIONE_INIZIO%>']").css('background-color',backGroupOriginal);
-              $("[name='<%=ICostantiSicoJMS.CAMPO_MESE_DATA_TRASMISSIONE_INIZIO%>']").css('background-color',backGroupOriginal);
-              $("[name='<%=ICostantiSicoJMS.CAMPO_ANNO_DATA_TRASMISSIONE_INIZIO%>']").css('background-color',backGroupOriginal);  
+              $("[name='<%=ICostantiSicoJMS.CAMPO_GIORNO_DATA_TRASMISSIONE_INIZIO%>']").css('background-color','');
+              $("[name='<%=ICostantiSicoJMS.CAMPO_MESE_DATA_TRASMISSIONE_INIZIO%>']").css('background-color','');
+              $("[name='<%=ICostantiSicoJMS.CAMPO_ANNO_DATA_TRASMISSIONE_INIZIO%>']").css('background-color','');  
           },500);
       } 
       
@@ -141,6 +140,26 @@ if(IstruttoriaCumulo !=null && IstruttoriaCumulo.getIdIstruttoriaCumulo()!=null)
       function resetSede(){
           document.f.<%=ICostantiUfficio.CAMPO_SEDE_UFFICIO%>.value="";
       }
+
+      function espandi(idTabella){
+          var collapseGif = "<%=IWebConstants.IMAGES_DIR%>collapse.gif";
+          var hrefNew = "Javascript:collassa('"+idTabella+"');";
+          
+          $('#idHrefRicerca').attr('href',hrefNew);
+          $('#idHrefRicerca').children().attr('src',collapseGif);
+        
+          var tabella = $('#'+idTabella).fadeIn();
+      }
+         
+      function collassa(idTabella){
+          var collapseGif = "<%=IWebConstants.IMAGES_DIR%>expand.gif";
+          var hrefNew = "Javascript:espandi('"+idTabella+"');";
+          
+          $('#idHrefRicerca').attr('href',hrefNew);
+          $('#idHrefRicerca').children().attr('src',collapseGif);
+        
+          var tabella = $('#'+idTabella).fadeOut();
+      }      
       
       function Verify(){
           var dataOdierna = '<%=DateUtils.getSysDate("dd/MM/yyyy")%>';

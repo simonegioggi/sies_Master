@@ -451,7 +451,7 @@
       <td class="int">Azioni</td>
     </tr>
     <tr>
-      <td class="c" colspan="5">  <br>Non sono presenti richieste atti che soddisfano i criteri di ricerca selezionati<br> </td>
+      <td class="c" colspan="6">  <br>Non sono presenti richieste atti che soddisfano i criteri di ricerca selezionati<br> </td>
     </tr>
   </table>
 <% } else { %>
