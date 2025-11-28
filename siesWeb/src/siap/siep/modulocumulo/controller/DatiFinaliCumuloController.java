@@ -5071,24 +5071,34 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
                     
                     // Normalizzo (abs) per via dei segni negativi
                     CalendarUtil lCalUtilRP = new CalendarUtil();
-                    //CalendarModel lTotReclusioneRPToView = lCalUtilRP.abs(lTotReclusioneRP);
-                    //lTotReclusioneRPToView = lCalUtilRP.ricalcolaGAM (lTotReclusioneRPToView);
-                    //lTotArrestoRP.getImportoAmmenda().abs()
-                    //CalendarModel lTotArrestoRPToView = lCalUtilRP.abs(lTotArrestoRP);
-                    //lTotArrestoRPToView = lCalUtilRP.ricalcolaGAM (lTotArrestoRPToView);
+                    if (lCalUtilRP.isPositiveTime(lTotReclusioneRP))
+                        csm.setSegnoQuantumReclusione("+");
+                    else 
+                        csm.setSegnoQuantumReclusione("-");
                     
-                    if (!lTotReclusioneRP.isQuantumZero()){
-                        csm.setNumAnniReclusione   (new BigDecimal(lTotReclusioneRP.getNumAnni())) ;
-                        csm.setNumMesiReclusione   (new BigDecimal(lTotReclusioneRP.getNumMesi())) ;
-                        csm.setNumGiorniReclusione (new BigDecimal(lTotReclusioneRP.getNumGiorni())) ;
+                    CalendarModel lTotReclusioneRPToView = lCalUtilRP.abs(lTotReclusioneRP);
+                    lTotReclusioneRPToView = lCalUtilRP.ricalcolaGAM (lTotReclusioneRPToView);
+                    //lTotArrestoRP.getImportoAmmenda().abs()
+                    
+                    if (lCalUtilRP.isPositiveTime(lTotArrestoRP))
+                        csm.setSegnoQuantumArresto("+");
+                    else 
+                        csm.setSegnoQuantumArresto("-");
+                    CalendarModel lTotArrestoRPToView = lCalUtilRP.abs(lTotArrestoRP);
+                    lTotArrestoRPToView = lCalUtilRP.ricalcolaGAM (lTotArrestoRPToView);
+                    
+                    if (!lTotReclusioneRPToView.isQuantumZero()){
+                        csm.setNumAnniReclusione   (new BigDecimal(lTotReclusioneRPToView.getNumAnni())) ;
+                        csm.setNumMesiReclusione   (new BigDecimal(lTotReclusioneRPToView.getNumMesi())) ;
+                        csm.setNumGiorniReclusione (new BigDecimal(lTotReclusioneRPToView.getNumGiorni())) ;
                     }
                     if (Math.abs(lTotReclusioneRP.getImportoMulta())>0)
                         csm.setImportoMulta(new BigDecimal(lTotReclusioneRP.getImportoMulta()));
     
                     if (!lTotArrestoRP.isQuantumZero()){
-                        csm.setNumAnniArresto   (new BigDecimal(lTotArrestoRP.getNumAnni())) ;
-                        csm.setNumMesiArresto   (new BigDecimal(lTotArrestoRP.getNumMesi())) ;
-                        csm.setNumGiorniArresto (new BigDecimal(lTotArrestoRP.getNumGiorni())) ;
+                        csm.setNumAnniArresto   (new BigDecimal(lTotArrestoRPToView.getNumAnni())) ;
+                        csm.setNumMesiArresto   (new BigDecimal(lTotArrestoRPToView.getNumMesi())) ;
+                        csm.setNumGiorniArresto (new BigDecimal(lTotArrestoRPToView.getNumGiorni())) ;
                     }
                     if (Math.abs(lTotArrestoRP.getImportoAmmenda())>0)
                         csm.setImportoAmmenda(new BigDecimal(lTotArrestoRP.getImportoAmmenda()));                                

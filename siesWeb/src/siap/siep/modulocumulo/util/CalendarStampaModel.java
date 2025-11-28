@@ -61,6 +61,9 @@ public class CalendarStampaModel extends GenericModel {
     private BigDecimal mNumMesi;
     private BigDecimal mNumGiorni;
     
+    private String mSegnoQuantumReclusione;
+    private String mSegnoQuantumArresto;    
+    
     // =========================================
     //  Metodi GET
     // =========================================
@@ -84,6 +87,8 @@ public class CalendarStampaModel extends GenericModel {
     public BigDecimal getNumMesi()   { return mNumMesi;   }
     public BigDecimal getNumGiorni() { return mNumGiorni; }
     
+    public String getSegnoQuantumReclusione() { return mSegnoQuantumReclusione; }
+    public String getSegnoQuantumArresto()    { return mSegnoQuantumArresto; }
     
     
     // =========================================
@@ -108,5 +113,8 @@ public class CalendarStampaModel extends GenericModel {
     public void setNumAnni   (BigDecimal mNumAnni)   { this.mNumAnni   = mNumAnniReclusione;   }
     public void setNumMesi   (BigDecimal mNumMesi)   { this.mNumMesi   = mNumMesi;   }
     public void setNumGiorni (BigDecimal mNumGiorni) { this.mNumGiorni = mNumGiorni; }
+    
+    public void setSegnoQuantumReclusione (String mSegnoQuantumReclusione) { this.mSegnoQuantumReclusione = mSegnoQuantumReclusione; }
+    public void setSegnoQuantumArresto    (String mSegnoQuantumArresto)    { this.mSegnoQuantumArresto = mSegnoQuantumArresto; }
     //StringUtils.toEuroFormat
 }

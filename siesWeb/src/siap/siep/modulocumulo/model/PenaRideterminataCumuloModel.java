@@ -825,7 +825,7 @@ public class PenaRideterminataCumuloModel extends GenericModel {
   
   
 	public boolean isMulta() {
-		if (mImportoMulta != null && mImportoMulta.compareTo(BigDecimal.ZERO) > 0)
+		if (mImportoMulta != null && mImportoMulta.compareTo(BigDecimal.ZERO) != 0)
 			return true;
 		else
 			return false;
@@ -841,7 +841,7 @@ public class PenaRideterminataCumuloModel extends GenericModel {
 	}
 
 	public boolean isAmmenda() {
-		if (mImportoAmmenda != null && mImportoAmmenda.compareTo(BigDecimal.ZERO) > 0)
+		if (mImportoAmmenda != null && mImportoAmmenda.compareTo(BigDecimal.ZERO) != 0)
 			return true;
 		else
 			return false;
