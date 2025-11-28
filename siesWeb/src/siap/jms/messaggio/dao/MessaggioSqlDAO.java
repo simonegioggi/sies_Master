@@ -755,7 +755,12 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
                                              , String aChiaveUfficioFasCumulante
                                              , int  aPage) throws DAOException
   {
-    String lSql = getSqlQueryMS();
+    //  MEV_2025-48 - 2.15 Gestione Annotazioni Trasmissioni
+    // Si modifica la query base che non estraeva la count dei solleciti ed andava 
+    // inutilmente in join con FASC_MS_TO_FASC_SIEP
+    // String lSql = getSqlQueryMS();
+    String lSql = getSqlQueryCumulo();
+    // MEV_2025-48 - 2.15 Gestione Annotazioni Trasmissioni - FINE
     
     if (aDeliveryMode!=null)
       lSql += " AND DELIVERY_MODE = '"+aDeliveryMode+"' ";   
@@ -1426,6 +1431,148 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 		return lStatement;
 	}
 
+	// MEV_2025-48 - 2.15 Gestione Annotazioni Trasmissioni
+	// Metodo duplicato per ottimizzazione query solo per le ricerce annotazioni trasmissioni
+	// Si elòimina la join con FASC_MS_TO_FASC_SIEP non uitilizzata
+	// Si toglie la condizione su AND solleciti.DELIVERY_MODE = '00002' 
+	// Si aggiunge la condizione OR solleciti.ID_MESSAGGIO_SOLLECITATO = MESSAGGIO.ID_MESSAGGIO
+	// i solleciti inviati puntano il messaggio inviato
+    protected String getSqlQueryCumulo() {
+
+        String lStatement = new String("");
+        lStatement = "SELECT  ID_MESSAGGIO, "
+                + " COD_TIPO_MESSAGGIO, tipoMess.DESCRIZIONE DescrTipoMessaggio, "
+                + " COD_TIPO_OPERAZIONE,  tipOperazione.DESCRIZIONE DescrTipoOperazione, "
+                + " COD_UFFICIO_MITTENTE,  "
+                + " COD_BDI_MITTENTE,  bdiMitt.DESCRIZIONE bdiMit, "
+                + " COD_UFFICIO_DESTINATARIO, comuffdest.DESCRIZIONE destSede, tipuffdest.RV_MEANING tipodest, "
+                + " comuffMitt.DESCRIZIONE sede, tipuffMitt.RV_MEANING tipouff, "
+                + " COD_BDI_DESTINATARIA, bdiDest.descrizione bdiDest, "
+                + " DATA_INVIO, DATA_ESITO, "
+                + " FLAG_VISTO, "
+                + " CODICE_UTENTE_MITTENTE, "
+                + " COD_ESITO, esito.DESCRIZIONE DESCR_ESITO , "
+                + " JMS_ID_MESSAGE, JMS_CORRELATION_ID_MESSAGE, "
+                + " MESSAGGIO.CHIAVE_ANNO_SIEP, "
+                + " MESSAGGIO.CHIAVE_PROGR_SIEP, "
+               // + " BLOB_ESITO, " // MEV_2025-48 - 2.15 non utile, si evita il parsing
+                +
+                // =======================
+                " MESSAGGIO.CHIAVE_UFFICIO_SIEP, "
+                + // new d.f. since NOV/2013 per gestire l'inoltro ad altro ufficio
+                " tipo_ufficio_fasc_siep.RV_MEANING descr_ufficio_siep, "
+                + // new d.f. since NOV/2013 per gestire l'inoltro ad altro ufficio
+                " comune_fasc_siep.DESCRIZIONE sede_ufficio_siep, "
+                + // new d.f. since NOV/2013 per gestire l'inoltro ad altro ufficio
+                // ======================
+                " CHIAVE_ANNO_SIUS, "
+                + " CHIAVE_PROGR_SIUS, "
+                + " CHIAVE_ANNO_FAS_CUMULANTE, "
+                + " CHIAVE_PROGR_FAS_CUMULANTE, "
+                + " NOTE, "
+                + " CHIAVE_ANNO_SIEPE, CHIAVE_PROGR_SIEPE, "
+                + " COGNOME_SOGGETTO, NOME_SOGGETTO, DATA_NASCITA, COD_STATO_NASCITA, COD_COMUNE_NASCITA, "
+                +
+                // ==============================
+                " DELIVERY_MODE, "
+                + " COD_UFFICIO_INOLTRO, tipUffInoltro.RV_MEANING descrUffInoltro, comUffInoltro.DESCRIZIONE descrSedeUfficioInoltro,"
+                + " COD_BDI_INOLTRO, "
+                + " COD_UFFICIO_REPLY_TO, tipuffReplyTo.RV_MEANING descrUffReplyTo, comuffReplyTo.DESCRIZIONE descrSedeUfficioReplyTo,"
+                + " COD_BDI_REPLY_TO, "
+                + " JMS_CORRELATION_REPLY_TO, "
+                + " ID_MESSAGGIO_SOLLECITATO, "
+                + " ID_RICHIESTA, " 
+                // " --==============================" +
+                // MEV_2025-48 - 2.15 Gestione Annotazioni Trasmissioni
+                // Se elimina la join con FASC_MS_TO_FASC_SIEP non utilizzata nel riscontro esiti
+//                + " FASC_MS_TO_FASC_SIEP.ID_FASC_MS_TO_FASC_SIEP, "
+//                + " FASC_MS_TO_FASC_SIEP.COD_TIPO_RELAZIONE_MS, "
+//                +   " FASC_MS_TO_FASC_SIEP.FAS_SIE_ID_FASCICOLO_SIEP as FAS_SIE_ID_FASCICOLO_SIEP_X, "
+//                + " FASC_MS_TO_FASC_SIEP.CHIAVE_ANNO_SIEP as CHIAVE_ANNO_SIEP_X, "
+//                + " FASC_MS_TO_FASC_SIEP.CHIAVE_PROGR_SIEP as CHIAVE_PROGR_SIEP_X, "
+//                + " FASC_MS_TO_FASC_SIEP.CHIAVE_UFFICIO_SIEP as CHIAVE_UFFICIO_SIEP_X, "
+//                +   " FASC_MS_TO_FASC_SIEP.FAS_SIE_ID_FASCICOLO_COLLEGATO, "
+//                + " FASC_MS_TO_FASC_SIEP.CHIAVE_ANNO_SIEP_COLLEGATO, "
+//                + " FASC_MS_TO_FASC_SIEP.CHIAVE_PROGR_SIEP_COLLEGATO, "
+//                + " FASC_MS_TO_FASC_SIEP.CHIAVE_UFFICIO_SIEP_COLLEGATO "
+                // Ticket#20220111018 - ottimizzazione recupero solleciti: si cerca subito se presenti solleciti
+                // sul messaggio (count). Le funzioni di ricerca ciclano sul risultato della ricerca (vettore)
+                // per recuperare eventuali solleciti. In questo modo già sanno se presenti ed si evitano 
+                // query inutili.
+                // Si ricercano tra i messaggi ricevuti (DELIVERY_MODE = '00002'), di tipo richiesta (COD_TIPO_MESSAGGIO = '01')
+                // di qualsiazi tipo (COD_TIPO_OPERAZIONE). Non si entra nello specifico del tipo di sollecito
+                // ne dell'ufficio. Sarà la successiva query a mettere dei filtri più stringenti.
+                + "  (select COUNT(*) "
+                + "      from MESSAGGIO solleciti "
+                + "     where 1=1 "
+                //+ "       AND solleciti.DELIVERY_MODE = '00002' " // MEV_2025-48 - 2.15
+                + "       AND solleciti.COD_TIPO_MESSAGGIO = '01'  "
+                + "       AND solleciti.COD_TIPO_OPERAZIONE in ( '00073', '00076','00068')  "
+                + "       AND (   solleciti.ID_MESSAGGIO_SOLLECITATO = MESSAGGIO.JMS_CORRELATION_ID_MESSAGE "
+                + "            OR solleciti.ID_MESSAGGIO_SOLLECITATO = MESSAGGIO.JMS_CORRELATION_REPLY_TO "
+                // MEV_2025-48 - 2.15 Gestione Annotazioni Trasmissioni: i solleciti inviati 
+                // sono collegati all'MESSAGGIO.ID_MESSAGGIO
+                + "            OR solleciti.ID_MESSAGGIO_SOLLECITATO = MESSAGGIO.ID_MESSAGGIO "
+                + "           ) "
+                + "   ) contaSolleciti "
+                // Ticket#20220111018 - ottimizzazione   
+                // MEV_2025-48 - 2.15 Gestione Annotazioni Trasmissioni
+                // Se elimina la join con FASC_MS_TO_FASC_SIEP non utilizzata nel riscontro esiti
+                + " FROM MESSAGGIO "
+                // + " FROM MESSAGGIO LEFT OUTER JOIN FASC_MS_TO_FASC_SIEP ON (    MESSAGGIO.ID_MESSAGGIO     = FASC_MS_TO_FASC_SIEP.MES_ID_MESSAGGIO) "
+                
+                // " FROM MESSAGGIO LEFT OUTER JOIN FASC_MS_TO_FASC_SIEP ON (    MESSAGGIO.CHIAVE_ANNO_SIEP     = FASC_MS_TO_FASC_SIEP.CHIAVE_ANNO_SIEP "
+                // +
+                // "  AND MESSAGGIO.CHIAVE_PROGR_SIEP    = FASC_MS_TO_FASC_SIEP.CHIAVE_PROGR_SIEP " +
+                // "  AND MESSAGGIO.CHIAVE_UFFICIO_SIEP  = FASC_MS_TO_FASC_SIEP.CHIAVE_UFFICIO_SIEP" +
+                // "  AND MESSAGGIO.COD_UFFICIO_DESTINATARIO = FASC_MS_TO_FASC_SIEP.CHIAVE_UFFICIO_CLASSE_IV) "
+                // +
+                + " , JMS_CODE tipoMess, JMS_CODE tipOperazione, JMS_CODE ESITO "
+                + " , JMS_CODE bdiMitt, UFFICIO uffMitt, COMUNE comuffMitt, CG_REF_CODES tipuffMitt "
+                + " , JMS_CODE bdiDest, UFFICIO uffdest, COMUNE comuffdest, CG_REF_CODES tipuffdest "
+                + " , UFFICIO uffInoltro, COMUNE comUffInoltro, CG_REF_CODES tipUffInoltro "
+                + " , UFFICIO uffReplyTo, COMUNE comuffReplyTo, CG_REF_CODES tipuffReplyTo "
+                + " , UFFICIO ufficio_fasc_siep, COMUNE comune_fasc_siep ,CG_REF_CODES tipo_ufficio_fasc_siep "
+                + " WHERE COD_TIPO_MESSAGGIO = tipoMess.CODICE and tipoMess.dominio = 'TIPO_MESSAGGIO'  "
+                + " AND COD_TIPO_OPERAZIONE = tipOperazione.CODICE and tipOperazione.dominio = 'TIPO_OPERAZIONE'  "
+                + " AND COD_ESITO = esito.CODICE AND esito.DOMINIO = 'CODICE_ESITO'"
+                +
+                // ============ BDI/UFFICIO MITTENTE ==========================
+                " AND COD_BDI_MITTENTE = bdiMitt.CODICE and bdiMitt.dominio = 'BDI'  "
+                + " AND COD_UFFICIO_MITTENTE = uffMitt.COD_UFFICIO"
+                + " AND uffMitt.COD_COMUNE = comuffMitt.COD_COMUNE"
+                + " AND uffMitt.COD_TIPO_UFFICIO = tipuffMitt.RV_LOW_VALUE"
+                + " AND tipuffMitt.RV_DOMAIN ='TIPO_UFFICIO'"
+                +
+                // ============ BDI/UFFICIO DESTINATARIO ======================
+                " AND COD_BDI_DESTINATARIA = bdiDest.CODICE and bdiDest.dominio = 'BDI'  "
+                + " AND COD_UFFICIO_DESTINATARIO = uffdest.COD_UFFICIO "
+                + " AND comuffdest.COD_COMUNE = uffdest.COD_COMUNE"
+                + " AND uffdest.COD_TIPO_UFFICIO = tipuffdest.RV_LOW_VALUE "
+                + " AND tipuffdest.RV_DOMAIN ='TIPO_UFFICIO' "
+                +
+                // ============ UFFICIO FASCIOLO SIEP =========================
+                " AND ufficio_fasc_siep.COD_UFFICIO = nvl(MESSAGGIO.CHIAVE_UFFICIO_SIEP, '-' ) "
+                + " AND ufficio_fasc_siep.COD_COMUNE = comune_fasc_siep.COD_COMUNE "
+                + " AND ufficio_fasc_siep.COD_TIPO_UFFICIO = tipo_ufficio_fasc_siep.RV_LOW_VALUE "
+                + " AND tipo_ufficio_fasc_siep.RV_DOMAIN ='TIPO_UFFICIO' "
+                +
+                // ============ UFFICIO/BDI INOLTRO =========================
+                " AND uffInoltro.COD_UFFICIO = nvl(MESSAGGIO.COD_UFFICIO_INOLTRO, '-' ) "
+                + " AND uffInoltro.COD_COMUNE = comUffInoltro.COD_COMUNE "
+                + " AND uffInoltro.COD_TIPO_UFFICIO = tipUffInoltro.RV_LOW_VALUE "
+                + " AND tipUffInoltro.RV_DOMAIN ='TIPO_UFFICIO' "
+                +
+                // ============ UFFICIO/BDI REPLY TO =========================
+                " AND uffReplyTo.COD_UFFICIO = nvl(MESSAGGIO.COD_UFFICIO_REPLY_TO, '-' ) "
+                + " AND uffReplyTo.COD_COMUNE = comuffReplyTo.COD_COMUNE "
+                + " AND uffReplyTo.COD_TIPO_UFFICIO = tipuffReplyTo.RV_LOW_VALUE "
+                + " AND tipuffReplyTo.RV_DOMAIN ='TIPO_UFFICIO' ";
+
+        return lStatement;
+      }
+    // MEV_2025-48 - 2.15 Gestione Annotazioni Trasmissioni - FINE
+    
 	protected String getSqlQuery() {
 		return getSqlQuery(true);
 		/*

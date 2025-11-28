@@ -267,7 +267,14 @@ public class ActLoadRicercaTrasmissioniSolleciti extends ActionSiap implements I
 		for (int k = 0; k < lVect.size(); k++) {
 			lMess = lVect.get(k);
 			if (lMess != null && lMess.getIdMessaggio() != null) {
-				if ("00067".equals(lMess.getCodTipoOperazione())) {
+				if ("00067".equals(lMess.getCodTipoOperazione())
+				    // MEV_2025-48 - 2.15 Gestione Annotazioni Trasmissioni
+				    // Test su presenza solleciti prima di ricercarli
+				    && lMess.getContaSolleciti()!=null 
+				    && lMess.getContaSolleciti().intValue()>0
+				    // MEV_2025-48 - 2.15 Gestione Annotazioni Trasmissioni - FINE
+				   ) 
+				{
 					IMessaggio CtrlMess = JMSLookupRemote.getMessaggioRemote();
 					lVecSoll = new Vector<>(CtrlMess.ExRicercaMessaggioByIdMessaggioSollecitato("00068",
 							"" + lMess.getIdMessaggio()));

@@ -393,6 +393,7 @@
     <tr>
       <td class="int">Anno/Numero&nbsp;<br>SIEP</td>
       <td class="int">Ufficio Destinatario Atti&nbsp;</td>
+      <td class="int">Anno/Numero Fascicolo Cumulante&nbsp;</td>
       <td class="int">Tipo operazione&nbsp;</td>
       <td class="int">Data Trasmissione&nbsp;<br>Esito</td>
       <td class="int">Esito&nbsp;</td>
@@ -419,11 +420,16 @@
     coloreLinea = "c";
    // if (lMess.getFlagVisto().compareTo("S")==0)
    //   coloreLinea = "cVerde";
-
+   String strCumulante = "";
+   if (lMess.getChiaveAnnoFasCumulante()!=null)
+       strCumulante = StringUtils.toStringJSP(lMess.getChiaveAnnoFasCumulante())+"/"+StringUtils.toStringJSP(lMess.getChiaveProgrFasCumulante());
+   else
+       strCumulante = "<font style='color:red;'>n.d./n.d.</font>";
 %>
   <tr>
     <td class="<%=coloreLinea%>"><%= StringUtils.toStringJSP(lMess.getChiaveAnnoSiep())%>/<%=StringUtils.toStringJSP(lMess.getChiaveProgrSiep())%></td>     
     <td class="<%=coloreLinea%>"><%= lMess.getDescrUfficioMittente() + " " + lMess.getDescrSedeUfficioMittente()%></td>     
+    <td class="<%=coloreLinea%>"><%= StringUtils.toStringJSP(strCumulante)%></td>
     <td class="<%=coloreLinea%>"><%= lMess.getDescrTipoOperazione()%></td>     
     <td class="<%=coloreLinea%>"><%= StringUtils.toStringJSP(DateUtils.getDateToString(lMess.getDataInvio(),"dd-MM-yyyy HH:mm"))%></td>
     

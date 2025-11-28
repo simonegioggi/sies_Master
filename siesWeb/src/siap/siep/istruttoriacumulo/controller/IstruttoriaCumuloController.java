@@ -968,6 +968,9 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 			// ===================================================
 			// Marco il Messaggio di Comunicazione Evasa
 			// ===================================================
+			// MEV_2025-48 - 2.15 Gestione Annotazioni Trasmissioni
+			// La marcatura viene fatta solo sulla validazione e non sull'ijserimento
+			/*
 			if (aIdMess != null) {
 				siesLogger.debug("--XX-- Vado a Modoficare il messaggio...");
 				lMesDao = new MessaggioDAO(lConn);
@@ -984,6 +987,8 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 					lMesDao.update();
 				}
 			}
+			*/
+			// MEV_2025-48 - 2.15 Gestione Annotazioni Trasmissioni - FINE
 
 			commit(lConn);
 		} catch (Exception e) {

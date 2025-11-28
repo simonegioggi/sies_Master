@@ -187,20 +187,33 @@ public class ActLoadInsAnnotaEsitoTrasmComp extends ActionSiap implements ICosta
 		// RICERCA MESSAGGI di COMUNICAZIONE CUMULO DA ALTRE BDI per il Fascicolo
 		// ==========================================================================
 		//FIXME da verificare
-		IMessaggio lCrtlMes = JMSLookupRemote.getMessaggioRemote();
+		// MEV_2025-48 - 2.15 Gestione Annotazioni Trasmissioni
+		// FIX provo a caricare la comunicazione solo se non ho già selezionato un altro MESSAGGIO
 		MessaggioModel lMessaggioComunicazione = new MessaggioModel();
-		// Ticket#20221102013 - Le comunicazioni di assorbimento sono degli esiti e non delle richieste
-		//lMessaggioComunicazione.setCodTipoMessaggio("01");
-		lMessaggioComunicazione.setCodTipoMessaggio(ICostantiJMS.ESITO);
-		// Ticket#20221102013 - FINE
-		lMessaggioComunicazione.setCodTipoOperazione(ICostantiJMS.COMUNICAZIONE_CUMULO_PROCURE_COMPETENTI);
-		lMessaggioComunicazione.setChiaveAnnoSiep(lFascMod.getChiaveAnno());
-		lMessaggioComunicazione.setChiaveProgrSiep(lFascMod.getChiaveProgr());
-		lMessaggioComunicazione.setChiaveUfficioSiep(lFascMod.getChiaveUfficio());
-		Vector lMessaggi = lCrtlMes.ExRicercaMessaggio(lMessaggioComunicazione);
-		if (lMessaggi.size() > 0) {
-			lMessaggioComunicazione = (MessaggioModel) lMessaggi.get(0);
-			setRequestAttribute("messaggioComunicazione", lMessaggioComunicazione);
+		if (lMessaggioEsito == null) {
+    		IMessaggio lCrtlMes = JMSLookupRemote.getMessaggioRemote();
+    		//MessaggioModel lMessaggioComunicazione = new MessaggioModel();
+    		// Ticket#20221102013 - Le comunicazioni di assorbimento sono degli esiti e non delle richieste
+    		//lMessaggioComunicazione.setCodTipoMessaggio("01");
+    		lMessaggioComunicazione.setCodTipoMessaggio(ICostantiJMS.ESITO);
+    		// Ticket#20221102013 - FINE
+    		lMessaggioComunicazione.setCodTipoOperazione(ICostantiJMS.COMUNICAZIONE_CUMULO_PROCURE_COMPETENTI);
+    		lMessaggioComunicazione.setChiaveAnnoSiep(lFascMod.getChiaveAnno());
+    		lMessaggioComunicazione.setChiaveProgrSiep(lFascMod.getChiaveProgr());
+    		lMessaggioComunicazione.setChiaveUfficioSiep(lFascMod.getChiaveUfficio());
+    		Vector <MessaggioModel> lMessaggi = lCrtlMes.ExRicercaMessaggio(lMessaggioComunicazione);
+    		if (lMessaggi.size() > 0) {
+    			// lMessaggioComunicazione = (MessaggioModel) lMessaggi.get(0); // Il più recente
+    		    // MEV_2025-48 - 2.15 Gestione Annotazioni Trasmissioni
+    		    // Filtro solo quelli da elaborare se presenti
+    			for (MessaggioModel lMsgCom : lMessaggi){
+                    if (!"S".equals(lMsgCom.getFlagVisto())){
+                        lMessaggioComunicazione = lMsgCom;
+                        setRequestAttribute("messaggioComunicazione", lMessaggioComunicazione);
+                        break;
+                    }
+    			}
+    		}
 		}
 
 		// Tipologia Atto: EVENTO.TIPO_PROVVEDIMENTO
