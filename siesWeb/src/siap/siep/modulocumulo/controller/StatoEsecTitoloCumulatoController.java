@@ -1725,6 +1725,33 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 				lComputiModel.setNumMesiReclusione(lSospModel.getNumMesiPenaEspiata());
 				lComputiModel.setNumGiorniReclusione(lSospModel.getNumGiorniPenaEspiata());
 
+				// MEV_2025-48 - LA su Espiato - Aggiungo i GG di LA computati sull'espiato
+				//lComputiModel.setNumGiorniLibanticipata(lSospModel.getNumGiorniLibanticipata());
+				// Ricalcolo i quantum effettivi in base al periodo di espiazione per evitare 
+				// che le LA siano inglobate nell'espiato e computate 2 volte
+				siesLogger.debug("MEV_2025-48 LA: lComputiModel.getDataReclusioneDa() = "+lComputiModel.getDataReclusioneDa());
+                siesLogger.debug("MEV_2025-48 LA: lComputiModel.getDataReclusioneA() = "+lComputiModel.getDataReclusioneA());
+				if (   lSospModel.getNumGiorniLibanticipata()!=null 
+				    && lSospModel.getNumGiorniLibanticipata().intValue()>0
+				    && lComputiModel.getDataReclusioneDa()!=null
+				    && lComputiModel.getDataReclusioneA()!=null
+				   ) 
+				{
+                    CalendarModel lCalPenaEspiata = new CalendarModel();
+                    lCalPenaEspiata.setDataInizio (lComputiModel.getDataReclusioneDa());
+                    lCalPenaEspiata.setDataFine   (lComputiModel.getDataReclusioneA());
+
+                    CalendarUtil lCalUtil = new CalendarUtil();
+                    lCalPenaEspiata = lCalUtil.CalcolaNumGiorniMesiAnni(lCalPenaEspiata, false);
+
+                    // Normalizzo i quantum
+                    lCalPenaEspiata = lCalUtil.ricalcolaGAM(lCalPenaEspiata);
+                    lComputiModel.setNumAnniReclusione   (new BigDecimal(lCalPenaEspiata.getNumAnni()));
+                    lComputiModel.setNumMesiReclusione   (new BigDecimal(lCalPenaEspiata.getNumMesi()));
+                    lComputiModel.setNumGiorniReclusione (new BigDecimal(lCalPenaEspiata.getNumGiorni()));
+				}
+				// MEV_2025-48 - LA su Espiato - FINE
+				
 				// ======================================================================
 				// Lettura del DecretoOrdinanzaSIEP.
 				siesLogger.debug("Cerco Decreto Ordinanza Collegato...");

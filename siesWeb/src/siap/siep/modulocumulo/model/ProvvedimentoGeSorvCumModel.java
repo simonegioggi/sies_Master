@@ -712,7 +712,7 @@ public class ProvvedimentoGeSorvCumModel extends GenericModel {
         lStringReclusione = lStringReclusione.trim();
         
 
-        if (lStringReclusione != null)
+        if (lStringReclusione.length()>0)
             lStringaQuantumXStampa += lStringReclusione+" Reclusione ";
 
         if (mImportoMultaD != null && mImportoMultaD.intValue() > 0)
@@ -729,7 +729,7 @@ public class ProvvedimentoGeSorvCumModel extends GenericModel {
         if (mNumGiorniArrestoD != null && mNumGiorniArrestoD.intValue() != 0)
             lStringArresto += " Giorni " + mNumGiorniArrestoD;
 
-        if (lStringArresto != null)
+        if (lStringArresto.length()>0)
             lStringaQuantumXStampa += lStringArresto+" Arresto ";
 
         if (mImportoAmmendaD != null && mImportoAmmendaD.intValue() > 0)
