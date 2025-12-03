@@ -11,6 +11,7 @@
 <%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
+<%@ page import="f3b.util.Utils"%>
 <%@ page import="f3b.log.LogF3B"%>
 
 <%@ page import="siap.sico.util.SiapStringUtil"%>
@@ -434,8 +435,14 @@ if (soggetto.getDescrComuneNascita().compareTo("-") == 0) {
 }
 %>
       		</font>
+<%
+if (Utils.isPresent(soggetto.getCodAfis())) {
+%>
       		<font class="label">Codice CUI : </font>
-      		<font class="campo"> <%=StringUtils.toStringJSP(soggetto.getCodAfis())%></font>&nbsp;&nbsp;&nbsp;
+      		<font class="campo"><%=StringUtils.toStringJSP(soggetto.getCodAfis())%></font>
+<%
+}
+%>
 		</td>
 <%
 if ("1".equals(colspanSoggetto)) {
@@ -472,20 +479,19 @@ if (fascicolo != null && fascicolo.getChiaveProgr() != null
 		&& (sentenza.getCodTipoProvvedimento().compareTo("02") == 0
 			|| sentenza.getCodTipoProvvedimento().compareTo("03") == 0)) {
 %>    
-			<font class="campo">
 				<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sentenza.action.ActLoadDettaglioDatiProvvedimentoMSFuoriSent&<%=ICostantiSentenza.CAMPO_ID_SENTENZA%>=<%=sentenza.getIdSentenza()%>" title="Sentenza">
+					<font class="campo"><%=StringUtils.toStringJSP(sentenza.getAnnoSentenza())%> / <%=StringUtils.toStringJSP(sentenza.getNumeroSentenza())%></font>
+          		</a>&nbsp;
 <%
 } else {
 %>
-        	<font class="campo">
         		<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sentenza.action.ActLoadDettaglioSentenza&<%=ICostantiSentenza.CAMPO_ID_SENTENZA%>=<%=sentenza.getIdSentenza()%>" title="Sentenza">
+        			<font class="campo"><%=StringUtils.toStringJSP(sentenza.getAnnoSentenza())%> / <%=StringUtils.toStringJSP(sentenza.getNumeroSentenza())%></font>
+          		</a>&nbsp;
 <%
 }
 %>        	
-          			<%=StringUtils.toStringJSP(sentenza.getAnnoSentenza())%> / <%=StringUtils.toStringJSP(sentenza.getNumeroSentenza())%>
-          		</a>&nbsp;
-          	</font>
-          	<font class="label">del</font>&nbsp;
+          	<font class="label">del&nbsp;
             	<%=DateUtils.getDateToString(sentenza.getDataProvvedimento(), "dd-MM-yyyy")%>
         	</font>
 <%
@@ -664,28 +670,37 @@ while (itxReg.hasNext()) {
 
 <table cellspacing="0" cellpadding="0" width="95%">
 <%
-int Conta = 0;
+// 20251105 [SG]: in caso di più collegati la pagina si scombinava (solo per i collegati a classe VII); infatti è un vettore <vectfasc>
+int conta = 0;
 FascicoloSiepModel lFasciMod = new FascicoloSiepModel();
 Iterator itx = vectfasc.iterator();
 while (itx.hasNext()) {
 	lFasciMod = (FascicoloSiepModel)itx.next();
 	if (lFasciMod.getChiaveProgr().intValue() > 70000 && lFasciMod.getChiaveProgr().intValue() < 80000) {
-		Conta = Conta + 1;
+		conta = conta + 1;
     }
 }
-if (Conta > 0) {
+if (conta > 0) {
 %>
 	<tr>
 		<td class="L">
-			<font class="label">Collegato al Procedimento: N.</font>
 <%            
+	if (conta > 1) {
+%>
+			<font class="label">Collegato ai Procedimenti: </font>
+<%
+	} else {
+%>
+			<font class="label">Collegato al Procedimento: </font>
+<%
+	}
 	lFasciMod = new FascicoloSiepModel();
 	itx = vectfasc.iterator();
     while (itx.hasNext()) {
 		lFasciMod = (FascicoloSiepModel)itx.next();
       	if (lFasciMod.getChiaveProgr().intValue() > 70000 && lFasciMod.getChiaveProgr().intValue() < 80000) {
 %>
-			<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>=<%=lFasciMod.getIdFascicoloSiep()%>" title="Procedimento">
+			N. <a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>=<%=lFasciMod.getIdFascicoloSiep()%>" title="Procedimento">
                 <%=StringUtils.toStringJSP(lFasciMod.getChiaveAnno())%>/
                 <%=StringUtils.toStringJSP(lFasciMod.getChiaveProgr())%>
            	</a>
@@ -724,12 +739,15 @@ if (Conta > 0) {
 <%
 }
 			}
+		}
+      	if (itx.hasNext()) {
 %>
-		</td>
+			&nbsp;&nbsp;&nbsp;
 <%
 		}
 	}
 %>
+		</td>
 	</tr>
 <%    
 }
