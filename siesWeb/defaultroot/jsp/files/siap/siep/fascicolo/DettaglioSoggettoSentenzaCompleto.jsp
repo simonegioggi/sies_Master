@@ -632,14 +632,14 @@ if (lFascProg > 70000 && lFascProg < 80000 && richiestaconversione.getIdRichiest
 Iterator itxReg = registroIstanzaCollMod.iterator();
 int nRegColl = 0;
 while (itxReg.hasNext()) {
-	nRegColl++;
     FascicoloSiepModel regIstCollMod = (FascicoloSiepModel) itxReg.next();
     // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
     siesLogger.info("MODEL PERVENUTO ALLA JSP: " + regIstCollMod);
   	if (regIstCollMod.getChiaveProgr() != null
   			&& regIstCollMod.getChiaveProgr().intValue() > 90000
   			&& regIstCollMod.getChiaveProgr().intValue() < 100000) {
-		if (nRegColl==1) {
+  		nRegColl++; // 20251204: contava male poichè era messo prima della if 90000 <> 100000 (cara Anna)
+		if (nRegColl == 1) {
 %>
 	<tr>
 		<td class="L" colspan=1>
@@ -662,8 +662,8 @@ while (itxReg.hasNext()) {
 </tr>
 <%
 		}
-	} // Chiusura If 
-} // Chiusura While 
+	} // Chiusura if
+} // Chiusura while 
 // fine ANNA  
 %>
 </table>
