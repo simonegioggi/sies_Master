@@ -696,5 +696,5 @@ if (isFascicoloDiCompetenza) { // Ticket#20231010019:€” SIEP solo se di competen
       frmvalidator.setAddnlValidationFunction("Verify"); 
   </script>
   <%-- MEV_2025-48 - 2.15 Gestione Annotazioni Trasmission --%>  
-<% } %>   
+<% } } %>   
 </html>
