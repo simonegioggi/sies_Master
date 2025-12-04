@@ -56,8 +56,7 @@
 
 int TotaleIscrivibili=0;
 Iterator itx1 = ListaProcedimenti.iterator();
-while(itx1.hasNext())
-{
+while (itx1.hasNext()) {
 	FascicoloSiepModel lProc = (FascicoloSiepModel)itx1.next();
 	if(!"SI".equals(lProc.getgiaInIstruttoria()) )
 		TotaleIscrivibili ++;
@@ -76,8 +75,7 @@ for (int k=0; k<ListaProcedimenti.size();k++){
 		if (VecTitCum != null) {
 			for (int ii=0; ii<VecTitCum.size();ii++) {
 				TitoloCumulatoModel lTitoloCumModel = (TitoloCumulatoModel) VecTitCum.elementAt(ii);
-	        	if (lsentenza != null &&
-	        		lTitoloCumModel.isStessoTitolo(lsentenza) ) {
+	        	if (lsentenza != null && lTitoloCumModel.isStessoTitolo(lsentenza)) {
 	             	stessoTitolo += " "+lTitoloCumModel.getProcedimentoCumulato().getChiaveAnnoFasCumulato()+"/"+lTitoloCumModel.getProcedimentoCumulato().getChiaveProgrFasCumulato()+" ";
 	             	aTitoli[k]=lTitoloCumModel.getProcedimentoCumulato().getChiaveAnnoFasCumulato()+"/"+lTitoloCumModel.getProcedimentoCumulato().getChiaveProgrFasCumulato();
 					break;
@@ -190,42 +188,35 @@ for (int k=0; k<ListaProcedimenti.size();k++){
       <%-- MEV_2025-48 - FINE --%>
       
       // Torna indietro su ElencoFascicoli coinvolti
-      function eseguiFunzione(action)
-      {
+function eseguiFunzione(action) {
         document.f.<%=IWebConstants.ACTION_FIELD%>.value = action;
         document.f.submit();
       }
       
       // azzeramento dei campi Ricerca
-      function pulisciCogno()
-      {
+function pulisciCogno() {
       	document.f.<%=ICostantiSoggetto.CAMPO_COGNOME%>.value = "";
        }
       
-      function pulisciNome()
-      {
+function pulisciNome() {
       	document.f.<%=ICostantiSoggetto.CAMPO_NOME%>.value = "";
       }
       
-      function pulisciCui()
-      {
+function pulisciCui() {
       	document.f.<%=ICostantiSoggetto.CAMPO_COD_AFIS%>.value = "";
       }
       
-      function pulisciData()
-      {
+function pulisciData() {
           document.f.<%=ICostantiSoggetto.CAMPO_GIORNO_DATA_NASCITA%>.value= "";
           document.f.<%=ICostantiSoggetto.CAMPO_MESE_DATA_NASCITA%>.value= "";
           document.f.<%=ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>.value= "";
       }
       
-      function pulisciComune()
-      {
+function pulisciComune() {
       	document.f.<%=ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA %>.value = "";
       }
       
-      function pulisciStato()
-      {
+function pulisciStato() {
       	document.f.<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA %>.value = "";
       }
       
@@ -315,20 +306,16 @@ for (int k=0; k<ListaProcedimenti.size();k++){
           var data_nasc =     document.f.<%=ICostantiSoggetto.CAMPO_GIORNO_DATA_NASCITA%>.value
                           +'/'+document.f.<%=ICostantiSoggetto.CAMPO_MESE_DATA_NASCITA%>.value
                           +'/'+document.f.<%=ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>.value;
-          if (!ControllaDataPassaVuota(data_nasc))
-          {
+ 	if (!ControllaDataPassaVuota(data_nasc)) {
             alert('Data Nascita non corretta');      
             document.f.<%=ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>.focus();
             return false;
           }
         
           // Comune e Stato Nascita
-          if( document.f.<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>.value !="" &&
-              document.f.<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>.value !="-")
-          {
-            if( document.f.<%=ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA%>.value !="" &&
-                document.f.<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>[document.f.<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>.selectedIndex].value != '039')
-            {
+	if (document.f.<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>.value != "" && document.f.<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>.value != "-") {
+   		if (document.f.<%=ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA%>.value != ""
+   				&& document.f.<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>[document.f.<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>.selectedIndex].value != '039') {
                 alert('Il campo Stato Nascita e comune nascita incongruenti');
                 return false;
             }
@@ -343,8 +330,7 @@ for (int k=0; k<ListaProcedimenti.size();k++){
       } // Chiude Verify()
       
       <%-- Ticket#20220127012 - Funzione riscritta --%>
-      function IscrizioneinIstru()
-      {
+function IscrizioneinIstru() {
         // 29/04/2019  MEV70 Elaborazione dell'Array contrenente i riferimenti ad eventuali titoli giàpresenti in Istruttoria.
         // - Se un procedimento e già presente in Istruttoria il relativo elemento nell'Array è contrassegnato con "p"; 
         // - Se un procedimento non e presente ma afferisce a un Titolo già presente in Istruttoria, il relativo elemento nell'Array è contrassegnato con "Anno/Numero procedimento"; 
@@ -377,40 +363,48 @@ for (int k=0; k<ListaProcedimenti.size();k++){
         var contaSelezionati = 0;
         
         for (var j = 0; j < <%=aTitoli.length%>; j++) {
-          <% if (aTitoli.length==1) {%>
-          if (document.f.<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>.checked)
-          <% } else { %>
-          if (document.f.<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>[j].checked)
-          <% }%>
+<%
+// Ticket#20251104017: casistica di un solo elemento in lista
+if (aTitoli.length == 1) {
+%>
+		if (document.f.<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>.checked)
+<%
+} else {
+%>
+		if (document.f.<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>[j].checked)
+<%
+}
+%>
           {
             contaSelezionati++;
             // Testo se in istruttoria
             if (   titoliJS[j] !="p" // selezionabile
-                && titoliJS[j] != "" // titolo già in iestruttoria
-               ) 
-            {
+					&& titoliJS[j] != "") { // titolo già in iestruttoria
                 aStessoTitolo+= titoliJS[j]+' ';
             }
             
-            // Testo se iscritto a NSC
-			<% if (aTitoli.length==1) {%>
-            if( document.f.<%=ICostantiFascicoloSiep.CAMPO_KEY_PROVV_NSC%>.value != "SI" )
-			<% } else { %>
-            if( document.f.<%=ICostantiFascicoloSiep.CAMPO_KEY_PROVV_NSC%>[j].value != "SI" )
-			<% }%>
+// Testo se iscritto a NSC
+<%
+if (aTitoli.length == 1) {
+%>
+			if (document.f.<%=ICostantiFascicoloSiep.CAMPO_KEY_PROVV_NSC%>.value != "SI")
+<%
+} else {
+%>
+            if (document.f.<%=ICostantiFascicoloSiep.CAMPO_KEY_PROVV_NSC%>[j].value != "SI")
+<%
+}
+%>
             {
               NSC = "NO";
             }
           }
         }        
-        
-        if (sizelista == 0)
-        {
+    if (sizelista == 0) {
           alert("Nessun Fascicolo / Titolo da Inserire in Istruttoria");
           document.f.<%=ICostantiSoggetto.CAMPO_COGNOME%>.focus();
           return false;	 
-        }
-        else if (contaSelezionati == 0) {
+	} else if (contaSelezionati == 0) {
           alert("Spuntare la checkBox del relativo Fascicolo / Titolo da Inserire in Istruttoria");
           return false;          
         }      
@@ -456,190 +450,12 @@ for (int k=0; k<ListaProcedimenti.size();k++){
         }
       }
       <%-- Ticket#20220127012 - FINE --%>
-      
-      <%-- Ticket#20220127012 - Vecchia versione rimossa 
-      function IscrizioneinIstruOLD()
-      {
-    	 // 29/04/2019  MEV70 Elaborazione dell'Array contrenente i riferimenti ad eventuali titoli giàpresenti in Istruttoria.
-    	 // - Se un procedimento e già presente in Istruttoria il relativo elemento nell'Array è contrassegnato con "p"; 
-    	 // - Se un procedimento non e presente ma afferisce a un Titolo già presente in Istruttoria, il relativo elemento nell'Array è contrassegnato con "Anno/Numero procedimento"; 
-    	 // - Se un procedimento e il relativo Titolo Esecutivo non sono presenti in Istruttoria, il relativo elemento nell'Array è contrassegnato con ""; 
-		 <%
-		 	StringBuffer titoliSB = new StringBuffer();
-		 	for (int i = 0; i < aTitoli.length; ++i) {
-    	 		if (titoliSB.length() > 0) {
-    	 			titoliSB.append(',');
-    	 		}
-    	 		titoliSB.append('"').append(aTitoli[i]).append('"');
-		 	}
-		 %>
-
-		 var titoliJS = [ <%= titoliSB.toString() %> ];
-		 var aNumCheckBox = <%=aNumCheck%>;   	 
-     var aStessoTitolo = '';
-      	 
-      	//MAC 20200110018 - 20200122 - MG: errore NON segnalato da utente ma rilevato durante l'esecuzione dei test 
-      	//in fase di valorizzazione della variabile aStessoTitolo va tenuto conto della dimensione della lista
-      	//dei procedimenti iscrivibili ( sizelista== 1 oppure sizelista > 1)
-      	 var sizelista = <%=TotaleIscrivibili%>;	
-    	 for(var j = 0; j < <%=aTitoli.length%>; j++) {
-      	  if(sizelista == 1){
-      		if (titoliJS[j] !="p"  &&
-      				titoliJS[j]  != "" &&
-	      		     document.f.<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>.checked ) {
-	      			 	aStessoTitolo+= titoliJS[j];
-	      		 } 
-      	  }	
-      	  else if(sizelista > 1){
-		     if (aNumCheckBox > 1	&& 	 
-      		     titoliJS[j]!="p"   &&
-         		 titoliJS[j] != "" &&
-      		     document.f.<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>[j].checked ) {
-      			 	aStessoTitolo+= titoliJS[j]+' ';
-      		 } else 
-    		     if (aNumCheckBox == 1	&& 	 
-   	      		     titoliJS[j]!="p"   &&
-   	         		 titoliJS[j] != ""  &&
-   	      		     document.f.<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>.checked ) {
-   	      			 	aStessoTitolo+= titoliJS[j]+' ';
-      			 
-      		 }      			 	
-      	 }
-      	 }
-		
-      	 //var sizelista = < %=ListaProcedimenti.size()%>;
-      	 //fine MAC 20200110018 - 20200122 - MG:
-      		 
-      	 var NSC = "SI";
-      	 
-      	 if(sizelista == 0)
-      	 {
-      		 alert("Nessun Fascicolo / Titolo da Inserire in Istruttoria");
-      		 document.f.<%=ICostantiSoggetto.CAMPO_COGNOME%>.focus();
-      		 return false;	 
-      	 }
-      	 else if(sizelista == 1)
-      	 {
-       		 if(!document.f.<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>.checked )
-      		 {
-      			 alert("Spuntare la checkBox del relativo Fascicolo / Titolo da Inserire in Istruttoria");
-      			 document.f.<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>.focus();
-         		 return false;
-      		 }
-       		 
-       		 if(document.f.<%=ICostantiFascicoloSiep.CAMPO_KEY_PROVV_NSC%>.value != "SI")
-       		 {
-       			 NSC = "NO";
-       		 }	 
-      	 }
-      	 else
-      	 {	 
-	      	 var spunta = "NO";
-	      	 for(var i = 0; i < sizelista; i++)
-	      	 {
-	      		 if( document.f.<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>[i].checked )
-	      	 	 { 
-	      			 spunta = "SI";
-	      			 
-	      			 if( document.f.<%=ICostantiFascicoloSiep.CAMPO_KEY_PROVV_NSC%>[i].value != "SI" )
-	      			 {
-	      				 NSC = "NO";
-	      			 }	 
-	      	 	 }
-	      	 
-	      	 }	 
-	      	 
-	      	 if(spunta == "NO")
-	      	 {
-	      		 alert("Selezionare un Fascicolo / Titolo da Inserire in Istruttoria");
-	      		 document.f.<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>[0].focus();
-	      		 return false;
-	      	 }
-      	 } 	 
-      	 
-		 // 26/04/2019	MEV70 
-      	 var msgConfirm="";
-		 var esegui = true;
-      	 if(aStessoTitolo.length > 0 )
-      	 {
-      		msgConfirm = "Attenzione! Già è presente in Istruttoria Cumulo\n il Procedimento "+aStessoTitolo+" con estremi del Titolo Esecutivo\n";
-      		msgConfirm += "uguali a quelli di un procedimento che si sta per prendere in carico.\n Si vuole procedere all'iscrizione in Instruttoria del Titolo selezionato?";
-      	 
-	        msgConfirm += "\nSi vuole procedere all'iscrizione del/dei Titolo/i selezionato?"; 
-	        esegui = window.confirm(msgConfirm);
-      	 } 
-      	 
-      	 if (esegui) {
-      	 if(NSC == "NO")
-      	 {
-      	 		msgConfirm = "Attenzione! Almeno uno dei Procedimenti selezionati non risulta ancora trasmesso a NSC.\n";
-      	 		msgConfirm += "Per procedere all'iscrizione in Instruttoria, è consigliabile prima affettuare lo scarico su NSC\n";
-
-      	 		msgConfirm += "\nSi vuole procedere all'iscrizione del/dei Titolo/i selezionato?"; 
-    	        esegui = window.confirm(msgConfirm);
-      	 }	 
-      	 } else {
-       	 	msgConfirm="";
-      	 }
-      	 
-      	 if (esegui &&
-      		 msgConfirm=="") {
-   	 		msgConfirm = "\nSi vuole procedere all'iscrizione del/dei Titolo/i selezionato?"; 
-	        esegui = window.confirm(msgConfirm);
-      	 }
-      	 
-         if( esegui ) 
-         {
-          	lAzione = "siap.siep.istruttoriacumulo.action.ActInserisciFascicoloProprioUfficioInIstruttoria";
-          	document.f.<%=IWebConstants.ACTION_FIELD%>.value = lAzione;
-          	document.f.submit();
-           document.f.AGGIUNGI.disabled=true;
-           document.body.style.cursor='wait';
-         }
-      }
-      --%>
-      
       <%-- Ticket#20220127012 - Funzione rivista --%>
- 	 function CtrStato(checkObject)
-	 {
+function CtrStato(checkObject) {
         alert("Attenzione: Il Procedimento selezionato NON è mai stato Validato.\nPer procedere all'iscrizione in Instruttoria è necessario prima Validarlo");
         checkObject.checked = false;
 	 }
  	<%-- Ticket#20220127012 - FINE --%>
-	 
- 	<%-- Ticket#20220127012 - funzioni rimosse 
-	 function CtrStatoOLD(lCodstato)
-	 {
-		if(lCodstato == '02')
-		{
-			alert("Attenzione: Il Procedimento selezionato NON è mai stato Validato.\nPer procedere all'iscrizione in Instruttoria è necessario prima Validarlo");
-			
-			ripulisciCheck();
-
-			return false;
-		}
-		
-		return true;
-	 }
-	 
-	 function ripulisciCheck()
-	 {
-		 //alert(" ripulisciCheck");
-	 	var sizelista1 = <%=TotaleIscrivibili%>;
-	 	if(sizelista1 == 1)
-  	 	{
-   		  	document.f.<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>.checked = false;
-  	 	}
-	 	else
-	 	{	
-	 		for(var k = 0; k < sizelista1; k++)
-     	 	{
-				document.f.<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>[k].checked = false;
-     	 	}	
-	 	}	
-	 }	
-	  Ticket#20220127012 --%>
-
 	  <%-- MEV_2025-48 - Ricerca soggetto da Iscrizione proprio titolo --%>
       function checkAbilitaDisabilitaCampi(checkObject, nomeCampo){
 
@@ -750,7 +566,7 @@ for (int k=0; k<ListaProcedimenti.size();k++){
 <body class="corpo" style="margin-top: 0px; margin-left: 0px;">
 <table>
   <tr>
-    <td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
+    	<td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border="0"></a></td>
     <td class="LBG">
       <font class="label">Funzione : </font><font class="campo">Ricerca Procedimenti per Titolo e Soggetto</font>&nbsp;&nbsp;
     </td>
@@ -772,12 +588,6 @@ for (int k=0; k<ListaProcedimenti.size();k++){
   <input type="hidden" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.istruttoriacumulo.action.ActRicercaPropriProcedimenti">
   <input type="hidden" name="<%=IWebConstants.NUM_PAGE%>" value="1">
   <input type="hidden" name="<%=ICostantiIstruttoriaCumulo.CAMPO_ID_ISTRUTTORIA_CUMULO%>" value="<%=IstruttoriaCumulo.getIdIstruttoriaCumulo()%>">
- 
-<%
-//==============================================================================
-//
-//==============================================================================
-%>
   <table cellspacing="2" cellpadding="2" width="100%">
     <tr>
       <td class="Titolo" colspan="6"> Criteri di ricerca 
@@ -789,9 +599,7 @@ for (int k=0; k<ListaProcedimenti.size();k++){
     <tr>
       <td class="l">Cognome</td>
       <td class="l" colspan="1">
-        <input type="text" title="Cognome" maxlength="35" size="35"
-               name="<%=ICostantiSoggetto.CAMPO_COGNOME%>" 
-               value="<%=StringUtils.toStringJSP(lsoggetto.getCognome(),"")%>" >
+        	<input type="text" title="Cognome" maxlength="35" size="35" name="<%=ICostantiSoggetto.CAMPO_COGNOME%>" value="<%=StringUtils.toStringJSP(lsoggetto.getCognome(),"")%>">
         <%-- MEV_2025-48 - Ricerca soggetto da Iscrizione proprio titolo --%>
         <%-- a href="Javascript:pulisciCogno();"><img src="/images/delete.gif" border=0></a>  --%>
         <a href="Javascript:ripristinaValori(cognome,'<%=ICostantiSoggetto.CAMPO_COGNOME%>');" title="Ripristina Valore anagrafica Soggetto cumulante">
@@ -802,9 +610,7 @@ for (int k=0; k<ListaProcedimenti.size();k++){
 		<%-- MEV_2025-48 - FINE --%>		          
       </td>
       <td class="l">Nome &nbsp;
-        <input type="text" title="Nome"  maxlength="35" size="35"
-               name="<%=ICostantiSoggetto.CAMPO_NOME%>"
-               value="<%=StringUtils.toStringJSP(lsoggetto.getNome(),"")%>" >
+        	<input type="text" title="Nome"  maxlength="35" size="35" name="<%=ICostantiSoggetto.CAMPO_NOME%>" value="<%=StringUtils.toStringJSP(lsoggetto.getNome(),"")%>">
                <%-- MEV_2025-48 - Ricerca soggetto da Iscrizione proprio titolo --%>
         <%-- <a href="Javascript:pulisciNome();"><img src="/images/delete.gif" border=0></a> --%>
         <a href="Javascript:ripristinaValori(nome,'<%=ICostantiSoggetto.CAMPO_NOME%>');" title="Ripristina Valore anagrafica Soggetto cumulante">
@@ -815,8 +621,7 @@ for (int k=0; k<ListaProcedimenti.size();k++){
 		<%-- MEV_2025-48 - FINE --%>		       
       </td>
       <td class="l" colspan="2">Codice CUI &nbsp;
-          <input title="Codice CUI" type="text" name="<%=ICostantiSoggetto.CAMPO_COD_AFIS %>" 
-          	value="<%=StringUtils.toStringJSP(lsoggetto.getCodAfis(),"")%>" maxlength="7" size="7">
+          	<input title="Codice CUI" type="text" name="<%=ICostantiSoggetto.CAMPO_COD_AFIS %>" value="<%=StringUtils.toStringJSP(lsoggetto.getCodAfis(),"")%>" maxlength="7" size="7">
           	<%-- MEV_2025-48 - Ricerca soggetto da Iscrizione proprio titolo --%>
         <%--  <a href="Javascript:pulisciCui();"><img src="/images/delete.gif" border=0></a>	 --%>
           <a href="Javascript:ripristinaValori(codCUI,'<%=ICostantiSoggetto.CAMPO_COD_AFIS%>');" title="Ripristina Valore anagrafica Soggetto cumulante">
@@ -831,18 +636,13 @@ for (int k=0; k<ListaProcedimenti.size();k++){
     <tr>
       <td class="l">Data Nascita</td>
       <td class="l"> 
-        <input type="text" size="2" maxlength="2" 
-               value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lsoggetto.getDataNascita(),"dd" ),"")%>"
+  			<input type="text" size="2" maxlength="2" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lsoggetto.getDataNascita(), "dd"), "")%>"
                name="<%= ICostantiSoggetto.CAMPO_GIORNO_DATA_NASCITA%>" 
-               onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)" 
-         >&nbsp;/&nbsp;
-        <input type="text" size="2" maxlength="2" 
-               value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lsoggetto.getDataNascita(),"MM" ),"")%>"
+				onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">&nbsp;/&nbsp;
+			<input type="text" size="2" maxlength="2" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lsoggetto.getDataNascita(),"MM" ),"")%>"
                name="<%= ICostantiSoggetto.CAMPO_MESE_DATA_NASCITA %>" 
-               onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)" 
-         >&nbsp;/&nbsp;
-        <input type="text" size="4" maxlength="4" 
-               value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lsoggetto.getDataNascita(),"yyyy" ),"")%>"
+				onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">&nbsp;/&nbsp;
+			<input type="text" size="4" maxlength="4" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lsoggetto.getDataNascita(),"yyyy" ),"")%>"
                name="<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>" 
                onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)"
          >&nbsp;
@@ -936,31 +736,14 @@ for (int k=0; k<ListaProcedimenti.size();k++){
  <%-- MEV_2025-48 - FINE --%>
  
     <tr>
-      <td>
-         <input class="bottone" type="submit" name="Ricerca" value="Ricerca">
-      </td>
+	    <td><input class="bottone" type="submit" name="Ricerca" value="Ricerca"></td>
     </tr>
   </table>
-<%-- 
-</form>  
---%>  
-  
-<%
-//==============================================================================
-//
-//==============================================================================
-%>
 <div id="divRisultatoRicerca">
  
   <jsp:include page="<%=IWebConstants.PAGINAZIONE_RICERCA%>"></jsp:include>
-  
-  <!--br-->
-
   <table cellspacing="2" cellpadding="2" width="100%">
-    <tr>
-      <td class="Titolo" colspan="8">Elenco Procedimenti trovati </td>
-    </tr>
-<!--    <tr><td>&nbsp;</td></tr>  -->
+	<tr><td class="Titolo" colspan="8">Elenco Procedimenti trovati</td></tr>
     <tr>
       <td class="int">Data Titolo <br> Esecutivo</td>
       <td class="int">Anno e Numero</td>
@@ -972,21 +755,15 @@ for (int k=0; k<ListaProcedimenti.size();k++){
       <td class="int">Iscrivi</td>
     </tr>
 <% 
- if(ListaProcedimenti == null || ListaProcedimenti.size() == 0 )
- {	%>
-     <tr>
-      <td class="c" colspan="7"><center>Nessun procedimento trovato con i criteri di ricerca selezionati</center></td>
-    </tr>
+if (ListaProcedimenti == null || ListaProcedimenti.size() == 0) {
+%>
+	<tr><td class="c" colspan="7"><center>Nessun procedimento trovato con i criteri di ricerca selezionati</center></td></tr>
 <%
- }
- else
- {	 
+} else {	 
 	 String lNsc = "";
 	Iterator itx = ListaProcedimenti.iterator();
-	while(itx.hasNext())
-	{
+	while(itx.hasNext()) {
 		FascicoloSiepModel lfascicolo = (FascicoloSiepModel)itx.next();
-		//SoggettoModel soggetto = lfascicolo.getSoggetto();
 		SentenzaModel lsentenza = lfascicolo.getSentenza();
 		lNsc="";
 		
@@ -1016,64 +793,74 @@ for (int k=0; k<ListaProcedimenti.size();k++){
         }
 %>  
 	    <tr>
-	      <td class="c"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lsentenza.getDataProvvedimento(),"dd-MM-yyyy"))%>
+		<td class="c">
+			<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lsentenza.getDataProvvedimento(), "dd-MM-yyyy"))%>
 	      	 <br> <%=StringUtils.toStringJSP(lsentenza.getDescrTipoProvvedimento()) %></font>
-	   <%if(lfascicolo.getKeyProvvNsc()==null) { %> 
+<%
+		if (lfascicolo.getKeyProvvNsc() == null) {
+%> 
 	   			&nbsp;<font class=crosso> (*)</font>&nbsp;
-	   <%}
-	   	 else {	lNsc= "SI";	}	%>				  	 
+<%
+		} else {
+			lNsc = "SI";
+		}
+%>				  	 
 	      </td>
 	      <td class="c" nowrap ><font class="campo"><%=StringUtils.toStringJSP(lsentenza.getAnnoSentenza())%> / <%=StringUtils.toStringJSP(lsentenza.getNumeroSentenza())%></font></td>
-	      <td class="c"><font class="campo"><%=StringUtils.toStringJSP(lsentenza.getDescrTipoAutoritaEmittente())%>&nbsp;</font>
-	      		di&nbsp;<font class="campo"><%=StringUtils.toStringJSP(lsentenza.getDescrLuogoEmittente() )%></font>
+		<td class="c">
+			<font class="campo"><%=StringUtils.toStringJSP(lsentenza.getDescrTipoAutoritaEmittente())%></font>
+			&nbsp;di&nbsp;<font class="campo"><%=StringUtils.toStringJSP(lsentenza.getDescrLuogoEmittente())%></font>
 	      </td>		 
 	      <td class="c"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lfascicolo.getDataIrrevocabilita(),"dd-MM-yyyy"))%></font></td>
 	      <td class="c" nowrap><%=lAnnoNumeroSIEP%></td>
 	      <td class="c"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lfascicolo.getDataIscrizione(),"dd-MM-yyyy"))%></font></td>
-<% 		if("02".equals(lfascicolo.getCodStatoFascicolo()) )	
-		{	%>
+<%
+		if ("02".equals(lfascicolo.getCodStatoFascicolo())) {
+%>
 	      <td class="c"><font class="campo" style="color:red" ><%=StringUtils.toStringJSP(lfascicolo.getDescrStatoFascicolo())%></font></td>
-<% 		}
-		else
-		{	%>	      
+<%
+		} else {
+%>	      
 	      <td class="c"><font class="campo"><%=StringUtils.toStringJSP(lfascicolo.getDescrStatoFascicolo())%></font></td>
-<%		}
-		if("SI".equals(lfascicolo.getgiaInIstruttoria()))
-		{	%>
- 		  <td class="c"><font style="color:green"><img src="/images/V.gif"></font>
+<%
+		}
+		if ("SI".equals(lfascicolo.getgiaInIstruttoria())) {
+%>
+		<td class="c">
+			<font style="color:green"><img src="/images/V.gif"></font>
       	    			<font style="font-size: 12">già in <br> istruttoria </font>
           <%-- Ticket#20220127012 SI aggiunge sempre il campo con IdFascicolo ed NSC per evere la tabella complata per i controlli JS  --%>
-	        <input type="hidden" disabled
-                 name="<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP %>" 
-                value="<%=lfascicolo.getIdFascicoloSiep()%>" 
-	        		 title="Iscrivi in Istruttoria" >     	  
+	        <input type="hidden" disabled name="<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>" value="<%=lfascicolo.getIdFascicoloSiep()%>" title="Iscrivi in Istruttoria">     	  
           <input type="hidden" name="<%=ICostantiFascicoloSiep.CAMPO_KEY_PROVV_NSC %>" value="<%=lNsc%>" > 
           <%-- Ticket#20220127012 FINE --%>
       </td>
- <%		}
-		else
-		{	%>     	  
+ <%
+ 		} else {
+ %>     	  
 	      <td class="c">
 	        <input type="checkbox" name="<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP %>" value="<%=lfascicolo.getIdFascicoloSiep()%>" 
 	        						title="Iscrivi in Istruttoria" 
-	        						<%-- Ticket#20220127012 Modificata la chiamata alla funzione CtrStato 
-	        						onclick1="javascript:CtrStato('<%=lfascicolo.getCodStatoFascicolo()%>');" 
-	        						--%>
-	        						<% if ("02".equals(lfascicolo.getCodStatoFascicolo())) { %>
+				<%-- Ticket#20220127012 Modificata la chiamata alla funzione CtrStato onclick1="javascript:CtrStato('<%=lfascicolo.getCodStatoFascicolo()%>');" --%>
+<%
+			if ("02".equals(lfascicolo.getCodStatoFascicolo())) {
+%>
 	        						onclick="javascript:CtrStato(this);" 
-	        						<% } %>
+<%
+			}
+%>
 	        						<%-- Ticket#20220127012 - FINE --%>
 	        						>
 	        <input type="hidden" name="<%=ICostantiFascicoloSiep.CAMPO_KEY_PROVV_NSC %>" value="<%=lNsc%>" >
 	      </td>
-<%		}	 %>
+<%
+		}
+%>
 
 		</tr>
-   
-    
-<%   } // end while  %>
-    
-<%} %>
+<%
+	} // end while
+}
+%>
     <tr>
       <td>
         <INPUT class="bottone" type="button" name="AGGIUNGI" value="Iscrivi in istruttoria" onClick="javascript:IscrizioneinIstru();">
@@ -1085,8 +872,7 @@ for (int k=0; k<ListaProcedimenti.size();k++){
       </td>	    
     </tr>
    </table> 
-
-</div> <% //divRisultatoRicerca %>
+</div> <%-- divRisultatoRicerca --%>
 </form>
 
 <script language="JavaScript" type="text/javascript">

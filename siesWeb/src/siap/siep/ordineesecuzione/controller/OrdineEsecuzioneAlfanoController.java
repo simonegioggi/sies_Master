@@ -48,20 +48,8 @@ import siap.siep.statoprocedimento.model.StatoProcedimentoModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * <p>
- * Title: OrdineEsecuzioneAlfanoController
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2010
- * </p>
- * <p>
- * Company:
- * </p>
+ * OrdineEsecuzioneAlfanoController - Classe Controllore per OE Alfano
  *
- * @author not attributable
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
