@@ -2,39 +2,27 @@ BRANCH SIES VERSIONE 12.8.3.0
 
 Nasce dal branch 12.8.2.0 in data 29/08/2025
 
-In data 09/09/2025 eseguito il merge con il branch MEV_2019-09,
-ma senza il branch MEV_2024-DNA.
-
-MEV_2019-09: 07/10/2020	-->	ID 09 SIES DLgs 123/18 e 121/18
-
-Le specifiche di intervento sono realizzate nell'ambito del sistema SIES al fine di soddisfare i requisiti
-espressi dall'Amministrazione in relazione alla richiesta di adeguamento normativo del Sistema, nella sua
-interezza, al D.lgs. 123/2018 ed al D.lgs. 121/2018.
-L'intervento è stato richiesto con comunicazione m_dg.DOG07AR.08082019.0000017.U.
-Gli interventi sono attinenti alle funzioni da prevedere nel sistema in base alle novità normative del
-decreto D.lgs.123/18 (maggiorenni e minorenni).
-Gli interventi sono relativi ai sottosistemi SIEP e SIUS.
-
-1)	nato dal branch "RELEASE_12.4.3.0"
-
-2)	in data 11/11/2022 eseguito merge con "RELEASE_12.4.24.0"
-
-3)	in data 07/11/2023 eseguito merge con "RELEASE_12.5.4.0"
-
-4)	in data 16/01/2024 eseguito merge con "RELEASE_12.5.6.0"
-
-5)	in data 14/03/2024 eseguito merge con "RELEASE_12.5.7.0"
-
-6)	in data 18/09/2024 eseguito merge con "RELEASE_12.6.2.0"
-
-7)	in data 24/09/2024 eseguito merge con "MEV_2024-DNA"merge 092 into 12.8.3.0 modificata!
+In data 09/09/2025 eseguito il merge con il branch MEV_2019-09, ma senza il branch MEV_2024-DNA.
+	MEV_2019-09: 07/10/2020	-->	ID 09 SIES DLgs 123/18 e 121/18
+	Le specifiche di intervento sono realizzate nell'ambito del sistema SIES al fine di soddisfare i requisiti
+	espressi dall'Amministrazione in relazione alla richiesta di adeguamento normativo del Sistema, nella sua
+	interezza, al D.lgs. 123/2018 ed al D.lgs. 121/2018.
+	L'intervento è stato richiesto con comunicazione m_dg.DOG07AR.08082019.0000017.U.
+	Gli interventi sono attinenti alle funzioni da prevedere nel sistema in base alle novità normative del
+	decreto D.lgs.123/18 (maggiorenni e minorenni).
+	Gli interventi sono relativi ai sottosistemi SIEP e SIUS.
+		1)	nato dal branch "RELEASE_12.4.3.0"
+		2)	in data 11/11/2022 eseguito merge con "RELEASE_12.4.24.0"
+		3)	in data 07/11/2023 eseguito merge con "RELEASE_12.5.4.0"
+		4)	in data 16/01/2024 eseguito merge con "RELEASE_12.5.6.0"
+		5)	in data 14/03/2024 eseguito merge con "RELEASE_12.5.7.0"
+		6)	in data 18/09/2024 eseguito merge con "RELEASE_12.6.2.0"
+		7)	in data 24/09/2024 eseguito merge con "MEV_2024-DNA"merge 092 into 12.8.3.0 modificata!
 
 In data 25/09/2025 eseguito il merge con il branch MEV_2024-092.
+	1)	nato dal branch 12.6.3.0 in data 18/09/2024
+	2)	in data 30/09/2024 eseguito merge col branch 12.6.4.0
+	3)	in data 16/10/2024 eseguito merge col branch MEV_2019-009
+	4)	in data 04/04/2025 eseguito merge col branch MEV_2019-021
 
-1)	nato dal branch 12.6.3.0 in data 18/09/2024
-
-2)	in data 30/09/2024 eseguito merge col branch 12.6.4.0
-
-3)	in data 16/10/2024 eseguito merge col branch MEV_2019-009
-
-4)	in data 04/04/2025 eseguito merge col branch MEV_2019-021
+In data 09/12/2025 eseguito il merge con il branch SIES VERSIONE 12.8.4.0.
