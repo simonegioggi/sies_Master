@@ -2653,6 +2653,18 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 
 						TreeModel lTreeRichiestaPMMod = new TreeModel(lRichPMCumMod);
 
+						// MEV_2025-48 - Si aggiunge la decisione se presente
+						lProvvSqlDao.ricercaProvvedimentoGeSorvCumByIdRichiesta(lRichPMCumMod.getIdRichiestePmInCumulo());
+					    ProvvedimentoGeSorvCumModel lDecisione = null;
+					    lDecisione = (ProvvedimentoGeSorvCumModel) lProvvSqlDao.getModelByKey();
+						if (lDecisione!=null) {
+						    lRichPMCumMod.setIsPresenzaDecisione(true);
+						    lTreeRichiestaPMMod.add(new TreeModel(lDecisione));
+						}
+						else 
+						    lRichPMCumMod.setIsPresenzaDecisione(false);
+						// MEV_2025-48 - FINE
+						
 						// Spostare qui il caricamento nei benefici
 						// Eventuale Richiesta di APPLICAZIONE BENEFICIO Concesso sul Titolo
 						// ====== SOLO SE CON ANTICIPAZIONE DEGLI EFFETTI VA AGGIUNTA ======
@@ -2736,14 +2748,7 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 //										lRichTitCumMod.getTitIdTitoloCumulato());								
 								// END Ticket#20200715012
 								//==========================================================================================
-								
-								
-								
-								
-
-								
-								
-								
+				
 								lSSCumSqlDao.start();
 								while (lSSCumSqlDao.next()) {
 

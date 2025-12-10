@@ -110,7 +110,7 @@ public class CalendarStampaModel extends GenericModel {
     public void setNumGiorniArresto (BigDecimal mNumGiorniArresto) { this.mNumGiorniArresto = mNumGiorniArresto; }
     public void setImportoAmmenda   (BigDecimal mImportoAmmenda)   { this.mImportoAmmenda   = mImportoAmmenda;   }
     
-    public void setNumAnni   (BigDecimal mNumAnni)   { this.mNumAnni   = mNumAnniReclusione;   }
+    public void setNumAnni   (BigDecimal mNumAnni)   { this.mNumAnni   = mNumAnni;   }
     public void setNumMesi   (BigDecimal mNumMesi)   { this.mNumMesi   = mNumMesi;   }
     public void setNumGiorni (BigDecimal mNumGiorni) { this.mNumGiorni = mNumGiorni; }
     

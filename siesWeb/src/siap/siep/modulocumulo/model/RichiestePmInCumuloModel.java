@@ -123,6 +123,9 @@ public class RichiestePmInCumuloModel extends GenericModel {
 
 	private Vector<TitoloCumulatoModel> mListaTitoli;
 
+	// MEV_2025-48 - Si aggiunge se presente la decisione 
+	private boolean mIsPresenzaDecisione = false;
+	
 	/*****************************************************************************
 	 * Costruttore di default che inizializza i campi del model I campi String vengono inizializzati a "",
 	 * tutti gli altri campi a null
@@ -282,6 +285,8 @@ public class RichiestePmInCumuloModel extends GenericModel {
 
 		this.mRicIdRichiesteInviateCum = aModel.mRicIdRichiesteInviateCum;
 		this.mProIdProvvGeSorvCum = aModel.mProIdProvvGeSorvCum;
+		
+		this.mIsPresenzaDecisione = aModel.mIsPresenzaDecisione; // MEV_2025-48 - Si aggiunge la decisione se presente 
 	}
 
 	/*****************************************************************************
@@ -682,6 +687,11 @@ public class RichiestePmInCumuloModel extends GenericModel {
 		return mListaTitoli;
 	}
 
+	// MEV_2025-48 - Si aggiunge la decisione se presente
+	public boolean getIsPresenzaDecisione () {
+	    return mIsPresenzaDecisione;
+	}
+
 	// ============================================================================
 	// METODI SET()
 	// ============================================================================
@@ -991,6 +1001,12 @@ public class RichiestePmInCumuloModel extends GenericModel {
 		mListaTitoli = aValore;
 	}
 
+	// MEV_2025-48 - Si aggiunge la decisione se presente
+    public void setIsPresenzaDecisione (boolean aValore ) {
+        mIsPresenzaDecisione = aValore;
+    }
+
+    
 	public void addTitolo(TitoloCumulatoModel aValore) {
 		if (mListaTitoli == null)
 			mListaTitoli = new Vector<>();
