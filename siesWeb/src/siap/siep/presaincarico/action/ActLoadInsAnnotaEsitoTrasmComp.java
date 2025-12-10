@@ -38,14 +38,13 @@ import siap.siep.util.SIEPLookupRemote;
  * Riscontro trasmissioni - Dettaglio). Nel secindo caso l'id dell'evento
  *
  * @author d.fiorletta
- *
  */
 public class ActLoadInsAnnotaEsitoTrasmComp extends ActionSiap implements ICostantiPresaincarico {
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings("unchecked")
 	public String processRequest() throws Exception {
 
 		MessaggioModel lMessaggioEsito = null;
@@ -60,7 +59,7 @@ public class ActLoadInsAnnotaEsitoTrasmComp extends ActionSiap implements ICosta
 			lMessaggioEsito = lCrtl.ExRicercaMessaggioByKey(lIdMessage);
 
 			// Recupero i dati del fascicolo cumulato per caricarlo in sessione: anno/prog/uff
-			// I dati sono presenti nel messaggio di trasmissione e nel messaggio di 
+			// I dati sono presenti nel messaggio di trasmissione e nel messaggio di
 			// comunicazione
 			FascicoloSiepModel lFasMod = new FascicoloSiepModel();
 
@@ -186,34 +185,35 @@ public class ActLoadInsAnnotaEsitoTrasmComp extends ActionSiap implements ICosta
 		// ==========================================================================
 		// RICERCA MESSAGGI di COMUNICAZIONE CUMULO DA ALTRE BDI per il Fascicolo
 		// ==========================================================================
-		//FIXME da verificare
+		// FIXME da verificare
 		// MEV_2025-48 - 2.15 Gestione Annotazioni Trasmissioni
 		// FIX provo a caricare la comunicazione solo se non ho già selezionato un altro MESSAGGIO
 		MessaggioModel lMessaggioComunicazione = new MessaggioModel();
 		if (lMessaggioEsito == null) {
-    		IMessaggio lCrtlMes = JMSLookupRemote.getMessaggioRemote();
-    		//MessaggioModel lMessaggioComunicazione = new MessaggioModel();
-    		// Ticket#20221102013 - Le comunicazioni di assorbimento sono degli esiti e non delle richieste
-    		//lMessaggioComunicazione.setCodTipoMessaggio("01");
-    		lMessaggioComunicazione.setCodTipoMessaggio(ICostantiJMS.ESITO);
-    		// Ticket#20221102013 - FINE
-    		lMessaggioComunicazione.setCodTipoOperazione(ICostantiJMS.COMUNICAZIONE_CUMULO_PROCURE_COMPETENTI);
-    		lMessaggioComunicazione.setChiaveAnnoSiep(lFascMod.getChiaveAnno());
-    		lMessaggioComunicazione.setChiaveProgrSiep(lFascMod.getChiaveProgr());
-    		lMessaggioComunicazione.setChiaveUfficioSiep(lFascMod.getChiaveUfficio());
-    		Vector <MessaggioModel> lMessaggi = lCrtlMes.ExRicercaMessaggio(lMessaggioComunicazione);
-    		if (lMessaggi.size() > 0) {
-    			// lMessaggioComunicazione = (MessaggioModel) lMessaggi.get(0); // Il più recente
-    		    // MEV_2025-48 - 2.15 Gestione Annotazioni Trasmissioni
-    		    // Filtro solo quelli da elaborare se presenti
-    			for (MessaggioModel lMsgCom : lMessaggi){
-                    if (!"S".equals(lMsgCom.getFlagVisto())){
-                        lMessaggioComunicazione = lMsgCom;
-                        setRequestAttribute("messaggioComunicazione", lMessaggioComunicazione);
-                        break;
-                    }
-    			}
-    		}
+			IMessaggio lCrtlMes = JMSLookupRemote.getMessaggioRemote();
+			// MessaggioModel lMessaggioComunicazione = new MessaggioModel();
+			// Ticket#20221102013 - Le comunicazioni di assorbimento sono degli esiti e non delle richieste
+			// lMessaggioComunicazione.setCodTipoMessaggio("01");
+			lMessaggioComunicazione.setCodTipoMessaggio(ICostantiJMS.ESITO);
+			// Ticket#20221102013 - FINE
+			lMessaggioComunicazione
+					.setCodTipoOperazione(ICostantiJMS.COMUNICAZIONE_CUMULO_PROCURE_COMPETENTI);
+			lMessaggioComunicazione.setChiaveAnnoSiep(lFascMod.getChiaveAnno());
+			lMessaggioComunicazione.setChiaveProgrSiep(lFascMod.getChiaveProgr());
+			lMessaggioComunicazione.setChiaveUfficioSiep(lFascMod.getChiaveUfficio());
+			Vector<MessaggioModel> lMessaggi = lCrtlMes.ExRicercaMessaggio(lMessaggioComunicazione);
+			if (lMessaggi.size() > 0) {
+				// lMessaggioComunicazione = (MessaggioModel) lMessaggi.get(0); // Il più recente
+				// MEV_2025-48 - 2.15 Gestione Annotazioni Trasmissioni
+				// Filtro solo quelli da elaborare se presenti
+				for (MessaggioModel lMsgCom : lMessaggi) {
+					if (!"S".equals(lMsgCom.getFlagVisto())) {
+						lMessaggioComunicazione = lMsgCom;
+						setRequestAttribute("messaggioComunicazione", lMessaggioComunicazione);
+						break;
+					}
+				}
+			}
 		}
 
 		// Tipologia Atto: EVENTO.TIPO_PROVVEDIMENTO
@@ -240,11 +240,10 @@ public class ActLoadInsAnnotaEsitoTrasmComp extends ActionSiap implements ICosta
 		lEsiti.add(new DecodificheModel(ICostantiJMS.ASSORBITO_IN_CUMULO, "Assorbito in Cumulo", "", "", "",
 				"", "", "", ""));
 		// Ticket#202210130113 - Aggiunta gestione el codice di RIGETTO
-		lEsiti.add(new DecodificheModel(ICostantiJMS.RIGETTATO, "Atti Rigettati", "", "", "",
-				"", "", "", ""));
+		lEsiti.add(
+				new DecodificheModel(ICostantiJMS.RIGETTATO, "Atti Rigettati", "", "", "", "", "", "", ""));
 		// Ticket#202210130113 - FINE
 
-		
 		Option lOptionEsiti = new Option(lEsiti);
 		if (lMessaggioComunicazione.getIdMessaggio() != null)
 			lOptionEsiti.setSelected(ICostantiJMS.ASSORBITO_IN_CUMULO);

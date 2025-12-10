@@ -109,7 +109,6 @@ import siap.siep.modulocumulo.model.DatiFinaliUlterioriSanzioniModel;
 import siap.siep.modulocumulo.model.MisuraCautelareCumuloModel;
 import siap.siep.modulocumulo.model.MisuraSicurezzaCumuloModel;
 import siap.siep.modulocumulo.model.PenaAccessoriaCumuloModel;
-import siap.siep.modulocumulo.model.PenaComplessivaCumuloModel;
 import siap.siep.modulocumulo.model.PenaRideterminataCumuloModel;
 import siap.siep.modulocumulo.model.PosizioneGiuridicaCumuloModel;
 import siap.siep.modulocumulo.model.ProcedimentoCumulatoModel;
@@ -148,8 +147,7 @@ import siap.sius.rifasiep.dao.RiferimentoFascicoloSiepDAO;
 import siap.sius.rifasiep.model.RiferimentoFascicoloSiepModel;
 
 /**
- * Title: DatiFinaliCumuloController 
- * Description: Classe Controller per DatiFinaliCumulo
+ * DatiFinaliCumuloController - Classe Controller per DatiFinaliCumulo
  *
  * @version 1.0
  */
@@ -365,9 +363,6 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 		return lCount;
 	}
 
-	/**
-	*
-	*/
 	public DatiFinaliCumuloModel ExRicercaDatiFinaliCumuloByIdIstrutt(BigDecimal aIdIstruttoria)
 			throws F3BException {
 
@@ -522,9 +517,6 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 		return lDatiFinaliAggregatoMod;
 	}
 
-	/**
-	*
-	*/
 	public PenaRideterminataCumuloModel ExInserisciPenaRideterminataCumulo(
 			PenaRideterminataCumuloModel aPenaRideterminataCumulo) throws F3BException {
 
@@ -557,9 +549,6 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 		return lPenMod;
 	}
 
-	/**
-	*
-	*/
 	public void ExModificaPenaRideterminataCumulo(PenaRideterminataCumuloModel aPenaRideterminataCumulo)
 			throws F3BException {
 
@@ -587,9 +576,6 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 		}
 	}
 
-	/**
-	*
-	*/
 	public void ExCancellaPenaRideterminataCumulo(PenaRideterminataCumuloModel aPenaRideterminataCumulo)
 			throws F3BException {
 
@@ -819,9 +805,6 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 		}
 	}
 
-	/**
-	*
-	*/
 	public PosizioneGiuridicaCumuloModel ExInserisciPosizioneGiuridicaCumulo(
 			PosizioneGiuridicaCumuloModel aPosizioneGiuridicaCumulo) throws F3BException {
 
@@ -857,9 +840,6 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 		return lPosMod;
 	}
 
-	/**
-	*
-	*/
 	public void ExModificaPosizioneGiuridicaCumulo(PosizioneGiuridicaCumuloModel aPosizioneGiuridicaCumulo)
 			throws F3BException {
 
@@ -889,7 +869,8 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	}
 
 	/**
-	 *
+	 * metodo per Inserimento Provvedimento Cumulo
+	 * 
 	 * @param aEveNotModel
 	 * @param aCompetenzaModel
 	 * @return
@@ -941,9 +922,6 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 		return lEveNot;
 	}
 
-	/**
-	*
-	*/
 	public EventoNotificaModel ExModificaProvvedimentoCumulo(EventoNotificaModel aEveNotModel,
 			BigDecimal aIdDatiFinali) throws F3BException {
 
@@ -2766,19 +2744,19 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 				lTreeIstruttoria.add(new TreeModel(lMisSicMod));
 			}
 
-			
 			// ===============================================================
-			//  MEV_2025-48 - ALTRO - 
-			//  Si aggiungono al TreeModel tutti i dati estratti nella popup 
-			//  PeneRideterminate 
+			// MEV_2025-48 - ALTRO -
+			// Si aggiungono al TreeModel tutti i dati estratti nella popup
+			// PeneRideterminate
 			// lTreeIstruttoria
 			// ===============================================================
 
-			lTreeIstruttoria.add(this.getTreeModelCalcoloPenaCumulo(aEventoNotModel.getEvento().getIstruIdIstruttoriaCumulo()));
-			
-			//  MEV_2025-48 - ALTRO - FINE
+			lTreeIstruttoria.add(this.getTreeModelCalcoloPenaCumulo(
+					aEventoNotModel.getEvento().getIstruIdIstruttoriaCumulo()));
+
+			// MEV_2025-48 - ALTRO - FINE
 			// ===============================================================
-			
+
 			// ========================================================================
 			// Generazione del report
 			// ========================================================================
@@ -3664,7 +3642,8 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	}
 
 	/**
-	 *
+	 * metodo per iscrizione Procedimento di Classe IV
+	 * 
 	 * @param aDBConnection
 	 * @param aListaMisure
 	 * @param aIdFascicoloCumulante
@@ -4073,7 +4052,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 				lMisuraNew.setNumGiorni(lMisuraCum.getNumGiorni());
 
 				// Collegata al fascicolo di classe IV
-				lMisuraNew.setFasSieIdFascicoloSiep(lFasClasseIVMod.getIdFascicoloSiep()); 
+				lMisuraNew.setFasSieIdFascicoloSiep(lFasClasseIVMod.getIdFascicoloSiep());
 				lMisuraNew.setEveIdEvento(null);
 				lMisuraNew.setFasSiuIdFascicoloSius(null);
 
@@ -4399,7 +4378,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 				}
 
 				if (lMisuraCum.getAnnoFascicoloSiepIV() != null) {
-					// La MS da caricare è già collegata a un  classe IV, verifico che non
+					// La MS da caricare è già collegata a un classe IV, verifico che non
 					// coincida con il classe IV su cui la devo caricare a seguito del cumulo
 					lUffSqlDao = new UfficioSqlDAO(lConn);
 
@@ -4852,11 +4831,8 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	// }
 
 	/*
-	 * ISSUE MAC : aggiunto metodo che aggiorna il flag altra causa (posizione giuridica) sul fascicolo 
-	 * Numero MAC : 20191128013 
-	 * Autore : monica 
-	 * Data : 19/dic/2019 
-	 * Branch : 11.2.4
+	 * ISSUE MAC : aggiunto metodo che aggiorna il flag altra causa (posizione giuridica) sul fascicolo Numero
+	 * MAC : 20191128013 Autore : monica Data : 19/dic/2019 Branch : 11.2.4
 	 */
 	/**
 	 * Aggiorna il flag altra causa sul fascicolo
@@ -4907,334 +4883,327 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			cleanup(lConn);
 		}
 	} // CHIUDE ExUpdateFlagAltraCausaFascicolo()
-	// ***** FINE INTERVENTO 20191128013 *****//
+		// ***** FINE INTERVENTO 20191128013 *****//
 
-	
 	/**
-	 * Metodo che estrae i dati presenti nella popup Pene Rideterminate
-	 * e li incapsula in un treeModel per le stampe
-	 * 
+	 * Metodo che estrae i dati presenti nella popup Pene Rideterminate e li incapsula in un treeModel per le
+	 * stampe
+	 *
 	 * @since MEV_2025-48
 	 */
 	private TreeModel getTreeModelCalcoloPenaCumulo(BigDecimal aIdIstruttCumulo) throws F3BException {
-	    TreeModel lTreeCalcoloPena = null;
-	    
-	    try {
-            IIstruttoriaCumulo lCtrlIstruttoria = SIEPLookupRemote.getIstruttoriaCumuloRemote();
-            CalcoloPenaCumuloModel lCalcoloPenaModel = lCtrlIstruttoria.ExCalcolaPenaCumuloByIstruttoria(aIdIstruttCumulo,null, true);
-            
-            lTreeCalcoloPena = new TreeModel(lCalcoloPenaModel);
-            
-            {
-                // 001 - Totali pene principali
-                PenaRideterminataCumuloModel lPenaRideterminataLorda = lCalcoloPenaModel.getPenaPrincipaleTotLorda();
-                if (lPenaRideterminataLorda!=null) {
-                    CalendarStampaModel csm = new CalendarStampaModel();
-                    csm.setTipoConteggio(CalendarStampaModel.TIPO_TOT_PENA_PRINC);
-                    csm.setDescConteggio("Totali pene principali");
-                    
-                    if (lPenaRideterminataLorda.isReclusione()){
-                        csm.setNumAnniReclusione   (lPenaRideterminataLorda.getNumAnniReclusione()) ;
-                        csm.setNumMesiReclusione   (lPenaRideterminataLorda.getNumMesiReclusione()) ;
-                        csm.setNumGiorniReclusione (lPenaRideterminataLorda.getNumGiorniReclusione()) ;
-                    }
-                    if (lPenaRideterminataLorda.isMulta())
-                        csm.setImportoMulta(lPenaRideterminataLorda.getImportoMulta());
-    
-                    if (lPenaRideterminataLorda.isArresto()){
-                        csm.setNumAnniArresto   (lPenaRideterminataLorda.getNumAnniArresto()) ;
-                        csm.setNumMesiArresto   (lPenaRideterminataLorda.getNumMesiArresto()) ;
-                        csm.setNumGiorniArresto (lPenaRideterminataLorda.getNumGiorniArresto()) ;
-                    }
-                    if (lPenaRideterminataLorda.isAmmenda())
-                        csm.setImportoAmmenda(lPenaRideterminataLorda.getImportoAmmenda());                  
-                    
-                    TreeModel lTree = new TreeModel(csm);
-                    lTreeCalcoloPena.add(lTree);                
-                }
-            }
-            
-            // 002 - Dedotti i Periodi di carcerazione sofferti
-            MisuraCautelareCumuloModel lTotMisCautModel = lCalcoloPenaModel.getMisureCautelariTotaliCont();
-            if (lTotMisCautModel!=null) {
-                CalendarStampaModel csm = new CalendarStampaModel();
-                csm.setTipoConteggio(CalendarStampaModel.TIPO_PERIODI_CARC_SOFFERTI);
-                csm.setDescConteggio("Dedotti i Periodi di carcerazione sofferti");
-              
-                csm.setNumAnni   (lTotMisCautModel.getNumAnni()) ;
-                csm.setNumMesi   (lTotMisCautModel.getNumMesi()) ;
-                csm.setNumGiorni (lTotMisCautModel.getNumGiorni()) ; 
-               
-                TreeModel lTree = new TreeModel(csm);
-                lTreeCalcoloPena.add(lTree);
-            }
-            
-            // 003 - Dedotti i Periodi di carcerazione sofferti a seguito revoca di Misure Alternative
-            CalendarModel lTotReclusioneRMA = lCalcoloPenaModel.getRevocaMATotali();
-            if (lTotReclusioneRMA!=null && !lTotReclusioneRMA.isQuantumZero()){
-                CalendarStampaModel csm = new CalendarStampaModel();
-                csm.setTipoConteggio(CalendarStampaModel.TIPO_PERIODI_ESP_REV_MA);
-                csm.setDescConteggio("Dedotti i Periodi di carcerazione sofferti a seguito revoca di Misure Alternative");
 
-                csm.setNumAnni   (new BigDecimal(lTotReclusioneRMA.getNumAnni())) ;
-                csm.setNumMesi   (new BigDecimal(lTotReclusioneRMA.getNumMesi())) ;
-                csm.setNumGiorni (new BigDecimal(lTotReclusioneRMA.getNumGiorni())) ;                
-                
-                TreeModel lTree = new TreeModel(csm);
-                //lTree.add(new TreeModel(lTotReclusioneRMA));
-                lTreeCalcoloPena.add(lTree);
-            }
-            
-            // 004 - Dedotti i Periodi di carcerazione sofferti a seguito Sospensione / Differimento della Pena
-            CalendarModel lTotSospDiff = lCalcoloPenaModel.getSospDiffTotali();
-            if (lTotSospDiff!=null && !lTotSospDiff.isQuantumZero()){
-                CalendarStampaModel csm = new CalendarStampaModel();
-                csm.setTipoConteggio(CalendarStampaModel.TIPO_PERIODI_SOSP_DIFF);
-                csm.setDescConteggio("Dedotti i Periodi di carcerazione sofferti a seguito Sospensione / Differimento della Pena");
-                
-                csm.setNumAnni   (new BigDecimal(lTotSospDiff.getNumAnni())) ;
-                csm.setNumMesi   (new BigDecimal(lTotSospDiff.getNumMesi())) ;
-                csm.setNumGiorni (new BigDecimal(lTotSospDiff.getNumGiorni())) ; 
-                
-                TreeModel lTree = new TreeModel(csm);
-                // lTree.add(new TreeModel(lTotSospDiff));
-                lTreeCalcoloPena.add(lTree);
-            }
-            
+		TreeModel lTreeCalcoloPena = null;
 
-            // 005 - Dedotti i benefici (Amnistia/Indulto ...)
-            {
-                CalendarModel lTotReclusione = lCalcoloPenaModel.getBeneficiTotali("R");
-                CalendarModel lTotArresto    = lCalcoloPenaModel.getBeneficiTotali("A");
-                if (   !lTotReclusione.isQuantumZero() 
-                    || !lTotArresto.isQuantumZero()
-                    || Math.abs(lTotReclusione.getImportoMulta())>0 
-                    || Math.abs(lTotArresto.getImportoAmmenda())>0
-                   )
-                {
-                    CalendarStampaModel csm = new CalendarStampaModel();
-                    csm.setTipoConteggio(CalendarStampaModel.TIPO_BENEFICI);
-                    csm.setDescConteggio("Dedotti i benefici");
-                    
-                    if (!lTotReclusione.isQuantumZero()){
-                        csm.setNumAnniReclusione   (new BigDecimal(lTotReclusione.getNumAnni())) ;
-                        csm.setNumMesiReclusione   (new BigDecimal(lTotReclusione.getNumMesi())) ;
-                        csm.setNumGiorniReclusione (new BigDecimal(lTotReclusione.getNumGiorni())) ;
-                    }
-                    if (Math.abs(lTotReclusione.getImportoMulta())>0)
-                        csm.setImportoMulta(new BigDecimal(lTotReclusione.getImportoMulta()));
-    
-                    if (!lTotArresto.isQuantumZero()){
-                        csm.setNumAnniArresto   (new BigDecimal(lTotArresto.getNumAnni())) ;
-                        csm.setNumMesiArresto   (new BigDecimal(lTotArresto.getNumMesi())) ;
-                        csm.setNumGiorniArresto (new BigDecimal(lTotArresto.getNumGiorni())) ;
-                    }
-                    if (Math.abs(lTotArresto.getImportoAmmenda())>0)
-                        csm.setImportoAmmenda(new BigDecimal(lTotArresto.getImportoAmmenda()));                                
-                    
-                    TreeModel lTree = new TreeModel(csm);
-                    lTreeCalcoloPena.add(lTree);
-                }
-            }
-            
-            // 006 - Dedotte le somme già pagate (multa/ammenda)
-            CalendarModel lTotPagamentiPP = lCalcoloPenaModel.getPagamentoPPTotale();
-            if (lTotPagamentiPP!=null){
-                CalendarStampaModel csm = new CalendarStampaModel();
-                csm.setTipoConteggio(CalendarStampaModel.TIPO_SOMME_PAGATE);
-                csm.setDescConteggio("Dedotte le somme già pagate (multa/ammenda) ");
-                
-                if (Math.abs(lTotPagamentiPP.getImportoMulta())>0)
-                    csm.setImportoMulta(new BigDecimal(lTotPagamentiPP.getImportoMulta()));  
-                
-                if (Math.abs(lTotPagamentiPP.getImportoAmmenda())>0)
-                    csm.setImportoAmmenda(new BigDecimal(lTotPagamentiPP.getImportoAmmenda()));  
-                
-                TreeModel lTree = new TreeModel(csm);
-                //lTree.add(new TreeModel(lTotPagamentiPP));
-                lTreeCalcoloPena.add(lTree);
-            }
-            
-            {
-                // 007 - Quantum di pena a seguito di rideterminazione pena - altro
-                CalendarModel lTotReclusioneRP = lCalcoloPenaModel.getRidetPenaPMAltroTotali("R");
-                CalendarModel lTotArrestoRP    = lCalcoloPenaModel.getRidetPenaPMAltroTotali("A");
-                if (   !lTotReclusioneRP.isQuantumZero() 
-                    || !lTotArrestoRP.isQuantumZero()
-                    || Math.abs(lTotReclusioneRP.getImportoMulta())>0 
-                    || Math.abs(lTotArrestoRP.getImportoAmmenda())>0
-                   )
-                {
-                    CalendarStampaModel csm = new CalendarStampaModel();
-                    csm.setTipoConteggio(CalendarStampaModel.TIPO_RIDE_PENA_ALTRO);
-                    csm.setDescConteggio("Quantum di pena a seguito di rideterminazione pena - altro");
-                    
-                    // Normalizzo (abs) per via dei segni negativi
-                    CalendarUtil lCalUtilRP = new CalendarUtil();
-                    if (lCalUtilRP.isPositiveTime(lTotReclusioneRP))
-                        csm.setSegnoQuantumReclusione("+");
-                    else 
-                        csm.setSegnoQuantumReclusione("-");
-                    
-                    CalendarModel lTotReclusioneRPToView = lCalUtilRP.abs(lTotReclusioneRP);
-                    lTotReclusioneRPToView = lCalUtilRP.ricalcolaGAM (lTotReclusioneRPToView);
-                    //lTotArrestoRP.getImportoAmmenda().abs()
-                    
-                    if (lCalUtilRP.isPositiveTime(lTotArrestoRP))
-                        csm.setSegnoQuantumArresto("+");
-                    else 
-                        csm.setSegnoQuantumArresto("-");
-                    CalendarModel lTotArrestoRPToView = lCalUtilRP.abs(lTotArrestoRP);
-                    lTotArrestoRPToView = lCalUtilRP.ricalcolaGAM (lTotArrestoRPToView);
-                    
-                    if (!lTotReclusioneRPToView.isQuantumZero()){
-                        csm.setNumAnniReclusione   (new BigDecimal(lTotReclusioneRPToView.getNumAnni())) ;
-                        csm.setNumMesiReclusione   (new BigDecimal(lTotReclusioneRPToView.getNumMesi())) ;
-                        csm.setNumGiorniReclusione (new BigDecimal(lTotReclusioneRPToView.getNumGiorni())) ;
-                    }
-                    if (Math.abs(lTotReclusioneRP.getImportoMulta())>0)
-                        csm.setImportoMulta(new BigDecimal(lTotReclusioneRP.getImportoMulta()));
-    
-                    if (!lTotArrestoRP.isQuantumZero()){
-                        csm.setNumAnniArresto   (new BigDecimal(lTotArrestoRPToView.getNumAnni())) ;
-                        csm.setNumMesiArresto   (new BigDecimal(lTotArrestoRPToView.getNumMesi())) ;
-                        csm.setNumGiorniArresto (new BigDecimal(lTotArrestoRPToView.getNumGiorni())) ;
-                    }
-                    if (Math.abs(lTotArrestoRP.getImportoAmmenda())>0)
-                        csm.setImportoAmmenda(new BigDecimal(lTotArrestoRP.getImportoAmmenda()));                                
-                    
-                    TreeModel lTree = new TreeModel(csm);
-                    lTreeCalcoloPena.add(lTree);            
-                }
-            }
-            
-            // 008 - Liberazione anticipata
-            {
-                CalendarStampaModel csm = new CalendarStampaModel();
-                csm.setTipoConteggio(CalendarStampaModel.TIPO_LA_PERMESSI);
-                csm.setDescConteggio("Considerata la liberazione anticipata/Rimedi risarcitori/Scomputi Permessi");
-                
-                int lTotLA    = lCalcoloPenaModel.getTotaliLA("LA",null);
-                int lTotLS    = lCalcoloPenaModel.getTotaliLA("LS",null);
-                int lTotLI    = lCalcoloPenaModel.getTotaliLA("LI",null);
-                int lTotRim   = lCalcoloPenaModel.getTotaliRimedi(null);
-                int lTotScomp = lCalcoloPenaModel.getTotaliScomputi(null);
-    
-                csm.setNumGiorniLA (lTotLA==0    ? null : new BigDecimal(lTotLA));
-                csm.setNumGiorniLS (lTotLS==0    ? null : new BigDecimal(lTotLS));
-                csm.setNumGiorniLI (lTotLI==0    ? null : new BigDecimal(lTotLI));
-                csm.setNumRimedi   (lTotRim==0   ? null : new BigDecimal(lTotRim));
-                csm.setNumScomputi (lTotScomp==0 ? null : new BigDecimal(lTotScomp));
-                
-                TreeModel lTree = new TreeModel(csm);
-                lTreeCalcoloPena.add(lTree);
-            }
-            
-            {
-                // 009 - Richieste al GE Concessione Benefici
-                CalendarModel lTotReclusioneRich = lCalcoloPenaModel.getRichiesteTotali("R","C");
-                CalendarModel lTotArrestoRich = lCalcoloPenaModel.getRichiesteTotali("A","C");               
+		try {
+			IIstruttoriaCumulo lCtrlIstruttoria = SIEPLookupRemote.getIstruttoriaCumuloRemote();
+			CalcoloPenaCumuloModel lCalcoloPenaModel = lCtrlIstruttoria
+					.ExCalcolaPenaCumuloByIstruttoria(aIdIstruttCumulo, null, true);
 
-                if (   !lTotReclusioneRich.isQuantumZero() 
-                    || !lTotArrestoRich.isQuantumZero()
-                    || Math.abs(lTotReclusioneRich.getImportoMulta())>0 
-                    || Math.abs(lTotArrestoRich.getImportoAmmenda())>0
-                   )
-                {
-                    CalendarStampaModel csm = new CalendarStampaModel();
-                    csm.setTipoConteggio(CalendarStampaModel.TIPO_RICH_GE_CONC);
-                    csm.setDescConteggio("Richieste al GE Concessione Benefici");
-                    
-                    if (!lTotReclusioneRich.isQuantumZero()){
-                        csm.setNumAnniReclusione   (new BigDecimal(lTotReclusioneRich.getNumAnni())) ;
-                        csm.setNumMesiReclusione   (new BigDecimal(lTotReclusioneRich.getNumMesi())) ;
-                        csm.setNumGiorniReclusione (new BigDecimal(lTotReclusioneRich.getNumGiorni())) ;
-                    }
-                    if (Math.abs(lTotReclusioneRich.getImportoMulta())>0)
-                        csm.setImportoMulta(new BigDecimal(lTotReclusioneRich.getImportoMulta()));
-    
-                    if (!lTotArrestoRich.isQuantumZero()){
-                        csm.setNumAnniArresto   (new BigDecimal(lTotArrestoRich.getNumAnni())) ;
-                        csm.setNumMesiArresto   (new BigDecimal(lTotArrestoRich.getNumMesi())) ;
-                        csm.setNumGiorniArresto (new BigDecimal(lTotArrestoRich.getNumGiorni())) ;
-                    }
-                    if (Math.abs(lTotArrestoRich.getImportoAmmenda())>0)
-                        csm.setImportoAmmenda(new BigDecimal(lTotArrestoRich.getImportoAmmenda()));                                
-                    
-                    TreeModel lTree = new TreeModel(csm);
-                    lTreeCalcoloPena.add(lTree);
-                }
-            }
+			lTreeCalcoloPena = new TreeModel(lCalcoloPenaModel);
 
-            {
-                // 010 - Richieste al GE Revoca Benefici
-                CalendarModel lTotReclusioneRichRev = lCalcoloPenaModel.getRichiesteTotali("R","R");
-                CalendarModel lTotArrestoRichRev    = lCalcoloPenaModel.getRichiesteTotali("A","R");             
+			{
+				// 001 - Totali pene principali
+				PenaRideterminataCumuloModel lPenaRideterminataLorda = lCalcoloPenaModel
+						.getPenaPrincipaleTotLorda();
+				if (lPenaRideterminataLorda != null) {
+					CalendarStampaModel csm = new CalendarStampaModel();
+					csm.setTipoConteggio(CalendarStampaModel.TIPO_TOT_PENA_PRINC);
+					csm.setDescConteggio("Totali pene principali");
 
-                if (   !lTotReclusioneRichRev.isQuantumZero() 
-                    || !lTotArrestoRichRev.isQuantumZero()
-                    || Math.abs(lTotReclusioneRichRev.getImportoMulta())>0 
-                    || Math.abs(lTotArrestoRichRev.getImportoAmmenda())>0
-                   )
-                {
-                    CalendarStampaModel csm = new CalendarStampaModel();
-                    csm.setTipoConteggio(CalendarStampaModel.TIPO_RICH_GE_REV);
-                    csm.setDescConteggio("Richieste al GE Revoca Benefici");
-                    
-                    if (!lTotReclusioneRichRev.isQuantumZero()){
-                        csm.setNumAnniReclusione   (new BigDecimal(lTotReclusioneRichRev.getNumAnni())) ;
-                        csm.setNumMesiReclusione   (new BigDecimal(lTotReclusioneRichRev.getNumMesi())) ;
-                        csm.setNumGiorniReclusione (new BigDecimal(lTotReclusioneRichRev.getNumGiorni())) ;
-                    }
-                    if (Math.abs(lTotReclusioneRichRev.getImportoMulta())>0)
-                        csm.setImportoMulta(new BigDecimal(lTotReclusioneRichRev.getImportoMulta()));
-    
-                    if (!lTotArrestoRichRev.isQuantumZero()){
-                        csm.setNumAnniArresto   (new BigDecimal(lTotArrestoRichRev.getNumAnni())) ;
-                        csm.setNumMesiArresto   (new BigDecimal(lTotArrestoRichRev.getNumMesi())) ;
-                        csm.setNumGiorniArresto (new BigDecimal(lTotArrestoRichRev.getNumGiorni())) ;
-                    }
-                    if (Math.abs(lTotArrestoRichRev.getImportoAmmenda())>0)
-                        csm.setImportoAmmenda(new BigDecimal(lTotArrestoRichRev.getImportoAmmenda()));                                
-                    
-                    TreeModel lTree = new TreeModel(csm);
-                    lTreeCalcoloPena.add(lTree);
-                }
-            }
-            
-            // 011 - Totali Finali
-            PenaRideterminataCumuloModel lTotaleDaScontare = lCalcoloPenaModel.getPenaPrincipaleTotNetta();
-            if (lTotaleDaScontare!=null) {
-                CalendarStampaModel csm = new CalendarStampaModel();
-                csm.setTipoConteggio(CalendarStampaModel.TIPO_TOTALI);
-                csm.setDescConteggio("Totale quantum");
+					if (lPenaRideterminataLorda.isReclusione()) {
+						csm.setNumAnniReclusione(lPenaRideterminataLorda.getNumAnniReclusione());
+						csm.setNumMesiReclusione(lPenaRideterminataLorda.getNumMesiReclusione());
+						csm.setNumGiorniReclusione(lPenaRideterminataLorda.getNumGiorniReclusione());
+					}
+					if (lPenaRideterminataLorda.isMulta())
+						csm.setImportoMulta(lPenaRideterminataLorda.getImportoMulta());
 
-                if (lTotaleDaScontare.isReclusione()){
-                    csm.setNumAnniReclusione   (lTotaleDaScontare.getNumAnniReclusione()) ;
-                    csm.setNumMesiReclusione   (lTotaleDaScontare.getNumMesiReclusione()) ;
-                    csm.setNumGiorniReclusione (lTotaleDaScontare.getNumGiorniReclusione()) ;
-                }
-                if (lTotaleDaScontare.isMulta())
-                    csm.setImportoMulta(lTotaleDaScontare.getImportoMulta());
+					if (lPenaRideterminataLorda.isArresto()) {
+						csm.setNumAnniArresto(lPenaRideterminataLorda.getNumAnniArresto());
+						csm.setNumMesiArresto(lPenaRideterminataLorda.getNumMesiArresto());
+						csm.setNumGiorniArresto(lPenaRideterminataLorda.getNumGiorniArresto());
+					}
+					if (lPenaRideterminataLorda.isAmmenda())
+						csm.setImportoAmmenda(lPenaRideterminataLorda.getImportoAmmenda());
 
-                if (lTotaleDaScontare.isArresto()){
-                    csm.setNumAnniArresto   (lTotaleDaScontare.getNumAnniArresto()) ;
-                    csm.setNumMesiArresto   (lTotaleDaScontare.getNumMesiArresto()) ;
-                    csm.setNumGiorniArresto (lTotaleDaScontare.getNumGiorniArresto()) ;
-                }
-                if (lTotaleDaScontare.isAmmenda())
-                    csm.setImportoAmmenda(lTotaleDaScontare.getImportoAmmenda());
-                
-                TreeModel lTree = new TreeModel(csm);
-                lTreeCalcoloPena.add(lTree);                
-            }
-            
-	    } catch (Exception ex) {
-            siesLogger.error("Exception: ", ex);
-            throw new F3BException("DatiFinaliCumuloController.getTreeModelCalcoloPenaCumulo : " + ex);
-	    }
-        
-        return lTreeCalcoloPena;
-	    
+					TreeModel lTree = new TreeModel(csm);
+					lTreeCalcoloPena.add(lTree);
+				}
+			}
+
+			// 002 - Dedotti i Periodi di carcerazione sofferti
+			MisuraCautelareCumuloModel lTotMisCautModel = lCalcoloPenaModel.getMisureCautelariTotaliCont();
+			if (lTotMisCautModel != null) {
+				CalendarStampaModel csm = new CalendarStampaModel();
+				csm.setTipoConteggio(CalendarStampaModel.TIPO_PERIODI_CARC_SOFFERTI);
+				csm.setDescConteggio("Dedotti i Periodi di carcerazione sofferti");
+
+				csm.setNumAnni(lTotMisCautModel.getNumAnni());
+				csm.setNumMesi(lTotMisCautModel.getNumMesi());
+				csm.setNumGiorni(lTotMisCautModel.getNumGiorni());
+
+				TreeModel lTree = new TreeModel(csm);
+				lTreeCalcoloPena.add(lTree);
+			}
+
+			// 003 - Dedotti i Periodi di carcerazione sofferti a seguito revoca di Misure Alternative
+			CalendarModel lTotReclusioneRMA = lCalcoloPenaModel.getRevocaMATotali();
+			if (lTotReclusioneRMA != null && !lTotReclusioneRMA.isQuantumZero()) {
+				CalendarStampaModel csm = new CalendarStampaModel();
+				csm.setTipoConteggio(CalendarStampaModel.TIPO_PERIODI_ESP_REV_MA);
+				csm.setDescConteggio(
+						"Dedotti i Periodi di carcerazione sofferti a seguito revoca di Misure Alternative");
+
+				csm.setNumAnni(new BigDecimal(lTotReclusioneRMA.getNumAnni()));
+				csm.setNumMesi(new BigDecimal(lTotReclusioneRMA.getNumMesi()));
+				csm.setNumGiorni(new BigDecimal(lTotReclusioneRMA.getNumGiorni()));
+
+				TreeModel lTree = new TreeModel(csm);
+				// lTree.add(new TreeModel(lTotReclusioneRMA));
+				lTreeCalcoloPena.add(lTree);
+			}
+
+			// 004 - Dedotti i Periodi di carcerazione sofferti a seguito Sospensione / Differimento della
+			// Pena
+			CalendarModel lTotSospDiff = lCalcoloPenaModel.getSospDiffTotali();
+			if (lTotSospDiff != null && !lTotSospDiff.isQuantumZero()) {
+				CalendarStampaModel csm = new CalendarStampaModel();
+				csm.setTipoConteggio(CalendarStampaModel.TIPO_PERIODI_SOSP_DIFF);
+				csm.setDescConteggio(
+						"Dedotti i Periodi di carcerazione sofferti a seguito Sospensione / Differimento della Pena");
+
+				csm.setNumAnni(new BigDecimal(lTotSospDiff.getNumAnni()));
+				csm.setNumMesi(new BigDecimal(lTotSospDiff.getNumMesi()));
+				csm.setNumGiorni(new BigDecimal(lTotSospDiff.getNumGiorni()));
+
+				TreeModel lTree = new TreeModel(csm);
+				// lTree.add(new TreeModel(lTotSospDiff));
+				lTreeCalcoloPena.add(lTree);
+			}
+
+			// 005 - Dedotti i benefici (Amnistia/Indulto ...)
+			{
+				CalendarModel lTotReclusione = lCalcoloPenaModel.getBeneficiTotali("R");
+				CalendarModel lTotArresto = lCalcoloPenaModel.getBeneficiTotali("A");
+				if (!lTotReclusione.isQuantumZero() || !lTotArresto.isQuantumZero()
+						|| Math.abs(lTotReclusione.getImportoMulta()) > 0
+						|| Math.abs(lTotArresto.getImportoAmmenda()) > 0) {
+					CalendarStampaModel csm = new CalendarStampaModel();
+					csm.setTipoConteggio(CalendarStampaModel.TIPO_BENEFICI);
+					csm.setDescConteggio("Dedotti i benefici");
+
+					if (!lTotReclusione.isQuantumZero()) {
+						csm.setNumAnniReclusione(new BigDecimal(lTotReclusione.getNumAnni()));
+						csm.setNumMesiReclusione(new BigDecimal(lTotReclusione.getNumMesi()));
+						csm.setNumGiorniReclusione(new BigDecimal(lTotReclusione.getNumGiorni()));
+					}
+					if (Math.abs(lTotReclusione.getImportoMulta()) > 0)
+						csm.setImportoMulta(new BigDecimal(lTotReclusione.getImportoMulta()));
+
+					if (!lTotArresto.isQuantumZero()) {
+						csm.setNumAnniArresto(new BigDecimal(lTotArresto.getNumAnni()));
+						csm.setNumMesiArresto(new BigDecimal(lTotArresto.getNumMesi()));
+						csm.setNumGiorniArresto(new BigDecimal(lTotArresto.getNumGiorni()));
+					}
+					if (Math.abs(lTotArresto.getImportoAmmenda()) > 0)
+						csm.setImportoAmmenda(new BigDecimal(lTotArresto.getImportoAmmenda()));
+
+					TreeModel lTree = new TreeModel(csm);
+					lTreeCalcoloPena.add(lTree);
+				}
+			}
+
+			// 006 - Dedotte le somme già pagate (multa/ammenda)
+			CalendarModel lTotPagamentiPP = lCalcoloPenaModel.getPagamentoPPTotale();
+			if (lTotPagamentiPP != null) {
+				CalendarStampaModel csm = new CalendarStampaModel();
+				csm.setTipoConteggio(CalendarStampaModel.TIPO_SOMME_PAGATE);
+				csm.setDescConteggio("Dedotte le somme già pagate (multa/ammenda) ");
+
+				if (Math.abs(lTotPagamentiPP.getImportoMulta()) > 0)
+					csm.setImportoMulta(new BigDecimal(lTotPagamentiPP.getImportoMulta()));
+
+				if (Math.abs(lTotPagamentiPP.getImportoAmmenda()) > 0)
+					csm.setImportoAmmenda(new BigDecimal(lTotPagamentiPP.getImportoAmmenda()));
+
+				TreeModel lTree = new TreeModel(csm);
+				// lTree.add(new TreeModel(lTotPagamentiPP));
+				lTreeCalcoloPena.add(lTree);
+			}
+
+			{
+				// 007 - Quantum di pena a seguito di rideterminazione pena - altro
+				CalendarModel lTotReclusioneRP = lCalcoloPenaModel.getRidetPenaPMAltroTotali("R");
+				CalendarModel lTotArrestoRP = lCalcoloPenaModel.getRidetPenaPMAltroTotali("A");
+				if (!lTotReclusioneRP.isQuantumZero() || !lTotArrestoRP.isQuantumZero()
+						|| Math.abs(lTotReclusioneRP.getImportoMulta()) > 0
+						|| Math.abs(lTotArrestoRP.getImportoAmmenda()) > 0) {
+					CalendarStampaModel csm = new CalendarStampaModel();
+					csm.setTipoConteggio(CalendarStampaModel.TIPO_RIDE_PENA_ALTRO);
+					csm.setDescConteggio("Quantum di pena a seguito di rideterminazione pena - altro");
+
+					// Normalizzo (abs) per via dei segni negativi
+					CalendarUtil lCalUtilRP = new CalendarUtil();
+					if (lCalUtilRP.isPositiveTime(lTotReclusioneRP))
+						csm.setSegnoQuantumReclusione("+");
+					else
+						csm.setSegnoQuantumReclusione("-");
+
+					CalendarModel lTotReclusioneRPToView = lCalUtilRP.abs(lTotReclusioneRP);
+					lTotReclusioneRPToView = lCalUtilRP.ricalcolaGAM(lTotReclusioneRPToView);
+					// lTotArrestoRP.getImportoAmmenda().abs()
+
+					if (lCalUtilRP.isPositiveTime(lTotArrestoRP))
+						csm.setSegnoQuantumArresto("+");
+					else
+						csm.setSegnoQuantumArresto("-");
+					CalendarModel lTotArrestoRPToView = lCalUtilRP.abs(lTotArrestoRP);
+					lTotArrestoRPToView = lCalUtilRP.ricalcolaGAM(lTotArrestoRPToView);
+
+					if (!lTotReclusioneRPToView.isQuantumZero()) {
+						csm.setNumAnniReclusione(new BigDecimal(lTotReclusioneRPToView.getNumAnni()));
+						csm.setNumMesiReclusione(new BigDecimal(lTotReclusioneRPToView.getNumMesi()));
+						csm.setNumGiorniReclusione(new BigDecimal(lTotReclusioneRPToView.getNumGiorni()));
+					}
+					if (Math.abs(lTotReclusioneRP.getImportoMulta()) > 0)
+						csm.setImportoMulta(new BigDecimal(lTotReclusioneRP.getImportoMulta()));
+
+					if (!lTotArrestoRP.isQuantumZero()) {
+						csm.setNumAnniArresto(new BigDecimal(lTotArrestoRPToView.getNumAnni()));
+						csm.setNumMesiArresto(new BigDecimal(lTotArrestoRPToView.getNumMesi()));
+						csm.setNumGiorniArresto(new BigDecimal(lTotArrestoRPToView.getNumGiorni()));
+					}
+					if (Math.abs(lTotArrestoRP.getImportoAmmenda()) > 0)
+						csm.setImportoAmmenda(new BigDecimal(lTotArrestoRP.getImportoAmmenda()));
+
+					TreeModel lTree = new TreeModel(csm);
+					lTreeCalcoloPena.add(lTree);
+				}
+			}
+
+			// 008 - Liberazione anticipata
+			{
+				CalendarStampaModel csm = new CalendarStampaModel();
+				csm.setTipoConteggio(CalendarStampaModel.TIPO_LA_PERMESSI);
+				csm.setDescConteggio(
+						"Considerata la liberazione anticipata/Rimedi risarcitori/Scomputi Permessi");
+
+				int lTotLA = lCalcoloPenaModel.getTotaliLA("LA", null);
+				int lTotLS = lCalcoloPenaModel.getTotaliLA("LS", null);
+				int lTotLI = lCalcoloPenaModel.getTotaliLA("LI", null);
+				int lTotRim = lCalcoloPenaModel.getTotaliRimedi(null);
+				int lTotScomp = lCalcoloPenaModel.getTotaliScomputi(null);
+
+				csm.setNumGiorniLA(lTotLA == 0 ? null : new BigDecimal(lTotLA));
+				csm.setNumGiorniLS(lTotLS == 0 ? null : new BigDecimal(lTotLS));
+				csm.setNumGiorniLI(lTotLI == 0 ? null : new BigDecimal(lTotLI));
+				csm.setNumRimedi(lTotRim == 0 ? null : new BigDecimal(lTotRim));
+				csm.setNumScomputi(lTotScomp == 0 ? null : new BigDecimal(lTotScomp));
+
+				TreeModel lTree = new TreeModel(csm);
+				lTreeCalcoloPena.add(lTree);
+			}
+
+			{
+				// 009 - Richieste al GE Concessione Benefici
+				CalendarModel lTotReclusioneRich = lCalcoloPenaModel.getRichiesteTotali("R", "C");
+				CalendarModel lTotArrestoRich = lCalcoloPenaModel.getRichiesteTotali("A", "C");
+
+				if (!lTotReclusioneRich.isQuantumZero() || !lTotArrestoRich.isQuantumZero()
+						|| Math.abs(lTotReclusioneRich.getImportoMulta()) > 0
+						|| Math.abs(lTotArrestoRich.getImportoAmmenda()) > 0) {
+					CalendarStampaModel csm = new CalendarStampaModel();
+					csm.setTipoConteggio(CalendarStampaModel.TIPO_RICH_GE_CONC);
+					csm.setDescConteggio("Richieste al GE Concessione Benefici");
+
+					if (!lTotReclusioneRich.isQuantumZero()) {
+						csm.setNumAnniReclusione(new BigDecimal(lTotReclusioneRich.getNumAnni()));
+						csm.setNumMesiReclusione(new BigDecimal(lTotReclusioneRich.getNumMesi()));
+						csm.setNumGiorniReclusione(new BigDecimal(lTotReclusioneRich.getNumGiorni()));
+					}
+					if (Math.abs(lTotReclusioneRich.getImportoMulta()) > 0)
+						csm.setImportoMulta(new BigDecimal(lTotReclusioneRich.getImportoMulta()));
+
+					if (!lTotArrestoRich.isQuantumZero()) {
+						csm.setNumAnniArresto(new BigDecimal(lTotArrestoRich.getNumAnni()));
+						csm.setNumMesiArresto(new BigDecimal(lTotArrestoRich.getNumMesi()));
+						csm.setNumGiorniArresto(new BigDecimal(lTotArrestoRich.getNumGiorni()));
+					}
+					if (Math.abs(lTotArrestoRich.getImportoAmmenda()) > 0)
+						csm.setImportoAmmenda(new BigDecimal(lTotArrestoRich.getImportoAmmenda()));
+
+					TreeModel lTree = new TreeModel(csm);
+					lTreeCalcoloPena.add(lTree);
+				}
+			}
+
+			{
+				// 010 - Richieste al GE Revoca Benefici
+				CalendarModel lTotReclusioneRichRev = lCalcoloPenaModel.getRichiesteTotali("R", "R");
+				CalendarModel lTotArrestoRichRev = lCalcoloPenaModel.getRichiesteTotali("A", "R");
+
+				if (!lTotReclusioneRichRev.isQuantumZero() || !lTotArrestoRichRev.isQuantumZero()
+						|| Math.abs(lTotReclusioneRichRev.getImportoMulta()) > 0
+						|| Math.abs(lTotArrestoRichRev.getImportoAmmenda()) > 0) {
+					CalendarStampaModel csm = new CalendarStampaModel();
+					csm.setTipoConteggio(CalendarStampaModel.TIPO_RICH_GE_REV);
+					csm.setDescConteggio("Richieste al GE Revoca Benefici");
+
+					if (!lTotReclusioneRichRev.isQuantumZero()) {
+						csm.setNumAnniReclusione(new BigDecimal(lTotReclusioneRichRev.getNumAnni()));
+						csm.setNumMesiReclusione(new BigDecimal(lTotReclusioneRichRev.getNumMesi()));
+						csm.setNumGiorniReclusione(new BigDecimal(lTotReclusioneRichRev.getNumGiorni()));
+					}
+					if (Math.abs(lTotReclusioneRichRev.getImportoMulta()) > 0)
+						csm.setImportoMulta(new BigDecimal(lTotReclusioneRichRev.getImportoMulta()));
+
+					if (!lTotArrestoRichRev.isQuantumZero()) {
+						csm.setNumAnniArresto(new BigDecimal(lTotArrestoRichRev.getNumAnni()));
+						csm.setNumMesiArresto(new BigDecimal(lTotArrestoRichRev.getNumMesi()));
+						csm.setNumGiorniArresto(new BigDecimal(lTotArrestoRichRev.getNumGiorni()));
+					}
+					if (Math.abs(lTotArrestoRichRev.getImportoAmmenda()) > 0)
+						csm.setImportoAmmenda(new BigDecimal(lTotArrestoRichRev.getImportoAmmenda()));
+
+					TreeModel lTree = new TreeModel(csm);
+					lTreeCalcoloPena.add(lTree);
+				}
+			}
+
+			// 011 - Totali Finali
+			PenaRideterminataCumuloModel lTotaleDaScontare = lCalcoloPenaModel.getPenaPrincipaleTotNetta();
+			if (lTotaleDaScontare != null) {
+				CalendarStampaModel csm = new CalendarStampaModel();
+				csm.setTipoConteggio(CalendarStampaModel.TIPO_TOTALI);
+				csm.setDescConteggio("Totale quantum");
+
+				if (lTotaleDaScontare.isReclusione()) {
+					csm.setNumAnniReclusione(lTotaleDaScontare.getNumAnniReclusione());
+					csm.setNumMesiReclusione(lTotaleDaScontare.getNumMesiReclusione());
+					csm.setNumGiorniReclusione(lTotaleDaScontare.getNumGiorniReclusione());
+				}
+				if (lTotaleDaScontare.isMulta())
+					csm.setImportoMulta(lTotaleDaScontare.getImportoMulta());
+
+				if (lTotaleDaScontare.isArresto()) {
+					csm.setNumAnniArresto(lTotaleDaScontare.getNumAnniArresto());
+					csm.setNumMesiArresto(lTotaleDaScontare.getNumMesiArresto());
+					csm.setNumGiorniArresto(lTotaleDaScontare.getNumGiorniArresto());
+				}
+				if (lTotaleDaScontare.isAmmenda())
+					csm.setImportoAmmenda(lTotaleDaScontare.getImportoAmmenda());
+
+				TreeModel lTree = new TreeModel(csm);
+				lTreeCalcoloPena.add(lTree);
+			}
+
+		} catch (Exception ex) {
+			siesLogger.error("Exception: ", ex);
+			throw new F3BException("DatiFinaliCumuloController.getTreeModelCalcoloPenaCumulo : " + ex);
+		}
+
+		return lTreeCalcoloPena;
 	}
+
 }

@@ -24,31 +24,18 @@ import siap.sico.jms.action.ICostantiSicoJMS;
 import siap.sico.soggetto.action.ICostantiSoggetto;
 import siap.sico.ufficio.action.ICostantiUfficio;
 import siap.sico.web.ActionSiap;
-import siap.siep.fascicolo.action.ICostantiFascicoloSiep;
 import siap.siep.fascicolo.controller.IFascicoloSiep;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.istruttoriacumulo.action.ICostantiIstruttoriaCumulo;
 import siap.siep.istruttoriacumulo.controller.IIstruttoriaCumulo;
 import siap.siep.istruttoriacumulo.model.IstruttoriaCumuloModel;
 import siap.siep.util.SIEPLookupRemote;
-import siap.sius.presaincarico.action.ICostantiPresaincarico;
 
 /**
- * <p>
- * Title: ActLoadRicercaAttiCompetenzaRicevuti
- * </p>
- * <p>
- * Description: Classe Action utilizzata UNICAMENTE per invocare la ricerca diretatmente da menù orizzontale.
- * Si ricerca SOLO gli atti ricevuti per competenza per assorbimento in cumulo 00066 non ancora presi in
- * carico
- * </p>
- * <p>
- * Copyright: Copyright (c) 2008
- * </p>
- * <p>
- * Company: Eutelia
- * </p>
- * 
+ * ActLoadRicercaAttiCompetenzaRicevuti - Classe Action utilizzata UNICAMENTE per invocare la ricerca
+ * diretatmente da menù orizzontale. Si ricerca SOLO gli atti ricevuti per competenza per assorbimento in
+ * cumulo 00066 non ancora presi in carico
+ *
  * @version 1.0
  */
 @SuppressWarnings("rawtypes")
@@ -95,7 +82,7 @@ public class ActLoadRicercaAttiCompetenzaRicevuti extends ActionSiap implements 
 		lListaTipoOperazione.add(ICostantiJMS.COMUNICAZIONE_CUMULO_PROCURE_COMPETENTI);
 
 		// MEV26 - CUMULO. Se provengo dall'istruttoria filtro direttamente i
-		// fascicolo trasmessi destinati al fascicolo Cumulante		
+		// fascicolo trasmessi destinati al fascicolo Cumulante
 		// if (!isRequestParameterNullObj(ICostantiIstruttoriaCumulo.CAMPO_ID_ISTRUTTORIA_CUMULO)) {
 		if (!isRequestParameterNullEmptyObj(ICostantiIstruttoriaCumulo.CAMPO_ID_ISTRUTTORIA_CUMULO)) {
 			BigDecimal lIdIstruttoria = getRequestBigDecimalParameter(
@@ -123,7 +110,7 @@ public class ActLoadRicercaAttiCompetenzaRicevuti extends ActionSiap implements 
 
 			lMessaggio.setChiaveAnnoFasCumulante(lFascModel.getChiaveAnno());
 			lMessaggio.setChiaveProgrFasCumulante(lFascModel.getChiaveProgr());
-			
+
 			setRequestAttribute("ChiaveAnnoCumulante", lFascModel.getChiaveAnno().toString());
 			setRequestAttribute("ChiaveProgrCumulante", lFascModel.getChiaveProgr().toString());
 
@@ -134,41 +121,46 @@ public class ActLoadRicercaAttiCompetenzaRicevuti extends ActionSiap implements 
 		Date lDataFine = null;
 		/* MEV_2025-48 – Atti pervenuti per competenza al cumulo */
 		/*
-		if (!isRequestParameterNullObj(ICostantiPresaincarico.CAMPO_ANNO_DATA_RICEZIONE_ATTI)) {
-			lDataInizio = getRequestDateParameter(ICostantiPresaincarico.CAMPO_ANNO_DATA_RICEZIONE_ATTI,
-					ICostantiPresaincarico.CAMPO_MESE_DATA_RICEZIONE_ATTI,
-					ICostantiPresaincarico.CAMPO_GIORNO_DATA_RICEZIONE_ATTI);
-			lDataFine = getRequestDateParameter(ICostantiPresaincarico.CAMPO_ANNO_DATA_TRASMISSIONE_ATTI,
-					ICostantiPresaincarico.CAMPO_MESE_DATA_TRASMISSIONE_ATTI,
-					ICostantiPresaincarico.CAMPO_GIORNO_DATA_TRASMISSIONE_ATTI);
-		}*/
-		
+		 * if (!isRequestParameterNullObj(ICostantiPresaincarico.CAMPO_ANNO_DATA_RICEZIONE_ATTI)) {
+		 * lDataInizio = getRequestDateParameter(ICostantiPresaincarico.CAMPO_ANNO_DATA_RICEZIONE_ATTI,
+		 * ICostantiPresaincarico.CAMPO_MESE_DATA_RICEZIONE_ATTI,
+		 * ICostantiPresaincarico.CAMPO_GIORNO_DATA_RICEZIONE_ATTI); lDataFine =
+		 * getRequestDateParameter(ICostantiPresaincarico.CAMPO_ANNO_DATA_TRASMISSIONE_ATTI,
+		 * ICostantiPresaincarico.CAMPO_MESE_DATA_TRASMISSIONE_ATTI,
+		 * ICostantiPresaincarico.CAMPO_GIORNO_DATA_TRASMISSIONE_ATTI); }
+		 */
+
 		if (!isRequestParameterNullObj(ICostantiSicoJMS.CAMPO_ANNO_DATA_TRASMISSIONE_INIZIO)) {
 			lDataInizio = getRequestDateParameter(ICostantiSicoJMS.CAMPO_ANNO_DATA_TRASMISSIONE_INIZIO,
 					ICostantiSicoJMS.CAMPO_MESE_DATA_TRASMISSIONE_INIZIO,
 					ICostantiSicoJMS.CAMPO_GIORNO_DATA_TRASMISSIONE_INIZIO);
 			lDataFine = getRequestDateParameter(ICostantiSicoJMS.CAMPO_ANNO_DATA_TRASMISSIONE_FINE,
 					ICostantiSicoJMS.CAMPO_MESE_DATA_TRASMISSIONE_FINE,
-					ICostantiSicoJMS.CAMPO_GIORNO_DATA_TRASMISSIONE_FINE);			
-		}
-		else {
+					ICostantiSicoJMS.CAMPO_GIORNO_DATA_TRASMISSIONE_FINE);
+		} else {
 			if (lDataInizio == null)
 				lDataInizio = DateUtils.getEnneMonthBefore(DateUtils.getSysDate(), 2);
 
 			// Se la data fine non viene valorizzata si imposta con quella odierna.
 			if (lDataFine == null)
 				lDataFine = DateUtils.getSysDate();
-			
+
 		}
-		
-		setRequestAttribute(ICostantiSicoJMS.CAMPO_GIORNO_DATA_TRASMISSIONE_INIZIO, DateUtils.getDateToString(lDataInizio, "dd"));
-		setRequestAttribute(ICostantiSicoJMS.CAMPO_MESE_DATA_TRASMISSIONE_INIZIO, DateUtils.getDateToString(lDataInizio, "MM"));
-		setRequestAttribute(ICostantiSicoJMS.CAMPO_ANNO_DATA_TRASMISSIONE_INIZIO, DateUtils.getDateToString(lDataInizio, "yyyy"));
-		
-		setRequestAttribute(ICostantiSicoJMS.CAMPO_GIORNO_DATA_TRASMISSIONE_FINE, DateUtils.getDateToString(lDataFine, "dd"));
-		setRequestAttribute(ICostantiSicoJMS.CAMPO_MESE_DATA_TRASMISSIONE_FINE, DateUtils.getDateToString(lDataFine, "MM"));
-		setRequestAttribute(ICostantiSicoJMS.CAMPO_ANNO_DATA_TRASMISSIONE_FINE, DateUtils.getDateToString(lDataFine, "yyyy"));
-		
+
+		setRequestAttribute(ICostantiSicoJMS.CAMPO_GIORNO_DATA_TRASMISSIONE_INIZIO,
+				DateUtils.getDateToString(lDataInizio, "dd"));
+		setRequestAttribute(ICostantiSicoJMS.CAMPO_MESE_DATA_TRASMISSIONE_INIZIO,
+				DateUtils.getDateToString(lDataInizio, "MM"));
+		setRequestAttribute(ICostantiSicoJMS.CAMPO_ANNO_DATA_TRASMISSIONE_INIZIO,
+				DateUtils.getDateToString(lDataInizio, "yyyy"));
+
+		setRequestAttribute(ICostantiSicoJMS.CAMPO_GIORNO_DATA_TRASMISSIONE_FINE,
+				DateUtils.getDateToString(lDataFine, "dd"));
+		setRequestAttribute(ICostantiSicoJMS.CAMPO_MESE_DATA_TRASMISSIONE_FINE,
+				DateUtils.getDateToString(lDataFine, "MM"));
+		setRequestAttribute(ICostantiSicoJMS.CAMPO_ANNO_DATA_TRASMISSIONE_FINE,
+				DateUtils.getDateToString(lDataFine, "yyyy"));
+
 		// Filtro per - Ufficio Mittente
 		String lCodTipoUfficio = null;
 		String lDescrComuneUfficio = null;
@@ -182,55 +174,54 @@ public class ActLoadRicercaAttiCompetenzaRicevuti extends ActionSiap implements 
 			lCodUfficioMitt = getCodUfficioByCodTipoUfficioDescrComune(lCodTipoUfficio, lDescrComuneUfficio);
 			lMessaggio.setCodUfficioMittente(lCodUfficioMitt);
 		}
-		
-		
+
 		// Estremi procedimento Trasmesso
 		if (!isRequestParameterNullObj(ICostantiJMS.CHIAVE_ANNO_SIEP)
 				&& !getRequestStringParameter(ICostantiJMS.CHIAVE_ANNO_SIEP).equals("")) {
-			lMessaggio.setChiaveAnnoSiep (getRequestBigDecimalParameter(ICostantiJMS.CHIAVE_ANNO_SIEP));
+			lMessaggio.setChiaveAnnoSiep(getRequestBigDecimalParameter(ICostantiJMS.CHIAVE_ANNO_SIEP));
 		}
 
 		if (!isRequestParameterNullObj(ICostantiJMS.CHIAVE_PROGR_SIEP)
 				&& !getRequestStringParameter(ICostantiJMS.CHIAVE_PROGR_SIEP).equals("")) {
 			lMessaggio.setChiaveProgrSiep(getRequestBigDecimalParameter(ICostantiJMS.CHIAVE_PROGR_SIEP));
 		}
-		
+
 		// Estremi procedimento cumulante
 		if (!isRequestParameterNullObj(ICostantiJMS.CHIAVE_ANNO_FAS_CUMULANTE)
 				&& !getRequestStringParameter(ICostantiJMS.CHIAVE_ANNO_FAS_CUMULANTE).equals("")) {
-			lMessaggio.setChiaveAnnoFasCumulante(getRequestBigDecimalParameter(ICostantiJMS.CHIAVE_ANNO_FAS_CUMULANTE));
+			lMessaggio.setChiaveAnnoFasCumulante(
+					getRequestBigDecimalParameter(ICostantiJMS.CHIAVE_ANNO_FAS_CUMULANTE));
 		}
 
 		if (!isRequestParameterNullObj(ICostantiJMS.CHIAVE_PROGR_FAS_CUMULANTE)
 				&& !getRequestStringParameter(ICostantiJMS.CHIAVE_PROGR_FAS_CUMULANTE).equals("")) {
-			lMessaggio.setChiaveProgrFasCumulante(getRequestBigDecimalParameter(ICostantiJMS.CHIAVE_PROGR_FAS_CUMULANTE));
-		}		
+			lMessaggio.setChiaveProgrFasCumulante(
+					getRequestBigDecimalParameter(ICostantiJMS.CHIAVE_PROGR_FAS_CUMULANTE));
+		}
 
 		// Estremi del soggetto
 		if (!isRequestParameterNullObj(ICostantiSoggetto.CAMPO_COGNOME)
 				&& !getRequestStringParameter(ICostantiSoggetto.CAMPO_COGNOME).equals("")) {
-			lMessaggio.setCognomeSoggetto (getRequestStringParameter(ICostantiSoggetto.CAMPO_COGNOME));
+			lMessaggio.setCognomeSoggetto(getRequestStringParameter(ICostantiSoggetto.CAMPO_COGNOME));
 		}
 
 		if (!isRequestParameterNullObj(ICostantiSoggetto.CAMPO_NOME)
 				&& !getRequestStringParameter(ICostantiSoggetto.CAMPO_NOME).equals("")) {
 			lMessaggio.setNomeSoggetto(getRequestStringParameter(ICostantiSoggetto.CAMPO_NOME));
-		}		
-		
-		siesLogger.debug("lMessaggio = "+lMessaggio.toString());
+		}
+
+		siesLogger.debug("lMessaggio = " + lMessaggio.toString());
 		/* MEV_2025-48 – FINE */
 
-		siesLogger.debug("Data Inizio = "+lDataInizio);
-		siesLogger.debug("Data Fine   = "+lDataFine);
-/*		
-		// Se la Data inizio non viene valorizzata si imposta a 2 mesi mesi precedenti.
-		if (lDataInizio == null)
-			lDataInizio = DateUtils.getEnneMonthBefore(DateUtils.getSysDate(), 2);
-
-		// Se la data fine non viene valorizzata si imposta con quella odierna.
-		if (lDataFine == null)
-			lDataFine = DateUtils.getSysDate();
-*/
+		siesLogger.debug("Data Inizio = " + lDataInizio);
+		siesLogger.debug("Data Fine   = " + lDataFine);
+		/*
+		 * // Se la Data inizio non viene valorizzata si imposta a 2 mesi mesi precedenti. if (lDataInizio ==
+		 * null) lDataInizio = DateUtils.getEnneMonthBefore(DateUtils.getSysDate(), 2);
+		 *
+		 * // Se la data fine non viene valorizzata si imposta con quella odierna. if (lDataFine == null)
+		 * lDataFine = DateUtils.getSysDate();
+		 */
 		// Ricerca Messaggi
 		IMessaggio lCrtl = JMSLookupRemote.getMessaggioRemote();
 
@@ -267,7 +258,7 @@ public class ActLoadRicercaAttiCompetenzaRicevuti extends ActionSiap implements 
 			lOption.setSelected("-");
 		setRequestAttribute("tipoUfficioRichiedente", "" + lOption);
 		/* MEV_2025-48 – FINE */
-		
+
 		if (chiamanteMenu) {
 			if (lVect != null)
 				setRequestAttribute("contaAttiRicevuti", lVect.size() + "");
@@ -282,7 +273,7 @@ public class ActLoadRicercaAttiCompetenzaRicevuti extends ActionSiap implements 
 
 	/**
 	 * Esclude i messaggi che hanno datatInvio non ricadente nell'intervallo di date indicato
-	 * 
+	 *
 	 * @param aVect
 	 * @param aDataIniziale
 	 * @param aDataFinale

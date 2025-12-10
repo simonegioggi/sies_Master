@@ -26,6 +26,7 @@ public class ActRicercaPropriProcedimenti extends ActionModuloCumulo implements 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
+	@SuppressWarnings("rawtypes")
 	public String processRequest() throws F3BException {
 
 		siesLogger.debug("--XX-- ActRicercaPropriProcedimenti - INIZIO");
@@ -44,29 +45,29 @@ public class ActRicercaPropriProcedimenti extends ActionModuloCumulo implements 
 			// Ricerca per estremi fascicolo proprio ufficio
 			BigDecimal chiaveAnno = getRequestBigDecimalParameter(ICostantiFascicoloSiep.CAMPO_CHIAVE_ANNO);
 			BigDecimal chiaveProg = getRequestBigDecimalParameter(ICostantiFascicoloSiep.CAMPO_CHIAVE_PROGR);
-			BigDecimal chiaveProgRich = new BigDecimal(chiaveProg.toString()) ;
+			BigDecimal chiaveProgRich = new BigDecimal(chiaveProg.toString());
 			String chiaveUffi = getCodUfficioUtenteConnesso();
-			
+
 			BigDecimal offsetUffAccorpato = new BigDecimal(0); // è il trattino della combo
 			if (!isRequestParameterNullEmptyObj(ICostantiFascicoloSiep.CAMPO_CHIAVE_ACCORPATO)) {
 				siesLogger.debug("--XX-- Ufficio Accorpato presente in form");
-				offsetUffAccorpato = getRequestBigDecimalParameter(ICostantiFascicoloSiep.CAMPO_CHIAVE_ACCORPATO);
+				offsetUffAccorpato = getRequestBigDecimalParameter(
+						ICostantiFascicoloSiep.CAMPO_CHIAVE_ACCORPATO);
 				chiaveProgRich = chiaveProg.add(offsetUffAccorpato); // offsetUffAccorpato eventualmente 0
-				siesLogger.debug("--XX-- nova chiave progr chiaveProg = "+chiaveProg);
+				siesLogger.debug("--XX-- nova chiave progr chiaveProg = " + chiaveProg);
 			}
-			
+
 			lFasModel = new FascicoloSiepModel();
 			lFasModel.setChiaveAnno(chiaveAnno);
 			lFasModel.setChiaveProgr(chiaveProgRich);
 			lFasModel.setChiaveUfficio(chiaveUffi);
-			
-			setRequestAttribute("checkRicercaProvvVal", "checked"); 
+
+			setRequestAttribute("checkRicercaProvvVal", "checked");
 			setRequestAttribute("chiaveAnnoRich", chiaveAnno.toString());
 			setRequestAttribute("chiaveProgRich", chiaveProg.toString());
-			setRequestAttribute("offsetUffAccorpato", offsetUffAccorpato.toString());	
+			setRequestAttribute("offsetUffAccorpato", offsetUffAccorpato.toString());
 			/* MEV_2025-48 - FINE */
-		}
-		else if ((isRequestParameterNullObj(ICostantiSoggetto.CAMPO_COGNOME)
+		} else if ((isRequestParameterNullObj(ICostantiSoggetto.CAMPO_COGNOME)
 				|| getRequestStringParameter(ICostantiSoggetto.CAMPO_COGNOME).equals(""))
 				&& (isRequestParameterNullObj(ICostantiSoggetto.CAMPO_COD_AFIS)
 						|| getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_AFIS).equals(""))
@@ -75,7 +76,7 @@ public class ActRicercaPropriProcedimenti extends ActionModuloCumulo implements 
 			// Provengo dalla Lista Titoli Coinvolti ; La successiva Ricerca sarà effettuata con dati del
 			// Soggetto di sessione
 			soggetto = (SoggettoModel) getSessionAttribute("soggetto");
-			setRequestAttribute("primoCaricamento", "true"); 
+			setRequestAttribute("primoCaricamento", "true");
 		} else {
 			// Provengo dalla Form Ricerca Fascicoli Propriio Ufficio ; La successiva Ricerca sarà effettuata
 			// Recuperando i dati della form
@@ -86,7 +87,7 @@ public class ActRicercaPropriProcedimenti extends ActionModuloCumulo implements 
 					&& !getRequestStringParameter(ICostantiSoggetto.CAMPO_COGNOME).equals("")) {
 				soggetto.setCognome(getRequestStringParameter(ICostantiSoggetto.CAMPO_COGNOME).toUpperCase());
 			} else if (isRequestParameterNullObj(ICostantiSoggetto.CAMPO_COGNOME))
-			    setRequestAttribute("isCheckCognome", "checked");
+				setRequestAttribute("isCheckCognome", "checked");
 
 			if (!isRequestParameterNullObj(ICostantiSoggetto.CAMPO_NOME)
 					&& !getRequestStringParameter(ICostantiSoggetto.CAMPO_NOME).equals("")) {
@@ -97,40 +98,40 @@ public class ActRicercaPropriProcedimenti extends ActionModuloCumulo implements 
 			if (!isRequestParameterNullObj(ICostantiSoggetto.CAMPO_COD_AFIS)
 					&& !getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_AFIS).equals("")) {
 				soggetto.setCodAfis(getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_AFIS));
-			} else if (isRequestParameterNullObj(ICostantiSoggetto.CAMPO_COD_AFIS)) 
+			} else if (isRequestParameterNullObj(ICostantiSoggetto.CAMPO_COD_AFIS))
 				setRequestAttribute("isCheckCUI", "checked");
 
 			if (!isRequestParameterNullObj(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)
 					&& !getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA).equals("")) {
 				/* MEV_2025-48 - Modificata ricerca comune. Si entra per descrizione */
-//				soggetto.setCodComuneNascita(getDatiComuneByDescrOmonimiaFlagVal(
-//						getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA))
-//								.getCodComune());
+				// soggetto.setCodComuneNascita(getDatiComuneByDescrOmonimiaFlagVal(
+				// getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA))
+				// .getCodComune());
 				soggetto.setDescrComuneNascita(
 						getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA));
-			} else if (isRequestParameterNullObj(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)) 
-			   setRequestAttribute("isCheckComune", "checked");
+			} else if (isRequestParameterNullObj(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA))
+				setRequestAttribute("isCheckComune", "checked");
 
 			if (!isRequestParameterNullObj(ICostantiSoggetto.CAMPO_COD_STATO_NASCITA)
 					&& !getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_STATO_NASCITA).equals("")
 					&& !getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_STATO_NASCITA).equals("-")) {
 				soggetto.setCodStatoNascita(
 						getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_STATO_NASCITA));
-			} else if (isRequestParameterNullObj(ICostantiSoggetto.CAMPO_COD_STATO_NASCITA))  
-			   setRequestAttribute("isCheckStato", "checked");
+			} else if (isRequestParameterNullObj(ICostantiSoggetto.CAMPO_COD_STATO_NASCITA))
+				setRequestAttribute("isCheckStato", "checked");
 
 			if (!isRequestParameterNullObj(ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA)
 					&& !getRequestStringParameter(ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA).equals("")) {
 				soggetto.setDataNascita(getRequestDateParameter(ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA,
 						ICostantiSoggetto.CAMPO_MESE_DATA_NASCITA,
 						ICostantiSoggetto.CAMPO_GIORNO_DATA_NASCITA));
-			} else if (isRequestParameterNullObj(ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA)) 
+			} else if (isRequestParameterNullObj(ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA))
 				setRequestAttribute("isCheckDataNascita", "checked");
 		}
 
 		// Passaggio parametri della Ricerca
 		setRequestAttribute("lsoggetto", soggetto);
-		
+
 		/* MEV_2025-48 - Aggiunta ricerca per chiaveAnno/chiaveProgr e ufficio accorpato */
 		String codUfficioUtente = getCodUfficioUtenteConnesso();
 
@@ -153,18 +154,19 @@ public class ActRicercaPropriProcedimenti extends ActionModuloCumulo implements 
 
 		if (isRequestParameterNullObj("CountRisultati")) {
 			/* MEV_2025-48 - Aggiunta ricerca per chiaveAnno/chiaveProgr e ufficio accorpato */
-			//lCountRisultati = Ctrl.ExCountFascicoliBySoggettoProprioUfficioPaged(soggetto, ufficio, 0);
-			lCountRisultati = Ctrl.ExCountFascicoliBySoggettoProprioUfficioPaged(soggetto, lFasModel, ufficio, 0);
+			// lCountRisultati = Ctrl.ExCountFascicoliBySoggettoProprioUfficioPaged(soggetto, ufficio, 0);
+			lCountRisultati = Ctrl.ExCountFascicoliBySoggettoProprioUfficioPaged(soggetto, lFasModel, ufficio,
+					0);
 		} else {
 			lCountRisultati = getRequestBigDecimalParameter("CountRisultati");
 		}
 
 		Vector<FascicoloSiepModel> lFascicoliSoggetti = null;
 		/* MEV_2025-48 - Aggiunta ricerca per chiaveAnno/chiaveProgr e ufficio accorpato */
-		//lFascicoliSoggetti = Ctrl.ExRicercaFascicoliBySoggettoProprioUfficioPaged(soggetto, ufficio,
-		//		Integer.parseInt(lPagina), lIdIstruttoriaCumulo);
-		lFascicoliSoggetti = Ctrl.ExRicercaFascicoliBySoggettoProprioUfficioPaged(soggetto, lFasModel, ufficio,
-				Integer.parseInt(lPagina), lIdIstruttoriaCumulo);
+		// lFascicoliSoggetti = Ctrl.ExRicercaFascicoliBySoggettoProprioUfficioPaged(soggetto, ufficio,
+		// Integer.parseInt(lPagina), lIdIstruttoriaCumulo);
+		lFascicoliSoggetti = Ctrl.ExRicercaFascicoliBySoggettoProprioUfficioPaged(soggetto, lFasModel,
+				ufficio, Integer.parseInt(lPagina), lIdIstruttoriaCumulo);
 
 		if (lFascicoliSoggetti != null && lFascicoliSoggetti.size() > 0)
 			siesLogger.debug("--XX-- ======================== >>>>   TROVATI  >" + lFascicoliSoggetti.size()

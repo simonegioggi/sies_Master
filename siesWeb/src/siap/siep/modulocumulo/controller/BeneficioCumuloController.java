@@ -16,7 +16,6 @@ import siap.siep.modulocumulo.dao.BeneficioCumuloDAO;
 import siap.siep.modulocumulo.dao.BeneficioCumuloSqlDAO;
 import siap.siep.modulocumulo.dao.PenaAccessoriaCumuloDAO;
 import siap.siep.modulocumulo.dao.RichPMBeneficioCumSqlDAO;
-import siap.siep.modulocumulo.dao.RichiestePmInCumuloSqlDAO;
 import siap.siep.modulocumulo.model.BeneficioCumuloModel;
 import siap.siep.modulocumulo.model.RichPMBeneficioCumModel;
 import siap.siep.penaaccessoria.dao.PenaAccessoriaDAO;
@@ -24,12 +23,7 @@ import siap.siep.tipologiaorario.dao.TipologiaOrarioDAO;
 import siap.siep.tipologiaorario.model.TipologiaOrarioModel;
 
 /**
- * <p>
- * Title: BeneficioCumuloController
- * </p>
- * <p>
- * Description: Classe Controller per Beneficio_Cumulato
- * </p>
+ * BeneficioCumuloController - Classe Controller per Beneficio_Cumulato
  *
  * @version 1.0
  */
@@ -620,27 +614,27 @@ public class BeneficioCumuloController extends SiapController implements IBenefi
 
 		// RichiestePmInCumuloSqlDAO lRichPmCumSqlDao = null;
 		RichPMBeneficioCumSqlDAO lRichPmBenCumSqlDao = null;
-		
+
 		try {
 			lConn = getDBTransaction();
 
-			// 2025.11.18 - Correzione per ERR violazione FK 
+			// 2025.11.18 - Correzione per ERR violazione FK
 			if (aBeneficio.getFlagStato().compareTo("I") == 0) {
-			    // Devo verificare che il beneficio non sia puntato da una richiesta di revoca 
-			    // altrimenti va in errore la FK
-			    lRichPmBenCumSqlDao = new RichPMBeneficioCumSqlDAO (lConn);
-			    
-			    RichPMBeneficioCumModel aModel = null;
-			    lRichPmBenCumSqlDao.ricercaRichPmBeneficioCumByIdBen(aBeneficio.getIdBeneficioCumulo());
-			    aModel = (RichPMBeneficioCumModel) lRichPmBenCumSqlDao.getModelByKey();
-			    if (aModel!=null && aModel.getRicIdRichiestePmInCumulo()!=null){
-			          throw new F3BException(F3BException.USER_MESSAGE, "Il beneficio non è cancellabile in quanto collegato ad Richieste in cumulo."
-			                  + " Per procedere è necessario prima cancellare le richieste."); 
-			    }
+				// Devo verificare che il beneficio non sia puntato da una richiesta di revoca
+				// altrimenti va in errore la FK
+				lRichPmBenCumSqlDao = new RichPMBeneficioCumSqlDAO(lConn);
+
+				RichPMBeneficioCumModel aModel = null;
+				lRichPmBenCumSqlDao.ricercaRichPmBeneficioCumByIdBen(aBeneficio.getIdBeneficioCumulo());
+				aModel = (RichPMBeneficioCumModel) lRichPmBenCumSqlDao.getModelByKey();
+				if (aModel != null && aModel.getRicIdRichiestePmInCumulo() != null) {
+					throw new F3BException(F3BException.USER_MESSAGE,
+							"Il beneficio non è cancellabile in quanto collegato ad Richieste in cumulo."
+									+ " Per procedere è necessario prima cancellare le richieste.");
+				}
 			}
-			// 2025.11.18 - FINE 
-			
-			
+			// 2025.11.18 - FINE
+
 			// se esiste la tipologia orario e trattasi di Cancellazione Fisica: allora Delete
 			if (aBeneficio.getFlagStato().compareTo("I") == 0) {
 				lTipOrDao = new TipologiaOrarioDAO(lConn);
