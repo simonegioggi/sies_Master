@@ -274,6 +274,10 @@ public class ComputiCumuloSqlDAO extends SqlDAO {
                   "TIPO_AUT_REGE, TIPAUTO_REGE.RV_MEANING DescrTipoAutoritaRege, "+
                   "COD_SEDE_REGE, SEDEAUTO_REGE.DESCRIZIONE DescrLuogoAutoritaRege, DATA_REGE, "+
                   
+                   // MEV_2025-48 - ALTRO – Benefici con anticipazione effetti                  
+                   "FLAG_APP_PROVVISORIA, "+  
+                  
+                  
                   "CHIAVE_ANNO_SIEP, CHIAVE_NUMERO_SIEP, CHIAVE_UFFICIO_SIEP, ANNO_SENTENZA, NUMERO_SENTENZA, DATA_SENTENZA, "+    // Campi sentenza
                   "COD_TIPO_AUT_EMITT_SENTENZA, TIPO_AUTO.RV_MEANING DescrTipoAutoritaEmittente, "+
                   "COD_LUOGO_EMITTENTE_SENTENZA, LUOGO_AUTO.DESCRIZIONE DescrLuogoEmittente "; 
@@ -477,6 +481,8 @@ public class ComputiCumuloSqlDAO extends SqlDAO {
     aModel.setChiaveNumeroSIEP			(getBigDecimal	("CHIAVE_NUMERO_SIEP"));
     aModel.setChiaveUfficioSIEP			(getString		("CHIAVE_UFFICIO_SIEP"));
     
+    // MEV_2025-48 - ALTRO – Benefici con anticipazione effetti
+    aModel.setFlagAppProvvisoria        (getString      ("FLAG_APP_PROVVISORIA"));
 
     return aModel;
   }
@@ -722,6 +728,11 @@ public class ComputiCumuloSqlDAO extends SqlDAO {
     if (aModel.getAltroLuogoDetenzione() != null && aModel.getAltroLuogoDetenzione().length() > 0) { 
       lCondizioni += " and ALTRO_LUOGO_DETENZIONE = '" + aModel.getAltroLuogoDetenzione() + "' "; 
     }    
+    // MEV_2025-48 - ALTRO – Benefici con anticipazione effetti
+    if (aModel.getFlagAppProvvisoria() != null && aModel.getFlagAppProvvisoria().length() > 0) { 
+        lCondizioni += " and FLAG_APP_PROVVISORIA = '" + aModel.getFlagAppProvvisoria() + "' "; 
+    } 
+    
     // Elimino il primo and 
     if (lCondizioni.length() > 0) { 
       lCondizioni = lCondizioni.substring(4); 
