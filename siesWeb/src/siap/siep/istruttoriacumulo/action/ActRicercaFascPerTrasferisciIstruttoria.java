@@ -49,9 +49,14 @@ public class ActRicercaFascPerTrasferisciIstruttoria extends ActionSiap
 		// Ricerco il fascicolo
 		FascicoloSiepModel lFasMod = new FascicoloSiepModel();
 
+        BigDecimal lChiaveAnno = getRequestBigDecimalParameter(ICostantiFascicoloSiep.CAMPO_CHIAVE_ANNO);
 		BigDecimal lChiaveProgr = getRequestBigDecimalParameter(ICostantiFascicoloSiep.CAMPO_CHIAVE_PROGR);
-		BigDecimal lChiaveAnno = getRequestBigDecimalParameter(ICostantiFascicoloSiep.CAMPO_CHIAVE_ANNO);
 
+		FascicoloSiepModel lFas = (FascicoloSiepModel) getSession().getAttribute("fascicolo");
+		if (lFas.getChiaveAnno().compareTo(lChiaveAnno)==0 && lFas.getChiaveProgr().compareTo(lChiaveProgr)==0)
+	          throw new SIEPException(F3BException.USER_MESSAGE,
+	                    "Non si può trasferire l'istruttoria sullo stesso fascicolo");
+		
 		lFasMod.setChiaveUfficio(getCodUfficioUtenteConnesso());
 		lFasMod.setChiaveProgr(lChiaveProgr);
 		lFasMod.setChiaveAnno(lChiaveAnno);

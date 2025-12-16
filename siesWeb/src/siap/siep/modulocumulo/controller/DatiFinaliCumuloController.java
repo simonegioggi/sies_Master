@@ -4891,7 +4891,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	 *
 	 * @since MEV_2025-48
 	 */
-	private TreeModel getTreeModelCalcoloPenaCumulo(BigDecimal aIdIstruttCumulo) throws F3BException {
+	public TreeModel getTreeModelCalcoloPenaCumulo(BigDecimal aIdIstruttCumulo) throws F3BException {
 
 		TreeModel lTreeCalcoloPena = null;
 

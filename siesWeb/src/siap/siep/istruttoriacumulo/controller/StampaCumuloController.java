@@ -50,6 +50,7 @@ import siap.siep.istruttoriacumulo.model.RiepilogoPenaComplessivaCumuloModel;
 import siap.siep.istruttoriacumulo.model.RiepilogoPresoffertoCumuloModel;
 import siap.siep.modulocumulo.controller.IBeneficioCumulo;
 import siap.siep.modulocumulo.controller.ICircostanzaCumulo;
+import siap.siep.modulocumulo.controller.IDatiFinaliCumulo;
 import siap.siep.modulocumulo.controller.IReatoCumulo;
 import siap.siep.modulocumulo.controller.ITitoloCumulato;
 import siap.siep.modulocumulo.controller.ReatoContinuazioneCumuloController;
@@ -2493,6 +2494,13 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 
 				lTreeIstruMod.add(new TreeModel(lBen));
 			}
+			
+			// MEV_2025-48 - ALTRO – Aggiunta Ramo <CalcoloPenaCumulo>
+			IDatiFinaliCumulo lDatFinCtrl = SIEPLookupRemote.getDatiFinaliCumuloRemote();
+			TreeModel lTreeCalcoloPenaNew = null; 
+			lTreeCalcoloPenaNew = lDatFinCtrl.getTreeModelCalcoloPenaCumulo(aIstruttoriaCumulo.getIdIstruttoriaCumulo());
+			lTreeIstruMod.add(lTreeCalcoloPenaNew);
+			// MEV_2025-48 - ALTRO – Aggiunta Ramo <CalcoloPenaCumulo> - FINE
 
 			siesLogger.debug("add di TUTTO Il NODO ISTRUTTORIA al root .... ");
 			lTreeRoot.add(lTreeIstruMod);
