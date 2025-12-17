@@ -307,11 +307,14 @@ public class ComputiCumuloSqlDAO extends SqlDAO {
 
     
     // Fungibilita
-   // -- Campi PTOVV
+    // -- Campi PROVV
     lStatement += " LEFT OUTER JOIN UFFICIO ON UFFICIO.COD_UFFICIO = COD_UFFICIO_EMITTENTE_PROVV "+
                   " LEFT OUTER JOIN CG_REF_CODES TIPO_UFF ON TIPO_UFF.RV_LOW_VALUE = UFFICIO.COD_TIPO_UFFICIO "+
                     " AND TIPO_UFF.RV_DOMAIN = 'TIPO_UFFICIO' "+
-                  " LEFT OUTER JOIN COMUNE ON COMUNE.COD_COMUNE = COD_LUOGO_UFFICIO_PROVV ";
+    // MEV_2025-48 - ALTRO – Benefici con anticipazione effetti si corregge il recupera della desc comune ufficio             
+    //              " LEFT OUTER JOIN COMUNE ON COMUNE.COD_COMUNE = COD_LUOGO_UFFICIO_PROVV ";
+                  " LEFT OUTER JOIN COMUNE ON COMUNE.COD_COMUNE =UFFICIO.COD_COMUNE ";
+    // MEV_2025-48 - ALTRO – Benefici con anticipazione effetti
     //-- Campi SENTENZA
     lStatement += " LEFT OUTER JOIN CG_REF_CODES TIPO_AUTO ON TIPO_AUTO.RV_LOW_VALUE = COD_TIPO_AUT_EMITT_SENTENZA "+ 
                                                        " AND TIPO_AUTO.RV_DOMAIN = 'TIPO_UFFICIO' "+
