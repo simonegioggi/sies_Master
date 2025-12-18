@@ -1748,9 +1748,8 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 	/**
 	 * Seleziona un singolo documento rtf sul DB e lo restituisce come ByteArrayOutputStream
 	 *
-	 * @param aRichiesta
-	 *            Inviata
-	 * @return Array con il Documento recuperato dal DB
+	 * @param aRichiesta Inviata
+	 * @return ByteArrayOutputStream con il Documento recuperato dal DB se presente
 	 * @throws F3BException
 	 */
 	public ByteArrayOutputStream ExGetDocumento(RichiesteInviateCumModel aRichiesteInv) throws F3BException {
@@ -1770,7 +1769,6 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 			lRicDao.selByKey();
 
 			lRicDao.start(1);
-			siesLogger.debug("--XX-- Dopo RicDao Start ");
 			if (lRicDao.next())
 				lByteArrayOut = lRicDao.getDocBlob();
 
@@ -1783,6 +1781,9 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 			siesLogger.error("DAOException: ", ex);
 			throw new F3BException(
 					"RichiestePmInCumuloController.ExGetDocumento: Errore Dati NON trovati " + ex);
+	    } catch (F3BException ex) {
+	        siesLogger.warn("F3BException: "+ex.getMessage());
+	        throw ex;
 		} catch (Exception ex) {
 			siesLogger.error("Exception: ", ex);
 			throw new F3BException(

@@ -329,12 +329,13 @@
 
 	<br>
 
-	<table cellspacing="2" cellpadding="4" width="800px">
+	<table cellspacing="2" cellpadding="4" width="900px">
 		<tr>
 			<td colspan="8">
 				<font class='cBlack'>N.B. Di seguito sono riportate : </font>
 				<font class='cRosso'>in Rosso le quantità di pena da sommare alla Pena Principale, </font>
-				<font class='Label'>in Blu quelle da Detrarre. </font>
+				<font class='Label'>in Blu quelle da Detrarre, </font>
+				<font class='Label' style="color:grey;">in Grigio quelle non conteggiate. </font>
 			</td>
 		</tr>
 		
