@@ -3,6 +3,7 @@ package siap.siep.calcolopena.model;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -63,6 +64,9 @@ public class CalcoloPenaDL92Model extends GenericModel {
 	private Date mDataScarcerazioneLANoFung; 
 	// ?? data fine pena dal Penultimo semestre ( a che serve????)
 	private Date mDataScarcerazionePenultimoSemestre;
+
+	// Indica se il semestre con progressivo x è considerato valido ai fini della concessione delle LA
+	private Hashtable <String, String> mListaIsCompresa = new Hashtable <String, String>();
 
   /**
    * 
@@ -159,6 +163,10 @@ public class CalcoloPenaDL92Model extends GenericModel {
 		return mDataScarcerazionePenultimoSemestre;
 	}
 	
+	public Hashtable <String, String> getListaIsCompresa () {
+		return mListaIsCompresa;
+	}	
+	
   // Metodi Setter
   public void setNumAnniReclusione(BigDecimal mNumAnniReclusione) {
     this.mNumAnniReclusione = mNumAnniReclusione;
@@ -239,6 +247,10 @@ public class CalcoloPenaDL92Model extends GenericModel {
 		this.mDataScarcerazionePenultimoSemestre = mDataScarcerazionePenultimoSemestre;
 	}
 	
+	public void setListaIsCompresa (Hashtable <String, String> mListaIsCompresa)   {
+		this.mListaIsCompresa = mListaIsCompresa;
+	}	
+	
   /**
 	 * calcolaPenaVirtuale
    */
@@ -266,9 +278,13 @@ public class CalcoloPenaDL92Model extends GenericModel {
 		lCalendarSemestre.setNumMesi(new BigDecimal(6));
 		
 	  // Calendar che rappresenta i 45 gg di LA
-		CalendarModel lCalendarLA = new CalendarModel();
-		lCalendarLA.setNumGiorni(new BigDecimal(45));
-		lCalendarLA = lCalUtil.ricalcolaGAM(lCalendarLA);
+		CalendarModel lCalendarLA_Compreso = new CalendarModel();
+		lCalendarLA_Compreso.setNumGiorni(new BigDecimal(45));
+		lCalendarLA_Compreso = lCalUtil.ricalcolaGAM(lCalendarLA_Compreso);
+		
+		CalendarModel lCalendarLA_Escluso = new CalendarModel();
+		lCalendarLA_Escluso.setNumGiorni(new BigDecimal(0));
+		lCalendarLA_Escluso = lCalUtil.ricalcolaGAM(lCalendarLA_Escluso);
 		
 		// Il presofferto posso calcolarlo fuori ciclo sia per Detenuto che libero
 		int lGiorniResiduiPresofferto = 0;
@@ -333,7 +349,18 @@ public class CalcoloPenaDL92Model extends GenericModel {
   			CalendarModel lResiduo = lCalUtil.sottraiGiornieValute(lCalModTot, lCalendarSemestre);
 				// lLaApplicate = default 45 per semestre tranne eventualmente sull'utimo in mancanza di
 				// capienza
+  			//
   			BigDecimal lLaApplicate = new BigDecimal(45);
+  			CalendarModel lCalendarLA = lCalendarLA_Compreso;
+  			String lIsCompreso = "S";
+  			String idSemestre = "prgSemestre_"+(lProgSemestre+1);
+  			
+  			if ( mListaIsCompresa.get(idSemestre)!=null && "N".equals(mListaIsCompresa.get(idSemestre)) ) {
+  				lCalendarLA = lCalendarLA_Escluso;
+  			  lLaApplicate = new BigDecimal(0);
+  			  lIsCompreso = "N";
+  			}  			
+  			
   			if (lCalUtil.isPositiveTime(lResiduo) ) {
   				siesLogger.debug(lProgSemestre+") Ho capienza per un altro semestre"); 
 	  			// Ho capienza per un altro semestre sotraggo
@@ -370,6 +397,7 @@ public class CalcoloPenaDL92Model extends GenericModel {
 				lSemetreUtile.setResiduoNumMesi      (new BigDecimal (lCalModTot.getNumMesi()));
 				lSemetreUtile.setResiduoNumGiorni    (new BigDecimal (lCalModTot.getNumGiorni()));
 				lSemetreUtile.setLAApplicate         (lLaApplicate);
+				lSemetreUtile.setIsCompreso          (lIsCompreso);
 				
 				mListaSemetri.add(lSemetreUtile);
   		}
@@ -381,21 +409,20 @@ public class CalcoloPenaDL92Model extends GenericModel {
   		
 			// Calcolo il fine pena applicando tutti i quantum
 			PenaResiduaModel lPenaIniziale = new PenaResiduaModel();
-			//n.b. non posso usar i quantul sul presofferto perchè già decurtati delle LA. 
-			// Devo usare iil totale iniziale e poi anticipare il fine pena 
+			// n.b. non posso usare i quantum sul presofferto perchè già decurtati delle LA. 
+			// Devo usare il totale iniziale e poi anticipare il fine pena 
 			lPenaIniziale.setQuantumReclusione (this.getTotaleDaEseguire()); 
 			
 			ICalcoloPena lCalPenCtrl = SIEPLookupRemote.getCalcoloPenaRemote();
 			Vector<Date> lDateFine = lCalPenCtrl.exCalcolaDataFinePena(this.mDataInizioPena, lPenaIniziale,
 					true);
 			Date lDataFinePena = lDateFine.elementAt(0);
-			siesLogger
-					.debug("Data Fine senza LA = " + DateUtils.getDateToString(lDataFinePena, "dd/MM/yyyy"));
+			siesLogger.debug("Data Fine senza LA = " + DateUtils.getDateToString(lDataFinePena, "dd/MM/yyyy"));
 			
 			// Data senza applicare LA (nemmeno quelle del presofferto)
 			mDataScarcerazioneNoLA = lDataFinePena;
 			
-  		// Gestire il presofferto
+  		// Gestione Presofferto
   		if (!lCalUtil.isZero (lCalModPresofferto)) { 
   			// Se maturate LA devo anticipare il fine pena
   			if (mSemestrePresofferto.getLAApplicate().intValue()>0) {
@@ -443,8 +470,19 @@ public class CalcoloPenaDL92Model extends GenericModel {
   				break;
   			}
   			
+  			// Nuova gestione dei periodi (ESCLUSO/COMPRESO)
+  			BigDecimal lLaApplicate = new BigDecimal(45); //default
+  			String lIsCompreso = "S";
+  			String idSemestre = "prgSemestre_"+(lProgSemestre+1);
+  			
+  			if ( mListaIsCompresa.get(idSemestre)!=null && "N".equals(mListaIsCompresa.get(idSemestre)) ) {
+  			  lLaApplicate = new BigDecimal(0);
+  			  lIsCompreso = "N";
+  			}  			
+
+  			
   			// Nuovo fine pena sottraendo i 45 gg maturati
-  			lNuovaDataFinePena = DateUtils.moveDateTo (lDataFinePena, Calendar.DAY_OF_MONTH, -45);
+  			lNuovaDataFinePena = DateUtils.moveDateTo (lDataFinePena, Calendar.DAY_OF_MONTH, -lLaApplicate.intValue());
 				siesLogger.debug(lProgSemestre + ") lNuovaDataFinePena = "
 						+ DateUtils.getDateToString(lNuovaDataFinePena, "dd/MM/yyyy"));
 	  		
@@ -452,7 +490,7 @@ public class CalcoloPenaDL92Model extends GenericModel {
   			mDataScarcerazioneLANoFung = lNuovaDataFinePena;
   			
   			// Verifico se posso applicare Tutti i 45 gg di LA maturati
-  			BigDecimal lLaApplicate = new BigDecimal(45); //default
+  			//BigDecimal lLaApplicate = new BigDecimal(45); //default
   			if (DateUtils.isGreater (lDataMaturazioneSemestre, lNuovaDataFinePena)) {
   				// Non posso sottrarre tutti i 45 gg ma solo una parte
 					siesLogger.debug(lProgSemestre
@@ -498,6 +536,7 @@ public class CalcoloPenaDL92Model extends GenericModel {
 				lSemetreUtile.setResiduoNumMesi      (new BigDecimal (lCalModTot.getNumMesi()));
 				lSemetreUtile.setResiduoNumGiorni    (new BigDecimal (lCalModTot.getNumGiorni()));
 				lSemetreUtile.setLAApplicate         (lLaApplicate);
+				lSemetreUtile.setIsCompreso          (lIsCompreso);
 				
 				lSemetreUtile.setDataMaturazioneLA     (lDataMaturazioneSemestre);
 				lSemetreUtile.setNuovaDataScadenzaPena (lNuovaDataFinePena);				
@@ -548,16 +587,18 @@ public class CalcoloPenaDL92Model extends GenericModel {
   
   /**
    * Ritorna il totale della LA maturate come prodotto del numero di semestri utili per 45gg
-	 *
+   * Nota solo le LA sulla solo pena da sconare quindi non conteggiano le LA sul presofferto
    * @return
    */
   public BigDecimal getLAMaturate () {
   	int lTotLAMaturata = 0;
   	
-  	if (mSemestrePresofferto!=null && mSemestrePresofferto.getLAApplicate()!=null)
-  		lTotLAMaturata = mSemestrePresofferto.getLAApplicate().intValue();
+  	//if (mSemestrePresofferto!=null && mSemestrePresofferto.getLAApplicate()!=null)
+  	//	lTotLAMaturata = mSemestrePresofferto.getLAApplicate().intValue();
   	
-  	lTotLAMaturata += mListaSemetri.size()*45;
+  	// lTotLAMaturata += mListaSemetri.size()*45;
+  	lTotLAMaturata +=getSemestriUtiliPenaScontata().intValue()*45;
+  	
   	return new BigDecimal(lTotLAMaturata);
   }
   
@@ -581,15 +622,35 @@ public class CalcoloPenaDL92Model extends GenericModel {
   	return lTotLAApplicata;
   }
   
+  public BigDecimal getLANonConcesse () {
+  	BigDecimal lTotLANonConcesse = new BigDecimal(0);
+
+  	//if (mSemestrePresofferto!=null && mSemestrePresofferto.getLAApplicate()!=null)
+  	//	lTotLAApplicata = lTotLAApplicata.add(mSemestrePresofferto.getLAApplicate());
+  	
+  	for (int i = 0; i<mListaSemetri.size(); i++) {
+  		SemestreDL92Model lSemestreUtile = mListaSemetri.elementAt(i);
+  		if ("N".equals(lSemestreUtile.getIsCompreso()))
+  			lTotLANonConcesse = lTotLANonConcesse.add (new BigDecimal(45));
+  	}
+  	
+  	return lTotLANonConcesse;
+  }
+  
   /**
    * Ritorna le LA non fruibili (fungibili) come differenza tra quelle maturate e quelle applicate
+   * escludendo comunque i semestri non concessi
 	 *
    * @return
    */
   public BigDecimal getLAFungibili () {
   	BigDecimal lTotLAFungibile = null;
 
+  	// lTotLAFungibile= getLAMaturate().subtract(getLAApplicate());
   	lTotLAFungibile= getLAMaturate().subtract(getLAApplicate());
+  	
+  	// Le LA non concesso non sono ovviamente fungibili
+  	//lTotLAFungibile = lTotLAFungibile.subtract(getLANonConcesse());
   	
   	return lTotLAFungibile;
   }
@@ -607,22 +668,38 @@ public class CalcoloPenaDL92Model extends GenericModel {
   	return new BigDecimal(numGiorniLAMaturataInPenaresidua);
   }
   
+  /**
+   * Semestri su cui computare le LA calcolati sulla pena residua al netto del Presofferto, quindi escluso il presoffeto.
+   * @return
+   */
   public BigDecimal getSemestriUtili () {
 
-  	int semestriUtili = getListaSemetri().size();
+  	int semestriUtili = 0; //getListaSemetri().size();
+  	
+  	Vector <SemestreDL92Model> listaSemestri = getListaSemetri();
+  	for (int i = 0 ; i< listaSemestri.size(); i++) {  		
+  		if ("S".equals(listaSemestri.elementAt(i).getIsCompreso()))
+  			semestriUtili++;
+  	}  	
   	
   	return new BigDecimal(semestriUtili);
   }
   
   /**
    * Ritorna il totale dei semestri utili, quelli del presofferto più quelli delle detentiva
-	 *
+   * a meno dei semestri scartati
 	 * @return BigDecimal
    */
   public BigDecimal getSemestriUtiliPenaScontata () {
   	
-		int semestriUtili = this.getSemestrePresofferto().getNumSemestriMaturati().intValue()
-				+ this.getListaSemetri().size();
+	  	int semestriUtili = this.getSemestrePresofferto().getNumSemestriMaturati().intValue();
+		//		+ this.getListaSemetri().size();
+	  	
+		Vector <SemestreDL92Model> listaSemestri = getListaSemetri();
+		for (int i = 0 ; i< listaSemestri.size(); i++) {  		
+			if ("S".equals(listaSemestri.elementAt(i).getIsCompreso()))
+				semestriUtili++;
+		}
   	
   	return new BigDecimal(semestriUtili);
   }
