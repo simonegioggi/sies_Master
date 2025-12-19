@@ -1,13 +1,13 @@
-BRANCH SIES VERSIONE 12.8.4.0
+BRANCH SIES VERSIONE 12.8.5.0
 
-Nasce dal branch 12.8.3.1 in data 07/11/2025
+Nasce dal branch 12.8.4.0 in data 22/12/2025
 
-Questa Release verrà rilasciata il 19/12/2025 (Patch mesi di Novembre e Dicembre 2025)
+Questa Release verrà rilasciata il 23/01/2026 (Patch mese di Gennaio 2026)
 
 Comprende i seguenti Ticket MAC:
 
-1)	Ticket#202511270115 - Errore nota accompagnamento notifica avvocati template Siep
-	Per la risoluzione della problematica è stato modificato il template relativo alla Notifica agli Avvocati.
-	Il problema era legato al fatto che mancava un controllo sul codice motivo dell'evento legato al fascicolo.
-	Template modificato:
-	-   NotificaAvvocati.rtf
+1)	Ticket#
+	Per la risoluzione della problematica è stata modificata ...
+	Il problema era legato al fatto che ...
+	Classe modificata:
+	-   ...
