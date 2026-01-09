@@ -5,5 +5,5 @@
 // Generato il: 2016.09.29 alle 10:18:36 AM CEST 
 //
 
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://it/eng/giustizia/avvocatura/ws/type/dettaglioDecreto", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+@jakarta.xml.bind.annotation.XmlSchema(namespace = "http://it/eng/giustizia/avvocatura/ws/type/dettaglioDecreto", elementFormDefault = jakarta.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package it.eng.giustizia.avvocatura.ws.type.dettaglioDecreto;

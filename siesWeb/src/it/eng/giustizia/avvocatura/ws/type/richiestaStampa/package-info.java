@@ -5,5 +5,5 @@
 // Generato il: 2016.09.05 alle 02:30:32 PM CEST 
 //
 
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://it/eng/giustizia/avvocatura/ws/type/richiestaStampa", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+@jakarta.xml.bind.annotation.XmlSchema(namespace = "http://it/eng/giustizia/avvocatura/ws/type/richiestaStampa", elementFormDefault = jakarta.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package it.eng.giustizia.avvocatura.ws.type.richiestaStampa;

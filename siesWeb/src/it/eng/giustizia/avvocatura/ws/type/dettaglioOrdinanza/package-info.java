@@ -5,5 +5,5 @@
 // Generato il: 2016.09.26 alle 11:09:52 AM CEST 
 //
 
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://it/eng/giustizia/avvocatura/ws/type/dettaglioOrdinanza", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+@jakarta.xml.bind.annotation.XmlSchema(namespace = "http://it/eng/giustizia/avvocatura/ws/type/dettaglioOrdinanza", elementFormDefault = jakarta.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package it.eng.giustizia.avvocatura.ws.type.dettaglioOrdinanza;

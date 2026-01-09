@@ -3,8 +3,8 @@ package it.eng.giustizia.avvocatura.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.ValidationEvent;
-import javax.xml.bind.util.ValidationEventCollector;
+import jakarta.xml.bind.ValidationEvent;
+import jakarta.xml.bind.util.ValidationEventCollector;
 
 public class ValidationHandler extends ValidationEventCollector {
 	

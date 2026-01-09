@@ -5,5 +5,5 @@
 // Generato il: 2016.08.24 alle 10:47:00 AM CEST 
 //
 
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://it/eng/giustizia/avvocatura/ws/type/dettaglioSentenza", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+@jakarta.xml.bind.annotation.XmlSchema(namespace = "http://it/eng/giustizia/avvocatura/ws/type/dettaglioSentenza", elementFormDefault = jakarta.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package it.eng.giustizia.avvocatura.ws.type.dettaglioSentenza;

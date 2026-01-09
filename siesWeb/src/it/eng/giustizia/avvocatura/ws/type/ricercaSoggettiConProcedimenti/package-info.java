@@ -5,5 +5,5 @@
 // Generato il: 2020.02.10 alle 12:42:15 PM CET 
 //
 
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://it/eng/giustizia/avvocatura/ws/type/ricercaSoggettiConProcedimenti", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+@jakarta.xml.bind.annotation.XmlSchema(namespace = "http://it/eng/giustizia/avvocatura/ws/type/ricercaSoggettiConProcedimenti", elementFormDefault = jakarta.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package it.eng.giustizia.avvocatura.ws.type.ricercaSoggettiConProcedimenti;

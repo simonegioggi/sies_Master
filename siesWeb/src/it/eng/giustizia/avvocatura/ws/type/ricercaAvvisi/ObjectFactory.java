@@ -8,7 +8,7 @@
 
 package it.eng.giustizia.avvocatura.ws.type.ricercaAvvisi;
 
-import javax.xml.bind.annotation.XmlRegistry;
+import jakarta.xml.bind.annotation.XmlRegistry;
 
 
 /**
