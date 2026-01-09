@@ -1,4 +1,4 @@
-
+ï»¿
 package it.mig.sies.type.foglicomplementari;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -84,7 +84,7 @@ public class ProvvedimentoGiudiziario {
     protected String codiceSedeAutoritaPrincipale;
 
     /**
-     * Recupera il valore della proprietà chiaviProvvedimentoGiudiziario.
+     * Recupera il valore della proprieta chiaviProvvedimentoGiudiziario.
      * 
      * @return
      *     possible object is
@@ -96,7 +96,7 @@ public class ProvvedimentoGiudiziario {
     }
 
     /**
-     * Imposta il valore della proprietà chiaviProvvedimentoGiudiziario.
+     * Imposta il valore della proprieta chiaviProvvedimentoGiudiziario.
      * 
      * @param value
      *     allowed object is
@@ -108,7 +108,7 @@ public class ProvvedimentoGiudiziario {
     }
 
     /**
-     * Recupera il valore della proprietà numeroSentenza.
+     * Recupera il valore della proprieta numeroSentenza.
      * 
      * @return
      *     possible object is
@@ -120,7 +120,7 @@ public class ProvvedimentoGiudiziario {
     }
 
     /**
-     * Imposta il valore della proprietà numeroSentenza.
+     * Imposta il valore della proprieta numeroSentenza.
      * 
      * @param value
      *     allowed object is
@@ -132,7 +132,7 @@ public class ProvvedimentoGiudiziario {
     }
 
     /**
-     * Recupera il valore della proprietà flagCumulante.
+     * Recupera il valore della proprieta flagCumulante.
      * 
      */
     public boolean isFlagCumulante() {
@@ -140,7 +140,7 @@ public class ProvvedimentoGiudiziario {
     }
 
     /**
-     * Imposta il valore della proprietà flagCumulante.
+     * Imposta il valore della proprieta flagCumulante.
      * 
      */
     public void setFlagCumulante(boolean value) {
@@ -148,7 +148,7 @@ public class ProvvedimentoGiudiziario {
     }
 
     /**
-     * Recupera il valore della proprietà annoSentenza.
+     * Recupera il valore della proprieta annoSentenza.
      * 
      * @return
      *     possible object is
@@ -160,7 +160,7 @@ public class ProvvedimentoGiudiziario {
     }
 
     /**
-     * Imposta il valore della proprietà annoSentenza.
+     * Imposta il valore della proprieta annoSentenza.
      * 
      * @param value
      *     allowed object is
@@ -172,7 +172,7 @@ public class ProvvedimentoGiudiziario {
     }
 
     /**
-     * Recupera il valore della proprietà dataProvvedimento.
+     * Recupera il valore della proprieta dataProvvedimento.
      * 
      * @return
      *     possible object is
@@ -184,7 +184,7 @@ public class ProvvedimentoGiudiziario {
     }
 
     /**
-     * Imposta il valore della proprietà dataProvvedimento.
+     * Imposta il valore della proprieta dataProvvedimento.
      * 
      * @param value
      *     allowed object is
@@ -196,7 +196,7 @@ public class ProvvedimentoGiudiziario {
     }
 
     /**
-     * Recupera il valore della proprietà codiceAutorita.
+     * Recupera il valore della proprieta codiceAutorita.
      * 
      * @return
      *     possible object is
@@ -208,7 +208,7 @@ public class ProvvedimentoGiudiziario {
     }
 
     /**
-     * Imposta il valore della proprietà codiceAutorita.
+     * Imposta il valore della proprieta codiceAutorita.
      * 
      * @param value
      *     allowed object is
@@ -220,7 +220,7 @@ public class ProvvedimentoGiudiziario {
     }
 
     /**
-     * Recupera il valore della proprietà codiceSedeAutoritaPrincipaleDistaccata.
+     * Recupera il valore della proprieta codiceSedeAutoritaPrincipaleDistaccata.
      * 
      * @return
      *     possible object is
@@ -232,7 +232,7 @@ public class ProvvedimentoGiudiziario {
     }
 
     /**
-     * Imposta il valore della proprietà codiceSedeAutoritaPrincipaleDistaccata.
+     * Imposta il valore della proprieta codiceSedeAutoritaPrincipaleDistaccata.
      * 
      * @param value
      *     allowed object is
@@ -244,7 +244,7 @@ public class ProvvedimentoGiudiziario {
     }
 
     /**
-     * Recupera il valore della proprietà codiceSedeAutoritaPrincipale.
+     * Recupera il valore della proprieta codiceSedeAutoritaPrincipale.
      * 
      * @return
      *     possible object is
@@ -256,7 +256,7 @@ public class ProvvedimentoGiudiziario {
     }
 
     /**
-     * Imposta il valore della proprietà codiceSedeAutoritaPrincipale.
+     * Imposta il valore della proprieta codiceSedeAutoritaPrincipale.
      * 
      * @param value
      *     allowed object is

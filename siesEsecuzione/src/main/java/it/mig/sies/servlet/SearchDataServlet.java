@@ -1,4 +1,4 @@
-package it.mig.sies.servlet;
+﻿package it.mig.sies.servlet;
 
 import it.mig.sies.business.LoadService;
 import it.mig.sies.exception.ProfileException;
@@ -17,7 +17,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 
 /**
- * SIES FASE 2 - Servlet che gestisce il caricamento delle informazioni relative all'attivit� effettuate sul
+ * SIES FASE 2 - Servlet che gestisce il caricamento delle informazioni relative all'attivitï¿½ effettuate sul
  * singolo provvedimento dell'esecuzione
  * 
  * @author Federico Paparoni

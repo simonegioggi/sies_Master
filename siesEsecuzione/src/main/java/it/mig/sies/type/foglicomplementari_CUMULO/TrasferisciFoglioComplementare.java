@@ -1,4 +1,4 @@
-package it.mig.sies.type.foglicomplementari_CUMULO;
+﻿package it.mig.sies.type.foglicomplementari_CUMULO;
 
 import javax.jws.WebMethod;
 import javax.jws.WebParam;

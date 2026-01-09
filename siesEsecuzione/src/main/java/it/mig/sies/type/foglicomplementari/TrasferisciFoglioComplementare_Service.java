@@ -1,4 +1,4 @@
-package it.mig.sies.type.foglicomplementari;
+﻿package it.mig.sies.type.foglicomplementari;
 
 import java.net.MalformedURLException;
 import java.net.URL;

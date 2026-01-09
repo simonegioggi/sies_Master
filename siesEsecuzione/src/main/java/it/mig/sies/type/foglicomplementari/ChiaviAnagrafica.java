@@ -1,4 +1,4 @@
-
+ï»¿
 package it.mig.sies.type.foglicomplementari;
 
 import java.math.BigInteger;
@@ -53,7 +53,7 @@ public class ChiaviAnagrafica {
     protected BigInteger sies;
 
     /**
-     * Recupera il valore della proprietà nsc.
+     * Recupera il valore della proprieta nsc.
      * 
      * @return
      *     possible object is
@@ -65,7 +65,7 @@ public class ChiaviAnagrafica {
     }
 
     /**
-     * Imposta il valore della proprietà nsc.
+     * Imposta il valore della proprieta nsc.
      * 
      * @param value
      *     allowed object is
@@ -77,7 +77,7 @@ public class ChiaviAnagrafica {
     }
 
     /**
-     * Recupera il valore della proprietà sies.
+     * Recupera il valore della proprieta sies.
      * 
      * @return
      *     possible object is
@@ -89,7 +89,7 @@ public class ChiaviAnagrafica {
     }
 
     /**
-     * Imposta il valore della proprietà sies.
+     * Imposta il valore della proprieta sies.
      * 
      * @param value
      *     allowed object is

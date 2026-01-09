@@ -1,7 +1,7 @@
-//
-// Questo file � stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
+﻿//
+// Questo file ï¿½ stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
 // Vedere <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Qualsiasi modifica a questo file andr� persa durante la ricompilazione dello schema di origine. 
+// Qualsiasi modifica a questo file andrï¿½ persa durante la ricompilazione dello schema di origine. 
 // Generato il: 2016.10.26 alle 04:01:02 PM CEST 
 //
 
@@ -75,7 +75,7 @@ public class ResponseData {
     protected ProvvedimentoNSC provvedimentoNSC;
 
     /**
-     * Recupera il valore della propriet� esito.
+     * Recupera il valore della proprietï¿½ esito.
      * 
      * @return
      *     possible object is
@@ -87,7 +87,7 @@ public class ResponseData {
     }
 
     /**
-     * Imposta il valore della propriet� esito.
+     * Imposta il valore della proprietï¿½ esito.
      * 
      * @param value
      *     allowed object is
@@ -99,7 +99,7 @@ public class ResponseData {
     }
 
     /**
-     * Recupera il valore della propriet� chiaviAnagrafica.
+     * Recupera il valore della proprietï¿½ chiaviAnagrafica.
      * 
      * @return
      *     possible object is
@@ -111,7 +111,7 @@ public class ResponseData {
     }
 
     /**
-     * Imposta il valore della propriet� chiaviAnagrafica.
+     * Imposta il valore della proprietï¿½ chiaviAnagrafica.
      * 
      * @param value
      *     allowed object is
@@ -123,7 +123,7 @@ public class ResponseData {
     }
 
     /**
-     * Recupera il valore della propriet� chiaviProvvedimentoEsecutivo.
+     * Recupera il valore della proprietï¿½ chiaviProvvedimentoEsecutivo.
      * 
      * @return
      *     possible object is
@@ -135,7 +135,7 @@ public class ResponseData {
     }
 
     /**
-     * Imposta il valore della propriet� chiaviProvvedimentoEsecutivo.
+     * Imposta il valore della proprietï¿½ chiaviProvvedimentoEsecutivo.
      * 
      * @param value
      *     allowed object is
@@ -176,7 +176,7 @@ public class ResponseData {
     }
 
     /**
-     * Recupera il valore della propriet� arrayOmonimi.
+     * Recupera il valore della proprietï¿½ arrayOmonimi.
      * 
      * @return
      *     possible object is
@@ -188,7 +188,7 @@ public class ResponseData {
     }
 
     /**
-     * Imposta il valore della propriet� arrayOmonimi.
+     * Imposta il valore della proprietï¿½ arrayOmonimi.
      * 
      * @param value
      *     allowed object is
@@ -200,7 +200,7 @@ public class ResponseData {
     }
 
     /**
-     * Recupera il valore della propriet� estratto.
+     * Recupera il valore della proprietï¿½ estratto.
      * 
      * @return
      *     possible object is
@@ -211,7 +211,7 @@ public class ResponseData {
     }
 
     /**
-     * Imposta il valore della propriet� estratto.
+     * Imposta il valore della proprietï¿½ estratto.
      * 
      * @param value
      *     allowed object is
@@ -222,7 +222,7 @@ public class ResponseData {
     }
 
     /**
-     * Recupera il valore della propriet� anagraficaCancellata.
+     * Recupera il valore della proprietï¿½ anagraficaCancellata.
      * 
      */
     public boolean isAnagraficaCancellata() {
@@ -230,7 +230,7 @@ public class ResponseData {
     }
 
     /**
-     * Imposta il valore della propriet� anagraficaCancellata.
+     * Imposta il valore della proprietï¿½ anagraficaCancellata.
      * 
      */
     public void setAnagraficaCancellata(boolean value) {
@@ -238,7 +238,7 @@ public class ResponseData {
     }
 
     /**
-     * Recupera il valore della propriet� provvedimentoNSC.
+     * Recupera il valore della proprietï¿½ provvedimentoNSC.
      * 
      * @return
      *     possible object is
@@ -250,7 +250,7 @@ public class ResponseData {
     }
 
     /**
-     * Imposta il valore della propriet� provvedimentoNSC.
+     * Imposta il valore della proprietï¿½ provvedimentoNSC.
      * 
      * @param value
      *     allowed object is

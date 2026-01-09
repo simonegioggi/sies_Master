@@ -1,4 +1,4 @@
-package it.mig.sies.exception;
+﻿package it.mig.sies.exception;
 
 import org.apache.log4j.Logger;
 
@@ -7,7 +7,7 @@ import org.apache.log4j.Logger;
  * Title: F3BException
  * </p>
  * <p>
- * Description: Classe responsabile della gestione degli errori di eccezioni del framework. Questa classe dovr� essere
+ * Description: Classe responsabile della gestione degli errori di eccezioni del framework. Questa classe dovrï¿½ essere
  * ereditata da eventuali classi del progetto, specializzata per gestire errori di eccezione specifici del progetto.
  * </p>
  * <p>

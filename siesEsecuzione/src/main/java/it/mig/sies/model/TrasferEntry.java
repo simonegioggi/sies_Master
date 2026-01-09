@@ -1,9 +1,9 @@
-package it.mig.sies.model;
+﻿package it.mig.sies.model;
 
 import java.util.List;
 
 /**
- * SIES FASE 2 - Classe model relativa alla singola entry trasferita in modalit� massiva
+ * SIES FASE 2 - Classe model relativa alla singola entry trasferita in modalitï¿½ massiva
  * 
  * @author Federico Paparoni
  */

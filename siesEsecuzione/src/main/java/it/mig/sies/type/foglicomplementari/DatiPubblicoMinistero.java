@@ -1,4 +1,4 @@
-
+ï»¿
 package it.mig.sies.type.foglicomplementari;
 
 import java.math.BigDecimal;
@@ -180,7 +180,7 @@ public class DatiPubblicoMinistero {
     protected XMLGregorianCalendar dataFinePenaAl;
 
     /**
-     * Recupera il valore della proprietà chiaveSies.
+     * Recupera il valore della proprieta chiaveSies.
      * 
      */
     public long getChiaveSies() {
@@ -188,7 +188,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà chiaveSies.
+     * Imposta il valore della proprieta chiaveSies.
      * 
      */
     public void setChiaveSies(long value) {
@@ -196,7 +196,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà chiaveNsc.
+     * Recupera il valore della proprieta chiaveNsc.
      * 
      */
     public long getChiaveNsc() {
@@ -204,7 +204,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà chiaveNsc.
+     * Imposta il valore della proprieta chiaveNsc.
      * 
      */
     public void setChiaveNsc(long value) {
@@ -212,7 +212,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà dataProvvedimento.
+     * Recupera il valore della proprieta dataProvvedimento.
      * 
      * @return
      *     possible object is
@@ -224,7 +224,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà dataProvvedimento.
+     * Imposta il valore della proprieta dataProvvedimento.
      * 
      * @param value
      *     allowed object is
@@ -236,7 +236,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà annoOrdinanza.
+     * Recupera il valore della proprieta annoOrdinanza.
      * 
      * @return
      *     possible object is
@@ -248,7 +248,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà annoOrdinanza.
+     * Imposta il valore della proprieta annoOrdinanza.
      * 
      * @param value
      *     allowed object is
@@ -260,7 +260,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà numeroOrdinanza.
+     * Recupera il valore della proprieta numeroOrdinanza.
      * 
      * @return
      *     possible object is
@@ -272,7 +272,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà numeroOrdinanza.
+     * Imposta il valore della proprieta numeroOrdinanza.
      * 
      * @param value
      *     allowed object is
@@ -284,7 +284,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà codiceSedePM.
+     * Recupera il valore della proprieta codiceSedePM.
      * 
      * @return
      *     possible object is
@@ -296,7 +296,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà codiceSedePM.
+     * Imposta il valore della proprieta codiceSedePM.
      * 
      * @param value
      *     allowed object is
@@ -308,7 +308,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà annoSIEP.
+     * Recupera il valore della proprieta annoSIEP.
      * 
      * @return
      *     possible object is
@@ -320,7 +320,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà annoSIEP.
+     * Imposta il valore della proprieta annoSIEP.
      * 
      * @param value
      *     allowed object is
@@ -332,7 +332,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà numeroSIEP.
+     * Recupera il valore della proprieta numeroSIEP.
      * 
      * @return
      *     possible object is
@@ -344,7 +344,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà numeroSIEP.
+     * Imposta il valore della proprieta numeroSIEP.
      * 
      * @param value
      *     allowed object is
@@ -356,7 +356,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà annoSentenza.
+     * Recupera il valore della proprieta annoSentenza.
      * 
      * @return
      *     possible object is
@@ -368,7 +368,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà annoSentenza.
+     * Imposta il valore della proprieta annoSentenza.
      * 
      * @param value
      *     allowed object is
@@ -380,7 +380,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà numeroSentenza.
+     * Recupera il valore della proprieta numeroSentenza.
      * 
      * @return
      *     possible object is
@@ -392,7 +392,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà numeroSentenza.
+     * Imposta il valore della proprieta numeroSentenza.
      * 
      * @param value
      *     allowed object is
@@ -404,7 +404,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà codiceAutorita.
+     * Recupera il valore della proprieta codiceAutorita.
      * 
      * @return
      *     possible object is
@@ -416,7 +416,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà codiceAutorita.
+     * Imposta il valore della proprieta codiceAutorita.
      * 
      * @param value
      *     allowed object is
@@ -428,7 +428,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà sedeAutoritaPrinDist.
+     * Recupera il valore della proprieta sedeAutoritaPrinDist.
      * 
      * @return
      *     possible object is
@@ -440,7 +440,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà sedeAutoritaPrinDist.
+     * Imposta il valore della proprieta sedeAutoritaPrinDist.
      * 
      * @param value
      *     allowed object is
@@ -452,7 +452,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà sedeAutoritaPrinc.
+     * Recupera il valore della proprieta sedeAutoritaPrinc.
      * 
      * @return
      *     possible object is
@@ -464,7 +464,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà sedeAutoritaPrinc.
+     * Imposta il valore della proprieta sedeAutoritaPrinc.
      * 
      * @param value
      *     allowed object is
@@ -476,7 +476,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà codiceUnivocoProvvedimento.
+     * Recupera il valore della proprieta codiceUnivocoProvvedimento.
      * 
      * @return
      *     possible object is
@@ -488,7 +488,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà codiceUnivocoProvvedimento.
+     * Imposta il valore della proprieta codiceUnivocoProvvedimento.
      * 
      * @param value
      *     allowed object is
@@ -500,7 +500,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà tipoProvvedimento.
+     * Recupera il valore della proprieta tipoProvvedimento.
      * 
      * @return
      *     possible object is
@@ -512,7 +512,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà tipoProvvedimento.
+     * Imposta il valore della proprieta tipoProvvedimento.
      * 
      * @param value
      *     allowed object is
@@ -524,7 +524,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà importoAmmenda.
+     * Recupera il valore della proprieta importoAmmenda.
      * 
      * @return
      *     possible object is
@@ -536,7 +536,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà importoAmmenda.
+     * Imposta il valore della proprieta importoAmmenda.
      * 
      * @param value
      *     allowed object is
@@ -548,7 +548,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà importoMulta.
+     * Recupera il valore della proprieta importoMulta.
      * 
      * @return
      *     possible object is
@@ -560,7 +560,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà importoMulta.
+     * Imposta il valore della proprieta importoMulta.
      * 
      * @param value
      *     allowed object is
@@ -572,7 +572,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà arresto.
+     * Recupera il valore della proprieta arresto.
      * 
      * @return
      *     possible object is
@@ -584,7 +584,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà arresto.
+     * Imposta il valore della proprieta arresto.
      * 
      * @param value
      *     allowed object is
@@ -596,7 +596,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà reclusione.
+     * Recupera il valore della proprieta reclusione.
      * 
      * @return
      *     possible object is
@@ -608,7 +608,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà reclusione.
+     * Imposta il valore della proprieta reclusione.
      * 
      * @param value
      *     allowed object is
@@ -620,7 +620,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà ergastolo.
+     * Recupera il valore della proprieta ergastolo.
      * 
      * @return
      *     possible object is
@@ -632,7 +632,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà ergastolo.
+     * Imposta il valore della proprieta ergastolo.
      * 
      * @param value
      *     allowed object is
@@ -644,7 +644,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà isolamentoDiurno.
+     * Recupera il valore della proprieta isolamentoDiurno.
      * 
      * @return
      *     possible object is
@@ -656,7 +656,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà isolamentoDiurno.
+     * Imposta il valore della proprieta isolamentoDiurno.
      * 
      * @param value
      *     allowed object is
@@ -668,7 +668,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà dataFinePena.
+     * Recupera il valore della proprieta dataFinePena.
      * 
      * @return
      *     possible object is
@@ -680,7 +680,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà dataFinePena.
+     * Imposta il valore della proprieta dataFinePena.
      * 
      * @param value
      *     allowed object is
@@ -692,7 +692,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà dataFinePenaDal.
+     * Recupera il valore della proprieta dataFinePenaDal.
      * 
      * @return
      *     possible object is
@@ -704,7 +704,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà dataFinePenaDal.
+     * Imposta il valore della proprieta dataFinePenaDal.
      * 
      * @param value
      *     allowed object is
@@ -716,7 +716,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Recupera il valore della proprietà dataFinePenaAl.
+     * Recupera il valore della proprieta dataFinePenaAl.
      * 
      * @return
      *     possible object is
@@ -728,7 +728,7 @@ public class DatiPubblicoMinistero {
     }
 
     /**
-     * Imposta il valore della proprietà dataFinePenaAl.
+     * Imposta il valore della proprieta dataFinePenaAl.
      * 
      * @param value
      *     allowed object is

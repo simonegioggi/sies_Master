@@ -1,4 +1,4 @@
-package it.mig.sies.util;
+﻿package it.mig.sies.util;
 
 import it.mig.sies.exception.PropertiesException;
 
@@ -127,7 +127,7 @@ public class PropertiesMgr {
 		try {
 			lIntValue = Integer.parseInt(mProps.getProperty(aKey));
 		} catch (NumberFormatException nfex) {
-			throw new PropertiesException("Non � possibile convertire la chiave " + aKey + " con valore = "
+			throw new PropertiesException("Non ï¿½ possibile convertire la chiave " + aKey + " con valore = "
 					+ mProps.getProperty(aKey) + " in intero!");
 		}
 
@@ -157,7 +157,7 @@ public class PropertiesMgr {
 			else
 				lIntValue = Integer.parseInt(lStrValue);
 		} catch (NumberFormatException nfex) {
-			throw new PropertiesException("Non � possibile convertire la stringa in intero!");
+			throw new PropertiesException("Non ï¿½ possibile convertire la stringa in intero!");
 		}
 		return lIntValue;
 	}

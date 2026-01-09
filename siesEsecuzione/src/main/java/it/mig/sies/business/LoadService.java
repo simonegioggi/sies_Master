@@ -1,4 +1,4 @@
-package it.mig.sies.business;
+﻿package it.mig.sies.business;
 
 import it.mig.sies.exception.LoadException;
 import it.mig.sies.exception.ProfileException;
@@ -157,7 +157,7 @@ public class LoadService {
             Anagrafica anagrafica = Mapper.map(soggetto);
             
             //Se il provvedimento non ha 
-            //principali � lui stesso un principale...
+            //principali ï¿½ lui stesso un principale...
             if ((titoloGiudiziarioList!=null)&&(titoloGiudiziarioList.size()>0)) {
             	for (TitoloGiudiziario titoloGiudiziario : titoloGiudiziarioList) {
                     provvedimento.getProvvedimentoGiudiziario().add(Mapper.map(titoloGiudiziario));

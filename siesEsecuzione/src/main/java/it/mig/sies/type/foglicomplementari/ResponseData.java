@@ -1,4 +1,4 @@
-
+ï»¿
 package it.mig.sies.type.foglicomplementari;
 
 import java.util.ArrayList;
@@ -64,7 +64,7 @@ public class ResponseData {
     protected boolean anagraficaCancellata;
 
     /**
-     * Recupera il valore della proprietà esito.
+     * Recupera il valore della proprieta esito.
      * 
      * @return
      *     possible object is
@@ -76,7 +76,7 @@ public class ResponseData {
     }
 
     /**
-     * Imposta il valore della proprietà esito.
+     * Imposta il valore della proprieta esito.
      * 
      * @param value
      *     allowed object is
@@ -88,7 +88,7 @@ public class ResponseData {
     }
 
     /**
-     * Recupera il valore della proprietà chiaviAnagrafica.
+     * Recupera il valore della proprieta chiaviAnagrafica.
      * 
      * @return
      *     possible object is
@@ -100,7 +100,7 @@ public class ResponseData {
     }
 
     /**
-     * Imposta il valore della proprietà chiaviAnagrafica.
+     * Imposta il valore della proprieta chiaviAnagrafica.
      * 
      * @param value
      *     allowed object is
@@ -112,7 +112,7 @@ public class ResponseData {
     }
 
     /**
-     * Recupera il valore della proprietà chiaviProvvedimentoEsecutivo.
+     * Recupera il valore della proprieta chiaviProvvedimentoEsecutivo.
      * 
      * @return
      *     possible object is
@@ -124,7 +124,7 @@ public class ResponseData {
     }
 
     /**
-     * Imposta il valore della proprietà chiaviProvvedimentoEsecutivo.
+     * Imposta il valore della proprieta chiaviProvvedimentoEsecutivo.
      * 
      * @param value
      *     allowed object is
@@ -165,7 +165,7 @@ public class ResponseData {
     }
 
     /**
-     * Recupera il valore della proprietà arrayOmonimi.
+     * Recupera il valore della proprieta arrayOmonimi.
      * 
      * @return
      *     possible object is
@@ -177,7 +177,7 @@ public class ResponseData {
     }
 
     /**
-     * Imposta il valore della proprietà arrayOmonimi.
+     * Imposta il valore della proprieta arrayOmonimi.
      * 
      * @param value
      *     allowed object is
@@ -189,7 +189,7 @@ public class ResponseData {
     }
 
     /**
-     * Recupera il valore della proprietà estratto.
+     * Recupera il valore della proprieta estratto.
      * 
      * @return
      *     possible object is
@@ -200,7 +200,7 @@ public class ResponseData {
     }
 
     /**
-     * Imposta il valore della proprietà estratto.
+     * Imposta il valore della proprieta estratto.
      * 
      * @param value
      *     allowed object is
@@ -211,7 +211,7 @@ public class ResponseData {
     }
 
     /**
-     * Recupera il valore della proprietà anagraficaCancellata.
+     * Recupera il valore della proprieta anagraficaCancellata.
      * 
      */
     public boolean isAnagraficaCancellata() {
@@ -219,7 +219,7 @@ public class ResponseData {
     }
 
     /**
-     * Imposta il valore della proprietà anagraficaCancellata.
+     * Imposta il valore della proprieta anagraficaCancellata.
      * 
      */
     public void setAnagraficaCancellata(boolean value) {

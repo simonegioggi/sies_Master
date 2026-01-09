@@ -1,4 +1,4 @@
-package it.mig.sies.type.esecuzione_NEW;
+﻿package it.mig.sies.type.esecuzione_NEW;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

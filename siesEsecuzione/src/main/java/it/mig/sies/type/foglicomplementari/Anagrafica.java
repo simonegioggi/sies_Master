@@ -1,4 +1,4 @@
-
+ï»¿
 package it.mig.sies.type.foglicomplementari;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -145,7 +145,7 @@ public class Anagrafica {
     protected String flagAliasRichiamo;
 
     /**
-     * Recupera il valore della proprietà chiaviAnagrafica.
+     * Recupera il valore della proprieta chiaviAnagrafica.
      * 
      * @return
      *     possible object is
@@ -157,7 +157,7 @@ public class Anagrafica {
     }
 
     /**
-     * Imposta il valore della proprietà chiaviAnagrafica.
+     * Imposta il valore della proprieta chiaviAnagrafica.
      * 
      * @param value
      *     allowed object is
@@ -169,7 +169,7 @@ public class Anagrafica {
     }
 
     /**
-     * Recupera il valore della proprietà cognome.
+     * Recupera il valore della proprieta cognome.
      * 
      * @return
      *     possible object is
@@ -181,7 +181,7 @@ public class Anagrafica {
     }
 
     /**
-     * Imposta il valore della proprietà cognome.
+     * Imposta il valore della proprieta cognome.
      * 
      * @param value
      *     allowed object is
@@ -193,7 +193,7 @@ public class Anagrafica {
     }
 
     /**
-     * Recupera il valore della proprietà nome.
+     * Recupera il valore della proprieta nome.
      * 
      * @return
      *     possible object is
@@ -205,7 +205,7 @@ public class Anagrafica {
     }
 
     /**
-     * Imposta il valore della proprietà nome.
+     * Imposta il valore della proprieta nome.
      * 
      * @param value
      *     allowed object is
@@ -217,7 +217,7 @@ public class Anagrafica {
     }
 
     /**
-     * Recupera il valore della proprietà codiceLuogoNascita.
+     * Recupera il valore della proprieta codiceLuogoNascita.
      * 
      * @return
      *     possible object is
@@ -229,7 +229,7 @@ public class Anagrafica {
     }
 
     /**
-     * Imposta il valore della proprietà codiceLuogoNascita.
+     * Imposta il valore della proprieta codiceLuogoNascita.
      * 
      * @param value
      *     allowed object is
@@ -241,7 +241,7 @@ public class Anagrafica {
     }
 
     /**
-     * Recupera il valore della proprietà codiceStatoEsteroNascita.
+     * Recupera il valore della proprieta codiceStatoEsteroNascita.
      * 
      * @return
      *     possible object is
@@ -253,7 +253,7 @@ public class Anagrafica {
     }
 
     /**
-     * Imposta il valore della proprietà codiceStatoEsteroNascita.
+     * Imposta il valore della proprieta codiceStatoEsteroNascita.
      * 
      * @param value
      *     allowed object is
@@ -265,7 +265,7 @@ public class Anagrafica {
     }
 
     /**
-     * Recupera il valore della proprietà descrizioneComuneEstero.
+     * Recupera il valore della proprieta descrizioneComuneEstero.
      * 
      * @return
      *     possible object is
@@ -277,7 +277,7 @@ public class Anagrafica {
     }
 
     /**
-     * Imposta il valore della proprietà descrizioneComuneEstero.
+     * Imposta il valore della proprieta descrizioneComuneEstero.
      * 
      * @param value
      *     allowed object is
@@ -289,7 +289,7 @@ public class Anagrafica {
     }
 
     /**
-     * Recupera il valore della proprietà dataNascita.
+     * Recupera il valore della proprieta dataNascita.
      * 
      * @return
      *     possible object is
@@ -301,7 +301,7 @@ public class Anagrafica {
     }
 
     /**
-     * Imposta il valore della proprietà dataNascita.
+     * Imposta il valore della proprieta dataNascita.
      * 
      * @param value
      *     allowed object is
@@ -313,7 +313,7 @@ public class Anagrafica {
     }
 
     /**
-     * Recupera il valore della proprietà sesso.
+     * Recupera il valore della proprieta sesso.
      * 
      * @return
      *     possible object is
@@ -325,7 +325,7 @@ public class Anagrafica {
     }
 
     /**
-     * Imposta il valore della proprietà sesso.
+     * Imposta il valore della proprieta sesso.
      * 
      * @param value
      *     allowed object is
@@ -337,7 +337,7 @@ public class Anagrafica {
     }
 
     /**
-     * Recupera il valore della proprietà codiceFiscale.
+     * Recupera il valore della proprieta codiceFiscale.
      * 
      * @return
      *     possible object is
@@ -349,7 +349,7 @@ public class Anagrafica {
     }
 
     /**
-     * Imposta il valore della proprietà codiceFiscale.
+     * Imposta il valore della proprieta codiceFiscale.
      * 
      * @param value
      *     allowed object is
@@ -361,7 +361,7 @@ public class Anagrafica {
     }
 
     /**
-     * Recupera il valore della proprietà codiceImprontaDigitale.
+     * Recupera il valore della proprieta codiceImprontaDigitale.
      * 
      * @return
      *     possible object is
@@ -373,7 +373,7 @@ public class Anagrafica {
     }
 
     /**
-     * Imposta il valore della proprietà codiceImprontaDigitale.
+     * Imposta il valore della proprieta codiceImprontaDigitale.
      * 
      * @param value
      *     allowed object is
@@ -385,7 +385,7 @@ public class Anagrafica {
     }
 
     /**
-     * Recupera il valore della proprietà nomePadre.
+     * Recupera il valore della proprieta nomePadre.
      * 
      * @return
      *     possible object is
@@ -397,7 +397,7 @@ public class Anagrafica {
     }
 
     /**
-     * Imposta il valore della proprietà nomePadre.
+     * Imposta il valore della proprieta nomePadre.
      * 
      * @param value
      *     allowed object is
@@ -409,7 +409,7 @@ public class Anagrafica {
     }
 
     /**
-     * Recupera il valore della proprietà flagAliasRichiamo.
+     * Recupera il valore della proprieta flagAliasRichiamo.
      * 
      * @return
      *     possible object is
@@ -421,7 +421,7 @@ public class Anagrafica {
     }
 
     /**
-     * Imposta il valore della proprietà flagAliasRichiamo.
+     * Imposta il valore della proprieta flagAliasRichiamo.
      * 
      * @param value
      *     allowed object is

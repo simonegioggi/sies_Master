@@ -1,7 +1,7 @@
-//
-// Questo file � stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
+﻿//
+// Questo file ï¿½ stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
 // Vedere <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Qualsiasi modifica a questo file andr� persa durante la ricompilazione dello schema di origine. 
+// Qualsiasi modifica a questo file andrï¿½ persa durante la ricompilazione dello schema di origine. 
 // Generato il: 2016.10.26 alle 04:01:02 PM CEST 
 //
 
@@ -152,7 +152,7 @@ public class Anagrafica {
     protected String flagAliasRichiamo;
 
     /**
-     * Recupera il valore della propriet� chiaviAnagrafica.
+     * Recupera il valore della proprietï¿½ chiaviAnagrafica.
      * 
      * @return
      *     possible object is
@@ -164,7 +164,7 @@ public class Anagrafica {
     }
 
     /**
-     * Imposta il valore della propriet� chiaviAnagrafica.
+     * Imposta il valore della proprietï¿½ chiaviAnagrafica.
      * 
      * @param value
      *     allowed object is
@@ -176,7 +176,7 @@ public class Anagrafica {
     }
 
     /**
-     * Recupera il valore della propriet� cognome.
+     * Recupera il valore della proprietï¿½ cognome.
      * 
      * @return
      *     possible object is
@@ -188,7 +188,7 @@ public class Anagrafica {
     }
 
     /**
-     * Imposta il valore della propriet� cognome.
+     * Imposta il valore della proprietï¿½ cognome.
      * 
      * @param value
      *     allowed object is
@@ -200,7 +200,7 @@ public class Anagrafica {
     }
 
     /**
-     * Recupera il valore della propriet� nome.
+     * Recupera il valore della proprietï¿½ nome.
      * 
      * @return
      *     possible object is
@@ -212,7 +212,7 @@ public class Anagrafica {
     }
 
     /**
-     * Imposta il valore della propriet� nome.
+     * Imposta il valore della proprietï¿½ nome.
      * 
      * @param value
      *     allowed object is
@@ -224,7 +224,7 @@ public class Anagrafica {
     }
 
     /**
-     * Recupera il valore della propriet� codiceLuogoNascita.
+     * Recupera il valore della proprietï¿½ codiceLuogoNascita.
      * 
      * @return
      *     possible object is
@@ -236,7 +236,7 @@ public class Anagrafica {
     }
 
     /**
-     * Imposta il valore della propriet� codiceLuogoNascita.
+     * Imposta il valore della proprietï¿½ codiceLuogoNascita.
      * 
      * @param value
      *     allowed object is
@@ -248,7 +248,7 @@ public class Anagrafica {
     }
 
     /**
-     * Recupera il valore della propriet� codiceStatoEsteroNascita.
+     * Recupera il valore della proprietï¿½ codiceStatoEsteroNascita.
      * 
      * @return
      *     possible object is
@@ -260,7 +260,7 @@ public class Anagrafica {
     }
 
     /**
-     * Imposta il valore della propriet� codiceStatoEsteroNascita.
+     * Imposta il valore della proprietï¿½ codiceStatoEsteroNascita.
      * 
      * @param value
      *     allowed object is
@@ -272,7 +272,7 @@ public class Anagrafica {
     }
 
     /**
-     * Recupera il valore della propriet� descrizioneComuneEstero.
+     * Recupera il valore della proprietï¿½ descrizioneComuneEstero.
      * 
      * @return
      *     possible object is
@@ -284,7 +284,7 @@ public class Anagrafica {
     }
 
     /**
-     * Imposta il valore della propriet� descrizioneComuneEstero.
+     * Imposta il valore della proprietï¿½ descrizioneComuneEstero.
      * 
      * @param value
      *     allowed object is
@@ -296,7 +296,7 @@ public class Anagrafica {
     }
 
     /**
-     * Recupera il valore della propriet� dataNascita.
+     * Recupera il valore della proprietï¿½ dataNascita.
      * 
      * @return
      *     possible object is
@@ -308,7 +308,7 @@ public class Anagrafica {
     }
 
     /**
-     * Imposta il valore della propriet� dataNascita.
+     * Imposta il valore della proprietï¿½ dataNascita.
      * 
      * @param value
      *     allowed object is
@@ -320,7 +320,7 @@ public class Anagrafica {
     }
 
     /**
-     * Recupera il valore della propriet� sesso.
+     * Recupera il valore della proprietï¿½ sesso.
      * 
      * @return
      *     possible object is
@@ -332,7 +332,7 @@ public class Anagrafica {
     }
 
     /**
-     * Imposta il valore della propriet� sesso.
+     * Imposta il valore della proprietï¿½ sesso.
      * 
      * @param value
      *     allowed object is
@@ -344,7 +344,7 @@ public class Anagrafica {
     }
 
     /**
-     * Recupera il valore della propriet� codiceFiscale.
+     * Recupera il valore della proprietï¿½ codiceFiscale.
      * 
      * @return
      *     possible object is
@@ -356,7 +356,7 @@ public class Anagrafica {
     }
 
     /**
-     * Imposta il valore della propriet� codiceFiscale.
+     * Imposta il valore della proprietï¿½ codiceFiscale.
      * 
      * @param value
      *     allowed object is
@@ -368,7 +368,7 @@ public class Anagrafica {
     }
 
     /**
-     * Recupera il valore della propriet� codiceImprontaDigitale.
+     * Recupera il valore della proprietï¿½ codiceImprontaDigitale.
      * 
      * @return
      *     possible object is
@@ -380,7 +380,7 @@ public class Anagrafica {
     }
 
     /**
-     * Imposta il valore della propriet� codiceImprontaDigitale.
+     * Imposta il valore della proprietï¿½ codiceImprontaDigitale.
      * 
      * @param value
      *     allowed object is
@@ -392,7 +392,7 @@ public class Anagrafica {
     }
 
     /**
-     * Recupera il valore della propriet� nomePadre.
+     * Recupera il valore della proprietï¿½ nomePadre.
      * 
      * @return
      *     possible object is
@@ -404,7 +404,7 @@ public class Anagrafica {
     }
 
     /**
-     * Imposta il valore della propriet� nomePadre.
+     * Imposta il valore della proprietï¿½ nomePadre.
      * 
      * @param value
      *     allowed object is
@@ -416,7 +416,7 @@ public class Anagrafica {
     }
 
     /**
-     * Recupera il valore della propriet� flagAliasRichiamo.
+     * Recupera il valore della proprietï¿½ flagAliasRichiamo.
      * 
      * @return
      *     possible object is
@@ -428,7 +428,7 @@ public class Anagrafica {
     }
 
     /**
-     * Imposta il valore della propriet� flagAliasRichiamo.
+     * Imposta il valore della proprietï¿½ flagAliasRichiamo.
      * 
      * @param value
      *     allowed object is

@@ -1,4 +1,4 @@
-
+ï»¿
 package it.mig.sies.type.foglicomplementari;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -50,7 +50,7 @@ public class RequestData {
     protected FoglioComplementare foglioComplementare;
 
     /**
-     * Recupera il valore della proprietà utente.
+     * Recupera il valore della proprieta utente.
      * 
      * @return
      *     possible object is
@@ -62,7 +62,7 @@ public class RequestData {
     }
 
     /**
-     * Imposta il valore della proprietà utente.
+     * Imposta il valore della proprieta utente.
      * 
      * @param value
      *     allowed object is
@@ -74,7 +74,7 @@ public class RequestData {
     }
 
     /**
-     * Recupera il valore della proprietà azione.
+     * Recupera il valore della proprieta azione.
      * 
      * @return
      *     possible object is
@@ -86,7 +86,7 @@ public class RequestData {
     }
 
     /**
-     * Imposta il valore della proprietà azione.
+     * Imposta il valore della proprieta azione.
      * 
      * @param value
      *     allowed object is
@@ -98,7 +98,7 @@ public class RequestData {
     }
 
     /**
-     * Recupera il valore della proprietà anagrafica.
+     * Recupera il valore della proprieta anagrafica.
      * 
      * @return
      *     possible object is
@@ -110,7 +110,7 @@ public class RequestData {
     }
 
     /**
-     * Imposta il valore della proprietà anagrafica.
+     * Imposta il valore della proprieta anagrafica.
      * 
      * @param value
      *     allowed object is
@@ -122,7 +122,7 @@ public class RequestData {
     }
 
     /**
-     * Recupera il valore della proprietà foglioComplementare.
+     * Recupera il valore della proprieta foglioComplementare.
      * 
      * @return
      *     possible object is
@@ -134,7 +134,7 @@ public class RequestData {
     }
 
     /**
-     * Imposta il valore della proprietà foglioComplementare.
+     * Imposta il valore della proprieta foglioComplementare.
      * 
      * @param value
      *     allowed object is

@@ -1,4 +1,4 @@
-
+ï»¿
 package it.mig.sies.type.foglicomplementari;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -53,7 +53,7 @@ public class Esito {
     protected String descrizione;
 
     /**
-     * Recupera il valore della proprietà codice.
+     * Recupera il valore della proprieta codice.
      * 
      * @return
      *     possible object is
@@ -65,7 +65,7 @@ public class Esito {
     }
 
     /**
-     * Imposta il valore della proprietà codice.
+     * Imposta il valore della proprieta codice.
      * 
      * @param value
      *     allowed object is
@@ -77,7 +77,7 @@ public class Esito {
     }
 
     /**
-     * Recupera il valore della proprietà descrizione.
+     * Recupera il valore della proprieta descrizione.
      * 
      * @return
      *     possible object is
@@ -89,7 +89,7 @@ public class Esito {
     }
 
     /**
-     * Imposta il valore della proprietà descrizione.
+     * Imposta il valore della proprieta descrizione.
      * 
      * @param value
      *     allowed object is

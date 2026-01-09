@@ -1,4 +1,4 @@
-package it.mig.sies.util;
+﻿package it.mig.sies.util;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -592,7 +592,7 @@ public class Mapper {
 		return sinonimi;
 	}
 
-	// MEV 31: cambiata la visibilit� del metodo
+	// MEV 31: cambiata la visibilitï¿½ del metodo
 	public static String decodeEsito(String operazione, ResponseData responseData) {
 
 		StringBuilder esito = new StringBuilder();
@@ -939,7 +939,7 @@ public class Mapper {
 		it.mig.sies.model.ResponseData response = new it.mig.sies.model.ResponseData();
 		String esito = decodeEsitoFC(operazione, responseData);
 		response.setEsito(esito);
-		// MEV 16 CUMULO: aggiunta impostazione di proprietà
+		// MEV 16 CUMULO: aggiunta impostazione di proprietÃ 
 		// ApplicationProperties properties = ApplicationProperties.getIstance();
 		// if (PropertyUtil.isPresent(responseData.getProvvedimentoNSC())
 		// && PropertyUtil.isPresent(responseData.getProvvedimentoNSC().getEsito().getCodice())) {
@@ -1024,7 +1024,7 @@ public class Mapper {
 	// tg.setChiaveSies(pg.getChiaviProvvedimentoGiudiziario().getSies());
 	// }
 	// if (PropertyUtil.isPresent(pg.getCodiceEsito()) && pg.getCodiceEsito().length() == 2) {
-	// // il valore di ritorno è del tipo "V1"
+	// // il valore di ritorno Ã¨ del tipo "V1"
 	// String stato = pg.getCodiceEsito().substring(0, 1);
 	// String presente = pg.getCodiceEsito().substring(1);
 	// tg.setPresenteSIC(mapResultProcedure(presente));

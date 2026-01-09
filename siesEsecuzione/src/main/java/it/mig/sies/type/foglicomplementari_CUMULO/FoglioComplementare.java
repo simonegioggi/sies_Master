@@ -1,7 +1,7 @@
-//
-// Questo file � stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
+﻿//
+// Questo file ï¿½ stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
 // Vedere <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Qualsiasi modifica a questo file andr� persa durante la ricompilazione dello schema di origine. 
+// Qualsiasi modifica a questo file andrï¿½ persa durante la ricompilazione dello schema di origine. 
 // Generato il: 2016.10.26 alle 04:01:02 PM CEST 
 //
 
@@ -64,7 +64,7 @@ public class FoglioComplementare {
     protected DatiPubblicoMinistero datiPubblicoMinistero;
 
     /**
-     * Recupera il valore della propriet� annoSiep.
+     * Recupera il valore della proprietï¿½ annoSiep.
      * 
      */
     public int getAnnoSiep() {
@@ -72,7 +72,7 @@ public class FoglioComplementare {
     }
 
     /**
-     * Imposta il valore della propriet� annoSiep.
+     * Imposta il valore della proprietï¿½ annoSiep.
      * 
      */
     public void setAnnoSiep(int value) {
@@ -80,7 +80,7 @@ public class FoglioComplementare {
     }
 
     /**
-     * Recupera il valore della propriet� numeroSiep.
+     * Recupera il valore della proprietï¿½ numeroSiep.
      * 
      */
     public long getNumeroSiep() {
@@ -88,7 +88,7 @@ public class FoglioComplementare {
     }
 
     /**
-     * Imposta il valore della propriet� numeroSiep.
+     * Imposta il valore della proprietï¿½ numeroSiep.
      * 
      */
     public void setNumeroSiep(long value) {
@@ -96,7 +96,7 @@ public class FoglioComplementare {
     }
 
     /**
-     * Recupera il valore della propriet� flagPrincipale.
+     * Recupera il valore della proprietï¿½ flagPrincipale.
      * 
      */
     public boolean isFlagPrincipale() {
@@ -104,7 +104,7 @@ public class FoglioComplementare {
     }
 
     /**
-     * Imposta il valore della propriet� flagPrincipale.
+     * Imposta il valore della proprietï¿½ flagPrincipale.
      * 
      */
     public void setFlagPrincipale(boolean value) {
@@ -141,7 +141,7 @@ public class FoglioComplementare {
     }
 
     /**
-     * Recupera il valore della propriet� chiaviProvvedimentoEsecutivo.
+     * Recupera il valore della proprietï¿½ chiaviProvvedimentoEsecutivo.
      * 
      * @return
      *     possible object is
@@ -153,7 +153,7 @@ public class FoglioComplementare {
     }
 
     /**
-     * Imposta il valore della propriet� chiaviProvvedimentoEsecutivo.
+     * Imposta il valore della proprietï¿½ chiaviProvvedimentoEsecutivo.
      * 
      * @param value
      *     allowed object is
@@ -165,7 +165,7 @@ public class FoglioComplementare {
     }
 
     /**
-     * Recupera il valore della propriet� datiPubblicoMinistero.
+     * Recupera il valore della proprietï¿½ datiPubblicoMinistero.
      * 
      * @return
      *     possible object is
@@ -177,7 +177,7 @@ public class FoglioComplementare {
     }
 
     /**
-     * Imposta il valore della propriet� datiPubblicoMinistero.
+     * Imposta il valore della proprietï¿½ datiPubblicoMinistero.
      * 
      * @param value
      *     allowed object is

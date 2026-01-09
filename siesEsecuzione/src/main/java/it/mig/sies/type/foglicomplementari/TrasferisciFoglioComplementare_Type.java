@@ -1,4 +1,4 @@
-
+ï»¿
 package it.mig.sies.type.foglicomplementari;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -38,7 +38,7 @@ public class TrasferisciFoglioComplementare_Type {
     protected String xml;
 
     /**
-     * Recupera il valore della proprietà xml.
+     * Recupera il valore della proprieta xml.
      * 
      * @return
      *     possible object is
@@ -50,7 +50,7 @@ public class TrasferisciFoglioComplementare_Type {
     }
 
     /**
-     * Imposta il valore della proprietà xml.
+     * Imposta il valore della proprieta xml.
      * 
      * @param value
      *     allowed object is

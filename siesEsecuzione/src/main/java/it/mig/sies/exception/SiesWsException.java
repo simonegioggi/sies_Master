@@ -1,4 +1,4 @@
-package it.mig.sies.exception;
+﻿package it.mig.sies.exception;
 
 /**
  * MEV 23010 - Exception generica per il ws di trasferimento

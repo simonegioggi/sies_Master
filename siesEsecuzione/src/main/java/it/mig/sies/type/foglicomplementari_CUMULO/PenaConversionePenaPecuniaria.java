@@ -1,7 +1,7 @@
-//
-// Questo file � stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
+﻿//
+// Questo file ï¿½ stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
 // Vedere <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Qualsiasi modifica a questo file andr� persa durante la ricompilazione dello schema di origine. 
+// Qualsiasi modifica a questo file andrï¿½ persa durante la ricompilazione dello schema di origine. 
 // Generato il: 2017.02.06 alle 11:58:26 AM CET 
 //
 
@@ -47,7 +47,7 @@ public class PenaConversionePenaPecuniaria {
     protected Durata libertaControllata;
 
     /**
-     * Recupera il valore della propriet� lavoroSostitutivo.
+     * Recupera il valore della proprietï¿½ lavoroSostitutivo.
      * 
      * @return
      *     possible object is
@@ -59,7 +59,7 @@ public class PenaConversionePenaPecuniaria {
     }
 
     /**
-     * Imposta il valore della propriet� lavoroSostitutivo.
+     * Imposta il valore della proprietï¿½ lavoroSostitutivo.
      * 
      * @param value
      *     allowed object is
@@ -71,7 +71,7 @@ public class PenaConversionePenaPecuniaria {
     }
 
     /**
-     * Recupera il valore della propriet� libertaControllata.
+     * Recupera il valore della proprietï¿½ libertaControllata.
      * 
      * @return
      *     possible object is
@@ -83,7 +83,7 @@ public class PenaConversionePenaPecuniaria {
     }
 
     /**
-     * Imposta il valore della propriet� libertaControllata.
+     * Imposta il valore della proprietï¿½ libertaControllata.
      * 
      * @param value
      *     allowed object is

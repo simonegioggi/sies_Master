@@ -1,7 +1,7 @@
-//
-// Questo file � stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
+﻿//
+// Questo file ï¿½ stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
 // Vedere <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Qualsiasi modifica a questo file andr� persa durante la ricompilazione dello schema di origine. 
+// Qualsiasi modifica a questo file andrï¿½ persa durante la ricompilazione dello schema di origine. 
 // Generato il: 2016.10.26 alle 04:01:02 PM CEST 
 //
 
@@ -84,7 +84,7 @@ public class Ufficio {
     protected String codiceSistema;
 
     /**
-     * Recupera il valore della propriet� codiceTipo.
+     * Recupera il valore della proprietï¿½ codiceTipo.
      * 
      * @return
      *     possible object is
@@ -96,7 +96,7 @@ public class Ufficio {
     }
 
     /**
-     * Imposta il valore della propriet� codiceTipo.
+     * Imposta il valore della proprietï¿½ codiceTipo.
      * 
      * @param value
      *     allowed object is
@@ -108,7 +108,7 @@ public class Ufficio {
     }
 
     /**
-     * Recupera il valore della propriet� codiceSede.
+     * Recupera il valore della proprietï¿½ codiceSede.
      * 
      * @return
      *     possible object is
@@ -120,7 +120,7 @@ public class Ufficio {
     }
 
     /**
-     * Imposta il valore della propriet� codiceSede.
+     * Imposta il valore della proprietï¿½ codiceSede.
      * 
      * @param value
      *     allowed object is
@@ -132,7 +132,7 @@ public class Ufficio {
     }
 
     /**
-     * Recupera il valore della propriet� codiceDistretto.
+     * Recupera il valore della proprietï¿½ codiceDistretto.
      * 
      * @return
      *     possible object is
@@ -144,7 +144,7 @@ public class Ufficio {
     }
 
     /**
-     * Imposta il valore della propriet� codiceDistretto.
+     * Imposta il valore della proprietï¿½ codiceDistretto.
      * 
      * @param value
      *     allowed object is
@@ -156,7 +156,7 @@ public class Ufficio {
     }
 
     /**
-     * Recupera il valore della propriet� codiceSistema.
+     * Recupera il valore della proprietï¿½ codiceSistema.
      * 
      * @return
      *     possible object is
@@ -168,7 +168,7 @@ public class Ufficio {
     }
 
     /**
-     * Imposta il valore della propriet� codiceSistema.
+     * Imposta il valore della proprietï¿½ codiceSistema.
      * 
      * @param value
      *     allowed object is

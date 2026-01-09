@@ -1,4 +1,4 @@
-
+ï»¿
 package it.mig.sies.type.foglicomplementari;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -38,7 +38,7 @@ public class TrasferisciFoglioComplementareResponse {
     protected String _return;
 
     /**
-     * Recupera il valore della proprietà return.
+     * Recupera il valore della proprieta return.
      * 
      * @return
      *     possible object is
@@ -50,7 +50,7 @@ public class TrasferisciFoglioComplementareResponse {
     }
 
     /**
-     * Imposta il valore della proprietà return.
+     * Imposta il valore della proprieta return.
      * 
      * @param value
      *     allowed object is

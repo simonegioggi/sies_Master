@@ -1,4 +1,4 @@
-package it.mig.sies.util;
+﻿package it.mig.sies.util;
 
 import it.mig.sies.model.MisuraSicurezza;
 
@@ -33,7 +33,7 @@ public class PropertyUtil {
 
 	/*
 	 * Metodo che verifica la presenza di una misura di sicurezza. E' necessario il controllo di tutti i campi
-	 * in caso di una sola misura perch� per come � strutturata la query di estrazione potrebbe comunque
+	 * in caso di una sola misura perchï¿½ per come ï¿½ strutturata la query di estrazione potrebbe comunque
 	 * tornare un oggetto MisuraSicurezza con tutti i campi a NULL
 	 */
 	public static boolean checkMisureSicurezza(List<MisuraSicurezza> misuraSicurezzaList) {

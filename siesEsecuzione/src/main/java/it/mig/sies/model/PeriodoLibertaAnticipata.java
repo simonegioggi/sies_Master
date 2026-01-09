@@ -1,9 +1,9 @@
-package it.mig.sies.model;
+﻿package it.mig.sies.model;
 
 import java.util.Date;
 
 /**
- * SIES FASE 2 - Classe model relativa al periodo di libert� anticipata associata ad un provvedimento
+ * SIES FASE 2 - Classe model relativa al periodo di libertï¿½ anticipata associata ad un provvedimento
  * dell'esecuzione
  * 
  * @author Federico Paparoni

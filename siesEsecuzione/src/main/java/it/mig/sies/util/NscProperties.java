@@ -1,4 +1,4 @@
-package it.mig.sies.util;
+﻿package it.mig.sies.util;
 
 import it.mig.sies.exception.PropertiesException;
 
@@ -69,7 +69,7 @@ public class NscProperties extends PropertiesMgr {
 		String lProperty = getInstance().readProperty(aName);
 
 		if (lProperty == null || (lProperty != null && lProperty.length() == 0))
-			logger.info("\n Propriet� <" + aName + "> non trovata nel file Nsc.properties!");
+			logger.info("\n Proprietï¿½ <" + aName + "> non trovata nel file Nsc.properties!");
 
 		return lProperty;
 	}
@@ -81,7 +81,7 @@ public class NscProperties extends PropertiesMgr {
 	 * @param aName
 	 *            nome chiave del valore desiderato.
 	 * @param aDefault
-	 *            valore di default nel caso in cui il valore � un <code>null</code>.
+	 *            valore di default nel caso in cui il valore ï¿½ un <code>null</code>.
 	 * @return valore corrispondente alla chiave.
 	 * @throws F3BException
 	 *             propaga l'errore di eccezione.

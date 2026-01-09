@@ -1,4 +1,4 @@
-package it.mig.sies.util;
+﻿package it.mig.sies.util;
 
 import java.util.HashMap;
 import java.util.List;
@@ -65,7 +65,7 @@ public class SiesDAO {
 	 */
 	public void updateSoggetto(ChiaviAnagrafica chiaviAnagrafica) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		try {
 			// Apertura connessione
@@ -89,7 +89,7 @@ public class SiesDAO {
 	 */
 	public void updateDTS(ChiaviProvvedimentoEsecutivo chiaviProvvedimentoEsecutivo) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		try {
 			session = getSession();
@@ -112,7 +112,7 @@ public class SiesDAO {
 	 */
 	public void updateDUS(ChiaviProvvedimentoEsecutivo chiaviProvvedimentoEsecutivo) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		try {
 			session = getSession();
@@ -135,7 +135,7 @@ public class SiesDAO {
 	 */
 	public void insertResponse(ResponseData responseData) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		try {
 			session = getSession();
@@ -171,7 +171,7 @@ public class SiesDAO {
 	 */
 	public Soggetto loadSoggetto(String idEvento) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		Soggetto soggetto = null;
 		try {
@@ -195,7 +195,7 @@ public class SiesDAO {
 	 */
 	public List<TitoloGiudiziario> loadTitoloGiudiziario(String idEvento) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		List<TitoloGiudiziario> titoloGiudiziarioList = null;
 		try {
@@ -216,7 +216,7 @@ public class SiesDAO {
 	 */
 	public void updateTitoloGiudiziario(ChiaviProvvedimentoGiudiziario chiaviProvvedimentoGiudiziario) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		try {
 			session = getSession();
@@ -290,7 +290,7 @@ public class SiesDAO {
 	 */
 	public DatiUfficioSorveglianza loadUDS(String idEvento) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		DatiUfficioSorveglianza datiUfficioSorveglianza = null;
 		try {
@@ -344,7 +344,7 @@ public class SiesDAO {
 	 */
 	public DatiTribunaleSorveglianza loadTDS(String idEvento) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		DatiTribunaleSorveglianza datiTribunaleSorveglianza = null;
 		try {
@@ -405,7 +405,7 @@ public class SiesDAO {
 	 */
 	public void deleteLogicaSoggetto(ChiaviAnagrafica chiaviAnagrafica) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		try {
 			session = getSession();
@@ -427,7 +427,7 @@ public class SiesDAO {
 	 */
 	public void deleteLogicaDTS(ChiaviProvvedimentoEsecutivo chiaviProvvedimentoEsecutivo) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		try {
 			session = getSession();
@@ -449,7 +449,7 @@ public class SiesDAO {
 	 */
 	public void deleteLogicaDUS(ChiaviProvvedimentoEsecutivo chiaviProvvedimentoEsecutivo) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		try {
 			session = getSession();
@@ -471,7 +471,7 @@ public class SiesDAO {
 	 */
 	public void deleteLogicaTitoloGiudiziario(ChiaviProvvedimentoGiudiziario chiaviProvvedimentoGiudiziario) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		try {
 			session = getSession();
@@ -503,7 +503,7 @@ public class SiesDAO {
 	 */
 	public DettagliFascicolo loadDettagliFascicolo(String idEvento) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		DettagliFascicolo dettagliFascicolo = null;
 		try {
@@ -524,7 +524,7 @@ public class SiesDAO {
 	 */
 	public String loadNoteTribunaleSorveglianza(String idEvento) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		String note = "";
 		try {
@@ -545,7 +545,7 @@ public class SiesDAO {
 	 */
 	public long loadIdRevocatoUfficioSorveglianza(String idEvento) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		Object objectReturned = null;
 		try {
@@ -571,7 +571,7 @@ public class SiesDAO {
 	 */
 	public List<ProvvedimentoCollegato> loadRevocatoTribunaleSorveglianza(String idEvento) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		List<ProvvedimentoCollegato> objectReturned = null;
 		try {
@@ -595,7 +595,7 @@ public class SiesDAO {
 	 */
 	public List<TitoloEsecutivo> loadTrasferEntry(String tipologia) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		List<TitoloEsecutivo> entryList = null;
 		try {
@@ -615,7 +615,7 @@ public class SiesDAO {
 	 */
 	public TitoloEsecutivo loadTitoloEsecutivo(String idEvento) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		TitoloEsecutivo titoloEsecutivo = null;
 		try {
@@ -636,7 +636,7 @@ public class SiesDAO {
 	 */
 	public ResponseData loadResponse(String id) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		ResponseData responseData = null;
 		try {
@@ -657,7 +657,7 @@ public class SiesDAO {
 	 */
 	public List<ResponseData> loadResponseList(String idEvento) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		List<ResponseData> responseDataList = null;
 		try {
@@ -675,7 +675,7 @@ public class SiesDAO {
 
 	public List<MisuraSicurezza> loadMisuraSicurezza(String idEvento) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		List<MisuraSicurezza> misuraSicurezzaList = null;
 		try {
@@ -696,7 +696,7 @@ public class SiesDAO {
 	 */
 	public List<String> loadProfiliUtente(String idUtente) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		List<String> profiliList = null;
 		try {
@@ -723,7 +723,7 @@ public class SiesDAO {
 		params.put("codiceMotivo", codiceMotivo);
 		params.put("codiceEsito", codiceEsito);
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		DescrizioneProvvedimento descrizioneProvvedimento = null;
 		try {
@@ -751,7 +751,7 @@ public class SiesDAO {
 	 */
 	public void updateDocumentoAllegato(String idEvento, String action) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		try {
 			session = getSession();
@@ -784,7 +784,7 @@ public class SiesDAO {
 	public boolean verificaPresenza(String idEvento) {
 		boolean presente = false;
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		try {
 			session = getSession();
@@ -808,7 +808,7 @@ public class SiesDAO {
 	 */
 	public String getDescComune(String codiceLuogoNascita) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		String descComune = "";
 		try {
@@ -832,7 +832,7 @@ public class SiesDAO {
 	 */
 	public String getDescNazione(String codiceNazioneNascita) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		String descNazione = "";
 		try {
@@ -856,7 +856,7 @@ public class SiesDAO {
 	 */
 	public Soggetto getSoggettoByID(String idSoggetto) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		Soggetto soggetto = null;
 		try {
@@ -880,7 +880,7 @@ public class SiesDAO {
 	 */
 	public TitoloEsecutivo getTitoloEsecutivoByID(String idEvento) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		TitoloEsecutivo titoloEsecutivo = null;
 		try {
@@ -910,7 +910,7 @@ public class SiesDAO {
 			// MEV 16 CUMULO: aggiunto parametro di passaggio
 			boolean isForCumulo, String idEvento) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		// MEV 16 CUMULO: aggiunte query per estrazioni dati cumulo
 		List<TitoloGiudiziario> titoloGiudiziarioList = null;
@@ -975,7 +975,7 @@ public class SiesDAO {
 	public List<DatiPubblicoMinistero> loadDatiProvvedimentoPM(String idEvento, String idFascicoloSiep,
 			boolean isForCumulo, boolean isAvvenutaEsecuzionePena) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		List<DatiPubblicoMinistero> datiPubblicoMinisteroList = null;
 		try {
@@ -1024,7 +1024,7 @@ public class SiesDAO {
 					ConversionePPCumulo lsCPP = (ConversionePPCumulo) session.selectOne(
 							"it.mig.sies.model.DatiPubblicoMinistero.getLavoroSostitutivoCPPCumuloByIDEvento",
 							new Long(idEvento));
-					// 7 CPP - Libertà Controllata
+					// 7 CPP - LibertÃ  Controllata
 					ConversionePPCumulo lcCPP = (ConversionePPCumulo) session.selectOne(
 							"it.mig.sies.model.DatiPubblicoMinistero.getLibertaControllataCPPCumuloByIDEvento",
 							new Long(idEvento));
@@ -1179,7 +1179,7 @@ public class SiesDAO {
 	 */
 	public DettagliFascicolo getFascicoloByID(String idEvento) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		DettagliFascicolo dettagliFascicolo = null;
 		try {
@@ -1203,7 +1203,7 @@ public class SiesDAO {
 	public void deleteLogicaSoggettoFC(
 			it.mig.sies.type.foglicomplementari.ChiaviAnagrafica chiaviAnagrafica) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		try {
 			session = getSession();
@@ -1228,7 +1228,7 @@ public class SiesDAO {
 	public void deleteLogicaTitoloGiudiziarioFC(
 			it.mig.sies.type.foglicomplementari.ChiaviProvvedimentoGiudiziario chiaviProvvedimentoGiudiziario) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		try {
 			session = getSession();
@@ -1253,7 +1253,7 @@ public class SiesDAO {
 	public void deleteLogicaPM(
 			it.mig.sies.type.foglicomplementari.ChiaviProvvedimentoEsecutivo chiaviProvvedimentoEsecutivo) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		try {
 			session = getSession();
@@ -1277,7 +1277,7 @@ public class SiesDAO {
 	 */
 	public void updateSoggettoFC(it.mig.sies.type.foglicomplementari.ChiaviAnagrafica chiaviAnagrafica) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		try {
 			// Apertura connessione
@@ -1304,7 +1304,7 @@ public class SiesDAO {
 	public void updateTitoloGiudiziarioFC(
 			it.mig.sies.type.foglicomplementari.ChiaviProvvedimentoGiudiziario chiaviProvvedimentoGiudiziario) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		try {
 			session = getSession();
@@ -1330,7 +1330,7 @@ public class SiesDAO {
 	public void updatePM(
 			it.mig.sies.type.foglicomplementari.ChiaviProvvedimentoEsecutivo chiaviProvvedimentoEsecutivo) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		try {
 			session = getSession();
@@ -1356,7 +1356,7 @@ public class SiesDAO {
 	public void updateMisCautelare(
 			it.mig.sies.type.foglicomplementari.ChiaviProvvedimentoEsecutivo chiaviProvvedimentoEsecutivo) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		try {
 			session = getSession();
@@ -1377,7 +1377,7 @@ public class SiesDAO {
 	public void deleteLogicaMisCautelare(
 			it.mig.sies.type.foglicomplementari.ChiaviProvvedimentoEsecutivo chiaviProvvedimentoEsecutivo) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		try {
 			session = getSession();
@@ -1405,7 +1405,7 @@ public class SiesDAO {
 
 		boolean isCumulo = false;
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		try {
 			session = getSession();
@@ -1422,14 +1422,14 @@ public class SiesDAO {
 	}
 
 	/**
-	 * MEV 16 CUMULO: metodo per il recupero della descrizione dell'autorità
+	 * MEV 16 CUMULO: metodo per il recupero della descrizione dell'autoritÃ 
 	 *
 	 * @param codiceAutorita
 	 * @return String
 	 */
 	public String getDescAutorita(String codiceAutorita) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		String descAutorita = "";
 		try {
@@ -1446,14 +1446,14 @@ public class SiesDAO {
 	}
 
 	/**
-	 * MEV 16 CUMULO: metodo per il recupero della descrizione della sede autorità
+	 * MEV 16 CUMULO: metodo per il recupero della descrizione della sede autoritÃ 
 	 *
 	 * @param codiceSedeAutorita
 	 * @return String
 	 */
 	public String getDescSedeAutorita(String codiceSedeAutorita) {
 
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nÂ° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		String descSedeAutorita = "";
 		try {

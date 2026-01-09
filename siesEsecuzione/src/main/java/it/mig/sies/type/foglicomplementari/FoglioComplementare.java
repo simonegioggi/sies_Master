@@ -1,4 +1,4 @@
-
+ï»¿
 package it.mig.sies.type.foglicomplementari;
 
 import java.util.ArrayList;
@@ -57,7 +57,7 @@ public class FoglioComplementare {
     protected DatiPubblicoMinistero datiPubblicoMinistero;
 
     /**
-     * Recupera il valore della proprietà annoSiep.
+     * Recupera il valore della proprieta annoSiep.
      * 
      * @return
      *     possible object is
@@ -69,7 +69,7 @@ public class FoglioComplementare {
     }
 
     /**
-     * Imposta il valore della proprietà annoSiep.
+     * Imposta il valore della proprieta annoSiep.
      * 
      * @param value
      *     allowed object is
@@ -81,7 +81,7 @@ public class FoglioComplementare {
     }
 
     /**
-     * Recupera il valore della proprietà numeroSiep.
+     * Recupera il valore della proprieta numeroSiep.
      * 
      * @return
      *     possible object is
@@ -93,7 +93,7 @@ public class FoglioComplementare {
     }
 
     /**
-     * Imposta il valore della proprietà numeroSiep.
+     * Imposta il valore della proprieta numeroSiep.
      * 
      * @param value
      *     allowed object is
@@ -105,7 +105,7 @@ public class FoglioComplementare {
     }
 
     /**
-     * Recupera il valore della proprietà flagPrincipale.
+     * Recupera il valore della proprieta flagPrincipale.
      * 
      */
     public boolean isFlagPrincipale() {
@@ -113,7 +113,7 @@ public class FoglioComplementare {
     }
 
     /**
-     * Imposta il valore della proprietà flagPrincipale.
+     * Imposta il valore della proprieta flagPrincipale.
      * 
      */
     public void setFlagPrincipale(boolean value) {
@@ -150,7 +150,7 @@ public class FoglioComplementare {
     }
 
     /**
-     * Recupera il valore della proprietà chiaviProvvedimentoEsecutivo.
+     * Recupera il valore della proprieta chiaviProvvedimentoEsecutivo.
      * 
      * @return
      *     possible object is
@@ -162,7 +162,7 @@ public class FoglioComplementare {
     }
 
     /**
-     * Imposta il valore della proprietà chiaviProvvedimentoEsecutivo.
+     * Imposta il valore della proprieta chiaviProvvedimentoEsecutivo.
      * 
      * @param value
      *     allowed object is
@@ -174,7 +174,7 @@ public class FoglioComplementare {
     }
 
     /**
-     * Recupera il valore della proprietà datiPubblicoMinistero.
+     * Recupera il valore della proprieta datiPubblicoMinistero.
      * 
      * @return
      *     possible object is
@@ -186,7 +186,7 @@ public class FoglioComplementare {
     }
 
     /**
-     * Imposta il valore della proprietà datiPubblicoMinistero.
+     * Imposta il valore della proprieta datiPubblicoMinistero.
      * 
      * @param value
      *     allowed object is

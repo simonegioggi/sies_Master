@@ -1,4 +1,4 @@
-package it.mig.sies.model;
+﻿package it.mig.sies.model;
 
 public class LiberazioneAnticipata extends BaseModel {
 

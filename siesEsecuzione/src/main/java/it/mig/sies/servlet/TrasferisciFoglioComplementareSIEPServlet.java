@@ -1,4 +1,4 @@
-package it.mig.sies.servlet;
+﻿package it.mig.sies.servlet;
 
 import it.mig.sies.business.CommunicationTrasferisciFCService;
 import it.mig.sies.business.LoadTrasferisciFCService;
@@ -270,7 +270,7 @@ public class TrasferisciFoglioComplementareSIEPServlet extends HttpServlet {
 						responseDataRet.setEsito(responseDataRet.getEsito() + "; " + rd.getEsito());
 			}
 
-			// MEV 16 CUMULO: aggiunta impostazione di proprietà
+			// MEV 16 CUMULO: aggiunta impostazione di proprietÃ 
 			if (rd.getDescCodiceEsito() != null) {
 				if (responseDataRet.getDescCodiceEsito() == null)
 					if (isRespToList)
@@ -342,7 +342,7 @@ public class TrasferisciFoglioComplementareSIEPServlet extends HttpServlet {
 					responseDataRet.setElencoProvvedimentiNSC(rd.getElencoProvvedimentiNSC());
 			}
 
-			// MEV 16 CUMULO: aggiunta impostazione di proprietà
+			// MEV 16 CUMULO: aggiunta impostazione di proprietÃ 
 			if (rd.getDescEsitoCumulo() != null) {
 				if (responseDataRet.getDescEsitoCumulo() == null
 						|| responseDataRet.getDescEsitoCumulo() != rd.getDescEsitoCumulo())

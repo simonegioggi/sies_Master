@@ -1,4 +1,4 @@
-
+ï»¿
 package it.mig.sies.type.foglicomplementari;
 
 import java.util.ArrayList;
@@ -113,7 +113,7 @@ public class ArrayOmonimi {
         protected byte[] certificatoControllo;
 
         /**
-         * Recupera il valore della proprietà anagrafica.
+         * Recupera il valore della proprieta anagrafica.
          * 
          * @return
          *     possible object is
@@ -125,7 +125,7 @@ public class ArrayOmonimi {
         }
 
         /**
-         * Imposta il valore della proprietà anagrafica.
+         * Imposta il valore della proprieta anagrafica.
          * 
          * @param value
          *     allowed object is
@@ -137,7 +137,7 @@ public class ArrayOmonimi {
         }
 
         /**
-         * Recupera il valore della proprietà certificatoControllo.
+         * Recupera il valore della proprieta certificatoControllo.
          * 
          * @return
          *     possible object is
@@ -148,7 +148,7 @@ public class ArrayOmonimi {
         }
 
         /**
-         * Imposta il valore della proprietà certificatoControllo.
+         * Imposta il valore della proprieta certificatoControllo.
          * 
          * @param value
          *     allowed object is

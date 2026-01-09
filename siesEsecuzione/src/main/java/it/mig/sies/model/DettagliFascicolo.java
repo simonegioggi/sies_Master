@@ -1,4 +1,4 @@
-package it.mig.sies.model;
+﻿package it.mig.sies.model;
 
 /**
  * SIES FASE 2 - Classe model relativa a vari dati presenti in un fascicolo

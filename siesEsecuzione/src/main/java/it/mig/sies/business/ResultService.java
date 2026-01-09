@@ -1,4 +1,4 @@
-package it.mig.sies.business;
+﻿package it.mig.sies.business;
 
 import org.apache.log4j.Logger;
 
@@ -46,7 +46,7 @@ public class ResultService {
 		try {
 			logger.info("Gestione della risposta al trasferimento");
 			/**
-			 * Se la risposta � positiva, in quanto � stato effettuato un inserimento
+			 * Se la risposta ï¿½ positiva, in quanto ï¿½ stato effettuato un inserimento
 			 * si deve aggiornare il database locale di SIES
 			 * */
 			if (aggiornamentoAvvenuto(responseData)) {
@@ -126,8 +126,8 @@ public class ResultService {
 	}
 	
 	/**
-	 * Controlla se � avvenuto l'aggiornamento in base al codice di risposta
-	 * Metodo necessario per complessit� ciclomatica!!!
+	 * Controlla se ï¿½ avvenuto l'aggiornamento in base al codice di risposta
+	 * Metodo necessario per complessitï¿½ ciclomatica!!!
 	 * */
 	private boolean aggiornamentoAvvenuto(ResponseData responseData) {
 		return (responseData.getEsito().getCodice().equals(ResponseCode.INSERT_EFFETTUATA))
@@ -153,7 +153,7 @@ public class ResultService {
 			logger.info("Diverso da null");
 		
 		//Se il provvedimento non ha 
-        //principali � lui stesso un principale...
+        //principali ï¿½ lui stesso un principale...
         if ((!requestData.getProvvedimento().isFlagPrincipale())&&(responseData.getChiaviProvvedimentoGiudiziario()!=null)) {
 			//Viene richiamata la delete logica per ogni titolo principale presente
 	        for(ChiaviProvvedimentoGiudiziario chiaviProvvedimentoGiudiziario:responseData.getChiaviProvvedimentoGiudiziario()) 

@@ -1,4 +1,4 @@
-
+ï»¿
 package it.mig.sies.type.foglicomplementari;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -72,7 +72,7 @@ public class Utente {
     protected String ipServer;
 
     /**
-     * Recupera il valore della proprietà ufficio.
+     * Recupera il valore della proprieta ufficio.
      * 
      * @return
      *     possible object is
@@ -84,7 +84,7 @@ public class Utente {
     }
 
     /**
-     * Imposta il valore della proprietà ufficio.
+     * Imposta il valore della proprieta ufficio.
      * 
      * @param value
      *     allowed object is
@@ -96,7 +96,7 @@ public class Utente {
     }
 
     /**
-     * Recupera il valore della proprietà username.
+     * Recupera il valore della proprieta username.
      * 
      * @return
      *     possible object is
@@ -108,7 +108,7 @@ public class Utente {
     }
 
     /**
-     * Imposta il valore della proprietà username.
+     * Imposta il valore della proprieta username.
      * 
      * @param value
      *     allowed object is
@@ -120,7 +120,7 @@ public class Utente {
     }
 
     /**
-     * Recupera il valore della proprietà cognome.
+     * Recupera il valore della proprieta cognome.
      * 
      * @return
      *     possible object is
@@ -132,7 +132,7 @@ public class Utente {
     }
 
     /**
-     * Imposta il valore della proprietà cognome.
+     * Imposta il valore della proprieta cognome.
      * 
      * @param value
      *     allowed object is
@@ -144,7 +144,7 @@ public class Utente {
     }
 
     /**
-     * Recupera il valore della proprietà nome.
+     * Recupera il valore della proprieta nome.
      * 
      * @return
      *     possible object is
@@ -156,7 +156,7 @@ public class Utente {
     }
 
     /**
-     * Imposta il valore della proprietà nome.
+     * Imposta il valore della proprieta nome.
      * 
      * @param value
      *     allowed object is
@@ -168,7 +168,7 @@ public class Utente {
     }
 
     /**
-     * Recupera il valore della proprietà ipServer.
+     * Recupera il valore della proprieta ipServer.
      * 
      * @return
      *     possible object is
@@ -180,7 +180,7 @@ public class Utente {
     }
 
     /**
-     * Imposta il valore della proprietà ipServer.
+     * Imposta il valore della proprieta ipServer.
      * 
      * @param value
      *     allowed object is

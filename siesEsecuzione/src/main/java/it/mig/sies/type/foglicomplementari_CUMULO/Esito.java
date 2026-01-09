@@ -1,7 +1,7 @@
-//
-// Questo file � stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
+﻿//
+// Questo file ï¿½ stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
 // Vedere <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Qualsiasi modifica a questo file andr� persa durante la ricompilazione dello schema di origine. 
+// Qualsiasi modifica a questo file andrï¿½ persa durante la ricompilazione dello schema di origine. 
 // Generato il: 2016.10.26 alle 04:01:02 PM CEST 
 //
 
@@ -57,7 +57,7 @@ public class Esito {
     protected String descrizione;
 
     /**
-     * Recupera il valore della propriet� codice.
+     * Recupera il valore della proprietï¿½ codice.
      * 
      * @return
      *     possible object is
@@ -69,7 +69,7 @@ public class Esito {
     }
 
     /**
-     * Imposta il valore della propriet� codice.
+     * Imposta il valore della proprietï¿½ codice.
      * 
      * @param value
      *     allowed object is
@@ -81,7 +81,7 @@ public class Esito {
     }
 
     /**
-     * Recupera il valore della propriet� descrizione.
+     * Recupera il valore della proprietï¿½ descrizione.
      * 
      * @return
      *     possible object is
@@ -93,7 +93,7 @@ public class Esito {
     }
 
     /**
-     * Imposta il valore della propriet� descrizione.
+     * Imposta il valore della proprietï¿½ descrizione.
      * 
      * @param value
      *     allowed object is

@@ -1,4 +1,4 @@
-
+ï»¿
 package it.mig.sies.type.foglicomplementari;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -77,7 +77,7 @@ public class Ufficio {
     protected String codiceSistema;
 
     /**
-     * Recupera il valore della proprietà codiceTipo.
+     * Recupera il valore della proprieta codiceTipo.
      * 
      * @return
      *     possible object is
@@ -89,7 +89,7 @@ public class Ufficio {
     }
 
     /**
-     * Imposta il valore della proprietà codiceTipo.
+     * Imposta il valore della proprieta codiceTipo.
      * 
      * @param value
      *     allowed object is
@@ -101,7 +101,7 @@ public class Ufficio {
     }
 
     /**
-     * Recupera il valore della proprietà codiceSede.
+     * Recupera il valore della proprieta codiceSede.
      * 
      * @return
      *     possible object is
@@ -113,7 +113,7 @@ public class Ufficio {
     }
 
     /**
-     * Imposta il valore della proprietà codiceSede.
+     * Imposta il valore della proprieta codiceSede.
      * 
      * @param value
      *     allowed object is
@@ -125,7 +125,7 @@ public class Ufficio {
     }
 
     /**
-     * Recupera il valore della proprietà codiceDistretto.
+     * Recupera il valore della proprieta codiceDistretto.
      * 
      * @return
      *     possible object is
@@ -137,7 +137,7 @@ public class Ufficio {
     }
 
     /**
-     * Imposta il valore della proprietà codiceDistretto.
+     * Imposta il valore della proprieta codiceDistretto.
      * 
      * @param value
      *     allowed object is
@@ -149,7 +149,7 @@ public class Ufficio {
     }
 
     /**
-     * Recupera il valore della proprietà codiceSistema.
+     * Recupera il valore della proprieta codiceSistema.
      * 
      * @return
      *     possible object is
@@ -161,7 +161,7 @@ public class Ufficio {
     }
 
     /**
-     * Imposta il valore della proprietà codiceSistema.
+     * Imposta il valore della proprieta codiceSistema.
      * 
      * @param value
      *     allowed object is

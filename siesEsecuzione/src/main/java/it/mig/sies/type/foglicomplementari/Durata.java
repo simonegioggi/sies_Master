@@ -1,4 +1,4 @@
-
+ï»¿
 package it.mig.sies.type.foglicomplementari;
 
 import java.math.BigInteger;
@@ -63,7 +63,7 @@ public class Durata {
     protected BigInteger giorni;
 
     /**
-     * Recupera il valore della proprietà anni.
+     * Recupera il valore della proprieta anni.
      * 
      * @return
      *     possible object is
@@ -75,7 +75,7 @@ public class Durata {
     }
 
     /**
-     * Imposta il valore della proprietà anni.
+     * Imposta il valore della proprieta anni.
      * 
      * @param value
      *     allowed object is
@@ -87,7 +87,7 @@ public class Durata {
     }
 
     /**
-     * Recupera il valore della proprietà mesi.
+     * Recupera il valore della proprieta mesi.
      * 
      * @return
      *     possible object is
@@ -99,7 +99,7 @@ public class Durata {
     }
 
     /**
-     * Imposta il valore della proprietà mesi.
+     * Imposta il valore della proprieta mesi.
      * 
      * @param value
      *     allowed object is
@@ -111,7 +111,7 @@ public class Durata {
     }
 
     /**
-     * Recupera il valore della proprietà giorni.
+     * Recupera il valore della proprieta giorni.
      * 
      * @return
      *     possible object is
@@ -123,7 +123,7 @@ public class Durata {
     }
 
     /**
-     * Imposta il valore della proprietà giorni.
+     * Imposta il valore della proprieta giorni.
      * 
      * @param value
      *     allowed object is

@@ -73,27 +73,69 @@
 			<version>1.2.16</version>
 			<scope>provided</scope>
 		</dependency>
+		
+		<!-- JAXB API for Java 17/21 -->
+		<dependency>
+			<groupId>jakarta.xml.bind</groupId>
+			<artifactId>jakarta.xml.bind-api</artifactId>
+			<version>3.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-impl</artifactId>
+			<version>3.0.2</version>
+			<scope>runtime</scope>
+		</dependency>
+		
+		<!-- JAX-WS API for Java 17/21 -->
+		<dependency>
+			<groupId>jakarta.xml.ws</groupId>
+			<artifactId>jakarta.xml.ws-api</artifactId>
+			<version>3.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.ws</groupId>
+			<artifactId>jaxws-rt</artifactId>
+			<version>3.0.2</version>
+			<scope>runtime</scope>
+		</dependency>
+		
+		<!-- Jakarta Activation for JAXB -->
+		<dependency>
+			<groupId>jakarta.activation</groupId>
+			<artifactId>jakarta.activation-api</artifactId>
+			<version>2.0.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
+				<groupId>com.sun.xml.ws</groupId>
 				<artifactId>jaxws-maven-plugin</artifactId>
-				<version>1.12</version>
+				<version>3.0.2</version>
 				<configuration>
 					<sourceDestDir>
 						${basedir}/src/main/java/
 					</sourceDestDir>
+					<wsdlDirectory>${basedir}/src/wsdl</wsdlDirectory>
 					<wsdlFiles>
-						<wsdlFile>esecuzione.wsdl</wsdlFile>
+						<wsdlFile>esecuzione_NEW.wsdl</wsdlFile>
 					</wsdlFiles>
+					<encoding>UTF-8</encoding>
 				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>com.sun.xml.ws</groupId>
+						<artifactId>jaxws-tools</artifactId>
+						<version>3.0.2</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 			<plugin>
-				<groupId>org.jvnet.jaxb2.maven2</groupId>
-				<artifactId>maven-jaxb2-plugin</artifactId>
-				<version>0.8.0</version>
+				<groupId>org.jvnet.jaxb</groupId>
+				<artifactId>jaxb-maven-plugin</artifactId>
+				<version>4.0.8</version>
 				<configuration>
 					<removeOldOutput>false</removeOldOutput>
 					<generatePackage>
@@ -102,6 +144,7 @@
 					<generateDirectory>
 						${basedir}/src/main/java/
 					</generateDirectory>
+					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -131,7 +174,7 @@
 		<project.build.sourceEncoding>
 			UTF-8
 		</project.build.sourceEncoding>
-		<java.version>1.8</java.version>
+		<java.version>17</java.version>
 		<!-- MEV 16: aggiunto ws -->
 		<webservice.wsdl>
 			http://localhost:7001/siesEsecuzione/iscriviProvvedimentoEsecuzione_NEW?WSDL

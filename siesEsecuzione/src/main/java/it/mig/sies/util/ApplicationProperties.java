@@ -1,4 +1,4 @@
-package it.mig.sies.util;
+﻿package it.mig.sies.util;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,8 +30,8 @@ public class ApplicationProperties {
     }
     
     /**
-     * Recupera la propriet� a partire dalla chiave
-     * @param key Chiave della propriet�
+     * Recupera la proprietï¿½ a partire dalla chiave
+     * @param key Chiave della proprietï¿½
      * */
     public String getProperty(String key) {
         return properties.getProperty(key);
