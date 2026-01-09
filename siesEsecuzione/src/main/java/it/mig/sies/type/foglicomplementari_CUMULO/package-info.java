@@ -5,5 +5,5 @@
 // Generato il: 2016.10.26 alle 04:01:02 PM CEST 
 //
 
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://it/mig/sies/type/fogliComplementari", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+@jakarta.xml.bind.annotation.XmlSchema(namespace = "http://it/mig/sies/type/fogliComplementari", elementFormDefault = jakarta.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package it.mig.sies.type.foglicomplementari_CUMULO;
