@@ -7,6 +7,7 @@ import it.mig.sies.util.ApplicationProperties;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Serial;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -27,6 +28,7 @@ public class SearchDataServlet extends HttpServlet {
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = 2683234170485164666L;
 
 	private static final Logger logger = Logger.getLogger(SearchDataServlet.class);

@@ -1,5 +1,6 @@
 package it.mig.sies.model;
 
+import java.io.Serial;
 import java.util.Date;
 
 /**
@@ -13,6 +14,7 @@ public class PeriodoLibertaAnticipata extends BaseModel {
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = -2098491058152033618L;
 
 	private Date dataLibertaAnticipataInizio;

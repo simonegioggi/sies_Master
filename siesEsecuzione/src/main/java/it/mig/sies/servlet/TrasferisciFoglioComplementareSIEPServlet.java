@@ -9,6 +9,7 @@ import it.mig.sies.type.foglicomplementari.RequestData;
 import it.mig.sies.util.PropertyUtil;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class TrasferisciFoglioComplementareSIEPServlet extends HttpServlet {
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = 1437043850893865575L;
 
 	private static final Logger logger = Logger.getLogger(TrasferisciFoglioComplementareSIEPServlet.class);
@@ -141,14 +143,14 @@ public class TrasferisciFoglioComplementareSIEPServlet extends HttpServlet {
 		// MEV 16 CUMULO: setto nuovi attributi nella richiesta
 		String cup = "";
 		if (!requestDataList.isEmpty() && requestDataList.size() == 1) {
-			cup = requestDataList.get(0).getFoglioComplementare().getDatiPubblicoMinistero()
+			cup = requestDataList.getFirst().getFoglioComplementare().getDatiPubblicoMinistero()
 					.getCodiceUnivocoProvvedimento();
 			if (PropertyUtil.isPresent(cup) && cup.contains("CUMULO"))
 				cup = "CUMULO";
 		}
 		String isTrasferibile = "NO";
 		if (!responseDataList.isEmpty() && responseDataList.size() == 1 && "CUMULO".equals(cup)) {
-			ResponseData rd = responseDataList.get(0);
+			ResponseData rd = responseDataList.getFirst();
 			if ("414".equals(rd.getCodiceEsito())) {
 				isTrasferibile = "SI";
 				// imposto la descrizione dell'esito

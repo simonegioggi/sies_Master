@@ -1,10 +1,13 @@
 package it.mig.sies.exception;
 
+import java.io.Serial;
+
 public class ControlException extends SiesWsException {
 
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = 6079916352574466710L;
 
 	public ControlException() {

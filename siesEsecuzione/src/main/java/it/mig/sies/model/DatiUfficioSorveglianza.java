@@ -1,5 +1,6 @@
 package it.mig.sies.model;
 
+import java.io.Serial;
 import java.util.Date;
 import java.util.List;
 
@@ -13,6 +14,7 @@ public class DatiUfficioSorveglianza extends BaseModel {
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = 5609442858351913298L;
 
 	private long chiaveSies;

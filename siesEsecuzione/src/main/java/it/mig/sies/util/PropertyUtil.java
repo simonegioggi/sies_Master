@@ -44,7 +44,7 @@ public class PropertyUtil {
 
 		else {
 			if (misuraSicurezzaList.size() == 1) {
-				MisuraSicurezza ms = misuraSicurezzaList.get(0);
+				MisuraSicurezza ms = misuraSicurezzaList.getFirst();
 				if (ms == null) {
 					check = false;
 				} else {

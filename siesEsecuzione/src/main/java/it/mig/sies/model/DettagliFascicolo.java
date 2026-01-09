@@ -1,5 +1,7 @@
 package it.mig.sies.model;
 
+import java.io.Serial;
+
 /**
  * SIES FASE 2 - Classe model relativa a vari dati presenti in un fascicolo
  * 
@@ -10,6 +12,7 @@ public class DettagliFascicolo extends BaseModel {
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = 8908935180568126456L;
 
 	private long numeroSentenza;

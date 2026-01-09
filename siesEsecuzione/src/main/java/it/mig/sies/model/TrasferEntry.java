@@ -1,5 +1,6 @@
 package it.mig.sies.model;
 
+import java.io.Serial;
 import java.util.List;
 
 /**
@@ -12,6 +13,7 @@ public class TrasferEntry extends BaseModel {
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = 434994928857888686L;
 
 	private long idEvento;

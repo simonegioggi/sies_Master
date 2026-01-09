@@ -1,10 +1,13 @@
 package it.mig.sies.model;
 
+import java.io.Serial;
+
 public class DeclaratoriaEstinzionePena extends BaseModel {
 
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = 3851529585949879185L;
 
 	private int totale;

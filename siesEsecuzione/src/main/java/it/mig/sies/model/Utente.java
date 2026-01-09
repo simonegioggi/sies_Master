@@ -1,5 +1,7 @@
 package it.mig.sies.model;
 
+import java.io.Serial;
+
 /**
  * SIES FASE 2 - Classe model relativa all'utente che sta effettuando il trasferimento
  * 
@@ -10,6 +12,7 @@ public class Utente extends BaseModel {
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = 1479133706548534297L;
 
 	private String codiceTipoUfficio;

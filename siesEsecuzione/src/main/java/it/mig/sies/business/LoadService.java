@@ -306,7 +306,7 @@ public class LoadService {
         	//SE PRESENTE ED UNICO LO UTILIZZO
         	//ALTRIMENTI CARICO IL CAMPO NOTE
         	if (idRevocatoList.size()==1)
-        		provvedimentoCollegato=idRevocatoList.get(0);
+        		provvedimentoCollegato=idRevocatoList.getFirst();
         	else {
         		//Caricamento delle note
                 String note = dao.loadNoteTribunaleSorveglianza(idEvento);

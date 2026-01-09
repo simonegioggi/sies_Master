@@ -4,6 +4,8 @@ import it.mig.sies.business.LoadService;
 import it.mig.sies.model.ResponseData;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.Serial;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +21,7 @@ public class LoadDataServlet extends HttpServlet {
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = 5676937457032356635L;
 
 	/**

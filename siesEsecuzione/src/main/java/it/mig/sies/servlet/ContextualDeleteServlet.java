@@ -5,6 +5,7 @@ import it.mig.sies.model.ResponseData;
 import it.mig.sies.util.ApplicationProperties;
 
 import java.io.IOException;
+import java.io.Serial;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -24,6 +25,7 @@ public class ContextualDeleteServlet extends HttpServlet {
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = 732611276908202867L;
 
 	private static final Logger logger = Logger.getLogger(ContextualDeleteServlet.class);

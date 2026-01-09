@@ -8,6 +8,8 @@ import it.mig.sies.exception.SiesWsException;
 import it.mig.sies.model.ResponseData;
 import it.mig.sies.type.esecuzione_NEW.RequestData;
 import java.io.IOException;
+import java.io.Serial;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +29,7 @@ public class EntryPointServlet extends HttpServlet {
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = -5813823235783430519L;
 
 	private static final Logger logger = Logger.getLogger(EntryPointServlet.class);

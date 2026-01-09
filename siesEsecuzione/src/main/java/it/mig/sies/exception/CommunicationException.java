@@ -2,6 +2,8 @@ package it.mig.sies.exception;
 
 import it.mig.sies.util.ApplicationProperties;
 
+import java.io.Serial;
+
 /**
  * SIES FASE 2 - Exception sollevata nel caso in cui ci siano dei problemi di interconnessione con il
  * webservice disponibile su NSC/SIES
@@ -13,6 +15,7 @@ public class CommunicationException extends SiesWsException {
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = 6432361697228507310L;
 
 	public CommunicationException() {

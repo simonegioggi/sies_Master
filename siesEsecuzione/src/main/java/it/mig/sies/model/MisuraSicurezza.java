@@ -1,10 +1,13 @@
 package it.mig.sies.model;
 
+import java.io.Serial;
+
 public class MisuraSicurezza extends BaseModel {
 
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = -7292154860308819671L;
 
 	private int giorni;

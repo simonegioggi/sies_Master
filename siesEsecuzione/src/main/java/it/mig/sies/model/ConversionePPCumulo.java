@@ -1,5 +1,7 @@
 package it.mig.sies.model;
 
+import java.io.Serial;
+
 /**
  * MEV 16 CUMULO: aggiunta classe modello per le richieste GE associate al cumulo
  * 
@@ -11,6 +13,7 @@ public class ConversionePPCumulo extends BaseModel {
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = 743421215791286543L;
 
 	private int giorniLavoroSostitutivo;

@@ -1,5 +1,7 @@
 package it.mig.sies.exception;
 
+import java.io.Serial;
+
 /**
  * MEV 23010 - Exception generica per il ws di trasferimento
  * 
@@ -10,6 +12,7 @@ public abstract class SiesWsException extends Exception {
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = 7842616224552043136L;
 
 	public SiesWsException() {

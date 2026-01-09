@@ -2,6 +2,8 @@ package it.mig.sies.exception;
 
 import it.mig.sies.util.ApplicationProperties;
 
+import java.io.Serial;
+
 /**
  * SIES FASE 2 - Exception sollevata nel caso in cui ci siano dei problemi nella gestione della risposta
  * inviata da NSC
@@ -13,6 +15,7 @@ public class ResultException extends SiesWsException {
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = 3471456753948185623L;
 
 	public ResultException() {

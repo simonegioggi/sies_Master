@@ -1,5 +1,7 @@
 package it.mig.sies.model;
 
+import java.io.Serial;
+
 /**
  * MEV 16 CUMULO: aggiunta classe modello per le richieste GE associate al cumulo
  * 
@@ -11,6 +13,7 @@ public class SanzioniSostitutiveCumulo extends BaseModel {
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = -1214029466827442933L;
 
 	private int giorniSemidetenzione;

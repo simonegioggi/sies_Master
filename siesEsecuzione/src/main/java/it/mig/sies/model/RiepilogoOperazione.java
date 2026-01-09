@@ -1,5 +1,6 @@
 package it.mig.sies.model;
 
+import java.io.Serial;
 import java.util.List;
 
 /**
@@ -13,6 +14,7 @@ public class RiepilogoOperazione extends BaseModel {
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = 7263617268588009592L;
 
 	private Soggetto soggetto;

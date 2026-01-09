@@ -2,6 +2,8 @@ package it.mig.sies.exception;
 
 import it.mig.sies.util.ApplicationProperties;
 
+import java.io.Serial;
+
 /**
  * Exception sollevata nel caso in cui l'utente non ha il profilo necessario per gestire il trasferimento
  * 
@@ -12,6 +14,7 @@ public class ProfileException extends SiesWsException {
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = 844463153415717525L;
 
 	public ProfileException() {

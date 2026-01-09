@@ -833,9 +833,9 @@ public class Mapper {
 		if (PropertyUtil.isPresent(idSinonimo) && !idSinonimo.contains("REPLICA")) {
 			if (idSinonimo.contains("#TFCCUM")) {
 				String[] split = idSinonimo.split("#");
-				chiaviAnagrafica.setNsc(BigInteger.valueOf(new Long(split[0]).longValue()));
+				chiaviAnagrafica.setNsc(BigInteger.valueOf(Long.valueOf(split[0]).longValue()));
 			} else
-				chiaviAnagrafica.setNsc(BigInteger.valueOf(new Long(idSinonimo).longValue()));
+				chiaviAnagrafica.setNsc(BigInteger.valueOf(Long.valueOf(idSinonimo).longValue()));
 		} else
 			chiaviAnagrafica.setNsc(BigInteger.valueOf(soggetto.getChiaveNSC()));
 		chiaviAnagrafica.setSies(BigInteger.valueOf(soggetto.getChiaveSies()));

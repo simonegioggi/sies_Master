@@ -1,5 +1,7 @@
 package it.mig.sies.model;
 
+import java.io.Serial;
+
 /**
  * MEV 23010 - Classe model relativa ai dettagli di una singola tipologia di provvedimento
  * 
@@ -10,6 +12,7 @@ public class DescrizioneProvvedimento extends BaseModel {
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = 2154605373686507209L;
 
 	private String codiceUnivoco;

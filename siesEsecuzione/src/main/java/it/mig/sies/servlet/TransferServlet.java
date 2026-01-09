@@ -9,6 +9,7 @@ import it.mig.sies.model.TrasferEntry;
 import it.mig.sies.type.esecuzione_NEW.RequestData;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -28,6 +29,7 @@ public class TransferServlet extends HttpServlet {
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = 1332458862096688303L;
 
 	private static final Logger logger = Logger.getLogger(TransferServlet.class);

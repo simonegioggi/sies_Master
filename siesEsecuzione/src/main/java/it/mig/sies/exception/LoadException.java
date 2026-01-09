@@ -2,6 +2,8 @@ package it.mig.sies.exception;
 
 import it.mig.sies.util.ApplicationProperties;
 
+import java.io.Serial;
+
 /**
  * SIES FASE 2 - Exception sollevata nel caso in cui ci siano dei problemi nel caricamento delle informazioni
  * dal database locale di SIES
@@ -13,6 +15,7 @@ public class LoadException extends SiesWsException {
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = -2539933537729075460L;
 
 	public LoadException() {

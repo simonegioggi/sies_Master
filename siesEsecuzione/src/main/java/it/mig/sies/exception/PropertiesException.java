@@ -1,5 +1,7 @@
 package it.mig.sies.exception;
 
+import java.io.Serial;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -22,6 +24,7 @@ public class PropertiesException extends Exception {
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = -1342579357869841293L;
 
 	/**

@@ -1,10 +1,13 @@
 package it.mig.sies.model;
 
+import java.io.Serial;
+
 public class LiberazioneAnticipata extends BaseModel {
 
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = 3779243118930410207L;
 
 	private int totale;

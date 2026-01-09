@@ -1,5 +1,7 @@
 package it.mig.sies.model;
 
+import java.io.Serial;
+
 /**
  * MEV 16 CUMULO: aggiunta classe modello per le MS associate al cumulo
  * 
@@ -11,6 +13,7 @@ public class MisuraSicurezzaCumulo extends BaseModel {
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = 4679752749478731613L;
 
 	private String codiceTipoMS;

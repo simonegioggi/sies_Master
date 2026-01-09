@@ -1,6 +1,7 @@
 package it.mig.sies.type.foglicomplementari;
 
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import javax.xml.namespace.QName;
 import jakarta.xml.ws.WebEndpoint;
@@ -26,7 +27,7 @@ public class TrasferisciFoglioComplementare_Service extends Service {
     static {
         URL url = null;
         try {
-            url = new URL("file:/C:/LAVORO/Progetti/WSAxisTest/AxisTestClientWeb/WebContent/wsdl/IntegrazioneSiesAdn/trasferisciFoglioComplementare.wsdl");
+            url = URI.create("file:/C:/LAVORO/Progetti/WSAxisTest/AxisTestClientWeb/WebContent/wsdl/IntegrazioneSiesAdn/trasferisciFoglioComplementare.wsdl").toURL();
         } catch (MalformedURLException e) {
             java.util.logging.Logger.getLogger(TrasferisciFoglioComplementare_Service.class.getName())
                 .log(java.util.logging.Level.INFO, 

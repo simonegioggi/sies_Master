@@ -1,5 +1,7 @@
 package it.mig.sies.model;
 
+import java.io.Serial;
+
 /**
  * MEV 16 CUMULO: aggiunta classe modello per le PA associate al cumulo
  * 
@@ -11,6 +13,7 @@ public class PenaAccessoriaCumulo extends BaseModel {
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = 7760082459681216118L;
 
 	private String codiceTipoPA;

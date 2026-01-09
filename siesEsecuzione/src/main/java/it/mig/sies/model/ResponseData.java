@@ -1,5 +1,6 @@
 package it.mig.sies.model;
 
+import java.io.Serial;
 import java.util.Date;
 import java.util.List;
 
@@ -14,6 +15,7 @@ public class ResponseData extends BaseModel {
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = 7687582982835511468L;
 
 	private long id;
