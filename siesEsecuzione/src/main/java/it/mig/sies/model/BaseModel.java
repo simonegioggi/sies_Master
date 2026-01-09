@@ -1,4 +1,4 @@
-﻿package it.mig.sies.model;
+package it.mig.sies.model;
 
 import java.io.Serializable;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;

@@ -1,4 +1,4 @@
-﻿package it.mig.sies.exception;
+package it.mig.sies.exception;
 
 import org.apache.log4j.Logger;
 

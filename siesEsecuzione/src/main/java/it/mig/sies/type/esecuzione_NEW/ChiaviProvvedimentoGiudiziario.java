@@ -1,4 +1,4 @@
-﻿package it.mig.sies.type.esecuzione_NEW;
+package it.mig.sies.type.esecuzione_NEW;
 
 import java.math.BigInteger;
 import javax.xml.bind.annotation.XmlAccessType;

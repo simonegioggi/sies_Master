@@ -1,4 +1,4 @@
-﻿package it.mig.sies.type.esecuzione_NEW;
+package it.mig.sies.type.esecuzione_NEW;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlType;

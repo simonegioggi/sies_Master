@@ -1,4 +1,4 @@
-﻿package it.mig.sies.business;
+package it.mig.sies.business;
 
 import org.apache.log4j.Logger;
 

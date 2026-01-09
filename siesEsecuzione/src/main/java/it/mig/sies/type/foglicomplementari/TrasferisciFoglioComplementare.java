@@ -1,4 +1,4 @@
-﻿package it.mig.sies.type.foglicomplementari;
+package it.mig.sies.type.foglicomplementari;
 
 import javax.jws.WebMethod;
 import javax.jws.WebParam;

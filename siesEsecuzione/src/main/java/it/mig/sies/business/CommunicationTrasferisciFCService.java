@@ -1,4 +1,4 @@
-﻿package it.mig.sies.business;
+package it.mig.sies.business;
 
 import it.mig.sies.exception.CommunicationException;
 import it.mig.sies.exception.PropertiesException;

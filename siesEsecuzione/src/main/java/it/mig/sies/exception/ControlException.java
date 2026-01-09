@@ -1,4 +1,4 @@
-﻿package it.mig.sies.exception;
+package it.mig.sies.exception;
 
 public class ControlException extends SiesWsException {
 

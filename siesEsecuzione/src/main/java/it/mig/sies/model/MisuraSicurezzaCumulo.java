@@ -1,4 +1,4 @@
-﻿package it.mig.sies.model;
+package it.mig.sies.model;
 
 /**
  * MEV 16 CUMULO: aggiunta classe modello per le MS associate al cumulo

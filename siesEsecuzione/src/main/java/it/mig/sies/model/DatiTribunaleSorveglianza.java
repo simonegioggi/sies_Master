@@ -1,4 +1,4 @@
-﻿package it.mig.sies.model;
+package it.mig.sies.model;
 
 import java.util.Date;
 import java.util.List;

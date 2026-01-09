@@ -1,4 +1,4 @@
-﻿package it.mig.sies.model;
+package it.mig.sies.model;
 
 /**
  * MEV 23010 - Mappa le chiavi relative ad un provvedimento collegato

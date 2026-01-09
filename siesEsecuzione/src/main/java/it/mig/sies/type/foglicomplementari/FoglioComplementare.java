@@ -1,4 +1,4 @@
-﻿
+
 package it.mig.sies.type.foglicomplementari;
 
 import java.util.ArrayList;

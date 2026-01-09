@@ -1,4 +1,4 @@
-﻿package it.mig.sies.util;
+package it.mig.sies.util;
 
 import it.mig.sies.model.MisuraSicurezza;
 

@@ -1,4 +1,4 @@
-﻿package it.mig.sies.exception;
+package it.mig.sies.exception;
 
 import it.mig.sies.util.ApplicationProperties;
 

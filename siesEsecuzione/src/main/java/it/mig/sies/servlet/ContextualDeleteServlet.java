@@ -1,4 +1,4 @@
-﻿package it.mig.sies.servlet;
+package it.mig.sies.servlet;
 
 import it.mig.sies.business.ControlService;
 import it.mig.sies.model.ResponseData;

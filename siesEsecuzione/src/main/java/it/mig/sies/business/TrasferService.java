@@ -1,4 +1,4 @@
-﻿package it.mig.sies.business;
+package it.mig.sies.business;
 
 import it.mig.sies.model.TitoloEsecutivo;
 import it.mig.sies.model.TrasferEntry;

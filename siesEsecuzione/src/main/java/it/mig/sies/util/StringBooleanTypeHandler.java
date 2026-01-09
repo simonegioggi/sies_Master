@@ -1,4 +1,4 @@
-﻿package it.mig.sies.util;
+package it.mig.sies.util;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;

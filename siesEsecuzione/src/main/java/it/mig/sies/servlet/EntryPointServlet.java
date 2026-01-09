@@ -1,4 +1,4 @@
-﻿package it.mig.sies.servlet;
+package it.mig.sies.servlet;
 
 import it.mig.sies.business.CommunicationService;
 import it.mig.sies.business.ControlService;

@@ -1,4 +1,4 @@
-﻿package it.mig.sies.business;
+package it.mig.sies.business;
 
 import java.math.BigInteger;
 import java.util.ArrayList;

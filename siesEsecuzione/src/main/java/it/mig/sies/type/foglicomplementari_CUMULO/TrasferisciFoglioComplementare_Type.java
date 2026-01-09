@@ -1,4 +1,4 @@
-﻿package it.mig.sies.type.foglicomplementari_CUMULO;
+package it.mig.sies.type.foglicomplementari_CUMULO;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

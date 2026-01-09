@@ -1,4 +1,4 @@
-﻿package it.mig.sies.type.esecuzione_NEW;
+package it.mig.sies.type.esecuzione_NEW;
 
 import java.net.MalformedURLException;
 import java.net.URL;

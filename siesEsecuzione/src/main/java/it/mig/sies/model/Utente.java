@@ -1,4 +1,4 @@
-﻿package it.mig.sies.model;
+package it.mig.sies.model;
 
 /**
  * SIES FASE 2 - Classe model relativa all'utente che sta effettuando il trasferimento

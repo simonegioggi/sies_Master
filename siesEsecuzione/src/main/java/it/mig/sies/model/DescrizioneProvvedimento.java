@@ -1,4 +1,4 @@
-﻿package it.mig.sies.model;
+package it.mig.sies.model;
 
 /**
  * MEV 23010 - Classe model relativa ai dettagli di una singola tipologia di provvedimento
