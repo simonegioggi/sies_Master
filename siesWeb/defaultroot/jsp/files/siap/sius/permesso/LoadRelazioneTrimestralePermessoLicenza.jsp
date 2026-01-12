@@ -76,7 +76,9 @@ function differenzaDate() {
 	dataFine.setDate(FillDM(docRef.<%=ICostantiDepositoDecreto.CAMPO_GIORNO_DATA_DEPOSITO_FINALE%>.value));
 	var diff = dataFine.getTime() - dataInizio.getTime();
 	diff = Math.floor(diff / (1000 * 60 * 60 * 24));
-	if (diff > 182.5) {
+	// 20260112 [SG] : segnalazione di UM dal 01/07/2025 al 31/12/2025 --> diff = 183
+	// if (diff > 182.5) {
+	if (diff > 183) {
   		alert ('Il range di date non può superare i 6 mesi!');
 	 	return false;        
 	}	
