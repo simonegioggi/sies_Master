@@ -343,7 +343,12 @@
  		if(lRichiestaSORV.getAnnoSentenza()!=null && lRichiestaSORV.getNumeroSentenza()!=null)
  		{
  			lSentenza = lRichiestaSORV.getAnnoSentenza()+"/"+lRichiestaSORV.getNumeroSentenza();
- 			
+            
+ 			// MEV_2025-48 - ALTRO - Visualizza data Sentenza su Richieste PM
+            if (lRichiestaSORV.getDataSentenza()!=null){
+               lSentenza+=" del "+DateUtils.getDateToString(lRichiestaSORV.getDataSentenza(), "dd/MM/yyyy") ;
+            }
+            
  			if( !("null").equals(lRichiestaSORV.getAltri()) && 
  				!"".equals(lRichiestaSORV.getAltri()) &&
  				!"0".equals(lRichiestaSORV.getAltri()) )
