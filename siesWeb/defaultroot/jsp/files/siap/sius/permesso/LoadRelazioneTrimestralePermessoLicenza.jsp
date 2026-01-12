@@ -82,7 +82,7 @@ function differenzaDate() {
   		alert ('Il range di date non può superare i 6 mesi!');
 	 	return false;        
 	}	
-	return false;
+	return true;
 }
 </script>  	
 </head>
