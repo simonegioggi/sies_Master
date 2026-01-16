@@ -53,8 +53,10 @@ import siap.siep.competenza.dao.CompetenzaDAO;
 import siap.siep.competenza.model.CompetenzaModel;
 import siap.siep.continuazione.dao.ContinuazioneSqlDAO;
 import siap.siep.continuazione.model.ContinuazioneModel;
+import siap.siep.fascicolo.dao.FascicoloSiepDAO;
 import siap.siep.fascicolo.dao.FascicoloSiepSqlDAO;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
+import siap.siep.istruttoriacumulo.dao.IstruttoriaCumuloDAO;
 import siap.siep.istruttoriacumulo.dao.IstruttoriaCumuloSqlDAO;
 import siap.siep.istruttoriacumulo.model.IstruttoriaCumuloModel;
 import siap.siep.luogodetenzione.dao.LuogoDetenzioneSqlDAO;
@@ -2845,6 +2847,11 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 		ContinuazioneCumuloDAO lContCumDao = null;
 		BeneficioCumuloDAO lBenCumDao = null;
 
+		// Ticket#202601140182 - SIEP : Doppio titolo Esecutivo
+		FascicoloSiepDAO lFascSiepDao = null;
+		IstruttoriaCumuloDAO lIstrDAO = null;
+		// Ticket#202601140182 - FINE
+		
 		// Le tabelle del cumulo si referenziano tra di loro per cui in fase di
 		// copia dei record di un titolo vanno ricreati i collegamneti anche sui
 		// nuovi record inseriti in copia (FK logiche e/o fisiche)
@@ -2897,6 +2904,21 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 				lConn = getDBConnection();
 			}
 
+			
+			// Ticket#202601140182 - SIEP : Doppio titolo Esecutivo
+			// recupero dati del cumulante principale
+			siesLogger.debug("Istruttoria Principale: "+aIdIstruttoriaCumulo);
+			lIstrDAO = new IstruttoriaCumuloDAO(lConn);
+			lIstrDAO.selCondizioneUpdate(aIdIstruttoriaCumulo);
+			IstruttoriaCumuloModel lIstruttoria = (IstruttoriaCumuloModel) lIstrDAO.getModelByKey();
+			
+			siesLogger.debug("Ricerca il fascicolo cumulante principale: "+lIstruttoria.getFasSieIdFascicoloSiep());
+			lFascSiepDao = new FascicoloSiepDAO(lConn);
+			lFascSiepDao.selCondizioneUpdate (lIstruttoria.getFasSieIdFascicoloSiep());
+			FascicoloSiepModel lFasCumulantePrincipale = (FascicoloSiepModel) lFascSiepDao.getModelByKey();
+			siesLogger.debug("lFasCumulantePrincipale = "+lFasCumulantePrincipale);
+			// Ticket#202601140182 - FINE
+			
 			lTitoloCumSqlDao = new TitoloCumulatoSqlDAO(lConn);
 
 			lTitoloCumSqlDao.ricercaTitoloCumulatoByIstruttoria(aUltimaIstruttoria.getIdIstruttoriaCumulo());
@@ -2919,17 +2941,32 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 					lProcModel = (ProcedimentoCumulatoModel) lProcedimentoSqlDao.getModel();
 
 				siesLogger.debug("lProcModel = " + lProcModel);
+				siesLogger.debug("aFascicoloSiepCumulato = " + aFascicoloSiepCumulato);
+				
 				boolean lStessoTitolo = false;
 				if (lProcModel != null) {
-					if (aFascicoloSiepCumulato.getChiaveAnno()
-							.compareTo(lProcModel.getChiaveAnnoFasCumulato()) == 0
-							&& aFascicoloSiepCumulato.getChiaveProgr()
-									.compareTo(lProcModel.getChiaveProgrFasCumulato()) == 0
-							&& aFascicoloSiepCumulato.getChiaveUfficio()
-									.equals(lProcModel.getCodUfficioFasCumulato())) {
-						siesLogger.debug("Stesso titolo del cumulante lo salto");
+					// Ticket#202601140182 - SIEP : Doppio titolo Esecutivo
+					// Attenzione che se l'istruttoria non è del fascicolo cumulante (secono cumulo) 
+					// ma viene da un cumulo presente su un cumulato è possibile che il cumulante corrente 
+					// fosse in istruttoria
+//					if (aFascicoloSiepCumulato.getChiaveAnno()
+//							.compareTo(lProcModel.getChiaveAnnoFasCumulato()) == 0
+//							&& aFascicoloSiepCumulato.getChiaveProgr()
+//									.compareTo(lProcModel.getChiaveProgrFasCumulato()) == 0
+//							&& aFascicoloSiepCumulato.getChiaveUfficio()
+//									.equals(lProcModel.getCodUfficioFasCumulato())) {
+//						siesLogger.debug("Stesso titolo del cumulante lo salto");
+//						lStessoTitolo = true;
+//					}
+					
+					if (   lFasCumulantePrincipale.getChiaveAnno().compareTo(lProcModel.getChiaveAnnoFasCumulato()) == 0
+						&& lFasCumulantePrincipale.getChiaveProgr().compareTo(lProcModel.getChiaveProgrFasCumulato()) == 0
+						&& lFasCumulantePrincipale.getChiaveUfficio().equals(lProcModel.getCodUfficioFasCumulato())) {
+						siesLogger.debug("Stesso titolo del cumulante principale lo salto");
 						lStessoTitolo = true;
-					}
+					}					
+					// Ticket#202601140182 - FINE
+					
 				} else {
 					siesLogger.debug("Procedimento cumulato assente");
 				}
@@ -3013,6 +3050,11 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			cleanup(lProcedimentoSqlDao);
 			cleanup(lContCumDao);
 			cleanup(lBenCumDao);
+			
+			// Ticket#202601140182 - SIEP : Doppio titolo Esecutivo
+			cleanup(lFascSiepDao);
+			cleanup(lIstrDAO);
+			// Ticket#202601140182 - FINE
 
 			if (aDBConnection == null) {
 				cleanup(lConn);
