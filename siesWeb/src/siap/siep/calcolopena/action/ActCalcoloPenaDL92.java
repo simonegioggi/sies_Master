@@ -36,6 +36,8 @@ import siap.siep.fascicolo.controller.IFascicoloSiepStampa;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.penacomplessiva.action.ICostantiPenaComplessiva;
 import siap.siep.penaresidua.action.ICostantiPenaResidua;
+import siap.siep.penaresidua.controller.IPenaResidua;
+import siap.siep.penaresidua.model.PenaResiduaModel;
 import siap.siep.sentenza.model.SentenzaModel;
 import siap.siep.util.SIEPLookupRemote;
 
@@ -199,7 +201,13 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 
 			IFascicoloSiepStampa lCtrStam = SIEPLookupRemote.getFascicoloSiepStampaRemote();
 			lTreeRoot = lCtrStam.prelevaDatiStampaFascicolo(lFascicoloModel, lUtente);
-
+			
+			TreeModel lTreeFascicolo = lTreeRoot.findTreeModel(lTreeRoot, lFascicoloModel);
+			
+			IPenaResidua lCtrlPenaResidua = SIEPLookupRemote.getPenaResiduaRemote();
+			PenaResiduaModel lPenRes = lCtrlPenaResidua.ExRicercaPenaResiduaUltimaValidata(lFascicoloModel.getIdFascicoloSiep());
+			if (lPenRes!=null && lPenRes.getIdPenaResidua()!= null)
+				lTreeFascicolo.add(new TreeModel(lPenRes));
 		} else {
 			XModel lStampa = new XModel();
 
