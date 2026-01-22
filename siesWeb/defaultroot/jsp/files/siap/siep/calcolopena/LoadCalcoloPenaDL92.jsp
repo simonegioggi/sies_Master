@@ -5,6 +5,8 @@
 
 <%@ page import="java.math.BigDecimal" %>
 <%@ page import="java.util.Date"%>
+<%@ page import="java.util.Vector"%>
+<%@ page import="java.util.Iterator"%>
 
 <%@ page import="siap.sico.calendar.model.CalendarModel" %>
 <%@ page import="siap.sico.util.CalendarUtil" %>
@@ -15,6 +17,7 @@
 
 <%@ page import="siap.siep.penaresidua.model.PenaResiduaModel"%>
 
+<%@ page import="siap.siep.calcolopenadl92.model.CalcoloPenaDL92ModelDB"%>
 
 <jsp:useBean id="lCalcoloPenaMod"  scope="request" class="siap.siep.calcolopena.model.CalcoloPenaModel" />
 <jsp:useBean id="lPenComplMod"     scope="request" class="siap.siep.penacomplessiva.model.PenaComplessivaModel" />
@@ -167,6 +170,11 @@ totMCComputabili = lCalcoloPenaMod.getMisureCautelariReclusioneInSentenza();
       }
     }  
     
+    <%-- MEV-2026_1 --%>
+    function storicoDL92() {
+        document.StoricoCalcoloPenaDL92.submit();   
+    }
+    <%-- MEV-2026_1 --%>
   </script>
 </head>
 
@@ -187,12 +195,7 @@ totMCComputabili = lCalcoloPenaMod.getMisureCautelariReclusioneInSentenza();
         <a href="Javascript:stampaSiepXls()" >
           <img  align="middle" src="/images/xls.jpg" alt="Generazione Stampa" width="24" height="24" border="0">
         </a>
-      </td>        
-      <td class="LBG">
-        <a href="Javascript:history.go(-1);">
-          <img align="middle" src="<%=IWebConstants.IMAGES_DIR%>arrowleft24.gif" alt="ritorna su" width="24" height="24" border="0">
-        </a>
-      </td>
+      </td>     
     </tr>
   </table>
   
@@ -299,7 +302,7 @@ totMCComputabili = lCalcoloPenaMod.getMisureCautelariReclusioneInSentenza();
         <td class="l" colspan="2">&nbsp;</td>
       </tr>
      
-       <tr>
+      <tr>
         <td colspan="4">&nbsp;</td>
       </tr> 
       <tr>
@@ -340,10 +343,22 @@ totMCComputabili = lCalcoloPenaMod.getMisureCautelariReclusioneInSentenza();
           <input class="bottone" type="button" name="PULISCI" value="Pulisci Dati" 
                  title="Pulisce i dati in maschera per un nuovo calcolo" 
                  onClick="javascript:pulisciMaschera();">&nbsp;&nbsp;
+                 
+          <%-- MEV-2026_1 --%>
+          <% if (session.getAttribute("fascicolo") != null) { %>
+          <input class="bottone" type="button" name="Storico" value="Storico Calcoli Validati"
+              onClick="javascript:storicoDL92();">
+          <%-- MEV-2026_1 --%>
+          <% } %>           
         </td>
+
       </tr>
     </table>
   </form>
+  
+  <form method="POST" action="/jsp/Main.jsp" name="StoricoCalcoloPenaDL92">
+    <input type="hidden" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.calcolopena.action.ActLoadStoricoCalcoloPenaDL92">
+  </form> 
   
   
 <script language="JavaScript" type="text/javascript">

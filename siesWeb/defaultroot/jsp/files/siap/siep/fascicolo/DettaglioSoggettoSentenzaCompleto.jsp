@@ -1747,6 +1747,17 @@ if (dettagliofascicolo.getPenaResidua() != null) {
         	<font class="label">Fine Pena : </font>
         	<font  color=red><%=StringUtils.toStringJSP(DateUtils.getDateToString(lPenResMod.getDataFine(),"dd-MM-yyyy"))%></font>
         	<input type="hidden" name="dataFinePena" value="<%=DateUtils.getDateToString(lPenResMod.getDataFine(),"dd-MM-yyyy")%>"/>
+        	
+        	<%-- MEV-2026_1 --%>
+        	<% if (dettagliofascicolo.getCalcoloPenaDL92DB()!=null 
+        	       && dettagliofascicolo.getCalcoloPenaDL92DB().getDataScarcLaFung()!=null
+        	       ) 
+        	{ %>
+        	<font class="label" style="color: red;">Fine Pena Virtuale: </font>
+        	<font color="red"><%=StringUtils.toStringJSP(DateUtils.getDateToString(dettagliofascicolo.getCalcoloPenaDL92DB().getDataScarcLaFung(),"dd-MM-yyyy"))%></font>
+        	<%-- MEV-2026_1 --%>
+        	<% } %>
+        	
 <%
       	} else {
         	if (lPenResMod.getDataFine() != null) {
@@ -1754,6 +1765,16 @@ if (dettagliofascicolo.getPenaResidua() != null) {
            	<font class="label">Fine Pena : </font>
            	<font class="cVerde"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lPenResMod.getDataFine(),"dd-MM-yyyy"))%></font>
            	<input type="hidden" name="dataFinePena" value="<%=DateUtils.getDateToString(lPenResMod.getDataFine(),"dd-MM-yyyy")%>"/>
+           	
+            <%-- MEV-2026_1 --%>
+            <% if (   dettagliofascicolo.getCalcoloPenaDL92DB()!=null 
+                   && dettagliofascicolo.getCalcoloPenaDL92DB().getDataScarcLaFung()!=null
+                  ) 
+            { %>
+            <font class="label" style="color: red;">Fine Pena Virtuale: </font>
+            <font color="red"><%=StringUtils.toStringJSP(DateUtils.getDateToString(dettagliofascicolo.getCalcoloPenaDL92DB().getDataScarcLaFung(),"dd-MM-yyyy"))%></font>
+            <%-- MEV-2026_1 --%>
+            <% } %>           	
 <%
 			}
       	}

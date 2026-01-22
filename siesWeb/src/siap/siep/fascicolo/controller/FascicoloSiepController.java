@@ -59,6 +59,8 @@ import siap.siep.beneficio.dao.BeneficioSqlDAO;
 import siap.siep.beneficio.model.BeneficioModel;
 import siap.siep.calcolopena.controller.CalcoloPenaControllerF5;
 import siap.siep.calcolopena.model.CalcoloPenaModel;
+import siap.siep.calcolopenadl92.controller.ICalcoloPenaDL92;
+import siap.siep.calcolopenadl92.model.CalcoloPenaDL92ModelDB;
 import siap.siep.circostanza.controller.ICircostanza;
 import siap.siep.circostanza.dao.CircostanzaSqlDAO;
 import siap.siep.circostanza.model.CircostanzaModel;
@@ -1857,6 +1859,13 @@ public class FascicoloSiepController extends SiapController implements IFascicol
 			IPenaResidua lPenResCtrl = SIEPLookupRemote.getPenaResiduaRemote();
 			PenaResiduaModel lPenResMod = lPenResCtrl.ExRicercaPenaResiduaUltimaByDate(aIdFascicolo);
 			lDettaglio.setPenaResidua(lPenResMod);
+			
+			// MEV-2026_1
+            siesLogger.debug("GetLastCalcoloDL92 da ExDettaglioFascicoloSiep");			
+			ICalcoloPenaDL92 lCalcDL92Ctrl = SIEPLookupRemote.getCalcoloPenaDL92();
+			CalcoloPenaDL92ModelDB lCalcoloModel = lCalcDL92Ctrl.GetLastCalcoloDL92(aIdFascicolo);
+			lDettaglio.setCalcoloPenaDL92DB(lCalcoloModel);
+			// MEV-2026_1 - FINE
 
 			// Pena Presunta
 			IPenaPresunta lPenPresCtrl = SIEPLookupRemote.getPenaPresuntaRemote();
@@ -4382,6 +4391,13 @@ public class FascicoloSiepController extends SiapController implements IFascicol
 			PenaResiduaModel lPenResMod = lPenResCtrl.ExRicercaPenaResiduaUltimaByDate(aIdFascicolo);
 			lDettaglio.setPenaResidua(lPenResMod);
 
+	        // MEV-2026_1
+			siesLogger.debug("GetLastCalcoloDL92 da ExDettaglioFascicoloSiepNew");
+            ICalcoloPenaDL92 lCalcDL92Ctrl = SIEPLookupRemote.getCalcoloPenaDL92();
+            CalcoloPenaDL92ModelDB lCalcoloModel = lCalcDL92Ctrl.GetLastCalcoloDL92(aIdFascicolo);
+            lDettaglio.setCalcoloPenaDL92DB(lCalcoloModel);
+            // MEV-2026_1 - FINE
+            
 			// Pena Presunta
 			IPenaPresunta lPenPresCtrl = SIEPLookupRemote.getPenaPresuntaRemote();
 			PenaPresuntaModel lPenPresMod = lPenPresCtrl

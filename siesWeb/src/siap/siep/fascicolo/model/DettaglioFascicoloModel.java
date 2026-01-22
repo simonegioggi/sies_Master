@@ -10,6 +10,7 @@ import siap.sico.misuraalternativa.model.MisuraAlternativaModel;
 import siap.sico.residenza.model.ResidenzaModel;
 import siap.siep.altracausa.model.AltraCausaModel;
 import siap.siep.calcolopena.model.CalcoloPenaModel;
+import siap.siep.calcolopenadl92.model.CalcoloPenaDL92ModelDB;
 import siap.siep.decretoordinanza.model.DecretoOrdinanzaSiepModel;
 import siap.siep.luogodetenzione.model.LuogoDetenzioneModel;
 import siap.siep.modulocumulo.model.PenaRideterminataCumuloModel;
@@ -90,8 +91,13 @@ public class DettaglioFascicoloModel extends GenericModel {
 	private List mReatoCircoCumulo; // ReatoCircostanzaCumuloModel
 	private List mCircostanzaCumulo; // CircostanzaCumuloModel
 	private String mFlagIstruttoriaPresente;
+	
+	
+	// MEV-2026_1
+	private CalcoloPenaDL92ModelDB mCalcoloPenaDL92DB;
 
-	// COSTRUTTORE DI DEFAULT
+
+    // COSTRUTTORE DI DEFAULT
 	public DettaglioFascicoloModel() {
 		mFascicoloSiep = null;
 		mResidenza = null;
@@ -385,6 +391,12 @@ public class DettaglioFascicoloModel extends GenericModel {
 		return mFlagIstruttoriaPresente;
 	}
 
+    // MEV-2026_1
+    public CalcoloPenaDL92ModelDB getCalcoloPenaDL92DB() {
+        return mCalcoloPenaDL92DB;
+    }
+
+	
 	//
 	// METODI SET()
 	//
@@ -567,4 +579,8 @@ public class DettaglioFascicoloModel extends GenericModel {
 		mFlagIstruttoriaPresente = aValore;
 	}
 
+    // MEV-2026_1
+    public void setCalcoloPenaDL92DB(CalcoloPenaDL92ModelDB aValore) {
+        mCalcoloPenaDL92DB = aValore;
+    }
 }
