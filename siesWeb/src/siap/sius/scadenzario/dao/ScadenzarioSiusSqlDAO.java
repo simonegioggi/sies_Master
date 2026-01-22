@@ -211,7 +211,7 @@ public class ScadenzarioSiusSqlDAO extends SIAPSqlDAO {
 				+ " UFFICIO UFF, COMUNE DESCR_COMUNE_UFFICIO, COMUNE DESCR_COMUNE_NASCITA,"
 				+ " PENA_RESIDUA PR, POSIZIONE_GIURIDICA PG,"
 				+ " CG_REF_CODES DESCR_POSIZIONE_GIURIDICA, CG_REF_CODES DESCR_STATO_NASCITA,"
-				+ " FASCICOLO_SIEP FSIEP, SCADENZARIO_SIUS SCAD_SIUS"
+				+ " FASCICOLO_SIEP FSIEP"
 				+ " WHERE FSIUS.SOG_ID_SOGGETTO = SOGG.ID_SOGGETTO"
 				+ " AND FSIUS.FAS_SIE_ID_FASCICOLO_SIEP is not null"
 				+ " AND FSIUS.FAS_SIE_ID_FASCICOLO_SIEP = FSIEP.ID_FASCICOLO_SIEP"
@@ -231,15 +231,14 @@ public class ScadenzarioSiusSqlDAO extends SIAPSqlDAO {
 				+ " AND UFF.COD_COMUNE = DESCR_COMUNE_UFFICIO.COD_COMUNE"
 				+ " AND SOGG.COD_COMUNE_NASCITA = DESCR_COMUNE_NASCITA.COD_COMUNE";
 		if (Utils.isPresent(dsi)) {
-			lStatement += " AND DATA_FINE_SCADENZA >= TO_DATE(" + DateUtils.getDateToString(dsi, "yyyyMMdd")
+			lStatement += " AND PR.DATA_FINE >= TO_DATE(" + DateUtils.getDateToString(dsi, "yyyyMMdd")
 					+ ",'YYYYMMDD')";
 		}
 		if (Utils.isPresent(dsf)) {
-			lStatement += " AND DATA_FINE_SCADENZA <= TO_DATE(" + DateUtils.getDateToString(dsf, "yyyyMMdd")
+			lStatement += " AND PR.DATA_FINE <= TO_DATE(" + DateUtils.getDateToString(dsf, "yyyyMMdd")
 					+ ",'YYYYMMDD')";
 		}
-		lStatement += " AND SCAD_SIUS.FAS_SIU_ID_FASCICOLO_SIUS = FSIUS.ID_FASCICOLO_SIUS"
-				+ " AND TO_CHAR(FSIUS.DATA_INSERIMENTO, 'YYYYMMDD') <= TO_CHAR(sysdate, 'YYYYMMDD')"
+		lStatement += " AND TO_CHAR(FSIUS.DATA_INSERIMENTO, 'YYYYMMDD') <= TO_CHAR(sysdate, 'YYYYMMDD')"
 				+ " AND UFF.COD_UFFICIO = nvl('" + codUfficio + "', UFF.COD_UFFICIO)";
 		if (Utils.isPresent(dii)) {
 			lStatement += " AND TO_CHAR(FSIUS.DATA_ISCRIZIONE, 'YYYYMMDD') >= '"
