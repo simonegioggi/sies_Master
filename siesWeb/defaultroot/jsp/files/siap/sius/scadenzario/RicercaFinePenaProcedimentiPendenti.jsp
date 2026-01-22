@@ -1,5 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%-- @since MEV_2026-1 --%>
+<%@page import="f3b.util.Utils"%>
 <%@ page import="java.util.Iterator"%>
 <%@ page import="java.util.Collection"%>
 <%@ page import="java.lang.String"%>
@@ -90,28 +91,28 @@ if (scadenzari.size() == 0) {
 	Iterator itx = scadenzari.iterator();
 	while (itx.hasNext()) {
 		ScadenzarioSiusModel ssm = (ScadenzarioSiusModel) itx.next();
-	  	FascicoloSiusModel fsium = ssm.getFascicoloSius();
-	  	RiferimentoFascicoloSiepModel rfsm = ssm.getFascicoloSiep();
-		SoggettoModel sm = fsium.getSoggetto();
+		int giorniResidui = Utils.isNullObj(ssm.getGiorniResidui()) ? 0 : ssm.getGiorniResidui().intValue();
+		int giorniResiduiVirtuali = Utils.isNullObj(ssm.getGiorniResiduiVirtuali()) ? 0 : ssm.getGiorniResiduiVirtuali().intValue();
 %>
 	<tr>
 		<td class="crosso">
-			<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>=<%=fsium.getIdFascicoloSius()%><%=retParam%>" title="Procedimento SIUS">
-				<%=fsium.getChiaveAnno()%>/<%=fsium.getChiaveProgr()%>&nbsp;
+			<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>=<%=ssm.getFascicoloSius().getIdFascicoloSius()%><%=retParam%>" title="Procedimento SIUS">
+				<%=ssm.getFascicoloSius().getChiaveAnno()%>/<%=ssm.getFascicoloSius().getChiaveProgr()%>&nbsp;
 			</a>
 		</td>
-		<td class="C"><%=sm.getCognome()%></td>
-		<td class="C"><%=sm.getNome()%></td>
-		<td class="C"><%=sm.getDescrComuneNascita()%></td>
-		<td class="C"><%=DateUtils.getDateToString(sm.getDataNascita(),"dd/MM/yyyy") %></td>
-		<td class="C"><%=ssm.getEvento().getDescrTipoProvvedimento()%></td>
-		<td class="C"><%=DateUtils.getDateToString(ssm.getEvento().getDataEmissione(),"dd/MM/yyyy")%></td>
-		<td class="C"><%=DateUtils.getDateToString(ssm.getDataInizioScadenza(),"dd/MM/yyyy") %></td>
-		<td class="C"><%=DateUtils.getDateToString(ssm.getDataFineScadenza(),"dd/MM/yyyy") %></td>
-		<td class="C"><%=ssm.getGiorniResidui().intValue()%></td>
+		<td class="C"><%=StringUtils.toStringJSP(ssm.getSoggetto().getCognome())%>&nbsp;<%=StringUtils.toStringJSP(ssm.getSoggetto().getNome())%></td>
+		<td class="C"><%=StringUtils.toStringJSP(ssm.getSoggetto().getDescrComuneNascita())%></td>
+		<td class="C"><%=StringUtils.toStringJSP(DateUtils.getDateToString(ssm.getSoggetto().getDataNascita(),"dd/MM/yyyy"))%></td>
+		<td class="C"><%=StringUtils.toStringJSP(ssm.getPosizioneGiuridica().getDescrPosizioneGiuridica())%></td>
+		<td class="C"><%=StringUtils.toStringJSP(ssm.getGeneraleProcedimento().getDescrOggettoProcedimento())%></td>
+		<td class="C"><%=StringUtils.toStringJSP(DateUtils.getDateToString(ssm.getDataInizioScadenza(),"dd/MM/yyyy"))%></td>
+		<td class="C"><%=StringUtils.toStringJSP(DateUtils.getDateToString(ssm.getDataFineScadenza(),"dd/MM/yyyy"))%></td>
+		<td class="C"><%=StringUtils.toStringJSP(giorniResidui)%></td>
+		<td class="C"><%=StringUtils.toStringJSP(DateUtils.getDateToString(ssm.getDataFinePenaVirtuale(),"dd/MM/yyyy"), "-")%></td>
+		<td class="C"><%=StringUtils.toStringJSP((Utils.isNullObj(ssm.getDataFinePenaVirtuale())) ? "-" : giorniResiduiVirtuali)%></td>
 		<td class="crosso">
-			<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>=<%=rfsm.getIdRiferimentoFascicoloSiep()%><%=retParam%>" title="Procedimento SIEP">
-				<%=rfsm.getAnnoFascicoloSiep()%>/<%=rfsm.getProgrFascicoloSiep()%>
+			<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>=<%=ssm.getRiferimentoFascicoloSiep().getFasSieIdFascicoloSiep()%><%=retParam%>" title="Procedimento SIEP">
+				<%=ssm.getRiferimentoFascicoloSiep().getAnnoFascicoloSiep()%>/<%=ssm.getRiferimentoFascicoloSiep().getProgrFascicoloSiep()%>
 			</a>
 		</td>
 	</tr>

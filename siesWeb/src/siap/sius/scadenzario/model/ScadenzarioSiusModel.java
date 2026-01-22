@@ -44,7 +44,7 @@ public class ScadenzarioSiusModel extends GenericModel {
 	private BigDecimal mEveIdEvento; // 02/08/2004
 	private EventoModel mEvento; // 02/08/2004
 	// MEV_2026-1: aggiunte variabili e gestite nella classe
-	private RiferimentoFascicoloSiepModel mFascicoloSiep;
+	private RiferimentoFascicoloSiepModel mRiferimentoFascicoloSiep;
 	private SoggettoModel mSoggetto;
 	private PosizioneGiuridicaModel mPosizioneGiuridica;
 	private GeneraleProcedimentoModel mGeneraleProcedimento;
@@ -75,7 +75,7 @@ public class ScadenzarioSiusModel extends GenericModel {
 		this.mFascicoloSius = null;
 		this.mEveIdEvento = null;
 		this.mEvento = null;
-		this.mFascicoloSiep = null;
+		this.mRiferimentoFascicoloSiep = null;
 		this.mSoggetto = null;
 		this.mPosizioneGiuridica = null;
 		this.mGeneraleProcedimento = null;
@@ -106,7 +106,7 @@ public class ScadenzarioSiusModel extends GenericModel {
 		this.mGiorniResidui = aModel.mGiorniResidui;
 		this.mEveIdEvento = aModel.mEveIdEvento;
 		this.mEvento = aModel.mEvento;
-		this.mFascicoloSiep = aModel.mFascicoloSiep;
+		this.mRiferimentoFascicoloSiep = aModel.mRiferimentoFascicoloSiep;
 		this.mSoggetto = aModel.mSoggetto;
 		this.mPosizioneGiuridica = aModel.mPosizioneGiuridica;
 		this.mGeneraleProcedimento = aModel.mGeneraleProcedimento;
@@ -121,7 +121,7 @@ public class ScadenzarioSiusModel extends GenericModel {
 			String aCodUfficioInserimento, String aDescrUfficioInserimento, String aCodOperatoreAggiornamento,
 			Date aDataAggiornamento, String aCodUfficioAggiornamento, String aDescrUfficioAggiornamento,
 			BigDecimal aGiorniResidui, BigDecimal aFasSiuIdFascicoloSius, FascicoloSiusModel aFascicoloSius,
-			BigDecimal aEveIdEvento, EventoModel aEvento, RiferimentoFascicoloSiepModel aFascicoloSiep,
+			BigDecimal aEveIdEvento, EventoModel aEvento, RiferimentoFascicoloSiepModel aRiferimentoFascicoloSiep,
 			SoggettoModel aSoggetto, PosizioneGiuridicaModel aPosizioneGiuridica,
 			GeneraleProcedimentoModel aGeneraleProcedimento, Date aDataFinePenaVirtuale,
 			BigDecimal aGiorniResiduiVirtuali) {
@@ -146,7 +146,7 @@ public class ScadenzarioSiusModel extends GenericModel {
 		this.mFascicoloSius = aFascicoloSius;
 		this.mEveIdEvento = aEveIdEvento;
 		this.mEvento = aEvento;
-		this.mFascicoloSiep = aFascicoloSiep;
+		this.mRiferimentoFascicoloSiep = aRiferimentoFascicoloSiep;
 		this.mSoggetto = aSoggetto;
 		this.mPosizioneGiuridica = aPosizioneGiuridica;
 		this.mGeneraleProcedimento = aGeneraleProcedimento;
@@ -237,8 +237,8 @@ public class ScadenzarioSiusModel extends GenericModel {
 		return mEvento;
 	}
 
-	public RiferimentoFascicoloSiepModel getFascicoloSiep() {
-		return mFascicoloSiep;
+	public RiferimentoFascicoloSiepModel getRiferimentoFascicoloSiep() {
+		return mRiferimentoFascicoloSiep;
 	}
 
 	public SoggettoModel getSoggetto() {
@@ -344,8 +344,8 @@ public class ScadenzarioSiusModel extends GenericModel {
 		mEvento = aValore;
 	}
 
-	public void setFascicoloSiep(RiferimentoFascicoloSiepModel aValore) {
-		mFascicoloSiep = aValore;
+	public void setRiferimentoFascicoloSiep(RiferimentoFascicoloSiepModel aValore) {
+		mRiferimentoFascicoloSiep = aValore;
 	}
 
 	public void setSoggetto(SoggettoModel aValore) {
