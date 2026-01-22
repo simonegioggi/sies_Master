@@ -1,12 +1,12 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%-- @since MEV_2026-1 --%>
-<%@page import="f3b.util.Utils"%>
 <%@ page import="java.util.Iterator"%>
 <%@ page import="java.util.Collection"%>
 <%@ page import="java.lang.String"%>
 
 <%@ page import="f3b.util.StringUtils"%>
 <%@ page import="f3b.util.DateUtils"%>
+<%@ page import="f3b.util.Utils"%>
 <%@ page import="f3b.web.IWebConstants"%>
 
 <%@ page import="siap.sius.scadenzario.action.ICostantiScadenzarioSius"%>
@@ -65,6 +65,7 @@ String retParam = retFlag ? ("&TornaQui=" + TornaQui) : "";
 	<tr><td class="Titolo"><%=intestazione%></td></tr>
 </table>
 <br>
+<jsp:include page="<%=IWebConstants.PAGINAZIONE_RICERCA%>"></jsp:include>
 <table cellpadding="2" cellspacing="2">
 <%
 if (scadenzari.size() == 0) {
@@ -105,8 +106,8 @@ if (scadenzari.size() == 0) {
 		<td class="C"><%=StringUtils.toStringJSP(DateUtils.getDateToString(ssm.getSoggetto().getDataNascita(),"dd/MM/yyyy"))%></td>
 		<td class="C"><%=StringUtils.toStringJSP(ssm.getPosizioneGiuridica().getDescrPosizioneGiuridica())%></td>
 		<td class="C"><%=StringUtils.toStringJSP(ssm.getGeneraleProcedimento().getDescrOggettoProcedimento())%></td>
-		<td class="C"><%=StringUtils.toStringJSP(DateUtils.getDateToString(ssm.getDataInizioScadenza(),"dd/MM/yyyy"))%></td>
-		<td class="C"><%=StringUtils.toStringJSP(DateUtils.getDateToString(ssm.getDataFineScadenza(),"dd/MM/yyyy"))%></td>
+		<td class="C"><%=StringUtils.toStringJSP(DateUtils.getDateToString(ssm.getDataInizioScadenza(),"dd/MM/yyyy"), "-")%></td>
+		<td class="C"><%=StringUtils.toStringJSP(DateUtils.getDateToString(ssm.getDataFineScadenza(),"dd/MM/yyyy"), "-")%></td>
 		<td class="C"><%=StringUtils.toStringJSP(giorniResidui)%></td>
 		<td class="C"><%=StringUtils.toStringJSP(DateUtils.getDateToString(ssm.getDataFinePenaVirtuale(),"dd/MM/yyyy"), "-")%></td>
 		<td class="C"><%=StringUtils.toStringJSP((Utils.isNullObj(ssm.getDataFinePenaVirtuale())) ? "-" : giorniResiduiVirtuali)%></td>

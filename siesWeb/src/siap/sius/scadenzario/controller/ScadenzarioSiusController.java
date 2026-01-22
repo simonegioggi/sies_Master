@@ -586,7 +586,7 @@ public class ScadenzarioSiusController extends SiapController implements IScaden
 			sssdao = new ScadenzarioSiusSqlDAO(c);
 			sssdao.ricercaFinePenaProcedimentiPendentiPaginata(riferimento, ai, ni, af, nf, dii, dif, dsi,
 					dsf, codUfficio);
-			sssdao.getNumRowsSelected();
+			records = sssdao.getNumRowsSelected();
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
