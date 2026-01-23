@@ -1,8 +1,10 @@
 package siap.sius.scadenzario.action;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -124,6 +126,21 @@ public class ActRicercaFinePenaProcedimentiPendenti extends ActionSiap implement
 		String rife = ("reale".equals(riferimento)) ? "Data Fine Pena Reale" : "Data Fine Pena Virtuale";
 		cdrRet += "; " + cdr4 + rife;
 		setRequestAttribute("intestazione", cdrRet);
+
+		// gestione dati in sessione
+		List<Object> l = new ArrayList<Object>();
+		l.add(riferimento);
+		l.add(ai);
+		l.add(ni);
+		l.add(af);
+		l.add(nf);
+		l.add(dii);
+		l.add(dif);
+		l.add(dsi);
+		l.add(dsf);
+		l.add(codUfficio);
+		l.add(cdrRet);
+		setSessionAttribute("ricercaFinePenaProcedimentiPendenti", l);
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()

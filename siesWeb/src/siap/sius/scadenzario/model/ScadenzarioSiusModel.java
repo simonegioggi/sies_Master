@@ -5,7 +5,6 @@ import java.util.Date;
 
 import f3b.model.GenericModel;
 import siap.sico.evento.model.EventoModel;
-import siap.sico.soggetto.model.SoggettoModel;
 import siap.siep.posizione.model.PosizioneGiuridicaModel;
 import siap.sius.fascicolo.model.FascicoloSiusModel;
 import siap.sius.generaleprocedimento.model.GeneraleProcedimentoModel;
@@ -45,7 +44,6 @@ public class ScadenzarioSiusModel extends GenericModel {
 	private EventoModel mEvento; // 02/08/2004
 	// MEV_2026-1: aggiunte variabili e gestite nella classe
 	private RiferimentoFascicoloSiepModel mRiferimentoFascicoloSiep;
-	private SoggettoModel mSoggetto;
 	private PosizioneGiuridicaModel mPosizioneGiuridica;
 	private GeneraleProcedimentoModel mGeneraleProcedimento;
 	private Date mDataFinePenaVirtuale;
@@ -76,7 +74,6 @@ public class ScadenzarioSiusModel extends GenericModel {
 		this.mEveIdEvento = null;
 		this.mEvento = null;
 		this.mRiferimentoFascicoloSiep = null;
-		this.mSoggetto = null;
 		this.mPosizioneGiuridica = null;
 		this.mGeneraleProcedimento = null;
 		this.mDataFinePenaVirtuale = null;
@@ -107,7 +104,6 @@ public class ScadenzarioSiusModel extends GenericModel {
 		this.mEveIdEvento = aModel.mEveIdEvento;
 		this.mEvento = aModel.mEvento;
 		this.mRiferimentoFascicoloSiep = aModel.mRiferimentoFascicoloSiep;
-		this.mSoggetto = aModel.mSoggetto;
 		this.mPosizioneGiuridica = aModel.mPosizioneGiuridica;
 		this.mGeneraleProcedimento = aModel.mGeneraleProcedimento;
 		this.mDataFinePenaVirtuale = aModel.mDataFinePenaVirtuale;
@@ -121,10 +117,10 @@ public class ScadenzarioSiusModel extends GenericModel {
 			String aCodUfficioInserimento, String aDescrUfficioInserimento, String aCodOperatoreAggiornamento,
 			Date aDataAggiornamento, String aCodUfficioAggiornamento, String aDescrUfficioAggiornamento,
 			BigDecimal aGiorniResidui, BigDecimal aFasSiuIdFascicoloSius, FascicoloSiusModel aFascicoloSius,
-			BigDecimal aEveIdEvento, EventoModel aEvento, RiferimentoFascicoloSiepModel aRiferimentoFascicoloSiep,
-			SoggettoModel aSoggetto, PosizioneGiuridicaModel aPosizioneGiuridica,
-			GeneraleProcedimentoModel aGeneraleProcedimento, Date aDataFinePenaVirtuale,
-			BigDecimal aGiorniResiduiVirtuali) {
+			BigDecimal aEveIdEvento, EventoModel aEvento,
+			RiferimentoFascicoloSiepModel aRiferimentoFascicoloSiep,
+			PosizioneGiuridicaModel aPosizioneGiuridica, GeneraleProcedimentoModel aGeneraleProcedimento,
+			Date aDataFinePenaVirtuale, BigDecimal aGiorniResiduiVirtuali) {
 
 		this.mIdScadenzarioSius = aIdScadenzarioSius;
 		this.mCodTipoScadenzario = aCodTipoScadenzario;
@@ -147,7 +143,6 @@ public class ScadenzarioSiusModel extends GenericModel {
 		this.mEveIdEvento = aEveIdEvento;
 		this.mEvento = aEvento;
 		this.mRiferimentoFascicoloSiep = aRiferimentoFascicoloSiep;
-		this.mSoggetto = aSoggetto;
 		this.mPosizioneGiuridica = aPosizioneGiuridica;
 		this.mGeneraleProcedimento = aGeneraleProcedimento;
 		this.mDataFinePenaVirtuale = aDataFinePenaVirtuale;
@@ -239,10 +234,6 @@ public class ScadenzarioSiusModel extends GenericModel {
 
 	public RiferimentoFascicoloSiepModel getRiferimentoFascicoloSiep() {
 		return mRiferimentoFascicoloSiep;
-	}
-
-	public SoggettoModel getSoggetto() {
-		return mSoggetto;
 	}
 
 	public PosizioneGiuridicaModel getPosizioneGiuridica() {
@@ -346,10 +337,6 @@ public class ScadenzarioSiusModel extends GenericModel {
 
 	public void setRiferimentoFascicoloSiep(RiferimentoFascicoloSiepModel aValore) {
 		mRiferimentoFascicoloSiep = aValore;
-	}
-
-	public void setSoggetto(SoggettoModel aValore) {
-		mSoggetto = aValore;
 	}
 
 	public void setPosizioneGiuridica(PosizioneGiuridicaModel aValore) {

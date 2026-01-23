@@ -54,7 +54,7 @@ String retParam = retFlag ? ("&TornaQui=" + TornaQui) : "";
 		<jsp:include page="<%=IWebConstants.PG_RETURN_BUTTON%>"/>
 		<!-- BOTTONE PER STAMPA EXCEL --> 
 		<td class=l>
-			<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.statistiche.action.ActRicercaFinePenaProcedimentiPendentiExcel">
+			<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.scadenzario.action.ActRicercaFinePenaProcedimentiPendentiExcel">
 				<img src="<%=IWebConstants.IMAGES_DIR%>printexcel.gif" alt="Stampa Excel" width="24" height="24" border="0">
 			</a>
 		</td>
@@ -89,11 +89,20 @@ if (scadenzari.size() == 0) {
 		<td class="int">Procedimento SIEP</td>
 	</tr>
 <%
-	Iterator itx = scadenzari.iterator();
+	Iterator<ScadenzarioSiusModel> itx = scadenzari.iterator();
 	while (itx.hasNext()) {
 		ScadenzarioSiusModel ssm = (ScadenzarioSiusModel) itx.next();
 		int giorniResidui = Utils.isNullObj(ssm.getGiorniResidui()) ? 0 : ssm.getGiorniResidui().intValue();
 		int giorniResiduiVirtuali = Utils.isNullObj(ssm.getGiorniResiduiVirtuali()) ? 0 : ssm.getGiorniResiduiVirtuali().intValue();
+		String straniero = (Utils.isPresent(ssm.getFascicoloSius().getSoggetto().getDescComuneNascitaEstero())
+				&& !"-".equals(ssm.getFascicoloSius().getSoggetto().getDescComuneNascitaEstero())) 
+				? ssm.getFascicoloSius().getSoggetto().getDescComuneNascitaEstero() : "";
+		String luogoNascitaStraniero = (Utils.isPresent(straniero)) 
+				? straniero + " (" + ssm.getFascicoloSius().getSoggetto().getDescrStatoNascita() + ")" 
+				: ssm.getFascicoloSius().getSoggetto().getDescrStatoNascita();
+		String luogoNascita = (Utils.isPresent(ssm.getFascicoloSius().getSoggetto().getDescrComuneNascita())
+				&& !"-".equals(ssm.getFascicoloSius().getSoggetto().getDescrComuneNascita())) 
+				? ssm.getFascicoloSius().getSoggetto().getDescrComuneNascita() : luogoNascitaStraniero;
 %>
 	<tr>
 		<td class="crosso">
@@ -101,15 +110,15 @@ if (scadenzari.size() == 0) {
 				<%=ssm.getFascicoloSius().getChiaveAnno()%>/<%=ssm.getFascicoloSius().getChiaveProgr()%>&nbsp;
 			</a>
 		</td>
-		<td class="C"><%=StringUtils.toStringJSP(ssm.getSoggetto().getCognome())%>&nbsp;<%=StringUtils.toStringJSP(ssm.getSoggetto().getNome())%></td>
-		<td class="C"><%=StringUtils.toStringJSP(ssm.getSoggetto().getDescrComuneNascita())%></td>
-		<td class="C"><%=StringUtils.toStringJSP(DateUtils.getDateToString(ssm.getSoggetto().getDataNascita(),"dd/MM/yyyy"))%></td>
-		<td class="C"><%=StringUtils.toStringJSP(ssm.getPosizioneGiuridica().getDescrPosizioneGiuridica())%></td>
-		<td class="C"><%=StringUtils.toStringJSP(ssm.getGeneraleProcedimento().getDescrOggettoProcedimento())%></td>
-		<td class="C"><%=StringUtils.toStringJSP(DateUtils.getDateToString(ssm.getDataInizioScadenza(),"dd/MM/yyyy"), "-")%></td>
-		<td class="C"><%=StringUtils.toStringJSP(DateUtils.getDateToString(ssm.getDataFineScadenza(),"dd/MM/yyyy"), "-")%></td>
-		<td class="C"><%=StringUtils.toStringJSP(giorniResidui)%></td>
-		<td class="C"><%=StringUtils.toStringJSP(DateUtils.getDateToString(ssm.getDataFinePenaVirtuale(),"dd/MM/yyyy"), "-")%></td>
+		<td class="C"><%=StringUtils.toStringJSP(ssm.getFascicoloSius().getSoggetto().getCognome())%>&nbsp;<%=StringUtils.toStringJSP(ssm.getFascicoloSius().getSoggetto().getNome())%></td>
+		<td class="C"><%=StringUtils.toStringJSP(luogoNascita, "-")%></td>
+		<td class="C"><%=StringUtils.toStringJSP(DateUtils.getDateToString(ssm.getFascicoloSius().getSoggetto().getDataNascita(),"dd/MM/yyyy"))%></td>
+		<td class="C"><%=StringUtils.toStringJSP(ssm.getPosizioneGiuridica().getDescrPosizioneGiuridica(), "-")%></td>
+		<td class="C"><%=StringUtils.toStringJSP(ssm.getGeneraleProcedimento().getDescrOggettoProcedimento(), "-")%></td>
+		<td class="C"><%=StringUtils.toStringJSP(DateUtils.getDateToString(ssm.getDataInizioScadenza(), "dd/MM/yyyy"), "-")%></td>
+		<td class="C"><%=StringUtils.toStringJSP(DateUtils.getDateToString(ssm.getDataFineScadenza(), "dd/MM/yyyy"), "-")%></td>
+		<td class="C"><%=StringUtils.toStringJSP((Utils.isNullObj(ssm.getDataFineScadenza())) ? "-" : giorniResidui)%></td>
+		<td class="C"><%=StringUtils.toStringJSP(DateUtils.getDateToString(ssm.getDataFinePenaVirtuale(), "dd/MM/yyyy"), "-")%></td>
 		<td class="C"><%=StringUtils.toStringJSP((Utils.isNullObj(ssm.getDataFinePenaVirtuale())) ? "-" : giorniResiduiVirtuali)%></td>
 		<td class="crosso">
 			<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>=<%=ssm.getRiferimentoFascicoloSiep().getFasSieIdFascicoloSiep()%><%=retParam%>" title="Procedimento SIEP">

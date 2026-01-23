@@ -165,8 +165,7 @@ public class ScadenzarioSiusDAO extends TableDAO {
 				getDataInizioScadenza(), getDataFineScadenza(), getFlagVisto(), getDataVisto(),
 				getCodOperatoreInserimento(), getDataInserimento(), getCodUfficioInserimento(), "",
 				getCodOperatoreAggiornamento(), getDataAggiornamento(), getCodUfficioAggiornamento(), "",
-				null, getFasSiuIdFascicoloSius(), null, getEveIdEvento(), null, null, null, null, null, null,
-				null);
+				null, getFasSiuIdFascicoloSius(), null, getEveIdEvento(), null, null, null, null, null, null);
 	}
 
 	public void setDAOFromModel(ScadenzarioSiusModel aModel) throws DAOException {
