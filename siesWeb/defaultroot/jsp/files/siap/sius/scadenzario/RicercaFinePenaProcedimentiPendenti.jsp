@@ -20,7 +20,7 @@
 <%@ page import="siap.sius.fascicolo.action.ICostantiFascicoloSius"%>
 <%@ page import="siap.siep.fascicolo.action.ICostantiFascicoloSiep"%>
 
-<jsp:useBean id="scadenzari"	scope="request" class="java.util.Vector"/>
+<jsp:useBean id="scadenzari"	scope="request" class="java.util.Vector<ScadenzarioSiusModel>"/>
 <jsp:useBean id="intestazione" 	scope="request" class="java.lang.String"/>
 <jsp:useBean id="TornaQui"		scope="request" class="java.lang.String"/>
 
@@ -62,7 +62,7 @@ String retParam = retFlag ? ("&TornaQui=" + TornaQui) : "";
 </table>
 <br>
 <table cellpadding="2" cellspacing="2">
-	<tr><td class="Titolo"><%=intestazione%></td></tr>
+	<tr><td class="Titolo" style="font-size: 12px;"><%=intestazione%></td></tr>
 </table>
 <br>
 <jsp:include page="<%=IWebConstants.PAGINAZIONE_RICERCA%>"></jsp:include>
@@ -70,7 +70,7 @@ String retParam = retFlag ? ("&TornaQui=" + TornaQui) : "";
 <%
 if (scadenzari.size() == 0) {
 %>
-	<tr><td class="Titolo" colspan="12">Nessun procedimento trovato con i criteri di ricerca selezionati</td></tr>
+	<tr><td class="Titolo" colspan="12" style="font-size: 12px;">Nessun procedimento trovato con i criteri di ricerca selezionati</td></tr>
 <%
 } else {
 %>
