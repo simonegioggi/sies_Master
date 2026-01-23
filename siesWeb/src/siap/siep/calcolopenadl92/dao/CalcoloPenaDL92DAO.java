@@ -182,6 +182,8 @@ public class CalcoloPenaDL92DAO extends SIAPTableDAO {
     
     public void setDAOFromModel(CalcoloPenaDL92ModelDB aModel) throws DAOException
     {
+      setIdCalcoloPenaDL92( aModel.getIdCalcoloPenaDL92() );
+        
       setFasSieIdFascicoloSiep( aModel.getFasSieIdFascicoloSiep() );
       
       setNumAnniReclusione( aModel.getNumAnniReclusione() );

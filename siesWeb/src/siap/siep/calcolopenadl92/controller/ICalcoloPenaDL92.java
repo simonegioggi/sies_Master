@@ -27,4 +27,6 @@ public interface ICalcoloPenaDL92 {
   public CalcoloPenaDL92ModelDB GetDettaglioStoricoById(BigDecimal aIdCalcoloPena) throws F3BException;
   
   public CalcoloPenaDL92ModelDB GetLastCalcoloDL92(BigDecimal aIdFascicolo) throws F3BException;
+  
+  public Vector<CalcoloPenaDL92ModelDB> ExRicercaCalcoloPenaDL92ByIdFasCompleta(BigDecimal aIdFascicolo) throws F3BException;
 }

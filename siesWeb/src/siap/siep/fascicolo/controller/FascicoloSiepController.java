@@ -1816,15 +1816,15 @@ public class FascicoloSiepController extends SiapController implements IFascicol
 			// AvvocatiSIEP.
 			ArrayList lArrayAvvFascSiep = new ArrayList();
 			for (int i = 0; i < lDettaglio.getAvvocati().size(); i++) {
-				AvvocatoModel lAvv = (AvvocatoModel) lDettaglio.getAvvocati().get(i);
-				lAvvFasSieSqlDao = new AvvocatoFascicoloSiepSqlDAO(lConn);
+			    AvvocatoModel lAvv = (AvvocatoModel) lDettaglio.getAvvocati().get(i);
+			    lAvvFasSieSqlDao = new AvvocatoFascicoloSiepSqlDAO(lConn);
 
-				lAvvFasSieSqlDao.ricercaAvvocatoFascicoloSiepByIdAvvocatoIdFascicolo(lAvv.getIdAvvocato(),
-						lDettaglio.getFascicoloSiep().getIdFascicoloSiep());
-				lAvvSiepModel = (AvvocatoSiepModel) lAvvFasSieSqlDao.getModelByKey();
+			    lAvvFasSieSqlDao.ricercaAvvocatoFascicoloSiepByIdAvvocatoIdFascicolo(lAvv.getIdAvvocato(),
+			            lDettaglio.getFascicoloSiep().getIdFascicoloSiep());
+			    lAvvSiepModel = (AvvocatoSiepModel) lAvvFasSieSqlDao.getModelByKey();
 
-				if (lAvvSiepModel != null && lAvvSiepModel.getAvvocatoFascicoloSiepModel() != null)
-					lArrayAvvFascSiep.add(lAvvSiepModel.getAvvocatoFascicoloSiepModel());
+			    if (lAvvSiepModel != null && lAvvSiepModel.getAvvocatoFascicoloSiepModel() != null)
+			        lArrayAvvFascSiep.add(lAvvSiepModel.getAvvocatoFascicoloSiepModel());
 			}
 			lDettaglio.setAvvocatiSIEP(lArrayAvvFascSiep);
 
@@ -1907,7 +1907,7 @@ public class FascicoloSiepController extends SiapController implements IFascicol
 			lPosizioneMateriale = (PosizioneMaterialeFascModel) lPosMatDAO.getModelByKey();
 			if (lPosizioneMateriale != null)
 				lDettaglio.setPosizioneMateriale(lPosizioneMateriale);
-
+			
 			// Magistrato Competente
 			lMagDAO.ricercaMagistratoCompetenteByFascicolo(aIdFascicolo);
 			MagistratoCompetenteMagistratoModel lMagComMod = (MagistratoCompetenteMagistratoModel) lMagDAO
@@ -2114,6 +2114,12 @@ public class FascicoloSiepController extends SiapController implements IFascicol
 				// mlog.info(lDettaglio.getNoteFascicolo() + " --- " +
 				// lNoteMod.getNotaDispositivo());
 			}
+			
+            // MEV-2026_1 - Si aggiunge lo storico completo dei calcoli pena virtuale DL92 x Trasferimento
+            siesLogger.debug("GetLastCalcoloDL92 da ExDettaglioFascicoloSiep");
+            Vector <CalcoloPenaDL92ModelDB> lListaCalcoloDL92Model = lCalcDL92Ctrl.ExRicercaCalcoloPenaDL92ByIdFasCompleta(aIdFascicolo);
+            lDettaglio.setStoricoCalcoliPenaDL92DB(new ArrayList(lListaCalcoloDL92Model));
+            // MEV-2026_1 - FINE			
 
 		} catch (F3BException fex) {
 			if (fex.getErrorCode() == F3BException.USER_MESSAGE) {
@@ -2431,6 +2437,17 @@ public class FascicoloSiepController extends SiapController implements IFascicol
 				siesLogger.debug("NOTE FASCICOLO: aDettaglio.getNoteFascicolo() >>>"
 						+ aDettaglio.getFascicoloSiep().getNote());
 			}
+			
+//			// MEV-2026_1 - Si aggiunge lo storico completo dei calcoli pena virtuale DL92 x Trsferimento
+//            siesLogger.debug("GetLastCalcoloDL92 da ExAltriDatiFascicoloSiep");
+//            ICalcoloPenaDL92 lCalcDL92Ctrl = SIEPLookupRemote.getCalcoloPenaDL92();
+//            Vector <CalcoloPenaDL92ModelDB> lListaCalcoloDL92Model = lCalcDL92Ctrl.ExRicercaCalcoloPenaDL92ByIdFasCompleta(aIdFascicolo);
+//            //aDettaglio.setStoricoCalcoliPenaDL92DB(lListaCalcoloDL92Model);	
+//            aDettaglio.setStoricoCalcoliPenaDL92DB(new ArrayList(lListaCalcoloDL92Model));
+//
+//            siesLogger.debug("test 1 = "+(aDettaglio.getStoricoCalcoliPenaDL92DB()==null ? "null" :aDettaglio.getStoricoCalcoliPenaDL92DB().size()));
+//			// MEV-2026_1 - FINE
+			
 		} catch (F3BException ex) {
 			ex.printStackTrace();
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza

@@ -53,6 +53,8 @@
 <%@ page import="siap.sius.fascicolo.action.ICostantiFascicoloSius"%>
 <%@ page import="siap.sius.misurasicurezza.model.PeriodoAltraMisuraModel"%>
 
+<%@ page import="siap.siep.calcolopena.action.ICostantiCalcoloPena"%>
+
 <%@ page import="org.apache.log4j.Logger"%>
 <%-- // [FT] - 05/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog --%>
 <% final Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);%>
@@ -1753,7 +1755,9 @@ if (dettagliofascicolo.getPenaResidua() != null) {
         	       && dettagliofascicolo.getCalcoloPenaDL92DB().getDataScarcLaFung()!=null
         	       ) 
         	{ %>
-        	<font class="label" style="color: red;">Fine Pena Virtuale: </font>
+            <a href="/jsp/Main.jsp?Action=siap.siep.calcolopena.action.ActDettStoricoCalcoloPenaDL92&<%=ICostantiCalcoloPena.CAMPO_ID_CALCOLO_PENA_DL92 %>=<%=dettagliofascicolo.getCalcoloPenaDL92DB().getIdCalcoloPenaDL92() %>&TornaQui=20">
+                <font class="label" style="color: red;">Fine Pena Virtuale: </font>
+            </a>
         	<font color="red"><%=StringUtils.toStringJSP(DateUtils.getDateToString(dettagliofascicolo.getCalcoloPenaDL92DB().getDataScarcLaFung(),"dd-MM-yyyy"))%></font>
         	<%-- MEV-2026_1 --%>
         	<% } %>
@@ -1771,7 +1775,9 @@ if (dettagliofascicolo.getPenaResidua() != null) {
                    && dettagliofascicolo.getCalcoloPenaDL92DB().getDataScarcLaFung()!=null
                   ) 
             { %>
-            <font class="label" style="color: red;">Fine Pena Virtuale: </font>
+            <a href="/jsp/Main.jsp?Action=siap.siep.calcolopena.action.ActDettStoricoCalcoloPenaDL92&<%=ICostantiCalcoloPena.CAMPO_ID_CALCOLO_PENA_DL92 %>=<%=dettagliofascicolo.getCalcoloPenaDL92DB().getIdCalcoloPenaDL92() %>&TornaQui=20">
+                <font class="label" style="color: red;">Fine Pena Virtuale: </font>
+            </a>
             <font color="red"><%=StringUtils.toStringJSP(DateUtils.getDateToString(dettagliofascicolo.getCalcoloPenaDL92DB().getDataScarcLaFung(),"dd-MM-yyyy"))%></font>
             <%-- MEV-2026_1 --%>
             <% } %>           	

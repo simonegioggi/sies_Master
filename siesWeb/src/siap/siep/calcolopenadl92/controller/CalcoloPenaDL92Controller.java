@@ -284,4 +284,47 @@ public class CalcoloPenaDL92Controller extends SiapController implements ICalcol
         
         return lLastCalcolo;
     }
+    
+    
+    /**
+     * Effettua la ricerca dei record collegati al fascicolo ordinato per data inserimento  
+     * Recupera ache i semestri  
+     */
+    public Vector<CalcoloPenaDL92ModelDB> ExRicercaCalcoloPenaDL92ByIdFasCompleta(BigDecimal aIdFascicolo) throws F3BException
+    {
+        Connection lConn = null;
+        CalcoloPenaDL92SqlDAO lCalcoloPenaSqlDao = null;
+        SemestreDL92SqlDAO lSemDL92SqlDAO = null;
+        Vector<CalcoloPenaDL92ModelDB> lListaModel = null;
+        
+        try {
+          lConn = getDBConnection();
+          lCalcoloPenaSqlDao = new CalcoloPenaDL92SqlDAO(lConn);
+          
+          lCalcoloPenaSqlDao.ricercaCalcoloPenaDL92ByIdFasc (aIdFascicolo);
+          
+          lListaModel = new Vector<CalcoloPenaDL92ModelDB>(lCalcoloPenaSqlDao.getModels());
+          
+          lSemDL92SqlDAO  = new SemestreDL92SqlDAO (lConn);
+          
+          for (CalcoloPenaDL92ModelDB lCalcolo : lListaModel) {              
+              lSemDL92SqlDAO.ricercaSemestriByIdCalc (lCalcolo.getIdCalcoloPenaDL92());
+              Vector <SemestreDL92Model> lListaSemestriDB = new Vector(lSemDL92SqlDAO.getModels());
+              lCalcolo.setListaSemetri(lListaSemestriDB);
+          }
+        } catch (DAOException daoEx) {
+          siesLogger.error("CalcoloPenaDL92Controller.ExRicercaCalcoloPenaDL92ByIdFasCompleta", daoEx);
+          throw new F3BException("CalcoloPenaDL92Controller.ExRicercaCalcoloPenaDL92ByIdFasCompleta: " + daoEx);
+        } catch (Exception ex) {
+            siesLogger.error("CalcoloPenaDL92Controller.ExRicercaCalcoloPenaDL92ByIdFasCompleta", ex);
+            throw new F3BException("CalcoloPenaDL92Controller.ExRicercaCalcoloPenaDL92ByIdFasCompleta: " + ex);
+        } finally {
+          cleanup(lCalcoloPenaSqlDao);
+          cleanup(lSemDL92SqlDAO);
+          cleanup(lConn);
+        }    
+        
+        return lListaModel;
+        
+    }
 }

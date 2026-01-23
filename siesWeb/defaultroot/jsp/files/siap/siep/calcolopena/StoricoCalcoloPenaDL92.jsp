@@ -84,6 +84,7 @@
       <td class="int" colspan="3" style="padding-left:10px;padding-right:10px;">Arresto<br>(anni-mesi-giorni)</td>
       <td class="int" colspan="1">&nbsp;</td>
       <td class="int" colspan="3" style="padding-left:10px;padding-right:10px;">Presoffero<br>(anni-mesi-giorni)</td>
+      <td class="int" colspan="1">&nbsp;</td>
       <td class="int" style="padding-left:5px;padding-right:5px;">Posizione Giuridica</td>
       <td class="int" style="padding-left:5px;padding-right:5px;">Data Decorrenza Pena</td>
       <td class="int" style="padding-left:5px;padding-right:5px;">Data Fine Pena Virtuale</td>
@@ -98,6 +99,7 @@
     <tr>
        <td class="c"><%= StringUtils.toStringJSP (DateUtils.getDateToString(lCalcoloModel.getDataInserimento(),"dd-MM-yyyy HH:mm"))%></td>
        <td class="c"><%= StringUtils.toStringJSP (lCalcoloModel.getCodOperatoreInserimento() )%></td>
+       
        <%-- Reclusione --%>
        <td class1="c" colspan="1">&nbsp;</td>
        <td class="r" nowrap><font class="label"><%=lCalcoloModel.getNumAnniReclusione().intValue()>0 ? lCalcoloModel.getNumAnniReclusione() : "&nbsp;" %></font></td>
@@ -115,6 +117,7 @@
        <td class="r" nowrap><font class="label"><%=lCalcoloModel.getNumAnniPresofferto().intValue()>0 ? lCalcoloModel.getNumAnniPresofferto() : "&nbsp;" %></font></td>
        <td class="r" nowrap><font class="label"><%=lCalcoloModel.getNumMesiPresofferto().intValue()>0 ? lCalcoloModel.getNumMesiPresofferto() : "&nbsp;" %></font></td>
        <td class="r" nowrap><font class="label"><%=lCalcoloModel.getNumGiorniPresofferto().intValue()>0 ? lCalcoloModel.getNumGiorniPresofferto() : "&nbsp;" %></font></td>
+       <td class1="c" colspan="1">&nbsp;</td>
        
        <% if ("L".equals(lCalcoloModel.getPosizioneGiuridica())) { %>
        <td class="c" nowrap><font class="label">Libero</font></td>
@@ -129,7 +132,7 @@
         <table>
           <tr>
             <td>
-              <a href="/jsp/Main.jsp?Action=siap.siep.calcolopena.action.ActDettStoricoCalcoloPenaDL92&<%=ICostantiCalcoloPena.CAMPO_ID_CALCOLO_PENA_DL92 %>=<%=lCalcoloModel.getIdCalcoloPenaDL92() %>&TornaQui=20">
+              <a href="/jsp/Main.jsp?Action=siap.siep.calcolopena.action.ActDettStoricoCalcoloPenaDL92&<%=ICostantiCalcoloPena.CAMPO_ID_CALCOLO_PENA_DL92 %>=<%=lCalcoloModel.getIdCalcoloPenaDL92() %>&fromLista=S">
                 <img src="/images/dettagli.gif" width="12" height="12" alt="Dettaglio" border="0">
               </a>
             </td>
@@ -153,9 +156,9 @@
     </tr>
     <% } %>
 
-    <% if (storicoCalcoli.size()==1000) { %>
+    <% if (storicoCalcoli.size()==0) { %>
     <tr>
-      <td class="l" colspan="18">Nessun calcolo e' stato validato per il fascicolo corrente</td>
+      <td class="c" colspan="100%">Nessun calcolo e' stato validato per il fascicolo corrente</td>
     </tr>
     <% } %>
    </table>

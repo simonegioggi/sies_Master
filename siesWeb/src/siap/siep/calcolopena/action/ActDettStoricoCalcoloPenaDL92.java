@@ -33,6 +33,9 @@ public class ActDettStoricoCalcoloPenaDL92 extends ActionSiap implements ICostan
         setRequestAttribute("EsitoCalcolo", lCalcoloModel);
         setRequestAttribute("UfficioCalcolo", lUfficioCalcolo);
         
+        if (!isRequestParameterNullObj("fromLista"))
+            setRequestAttribute("fromLista", "S");        
+        
         return PG_DETT_STORICO_CALCPENA_DL92;
     }
 }

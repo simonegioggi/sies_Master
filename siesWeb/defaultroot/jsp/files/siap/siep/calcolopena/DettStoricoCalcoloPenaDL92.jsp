@@ -1,4 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@page import="siap.siep.fascicolo.action.ICostantiFascicoloSiep"%>
 <%@ page import="f3b.web.IWebConstants" %>
 <%@ page import="siap.web.ISIAPCostantiWeb"%>
 <%@ page import="f3b.util.StringUtils"%>
@@ -16,9 +17,9 @@
 <%@ page import="siap.siep.penaresidua.action.ICostantiPenaResidua"%>
 <%@ page import="siap.siep.calcolopena.action.ICostantiCalcoloPena"%>
 
-<jsp:useBean id="EsitoCalcolo" scope="request" class="siap.siep.calcolopenadl92.model.CalcoloPenaDL92ModelDB" />
-
+<jsp:useBean id="EsitoCalcolo"   scope="request" class="siap.siep.calcolopenadl92.model.CalcoloPenaDL92ModelDB" />
 <jsp:useBean id="UfficioCalcolo" scope="request" class="siap.sico.ufficio.model.UfficioModel" />
+<jsp:useBean id="fromLista"      scope="request" class="java.lang.String" />
 
 
 <%
@@ -39,27 +40,14 @@
   
   function tornaIndietro()
   {
+	<% if ("S".equals(fromLista)) { %>
     document.CalcoloPenaDL92.<%=IWebConstants.ACTION_FIELD%>.value = "siap.siep.calcolopena.action.ActLoadStoricoCalcoloPenaDL92";
     document.CalcoloPenaDL92.submit();
+    <% } else { %>
+    document.CalcoloPenaDL92.<%=IWebConstants.ACTION_FIELD%>.value = "siap.siep.fascicolo.action.ActLoadDettaglioFascicolo";
+    document.CalcoloPenaDL92.submit();    
+    <% } %>
   }
-  
-  function stampaSiep()
-  {
-    document.CalcoloPenaDL92.tipoOutput.value = "stampaTemplate";
-    document.CalcoloPenaDL92.submit();
-  }
-  
-  function stampaSiepXls()
-  {
-    document.CalcoloPenaDL92.tipoOutput.value = "stampaExcel";
-    document.CalcoloPenaDL92.submit();
-  }    
-  
-  function calcolaDL92() {      
-    document.CalcoloPenaDL92.tipoOutput.value = "dettaglio";
-    document.CalcoloPenaDL92.submit();
-  }
-  
   </script>
 </head>
 
@@ -87,7 +75,9 @@
 
   
   <form method="POST" action="/jsp/Main.jsp" name="CalcoloPenaDL92">
-     <input type="hidden" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.calcolopena.action.ActCalcoloPenaDL92"> 
+     <input type="hidden" name="<%=IWebConstants.ACTION_FIELD%>" value=""> 
+     <input type="hidden" name="<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>" 
+                         value="<%=EsitoCalcolo.getFasSieIdFascicoloSiep() %>"> 
   </form>
   
   <!-- ===================================================================== -->

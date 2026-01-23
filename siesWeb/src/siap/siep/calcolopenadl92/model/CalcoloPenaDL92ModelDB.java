@@ -71,7 +71,7 @@ public class CalcoloPenaDL92ModelDB extends GenericModel {
     
     //
     private SemestreDL92Model mSemestrePresofferto = null;
-    private Vector<SemestreDL92Model> mListaSemetri = new Vector<>();
+    private Vector<SemestreDL92Model> mListaSemetri = new Vector<SemestreDL92Model>();
     
     
     /**
@@ -192,7 +192,6 @@ public class CalcoloPenaDL92ModelDB extends GenericModel {
      * @param aModel
      */
     public CalcoloPenaDL92ModelDB (CalcoloPenaDL92Model aModel) {
-        //@TODO Implementare la mappatura del model con i dati calcolati verso questo model che mappa il DB
         //this.mIdCalcoloPenaDL92 = aModel.getIdCalcoloPenaDL92();
         //this.mFasSieIdFascicoloSiep = aModel.getFasSieIdFascicoloSiep();
         
