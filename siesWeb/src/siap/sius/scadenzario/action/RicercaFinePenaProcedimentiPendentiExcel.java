@@ -94,7 +94,7 @@ public class RicercaFinePenaProcedimentiPendentiExcel extends SIAPExcelProducer 
 		lSheet.setColumnWidth(8, 10 * 256); // Giorni Residui
 		lSheet.setColumnWidth(9, 15 * 256); // Fine Pena Virtuale
 		lSheet.setColumnWidth(10, 10 * 256); // Giorni Residui
-		lSheet.setColumnWidth(11, 15 * 256); // Procedimento SIEP
+		lSheet.setColumnWidth(11, 20 * 256); // Procedimento SIEP
 
 		// Intestazione colonne
 		setCell(lRow, 0, "Procedimento SIUS.", lCellStyleCenter);
@@ -177,9 +177,13 @@ public class RicercaFinePenaProcedimentiPendentiExcel extends SIAPExcelProducer 
 			setCell(lRow, 10,
 					(Utils.isNullObj(ssm.getDataFinePenaVirtuale())) ? "-" : "" + giorniResiduiVirtuali,
 					lCellStyleCenter);
-			// Procedimento SIEP
-			setCell(lRow, 11, "" + ssm.getRiferimentoFascicoloSiep().getAnnoFascicoloSiep() + "/"
-					+ ssm.getRiferimentoFascicoloSiep().getProgrFascicoloSiep(), lCellStyleCenter);
+			// Procedimento SIEP (anno/numero tipo (tipoufficio descComuneUfficio)
+			setCell(lRow, 11,
+					"" + ssm.getRiferimentoFascicoloSiep().getAnnoFascicoloSiep() + "/"
+							+ ssm.getRiferimentoFascicoloSiep().getProgrFascicoloSiep() + "\n("
+							+ ssm.getRiferimentoFascicoloSiep().getCodUffFascicoloSiep() + " "
+							+ ssm.getRiferimentoFascicoloSiep().getDescrUffFascicoloSiep() + ")",
+					lCellStyleCenter);
 		}
 
 		baos = new ByteArrayOutputStream();

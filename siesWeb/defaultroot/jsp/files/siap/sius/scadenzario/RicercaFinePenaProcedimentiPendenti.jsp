@@ -62,7 +62,7 @@ String retParam = retFlag ? ("&TornaQui=" + TornaQui) : "";
 </table>
 <br>
 <table cellpadding="2" cellspacing="2">
-	<tr><td class="Titolo" style="font-size: 12px;"><%=intestazione%></td></tr>
+	<tr><td class="Titolo" style="font-size: 12px; color: #228B22;"><%=intestazione%></td></tr>
 </table>
 <br>
 <jsp:include page="<%=IWebConstants.PAGINAZIONE_RICERCA%>"></jsp:include>
@@ -105,9 +105,9 @@ if (scadenzari.size() == 0) {
 				? ssm.getFascicoloSius().getSoggetto().getDescrComuneNascita() : luogoNascitaStraniero;
 %>
 	<tr>
-		<td class="crosso">
+		<td class="C">
 			<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>=<%=ssm.getFascicoloSius().getIdFascicoloSius()%><%=retParam%>" title="Procedimento SIUS">
-				<%=ssm.getFascicoloSius().getChiaveAnno()%>/<%=ssm.getFascicoloSius().getChiaveProgr()%>&nbsp;
+				<%=ssm.getFascicoloSius().getChiaveAnno()%>/<%=ssm.getFascicoloSius().getChiaveProgr()%>
 			</a>
 		</td>
 		<td class="C"><%=StringUtils.toStringJSP(ssm.getFascicoloSius().getSoggetto().getCognome())%>&nbsp;<%=StringUtils.toStringJSP(ssm.getFascicoloSius().getSoggetto().getNome())%></td>
@@ -120,10 +120,11 @@ if (scadenzari.size() == 0) {
 		<td class="C"><%=StringUtils.toStringJSP((Utils.isNullObj(ssm.getDataFineScadenza())) ? "-" : giorniResidui)%></td>
 		<td class="C"><%=StringUtils.toStringJSP(DateUtils.getDateToString(ssm.getDataFinePenaVirtuale(), "dd/MM/yyyy"), "-")%></td>
 		<td class="C"><%=StringUtils.toStringJSP((Utils.isNullObj(ssm.getDataFinePenaVirtuale())) ? "-" : giorniResiduiVirtuali)%></td>
-		<td class="crosso">
+		<td class="C">
 			<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>=<%=ssm.getRiferimentoFascicoloSiep().getFasSieIdFascicoloSiep()%><%=retParam%>" title="Procedimento SIEP">
 				<%=ssm.getRiferimentoFascicoloSiep().getAnnoFascicoloSiep()%>/<%=ssm.getRiferimentoFascicoloSiep().getProgrFascicoloSiep()%>
 			</a>
+			<br>(<%=StringUtils.toStringJSP(ssm.getRiferimentoFascicoloSiep().getCodUffFascicoloSiep())%>&nbsp;<%=StringUtils.toStringJSP(ssm.getRiferimentoFascicoloSiep().getDescrUffFascicoloSiep())%>)
 		</td>
 	</tr>
 <%
