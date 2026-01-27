@@ -37,8 +37,10 @@ public class ActRicercaFinePenaProcedimentiPendenti extends ActionSiap implement
 		// LogF3B.getLogger()
 		siesLogger.debug(getClass().getName() + ".processRequest : inizio");
 
-		// paginazione
+		// navigazione
 		setLinkRitorno();
+
+		// paginazione
 		String pagina = "1";
 		if (!isRequestParameterNullObj(IWebConstants.NUM_PAGE))
 			pagina = getRequestStringParameter(IWebConstants.NUM_PAGE);

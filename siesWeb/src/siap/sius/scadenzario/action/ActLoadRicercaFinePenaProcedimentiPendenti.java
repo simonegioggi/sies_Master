@@ -1,6 +1,5 @@
 package siap.sius.scadenzario.action;
 
-import f3b.util.F3BException;
 import siap.sico.web.ActionSiap;
 
 /**
@@ -14,7 +13,10 @@ import siap.sico.web.ActionSiap;
 public class ActLoadRicercaFinePenaProcedimentiPendenti extends ActionSiap
 		implements ICostantiScadenzarioSius {
 
-	public String processRequest() throws F3BException {
+	public String processRequest() throws Exception {
+
+		// navigazione
+		setLinkRitorno();
 
 		// restituisce la jsp di VIEW
 		return PG_LOAD_RICERCAFINEPENAPROCEDIMENTIPENDENTI;

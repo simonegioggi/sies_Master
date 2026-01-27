@@ -250,12 +250,22 @@ public class ScadenzarioSiusSqlDAO extends SIAPSqlDAO {
 				+ " AND UFF.COD_COMUNE = DESCR_COMUNE_UFFICIO.COD_COMUNE"
 				+ " AND SOGG.COD_COMUNE_NASCITA = DESCR_COMUNE_NASCITA.COD_COMUNE";
 		if (Utils.isPresent(dsi)) {
-			lStatement += " AND PR.DATA_FINE >= TO_DATE(" + DateUtils.getDateToString(dsi, "yyyyMMdd")
-					+ ",'YYYYMMDD')";
+			if (!test) {
+				lStatement += " AND CP.DATA_SCARC_LA_FUNG >= TO_DATE("
+						+ DateUtils.getDateToString(dsi, "yyyyMMdd") + ",'YYYYMMDD')";
+			} else {
+				lStatement += " AND PR.DATA_FINE >= TO_DATE(" + DateUtils.getDateToString(dsi, "yyyyMMdd")
+						+ ",'YYYYMMDD')";
+			}
 		}
 		if (Utils.isPresent(dsf)) {
-			lStatement += " AND PR.DATA_FINE <= TO_DATE(" + DateUtils.getDateToString(dsf, "yyyyMMdd")
-					+ ",'YYYYMMDD')";
+			if (!test) {
+				lStatement += " AND CP.DATA_SCARC_LA_FUNG <= TO_DATE("
+						+ DateUtils.getDateToString(dsf, "yyyyMMdd") + ",'YYYYMMDD')";
+			} else {
+				lStatement += " AND PR.DATA_FINE <= TO_DATE(" + DateUtils.getDateToString(dsf, "yyyyMMdd")
+						+ ",'YYYYMMDD')";
+			}
 		}
 		lStatement += " AND TO_CHAR(FSIUS.DATA_INSERIMENTO, 'YYYYMMDD') <= TO_CHAR(sysdate, 'YYYYMMDD')"
 				+ " AND UFF.COD_UFFICIO = nvl('" + codUfficio + "', UFF.COD_UFFICIO)";
