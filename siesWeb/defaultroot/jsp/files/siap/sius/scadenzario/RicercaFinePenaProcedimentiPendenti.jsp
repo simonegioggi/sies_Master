@@ -103,6 +103,9 @@ if (scadenzari.size() == 0) {
 		String luogoNascita = (Utils.isPresent(ssm.getFascicoloSius().getSoggetto().getDescrComuneNascita())
 				&& !"-".equals(ssm.getFascicoloSius().getSoggetto().getDescrComuneNascita())) 
 				? ssm.getFascicoloSius().getSoggetto().getDescrComuneNascita() : luogoNascitaStraniero;
+		String style = "c";
+		if (!Utils.isNullObj(ssm.getDataFinePenaVirtuale()))
+			style = "crosso";
 %>
 	<tr>
 		<td class="C">
@@ -118,7 +121,7 @@ if (scadenzari.size() == 0) {
 		<td class="C"><%=StringUtils.toStringJSP(DateUtils.getDateToString(ssm.getDataInizioScadenza(), "dd/MM/yyyy"), "-")%></td>
 		<td class="C"><%=StringUtils.toStringJSP(DateUtils.getDateToString(ssm.getDataFineScadenza(), "dd/MM/yyyy"), "-")%></td>
 		<td class="C"><%=StringUtils.toStringJSP((Utils.isNullObj(ssm.getDataFineScadenza())) ? "-" : giorniResidui)%></td>
-		<td class="C"><%=StringUtils.toStringJSP(DateUtils.getDateToString(ssm.getDataFinePenaVirtuale(), "dd/MM/yyyy"), "-")%></td>
+		<td class="<%=style%>"><%=StringUtils.toStringJSP(DateUtils.getDateToString(ssm.getDataFinePenaVirtuale(), "dd/MM/yyyy"), "-")%></td>
 		<td class="C"><%=StringUtils.toStringJSP((Utils.isNullObj(ssm.getDataFinePenaVirtuale())) ? "-" : giorniResiduiVirtuali)%></td>
 		<td class="C">
 			<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>=<%=ssm.getRiferimentoFascicoloSiep().getFasSieIdFascicoloSiep()%><%=retParam%>" title="Procedimento SIEP">

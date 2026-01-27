@@ -278,8 +278,13 @@ public class ScadenzarioSiusSqlDAO extends SIAPSqlDAO {
 			lStatement += " AND FSIUS.CHIAVE_ANNO >= " + ai + " AND FSIUS.CHIAVE_ANNO <= " + af
 					+ " AND FSIUS.CHIAVE_PROGR >= " + ni + " AND FSIUS.CHIAVE_PROGR <= " + nf;
 		}
-		lStatement += " AND FSIUS.COD_STATO_FASCICOLO not in " + codStatoFascicolo
-				+ " ORDER BY FSIUS.CHIAVE_ANNO, FSIUS.CHIAVE_PROGR";
+		lStatement += " AND FSIUS.COD_STATO_FASCICOLO not in " + codStatoFascicolo;
+		// lStatement += " ORDER BY FSIUS.CHIAVE_ANNO, FSIUS.CHIAVE_PROGR";
+		if (!test) {
+			lStatement += " ORDER BY CP.DATA_SCARC_LA_FUNG desc";
+		} else {
+			lStatement += " ORDER BY PR.DATA_FINE desc";
+		}
 
 		setStatement(lStatement);
 	}
