@@ -3,8 +3,11 @@ package siap.siep.scadenzario.dao;
 import java.math.BigDecimal;
 import java.sql.Connection;
 
+import org.apache.log4j.Logger;
+
 import f3b.dao.DAOException;
 import f3b.dao.SqlDAO;
+import f3b.log.LogF3B;
 import f3b.model.GenericModel;
 import f3b.util.DateUtils;
 import f3b.util.Utils;
@@ -22,6 +25,8 @@ import siap.siep.scadenzario.model.ScadenzarioModel;
  */
 public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 
+    private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+    
 	public ScadenzarioSoggettoSqlDAO(Connection con) {
 		super(con);
 	}
@@ -67,6 +72,10 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 		String lSql = new String("");
 		if ("20".equals(aModel.getCodTipoScadenzario())) {
 			lSql = getSqlQueryNew();
+		// MEV-2026_1 - Se incrociano i dati con la pena virtuale
+		} else if ("02".equals(aModel.getCodTipoScadenzario())) {	
+		    lSql = getSqlQueryFinePena();
+		// MEV-2026_1	
 		} else {
 			lSql = getSqlQueryOLD();
 		}
@@ -129,6 +138,47 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 		return lStatement;
 	}
 
+	/**
+	 * 
+	 * @return
+	 * @since MEV-2026_1
+	 */
+	   protected String getSqlQueryFinePena() {
+	        String lStatement = new String("");
+	        lStatement = "SELECT SOG.ID_SOGGETTO, SOG.NOME, SOG.COGNOME, TIPCOM.DESCRIZIONE COMUNE_NASCITA,";
+	        lStatement += " SOG.DATA_NASCITA, FAS.ID_FASCICOLO_SIEP, FAS.CHIAVE_ANNO, FAS.CHIAVE_PROGR,";
+	        lStatement += " SCA.ID_SCADENZARIO_SIEP, SCA.DATA_INIZIO_SCADENZA, SCA.DATA_FINE_SCADENZA,";
+	        lStatement += " TIPSCA.RV_MEANING, SCA.COD_STATO_NOTIFICA,";
+	        // MEV_39: aggiunto campo in estrazione
+	        lStatement += " SCA.FLAG_VISTO,";
+	        lStatement += " (SCA.DATA_FINE_SCADENZA-TO_DATE(TO_CHAR(SYSDATE,'DD/MM/YYYY'),'DD/MM/YYYY')) RESIDUO";
+	        // MEV-2026_1 - 
+	        lStatement += " , PENA_VIRTUALE.DATA_SCARC_LA_FUNG AS DATA_FINE_PENA_VIRTUALE ";
+	        // MEV-2026_1 - 
+	        lStatement += " FROM SOGGETTO SOG, SCADENZARIO_SIEP SCA, FASCICOLO_SIEP FAS,";
+	        lStatement += " CG_REF_CODES TIPSCA, COMUNE TIPCOM";
+	        // MEV-2026_1 - Si va in join con la tabella CALCOLO_PENA_DL92 per recuperare 
+	        //              la pena virtuale se presente
+	          lStatement += " , (SELECT c.FAS_SIE_ID_FASCICOLO_SIEP, c.DATA_SCARC_LA_FUNG ";
+	          lStatement += "      FROM CALCOLO_PENA_DL92 c ";
+	          lStatement += "     WHERE 1= 1  ";
+	        //  lStatement += "       AND c.COD_UFFICIO_INSERIMENTO = '00127202101' ";
+	          lStatement += "       AND c.DATA_INSERIMENTO =  ";
+	          lStatement += "       ( SELECT MAX(DATA_INSERIMENTO)  ";
+	          lStatement += "           FROM CALCOLO_PENA_DL92 dd  ";
+	          lStatement += "          WHERE dd.FAS_SIE_ID_FASCICOLO_SIEP = c.FAS_SIE_ID_FASCICOLO_SIEP  ";
+	        //  lStatement += "            AND dd.COD_UFFICIO_INSERIMENTO = '00127202101' ";
+	          lStatement += "        ) ";
+	          lStatement += "     ) PENA_VIRTUALE ";	        
+	        // MEV-2026_1 - FINE
+	        lStatement += " WHERE SCA.FAS_SIE_ID_FASCICOLO_SIEP = FAS.ID_FASCICOLO_SIEP";
+	        lStatement += " AND FAS.SOG_ID_SOGGETTO = SOG.ID_SOGGETTO";
+	        lStatement += " AND TIPSCA.RV_DOMAIN = 'TIPO_SCADENZARIO'";
+	        lStatement += " AND TIPSCA.RV_LOW_VALUE = SCA.COD_TIPO_SCADENZARIO";
+	        lStatement += " AND TIPCOM.COD_COMUNE = SOG.COD_COMUNE_NASCITA";
+
+	        return lStatement;
+	    }
 	// AMBROSINO 04-02-2011 Vers 5.1 - Su segnalazione di Marchese Aggiungo Data
 	// VVR alla ricerca Scadenzario
 	public void ricercaScadenzarioVVRPagedCompleta(ScadenzarioModel aModel, int aPage) throws DAOException {
@@ -586,6 +636,12 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 			lCondizioni += "  AND SCA.DATA_INIZIO_SCADENZA IS NOT NULL AND SCA.DATA_FINE_SCADENZA IS NOT NULL  ";
 		}
 
+		// MEV-2026_1 - Si aggiunge la join con la pena virtuale 
+		if ("02".equals(aModel.getCodTipoScadenzario())) {
+		    lCondizioni += " AND PENA_VIRTUALE.FAS_SIE_ID_FASCICOLO_SIEP(+) = SCA.FAS_SIE_ID_FASCICOLO_SIEP ";
+		}
+		// MEV-2026_1 - FINE
+		
 		return lCondizioni;
 	}
 
@@ -629,6 +685,13 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 		aModel.setCodStatoNotifica(getString("COD_STATO_NOTIFICA"));
 		// MEV_39: aggiunto campo in estrazione
 		aModel.setFlagVisto(getString("FLAG_VISTO"));
+
+		// MEV-2026_1 - recupera ance il campo Fine Pena Virtuale
+		if (findColumn("DATA_FINE_PENA_VIRTUALE")) {
+		    aModel.setDataFinePenaVirtuale (getDate("DATA_FINE_PENA_VIRTUALE"));
+		}
+		// MEV-2026_1 - FINE
+		
 
 		return aModel;
 	}
@@ -1017,4 +1080,13 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 		return lCondizioni;
 	}
 
+	
+   public boolean findColumn(String aValue) {
+        try {
+            mRs.findColumn(aValue);
+        } catch (Exception sqex) {
+            return false;
+        }
+        return true;
+    }
 }

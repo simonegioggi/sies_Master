@@ -149,9 +149,8 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 		}
 		lCalcoloModel.setListaIsCompresa(listaIsCompresa);
 		
-		siesLogger.debug("Modelprima del calcolo");
+		siesLogger.debug("Model prima del calcolo");
 		lCalcoloModel.stampaCalcolo();
-
 		lCalcoloModel.calcolaPenaVirtuale();
 		lCalcoloModel.stampaCalcolo();
 		setRequestAttribute("EsitoCalcolo", lCalcoloModel);

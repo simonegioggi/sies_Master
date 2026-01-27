@@ -77,6 +77,10 @@
           }
         }
 %>
+        <%-- MEV-2026_1 --%>
+        <td class="int">Fine Pena Virtuale</td>
+        <%-- MEV-2026_1 - FINE --%>
+        
         <td class="int">Visto</td>
         <td class="int">Azioni</td>
      </tr>
@@ -224,6 +228,13 @@
         }
       }
 
+%>
+
+<%-- MEV-2026_1 - Fine Pena Virtuale--%>
+<td class="c" style="color: red;"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lSca.getDataFinePenaVirtuale(),"dd/MM/yyyy")) %>&nbsp;</td>
+<%-- MEV-2026_1 - FINE --%>
+
+<%
       if(  lSca != null
         && lSca.getFlagVisto() != null
         && lSca.getFlagVisto().equals("S") )

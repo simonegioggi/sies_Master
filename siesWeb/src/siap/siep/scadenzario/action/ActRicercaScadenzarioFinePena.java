@@ -36,7 +36,12 @@ public class ActRicercaScadenzarioFinePena extends ActionSiap implements ICostan
 		ScadenzarioModel lScaMod = new ScadenzarioModel();
 		String titolo = new String();
 		titolo = "Tutti";
-
+		
+		// MEV-2026_1 - Si setta a null in quanto il costruttore ha un default a N ma lo scadenzario FINE PENA 
+		// non è interessato allo stato notifica.
+		lScaMod.setCodStatoNotifica(null);
+		// MEV-2026_1 - FINE
+		
 		String lPagina = "1";
 		if (!isRequestParameterNullObj(IWebConstants.NUM_PAGE))
 			lPagina = getRequestStringParameter(IWebConstants.NUM_PAGE);
