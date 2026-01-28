@@ -61,16 +61,16 @@ String retParam = retFlag ? ("&TornaQui=" + TornaQui) : "";
 	</tr>
 </table>
 <br>
-<table cellpadding="2" cellspacing="2">
-	<tr><td class="Titolo" style="font-size: 12px; color: #228B22;"><%=intestazione%></td></tr>
+<table cellpadding="2" cellspacing="2" width="95%">
+	<tr><td class="cverde" style="font-size: 12px;"><%=intestazione%></td></tr>
 </table>
 <br>
 <jsp:include page="<%=IWebConstants.PAGINAZIONE_RICERCA%>"></jsp:include>
-<table cellpadding="2" cellspacing="2">
+<table cellpadding="2" cellspacing="2" width="95%">
 <%
 if (scadenzari.size() == 0) {
 %>
-	<tr><td class="Titolo" colspan="12" style="font-size: 12px;">Nessun procedimento trovato con i criteri di ricerca selezionati</td></tr>
+	<tr><td class="cverde" style="font-size: 12px;">Nessun procedimento trovato con i criteri di ricerca selezionati</td></tr>
 <%
 } else {
 %>
