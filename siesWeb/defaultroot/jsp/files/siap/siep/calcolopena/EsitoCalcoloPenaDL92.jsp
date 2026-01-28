@@ -20,6 +20,8 @@
 <jsp:useBean id="EsitoCalcolo"   scope="request" class="siap.siep.calcolopena.model.CalcoloPenaDL92Model" />
 <jsp:useBean id="UtenteConnesso" scope="session" class="siap.sico.utente.model.UtenteModel" />
 
+<jsp:useBean id="msgStoricizzazione" scope="request" class="java.lang.String" />
+
 
 <%
 //==============================================================================
@@ -84,10 +86,16 @@
       document.getElementById(idSemestre).value = "N";
     }
   }
+  
+  function showMsg () {
+	  <% if (msgStoricizzazione.length()>0) { %>
+	  alert("<%=msgStoricizzazione%>");
+	  <% } %>	  
+  }
   </script>
 </head>
 
-<body class="corpo">
+<body class="corpo" onload="showMsg();">
   <table>
     <tr><td class="LBG"><a href="Javascript:window.print();"><img src="../../images/quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
       <td class="LBG">
@@ -430,12 +438,10 @@
 	          <input class="bottone" type="submit" name="Valida" value="Valida"
 	               onClick="javascript:salvaDL92();">
 	        </td>
-	        <%-- 
 	        <td colspan="1">
 	          <input class="bottone" type="submit" name="Storico" value="Storico Calcoli Validati"
 	               onClick="javascript:storicoDL92();">
 	        </td>
-	        --%>
 	      <% } %>
         <% } %>
       </tr>

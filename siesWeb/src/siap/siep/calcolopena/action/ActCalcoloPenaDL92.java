@@ -189,7 +189,16 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 	            lCalcPenaModelDB.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
 	            
 	            ICalcoloPenaDL92 lCalcDL92Ctrl = SIEPLookupRemote.getCalcoloPenaDL92();
+	            // CalcoloPenaDL92ModelDB lRetModel = 
 	            lCalcDL92Ctrl.ExInserisciCalcoloPenaDL92(lCalcPenaModelDB, lCalcoloModel.getSemestrePresofferto(), lCalcoloModel.getListaSemetri());
+	            
+	            setRequestAttribute("msgStoricizzazione", "Calcolo pena storicizzato correttamente");
+	            setRequestAttribute("fromStoricizza", "S");
+	            
+//              String lPageDett = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
+//              + "=siap.siep.calcolopena.action.ActDettStoricoCalcoloPenaDL92&"
+//              +CAMPO_ID_CALCOLO_PENA_DL92+"="+ lRetModel.getIdCalcoloPenaDL92();
+//      return lPageDett;	            
 	        }    
 
 	        return PG_CALCOLOPENA_DL92;
