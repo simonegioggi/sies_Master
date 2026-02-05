@@ -277,7 +277,7 @@ public class ScadenzarioSiusSqlDAO extends SIAPSqlDAO {
 		lStatement += " AND FSIUS.COD_STATO_FASCICOLO not in " + codStatoFascicolo;
 		// lStatement += " ORDER BY FSIUS.CHIAVE_ANNO, FSIUS.CHIAVE_PROGR";
 		if (!test) {
-			lStatement += " ORDER BY CP.DATA_SCARC_LA_FUNG desc";
+			lStatement += " ORDER BY CP.DATA_SCARC_LA_FUNG desc, PR.DATA_FINE desc";
 		} else {
 			lStatement += " ORDER BY PR.DATA_FINE desc";
 		}
