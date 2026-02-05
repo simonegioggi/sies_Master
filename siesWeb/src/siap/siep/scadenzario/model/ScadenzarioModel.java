@@ -80,6 +80,9 @@ public class ScadenzarioModel extends GenericModel {
 	
 	// MEV-2026_1
 	private Date mDataFinePenaVirtuale;
+	// Indica se lo scadenzario fine pena deve lavorare sulla PENA_RESIDUA (true)
+	// o su SCADENZARIO_SIEP (false) default=flase vecchia gestione
+	private boolean mScadFinePenaSuPenaResidua = false;
 	
 	// COSTRUTTORE DI DEFAULT
 	public ScadenzarioModel() {
@@ -442,7 +445,11 @@ public class ScadenzarioModel extends GenericModel {
     public Date getDataFinePenaVirtuale() {
         return mDataFinePenaVirtuale;
     }	
-	
+    public boolean getScadFinePenaSuPenaResidua() {
+        return mScadFinePenaSuPenaResidua;
+    }
+    // MEV-2026_1
+    
 	//
 	// METODI SET()
 	//
@@ -608,11 +615,17 @@ public class ScadenzarioModel extends GenericModel {
   public void setBollettinoModel (BollettinoPagopaModel aValore){
     mBollettinoModel = aValore;
   }
+    
     // MEV-2026_1
     public void setDataFinePenaVirtuale(Date aValore) {
       mDataFinePenaVirtuale = aValore;
     }
-	
+    public void setScadFinePenaSuPenaResidua(boolean aValore) {
+        mScadFinePenaSuPenaResidua = aValore;
+    }
+    // MEV-2026_1
+    
+    
 	public String toString() {
 
 		String lStr = new String();

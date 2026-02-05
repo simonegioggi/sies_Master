@@ -21,6 +21,10 @@
 <jsp:useBean id="tipo" scope="request" class="java.lang.String"/>
 <jsp:useBean id="titolo" scope="request" class="java.lang.String"/>
 
+<%-- MEV_2026-1 --%>
+<jsp:useBean id="isScadFinePenaSuPenaResidua" scope="request" class="java.lang.String"/>
+
+
 <html>
   <head>
     <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
@@ -81,8 +85,17 @@
         <td class="int">Fine Pena Virtuale</td>
         <%-- MEV-2026_1 - FINE --%>
         
+        
+ <% 
+// MEV-2026_1 - calcolo su SENA_RESIDUA
+if (!"true".equals(isScadFinePenaSuPenaResidua))
+{
+%>
+        
         <td class="int">Visto</td>
         <td class="int">Azioni</td>
+<% } %>        
+        
      </tr>
 <%
     Iterator itx = scadenzario.iterator();
@@ -234,6 +247,13 @@
 <td class="c" style="color: red;"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lSca.getDataFinePenaVirtuale(),"dd/MM/yyyy")) %>&nbsp;</td>
 <%-- MEV-2026_1 - FINE --%>
 
+
+<% 
+// MEV-2026_1 - calcolo su SENA_RESIDUA
+if (!"true".equals(isScadFinePenaSuPenaResidua))
+{
+%>
+
 <%
       if(  lSca != null
         && lSca.getFlagVisto() != null
@@ -260,6 +280,12 @@
 <%
     }
 %>
+
+<% 
+// MEV-2026_1 - calcolo su SENA_RESIDUA
+} 
+%>
+
     </table>
   </FORM>
 </body>

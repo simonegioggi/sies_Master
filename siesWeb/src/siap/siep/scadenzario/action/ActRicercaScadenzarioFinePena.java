@@ -34,6 +34,10 @@ public class ActRicercaScadenzarioFinePena extends ActionSiap implements ICostan
 	public String processRequest() throws Exception {
 
 		ScadenzarioModel lScaMod = new ScadenzarioModel();
+		
+		// MEV_2026-1 - true = il calcolo viene fatto su PENA_RESIDUA
+		lScaMod.setScadFinePenaSuPenaResidua (true);
+		
 		String titolo = new String();
 		titolo = "Tutti";
 		
@@ -102,7 +106,12 @@ public class ActRicercaScadenzarioFinePena extends ActionSiap implements ICostan
 		IScadenzario lCtrl = SIEPLookupRemote.getScadenzarioRemote();
 		BigDecimal CountRisultati;
 		if (isRequestParameterNullObj("CountRisultati")) {
-			CountRisultati = lCtrl.ExGetCountScadenzari(lScaMod);
+		    if (lScaMod.getScadFinePenaSuPenaResidua())
+	            // MEV_2026-1 - Nuovo metodo per operare sulla tabella PENA_RESIDUA
+		        CountRisultati = lCtrl.ExGetCountScadenzariFinePena(lScaMod);
+		    else 
+	            // Vecchio metodo che opera su SCADENZARIO_SIEP
+		        CountRisultati = lCtrl.ExGetCountScadenzari(lScaMod);
 		} else
 			CountRisultati = getRequestBigDecimalParameter("CountRisultati");
 
@@ -115,6 +124,9 @@ public class ActRicercaScadenzarioFinePena extends ActionSiap implements ICostan
 		setRequestAttribute("scadenzario", lVect);
 		setRequestAttribute("tipo", getRequestStringParameter("tipo"));
 		setRequestAttribute("titolo", titolo);
+		
+		if (lScaMod.getScadFinePenaSuPenaResidua())
+		    setRequestAttribute("isScadFinePenaSuPenaResidua", "true");
 
 		return PG_RICERCASCADENZARIOFINEPENA;
 	}

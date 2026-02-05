@@ -73,8 +73,13 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 		if ("20".equals(aModel.getCodTipoScadenzario())) {
 			lSql = getSqlQueryNew();
 		// MEV-2026_1 - Se incrociano i dati con la pena virtuale
-		} else if ("02".equals(aModel.getCodTipoScadenzario())) {	
-		    lSql = getSqlQueryFinePena();
+		} else if ("02".equals(aModel.getCodTipoScadenzario())) {
+		    if (aModel.getScadFinePenaSuPenaResidua())
+		        // Nuova ricerca su pena residua
+		        lSql = getSqlQueryFinePenaSuPenaResidua();
+		    else
+	            // Vecchia Ricerca su SCADENZARIO_SIEP
+		        lSql = getSqlQueryFinePena();
 		// MEV-2026_1	
 		} else {
 			lSql = getSqlQueryOLD();
@@ -82,7 +87,16 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 
 		String lPaginedStatement = new String("");
 
-		lSql += " " + setCondizione(aModel);
+		if ("02".equals(aModel.getCodTipoScadenzario())) {
+		    if (aModel.getScadFinePenaSuPenaResidua())
+		        // Condizione su PENA_RESIDUA
+		        lSql += " " + setCondizioneScadFinePena(aModel);
+		    else
+		     // Condizione su SCADENZARIO_SIEP
+		        lSql += " " + setCondizione(aModel);
+		} else
+		    lSql += " " + setCondizione(aModel);
+		
 		lSql += " " + setOrderByResiduo();
 
 		lPaginedStatement = "SELECT * FROM (SELECT INNER.* , Rownum rn FROM (" + lSql
@@ -179,6 +193,65 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 
 	        return lStatement;
 	    }
+	 
+	   /**
+	    * 01.2026 metodo di test per estrarre lo scadenzario fine pena incrociando direttamente la tabella
+	    * PENA_RESIDUA (ultima pena validata) invece della tabella SCADENZARIO_SIEP 
+	    * n.b. come alias delle colonne si usano gli stessi nomi del metodo che legge da SCADENZARIO_SIEP per non 
+	    *      dover modificare il getModel
+	    * 
+	    * @return
+	    */
+     protected String getSqlQueryFinePenaSuPenaResidua() {
+          String lStatement = new String("");
+          lStatement = "SELECT SOG.ID_SOGGETTO, SOG.NOME, SOG.COGNOME, TIPCOM.DESCRIZIONE COMUNE_NASCITA ";
+          lStatement += " , SOG.DATA_NASCITA, FAS.ID_FASCICOLO_SIEP, FAS.CHIAVE_ANNO, FAS.CHIAVE_PROGR ";
+          lStatement += " , '' AS ID_SCADENZARIO_SIEP, PENA_RESIDUA_CORRENTE.DATA_INIZIO AS DATA_INIZIO_SCADENZA, PENA_RESIDUA_CORRENTE.DATA_FINE AS DATA_FINE_SCADENZA ";
+          lStatement += " , 'Fine Pena' AS RV_MEANING, '' AS COD_STATO_NOTIFICA ";
+          // MEV_39: aggiunto campo in estrazione
+          lStatement += " , '' AS FLAG_VISTO ";
+          lStatement += " , (PENA_RESIDUA_CORRENTE.DATA_FINE-TO_DATE(TO_CHAR(SYSDATE,'DD/MM/YYYY'),'DD/MM/YYYY')) RESIDUO";
+          // MEV-2026_1 - 
+          lStatement += " , PENA_VIRTUALE.DATA_SCARC_LA_FUNG AS DATA_FINE_PENA_VIRTUALE ";
+          // MEV-2026_1 - 
+          lStatement += " FROM SOGGETTO SOG, FASCICOLO_SIEP FAS, COMUNE TIPCOM";
+          // ===============================================================================
+          // MEV-2026_1 - Si va in join con la tabella CALCOLO_PENA_DL92 per recuperare 
+          //              la pena virtuale se presente
+            lStatement += " , (SELECT c.FAS_SIE_ID_FASCICOLO_SIEP, c.DATA_SCARC_LA_FUNG ";
+            lStatement += "      FROM CALCOLO_PENA_DL92 c ";
+            lStatement += "     WHERE 1= 1  ";
+            lStatement += "       AND c.DATA_INSERIMENTO =  ";
+            lStatement += "       ( SELECT MAX(DATA_INSERIMENTO)  ";
+            lStatement += "           FROM CALCOLO_PENA_DL92 dd  ";
+            lStatement += "          WHERE dd.FAS_SIE_ID_FASCICOLO_SIEP = c.FAS_SIE_ID_FASCICOLO_SIEP  ";
+            lStatement += "        ) ";
+            lStatement += "     ) PENA_VIRTUALE "; 
+          //===============================================================================
+          lStatement += ", (SELECT p.FAS_SIE_ID_FASCICOLO_SIEP, p.DATA_INIZIO, p.DATA_FINE  ";
+          lStatement += "     FROM PENA_RESIDUA p ";
+          lStatement += "    WHERE 1= 1  ";
+          lStatement += "      AND p.FLAG_VALIDATO = 'S' ";
+          lStatement += "      AND p.DATA_INSERIMENTO =  ";
+          lStatement += "      ( SELECT MAX(pp.DATA_INSERIMENTO) ";
+          lStatement += "          FROM PENA_RESIDUA pp  ";
+          lStatement += "         WHERE pp.FAS_SIE_ID_FASCICOLO_SIEP = p.FAS_SIE_ID_FASCICOLO_SIEP  ";
+          lStatement += "           AND pp.FLAG_VALIDATO = 'S' ";
+          lStatement += "      )  ";
+          lStatement += " ) PENA_RESIDUA_CORRENTE ";
+          //===============================================================================
+          // MEV-2026_1 - FINE
+          //===============================================================================
+          lStatement += " WHERE 1=1 ";
+          lStatement += "   AND FAS.SOG_ID_SOGGETTO = SOG.ID_SOGGETTO ";
+          lStatement += "   AND TIPCOM.COD_COMUNE = SOG.COD_COMUNE_NASCITA ";
+          lStatement += "   AND PENA_RESIDUA_CORRENTE.FAS_SIE_ID_FASCICOLO_SIEP = FAS.ID_FASCICOLO_SIEP ";
+
+          return lStatement;
+      }	   
+	   
+	   
+	   
 	// AMBROSINO 04-02-2011 Vers 5.1 - Su segnalazione di Marchese Aggiungo Data
 	// VVR alla ricerca Scadenzario
 	public void ricercaScadenzarioVVRPagedCompleta(ScadenzarioModel aModel, int aPage) throws DAOException {
@@ -645,6 +718,63 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 		return lCondizioni;
 	}
 
+	// 
+	/**
+	 * MEV_2026-1 - Test per andare in join con la pena residua (SOLO scadenzario fine pena)
+	 * Imposta le condizioni della ricerca sulla pseudo tabella PENA_RESIDUA_CORRENTE
+	 * 
+	 * @param aModel
+	 * @return
+	 */
+	  private String setCondizioneScadFinePena(ScadenzarioModel aModel) {
+	      String lCondizioni = new String();
+
+	      String ldata1 = new String();
+	      String ldata2 = new String();
+
+	      if (aModel.getDataInizioScadenza() != null)
+	        ldata1 = DateUtils.getDateToString(aModel.getDataInizioScadenza(), "dd/MM/yyyy");
+
+	      if (aModel.getDataFineScadenza() != null)
+	        ldata2 = DateUtils.getDateToString(aModel.getDataFineScadenza(), "dd/MM/yyyy");
+
+
+	      if (aModel.getFasSieIdFascicoloSiep() != null
+	          && aModel.getFasSieIdFascicoloSiep().compareTo(new BigDecimal(0)) != 0) {
+	        lCondizioni += " AND FAS.ID_FASCICOLO_SIEP = " + aModel.getFasSieIdFascicoloSiep();
+	      }
+
+	      // sette = in scadenza entro gg mm aaaa
+	      if (aModel.getTipoRic().equals("sette")) {
+	          lCondizioni += " AND PENA_RESIDUA_CORRENTE.DATA_FINE BETWEEN TO_DATE('" + ldata1
+	              + "','DD/MM/YYYY') AND TO_DATE('" + ldata2 + "','DD/MM/YYYY')";
+	      }
+
+	      // scaduti
+	      if (aModel.getTipoRic().equals("scaduto")) {
+	          lCondizioni += " AND PENA_RESIDUA_CORRENTE.DATA_FINE < TO_DATE('" + ldata1 + "','DD/MM/YYYY')";
+	      }
+
+	      // MEV_39: il controllo ora va fatto sul campo DATA_FINE della tabella PENA_RESIDUA
+	      // per tipo scadenzario = 20
+	      // oggi
+	      if (aModel.getTipoRic().equals("oggi")) {
+	          lCondizioni += " AND PENA_RESIDUA_CORRENTE.DATA_FINE = TO_DATE('" + ldata2 + "','DD/MM/YYYY')";
+	      }
+
+	      // PER UFFICIO
+	      if (aModel.getCodUfficioInserimento() != null && !aModel.getCodUfficioInserimento().equals("")) {
+	        lCondizioni += " AND FAS.CHIAVE_UFFICIO = '" + aModel.getCodUfficioInserimento() + "'";
+	      }
+
+
+	      lCondizioni += " AND PENA_RESIDUA_CORRENTE.FAS_SIE_ID_FASCICOLO_SIEP = FAS.ID_FASCICOLO_SIEP ";
+	      lCondizioni += " AND PENA_VIRTUALE.FAS_SIE_ID_FASCICOLO_SIEP(+) = FAS.ID_FASCICOLO_SIEP ";
+	      lCondizioni += " AND PENA_RESIDUA_CORRENTE.DATA_FINE IS NOT null ";
+	      
+	      return lCondizioni;
+	    }
+	
 	private String setOrderByResiduo() {
 		return " ORDER BY RESIDUO DESC ";
 	}
@@ -951,6 +1081,20 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 
 		setStatement(lStatement);
 	}
+	
+	/**
+	 * MEV_2026-1 - Metodo che effettua la count sulla tabella PENA_RESIDUA invece di SCADENZARIO_SIEP
+	 * @param aModel
+	 * @throws DAOException
+	 */
+    public void getCountScadenzariFinePena(ScadenzarioModel aModel) throws DAOException {
+        String lStatement = "SELECT COUNT(*) HowManyRecords ";
+        lStatement += " from (" +  getSqlQueryFinePenaSuPenaResidua();
+        lStatement += " " + setCondizioneScadFinePena(aModel);
+        lStatement += ")";
+
+        setStatement(lStatement);
+    }
 
 	public void ricercaScadenzarioPagedPPCompleta(ScadenzarioModel aModel, int aPage) throws DAOException {
 		String lSql = new String("");
