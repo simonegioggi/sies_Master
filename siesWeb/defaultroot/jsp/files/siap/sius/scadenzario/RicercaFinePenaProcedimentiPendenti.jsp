@@ -106,6 +106,10 @@ if (scadenzari.size() == 0) {
 		String style = "c";
 		if (!Utils.isNullObj(ssm.getDataFinePenaVirtuale()))
 			style = "crosso";
+		if ("01/01/0001".equals(DateUtils.getDateToString(ssm.getDataFineScadenza(), "dd/MM/yyyy")))
+			ssm.setDataFineScadenza(null);
+		if ("01/01/0001".equals(DateUtils.getDateToString(ssm.getDataFinePenaVirtuale(), "dd/MM/yyyy")))
+			ssm.setDataFinePenaVirtuale(null);
 %>
 	<tr>
 		<td class="C">
