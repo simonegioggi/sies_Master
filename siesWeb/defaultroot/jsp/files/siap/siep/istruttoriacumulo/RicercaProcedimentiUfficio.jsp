@@ -48,9 +48,17 @@ for (int k = 0; k < ListaProcedimenti.size(); k++) {
 			for (int ii = 0; ii < VecTitCum.size(); ii++) {
 				TitoloCumulatoModel lTitoloCumModel = (TitoloCumulatoModel) VecTitCum.elementAt(ii);
 	        	if (lsentenza != null && lTitoloCumModel.isStessoTitolo(lsentenza)) {
-	             	stessoTitolo += " " + lTitoloCumModel.getProcedimentoCumulato().getChiaveAnnoFasCumulato() + "/" + lTitoloCumModel.getProcedimentoCumulato().getChiaveProgrFasCumulato() + " ";
-	             	aTitoli[k] = lTitoloCumModel.getProcedimentoCumulato().getChiaveAnnoFasCumulato() + "/" + lTitoloCumModel.getProcedimentoCumulato().getChiaveProgrFasCumulato();
-					break;
+	        		// Ticket#202602100127 - si gestisce il caso di lTitoloCumModel.getProcedimentoCumulato()==null
+	        		//                       che andava in null pointer
+	        		if (lTitoloCumModel.getProcedimentoCumulato()!=null) { 
+	             	    stessoTitolo += " " + lTitoloCumModel.getProcedimentoCumulato().getChiaveAnnoFasCumulato() + "/" + lTitoloCumModel.getProcedimentoCumulato().getChiaveProgrFasCumulato() + " ";
+	             	    aTitoli[k] = lTitoloCumModel.getProcedimentoCumulato().getChiaveAnnoFasCumulato() + "/" + lTitoloCumModel.getProcedimentoCumulato().getChiaveProgrFasCumulato();
+	        		} else {
+	        			stessoTitolo += " n.d./n.d. ";
+	        			aTitoli[k] = "n.d./n.d.";	             		
+	        		}
+	        		break;
+	        		// Ticket#202602100127
 	        	} else {
 	             	aTitoli[k] = "";
 	        	}
@@ -243,7 +251,7 @@ var msgConfirm="";
 var esegui = true;
 if (aStessoTitolo.length > 0 )
 {
-  msgConfirm = "Attenzione! Già è presente in Istruttoria Cumulo\n il Procedimento "+aStessoTitolo+" con estremi del Titolo Esecutivo\n";
+  msgConfirm = "Attenzione! Già è presente in Istruttoria Cumulo \nil Procedimento "+aStessoTitolo+" con estremi del Titolo Esecutivo\n";
   msgConfirm += "uguali a quelli di un procedimento che si sta per iscrivere in istruttoria.";
   msgConfirm += "\nSi vuole procedere all'iscrizione del/dei Titolo/i selezionato/i?"; 
   
