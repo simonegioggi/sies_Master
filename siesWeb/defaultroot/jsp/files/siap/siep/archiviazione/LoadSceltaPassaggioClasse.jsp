@@ -85,6 +85,7 @@ function Verify() {
 	}
 	if (document.LoadSceltaPassaggioClasse.tipoV[0].checked == false
 			&& document.LoadSceltaPassaggioClasse.tipoV[1].checked == false
+			&& document.LoadSceltaPassaggioClasse.tipoV[2].checked == false
 			&& document.LoadSceltaPassaggioClasse.tipoV[3].checked == false
 			&& document.LoadSceltaPassaggioClasse.tipoV[4].checked == false
 			&& document.LoadSceltaPassaggioClasse.tipoV[5].checked == false
