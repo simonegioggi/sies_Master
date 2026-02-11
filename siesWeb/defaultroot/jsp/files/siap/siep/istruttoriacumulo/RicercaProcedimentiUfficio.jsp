@@ -21,13 +21,11 @@
 <%@ page import="siap.siep.fascicolo.action.ICostantiFascicoloSiep"%>
 <%@ page import="siap.sico.ufficio.model.UfficioAccorpatoModel"%>
 
-<jsp:useBean id="TornaQui" scope="request" class="java.lang.String"/>
-
-<jsp:useBean id="ListaProcedimenti" scope="request" class="java.util.Vector"/>
-
-<jsp:useBean id="IstruttoriaCumulo" scope="request" class="siap.siep.istruttoriacumulo.model.IstruttoriaCumuloModel"/>
-<jsp:useBean id="lsoggetto" 		scope="request" class="siap.sico.soggetto.model.SoggettoModel"/>
-<jsp:useBean id="StatoNascita" 	scope="request" class="java.lang.String"/>
+<jsp:useBean id="TornaQui" 					scope="request" class="java.lang.String"/>
+<jsp:useBean id="ListaProcedimenti" 		scope="request" class="java.util.Vector"/>
+<jsp:useBean id="IstruttoriaCumulo" 		scope="request" class="siap.siep.istruttoriacumulo.model.IstruttoriaCumuloModel"/>
+<jsp:useBean id="lsoggetto" 				scope="request" class="siap.sico.soggetto.model.SoggettoModel"/>
+<jsp:useBean id="StatoNascita" 				scope="request" class="java.lang.String"/>
 <jsp:useBean id="ListaTitoliInIstruttoria"  scope="request" class="java.util.Vector"/>
  
  
@@ -76,9 +74,17 @@ for (int k=0; k<ListaProcedimenti.size();k++){
 			for (int ii=0; ii<VecTitCum.size();ii++) {
 				TitoloCumulatoModel lTitoloCumModel = (TitoloCumulatoModel) VecTitCum.elementAt(ii);
 	        	if (lsentenza != null && lTitoloCumModel.isStessoTitolo(lsentenza)) {
+	        		// Ticket#202602100127 - si gestisce il caso di lTitoloCumModel.getProcedimentoCumulato()==null
+	        		//                       che andava in null pointer
+	        		if (lTitoloCumModel.getProcedimentoCumulato()!=null) { 
 	             	stessoTitolo += " "+lTitoloCumModel.getProcedimentoCumulato().getChiaveAnnoFasCumulato()+"/"+lTitoloCumModel.getProcedimentoCumulato().getChiaveProgrFasCumulato()+" ";
 	             	aTitoli[k]=lTitoloCumModel.getProcedimentoCumulato().getChiaveAnnoFasCumulato()+"/"+lTitoloCumModel.getProcedimentoCumulato().getChiaveProgrFasCumulato();
+	        		} else {
+	        			stessoTitolo += " n.d./n.d. ";
+	        			aTitoli[k] = "n.d./n.d.";	             		
+	        		}
 					break;
+	        		// Ticket#202602100127
 	        	} else {
 	             	aTitoli[k]="";
 	        	}
