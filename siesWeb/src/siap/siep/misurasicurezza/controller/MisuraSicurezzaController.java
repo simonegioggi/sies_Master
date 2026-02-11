@@ -17,6 +17,7 @@ import f3b.util.DateUtils;
 import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.jms.ICostantiJMS;
+import siap.jms.messaggio.dao.MessaggioDAO;
 import siap.jms.messaggio.dao.MessaggioSqlDAO;
 import siap.jms.messaggio.model.MessaggioModel;
 import siap.sico.camponota.dao.CampoNotaDAO;
@@ -1916,6 +1917,10 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 		AnnotazioneEsitoTrasmissioneSqlDAO lAnnotazSqlDao = null;
 		FascMsToFascSiepDAO lFascMsToFascSiepDao = null;
 		FascMsToFascSiepSqlDAO lFasMsSqlDao = null;
+		
+		// MEV_2025-48 - 2.15 Gestione Annotazioni Trasmissioni
+		MessaggioSqlDAO lMessaggioSqlDao = null;
+		MessaggioDAO    lMessaggioDao = null;
 
 		try {
 			lConn = getDBTransaction();
@@ -2040,6 +2045,50 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 					lFascMsToFascSiepDao.stop();
 				}
 			}
+			// MEV_2025-48 - 2.15 Gestione Annotazioni Trasmissioni
+			else if (   lAnnotazModel.getOggettoTrasmissione()!=null
+			         && (   lAnnotazModel.getOggettoTrasmissione().equals(ICostantiJMS.TRASFERIMENTO_COMPETENZA)
+			             || lAnnotazModel.getOggettoTrasmissione().equals(ICostantiJMS.SEGUITO_ATTI_TRASFERIMENTO_COMPETENZA)
+			             //|| lAnnotazModel.getOggettoTrasmissione().equals(ICostantiJMS.SEGUITO_ATTI_TRASFERIMENTO_COMPETENZA)
+			             // verificare altri codici tipo annoazione esito comunicazione alle procure
+			            )
+			        ) 
+			{
+			  siesLogger.debug("MEV_2025-48: verifico se stao annotando l'esito da un messaggio Cumulo");
+			  // Se sto annotando l'esito di 
+			  // 00067 - ESITO TRASFERIMENTO COMPETENZA
+			  // 00079 - COMUNICAZIONE CUMULO PROCURE COMPETENTI
+			  // 00080 - ESITO SEGUITO ATTI
+		      if (lAnnotazModel.getMesIdMessaggioEsito()!=null) {
+		          lMessaggioSqlDao = new MessaggioSqlDAO(lConn);
+		          lMessaggioSqlDao.ricercaMessaggioByKey(lAnnotazModel.getMesIdMessaggioEsito());
+		          
+		          MessaggioModel lMsgEsito = (MessaggioModel) lMessaggioSqlDao.getModelByKey();
+		          if (lMsgEsito!=null)
+		              siesLogger.debug("Msg: "+lMsgEsito.getIdMessaggio()
+		                                +" - "+lMsgEsito.getCodTipoOperazione()
+		                                +" - "+lMsgEsito.getCodEsito()
+		                                +" - "+lMsgEsito.getFlagVisto());
+		          
+		          if (   lMsgEsito!= null 
+		              && "N".equals(lMsgEsito.getFlagVisto())
+		              && (   lMsgEsito.getCodTipoOperazione().equals(ICostantiJMS.ESITO_TRASFERIMENTO_COMPETENZA)
+		                  || lMsgEsito.getCodTipoOperazione().equals(ICostantiJMS.COMUNICAZIONE_CUMULO_PROCURE_COMPETENTI)
+		                  || lMsgEsito.getCodTipoOperazione().equals(ICostantiJMS.ESITO_SEGUITO_ATTI)
+		                 )
+		             ) 
+		          {
+		              siesLogger.debug("MSG Esito Cumulo non ancora marcato, lo marco come visto...");
+		              // lMessaggioDao
+		              lMessaggioDao = new MessaggioDAO(lConn);
+		              lMessaggioDao.setFlagVisto("S");
+		              lMessaggioDao.setCondizioneUpdate(lMsgEsito.getIdMessaggio());
+		              lMessaggioDao.update();
+		              lMessaggioDao.stop();
+		          }
+		      }
+		    }
+			// MEV_2025-48 - 2.15 Gestione Annotazioni Trasmissioni - FINE
 
 			// ========================================================================
 			// Aggiorno il blob sull'evento
@@ -2065,6 +2114,10 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 			cleanup(lAnnotazSqlDao);
 			cleanup(lFascMsToFascSiepDao);
 			cleanup(lFasMsSqlDao);
+			
+		     // MEV_2025-48 - 2.15 Gestione Annotazioni Trasmissioni
+			cleanup(lMessaggioSqlDao);
+			cleanup(lMessaggioDao);
 
 			cleanup(lConn);
 		}

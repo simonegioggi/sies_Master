@@ -436,6 +436,11 @@
  		{
  			lSentenza = lRichiestaGE.getAnnoSentenza()+"/"+lRichiestaGE.getNumeroSentenza();
  			
+ 		    // MEV_2025-48 - ALTRO - Visualizza data Sentenza su Richieste PM
+ 		    if (lRichiestaGE.getDataSentenza()!=null){
+ 		       lSentenza+=" del "+DateUtils.getDateToString(lRichiestaGE.getDataSentenza(), "dd/MM/yyyy") ;
+ 		    }
+ 			
  			if( !("null").equals(lRichiestaGE.getAltri()) && 
  				!"".equals(lRichiestaGE.getAltri()) &&
  				!"0".equals(lRichiestaGE.getAltri()) )

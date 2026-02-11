@@ -1,6 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%@ page import="f3b.web.IWebConstants"%>
+<%@ page import="f3b.util.Utils"%>
 <%@ page import="f3b.util.StringUtils"%>
+<%@ page import="f3b.web.IWebConstants"%>
 
 <%@ page import="siap.sico.evento.action.ICostantiEvento"%>
 <%@ page import="siap.sico.utente.model.UtenteModel"%>
@@ -27,28 +28,36 @@
     <script language="JavaScript">
 	    function Verify(){
 			// il campo Userid è obbligatorio
-	    	if(document.LoadRichiestaCertificatoPenale.<%=ICostantiUtente.CAMPO_USERID_NSC%>.value=="")
-	        {
+  	if (document.LoadRichiestaCertificatoPenale.<%=ICostantiUtente.CAMPO_USERID_NSC%>.value == "") {
 	          alert("Userid è obbligatoria");
 	          document.LoadRichiestaCertificatoPenale.<%=ICostantiUtente.CAMPO_USERID_NSC%>.focus();
 	          return false;
 	        }
 		  	
      	    // il campo Password è obbligatorio
-	    	if(document.LoadRichiestaCertificatoPenale.<%=ICostantiUtente.CAMPO_PWD_NSC%>.value=="")
-	        {
+	if (document.LoadRichiestaCertificatoPenale.<%=ICostantiUtente.CAMPO_PWD_NSC%>.value == "") {
 	          alert("Password è obbligatoria");
 	          document.LoadRichiestaCertificatoPenale.<%=ICostantiUtente.CAMPO_PWD_NSC%>.focus();
 	          return false;
 	        }
      	    return true;
 	    }
+
+function pulisciCampi() {
+	document.LoadRichiestaCertificatoPenale.<%=ICostantiUtente.CAMPO_USERID_NSC%>.value = "";
+	document.LoadRichiestaCertificatoPenale.<%=ICostantiUtente.CAMPO_PWD_NSC%>.value = "";
+}
   </script>
 
  </head>
  <body class="corpo">
    <table>
-    <tr><td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
+	<tr>
+		<td class="LBG">
+			<a href="Javascript:window.print();">
+				<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border="0">
+			</a>
+		</td>
       <td class="LBG">
       	<font class="label">Funzione :</font> &nbsp;&nbsp;<font class="campo">Richiesta Certificato Penale</font>
       </td>
@@ -60,11 +69,14 @@
   <br>
   
   <FORM method="POST" name="LoadRichiestaCertificatoPenale" action="<%= IWebConstants.PG_MAIN%>">
-  <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.istruttoria.action.ActInserisciCertificatoPenale">
+<input type="hidden" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.istruttoria.action.ActInserisciCertificatoPenale">
   <input type="hidden" name="<%=ICostantiIstruttoriaCumulo.CAMPO_ID_ISTRUTTORIA_CUMULO %>"	value="<%= IdIstruttoriaCumulo%>" >
 
   <table>
-<% if(userIdNSC == null || userIdNSC.equals("")){ %>
+<%-- <% --%>
+<!--MEV_2025-48: aggiunta nuova funzionalita': userid e psw sempre visibili -->
+<!-- if (userIdNSC == null || userIdNSC.equals("")) { -->
+<!-- %> -->
    <tr>
       <td class="Titolo" colspan=2>Dati Accesso NSC </td>
    </tr>
@@ -72,14 +84,18 @@
    <tr>
       <td class="l">Userid <font class=ob>(*)</font></td>
       <td class="l">
-      	 <input type="text" Title="useridNSC" name="<%=ICostantiUtente.CAMPO_USERID_NSC%>" value="" maxlength="100" size="30" />
+      	 	<input type="text" Title="useridNSC" name="<%=ICostantiUtente.CAMPO_USERID_NSC%>" value="<%=Utils.isPresent(userIdNSC) ? userIdNSC : ""%>" maxlength="100" size="30"/>
+      	 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      	 	<font style="color: red;">N.B. E' possibile ridigitare i dati, in caso di modifica dell'utenza e/o password</font>
       </td>
    </tr>
 
    <tr>
       <td class="l">Password <font class=ob>(*)</font></td>
       <td class="l">
-      	 <input type="password" Title="pwdNSC" name="<%=ICostantiUtente.CAMPO_PWD_NSC%>" value="" maxlength="30" size="30" />
+      	 	<input type="password" Title="pwdNSC" name="<%=ICostantiUtente.CAMPO_PWD_NSC%>" value="<%=Utils.isPresent(pwdNSC) ? pwdNSC : ""%>" maxlength="30" size="30"/>
+      	 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      	 	<input type="button" onclick="javascript:pulisciCampi();" value="Pulisci i Campi">
       </td>
    </tr>
 
@@ -88,14 +104,9 @@
        <br><br><INPUT class="bottone" type="submit" name="I" value="Richiesta Certificato" onClick="javascript:return Verify();">
        </td>
    </tr>
-
-<% } else {%>
-   <tr>
-       <td class="lNoBord" colspan="2">
-       <br><br><INPUT class="bottone" type="submit" name="I" value="Richiesta Certificato">
-       </td>
-   </tr>
-<% } %>
+<%-- <% --%>
+<!-- } -->
+<%-- %> --%>
 </table>
 	</form>
 

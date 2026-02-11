@@ -1,27 +1,21 @@
 package siap.siep.avvocato.action;
 
-/**
- * <p>Title: ActRicercaAvvocato</p>
- * <p>Description: Classe Action per la ricerca di Avvocato</p>
- * <p>Copyright: Copyright (c) 2002</p>
- * <p>Company: Bull</p>
- * @version 1.0
- */
-
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
 import f3b.util.F3BException;
-import siap.sico.decodifiche.controller.DecodificheManager;
-import siap.sico.decodifiche.util.DecodificheUtils;
 import siap.sico.web.ActionSiap;
-//import siap.siep.avvocato.controller.AvvocatoController;
 import siap.siep.avvocato.controller.IAvvocato;
 import siap.siep.avvocato.model.AvvocatoModel;
 import siap.siep.util.SIEPLookupRemote;
 
+/**
+ * ActRicercaAvvocato - Classe Action per la ricerca di Avvocato
+ *
+ * @version 1.0
+ */
 @SuppressWarnings("rawtypes")
 public class ActRicercaAvvocato extends ActionSiap implements ICostantiAvvocato {
 
@@ -59,10 +53,11 @@ public class ActRicercaAvvocato extends ActionSiap implements ICostantiAvvocato 
 
 		String lPage = PG_RICERCAAVVOCATO;
 
-		//202110811 MEV_21 Controllo parametro per la diversificazione della destinazione della ricerca (Avvocato presentante Istanza).
-		if (!isRequestParameterNullObj("formFiltra")		&&
-		   ("FiltraInsAvvReginde".equals(getRequestStringParameter("formFiltra"))) )
-			//setRequestAttribute("formFiltra", "filtraAvvPre");
+		// 202110811 MEV_21 Controllo parametro per la diversificazione della destinazione della ricerca
+		// (Avvocato presentante Istanza).
+		if (!isRequestParameterNullObj("formFiltra")
+				&& ("FiltraInsAvvReginde".equals(getRequestStringParameter("formFiltra"))))
+			// setRequestAttribute("formFiltra", "filtraAvvPre");
 			lPage = PG_RICERCA_INS_AVVOCATO;
 
 		if (getRequestStringParameter("modalita").compareTo("BREVE") == 0)

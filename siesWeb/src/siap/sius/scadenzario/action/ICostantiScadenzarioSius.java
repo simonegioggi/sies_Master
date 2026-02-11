@@ -3,7 +3,7 @@ package siap.sius.scadenzario.action;
 import f3b.web.IWebConstants;
 
 /**
- * ICostantiScadenzario - Classe di costanti di Scadenzario
+ * ICostantiScadenzarioSius - Classe di costanti di Scadenzario SIUS
  *
  * @version 1.0
  */

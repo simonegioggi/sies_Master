@@ -2330,4 +2330,29 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 		return lListaSolleciti;
 	}
 
+	/**
+	 * Metodo che marca FLAG_SISTO = 'S' sul messaggio
+	 * @since MEV_2025-48 - 2.15 Gestione Annotazioni Trasmissioni 
+	 */
+    public void ExMarcaMessaggioVisto(BigDecimal aIdMessaggio) throws F3BException {
+        Connection lConn = null;
+
+        MessaggioDAO lMesDao = null;
+        try {
+            lConn = getDBConnection();
+            lMesDao = new MessaggioDAO(lConn);
+            lMesDao.setFlagVisto("S");
+            lMesDao.setCondizioneUpdate(aIdMessaggio);
+            lMesDao.update();
+            commit(lConn);
+        } catch (DAOException daoEx) {
+            rollback(lConn);
+            siesLogger.error("MessaggioController.ExMarcaMessaggioVisto", daoEx);
+            throw new F3BException("MessaggioController.ExMarcaMessaggioVisto: Non posso leggere : " + daoEx);
+        } finally {
+            cleanup(lMesDao);
+            cleanup(lConn);
+        }
+    }
+	
 }

@@ -50,11 +50,65 @@ public class PermessoUtils {
 		return lCodMotivo;
 	}
 
-	public static void main(String[] args) {
-		String lCodMotivo = "2460";
-		if ("2450,2451,2452,2460,2461".contains(lCodMotivo) /*> -1*/) // Licenza Internati
-			System.out.println("OK contains");
-		if (lCodMotivo.indexOf("2450,2451,2452,2460,2461") > -1)
-			System.out.println("OK indexof");
-	}
+	// public static void main(String[] args) {
+	//
+	// String lCodMotivo = "2460";
+	// String coll = "2450,2451,2452,2460,2461";
+	// if (coll.contains(lCodMotivo))
+	// System.out.println("OK contains");
+	// if (coll.indexOf(lCodMotivo) > -1)
+	// System.out.println("OK indexof " + coll.indexOf(lCodMotivo));
+	// if (coll.lastIndexOf(lCodMotivo) > -1)
+	// System.out.println("OK lastIndexOf " + coll.lastIndexOf(lCodMotivo));
+	//
+	// try {
+	// Scanner tastiera = new Scanner(System.in);
+	// System.out.println("Inserisci il valore di a: ");
+	// int a = new Integer(tastiera.nextLine()).intValue();
+	// System.out.println("Inserisci il valore di b: ");
+	// int b = new Integer(tastiera.nextLine()).intValue();
+	// System.out.println("Inserisci il valore di c: ");
+	// int c = new Integer(tastiera.nextLine()).intValue();
+	// tastiera.close();
+	// // int a = 3, b = 5, c = 4;
+	// if (a > b && a > c) {
+	// System.out.println("a = " + a);
+	// if (b > c) {
+	// System.out.println("b = " + b);
+	// System.out.println("c = " + c);
+	// } else {
+	// System.out.println("c = " + c);
+	// System.out.println("b = " + b);
+	// }
+	// } else if (b > a && b > c) {
+	// System.out.println("b = " + b);
+	// if (a > c) {
+	// System.out.println("a = " + a);
+	// System.out.println("c = " + c);
+	// } else {
+	// System.out.println("c = " + c);
+	// System.out.println("a = " + a);
+	// }
+	// } else {
+	// System.out.println("c = " + c);
+	// if (a > b) {
+	// System.out.println("a = " + a);
+	// System.out.println("b = " + b);
+	// } else {
+	// System.out.println("b = " + b);
+	// System.out.println("a = " + a);
+	// }
+	// }
+	// List<Integer> arr = new ArrayList<>();
+	// arr.add(a);
+	// arr.add(b);
+	// arr.add(c);
+	// Collections.sort(arr);
+	// for (int i = arr.size() - 1; i >= 0; i--)
+	// System.out.println(arr.get(i));
+	// } catch (Exception e) {
+	// System.out.println("ATTENZIONE! Inserire solo valori numerici");
+	// }
+	// }
+
 }

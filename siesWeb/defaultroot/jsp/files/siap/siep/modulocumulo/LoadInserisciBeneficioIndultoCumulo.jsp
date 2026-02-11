@@ -191,17 +191,33 @@ else if(modalita.equals("I") )
    	}
    	else if(document.BeneficiIndultoCumulo.<%=ICostantiBeneficiCumulo.CAMPO_COD_SOTTOTIPO_BENEFICIO%>.value == '-')
    	{
-   		document.BeneficiIndultoCumulo.AArr.value = "";
-	    document.BeneficiIndultoCumulo.MArr.value = "";
-	    document.BeneficiIndultoCumulo.GArr.value = "";
-	    document.BeneficiIndultoCumulo.Ammenda.value = "";
-	    document.BeneficiIndultoCumulo.Amm_dec.value = "";
-	   
-	    document.BeneficiIndultoCumulo.ARec.value = "";
-	    document.BeneficiIndultoCumulo.MRec.value = "";
-	    document.BeneficiIndultoCumulo.GRec.value = "";
-	    document.BeneficiIndultoCumulo.Multa.value = "";
-	    document.BeneficiIndultoCumulo.Mul_dec.value = "";
+        if(document.BeneficiIndultoCumulo.<%=ICostantiBeneficiCumulo.CAMPO_COD_SOTTOTIPO_BENEFICIO%>.value == SottoTipoBeneficioinModifica)
+        {
+            document.BeneficiIndultoCumulo.AArr.value = "<%=StringUtils.toStringJSP(beneficioCumulo.getNumAnniArresto(),"0")%>";
+            document.BeneficiIndultoCumulo.MArr.value = "<%=StringUtils.toStringJSP(beneficioCumulo.getNumMesiArresto(),"0")%>";
+            document.BeneficiIndultoCumulo.GArr.value = "<%=StringUtils.toStringJSP(beneficioCumulo.getNumGiorniArresto(),"0")%>";
+            document.BeneficiIndultoCumulo.Ammenda.value = "<%=StringUtils.getParteIntera(beneficioCumulo.getImportoAmmenda()) %>";
+            document.BeneficiIndultoCumulo.Amm_dec.value = "<%=StringUtils.getParteDecimale(beneficioCumulo.getImportoAmmenda()) %>";
+       
+            document.BeneficiIndultoCumulo.ARec.value = "<%=StringUtils.toStringJSP(beneficioCumulo.getNumAnniReclusione(),"0")%>";
+            document.BeneficiIndultoCumulo.MRec.value = "<%=StringUtils.toStringJSP(beneficioCumulo.getNumMesiReclusione(),"0")%>";
+            document.BeneficiIndultoCumulo.GRec.value = "<%=StringUtils.toStringJSP(beneficioCumulo.getNumGiorniReclusione(),"0")%>";
+            document.BeneficiIndultoCumulo.Multa.value = "<%=StringUtils.getParteIntera(beneficioCumulo.getImportoMulta()) %>";
+            document.BeneficiIndultoCumulo.Mul_dec.value = "<%=StringUtils.getParteDecimale(beneficioCumulo.getImportoMulta()) %>";
+
+        } else {	
+	   		document.BeneficiIndultoCumulo.AArr.value = "";
+		    document.BeneficiIndultoCumulo.MArr.value = "";
+		    document.BeneficiIndultoCumulo.GArr.value = "";
+		    document.BeneficiIndultoCumulo.Ammenda.value = "";
+		    document.BeneficiIndultoCumulo.Amm_dec.value = "";
+		   
+		    document.BeneficiIndultoCumulo.ARec.value = "";
+		    document.BeneficiIndultoCumulo.MRec.value = "";
+		    document.BeneficiIndultoCumulo.GRec.value = "";
+		    document.BeneficiIndultoCumulo.Multa.value = "";
+		    document.BeneficiIndultoCumulo.Mul_dec.value = "";
+        }
    	}
    
    	lPrima = false;                       

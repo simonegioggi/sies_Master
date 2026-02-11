@@ -46,6 +46,11 @@ public class ActDettaglioPenaCumulo extends ActionModuloCumulo implements ICosta
 		IstruttoriaCumuloModel lIstruttoriaModel = super.getDatiIstruttoria();
 		DatiFinaliCumuloAggregatoModel lDatiAggregati = super.getDatiFinaliCumuloAggregato();
 
+	    // MEV_2025-48 - 2.12 Alert su continuazione e revoche benefici
+	    super.getListaTitContSganciate(null);
+	    super.getListaTitConRevBenSganciati(null);
+	    // MEV_2025-48 - 2.12 Alert su continuazione e revoche benefici
+	    
 		if (!lIstruttoriaModel.getFlagStato().equals(ICostantiIstruttoriaCumulo.FLAG_STATO_APERTA)) {
 			// Se l'istruttoria non è in stato APERTA non rieffettuo i calcoli, ma
 			// visualizzo solo il dettaglio se presente

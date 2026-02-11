@@ -40,13 +40,17 @@
 //     FORM di Selezione delle Misure di Sicurezza da includere nel cumulo
 //==============================================================================
 DatiFinaliCumuloModel lDatiFinaliCumulo = datiFinaliAggregatoModel.getDatiFinaliCumulo();
-
-BigDecimal idFascMS = new BigDecimal(-1);
+// MEV_2025-48 - ALTRO
+BigDecimal idFascMS = new BigDecimal(-2);
 if ("S".equals (lDatiFinaliCumulo.getFlagCreaFascicoloMs() ) ) {
   if (lDatiFinaliCumulo.getFasSieIdFascicoloSiepMs()!=null)
     idFascMS = lDatiFinaliCumulo.getFasSieIdFascicoloSiepMs();
   else
     idFascMS = new BigDecimal(0);
+}
+//MEV_2025-48 - ALTRO
+else if ("N".equals (lDatiFinaliCumulo.getFlagCreaFascicoloMs() ) ) {
+  idFascMS = new BigDecimal(-1);
 }
 
 lDatiFinaliCumulo.getFasSieIdFascicoloSiepMs();
@@ -182,11 +186,21 @@ if(ElencoMisureSicurezzaInIstruttoria.size() > 0 )
 
 <div id="divPosizionamento" align="center" style="position:relative;">
 
-<%--   <% if (1==1) { %> --%>
   <table cellspacing="2" cellpadding="2" align="center" width="70%">
     <tr>
       <td class="titolo" colspan="3">Procedimento in cui iscrivere le Misure</td>
     </tr>
+    <%-- MEV_2025-48 - ALTRO --%>
+    <tr>
+      <td class="c">
+        <input type="checkbox" id="checkIdC4_NULL" 
+               name="<%=ICostantiDatiFinaliCumulo.CAMPO_FAS_SIE_ID_FASCICOLO_SIEP_MS%>" value="-1"
+               <%=(idFascMS.compareTo(new BigDecimal(-1))==0)?"checked":""%>
+               onClick="Javascript:checkProcedimentoEsecuzione(this)">
+      </td>
+      <td class="l">Non iscrivere le MS a Procedimento classe IV</td>
+    </tr>
+    <%-- MEV_2025-48 - ALTRO --%>
     <tr>
       <td class="c">
         <input type="checkbox" id="checkIdC4_0" 
@@ -220,7 +234,7 @@ if(ElencoMisureSicurezzaInIstruttoria.size() > 0 )
     </tr>
     <% } %>
   </table>
-<%--   <% } %> --%>
+
   
   <br>
 

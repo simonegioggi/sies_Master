@@ -177,6 +177,9 @@ lStringParametri += "&"+ICostantiSicoJMS.CAMPO_GIORNO_DATA_TRASMISSIONE_INIZIO +
 lStringParametri += "&"+ICostantiSicoJMS.CAMPO_ANNO_DATA_TRASMISSIONE_FINE + "=" + DateUtils.getDateToString(lDataTrasmissioneAl,"yyyy");
 lStringParametri += "&"+ICostantiSicoJMS.CAMPO_MESE_DATA_TRASMISSIONE_FINE + "=" + DateUtils.getDateToString(lDataTrasmissioneAl,"MM");
 lStringParametri += "&"+ICostantiSicoJMS.CAMPO_GIORNO_DATA_TRASMISSIONE_FINE + "=" + DateUtils.getDateToString(lDataTrasmissioneAl,"dd");
+// MEV_2025-48 - 2.15 Gestione Annotazioni Trasmissioni
+lStringParametri += "&"+ICostantiSicoJMS.CAMPO_FLAG_VISTO + "=N";
+
 %>
 		<td width="32%" class="menulines" nowrap>
 		  	<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.modulocumulo.action.ActLoadRichiesteAttiRicevute<%=lStringParametri%>">Richieste Atti per Competenza Ricevute</a>

@@ -111,14 +111,22 @@ public class FascicoloSiepSoggettoSqlDAO extends SIAPSqlDAO {
 		setStatement(soggettoFascicolo);
 	}
 
-	public void RicercaFascicoliBySoggettoProprioUfficioPaged(SoggettoModel aModel,
-			String lCodUfficioUtenteConnesso, int aPage) {
+	/* MEV_2025-48 - Aggiunta ricerca per chiaveAnno/chiaveProgr e ufficio accorpato: Aggiunto FascicoloSiepModel */
+//	public void RicercaFascicoliBySoggettoProprioUfficioPaged(SoggettoModel aModel,
+//			String lCodUfficioUtenteConnesso, int aPage) {
+	public void RicercaFascicoliBySoggettoProprioUfficioPaged(SoggettoModel aModel, FascicoloSiepModel aFascModel,
+			String lCodUfficioUtenteConnesso, int aPage) {		
 		String soggettoFascicolomioUffi = "";
 		String lPaginedStatement = new String("");
 
 		soggettoFascicolomioUffi += getFascicoloMioUffiSqlSoggettoQuery(aPage);
 		soggettoFascicolomioUffi += setCondizioneMioUfficio(lCodUfficioUtenteConnesso);
-		soggettoFascicolomioUffi += setCondizioneSoggettoParziale(aModel);
+		/* MEV_2025-48 - Aggiunta ricerca per chiaveAnno/chiaveProgr e ufficio accorpato: Aggiunto FascicoloSiepModel */
+		if (aFascModel!=null)
+			soggettoFascicolomioUffi += setCondizioneFascicolo(aFascModel);
+		else
+			soggettoFascicolomioUffi += setCondizioneSoggettoParziale(aModel);
+		/* MEV_2025-48 - FINE */
 		soggettoFascicolomioUffi += setOrder();
 		// 20220128 test DF per ordinare la lista dei propri titoli come la liste dai titoli già iscritti
 		// soggettoFascicolomioUffi += " ORDER BY F.DATA_IRREVOCABILITA, CHIAVE_ANNO, CHIAVE_PROGR";
@@ -736,6 +744,8 @@ public class FascicoloSiepSoggettoSqlDAO extends SIAPSqlDAO {
 			lStatement += "   S.MESE_NASCITA, ";
 			lStatement += "   F.ID_FASCICOLO_SIEP, F.CHIAVE_ANNO, F.CHIAVE_PROGR, F.DATA_ISCRIZIONE, F.DATA_IRREVOCABILITA, F.CHIAVE_UFFICIO,";
 			lStatement += "   F.COD_STATO_FASCICOLO, STATO_FASC.RV_MEANING STATO_FASCICOLO, F.KEY_PROVV_NSC, ";
+			/* MEV_2025-48 - Aggiunto F.CHIAVE_PROGR_ORIG per decodifica accorpati */
+			lStatement += "   F.CHIAVE_PROGR_ORIG, ";
 			lStatement += "   ST.DATA_PROVVEDIMENTO , ST.ID_SENTENZA, ST.ANNO_SENTENZA, ST.NUMERO_SENTENZA,";
 			lStatement += "   ST.COD_TIPO_PROVVEDIMENTO, PROVV.RV_MEANING DESCR_PROVVEDIMENTO,";
 			lStatement += "   ST.COD_TIPO_AUTORITA_EMITTENTE COD_TIPO_AUTORITA_EMITTENTE, AUTORITA_EMITTENTE.RV_MEANING DESCR_AUTO_EMITTENTE,";
@@ -768,11 +778,30 @@ public class FascicoloSiepSoggettoSqlDAO extends SIAPSqlDAO {
 		return lStatement;
 	}
 
+	/*
+	 * MEV_2025-48 - Aggiunta ricerca per chiaveAnno/chiaveProgr e ufficio accorpato: Aggiunto FascicoloSiepModel
+	 * Aggiunti criteri di ricerca per Fascicolo SIEP
+	 */
+	private String setCondizioneFascicolo(FascicoloSiepModel aFSModel) {
+		String lCondizioni = new String();
+
+		if (aFSModel.getChiaveAnno()!=null)
+			lCondizioni += " AND F.CHIAVE_ANNO = "+aFSModel.getChiaveAnno();
+		if (aFSModel.getChiaveProgr()!=null)
+			lCondizioni += " AND F.CHIAVE_PROGR = "+aFSModel.getChiaveProgr();
+		if (aFSModel.getChiaveUfficio()!=null && !aFSModel.getChiaveUfficio().equals(""))
+			lCondizioni += " AND F.CHIAVE_UFFICIO = "+aFSModel.getChiaveUfficio();
+		
+		return lCondizioni;
+	}
+	
 	private String setCondizioneSoggettoParziale(SoggettoModel aSm) {
 		String lCondizioni = new String();
 
 		if (!(aSm.getCognome().equals(""))) {
-			lCondizioni += " AND COGNOME like '" + StringUtils.convertSqlString(aSm.getCognome()) + "%'";
+			/* MEV_2025-48 - Si modifica la ricerca in UPPERCASE (case insensitive) */
+			//lCondizioni += " AND COGNOME like '" + StringUtils.convertSqlString(aSm.getCognome()) + "%'";
+			lCondizioni += " AND UPPER(COGNOME) like '" + StringUtils.convertSqlString(aSm.getCognome()).toUpperCase() + "%'";
 		}
 
 		if (!(aSm.getCodAfis().equals(""))) {
@@ -786,12 +815,21 @@ public class FascicoloSiepSoggettoSqlDAO extends SIAPSqlDAO {
 		}
 
 		if (!(aSm.getNome().equals(""))) {
-			lCondizioni += " AND NOME like '" + StringUtils.convertSqlString(aSm.getNome()) + "%'";
+			/* MEV_2025-48 - Si modifica la ricerca in UPPERCASE (case insensitive) */
+			//lCondizioni += " AND NOME like '" + StringUtils.convertSqlString(aSm.getNome()) + "%'";
+			lCondizioni += " AND UPPER(NOME) like '" + StringUtils.convertSqlString(aSm.getNome()).toUpperCase() + "%'";
 		}
 
-		if (!(aSm.getCodComuneNascita().equals(""))) {
-			lCondizioni += " AND COD_COMUNE_NASCITA = '" + aSm.getCodComuneNascita() + "'";
+		/* MEV_2025-48 - Si modifica la ricerca per descrizione e non per codice. In form viene 
+		                 inserita la descrizione a cui possono corrispondere più codici comune
+		                 e in caso di omonimia/combio prov falliva la ricerca */
+//		if (!(aSm.getCodComuneNascita().equals(""))) {
+//			lCondizioni += " AND COD_COMUNE_NASCITA = '" + aSm.getCodComuneNascita() + "'";
+//		}
+		if (!(aSm.getDescrComuneNascita().equals(""))) {
+			lCondizioni += " AND UPPER(COMUNE_NASCITA.DESCRIZIONE) = '" + StringUtils.convertSqlString(aSm.getDescrComuneNascita()).toUpperCase() + "'";
 		}
+		
 
 		if (!(aSm.getCodStatoNascita().equals(""))) {
 			lCondizioni += " AND COD_STATO_NASCITA = '" + aSm.getCodStatoNascita() + "'";
@@ -1015,6 +1053,9 @@ public class FascicoloSiepSoggettoSqlDAO extends SIAPSqlDAO {
 		lFascicolo.setDescrStatoFascicolo(getString("STATO_FASCICOLO"));
 		lFascicolo.setChiaveUfficio(getString("CHIAVE_UFFICIO"));
 		lFascicolo.setKeyProvvNsc(getBigDecimal("KEY_PROVV_NSC"));
+		
+		/* MEV_2025-48 - Aggiunto campo per decodifica accorpati */
+		lFascicolo.setChiaveProgrOrig(getBigDecimal("CHIAVE_PROGR_ORIG"));
 
 		SoggettoModel lSoggetto = new SoggettoModel();
 		lSoggetto.setIdSoggetto(getBigDecimal("ID_SOGGETTO"));

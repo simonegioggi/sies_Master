@@ -21,17 +21,20 @@
 <%@ page import="siap.siep.competenza.action.ICostantiCompetenza"%>
 <%@ page import="siap.sico.evento.model.EventoModel"%>
 
+<%@ page import="java.util.Iterator" %>
+
 <jsp:useBean id="posizioneluogoaltra" scope="request" class="siap.siep.posizione.model.PosizioneGiuridicaLuogoDetenzioneAltraCausaModel"/>
-<jsp:useBean id="magistrato"         scope="request" class="siap.sico.magistrato.model.MagistratoModel"/>
-<jsp:useBean id="penaresidua"        scope="request" class="siap.siep.penaresidua.model.PenaResiduaModel"/>
-<jsp:useBean id="eventonotifica" scope="request" class="siap.sico.evento.model.EventoNotificaModel"/>
-<jsp:useBean id="competenza" scope="request" class="siap.siep.competenza.model.CompetenzaModel"/>
-<jsp:useBean id="fascCompetenza" scope="request" class="siap.siep.fascicolo.model.FascicoloSiepModel"/>
-<jsp:useBean id="noteautoritaEsterna"         scope="request" class="java.lang.String"/>
+<jsp:useBean id="magistrato"          scope="request" class="siap.sico.magistrato.model.MagistratoModel"/>
+<jsp:useBean id="penaresidua"         scope="request" class="siap.siep.penaresidua.model.PenaResiduaModel"/>
+<jsp:useBean id="eventonotifica"      scope="request" class="siap.sico.evento.model.EventoNotificaModel"/>
+<jsp:useBean id="competenza"          scope="request" class="siap.siep.competenza.model.CompetenzaModel"/>
+<jsp:useBean id="fascCompetenza"      scope="request" class="siap.siep.fascicolo.model.FascicoloSiepModel"/>
+<jsp:useBean id="noteautoritaEsterna" scope="request" class="java.lang.String"/>
 
 <jsp:useBean id="Messaggio" scope="request" class="siap.jms.messaggio.model.MessaggioModel"/>
 
-
+<%-- MEV_2025-48 - 2.15 Gestione Annotazioni Trasmission --%> 
+<jsp:useBean id="MessaggiEsiti" scope="request" class="java.util.Vector"/>
 
 <%
   FascicoloSiepModel lFascicoloAssociato = (FascicoloSiepModel)session.getAttribute("fascicolo");
@@ -71,7 +74,7 @@
 	  }
   }
 
-  // Ticket#20231010019 â€” SIEP - Fascicolo trasmesso per errore - se fascicolo non di competenza vanno bloccati i tasti funzione
+  // Ticket#20231010019:€” SIEP - Fascicolo trasmesso per errore - se fascicolo non di competenza vanno bloccati i tasti funzione
   //                             sulla form di dettaglio
   boolean isFascicoloDiCompetenza = false;
   String lUffUtente = lUtenteMod.getUfficioUtente().getCodUfficio();
@@ -88,16 +91,59 @@
   <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
   <script language="JavaScript" src="<%=IWebConstants.JS_CONFIRM%>"></script>
   <script language="JavaScript" src="<%=ISIAPCostantiWeb.JS_CONTROL_UPLOAD%>"></script>
-
-  <script language="JavaScript">
   
+  <script language="JavaScript" src="<%=IWebConstants.JS_JQUERY%>"></script>
+  <script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
+  
+  <script language="JavaScript">
 	function Seguito()
 	{
 		//document.formName.< %=IWebConstants.ACTION_FIELD%>.value="siap.siep.richiesta.action.ActLoadInserisciTrasmissioneCompetenza";
 		document.formName.<%=IWebConstants.ACTION_FIELD%>.value="siap.siep.richiesta.action.ActLoadInserisciTrasmissioneSeguitoAtti";
 		document.formName.<%=ICostantiEvento.CAMPO_COD_MOTIVO%>.value="0740";
 	}
+	
+	<%-- MEV_2025-48 - 2.15 Gestione Annotazioni Trasmission --%>
+	function marcaElaborato(idMessaggio) {
+		strMsg = "Attenzione procedendo il messaggio selezionato verrà marcato come 'Elaborato' senza registrare l'annotazione esito.";
+        strMsg += " Si vuole procedere comunque?";
+        if (window.confirm(strMsg)){
+            //
+        	document.marcaEsito.<%=ICostantiMessaggio.CAMPO_ID_MESSAGGIO%>.value=idMessaggio;
+        	document.marcaEsito.submit();
+        	$('#formSubmit').find(':submit').prop('disabled',true);
+        }		
+	}
+	
+	
+	function Verify(){
+		   
+		<% if (MessaggiEsiti.size() > 0) { %>
+		var count = $('input[type="checkbox"][name="<%=ICostantiMessaggio.CAMPO_ID_MESSAGGIO%>_ESITO"]:checked').length;
+
+		if (count>1) {
+			alert("Selezionare un solo messaggio per l'annotazione esito");
+	        return false;
+		}
+		else if (count==0){
+			strMsg = "Attenzione non è stato selezionato nessuno dei messaggi di esito in attesa di elaborazione.";
+			strMsg += " Proseguendo il messaggio restera' in attesa elaborazione. ";
+			strMsg += " Si vuole procedere comunque?";
+			if (!window.confirm(strMsg)){
+				return false;
+			}
+		}
+		else {
+			<%-- Selezionato un solo messaggio setto il valore --%>
+			var selected = $('input[type="checkbox"][name="<%=ICostantiMessaggio.CAMPO_ID_MESSAGGIO%>_ESITO"]:checked');
+			var idMsgSel = selected.val();
+			document.formName.<%=ICostantiMessaggio.CAMPO_ID_MESSAGGIO%>.value= idMsgSel;
+		}
+		<% }%>
 		
+		return true;
+	}
+	<%-- MEV_2025-48 - 2.15 Gestione Annotazioni Trasmission - FINE --%>
   </script>
 		
 </head>
@@ -139,7 +185,7 @@
 
   <!-- TOOLBAR HEADER (per il tasto di TRASMISSIONE -->  
   <%
-if (isFascicoloDiCompetenza) { // Ticket#20231010019 â€” SIEP solo se di competenza  
+if (isFascicoloDiCompetenza) { // Ticket#20231010019:€” SIEP solo se di competenza  
   //if(eventonotifica.getEvento().getDataTrasmissioneAtti().equals(eventonotifica.getEvento().getDataEmissione())){
     if(eventonotifica.getEvento().getFlagDocumentoRegistrato()!=null && eventonotifica.getEvento().getFlagDocumentoRegistrato().equalsIgnoreCase("S")){
 	  String lModificabile = "NO";
@@ -491,16 +537,16 @@ if (isFascicoloDiCompetenza) { // Ticket#20231010019 â€” SIEP solo se di compete
 //==============================================================================
 %>
 <% 
-if (isFascicoloDiCompetenza) { // Ticket#20231010019 â€” SIEP solo se di competenza  
-EventoModel lEvento = eventonotifica.getEvento();
-if( (   "0340".equals(lEvento.getCodMotivo())
-     || "5403".equals(lEvento.getCodMotivo())     
-     || "0740".equals(lEvento.getCodMotivo())     
-    )
-   && "S".equals(lEvento.getFlagDocumentoRegistrato())
-  )
-{ %>
-<form method="POST" action="<%=IWebConstants.PG_MAIN%>" name="formName"> 
+if (isFascicoloDiCompetenza) { // Ticket#20231010019:€” SIEP solo se di competenza  
+	EventoModel lEvento = eventonotifica.getEvento();
+	if( (   "0340".equals(lEvento.getCodMotivo())
+	     || "5403".equals(lEvento.getCodMotivo())     
+	     || "0740".equals(lEvento.getCodMotivo())     
+	    )
+	   && "S".equals(lEvento.getFlagDocumentoRegistrato())
+	  )
+	{ %>
+<form method="POST" action="<%=IWebConstants.PG_MAIN%>" name="formName" id="formSubmit"> 
   <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.presaincarico.action.ActLoadInsAnnotaEsitoTrasmComp">
   <input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>"  value="<%= lEvento.getIdEvento() %>">
   <input type="HIDDEN" name="<%=ICostantiCompetenza.CAMPO_ID_COMPETENZA%>"  value="<%=competenza.getIdCompetenza()%>">
@@ -512,10 +558,7 @@ if( (   "0340".equals(lEvento.getCodMotivo())
       <td>
         <input type="submit" name="AnnotazioneEsito" value="Annotazione Esito" >
       </td>
-
-<% if( !"0740".equals(lEvento.getCodMotivo()) )
-   {	%>
-
+<% if( !"0740".equals(lEvento.getCodMotivo()) ) { %>
       <td>
         <input type="submit" name="SeguitoAtti" value="Seguito Atti" onClick=javascript:Seguito(); >
       </td>
@@ -523,9 +566,101 @@ if( (   "0340".equals(lEvento.getCodMotivo())
 
     </tr>
   </table>  
+
+<%-- MEV_2025-48 - 2.15 Gestione Annotazioni Trasmission --%>   
+<% if (MessaggiEsiti.size() > 0) 
+{ 
+    String alert = "";
+    int contaDaElaborare = 0;
+    for (int i=0; i<MessaggiEsiti.size(); i++) {
+        MessaggioModel lMsg = (MessaggioModel) MessaggiEsiti.elementAt(i);
+        if (!"S".equals(lMsg.getFlagVisto()))
+            contaDaElaborare = contaDaElaborare+1; 
+    }
+    if (contaDaElaborare>0)
+        alert = "&nbsp;<font style='color:red;'>(Attenzione ci sono esiti in attesa di essere annotati)</font>";
+
+%>
+<br>
+  <table width=90%>
+     <tr>
+        <td class="Titolo">Esiti Ricevuti <%=alert%> </td>
+     </tr>
+   </table>  
+     
+  <table cellspacing=2 cellpadding=2 width="90%">
+    <tr>
+      <td class="int">Ufficio Mittente Esito&nbsp;</td>
+      <td class="int">Anno/Numero Fascicolo Cumulante&nbsp;</td>
+      <td class="int">Tipo operazione&nbsp;</td>
+      <td class="int">Data Trasmissione&nbsp;<br>Esito</td>
+      <td class="int">Esito&nbsp;</td>
+      <td class="int">Motivazioni&nbsp;</td>
+      <td class="int">Azioni&nbsp;</td>
+    </tr>
+
+<%
+  Iterator itx = MessaggiEsiti.iterator();
+  while ( itx.hasNext())
+  {
+    MessaggioModel lMess = (MessaggioModel)itx.next();
+    String strCumulante = "";
+    if (lMess.getChiaveAnnoFasCumulante()!=null)
+        strCumulante = StringUtils.toStringJSP(lMess.getChiaveAnnoFasCumulante())+"/"+StringUtils.toStringJSP(lMess.getChiaveProgrFasCumulante());
+    else
+        strCumulante = "<font style='color:red;'>n.d./n.d.</font>";
+%>
+  <tr>
+    <td class="c"><%= lMess.getDescrUfficioMittente() + " " + lMess.getDescrSedeUfficioMittente()%></td>    
+    <td class="c"><%= StringUtils.toStringJSP(strCumulante)%></td>
+    <td class="c"><%= lMess.getDescrTipoOperazione()%></td>     
+    <td class="c"><%= StringUtils.toStringJSP(DateUtils.getDateToString(lMess.getDataInvio(),"dd-MM-yyyy HH:mm"))%></td>
+   
+<% if(lMess.getCodEsito()!=null && lMess.getCodEsito().compareTo("01001")==0 )  {%>    
+    <%-- Atti Presi in carico --%>
+    <td class="cVerde"><%= lMess.getDescrEsito()%></td>
+<% } else if(lMess.getCodEsito()!=null && lMess.getCodEsito().compareTo("01007")==0 ){%>
+    <%-- Atti Rigettati --%>
+    <td class="cRosso"><%= lMess.getDescrEsito()%></td>
+<% } else   {%>
+    <%-- Atti Trasmessi o Restituiti --%>
+    <td class="c"><%= lMess.getDescrEsito()%></td>
+<% } %>
+      
+    <td class="c"><%if(lMess.getNote()!=null){%><%=lMess.getNote()%><%} %>&nbsp;</td>
+         
+    <td class="c">
+    <% if (!"S".equals(lMess.getFlagVisto())) { %>
+        <input type="checkbox"  value="<%=lMess.getIdMessaggio() %>" 
+               name="<%=ICostantiMessaggio.CAMPO_ID_MESSAGGIO%>_ESITO" 
+               >
+        <a href="Javascript:marcaElaborato('<%=lMess.getIdMessaggio() %>');">
+            <img src="/images/delete.gif" width="12" height="12" alt="Marca Elaborato" border="0">
+        </a>               
+    <% } else { %>
+        elaborato
+    <% } %>
+    </td>
+  </tr>
+<% } %>
+</table>
+<% } %>  
+<%-- MEV_2025-48 - 2.15 Gestione Annotazioni Trasmissioni - FINE --%> 
 </form>  
 <% } %>
 <% } %>
+
+<%-- MEV_2025-48 - 2.15 Gestione Annotazioni Trasmissioni --%> 
+<% if (isFascicoloDiCompetenza) { %>
+<form method="POST" action="<%=IWebConstants.PG_MAIN%>" name="marcaEsito"> 
+  <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>"            value="siap.jms.messaggio.action.ActMarcaMessaggio">
+  <input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>"       value="<%=eventonotifica.getEvento().getIdEvento() %>">
+  <input type="HIDDEN" name="<%=ICostantiMessaggio.CAMPO_ID_MESSAGGIO%>" value="">
+  <input type="HIDDEN" name="Return" value="siap.siep.richiesta.action.ActDettaglioTrasmissioneCompetenza&<%=ICostantiEvento.CAMPO_ID_EVENTO%>=<%=eventonotifica.getEvento().getIdEvento() %>">
+</form>
+<% } %>
+<%-- MEV_2025-48 - 2.15 Gestione Annotazioni Trasmissioni - FINE --%> 
+
 <br>
   <div align=left style="visibility:hidden" id="upld"><%-- onSubmit="return controllaUpload();" --%>
     <FORM name="comandi" enctype="multipart/form-data" method="post">
@@ -546,4 +681,20 @@ if( (   "0340".equals(lEvento.getCodMotivo())
   <br>
   <br>
 </body>
+  <%-- MEV_2025-48 - 2.15 Gestione Annotazioni Trasmission--%>
+<% if (isFascicoloDiCompetenza) { 
+    EventoModel lEvento = eventonotifica.getEvento();
+    if( (   "0340".equals(lEvento.getCodMotivo()) // atti per competenza (per emissione provvedimento cumulo)
+         || "5403".equals(lEvento.getCodMotivo()) // Emissione provvedimento di cumulo a seguito revoca beneficio    
+         || "0740".equals(lEvento.getCodMotivo()) // atti per competenza (per emissione provvedimento cumulo) - Seguito Atti
+        )
+       && "S".equals(lEvento.getFlagDocumentoRegistrato())
+      )
+    { %>  
+  <script language="JavaScript" type="text/javascript">
+      var frmvalidator = new Validator("formName");
+      frmvalidator.setAddnlValidationFunction("Verify"); 
+  </script>
+  <%-- MEV_2025-48 - 2.15 Gestione Annotazioni Trasmission --%>  
+<% } } %>   
 </html>

@@ -65,7 +65,6 @@ public class ScadenzarioSiusController extends SiapController implements IScaden
 
 	/**
 	 * Ricerca i Tipi Scadenzari Sius per l'ufficio Collegato.
-	 * <p>
 	 *
 	 * @param aTipoUfficio
 	 * @return Vettore di Tipi Scadenzari SIUS
@@ -258,7 +257,6 @@ public class ScadenzarioSiusController extends SiapController implements IScaden
 	/**
 	 * Ricerca record di scadenzario di un determinato tipo, con scadenza all'interno di un intervallo di
 	 * date.
-	 *
 	 */
 	public Vector ExRicercaScadenzarioSius(String aTipoScadenzario, Date aData1, Date aData2
 	// Ticket#202305250112 - aggiunto filtro per codice ufficio
