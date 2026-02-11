@@ -1,7 +1,5 @@
-BRANCH SIES VERSIONE MEV_2025-48
+BRANCH SIES VERSIONE 12.9.0.0
 
-Nasce dal branch 12.8.3.0 in data 27/10/2025
+Corrisponde al branch MEV_2025-48, creato in data 11/02/2026
 
-Questa Release verrà rilasciata il 22/12/2025
-
-In data 19/12/2025 eseguito merge col branch 12.8.4.0
+Data prevista per la diffusione mercoledì 18 febbraio 2026.
