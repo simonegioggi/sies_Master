@@ -2,11 +2,12 @@
 <%@ page import="f3b.web.IWebConstants" %>
 <%@ page import="siap.sius.esecuzionemisuraalternativa.action.ICostantiEsecuzioneMA" %>
 
+<html>
 <head>
-  <title> [S.I.E.S.] - Ricerca Procedimenti Relativi - </title>
-  <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
-  <script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
-  <script language="JavaScript">
+<title> [S.I.E.S.] - Ricerca Procedimenti Relativi - </title>
+<link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
+<script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
+<script language="JavaScript">
   function VerifySingolo()
   {
     // In caso di ricerca singola, Anno e progressivo sono obbligatori.
@@ -69,18 +70,16 @@
         alert("Anno inizio maggiore Anno fine");
         return false;
       }
-      else if(document.f.<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_ANNO_FINALE%>.value == document.f.<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_ANNO_INIZIALE%>.value)
-      {
-        if(parseInt(document.f.<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_PROGR_FINALE%>.value) < parseInt(document.f.<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_PROGR_INIZIALE%>.value))
-        {
-          alert("Numero iniziale maggiore del numero finale");
-          return false;
-        }
-      }
+      else if (document.f.<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_ANNO_FINALE%>.value == document.f.<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_ANNO_INIZIALE%>.value) {
+        	if (parseInt(document.f.<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_PROGR_FINALE%>.value) < parseInt(document.f.<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_PROGR_INIZIALE%>.value)) {
+				alert("Numero iniziale maggiore del numero finale");
+				return false;
+        	}
+      	}
     }
-  return true;
-  }
-  </script>
+	return true;
+}
+</script>
 </head>
 
 <body class="corpo">
@@ -109,7 +108,6 @@
       <td>
         <input class="bottone" type="submit" name="RICERCA" value="Ricerca">
       </td>
-    </tr>
     </tr>
   </table>
 </form>
@@ -149,37 +147,36 @@
   </table>
 </form>
 <script language="JavaScript" type="text/javascript">
-  var frmvalidator  = new Validator("f");
+var frmvalidator  = new Validator("f");
 
-  frmvalidator.addValidation("<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_PROGR_INIZIALE%>","maxlen=6","La lunghezza massima per il Numero Procedimento è di 6 caratteri");
-  frmvalidator.addValidation("<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_PROGR_INIZIALE%>","numeric");
+frmvalidator.addValidation("<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_PROGR_INIZIALE%>","maxlen=6","La lunghezza massima per il Numero Procedimento è di 6 caratteri");
+frmvalidator.addValidation("<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_PROGR_INIZIALE%>","numeric");
 
-  frmvalidator.addValidation("<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_ANNO_INIZIALE%>","maxlen=4","La lunghezza massima per l'Anno Procedimento è di 4 caratteri");
-  frmvalidator.addValidation("<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_ANNO_INIZIALE%>","minlen=4","La lunghezza minima per l'Anno Procedimento è di 4 caratteri");
-  frmvalidator.addValidation("<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_ANNO_INIZIALE%>","numeric");
+frmvalidator.addValidation("<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_ANNO_INIZIALE%>","maxlen=4","La lunghezza massima per l'Anno Procedimento è di 4 caratteri");
+frmvalidator.addValidation("<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_ANNO_INIZIALE%>","minlen=4","La lunghezza minima per l'Anno Procedimento è di 4 caratteri");
+frmvalidator.addValidation("<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_ANNO_INIZIALE%>","numeric");
 
-  frmvalidator.addValidation("<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_PROGR_FINALE%>","maxlen=6","La lunghezza massima per il Numero Procedimento è di 6 caratteri");
-  frmvalidator.addValidation("<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_PROGR_FINALE%>","numeric");
+frmvalidator.addValidation("<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_PROGR_FINALE%>","maxlen=6","La lunghezza massima per il Numero Procedimento è di 6 caratteri");
+frmvalidator.addValidation("<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_PROGR_FINALE%>","numeric");
 
-  frmvalidator.addValidation("<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_ANNO_FINALE%>","maxlen=4","La lunghezza massima per l'Anno Procedimento è di 4 caratteri");
-  frmvalidator.addValidation("<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_ANNO_FINALE%>","minlen=4","La lunghezza minima per l'Anno Procedimento è di 4 caratteri");
-  frmvalidator.addValidation("<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_ANNO_FINALE%>","numeric");
+frmvalidator.addValidation("<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_ANNO_FINALE%>","maxlen=4","La lunghezza massima per l'Anno Procedimento è di 4 caratteri");
+frmvalidator.addValidation("<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_ANNO_FINALE%>","minlen=4","La lunghezza minima per l'Anno Procedimento è di 4 caratteri");
+frmvalidator.addValidation("<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_ANNO_FINALE%>","numeric");
 
-  frmvalidator.setAddnlValidationFunction("VerifyF");
+frmvalidator.setAddnlValidationFunction("VerifyF");
 </script>
 
 <script language="JavaScript" type="text/javascript">
-  var frmvalidator  = new Validator("Singolo");
+var frmvalidator  = new Validator("Singolo");
 
-  frmvalidator.addValidation("<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_PROGR%>","maxlen=6","La lunghezza massima per il Numero Procedimento è di 6 caratteri");
-  frmvalidator.addValidation("<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_PROGR%>","numeric");
+frmvalidator.addValidation("<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_PROGR%>","maxlen=6","La lunghezza massima per il Numero Procedimento è di 6 caratteri");
+frmvalidator.addValidation("<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_PROGR%>","numeric");
 
-  frmvalidator.addValidation("<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_ANNO%>","maxlen=4","La lunghezza massima per l'Anno Procedimento è di 4 caratteri");
-  frmvalidator.addValidation("<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_ANNO%>","minlen=4","La lunghezza minima per l'Anno Procedimento è di 4 caratteri");
-  frmvalidator.addValidation("<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_ANNO%>","numeric");
+frmvalidator.addValidation("<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_ANNO%>","maxlen=4","La lunghezza massima per l'Anno Procedimento è di 4 caratteri");
+frmvalidator.addValidation("<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_ANNO%>","minlen=4","La lunghezza minima per l'Anno Procedimento è di 4 caratteri");
+frmvalidator.addValidation("<%=ICostantiEsecuzioneMA.CAMPO_CHIAVE_ANNO%>","numeric");
 
-  frmvalidator.setAddnlValidationFunction("VerifySingolo");
-
+frmvalidator.setAddnlValidationFunction("VerifySingolo");
 </script>
 </body>
 </html>

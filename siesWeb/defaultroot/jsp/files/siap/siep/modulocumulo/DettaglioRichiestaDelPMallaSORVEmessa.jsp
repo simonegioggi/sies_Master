@@ -80,25 +80,28 @@ if(RichiestaInviata.getListaRichiestePMinCumulo()!=null && RichiestaInviata.getL
           <img align="middle" src="<%=IWebConstants.IMAGES_DIR%>arrowleft24.gif" alt="ritorna su" width="24" height="24" border="0">
         </a>
       </td>
-      
-<%	if( RichiestaInviata.getFlagDocValidato() != null )
-	{
-	  if(RichiestaInviata.getFlagDocValidato().compareTo("N")== 0 )	
-	  {  %>
-      			<!-- BOTTONE DI STAMPA -->
-		  <jsp:include page="<%= ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>">
-		    <jsp:param name="ActionLink" value="<%= "/jsp/Main.jsp?Action=siap.siep.modulocumulo.action.ActStampaRichiestaDelPM&IdRichiestaInviataCum="+RichiestaInviata.getIdRichiesteInviateCum().toString()+"&IdIstruttoriaCumulo="+IstruttoriaCumulo.getIdIstruttoriaCumulo() %>"/>
-		  </jsp:include>
-<%	  }
-	}
-	else
-	{	%>
-      			<!-- BOTTONE DI STAMPA -->
-		  <jsp:include page="<%= ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>">
-		    <jsp:param name="ActionLink" value="<%= "/jsp/Main.jsp?Action=siap.siep.modulocumulo.action.ActStampaRichiestaDelPM&IdRichiestaInviataCum="+RichiestaInviata.getIdRichiesteInviateCum().toString()+"&IdIstruttoriaCumulo="+IstruttoriaCumulo.getIdIstruttoriaCumulo() %>"/>
-		  </jsp:include>
-
-<%	} %>      
+   
+   
+<% 
+// MEV_2025-48 - ALTRO - Si aggiunge il tasto di validazione diretta
+String strUpload="/jsp/Main.jsp?Action=siap.siep.modulocumulo.action.ActUploadRichiestaDelPM";
+strUpload+="&"+ICostantiRichiestePmInCumulo.CAMPO_ID_RICHIESTA_INVIATA_CUM+"="+RichiestaInviata.getIdRichiesteInviateCum();
+strUpload+="&"+ICostantiIstruttoriaCumulo.CAMPO_ID_ISTRUTTORIA_CUMULO+"="+IstruttoriaCumulo.getIdIstruttoriaCumulo();
+strUpload+="&"+ICostantiRichiestePmInCumulo.CAMPO_AZIONE_DETTAGLIO+"=siap.siep.modulocumulo.action.ActDettaglioRichiestaDelPMallaSORVEmessa";
+strUpload+="&noblob=S&CampoValida=1";
+if (RichiestaInviata.getFlagDocValidato() == null || "N".equals(RichiestaInviata.getFlagDocValidato()) ) 
+{
+%>
+  <!-- BOTTONE DI STAMPA -->
+  <jsp:include page="<%= ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>">
+    <jsp:param name="ActionLink" value="<%= "/jsp/Main.jsp?Action=siap.siep.modulocumulo.action.ActStampaRichiestaDelPM&IdRichiestaInviataCum="+RichiestaInviata.getIdRichiesteInviateCum().toString()+"&IdIstruttoriaCumulo="+IstruttoriaCumulo.getIdIstruttoriaCumulo() %>"/>
+  </jsp:include>
+  <td class="LBG">
+    <a  href="<%=strUpload%>">
+      <img align="middle" src="/images/upload24.gif" alt="Valida Provvedimento" width="24" height="24" border="0">
+    </a>
+  </td>
+<% } %>        
     </tr>
   </table>
 

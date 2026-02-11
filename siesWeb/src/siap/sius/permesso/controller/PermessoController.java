@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -14,6 +15,7 @@ import org.apache.log4j.Logger;
 import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.util.F3BException;
+import f3b.util.Utils;
 import siap.controller.SiapController;
 import siap.sico.libertaanticipata.model.LicenzaLibAnticipataModel;
 import siap.sico.soggetto.dao.SoggettoSqlDAO;
@@ -26,6 +28,7 @@ import siap.sius.permesso.model.CriteriRicercaProvPermessiLicenzeModel;
 import siap.sius.permesso.model.DepositoDecretoMotivazioniLicenzaModel;
 import siap.sius.permesso.model.LicenzaModel;
 import siap.sius.permesso.model.PermessoModel;
+import siap.sius.permesso.model.ProvvedimentoPermessoLicenzaModel;
 import siap.sius.permesso.model.TotaliPermessiLicenzeModel;
 import siap.sius.stampa.controller.IStampaSius;
 import siap.sius.tenore.dao.TenoreSqlDAO;
@@ -53,7 +56,8 @@ public class PermessoController extends SiapController implements IPermesso {
 	 * @param lCodPermesso
 	 * @param dataDalInCanc
 	 * @param dataAlInCanc
-	 * @param aPageNum: numero pagina > 0
+	 * @param aPageNum:
+	 *            numero pagina > 0
 	 * @return Vettore di FascicoloSiusModel
 	 * @throws F3BException
 	 */
@@ -654,16 +658,18 @@ public class PermessoController extends SiapController implements IPermesso {
 	}
 
 	/**
-	 * Metodo che ritorna elenco dei provvedimenti con Permessi o Licenze, concessi.
+	 * Metodo che ritorna elenco dei provvedimenti con Permessi o Licenze, concessi
 	 *
 	 * @param aCriteriRicerca
 	 *            Criteri di Ricerca.
-	 * @return Collection insieme delle occorrense.
+	 * @param aPage
+	 *            MEV_2025-48: paginata la ricerca
+	 * @return Collection insieme delle occorrenze
 	 * @throws F3BException
-	 *             propaga errore di eccezione.
+	 *             propaga errore di eccezione
 	 */
 	public Collection ExRicercaProvvedimentiPermessiLicenze(
-			CriteriRicercaProvPermessiLicenzeModel aCriteriRicerca) throws F3BException {
+			CriteriRicercaProvPermessiLicenzeModel aCriteriRicerca, int aPage) throws F3BException {
 
 		Connection lConn = null;
 		PermessoSqlDAO lPermSqlDao = null;
@@ -672,9 +678,10 @@ public class PermessoController extends SiapController implements IPermesso {
 		try {
 			lConn = getDBConnection();
 			lPermSqlDao = new PermessoSqlDAO(lConn);
+			// MEV_2025-48: paginata la ricerca
 			lPermSqlDao.ricercaProvvedimentiPermessiLicenze(aCriteriRicerca.getDataDepositoIniziale(),
 					aCriteriRicerca.getDataDepositoFinale(), aCriteriRicerca.getCodMotivo(),
-					aCriteriRicerca.getCodUfficio());
+					aCriteriRicerca.getCodUfficio(), aPage);
 
 			lPermSqlDao.start();
 
@@ -721,10 +728,10 @@ public class PermessoController extends SiapController implements IPermesso {
 		try {
 			lConn = getDBConnection();
 			lPermSqlDao = new PermessoSqlDAO(lConn);
-
+			// MEV_2025-48: paginata la ricerca
 			lPermSqlDao.ricercaProvvedimentiPermessiLicenze(aCriteriRicerca.getDataDepositoIniziale(),
 					aCriteriRicerca.getDataDepositoFinale(), aCriteriRicerca.getCodMotivo(),
-					aCriteriRicerca.getCodUfficio());
+					aCriteriRicerca.getCodUfficio(), 0);
 			lNum = lPermSqlDao.getNumRowsSelected().intValue();
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -763,26 +770,58 @@ public class PermessoController extends SiapController implements IPermesso {
 
 		// MEV_2023-35: aggiungo due contatori
 		int lNum = 0, li = 0, lp = 0;
+		// MEV_2025-48: aggiungo 4 contatori
+		int pp51 = 0, pp41bis = 0, pn51 = 0, pn41bis = 0;
 
 		try {
 			lConn = getDBConnection();
 			lTotali = new TotaliPermessiLicenzeModel();
 			lPermSqlDao = new PermessoSqlDAO(lConn);
 			StringTokenizer lStrToken = new StringTokenizer(aCriteriRicerca.getCodMotivo(), ",");
-
 			while (lStrToken.hasMoreTokens()) {
 				String lCodMotivo = lStrToken.nextToken();
 				lNum = lPermSqlDao.getNumProvvedimentiPermessiLicenze(
 						aCriteriRicerca.getDataDepositoIniziale(), aCriteriRicerca.getDataDepositoFinale(),
 						lCodMotivo, aCriteriRicerca.getCodUfficio());
+				// MEV_2025-48: aggiunta ricerca per 2020 (Permesso Premio) e 2021 (Permesso Necessità)
+				if ("2020,2021".contains(lCodMotivo)) {
+					aCriteriRicerca.setCodMotivo(lCodMotivo);
+					Collection elenco = ExRicercaProvvedimentiPermessiLicenze(aCriteriRicerca, 0);
+					Iterator<?> itx = elenco.iterator();
+					String codMotivoDet = "";
+					while (itx.hasNext()) {
+						ProvvedimentoPermessoLicenzaModel pplm = (ProvvedimentoPermessoLicenzaModel) itx
+								.next();
+						if (!Utils.isNullObj(pplm.getLicenza())) {
+							codMotivoDet = pplm.getLicenza().getCodMotivoDetenzione();
+							if (lCodMotivo.equals("2020")) {
+								if ("01".equals(codMotivoDet))
+									pp51 += 1;
+								else if ("02".equals(codMotivoDet))
+									pp41bis += 1;
+							} else if (lCodMotivo.equals("2021")) {
+								if ("01".equals(codMotivoDet))
+									pn51 += 1;
+								else if ("02".equals(codMotivoDet))
+									pn41bis += 1;
+							}
+						}
+					}
+				}
 				// 20110524 - PM : Aggiunta di :
 				// 2680 - Permesso Internati
 				// 2450,2451,2452,2460,2461 - Licenza Internati.
-				if (lCodMotivo.equals("2020")) // Permesso Premio
+				if (lCodMotivo.equals("2020")) { // Permesso Premio
+					// MEV_2025-48: aggiunte 2 impostazioni per il motivo detenzione
+					lTotali.setNumPP41bis(pp41bis);
+					lTotali.setNumPP51(pp51);
 					lTotali.setNumPP(lNum);
-				else if (lCodMotivo.equals("2021")) // Permesso Necessità
+				} else if (lCodMotivo.equals("2021")) { // Permesso Necessità
+					// MEV_2025-48: aggiunte 2 impostazioni per il motivo detenzione
+					lTotali.setNumPN41bis(pn41bis);
+					lTotali.setNumPN51(pn51);
 					lTotali.setNumPN(lNum);
-				else if (lCodMotivo.equals("2680")) // Permesso Internati
+				} else if (lCodMotivo.equals("2680")) // Permesso Internati
 					lTotali.setNumPI(lNum);
 				else if (lCodMotivo.equals("2025")) // Licenza
 					lTotali.setNumLC(lNum);

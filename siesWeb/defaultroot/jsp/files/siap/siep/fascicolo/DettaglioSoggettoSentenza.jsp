@@ -1,39 +1,38 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page import="java.util.Iterator"%>
+<%@ page import="siap.siep.reato.model.ReatoModel"%>
+<%@ page import="siap.siep.reato.model.ReatoCircostanzaModel"%>
+<%@ page import="java.util.Date"%>
+<%@ page import="siap.siep.fascicolo.model.DettaglioFascicoloModel"%>
+<%@ page import="siap.siep.fascicolo.controller.IFascicoloSiep"%>
 <%@ page import="java.util.Collection"%>
 <%@ page import="java.util.Vector"%>
 
 <%@ page import="f3b.util.DateUtils"%>
-<%@ page import="f3b.util.StringUtils" %>
+<%@ page import="f3b.util.StringUtils"%>
 <%@ page import="f3b.web.IWebConstants"%>
-
 <%@ page import="f3b.log.LogF3B"%>
-<%@ page import="siap.siep.SIEPException"%>
 
+<%@ page import="siap.siep.SIEPException"%>
 <%@ page import="siap.sico.decodifiche.controller.DecodificheManager"%>
 <%@ page import="siap.sico.decodifiche.util.DecodificheUtils"%>
-
-<%@ page import="siap.sico.soggetto.action.ICostantiSoggetto" %>
-<%@ page import="siap.sico.soggetto.model.SoggettoModel" %>
-
-<%@ page import="siap.siep.fascicolo.action.ICostantiFascicoloSiep" %>
-<%@ page import="siap.siep.sentenza.action.ICostantiSentenza" %>
-<%@ page import="siap.siep.sentenza.model.SentenzaModel" %>
-
-<%@ page import="siap.siep.avvocato.model.AvvocatoSiepModel" %>
-<%@ page import="siap.siep.avvocato.model.AvvocatoModel" %>
-<%@ page import="siap.siep.avvocato.model.AvvocatoFascicoloSiepModel" %>
-
-
-<%@ page import="siap.siep.util.SIEPLookupRemote" %>
-<%@ page import="siap.siep.avvocato.controller.IAvvocato" %>
-
-
-<%@page import="org.apache.log4j.Logger"%>
+<%@ page import="siap.sico.soggetto.action.ICostantiSoggetto"%>
+<%@ page import="siap.sico.soggetto.model.SoggettoModel"%>
+<%@ page import="siap.siep.fascicolo.action.ICostantiFascicoloSiep"%>
+<%@ page import="siap.siep.sentenza.action.ICostantiSentenza"%>
+<%@ page import="siap.siep.sentenza.model.SentenzaModel"%>
+<%@ page import="siap.siep.avvocato.model.AvvocatoSiepModel"%>
+<%@ page import="siap.siep.avvocato.model.AvvocatoModel"%>
+<%@ page import="siap.siep.avvocato.model.AvvocatoFascicoloSiepModel"%>
+<%@ page import="siap.siep.util.SIEPLookupRemote"%>
+<%@ page import="siap.siep.avvocato.controller.IAvvocato"%>
+<%@ page import="org.apache.log4j.Logger"%>
 <%-- // [FT] - 05/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog --%>
 <% final Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG); %>
-<jsp:useBean id="UtenteConnesso" scope="session" class="siap.sico.utente.model.UtenteModel" />
-<jsp:useBean id="fascicolo" scope="session" class="siap.siep.fascicolo.model.FascicoloSiepModel" />
-<jsp:useBean id="penaresidua" scope="session" class="siap.siep.penaresidua.model.PenaResiduaModel" />
+
+<jsp:useBean id="UtenteConnesso" scope="session" class="siap.sico.utente.model.UtenteModel"/>
+<jsp:useBean id="fascicolo" scope="session" class="siap.siep.fascicolo.model.FascicoloSiepModel"/>
+<jsp:useBean id="penaresidua" scope="session" class="siap.siep.penaresidua.model.PenaResiduaModel"/>
 
 <%
   SoggettoModel soggetto = fascicolo.getSoggetto();
@@ -124,6 +123,42 @@
     }
   }
 
+// MEV_2025-48: dicitura CARTABIA se almeno uno dei reati collegati al procedimento ha una data inizio > 30/12/2022
+IFascicoloSiep ifs = SIEPLookupRemote.getFascicoloSiepRemote();
+DettaglioFascicoloModel dfm = ifs.ExDettaglioFascicoloSiepNew(fascicolo.getIdFascicoloSiep());
+Collection reatiCircostanzeColl = dfm.getReatiCircostanze();
+Vector reatiCircostanzeVect = new Vector(reatiCircostanzeColl);
+boolean isCartabia = false;
+final Date dataCartabia = DateUtils.getDate("30/12/2022", "dd/MM/yyyy");
+Date dataInizioReato = null;
+Iterator itx = reatiCircostanzeVect.iterator();
+while (itx.hasNext()) {
+	ReatoModel rm = null;
+	Object obj = itx.next();
+	if (obj instanceof ReatoModel) {
+		rm = (ReatoModel) obj;
+	} else if (obj instanceof ReatoCircostanzaModel) {
+		ReatoCircostanzaModel rcm = (ReatoCircostanzaModel) obj;
+		rm = rcm.getReato();
+	}
+	Date dataReato = null;
+	if (rm.getDataInizio() != null) {
+		dataReato = rm.getDataInizio();
+	} else if (rm.getMeseInizio() != null && rm.getAnnoInizio() != null) {
+		dataReato = DateUtils.getDate(rm.getAnnoInizio().intValue(), rm.getMeseInizio().intValue(), 1);
+	} else if (rm.getAnnoInizio() != null) {
+		dataReato = DateUtils.getDate(rm.getAnnoInizio().intValue(), 1, 1);
+	}
+	if (dataReato != null) {
+		if (dataInizioReato == null)
+			dataInizioReato = dataReato;
+		else if (DateUtils.isLower(dataInizioReato, dataReato))
+			dataInizioReato = dataReato;
+		if (DateUtils.isGreater(dataInizioReato, dataCartabia))
+			isCartabia = true;
+	}
+}
+// FINE MEV_2025-48
 %>
 
 <% if (isAvvocatoForoSoppresso || isAvvocatoForoRegInde) {  %>
@@ -172,7 +207,12 @@
             <font class="cRossoCumulo"> &nbsp;Migrato&nbsp; </font> &nbsp;
 <%
           }
-
+// MEV_2025-48: aggiunta sezione
+if (isCartabia) {
+%>
+			<font class="cRossoCumulo"> &nbsp;Cartabia&nbsp; </font>&nbsp;
+<%
+}
           if(   fascicolo.getCodStatoFascicolo() != null
              && (fascicolo.getCodStatoFascicolo().equals("01"))
              )

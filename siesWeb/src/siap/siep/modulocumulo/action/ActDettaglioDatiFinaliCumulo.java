@@ -20,6 +20,11 @@ public class ActDettaglioDatiFinaliCumulo extends ActionModuloCumulo implements 
 
 		// super.getListaTitoli();
 
+		// MEV_2025-48 - 2.12 Alert su continuazione e revoche benefici
+		super.getListaTitContSganciate(null);
+		super.getListaTitConRevBenSganciati(null);
+		// MEV_2025-48 - 2.12 Alert su continuazione e revoche benefici
+		
 		// ==========================================================================
 		// Recupero i dati. Se assenti, provengo dalla navigazione, carico la form
 		// di inserimento.

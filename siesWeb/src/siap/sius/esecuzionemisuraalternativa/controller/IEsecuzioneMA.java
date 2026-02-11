@@ -2,25 +2,17 @@ package siap.sius.esecuzionemisuraalternativa.controller;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.util.Collection;
 import java.util.Vector;
 
-import siap.sius.esecuzionemisuraalternativa.model.EsecuzioneMisuraAlternativaModel;
 import f3b.util.F3BException;
+import siap.sius.esecuzionemisuraalternativa.model.EMAFascGPModel;
+import siap.sius.esecuzionemisuraalternativa.model.EsecuzioneMisuraAlternativaModel;
+import siap.sius.statistiche.model.RicercaProcedimentoModel;
 
 /**
- * <p>
- * Title: EsecuzioneMAController
- * </p>
- * <p>
- * Description: Classe Controller per EsecuzioneMisuraAlternativa
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ * EsecuzioneMAController - Classe Controller per Esecuzione Misura Alternativa
+ *
  * @version 1.0
  */
 @SuppressWarnings("rawtypes")
@@ -56,10 +48,6 @@ public interface IEsecuzioneMA {
 	public Vector ExRicercaDettaglioEsecuzioneMA(BigDecimal aKey, BigDecimal aIdSoggetto,
 			String lUfficioUtenteConnesso, Connection aConn) throws F3BException;
 
-	/*
-	 * public Vector ExRicercaDettaglioEsecuzioneMAbyFascicolo (BigDecimal aKey, BigDecimal aIdSoggetto,
-	 * String lUfficioUtenteConnesso ) throws F3BException;
-	 */
 	public EsecuzioneMisuraAlternativaModel ExRicercaEsecuzioneMisuraAlternativaByAnnoProg(BigDecimal aAnno,
 			BigDecimal aProg) throws F3BException;
 
@@ -72,5 +60,11 @@ public interface IEsecuzioneMA {
 
 	public Vector[] ExRicercaDettaglioEMAeCorrelati(BigDecimal aKey, BigDecimal aIdSoggetto,
 			String lUfficioUtenteConnesso) throws F3BException;
+
+	// MEV_2025-48: aggiunti metodi di ricerca per Scadenzario monitoraggio misure alternative espiate
+	public Collection<EMAFascGPModel> ExRicercaDataScadenzaProcEsecMAPaginata(RicercaProcedimentoModel rpm,
+			int parseInt) throws F3BException;
+
+	public BigDecimal ExGetNumRicercaDataScadenzaProcEsecMA(RicercaProcedimentoModel rpm) throws F3BException;
 
 }

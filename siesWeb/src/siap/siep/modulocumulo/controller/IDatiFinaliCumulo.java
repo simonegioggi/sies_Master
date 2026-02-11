@@ -15,6 +15,7 @@ import java.sql.Connection;
 import java.util.Vector;
 
 import f3b.util.F3BException;
+import f3b.util.xml.TreeModel;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.ufficio.model.UfficioModel;
@@ -87,4 +88,6 @@ public interface IDatiFinaliCumulo{
   public void ExUpdateFlagAltraCausaFascicolo(FascicoloSiepModel aFascicolo,
 			String flagAltraCausa)  throws F3BException ;
 //***** FINE INTERVENTO 20191128013 *****//
+  // MEV_2025-48
+  public TreeModel getTreeModelCalcoloPenaCumulo(BigDecimal aIdIstruttCumulo) throws F3BException;
 }

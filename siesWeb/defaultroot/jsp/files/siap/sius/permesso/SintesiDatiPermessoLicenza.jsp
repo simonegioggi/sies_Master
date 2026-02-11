@@ -104,8 +104,15 @@ if (lLic.getFlagScorta().toUpperCase().compareTo("N") == 0) {
 }
 %>
     </tr>
+   	<%-- MEV_2025-48: aggiunta riga x Motivo Detenzione --%>
     <tr>
-      	<td class="l">Motivazione provvedimento</td>
+      	<td class="l">Motivo Detenzione</td>
+      	<td class="l">
+      		<font class="campo"><%=StringUtils.toStringJSP(lLic.getDescrMotivoDetenzione(), "-")%></font>
+      	</td>
+	</tr>
+    <tr>
+      	<td class="l">Motivazione Provvedimento</td>
       	<td class="l">
       		<font class="campo"><%=StringUtils.toStringJSP(lDep.getNote(), "-")%></font>
       	</td>

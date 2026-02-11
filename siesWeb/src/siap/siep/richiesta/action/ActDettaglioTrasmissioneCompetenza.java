@@ -1,10 +1,10 @@
 package siap.siep.richiesta.action;
 
-//import per le combo
-//import f3b.web.html.Option;
-//import siap.sico.decodifiche.controller.DecodificheManager;
 import java.math.BigDecimal;
+import java.util.Vector;
 
+import siap.jms.ICostantiJMS;
+import siap.jms.messaggio.model.MessaggioModel;
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoNotificaModel;
@@ -15,6 +15,7 @@ import siap.siep.competenza.controller.ICompetenza;
 import siap.siep.competenza.model.CompetenzaModel;
 import siap.siep.fascicolo.controller.IFascicoloSiep;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
+import siap.siep.modulocumulo.controller.IModuloCumulo;
 import siap.siep.penaresidua.model.PenaResiduaModel;
 import siap.siep.posizione.model.PosizioneGiuridicaLuogoDetenzioneAltraCausaModel;
 import siap.siep.util.SIEPLookupRemote;
@@ -83,6 +84,47 @@ public class ActDettaglioTrasmissioneCompetenza extends ActSIESDettaglioProvvedi
 		findedFasc = lCtrlFas.ExRicercaFascicoloSiepByProgrAnnoCodUfficio(mFascComp);
 		setRequestAttribute("fascCompetenza", findedFasc);
 	}
+	
+	// MEV_2025-48 - 2.15 Gestione Annotazioni Trasmissioni
+	// Ricerco eventuali esiti non presi annotati
+	// solo se evento validato
+	if ("S".equals(lEveMod.getEvento().getFlagDocumentoRegistrato()))
+	{
+        Vector<String> lListaTipoMessaggio = new Vector<>();
+        lListaTipoMessaggio.add(ICostantiJMS.ESITO);
+        lListaTipoMessaggio.add(ICostantiJMS.RICHIESTA);
+        
+    	Vector<String> lListaTipoOperazione = new Vector<>();
+        lListaTipoOperazione.add(ICostantiJMS.ESITO_TRASFERIMENTO_COMPETENZA);
+        lListaTipoOperazione.add(ICostantiJMS.COMUNICAZIONE_CUMULO_PROCURE_COMPETENTI);
+        lListaTipoOperazione.add(ICostantiJMS.ESITO_SEGUITO_ATTI);
+        
+
+        
+        IModuloCumulo lCtrl = SIEPLookupRemote.getModuloCumuloRemote();
+        Vector<MessaggioModel> lVect = lCtrl.ExRicercaMessaggi(
+                  null // ICostantiJMS.DELIVERY_MODE_INVIATO
+                , lListaTipoMessaggio, lListaTipoOperazione
+                , null // lCodEsito
+                , null // "N" // Flag_visto Sul dettaglio evento li voglio tutti
+                , lFascMod.getChiaveAnno() 
+                , lFascMod.getChiaveProgr() 
+                , lFascMod.getChiaveUfficio() 
+                , null // aCodUfficioMitt
+                , getCodUfficioUtenteConnesso() // ufficio dest
+                , null // lDataTrasmissioneDal
+                , null // lDataTrasmissioneAl
+                , null // lCognome
+                , null // lNome
+                // Solo quelli relativi al fascicolo Cumulante dell'evento se presente
+                , mComp.getChiaveAnno()    // aChiaveAnnoFasCumulante
+                , mComp.getChiaveProgr()   // aChiaveProgrFasCumulante
+                , mComp.getChiaveUfficio() // aChiaveUfficioFasCumulante
+                , 0); // Pagina	
+    	
+        setRequestAttribute("MessaggiEsiti", lVect);
+	}
+    // MEV_2025-48 - 2.15 Gestione Annotazioni Trasmissioni - FINE
 	
     return PG_DETTAGLIO_TRASMISSIONE_COMP;
   }

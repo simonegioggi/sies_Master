@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -24,8 +25,10 @@ import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.libertaanticipata.controller.ILicenzaPeriodiLibAnticipata;
 import siap.sico.libertaanticipata.dao.LicenzaLibanticipataSqlDAO;
 import siap.sico.magistratocompetente.controller.IMagistratoCompetente;
+import siap.sico.magistratocompetente.dao.MagistratoCompetenteDAO;
 import siap.sico.magistratocompetente.dao.MagistratoCompetenteMagistratoSqlDAO;
 import siap.sico.magistratocompetente.model.MagistratoCompetenteMagistratoModel;
+import siap.sico.magistratocompetente.model.MagistratoCompetenteModel;
 import siap.sico.misuraalternativa.controller.IMisuraAlternativa;
 import siap.sico.misuraalternativa.dao.MisuraAlternativaSqlDAO;
 import siap.sico.misuraalternativa.model.MisuraAlternativaModel;
@@ -50,16 +53,19 @@ import siap.siep.alias.dao.AliasSqlDAO;
 import siap.siep.alias.model.AliasModel;
 import siap.siep.altrigradigiudizio.dao.AltriGradiGiudizioSqlDAO;
 import siap.siep.annotazionemanuale.controller.IAnnotazioneManuale;
+import siap.siep.annotazionemanuale.dao.AnnotazioneManualeDAO;
 import siap.siep.avvocato.dao.AvvocatoFascicoloSiepSqlDAO;
 import siap.siep.avvocato.dao.AvvocatoSqlDAO;
 import siap.siep.avvocato.model.AvvocatoFascicoloSiepModel;
 import siap.siep.avvocato.model.AvvocatoModel;
 import siap.siep.avvocato.model.AvvocatoSiepModel;
+import siap.siep.beneficio.dao.BeneficioDAO;
 import siap.siep.beneficio.dao.BeneficioSqlDAO;
 import siap.siep.beneficio.model.BeneficioModel;
 import siap.siep.calcolopena.controller.CalcoloPenaControllerF5;
 import siap.siep.calcolopena.model.CalcoloPenaModel;
 import siap.siep.circostanza.controller.ICircostanza;
+import siap.siep.circostanza.dao.CircostanzaDAO;
 import siap.siep.circostanza.dao.CircostanzaSqlDAO;
 import siap.siep.circostanza.model.CircostanzaModel;
 import siap.siep.competenza.controller.ICompetenza;
@@ -79,10 +85,14 @@ import siap.siep.fascicolo.model.FascicoloSiepAggregatoModel;
 import siap.siep.fascicolo.model.FascicoloSiepCertBlobModel;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.fungibilita.controller.IFungibilita;
+import siap.siep.misuracautelare.dao.MisuraCautelareDAO;
 import siap.siep.misuracautelare.dao.MisuraCautelareSqlDAO;
+import siap.siep.misuracautelare.model.MisuraCautelareModel;
 import siap.siep.misurasicurezza.controller.IMisuraSicurezza;
+import siap.siep.misurasicurezza.dao.MisuraSicurezzaDAO;
 import siap.siep.misurasicurezza.dao.MisuraSicurezzaSqlDAO;
 import siap.siep.misurasicurezza.model.FascMsToFascSiepModel;
+import siap.siep.misurasicurezza.model.MisuraSicurezzaModel;
 import siap.siep.modulocumulo.dao.PenaRideterminataCumuloSqlDAO;
 import siap.siep.modulocumulo.model.PenaRideterminataCumuloModel;
 import siap.siep.notefascicolo.dao.NoteFascicoloSqlDAO;
@@ -90,8 +100,12 @@ import siap.siep.notefascicolo.model.NoteFascicoloModel;
 import siap.siep.nuovaistanza.controller.INuovaIstanza;
 import siap.siep.nuovaistanza.dao.NuovaIstanzaSqlDAO;
 import siap.siep.nuovaistanza.model.NuovaIstanzaModel;
+import siap.siep.penaaccessoria.dao.PenaAccessoriaDAO;
 import siap.siep.penaaccessoria.dao.PenaAccessoriaSqlDAO;
+import siap.siep.penaaccessoria.model.PenaAccessoriaModel;
 import siap.siep.penacomplessiva.controller.IPenaComplessiva;
+import siap.siep.penacomplessiva.dao.PenaComplessivaDAO;
+import siap.siep.penacomplessiva.model.PenaComplessivaModel;
 import siap.siep.penacomplessiva.model.PenaComplessivaSanzioneSostitutivaModel;
 import siap.siep.penacumulo.controller.IPenaCumulo;
 import siap.siep.penacumulo.model.PenaCumuloModel;
@@ -105,15 +119,24 @@ import siap.siep.penaresidua.controller.IPenaResidua;
 import siap.siep.penaresidua.dao.PenaResiduaDAO;
 import siap.siep.penaresidua.model.PenaResiduaModel;
 import siap.siep.posizione.controller.IPosizioneGiuridica;
+import siap.siep.posizione.dao.PosizioneGiuridicaDAO;
 import siap.siep.posizione.dao.PosizioneGiuridicaSqlDAO;
 import siap.siep.posizione.model.PosizioneGiuridicaLuogoDetenzioneAltraCausaModel;
 import siap.siep.posizione.model.PosizioneGiuridicaModel;
 import siap.siep.posizionematerialefasc.dao.PosizioneMaterialeFascSqlDAO;
 import siap.siep.posizionematerialefasc.model.PosizioneMaterialeFascModel;
+import siap.siep.rateizzazionepp.dao.RateizzazionePPDAO;
+import siap.siep.rateizzazionepp.dao.RateizzazionePPSqlDAO;
+import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 import siap.siep.reato.controller.IReato;
+import siap.siep.reato.dao.ReatoDAO;
 import siap.siep.reato.dao.ReatoSqlDAO;
+import siap.siep.reato.model.ReatoCircostanzaModel;
 import siap.siep.reato.model.ReatoModel;
 import siap.siep.sanzionesostitutiva.controller.ISanzioneSostitutiva;
+import siap.siep.sanzionesostitutiva.dao.SanzioneSostitutivaDAO;
+import siap.siep.sanzionesostitutiva.dao.SanzioneSostitutivaSqlDAO;
+import siap.siep.sanzionesostitutiva.model.SanzioneSostitutivaModel;
 import siap.siep.scambiosanzione.dao.ScambioSanzioneSqlDAO;
 import siap.siep.scambiosanzione.model.ScambioSanzioneModel;
 import siap.siep.sentenza.dao.SentenzaSqlDAO;
@@ -128,17 +151,7 @@ import siap.siep.ulterioresanzionecumulo.controller.IUlterioreSanzioneCumulo;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * <p>
- * Title: FascicoloSiepModel
- * </p>
- * <p>
- * Description: Realizza il controller del Fascicolo Siep
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * FascicoloSiepModel - Realizza il controller del Fascicolo Siep
  *
  * @version 1.0
  */
@@ -2030,6 +2043,10 @@ public class FascicoloSiepController extends SiapController implements IFascicol
 
 				lDettaglio.setEventi(lEve);
 			} catch (F3BException e) {
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
+				// siesLogger al posto di mLog
+				siesLogger.error("Errore GESTITO in FascicoloSiepController.ExDettaglioFascicoloSiep : "
+						+ e.getMessage());
 			}
 
 			// Misure Cautelari (n)
@@ -3325,14 +3342,49 @@ public class FascicoloSiepController extends SiapController implements IFascicol
 	 * Ricerca l'elenco dei fascicoli correntemente assegnati a un magistrato su un particolare ufficio in
 	 * base allo stato del fascicolo
 	 *
+	 * MEV_2025-48: aggiunta nuova funzionalita': paginata la ricerca
+	 *
 	 * @param aCodMagistrato
 	 *            - Codice CSM del magistrato
 	 * @param aCodUfficio
 	 *            - Codice ufficio di appartenenza del Procedimento
 	 * @param aStato
 	 *            - Array di COD_STATO_FASCICOLO
-	 * @return
+	 * @param aPage
+	 *            - Paginazione
+	 *
+	 * @return Vector
 	 */
+	public Vector ExRicercaFascicoliByMagistratoAssegnatarioPaged(String aCodMagistrato, String aCodUfficio,
+			String[] aStato, int aPage) throws F3BException {
+
+		Connection lConn = null;
+		Vector lFascicoli = new Vector();
+
+		FascicoloSiepSqlDAO lFasSqlDao = null;
+
+		try {
+			lConn = getDBConnection();
+
+			lFasSqlDao = new FascicoloSiepSqlDAO(lConn);
+			lFasSqlDao.ricercaFascicoloSiepByMagistratoAssegnatarioPaged(aCodMagistrato, aCodUfficio, aStato,
+					aPage);
+
+			lFascicoli = new Vector(lFasSqlDao.getModels());
+
+			lFasSqlDao.stop();
+		} catch (DAOException daoEx) {
+			throw new SIEPException(F3BException.USER_MESSAGE,
+					"FascicoloSiepController.ricercaFascicoloSiepByMagistratoAssegnatarioPaged: Non posso leggere : "
+							+ daoEx);
+		} finally {
+			cleanup(lFasSqlDao);
+			cleanup(lConn);
+		}
+
+		return lFascicoli;
+	}
+
 	public Vector ExRicercaFascicoliByMagistratoAssegnatario(String aCodMagistrato, String aCodUfficio,
 			String[] aStato) throws F3BException {
 
@@ -3360,8 +3412,482 @@ public class FascicoloSiepController extends SiapController implements IFascicol
 		}
 
 		return lFascicoli;
-
 	}
+
+	@Override
+	public BigDecimal ExGetCountProcedimenti(String lCodMagistrato, String lCodUfficio, String[] lStato)
+			throws F3BException {
+
+		BigDecimal lCount = new BigDecimal(0);
+		Connection lConn = null;
+
+		FascicoloSiepSqlDAO lFasSqlDao = null;
+		try {
+			lConn = getDBConnection();
+			lFasSqlDao = new FascicoloSiepSqlDAO(lConn);
+			lFasSqlDao.getCountProcedimenti(lCodMagistrato, lCodUfficio, lStato);
+			lFasSqlDao.start();
+			lFasSqlDao.next();
+			lCount = lFasSqlDao.getBigDecimal("HowManyRecords");
+			lFasSqlDao.stop();
+		} catch (DAOException daoEx) {
+			throw new SIEPException(SIEPException.USER_MESSAGE,
+					"FascicoloSiepController.ExGetCountProcedimenti: Non posso leggere gli elementi : "
+							+ daoEx);
+		} finally {
+			cleanup(lFasSqlDao);
+			cleanup(lConn);
+		}
+		return lCount;
+	}
+
+	// Nuova funzionalità di definizione procedimento per passaggio di classe e creazione nuovo fascicolo
+	public FascicoloSiepModel ExInserisciFascicoloSiepPassaggioClasse(SoggettoModel sm,
+			FascicoloSiepModel fsmNew, DettaglioFascicoloModel dfm) throws F3BException {
+
+		Connection c = null;
+
+		SoggettoDAO sdao = null;
+		EventoDAO edao = null;
+		EventoDAO edaoRevo = null;
+		FascicoloSiepDAO fsdao = null;
+		FascicoloSiepSqlDAO fssdao = null;
+		ResidenzaDAO resdao = null;
+		ResidenzaFascicoloSiepDAO rfsdao = null;
+		PosizioneGiuridicaDAO pgdao = null;
+		MagistratoCompetenteDAO magcomdao = null;
+		ReatoDAO readao = null;
+		CircostanzaDAO cdao = null;
+		PenaComplessivaDAO pcdao = null;
+		MisuraCautelareDAO miscaudao = null;
+		AnnotazioneManualeDAO amdao = null;
+		PenaAccessoriaDAO padao = null;
+		BeneficioDAO bdao = null;
+		StatoProcedimentoDAO spdao = null;
+		MisuraSicurezzaDAO msdao = null;
+		SanzioneSostitutivaDAO ssdao = null;
+		SanzioneSostitutivaSqlDAO sssdao = null;
+		RateizzazionePPDAO rppdao = null;
+		RateizzazionePPSqlDAO rppsdao = null;
+
+		Vector<RateizzazionePPModel> listaRate = new Vector<>();
+
+		try {
+			c = getDBTransaction();
+			// duplico il soggetto
+			sdao = new SoggettoDAO(c);
+			sdao.setDAOFromModel(sm);
+			siesLogger.debug("Duplicazione Soggetto...");
+			BigDecimal sequence = sdao.insert();
+			sm.setIdSoggetto(sequence);
+
+			// ========================================================================
+			// preparo il nuovo fascicolo classe prescelta collegandolo al nuovo soggetto
+			// ========================================================================
+			fsmNew.setSogIdSoggetto(sequence);
+
+			fsdao = new FascicoloSiepDAO(c);
+			// Cerco il Progressivo rispettivamente al tipo progressivo impostato
+			fssdao = new FascicoloSiepSqlDAO(c);
+			// consento la scelta della classe tranne quella da cui provengo
+			int nTipo = fsmNew.getTipoProgressivo();
+			fsmNew.setTipoProgressivo(nTipo);
+			fsmNew.setCodStatoFascicolo("02"); // Iscritto
+			fssdao.getProgressivoFascicoloSiep(fsmNew);
+			fssdao.start();
+			int maxProgr = 0;
+
+			if (fssdao.next() && (fssdao.getInt("aMAX") > 0))
+				maxProgr = fssdao.getInt("aMAX");
+			fssdao.stop();
+
+			// Setto la ChiaveProgressivo del Model con il MAX + 1 a seconda del tipo...
+			int tipoProgressivo = fsmNew.getTipoProgressivo();
+			if (maxProgr == 0) {
+				if (tipoProgressivo == 1)
+					fsmNew.setChiaveProgr(new BigDecimal(1));
+				else
+					fsmNew.setChiaveProgr(new BigDecimal(tipoProgressivo * 10000 + 1));
+			} else
+				fsmNew.setChiaveProgr(new BigDecimal(maxProgr + 1));
+
+			// inserisco il nuovo fascicolo di classe selezionata da utente
+			fsdao.setDAOFromModel(fsmNew);
+			siesLogger.debug("Creazione nuovo fascicolo SIEP di classe: " + nTipo);
+			sequence = fsdao.insert();
+			fsmNew.setIdFascicoloSiep(sequence);
+
+			pcdao = new PenaComplessivaDAO(c);
+			ssdao = new SanzioneSostitutivaDAO(c);
+			if (dfm.getPenaComplessivaSanzioneSostitutiva() != null) {
+				// PENA COMPLESSIVA
+				if (dfm.getPenaComplessivaSanzioneSostitutiva().getPenaComplessiva() != null) {
+					PenaComplessivaModel pcm = dfm.getPenaComplessivaSanzioneSostitutiva()
+							.getPenaComplessiva();
+					pcm.setCodOperatoreInserimento(fsmNew.getCodOperatoreInserimento());
+					pcm.setCodUfficioInserimento(fsmNew.getCodUfficioInserimento());
+					pcm.setDataInserimento(DateUtils.getSysDate());
+					pcm.setFasSieIdFascicoloSiep(fsmNew.getIdFascicoloSiep());
+					pcdao.setDAOFromModel(pcm);
+					siesLogger.debug("Duplicazione Pena complessiva...");
+					sequence = pcdao.insert();
+					// SANZIONE SOSTITUTIVA legata alla PENA COMPLESSIVA
+					if (dfm.getPenaComplessivaSanzioneSostitutiva().getSanzioneSostitutiva() != null) {
+						SanzioneSostitutivaModel ssm = dfm.getPenaComplessivaSanzioneSostitutiva()
+								.getSanzioneSostitutiva();
+						ssm.setCodOperatoreInserimento(fsmNew.getCodOperatoreInserimento());
+						ssm.setCodUfficioInserimento(fsmNew.getCodUfficioInserimento());
+						ssm.setDataInserimento(DateUtils.getSysDate());
+						ssm.setPenComIdPenaComplessiva(sequence);
+						ssdao.setDAOFromModel(ssm);
+						siesLogger.debug("Duplicazione Sanzione Sostitutiva...");
+						ssdao.insert();
+					}
+				}
+			}
+
+			// stato_procedimento prendo l'ultimo statoprocedimento della lista (size-1)
+			spdao = new StatoProcedimentoDAO(c);
+			StatoProcedimentoModel spm = (StatoProcedimentoModel) dfm.getStatoProcedimento()
+					.get(dfm.getStatoProcedimento().size() - 1);
+			spm.setFasSieIdFascicoloSiep(fsmNew.getIdFascicoloSiep());
+			spm.setProgressivo(new BigDecimal(1));
+			spm.setCodStatoProcedimento("0108"); // iscritto
+			spm.setData(null);
+			spdao.setDAOFromModel(spm);
+			siesLogger.debug("Creazione Stato Procedimento...");
+			spdao.insert();
+
+			// residenza se sono vuoti
+			if (dfm.getResidenza() != null) {
+				resdao = new ResidenzaDAO(c);
+				ResidenzaModel resm = dfm.getResidenza();
+				resm.setSogIdSoggetto(fsmNew.getSogIdSoggetto());
+				resdao.setDAOFromModel(resm);
+				siesLogger.debug("Duplicazione Residenza...");
+				sequence = resdao.insert();
+				// collego la residenza al nuovo fascicolo
+				rfsdao = new ResidenzaFascicoloSiepDAO(c);
+				ResidenzaFascicoloSiepModel rfsm = new ResidenzaFascicoloSiepModel();
+				rfsm.setFasSieIdFascicoloSiep(fsmNew.getIdFascicoloSiep());
+				rfsm.setResIdResidenza(sequence);
+				rfsdao.setDAOFromModel(rfsm);
+				siesLogger.debug("Creazione legame Residenza-Fascicolo SIEP...");
+				rfsdao.insert();
+			}
+
+			// duplico domicilio collegandolo al nuovo soggetto
+			if (dfm.getDomicilio() != null) {
+				resdao = new ResidenzaDAO(c);
+				ResidenzaModel resm = dfm.getDomicilio();
+				resm.setSogIdSoggetto(fsmNew.getSogIdSoggetto());
+				resdao.setDAOFromModel(resm);
+				siesLogger.debug("Duplicazione Domicilio...");
+				sequence = resdao.insert();
+				// collego il domicilio al nuovo fascicolo
+				rfsdao = new ResidenzaFascicoloSiepDAO(c);
+				ResidenzaFascicoloSiepModel rfsm = new ResidenzaFascicoloSiepModel();
+				rfsm.setFasSieIdFascicoloSiep(fsmNew.getIdFascicoloSiep());
+				rfsm.setResIdResidenza(sequence);
+				rfsdao.setDAOFromModel(rfsm);
+				siesLogger.debug("Creazione legame Domicilio-Fascicolo SIEP...");
+				rfsdao.insert();
+			}
+
+			// creo posizione giuridica a libero
+			pgdao = new PosizioneGiuridicaDAO(c);
+			PosizioneGiuridicaModel pgm = new PosizioneGiuridicaModel();
+			pgm.setCodPosizioneGiuridica("07");
+			pgm.setCodPosizioneProcessuale("-");
+			pgm.setCodOperatoreInserimento(fsmNew.getCodOperatoreInserimento());
+			pgm.setCodUfficioInserimento(fsmNew.getCodUfficioInserimento());
+			pgm.setDataInserimento(DateUtils.getSysDate());
+			pgm.setFasSieIdFascicoloSiep(fsmNew.getIdFascicoloSiep());
+			pgdao.setDAOFromModel(pgm);
+			siesLogger.debug("Creazione Posizone Giuridica...");
+			pgdao.insert();
+
+			// duplico magistrato collegandolo al nuovo fascicolo
+			if (dfm.getMagistratoCompetente() != null) {
+				if (dfm.getMagistratoCompetente().getMagistratoCompetente() != null) {
+					magcomdao = new MagistratoCompetenteDAO(c);
+					MagistratoCompetenteMagistratoModel mcmm = dfm.getMagistratoCompetente();
+					MagistratoCompetenteModel mcm = mcmm.getMagistratoCompetente();
+					mcm = mcmm.getMagistratoCompetente();
+					mcm.setMagCodMagistrato(mcmm.getMagistrato().getCodMagistrato());
+					mcm.setFasSieIdFascicoloSiep(fsmNew.getIdFascicoloSiep());
+					magcomdao.setDAOFromModel(mcm);
+					siesLogger.debug("Duplicazione Magistrato Competente...");
+					magcomdao.insert();
+				}
+			}
+
+			// Insert Reato e le circostanze sempre e solo da tabella REATO
+			if (dfm.getReatiCircostanze() != null) {
+				// prendo la lista dei reati e la metto nel model comune
+				readao = new ReatoDAO(c);
+				List listaReatiCircostanze = dfm.getReatiCircostanze();
+				ReatoModel rm = new ReatoModel();
+				// ciclo su questa lista
+				for (int i = 0; i <= listaReatiCircostanze.size() - 1; i++) {
+					// prendo il reato per scriverlo
+					rm = ((ReatoCircostanzaModel) listaReatiCircostanze.get(i)).getReato();
+					// scrivo reato
+					rm.setFasSieIdFascicoloSiep(fsmNew.getIdFascicoloSiep());
+					readao.setDAOFromModel(rm);
+					siesLogger.debug("Duplicazione Reato N° " + (i + 1));
+					readao.insert();
+					// prendo la lista delle circostanze affogate nella tabella reati
+					ReatoModel[] arrayCircostanze = ((ReatoCircostanzaModel) listaReatiCircostanze.get(i))
+							.getCircostanze();
+					// Ciclo sulle n° circostanze afffogate nella tabella REATI
+					for (int j = 0; j <= arrayCircostanze.length - 1; j++) {
+						// prendo la circostanza per scriverla
+						rm = arrayCircostanze[j];
+						// scrivo la circostanza
+						rm.setFasSieIdFascicoloSiep(fsmNew.getIdFascicoloSiep());
+						readao.setDAOFromModel(rm);
+						siesLogger.debug("Duplicazione Circostanza legata al Reato N° " + (j + 1));
+						readao.insert();
+					}
+				}
+			}
+
+			// circostanze
+			if (dfm.getCircostanze() != null) {
+				CircostanzaModel cm = new CircostanzaModel();
+				List lLisCir = dfm.getCircostanze();
+				cdao = new CircostanzaDAO(c);
+				for (int i = 0; i <= lLisCir.size() - 1; i++) {
+					cm = (CircostanzaModel) lLisCir.get(i);
+					cm.setFasSieIdFascicoloSiep(fsmNew.getIdFascicoloSiep());
+					cdao.setDAOFromModel(cm);
+					siesLogger.debug("Duplicazione Circostanza N° " + (i + 1));
+					cdao.insert();
+				}
+			}
+
+			// Inizio duplicazione PeneAccessorie e Benefici Che possono essere legati tra loro
+			// PENE ACCESSORIE
+			int cont = 0;
+			BigDecimal sequenceBen = null;
+			BigDecimal[] arrayIdBeneficio;
+			arrayIdBeneficio = new BigDecimal[10];
+			BigDecimal[] arrayIdBeneficioNEW;
+			arrayIdBeneficioNEW = new BigDecimal[10];
+			if (dfm.getPeneAccessorie() != null) {
+				List listaPeneAccessorie = dfm.getPeneAccessorie();
+				for (int i = 0; i <= listaPeneAccessorie.size() - 1; i++) {
+					padao = null;
+					PenaAccessoriaModel pam = new PenaAccessoriaModel(
+							(PenaAccessoriaModel) listaPeneAccessorie.get(i));
+					pam.setCodOperatoreInserimento(fsmNew.getCodOperatoreInserimento());
+					pam.setCodUfficioInserimento(fsmNew.getCodUfficioInserimento());
+					pam.setDataInserimento(fsmNew.getDataInserimento());
+					pam.setFasSieIdFascicoloSiep(fsmNew.getIdFascicoloSiep());
+					pam.setCodOperatoreAggiornamento(null);
+					pam.setCodUfficioAggiornamento(null);
+					pam.setDataAggiornamento(null);
+					// pam.setNumeroEventiCorrelati(?);
+					// controllo che P.Acc. non sia legata ad un Beneficio : Se si
+					// devo scrivere prima il Beneficio
+					if (pam.getBenIdBeneficio() != null) {
+						List listaBenefici = dfm.getBenefici();
+						// BeneficioModel lBeneMod = new BeneficioModel();
+						// cerco il Beneficio al quale è legata la P.Acc
+						for (int j = 0; j <= listaBenefici.size() - 1; j++) {
+							bdao = null;
+							BeneficioModel bm = new BeneficioModel((BeneficioModel) listaBenefici.get(j));
+							if (bm.getIdBeneficio().equals(pam.getBenIdBeneficio())) {
+								// controllo che il Beneficio non sia stato già scritto
+								String testInsertBeneficio = "SI";
+								for (int ic = 0; ic <= arrayIdBeneficio.length - 1; ic++) {
+									if (bm.getIdBeneficio().equals(arrayIdBeneficio[ic])) {
+										testInsertBeneficio = "NO";
+										sequenceBen = arrayIdBeneficioNEW[ic];
+									}
+								}
+								if (testInsertBeneficio.equals("SI")) {
+									bm.setCodOperatoreInserimento(fsmNew.getCodOperatoreInserimento());
+									bm.setCodUfficioInserimento(fsmNew.getCodUfficioInserimento());
+									bm.setDataInserimento(DateUtils.getSysDate());
+									bm.setFasSieIdFascicoloSiep(fsmNew.getIdFascicoloSiep());
+									bm.setCodOperatoreAggiornamento(null);
+									bm.setCodUfficioAggiornamento(null);
+									bm.setDataAggiornamento(null);
+									bdao = new BeneficioDAO(c);
+									bdao.setDAOFromModel(bm);
+									sequence = bdao.insert();
+									bdao.stop();
+									// annoto id del beneficio di classe III e l'id appena scritto del
+									// Beneficio in classe I
+									arrayIdBeneficio[cont] = bm.getIdBeneficio();
+									arrayIdBeneficioNEW[cont] = sequence;
+									cont++;
+									// scrivo PenaAccessoria legata al Beneficio
+									pam.setBenIdBeneficio(sequence);
+									padao = new PenaAccessoriaDAO(c);
+									padao.setDAOFromModel(pam);
+									siesLogger.debug(
+											"Duplicazione Pena Accessoria legata al Beneficio N° " + (j + 1));
+									padao.insert();
+									padao.stop();
+								} else {
+									// scrivo Solo la P.Acc legata ad un Beneficio già scritto in precedenza
+									pam.setBenIdBeneficio(sequenceBen);
+									padao = new PenaAccessoriaDAO(c);
+									padao.setDAOFromModel(pam);
+									siesLogger.debug(
+											"Duplicazione Pena Accessoria legata al Beneficio N° " + (j + 1));
+									padao.insert();
+									padao.stop();
+								}
+							} // END if (bm.getIdBeneficio().equals(pam.getBenIdBeneficio()
+						} // End ciclo for j
+					} // End if(pam.getBenIdBeneficio() != null)
+					else {
+						padao = new PenaAccessoriaDAO(c);
+						padao.setDAOFromModel(pam);
+						siesLogger.debug("Duplicazione Pena Accessoria...");
+						padao.insert();
+						padao.stop();
+					}
+				} // End ciclo for (int i=0
+			} // End if (dfm.getPeneAccessorie() != null)
+
+			// --> BENEFICI -- (solo quelli che non erano legati alle PeneAccessorie)
+			if (dfm.getBenefici() != null) {
+				List listaBenefici = dfm.getBenefici();
+				for (int i = 0; i <= listaBenefici.size() - 1; i++) {
+					bdao = null;
+					BeneficioModel bm = new BeneficioModel((BeneficioModel) listaBenefici.get(i));
+					bm.setCodOperatoreInserimento(fsmNew.getCodOperatoreInserimento());
+					bm.setCodUfficioInserimento(fsmNew.getCodUfficioInserimento());
+					bm.setDataInserimento(DateUtils.getSysDate());
+					bm.setFasSieIdFascicoloSiep(fsmNew.getIdFascicoloSiep());
+					bm.setCodOperatoreAggiornamento(null);
+					bm.setCodUfficioAggiornamento(null);
+					bm.setDataAggiornamento(null);
+					String testInsertBeneficio = "SI";
+					for (int ic = 0; ic <= arrayIdBeneficio.length - 1; ic++) {
+						// Controllo che non è un Beneficio legato alle P.Acc. e che quindi ho già scritto
+						if (bm.getIdBeneficio().equals(arrayIdBeneficio[ic]))
+							testInsertBeneficio = "NO";
+					}
+					if (testInsertBeneficio.equals("SI")) {
+						bdao = new BeneficioDAO(c);
+						bdao.setDAOFromModel(bm);
+						siesLogger.debug("Duplicazione Beneficio N° " + (i + 1));
+						bdao.insert();
+						bdao.stop();
+					}
+				} // End ciclo for i
+			} // End if Dettaglio.getbenefici
+				// FINE AMBROSINO 04/2013 - duplicazione PeneAccessorie e Benefici da Classe III a classe I
+
+			// Aggiunto il passaggio delle Misure Cautelari da Classe III a Classe I
+			if (dfm.getMisureCautelari() != null) {
+				MisuraCautelareModel mcm = new MisuraCautelareModel();
+				List listaMisureCautelari = dfm.getMisureCautelari();
+				miscaudao = new MisuraCautelareDAO(c);
+				for (int i = 0; i <= listaMisureCautelari.size() - 1; i++) {
+					mcm = (MisuraCautelareModel) listaMisureCautelari.get(i);
+					mcm.setFasSieIdFascicoloSiep(fsmNew.getIdFascicoloSiep());
+					miscaudao.setDAOFromModel(mcm);
+					siesLogger.debug("Duplicazione Misura Cautelare N° " + (i + 1));
+					miscaudao.insert();
+				}
+			}
+
+			// MISURE DI SICUREZZA
+			List listaMisureSicurezza = dfm.getMisureSicurezza();
+			if (listaMisureSicurezza != null && listaMisureSicurezza.size() > 0) {
+				for (int i = 0; i < listaMisureSicurezza.size(); i++) {
+					MisuraSicurezzaModel msm = (MisuraSicurezzaModel) listaMisureSicurezza.get(i);
+					MisuraSicurezzaModel msmNew = new MisuraSicurezzaModel(msm);
+					// Collegata al nuovo fascicolo
+					msmNew.setFasSieIdFascicoloSiep(fsmNew.getIdFascicoloSiep());
+					msmNew.setEveIdEvento(null);
+					msmNew.setFasSiuIdFascicoloSius(null);
+					msmNew.setDataInserimento(fsmNew.getDataInserimento());
+					msmNew.setCodOperatoreInserimento(fsmNew.getCodOperatoreInserimento());
+					msmNew.setCodUfficioInserimento(fsmNew.getCodUfficioInserimento());
+					msmNew.setDataAggiornamento(null);
+					msmNew.setCodOperatoreAggiornamento(null);
+					msmNew.setCodUfficioAggiornamento(null);
+					msdao = new MisuraSicurezzaDAO(c);
+					msdao.setDAOFromModel(msmNew);
+					siesLogger.debug("Duplicazione Misure di Sicurezza N° " + (i + 1));
+					msdao.insert();
+					msdao.stop();
+				}
+			}
+
+			// RATEIZZAZIONE PENA PECUNIARIA
+			rppsdao = new RateizzazionePPSqlDAO(c);
+			rppsdao.ricercaRateizzazionePPByIdFasSIEP(dfm.getFascicoloSiep().getIdFascicoloSiep());
+			rppsdao.start();
+			while (rppsdao.next())
+				listaRate.add((RateizzazionePPModel) rppsdao.getModel());
+			rppsdao.stop();
+			for (int i = 0; i < listaRate.size(); i++) {
+				RateizzazionePPModel rppm = listaRate.get(i);
+				RateizzazionePPModel rppmNew = new RateizzazionePPModel(rppm);
+				// Collegata al nuovo fascicolo
+				rppmNew.setFasSieIdFascicoloSiep(fsmNew.getIdFascicoloSiep());
+				rppmNew.setEveIdEvento(null);
+				rppmNew.setFasSiuIdFascicoloSius(null);
+				rppmNew.setDataInserimento(fsmNew.getDataInserimento());
+				rppmNew.setCodOperatoreInserimento(fsmNew.getCodOperatoreInserimento());
+				rppmNew.setCodUfficioInserimento(fsmNew.getCodUfficioInserimento());
+				rppmNew.setDataAggiornamento(null);
+				rppmNew.setCodOperatoreAggiornamento(null);
+				rppmNew.setCodUfficioAggiornamento(null);
+				rppdao = new RateizzazionePPDAO(c);
+				rppdao.setDAOFromModel(rppmNew);
+				siesLogger.debug("Duplicazione Rateizzazione N° " + (i + 1));
+				rppdao.insert();
+				rppdao.stop();
+			}
+
+			commit(c);
+		} catch (DAOException ex) {
+			rollback(c);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.error("DAOException: " + ex);
+			throw new F3BException(
+					"PenaSospesaController.ExInserisciFascicoloSiepPassaggioClasse: Non posso inserire: "
+							+ ex);
+		} finally {
+			cleanup(sdao);
+			cleanup(edao);
+			cleanup(fsdao);
+			cleanup(fssdao);
+			cleanup(resdao);
+			cleanup(rfsdao);
+			cleanup(pgdao);
+			cleanup(magcomdao);
+			cleanup(readao);
+			cleanup(cdao);
+			cleanup(miscaudao);
+			cleanup(pcdao);
+			cleanup(edaoRevo);
+			cleanup(bdao);
+			cleanup(padao);
+			cleanup(amdao);
+			cleanup(spdao);
+			cleanup(msdao);
+			cleanup(ssdao);
+			cleanup(sssdao);
+			cleanup(rppdao);
+			cleanup(rppsdao);
+
+			cleanup(c);
+		}
+		return fsmNew;
+	}
+	// FINE MEV_2025-48
 
 	public void ExModificaKeyNscByKey(FascicoloSiepModel aFascicoloSiep) throws F3BException {
 
@@ -3930,10 +4456,7 @@ public class FascicoloSiepController extends SiapController implements IFascicol
 				lFasDao.stop();
 			}
 
-			if (lByteArrayOut == null)
-				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Certificato Giudiziale Associato");
-
-			if (lByteArrayOut.size() == 0)
+			if ((lByteArrayOut == null) || (lByteArrayOut.size() == 0))
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Certificato Giudiziale Associato");
 		} catch (F3BException eF3b) {
 			throw eF3b;

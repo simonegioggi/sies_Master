@@ -50,6 +50,7 @@ import siap.siep.istruttoriacumulo.model.RiepilogoPenaComplessivaCumuloModel;
 import siap.siep.istruttoriacumulo.model.RiepilogoPresoffertoCumuloModel;
 import siap.siep.modulocumulo.controller.IBeneficioCumulo;
 import siap.siep.modulocumulo.controller.ICircostanzaCumulo;
+import siap.siep.modulocumulo.controller.IDatiFinaliCumulo;
 import siap.siep.modulocumulo.controller.IReatoCumulo;
 import siap.siep.modulocumulo.controller.ITitoloCumulato;
 import siap.siep.modulocumulo.controller.ReatoContinuazioneCumuloController;
@@ -2493,6 +2494,13 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 
 				lTreeIstruMod.add(new TreeModel(lBen));
 			}
+			
+			// MEV_2025-48 - ALTRO – Aggiunta Ramo <CalcoloPenaCumulo>
+			IDatiFinaliCumulo lDatFinCtrl = SIEPLookupRemote.getDatiFinaliCumuloRemote();
+			TreeModel lTreeCalcoloPenaNew = null; 
+			lTreeCalcoloPenaNew = lDatFinCtrl.getTreeModelCalcoloPenaCumulo(aIstruttoriaCumulo.getIdIstruttoriaCumulo());
+			lTreeIstruMod.add(lTreeCalcoloPenaNew);
+			// MEV_2025-48 - ALTRO – Aggiunta Ramo <CalcoloPenaCumulo> - FINE
 
 			siesLogger.debug("add di TUTTO Il NODO ISTRUTTORIA al root .... ");
 			lTreeRoot.add(lTreeIstruMod);
@@ -2653,6 +2661,18 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 
 						TreeModel lTreeRichiestaPMMod = new TreeModel(lRichPMCumMod);
 
+						// MEV_2025-48 - Si aggiunge la decisione se presente
+						lProvvSqlDao.ricercaProvvedimentoGeSorvCumByIdRichiesta(lRichPMCumMod.getIdRichiestePmInCumulo());
+					    ProvvedimentoGeSorvCumModel lDecisione = null;
+					    lDecisione = (ProvvedimentoGeSorvCumModel) lProvvSqlDao.getModelByKey();
+						if (lDecisione!=null) {
+						    lRichPMCumMod.setIsPresenzaDecisione(true);
+						    lTreeRichiestaPMMod.add(new TreeModel(lDecisione));
+						}
+						else 
+						    lRichPMCumMod.setIsPresenzaDecisione(false);
+						// MEV_2025-48 - FINE
+						
 						// Spostare qui il caricamento nei benefici
 						// Eventuale Richiesta di APPLICAZIONE BENEFICIO Concesso sul Titolo
 						// ====== SOLO SE CON ANTICIPAZIONE DEGLI EFFETTI VA AGGIUNTA ======
@@ -2736,14 +2756,7 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 //										lRichTitCumMod.getTitIdTitoloCumulato());								
 								// END Ticket#20200715012
 								//==========================================================================================
-								
-								
-								
-								
-
-								
-								
-								
+				
 								lSSCumSqlDao.start();
 								while (lSSCumSqlDao.next()) {
 

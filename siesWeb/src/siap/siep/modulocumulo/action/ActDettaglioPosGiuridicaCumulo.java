@@ -20,6 +20,11 @@ public class ActDettaglioPosGiuridicaCumulo extends ActionModuloCumulo implement
     
     DatiFinaliCumuloAggregatoModel lDatiFinaliAggModel = super.getDatiFinaliCumuloAggregato();
 
+    // MEV_2025-48 - 2.12 Alert su continuazione e revoche benefici
+    super.getListaTitContSganciate(null);
+    super.getListaTitConRevBenSganciati(null);
+    // MEV_2025-48 - 2.12 Alert su continuazione e revoche benefici
+    
     if (lDatiFinaliAggModel.getPosizioneGiuridicaCumulo()!=null) {
 //      if (   !isRequestParameterNullObj("FunzioneMenu")
 //          && "PG".equals(getRequestStringParameter("FunzioneMenu"))

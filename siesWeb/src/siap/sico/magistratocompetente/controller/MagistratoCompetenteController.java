@@ -10,6 +10,7 @@ import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
+import it.giustizia.www.serviziTelematici.reginde.interrogazioniInt.SearchLimitException;
 import siap.controller.SiapController;
 import siap.sico.magistrato.dao.MagistratoSqlDAO;
 import siap.sico.magistratocompetente.dao.MagistratoCompetenteDAO;
@@ -17,6 +18,7 @@ import siap.sico.magistratocompetente.dao.MagistratoCompetenteMagistratoSqlDAO;
 import siap.sico.magistratocompetente.dao.MagistratoCompetenteSqlDAO;
 import siap.sico.magistratocompetente.model.MagistratoCompetenteMagistratoModel;
 import siap.sico.magistratocompetente.model.MagistratoCompetenteModel;
+import siap.sius.SIUSException;
 
 /**
  * <p>
@@ -405,6 +407,17 @@ public class MagistratoCompetenteController extends SiapController implements IM
 			siesLogger.error("DAOException: " + ex);
 			throw new F3BException(
 					"MagistratoCompetenteController.ExModificaMultiplaMagistratoCompetente: " + ex);
+		} catch (Exception e) { // MEV_2025-48: aggiunta nuova funzionalita': paginata la ricerca
+			rollback(lConn);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.error("Exception: " + e);
+			if (e instanceof SearchLimitException || e instanceof IllegalStateException)
+				throw new SIUSException(
+						"Attenzione: con la selezione 'Tutti' il sistema non riesce a completare "
+								+ "l'aggiornamento, procedere con la selezione per pagina!");
+			else
+				throw new SIUSException(F3BException.USER_MESSAGE, e.getMessage());
 		} finally {
 			cleanup(lMagCompDao);
 

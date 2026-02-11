@@ -23,7 +23,7 @@ import siap.sige.util.SIGELookupRemote;
 
 /**
  * ActDeassegnaTitoloEsecutivo - Classe Action DeassegnaTitoloEsecutivo associato al Fascicolo Sige corrente
- * 
+ *
  * @version 1.0
  */
 public class ActDeassegnaTitoloEsecutivo extends ActionSiap
@@ -35,7 +35,7 @@ public class ActDeassegnaTitoloEsecutivo extends ActionSiap
 	/**
 	 * Azione di Deassegnazione del Titolo Esecutivo associato al Fascicolo Sige corrente. Il fascicolo SIEP
 	 * scelto prima assegnato è stato posto in sessione.
-	 * 
+	 *
 	 * @return Nome della pagina JSP da visualizzare al termine dell'elaborazione
 	 * @throws F3BException
 	 */
@@ -76,7 +76,7 @@ public class ActDeassegnaTitoloEsecutivo extends ActionSiap
 			// 20251128 : gestito ERRORE nella funzione "De-assegnazione Procedimento SIEP"
 			try {
 				fascicoloSigeEsteso = lCtrlTE.ExDeassegnaTitoloEsecutivo(fsem, chiaveAnnoSiep,
-					chiaveProgSiep);
+						chiaveProgSiep);
 			} catch (Exception ex) {
 				if (ex.getMessage().contains("FAS_SIGE_SEN_UK")) {
 					RedirectTo rt = new RedirectTo();
@@ -128,7 +128,7 @@ public class ActDeassegnaTitoloEsecutivo extends ActionSiap
 			// se presente dal codice comune (e descrizione)
 			cm = new ComuneModel(
 					getDatiComuneByCodDescr(getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
-					getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)));
+							getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)));
 		} else {
 			// altrimenti dalla sola descrizione (rischio omonimi)
 			cm = new ComuneModel(getDatiComuneByDescrOmonimia(

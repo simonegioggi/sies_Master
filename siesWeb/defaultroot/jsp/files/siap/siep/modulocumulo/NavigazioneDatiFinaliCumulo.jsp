@@ -1,7 +1,9 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ page import="f3b.web.IWebConstants"%>
+<%@ page import="f3b.util.DateUtils" %>
 <%@ page import="java.util.Iterator"%>
 <%@ page import="java.util.ArrayList"%>
+<%@ page import="java.util.Vector"%>
 <%@ page import="siap.siep.istruttoriacumulo.action.ICostantiIstruttoriaCumulo"%>
 
 <%@ page import="siap.siep.modulocumulo.model.PenaRideterminataCumuloModel"%>
@@ -12,6 +14,18 @@
 <%@ page import="siap.sico.evento.model.EventoNotificaModel"%>
 <%@ page import="siap.siep.modulocumulo.model.TitoloCumulatoModel"%>
 <%@ page import="siap.siep.modulocumulo.model.DatiFinaliCumuloModel"%>
+
+<!-- MEV_2025-48 - 2.12 Alert su continuazione -->
+<%@ page import="siap.siep.modulocumulo.model.ContinuazioneCumuloModel"%>
+<%@ page import="siap.siep.modulocumulo.action.ICostantiContinuazioneCumulo"%>
+<%@ page import="siap.siep.modulocumulo.action.ICostantiTitoloCumulato"%>
+<%@ page import="siap.sico.ufficio.model.UfficioModel"%>
+<%@ page import="siap.siep.modulocumulo.model.ProcedimentoCumulatoModel"%>
+<%@ page import="siap.siep.modulocumulo.model.BeneficioCumuloModel"%>
+<%@ page import="siap.siep.modulocumulo.action.ICostantiBeneficiCumulo"%>
+
+
+
 
 <jsp:useBean id="titoliDoppi"     scope="request" class="java.util.ArrayList"/>
 
@@ -29,6 +43,12 @@
 <jsp:useBean id="ListaTitoli"       scope="request" class="java.util.Vector"/>
 
 <jsp:useBean id="FunzioneMenu"      scope="request" class="java.lang.String"/>
+
+<!-- MEV_2025-48 - 2.12 Alert su continuazione -->
+<jsp:useBean id="ListaTitContSganciate"       scope="request" class="java.util.Vector"/>
+<jsp:useBean id="ListaTitRevBenSganciati"     scope="request" class="java.util.Vector"/>
+
+
 <%
 PenaRideterminataCumuloModel lPenaResidua = datiFinaliAggregatoModel.getPenaResiduaCumulo();
 String lColorBTPena = "";
@@ -54,11 +74,24 @@ String lProvvPresente = "";
 if (datiFinaliAggregatoModel.getDatiFinaliCumulo()!=null)                 lDFCPresente = " <img src='/images/V.gif' style='border:0px;'> ";
 if (datiFinaliAggregatoModel.getPenaRideterminataCumulo()!=null)          lPenRidetPresente = " <img src='/images/V.gif' style='border:0px;'> ";
 
+boolean lIsAlertMisureSicurezza = false;
+String lStrAlertMisureSicurezza = "<img src='/images/attenzione.jpg' style='border:0px; width:15px; height:15px;'> Non è stato ancora indicato se le Misure di Sicurezza selezionate vanno o meno iscritte in un fascicolo";
 if (    (datiFinaliAggregatoModel.getListaMisureSicurezza()!=null && datiFinaliAggregatoModel.getListaMisureSicurezza().size()>0)
      || (datiFinaliAggregatoModel.getListaPeneAccessorie()!=null && datiFinaliAggregatoModel.getListaPeneAccessorie().size()>0)
    )
-  lUltSanPresente = " <img src='/images/V.gif' style='border:0px;'> ";
-
+{
+    // MEV_2025-48 - ALTRO -
+    if (   datiFinaliAggregatoModel.getListaMisureSicurezza()!=null 
+        && datiFinaliAggregatoModel.getListaMisureSicurezza().size()>0
+        && datiFinaliAggregatoModel.getDatiFinaliCumulo().getFlagCreaFascicoloMs()==null
+       )
+    {
+        lIsAlertMisureSicurezza = true;
+        lUltSanPresente = " <img src='/images/attenzione.jpg' style='border:0px; width:15px; height:15px;'> "; // lUltSanPresente = " <img src='/images/V.gif' style='border:0px;'> ";
+    } else 
+        lUltSanPresente = " <img src='/images/V.gif' style='border:0px;'> ";
+} 
+  
 if (datiFinaliAggregatoModel.getPosizioneGiuridicaCumulo()!=null)         lPosPresente = " <img src='/images/V.gif' style='border:0px;'> ";
 if (datiFinaliAggregatoModel.getPenaResiduaCumulo()!=null)                lCalcPenaPresente = " <img src='/images/V.gif' style='border:0px;'> ";
 if (datiFinaliAggregatoModel.getProvvedimentoCumulo()!=null)              lProvvPresente = " <img src='/images/V.gif' style='border:0px;'>  ";
@@ -126,7 +159,162 @@ while ( itx.hasNext())
     }
 }
 
+// MEV_2025-48 - 2.12 Alert su continuazione
+String lAlertContinuazioni = "Attenzione! Alcune Continuazioni non sono correttamente associate a un titolo in istruttoria. Selezionare 'modifica' per effettuare l'associazione";
+/*
+boolean lIsAlertContinuazioni = true;
+lAlertContinuazioni+="<ul style='margin-top:1px; margin-bottom:0px; padding-top:1px; padding-bottom:0px;'>";
+lAlertContinuazioni += "<li>ciao";
+lAlertContinuazioni += "</li>";
+lAlertContinuazioni += "</ul>";
+*/
+
+lAlertContinuazioni+="<ul style='margin-top:5px; margin-bottom:5px; padding-top:1px; padding-bottom:1px;'>";
+
+boolean lIsAlertContinuazioni = false;
+Iterator itxTitoli = ListaTitContSganciate.iterator();
+while ( itxTitoli.hasNext()) 
+{
+    TitoloCumulatoModel lTitCont = (TitoloCumulatoModel) itxTitoli.next();
+    
+    if ("S".equals(lTitCont.getFlagEscluso()))
+        continue;
+    
+    Vector <ContinuazioneCumuloModel> lListaContTitolo = (Vector) lTitCont.getPenaComplessivaCumulo().getContinuazioniCumulo();
+    
+    String lDescTitolo = lTitCont.getDescrTipoProvvedimento();
+    lDescTitolo += " del " +  DateUtils.getDateToString( lTitCont.getDataProvvedimento(),"dd-MM-yyyy");
+    lDescTitolo += " - "+lTitCont.getCodTipoAutoritaEmittente() + " "+ lTitCont.getDescrLuogoEmittente();
+    
+    if (lTitCont.getProcedimentoCumulato()!=null) {
+        String nSiep = "";
+        ProcedimentoCumulatoModel lProcMod = lTitCont.getProcedimentoCumulato();
+        if ("S".equals(lProcMod.getFlagAccorpato()) && lProcMod.getUfficioOrigine()!=null ){
+          UfficioModel lUfficioOrigine = lProcMod.getUfficioOrigine();
+
+          nSiep = lProcMod.getChiaveAnnoFasCumulato() +"/"+ lProcMod.getChiaveProgrOrigine();
+          nSiep += " <font class=\"cRosso\">Ex "+lUfficioOrigine.getCodTipoUfficio()+" di "+lUfficioOrigine.getDescrComune()+"</font>"; 
+        }
+        else {
+          nSiep = lProcMod.getChiaveAnnoFasCumulato() +"/"+ lProcMod.getChiaveProgrFasCumulato();
+          nSiep += " "+lProcMod.getCodTipoUfficioFasCumulato() + " di "+lProcMod.getDescrLuogoUfficioFasCumulato();
+        }
+        lDescTitolo += " ("+nSiep+")";
+    }    
+
+    lAlertContinuazioni+="<li> "+lDescTitolo;
+    lAlertContinuazioni+="<ul style='margin-top:5px; margin-bottom:1px; padding-top:1px; padding-bottom:1px;'>";
+    Iterator itxListaCont = lListaContTitolo.iterator();
+    int contaContinuazione = 0;
+    while ( itxListaCont.hasNext()) 
+    {
+        ContinuazioneCumuloModel lContCumModel = (ContinuazioneCumuloModel) itxListaCont.next();
+
+	    String lLinkModificaCont = IWebConstants.PG_MAIN+"?"+IWebConstants.ACTION_FIELD+"=siap.siep.modulocumulo.action.ActLoadModificaContinuazioneCumulo"
+	            +"&"+ICostantiIstruttoriaCumulo.CAMPO_ID_ISTRUTTORIA_CUMULO+"="+IstruttoriaCumulo.getIdIstruttoriaCumulo()
+	            +"&"+ICostantiTitoloCumulato.CAMPO_ID_TITOLO_CUMULATO+"="+lContCumModel.getTitIdTitoloCumulato()
+	            +"&"+ICostantiContinuazioneCumulo.CAMPO_ID_CONTINUAZIONE_CUM+"=";    
+
+        lIsAlertContinuazioni = true;
+        lLinkModificaCont += lContCumModel.getIdContinuazioneCum();
+        
+        lAlertContinuazioni += "<li>";
+        lAlertContinuazioni += "  Tipo Continuazione: "+lContCumModel.getDescrTipoContinuazione();
+        lAlertContinuazioni += ", Sentenza: "+lContCumModel.getAnnoSentenza()+"/"+lContCumModel.getNumSentenza();
+        lAlertContinuazioni += " del "+DateUtils.getDateToString (lContCumModel.getDataSentenza(),"dd-MM-yyyy");
+        lAlertContinuazioni += ", "+lContCumModel.getDescrTipoAutorita()+" di "+lContCumModel.getDescrLuogoAutorita();
+        lAlertContinuazioni += " <a class='cliccabile' href='"+lLinkModificaCont+"' title='Modifica Continuazione'>Modifica Continuazione</a>";
+        lAlertContinuazioni += "</li>";
+    }  
+    lAlertContinuazioni+="</ul>";
+    lAlertContinuazioni+="</li>";
+}
+lAlertContinuazioni += "</ul>";
+
+//MEV_2025-48 - 2.12 Alert su continuazione
+
+// se l'istruttoria NON è aperta non visualizzo il messaggio di alert
+if (!"A".equals(IstruttoriaCumulo.getFlagStato()))
+    lIsAlertContinuazioni = false;
+
+//=====================================================
+// Check sulle revoche benefici non agganciate
+//=====================================================
+String lAlertRevoche = "Attenzione! Alcune Revoche Benefici non sono correttamente associate a un titolo in istruttoria. Selezionare 'modifica' per effettuare l'associazione";
+lAlertRevoche+="<ul style='margin-top:5px; margin-bottom:1px; padding-top:1px; padding-bottom:1px;'>";
+
+boolean lIsAlertRevocheBen = false;
+
+Iterator itxTitoliRevoche = ListaTitRevBenSganciati.iterator();
+while ( itxTitoliRevoche.hasNext()) 
+{
+    lIsAlertRevocheBen = true;
+    
+    TitoloCumulatoModel lTitRev = (TitoloCumulatoModel) itxTitoliRevoche.next();
+    
+    if ("S".equals(lTitRev.getFlagEscluso()))
+        continue;
+    
+    String lDescTitolo = lTitRev.getDescrTipoProvvedimento();
+    lDescTitolo += " del " +  DateUtils.getDateToString (lTitRev.getDataProvvedimento(),"dd-MM-yyyy");
+    lDescTitolo += " - "+lTitRev.getCodTipoAutoritaEmittente() + " "+ lTitRev.getDescrLuogoEmittente();
+    
+    if (lTitRev.getProcedimentoCumulato()!=null) {
+        String nSiep = "";
+        ProcedimentoCumulatoModel lProcMod = lTitRev.getProcedimentoCumulato();
+        if ("S".equals(lProcMod.getFlagAccorpato()) && lProcMod.getUfficioOrigine()!=null ){
+          UfficioModel lUfficioOrigine = lProcMod.getUfficioOrigine();
+
+          nSiep = lProcMod.getChiaveAnnoFasCumulato() +"/"+ lProcMod.getChiaveProgrOrigine();
+          nSiep += " <font class=\"cRosso\">Ex "+lUfficioOrigine.getCodTipoUfficio()+" di "+lUfficioOrigine.getDescrComune()+"</font>"; 
+        }
+        else {
+          nSiep = lProcMod.getChiaveAnnoFasCumulato() +"/"+ lProcMod.getChiaveProgrFasCumulato();
+          nSiep += " "+lProcMod.getCodTipoUfficioFasCumulato() + " di "+lProcMod.getDescrLuogoUfficioFasCumulato();
+        }
+        lDescTitolo += " ("+nSiep+")";
+    }
+    
+    lAlertRevoche+="<li> "+lDescTitolo;
+    lAlertRevoche+="<ul style='margin-top:5px; margin-bottom:1px; padding-top:1px; padding-bottom:1px;'>";
+    Iterator itxListaRevoche = lTitRev.getBeneficiCumulo().iterator();
+    while ( itxListaRevoche.hasNext()) 
+    {
+        BeneficioCumuloModel lRevocaCumModel = (BeneficioCumuloModel) itxListaRevoche.next();
+        
+        String lTipoFormBeneficio = "";
+        if ("01".equals(lRevocaCumModel.getCodTipoBeneficio())) // Sospensione condizionale
+            lTipoFormBeneficio = "01";
+        else if ("03".equals(lRevocaCumModel.getCodTipoBeneficio()))  // Indulto
+            lTipoFormBeneficio = "02";        
+        
+        String lLinkModificaRev = IWebConstants.PG_MAIN+"?"+IWebConstants.ACTION_FIELD+"=siap.siep.modulocumulo.action.ActLoadInserisciRevocaBeneficioCumulo"
+                +"&"+ICostantiIstruttoriaCumulo.CAMPO_ID_ISTRUTTORIA_CUMULO+"="+IstruttoriaCumulo.getIdIstruttoriaCumulo()
+                +"&"+ICostantiTitoloCumulato.CAMPO_ID_TITOLO_CUMULATO+"="+lRevocaCumModel.getTitIdTitoloCumulato()
+                +"&modalita=M"
+                +"&tipoFormBeneficio="+lTipoFormBeneficio
+                +"&"+ICostantiBeneficiCumulo.CAMPO_ID_BENEFICIO_CUMULO+"="; 
+        
+        lLinkModificaRev+=lRevocaCumModel.getIdBeneficioCumulo();
+        
+        lAlertRevoche += "<li>";
+        lAlertRevoche += "  Tipo Revoca: "+lRevocaCumModel.getDescrTipoBeneficio();
+        lAlertRevoche += " <a class='cliccabile' href='"+lLinkModificaRev+"' title='Modifica Revoca'>Modifica Revoca</a>";
+        lAlertRevoche += "</li>";
+    }
+    
+    lAlertRevoche+="</ul>";
+    lAlertRevoche+="</li>";
+    
+}    
+
+lAlertRevoche += "</ul>";
+
+//se l'istruttoria NON è aperta non visualizzo il messaggio di alert
+if (!"A".equals(IstruttoriaCumulo.getFlagStato()))
+    lIsAlertRevocheBen = false;
 %>
+
 
 <script language="JavaScript">   
   function eseguiNavigazioneInclude(azione) {
@@ -259,22 +447,38 @@ while ( itx.hasNext())
       </tr>
       <% } %> 
       
-      <% if(lEscluso)
-         { %>
+      <% if(lEscluso){ %>
          <tr>
            <td colspan="100%">
              <font class="cRosso">(*) Attenzione, uno o più Titoli iscritti in istruttoria risulta momentaneamente escluso. Per procedere alla emissione del provvedimento di cumulo è necessario prima provvedere ad escludere o includere definitivamente detto Titolo.</font>
            </td>
          </tr>
       <% } %>    
+      
+      <% if(lIsAlertContinuazioni) { %>
+         <tr>
+           <td colspan="100%">
+             <font class="cRosso">(*) <%=lAlertContinuazioni %></font>
+           </td>
+         </tr>
+      <% } %> 
+
+      <% if(lIsAlertRevocheBen) { %>
+         <tr>
+           <td colspan="100%">
+             <font class="cRosso">(*) <%=lAlertRevoche %></font>
+           </td>
+         </tr>
+      <% } %>
+      
+      <!-- MEV_2025-48 - ALTRO -->
+      <% if(lIsAlertMisureSicurezza) { %>
+         <tr>
+           <td colspan="100%">
+             <font class="cRosso">(*) <%=lStrAlertMisureSicurezza %></font>
+           </td>
+         </tr>
+      <% } %>
+      
     </table>
   </form>
-
-
-
-
-
-
-
-
-
