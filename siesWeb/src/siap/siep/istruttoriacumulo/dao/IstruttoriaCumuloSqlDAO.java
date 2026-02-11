@@ -726,6 +726,34 @@ public class IstruttoriaCumuloSqlDAO extends SqlDAO {
 		setStatement(lStatement);
 	}
 
+
+	/**
+	 * MEV_2025-48 – 2.14 Caricamento Istruttoria Annullata
+	 * Si verifica se presenta istruttoria annullata priva di evento per perdita competenza
+	 * prima di emissione provvedimento di cumulo
+	 * @param aIdFascicoloSiep
+	 * @throws DAOException
+	 */
+	public void ricercaIstruttoriaCumuloAnnullataByIdFas(BigDecimal aIdFascicoloSiep) throws DAOException {
+
+		// Recupera la select...from
+		String lSql = getSqlQuery();
+
+		// Aggiunge le where condition per chiave
+		lSql += " WHERE FAS_SIE_ID_FASCICOLO_SIEP = " + aIdFascicoloSiep;
+		lSql += " AND FLAG_STATO = 'N' "; // Annullata
+		// Chiusa senza evento 
+		lSql += " AND NOT EXISTS (SELECT 1 ";
+		lSql += "        FROM EVENTO ";
+		lSql += "       WHERE EVENTO.FAS_SIE_ID_FASCICOLO_SIEP = "+ aIdFascicoloSiep;
+		lSql += "         AND EVENTO.ISTR_ID_ISTRUTTORIA_CUMULO = ISTRUTTORIA_CUMULO.ID_ISTRUTTORIA_CUMULO ";
+		lSql += " ) ";
+		lSql += " ORDER BY DATA_INSERIMENTO DESC";
+
+		// Imposta lo statement da eseguire
+		setStatement(lSql);
+	}
+	
 	// Cerca Una ISTRUTTORIA_CUMULO in stato 'Aperta' by Fas_Sie_ID_Fascicolo_Siep
 	public void RicercaIstruttoriaCumuloApertaByIdFasSiep(BigDecimal aIdFascicoloSiep) throws DAOException {
 		// Recupera la select...from

@@ -40,7 +40,18 @@ public class RichPMBeneficioCumSqlDAO extends SqlDAO {
     setStatement(lSql);
   }
 
+  // 2025.11.18 Aggiunto metodo ricerca per id_beneficio
+  public void ricercaRichPmBeneficioCumByIdBen( BigDecimal aIdBeneficio) throws DAOException {
+      // Recupera la select...from 
+      String lSql = getSqlQuery();
 
+      // Aggiunge le where condition per chiave 
+      lSql += " WHERE BEN_ID_BENEFICIO_CUM = " + aIdBeneficio;
+
+      // Imposta lo statement da eseguire 
+      setStatement(lSql);
+    }
+  
   /***************************************************************************** 
    * Metodo per la costruzione della sql query 
    * @return 

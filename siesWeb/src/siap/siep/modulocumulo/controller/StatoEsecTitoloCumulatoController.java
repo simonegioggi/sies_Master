@@ -80,6 +80,7 @@ import siap.siep.penaresidua.dao.PenaPrecedenteSqlDAO;
 import siap.siep.penaresidua.dao.PenaResiduaSqlDAO;
 import siap.siep.penaresidua.model.PenaPrecedenteModel;
 import siap.siep.penaresidua.model.PenaResiduaModel;
+import siap.siep.reato.action.ICostantiReato;
 import siap.siep.sospensione.dao.SospensioneSqlDAO;
 import siap.siep.sospensione.model.SospensioneModel;
 import siap.siep.util.SIEPLookupRemote;
@@ -850,6 +851,15 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 							this.caricaComputiPagamentoPP(lEventoModel.getIdEvento(), lStatoEsecModel, lConn);
 						}
 
+						
+						// MEV_2025-48 - ALTRO – Benefici con anticipazione effetti
+                        if (StatoEsecuzioneCumuloUtils.isRichiestaBeneficiAlGE(lEventoModel.getCodMotivo())) {
+                            siesLogger.debug("Richieste al GE Amnistia/Indulto-Depen-Incost");
+                            this.caricaRichiestaBeneficiAlGE(lEventoModel.getIdEvento(), lStatoEsecModel, lConn);
+                        }						
+						// MEV_2025-48 - ALTRO – Benefici con anticipazione effetti - FINE
+						
+						
 						// ======================================================================
 						// Attività del GE
 						// ======================================================================
@@ -1725,6 +1735,33 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 				lComputiModel.setNumMesiReclusione(lSospModel.getNumMesiPenaEspiata());
 				lComputiModel.setNumGiorniReclusione(lSospModel.getNumGiorniPenaEspiata());
 
+				// MEV_2025-48 - LA su Espiato - Aggiungo i GG di LA computati sull'espiato
+				//lComputiModel.setNumGiorniLibanticipata(lSospModel.getNumGiorniLibanticipata());
+				// Ricalcolo i quantum effettivi in base al periodo di espiazione per evitare 
+				// che le LA siano inglobate nell'espiato e computate 2 volte
+				siesLogger.debug("MEV_2025-48 LA: lComputiModel.getDataReclusioneDa() = "+lComputiModel.getDataReclusioneDa());
+                siesLogger.debug("MEV_2025-48 LA: lComputiModel.getDataReclusioneA() = "+lComputiModel.getDataReclusioneA());
+				if (   lSospModel.getNumGiorniLibanticipata()!=null 
+				    && lSospModel.getNumGiorniLibanticipata().intValue()>0
+				    && lComputiModel.getDataReclusioneDa()!=null
+				    && lComputiModel.getDataReclusioneA()!=null
+				   ) 
+				{
+                    CalendarModel lCalPenaEspiata = new CalendarModel();
+                    lCalPenaEspiata.setDataInizio (lComputiModel.getDataReclusioneDa());
+                    lCalPenaEspiata.setDataFine   (lComputiModel.getDataReclusioneA());
+
+                    CalendarUtil lCalUtil = new CalendarUtil();
+                    lCalPenaEspiata = lCalUtil.CalcolaNumGiorniMesiAnni(lCalPenaEspiata, false);
+
+                    // Normalizzo i quantum
+                    lCalPenaEspiata = lCalUtil.ricalcolaGAM(lCalPenaEspiata);
+                    lComputiModel.setNumAnniReclusione   (new BigDecimal(lCalPenaEspiata.getNumAnni()));
+                    lComputiModel.setNumMesiReclusione   (new BigDecimal(lCalPenaEspiata.getNumMesi()));
+                    lComputiModel.setNumGiorniReclusione (new BigDecimal(lCalPenaEspiata.getNumGiorni()));
+				}
+				// MEV_2025-48 - LA su Espiato - FINE
+				
 				// ======================================================================
 				// Lettura del DecretoOrdinanzaSIEP.
 				siesLogger.debug("Cerco Decreto Ordinanza Collegato...");
@@ -1994,6 +2031,159 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 		}
 	}
 
+	/**
+	 * Si caricano anche le richieste al GE dei benefici di Amnistia/Indulto/Depenalizzazione/Incostituzionelita'
+	 * Oltre che le decisioni
+	 * @since MEV_2025-48 - ALTRO – Benefici con anticipazione effetti
+	 */
+    private void caricaRichiestaBeneficiAlGE(BigDecimal aIdEvento,
+            StatoEsecTitoloCumulatoModel aStatoEsecModel, Connection aConn) throws F3BException {
+        
+        siesLogger.debug("caricaRichiestaBeneficiAlGE: aIdEvento = "+aIdEvento);
+        
+        AnnotazioneManualeSqlDAO lAnnotaSqlDao = null;
+        ComputiCumuloDAO lComputiDao = null;
+        EventoSqlDAO lEveSqlDao = null;
+        ReatoCumuloSqlDAO lReatoCumuloSqlDao = null;
+        NotificaSqlDAO lNotificaSqlDao = null;
+
+        try {
+            // Lettura dell'Evento
+            EventoModel lEvento = new EventoModel();
+            lEveSqlDao = new EventoSqlDAO(aConn);
+            lEveSqlDao.ricercaEventoByKey(aIdEvento);
+            lEvento = (EventoModel) lEveSqlDao.getModelByKey();
+
+            // Lettura delle Annotazioni manuali
+            // n.b. Nelle richieste al GE annotazioni sono puntate dall'evento
+            lAnnotaSqlDao = new AnnotazioneManualeSqlDAO(aConn);
+            lAnnotaSqlDao.ricercaAnnotazioneManualeByKey(lEvento.getAnnIdAnnotazioneManuale());
+
+            AnnotazioneManualeModel lAnnModel = (AnnotazioneManualeModel) lAnnotaSqlDao.getModelByKey();
+            
+            siesLogger.debug("caricaRichiestaBeneficiAlGE trovata annotazione = "+lAnnModel);
+            lComputiDao = new ComputiCumuloDAO(aConn);
+            lNotificaSqlDao = new NotificaSqlDAO(aConn);
+            
+//            if (lAnnModel!=null && "A".equals(lAnnModel.getFlagAppProvvisoria())) 
+            if (lAnnModel!=null) 
+            {
+                siesLogger.debug("caricaRichiestaBeneficiAlGE trovata annotazione = "+lAnnModel.getIdAnnotazioneManuale());
+  
+                ComputiCumuloModel lComputiModel = new ComputiCumuloModel();
+
+                lComputiModel.setCodTipoAnnotazione(lAnnModel.getCodTipoAnnotazione());
+                lComputiModel.setCodCausaleComputo("-");
+                lComputiModel.setFlagPiuMeno(lAnnModel.getFlagPiuMeno());
+
+                lComputiModel.setNumAnniReclusione   (lAnnModel.getNumAnniReclusione());
+                lComputiModel.setNumMesiReclusione   (lAnnModel.getNumMesiReclusione());
+                lComputiModel.setNumGiorniReclusione (lAnnModel.getNumGiorniReclusione());
+
+                lComputiModel.setNumAnniArresto   (lAnnModel.getNumAnniArresto());
+                lComputiModel.setNumMesiArresto   (lAnnModel.getNumMesiArresto());
+                lComputiModel.setNumGiorniArresto (lAnnModel.getNumGiorniArresto());
+
+                lComputiModel.setImportoMulta(lAnnModel.getImportoMulta());
+                lComputiModel.setImportoAmmenda(lAnnModel.getImportoAmmenda());
+
+                lComputiModel.setCodTipoMisura(null);
+
+                lComputiModel.setNote(lAnnModel.getMotivazioni());                
+                
+                // Amnistia/Indulto
+                lComputiModel.setCodDpr(lAnnModel.getCodDpr());
+                
+                // Depenalizzazione
+                lComputiModel.setCodFonte            (lAnnModel.getCodFonte());
+                lComputiModel.setAnnoFonte           (lAnnModel.getAnnoFonte());
+                lComputiModel.setNumeroFonte         (lAnnModel.getNumeroFonte());
+                lComputiModel.setCodSottonumerazione (lAnnModel.getCodSottonumerazione());
+                lComputiModel.setComma               (lAnnModel.getComma());
+                lComputiModel.setLettera             (lAnnModel.getLettera());
+                lComputiModel.setNumero              (lAnnModel.getNumero());
+                lComputiModel.setArticolo            (lAnnModel.getArticolo());
+                
+                // Incostituzionalita'
+                lComputiModel.setAnnoSentenza   (lAnnModel.getAnnoCc());
+                lComputiModel.setNumeroSentenza (lAnnModel.getNumeroCc());
+                lComputiModel.setDataSentenza   (lAnnModel.getDataCC());
+                
+                
+                lComputiModel.setFlagAppProvvisoria(lAnnModel.getFlagAppProvvisoria());
+
+                // n.b è l'uffico del GE a cui è stta inviata la richiesta recuperato
+                //     dal record Netifiche dell'evento
+                lNotificaSqlDao.ricercaNotificaByEvento(aIdEvento);
+                NotificaModel lNotModel = (NotificaModel) lNotificaSqlDao.getModelByKey();
+                if (lNotModel!=null){
+                    lComputiModel.setCodUfficioEmittenteProvv(lNotModel.getUffCodUfficio());
+                }
+                
+                //lComputiModel.setCodLuogoUfficioProvv(lEvento.getCodLuogoEmittente());
+                //lComputiModel.setDataEmissioneProvv(lAnnModel.getDataGE());
+                
+                // lComputiModel.setDataRicezioneProvv (lEvento.getDataRicezioneAtti() );
+                //lComputiModel.setAnnoProvv(lAnnModel.getChiaveAnnoSige());
+                //lComputiModel.setProgrProvv(lAnnModel.getChiaveNumeroSige());
+
+                siesLogger.debug("lAnnModel.getReaIdReato() = "+lAnnModel.getReaIdReato());
+                if (lAnnModel.getReaIdReato() != null) {
+                    // siesLogger.debug("Individuazione del ReatoCumulo: idReato = "+lAnnota.getReaIdReato());
+
+                    lReatoCumuloSqlDao = new ReatoCumuloSqlDAO(aConn);
+                    lReatoCumuloSqlDao.ricercaReatiCumuloByIdTitolo(aStatoEsecModel.getTitIdTitoloCumulato());
+
+                    Vector<ReatoCumuloModel> lReaVect = new Vector(lReatoCumuloSqlDao.getModels());
+                    lReatoCumuloSqlDao.stop();
+
+                    for (int ii = 0; ii < lReaVect.size(); ii++) {
+                        ReatoCumuloModel lReaCum = lReaVect.get(ii);
+                        if (lReaCum.getIdReatoOrigine().compareTo(lAnnModel.getReaIdReato()) == 0
+                                && lReaCum.getProgrCircostanza().toString().equals("1")) {
+                            lComputiModel.setReaIdReatoCum(lReaCum.getIdReatoCum());
+                            break;
+                        }
+                    }
+                }
+
+                lComputiModel.setFlagStato("E");
+                lComputiModel.setMotivoModifica(null);
+
+                lComputiModel.setTitIdTitoloCumulato(aStatoEsecModel.getTitIdTitoloCumulato());
+                lComputiModel.setIstrIdIstruttoriaCumulo(aStatoEsecModel.getIstrIdIstruttoriaCumulo());
+                lComputiModel.setStatIdStatoEsecTitCum(aStatoEsecModel.getIdStatoEsecTitoloCumulato());
+
+                lComputiModel.setCodOperatoreInserimento(aStatoEsecModel.getCodOperatoreInserimento());
+                lComputiModel.setDataInserimento(aStatoEsecModel.getDataInserimento());
+                lComputiModel.setCodUfficioInserimento(aStatoEsecModel.getCodUfficioInserimento());
+
+                lComputiDao.setDAOFromModel(lComputiModel);
+                lComputiDao.insert();
+
+                lComputiDao.stop();
+            }
+        } catch (DAOException daoEx) {
+            siesLogger.error("DAOException: ", daoEx);
+            throw new F3BException(
+                    "StatoEsecTitoloCumulatoController.caricaRichiestaBeneficiAlGE: Non posso leggere : "
+                            + daoEx);
+        } catch (Exception ex) {
+            siesLogger.error("Exception: ", ex);
+            throw new F3BException(
+                    "StatoEsecTitoloCumulatoController.caricaRichiestaBeneficiAlGE: Non posso leggere : "
+                            + ex);            
+        } finally {
+            cleanup(lAnnotaSqlDao);
+            cleanup(lComputiDao);
+            cleanup(lEveSqlDao);
+            cleanup(lReatoCumuloSqlDao);
+            cleanup(lNotificaSqlDao);            
+        }
+    }	
+	
+	
+	
 	/**
 	 *
 	 * @param aEventoModel

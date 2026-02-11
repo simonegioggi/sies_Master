@@ -275,7 +275,9 @@ if ("S".equals (lDatiFinaliCumulo.getFlagCreaFascicoloMs() ) ) {
       <tr>
         <td class="L" colspan="7">
           <!--Iscrivi sul procedimento <font class="cRosso">2015/40033</font> di questo ufficio-->
-          <% if ( idFascMS.compareTo(new BigDecimal(0))==0) {%>
+          <%-- MEV_2025-48 - ALTRO --%>
+          <% if (   idFascMS.compareTo(new BigDecimal(0))==0 
+                 && "S".equals(datiFinaliAggregatoModel.getDatiFinaliCumulo().getFlagCreaFascicoloMs())) {%>
           <font class="cRosso">Da Iscrivere su nuovo procedimento di Classe IV</font>
           <% } else { %>
           Da aggiungere al procedimento <font class="cRosso"><%=fascicoloEsecMS.getChiaveAnno()%>/<%=fascicoloEsecMS.getChiaveProgr()%></font> di questo ufficio
@@ -283,6 +285,30 @@ if ("S".equals (lDatiFinaliCumulo.getFlagCreaFascicoloMs() ) ) {
         </td>
       </tr>
       <% } %>
+      
+      <%-- MEV_2025-48 - ALTRO --%>
+      <%
+      if (   datiFinaliAggregatoModel.getListaMisureSicurezza()!=null 
+          && datiFinaliAggregatoModel.getListaMisureSicurezza().size()>0
+         )
+      {
+          if (datiFinaliAggregatoModel.getDatiFinaliCumulo().getFlagCreaFascicoloMs()==null)
+          {%>      
+	      <tr>
+	        <td class="L" colspan="7">
+	          <img src='/images/attenzione.jpg' style='border:0px; width:15px; height:15px;'> 
+	          <font class="cRosso">Non è stato ancora indicato se le Misure di Sicurezza selezionate vanno o meno iscritte in un fascicolo</font>
+	        </td>
+	      </tr>
+          <% } else if ("N".equals(datiFinaliAggregatoModel.getDatiFinaliCumulo().getFlagCreaFascicoloMs())) { %>
+          <tr>
+            <td class="L" colspan="7">
+              <font class="cRosso">Non iscrivere le MS a Procedimento classe IV</font>
+            </td>
+          </tr>      
+          <% } %>
+       <% } %>
+      <%-- MEV_2025-48 - ALTRO --%>
    <% } %>
   </table>
   <% if (IstruttoriaCumulo.getFlagStato().equals("A") ){ %>

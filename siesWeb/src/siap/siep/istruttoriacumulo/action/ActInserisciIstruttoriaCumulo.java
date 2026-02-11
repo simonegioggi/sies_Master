@@ -55,7 +55,10 @@ public class ActInserisciIstruttoriaCumulo extends ActionSiap implements ICostan
     //========================================================================== 
     IIstruttoriaCumulo lCtrl = SIEPLookupRemote.getIstruttoriaCumuloRemote();
     IstruttoriaCumuloModel lIstRetMod = new IstruttoriaCumuloModel();
-    lIstRetMod=lCtrl.ExInserisciIstruttoriaCumulo(lIstMod,lFascMod);
+    /* MEV_2025-48 – 2.14 Caricamento Istruttoria Annullata 
+     * Modifica firma metodo */
+    // lIstRetMod=lCtrl.ExInserisciIstruttoriaCumulo(lIstMod,lFascMod);
+    lIstRetMod=lCtrl.ExInserisciIstruttoriaCumulo(lIstMod,lFascMod, null);
     
     
     //====================================================================== 

@@ -146,6 +146,9 @@ public class ComputiCumuloDAO extends TableDAO {
     setField("COD_TIPO_AUT_EMITT_SENTENZA" 	, STRING);
     setField("COD_LUOGO_EMITTENTE_SENTENZA" , STRING);
     
+    // MEV_2025-48 - ALTRO – Benefici con anticipazione effetti
+    setField("FLAG_APP_PROVVISORIA" , STRING);
+    
   }
 
 
@@ -269,6 +272,8 @@ public class ComputiCumuloDAO extends TableDAO {
   public  String      getCodTipoAutoritaEmittente()   	throws DAOException  { return getString     ("COD_TIPO_AUT_EMITT_SENTENZA" 	); } 
   public  String      getCodLuogoEmittente()       		throws DAOException  { return getString     ("COD_LUOGO_EMITTENTE_SENTENZA" ); }
   
+  //MEV_2025-48 - ALTRO – Benefici con anticipazione effetti
+  public  String      getFlagAppProvvisoria()           throws DAOException  { return getString     ("FLAG_APP_PROVVISORIA" ); }
 
   //============================================================================ 
   // Metodi set utilizzati per impostare i campi delle query  
@@ -391,8 +396,10 @@ public class ComputiCumuloDAO extends TableDAO {
   public void  setCodTipoAutoritaRege  		(String      aValore )   { setString     ("TIPO_AUT_REGE" 		 , aValore); } 
   public void  setCodLuogoAutoritaRege      (String      aValore )   { setString     ("COD_SEDE_REGE" 		 , aValore); }
   public void  setDataRege         			(Date        aValore )   { setDate       ("DATA_REGE"       	 , aValore); }
-
-
+  
+  //MEV_2025-48 - ALTRO – Benefici con anticipazione effetti
+  public void  setFlagAppProvvisoria        (String      aValore )   { setString     ("FLAG_APP_PROVVISORIA" , aValore); }
+  
   /***************************************************************************** 
    * Metodo che recupera i dati della select e carica il model in output 
    * @return il model 
@@ -526,7 +533,8 @@ public class ComputiCumuloDAO extends TableDAO {
       getCodTipoAutoritaEmittente(),
       "",
       getCodLuogoEmittente(),
-      ""
+      "",
+      getFlagAppProvvisoria() // MEV_2025-48 - ALTRO – Benefici con anticipazione effetti
       
     );
   }
@@ -655,6 +663,8 @@ public class ComputiCumuloDAO extends TableDAO {
    setCodLuogoAutoritaRege		(aModel.getCodLuogoAutoritaRege()	);
    setDataRege					(aModel.getDataEmissioneOrdRege()	);
    
+   // MEV_2025-48 - ALTRO – Benefici con anticipazione effetti
+   setFlagAppProvvisoria        (aModel.getFlagAppProvvisoria()   );
    
   }
   
@@ -783,6 +793,8 @@ public class ComputiCumuloDAO extends TableDAO {
     setCodLuogoAutoritaRege		(aModel.getCodLuogoAutoritaRege()	);
     setDataRege					(aModel.getDataEmissioneOrdRege()	);    
     
+    // MEV_2025-48 - ALTRO – Benefici con anticipazione effetti
+    setFlagAppProvvisoria        (aModel.getFlagAppProvvisoria()   );
   }  
 
 

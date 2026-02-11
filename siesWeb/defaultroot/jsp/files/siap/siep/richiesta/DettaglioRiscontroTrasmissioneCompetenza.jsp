@@ -321,6 +321,15 @@ if(soggetto.getDataNascita() == null){
           <font class="campo"><%=MessaggioEsito.getDescrEsito()%></font>
       </td>     
     </tr>
+    <tr>
+      <td class="L" width=100% colspan=4>
+        <font class="label">Fascicolo Cumulante:</font>
+          <font class="campo">
+          <%=StringUtils.toStringJSP(MessaggioEsito.getChiaveAnnoFasCumulante(),"&nbsp;")%>
+          /<%=StringUtils.toStringJSP(MessaggioEsito.getChiaveProgrFasCumulante(),"&nbsp;")%>
+          </font>
+      </td>     
+    </tr>
     <%if(MessaggioEsito.getNote()!=null){ %>
       <tr>
         <td class="L" width=100% colspan=4>
@@ -340,8 +349,13 @@ if(soggetto.getDataNascita() == null){
 // era una Trasmissione per Competenza
 //==============================================================================
 %>  
-<% if ( ICostantiJMS.TRASFERIMENTO_COMPETENZA.equals (MessaggioTrasm.getCodTipoOperazione()) ||
-		ICostantiJMS.COMUNICAZIONE_CUMULO_PROCURE_COMPETENTI.equals (MessaggioEsito.getCodTipoOperazione()) ) { %> 
+<% if (   ICostantiJMS.TRASFERIMENTO_COMPETENZA.equals (MessaggioTrasm.getCodTipoOperazione()) 
+       || ICostantiJMS.COMUNICAZIONE_CUMULO_PROCURE_COMPETENTI.equals (MessaggioEsito.getCodTipoOperazione()) 
+       // MEV_2025-48 - 2.15 Gestione Annotazioni Trasmissioni 
+       // Si devono gestire anche gli esiti del seguito per mettere il flag a S
+       || ICostantiJMS.ESITO_SEGUITO_ATTI.equals (MessaggioEsito.getCodTipoOperazione()) 
+	  ) 
+{ %> 
 <form method="POST" action="<%=IWebConstants.PG_MAIN%>" name="formFunzioni"> 
   <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="">
   <input type="HIDDEN" name="<%=ICostantiMessaggio.CAMPO_ID_MESSAGGIO%>" value="">

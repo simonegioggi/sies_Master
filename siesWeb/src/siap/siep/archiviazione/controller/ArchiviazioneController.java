@@ -41,18 +41,7 @@ import siap.siep.scadenzario.model.ScadenzarioModel;
 import siap.siep.statoprocedimento.dao.StatoProcedimentoDAO;
 
 /**
- * <p>
- * Title: ArchiviazioneController
- * </p>
- * <p>
- * Description: Classe Controller per Archiviazione
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * ArchiviazioneController - Classe Controller per Archiviazione
  *
  * @version 1.0
  */
@@ -383,7 +372,7 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 		String lRapp = "";
 
 		try {
-			siesLogger.debug("--XX-- >>>>>>>>>>>>>>>>>>>>>  - ExUpdateValidaArchiviazione -fasc = "
+			siesLogger.debug("ArchiviazioneController.ExUpdateValidaArchiviazione - fasc = "
 					+ aFascicolo.getChiaveAnno() + "/" + aFascicolo.getChiaveProgr());
 			if (aDBConnection != null) {
 				siesLogger.debug("Utilizzo connessione in input ");
@@ -410,7 +399,10 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 			if (lArchMod != null) {
 				if (lArchMod.getCodTipoProvvedimento() != null) {
 					String lStato = null;
-					if (lArchMod.getCodTipoProvvedimento().equals("20")) {
+					// MEV_2025-48: aggiunta nuova funionalita'
+					if (lArchMod.getCodTipoProvvedimento().equals("14"))
+						lStato = "0370";
+					else if (lArchMod.getCodTipoProvvedimento().equals("20")) {
 						if (lArchMod.getCodOggettoDefinizione().equals("0006"))
 							lStato = "0300";
 						else if (lArchMod.getCodOggettoDefinizione().equals("0007"))
@@ -425,10 +417,8 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 							lStato = "0305";
 						else if (lArchMod.getCodOggettoDefinizione().equals("0478"))
 							lStato = "0337";
-
 						lMotivoArchiviazione = "09";
-					}
-					if (lArchMod.getCodTipoProvvedimento().equals("21")) {
+					} else if (lArchMod.getCodTipoProvvedimento().equals("21")) {
 						if (lArchMod.getCodOggettoDefinizione().equals("0097"))
 							lStato = "0308";
 						else if (lArchMod.getCodOggettoDefinizione().equals("0096"))
@@ -445,14 +435,12 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 							lStato = "0339";
 						else if (lArchMod.getCodOggettoDefinizione().equals("0481"))
 							lStato = "0340";
-
 						lMotivoArchiviazione = "02";
 					} else if (lArchMod.getCodTipoProvvedimento().equals("22")) {
 						if (lArchMod.getCodOggettoDefinizione().equals("0019"))
 							lStato = "0315";
 						else if (lArchMod.getCodOggettoDefinizione().equals("0022"))
 							lStato = "0316";
-
 						lMotivoArchiviazione = "01";
 						lAzzeraAmmendaMulta = "S";
 					} else if (lArchMod.getCodTipoProvvedimento().equals("23")) {
@@ -541,7 +529,6 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 						} else if (lArchMod.getCodOggettoDefinizione().equals("1121")) {
 							lStato = "0313";
 						}
-
 						lMotivoArchiviazione = "10";
 					}
 
@@ -1194,7 +1181,7 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 
 	/**
 	 * Mev_2023-33 inserimento Archiviazione per Estinzione Pena Pecuniaria
-	 * 
+	 *
 	 */
 	public ArchiviazioneModel ExInserisciArchiviazionePP(EventoNotificaModel aEveNotMod,
 			ArchiviazioneModel aArchiviazione) throws F3BException {
@@ -1286,7 +1273,7 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 
 	/**
 	 * Mev_2023-33 Modifica Archiviazione per Estinzione Pena Pecuniaria
-	 * 
+	 *
 	 */
 	public ArchiviazioneModel ExModificaArchiviazionePP(EventoNotificaModel aEveNotMod,
 			ArchiviazioneModel aArchiviazione) throws F3BException {

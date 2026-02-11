@@ -20,6 +20,7 @@ import siap.siep.istruttoriacumulo.controller.IIstruttoriaCumulo;
 import siap.siep.istruttoriacumulo.model.IstruttoriaCumuloModel;
 import siap.siep.modulocumulo.controller.IDatiFinaliCumulo;
 import siap.siep.modulocumulo.controller.IMisuraSicurezzaCumulo;
+import siap.siep.modulocumulo.controller.IModuloCumulo;
 import siap.siep.modulocumulo.controller.IPenaAccessoriaCumulo;
 import siap.siep.modulocumulo.controller.ITitoloCumulato;
 import siap.siep.modulocumulo.model.DatiFinaliCumuloAggregatoModel;
@@ -288,5 +289,69 @@ public class ActionModuloCumulo extends ActionSiap implements ICostantiModuloCum
 
 		return lTitoli;
 	}
+	
+	/**
+	 * Recupera la lista dei titoli con continuazioni di tipo R non correttamente
+	 * agganciate ad altri titoli in istruttoria
+	 * 
+	 * @since MEV_2025-48 - 2.12 Alert su continuazione
+	 */
+    public Vector <TitoloCumulatoModel> getListaTitContSganciate (BigDecimal aIdIstruttoria) throws F3BException {
+
+        Vector <TitoloCumulatoModel> lTitoli = new Vector <TitoloCumulatoModel>();
+        
+        if (aIdIstruttoria == null
+                && (isRequestParameterNullObj(ICostantiIstruttoriaCumulo.CAMPO_ID_ISTRUTTORIA_CUMULO) || getRequestBigDecimalParameter(ICostantiIstruttoriaCumulo.CAMPO_ID_ISTRUTTORIA_CUMULO) == null)) {
+            return null;
+        } else {
+            BigDecimal lIdIstruttoriaCorrente = null;
+
+            if (aIdIstruttoria != null)
+                lIdIstruttoriaCorrente = aIdIstruttoria;
+            else
+                lIdIstruttoriaCorrente = this
+                        .getRequestBigDecimalParameter(ICostantiIstruttoriaCumulo.CAMPO_ID_ISTRUTTORIA_CUMULO);
+
+            // Recupero le continuazioni
+            IModuloCumulo lModuloCtrl = SIEPLookupRemote.getModuloCumuloRemote();
+            lTitoli = lModuloCtrl.ExRicercaTitoliConContinuazioniSganciate (lIdIstruttoriaCorrente);
+            
+            setRequestAttribute("ListaTitContSganciate", lTitoli);
+        }
+
+        return lTitoli;
+    }
+    
+    /**
+     * Recupera la lista dei titoli con annotate Revoche Benefici (sosp con 01, Indulto 03) non correttamente
+     * agganciate ad altri titoli in istruttoria
+     * 
+     * @since MEV_2025-48 - 2.12 Alert su continuazione
+     */
+    public Vector <TitoloCumulatoModel> getListaTitConRevBenSganciati (BigDecimal aIdIstruttoria) throws F3BException {
+
+        Vector <TitoloCumulatoModel> lTitoli = new Vector <TitoloCumulatoModel>();
+        
+        if (aIdIstruttoria == null
+                && (isRequestParameterNullObj(ICostantiIstruttoriaCumulo.CAMPO_ID_ISTRUTTORIA_CUMULO) || getRequestBigDecimalParameter(ICostantiIstruttoriaCumulo.CAMPO_ID_ISTRUTTORIA_CUMULO) == null)) {
+            return null;
+        } else {
+            BigDecimal lIdIstruttoriaCorrente = null;
+
+            if (aIdIstruttoria != null)
+                lIdIstruttoriaCorrente = aIdIstruttoria;
+            else
+                lIdIstruttoriaCorrente = this
+                        .getRequestBigDecimalParameter(ICostantiIstruttoriaCumulo.CAMPO_ID_ISTRUTTORIA_CUMULO);
+
+            // Recupero le continuazioni
+            IModuloCumulo lModuloCtrl = SIEPLookupRemote.getModuloCumuloRemote();
+            lTitoli = lModuloCtrl.ExRicercaTitoliConRevBenSganciati (lIdIstruttoriaCorrente);
+            
+            setRequestAttribute("ListaTitRevBenSganciati", lTitoli);
+        }
+
+        return lTitoli;
+    }
 
 }

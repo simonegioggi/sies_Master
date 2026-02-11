@@ -3,8 +3,9 @@ package siap.siep.modulocumulo.action;
 import java.io.ByteArrayOutputStream;
 
 import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import f3b.web.IWebConstants;
-
+import siap.siep.SIEPException;
 import siap.siep.modulocumulo.controller.IRichiestePmInCumulo;
 import siap.siep.modulocumulo.model.RichiesteInviateCumModel;
 import siap.siep.util.SIEPLookupRemote;
@@ -26,18 +27,29 @@ implements ICostantiRichiestePmInCumulo
 	
   public String processRequest() throws Exception
   {
-    siesLogger.info(" START -----> ");
+    siesLogger.debug(" START -----> ");
     
     RichiesteInviateCumModel lRicMod = new RichiesteInviateCumModel();
     lRicMod.setIdRichiesteInviateCum(getRequestBigDecimalParameter(CAMPO_ID_RICHIESTA_INVIATA_CUM) );
     
     IRichiestePmInCumulo lCtrlRic = SIEPLookupRemote.getRichiestePmInCumuloRemote();
-    ByteArrayOutputStream lReport = lCtrlRic.ExGetDocumento( lRicMod );
- 
+    ByteArrayOutputStream lReport = null;
+    try {
+        lReport = lCtrlRic.ExGetDocumento( lRicMod );
+    }
+    catch (F3BException e) {
+        siesLogger.warn("ActLoadDocBlobRichiestaDelPMCumulo F3BException: "+e.getMessage());
+        if (e.getErrorCode()==F3BException.USER_MESSAGE)
+            throw new SIEPException(F3BException.USER_MESSAGE,e.getMessage());
+    //                "Non si può trasferire l'istruttoria sullo stesso fascicolo");
+    }
+    catch (Exception e) {
+        siesLogger.warn("ActLoadDocBlobRichiestaDelPMCumulo Exception: "+e.getMessage());
+    }
     setRequestAttribute("report", lReport);
-    siesLogger.info("Report Size : " + lReport.size());
+    siesLogger.debug("Report Size : " + lReport.size());
     
-    siesLogger.info(" -----> END ");
+    siesLogger.debug(" -----> END ");
     
     return IWebConstants.PG_DOWNLOAD_DOCUMENT;
   }

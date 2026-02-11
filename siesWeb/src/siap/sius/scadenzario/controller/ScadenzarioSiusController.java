@@ -24,18 +24,7 @@ import siap.sius.scadenzario.dao.ScadenzarioSiusSqlDAO;
 import siap.sius.scadenzario.model.ScadenzarioSiusModel;
 
 /**
- * <p>
- * Title: ScadenzarioSiusController
- * </p>
- * <p>
- * Description: Classe Controller per ScadenzarioSius
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * ScadenzarioSiusController - Classe Controller per Scadenzario Sius
  *
  * @version 1.0
  */
@@ -76,7 +65,6 @@ public class ScadenzarioSiusController extends SiapController implements IScaden
 
 	/**
 	 * Ricerca i Tipi Scadenzari Sius per l'ufficio Collegato.
-	 * <p>
 	 *
 	 * @param aTipoUfficio
 	 * @return Vettore di Tipi Scadenzari SIUS
@@ -269,12 +257,10 @@ public class ScadenzarioSiusController extends SiapController implements IScaden
 	/**
 	 * Ricerca record di scadenzario di un determinato tipo, con scadenza all'interno di un intervallo di
 	 * date.
-	 *
 	 */
 	public Vector ExRicercaScadenzarioSius(String aTipoScadenzario, Date aData1, Date aData2
-			// Ticket#202305250112 - aggiunto filtro per codice ufficio 
-			, String aCodUfficio)
-			throws F3BException {
+	// Ticket#202305250112 - aggiunto filtro per codice ufficio
+			, String aCodUfficio) throws F3BException {
 
 		Connection lConn = null;
 		Vector lScadenzariSius = new Vector();
@@ -290,12 +276,11 @@ public class ScadenzarioSiusController extends SiapController implements IScaden
 			lSoggDao = new SoggettoSqlDAO(lConn);
 			lEveDao = new EventoSqlDAO(lConn);
 
-			// Ticket#202305250112 - aggiunto filtro per codice ufficio 
+			// Ticket#202305250112 - aggiunto filtro per codice ufficio
 			// lScaDao.ricercaScadenzarioSiusPerTipoDate(aTipoScadenzario, aData1, aData2);
-			lScaDao.ricercaScadenzarioSiusPerTipoDate (aTipoScadenzario, aData1, aData2, aCodUfficio);
+			lScaDao.ricercaScadenzarioSiusPerTipoDate(aTipoScadenzario, aData1, aData2, aCodUfficio);
 			// Ticket#202305250112 - FINE
-			
-			
+
 			lScadenzariSius = new Vector(lScaDao.getModels());
 			if (lScadenzariSius.size() == 0) {
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");

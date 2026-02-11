@@ -32,9 +32,15 @@ import siap.siep.modulocumulo.util.CalcoloPenaCumuloModel;
 @SuppressWarnings("rawtypes")
 public interface IIstruttoriaCumulo {
 
-	public IstruttoriaCumuloModel ExInserisciIstruttoriaCumulo(IstruttoriaCumuloModel aIstruttoriaCumulo,
-			FascicoloSiepModel aFascicoloSiep) throws F3BException;
-
+    /* MEV_2025-48 – 2.14 Caricamento Istruttoria Annullata 
+     * Modificata firma per gestire connessione in ingresso
+     * */ 
+	//public IstruttoriaCumuloModel ExInserisciIstruttoriaCumulo(IstruttoriaCumuloModel aIstruttoriaCumulo,
+	//		FascicoloSiepModel aFascicoloSiep) throws F3BException;
+    public IstruttoriaCumuloModel ExInserisciIstruttoriaCumulo(IstruttoriaCumuloModel aIstruttoriaCumulo,
+            FascicoloSiepModel aFascicoloSiep, Connection aDBConnection) throws F3BException;
+    /* MEV_2025-48 – 2.14 - FINE */
+    
 	public BigDecimal ExCountIstruttoriaCumuloPaged(IstruttoriaCumuloModel aIstruttoriaCumulo)
 			throws F3BException;
 
@@ -159,10 +165,18 @@ public interface IIstruttoriaCumulo {
 	public CalcoloPenaCumuloModel ExCalcolaPenaCumuloByIstruttoria(BigDecimal aIdIstruttoriaCumulo,
 			BigDecimal aIdTitolo, boolean aComputaRichieste) throws F3BException;
 
+	/* MEV_2025-48 - Aggiunta ricerca per chiaveAnno/chiaveProgr e ufficio accorpato: Aggiunto FascicoloSiepModel */
+//	public BigDecimal ExCountFascicoliBySoggettoProprioUfficioPaged(SoggettoModel aSogModel,
+//			String lCodUfficioUtenteConnesso, int aPage) throws F3BException;
 	public BigDecimal ExCountFascicoliBySoggettoProprioUfficioPaged(SoggettoModel aSogModel,
+			FascicoloSiepModel aFascModel,
 			String lCodUfficioUtenteConnesso, int aPage) throws F3BException;
 
+	/* MEV_2025-48 - Aggiunta ricerca per chiaveAnno/chiaveProgr e ufficio accorpato: Aggiunto FascicoloSiepModel */
+//	public Vector<FascicoloSiepModel> ExRicercaFascicoliBySoggettoProprioUfficioPaged(SoggettoModel aSogModel,
+//			String lCodUfficioUtenteConnesso, int aPage, BigDecimal lIdIstru) throws F3BException;
 	public Vector<FascicoloSiepModel> ExRicercaFascicoliBySoggettoProprioUfficioPaged(SoggettoModel aSogModel,
+			FascicoloSiepModel aFascModel,
 			String lCodUfficioUtenteConnesso, int aPage, BigDecimal lIdIstru) throws F3BException;
 
 	public Vector<EsitoArchiviazioniCumuloModel> ExRicercaEsitoArchiviazionideiCumulatiByIdEvento(
@@ -173,5 +187,11 @@ public interface IIstruttoriaCumulo {
 
 	public Vector<TitoloCumulatoModel> titoloDoppioInIstruttoria(BigDecimal aIdIstruttoria)
 			throws F3BException;
-  
+	
+	/* MEV_2025-48 2.14 Caricamento Istruttoria Annullata */
+    public IstruttoriaCumuloModel ExTrasferisciIstruttoriaCumulo (IstruttoriaCumuloModel aIstruttoriaToAdd,
+            IstruttoriaCumuloModel aIstruttoriaCorrente) throws F3BException;
+    
+    public IstruttoriaCumuloModel ExRicercaIstruttoriaUltimoCumulo (BigDecimal aIdFascicoloSiep) throws F3BException;
+    /* MEV_2025-48 2.14 Caricamento Istruttoria Annullata */
 }

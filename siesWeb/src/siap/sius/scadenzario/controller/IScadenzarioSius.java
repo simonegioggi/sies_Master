@@ -4,23 +4,12 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Vector;
 
-import siap.sius.scadenzario.model.ScadenzarioSiusModel;
 import f3b.util.F3BException;
+import siap.sius.scadenzario.model.ScadenzarioSiusModel;
 
 /**
- * <p>
- * Title: ScadenzarioSiusController
- * </p>
- * <p>
- * Description: Classe Controller per ScadenzarioSius
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ * ScadenzarioSiusController - Classe Controller per Scadenzario Sius
+ *
  * @version 1.0
  */
 @SuppressWarnings("rawtypes")
@@ -35,11 +24,11 @@ public interface IScadenzarioSius {
 
 	public Vector ExRicercaScadenzarioSius(Date aData1, Date aData2) throws F3BException;
 
-	// Ticket#202305250112 - aggiunto filtro per codice ufficio 
-	//public Vector ExRicercaScadenzarioSius(String aTipoScadenzario, Date aData1, Date aData2)
-	// 		throws F3BException;
-	public Vector ExRicercaScadenzarioSius(String aTipoScadenzario, Date aData1, Date aData2, String aCodUfficio)
-			throws F3BException;
+	// Ticket#202305250112 - aggiunto filtro per codice ufficio
+	// public Vector ExRicercaScadenzarioSius(String aTipoScadenzario, Date aData1, Date aData2)
+	// throws F3BException;
+	public Vector ExRicercaScadenzarioSius(String aTipoScadenzario, Date aData1, Date aData2,
+			String aCodUfficio) throws F3BException;
 	// Ticket#202305250112 - FINE
 
 	public ScadenzarioSiusModel ExModificaScadenzarioSius(ScadenzarioSiusModel aScadenzarioSius)
