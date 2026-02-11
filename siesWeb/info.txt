@@ -1,5 +1,13 @@
-BRANCH SIES VERSIONE 12.9.0.0
+BRANCH SIES VERSIONE 12.9.1.0
 
-Corrisponde al branch MEV_2025-48, creato in data 11/02/2026
+Nasce dal branch 12.9.0.0 in data 11/02/2026
 
-Data prevista per la diffusione mercoledì 18 febbraio 2026.
+Questa Release verrà rilasciata il 27/02/2026 (Patch mesi di Gennaio e Febbraio 2026)
+
+Comprende i seguenti Ticket MAC:
+
+1)	Ticket#
+	Per la risoluzione della problematica è stata modificata ...
+	Il problema era legato al fatto che ...
+	Classe modificata:
+	-   ...
