@@ -53,8 +53,10 @@ import siap.siep.competenza.dao.CompetenzaDAO;
 import siap.siep.competenza.model.CompetenzaModel;
 import siap.siep.continuazione.dao.ContinuazioneSqlDAO;
 import siap.siep.continuazione.model.ContinuazioneModel;
+import siap.siep.fascicolo.dao.FascicoloSiepDAO;
 import siap.siep.fascicolo.dao.FascicoloSiepSqlDAO;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
+import siap.siep.istruttoriacumulo.dao.IstruttoriaCumuloDAO;
 import siap.siep.istruttoriacumulo.dao.IstruttoriaCumuloSqlDAO;
 import siap.siep.istruttoriacumulo.model.IstruttoriaCumuloModel;
 import siap.siep.luogodetenzione.dao.LuogoDetenzioneSqlDAO;
@@ -145,12 +147,7 @@ import siap.siep.tipologiaorario.model.TipologiaOrarioModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * <p>
- * Title: ModuloCumuloController
- * </p>
- * <p>
- * Description: Classe Controller contenente i metodi per l'estrazione dei dati analitici
- * </p>
+ * ModuloCumuloController - Classe Controller contenente i metodi per l'estrazione dei dati analitici
  *
  * @version 1.0
  */
@@ -582,7 +579,7 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 				// FIXME In test
 				// ========================================================================
 				try {
-				    siesLogger.debug("Test caricaEspiazionePregressa ");
+					siesLogger.debug("Test caricaEspiazionePregressa ");
 					caricaEspiazionePregressa(aIdFascicoloSiep, lTitoloModel.getIdTitoloCumulato(),
 							aIdIstruttoriaCumulo, aDatoOpModel, lConn);
 				} catch (Exception e) {
@@ -614,16 +611,19 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			} else {
 				siesLogger.debug(
 						"Nessun provvedimento di cumulo presente sul cumulato, estrazione dati terminata. ");
-//				// MEV_2025-48 – 2.14 Caricamento Istruttoria Annullata
-//				// TEST se non trovo una istruttoria chiusa valida Estraggo i dati dall'ultima istruttoria annullata
-//              // NON PIU implementata. Il trasferimento è esplicito solo dalla grgiglia delle istruttorie aperte
-				//				lIstruttoraSqlDao.ricercaIstruttoriaCumuloAnnullataByIdFas(aIdFascicoloSiep);
-//				lUltimaIstruttoria = (IstruttoriaCumuloModel) lIstruttoraSqlDao.getModelByKey();
-//				if (lUltimaIstruttoria != null) {
-//					siesLogger.debug("Trovata Istruttoria annullata la carico...");
-//					EstraiDaPrecedenteCumulo(lUltimaIstruttoria, aIdIstruttoriaCumulo, lFascicolo, aDatoOpModel,
-//							lConn, aTipoIscrizione);					
-//				}
+				// // MEV_2025-48 – 2.14 Caricamento Istruttoria Annullata
+				// // TEST se non trovo una istruttoria chiusa valida Estraggo i dati dall'ultima istruttoria
+				// annullata
+				// // NON PIU implementata. Il trasferimento è esplicito solo dalla grgiglia delle istruttorie
+				// aperte
+				// lIstruttoraSqlDao.ricercaIstruttoriaCumuloAnnullataByIdFas(aIdFascicoloSiep);
+				// lUltimaIstruttoria = (IstruttoriaCumuloModel) lIstruttoraSqlDao.getModelByKey();
+				// if (lUltimaIstruttoria != null) {
+				// siesLogger.debug("Trovata Istruttoria annullata la carico...");
+				// EstraiDaPrecedenteCumulo(lUltimaIstruttoria, aIdIstruttoriaCumulo, lFascicolo,
+				// aDatoOpModel,
+				// lConn, aTipoIscrizione);
+				// }
 				// MEV_2025-48 – 2.14 FINE
 			}
 
@@ -2845,9 +2845,11 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 	 *            - ??? Per ora non utilizzata
 	 * @throws F3BException
 	 */
-	/* MEV_2025-48 – 2.14 Caricamento Istruttoria Annullata
-	 * il metodo diventa public per essere richiamato anche da IStruttoriaCumuloController */
-	//private void EstraiDaPrecedenteCumulo(IstruttoriaCumuloModel aUltimaIstruttoria,
+	/*
+	 * MEV_2025-48 – 2.14 Caricamento Istruttoria Annullata il metodo diventa public per essere richiamato
+	 * anche da IStruttoriaCumuloController
+	 */
+	// private void EstraiDaPrecedenteCumulo(IstruttoriaCumuloModel aUltimaIstruttoria,
 	public void EstraiDaPrecedenteCumulo(IstruttoriaCumuloModel aUltimaIstruttoria,
 			BigDecimal aIdIstruttoriaCumulo, FascicoloSiepModel aFascicoloSiepCumulato,
 			DatiOperazioneModel aDatoOpModel, Connection aDBConnection, String aTipoIscrizione)
@@ -2859,6 +2861,11 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 		ProcedimentoCumulatoSqlDAO lProcedimentoSqlDao = null;
 		ContinuazioneCumuloDAO lContCumDao = null;
 		BeneficioCumuloDAO lBenCumDao = null;
+
+		// Ticket#202601140182 - SIEP : Doppio titolo Esecutivo
+		FascicoloSiepDAO lFascSiepDao = null;
+		IstruttoriaCumuloDAO lIstrDAO = null;
+		// Ticket#202601140182 - FINE
 
 		// Le tabelle del cumulo si referenziano tra di loro per cui in fase di
 		// copia dei record di un titolo vanno ricreati i collegamneti anche sui
@@ -2912,6 +2919,21 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 				lConn = getDBConnection();
 			}
 
+			// Ticket#202601140182 - SIEP : Doppio titolo Esecutivo
+			// recupero dati del cumulante principale
+			siesLogger.debug("Istruttoria Principale: " + aIdIstruttoriaCumulo);
+			lIstrDAO = new IstruttoriaCumuloDAO(lConn);
+			lIstrDAO.selCondizioneUpdate(aIdIstruttoriaCumulo);
+			IstruttoriaCumuloModel lIstruttoria = (IstruttoriaCumuloModel) lIstrDAO.getModelByKey();
+
+			siesLogger.debug(
+					"Ricerca il fascicolo cumulante principale: " + lIstruttoria.getFasSieIdFascicoloSiep());
+			lFascSiepDao = new FascicoloSiepDAO(lConn);
+			lFascSiepDao.selCondizioneUpdate(lIstruttoria.getFasSieIdFascicoloSiep());
+			FascicoloSiepModel lFasCumulantePrincipale = (FascicoloSiepModel) lFascSiepDao.getModelByKey();
+			siesLogger.debug("lFasCumulantePrincipale = " + lFasCumulantePrincipale);
+			// Ticket#202601140182 - FINE
+
 			lTitoloCumSqlDao = new TitoloCumulatoSqlDAO(lConn);
 
 			lTitoloCumSqlDao.ricercaTitoloCumulatoByIstruttoria(aUltimaIstruttoria.getIdIstruttoriaCumulo());
@@ -2934,17 +2956,34 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 					lProcModel = (ProcedimentoCumulatoModel) lProcedimentoSqlDao.getModel();
 
 				siesLogger.debug("lProcModel = " + lProcModel);
+				siesLogger.debug("aFascicoloSiepCumulato = " + aFascicoloSiepCumulato);
+
 				boolean lStessoTitolo = false;
 				if (lProcModel != null) {
-					if (aFascicoloSiepCumulato.getChiaveAnno()
+					// Ticket#202601140182 - SIEP : Doppio titolo Esecutivo
+					// Attenzione che se l'istruttoria non è del fascicolo cumulante (secono cumulo)
+					// ma viene da un cumulo presente su un cumulato è possibile che il cumulante corrente
+					// fosse in istruttoria
+					// if (aFascicoloSiepCumulato.getChiaveAnno()
+					// .compareTo(lProcModel.getChiaveAnnoFasCumulato()) == 0
+					// && aFascicoloSiepCumulato.getChiaveProgr()
+					// .compareTo(lProcModel.getChiaveProgrFasCumulato()) == 0
+					// && aFascicoloSiepCumulato.getChiaveUfficio()
+					// .equals(lProcModel.getCodUfficioFasCumulato())) {
+					// siesLogger.debug("Stesso titolo del cumulante lo salto");
+					// lStessoTitolo = true;
+					// }
+
+					if (lFasCumulantePrincipale.getChiaveAnno()
 							.compareTo(lProcModel.getChiaveAnnoFasCumulato()) == 0
-							&& aFascicoloSiepCumulato.getChiaveProgr()
+							&& lFasCumulantePrincipale.getChiaveProgr()
 									.compareTo(lProcModel.getChiaveProgrFasCumulato()) == 0
-							&& aFascicoloSiepCumulato.getChiaveUfficio()
+							&& lFasCumulantePrincipale.getChiaveUfficio()
 									.equals(lProcModel.getCodUfficioFasCumulato())) {
-						siesLogger.debug("Stesso titolo del cumulante lo salto");
+						siesLogger.debug("Stesso titolo del cumulante principale lo salto");
 						lStessoTitolo = true;
 					}
+					// Ticket#202601140182 - FINE
 				} else {
 					siesLogger.debug("Procedimento cumulato assente");
 				}
@@ -3028,6 +3067,11 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			cleanup(lProcedimentoSqlDao);
 			cleanup(lContCumDao);
 			cleanup(lBenCumDao);
+
+			// Ticket#202601140182 - SIEP : Doppio titolo Esecutivo
+			cleanup(lFascSiepDao);
+			cleanup(lIstrDAO);
+			// Ticket#202601140182 - FINE
 
 			if (aDBConnection == null) {
 				cleanup(lConn);
@@ -4373,194 +4417,184 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 		}
 	}
 
-	
 	/**
-     * Si aggiunge metodo per recuperare i titoli con Continuazioni 
-     * non agganciate correttamente
-     * Per verifica mancato aggancio con il titolo in continuazione
-     * 
-     * @since MEV_2025-48 - 2.12 Alert su continuazione
-     */
-    public Vector <TitoloCumulatoModel> ExRicercaTitoliConContinuazioniSganciate (BigDecimal aIdIstruttoriaCumulo) 
-            throws F3BException 
-    {
-    
-        Connection lConn = null;
-        
-        ContinuazioneCumuloSqlDAO lContCumSqlDao = null;
-        TitoloCumulatoSqlDAO lTitoloSqlDao = null;
-        ProcedimentoCumulatoSqlDAO lProcCumSqlDao = null;
-        
-        Vector <ContinuazioneCumuloModel> lListaContinuazioni = new Vector <ContinuazioneCumuloModel>();
-        Vector <TitoloCumulatoModel> lListaTitoli = new Vector <TitoloCumulatoModel>();
+	 * Si aggiunge metodo per recuperare i titoli con Continuazioni non agganciate correttamente Per verifica
+	 * mancato aggancio con il titolo in continuazione
+	 *
+	 * @since MEV_2025-48 - 2.12 Alert su continuazione
+	 */
+	public Vector<TitoloCumulatoModel> ExRicercaTitoliConContinuazioniSganciate(
+			BigDecimal aIdIstruttoriaCumulo) throws F3BException {
 
-        try {
-            lConn = getDBConnection();
-        
-            siesLogger.debug("Ricerco se presenti continuazioni in istruttoria");
-            
-            lContCumSqlDao = new ContinuazioneCumuloSqlDAO (lConn);
-            lTitoloSqlDao = new TitoloCumulatoSqlDAO (lConn);
-            lProcCumSqlDao = new ProcedimentoCumulatoSqlDAO (lConn);
+		Connection lConn = null;
 
-            
-            lContCumSqlDao.ricercaContinuazioneByIdIstruttoria (aIdIstruttoriaCumulo);
-            
-            lListaContinuazioni = new Vector<ContinuazioneCumuloModel>(lContCumSqlDao.getModels());
-            
-            // n.b. sullo stesso titolo potrebbero esserci più continuazioni
-            // dovendo aggregare per titolo...
-            for (int i = 0; i < lListaContinuazioni.size(); i++) {
-                ContinuazioneCumuloModel lContModel = lListaContinuazioni.elementAt(i);
-                if (   "R".equals(lContModel.getCodTipoContinuazione())
-                        && lContModel.getTitIdTitoloCumulatoCont()== null)
-                {
-                    // Se il titolo non è in lista lo ricerco
-                    TitoloCumulatoModel lTitolo = null;
-                    for (int j = 0; j < lListaTitoli.size(); j++) {
-                        if (lListaTitoli.elementAt(j).getIdTitoloCumulato().compareTo(lContModel.getTitIdTitoloCumulato())==0 )
-                            lTitolo = lListaTitoli.elementAt(j);                       
-                    }    
-                    
-                    if (lTitolo==null) {
-                        // Recupera il titolo 
-                        lTitoloSqlDao.ricercaTitoloCumulatoByKey(lContModel.getTitIdTitoloCumulato());
-                        lTitolo = (TitoloCumulatoModel)lTitoloSqlDao.getModelByKey();
-                    
-                        // Recupera il procedimento 
-                        lProcCumSqlDao.ricercaProcedimentoCumulatoByIdTitolo(lTitolo.getIdTitoloCumulato());
-                        ProcedimentoCumulatoModel lProcModel = (ProcedimentoCumulatoModel) lProcCumSqlDao.getModelByKey();
-                        lTitolo.setProcedimentoCumulato(lProcModel);                        
-                        
-                        // record fittizio per aggiungere la lista delle continuazioni
-                        PenaComplessivaCumuloModel lPenaComp = new PenaComplessivaCumuloModel();
-                        
-                        lTitolo.setPenaComplessivaCumulo(lPenaComp);
-                        
-                        Vector vect = new Vector ();
-                        vect.add(lContModel);
-                        lPenaComp.setContinuazioniCumulo(vect);
-                        
-                        lListaTitoli.add(lTitolo);
-                    }
-                    else {
-                        Vector vect = (Vector) lTitolo.getPenaComplessivaCumulo().getContinuazioniCumulo();
-                        vect.add(lContModel);
-                    }
-                }
-            }
-        } catch (DAOException ex) {
-            siesLogger.error("DAOException: ", ex);
-            throw new F3BException(
-                    "ModuloCumuloController.ExRicercaTitoliConContinuazioniSganciate: " + ex);
-        } catch (Exception ex) {
-            siesLogger.error("Exception: ", ex);
-            throw new F3BException(
-                    "ModuloCumuloController.ExRicercaTitoliConContinuazioniSganciate: " + ex);
-        } finally {
-            cleanup(lContCumSqlDao);
-            cleanup(lTitoloSqlDao);
-            cleanup(lProcCumSqlDao);
-            
-            cleanup(lConn);
-        }
-        
-        return lListaTitoli;
-    }	
-	
-    /**
-     * Si aggiunge metodo per recuperare i titoli con Revoche Benefici (sosp cond e indulto) 
-     * non agganciate correttamente
-     * 
-     * @since MEV_2025-48 - 2.12 Alert su continuazione
-     */
-    public Vector <TitoloCumulatoModel> ExRicercaTitoliConRevBenSganciati (BigDecimal aIdIstruttoriaCumulo) 
-            throws F3BException 
-    {
-    
-        Connection lConn = null;
-        
-        BeneficioCumuloSqlDAO lBenCumSqlDao = null;
-        TitoloCumulatoSqlDAO lTitoloSqlDao = null;
-        ProcedimentoCumulatoSqlDAO lProcCumSqlDao = null;
-        
-        Vector <TitoloCumulatoModel> lListaTitoli = new Vector <TitoloCumulatoModel>();
+		ContinuazioneCumuloSqlDAO lContCumSqlDao = null;
+		TitoloCumulatoSqlDAO lTitoloSqlDao = null;
+		ProcedimentoCumulatoSqlDAO lProcCumSqlDao = null;
 
-        try {
-            lConn = getDBConnection();
-        
-            siesLogger.debug("Ricerco se presenti revoche benefici in istruttoria");
-            
-            lBenCumSqlDao = new BeneficioCumuloSqlDAO (lConn);
-            lTitoloSqlDao = new TitoloCumulatoSqlDAO (lConn);
-            lProcCumSqlDao = new ProcedimentoCumulatoSqlDAO (lConn);
+		Vector<ContinuazioneCumuloModel> lListaContinuazioni = new Vector<>();
+		Vector<TitoloCumulatoModel> lListaTitoli = new Vector<>();
 
-            
-            lBenCumSqlDao.ricercaBeneficioCumuloByIdIstruttoria(aIdIstruttoriaCumulo);
-            
-            Vector <BeneficioCumuloModel> lListaBenefici = new Vector<BeneficioCumuloModel>(lBenCumSqlDao.getModels());
-            
-            // n.b. prendo solo quelli con con natura R e di tipo 01/03 che non hanno il puntamento 
-            // al titolo 
-            for (int i = 0; i < lListaBenefici.size(); i++) {
-                BeneficioCumuloModel lBenModel = lListaBenefici.elementAt(i);
-                
-                if (   "R".equals(lBenModel.getCodNaturaBeneficio())
-                    && (   "01".equals(lBenModel.getCodTipoBeneficio())
-                        || "03".equals(lBenModel.getCodTipoBeneficio())
-                       )
-                    && lBenModel.getTitIdTitoloCumulatoCollegato()==null
-                   )
-                {
-                    siesLogger.debug("Trovata revoca non collegata: "+lBenModel.getIdBeneficioCumulo()
-                                     +" - "+lBenModel.getDescrNaturaBeneficio()
-                                     +" - "+lBenModel.getDescrTipoBeneficio());
-                    
-                    // Se il titolo non è in lista lo ricerco
-                    TitoloCumulatoModel lTitolo = null;
-                    for (int j = 0; j < lListaTitoli.size(); j++) {
-                        if (lListaTitoli.elementAt(j).getIdTitoloCumulato().compareTo(lBenModel.getTitIdTitoloCumulato())==0 )
-                            lTitolo = lListaTitoli.elementAt(j);                       
-                    }    
-                    
-                    if (lTitolo==null) {
-                        // Recupera il titolo 
-                        lTitoloSqlDao.ricercaTitoloCumulatoByKey(lBenModel.getTitIdTitoloCumulato());
-                        lTitolo = (TitoloCumulatoModel) lTitoloSqlDao.getModelByKey();
-                    
-                        // Recupera il procedimento 
-                        lProcCumSqlDao.ricercaProcedimentoCumulatoByIdTitolo(lTitolo.getIdTitoloCumulato());
-                        ProcedimentoCumulatoModel lProcModel = (ProcedimentoCumulatoModel) lProcCumSqlDao.getModelByKey();
-                        lTitolo.setProcedimentoCumulato(lProcModel);                        
-                        
-                        Vector vect = new Vector ();
-                        vect.add(lBenModel);
-                        
-                        lTitolo.setBeneficiCumulo(vect);
-                        
-                        lListaTitoli.add(lTitolo);
-                    }
-                    else {
-                        lTitolo.getBeneficiCumulo().add(lBenModel);
-                    }
-                }
-            }
-        } catch (DAOException ex) {
-            siesLogger.error("DAOException: ", ex);
-            throw new F3BException(
-                    "ModuloCumuloController.ExRicercaTitoliConRevBenSganciati: " + ex);
-        } catch (Exception ex) {
-            siesLogger.error("Exception: ", ex);
-            throw new F3BException(
-                    "ModuloCumuloController.ExRicercaTitoliConRevBenSganciati: " + ex);
-        } finally {
-            cleanup(lBenCumSqlDao);
-            cleanup(lTitoloSqlDao);
-            cleanup(lProcCumSqlDao);
-            
-            cleanup(lConn);
-        }
-        
-        return lListaTitoli;
-    }	
+		try {
+			lConn = getDBConnection();
+
+			siesLogger.debug("Ricerco se presenti continuazioni in istruttoria");
+
+			lContCumSqlDao = new ContinuazioneCumuloSqlDAO(lConn);
+			lTitoloSqlDao = new TitoloCumulatoSqlDAO(lConn);
+			lProcCumSqlDao = new ProcedimentoCumulatoSqlDAO(lConn);
+
+			lContCumSqlDao.ricercaContinuazioneByIdIstruttoria(aIdIstruttoriaCumulo);
+
+			lListaContinuazioni = new Vector<ContinuazioneCumuloModel>(lContCumSqlDao.getModels());
+
+			// n.b. sullo stesso titolo potrebbero esserci più continuazioni
+			// dovendo aggregare per titolo...
+			for (int i = 0; i < lListaContinuazioni.size(); i++) {
+				ContinuazioneCumuloModel lContModel = lListaContinuazioni.elementAt(i);
+				if ("R".equals(lContModel.getCodTipoContinuazione())
+						&& lContModel.getTitIdTitoloCumulatoCont() == null) {
+					// Se il titolo non è in lista lo ricerco
+					TitoloCumulatoModel lTitolo = null;
+					for (int j = 0; j < lListaTitoli.size(); j++) {
+						if (lListaTitoli.elementAt(j).getIdTitoloCumulato()
+								.compareTo(lContModel.getTitIdTitoloCumulato()) == 0)
+							lTitolo = lListaTitoli.elementAt(j);
+					}
+
+					if (lTitolo == null) {
+						// Recupera il titolo
+						lTitoloSqlDao.ricercaTitoloCumulatoByKey(lContModel.getTitIdTitoloCumulato());
+						lTitolo = (TitoloCumulatoModel) lTitoloSqlDao.getModelByKey();
+
+						// Recupera il procedimento
+						lProcCumSqlDao.ricercaProcedimentoCumulatoByIdTitolo(lTitolo.getIdTitoloCumulato());
+						ProcedimentoCumulatoModel lProcModel = (ProcedimentoCumulatoModel) lProcCumSqlDao
+								.getModelByKey();
+						lTitolo.setProcedimentoCumulato(lProcModel);
+
+						// record fittizio per aggiungere la lista delle continuazioni
+						PenaComplessivaCumuloModel lPenaComp = new PenaComplessivaCumuloModel();
+
+						lTitolo.setPenaComplessivaCumulo(lPenaComp);
+
+						Vector vect = new Vector();
+						vect.add(lContModel);
+						lPenaComp.setContinuazioniCumulo(vect);
+
+						lListaTitoli.add(lTitolo);
+					} else {
+						Vector vect = (Vector) lTitolo.getPenaComplessivaCumulo().getContinuazioniCumulo();
+						vect.add(lContModel);
+					}
+				}
+			}
+		} catch (DAOException ex) {
+			siesLogger.error("DAOException: ", ex);
+			throw new F3BException("ModuloCumuloController.ExRicercaTitoliConContinuazioniSganciate: " + ex);
+		} catch (Exception ex) {
+			siesLogger.error("Exception: ", ex);
+			throw new F3BException("ModuloCumuloController.ExRicercaTitoliConContinuazioniSganciate: " + ex);
+		} finally {
+			cleanup(lContCumSqlDao);
+			cleanup(lTitoloSqlDao);
+			cleanup(lProcCumSqlDao);
+
+			cleanup(lConn);
+		}
+
+		return lListaTitoli;
+	}
+
+	/**
+	 * Si aggiunge metodo per recuperare i titoli con Revoche Benefici (sosp cond e indulto) non agganciate
+	 * correttamente
+	 *
+	 * @since MEV_2025-48 - 2.12 Alert su continuazione
+	 */
+	public Vector<TitoloCumulatoModel> ExRicercaTitoliConRevBenSganciati(BigDecimal aIdIstruttoriaCumulo)
+			throws F3BException {
+
+		Connection lConn = null;
+
+		BeneficioCumuloSqlDAO lBenCumSqlDao = null;
+		TitoloCumulatoSqlDAO lTitoloSqlDao = null;
+		ProcedimentoCumulatoSqlDAO lProcCumSqlDao = null;
+
+		Vector<TitoloCumulatoModel> lListaTitoli = new Vector<>();
+
+		try {
+			lConn = getDBConnection();
+
+			siesLogger.debug("Ricerco se presenti revoche benefici in istruttoria");
+
+			lBenCumSqlDao = new BeneficioCumuloSqlDAO(lConn);
+			lTitoloSqlDao = new TitoloCumulatoSqlDAO(lConn);
+			lProcCumSqlDao = new ProcedimentoCumulatoSqlDAO(lConn);
+
+			lBenCumSqlDao.ricercaBeneficioCumuloByIdIstruttoria(aIdIstruttoriaCumulo);
+
+			Vector<BeneficioCumuloModel> lListaBenefici = new Vector<BeneficioCumuloModel>(
+					lBenCumSqlDao.getModels());
+
+			// n.b. prendo solo quelli con con natura R e di tipo 01/03 che non hanno il puntamento
+			// al titolo
+			for (int i = 0; i < lListaBenefici.size(); i++) {
+				BeneficioCumuloModel lBenModel = lListaBenefici.elementAt(i);
+
+				if ("R".equals(lBenModel.getCodNaturaBeneficio())
+						&& ("01".equals(lBenModel.getCodTipoBeneficio())
+								|| "03".equals(lBenModel.getCodTipoBeneficio()))
+						&& lBenModel.getTitIdTitoloCumulatoCollegato() == null) {
+					siesLogger.debug("Trovata revoca non collegata: " + lBenModel.getIdBeneficioCumulo()
+							+ " - " + lBenModel.getDescrNaturaBeneficio() + " - "
+							+ lBenModel.getDescrTipoBeneficio());
+
+					// Se il titolo non è in lista lo ricerco
+					TitoloCumulatoModel lTitolo = null;
+					for (int j = 0; j < lListaTitoli.size(); j++) {
+						if (lListaTitoli.elementAt(j).getIdTitoloCumulato()
+								.compareTo(lBenModel.getTitIdTitoloCumulato()) == 0)
+							lTitolo = lListaTitoli.elementAt(j);
+					}
+
+					if (lTitolo == null) {
+						// Recupera il titolo
+						lTitoloSqlDao.ricercaTitoloCumulatoByKey(lBenModel.getTitIdTitoloCumulato());
+						lTitolo = (TitoloCumulatoModel) lTitoloSqlDao.getModelByKey();
+
+						// Recupera il procedimento
+						lProcCumSqlDao.ricercaProcedimentoCumulatoByIdTitolo(lTitolo.getIdTitoloCumulato());
+						ProcedimentoCumulatoModel lProcModel = (ProcedimentoCumulatoModel) lProcCumSqlDao
+								.getModelByKey();
+						lTitolo.setProcedimentoCumulato(lProcModel);
+
+						Vector vect = new Vector();
+						vect.add(lBenModel);
+
+						lTitolo.setBeneficiCumulo(vect);
+
+						lListaTitoli.add(lTitolo);
+					} else {
+						lTitolo.getBeneficiCumulo().add(lBenModel);
+					}
+				}
+			}
+		} catch (DAOException ex) {
+			siesLogger.error("DAOException: ", ex);
+			throw new F3BException("ModuloCumuloController.ExRicercaTitoliConRevBenSganciati: " + ex);
+		} catch (Exception ex) {
+			siesLogger.error("Exception: ", ex);
+			throw new F3BException("ModuloCumuloController.ExRicercaTitoliConRevBenSganciati: " + ex);
+		} finally {
+			cleanup(lBenCumSqlDao);
+			cleanup(lTitoloSqlDao);
+			cleanup(lProcCumSqlDao);
+
+			cleanup(lConn);
+		}
+
+		return lListaTitoli;
+	}
+
 } // Chiude CLASSE
