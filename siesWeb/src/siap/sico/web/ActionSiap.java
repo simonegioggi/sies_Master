@@ -760,6 +760,37 @@ public class ActionSiap extends Action {
 		return lRequest.substring(0, lRequest.length() - 1);
 	}
 
+	
+
+	/**
+	 * Compone la Stringa completa di una request NON multipart ma con array di valori
+	 * es la ricerca avanzata SIEP per classi dove sono presenti i check tipoClasse
+	 *
+	 * @return
+	 * @throws F3BException
+	 * @since 2026.02.11
+	 */
+	public String getCompleteRequestURLMultiVal() throws F3BException {
+
+		String lRequest = this.getRequest().getRequestURL() + "?";
+		Set lKeys = getRequest().getParameterMap().keySet();
+
+		Iterator itx = lKeys.iterator();
+		while (itx.hasNext()) {
+			String key = (String) itx.next();
+			if (!(key.equals(IWebConstants.NUM_PAGE) || key.equals(IWebConstants.LINK_RITORNO)
+					|| key.equals(IWebConstants.FLAG_RITORNO)))
+			{
+				String [] val = getRequestStringParameters(key);
+				for (int i = 0; i< val.length; i++) {
+					lRequest += key + "=" + val[i] + "&";
+				}
+			}
+		}
+
+		return lRequest.substring(0, lRequest.length() - 1);
+	}
+	
 	/**
 	 * Compone la Stringa completa di una request NON multipart e NON con array di valori... Vengono saltati i
 	 * 2 parametri utilizzati nella gestione del ritorno, che sono: TornaQui, StoTornando.
