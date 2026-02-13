@@ -218,4 +218,35 @@ public class CalendarStampaModel extends GenericModel {
 		this.mSegnoQuantumArresto = mSegnoQuantumArresto;
 	}
 
+	// 2026.02 post collaudo - si aggiunge metodo per testare se il calendar contiene 
+	//         dati significativi in modo da poterlo escludera dal treeModel e dalla stampa	
+    public boolean isDatiValorizzati() {
+        boolean isValorizzato = false;
+        
+        if (   (mNumGiorniLA!=null && mNumGiorniLA.intValue()!=0)
+              || (mNumGiorniLS!=null && mNumGiorniLS.intValue()!=0) 
+              || (mNumGiorniLI!=null && mNumGiorniLI.intValue()!=0)      
+              
+              || (mNumRimedi!=null && mNumRimedi.intValue()!=0)
+              || (mNumScomputi!=null && mNumScomputi.intValue()!=0)
+              
+              || (mNumAnniReclusione!=null && mNumAnniReclusione.intValue()!=0)
+              || (mNumMesiReclusione!=null && mNumMesiReclusione.intValue()!=0)
+              || (mNumGiorniReclusione!=null && mNumGiorniReclusione.intValue()!=0)
+              || (mImportoMulta!=null && mImportoMulta.intValue()!=0)
+              
+              || (mNumAnniArresto!=null && mNumAnniArresto.intValue()!=0)
+              || (mNumMesiArresto!=null && mNumMesiArresto.intValue()!=0)
+              || (mNumGiorniArresto!=null && mNumGiorniArresto.intValue()!=0)
+              || (mImportoAmmenda!=null && mImportoAmmenda.intValue()!=0)
+              
+              || (mNumAnni!=null && mNumAnni.intValue()!=0)
+              || (mNumMesi!=null && mNumMesi.intValue()!=0)
+              || (mNumGiorni!=null && mNumGiorni.intValue()!=0)
+             )
+            return true;
+        
+        return isValorizzato;
+      }
+	
 }

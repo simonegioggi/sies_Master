@@ -4928,7 +4928,8 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 						csm.setImportoAmmenda(lPenaRideterminataLorda.getImportoAmmenda());
 
 					TreeModel lTree = new TreeModel(csm);
-					lTreeCalcoloPena.add(lTree);
+					if (csm.isDatiValorizzati()) //2026.02 Post Collaudo - Si aggiungono i dati solo se valorizzati
+					    lTreeCalcoloPena.add(lTree);
 				}
 			}
 
@@ -4944,7 +4945,8 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 				csm.setNumGiorni(lTotMisCautModel.getNumGiorni());
 
 				TreeModel lTree = new TreeModel(csm);
-				lTreeCalcoloPena.add(lTree);
+				if (csm.isDatiValorizzati()) //2026.02 Post Collaudo - Si aggiungono i dati solo se valorizzati
+				    lTreeCalcoloPena.add(lTree);
 			}
 
 			// 003 - Dedotti i Periodi di carcerazione sofferti a seguito revoca di Misure Alternative
@@ -4961,7 +4963,8 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 
 				TreeModel lTree = new TreeModel(csm);
 				// lTree.add(new TreeModel(lTotReclusioneRMA));
-				lTreeCalcoloPena.add(lTree);
+				if (csm.isDatiValorizzati()) //2026.02 Post Collaudo - Si aggiungono i dati solo se valorizzati
+				    lTreeCalcoloPena.add(lTree);
 			}
 
 			// 004 - Dedotti i Periodi di carcerazione sofferti a seguito Sospensione / Differimento della
@@ -4979,7 +4982,8 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 
 				TreeModel lTree = new TreeModel(csm);
 				// lTree.add(new TreeModel(lTotSospDiff));
-				lTreeCalcoloPena.add(lTree);
+				if (csm.isDatiValorizzati()) //2026.02 Post Collaudo - Si aggiungono i dati solo se valorizzati
+				    lTreeCalcoloPena.add(lTree);
 			}
 
 			// 005 - Dedotti i benefici (Amnistia/Indulto ...)
@@ -5010,7 +5014,8 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 						csm.setImportoAmmenda(new BigDecimal(lTotArresto.getImportoAmmenda()));
 
 					TreeModel lTree = new TreeModel(csm);
-					lTreeCalcoloPena.add(lTree);
+					if (csm.isDatiValorizzati()) //2026.02 Post Collaudo - Si aggiungono i dati solo se valorizzati
+					    lTreeCalcoloPena.add(lTree);
 				}
 			}
 
@@ -5029,7 +5034,8 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 
 				TreeModel lTree = new TreeModel(csm);
 				// lTree.add(new TreeModel(lTotPagamentiPP));
-				lTreeCalcoloPena.add(lTree);
+				if (csm.isDatiValorizzati()) //2026.02 Post Collaudo - Si aggiungono i dati solo se valorizzati
+				    lTreeCalcoloPena.add(lTree);
 			}
 
 			{
@@ -5078,7 +5084,8 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 						csm.setImportoAmmenda(new BigDecimal(lTotArrestoRP.getImportoAmmenda()));
 
 					TreeModel lTree = new TreeModel(csm);
-					lTreeCalcoloPena.add(lTree);
+					if (csm.isDatiValorizzati()) //2026.02 Post Collaudo - Si aggiungono i dati solo se valorizzati
+					    lTreeCalcoloPena.add(lTree);
 				}
 			}
 
@@ -5102,7 +5109,8 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 				csm.setNumScomputi(lTotScomp == 0 ? null : new BigDecimal(lTotScomp));
 
 				TreeModel lTree = new TreeModel(csm);
-				lTreeCalcoloPena.add(lTree);
+				if (csm.isDatiValorizzati()) //2026.02 Post Collaudo - Si aggiungono i dati solo se valorizzati
+				    lTreeCalcoloPena.add(lTree);
 			}
 
 			{
@@ -5134,7 +5142,8 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 						csm.setImportoAmmenda(new BigDecimal(lTotArrestoRich.getImportoAmmenda()));
 
 					TreeModel lTree = new TreeModel(csm);
-					lTreeCalcoloPena.add(lTree);
+					if (csm.isDatiValorizzati()) //2026.02 Post Collaudo - Si aggiungono i dati solo se valorizzati
+					    lTreeCalcoloPena.add(lTree);
 				}
 			}
 
@@ -5167,7 +5176,8 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 						csm.setImportoAmmenda(new BigDecimal(lTotArrestoRichRev.getImportoAmmenda()));
 
 					TreeModel lTree = new TreeModel(csm);
-					lTreeCalcoloPena.add(lTree);
+					if (csm.isDatiValorizzati()) //2026.02 Post Collaudo - Si aggiungono i dati solo se valorizzati
+					    lTreeCalcoloPena.add(lTree);
 				}
 			}
 
@@ -5195,7 +5205,8 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 					csm.setImportoAmmenda(lTotaleDaScontare.getImportoAmmenda());
 
 				TreeModel lTree = new TreeModel(csm);
-				lTreeCalcoloPena.add(lTree);
+				if (csm.isDatiValorizzati()) //2026.02 Post Collaudo - Si aggiungono i dati solo se valorizzati
+				    lTreeCalcoloPena.add(lTree);
 			}
 
 		} catch (Exception ex) {
