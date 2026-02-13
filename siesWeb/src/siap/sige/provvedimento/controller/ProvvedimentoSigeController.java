@@ -3152,8 +3152,9 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 			lDocAMod.setNumeroProgressivo(new BigDecimal(lBigDecAll.intValue() + 1));
 			lDocAMod.setEveIdEvento(lEveMod.getIdEvento());
 			lDocAMod.setDataEmissione(aProvvedimento.getDataDeposito());
-			// Codifica di COD_TIPO_DOCUMENTO_ALLEGATO = Decreto/Ordinanza
-			lDocAMod.setCodTipoDocumento(aProvvedimento.getCodTipoProvvedimento());
+			lDocAMod.setCodTipoDocumento(aProvvedimento.getCodTipoProvvedimento()); // Codifica di
+																					// COD_TIPO_DOCUMENTO_ALLEGATO
+																					// = Decreto/Ordinanza
 			lDocAMod.setFlagDocumentoRegistrato("N");
 			// lDocAMod.setDocBlobIn();
 			lDocAMod.setCodUfficioInserimento(aProvvedimento.getCodUfficioAggiornamento());
@@ -3231,19 +3232,18 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 			 * Data : 01/feb/2016 
 			 * Branch : MEV_15_S4
 			 */
-			// Ticket#202602110145 - SIGE GIP E DIB GENOVA
+			// Ticket#202602110145 - SIGE GIP E DIB GENOVA 
 			// La modifica deve aggiornare la data definizione solo per i provvedimenti definitori
 			if (aProvvedimento.getDefinitorio().compareToIgnoreCase("S") == 0) {
-				siesLogger.debug(
-						"ExModificaDataDeposito - Provvedimento definitorio, aggiorno la data definizione");
-				lFasSigeDao = new FascicoloSigeDAO(lConn);
-				lFasSigeDao.setDAOFromModelForUpdate(aFasSige);
-				lFasSigeDao.setDataDefinizione(aProvvedimento.getDataDeposito());
-				lFasSigeDao.update();
-				lFasSigeDao.stop();
-			} else {
-				siesLogger.debug("ExModificaDataDeposito - Provvedimento NON definitorio, "
-						+ "NON aggiorno la data definizione");
+				siesLogger.debug("ExModificaDataDeposito - Provvedimento definitorio, aggiorno la data definizione");
+			lFasSigeDao = new FascicoloSigeDAO(lConn);
+			lFasSigeDao.setDAOFromModelForUpdate(aFasSige);
+			lFasSigeDao.setDataDefinizione(aProvvedimento.getDataDeposito());
+			lFasSigeDao.update();
+			lFasSigeDao.stop();
+			}
+			else {
+				siesLogger.debug("ExModificaDataDeposito - Provvedimento NON definitorio, NON aggiorno la data definizione");
 			}
 			// Ticket#202602110145 - FINE
 			// ***** FINE INTERVENTO MEV_15_S4 *****//
