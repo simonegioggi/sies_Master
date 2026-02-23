@@ -6,8 +6,11 @@ Questa Release verrà rilasciata il 27/02/2026 (Patch mesi di Gennaio e Febbraio 
 
 Comprende i seguenti Ticket MAC:
 
-1)	Ticket#
-	Per la risoluzione della problematica è stata modificata ...
-	Il problema era legato al fatto che ...
-	Classe modificata:
-	-   ...
+1)	Ticket#202602190150 - SIES - Sius - Richiesta password NSC
+	Per la risoluzione della problematica è stata modificata la gestione di aggiornamento della password.
+	Il problema era legato al fatto che la form non decodificava la password quando la ricaricava a video. 
+	Classi modificate:
+	-   /siap/siep/istruttoria/LoadRichiestaCertificatoPenale.jsp
+	-	/siap/sius/fascicolo/LoadRichiestaCertificatoPenale.jsp
+
+2)	Ticket#202602190169 - PROCURA GENERALE NAPOLI	(Stesso problema)
