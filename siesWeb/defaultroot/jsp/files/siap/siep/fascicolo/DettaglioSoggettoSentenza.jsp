@@ -26,6 +26,9 @@
 <%@ page import="siap.siep.avvocato.model.AvvocatoFascicoloSiepModel"%>
 <%@ page import="siap.siep.util.SIEPLookupRemote"%>
 <%@ page import="siap.siep.avvocato.controller.IAvvocato"%>
+
+<%@ page import="siap.siep.reato.controller.IReato"%>
+
 <%@ page import="org.apache.log4j.Logger"%>
 <%-- // [FT] - 05/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog --%>
 <% final Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG); %>
@@ -124,9 +127,17 @@
   }
 
 // MEV_2025-48: dicitura CARTABIA se almeno uno dei reati collegati al procedimento ha una data inizio > 30/12/2022
-IFascicoloSiep ifs = SIEPLookupRemote.getFascicoloSiepRemote();
-DettaglioFascicoloModel dfm = ifs.ExDettaglioFascicoloSiepNew(fascicolo.getIdFascicoloSiep());
-Collection reatiCircostanzeColl = dfm.getReatiCircostanze();
+// 2026.02.18 Si commenta la chiamata al dettaglio ifs.ExDettaglioFascicoloSiepNew 
+//            Servono solo i reati. Si utilizza la chiamata fatta da ExDettaglioFascicoloSiepNew per caricare i reati
+//            nel DettaglioFascicoloModel. 
+// IFascicoloSiep ifs = SIEPLookupRemote.getFascicoloSiepRemote();
+// DettaglioFascicoloModel dfm = ifs.ExDettaglioFascicoloSiepNew(fascicolo.getIdFascicoloSiep());
+// Collection reatiCircostanzeColl = dfm.getReatiCircostanze();
+
+IReato lReaCtrl = SIEPLookupRemote.getReatoRemote();
+Collection reatiCircostanzeColl = lReaCtrl.ExRicercaReatoCircostanzaByFascicolo(fascicolo.getIdFascicoloSiep());
+// 2026.02.18 - FINE
+
 Vector reatiCircostanzeVect = new Vector(reatiCircostanzeColl);
 boolean isCartabia = false;
 final Date dataCartabia = DateUtils.getDate("30/12/2022", "dd/MM/yyyy");
