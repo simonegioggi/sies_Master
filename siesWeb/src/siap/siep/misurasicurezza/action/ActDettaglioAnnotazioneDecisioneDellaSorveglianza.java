@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
+
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoNotificaModel;
@@ -24,6 +26,7 @@ import siap.siep.web.ActSIESDettaglioProvvedimento;
 import siap.sius.misurasicurezza.controller.IPeriodoAltraMisura;
 import siap.sius.misurasicurezza.model.ProvvedimentoEventoTenoreFascicoloSiusModel;
 import siap.sius.util.SIUSLookupRemote;
+import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
 
@@ -50,16 +53,24 @@ import f3b.util.F3BException;
 public class ActDettaglioAnnotazioneDecisioneDellaSorveglianza extends ActSIESDettaglioProvvedimento
 		implements ICostantiMisuraSicurezza, ICostantiOrdineEsecuzione {
 
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public String processRequest() throws F3BException {
 
 		FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 		BigDecimal lId = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
 
+		// Ticket#202602170130 - Il provvedimento SIUS collegato all'annotazione SIEP che si sta visualizzando 
+		//                       DEVE Essere recuperato dall'EVE_ID_EVENTO
+		/*
 		// Lista PROVV. SIUS
 		Vector Provvedimenti;
 		IPeriodoAltraMisura lPAMCtrl = SIUSLookupRemote.getPeriodoAltraMisuraRemote();
+		siesLogger.debug("Ricerca provve per fascicolo di sessione ");
 		Provvedimenti = lPAMCtrl.ExRicercaProvvedimentoEventoByFascicoloSiep(lFascMod.getIdFascicoloSiep());
+		
+		
 		
 		// MEV_39 ***** inizio *****
 		// -----> controllo se fascicolo di classe I è legato a fascicolo di classe IV
@@ -85,7 +96,7 @@ public class ActDettaglioAnnotazioneDecisioneDellaSorveglianza extends ActSIESDe
 		// MEV_39 ***** fine ******
 
 		// setRequestAttribute("ListaProvv", Provvedimenti);
-
+*/
 		// EventoNotifica (Provvedimento di annotazione Inserito)
 		EventoNotificaModel lEveMod = new EventoNotificaModel();
 		IEvento lCtrl = SICOLookupRemote.getEventoRemote();
@@ -93,6 +104,13 @@ public class ActDettaglioAnnotazioneDecisioneDellaSorveglianza extends ActSIESDe
 
 		setRequestAttribute("eventonotifica", lEveMod);
 
+		// Ticket#202602170130 - Il provvedimento SIUS collegato all'annotazione SIEP che si sta visualizzando 
+		//
+		//siesLogger.debug("Nuova ricerca per eve_id_evento "+lEveMod.getEvento().getEveIdEvento());
+		IPeriodoAltraMisura lPAMCtrl = SIUSLookupRemote.getPeriodoAltraMisuraRemote();
+		ProvvedimentoEventoTenoreFascicoloSiusModel ProvvModel = lPAMCtrl.ExRicercaProvvedimentoEventoByIdEvento(lEveMod.getEvento().getEveIdEvento());
+		
+		/*
 		// Dati PROVVEDIMENTO SPECIFICO SIUS
 		ProvvedimentoEventoTenoreFascicoloSiusModel ProvvModel = new ProvvedimentoEventoTenoreFascicoloSiusModel();
 		Iterator Itx = Provvedimenti.iterator();
@@ -102,7 +120,7 @@ public class ActDettaglioAnnotazioneDecisioneDellaSorveglianza extends ActSIESDe
 				break;
 			}
 		}
-
+        */
 		setRequestAttribute("provvedimento", ProvvModel);
 
 		// Posizione Giuridica
