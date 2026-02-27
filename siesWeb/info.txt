@@ -2,6 +2,6 @@ BRANCH DEVELOP di SIESWEB
 
 Allineato al:
 
-BRANCH SIES VERSIONE 12.9.0.0 (MEV_2025-48)
+BRANCH SIES VERSIONE 12.9.1.0
 
-Questa release è stata rilasciata il 18/02/2026
+Questa release è stata rilasciata il 27/02/2026

@@ -97,7 +97,12 @@ function pulisciCampi() {
    <tr>
       <td class="l">Password <font class=ob>(*)</font></td>
       <td class="l">
-      	 	<input type="password" Title="pwdNSC" name="<%=ICostantiUtente.CAMPO_PWD_NSC%>" value="<%=Utils.isPresent(pwdNSC) ? pwdNSC : ""%>" maxlength="30" size="30"/>
+      	 	<input type="password" Title="pwdNSC" name="<%=ICostantiUtente.CAMPO_PWD_NSC%>" 
+      	 	<%-- Ticket#202602190150 - la pwd deve essere caricata decodificata 
+      	 	value="<%=Utils.isPresent(pwdNSC) ? pwdNSC : ""%>"
+      	 	--%>
+      	 	value="<%=Utils.isPresent(pwdNSC) ? Utils.pwdNSCDecode(pwdNSC) : ""%>" 
+      	 	maxlength="30" size="30"/>
       	 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       	 	<input type="button" onclick="javascript:pulisciCampi();" value="Pulisci i Campi">
       </td>
