@@ -187,17 +187,19 @@ public class ScadenzarioSiusSqlDAO extends SIAPSqlDAO {
 	 * @since MEV_2026-1
 	 */
 	public void ricercaFinePenaProcedimentiPendentiPaginata(String riferimento, BigDecimal ai, BigDecimal ni,
-			BigDecimal af, BigDecimal nf, Date dii, Date dif, Date dsi, Date dsf, String codUfficio)
-			throws DAOException {
+			BigDecimal af, BigDecimal nf, Date dii, Date dif, Date dsi, Date dsf, String codUfficio,
+			boolean includiDefiniti) throws DAOException {
 
 		final String codStatoFascicolo = "('01', '05', '07')";
 		final boolean test = "reale".equals(riferimento);
 
 		String lStatement = "SELECT DISTINCT FSIUS.ID_FASCICOLO_SIUS ID_FASCICOLO_SIUS,"
 				+ " FSIUS.CHIAVE_ANNO ANNO_SIUS, FSIUS.CHIAVE_PROGR PROGR_SIUS,"
+				+ " FSIUS.COD_STATO_FASCICOLO,"
+				+ " DESCR_STATO_FASCICOLO.RV_MEANING DESCR_STATO_FASCICOLO_SIUS,"
 				+ " SOGG.ID_SOGGETTO, SOGG.COGNOME, SOGG.NOME,"
 				+ " SOGG.COD_COMUNE_NASCITA, DESCR_COMUNE_NASCITA.DESCRIZIONE DESCR_COMUNE_NASCITA,"
-				+ " SOGG.COD_PROVINCIA_NASCITA, SOGG.DESC_COMUNE_NASCITA_ESTERO,"
+				+ " SOGG.DESC_COMUNE_NASCITA_ESTERO, SOGG.COD_PROVINCIA_NASCITA,"
 				+ " DESCR_COMUNE_NASCITA.DESCRIZIONE DESCR_PROVINCIA_NASCITA, SOGG.COD_STATO_NASCITA,"
 				+ " DESCR_STATO_NASCITA.RV_MEANING DESCR_STATO_NASCITA,"
 				+ " SOGG.DATA_NASCITA, PG.COD_POSIZIONE_GIURIDICA,"
@@ -213,7 +215,7 @@ public class ScadenzarioSiusSqlDAO extends SIAPSqlDAO {
 				// + " CP.DATA_SCARC_LA_FUNG FINE_PENA_VIRTUALE,"
 				+ " nvl(CP.DATA_SCARC_LA_FUNG, to_date('01/01/0001', 'dd/MM/yyyy')) FINE_PENA_VIRTUALE,"
 				+ " TRUNC(CP.DATA_SCARC_LA_FUNG - SYSDATE) GIORNI_RESIDUI_VIRTUALI"
-				+ " FROM FASCICOLO_SIUS FSIUS,"
+				+ " FROM FASCICOLO_SIUS FSIUS, CG_REF_CODES DESCR_STATO_FASCICOLO,"
 				+ " SOGGETTO SOGG, GENERALE_PROCEDIMENTO GP, CG_REF_CODES DESCR_OGGETTO_PROCEDIMENTO,"
 				+ " UFFICIO UFF, COMUNE DESCR_COMUNE_UFFICIO, COMUNE DESCR_COMUNE_NASCITA,"
 				+ " PENA_RESIDUA PR, POSIZIONE_GIURIDICA PG,"
@@ -244,6 +246,8 @@ public class ScadenzarioSiusSqlDAO extends SIAPSqlDAO {
 				+ " AND DESCR_STATO_NASCITA.RV_DOMAIN = 'NAZIONE'"
 				+ " AND DESCR_STATO_NASCITA.RV_LOW_VALUE = SOGG.COD_STATO_NASCITA"
 				+ " AND FSIUS.ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS"
+				+ " AND DESCR_STATO_FASCICOLO.RV_DOMAIN = 'STATO_FASCICOLO'"
+				+ " AND FSIUS.COD_STATO_FASCICOLO = DESCR_STATO_FASCICOLO.RV_LOW_VALUE"
 				+ " AND DESCR_OGGETTO_PROCEDIMENTO.RV_DOMAIN = 'OGGETTO_PROCEDIMENTO'"
 				+ " AND GP.COD_OGGETTO_PROCEDIMENTO = DESCR_OGGETTO_PROCEDIMENTO.RV_LOW_VALUE"
 				+ " AND UFF.COD_UFFICIO = FSIUS.CHIAVE_UFFICIO"
@@ -274,11 +278,13 @@ public class ScadenzarioSiusSqlDAO extends SIAPSqlDAO {
 					+ DateUtils.getDateToString(dii, "yyyyMMdd") + "'"
 					+ " AND TO_CHAR(FSIUS.DATA_ISCRIZIONE, 'YYYYMMDD') <= '"
 					+ DateUtils.getDateToString(dif, "yyyyMMdd") + "'";
-		} else {
+		}
+		if (Utils.isPresent(ai)) {
 			lStatement += " AND FSIUS.CHIAVE_ANNO >= " + ai + " AND FSIUS.CHIAVE_ANNO <= " + af
 					+ " AND FSIUS.CHIAVE_PROGR >= " + ni + " AND FSIUS.CHIAVE_PROGR <= " + nf;
 		}
-		lStatement += " AND FSIUS.COD_STATO_FASCICOLO not in " + codStatoFascicolo;
+		if (!includiDefiniti)
+			lStatement += " AND FSIUS.COD_STATO_FASCICOLO not in " + codStatoFascicolo;
 		// lStatement += " ORDER BY FSIUS.CHIAVE_ANNO, FSIUS.CHIAVE_PROGR";
 		if (!test) {
 			// lStatement += " ORDER BY CP.DATA_SCARC_LA_FUNG desc, PR.DATA_FINE desc";
@@ -300,6 +306,8 @@ public class ScadenzarioSiusSqlDAO extends SIAPSqlDAO {
 		fsm.setIdFascicoloSius(getBigDecimal("ID_FASCICOLO_SIUS"));
 		fsm.setChiaveAnno(getBigDecimal("ANNO_SIUS"));
 		fsm.setChiaveProgr(getBigDecimal("PROGR_SIUS"));
+		fsm.setCodStatoFascicolo(getString("COD_PROVINCIA_NASCITA"));
+		fsm.setDescrStatoFascicolo(getString("DESCR_STATO_FASCICOLO_SIUS"));
 		ssm.setFascicoloSius(fsm);
 		SoggettoModel sm = new SoggettoModel();
 		sm.setIdSoggetto(getBigDecimal("ID_SOGGETTO"));

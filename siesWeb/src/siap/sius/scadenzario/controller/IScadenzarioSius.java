@@ -63,6 +63,7 @@ public interface IScadenzarioSius {
 	 * @param dsf
 	 * @param codUfficio
 	 * @param pagina
+	 * @param includiDefiniti 
 	 * @return Vector
 	 * @throws F3BException
 	 *
@@ -71,11 +72,11 @@ public interface IScadenzarioSius {
 	 */
 	public Vector ExRicercaFinePenaProcedimentiPendentiPaginata(String riferimento, BigDecimal ai,
 			BigDecimal ni, BigDecimal af, BigDecimal nf, Date dii, Date dif, Date dsi, Date dsf,
-			String codUfficio, int pagina) throws F3BException;
+			String codUfficio, boolean includiDefiniti, int pagina) throws F3BException;
 
 	public BigDecimal ExGetNumRicercaFinePenaProcedimentiPendenti(String riferimento, BigDecimal ai,
 			BigDecimal ni, BigDecimal af, BigDecimal nf, Date dii, Date dif, Date dsi, Date dsf,
-			String codUfficio) throws F3BException;
+			String codUfficio, boolean includiDefiniti) throws F3BException;
 	// FINE MEV_2026-1
 
 }

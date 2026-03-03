@@ -54,10 +54,11 @@ public class RicercaFinePenaProcedimentiPendentiExcel extends SIAPExcelProducer 
 		iss = SIUSLookupRemote.getScadenzarioRemote();
 		Vector<ScadenzarioSiusModel> v = iss.ExRicercaFinePenaProcedimentiPendentiPaginata("" + l.get(0),
 				(BigDecimal) l.get(1), (BigDecimal) l.get(2), (BigDecimal) l.get(3), (BigDecimal) l.get(4),
-				(Date) l.get(5), (Date) l.get(6), (Date) l.get(7), (Date) l.get(8), "" + l.get(9), 0);
+				(Date) l.get(5), (Date) l.get(6), (Date) l.get(7), (Date) l.get(8), "" + l.get(9),
+				(Boolean) l.get(11), 0);
 
 		// creazione foglio
-		lSheet = lWb.createSheet("Elenco Fine Pena Procedimenti Pendenti");
+		lSheet = lWb.createSheet("Elenco Procedimenti Pendenti");
 		lCellStyleNull = lWb.createCellStyle();
 
 		// Intestazione del foglio excel
@@ -83,7 +84,7 @@ public class RicercaFinePenaProcedimentiPendentiExcel extends SIAPExcelProducer 
 
 		lRow = lSheet.createRow(lRowCounter++);
 
-		lSheet.setColumnWidth(0, 15 * 256); // Procedimento SIUS
+		lSheet.setColumnWidth(0, 25 * 256); // Procedimento SIUS
 		lSheet.setColumnWidth(1, 30 * 256); // Soggetto
 		lSheet.setColumnWidth(2, 25 * 256); // Luogo Nascita
 		lSheet.setColumnWidth(3, 15 * 256); // Data Nascita
@@ -91,13 +92,13 @@ public class RicercaFinePenaProcedimentiPendentiExcel extends SIAPExcelProducer 
 		lSheet.setColumnWidth(5, 35 * 256); // Contenuto
 		lSheet.setColumnWidth(6, 15 * 256); // Data Inizio Pena
 		lSheet.setColumnWidth(7, 15 * 256); // Data Fine Pena
-		lSheet.setColumnWidth(8, 10 * 256); // Giorni Residui
-		lSheet.setColumnWidth(9, 15 * 256); // Fine Pena Virtuale
-		lSheet.setColumnWidth(10, 10 * 256); // Giorni Residui
+		lSheet.setColumnWidth(8, 15 * 256); // Giorni Residui
+		lSheet.setColumnWidth(9, 20 * 256); // Fine Pena Virtuale
+		lSheet.setColumnWidth(10, 15 * 256); // Giorni Residui
 		lSheet.setColumnWidth(11, 20 * 256); // Procedimento SIEP
 
 		// Intestazione colonne
-		setCell(lRow, 0, "Procedimento SIUS.", lCellStyleCenter);
+		setCell(lRow, 0, "Procedimento SIUS", lCellStyleCenter);
 		setCell(lRow, 1, "Soggetto", lCellStyleCenter);
 		setCell(lRow, 2, "Luogo Nascita", lCellStyleCenter);
 		setCell(lRow, 3, "Data Nascita", lCellStyleCenter);
@@ -134,9 +135,12 @@ public class RicercaFinePenaProcedimentiPendentiExcel extends SIAPExcelProducer 
 
 			lRow = lSheet.createRow(lRowCounter++);
 
-			// Procedimento SIUS
-			setCell(lRow, 0, "" + ssm.getFascicoloSius().getChiaveAnno() + "/"
-					+ ssm.getFascicoloSius().getChiaveProgr(), lCellStyleCenter);
+			// Procedimento SIUS (Descrizione Stato Fascicolo)
+			setCell(lRow, 0,
+					"" + ssm.getFascicoloSius().getChiaveAnno() + "/"
+							+ ssm.getFascicoloSius().getChiaveProgr() + "\n("
+							+ ssm.getFascicoloSius().getDescrStatoFascicolo() + ")",
+					lCellStyleCenter);
 			// Soggetto
 			setCell(lRow, 1, ssm.getFascicoloSius().getSoggetto().getCognome() + " "
 					+ ssm.getFascicoloSius().getSoggetto().getNome(), lCellStyleCenter);

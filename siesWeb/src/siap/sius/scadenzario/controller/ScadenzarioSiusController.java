@@ -517,7 +517,7 @@ public class ScadenzarioSiusController extends SiapController implements IScaden
 	@Override
 	public Vector ExRicercaFinePenaProcedimentiPendentiPaginata(String riferimento, BigDecimal ai,
 			BigDecimal ni, BigDecimal af, BigDecimal nf, Date dii, Date dif, Date dsi, Date dsf,
-			String codUfficio, int pagina) throws F3BException {
+			String codUfficio, boolean includiDefiniti, int pagina) throws F3BException {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
@@ -533,7 +533,7 @@ public class ScadenzarioSiusController extends SiapController implements IScaden
 			c = getDBConnection();
 			sssdao = new ScadenzarioSiusSqlDAO(c);
 			sssdao.ricercaFinePenaProcedimentiPendentiPaginata(riferimento, ai, ni, af, nf, dii, dif, dsi,
-					dsf, codUfficio);
+					dsf, codUfficio, includiDefiniti);
 			// Ricerca paginata
 			// Viene fatta la ricerca non paginata se pagina ha un valore <= 0
 			if (pagina > 0)
@@ -541,7 +541,7 @@ public class ScadenzarioSiusController extends SiapController implements IScaden
 			else
 				sssdao.start();
 			while (sssdao.next()) {
-				ssm = (ScadenzarioSiusModel) sssdao.getFinePenaModel();
+				ssm = sssdao.getFinePenaModel();
 				v.add(ssm);
 			}
 			sssdao.stop();
@@ -568,7 +568,7 @@ public class ScadenzarioSiusController extends SiapController implements IScaden
 	@Override
 	public BigDecimal ExGetNumRicercaFinePenaProcedimentiPendenti(String riferimento, BigDecimal ai,
 			BigDecimal ni, BigDecimal af, BigDecimal nf, Date dii, Date dif, Date dsi, Date dsf,
-			String codUfficio) throws F3BException {
+			String codUfficio, boolean includiDefiniti) throws F3BException {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
@@ -583,7 +583,7 @@ public class ScadenzarioSiusController extends SiapController implements IScaden
 			c = getDBConnection();
 			sssdao = new ScadenzarioSiusSqlDAO(c);
 			sssdao.ricercaFinePenaProcedimentiPendentiPaginata(riferimento, ai, ni, af, nf, dii, dif, dsi,
-					dsf, codUfficio);
+					dsf, codUfficio, includiDefiniti);
 			records = sssdao.getNumRowsSelected();
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di

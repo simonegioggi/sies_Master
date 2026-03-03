@@ -96,15 +96,18 @@ public class ActRicercaFinePenaProcedimentiPendenti extends ActionSiap implement
 		}
 		IScadenzarioSius iss = SIUSLookupRemote.getScadenzarioRemote();
 		String codUfficio = getUfficioUtenteConnesso().getCodUfficio();
+		boolean includiDefiniti = false;
+		if (isRequestChecked("defi"))
+			includiDefiniti = true;
 		Vector v = iss.ExRicercaFinePenaProcedimentiPendentiPaginata(riferimento, ai, ni, af, nf, dii, dif,
-				dsi, dsf, codUfficio, Integer.parseInt(pagina));
+				dsi, dsf, codUfficio, includiDefiniti, Integer.parseInt(pagina));
 		setRequestAttribute("scadenzari", v);
 
 		// Paginazione
 		BigDecimal records = null;
 		if (isRequestParameterNullObj("CountRisultati"))
 			records = iss.ExGetNumRicercaFinePenaProcedimentiPendenti(riferimento, ai, ni, af, nf, dii, dif,
-					dsi, dsf, codUfficio);
+					dsi, dsf, codUfficio, includiDefiniti);
 		else
 			records = getRequestBigDecimalParameter("CountRisultati");
 
@@ -116,6 +119,7 @@ public class ActRicercaFinePenaProcedimentiPendenti extends ActionSiap implement
 		final String cdr2 = "Intervallo Date Iscrizione: ";
 		final String cdr3 = "Criterio di Ricerca: ";
 		final String cdr4 = "Con Riferimento alla: ";
+		final String cdr5 = "Con Procedimenti SIUS Definiti";
 		if (!Utils.isNullObj(ai))
 			cdrRet += cdr1 + "da " + ai + "/" + ni + " a " + af + "/" + nf;
 		if (!Utils.isNullObj(dii)) {
@@ -124,13 +128,18 @@ public class ActRicercaFinePenaProcedimentiPendenti extends ActionSiap implement
 			cdrRet += cdr2 + "da " + DateUtils.getDateToString(dii, "dd/MM/yyyy") + " a "
 					+ DateUtils.getDateToString(dif, "dd/MM/yyyy");
 		}
-		cdrRet += "; " + cdr3 + cdr;
+		if (Utils.isPresent(cdrRet))
+			cdrRet += "; " + cdr3 + cdr;
+		else
+			cdrRet += cdr3 + cdr;
 		String rife = ("reale".equals(riferimento)) ? "Data Fine Pena Reale" : "Data Fine Pena Virtuale";
 		cdrRet += "; " + cdr4 + rife;
+		if (includiDefiniti)
+			cdrRet += "; " + cdr5;
 		setRequestAttribute("intestazione", cdrRet);
 
 		// gestione dati in sessione
-		List<Object> l = new ArrayList<Object>();
+		List<Object> l = new ArrayList<>();
 		l.add(riferimento);
 		l.add(ai);
 		l.add(ni);
@@ -142,6 +151,7 @@ public class ActRicercaFinePenaProcedimentiPendenti extends ActionSiap implement
 		l.add(dsf);
 		l.add(codUfficio);
 		l.add(cdrRet);
+		l.add(includiDefiniti);
 		setSessionAttribute("ricercaFinePenaProcedimentiPendenti", l);
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di

@@ -116,10 +116,11 @@ if (scadenzari.size() == 0) {
 			<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>=<%=ssm.getFascicoloSius().getIdFascicoloSius()%><%=retParam%>" title="Procedimento SIUS">
 				<%=ssm.getFascicoloSius().getChiaveAnno()%>/<%=ssm.getFascicoloSius().getChiaveProgr()%>
 			</a>
+			<br>(<%=StringUtils.toStringJSP(ssm.getFascicoloSius().getDescrStatoFascicolo(), "-")%>)
 		</td>
 		<td class="C"><%=StringUtils.toStringJSP(ssm.getFascicoloSius().getSoggetto().getCognome())%>&nbsp;<%=StringUtils.toStringJSP(ssm.getFascicoloSius().getSoggetto().getNome())%></td>
 		<td class="C"><%=StringUtils.toStringJSP(luogoNascita, "-")%></td>
-		<td class="C"><%=StringUtils.toStringJSP(DateUtils.getDateToString(ssm.getFascicoloSius().getSoggetto().getDataNascita(),"dd/MM/yyyy"))%></td>
+		<td class="C"><%=StringUtils.toStringJSP(DateUtils.getDateToString(ssm.getFascicoloSius().getSoggetto().getDataNascita(), "dd/MM/yyyy"))%></td>
 		<td class="C"><%=StringUtils.toStringJSP(ssm.getPosizioneGiuridica().getDescrPosizioneGiuridica(), "-")%></td>
 		<td class="C"><%=StringUtils.toStringJSP(ssm.getGeneraleProcedimento().getDescrOggettoProcedimento(), "-")%></td>
 		<td class="C"><%=StringUtils.toStringJSP(DateUtils.getDateToString(ssm.getDataInizioScadenza(), "dd/MM/yyyy"), "-")%></td>

@@ -41,14 +41,14 @@ function verifica() {
 	var numeroIniziale = document.f.<%=ICostantiScadenzarioSius.CAMPO_NUM_INIZIALE%>.value;
 	var numeroFinale = document.f.<%=ICostantiScadenzarioSius.CAMPO_NUM_FINALE%>.value;
 
-	if ((data_iniziale == "//" && data_finale == "//" && annoIniziale.length == 0 && numeroIniziale.length == 0
-			&& annoFinale.length == 0 && numeroFinale.length == 0)
-		|| (data_iniziale != "//" && data_finale != "//" && annoIniziale.length != 0 && numeroIniziale.length != 0
-				&& annoFinale.length != 0 && numeroFinale.length != 0)) {
-		alert('Valorizzare obbligatoriamente l\'Intervallo Estremi Procedimenti oppure l\'Intervallo Date Iscrizione!');
-		document.f.<%=ICostantiScadenzarioSius.CAMPO_ANNO_INIZIALE%>.focus();
-	   	return false;
-	}
+// 	if ((data_iniziale == "//" && data_finale == "//" && annoIniziale.length == 0 && numeroIniziale.length == 0
+// 			&& annoFinale.length == 0 && numeroFinale.length == 0)
+// 		|| (data_iniziale != "//" && data_finale != "//" && annoIniziale.length != 0 && numeroIniziale.length != 0
+// 				&& annoFinale.length != 0 && numeroFinale.length != 0)) {
+// 		alert('Valorizzare obbligatoriamente l\'Intervallo Estremi Procedimenti oppure l\'Intervallo Date Iscrizione!');
+<%-- 		document.f.<%=ICostantiScadenzarioSius.CAMPO_ANNO_INIZIALE%>.focus(); --%>
+// 	   	return false;
+// 	}
 	if (annoIniziale == '' && annoFinale != '') {
 		alert("Se indicato l'anno finale va indicato anche l'anno iniziale");
 	 	document.f.<%=ICostantiScadenzarioSius.CAMPO_ANNO_FINALE%>.focus();
@@ -126,7 +126,7 @@ function verifica() {
 	<%-- ulteriori controlli sulle date --%>
 	if (data_iniziale != "//" && data_finale != "//") {
 		if (!ControllaData(data_iniziale)) {
-			alert('Data Iniziale non valida!');
+			alert('Data Iscrizione Iniziale non valida!');
 			document.f.<%=ICostantiScadenzarioSius.CAMPO_GIORNO_DATA_ISCRIZIONE_INIZIALE%>.focus();
 		   	return false;
 		} else if (!ControllaData(data_finale)) {
@@ -249,6 +249,8 @@ function verifica() {
 			Data Fine Pena Reale&nbsp;&nbsp;&nbsp;<input type="radio" name="rife" value="reale">
 			&nbsp;&nbsp;&nbsp;
 			Data Fine Pena Virtuale&nbsp;&nbsp;&nbsp;<input type="radio" name="rife" value="virtuale">
+			&nbsp;&nbsp;&nbsp;
+			Estrai anche i Procedimenti SIUS Definiti&nbsp;&nbsp;&nbsp;<input type="checkbox" name="defi" value="S">
 		</td>
 	</tr>
 	<tr><td>&nbsp;</td></tr>
