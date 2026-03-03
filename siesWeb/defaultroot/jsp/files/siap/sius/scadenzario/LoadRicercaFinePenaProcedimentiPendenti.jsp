@@ -215,6 +215,14 @@ function verifica() {
 </table>
 <br>
 <table cellspacing="2" cellpadding="2" width="80%">
+	<tr>
+		<td class="c" width="61%">
+			Estrai anche i Procedimenti SIUS Definiti&nbsp;&nbsp;&nbsp;<input type="checkbox" name="defi" value="S">
+		</td>
+	</tr>
+</table>
+<br>
+<table cellspacing="2" cellpadding="2" width="80%">
 	<tr><td class="Titolo" colspan="3">Criteri di Ricerca</td></tr>
 	<tr>
 		<td class="l" width="15%">Tutti</td>
@@ -249,8 +257,6 @@ function verifica() {
 			Data Fine Pena Reale&nbsp;&nbsp;&nbsp;<input type="radio" name="rife" value="reale">
 			&nbsp;&nbsp;&nbsp;
 			Data Fine Pena Virtuale&nbsp;&nbsp;&nbsp;<input type="radio" name="rife" value="virtuale">
-			&nbsp;&nbsp;&nbsp;
-			Estrai anche i Procedimenti SIUS Definiti&nbsp;&nbsp;&nbsp;<input type="checkbox" name="defi" value="S">
 		</td>
 	</tr>
 	<tr><td>&nbsp;</td></tr>
@@ -260,7 +266,7 @@ function verifica() {
 	  	</td>
 	</tr>
 	<tr><td>&nbsp;</td>
-	<tr><td class="Titolo" style="color: red;" colspan="3">N.B. Le date di inizio e fine pena sono quelle presenti al momento dell'estrazione sul Procedimento SIEP collegato</td></tr>
+	<tr><td class="Titolo" style="color: red; font-size: 14px;" colspan="3">N.B. Le date di inizio e fine pena sono quelle presenti al momento dell'estrazione sul Procedimento SIEP collegato</td></tr>
 </table>
 <input type="HIDDEN" name="<%=IWebConstants.LINK_RITORNO%>" value="<%=TornaQui%>">
 </form>

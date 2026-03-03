@@ -576,7 +576,8 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 						&& chiaveProgrSIEP.intValue() < 79999) {
 					rcm = lCtrlRC.ExRicercaRichiestaConversioneByIdFascicoloSiep(
 							fgpm.getFascicoloSiusModel().getFasSieIdFascicoloSiep());
-					if (!Utils.isNullObj(rcm.getIdRichiestaConversione())
+					// 20260303 [SG]: aggiunto controllo di consistenza oggetto model (rcm)
+					if (!Utils.isNullObj(rcm) && !Utils.isNullObj(rcm.getIdRichiestaConversione())
 							&& Utils.isNullObj(rcm.getFasSiuIdFascicoloSius())) {
 						rcm.setFasSiuIdFascicoloSius(fgpm.getFascicoloSiusModel().getIdFascicoloSius());
 						lCtrlRC.ExModificaRichiestaConversione(rcm);
