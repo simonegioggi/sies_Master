@@ -3316,9 +3316,11 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 
 			lFSoggSqlDao.stop();
 
+			/* 2026-03 si gestisce il risultato lato action 
 			if (lFascicoli.isEmpty())
 				throw new SIEPException(F3BException.USER_MESSAGE,
 						"Nessun Soggetto individuato con i criteri di ricerca selezionati! ");
+						*/
 		} catch (DAOException daoEx) {
 			rollback(lConn);
 			siesLogger.error("DAOException: ", daoEx);
