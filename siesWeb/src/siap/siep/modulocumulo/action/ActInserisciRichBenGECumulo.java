@@ -121,7 +121,10 @@ public class ActInserisciRichBenGECumulo extends ActionModuloCumulo
 	}
 
 	/**
-	 *
+	 * Metodo getDatiProvvedimento
+	 * 
+	 * @param aTipoOper
+	 * @return StatoEsecTitoloCumulatoModel
 	 * @throws F3BException
 	 */
 	private StatoEsecTitoloCumulatoModel getDatiProvvedimento(String aTipoOper) throws F3BException {
@@ -303,7 +306,6 @@ public class ActInserisciRichBenGECumulo extends ActionModuloCumulo
 		} else if ("M".equals(aTipoOper)) {
 			lComputo.setIdComputiCumulo(
 					getRequestBigDecimalParameter(ICostantiComputiCumulo.CAMPO_ID_COMPUTI_CUMULO));
-
 			lComputo.setCodOperatoreAggiornamento(getCodUtenteConnesso());
 			lComputo.setDataAggiornamento(DateUtils.getSysDate());
 			lComputo.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
