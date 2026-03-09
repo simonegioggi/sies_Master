@@ -114,11 +114,16 @@ for (int k=0; k<ListaProcedimenti.size();k++){
       <%
       SoggettoModel soggettoSessione = (SoggettoModel) session.getAttribute("soggetto");
       %>
-      var cognome     = '<%=soggettoSessione.getCognome()%>';
-      var nome        = '<%=soggettoSessione.getNome()%>';
-      var codCUI      = '<%=soggettoSessione.getCodAfis()%>';
-      var descComune  = '<%=soggettoSessione.getDescrComuneNascita()%>';
-      var codStato    = '<%=soggettoSessione.getCodStatoNascita()%>';
+      <%-- Ticket#202602260149 - sostituzione apice singolo con doppio apice per nomi e cognomi con accentate --%>
+      var cognome     = "<%=soggettoSessione.getCognome()%>";
+      var nome        = "<%=soggettoSessione.getNome()%>";
+      var codCUI      = "<%=soggettoSessione.getCodAfis()%>";
+      var descComune  = "<%=soggettoSessione.getDescrComuneNascita()%>";
+      var codStato    = "<%=soggettoSessione.getCodStatoNascita()%>";
+      var ggNascita   = "<%=StringUtils.toStringJSP(DateUtils.getDateToString(soggettoSessione.getDataNascita(),"dd" ),"")%>";
+      var mmNascita   = "<%=StringUtils.toStringJSP(DateUtils.getDateToString(soggettoSessione.getDataNascita(),"MM" ),"")%>";
+      var aaNascita   = "<%=StringUtils.toStringJSP(DateUtils.getDateToString(soggettoSessione.getDataNascita(),"yyyy" ),"")%>";
+
       
       $(document).ready(function(){
           <%if (checkRicercaProvvVal.equals("checked") && 1==1) { %>
@@ -263,13 +268,13 @@ function pulisciStato() {
           var anno = document.f.<%=ICostantiFascicoloSiep.CAMPO_CHIAVE_ANNO%>.value;
           if(anno.length<4)
           { 
-            alert('Per la ricerca per procedimento è necessario specificare sia anno che numero procedimento');      
+            alert("Per la ricerca per procedimento e' necessario specificare sia anno che numero procedimento");      
             document.f.<%=ICostantiFascicoloSiep.CAMPO_CHIAVE_ANNO%>.focus();
             return false;
           }
           if(document.f.<%=ICostantiFascicoloSiep.CAMPO_CHIAVE_PROGR%>.value == "")
           {
-            alert('Per la ricerca per procedimento è necessario specificare sia anno che numero procedimento');      
+            alert("Per la ricerca per procedimento e' necessario specificare sia anno che numero procedimento");      
             document.f.<%=ICostantiFascicoloSiep.CAMPO_CHIAVE_PROGR%>.focus();
             return false;
           }            
@@ -309,19 +314,31 @@ function pulisciStato() {
           var dataOdierna = '<%=DateUtils.getSysDate("dd/MM/yyyy")%>';
         
           // Data Nascita
-          var data_nasc =     document.f.<%=ICostantiSoggetto.CAMPO_GIORNO_DATA_NASCITA%>.value
-                          +'/'+document.f.<%=ICostantiSoggetto.CAMPO_MESE_DATA_NASCITA%>.value
-                          +'/'+document.f.<%=ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>.value;
- 	if (!ControllaDataPassaVuota(data_nasc)) {
-            alert('Data Nascita non corretta');      
-            document.f.<%=ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>.focus();
-            return false;
+          <%-- 202603 Il check va fatto solo se i campi sono abilitati --%>
+          if ( !$('[name="<%=ICostantiSoggetto.CAMPO_GIORNO_DATA_NASCITA%>"]').prop('disabled') )
+          {
+            var data_nasc =     document.f.<%=ICostantiSoggetto.CAMPO_GIORNO_DATA_NASCITA%>.value
+                            +'/'+document.f.<%=ICostantiSoggetto.CAMPO_MESE_DATA_NASCITA%>.value
+                            +'/'+document.f.<%=ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>.value;
+            if (!ControllaDataPassaVuota(data_nasc)) {
+              alert('Data Nascita non corretta');      
+              document.f.<%=ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>.focus();
+              return false;
+            }
           }
-        
-          // Comune e Stato Nascita
-	if (document.f.<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>.value != "" && document.f.<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>.value != "-") {
-   		if (document.f.<%=ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA%>.value != ""
-   				&& document.f.<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>[document.f.<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>.selectedIndex].value != '039') {
+
+          <%-- 202603 Il check va fatto solo se entrambi i campi sono abilitati --%>
+          if (   !$('[name="<%=ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA%>"]').prop('disabled') 
+              && !$('[name="<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>"]').prop('disabled')
+              && document.f.<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>.value != "" 
+              && document.f.<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>.value != "-"
+             ) 
+          {
+                if (   document.f.<%=ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA%>.value != ""
+                    && document.f.<%=ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA%>.value != "-"
+                    && document.f.<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>[document.f.<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>.selectedIndex].value != '039'
+                   ) 
+                {
                 alert('Il campo Stato Nascita e comune nascita incongruenti');
                 return false;
             }
@@ -420,7 +437,7 @@ if (aTitoli.length == 1) {
         var esegui = true;
         if(aStessoTitolo.length > 0 )
         {
-          msgConfirm = "Attenzione! Già è presente in Istruttoria Cumulo\n il Procedimento "+aStessoTitolo+" con estremi del Titolo Esecutivo\n";
+          msgConfirm = "Attenzione! Gia' e' presente in Istruttoria Cumulo\n il Procedimento "+aStessoTitolo+" con estremi del Titolo Esecutivo\n";
           msgConfirm += "uguali a quelli di un procedimento che si sta per iscrivere in istruttoria.";
           msgConfirm += "\nSi vuole procedere all'iscrizione del/dei Titolo/i selezionato/i?"; 
           
@@ -432,7 +449,7 @@ if (aTitoli.length == 1) {
           if(NSC == "NO")
           {
             msgConfirm = "Attenzione! Almeno uno dei Procedimenti selezionati non risulta ancora trasmesso a NSC.\n";
-            msgConfirm += "Per procedere all'iscrizione in Instruttoria, è consigliabile prima affettuare lo scarico su NSC\n";
+            msgConfirm += "Per procedere all'iscrizione in Instruttoria, e' consigliabile prima affettuare lo scarico su NSC\n";
             msgConfirm += "\nSi vuole procedere all'iscrizione del/dei Titolo/i selezionato?"; 
 
             esegui = window.confirm(msgConfirm);
@@ -508,10 +525,6 @@ function CtrStato(checkObject) {
       }
       
       function ripristinaValoriDataNascita(){
-    	  var ggNascita = '<%=StringUtils.toStringJSP(DateUtils.getDateToString(lsoggetto.getDataNascita(),"dd" ),"")%>';
-    	  var mmNascita = '<%=StringUtils.toStringJSP(DateUtils.getDateToString(lsoggetto.getDataNascita(),"MM" ),"")%>';
-    	  var aaNascita = '<%=StringUtils.toStringJSP(DateUtils.getDateToString(lsoggetto.getDataNascita(),"yyyy" ),"")%>';
-    	  
   		  $('[name="<%=ICostantiSoggetto.CAMPO_GIORNO_DATA_NASCITA%>"]').val(ggNascita);
 		  $('[name="<%=ICostantiSoggetto.CAMPO_MESE_DATA_NASCITA %>"]').val(mmNascita);
 		  $('[name="<%=ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>"]').val(aaNascita);
