@@ -77,7 +77,9 @@
   <table cellspacing=2 cellpadding=2>
     <tr>
       <td class="int" style="width: 150px;">Data Validazione</td>
+      <%-- 
       <td class="int" style="padding-left:5px;padding-right:5px;width: 100px;">Operatore</td>
+      --%>
       <td class="int" colspan="1">&nbsp;</td>
       <td class="int" colspan="3" style="padding-left:10px;padding-right:10px;">Reclusione<br>(anni-mesi-giorni)</td>
       <td class="int" colspan="1">&nbsp;</td>
@@ -87,6 +89,7 @@
       <td class="int" colspan="1">&nbsp;</td>
       <td class="int" style="padding-left:5px;padding-right:5px;">Posizione Giuridica</td>
       <td class="int" style="padding-left:5px;padding-right:5px;">Data Decorrenza Pena</td>
+<td class="int" style="padding-left:5px;padding-right:5px;width: 100px;">Giorni liberazione anticipata</td>      
       <td class="int" style="padding-left:5px;padding-right:5px;">Data Fine Pena Virtuale</td>
       <td class="int" style="width: 100px;">Azioni&nbsp;</td>
     </tr>  
@@ -98,7 +101,9 @@
     %>
     <tr>
        <td class="c"><%= StringUtils.toStringJSP (DateUtils.getDateToString(lCalcoloModel.getDataInserimento(),"dd-MM-yyyy HH:mm"))%></td>
+       <%--
        <td class="c"><%= StringUtils.toStringJSP (lCalcoloModel.getCodOperatoreInserimento() )%></td>
+       --%>
        
        <%-- Reclusione --%>
        <td class1="c" colspan="1">&nbsp;</td>
@@ -124,8 +129,9 @@
        <% } else { %>
        <td class="c" nowrap><font class="label">Detenuto</font></td>
        <% } %>
-       
+
        <td class="c"><%= StringUtils.toStringJSP (DateUtils.getDateToString(lCalcoloModel.getDataInizioPena(),"dd-MM-yyyy"),"&nbsp;")%></td>
+<td class="c" nowrap><font class="label"><%=lCalcoloModel.getLaApplicate().intValue()>0 ? lCalcoloModel.getLaApplicate() : "&nbsp;" %></font></td>
        <td class="c"><%= StringUtils.toStringJSP (DateUtils.getDateToString(lCalcoloModel.getDataScarcLaFung(),"dd-MM-yyyy"),"&nbsp;")%></td>
        
        <td class="c" nowrap>
