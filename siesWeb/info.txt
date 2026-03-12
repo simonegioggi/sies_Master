@@ -1,13 +1,14 @@
-BRANCH SIES VERSIONE 12.9.2.0
+BRANCH SIES VERSIONE 12.9.2.0-ADN
 
-Nasce dal branch 12.9.1.0 in data 27/02/2026
+Nasce dal branch 12.9.2.0 in data 11/03/2026
 
-Questa Release verrà rilasciata il 27/03/2026 (Patch mese di Marzo 2026)
+Questa Release verrà rilasciata il dd/MM/2026
 
-Comprende i seguenti Ticket MAC:
+In data 11/03/2026 eseguito merge col branch "IntegrazioneSiesAdn"
 
-1)	Ticket#20260
-	Per la risoluzione della problematica è stata modificata .
-	Il problema era legato al fatto che .
-	Classi modificate:
-	-   
+Scheda Intervento Integrazione SIES-ADN (Active Directory Nazionale)
+Branch creato il 15/02/2021 a partire dalla versione 12.6.0.0
+Obiettivi:
+	Prevedere un'attivita' di associazione degli utenti ADN con le utenze SIES.
+	Garantire una continuita' di funzionamento delle interazioni e delle interconnessioni che oggi il SIES ha con altri sistemi (SIC),
+	a valle della dismissione del sistema IGI nel SIC.

@@ -7,8 +7,8 @@
 <%@ page import="siap.sico.utente.model.UtenteModel"%>
 <%@ page import="siap.sico.ufficio.model.UfficioModel"%>
 
-<jsp:useBean id="FunRadiceMenuSceltaRapida" scope="session" class="f3b.security.model.FunctionModel" />
-<jsp:useBean id="UtenteConnesso" scope="session" class="siap.sico.utente.model.UtenteModel" />
+<jsp:useBean id="FunRadiceMenuSceltaRapida" scope="session" class="f3b.security.model.FunctionModel"/>
+<jsp:useBean id="UtenteConnesso" 			scope="session" class="siap.sico.utente.model.UtenteModel"/>
 
 <jsp:useBean id="ErroreBatchPagoPa" scope="session" class="java.lang.String" />
 <jsp:useBean id="BatchPagoPa" scope="session" class="siap.siep.pagoPaBatch.model.BatchPagopaModel" />
@@ -67,8 +67,8 @@ UfficioModel lUfficioUtente = UtenteConnesso.getUfficioUtente();
 //==========================================================================
 // Verifica abilitazione funzione help On-line per l'utente connesso
 //==========================================================================
-ArrayList lFunFiglie = FunRadiceMenuSceltaRapida.getDaughtersFunctions();
-Iterator lIter = lFunFiglie.iterator();
+ArrayList<?> lFunFiglie = FunRadiceMenuSceltaRapida.getDaughtersFunctions();
+Iterator<?> lIter = lFunFiglie.iterator();
 FunctionModel lFun = null;
 while (lIter.hasNext()) {
 	lFun = (FunctionModel)lIter.next();
@@ -98,29 +98,45 @@ Se Amministratore di Sistema (99) e sono presenti errori o segnalazioni nell'ult
 lancio del batchPagopa si visualizza l'icona di alert
 --%>
 <% 
-if ( "S".equals(ErroreBatchPagoPa)
-		&& (   UtenteConnesso.getUserProfile().getProfileId().intValue() == 99
-				|| UtenteConnesso.getUserProfile().getProfileId().intValue() == 90
-		    || UtenteConnesso.getUserProfile().getProfileId().intValue() == 4
-		    || UtenteConnesso.getUserProfile().getProfileId().intValue() == 40
-		    || UtenteConnesso.getUserProfile().getProfileId().intValue() == 50
-		   )
-   ) 	
-{%>
+if ("S".equals(ErroreBatchPagoPa)
+		&& (UtenteConnesso.getUserProfile().getProfileId().intValue() == 99
+		|| UtenteConnesso.getUserProfile().getProfileId().intValue() == 90
+		|| UtenteConnesso.getUserProfile().getProfileId().intValue() == 4
+		|| UtenteConnesso.getUserProfile().getProfileId().intValue() == 40
+		|| UtenteConnesso.getUserProfile().getProfileId().intValue() == 50)) {
+%>
 			<a href="<%=IWebConstants.PG_MAIN+"?"+IWebConstants.ACTION_FIELD+"=siap.siep.pagoPA.action.ActLoadAvvisoBatchPagoPA&IdBatchPagoPa="+BatchPagoPa.getIdBatchPagopa()%>" target="body">
-  				<img src="/images/attenzione.jpg" alt="" width="32" height="32" border="0" align="middle" title="Avviso Batch PagoPA">
- 				<font class=label>Avviso Batch PagoPA</font>
- 			</a>
-<% } %>
+				<img src="/images/attenzione.jpg" alt="" width="32" height="32" border="0" align="middle" title="Avviso Batch PagoPA">
+				<font class=label>Avviso Batch PagoPA</font>
+			</a>
+<%
+}
+%>
 <%-- MEV_2023-33 - FINE --%>
 
+<%-- MEV INTEGRAZIONE SIES ADN: modifica al cambio psw (mando avviso se non sono AMMINISTRATORE di sistema o di ufficio) ed al nome del logout --%>
+<%
+if (UtenteConnesso.getUserProfile().getProfileId().intValue() == 99
+		|| UtenteConnesso.getUserProfile().getProfileId().intValue() == 90) {
+%>
 			<a href="<%=IWebConstants.PG_MAIN+"?"+IWebConstants.ACTION_FIELD+"=siap.sico.utente.action.ActLoadModificaPassword"%>" target="body">
-				<img src="/images/Personal.gif" alt="" width="32" height="32" border="0" align="middle">
+				<img src="/images/Personal.gif" alt="" width="30" height="32" border="0" align="middle">
 				<font class=label>Cambio Password</font>
 			</a>
+<%
+} else {
+%>
+			<a href="Javascript:alert('Attenzione! Funzione di Cambio Password non attivo. Contattare amministratore di sistema o di ufficio.');" target="body">
+				<img src="/images/Personal.gif" alt="" width="30" height="32" border="0" align="middle">
+				<font class=label>Cambio Password</font>
+			</a>
+<%
+}
+%>
 			<a href="<%=IWebConstants.PG_MAIN+"?"+IWebConstants.ACTION_FIELD+"=siap.sico.security.action.ActLogout"%>" target="_top">
 				<img align="middle" src="/images/logout.gif" width="32" height="32" alt="" border="0">
-				<font class=label>Logout</font>
+				<!-- <font class=label>Logout</font> -->
+				<font class=label>Cambia Utenza/Esci</font>
 			</a>
 			<%-- MEV NUOVA INFRASTRUTTURA: refactoring --%>
 			<%--a href="<%=IWebConstants.PG_MAIN+"?"+IWebConstants.ACTION_FIELD+"=siap.sico.web.ActLoadHome"%>"" target="_top"><img align="middle" src="/images/home.gif" width="32" height="32" alt="" border="0"><font class=label>Home</font></a--%>

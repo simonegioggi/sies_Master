@@ -1,10 +1,12 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ page import="java.util.Collection"%>
 <%@ page import="java.util.Iterator"%>
+
 <%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
 <%@ page import="f3b.security.model.FunctionModel"%>
+
 <%@ page import="siap.web.ISIAPCostantiWeb"%>
 <%@ page import="siap.sico.security.action.ICostantiSecurity"%>
 <%@ page import="siap.sico.security.model.FunzioneModel"%>
@@ -16,41 +18,30 @@
 <%@ page import="siap.sius.documentoallegato.action.ICostantiDocumentoAllegato"%>
 <%@ page import="siap.sico.utente.model.UtenteModel"%>
 
-<jsp:useBean id="documentoAllegato" scope="request"
-	class="siap.sius.documentoallegato.model.DocumentoAllegatoModel" />
-<jsp:useBean id="fascicoloSiusGP" scope="session"
-	class="siap.sius.fascicolo.model.FascicoloGPModel" />
-<jsp:useBean id="depositoDecreto" scope="request"
-	class="siap.sius.depositodecreto.model.DepositoDecretoModel" />
-<jsp:useBean id="depositoordinanzapc" scope="request"
-	class="siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel" />
-<jsp:useBean id="evento" scope="request"
-	class="siap.sico.evento.model.EventoModel" />
-<jsp:useBean id="UtenteConnesso" scope="session"
-	class="siap.sico.utente.model.UtenteModel" />
-<jsp:useBean id="provenienza" scope="request" class="java.lang.String" />
-<jsp:useBean id="motivoNonInvio" scope="request"
-	class="java.lang.String" />
+<jsp:useBean id="documentoAllegato" scope="request" class="siap.sius.documentoallegato.model.DocumentoAllegatoModel"/>
+<jsp:useBean id="fascicoloSiusGP" scope="session" class="siap.sius.fascicolo.model.FascicoloGPModel"/>
+<jsp:useBean id="depositoDecreto" scope="request" class="siap.sius.depositodecreto.model.DepositoDecretoModel"/>
+<jsp:useBean id="depositoordinanzapc" scope="request" class="siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel"/>
+<jsp:useBean id="evento" scope="request" class="siap.sico.evento.model.EventoModel"/>
+<jsp:useBean id="UtenteConnesso" scope="session" class="siap.sico.utente.model.UtenteModel"/>
+<jsp:useBean id="provenienza" scope="request" class="java.lang.String"/>
+<jsp:useBean id="motivoNonInvio" scope="request" class="java.lang.String"/>
 <%-- MEV10-s3: aggiunto useBean per gestire la sentenza per i minori --%>
-<jsp:useBean id="depositoSentenza" scope="request"
-	class="siap.sius.depositosentenza.model.DepositoSentenzaModel" />
-
-<script language="JavaScript" src="<%=ISIAPCostantiWeb.JS_CONTROL_UPLOAD_NEW%>"
-	type="text/javascript"></script>
-<script language="JavaScript" src="<%=IWebConstants.JS_CONFIRM%>"
-	type="text/javascript"></script>
+<jsp:useBean id="depositoSentenza" scope="request" class="siap.sius.depositosentenza.model.DepositoSentenzaModel"/>
 
 <html>
 <head>
 <title>[S.I.E.S.] - Compilazione Foglio Complementare</title>
 <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
-
+<script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>" type="text/javascript"></script>
+<script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>" type="text/javascript"></script>
 <%
 	String lAzione = new String();
 	lAzione = "siap.sius.provvedimento.action.ActModificaCompFoglioComp";
 	String lNota = "N.B.: Il Foglio Complementare è già stato creato. Inserire eventualmente le indicazioni relative all'inserimento manuale e premere il tasto Conferma.";
 %>
-
+<script language="JavaScript" src="<%=ISIAPCostantiWeb.JS_CONTROL_UPLOAD_NEW%>" type="text/javascript"></script>
+<script language="JavaScript" src="<%=IWebConstants.JS_CONFIRM%>" type="text/javascript"></script>
 <script type="text/javascript">
       // variabile utilizzata per poter abilitare o disabilitare le icone
       // di trasmissione, modifica o cancellazione del foglio complementare da SIC
@@ -206,11 +197,7 @@
 		}
 	%>
 
-	<link rel="STYLESHEET" type="text/css" href="/css/style.css">
-
-	<script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>" type="text/javascript"></script>
-	<script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>" type="text/javascript"></script>
-
+<!-- 	<link rel="STYLESHEET" type="text/css" href="/css/style.css"> -->
 	<table>
 		<tr>
 			<td class="LBG"><a href="Javascript:window.print();">
@@ -242,6 +229,8 @@
 				else
 					idEventoInterconnessione = evento.getIdEvento();
 				String idUtente = UtenteConnesso.getUserId();
+				// MEV INTEGRAZIONE SIES ADN: aggiunta impostazione di variabile userAdn
+				String userAdn = UtenteConnesso.getUserAdn();
 			%>
 
 			<%-- MEV10-s3: l'invio del FC al sic non è possibile per le sentenze dei minori --%>
@@ -249,20 +238,20 @@
 				String codTipoUfficio = UtenteConnesso.getUfficioUtente().getCodTipoUfficio();
 				if (!("TDSM".equalsIgnoreCase(codTipoUfficio) || "UDSM".equalsIgnoreCase(codTipoUfficio))) { %>
 					<td class="LBG"><a href="#"
-						onClick="openPopup('/siesEsecuzione/index.jsp?action=INSERT&amp;idEvento=<%=idEventoInterconnessione%>&amp;idUtente=<%=idUtente%>');return(false);">
+						onClick="openPopup('/siesEsecuzione/index.jsp?action=INSERT&amp;idEvento=<%=idEventoInterconnessione%>&amp;idUtente=<%=idUtente%>&userAdn=<%=userAdn%>');return(false);">
 							<img id="TrasmissioneFC" align="middle"
 							src="/images/insertWS.png"
 							alt="Trasmissione Foglio Complementare al SIC" width="24"
 							height="24" border="0">
 					</a></td>
 					<td class="LBG"><a href="#"
-						onClick="openPopup('/siesEsecuzione/index.jsp?action=UPDATE&amp;idEvento=<%=idEventoInterconnessione%>&amp;idUtente=<%=idUtente%>');return(false);">
+						onClick="openPopup('/siesEsecuzione/index.jsp?action=UPDATE&amp;idEvento=<%=idEventoInterconnessione%>&amp;idUtente=<%=idUtente%>&userAdn=<%=userAdn%>');return(false);">
 							<img id="ModificaFC" align="middle" src="/images/updateWS.png"
 							alt="Modifica Foglio Complementare sul SIC" width="24" height="24"
 							border="0">
 					</a></td>
 					<td class="LBG"><a href="#"
-						onClick="openPopup('/siesEsecuzione/search?idEvento=<%=idEventoInterconnessione%>&amp;idUtente=<%=idUtente%>');return(false);">
+						onClick="openPopup('/siesEsecuzione/search?idEvento=<%=idEventoInterconnessione%>&amp;idUtente=<%=idUtente%>&userAdn=<%=userAdn%>');return(false);">
 							<img id="Storico" align="middle" src="/images/certificatoWS.png"
 							alt="Storico invio trasmissioni al SIC" width="24" height="24"
 							border="0">
@@ -275,7 +264,7 @@
 				<% } %>
 
 			<!-- BOTTONE DI RITORNO -->
-			<jsp:include page="<%=IWebConstants.PG_RETURN_BUTTON%>" />
+			<jsp:include page="<%=IWebConstants.PG_RETURN_BUTTON%>"/>
 		</tr>
 	</table>
 	<br>
@@ -284,7 +273,7 @@
 	%>
 	<table>
 		<tr>
-			<jsp:include page="<%=ICostantiFascicoloSius.PG_LOAD_SINTESIPROCEDIMENTOSIUS%>" />
+			<jsp:include page="<%=ICostantiFascicoloSius.PG_LOAD_SINTESIPROCEDIMENTOSIUS%>"/>
 		</tr>
 	</table>
 	<%
@@ -293,7 +282,7 @@
 	<br>
 	<!-- LISTA DEI FOGLI ANNULLATI -->
 	<jsp:include page="<%=ICostantiProvvedimento.PG_LISTA_CFC_ANNULLATI%>">
-		<jsp:param name="ActionLink" value="siap.sius.provvedimento.action.ActLoadDettaglioCompFoglioComp" />
+		<jsp:param name="ActionLink" value="siap.sius.provvedimento.action.ActLoadDettaglioCompFoglioComp"/>
 	</jsp:include>
 
 	<FORM method="POST" action="<%=IWebConstants.PG_MAIN%>"
@@ -357,10 +346,11 @@
 			<%
 				if (documentoAllegato.getDataAnnullamento() != null /*&& documentoAllegato.getFlagAnnullamento() != null && impugnazione.getFlagAnnullamento().equalsIgnoreCase("S") */) {
 			%>
-			<tr></tr>
-			<td class="l"><font class="cRosso"> Foglio Complementare
-					ANNULLATO</font></td>
-			<tr></tr>
+			<tr><td>&nbsp;</td></tr>
+			<tr>
+				<td class="l"><font class="cRosso">Foglio Complementare ANNULLATO</font></td>
+			</tr>
+			<tr><td>&nbsp;</td></tr>
 			<tr>
 				<td class="l">Data di annullamento</td>
 				<td class="L"><%=DateUtils.getDateToString(documentoAllegato.getDataAnnullamento(), "dd-MM-yyyy")%>

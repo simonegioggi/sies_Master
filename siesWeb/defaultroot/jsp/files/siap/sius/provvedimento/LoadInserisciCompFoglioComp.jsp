@@ -15,26 +15,16 @@
 <%@ page import="siap.sico.soggetto.model.SoggettoModel"%>
 <%@ page import="siap.web.ISIAPCostantiWeb"%>
 
-<jsp:useBean id="documentoAllegato" scope="request"
-	class="siap.sius.documentoallegato.model.DocumentoAllegatoModel" />
-<jsp:useBean id="depositoDecreto" scope="request"
-	class="siap.sius.depositodecreto.model.DepositoDecretoModel" />
-<jsp:useBean id="depositoordinanzapc" scope="request"
-	class="siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel" />
-<jsp:useBean id="evento" scope="request"
-	class="siap.sico.evento.model.EventoModel" />
-<jsp:useBean id="UtenteConnesso" scope="session"
-	class="siap.sico.utente.model.UtenteModel" />
-<jsp:useBean id="modalita" scope="request" class="java.lang.String" />
-<jsp:useBean id="motivoNonInvio" scope="request"
-	class="java.lang.String" />
-<jsp:useBean id="fascicoloSiusGP" scope="session"
-	class="siap.sius.fascicolo.model.FascicoloGPModel" />
+<jsp:useBean id="documentoAllegato" 	scope="request" class="siap.sius.documentoallegato.model.DocumentoAllegatoModel"/>
+<jsp:useBean id="depositoDecreto" 		scope="request"	class="siap.sius.depositodecreto.model.DepositoDecretoModel"/>
+<jsp:useBean id="depositoordinanzapc" 	scope="request"	class="siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel"/>
+<jsp:useBean id="evento" 				scope="request" class="siap.sico.evento.model.EventoModel"/>
+<jsp:useBean id="UtenteConnesso" 		scope="session" class="siap.sico.utente.model.UtenteModel"/>
+<jsp:useBean id="modalita" 				scope="request" class="java.lang.String"/>
+<jsp:useBean id="motivoNonInvio"		scope="request" class="java.lang.String"/>
+<jsp:useBean id="fascicoloSiusGP" 		scope="session" class="siap.sius.fascicolo.model.FascicoloGPModel"/>
 <%-- MEV10-s3: aggiunto useBean per gestire la sentenza per i minori --%>
-<jsp:useBean id="depositoSentenza" scope="request"
-	class="siap.sius.depositosentenza.model.DepositoSentenzaModel" />
-
-<script language="JavaScript" src="<%=ISIAPCostantiWeb.JS_CONTROL_UPLOAD_NEW%>"></script>
+<jsp:useBean id="depositoSentenza" 		scope="request"	class="siap.sius.depositosentenza.model.DepositoSentenzaModel"/>
 
 <html>
 <head>
@@ -43,6 +33,7 @@
 
 <script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
 <script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
+<script language="JavaScript" src="<%=ISIAPCostantiWeb.JS_CONTROL_UPLOAD_NEW%>"></script>
 
 <%
 	String lAzione = new String();
@@ -191,7 +182,7 @@
 </head>
 
 <body class="corpo">
-	<link rel="STYLESHEET" type="text/css" href="/css/style.css">
+<!-- 	<link rel="STYLESHEET" type="text/css" href="/css/style.css"> -->
 	<table>
 		<tr>
 			<td class="LBG"><a href="Javascript:window.print();">
@@ -221,6 +212,8 @@
 					idEventoInterconnessione = depositoDecreto.getIdEventoGenerato();
 
 				String idUtente = UtenteConnesso.getUserId();
+				// MEV INTEGRAZIONE SIES ADN: aggiunta impostazione di variabile userAdn
+				String userAdn = UtenteConnesso.getUserAdn();
 			%>
 
 			<%-- MEV10-s3: l'invio del FC al sic non è possibile per le sentenze dei minori --%>
@@ -228,33 +221,33 @@
 			String codTipoUfficio = UtenteConnesso.getUfficioUtente().getCodTipoUfficio();
 			if (!("TDSM".equalsIgnoreCase(codTipoUfficio) || "UDSM".equalsIgnoreCase(codTipoUfficio))) { %>
 				<td class="LBG"><a href="#"
-					onClick="openPopup('/siesEsecuzione/index.jsp?action=INSERT&idEvento=<%=idEventoInterconnessione%>&idUtente=<%=idUtente%>');return(false);">
+					onClick="openPopup('/siesEsecuzione/index.jsp?action=INSERT&idEvento=<%=idEventoInterconnessione%>&idUtente=<%=idUtente%>&userAdn=<%=userAdn%>');return(false);">
 						<img id="TrasmissioneFC" align="middle"
 						src="/images/insertWS.png"
 						alt="Trasmissione Foglio Complementare al SIC" width="24"
 						height="24" border="0">
 				</a></td>
 				<td class="LBG"><a href="#"
-					onClick="openPopup('/siesEsecuzione/index.jsp?action=UPDATE&idEvento=<%=idEventoInterconnessione%>&idUtente=<%=idUtente%>');return(false);">
+					onClick="openPopup('/siesEsecuzione/index.jsp?action=UPDATE&idEvento=<%=idEventoInterconnessione%>&idUtente=<%=idUtente%>&userAdn=<%=userAdn%>');return(false);">
 						<img id="ModificaFC" align="middle" src="/images/updateWS.png"
 						alt="Modifica Foglio Complementare sul SIC" width="24" height="24"
 						border="0">
 				</a></td>
 				<td class="LBG"><a href="#"
-					onClick="openPopup('/siesEsecuzione/search?idEvento=<%=idEventoInterconnessione%>&idUtente=<%=idUtente%>');return(false);">
+					onClick="openPopup('/siesEsecuzione/search?idEvento=<%=idEventoInterconnessione%>&idUtente=<%=idUtente%>&userAdn=<%=userAdn%>');return(false);">
 						<img id="Storico" align="middle" src="/images/certificatoWS.png"
 						alt="Storico invio trasmissioni al SIC" width="24" height="24"
 						border="0">
 				</a></td>
 				<td class="LBG"><a href="#"
-					onClick="openPopupAnnulla('/siesEsecuzione/index.jsp?action=DELETE&idEvento=<%=idEventoInterconnessione%>&idUtente=<%=idUtente%>&tipoOperazione=ANNULLA');return(false);">
+					onClick="openPopupAnnulla('/siesEsecuzione/index.jsp?action=DELETE&idEvento=<%=idEventoInterconnessione%>&idUtente=<%=idUtente%>&userAdn=<%=userAdn%>&tipoOperazione=ANNULLA');return(false);">
 						<img id="Annulla" align="middle" src="/images/delete24.gif"
 						alt="Annulla" width="24" height="24" border="0">
 				</a></td>
 			<% } %>
 
 			<!-- BOTTONE DI RITORNO -->
-			<jsp:include page="<%=IWebConstants.PG_RETURN_BUTTON%>" />
+			<jsp:include page="<%=IWebConstants.PG_RETURN_BUTTON%>"/>
 		</tr>
 	</table>
 	<br>
@@ -264,7 +257,7 @@
 	<table>
 		<tr>
 			<jsp:include
-				page="<%=ICostantiFascicoloSius.PG_LOAD_SINTESIPROCEDIMENTOSIUS%>" />
+				page="<%=ICostantiFascicoloSius.PG_LOAD_SINTESIPROCEDIMENTOSIUS%>"/>
 		</tr>
 	</table>
 	<%
@@ -273,11 +266,10 @@
 	<br>
 	<!-- LISTA DEI FOGLI ANNULLATI -->
 	<jsp:include page="<%=ICostantiProvvedimento.PG_LISTA_CFC_ANNULLATI%>">
-		<jsp:param name="ActionLink" value="siap.sius.provvedimento.action.ActLoadDettaglioCompFoglioComp" />
+		<jsp:param name="ActionLink" value="siap.sius.provvedimento.action.ActLoadDettaglioCompFoglioComp"/>
 	</jsp:include>
 
-	<FORM method="POST" action="<%=IWebConstants.PG_MAIN%>"
-		name="LoadInserisciCompFoglioComp">
+	<FORM method="POST" action="<%=IWebConstants.PG_MAIN%>" name="LoadInserisciCompFoglioComp">
 		<table cellspacing=2 cellpadding=2>
 			<tr>
 				<td class="Titolo" colspan=6>Estremi Provvedimento</td>

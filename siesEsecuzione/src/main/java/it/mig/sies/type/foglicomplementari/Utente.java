@@ -41,6 +41,13 @@ import javax.xml.bind.annotation.XmlType;
  *           &lt;/simpleType>
  *         &lt;/element>
  *         &lt;element name="ipServer" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="UserAdn">
+ *           &lt;simpleType>
+ *             &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
+ *               &lt;maxLength value="128"/>
+ *             &lt;/restriction>
+ *           &lt;/simpleType>
+ *         &lt;/element>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -55,7 +62,8 @@ import javax.xml.bind.annotation.XmlType;
     "username",
     "cognome",
     "nome",
-    "ipServer"
+    "ipServer",
+    "userAdn"
 })
 @XmlRootElement(name = "Utente")
 public class Utente {
@@ -70,9 +78,11 @@ public class Utente {
     protected String nome;
     @XmlElement(required = true, nillable = true)
     protected String ipServer;
+    @XmlElement(name = "UserAdn", required = true)
+    protected String userAdn;
 
     /**
-     * Recupera il valore della proprietà ufficio.
+     * Recupera il valore della proprietï¿½ ufficio.
      * 
      * @return
      *     possible object is
@@ -84,7 +94,7 @@ public class Utente {
     }
 
     /**
-     * Imposta il valore della proprietà ufficio.
+     * Imposta il valore della proprietï¿½ ufficio.
      * 
      * @param value
      *     allowed object is
@@ -96,7 +106,7 @@ public class Utente {
     }
 
     /**
-     * Recupera il valore della proprietà username.
+     * Recupera il valore della proprietï¿½ username.
      * 
      * @return
      *     possible object is
@@ -108,7 +118,7 @@ public class Utente {
     }
 
     /**
-     * Imposta il valore della proprietà username.
+     * Imposta il valore della proprietï¿½ username.
      * 
      * @param value
      *     allowed object is
@@ -120,7 +130,7 @@ public class Utente {
     }
 
     /**
-     * Recupera il valore della proprietà cognome.
+     * Recupera il valore della proprietï¿½ cognome.
      * 
      * @return
      *     possible object is
@@ -132,7 +142,7 @@ public class Utente {
     }
 
     /**
-     * Imposta il valore della proprietà cognome.
+     * Imposta il valore della proprietï¿½ cognome.
      * 
      * @param value
      *     allowed object is
@@ -144,7 +154,7 @@ public class Utente {
     }
 
     /**
-     * Recupera il valore della proprietà nome.
+     * Recupera il valore della proprietï¿½ nome.
      * 
      * @return
      *     possible object is
@@ -156,7 +166,7 @@ public class Utente {
     }
 
     /**
-     * Imposta il valore della proprietà nome.
+     * Imposta il valore della proprietï¿½ nome.
      * 
      * @param value
      *     allowed object is
@@ -168,7 +178,7 @@ public class Utente {
     }
 
     /**
-     * Recupera il valore della proprietà ipServer.
+     * Recupera il valore della proprietï¿½ ipServer.
      * 
      * @return
      *     possible object is
@@ -180,7 +190,7 @@ public class Utente {
     }
 
     /**
-     * Imposta il valore della proprietà ipServer.
+     * Imposta il valore della proprietï¿½ ipServer.
      * 
      * @param value
      *     allowed object is
@@ -189,6 +199,30 @@ public class Utente {
      */
     public void setIpServer(String value) {
         this.ipServer = value;
+    }
+
+    /**
+     * Recupera il valore della proprietï¿½ userAdn.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getUserAdn() {
+        return userAdn;
+    }
+
+    /**
+     * Imposta il valore della proprietï¿½ userAdn.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setUserAdn(String value) {
+        this.userAdn = value;
     }
 
 }

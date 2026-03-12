@@ -48,18 +48,20 @@ public class LoadTrasferisciFCService {
 	private String idFascicoloSiep;
 	// MEV 16 CUMULO: aggiunte variabili di classe e modificati i costruttori
 	private String idSinonimo;
+	// MEV INTEGRAZIONE SIES ADN: aggiunta impostazione di variabile userAdn
+	String userAdn;
 
 	/**
 	 * Costuttore
 	 *
 	 * @param idEvento
 	 */
-	public LoadTrasferisciFCService(String idEvento) {
-
-		this.idEvento = idEvento;
-		this.dao = SiesDAO.getIstance();
-		this.riepilogoOperazione = new RiepilogoOperazione();
-	}
+	// public LoadTrasferisciFCService(String idEvento) {
+	//
+	// this.idEvento = idEvento;
+	// this.dao = SiesDAO.getIstance();
+	// this.riepilogoOperazione = new RiepilogoOperazione();
+	// }
 
 	/**
 	 * Costruttore usato solo per il trasferimento massivo senza un utente...da modificare
@@ -67,13 +69,13 @@ public class LoadTrasferisciFCService {
 	 * @param idEvento
 	 * @param action
 	 */
-	public LoadTrasferisciFCService(String idEvento, String action) {
-
-		this.idEvento = idEvento;
-		this.action = action;
-		this.dao = SiesDAO.getIstance();
-		this.riepilogoOperazione = new RiepilogoOperazione();
-	}
+	// public LoadTrasferisciFCService(String idEvento, String action) {
+	//
+	// this.idEvento = idEvento;
+	// this.action = action;
+	// this.dao = SiesDAO.getIstance();
+	// this.riepilogoOperazione = new RiepilogoOperazione();
+	// }
 
 	/**
 	 * Costruttore
@@ -85,9 +87,10 @@ public class LoadTrasferisciFCService {
 	 * @param idSentenza
 	 * @param idFascicoloSiep
 	 * @param idSinonimo
+	 * @param userAdn
 	 */
 	public LoadTrasferisciFCService(String idEvento, String action, String idUtente, String idSoggetto,
-			String idSentenza, String idFascicoloSiep, String idSinonimo) {
+			String idSentenza, String idFascicoloSiep, String idSinonimo, String userAdn) {
 
 		this.idEvento = idEvento;
 		this.idUtente = idUtente;
@@ -98,6 +101,7 @@ public class LoadTrasferisciFCService {
 		this.idSentenza = idSentenza;
 		this.idFascicoloSiep = idFascicoloSiep;
 		this.idSinonimo = idSinonimo;
+		this.userAdn = userAdn;
 	}
 
 	/**
@@ -113,7 +117,7 @@ public class LoadTrasferisciFCService {
 		logger.info("Inizio caricamento dati dal database locale");
 		verificaUtente();
 		// valore di ritorno
-		return loadData(action);
+		return loadData();
 	}
 
 	/**
@@ -163,17 +167,18 @@ public class LoadTrasferisciFCService {
 	/**
 	 * Caricamento delle varie entity
 	 *
-	 * @param action
 	 * @return List<RequestData>
 	 * @throws LoadException
 	 * @throws ControlException
 	 */
-	private List<RequestData> loadData(String action) throws LoadException, ControlException {
+	private List<RequestData> loadData() throws LoadException, ControlException {
 
 		try {
 			List<RequestData> requestDataList = new ArrayList<>();
 			// Caricamento utente
 			it.mig.sies.model.Utente utente = loadUtente();
+			// MEV INTEGRAZIONE SIES ADN: aggiunta impostazione di proprietà
+			utente.setUserAdn(userAdn);
 			// Caricamento soggetto
 			Soggetto soggetto = loadSoggetto();
 			// controllo se trattasi di cumulo
@@ -261,7 +266,7 @@ public class LoadTrasferisciFCService {
 				// requestData.setAzioneCumulo(split[1] + "#" + split[2]);
 				// }
 				// Gestione della azione da inviare
-				manageAction(action, requestData);
+				manageAction(requestData);
 				// aggiungo alla lista
 				requestDataList.add(requestData);
 			}
@@ -358,11 +363,10 @@ public class LoadTrasferisciFCService {
 	/**
 	 * Gestione della action
 	 *
-	 * @param action
 	 * @param requestData
 	 * @throws LoadException
 	 */
-	private void manageAction(String action, RequestData requestData) throws LoadException {
+	private void manageAction(RequestData requestData) throws LoadException {
 
 		if (action.equals(Azione.INSERT.toString())) {
 			requestData.setAzione(Azione.INSERT);
