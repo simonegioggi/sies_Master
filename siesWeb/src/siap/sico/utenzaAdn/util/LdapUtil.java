@@ -73,7 +73,7 @@ public class LdapUtil {
 		String dn = F3BProperties.getProperty("ldap.dn");
 
 		Hashtable<String, String> environment = new Hashtable<>();
-		siesLogger.info("Preparo parametri onnessione al server ldap " + urlLDAP);
+		siesLogger.info("Preparo parametri connessione al server ldap " + urlLDAP);
 		environment.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
 		environment.put(Context.SECURITY_PROTOCOL, "ssl");
 		environment.put(Context.PROVIDER_URL, urlLDAP);

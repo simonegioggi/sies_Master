@@ -28,7 +28,7 @@ final Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 action.setServletContext(application);
 %>
 </jsp:useBean>
-<jsp:useBean id="lockTable" class="java.util.Hashtable<>" scope="application"/>
+<jsp:useBean id="lockTable" class="java.util.Hashtable" scope="application"/>
 
 <%
 /**
