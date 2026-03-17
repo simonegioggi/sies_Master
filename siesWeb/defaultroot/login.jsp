@@ -80,12 +80,11 @@ function exLogin() {
             		<table border="1" width="300" id="table1" cellspacing="0" cellpadding="0" bordercolor="#FFFFFF" bgcolor="#0383C0">
               			<tr>
                 			<td>
-                				<p align="center" style="margin-top: 0; margin-bottom: 0">
-	                				<strong>
-	                  					<font color="#FFFFFF" size="3">COMUNICAZIONI DI SERVIZIO</font>
-	                				</strong>
-	                				<hr color="#FFFFFF" width="100%" size="1" align="center">
-								</p>
+                				<p align="center" style="margin-top: 0; margin-bottom: 0"/>
+                				<strong>
+                  					<font color="#FFFFFF" size="3">COMUNICAZIONI DI SERVIZIO</font>
+                				</strong>
+                				<hr color="#FFFFFF" width="100%" size="1" align="center"/>
                 				<iframe name="comunicazioni" marginwidth="1" marginheight="1" height="200" width=800 style="border:0" frameborder="0" src="<%="http://"+request.getServerName()+":"+request.getServerPort()%>/comunicazioni/news.htm" scrolling="no">
                   					Il browser in uso non supporta frame non ancorati oppure è configurato in modo che i frame non ancorati non siano visualizzati.
                 				</iframe>
