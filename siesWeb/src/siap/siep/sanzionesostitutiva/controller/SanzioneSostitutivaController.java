@@ -83,8 +83,8 @@ import siap.siep.verbale.model.VerbaleModel;
 
 /**
  * Controller della Sanzioni Sostitutive
- * 
- * @version	1.0
+ *
+ * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class SanzioneSostitutivaController extends SiapController implements ISanzioneSostitutiva {
@@ -2796,32 +2796,36 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 					siesLogger.debug("Notifica al condannato. Attivo/Cancello lo scadenzario");
 
 					// 2023.11.20 - Cancello eventuali scadenzario 30 collegato ad altri eventi
-					lScaSqlDao.ricercaScadenzarioByTipoScadenzarioIdFascicolo("30", aEvento.getFasSieIdFascicoloSiep());
-					Vector <ScadenzarioModel> listaScadenzari = new Vector <ScadenzarioModel>(lScaSqlDao.getModels());
-					siesLogger.debug("listaScadenzari.size() = "+listaScadenzari.size());
+					lScaSqlDao.ricercaScadenzarioByTipoScadenzarioIdFascicolo("30",
+							aEvento.getFasSieIdFascicoloSiep());
+					Vector<ScadenzarioModel> listaScadenzari = new Vector<ScadenzarioModel>(
+							lScaSqlDao.getModels());
+					siesLogger.debug("listaScadenzari.size() = " + listaScadenzari.size());
 					for (ScadenzarioModel scadenzarioPrecedente : listaScadenzari) {
-					  if (scadenzarioPrecedente.getEveIdEvento().compareTo(aEvento.getIdEvento())!=0
-					      && "N".equals(scadenzarioPrecedente.getFlagVisto())) {
-					    siesLogger.debug("Annullo lo scadenzario con id = "+scadenzarioPrecedente.getIdScadenzario());
-//					    lScaDao.setFlagVisto("S");
-//					    lScaDao.setDataAggiornamento(DateUtils.getSysDate());
-//					    lScaDao.setCodOperatoreAggiornamento(lNotModel.getCodOperatoreInserimento());
-//					    lScaDao.setCodUfficioAggiornamento(lNotModel.getCodUfficioInserimento());
-              lScaDao.setCondizioneUpdate(scadenzarioPrecedente.getIdScadenzario());
-              lScaDao.delete();
-//              lScaDao.update();
-              lScaDao.stop();					    
-					  }					  
+						if (scadenzarioPrecedente.getEveIdEvento().compareTo(aEvento.getIdEvento()) != 0
+								&& "N".equals(scadenzarioPrecedente.getFlagVisto())) {
+							siesLogger.debug("Annullo lo scadenzario con id = "
+									+ scadenzarioPrecedente.getIdScadenzario());
+							// lScaDao.setFlagVisto("S");
+							// lScaDao.setDataAggiornamento(DateUtils.getSysDate());
+							// lScaDao.setCodOperatoreAggiornamento(lNotModel.getCodOperatoreInserimento());
+							// lScaDao.setCodUfficioAggiornamento(lNotModel.getCodUfficioInserimento());
+							lScaDao.setCondizioneUpdate(scadenzarioPrecedente.getIdScadenzario());
+							lScaDao.delete();
+							// lScaDao.update();
+							lScaDao.stop();
+						}
 					}
-				  // 2023.11.20 - 
-					
+					// 2023.11.20 -
+
 					Date dataScadenzaPrimaRata = null;
 
 					if (lNotModel.getDataAvvenutaNotifica() == null) {
 						siesLogger.debug("Notifica al condannato Rimossa, Cancello lo scadenzario");
-						
-					  // 2023.11.20 - Dovrei ripristinare lo scadenzario precedente. Storicizzazione attualmente non prevista					
-						
+
+						// 2023.11.20 - Dovrei ripristinare lo scadenzario precedente. Storicizzazione
+						// attualmente non prevista
+
 						lScaSqlDao.ricercaScadenzarioByIdEvento(aEvento.getIdEvento());
 						ScadenzarioModel lScadenzarioAttuale = (ScadenzarioModel) lScaSqlDao.getModelByKey();
 
@@ -2969,10 +2973,9 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 		} finally {
 			cleanup(lNotDAO);
 			cleanup(lAutDao);
-
 			cleanup(lScaDao);
+			cleanup(lScaSqlDao);
 			cleanup(lRateSqlDao);
-
 			cleanup(lBollSqlDao);
 			cleanup(lBollDao);
 
