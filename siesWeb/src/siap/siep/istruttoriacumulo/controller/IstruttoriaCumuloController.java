@@ -2100,6 +2100,10 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 						}
 					}
 				}
+				// Ticket#202603160115 - si stoppa subito il dao/sqldao CURSOR LEAK!!! Vengono aperti tanti cursori lBenCumSqlDao
+				// quanti sono i titoli e chiusi solo nel finally. Con 120 titoli si hanno 120 cursori aperti contemporaneamente
+				lBenCumSqlDao.stop();
+				// Ticket#202603160115 – FINE
 				if (lVecBenCum != null && lVecBenCum.size() > 0) {
 					lTitolo.setBeneficiCumulo(lVecBenCum);
 				}
@@ -2155,7 +2159,10 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 
 					lListaProvStatoEsec.add(lStatoModel);
 				}
-
+				// Ticket#202603160115 - si stoppa subito il dao/sqldao CURSOR LEAK!!! Vengono aperti tanti cursori lBenCumSqlDao
+				// quanti sono i titoli e chiusi solo nel finally. Con 120 titoli si hanno 120 cursori aperti contemporaneamente
+				lStatoEsecSqlDao.stop();
+				// Ticket#202603160115 - FINE 
 				lTitoloStat.setStatoEsecuzioneTitoloCumulato(lListaProvStatoEsec);
 			}
 
@@ -2694,7 +2701,6 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 			lTitoloSqlDao.ricercaTitoloCumulatoByIstruttoriaOrderBy(aIdIstruttoriaCumulo, lOrdinamentoTitoli);
 			// MEV_2025-48 - ALTRO - Ordinamento titoli come x Lista titoli - FINE
 			lListaTitoli = new Vector<TitoloCumulatoModel>(lTitoloSqlDao.getModels());
-
 			lCalcoloPenaModel.setListaTitoli(lListaTitoli);
 
 			// Aggiungere eventuali dettagli sul procedimento cumulato vedi
@@ -2782,6 +2788,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 					lContCumuloSqlDao.ricercaContinuazioneByIdTitolo(lPenaComplMod.getTitIdTitoloCumulato());
 					Vector lListaCont = new Vector(lContCumuloSqlDao.getModels());
 					lPenaComplMod.setContinuazioniCumulo(lListaCont);
+
 					// MEV_2025-48 - ALTRO - Visualizzazione Pena In Continuazione
 
 					if (isPenaDetentivaSospesa) {
@@ -2851,7 +2858,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 					lSSCumSqlDao.ricercaSanzioneSostitutivaByIdPenaComplessivaCum(
 							lPenaComplMod.getIdPenaComplessivaCum());
 					lSSCumModel = (SanzioneSostitutivaCumuloModel) lSSCumSqlDao.getModelByKey();
-
+					
 					if (lSSCumModel != null && !"C".equals(lSSCumModel.getFlagStato())) {
 						lPenaComplMod.setSanzioneSostitutivaCumulo(lSSCumModel);
 						lCalcoloPenaModel.addSanzioneSost(lSSCumModel);
@@ -2893,6 +2900,12 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 						siesLogger.debug("MC: idTitolo = " + lTitolo.getIdTitoloCumulato() + " - idMisura = "
 								+ lMCModel.getIdMisuraCautelareCumulo());
 					}
+					// Ticket#202603160115 - si stoppa subito il dao/sqldao (ERR-new in ciclo for, ne finallyu si ha il 
+					//                       puntamento solo all'ultistanza, le altre restano appese. Inoltre anche se 
+					// non ci fosse la new si aprirebbeo numerosi cursori contemporaneamente chiusi solo nel finally)
+					// Generando un possibile CURSOR LEAK
+					lMisCautCumSqlDao.stop();
+					// Ticket#202603160115 - FINE
 				} else {
 					siesLogger.debug("Pena Sospesa! NON recupero le MC in sentenza ");
 				}
@@ -2955,6 +2968,10 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 
 						lCalcoloPenaModel.addBeneficio(lBeneficio);
 					}
+					// Ticket#202603160115 - si stoppa subito il dao/sqldao. Se non si chiude subito il cursore verrà chiuso 
+				    // solo nel finally ed essendo nel ciclo sui titoli si rischia da avare parecchi cursori aperti contemporaneamente 
+					lBeneficioSqlDao.stop();
+					// Ticket#202603160115 - FINE
 				} else {
 					siesLogger.debug("Pena Sospesa! NON Recupero benefici Revocati in sentenza ");
 				}
@@ -3025,7 +3042,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 
 						Vector<StatoEsecTitoloCumulatoModel> lListaProvvPagamentoPP = new Vector(
 								lStatoEsecSqlDao.getModels());
-
+						
 						lComputiSqlDao = new ComputiCumuloSqlDAO(lConn);
 						for (int i = 0; i < lListaProvvPagamentoPP.size(); i++) {
 							StatoEsecTitoloCumulatoModel lStatoModel = lListaProvvPagamentoPP.elementAt(i);
@@ -3057,6 +3074,11 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 								.getModel();
 						lCalcoloPenaModel.addLibAnticipata(lLibAnticipata);
 					}
+					// Ticket#202603160115 - si stoppa subito il dao/sqldao (ERR-new in ciclo for nel finally si può 
+					// chiudere solo l'ultimo dao) Inoltre resterebbero comunque apertitutti i cursori (uno per ogni titolo) 
+					// fino al finally
+					lLibAnticSqlDao.stop();
+					// Ticket#202603160115 – FINE
 				} // End if pena sospensa
 				else {
 					siesLogger.debug("Pena Sospesa! NON Recupero i provvedimento con LA ");
@@ -3097,7 +3119,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 
 				Vector<RichiestePmInCumuloModel> lListaRichieste = new Vector<RichiestePmInCumuloModel>(
 						lRichPmInCumuloSqlDao.getModels());
-
+				
 				lProvvGeSorvSqlDao = new ProvvedimentoGeSorvCumSqlDAO(lConn);
 				for (int i = 0; i < lListaRichieste.size(); i++) {
 					RichiestePmInCumuloModel lRichiestaModel = lListaRichieste.elementAt(i);
@@ -3131,6 +3153,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 								lRichiestaModel.getIdRichiestePmInCumulo());
 						ProvvedimentoGeSorvCumModel lDecisioneModel = (ProvvedimentoGeSorvCumModel) lProvvGeSorvSqlDao
 								.getModelByKey();
+						
 						if (lDecisioneModel == null && !"A".equals(lRichiestaModel.getFlagAppProvvisoria())) {
 							siesLogger.debug("Richiesta " + lRichiestaModel.getDescrTipoAnnotazione()
 									+ " senza Anticipazione e Decisione assente: la rimuovo");
@@ -3664,7 +3687,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 																									// beneficio
 
 				Vector<RichiestePmInCumuloModel> lListaRichieste = new Vector(lRichPmSqlDao.getModels());
-
+				
 				lRicPmBenSqlDao = new RichPMBeneficioCumSqlDAO(aConn);
 
 				// Scorro le richieste revoca beneficio per vedere se ne esiste una
@@ -3867,6 +3890,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 
 				Vector<RichPMSanSostCumModel> lVecRicRevSSCum = new Vector<RichPMSanSostCumModel>(
 						lRicPmSanSostSqlDao.getModels());
+				
 				// Verifico se punta il beneficio della sospensione
 				for (RichPMSanSostCumModel lRichPMSSMod : lVecRicRevSSCum) {
 					if (lRichPMSSMod.getSanIdSanSostCumulo()
@@ -4289,13 +4313,16 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 			lProcCumSqlDao = new ProcedimentoCumulatoSqlDAO(aConn);
 
 			lContinuazioneCumSqlDao.ricercaContinuazioneByIdTitoloCont(aIdTitolo);
-
-			lContinuazioneCumSqlDao.start();
-
-			while (lContinuazioneCumSqlDao.next()) {
-				ContinuazioneCumuloModel lConCumModel = (ContinuazioneCumuloModel) lContinuazioneCumSqlDao
-						.getModel();
-
+			// Ticket#202603160115 - si usa la getModels per chiudere subito il cursore
+			Vector<ContinuazioneCumuloModel> listaCont = new Vector(lContinuazioneCumSqlDao.getModels());
+			
+//			lContinuazioneCumSqlDao.start();			
+//			while (lContinuazioneCumSqlDao.next()) {
+//				ContinuazioneCumuloModel lConCumModel = (ContinuazioneCumuloModel) lContinuazioneCumSqlDao
+//						.getModel();
+			for (int i = 0; i< listaCont.size(); i++) {	
+				ContinuazioneCumuloModel lConCumModel = listaCont.elementAt(i);
+				// Ticket#202603160115 -
 				if ("R".equals(lConCumModel.getCodTipoContinuazione())) {
 					siesLogger.debug(
 							"Trovata continuazione " + lConCumModel.getIdContinuazioneCum() + " di tipo R ");
@@ -4314,7 +4341,8 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 					break;
 				}
 			}
-			lContinuazioneCumSqlDao.stop();
+			// Ticket#202603160115
+			// lContinuazioneCumSqlDao.stop();
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: ", daoEx);
 			throw new SIEPException(F3BException.USER_MESSAGE,
