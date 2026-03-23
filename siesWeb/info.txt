@@ -6,8 +6,12 @@ Questa Release verrà rilasciata il 27/03/2026 (Patch mese di Marzo 2026)
 
 Comprende i seguenti Ticket MAC:
 
-1)	Ticket#20260
-	Per la risoluzione della problematica è stata modificata .
-	Il problema era legato al fatto che .
+1)	Ticket#202602260149 - PROCURA DI NOCERA - SIEP
+	Ticket#202603060170 - PROCURA DI FOGGIA - ANALOGA SEGNALAZIONE DI QUELLA DI SALERNO
+	Ticket#202603120147 - Problema Istruttoria Cumuli
+	Ticket#202603130151 - Anomlai istruttoria																	
+	Ticket#202603200112 - Mancata iscrizione fascicoli coinvolti nel CUMULO
+	Per la risoluzione della problematica è stata modificata la gestione dei campi: nome, cognome e comune.
+	Il problema era legato al fatto che i dati che contenevano un apostrofo non venivano gestiti correttamente.
 	Classi modificate:
-	-   
+	-   siap/siep/istruttoriacumulo/RicercaProcedimentiUfficio.jsp
