@@ -17,6 +17,7 @@ import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
+import f3b.util.JdbcTrackerUtil;
 import f3b.util.report.ReportGenerator;
 import f3b.util.xml.TreeModel;
 import siap.controller.SiapController;
@@ -1667,7 +1668,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 				Vector<MisuraSicurezzaCumuloModel> lListaMisure = new Vector<>();
 				lMisSicCumSqlDAO.ricercaMisureSicurezzaCumuloByIdIstruttoria(
 						lEveModel.getIstruIdIstruttoriaCumulo(), true);
-				lMisSicCumSqlDAO.start();
+				//lMisSicCumSqlDAO.start(); 2026.03.17 si commenta la riga. Lo start viene eseguito dalla getModels()
 				lListaMisure = new Vector<MisuraSicurezzaCumuloModel>(lMisSicCumSqlDAO.getModels());
 
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -2364,6 +2365,10 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 							lListaUffCancelleria.add(lUffCancModel);
 							lCod = lUffCancModel.getCodUfficio();
 						}
+						// Ticket#202603160115 - si stoppa subito il dao/sqldao 
+						// per evitare di lasciare il cursore aperto
+                        lUffSqlDao.stop();
+						// Ticket#202603160115 – FINE
 					} else {
 						siesLogger.debug(
 								"NotaDiTrasmissioneModel per Ufficio di CANCELLERIA: caso Ufficio Inesistente");
@@ -2464,7 +2469,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			// Avvocati
 			lAvvSqlDao = new AvvocatoSiepxStampaSqlDAO(lConn);
 			lAvvSqlDao.ricercaAvvocatiByFascicolo(lIstruttoriaCumulo.getFasSieIdFascicoloSiep());
-			lAvvSqlDao.start();
+			// lAvvSqlDao.start(); //2026.03.17 Si commenta. Lo start viene eseguito dalla getModels()
 			Vector<AvvocatoSiepModel> lAvvocati = new Vector<AvvocatoSiepModel>(lAvvSqlDao.getModels());
 
 			Iterator<AvvocatoSiepModel> lIterAvv = lAvvocati.iterator();
@@ -2659,7 +2664,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			lMisSicCumSqlDAO = new MisuraSicurezzaCumuloSqlDAO(lConn);
 			lMisSicCumSqlDAO.ricercaMisureSicurezzaCumuloByIdIstruttoria(
 					lIstruttoriaCumulo.getIdIstruttoriaCumulo(), true);
-			lMisSicCumSqlDAO.start();
+			// lMisSicCumSqlDAO.start(); // 2026.03.17 Viene commentato lo start. Viene eseguito dalla getModels
 			Vector<MisuraSicurezzaCumuloModel> lListaMisure = new Vector<MisuraSicurezzaCumuloModel>(
 					lMisSicCumSqlDAO.getModels());
 
@@ -2740,7 +2745,10 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 					}
 					// mev56 FINE ****************************
 				}
-
+				// Ticket#202603160115 - si stoppa subito il dao/sqldao
+				// per evitare di tenere aperto il cursore
+				lEveSqlDAO.stop();
+				// Ticket#202603160115 – FINE
 				lTreeIstruttoria.add(new TreeModel(lMisSicMod));
 			}
 
@@ -2987,6 +2995,10 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 							lListaUffCancelleria.add(lUffCancModel);
 							lCod = lUffCancModel.getCodUfficio();
 						}
+						// Ticket#202603160115 - si stoppa subito il dao/sqldao
+						// per evitare di tenere inutilmente aperto il Cursore
+						lUffSqlDao.stop();
+						// Ticket#202603160115 – FINE
 					} else {
 						siesLogger.debug(
 								"NotaDiTrasmissioneModel per Ufficio di CANCELLERIA: caso Ufficio Inesistente");
@@ -3142,7 +3154,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			// Avvocati
 			lAvvSqlDao = new AvvocatoSiepxStampaSqlDAO(lConn);
 			lAvvSqlDao.ricercaAvvocatiByFascicolo(lIstruttoriaCumulo.getFasSieIdFascicoloSiep());
-			lAvvSqlDao.start();
+			// lAvvSqlDao.start(); // 2026.03.17 si commenta. Lo start viene richiamato dalla getModels
 			Vector<AvvocatoSiepModel> lAvvocati = new Vector<AvvocatoSiepModel>(lAvvSqlDao.getModels());
 
 			Iterator<AvvocatoSiepModel> lIterAvv = lAvvocati.iterator();
@@ -3392,7 +3404,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			lMisSicCumSqlDAO = new MisuraSicurezzaCumuloSqlDAO(lConn);
 			lMisSicCumSqlDAO.ricercaMisureSicurezzaCumuloByIdIstruttoria(
 					lIstruttoriaCumulo.getIdIstruttoriaCumulo(), true);
-			lMisSicCumSqlDAO.start();
+			// lMisSicCumSqlDAO.start(); // 2026.03.17 si commenta. Lo start viene richiamto dalla getModels
 			Vector<MisuraSicurezzaCumuloModel> lListaMisure = new Vector<MisuraSicurezzaCumuloModel>(
 					lMisSicCumSqlDAO.getModels());
 
