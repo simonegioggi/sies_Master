@@ -115,12 +115,11 @@ public class StatoEsecuzioneController extends SiapController {
 
 		DepositoOrdinanzaPcModel lDepOrdPCMod = null;
 
-		
 		// MEV_2023-33
 		RateizzazionePPSqlDAO lRateSqlDao = null;
 		BollettinoPagopaSqlDAO lBollettiniSqlDao = null;
-		// MEV_2023-33 - 
-		    
+		// MEV_2023-33 -
+
 		try {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.info("\n>>> SONO 222 NEL REWORK DELLO STATO ESECUZIONE!!! <<< ");
@@ -134,11 +133,11 @@ public class StatoEsecuzioneController extends SiapController {
 			lTenSql = new TenoreSqlDAO(lConn);
 			lScaSanSql = new ScambioSanzioneSqlDAO(lConn);
 
-		   // MEV_2023-33
-			lRateSqlDao = new RateizzazionePPSqlDAO (lConn);
-			lBollettiniSqlDao = new BollettinoPagopaSqlDAO (lConn);
-	    // MEV_2023-33 - 
-			
+			// MEV_2023-33
+			lRateSqlDao = new RateizzazionePPSqlDAO(lConn);
+			lBollettiniSqlDao = new BollettinoPagopaSqlDAO(lConn);
+			// MEV_2023-33 -
+
 			// Ricerca Eventi per lo stato esecuzione
 			lEveDaoStampa.ricercaEventoByFascicoloSiepXStampa(lKeyFascicolo);
 			Vector lVectEve = new Vector(lEveDaoStampa.getModels());
@@ -332,45 +331,45 @@ public class StatoEsecuzioneController extends SiapController {
 								+ " - ID EVENTO = " + lAnnoModel.getEveIdEvento());
 					}
 				}
-			  
+
 				// MEV_2023-33
 				// Dveo recupera i bollletino collegati al fascicolo, le rate collegate al fascicole
 				// ed aggregare i bollettini allal rete ele rate agli ecento
-        siesLogger.debug("Ricerco le rate collegate al fascicolo...");
+				siesLogger.debug("Ricerco le rate collegate al fascicolo...");
 				lRateSqlDao.ricercaRateizzazionePPByIdFascicoloSiep(lKeyFascicolo);
 				Vector lListaRateizzazioni = new Vector(lRateSqlDao.getModels());
-				
+
 				Hashtable lHashRateizzazioni = new Hashtable();
 				if (lListaRateizzazioni != null) {
-				  siesLogger.debug("Rate trovate...");
-				  Iterator lItxRate = lListaRateizzazioni.iterator();
+					siesLogger.debug("Rate trovate...");
+					Iterator lItxRate = lListaRateizzazioni.iterator();
 
-				  while (lItxRate.hasNext()) {
-				    RateizzazionePPModel lRataModel = (RateizzazionePPModel) lItxRate.next();
-				    
-				    if (lRataModel.getEveIdEvento()!=null) {
-				      // 
-				      lBollettiniSqlDao.ricercaBollettinoPagopaByReteizzazione(lRataModel.getIdRateizzazionePP());
-				      Vector lListaBollettini = new Vector(lBollettiniSqlDao.getModels());
-				      lRataModel.setListaBollettini(lListaBollettini);
-				      
-				      if (lHashRateizzazioni.containsKey(lRataModel.getEveIdEvento())) {
-				        ((Vector) lHashRateizzazioni.get(lRataModel.getEveIdEvento())).add(lRataModel);
-				      }
-				      else {
-				        Vector <RateizzazionePPModel> lListaRateEvento = new Vector <RateizzazionePPModel>();
-				        lListaRateEvento.add (lRataModel);
-				        lHashRateizzazioni.put (lRataModel.getEveIdEvento(), lListaRateEvento);
-				      }
-				    }
+					while (lItxRate.hasNext()) {
+						RateizzazionePPModel lRataModel = (RateizzazionePPModel) lItxRate.next();
 
-				    siesLogger.debug("lRataModel = " + lRataModel);
-				  }
-				}			
+						if (lRataModel.getEveIdEvento() != null) {
+							//
+							lBollettiniSqlDao.ricercaBollettinoPagopaByReteizzazione(
+									lRataModel.getIdRateizzazionePP());
+							Vector lListaBollettini = new Vector(lBollettiniSqlDao.getModels());
+							lRataModel.setListaBollettini(lListaBollettini);
+
+							if (lHashRateizzazioni.containsKey(lRataModel.getEveIdEvento())) {
+								((Vector) lHashRateizzazioni.get(lRataModel.getEveIdEvento()))
+										.add(lRataModel);
+							} else {
+								Vector<RateizzazionePPModel> lListaRateEvento = new Vector<>();
+								lListaRateEvento.add(lRataModel);
+								lHashRateizzazioni.put(lRataModel.getEveIdEvento(), lListaRateEvento);
+							}
+						}
+
+						siesLogger.debug("lRataModel = " + lRataModel);
+					}
+				}
 				siesLogger.debug("Dopo ricerca rate...");
-			  // MEV_2023-33 - FINE 		
-				
-				
+				// MEV_2023-33 - FINE
+
 				// --------------------------------------------------------------------
 				// FINE SEZIONE caricamento hash table
 				// --------------------------------------------------------------------
@@ -391,11 +390,11 @@ public class StatoEsecuzioneController extends SiapController {
 				lStatEsec.setHashEventiRiferimento(lHashSorveglianza);
 				lStatEsec.setHashMisure(lHashMisAlt);
 				lStatEsec.setEveIdEvento(lEveIdEventi);
-				
-				// MEV_2023-33 
+
+				// MEV_2023-33
 				lStatEsec.setHashRateizzazioni(lHashRateizzazioni);
 				// MEV_2023-33 - FINE
-				
+
 				// FIXME d.f. verificare se e' il caso di recuperare anche le LA.
 				// Sebbene siano legate al provvedimento SIUS hanno un ref anche al fascicolo SIEP
 				// Si potrebber recuperare le LA legate a Ordinanze/Decreti puntati
@@ -849,22 +848,25 @@ public class StatoEsecuzioneController extends SiapController {
 							}
 						}
 
-            // MEV_2023-33
-            if (lEve.getListaRateizzazioni() != null && lEve.getListaRateizzazioni().size() > 0) {
-              Iterator <RateizzazionePPModel> lIterRate = lEve.getListaRateizzazioni().iterator();
-              while (lIterRate.hasNext()) {
-                RateizzazionePPModel lRata = lIterRate.next();
-                TreeModel lTreeRata = new TreeModel(lRata);
-                if (lRata.getListaBollettini()!=null && lRata.getListaBollettini().size()>0) {
-                  Iterator <BollettinoPagopaModel> lIterBoll = lRata.getListaBollettini().iterator();
-                  while (lIterBoll.hasNext()) {
-                    lTreeRata.add(new TreeModel(lIterBoll.next()));
-                  }
-                }
-                lStatEve.add(lTreeRata);
-              }
-            }
-            //MEV_2023-33
+						// MEV_2023-33
+						if (lEve.getListaRateizzazioni() != null && lEve.getListaRateizzazioni().size() > 0) {
+							Iterator<RateizzazionePPModel> lIterRate = lEve.getListaRateizzazioni()
+									.iterator();
+							while (lIterRate.hasNext()) {
+								RateizzazionePPModel lRata = lIterRate.next();
+								TreeModel lTreeRata = new TreeModel(lRata);
+								if (lRata.getListaBollettini() != null
+										&& lRata.getListaBollettini().size() > 0) {
+									Iterator<BollettinoPagopaModel> lIterBoll = lRata.getListaBollettini()
+											.iterator();
+									while (lIterBoll.hasNext()) {
+										lTreeRata.add(new TreeModel(lIterBoll.next()));
+									}
+								}
+								lStatEve.add(lTreeRata);
+							}
+						}
+						// MEV_2023-33
 
 						if (lEve.getFungibilita() != null) {
 							TreeModel lTreeFung = new TreeModel(lEve.getFungibilita());
@@ -1006,11 +1008,8 @@ public class StatoEsecuzioneController extends SiapController {
 							siesLogger.debug("lDatFinCumulo = " + lDatFinCumulo);
 
 							/*
-							 * ISSUE MAC : aggiunto il controllo su data finali cumulo != null 
-							 * Numero MAC : 20200224011
-							 * Autore : monica 
-							 * Data : 25/feb/2020 
-							 * Branch : 12.1
+							 * ISSUE MAC : aggiunto il controllo su data finali cumulo != null Numero MAC :
+							 * 20200224011 Autore : monica Data : 25/feb/2020 Branch : 12.1
 							 */
 							if (lDatFinCumulo != null
 									&& "03".equals(lDatFinCumulo.getTipoUfficioEmissione())) {
@@ -1077,7 +1076,7 @@ public class StatoEsecuzioneController extends SiapController {
 						// altrimenti no. Il template e' fatto in modo che se trova il rinnovo prende sempre
 						// il rinnovo altrimenti l'ultimo VVR
 						IRinnovo lCtrl = SIEPLookupRemote.getRinnovoRemote();
-						// Ticket#202106220110 - Si recupera l'ultimo 
+						// Ticket#202106220110 - Si recupera l'ultimo
 						// RinnovoModel lRinMod = lCtrl.ExRicercaRinnovoByKeyEvento(lEveNot.getIdEvento());
 						RinnovoModel lRinMod = lCtrl.ExRicercaUltimoRinnovoByKeyEvento(lEveNot.getIdEvento());
 						// Ticket#202106220110 - FINE
@@ -1225,7 +1224,6 @@ public class StatoEsecuzioneController extends SiapController {
 			lDepDecSql.stop();
 			lTenSql.stop();
 			lScaSanSql.stop();
-
 		} catch (DAOException daoEx) {
 			daoEx.printStackTrace();
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
@@ -1248,6 +1246,8 @@ public class StatoEsecuzioneController extends SiapController {
 			cleanup(lTenSql);
 			cleanup(lScaSanSql);
 			cleanup(lRicConSqlDao);
+			cleanup(lRateSqlDao);
+			cleanup(lBollettiniSqlDao);
 		}
 	}
 

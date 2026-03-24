@@ -1,5 +1,3 @@
-BRANCH SIESESECUZIONE VERSIONE 12.8.3.0
+BRANCH SIESESECUZIONE VERSIONE MEV_2026-24
 
-Nasce dal branch 12.8.2.0 in data 25/07/2025
-
-Gestisce il trasferimento verso NSC dei fogli complementari (NO CUMULO).
+Nasce dal branch 12.9.2.0 in data 30/03/2026

@@ -27,8 +27,7 @@
 <jsp:useBean id="lsoggetto" 				scope="request" class="siap.sico.soggetto.model.SoggettoModel"/>
 <jsp:useBean id="StatoNascita" 				scope="request" class="java.lang.String"/>
 <jsp:useBean id="ListaTitoliInIstruttoria"  scope="request" class="java.util.Vector"/>
- 
- 
+
 <%-- MEV_2025-48 - Ricerca soggetto da Iscrizione proprio titolo --%>
 <jsp:useBean id="checkRicercaProvvVal"	scope="request" class="java.lang.String"/>
 <jsp:useBean id="chiaveAnnoRich" 	    scope="request" class="java.lang.String"/>
@@ -37,7 +36,6 @@
 <jsp:useBean id="elencoUfficiAccorpati" scope="request" class="java.util.Vector" /> 
 <jsp:useBean id="primoCaricamento"      scope="request" class="java.lang.String"/>
 
-
 <jsp:useBean id="isCheckCognome"        scope="request" class="java.lang.String"/>
 <jsp:useBean id="isCheckNome"           scope="request" class="java.lang.String"/>
 <jsp:useBean id="isCheckCUI"            scope="request" class="java.lang.String"/>
@@ -45,13 +43,11 @@
 <jsp:useBean id="isCheckComune"         scope="request" class="java.lang.String"/>
 <jsp:useBean id="isCheckStato"          scope="request" class="java.lang.String"/>
 <%-- MEV_2025-48 --%>
- 
+
 <%
 //==============================================================================
 // Jsp per la visualizzazione delle richieste atti ricevute
 //==============================================================================
-
-
 int TotaleIscrivibili=0;
 Iterator itx1 = ListaProcedimenti.iterator();
 while (itx1.hasNext()) {
