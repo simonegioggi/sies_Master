@@ -870,7 +870,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 
 	/**
 	 * metodo per Inserimento Provvedimento Cumulo
-	 * 
+	 *
 	 * @param aEveNotModel
 	 * @param aCompetenzaModel
 	 * @return
@@ -1667,7 +1667,8 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 				Vector<MisuraSicurezzaCumuloModel> lListaMisure = new Vector<>();
 				lMisSicCumSqlDAO.ricercaMisureSicurezzaCumuloByIdIstruttoria(
 						lEveModel.getIstruIdIstruttoriaCumulo(), true);
-				lMisSicCumSqlDAO.start();
+				// lMisSicCumSqlDAO.start(); 2026.03.17 si commenta la riga. Lo start viene eseguito dalla
+				// getModels()
 				lListaMisure = new Vector<MisuraSicurezzaCumuloModel>(lMisSicCumSqlDAO.getModels());
 
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -2364,6 +2365,10 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 							lListaUffCancelleria.add(lUffCancModel);
 							lCod = lUffCancModel.getCodUfficio();
 						}
+						// Ticket#202603160115 - si stoppa subito il dao/sqldao
+						// per evitare di lasciare il cursore aperto
+						lUffSqlDao.stop();
+						// Ticket#202603160115 – FINE
 					} else {
 						siesLogger.debug(
 								"NotaDiTrasmissioneModel per Ufficio di CANCELLERIA: caso Ufficio Inesistente");
@@ -2464,7 +2469,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			// Avvocati
 			lAvvSqlDao = new AvvocatoSiepxStampaSqlDAO(lConn);
 			lAvvSqlDao.ricercaAvvocatiByFascicolo(lIstruttoriaCumulo.getFasSieIdFascicoloSiep());
-			lAvvSqlDao.start();
+			// lAvvSqlDao.start(); //2026.03.17 Si commenta. Lo start viene eseguito dalla getModels()
 			Vector<AvvocatoSiepModel> lAvvocati = new Vector<AvvocatoSiepModel>(lAvvSqlDao.getModels());
 
 			Iterator<AvvocatoSiepModel> lIterAvv = lAvvocati.iterator();
@@ -2659,7 +2664,8 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			lMisSicCumSqlDAO = new MisuraSicurezzaCumuloSqlDAO(lConn);
 			lMisSicCumSqlDAO.ricercaMisureSicurezzaCumuloByIdIstruttoria(
 					lIstruttoriaCumulo.getIdIstruttoriaCumulo(), true);
-			lMisSicCumSqlDAO.start();
+			// lMisSicCumSqlDAO.start(); // 2026.03.17 Viene commentato lo start. Viene eseguito dalla
+			// getModels
 			Vector<MisuraSicurezzaCumuloModel> lListaMisure = new Vector<MisuraSicurezzaCumuloModel>(
 					lMisSicCumSqlDAO.getModels());
 
@@ -2740,7 +2746,10 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 					}
 					// mev56 FINE ****************************
 				}
-
+				// Ticket#202603160115 - si stoppa subito il dao/sqldao
+				// per evitare di tenere aperto il cursore
+				lEveSqlDAO.stop();
+				// Ticket#202603160115 – FINE
 				lTreeIstruttoria.add(new TreeModel(lMisSicMod));
 			}
 
@@ -2987,6 +2996,10 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 							lListaUffCancelleria.add(lUffCancModel);
 							lCod = lUffCancModel.getCodUfficio();
 						}
+						// Ticket#202603160115 - si stoppa subito il dao/sqldao
+						// per evitare di tenere inutilmente aperto il Cursore
+						lUffSqlDao.stop();
+						// Ticket#202603160115 – FINE
 					} else {
 						siesLogger.debug(
 								"NotaDiTrasmissioneModel per Ufficio di CANCELLERIA: caso Ufficio Inesistente");
@@ -3142,7 +3155,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			// Avvocati
 			lAvvSqlDao = new AvvocatoSiepxStampaSqlDAO(lConn);
 			lAvvSqlDao.ricercaAvvocatiByFascicolo(lIstruttoriaCumulo.getFasSieIdFascicoloSiep());
-			lAvvSqlDao.start();
+			// lAvvSqlDao.start(); // 2026.03.17 si commenta. Lo start viene richiamato dalla getModels
 			Vector<AvvocatoSiepModel> lAvvocati = new Vector<AvvocatoSiepModel>(lAvvSqlDao.getModels());
 
 			Iterator<AvvocatoSiepModel> lIterAvv = lAvvocati.iterator();
@@ -3392,7 +3405,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			lMisSicCumSqlDAO = new MisuraSicurezzaCumuloSqlDAO(lConn);
 			lMisSicCumSqlDAO.ricercaMisureSicurezzaCumuloByIdIstruttoria(
 					lIstruttoriaCumulo.getIdIstruttoriaCumulo(), true);
-			lMisSicCumSqlDAO.start();
+			// lMisSicCumSqlDAO.start(); // 2026.03.17 si commenta. Lo start viene richiamto dalla getModels
 			Vector<MisuraSicurezzaCumuloModel> lListaMisure = new Vector<MisuraSicurezzaCumuloModel>(
 					lMisSicCumSqlDAO.getModels());
 
@@ -3643,7 +3656,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 
 	/**
 	 * metodo per iscrizione Procedimento di Classe IV
-	 * 
+	 *
 	 * @param aDBConnection
 	 * @param aListaMisure
 	 * @param aIdFascicoloCumulante
@@ -4928,8 +4941,9 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 						csm.setImportoAmmenda(lPenaRideterminataLorda.getImportoAmmenda());
 
 					TreeModel lTree = new TreeModel(csm);
-					if (csm.isDatiValorizzati()) //2026.02 Post Collaudo - Si aggiungono i dati solo se valorizzati
-					lTreeCalcoloPena.add(lTree);
+					if (csm.isDatiValorizzati()) // 2026.02 Post Collaudo - Si aggiungono i dati solo se
+													// valorizzati
+						lTreeCalcoloPena.add(lTree);
 				}
 			}
 
@@ -4945,8 +4959,9 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 				csm.setNumGiorni(lTotMisCautModel.getNumGiorni());
 
 				TreeModel lTree = new TreeModel(csm);
-				if (csm.isDatiValorizzati()) //2026.02 Post Collaudo - Si aggiungono i dati solo se valorizzati
-				lTreeCalcoloPena.add(lTree);
+				if (csm.isDatiValorizzati()) // 2026.02 Post Collaudo - Si aggiungono i dati solo se
+												// valorizzati
+					lTreeCalcoloPena.add(lTree);
 			}
 
 			// 003 - Dedotti i Periodi di carcerazione sofferti a seguito revoca di Misure Alternative
@@ -4963,8 +4978,9 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 
 				TreeModel lTree = new TreeModel(csm);
 				// lTree.add(new TreeModel(lTotReclusioneRMA));
-				if (csm.isDatiValorizzati()) //2026.02 Post Collaudo - Si aggiungono i dati solo se valorizzati
-				lTreeCalcoloPena.add(lTree);
+				if (csm.isDatiValorizzati()) // 2026.02 Post Collaudo - Si aggiungono i dati solo se
+												// valorizzati
+					lTreeCalcoloPena.add(lTree);
 			}
 
 			// 004 - Dedotti i Periodi di carcerazione sofferti a seguito Sospensione / Differimento della
@@ -4982,8 +4998,9 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 
 				TreeModel lTree = new TreeModel(csm);
 				// lTree.add(new TreeModel(lTotSospDiff));
-				if (csm.isDatiValorizzati()) //2026.02 Post Collaudo - Si aggiungono i dati solo se valorizzati
-				lTreeCalcoloPena.add(lTree);
+				if (csm.isDatiValorizzati()) // 2026.02 Post Collaudo - Si aggiungono i dati solo se
+												// valorizzati
+					lTreeCalcoloPena.add(lTree);
 			}
 
 			// 005 - Dedotti i benefici (Amnistia/Indulto ...)
@@ -5014,8 +5031,9 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 						csm.setImportoAmmenda(new BigDecimal(lTotArresto.getImportoAmmenda()));
 
 					TreeModel lTree = new TreeModel(csm);
-					if (csm.isDatiValorizzati()) //2026.02 Post Collaudo - Si aggiungono i dati solo se valorizzati
-					lTreeCalcoloPena.add(lTree);
+					if (csm.isDatiValorizzati()) // 2026.02 Post Collaudo - Si aggiungono i dati solo se
+													// valorizzati
+						lTreeCalcoloPena.add(lTree);
 				}
 			}
 
@@ -5034,8 +5052,9 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 
 				TreeModel lTree = new TreeModel(csm);
 				// lTree.add(new TreeModel(lTotPagamentiPP));
-				if (csm.isDatiValorizzati()) //2026.02 Post Collaudo - Si aggiungono i dati solo se valorizzati
-				lTreeCalcoloPena.add(lTree);
+				if (csm.isDatiValorizzati()) // 2026.02 Post Collaudo - Si aggiungono i dati solo se
+												// valorizzati
+					lTreeCalcoloPena.add(lTree);
 			}
 
 			{
@@ -5084,8 +5103,9 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 						csm.setImportoAmmenda(new BigDecimal(lTotArrestoRP.getImportoAmmenda()));
 
 					TreeModel lTree = new TreeModel(csm);
-					if (csm.isDatiValorizzati()) //2026.02 Post Collaudo - Si aggiungono i dati solo se valorizzati
-					lTreeCalcoloPena.add(lTree);
+					if (csm.isDatiValorizzati()) // 2026.02 Post Collaudo - Si aggiungono i dati solo se
+													// valorizzati
+						lTreeCalcoloPena.add(lTree);
 				}
 			}
 
@@ -5109,8 +5129,9 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 				csm.setNumScomputi(lTotScomp == 0 ? null : new BigDecimal(lTotScomp));
 
 				TreeModel lTree = new TreeModel(csm);
-				if (csm.isDatiValorizzati()) //2026.02 Post Collaudo - Si aggiungono i dati solo se valorizzati
-				lTreeCalcoloPena.add(lTree);
+				if (csm.isDatiValorizzati()) // 2026.02 Post Collaudo - Si aggiungono i dati solo se
+												// valorizzati
+					lTreeCalcoloPena.add(lTree);
 			}
 
 			{
@@ -5142,8 +5163,9 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 						csm.setImportoAmmenda(new BigDecimal(lTotArrestoRich.getImportoAmmenda()));
 
 					TreeModel lTree = new TreeModel(csm);
-					if (csm.isDatiValorizzati()) //2026.02 Post Collaudo - Si aggiungono i dati solo se valorizzati
-					lTreeCalcoloPena.add(lTree);
+					if (csm.isDatiValorizzati()) // 2026.02 Post Collaudo - Si aggiungono i dati solo se
+													// valorizzati
+						lTreeCalcoloPena.add(lTree);
 				}
 			}
 
@@ -5176,8 +5198,9 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 						csm.setImportoAmmenda(new BigDecimal(lTotArrestoRichRev.getImportoAmmenda()));
 
 					TreeModel lTree = new TreeModel(csm);
-					if (csm.isDatiValorizzati()) //2026.02 Post Collaudo - Si aggiungono i dati solo se valorizzati
-					lTreeCalcoloPena.add(lTree);
+					if (csm.isDatiValorizzati()) // 2026.02 Post Collaudo - Si aggiungono i dati solo se
+													// valorizzati
+						lTreeCalcoloPena.add(lTree);
 				}
 			}
 
@@ -5205,8 +5228,9 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 					csm.setImportoAmmenda(lTotaleDaScontare.getImportoAmmenda());
 
 				TreeModel lTree = new TreeModel(csm);
-				if (csm.isDatiValorizzati()) //2026.02 Post Collaudo - Si aggiungono i dati solo se valorizzati
-				lTreeCalcoloPena.add(lTree);
+				if (csm.isDatiValorizzati()) // 2026.02 Post Collaudo - Si aggiungono i dati solo se
+												// valorizzati
+					lTreeCalcoloPena.add(lTree);
 			}
 
 		} catch (Exception ex) {
