@@ -128,6 +128,7 @@ import siap.sius.magistratorelatore.dao.MagistratoRelatoreSqlDAO;
 import siap.sius.magistratorelatore.model.MagistratoRelatoreModel;
 import siap.sius.motivazionedecreto.dao.MotivazioneDecretoSqlDAO;
 import siap.sius.motivazionedecreto.model.MotivazioneDecretoModel;
+import siap.sius.permesso.controller.IPermesso;
 import siap.sius.permesso.dao.PermessoSqlDAO;
 import siap.sius.permesso.model.CriteriRicercaProvPermessiLicenzeModel;
 import siap.sius.permesso.model.ProvvedimentoPermessoLicenzaModel;
@@ -158,9 +159,9 @@ import siap.sius.udienzaprocedimento.model.UdienzaProcedimentoModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * Description: Classe Controller per Stampe SIUS Classe centralizzata, pubblica una serie di metodi che
- * gestiscono il prelievo dei dati per la generazione base delle pagine XML per la gestione delle stampe in
- * ambito SIUS
+ * SIAPStampaController - Classe Controller per Stampe SIUS Classe centralizzata, pubblica una serie di metodi
+ * che gestiscono il prelievo dei dati per la generazione base delle pagine XML per la gestione delle stampe
+ * in ambito SIUS
  *
  * @version 1.0
  */
@@ -5458,16 +5459,51 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 			StringTokenizer lStrToken = new StringTokenizer(aCriteriRicerca.getCodMotivo(), ",");
 			// MEV_2023-35: aggiungo due contatori
 			int li = 0, lp = 0;
+			// MEV_2025-48: aggiungo 4 contatori + variabile
+			int pp51 = 0, pp41bis = 0, pn51 = 0, pn41bis = 0;
+			String codMotivi = aCriteriRicerca.getCodMotivo();
 			while (lStrToken.hasMoreTokens()) {
 				String lCodMotivo = lStrToken.nextToken();
 				int lNum = lPermSqlDao.getNumProvvedimentiPermessiLicenze(
 						aCriteriRicerca.getDataDepositoIniziale(), aCriteriRicerca.getDataDepositoFinale(),
 						lCodMotivo, aCriteriRicerca.getCodUfficio());
-				if (lCodMotivo.equals("2020"))
+				// MEV_2025-48: aggiunta ricerca per 2020 (Permesso Premio) e 2021 (Permesso Necessità)
+				if ("2020,2021".contains(lCodMotivo)) {
+					aCriteriRicerca.setCodMotivo(lCodMotivo);
+					IPermesso ip = SIUSLookupRemote.getPermessoRemote();
+					Collection elenco = ip.ExRicercaProvvedimentiPermessiLicenze(aCriteriRicerca, 0);
+					Iterator<?> itx = elenco.iterator();
+					String codMotivoDet = "";
+					while (itx.hasNext()) {
+						ProvvedimentoPermessoLicenzaModel pplm = (ProvvedimentoPermessoLicenzaModel) itx
+								.next();
+						if (!Utils.isNullObj(pplm.getLicenza())) {
+							codMotivoDet = pplm.getLicenza().getCodMotivoDetenzione();
+							if (lCodMotivo.equals("2020")) {
+								if ("01".equals(codMotivoDet))
+									pp51 += 1;
+								else if ("02".equals(codMotivoDet))
+									pp41bis += 1;
+							} else if (lCodMotivo.equals("2021")) {
+								if ("01".equals(codMotivoDet))
+									pn51 += 1;
+								else if ("02".equals(codMotivoDet))
+									pn41bis += 1;
+							}
+						}
+					}
+				}
+				if (lCodMotivo.equals("2020")) { // Permesso Premio
+					// MEV_2025-48: aggiunte 2 impostazioni per il motivo detenzione
+					lTotali.setNumPP41bis(pp41bis);
+					lTotali.setNumPP51(pp51);
 					lTotali.setNumPP(lNum);
-				else if (lCodMotivo.equals("2021"))
+				} else if (lCodMotivo.equals("2021")) { // Permesso Necessità
+					// MEV_2025-48: aggiunte 2 impostazioni per il motivo detenzione
+					lTotali.setNumPN41bis(pn41bis);
+					lTotali.setNumPN51(pn51);
 					lTotali.setNumPN(lNum);
-				else if (lCodMotivo.equals("2025"))
+				} else if (lCodMotivo.equals("2025"))
 					lTotali.setNumLC(lNum);
 				// MEV_2023-35: aggiunti codici x permessi e licenze
 				else if ("3130,3150,3151".contains(lCodMotivo)) {
@@ -5484,8 +5520,8 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 			// Si recupera l'elenco.
 			lPermSqlDao.ricercaProvvedimentiPermessiLicenze(aCriteriRicerca.getDataDepositoIniziale(),
-					aCriteriRicerca.getDataDepositoFinale(), aCriteriRicerca.getCodMotivo(),
-					aCriteriRicerca.getCodUfficio());
+					aCriteriRicerca.getDataDepositoFinale(), /*aCriteriRicerca.getCodMotivo()*/codMotivi,
+					aCriteriRicerca.getCodUfficio(), 0); // MEV_2025-48: paginata la ricerca
 			lPermSqlDao.start();
 
 			while (lPermSqlDao.next()) {

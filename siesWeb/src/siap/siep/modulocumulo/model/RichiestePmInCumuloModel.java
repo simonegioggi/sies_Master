@@ -108,6 +108,9 @@ public class RichiestePmInCumuloModel extends GenericModel {
 	private ProvvedimentoGeSorvCumModel mDecisioneGeSorvCum;
 	private String mAnnoSentenza;
 	private String mNumeroSentenza;
+    // MEV_2025-48 - ALTRO - Visualizza data Sentenza su Richieste PM
+	private Date mDataSentenza;
+	
 	private String mAltri;
 
 	private List<RichPMTitoloCumModel> mListaRichPmTitoloCum;
@@ -120,6 +123,9 @@ public class RichiestePmInCumuloModel extends GenericModel {
 
 	private Vector<TitoloCumulatoModel> mListaTitoli;
 
+	// MEV_2025-48 - Si aggiunge se presente la decisione 
+	private boolean mIsPresenzaDecisione = false;
+	
 	/*****************************************************************************
 	 * Costruttore di default che inizializza i campi del model I campi String vengono inizializzati a "",
 	 * tutti gli altri campi a null
@@ -279,6 +285,8 @@ public class RichiestePmInCumuloModel extends GenericModel {
 
 		this.mRicIdRichiesteInviateCum = aModel.mRicIdRichiesteInviateCum;
 		this.mProIdProvvGeSorvCum = aModel.mProIdProvvGeSorvCum;
+		
+		this.mIsPresenzaDecisione = aModel.mIsPresenzaDecisione; // MEV_2025-48 - Si aggiunge la decisione se presente 
 	}
 
 	/*****************************************************************************
@@ -629,6 +637,11 @@ public class RichiestePmInCumuloModel extends GenericModel {
 	public String getNumeroSentenza() {
 		return mNumeroSentenza;
 	}
+	
+	// MEV_2025-48 - ALTRO - Visualizza data Sentenza su Richieste PM
+    public Date getDataSentenza() {
+        return mDataSentenza;
+    }	
 
 	public String getAltri() {
 		return mAltri;
@@ -672,6 +685,11 @@ public class RichiestePmInCumuloModel extends GenericModel {
 
 	public Vector<TitoloCumulatoModel> getListaTitoli() {
 		return mListaTitoli;
+	}
+
+	// MEV_2025-48 - Si aggiunge la decisione se presente
+	public boolean getIsPresenzaDecisione () {
+	    return mIsPresenzaDecisione;
 	}
 
 	// ============================================================================
@@ -933,6 +951,11 @@ public class RichiestePmInCumuloModel extends GenericModel {
 	public void setNumeroSentenza(String aValore) {
 		mNumeroSentenza = aValore;
 	}
+	
+	// MEV_2025-48 - ALTRO - Visualizza data Sentenza su Richieste PM
+    public void setDataSentenza(Date aValore) {
+        mDataSentenza = aValore;
+    }
 
 	public void setAltri(String aValore) {
 		mAltri = aValore;
@@ -978,6 +1001,12 @@ public class RichiestePmInCumuloModel extends GenericModel {
 		mListaTitoli = aValore;
 	}
 
+	// MEV_2025-48 - Si aggiunge la decisione se presente
+    public void setIsPresenzaDecisione (boolean aValore ) {
+        mIsPresenzaDecisione = aValore;
+    }
+
+    
 	public void addTitolo(TitoloCumulatoModel aValore) {
 		if (mListaTitoli == null)
 			mListaTitoli = new Vector<>();

@@ -175,7 +175,10 @@ public class ComputiCumuloModel extends GenericModel {
 	private BigDecimal mChiaveAnnoSIEP;
 	private BigDecimal mChiaveNumeroSIEP;
 	private String mChiaveUfficioSIEP;
-
+	
+	// MEV_2025-48 - ALTRO – Benefici con anticipazione effetti
+	private String mFlagAppProvvisoria;	
+	
 	private IstitutoDetenzioneModel mIstitutoDetenzione;
 
 	/*****************************************************************************
@@ -316,6 +319,9 @@ public class ComputiCumuloModel extends GenericModel {
 		this.mChiaveAnnoSIEP = null;
 		this.mChiaveNumeroSIEP = null;
 		this.mChiaveUfficioSIEP = "";
+		
+		// MEV_2025-48 - ALTRO – Benefici con anticipazione effetti
+		this.mFlagAppProvvisoria = "";
 	}
 
 	/*****************************************************************************
@@ -465,6 +471,9 @@ public class ComputiCumuloModel extends GenericModel {
 		this.mChiaveAnnoSIEP = aModel.mChiaveAnnoSIEP;
 		this.mChiaveNumeroSIEP = aModel.mChiaveNumeroSIEP;
 		this.mChiaveUfficioSIEP = aModel.mChiaveUfficioSIEP;
+		
+		// MEV_2025-48 - ALTRO – Benefici con anticipazione effetti
+		this.mFlagAppProvvisoria = aModel.mFlagAppProvvisoria;
 	}
 
 	/*****************************************************************************
@@ -529,6 +538,7 @@ public class ComputiCumuloModel extends GenericModel {
 			BigDecimal aAnnoSentenza, String aNumeroSentenza, Date aDataSentenza,
 			String aCodTipoAutoritaEmittente, String aDescrTipoAutoritaEmittente, String aCodLuogoEmittente,
 			String aDescrLuogoEmittente
+			, String aFlagAppProvvisoria // MEV_2025-48 - ALTRO – Benefici con anticipazione effetti
 
 	) {
 		this.mIdComputiCumulo = aIdComputiCumulo;
@@ -664,6 +674,8 @@ public class ComputiCumuloModel extends GenericModel {
 		this.mChiaveNumeroSIEP = aChiaveNumeroSIEP;
 		this.mChiaveUfficioSIEP = aChiaveUfficioSIEP;
 
+		// MEV_2025-48 - ALTRO – Benefici con anticipazione effetti
+		this.mFlagAppProvvisoria = aFlagAppProvvisoria;
 	}
 
 	// ============================================================================
@@ -1139,6 +1151,11 @@ public class ComputiCumuloModel extends GenericModel {
 		return mChiaveUfficioSIEP;
 	}
 
+	// MEV_2025-48 - ALTRO – Benefici con anticipazione effetti
+    public String getFlagAppProvvisoria() {
+        return mFlagAppProvvisoria;
+    }	
+	
 	//
 	public IstitutoDetenzioneModel getIstitutoDetenzione() {
 		return mIstitutoDetenzione;
@@ -1621,6 +1638,10 @@ public class ComputiCumuloModel extends GenericModel {
 		mChiaveUfficioSIEP = aValore;
 	}
 
+	// MEV_2025-48 - ALTRO – Benefici con anticipazione effetti
+    public void setFlagAppProvvisoria(String aValore) {
+        mFlagAppProvvisoria = aValore;
+    }
 	//
 
 	public boolean isQuantumReclusioneZero() {

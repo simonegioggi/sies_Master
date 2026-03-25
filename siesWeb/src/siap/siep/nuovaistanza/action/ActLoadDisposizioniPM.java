@@ -7,9 +7,9 @@ import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
 import f3b.util.F3BException;
+import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
-// import f3b.web.RedirectTo;
 import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.evento.controller.EventoController;
@@ -50,15 +50,14 @@ public class ActLoadDisposizioniPM extends ActionSiap implements ICostantiNuovaI
 		NuovaIstanzaController lIstController = new NuovaIstanzaController();
 		EventoController lEveController = new EventoController();
 
-		////////// Collection<NuovaIstanzaModel> lVect1 =
-		////////// lIstController.ExRicercaNuovaIstanzaByIdFascicolo(lFascMod.getIdFascicoloSiep());
-
 		// Per visualizzare l'elenco disposizioni in caso di registro istanze oppure
 		// direttamente solo l'istanza
 		Collection<NuovaIstanzaModel> lVect1 = new Vector<>();
 		Vector lVectEventiInoltro = null;
 		EventoModel evemod = new EventoModel();
-		if (isRequestParameterNullObj(ICostantiNuovaIstanza.CAMPO_ID_NUOVA_ISTANZA)) {
+		// 20251113 [SG]: aggiunto controllo
+		if (isRequestParameterNullEmptyObj(ICostantiNuovaIstanza.CAMPO_ID_NUOVA_ISTANZA) || Utils
+				.isNullObj(getRequestBigDecimalParameter(ICostantiNuovaIstanza.CAMPO_ID_NUOVA_ISTANZA))) {
 			lVect1 = lIstController.ExRicercaNuovaIstanzaByIdFascicolo(lFascMod.getIdFascicoloSiep());
 			evemod.setCodMotivo("1002");
 			evemod.setFasSieIdFascicoloSiep(lFascMod.getIdFascicoloSiep());
@@ -88,11 +87,11 @@ public class ActLoadDisposizioniPM extends ActionSiap implements ICostantiNuovaI
 		this.setRequestAttribute("listaeventi", lVectEventiInoltro);
 		//// FINE
 
-		Collection<NuovaIstanzaModel> lVect = new Vector<NuovaIstanzaModel>();
+		Collection<NuovaIstanzaModel> lVect = new Vector<>();
 		if (lVect1 != null && lVect1.size() > 0) {
 			java.util.Iterator<NuovaIstanzaModel> lItx = lVect1.iterator();
 			while (lItx.hasNext()) {
-				NuovaIstanzaModel lModel = (NuovaIstanzaModel) lItx.next();
+				NuovaIstanzaModel lModel = lItx.next();
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
 				siesLogger.info("lModel.getDataInoltroPM()=" + lModel.getDataInoltroPM());
@@ -230,7 +229,7 @@ public class ActLoadDisposizioniPM extends ActionSiap implements ICostantiNuovaI
 
 		if (lVect.size() == 1) {
 			java.util.Iterator<NuovaIstanzaModel> lItx = lVect.iterator();
-			NuovaIstanzaModel lModel = (NuovaIstanzaModel) lItx.next();
+			NuovaIstanzaModel lModel = lItx.next();
 			if (!lModel.getDescrStatoIstanza().equals("Da compilare e da Validare")
 					&& lVectEventiInoltro.size() == 0) {
 				String lPage = "";

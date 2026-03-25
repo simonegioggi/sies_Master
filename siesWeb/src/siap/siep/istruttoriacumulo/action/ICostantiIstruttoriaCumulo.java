@@ -88,4 +88,10 @@ public interface ICostantiIstruttoriaCumulo {
     public static final String PG_RESTITUZIONE_FASCICOLO  = IWebConstants.ROOT_DIR + "files/siap/siep/istruttoriacumulo/LoadRestituzioneFascicolo.jsp";
     
     public static final String PG_POPUP_CALCOLO_PENA  = IWebConstants.ROOT_DIR + "files/siap/siep/istruttoriacumulo/LoadCalcoloPenaCumulo.jsp";
+
+    /* MEV_2025-48 – 2.14 Caricamento Istruttoria Annullata */
+    public static final String PG_LOAD_CERCA_FASCICOLO_PER_TRASFERIMENTO  = IWebConstants.ROOT_DIR + "files/siap/siep/istruttoriacumulo/LoadRicercaFascicoloPerTrasferimento.jsp";
+    public static final String PG_ESITO_CERCA_FASCICOLO_PER_TRASFERIMENTO = IWebConstants.ROOT_DIR + "files/siap/siep/istruttoriacumulo/EsitoRicercaFascicoloPerTrasferimento.jsp";
+    public static final String PG_ESITO_TRASFERIMENTO_ISTRUTTORIA         = IWebConstants.ROOT_DIR + "files/siap/siep/istruttoriacumulo/EsitoTrasferimentoIstruttoria.jsp";
+    /* MEV_2025-48 – 2.14 Caricamento Istruttoria Annullata */
 }

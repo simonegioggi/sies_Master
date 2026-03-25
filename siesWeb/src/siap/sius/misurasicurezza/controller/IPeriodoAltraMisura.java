@@ -7,6 +7,7 @@ import java.util.Vector;
 import siap.sico.evento.model.EventoModel;
 import siap.sius.esecuzionemisurasicurezza.model.EsecuzioneMisuraSicurezzaModel;
 import siap.sius.misurasicurezza.model.PeriodoAltraMisuraModel;
+import siap.sius.misurasicurezza.model.ProvvedimentoEventoTenoreFascicoloSiusModel;
 import siap.sius.scadenzario.model.ScadenzarioSiusModel;
 import f3b.util.F3BException;
 
@@ -114,5 +115,8 @@ public interface IPeriodoAltraMisura {
 			throws F3BException;
 
 	public Vector ExRicercaProvvedimentoEventoByFascicoloSiep(BigDecimal aFascSiepKey) throws F3BException;
+	
+	// Ticket#202602170130
+	public ProvvedimentoEventoTenoreFascicoloSiusModel ExRicercaProvvedimentoEventoByIdEvento(BigDecimal aIdEventoSIUS) throws F3BException;
 
 }

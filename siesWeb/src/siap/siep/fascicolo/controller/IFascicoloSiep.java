@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Vector;
 
+import f3b.util.F3BException;
 import siap.sico.residenza.model.ResidenzaAssociataModel;
 import siap.sico.soggetto.model.SoggettoModel;
 import siap.siep.circostanza.model.CircostanzaModel;
@@ -13,22 +14,10 @@ import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.reato.model.ReatoModel;
 import siap.siep.sentenza.model.SentenzaModel;
 import siap.siep.statoprocedimento.model.StatoProcedimentoModel;
-import f3b.util.F3BException;
 
 /**
- * <p>
- * Title: IFascicoloSies
- * </p>
- * <p>
- * Description: Classe Controller per Fascicolo
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ * IFascicoloSies - Classe Controller per Fascicolo
+ *
  * @version 1.0
  */
 @SuppressWarnings("rawtypes")
@@ -75,8 +64,8 @@ public interface IFascicoloSiep {
 	public Vector ExRicercaFascicoloSiepBySoggettoPaged(SoggettoModel aModel, int aPageNum)
 			throws F3BException;
 
-	public Vector ExRicercaFascicoloSiepBySoggettoPaged(SoggettoModel aModel, int aPageNum, String majorOffice)
-			throws F3BException;
+	public Vector ExRicercaFascicoloSiepBySoggettoPaged(SoggettoModel aModel, int aPageNum,
+			String majorOffice) throws F3BException;
 
 	public Vector ExRicercaFascicoloSiepByRGNRPaged(SentenzaModel aSentenza, int aPageNum, String majorOffice)
 			throws F3BException;
@@ -129,9 +118,8 @@ public interface IFascicoloSiep {
 	public Vector ExRicercaFascicoloOnViewPagedSoggetti(FascicoloSiepModel aFascicoloSiep, int aPage,
 			String TipoRicerca, String StrCodiceDistrettoUtente) throws F3BException;
 
-	public Vector ExRicercaFascicoliBySoggettoPaged(SoggettoModel aSogModel,
-			String lCodUfficioUtenteConnesso, int aPage, String lCodDistrettoUtenteConnesso,
-			String TipoRicerca) throws F3BException;
+	public Vector ExRicercaFascicoliBySoggettoPaged(SoggettoModel aSogModel, String lCodUfficioUtenteConnesso,
+			int aPage, String lCodDistrettoUtenteConnesso, String TipoRicerca) throws F3BException;
 
 	// MEV Agosto 2014 - Ricerca Procedimenti X Reato e Circostanze Aggravanti
 	// Aggiunto criterio di Ricerca - Cumulati
@@ -190,17 +178,32 @@ public interface IFascicoloSiep {
 	/**
 	 * Ricerca l'elenco dei fascicoli correntemente assegnati a un magistrato su un particolare ufficio in
 	 * base allo stato del fascicolo
-	 * 
+	 *
+	 * MEV_2025-48: aggiunta nuova funzionalita': paginata la ricerca
+	 *
 	 * @param aCodMagistrato
 	 *            - Codice CSM del magistrato
 	 * @param aCodUfficio
 	 *            - Codice ufficio di appartenenza del Procedimento
 	 * @param aStato
 	 *            - Array di COD_STATO_FASCICOLO
-	 * @return
+	 * @param aPage
+	 *            - Paginazione
+	 *
+	 * @return Vector
 	 */
+	public Vector ExRicercaFascicoliByMagistratoAssegnatarioPaged(String aCodMagistrato, String aCodUfficio,
+			String[] aStato, int aPage) throws F3BException;
+
 	public Vector ExRicercaFascicoliByMagistratoAssegnatario(String aCodMagistrato, String aCodUfficio,
 			String[] aStato) throws F3BException;
+
+	public BigDecimal ExGetCountProcedimenti(String lCodMagistrato, String lCodUfficio, String[] lStato)
+			throws F3BException;
+
+	public FascicoloSiepModel ExInserisciFascicoloSiepPassaggioClasse(SoggettoModel soggettoModel,
+			FascicoloSiepModel fsmNew, DettaglioFascicoloModel dfm) throws F3BException;
+	// FINE MEV_2025-48
 
 	// paolo cherubini x supersoggetto 22 luglio 2009
 	public Vector ExRicercaFascicoloOnViewPagedSuperSoggetti(SoggettoModel aSogModel, String aCodUfficio,
@@ -266,24 +269,26 @@ public interface IFascicoloSiep {
 
 	// MERGE v10: aggiunta funzione di ricerca dettaglio
 	public DettaglioFascicoloModel ExDettaglioFascicoloSiepNew(BigDecimal aId) throws F3BException;
-	
+
 	public BigDecimal ExGetNumFascicoloSiepBySoggettoSIGE(SoggettoModel aSogModel) throws F3BException;
 
-  // MEV 26 CUMULO -step 2 - Ricerca Procedimento By reato 
-  public BigDecimal ExRicercaIstruttoriaCumuloByIdFascicoloSiep(BigDecimal aIdFasc) throws F3BException;
-  
-  // MEV PLO ANOMALIE SIUS
-  public String ExRicercaFasCollegatiFascicoloByKey(BigDecimal aIdFasc, String classe, String ufficio) throws F3BException;
+	// MEV 26 CUMULO -step 2 - Ricerca Procedimento By reato
+	public BigDecimal ExRicercaIstruttoriaCumuloByIdFascicoloSiep(BigDecimal aIdFasc) throws F3BException;
+
+	// MEV PLO ANOMALIE SIUS
+	public String ExRicercaFasCollegatiFascicoloByKey(BigDecimal aIdFasc, String classe, String ufficio)
+			throws F3BException;
 
 	/**
-	 * 
-	 * // [EC] - 16/01/2018: - ANOMALIA VISIBILITA MINORE SIEP: creo nuovo metodo passando anche il controllo su ufficio minorenne o meno
-	 * 
+	 *
+	 * // [EC] - 16/01/2018: - ANOMALIA VISIBILITA MINORE SIEP: creo nuovo metodo passando anche il controllo
+	 * su ufficio minorenne o meno
+	 *
 	 * @param aFascicoloSiep
 	 * @return
 	 * @throws F3BException
 	 */
-	public FascicoloSiepModel ExRicercaFascicoloSiepByProgrAnnoCodUfficio(FascicoloSiepModel aFascicoloSiep , String majorOffice )
-			throws F3BException;
+	public FascicoloSiepModel ExRicercaFascicoloSiepByProgrAnnoCodUfficio(FascicoloSiepModel aFascicoloSiep,
+			String majorOffice) throws F3BException;
 
 }

@@ -209,7 +209,9 @@ if ("0159".equals(tenori[0].getCodEsitoTenore()) && !Utils.isNullObj(rate) && !r
 	}
 } else if ("0276".equals(tenori[0].getCodEsitoTenore()) || "0277".equals(tenori[0].getCodEsitoTenore())
 		|| "0278".equals(tenori[0].getCodEsitoTenore()) || "0279".equals(tenori[0].getCodEsitoTenore())
-		|| "0281".equals(tenori[0].getCodEsitoTenore())) {
+		|| "0281".equals(tenori[0].getCodEsitoTenore())
+		// MEV_2025-48: aggiunto esito (3209) per Oggetto: 3180 - Contenuto: U142
+		|| "0287".equals(tenori[0].getCodEsitoTenore())) {
 	String descrTipoSanzione = "01".equals(dopm.getCodTipoSanzione()) ? "Semilibert&agrave;" :
 		 "02".equals(dopm.getCodTipoSanzione()) ? "Detenzione Domiciliare" : 
 			 "03".equals(dopm.getCodTipoSanzione()) ? "Lavoro Pubblica Utilit&agrave;" : "Permanenza Domiciliare";

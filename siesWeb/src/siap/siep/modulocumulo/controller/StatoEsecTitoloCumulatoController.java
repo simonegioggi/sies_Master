@@ -95,12 +95,7 @@ import siap.sius.tenore.dao.TenoreSqlDAO;
 import siap.sius.tenore.model.TenoreModel;
 
 /**
- * <p>
- * Title: StatoEsecTitoloCumulatoController
- * </p>
- * <p>
- * Description: Classe Controller per StatoEsecTitoloCumulato
- * </p>
+ * StatoEsecTitoloCumulatoController - Classe Controller per StatoEsecTitoloCumulato
  *
  * @version 1.0
  */
@@ -849,6 +844,14 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 							siesLogger.debug("Pagamento Pena Pecuniaria");
 							this.caricaComputiPagamentoPP(lEventoModel.getIdEvento(), lStatoEsecModel, lConn);
 						}
+
+						// MEV_2025-48 - ALTRO – Benefici con anticipazione effetti
+						if (StatoEsecuzioneCumuloUtils.isRichiestaBeneficiAlGE(lEventoModel.getCodMotivo())) {
+							siesLogger.debug("Richieste al GE Amnistia/Indulto-Depen-Incost");
+							this.caricaRichiestaBeneficiAlGE(lEventoModel.getIdEvento(), lStatoEsecModel,
+									lConn);
+						}
+						// MEV_2025-48 - ALTRO – Benefici con anticipazione effetti - FINE
 
 						// ======================================================================
 						// Attività del GE
@@ -1725,6 +1728,33 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 				lComputiModel.setNumMesiReclusione(lSospModel.getNumMesiPenaEspiata());
 				lComputiModel.setNumGiorniReclusione(lSospModel.getNumGiorniPenaEspiata());
 
+				// MEV_2025-48 - LA su Espiato - Aggiungo i GG di LA computati sull'espiato
+				// lComputiModel.setNumGiorniLibanticipata(lSospModel.getNumGiorniLibanticipata());
+				// Ricalcolo i quantum effettivi in base al periodo di espiazione per evitare
+				// che le LA siano inglobate nell'espiato e computate 2 volte
+				siesLogger.debug("MEV_2025-48 LA: lComputiModel.getDataReclusioneDa() = "
+						+ lComputiModel.getDataReclusioneDa());
+				siesLogger.debug("MEV_2025-48 LA: lComputiModel.getDataReclusioneA() = "
+						+ lComputiModel.getDataReclusioneA());
+				if (lSospModel.getNumGiorniLibanticipata() != null
+						&& lSospModel.getNumGiorniLibanticipata().intValue() > 0
+						&& lComputiModel.getDataReclusioneDa() != null
+						&& lComputiModel.getDataReclusioneA() != null) {
+					CalendarModel lCalPenaEspiata = new CalendarModel();
+					lCalPenaEspiata.setDataInizio(lComputiModel.getDataReclusioneDa());
+					lCalPenaEspiata.setDataFine(lComputiModel.getDataReclusioneA());
+
+					CalendarUtil lCalUtil = new CalendarUtil();
+					lCalPenaEspiata = lCalUtil.CalcolaNumGiorniMesiAnni(lCalPenaEspiata, false);
+
+					// Normalizzo i quantum
+					lCalPenaEspiata = lCalUtil.ricalcolaGAM(lCalPenaEspiata);
+					lComputiModel.setNumAnniReclusione(new BigDecimal(lCalPenaEspiata.getNumAnni()));
+					lComputiModel.setNumMesiReclusione(new BigDecimal(lCalPenaEspiata.getNumMesi()));
+					lComputiModel.setNumGiorniReclusione(new BigDecimal(lCalPenaEspiata.getNumGiorni()));
+				}
+				// MEV_2025-48 - LA su Espiato - FINE
+
 				// ======================================================================
 				// Lettura del DecretoOrdinanzaSIEP.
 				siesLogger.debug("Cerco Decreto Ordinanza Collegato...");
@@ -1991,6 +2021,157 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 			cleanup(lComputiDao);
 			cleanup(lCaNoSqlDao);
 			cleanup(lEveSqlDao);
+		}
+	}
+
+	/**
+	 * Si caricano anche le richieste al GE dei benefici di
+	 * Amnistia/Indulto/Depenalizzazione/Incostituzionelita' Oltre che le decisioni
+	 *
+	 * @since MEV_2025-48 - ALTRO – Benefici con anticipazione effetti
+	 */
+	private void caricaRichiestaBeneficiAlGE(BigDecimal aIdEvento,
+			StatoEsecTitoloCumulatoModel aStatoEsecModel, Connection aConn) throws F3BException {
+
+		siesLogger.debug("caricaRichiestaBeneficiAlGE: aIdEvento = " + aIdEvento);
+
+		AnnotazioneManualeSqlDAO lAnnotaSqlDao = null;
+		ComputiCumuloDAO lComputiDao = null;
+		EventoSqlDAO lEveSqlDao = null;
+		ReatoCumuloSqlDAO lReatoCumuloSqlDao = null;
+		NotificaSqlDAO lNotificaSqlDao = null;
+
+		try {
+			// Lettura dell'Evento
+			EventoModel lEvento = new EventoModel();
+			lEveSqlDao = new EventoSqlDAO(aConn);
+			lEveSqlDao.ricercaEventoByKey(aIdEvento);
+			lEvento = (EventoModel) lEveSqlDao.getModelByKey();
+
+			// Lettura delle Annotazioni manuali
+			// n.b. Nelle richieste al GE annotazioni sono puntate dall'evento
+			lAnnotaSqlDao = new AnnotazioneManualeSqlDAO(aConn);
+			lAnnotaSqlDao.ricercaAnnotazioneManualeByKey(lEvento.getAnnIdAnnotazioneManuale());
+
+			AnnotazioneManualeModel lAnnModel = (AnnotazioneManualeModel) lAnnotaSqlDao.getModelByKey();
+
+			siesLogger.debug("caricaRichiestaBeneficiAlGE trovata annotazione = " + lAnnModel);
+			lComputiDao = new ComputiCumuloDAO(aConn);
+			lNotificaSqlDao = new NotificaSqlDAO(aConn);
+
+			// if (lAnnModel!=null && "A".equals(lAnnModel.getFlagAppProvvisoria()))
+			if (lAnnModel != null) {
+				siesLogger.debug("caricaRichiestaBeneficiAlGE trovata annotazione = "
+						+ lAnnModel.getIdAnnotazioneManuale());
+
+				ComputiCumuloModel lComputiModel = new ComputiCumuloModel();
+
+				lComputiModel.setCodTipoAnnotazione(lAnnModel.getCodTipoAnnotazione());
+				lComputiModel.setCodCausaleComputo("-");
+				lComputiModel.setFlagPiuMeno(lAnnModel.getFlagPiuMeno());
+
+				lComputiModel.setNumAnniReclusione(lAnnModel.getNumAnniReclusione());
+				lComputiModel.setNumMesiReclusione(lAnnModel.getNumMesiReclusione());
+				lComputiModel.setNumGiorniReclusione(lAnnModel.getNumGiorniReclusione());
+
+				lComputiModel.setNumAnniArresto(lAnnModel.getNumAnniArresto());
+				lComputiModel.setNumMesiArresto(lAnnModel.getNumMesiArresto());
+				lComputiModel.setNumGiorniArresto(lAnnModel.getNumGiorniArresto());
+
+				lComputiModel.setImportoMulta(lAnnModel.getImportoMulta());
+				lComputiModel.setImportoAmmenda(lAnnModel.getImportoAmmenda());
+
+				lComputiModel.setCodTipoMisura(null);
+
+				lComputiModel.setNote(lAnnModel.getMotivazioni());
+
+				// Amnistia/Indulto
+				lComputiModel.setCodDpr(lAnnModel.getCodDpr());
+
+				// Depenalizzazione
+				lComputiModel.setCodFonte(lAnnModel.getCodFonte());
+				lComputiModel.setAnnoFonte(lAnnModel.getAnnoFonte());
+				lComputiModel.setNumeroFonte(lAnnModel.getNumeroFonte());
+				lComputiModel.setCodSottonumerazione(lAnnModel.getCodSottonumerazione());
+				lComputiModel.setComma(lAnnModel.getComma());
+				lComputiModel.setLettera(lAnnModel.getLettera());
+				lComputiModel.setNumero(lAnnModel.getNumero());
+				lComputiModel.setArticolo(lAnnModel.getArticolo());
+
+				// Incostituzionalita'
+				lComputiModel.setAnnoSentenza(lAnnModel.getAnnoCc());
+				lComputiModel.setNumeroSentenza(lAnnModel.getNumeroCc());
+				lComputiModel.setDataSentenza(lAnnModel.getDataCC());
+
+				lComputiModel.setFlagAppProvvisoria(lAnnModel.getFlagAppProvvisoria());
+
+				// n.b è l'uffico del GE a cui è stta inviata la richiesta recuperato
+				// dal record Netifiche dell'evento
+				lNotificaSqlDao.ricercaNotificaByEvento(aIdEvento);
+				NotificaModel lNotModel = (NotificaModel) lNotificaSqlDao.getModelByKey();
+				if (lNotModel != null) {
+					lComputiModel.setCodUfficioEmittenteProvv(lNotModel.getUffCodUfficio());
+				}
+
+				// lComputiModel.setCodLuogoUfficioProvv(lEvento.getCodLuogoEmittente());
+				// lComputiModel.setDataEmissioneProvv(lAnnModel.getDataGE());
+
+				// lComputiModel.setDataRicezioneProvv (lEvento.getDataRicezioneAtti() );
+				// lComputiModel.setAnnoProvv(lAnnModel.getChiaveAnnoSige());
+				// lComputiModel.setProgrProvv(lAnnModel.getChiaveNumeroSige());
+
+				siesLogger.debug("lAnnModel.getReaIdReato() = " + lAnnModel.getReaIdReato());
+				if (lAnnModel.getReaIdReato() != null) {
+					// siesLogger.debug("Individuazione del ReatoCumulo: idReato = "+lAnnota.getReaIdReato());
+
+					lReatoCumuloSqlDao = new ReatoCumuloSqlDAO(aConn);
+					lReatoCumuloSqlDao.ricercaReatiCumuloByIdTitolo(aStatoEsecModel.getTitIdTitoloCumulato());
+
+					Vector<ReatoCumuloModel> lReaVect = new Vector(lReatoCumuloSqlDao.getModels());
+					lReatoCumuloSqlDao.stop();
+
+					for (int ii = 0; ii < lReaVect.size(); ii++) {
+						ReatoCumuloModel lReaCum = lReaVect.get(ii);
+						if (lReaCum.getIdReatoOrigine().compareTo(lAnnModel.getReaIdReato()) == 0
+								&& lReaCum.getProgrCircostanza().toString().equals("1")) {
+							lComputiModel.setReaIdReatoCum(lReaCum.getIdReatoCum());
+							break;
+						}
+					}
+				}
+
+				lComputiModel.setFlagStato("E");
+				lComputiModel.setMotivoModifica(null);
+
+				lComputiModel.setTitIdTitoloCumulato(aStatoEsecModel.getTitIdTitoloCumulato());
+				lComputiModel.setIstrIdIstruttoriaCumulo(aStatoEsecModel.getIstrIdIstruttoriaCumulo());
+				lComputiModel.setStatIdStatoEsecTitCum(aStatoEsecModel.getIdStatoEsecTitoloCumulato());
+
+				lComputiModel.setCodOperatoreInserimento(aStatoEsecModel.getCodOperatoreInserimento());
+				lComputiModel.setDataInserimento(aStatoEsecModel.getDataInserimento());
+				lComputiModel.setCodUfficioInserimento(aStatoEsecModel.getCodUfficioInserimento());
+
+				lComputiDao.setDAOFromModel(lComputiModel);
+				lComputiDao.insert();
+
+				lComputiDao.stop();
+			}
+		} catch (DAOException daoEx) {
+			siesLogger.error("DAOException: ", daoEx);
+			throw new F3BException(
+					"StatoEsecTitoloCumulatoController.caricaRichiestaBeneficiAlGE: Non posso leggere : "
+							+ daoEx);
+		} catch (Exception ex) {
+			siesLogger.error("Exception: ", ex);
+			throw new F3BException(
+					"StatoEsecTitoloCumulatoController.caricaRichiestaBeneficiAlGE: Non posso leggere : "
+							+ ex);
+		} finally {
+			cleanup(lAnnotaSqlDao);
+			cleanup(lComputiDao);
+			cleanup(lEveSqlDao);
+			cleanup(lReatoCumuloSqlDao);
+			cleanup(lNotificaSqlDao);
 		}
 	}
 
@@ -2433,14 +2614,17 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 	}
 
 	/**
-	 * Evento che carica il record COMPUTO_CUUMULO da associare al record
-	 * StatoEsecTitoloCumulatoModel recuperando i dati da dall'eveto con id = aIdEvento
-	 * @param aIdEvento - id evento della sorveglianza (02-03)
-	 * @param aStatoEsecModel - 
+	 * Evento che carica il record COMPUTO_CUUMULO da associare al record StatoEsecTitoloCumulatoModel
+	 * recuperando i dati da dall'eveto con id = aIdEvento
+	 *
+	 * @param aIdEvento
+	 *            - id evento della sorveglianza (02-03)
+	 * @param aStatoEsecModel
+	 *            -
 	 * @param aConn
 	 * @throws F3BException
 	 */
-	private void caricaComputiMisuraAlternativaSORV (BigDecimal aIdEvento,
+	private void caricaComputiMisuraAlternativaSORV(BigDecimal aIdEvento,
 			StatoEsecTitoloCumulatoModel aStatoEsecModel, Connection aConn) throws F3BException {
 
 		MisuraAlternativaSqlDAO lMisAltSqlDao = null;
@@ -2458,10 +2642,10 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 			lEveSqlDao.ricercaEventoByKey(aIdEvento);
 			lEvento = (EventoModel) lEveSqlDao.getModelByKey();
 
-			// Lettura dell'eventuale Evento di Revoca 
+			// Lettura dell'eventuale Evento di Revoca
 			// (n.b più essere un qualunque provvedimento SIEP di esecuzione del decreto/ordinanza
-			//      non necessariamente un provevdimento di revoca
-			//      Se inoltre il provv. della SORV non è stato eseguito da SIEP, l'eveto collegato non esiste)
+			// non necessariamente un provevdimento di revoca
+			// Se inoltre il provv. della SORV non è stato eseguito da SIEP, l'eveto collegato non esiste)
 			EventoModel lEveSIEP = new EventoModel();
 			lEveSqlDao = new EventoSqlDAO(aConn);
 			lEveSqlDao.ricercaEventoByEveIdEvento(aIdEvento);
@@ -2494,7 +2678,7 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 			lComputiModel.setNumGiorniMisura(lMisAlt.getNumGiorniMisura());
 
 			// [Ticket#20210212019] - vedi oltre per la valorizzazione del campo
-			//lComputiModel.setDataInizioMisura(lMisAlt.getDataInizioMisura());
+			// lComputiModel.setDataInizioMisura(lMisAlt.getDataInizioMisura());
 			// Fine [Ticket#20210212019]
 			lComputiModel.setDataFineMisura(lMisAlt.getDataFineMisura());
 			lComputiModel.setNote(lMisAlt.getNote());
@@ -2503,26 +2687,29 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 			lComputiModel.setDataInizioRevoca(lMisAlt.getDataInizioRevoca());
 			// [Ticket#20210212019] - versione 12.4.6.0 Risultato negativo test in pre-esercizio
 			// In riapertura del ticket 202012020116
-			// Nel caso di revoca di alcune MA che NON rideterminano la pena (es: Detenzione Domiciliare 
-			// - Semilibertà - Arresti Domiciliari 656 c 10) la data Inizio Provvedimento di Revoca viene caricato nel campo 
+			// Nel caso di revoca di alcune MA che NON rideterminano la pena (es: Detenzione Domiciliare
+			// - Semilibertà - Arresti Domiciliari 656 c 10) la data Inizio Provvedimento di Revoca viene
+			// caricato nel campo
 			// MISURA_ALTERNATIVA.DATA_DECISIONE ed è la EVENTO.DATA_EMISSIONE del provvedimento SIEP
 			// Il modulo cumulo legge il campo dal COMPUTI_CUMULO.DATA_INIZIO_REVOCA.
-			ArrayList <String> codiciRevocaDetDom       = new ArrayList <String> (Arrays.asList("0016","0087","0088","0089","2270"));
-			ArrayList <String> codiciRevocaSemiliberta  = new ArrayList <String> (Arrays.asList("0091"));
-			ArrayList <String> codiciRevocaArrDom656c10 = new ArrayList <String> (Arrays.asList("0232","2744","2757","2746","2747"));
-			ArrayList <String> codiciRevocaMA = new ArrayList <String> ();
-			codiciRevocaMA.addAll (codiciRevocaDetDom);
-			codiciRevocaMA.addAll (codiciRevocaSemiliberta);
-			codiciRevocaMA.addAll (codiciRevocaArrDom656c10);
+			ArrayList<String> codiciRevocaDetDom = new ArrayList<>(
+					Arrays.asList("0016", "0087", "0088", "0089", "2270"));
+			ArrayList<String> codiciRevocaSemiliberta = new ArrayList<>(Arrays.asList("0091"));
+			ArrayList<String> codiciRevocaArrDom656c10 = new ArrayList<>(
+					Arrays.asList("0232", "2744", "2757", "2746", "2747"));
+			ArrayList<String> codiciRevocaMA = new ArrayList<>();
+			codiciRevocaMA.addAll(codiciRevocaDetDom);
+			codiciRevocaMA.addAll(codiciRevocaSemiliberta);
+			codiciRevocaMA.addAll(codiciRevocaArrDom656c10);
 			if (codiciRevocaMA.contains(lMisAlt.getCodTipoMisura())) {
-				lComputiModel.setDataInizioRevoca (lMisAlt.getDataInizioMisura());
-			}
-			else {
-				// La data inizio misura la valorizzo solo se non ribaltata già su lComputiModel.setDataInizioRevoca
-				lComputiModel.setDataInizioMisura (lMisAlt.getDataInizioMisura());
+				lComputiModel.setDataInizioRevoca(lMisAlt.getDataInizioMisura());
+			} else {
+				// La data inizio misura la valorizzo solo se non ribaltata già su
+				// lComputiModel.setDataInizioRevoca
+				lComputiModel.setDataInizioMisura(lMisAlt.getDataInizioMisura());
 			}
 			// Fine [Ticket#20210212019]
-			
+
 			lComputiModel.setNumAnniRevocaReclusione(lMisAlt.getNumAnniRevocaReclusione());
 			lComputiModel.setNumMesiRevocaReclusione(lMisAlt.getNumMesiRevocaReclusione());
 			lComputiModel.setNumGiorniRevocaReclusione(lMisAlt.getNumGiorniRevocaReclusione());
@@ -2542,139 +2729,139 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 
 			lPenaResSqlDao = new PenaResiduaSqlDAO(aConn);
 
-		// ticket 202104230110 - non è detto che esiste l'evento di revoca collegato
-		if (lEveSIEP!=null) {
-			siesLogger.debug("Recupero la PR collegata all'evento di revoca");
-			lPenaResSqlDao.ricercaPenaResiduaByKeyEvento (lEveSIEP.getIdEvento());			
-			lPenResMod = (PenaResiduaModel) lPenaResSqlDao.getModelByKey();
+			// ticket 202104230110 - non è detto che esiste l'evento di revoca collegato
+			if (lEveSIEP != null) {
+				siesLogger.debug("Recupero la PR collegata all'evento di revoca");
+				lPenaResSqlDao.ricercaPenaResiduaByKeyEvento(lEveSIEP.getIdEvento());
+				lPenResMod = (PenaResiduaModel) lPenaResSqlDao.getModelByKey();
 
-			if (lPenResMod != null) {
-				siesLogger.debug("PR presente, recupero la SOSPENSIONE");
+				if (lPenResMod != null) {
+					siesLogger.debug("PR presente, recupero la SOSPENSIONE");
 
-				lSospSqlDao = new SospensioneSqlDAO(aConn);
-				lSospSqlDao.ricercaSospensioneByIdPenaResidua(lPenResMod.getIdPenaResidua());
-				lSospModel = (SospensioneModel) lSospSqlDao.getModelByKey();
+					lSospSqlDao = new SospensioneSqlDAO(aConn);
+					lSospSqlDao.ricercaSospensioneByIdPenaResidua(lPenResMod.getIdPenaResidua());
+					lSospModel = (SospensioneModel) lSospSqlDao.getModelByKey();
+
+					if (lSospModel != null) {
+						siesLogger.debug("Trovata sospensione id " + lSospModel.getIdSospensione());
+					} else {
+						siesLogger.warn("Sospensione NON trovata per PR con id "
+								+ lPenResMod.getIdPenaResidua() + " su evento id " + aIdEvento);
+					}
+				} else {
+					siesLogger.warn("PR assente per evento interruttivo con id = " + aIdEvento);
+				}
 
 				if (lSospModel != null) {
-					siesLogger.debug("Trovata sospensione id " + lSospModel.getIdSospensione());
-				} else {
-					siesLogger.warn("Sospensione NON trovata per PR con id " + lPenResMod.getIdPenaResidua()
-							+ " su evento id " + aIdEvento);
-				}
-			} else {
-				siesLogger.warn("PR assente per evento interruttivo con id = " + aIdEvento);
-			}
 
-			if (lSospModel != null) {
+					lComputiModel.setCodTipoAnnotazione("019"); // Espiazione Pregressa
+					lComputiModel.setFlagPiuMeno("-");
 
-				lComputiModel.setCodTipoAnnotazione("019"); // Espiazione Pregressa
-				lComputiModel.setFlagPiuMeno("-");
+					// Provo a recuperare la data inizio periodi di espiazione dalla pena residua precedente a
+					// quelle di interruzione
+					siesLogger.debug("Provo a recuperare l'ultima pena in esecuzione...");
+					lPenaPrecedenteSqlDao = new PenaPrecedenteSqlDAO(aConn);
+					lPenaPrecedenteSqlDao.ricercaPenaPrecedenteByFascicoloDataIserimento(
+							lEvento.getFasSieIdFascicoloSiep(), lPenResMod.getIdPenaResidua());
+					PenaPrecedenteModel lPenaPrecedente = (PenaPrecedenteModel) lPenaPrecedenteSqlDao
+							.getModelByKey();
+					if (lPenaPrecedente != null) {
+						siesLogger.debug("Pena trovata id=" + lPenaPrecedente.getIdPenaResidua()
+								+ ", dataInizio" + lPenaPrecedente.getDataInizio() + ", dataFine"
+								+ lPenaPrecedente.getDataFine());
 
-				// Provo a recuperare la data inizio periodi di espiazione dalla pena residua precedente a
-				// quelle di interruzione
-				siesLogger.debug("Provo a recuperare l'ultima pena in esecuzione...");
-				lPenaPrecedenteSqlDao = new PenaPrecedenteSqlDAO(aConn);
-				lPenaPrecedenteSqlDao.ricercaPenaPrecedenteByFascicoloDataIserimento(
-						lEvento.getFasSieIdFascicoloSiep(), lPenResMod.getIdPenaResidua());
-				PenaPrecedenteModel lPenaPrecedente = (PenaPrecedenteModel) lPenaPrecedenteSqlDao
-						.getModelByKey();
-				if (lPenaPrecedente != null) {
-					siesLogger.debug("Pena trovata id=" + lPenaPrecedente.getIdPenaResidua() + ", dataInizio"
-							+ lPenaPrecedente.getDataInizio() + ", dataFine" + lPenaPrecedente.getDataFine());
+						lComputiModel.setDataReclusioneDa(lPenaPrecedente.getDataInizio());
 
-					lComputiModel.setDataReclusioneDa(lPenaPrecedente.getDataInizio());
-
-					// D.F. 07/05/2019 Il COMPUTI_CUMULO.DataReclusioneA dovrebbe essere il fine pena
-					// previsto prima dell'interruzione i base al quale viene calcolata
-					// la pena residua in form cge tra le altre cose non serve a null
-					if (lSospModel.getNumGiorniLibanticipata() != null
-							&& lPenaPrecedente.getDataFine() != null) {
-						siesLogger.debug("Ho PR.DATA_FINE e GG di LA, ricalcolo la data fine");
-						Date lDatFine = DateUtils.moveDateTo(lPenaPrecedente.getDataFine(),
-								Calendar.DAY_OF_MONTH, lSospModel.getNumGiorniLibanticipata().intValue());
-						lComputiModel.setDataReclusioneA(lDatFine);
+						// D.F. 07/05/2019 Il COMPUTI_CUMULO.DataReclusioneA dovrebbe essere il fine pena
+						// previsto prima dell'interruzione i base al quale viene calcolata
+						// la pena residua in form cge tra le altre cose non serve a null
+						if (lSospModel.getNumGiorniLibanticipata() != null
+								&& lPenaPrecedente.getDataFine() != null) {
+							siesLogger.debug("Ho PR.DATA_FINE e GG di LA, ricalcolo la data fine");
+							Date lDatFine = DateUtils.moveDateTo(lPenaPrecedente.getDataFine(),
+									Calendar.DAY_OF_MONTH, lSospModel.getNumGiorniLibanticipata().intValue());
+							lComputiModel.setDataReclusioneA(lDatFine);
+						} else {
+							lComputiModel.setDataReclusioneA(lPenaPrecedente.getDataFine());
+						}
 					} else {
-						lComputiModel.setDataReclusioneA(lPenaPrecedente.getDataFine());
+						// La data fine espiazione coincide con la data Inizio Sospensione
+						lComputiModel.setDataReclusioneA(lSospModel.getDataInizio());
 					}
-				} else {
-					// La data fine espiazione coincide con la data Inizio Sospensione
-					lComputiModel.setDataReclusioneA(lSospModel.getDataInizio());
-				}
 
-// INIZIO: Ticket#202012020116 - Carico la data Inizio e fine misura con i dati
-//         della data inizio e fine reclusione in quanto le form di inserimento/modifica/dettaglio 
-//         utilizzano tali campi
-lComputiModel.setDataInizioMisura (lComputiModel.getDataReclusioneDa());
-lComputiModel.setDataFineMisura   (lComputiModel.getDataReclusioneA());
-// FINE Ticket#202012020116
-				
-				lComputiModel.setNumAnniReclusione(lSospModel.getNumAnniPenaEspiata());
-				lComputiModel.setNumMesiReclusione(lSospModel.getNumMesiPenaEspiata());
-				lComputiModel.setNumGiorniReclusione(lSospModel.getNumGiorniPenaEspiata());
+					// INIZIO: Ticket#202012020116 - Carico la data Inizio e fine misura con i dati
+					// della data inizio e fine reclusione in quanto le form di inserimento/modifica/dettaglio
+					// utilizzano tali campi
+					lComputiModel.setDataInizioMisura(lComputiModel.getDataReclusioneDa());
+					lComputiModel.setDataFineMisura(lComputiModel.getDataReclusioneA());
+					// FINE Ticket#202012020116
 
-				// D.F. 06/05/2019
-				if (lSospModel.getNumGiorniLibanticipata() != null
-						&& lSospModel.getNumGiorniLibanticipata().intValue() > 0) {
-					siesLogger.debug("Trovate LA sulla sospensione. Ricalcolo l'espiato");
-					if (lPenaPrecedente != null && lPenaPrecedente.getDataInizio() != null
-							&& lSospModel.getDataInizio() != null) {
-						siesLogger.debug("dataInizioPena Ultima PR = " + lPenaPrecedente.getDataInizio());
-						siesLogger.debug("dataInterruzione = " + lSospModel.getDataInizio());
-						CalendarModel lCalPenaEspiata = new CalendarModel();
-						lCalPenaEspiata.setDataInizio(lPenaPrecedente.getDataInizio());
-						lCalPenaEspiata.setDataFine(lSospModel.getDataInizio());
+					lComputiModel.setNumAnniReclusione(lSospModel.getNumAnniPenaEspiata());
+					lComputiModel.setNumMesiReclusione(lSospModel.getNumMesiPenaEspiata());
+					lComputiModel.setNumGiorniReclusione(lSospModel.getNumGiorniPenaEspiata());
 
-						CalendarUtil lCalUtil = new CalendarUtil();
-						lCalPenaEspiata = lCalUtil.CalcolaNumGiorniMesiAnni(lCalPenaEspiata, false);
+					// D.F. 06/05/2019
+					if (lSospModel.getNumGiorniLibanticipata() != null
+							&& lSospModel.getNumGiorniLibanticipata().intValue() > 0) {
+						siesLogger.debug("Trovate LA sulla sospensione. Ricalcolo l'espiato");
+						if (lPenaPrecedente != null && lPenaPrecedente.getDataInizio() != null
+								&& lSospModel.getDataInizio() != null) {
+							siesLogger.debug("dataInizioPena Ultima PR = " + lPenaPrecedente.getDataInizio());
+							siesLogger.debug("dataInterruzione = " + lSospModel.getDataInizio());
+							CalendarModel lCalPenaEspiata = new CalendarModel();
+							lCalPenaEspiata.setDataInizio(lPenaPrecedente.getDataInizio());
+							lCalPenaEspiata.setDataFine(lSospModel.getDataInizio());
 
-						// Normalizzo i quantum
-						lCalPenaEspiata = lCalUtil.ricalcolaGAM(lCalPenaEspiata);
+							CalendarUtil lCalUtil = new CalendarUtil();
+							lCalPenaEspiata = lCalUtil.CalcolaNumGiorniMesiAnni(lCalPenaEspiata, false);
 
-						siesLogger.debug("Quantum = " + lCalPenaEspiata);
+							// Normalizzo i quantum
+							lCalPenaEspiata = lCalUtil.ricalcolaGAM(lCalPenaEspiata);
 
-						//
-						siesLogger.debug("Sovrascrivo l'espiato con i dati ricalcolati");
-						lComputiModel.setNumAnniReclusione(new BigDecimal(lCalPenaEspiata.getNumAnni()));
-						lComputiModel.setNumMesiReclusione(new BigDecimal(lCalPenaEspiata.getNumMesi()));
-						lComputiModel.setNumGiorniReclusione(new BigDecimal(lCalPenaEspiata.getNumGiorni()));
+							siesLogger.debug("Quantum = " + lCalPenaEspiata);
+
+							//
+							siesLogger.debug("Sovrascrivo l'espiato con i dati ricalcolati");
+							lComputiModel.setNumAnniReclusione(new BigDecimal(lCalPenaEspiata.getNumAnni()));
+							lComputiModel.setNumMesiReclusione(new BigDecimal(lCalPenaEspiata.getNumMesi()));
+							lComputiModel
+									.setNumGiorniReclusione(new BigDecimal(lCalPenaEspiata.getNumGiorni()));
+						}
 					}
-				}
 
-				// 16/04/2019 MEV70 Recupero della Pena Residua dalla Sospensione.
-				lComputiModel.setNumGiorniRevocaReclusione(lSospModel.getNumGiorniPenaResiduaReclus());
-				lComputiModel.setNumMesiRevocaReclusione(lSospModel.getNumMesiPenaResiduaReclus());
-				lComputiModel.setNumAnniRevocaReclusione(lSospModel.getNumAnniPenaResiduaReclus());
-			  } // end if (lSospModel != null) {			
-			}
-			else {
+					// 16/04/2019 MEV70 Recupero della Pena Residua dalla Sospensione.
+					lComputiModel.setNumGiorniRevocaReclusione(lSospModel.getNumGiorniPenaResiduaReclus());
+					lComputiModel.setNumMesiRevocaReclusione(lSospModel.getNumMesiPenaResiduaReclus());
+					lComputiModel.setNumAnniRevocaReclusione(lSospModel.getNumAnniPenaResiduaReclus());
+				} // end if (lSospModel != null) {
+			} else {
 				siesLogger.debug("lEveRevoca Assente...");
-			}			
+			}
 			// Fine id lEveRevoca!=null aggiunto per il ticket 202104230110
-			//===============================================================
-			
-				// Lettura del DecretoOrdinanzaSIEP.
-				siesLogger.debug("Cerco Decreto Ordinanza Collegato...");
-				lDecOrdSqlDao = new DecretoOrdinanzaSiepSqlDAO(aConn);
+			// ===============================================================
 
-				lDecOrdSqlDao.ricercaDecretoOrdinanzaSiepByIdEvento(aIdEvento);
-				DecretoOrdinanzaSiepModel lDecOrdModel = (DecretoOrdinanzaSiepModel) lDecOrdSqlDao
-						.getModelByKey();
-				lDecOrdSqlDao.stop();
+			// Lettura del DecretoOrdinanzaSIEP.
+			siesLogger.debug("Cerco Decreto Ordinanza Collegato...");
+			lDecOrdSqlDao = new DecretoOrdinanzaSiepSqlDAO(aConn);
 
-				siesLogger.debug("lDecOrdModel = " + lDecOrdModel);
+			lDecOrdSqlDao.ricercaDecretoOrdinanzaSiepByIdEvento(aIdEvento);
+			DecretoOrdinanzaSiepModel lDecOrdModel = (DecretoOrdinanzaSiepModel) lDecOrdSqlDao
+					.getModelByKey();
+			lDecOrdSqlDao.stop();
 
-				if (lDecOrdModel != null) {
-					lComputiModel.setDataRicezioneProvv(lDecOrdModel.getDataRicezioneProvvedimento());
-					lComputiModel.setDataEmissioneProvv(lDecOrdModel.getDataEmissioneProvvedimento());
-					lComputiModel.setDataSospensioneInterruzione(lDecOrdModel.getDataInterruzionePena());
+			siesLogger.debug("lDecOrdModel = " + lDecOrdModel);
 
-					lComputiModel.setProtocollo(lDecOrdModel.getProtocollo());
-					lComputiModel.setAltraAutorita(lDecOrdModel.getAltraAutorita());
-					lComputiModel.setAltroLuogo(lDecOrdModel.getAltroLuogo());
+			if (lDecOrdModel != null) {
+				lComputiModel.setDataRicezioneProvv(lDecOrdModel.getDataRicezioneProvvedimento());
+				lComputiModel.setDataEmissioneProvv(lDecOrdModel.getDataEmissioneProvvedimento());
+				lComputiModel.setDataSospensioneInterruzione(lDecOrdModel.getDataInterruzionePena());
 
-					lComputiModel.setNote(lDecOrdModel.getMotivazioni());
-				}
+				lComputiModel.setProtocollo(lDecOrdModel.getProtocollo());
+				lComputiModel.setAltraAutorita(lDecOrdModel.getAltraAutorita());
+				lComputiModel.setAltroLuogo(lDecOrdModel.getAltroLuogo());
 
+				lComputiModel.setNote(lDecOrdModel.getMotivazioni());
+			}
 
 			lComputiModel.setFlagStato("E");
 			lComputiModel.setMotivoModifica(null);
@@ -2700,7 +2887,7 @@ lComputiModel.setDataFineMisura   (lComputiModel.getDataReclusioneA());
 			siesLogger.error("ex: ", ex);
 			throw new F3BException(
 					"StatoEsecTitoloCumulatoController.caricaComputiMisuraAlternativaSORV: Non posso leggere : "
-							+ ex);					
+							+ ex);
 		} finally {
 			cleanup(lMisAltSqlDao);
 			cleanup(lComputiDao);

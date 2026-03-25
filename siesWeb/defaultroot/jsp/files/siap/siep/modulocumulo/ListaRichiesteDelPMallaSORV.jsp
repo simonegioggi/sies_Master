@@ -270,7 +270,7 @@
     <td class="c" nowrap ><%=StringUtils.toStringJSP(DateUtils.getDateToString(lRichinviate.getDataEmissione(), "dd-MM-yyyy"), " - ") %></td>
     <td class="c" nowrap ><%=StringUtils.toStringJSP(DateUtils.getDateToString(lRichinviate.getDataTrasmissione(), "dd-MM-yyyy"), " - ") %></td>
     <td class="c" nowrap>&nbsp;<%=StringUtils.toStringJSP(lRichinviate.getDescrUfficioDest(),"")%>&nbsp;di&nbsp;<%=StringUtils.toStringJSP(lRichinviate.getDescrLuogoDest(),"") %></td>
-    <td class="c" style="text-align:left"> &nbsp;
+    <td class="c" > 
       <a href="javascript:eseguiAzione('Dettaglio', <%=lRichinviate.getIdRichiesteInviateCum()%>)">
         <img src="/images/dettagli.gif" width="12" height="12" alt="Dettaglio Richiesta" border="0"></a>
 <%	if( lRichinviate.getFlagDocValidato() != null && lRichinviate.getFlagDocValidato().compareTo("S") == 0 )

@@ -136,11 +136,14 @@ public interface ICostantiLicenzaLibanticipata {
 	public static final String ESCLUSIONE_COMPUTO_PERMESSO = "EP";
 	public static final String REVOCA_PERMESSO = "RP";
 	public static final String PERMESSO_INTERNATO = "PI"; // 20110523 - PM
-	public static final String RIDUZIONE_GIORNI_DL92 = "RD"; // Riduzione Pena da Espiare (Violazione Art. 3
-																// CEDU)
-	public static final String SOMME_LIQUIDATE_DL92 = "SL"; // Somma da liquidare per risarcimento danno
-															// (Violazione Art. 3 CEDU)
+	// Riduzione Pena da Espiare (Violazione Art. 3 CEDU)
+	public static final String RIDUZIONE_GIORNI_DL92 = "RD";
+	// Somma da liquidare per risarcimento danno (Violazione Art. 3 CEDU)
+	public static final String SOMME_LIQUIDATE_DL92 = "SL";
 	// MEV_2023-35: aggiungo Licenza pene sostitutive (LP)
 	public static final String LICENZA_PENE_SOSTITUTIVE = "LP";
+
+	// MEV_2025-48: aggiunta nuova sezione - codice motivo detenzione
+	public static final String CAMPO_CK_COD_MOTIVO_DETENZIONE = "CheckModalitaEsecuzionePena";
 
 }

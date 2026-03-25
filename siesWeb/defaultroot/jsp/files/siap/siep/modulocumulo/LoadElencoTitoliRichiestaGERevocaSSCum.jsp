@@ -23,7 +23,7 @@
 <%
 //==================================================================================
 // Form di Elenco Titoli da selezionare per l'inserimento delle
-//	Richieste del PM al GE di Revoca Sentenza abolizione del Reato
+//	Richieste del PM al GE di Revoca Sanzioni Sostitutive
 //==================================================================================
 
 int TotTitoli = ListaTitoli.size();
@@ -32,7 +32,7 @@ int TotTitoli = ListaTitoli.size();
 
 <html>
   <head>
-    <title>[S.I.E.S.] - Gestione Cumulo - Elenco Titoli per Richieste del PM al GE - Revoca Sentenza abolizione del Reato </title>
+    <title>[S.I.E.S.] - Gestione Cumulo - Elenco Titoli per Richieste del PM al GE - Revoca Sanzioni Sostitutive </title>
     <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
   	<script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
   	<script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
@@ -146,7 +146,7 @@ int TotTitoli = ListaTitoli.size();
 <%
 if ( ListaTitoli == null || ListaTitoli.size() == 0 ) 	
 { 	%>  
-  <table>
+  <table width="100%">
     <tr>
       <td class="int" width="6%"  >Titolo</td>
       <td class="int" width="10%" >Data Titolo </td>
@@ -159,14 +159,14 @@ if ( ListaTitoli == null || ListaTitoli.size() == 0 )
       <td class="int" width="5%"  >Selezione</td>
     </tr>
     <tr>
-	  <td colspan="10">Nessun dato presente</td>
+	  <td colspan="9">Nessun dato presente</td>
     </tr>
   </table>
 <%
 }
 else
 {		%>    
-  <table>
+  <table width="100%">
     <tr>
       <td class="int" width="6%"  >Titolo</td>
       <td class="int" width="10%" >Data Titolo </td>

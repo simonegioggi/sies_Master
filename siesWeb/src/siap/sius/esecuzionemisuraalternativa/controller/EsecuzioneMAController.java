@@ -2,6 +2,7 @@ package siap.sius.esecuzionemisuraalternativa.controller;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.util.Collection;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -16,22 +17,12 @@ import siap.sius.esecuzionemisuraalternativa.dao.EsecuzioneMisuraAlternativaSqlD
 import siap.sius.esecuzionemisuraalternativa.model.EMAFascGPModel;
 import siap.sius.esecuzionemisuraalternativa.model.EsecuzioneMisuraAlternativaModel;
 import siap.sius.fascicolo.model.FascicoloGPModel;
+import siap.sius.statistiche.model.RicercaProcedimentoModel;
 import siap.sius.tenore.dao.TenoreSqlDAO;
 import siap.sius.tenore.model.TenoreModel;
 
 /**
- * <p>
- * Title: EsecuzioneMAController
- * </p>
- * <p>
- * Description: Classe Controller per EsecuzioneMisuraAlternativa
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * EsecuzioneMAController - Classe Controller per Esecuzione Misura Alternativa
  *
  * @version 1.0
  */
@@ -769,5 +760,86 @@ public class EsecuzioneMAController extends SiapController implements IEsecuzion
 
 		return lMisure;
 	}
+
+	// MEV_2025-48: aggiunti metodi di ricerca per Scadenzario monitoraggio misure alternative espiate
+	@Override
+	public Collection<EMAFascGPModel> ExRicercaDataScadenzaProcEsecMAPaginata(RicercaProcedimentoModel rpm,
+			int pagina) throws F3BException {
+
+		Connection c = null;
+		Vector procedimentiEsecMA = new Vector();
+
+		EsecuzioneMisuraAlternativaSqlDAO emasdao = null;
+
+		try {
+			c = getDBConnection();
+			emasdao = new EsecuzioneMisuraAlternativaSqlDAO(c);
+			emasdao.ricercaDataScadenzaProcEsecMA(rpm);
+
+			if (pagina > 0)
+				emasdao.startPage(pagina);
+			else
+				emasdao.start();
+
+			EMAFascGPModel emafgpm = null;
+			while (emasdao.next()) {
+				emafgpm = (EMAFascGPModel) emasdao.getEsecuzioneMisureAlternative();
+				procedimentiEsecMA.add(emafgpm);
+			}
+			emasdao.stop();
+		} catch (DAOException daoEx) {
+			rollback(c);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.error("DAOException: " + daoEx);
+			throw new SIUSException(F3BException.USER_MESSAGE,
+					"EsecuzioneMAController.ExRicercaDataScadenzaProcEsecMAPaginata: " + daoEx);
+		} catch (Exception e) {
+			rollback(c);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.error("Exception: " + e);
+			throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
+		} finally {
+			cleanup(emasdao);
+			cleanup(c);
+		}
+		// valore di ritorno
+		return procedimentiEsecMA;
+	}
+
+	@Override
+	public BigDecimal ExGetNumRicercaDataScadenzaProcEsecMA(RicercaProcedimentoModel rpm)
+			throws F3BException {
+
+		Connection c = null;
+		EsecuzioneMisuraAlternativaSqlDAO emasdao = null;
+		BigDecimal num = new BigDecimal(0);
+
+		try {
+			c = getDBConnection();
+			emasdao = new EsecuzioneMisuraAlternativaSqlDAO(c);
+			emasdao.ricercaDataScadenzaProcEsecMA(rpm);
+			num = emasdao.getNumRowsSelected();
+		} catch (DAOException daoEx) {
+			rollback(c);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.error("DAOException: " + daoEx);
+			throw new SIUSException(F3BException.USER_MESSAGE,
+					"EsecuzioneMAController.ExGetNumRicercaDataScadenzaProcEsecMA: " + daoEx);
+		} catch (Exception e) {
+			rollback(c);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.error("Exception: " + e);
+			throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
+		} finally {
+			cleanup(emasdao);
+			cleanup(c);
+		}
+		return num;
+	}
+	// FINE MEV_2025-48
 
 }

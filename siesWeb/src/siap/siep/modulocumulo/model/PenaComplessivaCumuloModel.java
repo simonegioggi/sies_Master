@@ -71,6 +71,16 @@ public class PenaComplessivaCumuloModel extends GenericModel {
 	private SanzioneSostitutivaCumuloModel mSanzioneSostitutivaCumulo;
 	private List<ContinuazioneCumuloModel> mListaContinuazioniCumulo;
 
+	
+	// MEV_2025-48 - ALTRO - Visualizzazione Pena Sospesa
+	// Si aggiunge il beneficio della sospensione che revoca la PS
+	private BeneficioCumuloModel mBeneficioSospensioneCumulo;
+	
+    // MEV_2025-48 - ALTRO - Visualizzazione Pena In Continuazione
+    // Si aggiunge il titolo che ASSORBE questa Pena in continuazione di tipo R
+	// escludendola dai calcoli
+    private TitoloCumulatoModel mTitoloContinuazioneR;	
+	
 	/**
 	 * L'attributo mPenaResidua, se valorizzato, contiene l'ultima pena residua validata associata al
 	 * fascicolo. L'ultima pena residua contiene il campo flag ergastolo, che viene valorizzato anche se
@@ -122,6 +132,11 @@ public class PenaComplessivaCumuloModel extends GenericModel {
 		this.mSanzioneSostitutivaCumulo = null;
 		this.mListaContinuazioniCumulo = null;
 
+		// MEV_2025-48 - ALTRO – Visualizzazione Pena Sospesa
+		this.mBeneficioSospensioneCumulo = null;
+		// MEV_2025-48 - ALTRO - Visualizzazione Pena In Continuazione
+		this.mTitoloContinuazioneR = null;
+		
 		this.mPenaResidua = null;
 
 	}
@@ -466,7 +481,17 @@ public class PenaComplessivaCumuloModel extends GenericModel {
 	public List<ContinuazioneCumuloModel> getContinuazioniCumulo() {
 		return mListaContinuazioniCumulo;
 	}
+	
+	// MEV_2025-48 - ALTRO – Visualizzazione Pena Sospesa
+	public BeneficioCumuloModel getBeneficioSospensioneCumulo() {
+	    return mBeneficioSospensioneCumulo;
+	}
 
+    // MEV_2025-48 - ALTRO - Visualizzazione Pena In Continuazione
+    public TitoloCumulatoModel getTitoloContinuazioneR() {
+        return mTitoloContinuazioneR;
+    }
+	
 	public String getStringaReclusione() {
 		return mStringaReclusione;
 	}
@@ -589,7 +614,17 @@ public class PenaComplessivaCumuloModel extends GenericModel {
 	public void setSanzioneSostitutivaCumulo(SanzioneSostitutivaCumuloModel aValore) {
 		mSanzioneSostitutivaCumulo = aValore;
 	}
+	
+	// MEV_2025-48 - ALTRO – Visualizzazione Pena Sospesa
+	public void setBeneficioSospensioneCumulo(BeneficioCumuloModel aValore) {
+	    mBeneficioSospensioneCumulo = aValore;
+	}
 
+    // MEV_2025-48 - ALTRO - Visualizzazione Pena In Continuazione
+    public void setTitoloContinuazioneR (TitoloCumulatoModel aValore) {
+        mTitoloContinuazioneR = aValore;
+    }
+	
 	public void setContinuazioniCumulo(List<ContinuazioneCumuloModel> aValore) {
 		mListaContinuazioniCumulo = aValore;
 	}

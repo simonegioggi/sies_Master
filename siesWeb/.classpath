@@ -12,6 +12,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ojdbc6"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ojdbc7"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

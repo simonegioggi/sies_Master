@@ -4,6 +4,7 @@
 <%@ page import="f3b.util.F3BProperties"%>
 <%@ page import="f3b.util.StringUtils"%>
 <%@ page import="java.util.Iterator"%>
+<%@ page import="java.math.BigDecimal" %>
 
 <%@ page import="siap.web.ISIAPCostantiWeb"%>
 
@@ -25,6 +26,9 @@
 <%@ page import="siap.siep.autoritaesterna.model.AutoritaEsternaModel"%>
 <%@ page import="siap.siep.fascicolo.action.ICostantiFascicoloSiep" %>
 
+<!-- MEV_2025-48 -->
+<%@ page import="siap.sico.ufficio.model.UfficioAccorpatoModel"%>
+
 <jsp:useBean id="IstruttoriaCumulo"     	scope="request" class="siap.siep.istruttoriacumulo.model.IstruttoriaCumuloModel"/>
 <jsp:useBean id="datiFinaliAggregatoModel" 	scope="request" class="siap.siep.modulocumulo.model.DatiFinaliCumuloAggregatoModel"/>
 <jsp:useBean id="magistrato" 				scope="request" class="siap.sico.magistrato.model.MagistratoModel"/>
@@ -32,6 +36,8 @@
 <%-- MEV 16 CUMULO: aggiunto useBean --%>
 <jsp:useBean id="documentoAllegato"			scope="request" class="siap.sius.documentoallegato.model.DocumentoAllegatoModel"/>
 <jsp:useBean id="Esiti"  					scope="request" class="java.util.Vector"/>
+
+<jsp:useBean id="elencoUfficiAccorpati" scope="request" class="java.util.Vector"/>
 
 <%
 PosizioneGiuridicaCumuloModel lPosizioneGiuridicaCumulo = datiFinaliAggregatoModel.getPosizioneGiuridicaCumulo();
@@ -568,14 +574,38 @@ if (lProvvedimentoCumulo.getNotifiche() != null && lProvvedimentoCumulo.getNotif
 		if(lEsiModel!=null && lEsiModel.getIdEsitoArchiviazioniCumulo()!=null)
 		{
 			NroRecord = NroRecord + 1;
+			
+			/* MEV_2025-48 */
+        	String lAnnoNumeroSIEP = "";
+	        if (lEsiModel.getChiaveProgrOrig()==null)             
+	        {
+	            lAnnoNumeroSIEP =  StringUtils.toStringJSP(lEsiModel.getChiaveAnnoFascSiep()) 
+	                                               +" / "+StringUtils.toStringJSP(lEsiModel.getChiaveProgrFascSiep());
+	        }            
+	        else if (lEsiModel.getChiaveProgrOrig()!=null) 
+	        {
+	            lAnnoNumeroSIEP =  StringUtils.toStringJSP(lEsiModel.getChiaveAnnoFascSiep()) 
+	                                               +" / "+StringUtils.toStringJSP(lEsiModel.getChiaveProgrOrig());
+ 	            BigDecimal offset = lEsiModel.getChiaveProgrFascSiep().subtract(lEsiModel.getChiaveProgrOrig());
+	            
+			    UfficioAccorpatoModel uffAccFasc = null;
+			    
+			    Iterator itUA = elencoUfficiAccorpati.iterator();
+			    while (itUA.hasNext())  {
+			        UfficioAccorpatoModel ua = (UfficioAccorpatoModel) itUA.next();
+			        if (offset.toString().equals(ua.getIncrProgressivo()) )
+			            uffAccFasc = ua;
+			    }
+			    lAnnoNumeroSIEP += "&nbsp;(Ex " + uffAccFasc.getCodTipoUfficio() + " di " + uffAccFasc.getDescrizione() + ")";
+	        }
+	        /* MEV_2025-48 */
 			%>  
 			<tr>
 			  <td class="l" nowrap>Fascicolo SIEP</td>
 			  <td class="L">
           <a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>=<%=lEsiModel.getFasIdFascicoloSiep()%>">
-            <%=StringUtils.toStringJSP(lEsiModel.getChiaveAnnoFascSiep())%>
-            /
-            <%=StringUtils.toStringJSP(lEsiModel.getChiaveProgrFascSiep())%>
+
+            <%=lAnnoNumeroSIEP%>
           </a>&nbsp;
           <%--
 			    <font class="campo"><%=StringUtils.toStringJSP(lEsiModel.getChiaveAnnoFascSiep())%>/<%=StringUtils.toStringJSP(lEsiModel.getChiaveProgrFascSiep())%></font>

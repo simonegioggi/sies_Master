@@ -148,6 +148,15 @@ if (lUteMod.getUserProfile().getProfileId().intValue() != 99
         	</a>
       	</td>
     </tr>
+    <%-- CALCOLATRICE NORDIO SU SIUS --%>
+    <tr><td><br>&nbsp;</td></tr>
+    <tr>
+        <td class="menulines" align="left">
+            <a style="" onclick="Javascript:BoldIT('<%=i%>');" href="/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.siep.calcolopena.action.ActLoadCalcoloPenaDL92" target="body">
+                <img align="middle" src="../../images/CalcDL92.png" width="32" height="32" alt="" border="0">&nbsp;&nbsp;&nbsp;&nbsp;Calcolo Pena DL92/2024
+            </a>
+        </td>
+    </tr>
 <%
 	} else if (codUff.equals("PGCAP") || codUff.equals("PM") || codUff.equals("PMM")) {
 %>

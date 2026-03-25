@@ -9,8 +9,6 @@
 <%@ page import="siap.sico.ufficio.action.ICostantiUfficio"%>
 
 <%@ page import="siap.siep.modulocumulo.model.ComputiCumuloModel"%>
-<%@ page import="siap.siep.modulocumulo.model.MisuraCautelareCumuloModel"%>
-<%@ page import="siap.siep.modulocumulo.action.ICostantiMisuraCautelareCumulo"%>
 <%@ page import="siap.siep.modulocumulo.action.ICostantiComputiCumulo"%>
 
 <%@ page import="siap.siep.istruttoriacumulo.action.ICostantiIstruttoriaCumulo"%>
@@ -51,13 +49,12 @@ if ( modalita.equals("M") )
     }
   }
 }
-MisuraCautelareCumuloModel lMisuraCautelareCumulo = new MisuraCautelareCumuloModel(); 
 
 %> 
 
 <html>
 <head>
-  <title> Gestione Presofferto Cumulo </title>
+  <title> Gestione Espiato Cumulo </title>
   <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
   <script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
   <script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
@@ -347,31 +344,21 @@ MisuraCautelareCumuloModel lMisuraCautelareCumulo = new MisuraCautelareCumuloMod
         computedVal = mesiQuantumCalcolati;
       else if (  $(obj).attr('id')=='giorniPresofferto' )
         computedVal = giorniQuantumCalcolati;
+  
+      var gg_dal = document.LoadInsEspiazionePregressa.<%=ICostantiComputiCumulo.CAMPO_GIORNO_DATA_RECLUSIONE_DA%>.value;
 
-      
-
-      if (currVal!=computedVal)
+      if (currVal!=computedVal && gg_dal!=""){
         $(obj).css("color", "red");
-      else 
+        $('#trAlert').show();
+      }
+      else {
         $(obj).css("color", "blue");
+        $('#trAlert').hide();
+      }
+    }
+  
+    
 
-    }
-  
-    
-    // 
-    function bloccaQuantum(par)
-    {
-      var tipoEspiazione = 'TipoEspiazioneIstituto';
-  
-      document.LoadInsEspiazionePregressa.<%=ICostantiComputiCumulo.CAMPO_NUM_GIORNI_RECLUSIONE%>.disabled=true;
-      document.LoadInsEspiazionePregressa.<%=ICostantiComputiCumulo.CAMPO_NUM_MESI_RECLUSIONE%>.disabled=true;
-      document.LoadInsEspiazionePregressa.<%=ICostantiComputiCumulo.CAMPO_NUM_ANNI_RECLUSIONE%>.disabled=true;
-      
-     
-      if (par!='onLoad') // non effettuo i calcoli quantum se sono chiamato dall'onLoad
-        testCalcolaPresofferto();
-    }
-    
     //============================================================================
     // 
     //============================================================================
@@ -402,8 +389,53 @@ MisuraCautelareCumuloModel lMisuraCautelareCumulo = new MisuraCautelareCumuloMod
     // On load
     $(document).ready(function(){
       //
-    });
+      var gg_dal = document.LoadInsEspiazionePregressa.<%=ICostantiComputiCumulo.CAMPO_GIORNO_DATA_RECLUSIONE_DA%>;
+      var mm_dal = document.LoadInsEspiazionePregressa.<%=ICostantiComputiCumulo.CAMPO_MESE_DATA_RECLUSIONE_DA%>;
+      var aa_dal = document.LoadInsEspiazionePregressa.<%=ICostantiComputiCumulo.CAMPO_ANNO_DATA_RECLUSIONE_DA%>;
 
+      var gg_al = document.LoadInsEspiazionePregressa.<%=ICostantiComputiCumulo.CAMPO_GIORNO_DATA_RECLUSIONE_A%>;
+      var mm_al = document.LoadInsEspiazionePregressa.<%=ICostantiComputiCumulo.CAMPO_MESE_DATA_RECLUSIONE_A%>;
+      var aa_al = document.LoadInsEspiazionePregressa.<%=ICostantiComputiCumulo.CAMPO_ANNO_DATA_RECLUSIONE_A%>;
+      
+      var dataDAL = gg_dal.value +"/"+mm_dal.value+"/"+aa_dal.value;
+      var dataAL  = gg_al.value +"/"+mm_al.value+"/"+aa_al.value;
+      
+      var tMis = "";
+      
+      // Prepara l'array dei dati da passare 
+      var myParams = new Array(gg_dal.value,
+                               mm_dal.value,
+                               aa_dal.value,
+                               gg_al.value,
+                               mm_al.value,
+                               aa_al.value,
+                               tMis
+                              );
+        jsrsExecute("/CaricaHTML_Servlet", inizializzaCalcoli, "getQuantumIntervallo",myParams);
+
+    });
+    
+    function inizializzaCalcoli(valueTextStr)  {
+//        document.body.style.cursor='auto';
+	    
+	    var sep = "~#";
+	    var aPairs = valueTextStr.split(sep);
+	    
+	    anni = aPairs[0];
+	    mesi = aPairs[1];
+	    giorni = aPairs[2];
+	    
+	    totGG= aPairs[3];
+	    
+	    // Valorizzo le var nascoste dei quantum calcolati
+	    anniQuantumCalcolati   = anni;
+	    mesiQuantumCalcolati   = mesi;
+	    giorniQuantumCalcolati = giorni;
+	    
+	    testChgQuantum($("#anniPresofferto"));
+	    testChgQuantum($("#mesiPresofferto"));
+	    testChgQuantum($("#giorniPresofferto"));
+    }
 
   </script>
 </head>
@@ -584,6 +616,14 @@ MisuraCautelareCumuloModel lMisuraCautelareCumulo = new MisuraCautelareCumuloMod
               </tr>
             </table>
           </td>
+          
+      </tr>
+
+      <tr id="trAlert" style="display:none;">
+        <td class="l" colspan="6">
+          <font class="label" style="color:red;">Attenzione i quantum presenti differiscono da quanto calcolato
+                     in base al periodo di espiazione </font>
+        </td>
       </tr>
     </table>
   </div>
@@ -632,43 +672,6 @@ MisuraCautelareCumuloModel lMisuraCautelareCumulo = new MisuraCautelareCumuloMod
 // 
 //==============================================================================
 %>
-<!--
-  <table width="95%" align="center">
-    <tr><td>&nbsp;</td></tr>
-    <%
-    //==========================================================================
-    // Descrizione dello stato visualizzata solo in fase di modifica del dato
-    //==========================================================================
-    if (lMisuraCautelareCumulo!=null && lMisuraCautelareCumulo.getIdMisuraCautelareCumulo()!=null)
-    {
-      String lDescStato = "AAAAA";
-        if      ( lMisuraCautelareCumulo.getFlagStato().equals("E")){lDescStato = "Dato Estratto dal fascicolo originale";}
-        else if ( lMisuraCautelareCumulo.getFlagStato().equals("I")){lDescStato = "Dato Inserito manualmente dopo l'estrazione";}
-        else if ( lMisuraCautelareCumulo.getFlagStato().equals("M")){lDescStato = "Dato estratto modificato";}
-        else if ( lMisuraCautelareCumulo.getFlagStato().equals("C")){lDescStato = "Dato estratto cancellato";}
-    %>
-    <tr>
-      <td class="l">&nbsp;</td>
-      <td class="l"> <%=lDescStato %></td> 
-    </tr>
-    <% } %>
-  
-    <%
-    //========================================================================== 
-    // Campo note visualizzato sia in inserimento sia in modifica dove l'utente
-    // può motivare l'intervento sui dati su cui sta intervenendo
-    //========================================================================== 
-    %>
-    <tr>
-      <td class="l">Motivo Inserimento/Modifica</td>
-      <td class="l">
-        <textarea cols="100" rows="6" 
-                  name="<%=ICostantiMisuraCautelareCumulo.CAMPO_MOTIVO_MODIFICA%>"
-        ><%=StringUtils.toStringJSP(lMisuraCautelareCumulo.getMotivoModifica()) %></textarea>
-      </td>
-    </tr>
-
--->
   <table width="95%" align="center">
     <tr>
       <td align="left">

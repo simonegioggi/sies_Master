@@ -17,6 +17,7 @@ import f3b.log.LogF3B;
 import f3b.model.GenericModel;
 import f3b.util.F3BException;
 import f3b.util.F3BProperties;
+import f3b.util.JdbcTrackerUtil;
 import f3b.util.StringUtils;
 
 /**
@@ -564,6 +565,8 @@ public class GenericDAO {
 				oldPs.add(mPs);
 			}
 			mPs = mCon.prepareStatement(mStatement);
+			JdbcTrackerUtil.trackOpen(mPs,mCon,this);
+			
 			// AVVOCATURA: calcolo tempo esecuzione query
 			long millis = System.currentTimeMillis();
 
@@ -576,6 +579,7 @@ public class GenericDAO {
 			}
 
 			mRs = mPs.executeQuery();
+			JdbcTrackerUtil.trackOpen(mRs,mCon,this);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.info("########## Tempo di Esecuzione Query: " + (System.currentTimeMillis() - millis)
@@ -598,15 +602,45 @@ public class GenericDAO {
 	 *             propaga l'errore di eccezione.
 	 */
 	public void stop() throws DAOException {
+		 // siesLogger.info(getClass().getName() + " STOP");
 		try {
 			reset();
-			if (mRs != null)
+			
+//			if (mRs != null)
+//				siesLogger.info(getClass().getName() + " STOP");
+			
+			if (mRs != null) {
+				// 202603 Traccio la chiusira el RS
+				JdbcTrackerUtil.trackClose(mRs,mCon);
 				mRs.close();
+			}
 			// fvender 02/08/2018: aggiunto blocco for per la gestione della problematica della chiusura delle
 			// connessioni
+			
+			// Loggature per verifica se e quanti RS restano aperti contemporaneamente
+			// Attivare solo per Debug per tracciare situazioni in cui lo stesso sqlDao
+			// viene usato può volte senza lo stop attivando più cursori contemporaneamente
+//			if (oldRs!=null && oldRs.size()>0) {
+//				siesLogger.debug("Closing oldRs.size() = "+oldRs.size()+" - "+this.getClass());	
+//				Throwable t = new Throwable("Cleaning CACHED ResultSet");
+//				siesLogger.debug("",t);
+//				if (oldRs.size()>4) {
+//					siesLogger.debug("=============================================");
+//					siesLogger.debug("ERROR vado in sleep controllare i cursori....");	
+//					siesLogger.debug("=============================================");
+//					//Thread.sleep(10000);
+//				}
+//			}
+			
 			for (ResultSet oRs : oldRs) {
+				siesLogger.debug("Closing oldRs ..."+this.getClass());				
 				try {
+					JdbcTrackerUtil.trackClose(oRs,mCon);
 					oRs.close();
+//					if (oldRs.size()>4) {
+//						siesLogger.debug("oldRs closed seep 3s");
+//						//Thread.sleep(3000);
+//					}
 					// 22/11/2018 - commento il debug in quanto genera file di log pesantissimi
 					// siesLogger.debug("Chiuso result set da lista.");
 				} catch (SQLException e) {
@@ -614,12 +648,31 @@ public class GenericDAO {
 				}
 			}
 
-			if (mPs != null)
+			// 202603 devo pulire RS corrente e la lista dopo aver chiuso tutti i ResultSet!!!
+			mRs = null;
+			if (oldRs!=null) 
+				oldRs.clear();
+			// 202603 - FINE
+
+			if (mPs != null) {
+				// 202603 Traccio la chiusira del PS
+				JdbcTrackerUtil.trackClose(mPs,mCon);
 				mPs.close();
-			// fvender 02/08/2018: aggiunto blocco for per la gestione della problematica della chiusura delle
-			// connessioni
+			}
+			
+
+//			if (oldPs!=null && oldPs.size()>0) {
+//				siesLogger.debug("Closing oPs.size() = "+oldPs.size()+" - "+this.getClass());	
+//				if (oldRs.size()>4) {
+//					siesLogger.debug("Prima della close oldPs sleep 10s ");	
+//					//Thread.sleep(10000);
+//				}
+//			}
+			
 			for (PreparedStatement oPs : oldPs) {
+//				siesLogger.debug("Closing oPs ..."+this.getClass());	
 				try {
+					JdbcTrackerUtil.trackClose(mPs, mCon);
 					oPs.close();
 					// 22/11/2018 - commento il debug in quanto genera file di log pesantissimi
 					// siesLogger.debug("Chiuso prepared statement da lista.");
@@ -627,6 +680,16 @@ public class GenericDAO {
 					siesLogger.debug(e.getMessage());
 				}
 			}
+			
+//			if (oldPs!=null && oldPs.size()>4) {
+//				siesLogger.debug("DOPO della close oldPs sleep 10s ");	
+//				//Thread.sleep(10000);				
+//			}
+			// 202603 devo pulire PS corrente e la lista dopo aver chiuso tutti i PS!!!
+			mPs = null;
+			if (oldPs!=null) oldPs.clear();
+			// 202603 - FINE
+			
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
 			// siesLogger al posto di LogF3B.getLogger()

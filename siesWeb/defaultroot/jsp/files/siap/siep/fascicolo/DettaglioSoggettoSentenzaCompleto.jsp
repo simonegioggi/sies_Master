@@ -11,6 +11,7 @@
 <%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
+<%@ page import="f3b.util.Utils"%>
 <%@ page import="f3b.log.LogF3B"%>
 
 <%@ page import="siap.sico.util.SiapStringUtil"%>
@@ -76,6 +77,8 @@
 <%-- MEV_2023-33: aggiunti useBean x gestione Civilmente Obbligato ed elenco stato pagamenti --%>
 <jsp:useBean id="existCivilmenteObbligato"	scope="request" class="java.lang.Boolean"/>
 <jsp:useBean id="existPagamenti"			scope="request" class="java.lang.Boolean"/>
+<%-- MEV_2025-48: aggiunta variabile --%>
+<jsp:useBean id="isCartabia"				scope="request" class="java.lang.Boolean"/>
 
 <%
 SoggettoModel soggetto = fascicolo.getSoggetto();
@@ -154,6 +157,12 @@ if (fascicolo.getFlagCumulante() != null && fascicolo.getFlagCumulante().equals(
 if (fascicolo.getCodOperatoreInserimento() != null && fascicolo.getCodOperatoreInserimento().startsWith("res-")) {
 %>
           	<font class="cRossoCumulo"> &nbsp;Migrato&nbsp; </font>&nbsp;
+<%
+}
+// MEV_2025-48: aggiunta sezione
+if (isCartabia) {
+%>
+			<font class="cRossoCumulo"> &nbsp;Cartabia&nbsp; </font>&nbsp;
 <%
 }
 if (fascicolo.getCodStatoFascicolo() != null && (fascicolo.getCodStatoFascicolo().equals("01"))) {
@@ -434,8 +443,14 @@ if (soggetto.getDescrComuneNascita().compareTo("-") == 0) {
 }
 %>
       		</font>
-      		<font class="label">Codice CUI : </font>
-      		<font class="campo"> <%=StringUtils.toStringJSP(soggetto.getCodAfis())%></font>&nbsp;&nbsp;&nbsp;
+<%
+if (Utils.isPresent(soggetto.getCodAfis())) {
+%>
+      		<font class="label"> Codice CUI : </font>
+      		<font class="campo"><%=StringUtils.toStringJSP(soggetto.getCodAfis())%></font>
+<%
+}
+%>
 		</td>
 <%
 if ("1".equals(colspanSoggetto)) {
@@ -472,20 +487,19 @@ if (fascicolo != null && fascicolo.getChiaveProgr() != null
 		&& (sentenza.getCodTipoProvvedimento().compareTo("02") == 0
 			|| sentenza.getCodTipoProvvedimento().compareTo("03") == 0)) {
 %>    
-			<font class="campo">
 				<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sentenza.action.ActLoadDettaglioDatiProvvedimentoMSFuoriSent&<%=ICostantiSentenza.CAMPO_ID_SENTENZA%>=<%=sentenza.getIdSentenza()%>" title="Sentenza">
+					<font class="campo"><%=StringUtils.toStringJSP(sentenza.getAnnoSentenza())%> / <%=StringUtils.toStringJSP(sentenza.getNumeroSentenza())%></font>
+          		</a>&nbsp;
 <%
 } else {
 %>
-        	<font class="campo">
         		<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sentenza.action.ActLoadDettaglioSentenza&<%=ICostantiSentenza.CAMPO_ID_SENTENZA%>=<%=sentenza.getIdSentenza()%>" title="Sentenza">
+        			<font class="campo"><%=StringUtils.toStringJSP(sentenza.getAnnoSentenza())%> / <%=StringUtils.toStringJSP(sentenza.getNumeroSentenza())%></font>
+          		</a>&nbsp;
 <%
 }
 %>        	
-          			<%=StringUtils.toStringJSP(sentenza.getAnnoSentenza())%> / <%=StringUtils.toStringJSP(sentenza.getNumeroSentenza())%>
-          		</a>&nbsp;
-          	</font>
-          	<font class="label">del</font>&nbsp;
+          	<font class="label">del&nbsp;
             	<%=DateUtils.getDateToString(sentenza.getDataProvvedimento(), "dd-MM-yyyy")%>
         	</font>
 <%
@@ -626,14 +640,14 @@ if (lFascProg > 70000 && lFascProg < 80000 && richiestaconversione.getIdRichiest
 Iterator itxReg = registroIstanzaCollMod.iterator();
 int nRegColl = 0;
 while (itxReg.hasNext()) {
-	nRegColl++;
     FascicoloSiepModel regIstCollMod = (FascicoloSiepModel) itxReg.next();
     // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
     siesLogger.info("MODEL PERVENUTO ALLA JSP: " + regIstCollMod);
   	if (regIstCollMod.getChiaveProgr() != null
   			&& regIstCollMod.getChiaveProgr().intValue() > 90000
   			&& regIstCollMod.getChiaveProgr().intValue() < 100000) {
-		if (nRegColl==1) {
+  		nRegColl++; // 20251204: contava male poichè era messo prima della if 90000 <> 100000 (cara Anna)
+		if (nRegColl == 1) {
 %>
 	<tr>
 		<td class="L" colspan=1>
@@ -656,36 +670,45 @@ while (itxReg.hasNext()) {
 </tr>
 <%
 		}
-	} // Chiusura If 
-} // Chiusura While 
+	} // Chiusura if
+} // Chiusura while 
 // fine ANNA  
 %>
 </table>
 
 <table cellspacing="0" cellpadding="0" width="95%">
 <%
-int Conta = 0;
+// 20251105 [SG]: in caso di più collegati la pagina si scombinava (solo per i collegati a classe VII); infatti è un vettore <vectfasc>
+int conta = 0;
 FascicoloSiepModel lFasciMod = new FascicoloSiepModel();
 Iterator itx = vectfasc.iterator();
 while (itx.hasNext()) {
 	lFasciMod = (FascicoloSiepModel)itx.next();
 	if (lFasciMod.getChiaveProgr().intValue() > 70000 && lFasciMod.getChiaveProgr().intValue() < 80000) {
-		Conta = Conta + 1;
+		conta = conta + 1;
     }
 }
-if (Conta > 0) {
+if (conta > 0) {
 %>
 	<tr>
 		<td class="L">
-			<font class="label">Collegato al Procedimento: N.</font>
-<%            
+<%
+	if (conta > 1) {
+%>
+			<font class="label">Collegato ai Procedimenti: </font>
+<%
+	} else {
+%>
+			<font class="label">Collegato al Procedimento: </font>
+<%
+	}
 	lFasciMod = new FascicoloSiepModel();
 	itx = vectfasc.iterator();
     while (itx.hasNext()) {
 		lFasciMod = (FascicoloSiepModel)itx.next();
       	if (lFasciMod.getChiaveProgr().intValue() > 70000 && lFasciMod.getChiaveProgr().intValue() < 80000) {
 %>
-			<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>=<%=lFasciMod.getIdFascicoloSiep()%>" title="Procedimento">
+			N. <a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>=<%=lFasciMod.getIdFascicoloSiep()%>" title="Procedimento">
                 <%=StringUtils.toStringJSP(lFasciMod.getChiaveAnno())%>/
                 <%=StringUtils.toStringJSP(lFasciMod.getChiaveProgr())%>
            	</a>
@@ -722,14 +745,17 @@ if (Conta > 0) {
 %>
 			)
 <%
-}
+				}
 			}
-%>
-		</td>
-<%
 		}
+      	if (itx.hasNext()) {
+%>
+			&nbsp;&nbsp;&nbsp;
+<%
+      	}
 	}
 %>
+		</td>
 	</tr>
 <%    
 }
@@ -1165,7 +1191,13 @@ if (!"S".equals(fascicolo.getFlagCumulante())) {
 %>
 		</td>
 	</tr>
+<%-- MEV_2025-48: aggiunta nuova sezione --%>
 <%
+				if (Utils.isPresent(lPenCompMod.getCodTipoRito()) && "E".equals(lPenCompMod.getCodTipoRito())) {
+%>
+	<tr><td class="L"><font color="red">Importo da Pagare Include Confisca per Equivalente</font></td></tr>
+<%
+				}
   			}
 		}
 	}
