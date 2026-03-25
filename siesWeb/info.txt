@@ -4,4 +4,6 @@ Nasce dal branch 12.8.2.0 in data 25/07/2025
 
 In data 22/10/2025 eseguito merge col branch 12.8.3.0
 
+In data 25/03/2026 eseguito merge col branch 12.9.2.0
+
 Gestisce il trasferimento verso NSC dei fogli complementari (NO CUMULO).
