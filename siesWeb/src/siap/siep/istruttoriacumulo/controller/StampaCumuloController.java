@@ -630,7 +630,9 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 										lCompCumSqlDao.start();
 										if (lCompCumSqlDao.next()) {
 											lCompMod = (ComputiCumuloModel) lCompCumSqlDao.getModel();
-
+											// normalizzazione dei quantum
+											lCompMod.normalizzaQuantum();
+											// 
 											lCompMod.calcolaStringaAmmenda();
 											lCompMod.calcolaStringaReclusione();
 
@@ -847,7 +849,9 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 										lCompCumSqlDao.start();
 										if (lCompCumSqlDao.next()) {
 											lCompMod = (ComputiCumuloModel) lCompCumSqlDao.getModel();
-
+											// Normalizzazione dei quantum
+											lCompMod.normalizzaQuantum();
+											// 
 											lCompMod.calcolaStringaAmmenda();
 											lCompMod.calcolaStringaReclusione();
 
@@ -4604,6 +4608,9 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 							Iterator lItxCmp = lVecCompCum.iterator();
 							while (lItxCmp.hasNext()) {
 								lCompMod = (ComputiCumuloModel) lItxCmp.next();
+								// Normalizzazione dei quantum
+								lCompMod.normalizzaQuantum();
+								// 
 								if (lCompMod != null && lCompMod.getIdComputiCumulo() != null) {
 									if (!lCompMod.isQuantumReclusioneZero())
 										lCompMod.calcolaStringaReclusione();
