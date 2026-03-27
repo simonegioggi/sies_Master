@@ -1,17 +1,13 @@
-BRANCH SIES VERSIONE 12.9.2.0
+BRANCH SIES VERSIONE 12.9.3.0
 
-Nasce dal branch 12.9.1.0 in data 27/02/2026
+Nasce dal branch 12.9.2.0 in data 27/03/2026
 
-Questa Release verrà rilasciata il 27/03/2026 (Patch mese di Marzo 2026)
+Questa Release verrà rilasciata il 24/04/2026 (Patch mese di Aprile 2026)
 
 Comprende i seguenti Ticket MAC:
 
-1)	Ticket#202602260149 - PROCURA DI NOCERA - SIEP
-	Ticket#202603060170 - PROCURA DI FOGGIA - ANALOGA SEGNALAZIONE DI QUELLA DI SALERNO
-	Ticket#202603120147 - Problema Istruttoria Cumuli
-	Ticket#202603130151 - Anomlai istruttoria																	
-	Ticket#202603200112 - Mancata iscrizione fascicoli coinvolti nel CUMULO
-	Per la risoluzione della problematica è stata modificata la gestione dei campi: nome, cognome e comune.
-	Il problema era legato al fatto che i dati che contenevano un apostrofo non erano gestiti correttamente.
+1)	Ticket#20260
+	Per la risoluzione della problematica è stata modificata la gestione .
+	Il problema era legato al fatto che .
 	Classi modificate:
-	-   siap/siep/istruttoriacumulo/RicercaProcedimentiUfficio.jsp
+	-   
