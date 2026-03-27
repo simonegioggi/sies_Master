@@ -120,12 +120,7 @@ import siap.siep.modulocumulo.util.StatoEsecuzioneCumuloUtils;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * <p>
- * Title: IstruttoriaCumuloController
- * </p>
- * <p>
- * Description: Classe Controller per IstruttoriaCumulo
- * </p>
+ * IstruttoriaCumuloController - Classe Controller per IstruttoriaCumulo
  *
  * @version 1.0
  */
@@ -145,16 +140,16 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
-	/* MEV_2025-48 – 2.14 Caricamento Istruttoria Annullata 
-	 * Modificata firma per gestire connessione in ingresso
-	 * 
-	 * ATTENZIONE CHE E' UNA UTOPIA.
-	 * ModuloCumuloController.ExInserisciTitoloInIstruttoria
-	 * pur prevedendo la connessione in ingresso committa almeno in 2 punti
-	 * 
-	 * */ 
-	//public IstruttoriaCumuloModel ExInserisciIstruttoriaCumulo(IstruttoriaCumuloModel aIstruttoriaCumulo,
-	//            FascicoloSiepModel aFascicoloSiep) throws F3BException {
+	/*
+	 * MEV_2025-48 – 2.14 Caricamento Istruttoria Annullata Modificata firma per gestire connessione in
+	 * ingresso
+	 *
+	 * ATTENZIONE CHE E' UNA UTOPIA. ModuloCumuloController.ExInserisciTitoloInIstruttoria pur prevedendo la
+	 * connessione in ingresso committa almeno in 2 punti
+	 *
+	 */
+	// public IstruttoriaCumuloModel ExInserisciIstruttoriaCumulo(IstruttoriaCumuloModel aIstruttoriaCumulo,
+	// FascicoloSiepModel aFascicoloSiep) throws F3BException {
 	public IstruttoriaCumuloModel ExInserisciIstruttoriaCumulo(IstruttoriaCumuloModel aIstruttoriaCumulo,
 			FascicoloSiepModel aFascicoloSiep, Connection aDBConnection) throws F3BException {
 
@@ -165,19 +160,18 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 		IstruttoriaCumuloModel lIstMod = null;
 
 		try {
-			
-		    // MEV_2025-48 – 2.14 Caricamento Istruttoria Annullata
-		    // lConn = getDBConnection();
-            if (aDBConnection != null) {
-                siesLogger.debug("Utilizzo connessione in input ");
-                lConn = aDBConnection;
-            } else {
-                siesLogger.debug("Apro nuova connessione");
-                lConn = getDBConnection();
-            }			
-            // MEV_2025-48 – 2.14 - FINE	
-			
-			
+
+			// MEV_2025-48 – 2.14 Caricamento Istruttoria Annullata
+			// lConn = getDBConnection();
+			if (aDBConnection != null) {
+				siesLogger.debug("Utilizzo connessione in input ");
+				lConn = aDBConnection;
+			} else {
+				siesLogger.debug("Apro nuova connessione");
+				lConn = getDBConnection();
+			}
+			// MEV_2025-48 – 2.14 - FINE
+
 			// Recupero il progressivo protocollo
 			lIstruttoriaSqlDao = new IstruttoriaCumuloSqlDAO(lConn);
 			BigDecimal lProgr = lIstruttoriaSqlDao
@@ -208,13 +202,13 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 			// ========================================================================
 
 			// MEV_2025-48 – 2.14 Caricamento Istruttoria Annullata
-            //commit(lConn);
-            if (aDBConnection == null) {
-                siesLogger.debug("ExInserisciIstruttoriaCumulo commit");
-                commit(lConn);
-            }
-            // MEV_2025-48 – 2.14 - FINE
-            
+			// commit(lConn);
+			if (aDBConnection == null) {
+				siesLogger.debug("ExInserisciIstruttoriaCumulo commit");
+				commit(lConn);
+			}
+			// MEV_2025-48 – 2.14 - FINE
+
 			lIstMod = new IstruttoriaCumuloModel(aIstruttoriaCumulo);
 			lIstMod.setMessage("Inserimento avvenuto correttamente!");
 			lIstMod.setIdIstruttoriaCumulo(lIdIstruttoria);
@@ -228,11 +222,11 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 			cleanup(lIstruttoriaSqlDao);
 
 			// MEV_2025-48 – 2.14 Caricamento Istruttoria Annullata
-            // cleanup(lConn);
-	        if (aDBConnection == null) {
-	           cleanup(lConn);
-	        }
-	        // MEV_2025-48 – 2.14 - FINE
+			// cleanup(lConn);
+			if (aDBConnection == null) {
+				cleanup(lConn);
+			}
+			// MEV_2025-48 – 2.14 - FINE
 		}
 
 		return lIstMod;
@@ -623,14 +617,14 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 		IstruttoriaCumuloDAO lIstruttoriaDao = null;
 		CumuloDAO lCumuloDAO = null;
 
-		// Ticket#20220803015 - 
+		// Ticket#20220803015 -
 		TitoloCumulatoSqlDAO lTitoloCumulatoSqlDao = null;
 		ProcedimentoCumulatoSqlDAO lProcCumSqlDao = null;
 		AnnotazioneEsitoTrasmissioneDAO lAnnEsiDao = null;
 		AnnotazioneEsitoTrasmissioneSqlDAO lAnnEsiSqlDao = null;
 		CampoNotaDAO lCampoNotaDao = null;
 		EventoDAO lEveDao = null;
-		// Ticket#20220803015 - 
+		// Ticket#20220803015 -
 		// Ticket#20220831013 - inizio
 		EventoStoreProcedurePulisciDAO lEventoProcSqlDao = null;
 		DatiFinaliCumuloSqlDAO lDatiFinaliSqlDAO = null;
@@ -971,23 +965,16 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 			// MEV_2025-48 - 2.15 Gestione Annotazioni Trasmissioni
 			// La marcatura viene fatta solo sulla validazione e non sull'ijserimento
 			/*
-			if (aIdMess != null) {
-				siesLogger.debug("--XX-- Vado a Modoficare il messaggio...");
-				lMesDao = new MessaggioDAO(lConn);
-				lMesSqlDao = new MessaggioSqlDAO(lConn);
-				MessaggioModel lMesMod = null;
-
-				lMesSqlDao.ricercaMessaggioByKey(aIdMess);
-				lMesMod = (MessaggioModel) lMesSqlDao.getModelByKey();
-				lMesSqlDao.stop();
-
-				if (lMesMod != null && lMesMod.getIdMessaggio() != null) {
-					lMesMod.setFlagVisto("S");
-					lMesDao.setDAOFromModelForUpdate(lMesMod);
-					lMesDao.update();
-				}
-			}
-			*/
+			 * if (aIdMess != null) { siesLogger.debug("--XX-- Vado a Modoficare il messaggio..."); lMesDao =
+			 * new MessaggioDAO(lConn); lMesSqlDao = new MessaggioSqlDAO(lConn); MessaggioModel lMesMod =
+			 * null;
+			 *
+			 * lMesSqlDao.ricercaMessaggioByKey(aIdMess); lMesMod = (MessaggioModel)
+			 * lMesSqlDao.getModelByKey(); lMesSqlDao.stop();
+			 *
+			 * if (lMesMod != null && lMesMod.getIdMessaggio() != null) { lMesMod.setFlagVisto("S");
+			 * lMesDao.setDAOFromModelForUpdate(lMesMod); lMesDao.update(); } }
+			 */
 			// MEV_2025-48 - 2.15 Gestione Annotazioni Trasmissioni - FINE
 
 			commit(lConn);
@@ -2113,6 +2100,10 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 						}
 					}
 				}
+				// Ticket#202603160115 - si stoppa subito il dao/sqldao CURSOR LEAK!!! Vengono aperti tanti cursori lBenCumSqlDao
+				// quanti sono i titoli e chiusi solo nel finally. Con 120 titoli si hanno 120 cursori aperti contemporaneamente
+				lBenCumSqlDao.stop();
+				// Ticket#202603160115 – FINE
 				if (lVecBenCum != null && lVecBenCum.size() > 0) {
 					lTitolo.setBeneficiCumulo(lVecBenCum);
 				}
@@ -2168,7 +2159,10 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 
 					lListaProvStatoEsec.add(lStatoModel);
 				}
-
+				// Ticket#202603160115 - si stoppa subito il dao/sqldao CURSOR LEAK!!! Vengono aperti tanti cursori lBenCumSqlDao
+				// quanti sono i titoli e chiusi solo nel finally. Con 120 titoli si hanno 120 cursori aperti contemporaneamente
+				lStatoEsecSqlDao.stop();
+				// Ticket#202603160115 - FINE 
 				lTitoloStat.setStatoEsecuzioneTitoloCumulato(lListaProvStatoEsec);
 			}
 
@@ -2671,10 +2665,10 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 		UfficioSqlDAO lUffSqlDao = null;
 		// MEV_2025-48 - ALTRO - Ordinamento titoli come x Lista titoli
 		IstruttoriaCumuloSqlDAO lIstrSqlDao = null;
-		
+
 		// MEV_2025-48 - ALTRO - Visualizzazione Pena In Continuazione
-		ContinuazioneCumuloSqlDAO lContCumuloSqlDao = null;		
-		        
+		ContinuazioneCumuloSqlDAO lContCumuloSqlDao = null;
+
 		CalcoloPenaCumuloModel lCalcoloPenaModel = new CalcoloPenaCumuloModel();
 
 		Vector<TitoloCumulatoModel> lListaTitoli = null; // new Vector<TitoloCumulatoModel>();
@@ -2691,24 +2685,22 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 			lConn = getDBConnection();
 
 			// MEV_2025-48 - ALTRO - Ordinamento titoli come x Lista titoli
-			lIstrSqlDao = new IstruttoriaCumuloSqlDAO (lConn);
+			lIstrSqlDao = new IstruttoriaCumuloSqlDAO(lConn);
 			lIstrSqlDao.ricercaIstruttoriaCumuloByKey(aIdIstruttoriaCumulo);
 			IstruttoriaCumuloModel lIstrCumulo = (IstruttoriaCumuloModel) lIstrSqlDao.getModelByKey();
 			String lOrdinamentoTitoli = ICostantiIstruttoriaCumulo.ORDER_BY_DATA_IRREVOCABILITA_DESC;
-			if (lIstrCumulo.getOrdinamentoTitoli()!=null)
-			    lOrdinamentoTitoli = lIstrCumulo.getOrdinamentoTitoli();
-			
+			if (lIstrCumulo.getOrdinamentoTitoli() != null)
+				lOrdinamentoTitoli = lIstrCumulo.getOrdinamentoTitoli();
+
 			// recupero l'elenco dei titoli
 			lTitoloSqlDao = new TitoloCumulatoSqlDAO(lConn);
-			
-			// MEV_2025-48 - ALTRO - Ordinamento titoli come x Lista titoli
-			//lTitoloSqlDao.ricercaTitoloCumulatoByIstruttoriaOrderBy(aIdIstruttoriaCumulo,
-			//		ICostantiIstruttoriaCumulo.ORDER_BY_DATA_IRREVOCABILITA_DESC);
-            lTitoloSqlDao.ricercaTitoloCumulatoByIstruttoriaOrderBy(aIdIstruttoriaCumulo,
-                    lOrdinamentoTitoli);			
-            // MEV_2025-48 - ALTRO - Ordinamento titoli come x Lista titoli - FINE
-			lListaTitoli = new Vector<TitoloCumulatoModel>(lTitoloSqlDao.getModels());
 
+			// MEV_2025-48 - ALTRO - Ordinamento titoli come x Lista titoli
+			// lTitoloSqlDao.ricercaTitoloCumulatoByIstruttoriaOrderBy(aIdIstruttoriaCumulo,
+			// ICostantiIstruttoriaCumulo.ORDER_BY_DATA_IRREVOCABILITA_DESC);
+			lTitoloSqlDao.ricercaTitoloCumulatoByIstruttoriaOrderBy(aIdIstruttoriaCumulo, lOrdinamentoTitoli);
+			// MEV_2025-48 - ALTRO - Ordinamento titoli come x Lista titoli - FINE
+			lListaTitoli = new Vector<TitoloCumulatoModel>(lTitoloSqlDao.getModels());
 			lCalcoloPenaModel.setListaTitoli(lListaTitoli);
 
 			// Aggiungere eventuali dettagli sul procedimento cumulato vedi
@@ -2789,39 +2781,39 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 						.getModelByKey();
 				lPenSqlDao.stop();
 				if (lPenaComplMod != null) {
-				    
-				    
-			        // MEV_2025-48 - ALTRO - Visualizzazione Pena In Continuazione
-                    // recupero eventuali cntinuazioni (solo visualizzazione)
-				    lContCumuloSqlDao = new ContinuazioneCumuloSqlDAO(lConn);
-				    lContCumuloSqlDao.ricercaContinuazioneByIdTitolo(lPenaComplMod.getTitIdTitoloCumulato());
-				    Vector lListaCont =  new Vector(lContCumuloSqlDao.getModels());
-				    lPenaComplMod.setContinuazioniCumulo(lListaCont);
-				    // MEV_2025-48 - ALTRO - Visualizzazione Pena In Continuazione
-				    
+
+					// MEV_2025-48 - ALTRO - Visualizzazione Pena In Continuazione
+					// recupero eventuali cntinuazioni (solo visualizzazione)
+					lContCumuloSqlDao = new ContinuazioneCumuloSqlDAO(lConn);
+					lContCumuloSqlDao.ricercaContinuazioneByIdTitolo(lPenaComplMod.getTitIdTitoloCumulato());
+					Vector lListaCont = new Vector(lContCumuloSqlDao.getModels());
+					lPenaComplMod.setContinuazioniCumulo(lListaCont);
+
+					// MEV_2025-48 - ALTRO - Visualizzazione Pena In Continuazione
+
 					if (isPenaDetentivaSospesa) {
-                        // MEV_2025-48 - ALTRO – Visualizzazione Pena Sospesa
-                        // Devo passare tutti i dati per poterli visualizzare
-                        lPenaComplMod.setBeneficioSospensioneCumulo(lBeneficioSosp);
-                        siesLogger.debug("isPenaDetentivaSospesa = " + isPenaDetentivaSospesa);
-                        // Procedo ad azzerare i quantum, lascio solo la pecuniaria
+						// MEV_2025-48 - ALTRO – Visualizzazione Pena Sospesa
+						// Devo passare tutti i dati per poterli visualizzare
+						lPenaComplMod.setBeneficioSospensioneCumulo(lBeneficioSosp);
+						siesLogger.debug("isPenaDetentivaSospesa = " + isPenaDetentivaSospesa);
+						// Procedo ad azzerare i quantum, lascio solo la pecuniaria
 						// Reclusione
-						//lPenaComplMod.setNumGiorniReclusione(null);
-						//lPenaComplMod.setNumMesiReclusione(null);
-						//lPenaComplMod.setNumAnniReclusione(null);
+						// lPenaComplMod.setNumGiorniReclusione(null);
+						// lPenaComplMod.setNumMesiReclusione(null);
+						// lPenaComplMod.setNumAnniReclusione(null);
 						// Arresto
-						//lPenaComplMod.setNumGiorniArresto(null);
-						//lPenaComplMod.setNumMesiArresto(null);
-						//lPenaComplMod.setNumAnniArresto(null);
-						
+						// lPenaComplMod.setNumGiorniArresto(null);
+						// lPenaComplMod.setNumMesiArresto(null);
+						// lPenaComplMod.setNumAnniArresto(null);
+
 						lCalcoloPenaModel.addPenaComplessiva(lPenaComplMod);
 					} else if (isPenaInteramenteSospesa) {
 						// non aggiungo la pena al model
-                        // MEV_2025-48 - ALTRO – Visualizzazione Pena Sospesa
-                        // Devo passare tutti i dati per poterli visualizzare
-                        lPenaComplMod.setBeneficioSospensioneCumulo(lBeneficioSosp);
-                        lCalcoloPenaModel.addPenaComplessiva(lPenaComplMod);
-                        // MEV_2025-48 - ALTRO – Visualizzazione Pena Sospesa - FINE
+						// MEV_2025-48 - ALTRO – Visualizzazione Pena Sospesa
+						// Devo passare tutti i dati per poterli visualizzare
+						lPenaComplMod.setBeneficioSospensioneCumulo(lBeneficioSosp);
+						lCalcoloPenaModel.addPenaComplessiva(lPenaComplMod);
+						// MEV_2025-48 - ALTRO – Visualizzazione Pena Sospesa - FINE
 					} else if (isPenaInContinuazione) {
 						// La pena è in continuazione. Esiste un altro titolo la cui pena
 						// è dichiarata in continuazione con la pena corrente e il tipo
@@ -2832,20 +2824,21 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 						// MEV_2025-48 - ALTRO - Visualizzazione Pena In Continuazione
 						// Si deve visualizzzare comunque la pena in continuazione ma non conteggiarla
 						siesLogger.debug("isPenaInContinuazione carico la pena x la visualizzazione");
-                        // Procedo ad azzerare i quantum, multa e ammenda
-                        // Reclusione
-                        lPenaComplMod.setNumGiorniReclusione(null);
-                        lPenaComplMod.setNumMesiReclusione(null);
-                        lPenaComplMod.setNumAnniReclusione(null);
-                        // Arresto
-                        lPenaComplMod.setNumGiorniArresto(null);
-                        lPenaComplMod.setNumMesiArresto(null);
-                        lPenaComplMod.setNumAnniArresto(null);
-						// 
-                        lPenaComplMod.setImportoMulta(null);
-                        lPenaComplMod.setImportoAmmenda(null);
-                        
-						TitoloCumulatoModel lTitoloR = this.getTitoloContinuazioneR(lPenaComplMod.getTitIdTitoloCumulato(), lConn);
+						// Procedo ad azzerare i quantum, multa e ammenda
+						// Reclusione
+						lPenaComplMod.setNumGiorniReclusione(null);
+						lPenaComplMod.setNumMesiReclusione(null);
+						lPenaComplMod.setNumAnniReclusione(null);
+						// Arresto
+						lPenaComplMod.setNumGiorniArresto(null);
+						lPenaComplMod.setNumMesiArresto(null);
+						lPenaComplMod.setNumAnniArresto(null);
+						//
+						lPenaComplMod.setImportoMulta(null);
+						lPenaComplMod.setImportoAmmenda(null);
+
+						TitoloCumulatoModel lTitoloR = this
+								.getTitoloContinuazioneR(lPenaComplMod.getTitIdTitoloCumulato(), lConn);
 						lPenaComplMod.setTitoloContinuazioneR(lTitoloR);
 						lCalcoloPenaModel.addPenaComplessiva(lPenaComplMod);
 						// MEV_2025-48 - ALTRO - Visualizzazione Pena In Continuazione - FINE
@@ -2865,7 +2858,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 					lSSCumSqlDao.ricercaSanzioneSostitutivaByIdPenaComplessivaCum(
 							lPenaComplMod.getIdPenaComplessivaCum());
 					lSSCumModel = (SanzioneSostitutivaCumuloModel) lSSCumSqlDao.getModelByKey();
-
+					
 					if (lSSCumModel != null && !"C".equals(lSSCumModel.getFlagStato())) {
 						lPenaComplMod.setSanzioneSostitutivaCumulo(lSSCumModel);
 						lCalcoloPenaModel.addSanzioneSost(lSSCumModel);
@@ -2907,6 +2900,12 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 						siesLogger.debug("MC: idTitolo = " + lTitolo.getIdTitoloCumulato() + " - idMisura = "
 								+ lMCModel.getIdMisuraCautelareCumulo());
 					}
+					// Ticket#202603160115 - si stoppa subito il dao/sqldao (ERR-new in ciclo for, ne finallyu si ha il 
+					//                       puntamento solo all'ultistanza, le altre restano appese. Inoltre anche se 
+					// non ci fosse la new si aprirebbeo numerosi cursori contemporaneamente chiusi solo nel finally)
+					// Generando un possibile CURSOR LEAK
+					lMisCautCumSqlDao.stop();
+					// Ticket#202603160115 - FINE
 				} else {
 					siesLogger.debug("Pena Sospesa! NON recupero le MC in sentenza ");
 				}
@@ -2969,6 +2968,10 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 
 						lCalcoloPenaModel.addBeneficio(lBeneficio);
 					}
+					// Ticket#202603160115 - si stoppa subito il dao/sqldao. Se non si chiude subito il cursore verrà chiuso 
+				    // solo nel finally ed essendo nel ciclo sui titoli si rischia da avare parecchi cursori aperti contemporaneamente 
+					lBeneficioSqlDao.stop();
+					// Ticket#202603160115 - FINE
 				} else {
 					siesLogger.debug("Pena Sospesa! NON Recupero benefici Revocati in sentenza ");
 				}
@@ -3039,7 +3042,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 
 						Vector<StatoEsecTitoloCumulatoModel> lListaProvvPagamentoPP = new Vector(
 								lStatoEsecSqlDao.getModels());
-
+						
 						lComputiSqlDao = new ComputiCumuloSqlDAO(lConn);
 						for (int i = 0; i < lListaProvvPagamentoPP.size(); i++) {
 							StatoEsecTitoloCumulatoModel lStatoModel = lListaProvvPagamentoPP.elementAt(i);
@@ -3071,6 +3074,11 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 								.getModel();
 						lCalcoloPenaModel.addLibAnticipata(lLibAnticipata);
 					}
+					// Ticket#202603160115 - si stoppa subito il dao/sqldao (ERR-new in ciclo for nel finally si può 
+					// chiudere solo l'ultimo dao) Inoltre resterebbero comunque apertitutti i cursori (uno per ogni titolo) 
+					// fino al finally
+					lLibAnticSqlDao.stop();
+					// Ticket#202603160115 – FINE
 				} // End if pena sospensa
 				else {
 					siesLogger.debug("Pena Sospesa! NON Recupero i provvedimento con LA ");
@@ -3111,7 +3119,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 
 				Vector<RichiestePmInCumuloModel> lListaRichieste = new Vector<RichiestePmInCumuloModel>(
 						lRichPmInCumuloSqlDao.getModels());
-
+				
 				lProvvGeSorvSqlDao = new ProvvedimentoGeSorvCumSqlDAO(lConn);
 				for (int i = 0; i < lListaRichieste.size(); i++) {
 					RichiestePmInCumuloModel lRichiestaModel = lListaRichieste.elementAt(i);
@@ -3145,6 +3153,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 								lRichiestaModel.getIdRichiestePmInCumulo());
 						ProvvedimentoGeSorvCumModel lDecisioneModel = (ProvvedimentoGeSorvCumModel) lProvvGeSorvSqlDao
 								.getModelByKey();
+						
 						if (lDecisioneModel == null && !"A".equals(lRichiestaModel.getFlagAppProvvisoria())) {
 							siesLogger.debug("Richiesta " + lRichiestaModel.getDescrTipoAnnotazione()
 									+ " senza Anticipazione e Decisione assente: la rimuovo");
@@ -3210,19 +3219,21 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 			cleanup(lIstrSqlDao);
 			// MEV_2025-48 - ALTRO - Visualizzazione Pena In Continuazione
 			cleanup(lContCumuloSqlDao);
-			
+
 			cleanup(lConn);
 		}
 
 		return lCalcoloPenaModel;
 	}
 
-	/* MEV_2025-48 - Aggiunta ricerca per chiaveAnno/chiaveProgr e ufficio accorpato: Aggiunto FascicoloSiepModel */
-//	public BigDecimal ExCountFascicoliBySoggettoProprioUfficioPaged(SoggettoModel aSogModel,
-//			String lCodUfficioUtenteConnesso, int aPage) throws F3BException {
+	/*
+	 * MEV_2025-48 - Aggiunta ricerca per chiaveAnno/chiaveProgr e ufficio accorpato: Aggiunto
+	 * FascicoloSiepModel
+	 */
+	// public BigDecimal ExCountFascicoliBySoggettoProprioUfficioPaged(SoggettoModel aSogModel,
+	// String lCodUfficioUtenteConnesso, int aPage) throws F3BException {
 	public BigDecimal ExCountFascicoliBySoggettoProprioUfficioPaged(SoggettoModel aSogModel,
-			FascicoloSiepModel aFascModel,
-			String lCodUfficioUtenteConnesso, int aPage) throws F3BException {
+			FascicoloSiepModel aFascModel, String lCodUfficioUtenteConnesso, int aPage) throws F3BException {
 
 		siesLogger.debug("--XX-- ExCountFascicoliBySoggettoProprioUfficioPaged ...... INIZIO  ");
 		Connection lConn = null;
@@ -3232,11 +3243,15 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 		try {
 			lConn = getDBConnection();
 			lFSoggSqlDao = new FascicoloSiepSoggettoSqlDAO(lConn);
-			/* MEV_2025-48 - Aggiunta ricerca per chiaveAnno/chiaveProgr e ufficio accorpato: Aggiunto FascicoloSiepModel */
-//			lFSoggSqlDao.RicercaFascicoliBySoggettoProprioUfficioPaged(aSogModel, lCodUfficioUtenteConnesso,
-//					aPage);
-			lFSoggSqlDao.RicercaFascicoliBySoggettoProprioUfficioPaged(aSogModel, aFascModel, lCodUfficioUtenteConnesso,
-					aPage);			
+			/*
+			 * MEV_2025-48 - Aggiunta ricerca per chiaveAnno/chiaveProgr e ufficio accorpato: Aggiunto
+			 * FascicoloSiepModel
+			 */
+			// lFSoggSqlDao.RicercaFascicoliBySoggettoProprioUfficioPaged(aSogModel,
+			// lCodUfficioUtenteConnesso,
+			// aPage);
+			lFSoggSqlDao.RicercaFascicoliBySoggettoProprioUfficioPaged(aSogModel, aFascModel,
+					lCodUfficioUtenteConnesso, aPage);
 			lFSoggSqlDao.start();
 			lFSoggSqlDao.next();
 			HowManyRecords = lFSoggSqlDao.getBigDecimal("HowManyRecords");
@@ -3259,14 +3274,17 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 		return HowManyRecords;
 	}
 
-	/* MEV_2025-48 - Aggiunta ricerca per chiaveAnno/chiaveProgr e ufficio accorpato: Aggiunto FascicoloSiepModel */
-//	public Vector<FascicoloSiepModel> ExRicercaFascicoliBySoggettoProprioUfficioPaged(SoggettoModel aSogModel,
-//			String lCodUfficioUtenteConnesso, int aPage, BigDecimal lIdIstruttoria
-//			) throws F3BException {
+	/*
+	 * MEV_2025-48 - Aggiunta ricerca per chiaveAnno/chiaveProgr e ufficio accorpato: Aggiunto
+	 * FascicoloSiepModel
+	 */
+	// public Vector<FascicoloSiepModel> ExRicercaFascicoliBySoggettoProprioUfficioPaged(SoggettoModel
+	// aSogModel,
+	// String lCodUfficioUtenteConnesso, int aPage, BigDecimal lIdIstruttoria
+	// ) throws F3BException {
 	public Vector<FascicoloSiepModel> ExRicercaFascicoliBySoggettoProprioUfficioPaged(SoggettoModel aSogModel,
 			FascicoloSiepModel aFascModel, // Aggiunto parametro
-			String lCodUfficioUtenteConnesso, int aPage, BigDecimal lIdIstruttoria
-			) throws F3BException {
+			String lCodUfficioUtenteConnesso, int aPage, BigDecimal lIdIstruttoria) throws F3BException {
 
 		siesLogger.debug("--XX-- ExRicercaFascicoliBySoggettoProprioUfficioPaged ...... INIZIO  ");
 		Connection lConn = null;
@@ -3282,11 +3300,15 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 
 			lFSoggSqlDao = new FascicoloSiepSoggettoSqlDAO(lConn);
 			lProcSqlDao = new ProcedimentoCumulatoSqlDAO(lConn);
-			/* MEV_2025-48 - Aggiunta ricerca per chiaveAnno/chiaveProgr e ufficio accorpato: Aggiunto FascicoloSiepModel */
-//			lFSoggSqlDao.RicercaFascicoliBySoggettoProprioUfficioPaged(aSogModel, lCodUfficioUtenteConnesso,
-//					aPage);
-			lFSoggSqlDao.RicercaFascicoliBySoggettoProprioUfficioPaged(aSogModel, aFascModel, lCodUfficioUtenteConnesso,
-					aPage);
+			/*
+			 * MEV_2025-48 - Aggiunta ricerca per chiaveAnno/chiaveProgr e ufficio accorpato: Aggiunto
+			 * FascicoloSiepModel
+			 */
+			// lFSoggSqlDao.RicercaFascicoliBySoggettoProprioUfficioPaged(aSogModel,
+			// lCodUfficioUtenteConnesso,
+			// aPage);
+			lFSoggSqlDao.RicercaFascicoliBySoggettoProprioUfficioPaged(aSogModel, aFascModel,
+					lCodUfficioUtenteConnesso, aPage);
 			lFSoggSqlDao.start();
 			while (lFSoggSqlDao.next()) {
 				lFascicolo = (FascicoloSiepModel) lFSoggSqlDao.getModelFascSoggSentMioUfficio();
@@ -3367,8 +3389,8 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 						if (lFascicoloMod != null && lFascicoloMod.getIdFascicoloSiep() != null) {
 							lEsiModel.setCodStatoFascAttuale(lFascicoloMod.getCodStatoFascicolo());
 							lEsiModel.setDescrizione(lFascicoloMod.getDescrStatoFascicolo());
-							
-							/* MEV_2025-48 */ 
+
+							/* MEV_2025-48 */
 							lEsiModel.setChiaveProgrOrig(lFascicoloMod.getChiaveProgrOrig());
 						}
 					}
@@ -3665,7 +3687,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 																									// beneficio
 
 				Vector<RichiestePmInCumuloModel> lListaRichieste = new Vector(lRichPmSqlDao.getModels());
-
+				
 				lRicPmBenSqlDao = new RichPMBeneficioCumSqlDAO(aConn);
 
 				// Scorro le richieste revoca beneficio per vedere se ne esiste una
@@ -3868,6 +3890,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 
 				Vector<RichPMSanSostCumModel> lVecRicRevSSCum = new Vector<RichPMSanSostCumModel>(
 						lRicPmSanSostSqlDao.getModels());
+				
 				// Verifico se punta il beneficio della sospensione
 				for (RichPMSanSostCumModel lRichPMSSMod : lVecRicRevSSCum) {
 					if (lRichPMSSMod.getSanIdSanSostCumulo()
@@ -4009,323 +4032,332 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 	}
 
 	/**
-	 * MEV_2025-48 – 2.14 Caricamento Istruttoria Annullata
-	 * Nuovo metodo che trasferisce i dati dell'istruttoria corrente sul fascicolo indicato
-	 * Se sul fascicolo indicato NON è presente una istruttoria aperta
-	 *    - Apre l'istruttoria
-	 *    - Carica in istruttoria il fascicolo corrente 
-	 *    - Carica in istruttoria anche i dati dell'istruttoria corrente
-	 * Se esiste una istruttoria aperta
-	 *    - Carica in istruttoria il fascicolo corrente (se non presente)
-	 *    - Carica in istruttoria anche i dati dell'istruttoria corrente (anche se aperta)
-	 * Per i fascicoli proprio ufficio dell'istruttoria corrente aggiorna i puntamenti al nuovo 
-	 * fascicolo
-	 * 
+	 * MEV_2025-48 – 2.14 Caricamento Istruttoria Annullata Nuovo metodo che trasferisce i dati
+	 * dell'istruttoria corrente sul fascicolo indicato Se sul fascicolo indicato NON è presente una
+	 * istruttoria aperta - Apre l'istruttoria - Carica in istruttoria il fascicolo corrente - Carica in
+	 * istruttoria anche i dati dell'istruttoria corrente Se esiste una istruttoria aperta - Carica in
+	 * istruttoria il fascicolo corrente (se non presente) - Carica in istruttoria anche i dati
+	 * dell'istruttoria corrente (anche se aperta) Per i fascicoli proprio ufficio dell'istruttoria corrente
+	 * aggiorna i puntamenti al nuovo fascicolo
+	 *
 	 * Al termine del caricamento chiude l'istruttoria corrente (annulla)
-	 * 
+	 *
 	 * Opera solo tra fascicoli dello STESSO ufficio
-	 * 
-	 * @param aIstruttoriaToAdd - Istruttoria targhet se non esiste viene creata
-	 * @param aIstruttoriaCorrente - istruttoria corrente da chiudere
+	 *
+	 * @param aIstruttoriaToAdd
+	 *            - Istruttoria targhet se non esiste viene creata
+	 * @param aIstruttoriaCorrente
+	 *            - istruttoria corrente da chiudere
 	 * @since MEV_2025-48
- 	 * */
-     public IstruttoriaCumuloModel ExTrasferisciIstruttoriaCumulo (IstruttoriaCumuloModel aIstruttoriaToAdd,
-             IstruttoriaCumuloModel aIstruttoriaCorrente) throws F3BException {
+	 */
+	public IstruttoriaCumuloModel ExTrasferisciIstruttoriaCumulo(IstruttoriaCumuloModel aIstruttoriaToAdd,
+			IstruttoriaCumuloModel aIstruttoriaCorrente) throws F3BException {
 
-        Connection lConn = null;
-        IstruttoriaCumuloDAO lIstruttoriaDao = null;
-        IstruttoriaCumuloSqlDAO lIstruttoriaSqlDao = null;
+		Connection lConn = null;
+		IstruttoriaCumuloDAO lIstruttoriaDao = null;
+		IstruttoriaCumuloSqlDAO lIstruttoriaSqlDao = null;
 
-        IstruttoriaCumuloModel lIstMod = null;
+		IstruttoriaCumuloModel lIstMod = null;
 
-        FascicoloSiepSqlDAO lFascSqlDao = null;
-        EventoStoreProcedurePulisciDAO lEventoProcSqlDao = null;
-        
-        DatiFinaliCumuloDAO    lDatiFinaliCumuloDAO = null;
-        DatiFinaliCumuloSqlDAO lDatiFinaliSqlDAO = null;
-        EventoSqlDAO lEveSqlDao = null;
-        
-        AnnotazioneEsitoTrasmissioneDAO lAnnEsiDao = null;
-        AnnotazioneEsitoTrasmissioneSqlDAO lAnnEsiSqlDao = null;
-        
-        try {
-            lConn = getDBConnection();
-            
-            lIstruttoriaSqlDao = new IstruttoriaCumuloSqlDAO(lConn);
-            lIstruttoriaDao = new IstruttoriaCumuloDAO(lConn);
-            
-            siesLogger.debug("Ricerco eventuale istruttoria Aperta sul fascicolo target "+aIstruttoriaToAdd.getFasSieIdFascicoloSiep());
-            IstruttoriaCumuloModel lIstrTarget = null;
-            // Verifico la presenza suil fasciolo di destinazione di una istruttoria aperta
-            
-            lIstruttoriaSqlDao.RicercaIstruttoriaCumuloApertaByIdFasSiep(aIstruttoriaToAdd.getFasSieIdFascicoloSiep());
-            lIstrTarget = (IstruttoriaCumuloModel) lIstruttoriaSqlDao.getModelByKey();
-            
-            
-            if (lIstrTarget==null){
-                siesLogger.debug("Istruttoria Aperta non trovata procedo ad aprirla"); 
-                
-                FascicoloSiepModel lFasc = new FascicoloSiepModel();
-                lFasc.setIdFascicoloSiep(aIstruttoriaToAdd.getFasSieIdFascicoloSiep());
+		FascicoloSiepSqlDAO lFascSqlDao = null;
+		EventoStoreProcedurePulisciDAO lEventoProcSqlDao = null;
 
-                siesLogger.debug("Chiamo ExInserisciIstruttoriaCumulo per il fascicolo target");
-                // crea l'istruttoria e carica il cumulante. Restituisce Istr con solo ID caricato
-                lIstrTarget = this.ExInserisciIstruttoriaCumulo (aIstruttoriaToAdd, lFasc, lConn);
-            }
-            else {
-                siesLogger.debug("Istruttoria Aperta trovata");
-            }
+		DatiFinaliCumuloDAO lDatiFinaliCumuloDAO = null;
+		DatiFinaliCumuloSqlDAO lDatiFinaliSqlDAO = null;
+		EventoSqlDAO lEveSqlDao = null;
 
-            // ========================================================================
-            // Carico il procedimento corrente in istruttoria      
-            // Inserisco il fascicolo corrente ed estraggo i dati analitici
-            // Mi serve
-            // - IdIstruttoria Target
-            // - IdDel fascicolo da iscrivere
-            // ========================================================================
-            IModuloCumulo lCtrlModCum = SIEPLookupRemote.getModuloCumuloRemote();
+		AnnotazioneEsitoTrasmissioneDAO lAnnEsiDao = null;
+		AnnotazioneEsitoTrasmissioneSqlDAO lAnnEsiSqlDao = null;
 
-            DatiOperazioneModel lDatiOpModel = new DatiOperazioneModel();
-            lDatiOpModel.setCodOperatore(aIstruttoriaToAdd.getCodOperatoreInserimento());
-            lDatiOpModel.setCodUfficio(aIstruttoriaToAdd.getCodUfficioInserimento());
-            lDatiOpModel.setData(aIstruttoriaToAdd.getDataInserimento());
-                       
-            siesLogger.debug("Carico il fascicolo corrente in Istruttoria");
-            // n.b. tipo 04 = proprio ufficio necessario in caso di rimozione dall'istruttoria
-            //      per cancellare l'evento di trasmissione
-            lCtrlModCum.ExInserisciTitoloInIstruttoria(lIstrTarget.getIdIstruttoriaCumulo()
-                    , aIstruttoriaCorrente.getFasSieIdFascicoloSiep()
-                    , lDatiOpModel, lConn, null, "04");
-            
-            // Carico i dati dell'istruttoria corrente in quella del fascicolo nuovo
-            siesLogger.debug("Carico i dati dell'istruttoria aperta");
-            lFascSqlDao = new FascicoloSiepSqlDAO(lConn);
-            lFascSqlDao.ricercaFascicoloByKey(aIstruttoriaCorrente.getFasSieIdFascicoloSiep());
-            FascicoloSiepModel lFascicolo = (FascicoloSiepModel) lFascSqlDao.getModelByKey();
-            lCtrlModCum.EstraiDaPrecedenteCumulo(aIstruttoriaCorrente, lIstrTarget.getIdIstruttoriaCumulo()
-                    , lFascicolo, lDatiOpModel, lConn, "04");
-            
-            // Devo registrare l'evento di trasmissione sul fascicolo corrente
-            lFascSqlDao.ricercaFascicoloByKey (aIstruttoriaToAdd.getFasSieIdFascicoloSiep());
-            FascicoloSiepModel lFasCumulanteModel = (FascicoloSiepModel) lFascSqlDao.getModelByKey();;
-            
-            lCtrlModCum.ExInserisciEventoAnnotazioneEsitoTrasm (lFasCumulanteModel
-                    , lIstrTarget.getIdIstruttoriaCumulo()
-                    , aIstruttoriaCorrente.getFasSieIdFascicoloSiep()
-                    , lDatiOpModel, lConn);
-            
+		try {
+			lConn = getDBConnection();
 
-            // Attenzione!! per i fascicoli nell'istruttoria corrente, stesso ufficio, devo aggiornare 
-            // i puntamenti dell'evento di trasmissione per farli risultare in istruttoria sul
-            // nuovo procedimento:
-            // - scorro i titoli dell'istuttoria corrente
-            // - se tipo iscrizione = 04 (e stesso ufficio!) provo a recuperare l'evento 
-            // - aggiorna il record ANNOTAZIONE_ESITO_TRASMISSIONE (anno e numero)
-            //  
-            siesLogger.debug("Aggiorno i record ANNOTAZIONE_ESITO_TRASMISSIONE per i titoli stesso ufficio");
-            Vector<TitoloCumulatoModel> lTitoliInIstrCorrente = null;
-            lTitoliInIstrCorrente = ExRicercaTitoliByIstruttoriaOrderBy (aIstruttoriaCorrente.getIdIstruttoriaCumulo(), null);
-            for (int k=0; k<lTitoliInIstrCorrente.size(); k++) {
-                TitoloCumulatoModel lTit = lTitoliInIstrCorrente.elementAt(k);
-                siesLogger.debug("Titolo "+lTit.getIdTitoloCumulato()+", Tipo iscrizione = "+lTit.getTipoIscrizione());
-                if ("04".equals(lTit.getTipoIscrizione())) {
-                    siesLogger.debug("Titolo "+lTit.getIdTitoloCumulato()+" iscritto da proprio uffiico");
-                    if (lTit.getProcedimentoCumulato()!=null && lTit.getProcedimentoCumulato().getEveIdEvento() != null) {
-                        siesLogger.debug("Aggiorno Anno e Progr sul record ANNOTAZIONE_ESITO_TRASMISSIONE");
-                        lAnnEsiSqlDao = new AnnotazioneEsitoTrasmissioneSqlDAO(lConn);
-                        lAnnEsiDao = new AnnotazioneEsitoTrasmissioneDAO(lConn);
-                        
-                        lAnnEsiSqlDao.ricercaAnnotazioneEsitoTrasmissioneByIdEvento(lTit.getProcedimentoCumulato().getEveIdEvento());
-                        AnnotazioneEsitoTrasmissioneModel lAnnMod = (AnnotazioneEsitoTrasmissioneModel) lAnnEsiSqlDao
-                                .getModelByKey();
-                        
-                        // Aggiorno Anno e Numero (se stesso ufficio)
-                        if ( lFasCumulanteModel.getChiaveUfficio().equals(lAnnMod.getChiaveUfficio())){
-                            lAnnEsiDao.setChiaveAnno(lFasCumulanteModel.getChiaveAnno());
-                            lAnnEsiDao.setChiaveProgr(lFasCumulanteModel.getChiaveProgr());
-                            
-                            lAnnEsiDao.selCondizioneUpdate(lAnnMod.getIdEsitoTrasmissione());
-                            
-                            lAnnEsiDao.update();
-                            lAnnEsiDao.stop();
-                        }
-                    } 
-                }
-            }
-            
-            
-            //
-            // Infine chiudo l'istruttoria Corrente eliminando l'evento se presente
-            //
-            siesLogger.debug("Chiudo l'istruttoria corrente");
-            aIstruttoriaCorrente.setFlagStato     (ICostantiIstruttoriaCumulo.FLAG_STATO_ANNULLATA); // Annullato
-            aIstruttoriaCorrente.setDataChiusura  (DateUtils.getSysDate());
-            aIstruttoriaCorrente.setNote          ("Istruttoria chiusa per trasferimento su Fascicolo "+lFasCumulanteModel.getChiaveAnno()+" / "+lFasCumulanteModel.getChiaveProgr());
-            
-            aIstruttoriaCorrente.setCodOperatoreAggiornamento (aIstruttoriaToAdd.getCodOperatoreInserimento());
-            aIstruttoriaCorrente.setCodUfficioAggiornamento   (aIstruttoriaToAdd.getCodUfficioInserimento());
-            aIstruttoriaCorrente.setDataAggiornamento         (aIstruttoriaToAdd.getDataInserimento());
-            
-            lIstruttoriaDao = new IstruttoriaCumuloDAO(lConn);
-            lIstruttoriaDao.setDAOFromModel(aIstruttoriaCorrente);
-            lIstruttoriaDao.selCondizioneUpdate(aIstruttoriaCorrente.getIdIstruttoriaCumulo());
-            lIstruttoriaDao.update();
-            
-            siesLogger.debug("Elimino eventuale EVENTO non validato collegato all'istruttoria");
-            lDatiFinaliSqlDAO = new DatiFinaliCumuloSqlDAO(lConn);
-            lDatiFinaliSqlDAO.ricercaDatiFinaliCumuloByIdIstruttoria(aIstruttoriaCorrente.getIdIstruttoriaCumulo());
+			lIstruttoriaSqlDao = new IstruttoriaCumuloSqlDAO(lConn);
+			lIstruttoriaDao = new IstruttoriaCumuloDAO(lConn);
 
-            DatiFinaliCumuloModel lDatiFinaliModel = (DatiFinaliCumuloModel) lDatiFinaliSqlDAO.getModelByKey();
+			siesLogger.debug("Ricerco eventuale istruttoria Aperta sul fascicolo target "
+					+ aIstruttoriaToAdd.getFasSieIdFascicoloSiep());
+			IstruttoriaCumuloModel lIstrTarget = null;
+			// Verifico la presenza suil fasciolo di destinazione di una istruttoria aperta
 
-            if (lDatiFinaliModel != null && lDatiFinaliModel.getEveIdEvento() != null) {
-                // pulisco il puntamento dalla DatiFinaliCumulo
-                lDatiFinaliCumuloDAO = new DatiFinaliCumuloDAO(lConn);
-                lDatiFinaliCumuloDAO.selCondizioneUpdate(lDatiFinaliModel.getIdDatiFinaliCumulo());
-                lDatiFinaliCumuloDAO.setEveIdEvento(null);
-                lDatiFinaliCumuloDAO.update();
+			lIstruttoriaSqlDao
+					.RicercaIstruttoriaCumuloApertaByIdFasSiep(aIstruttoriaToAdd.getFasSieIdFascicoloSiep());
+			lIstrTarget = (IstruttoriaCumuloModel) lIstruttoriaSqlDao.getModelByKey();
 
-                // n.b. per sicurezza si testa la presenza effettiva dell'evento non essendo presente la FK
-                lEveSqlDao = new EventoSqlDAO(lConn);
-                lEveSqlDao.ricercaEventoByKey(lDatiFinaliModel.getEveIdEvento());
-                EventoModel lProvvedimento = (EventoModel) lEveSqlDao.getModelByKey();
+			if (lIstrTarget == null) {
+				siesLogger.debug("Istruttoria Aperta non trovata procedo ad aprirla");
 
-                if (lProvvedimento != null) {
-                    // se l'evento esiste lo elimino
-                    lEventoProcSqlDao = new EventoStoreProcedurePulisciDAO(lConn);
-                    lEventoProcSqlDao.setIdEvento(lProvvedimento.getIdEvento());
-                    lEventoProcSqlDao.execute();
-                }
-            }
-            // ========================================================================
-            commit(lConn);
-            
-            lIstMod = new IstruttoriaCumuloModel();
-            lIstruttoriaSqlDao.ricercaIstruttoriaCumuloByKey(lIstrTarget.getIdIstruttoriaCumulo());
-            lIstMod = (IstruttoriaCumuloModel) lIstruttoriaSqlDao.getModelByKey();
-            lIstMod.setMessage("Inserimento avvenuto correttamente!");
-        } catch (DAOException ex) {
-            rollback(lConn);
-            siesLogger.error("DAOException", ex);
-            throw new F3BException(
-                    "IstruttoriaCumuloController.ExInserisciIstruttoriaCumulo: Non posso inserire: " + ex);
-        } finally {
-            cleanup(lIstruttoriaDao);
-            cleanup(lIstruttoriaSqlDao);
-            
-            cleanup(lFascSqlDao);
-            cleanup(lEventoProcSqlDao);
-            cleanup(lDatiFinaliSqlDAO);
-            cleanup(lDatiFinaliCumuloDAO);
-            cleanup(lEveSqlDao);
-            
-            cleanup(lAnnEsiDao);
-            cleanup(lAnnEsiSqlDao);
-            
-            cleanup(lConn);
-        }
+				FascicoloSiepModel lFasc = new FascicoloSiepModel();
+				lFasc.setIdFascicoloSiep(aIstruttoriaToAdd.getFasSieIdFascicoloSiep());
 
-        return lIstMod;
-    }
-	
-    /**
-     * Recupera l'istruttoria collegata all'ultimo provvedimento di cumulo validatao
-     * per il fascciolo in input
-     * 
-     */
-     public IstruttoriaCumuloModel ExRicercaIstruttoriaUltimoCumulo (BigDecimal aIdFascicoloSiep) throws F3BException {
+				siesLogger.debug("Chiamo ExInserisciIstruttoriaCumulo per il fascicolo target");
+				// crea l'istruttoria e carica il cumulante. Restituisce Istr con solo ID caricato
+				lIstrTarget = this.ExInserisciIstruttoriaCumulo(aIstruttoriaToAdd, lFasc, lConn);
+			} else {
+				siesLogger.debug("Istruttoria Aperta trovata");
+			}
 
-        Connection lConn = null;
-        IstruttoriaCumuloSqlDAO lIstruttoriaSqlDao = null;
-        IstruttoriaCumuloModel lUltimaIstruttoria = null;
+			// ========================================================================
+			// Carico il procedimento corrente in istruttoria
+			// Inserisco il fascicolo corrente ed estraggo i dati analitici
+			// Mi serve
+			// - IdIstruttoria Target
+			// - IdDel fascicolo da iscrivere
+			// ========================================================================
+			IModuloCumulo lCtrlModCum = SIEPLookupRemote.getModuloCumuloRemote();
 
-        try {
-            lConn = getDBConnection();
-            
-            lIstruttoriaSqlDao = new IstruttoriaCumuloSqlDAO(lConn);            
-            
-            siesLogger.debug("Ricerca eventuale presenza procedimento di cumulo...");
-            lIstruttoriaSqlDao = new IstruttoriaCumuloSqlDAO(lConn);
-            lIstruttoriaSqlDao.ricercaIstruttoriaCumuloByIdFas(aIdFascicoloSiep);
-            lUltimaIstruttoria = (IstruttoriaCumuloModel) lIstruttoriaSqlDao.getModelByKey();
-            if (lUltimaIstruttoria==null)
-                siesLogger.debug("Nessun cumulo validato collegato al fascicolo indicato.");
+			DatiOperazioneModel lDatiOpModel = new DatiOperazioneModel();
+			lDatiOpModel.setCodOperatore(aIstruttoriaToAdd.getCodOperatoreInserimento());
+			lDatiOpModel.setCodUfficio(aIstruttoriaToAdd.getCodUfficioInserimento());
+			lDatiOpModel.setData(aIstruttoriaToAdd.getDataInserimento());
 
-        } catch (DAOException ex) {
-            siesLogger.error("DAOException", ex);
-            throw new F3BException(
-                    "IstruttoriaCumuloController.ExRicercaIstruttoriaUltimoCumulo: Non posso inserire: " + ex);
-        } finally {
-            cleanup(lIstruttoriaSqlDao);
+			siesLogger.debug("Carico il fascicolo corrente in Istruttoria");
+			// n.b. tipo 04 = proprio ufficio necessario in caso di rimozione dall'istruttoria
+			// per cancellare l'evento di trasmissione
+			lCtrlModCum.ExInserisciTitoloInIstruttoria(lIstrTarget.getIdIstruttoriaCumulo(),
+					aIstruttoriaCorrente.getFasSieIdFascicoloSiep(), lDatiOpModel, lConn, null, "04");
 
-            cleanup(lConn);
-        }
+			// Carico i dati dell'istruttoria corrente in quella del fascicolo nuovo
+			siesLogger.debug("Carico i dati dell'istruttoria aperta");
+			lFascSqlDao = new FascicoloSiepSqlDAO(lConn);
+			lFascSqlDao.ricercaFascicoloByKey(aIstruttoriaCorrente.getFasSieIdFascicoloSiep());
+			FascicoloSiepModel lFascicolo = (FascicoloSiepModel) lFascSqlDao.getModelByKey();
+			lCtrlModCum.EstraiDaPrecedenteCumulo(aIstruttoriaCorrente, lIstrTarget.getIdIstruttoriaCumulo(),
+					lFascicolo, lDatiOpModel, lConn, "04");
 
-        return lUltimaIstruttoria;
-    }  
-     
-     /**
-      * Etrae i dati del Titolo che ASSORBE la pena in contiinuazione rendendola
-      * non computabile.
-      * Metodo aggiunto per visualizzare comunque la pena sulla popup di calcolo 
-      * 
-      * @since  MEV_2025-48 - ALTRO - Visualizzazione Pena In Continuazione 
-      * */
-     public TitoloCumulatoModel getTitoloContinuazioneR(BigDecimal aIdTitolo, Connection aConn) throws F3BException {
+			// Devo registrare l'evento di trasmissione sul fascicolo corrente
+			lFascSqlDao.ricercaFascicoloByKey(aIstruttoriaToAdd.getFasSieIdFascicoloSiep());
+			FascicoloSiepModel lFasCumulanteModel = (FascicoloSiepModel) lFascSqlDao.getModelByKey();
 
+			lCtrlModCum.ExInserisciEventoAnnotazioneEsitoTrasm(lFasCumulanteModel,
+					lIstrTarget.getIdIstruttoriaCumulo(), aIstruttoriaCorrente.getFasSieIdFascicoloSiep(),
+					lDatiOpModel, lConn);
 
-         ContinuazioneCumuloSqlDAO lContinuazioneCumSqlDao = null;
-         TitoloCumulatoSqlDAO lTitoloSqlDao = null;
-         ProcedimentoCumulatoSqlDAO lProcCumSqlDao = null;
-         
-         TitoloCumulatoModel lTitoloModel = null;
-         
-         
-         try {
-             siesLogger.debug("getTitoloContinuazioneR recupero i dati del titolo che assorbe in continuazione la PC del titolo =" + aIdTitolo);
+			// Attenzione!! per i fascicoli nell'istruttoria corrente, stesso ufficio, devo aggiornare
+			// i puntamenti dell'evento di trasmissione per farli risultare in istruttoria sul
+			// nuovo procedimento:
+			// - scorro i titoli dell'istuttoria corrente
+			// - se tipo iscrizione = 04 (e stesso ufficio!) provo a recuperare l'evento
+			// - aggiorna il record ANNOTAZIONE_ESITO_TRASMISSIONE (anno e numero)
+			//
+			siesLogger.debug("Aggiorno i record ANNOTAZIONE_ESITO_TRASMISSIONE per i titoli stesso ufficio");
+			Vector<TitoloCumulatoModel> lTitoliInIstrCorrente = null;
+			lTitoliInIstrCorrente = ExRicercaTitoliByIstruttoriaOrderBy(
+					aIstruttoriaCorrente.getIdIstruttoriaCumulo(), null);
+			for (int k = 0; k < lTitoliInIstrCorrente.size(); k++) {
+				TitoloCumulatoModel lTit = lTitoliInIstrCorrente.elementAt(k);
+				siesLogger.debug("Titolo " + lTit.getIdTitoloCumulato() + ", Tipo iscrizione = "
+						+ lTit.getTipoIscrizione());
+				if ("04".equals(lTit.getTipoIscrizione())) {
+					siesLogger.debug("Titolo " + lTit.getIdTitoloCumulato() + " iscritto da proprio uffiico");
+					if (lTit.getProcedimentoCumulato() != null
+							&& lTit.getProcedimentoCumulato().getEveIdEvento() != null) {
+						siesLogger.debug("Aggiorno Anno e Progr sul record ANNOTAZIONE_ESITO_TRASMISSIONE");
+						lAnnEsiSqlDao = new AnnotazioneEsitoTrasmissioneSqlDAO(lConn);
+						lAnnEsiDao = new AnnotazioneEsitoTrasmissioneDAO(lConn);
 
-             lContinuazioneCumSqlDao = new ContinuazioneCumuloSqlDAO(aConn);
-             lTitoloSqlDao  = new TitoloCumulatoSqlDAO(aConn);
-             lProcCumSqlDao = new ProcedimentoCumulatoSqlDAO(aConn);             
+						lAnnEsiSqlDao.ricercaAnnotazioneEsitoTrasmissioneByIdEvento(
+								lTit.getProcedimentoCumulato().getEveIdEvento());
+						AnnotazioneEsitoTrasmissioneModel lAnnMod = (AnnotazioneEsitoTrasmissioneModel) lAnnEsiSqlDao
+								.getModelByKey();
 
-             lContinuazioneCumSqlDao.ricercaContinuazioneByIdTitoloCont(aIdTitolo);
+						// Aggiorno Anno e Numero (se stesso ufficio)
+						if (lFasCumulanteModel.getChiaveUfficio().equals(lAnnMod.getChiaveUfficio())) {
+							lAnnEsiDao.setChiaveAnno(lFasCumulanteModel.getChiaveAnno());
+							lAnnEsiDao.setChiaveProgr(lFasCumulanteModel.getChiaveProgr());
 
-             lContinuazioneCumSqlDao.start();
+							lAnnEsiDao.selCondizioneUpdate(lAnnMod.getIdEsitoTrasmissione());
 
-             while (lContinuazioneCumSqlDao.next()) {
-                 ContinuazioneCumuloModel lConCumModel = (ContinuazioneCumuloModel) lContinuazioneCumSqlDao
-                         .getModel();
+							lAnnEsiDao.update();
+							lAnnEsiDao.stop();
+						}
+					}
+				}
+			}
 
-                 if ("R".equals(lConCumModel.getCodTipoContinuazione())) {
-                     siesLogger.debug("Trovata continuazione " + lConCumModel.getIdContinuazioneCum() + " di tipo R ");
-                     
-                     //  recupera il titolo
-                     siesLogger.debug("recupera i dati del titolo "+lConCumModel.getTitIdTitoloCumulato()); 
-                     lTitoloSqlDao.ricercaTitoloCumulatoByKey(lConCumModel.getTitIdTitoloCumulato());
-                     lTitoloModel = (TitoloCumulatoModel) lTitoloSqlDao.getModelByKey();
-                     
-                     // recupero se presento il procedimento
-                     siesLogger.debug("recupera i dati del procedimento collegato ");
-                     lProcCumSqlDao.ricercaProcedimentoCumulatoByIdTitolo(lTitoloModel.getIdTitoloCumulato());
-                     ProcedimentoCumulatoModel lProcModel = (ProcedimentoCumulatoModel) lProcCumSqlDao.getModelByKey();
-                     lTitoloModel.setProcedimentoCumulato(lProcModel);
-                     break;
-                 }
-             }
-             lContinuazioneCumSqlDao.stop();
-         } catch (DAOException daoEx) {
-             siesLogger.error("DAOException: ", daoEx);
-             throw new SIEPException(F3BException.USER_MESSAGE,
-                     "IstruttoriaCumuloController.getTitoloContinuazioneR: " + daoEx);
-         } catch (Exception e) {
-             siesLogger.error("Exception: ", e);
-             throw new SIEPException(F3BException.USER_MESSAGE,
-                     "IstruttoriaCumuloController.getTitoloContinuazioneR" + e.getMessage());
-         } finally {
-             cleanup(lContinuazioneCumSqlDao);
-             cleanup(lProcCumSqlDao);
-             cleanup(lTitoloSqlDao);
-         }
+			//
+			// Infine chiudo l'istruttoria Corrente eliminando l'evento se presente
+			//
+			siesLogger.debug("Chiudo l'istruttoria corrente");
+			aIstruttoriaCorrente.setFlagStato(ICostantiIstruttoriaCumulo.FLAG_STATO_ANNULLATA); // Annullato
+			aIstruttoriaCorrente.setDataChiusura(DateUtils.getSysDate());
+			aIstruttoriaCorrente.setNote("Istruttoria chiusa per trasferimento su Fascicolo "
+					+ lFasCumulanteModel.getChiaveAnno() + " / " + lFasCumulanteModel.getChiaveProgr());
 
-         return lTitoloModel;
-     }
+			aIstruttoriaCorrente.setCodOperatoreAggiornamento(aIstruttoriaToAdd.getCodOperatoreInserimento());
+			aIstruttoriaCorrente.setCodUfficioAggiornamento(aIstruttoriaToAdd.getCodUfficioInserimento());
+			aIstruttoriaCorrente.setDataAggiornamento(aIstruttoriaToAdd.getDataInserimento());
+
+			lIstruttoriaDao = new IstruttoriaCumuloDAO(lConn);
+			lIstruttoriaDao.setDAOFromModel(aIstruttoriaCorrente);
+			lIstruttoriaDao.selCondizioneUpdate(aIstruttoriaCorrente.getIdIstruttoriaCumulo());
+			lIstruttoriaDao.update();
+
+			siesLogger.debug("Elimino eventuale EVENTO non validato collegato all'istruttoria");
+			lDatiFinaliSqlDAO = new DatiFinaliCumuloSqlDAO(lConn);
+			lDatiFinaliSqlDAO
+					.ricercaDatiFinaliCumuloByIdIstruttoria(aIstruttoriaCorrente.getIdIstruttoriaCumulo());
+
+			DatiFinaliCumuloModel lDatiFinaliModel = (DatiFinaliCumuloModel) lDatiFinaliSqlDAO
+					.getModelByKey();
+
+			if (lDatiFinaliModel != null && lDatiFinaliModel.getEveIdEvento() != null) {
+				// pulisco il puntamento dalla DatiFinaliCumulo
+				lDatiFinaliCumuloDAO = new DatiFinaliCumuloDAO(lConn);
+				lDatiFinaliCumuloDAO.selCondizioneUpdate(lDatiFinaliModel.getIdDatiFinaliCumulo());
+				lDatiFinaliCumuloDAO.setEveIdEvento(null);
+				lDatiFinaliCumuloDAO.update();
+
+				// n.b. per sicurezza si testa la presenza effettiva dell'evento non essendo presente la FK
+				lEveSqlDao = new EventoSqlDAO(lConn);
+				lEveSqlDao.ricercaEventoByKey(lDatiFinaliModel.getEveIdEvento());
+				EventoModel lProvvedimento = (EventoModel) lEveSqlDao.getModelByKey();
+
+				if (lProvvedimento != null) {
+					// se l'evento esiste lo elimino
+					lEventoProcSqlDao = new EventoStoreProcedurePulisciDAO(lConn);
+					lEventoProcSqlDao.setIdEvento(lProvvedimento.getIdEvento());
+					lEventoProcSqlDao.execute();
+				}
+			}
+			// ========================================================================
+			commit(lConn);
+
+			lIstMod = new IstruttoriaCumuloModel();
+			lIstruttoriaSqlDao.ricercaIstruttoriaCumuloByKey(lIstrTarget.getIdIstruttoriaCumulo());
+			lIstMod = (IstruttoriaCumuloModel) lIstruttoriaSqlDao.getModelByKey();
+			lIstMod.setMessage("Inserimento avvenuto correttamente!");
+		} catch (DAOException ex) {
+			rollback(lConn);
+			siesLogger.error("DAOException", ex);
+			throw new F3BException(
+					"IstruttoriaCumuloController.ExInserisciIstruttoriaCumulo: Non posso inserire: " + ex);
+		} finally {
+			cleanup(lIstruttoriaDao);
+			cleanup(lIstruttoriaSqlDao);
+
+			cleanup(lFascSqlDao);
+			cleanup(lEventoProcSqlDao);
+			cleanup(lDatiFinaliSqlDAO);
+			cleanup(lDatiFinaliCumuloDAO);
+			cleanup(lEveSqlDao);
+
+			cleanup(lAnnEsiDao);
+			cleanup(lAnnEsiSqlDao);
+
+			cleanup(lConn);
+		}
+
+		return lIstMod;
+	}
+
+	/**
+	 * Recupera l'istruttoria collegata all'ultimo provvedimento di cumulo validatao per il fascciolo in input
+	 *
+	 */
+	public IstruttoriaCumuloModel ExRicercaIstruttoriaUltimoCumulo(BigDecimal aIdFascicoloSiep)
+			throws F3BException {
+
+		Connection lConn = null;
+		IstruttoriaCumuloSqlDAO lIstruttoriaSqlDao = null;
+		IstruttoriaCumuloModel lUltimaIstruttoria = null;
+
+		try {
+			lConn = getDBConnection();
+
+			lIstruttoriaSqlDao = new IstruttoriaCumuloSqlDAO(lConn);
+
+			siesLogger.debug("Ricerca eventuale presenza procedimento di cumulo...");
+			lIstruttoriaSqlDao = new IstruttoriaCumuloSqlDAO(lConn);
+			lIstruttoriaSqlDao.ricercaIstruttoriaCumuloByIdFas(aIdFascicoloSiep);
+			lUltimaIstruttoria = (IstruttoriaCumuloModel) lIstruttoriaSqlDao.getModelByKey();
+			if (lUltimaIstruttoria == null)
+				siesLogger.debug("Nessun cumulo validato collegato al fascicolo indicato.");
+
+		} catch (DAOException ex) {
+			siesLogger.error("DAOException", ex);
+			throw new F3BException(
+					"IstruttoriaCumuloController.ExRicercaIstruttoriaUltimoCumulo: Non posso inserire: "
+							+ ex);
+		} finally {
+			cleanup(lIstruttoriaSqlDao);
+
+			cleanup(lConn);
+		}
+
+		return lUltimaIstruttoria;
+	}
+
+	/**
+	 * Etrae i dati del Titolo che ASSORBE la pena in contiinuazione rendendola non computabile. Metodo
+	 * aggiunto per visualizzare comunque la pena sulla popup di calcolo
+	 *
+	 * @since MEV_2025-48 - ALTRO - Visualizzazione Pena In Continuazione
+	 */
+	public TitoloCumulatoModel getTitoloContinuazioneR(BigDecimal aIdTitolo, Connection aConn)
+			throws F3BException {
+
+		ContinuazioneCumuloSqlDAO lContinuazioneCumSqlDao = null;
+		TitoloCumulatoSqlDAO lTitoloSqlDao = null;
+		ProcedimentoCumulatoSqlDAO lProcCumSqlDao = null;
+
+		TitoloCumulatoModel lTitoloModel = null;
+
+		try {
+			siesLogger.debug(
+					"getTitoloContinuazioneR recupero i dati del titolo che assorbe in continuazione la PC del titolo ="
+							+ aIdTitolo);
+
+			lContinuazioneCumSqlDao = new ContinuazioneCumuloSqlDAO(aConn);
+			lTitoloSqlDao = new TitoloCumulatoSqlDAO(aConn);
+			lProcCumSqlDao = new ProcedimentoCumulatoSqlDAO(aConn);
+
+			lContinuazioneCumSqlDao.ricercaContinuazioneByIdTitoloCont(aIdTitolo);
+			// Ticket#202603160115 - si usa la getModels per chiudere subito il cursore
+			Vector<ContinuazioneCumuloModel> listaCont = new Vector(lContinuazioneCumSqlDao.getModels());
+			
+//			lContinuazioneCumSqlDao.start();			
+//			while (lContinuazioneCumSqlDao.next()) {
+//				ContinuazioneCumuloModel lConCumModel = (ContinuazioneCumuloModel) lContinuazioneCumSqlDao
+//						.getModel();
+			for (int i = 0; i< listaCont.size(); i++) {	
+				ContinuazioneCumuloModel lConCumModel = listaCont.elementAt(i);
+				// Ticket#202603160115 -
+				if ("R".equals(lConCumModel.getCodTipoContinuazione())) {
+					siesLogger.debug(
+							"Trovata continuazione " + lConCumModel.getIdContinuazioneCum() + " di tipo R ");
+
+					// recupera il titolo
+					siesLogger.debug("recupera i dati del titolo " + lConCumModel.getTitIdTitoloCumulato());
+					lTitoloSqlDao.ricercaTitoloCumulatoByKey(lConCumModel.getTitIdTitoloCumulato());
+					lTitoloModel = (TitoloCumulatoModel) lTitoloSqlDao.getModelByKey();
+
+					// recupero se presento il procedimento
+					siesLogger.debug("recupera i dati del procedimento collegato ");
+					lProcCumSqlDao.ricercaProcedimentoCumulatoByIdTitolo(lTitoloModel.getIdTitoloCumulato());
+					ProcedimentoCumulatoModel lProcModel = (ProcedimentoCumulatoModel) lProcCumSqlDao
+							.getModelByKey();
+					lTitoloModel.setProcedimentoCumulato(lProcModel);
+					break;
+				}
+			}
+			// Ticket#202603160115
+			// lContinuazioneCumSqlDao.stop();
+		} catch (DAOException daoEx) {
+			siesLogger.error("DAOException: ", daoEx);
+			throw new SIEPException(F3BException.USER_MESSAGE,
+					"IstruttoriaCumuloController.getTitoloContinuazioneR: " + daoEx);
+		} catch (Exception e) {
+			siesLogger.error("Exception: ", e);
+			throw new SIEPException(F3BException.USER_MESSAGE,
+					"IstruttoriaCumuloController.getTitoloContinuazioneR" + e.getMessage());
+		} finally {
+			cleanup(lContinuazioneCumSqlDao);
+			cleanup(lProcCumSqlDao);
+			cleanup(lTitoloSqlDao);
+		}
+
+		return lTitoloModel;
+	}
+
 } // Chiude Controller

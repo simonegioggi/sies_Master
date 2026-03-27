@@ -16,6 +16,7 @@ import f3b.util.StringUtils;
 
 import siap.sico.calendar.model.CalendarModel;
 import siap.sico.decodifiche.util.DecodificheUtils;
+import siap.sico.util.CalendarUtil;
 import siap.siep.istitutodetenzione.model.IstitutoDetenzioneModel;
 import siap.siep.modulocumulo.action.ICostantiMisuraCautelareCumulo;
 import siap.siep.modulocumulo.util.StatoEsecuzioneCumuloUtils;
@@ -1799,6 +1800,33 @@ public class ComputiCumuloModel extends GenericModel {
 		return lTipoEspiazione;
 	}
 
+	/**
+	 * Funzione che normalizza i quantum es 3mesi e 30 gg = 4 mesi
+	 * 2026.03
+	 */
+	public void normalizzaQuantum () 
+    { 
+        CalendarUtil lCalUtils = new CalendarUtil();
+        
+        // Normalizzo la reclusione
+        CalendarModel lCalReclusione = this.getReclusioneMultaAsCalendar();
+        if (lCalReclusione!=null) {
+            lCalReclusione = lCalUtils.ricalcolaGAM(lCalReclusione);
+            mNumAnniReclusione   = new BigDecimal (lCalReclusione.getNumAnni());
+            mNumMesiReclusione   = new BigDecimal (lCalReclusione.getNumMesi());
+            mNumGiorniReclusione = new BigDecimal (lCalReclusione.getNumGiorni());
+        }
+        
+        // Normalizzo gli arresti
+        CalendarModel lCalArresti = this.getArrestoAmmendaAsCalendar();
+        if (lCalArresti!=null) {
+            lCalArresti = lCalUtils.ricalcolaGAM(lCalArresti);
+            mNumAnniArresto   = new BigDecimal (lCalArresti.getNumAnni());
+            mNumMesiArresto   = new BigDecimal (lCalArresti.getNumMesi());
+            mNumGiorniArresto = new BigDecimal (lCalArresti.getNumGiorni());
+        }	 
+	}
+	
 	public String toString() {
 		String lStr = new String();
 

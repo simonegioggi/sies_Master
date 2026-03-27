@@ -1,3 +1,7 @@
-BRANCH SIESESECUZIONE VERSIONE MEV_2025-48
+BRANCH DEVELOP di SIESESECUZIONE
 
-Nasce dal branch 12.8.3.0 in data 27/10/2025
+Allineato al:
+
+Branch siesEsecuzione Versione release_12.9.2.0
+
+Questa release è stata rilasciata il 27/03/2026

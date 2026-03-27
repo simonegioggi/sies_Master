@@ -331,7 +331,7 @@ if (!"A".equals(IstruttoriaCumulo.getFlagStato()))
    	 	{
  	      	var msgConfirm = "Attenzione! In Istruttoria Cumulo sono presenti più Procedimenti\n con i seguenti estremi del Titolo Esecutivo:";
 <%			for(int i=0; i<titoliDoppi.size(); i++)  {	 %> 
-				msgConfirm+='\n'+'<%=titoliDoppi.get(i).toString()%>';
+				msgConfirm+="\n<%=titoliDoppi.get(i).toString()%>";
 <%			} %>
 
 			msgConfirm+=".\n\n Si vuole procedere ?";
