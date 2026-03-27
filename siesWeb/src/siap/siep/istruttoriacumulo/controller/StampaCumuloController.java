@@ -545,6 +545,9 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 									}
 
 								}
+								// Ticket#202603160115 - stop() per chiudere subito il cursore
+								lSSCumSqlDao.stop();
+								// Ticket#202603160115 - FINE
 
 								lTreeDatiPrincCum = new TreeModel(lDatiPrincMod);
 								// ==== MEV_70 - Fine Aggiunta SanzioneSostitutiva <<<<<<<<<<<<<<<<<<<<<<
@@ -601,7 +604,10 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 										}
 
 									} // Chiude Ciclo Benefici
-
+									// Ticket#202603160115 - stop() per chiudere subito il cursore
+									lBenSqlDao.stop();
+									// Ticket#202603160115 - FINE
+									
 									// =========================================================================================
 									// REVOCA BENEFICIO Concesso con Ordinanza (dati su StatoEsecTitoloCum e
 									// ComputiCumulo)
@@ -624,7 +630,9 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 										lCompCumSqlDao.start();
 										if (lCompCumSqlDao.next()) {
 											lCompMod = (ComputiCumuloModel) lCompCumSqlDao.getModel();
-
+											// normalizzazione dei quantum
+											lCompMod.normalizzaQuantum();
+											// 
 											lCompMod.calcolaStringaAmmenda();
 											lCompMod.calcolaStringaReclusione();
 
@@ -711,9 +719,13 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 											}
 
 										} // Chiude Computi
-
+										// Ticket#202603160115 - stop() per chiudere subito il cursore
+										lCompCumSqlDao.stop();
+										// Ticket#202603160115 - FINE
 									} // Chiude Ciclo su StatoEsecuzione
-
+									// Ticket#202603160115 - stop() per chiudere subito il cursore
+									lStatoEsecTitoCumSqlDAO.stop();
+									// Ticket#202603160115 - FINE
 								} // Chiude if CodAnnotazione = 021
 
 								// Libeazioni Anticipate (Eventuale Richiesta alla SORV. di Revoca LIBERAZIONE
@@ -787,18 +799,25 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 													lTreeDatiPrincStatoEsecCum.add(lTreeDatePeriodiLAMod);
 
 												}
-
+												// Ticket#202603160115 - stop() per chiudere subito il cursore
+												lPeriodoSqlDao.stop();
+												// Ticket#202603160115 - FINE
 												// ======= Fine DAL AL
 												// ===========================================
 
 											}
-
+											// Ticket#202603160115 - stop() per chiudere subito il cursore
+											lLibAntCumSqlDao.stop();
+											// Ticket#202603160115 - FINE
 											lStatoEseMod.setStringaPeriodoLA(lStringaPeriodo);
 										}
 										// ====
 										// lTreeDatiPrincCum.add(new TreeModel(lStatoEseMod));
 										lTreeDatiPrincCum.add(lTreeDatiPrincStatoEsecCum);
 									}
+									// Ticket#202603160115 - stop() per chiudere subito il cursore
+									lRichPmStEsecSqlDao.stop();
+									// Ticket#202603160115 - FINE
 
 								} // CHIUDE if (lRichPMCumMod.getCodTipoAnnotazione().equals("020")) "Revoca
 									// Libeazioni Anticipate"
@@ -830,7 +849,9 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 										lCompCumSqlDao.start();
 										if (lCompCumSqlDao.next()) {
 											lCompMod = (ComputiCumuloModel) lCompCumSqlDao.getModel();
-
+											// Normalizzazione dei quantum
+											lCompMod.normalizzaQuantum();
+											// 
 											lCompMod.calcolaStringaAmmenda();
 											lCompMod.calcolaStringaReclusione();
 
@@ -1005,7 +1026,9 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 							}
 
 						} // chiude while (lRichPMTitSqlDao.next()) { Elenco Titoli Cimilati della Ricjìhiesta
-
+						// Ticket#202603160115 - stop() per chiudere subito il cursore
+						lRichPMTitSqlDao.stop();
+						// Ticket#202603160115 - FINE
 						lTreeIstruMod.add(lTreeRichiestaPMMod);
 
 					} // Chiude while (lItxR.hasNext())
@@ -4585,6 +4608,9 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 							Iterator lItxCmp = lVecCompCum.iterator();
 							while (lItxCmp.hasNext()) {
 								lCompMod = (ComputiCumuloModel) lItxCmp.next();
+								// Normalizzazione dei quantum
+								lCompMod.normalizzaQuantum();
+								// 
 								if (lCompMod != null && lCompMod.getIdComputiCumulo() != null) {
 									if (!lCompMod.isQuantumReclusioneZero())
 										lCompMod.calcolaStringaReclusione();
@@ -4740,13 +4766,17 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 									}
 
 								}
-
+								// Ticket#202603160115 - stop() per chiudere subito il cursore
+								lPeriCumSqlDao.stop();
+								// Ticket#202603160115 - FINE
 								lTreeStatoEsecCum.add(lTreeLibAntCumMod);
 
 								// ======= Fine DAL AL ===========================================
 
 							} // Chiude while (lLibAntCumSqlDao.next())
-
+							// Ticket#202603160115 - stop() per chiudere subito il cursore
+							lLibAntCumSqlDao.stop();
+							// Ticket#202603160115 - FINE
 						}
 
 						lTreeTitoloMod.add(lTreeStatoEsecCum);
