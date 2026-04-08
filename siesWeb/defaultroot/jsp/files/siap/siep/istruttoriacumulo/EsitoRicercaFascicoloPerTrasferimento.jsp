@@ -206,18 +206,16 @@ while (itxTitoliInIstruttoriaCorrente.hasNext()) {
     } // End while
 } // chiusura blocco per evitare duplicazone variabili
 %>        
-  </table>
-  
-  <form action="<%=IWebConstants.PG_MAIN%>" method="post" name="TrasferisciIstruttoria">
-    <input type="hidden" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.istruttoriacumulo.action.ActTrasferisciIstruttoria">
-    <input type="hidden" name="<%=ICostantiIstruttoriaCumulo.CAMPO_ID_ISTRUTTORIA_CUMULO%>" value="<%=IstruttoriaCumulo.getIdIstruttoriaCumulo()%>">
-  
-    <input type="hidden" name="<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>" value="<%=fascicoloTrovato.getIdFascicoloSiep()%>">
-    
-    <%-- Eventuale Istruttori del nuovo fascicolo --%>
-    <input type="hidden" name="<%=ICostantiIstruttoriaCumulo.CAMPO_ID_ISTRUTTORIA_CUMULO%>_target" value="">
+</table>
 
-    <table cellpadding="2" cellspacing="2"  width="85%" align="center">
+<form action="<%=IWebConstants.PG_MAIN%>" method="post" name="TrasferisciIstruttoria">
+<input type="hidden" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.istruttoriacumulo.action.ActTrasferisciIstruttoria">
+<input type="hidden" name="<%=ICostantiIstruttoriaCumulo.CAMPO_ID_ISTRUTTORIA_CUMULO%>" value="<%=IstruttoriaCumulo.getIdIstruttoriaCumulo()%>">
+<input type="hidden" name="<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>" value="<%=fascicoloTrovato.getIdFascicoloSiep()%>">
+<%-- Eventuale Istruttori del nuovo fascicolo --%>
+<input type="hidden" name="<%=ICostantiIstruttoriaCumulo.CAMPO_ID_ISTRUTTORIA_CUMULO%>_target" value="">
+
+<table cellpadding="2" cellspacing="2"  width="85%" align="center">
         <tr><td width="90%" class="Titolo">Esito Ricerca Procedimento su cui trasferire l'istruttoria</td></tr>
         <tr>
             <td>
@@ -270,7 +268,7 @@ while (itxTitoliInIstruttoriaCorrente.hasNext()) {
 				    </tr>
 				    <tr>
 				      <td class="L" width=100% colspan=4>
-				        <font class="label">Data Irrevocabilit√†:</font>
+				        <font class="label">Data Irrevocabilit‡:</font>
 				        <font class="campo"><%=DateUtils.getDateToString(fascicoloTrovato.getDataIrrevocabilita(), "dd-MM-yyyy") %></font>
 				      </td>
 				    </tr>				    
@@ -434,7 +432,7 @@ while (itxTitoliInIstruttoriaCorrente.hasNext()) {
 							        isTitoloManuale = true;
 							    }
     
-							    // Autorit√† emittente
+							    // Autorit‡ emittente
 							    String AutEmi = lTitoloModel.getDescrTipoAutoritaEmittente() + " di " + lTitoloModel.getDescrLuogoEmittente();
 							    if (lTitoloModel.getNumSezioneAutoritaEmittente() != null)
 							        AutEmi += " - sez. "+lTitoloModel.getNumSezioneAutoritaEmittente();
