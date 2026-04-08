@@ -2792,8 +2792,12 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 					// INIZIO: Ticket#202012020116 - Carico la data Inizio e fine misura con i dati
 					// della data inizio e fine reclusione in quanto le form di inserimento/modifica/dettaglio
 					// utilizzano tali campi
-					lComputiModel.setDataInizioMisura(lComputiModel.getDataReclusioneDa());
-					lComputiModel.setDataFineMisura(lComputiModel.getDataReclusioneA());
+					// 2026.04.01 su segnalazione di MT nel caso del differimento i dati sono invece caricati correttamente
+					//            e non vanno recuperati da DataReclusione
+					if (!StatoEsecuzioneCumuloUtils.isDifferimento(lEvento)) {
+						lComputiModel.setDataInizioMisura(lComputiModel.getDataReclusioneDa());
+						lComputiModel.setDataFineMisura(lComputiModel.getDataReclusioneA());
+					} // 2026.04.01 - FINE IF
 					// FINE Ticket#202012020116
 
 					lComputiModel.setNumAnniReclusione(lSospModel.getNumAnniPenaEspiata());
