@@ -2,7 +2,7 @@ BRANCH SIES VERSIONE 12.9.3.0
 
 Nasce dal branch 12.9.2.0 in data 27/03/2026
 
-Questa Release verrà rilasciata il 24/04/2026 (Patch mese di Aprile 2026)
+Questa Release verrà rilasciata il 29/05/2026 (Patch mesi di Aprile e Maggio 2026)
 
 Comprende i seguenti Ticket MAC:
 
