@@ -2075,6 +2075,12 @@ public class CalcoloPenaCumuloModel extends GenericModel {
 	    
 	    for (MisuraCautelareCumuloModel lMCCumuloModel:lListaMisureCautelari) {
 	        
+	    	// Ticket#202604140156 - Se il periodo è in corso di espiazione ha data fine a nulle e 
+	    	// lo salto. Non concorre ai calcoli
+	    	if (lMCCumuloModel.getDataFine()==null)
+	    		continue;
+	    	// Ticket#202604140156 - FINE
+	    	
 	        String lTotGGMessaAllaProva = "";
 	        if ("CL".equals(lMCCumuloModel.getCodTipoMisura())) {
 	          lTotGGMessaAllaProva = " (totale giorni "+StringUtils.toStringJSP(lMCCumuloModel.getGiorni(),"&nbsp;")+")";
@@ -2164,7 +2170,8 @@ public class CalcoloPenaCumuloModel extends GenericModel {
         // Periodi di Espiato
         // =======================================================
 	    Vector <StatoEsecTitoloCumulatoModel> lListaProvvEspiato = this.getProvvEspiato();
-	    for (StatoEsecTitoloCumulatoModel lProvvedimento: lListaProvvEspiato) {	        String lDescrProvv = "";
+	    for (StatoEsecTitoloCumulatoModel lProvvedimento: lListaProvvEspiato) {	        
+	    	String lDescrProvv = "";
 	        // lDescrProvv += " "+lProvvedimento.getDescrMotivo()
 	        lDescrProvv += "Provvedimento"
 	                   +" del "+StringUtils.toStringJSP (DateUtils.getDateToString(lProvvedimento.getDataEmissione(),"dd-MM-yyyy"));
@@ -2242,6 +2249,8 @@ public class CalcoloPenaCumuloModel extends GenericModel {
 	            Date lDataInizio = lPcfModel.getCalendar().getDataInizio();
 	            if (   DateUtils.isEquals(lDataInizio, lLastPcfModel.getCalendar().getDataFine())
 	                || DateUtils.isEquals(lDataInizio, DateUtils.getDayAfter(lLastPcfModel.getCalendar().getDataFine()))
+	                // TEST 2026.04.16
+	                || DateUtils.isLower(lDataInizio, lLastPcfModel.getCalendar().getDataFine())
 	               )
 	            {
 	                siesLogger.debug("Periodo in continuazione: data FinePrec = "+DateUtils.getDateToString(lLastPcfModel.getCalendar().getDataFine(),"dd/MM/yyyy")
@@ -2257,10 +2266,12 @@ public class CalcoloPenaCumuloModel extends GenericModel {
 	                    siesLogger.debug("Istanzio lLastContinuazioneModel...");
 	                    lLastContinuazioneModel = new PeriodiCarcerazioneSoffertiModel();
 	                    lLastContinuazioneModel.setIsContinuativo(true);
-	                    lLastContinuazioneModel.setDescrizione("Periodo continuativo");
+	                    lLastContinuazioneModel.setDescrizione("Periodi continuativi");
 	                    lLastContinuazioneModel.setDataInizio(lLastPcfModel.getDataInizio()); // x ordinamento
+	                    
 	                    CalendarModel lCal = new CalendarModel();
-	                    lCal.setDataInizio(lLastPcfModel.getDataInizio());	                    
+	                    lCal.setDataInizio(lLastPcfModel.getDataInizio());	
+	                    lCal.setDataFine  (lLastPcfModel.getCalendar().getDataFine());
 	                    lLastContinuazioneModel.setCalendar(lCal);
 	                    
 	                    // Aggiungo il precedente al vettore dei periodi in continuazione
@@ -2269,9 +2280,19 @@ public class CalcoloPenaCumuloModel extends GenericModel {
 	                    //Aggiungo il model al vettore dei periodi in continuazione
 	                    lListaPeriodiInContinuazione.add(lLastContinuazioneModel);
 	                }
+
+	                if ( DateUtils.isLower(lDataInizio, lLastPcfModel.getCalendar().getDataFine()))
+	                	lLastContinuazioneModel.setDescrizione("Periodi continuativi sovrapposti");
 	                
 	                // Aggiorno la data fine
-	                lLastContinuazioneModel.getCalendar().setDataFine(lPcfModel.getCalendar().getDataFine());
+	                // 17.04.2026  TEST solo se la Data fine del periodo corrente è >
+	                // data fine del continuativo aggiorno la data del continuativo
+	                // altrimenti il periodo corrent è interamente contenuto nel continuativo
+	                if (lLastContinuazioneModel.getCalendar().getDataFine()==null)
+	                	lLastContinuazioneModel.getCalendar().setDataFine(lPcfModel.getCalendar().getDataFine());
+	                else if ( DateUtils.isGreater(lPcfModel.getCalendar().getDataFine(),  lLastContinuazioneModel.getCalendar().getDataFine()))
+	                	lLastContinuazioneModel.getCalendar().setDataFine(lPcfModel.getCalendar().getDataFine());
+	                
 	                // Ricalcolo i quantum
 	                lLastContinuazioneModel.ricalcolaQuantum();
 	                // Marco il perido corrente come in continuazione
