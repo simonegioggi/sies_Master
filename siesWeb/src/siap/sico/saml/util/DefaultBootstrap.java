@@ -12,7 +12,7 @@ import org.opensaml.xml.security.DefaultSecurityConfigurationBootstrap;
 
 import siap.sico.webservice.config.NscProperties;
 
-import com.sun.org.apache.xml.internal.security.Init;
+import org.apache.xml.security.Init;
 
 import f3b.log.LogF3B;
 import f3b.util.F3BException;

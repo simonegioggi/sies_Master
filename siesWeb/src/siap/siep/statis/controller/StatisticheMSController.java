@@ -7,6 +7,10 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
@@ -14,7 +18,7 @@ import org.apache.poi.hssf.usermodel.HSSFPalette;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.CellReference;
+import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.util.CellRangeAddress;
 
@@ -96,12 +100,12 @@ public class StatisticheMSController extends GenericController {
 			HSSFCellStyle csBold = getBordo4Lati(wb);
 			// Create a new font and alter it.
 			HSSFFont font = wb.createFont();
-			font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+			font.setBold(true);
 			csBold.setFont(font);
 
 			HSSFCellStyle csBoldCenter = getBordo4Lati(wb);
 			csBoldCenter.setFont(font);
-			csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+			csBoldCenter.setAlignment(HorizontalAlignment.CENTER);
 
 			// primo foglio; RIEPILOGO_ISCRIZIONI
 			HSSFSheet sheet = wb.createSheet("Riepilogo Iscrizioni");
@@ -188,10 +192,10 @@ public class StatisticheMSController extends GenericController {
 	private HSSFCellStyle getBordo4Lati(HSSFWorkbook wb) {
 
 		HSSFCellStyle cs = wb.createCellStyle();
-		cs.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		cs.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		cs.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		cs.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		cs.setBorderBottom(BorderStyle.THIN);
+		cs.setBorderTop(BorderStyle.THIN);
+		cs.setBorderRight(BorderStyle.THIN);
+		cs.setBorderLeft(BorderStyle.THIN);
 
 		return cs;
 	}
@@ -345,12 +349,12 @@ public class StatisticheMSController extends GenericController {
 			HSSFCellStyle csBold = getBordo4Lati(wb);
 			// Create a new font and alter it.
 			HSSFFont font = wb.createFont();
-			font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+			font.setBold(true);
 			csBold.setFont(font);
 
 			HSSFCellStyle csBoldCenter = getBordo4Lati(wb);
 			csBoldCenter.setFont(font);
-			csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+			csBoldCenter.setAlignment(HorizontalAlignment.CENTER);
 
 			// primo foglio; RIEPILOGO_ISCRIZIONI
 			HSSFSheet sheet = wb.createSheet("Tipologia MS");
@@ -523,38 +527,38 @@ public class StatisticheMSController extends GenericController {
 			HSSFCellStyle csBold = wb.createCellStyle();
 			// Create a new font and alter it
 			HSSFFont fontBold = wb.createFont();
-			fontBold.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+			fontBold.setBold(true);
 			csBold.setFont(fontBold);
 
 			// Stile della cella con bordi ed allineamento a destra
 			HSSFCellStyle csC = getBordo4Lati(wb);
-			csC.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+			csC.setAlignment(HorizontalAlignment.CENTER);
 
 			// stile per celle col bordo con carattere grassetto
 			// ALLINEATO AL CENTRO
 			HSSFCellStyle csBoldCenter = getBordo4Lati(wb);
 			csBoldCenter.setFont(fontBold);
-			csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+			csBoldCenter.setAlignment(HorizontalAlignment.CENTER);
 
 			// Stile Titolo 1
 			HSSFCellStyle csTitolo1 = getBordo4Lati(wb);
 
-			csTitolo1.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-			csTitolo1.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-			csTitolo1.setFillForegroundColor(HSSFColor.GREEN.index);
+			csTitolo1.setAlignment(HorizontalAlignment.CENTER);
+			csTitolo1.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+			csTitolo1.setFillForegroundColor(HSSFColor.HSSFColorPredefined.GREEN.getIndex());
 			csTitolo1.setFont(fontBold);
 
 			// Stile Titolo 2
 			HSSFCellStyle csTitolo2 = getBordo4Lati(wb);
 
-			csTitolo2.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-			csTitolo2.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-			csTitolo2.setFillForegroundColor(HSSFColor.YELLOW.index);
+			csTitolo2.setAlignment(HorizontalAlignment.CENTER);
+			csTitolo2.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+			csTitolo2.setFillForegroundColor(HSSFColor.HSSFColorPredefined.YELLOW.getIndex());
 			csTitolo2.setFont(fontBold);
 
 			// Utilizzo colore non standard (204,255,204)
 			HSSFPalette palette = wb.getCustomPalette();
-			palette.setColorAtIndex(HSSFColor.GREEN.index, (byte) 204, (byte) 255, (byte) 204);
+			palette.setColorAtIndex(HSSFColor.HSSFColorPredefined.GREEN.getIndex(), (byte) 204, (byte) 255, (byte) 204);
 
 			HSSFSheet sheet = wb.createSheet("Dettagli");
 			sheet.setDefaultColumnWidth(12);
@@ -615,7 +619,7 @@ public class StatisticheMSController extends GenericController {
 																							// (se arriva un
 																							// numero negativo
 																							// indicano che la
-																							// misura è
+																							// misura ï¿½
 																							// provvisoria)
 					// 24/11/2019 (INTERVENTO POST COLLAUDO 11.3) : GESTIONE MISURE PROVVISORIE
 					if (annoNumero.startsWith("-")) {
@@ -837,12 +841,12 @@ public class StatisticheMSController extends GenericController {
 			HSSFCellStyle csBold = getBordo4Lati(wb);
 			// Create a new font and alter it.
 			HSSFFont font = wb.createFont();
-			font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+			font.setBold(true);
 			csBold.setFont(font);
 
 			HSSFCellStyle csBoldCenter = getBordo4Lati(wb);
 			csBoldCenter.setFont(font);
-			csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+			csBoldCenter.setAlignment(HorizontalAlignment.CENTER);
 
 			// primo foglio; RIEPILOGO_ISCRIZIONI
 			HSSFSheet sheet;
@@ -951,12 +955,12 @@ public class StatisticheMSController extends GenericController {
 			HSSFCellStyle csBold = getBordo4Lati(wb);
 			// Create a new font and alter it.
 			HSSFFont font = wb.createFont();
-			font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+			font.setBold(true);
 			csBold.setFont(font);
 
 			HSSFCellStyle csBoldCenter = getBordo4Lati(wb);
 			csBoldCenter.setFont(font);
-			csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+			csBoldCenter.setAlignment(HorizontalAlignment.CENTER);
 
 			// primo foglio; Tipologia MS
 			HSSFSheet sheet;
@@ -1065,38 +1069,38 @@ public class StatisticheMSController extends GenericController {
 			HSSFCellStyle csBold = wb.createCellStyle();
 			// Create a new font and alter it
 			HSSFFont fontBold = wb.createFont();
-			fontBold.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+			fontBold.setBold(true);
 			csBold.setFont(fontBold);
 
 			// Stile della cella con bordi ed allineamento a destra
 			HSSFCellStyle csC = getBordo4Lati(wb);
-			csC.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+			csC.setAlignment(HorizontalAlignment.CENTER);
 
 			// stile per celle col bordo con carattere grassetto
 			// ALLINEATO AL CENTRO
 			HSSFCellStyle csBoldCenter = getBordo4Lati(wb);
 			csBoldCenter.setFont(fontBold);
-			csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+			csBoldCenter.setAlignment(HorizontalAlignment.CENTER);
 
 			// Stile Titolo 1
 			HSSFCellStyle csTitolo1 = getBordo4Lati(wb);
 
-			csTitolo1.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-			csTitolo1.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-			csTitolo1.setFillForegroundColor(HSSFColor.GREEN.index);
+			csTitolo1.setAlignment(HorizontalAlignment.CENTER);
+			csTitolo1.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+			csTitolo1.setFillForegroundColor(HSSFColor.HSSFColorPredefined.GREEN.getIndex());
 			csTitolo1.setFont(fontBold);
 
 			// Stile Titolo 2
 			HSSFCellStyle csTitolo2 = getBordo4Lati(wb);
 
-			csTitolo2.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-			csTitolo2.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-			csTitolo2.setFillForegroundColor(HSSFColor.YELLOW.index);
+			csTitolo2.setAlignment(HorizontalAlignment.CENTER);
+			csTitolo2.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+			csTitolo2.setFillForegroundColor(HSSFColor.HSSFColorPredefined.YELLOW.getIndex());
 			csTitolo2.setFont(fontBold);
 
 			// Utilizzo colore non standard (204,255,204)
 			HSSFPalette palette = wb.getCustomPalette();
-			palette.setColorAtIndex(HSSFColor.GREEN.index, (byte) 204, (byte) 255, (byte) 204);
+			palette.setColorAtIndex(HSSFColor.HSSFColorPredefined.GREEN.getIndex(), (byte) 204, (byte) 255, (byte) 204);
 
 			HSSFSheet sheet = wb.createSheet("Dettagli " + tipo);
 			sheet.setDefaultColumnWidth(30);
@@ -1164,7 +1168,7 @@ public class StatisticheMSController extends GenericController {
 																							// (se arriva un
 																							// numero negativo
 																							// indicano che la
-																							// misura è
+																							// misura ï¿½
 																							// provvisoria)
 					if (annoNumero.startsWith("-")) {
 						annoNumero = annoNumero.substring(1, 5) + "/"
@@ -1319,40 +1323,40 @@ public class StatisticheMSController extends GenericController {
 		HSSFCellStyle csBold = wb.createCellStyle();
 		// Create a new font and alter it.
 		HSSFFont fontBold = wb.createFont();
-		fontBold.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		fontBold.setBold(true);
 		csBold.setFont(fontBold);
 
 		// Stile della cella con bordi ed allineamento a destra
 		HSSFCellStyle csR = getBordo4Lati(wb);
-		csR.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+		csR.setAlignment(HorizontalAlignment.RIGHT);
 		// Ticket#202109290111 -
 	    // Stile della cella con bordi ed allineamento a destra su 2 righe x visualizzazione testo (Misura Provvisoria)		
 		csR.setWrapText(true);
-		csR.setVerticalAlignment(HSSFCellStyle.VERTICAL_TOP);
+		csR.setVerticalAlignment(VerticalAlignment.TOP);
 		// Ticket#202109290111 - FINE
 		
 		// stile per celle col bordo con carattere grassetto ALLINEATO A DESTRA
 		HSSFCellStyle csBoldRight = getBordo4Lati(wb);
 		csBoldRight.setFont(fontBold);
-		csBoldRight.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+		csBoldRight.setAlignment(HorizontalAlignment.RIGHT);
 
 		// Stile Titolo 1
 		HSSFCellStyle csTitolo1 = getBordo4Lati(wb);
-		csTitolo1.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csTitolo1.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		csTitolo1.setFillForegroundColor(HSSFColor.GREEN.index);
+		csTitolo1.setAlignment(HorizontalAlignment.CENTER);
+		csTitolo1.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		csTitolo1.setFillForegroundColor(HSSFColor.HSSFColorPredefined.GREEN.getIndex());
 		csTitolo1.setFont(fontBold);
 
 		// Stile Titolo 2
 		HSSFCellStyle csTitolo2 = getBordo4Lati(wb);
-		csTitolo2.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csTitolo2.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		csTitolo2.setFillForegroundColor(HSSFColor.YELLOW.index);
+		csTitolo2.setAlignment(HorizontalAlignment.CENTER);
+		csTitolo2.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		csTitolo2.setFillForegroundColor(HSSFColor.HSSFColorPredefined.YELLOW.getIndex());
 		csTitolo2.setFont(fontBold);
 
 		// Utilizzo colore non standard (204,255,204)
 		HSSFPalette palette = wb.getCustomPalette();
-		palette.setColorAtIndex(HSSFColor.GREEN.index, (byte) 204, (byte) 255, (byte) 204);
+		palette.setColorAtIndex(HSSFColor.HSSFColorPredefined.GREEN.getIndex(), (byte) 204, (byte) 255, (byte) 204);
 
 		HSSFSheet sheet = wb.createSheet(nomeFoglio);
 		// Ticket#202109290111 - la width 12 estesa a tutti i fogli, anche Archiviazione e Altre Posizioni
@@ -1685,7 +1689,7 @@ public class StatisticheMSController extends GenericController {
 
 		// Create a new font and alter it.
 		HSSFFont font = wb.createFont();
-		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		font.setBold(true);
 		csBold.setFont(font);
 
 		// primo foglio -----------------------------------------RIEPILOGO
@@ -1696,15 +1700,15 @@ public class StatisticheMSController extends GenericController {
 		HSSFCellStyle style = wb.createCellStyle();
 		style = getBordo4Lati(wb);
 		HSSFFont fontGR = wb.createFont();
-		fontGR.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
-		fontGR.setColor(HSSFColor.BLUE.index);
+		fontGR.setBold(true);
+		fontGR.setColor(HSSFColor.HSSFColorPredefined.BLUE.getIndex());
 		style.setFont(fontGR);
 
 		// Colore per TOTALI
 		HSSFCellStyle stylered = wb.createCellStyle();
 		stylered = getBordo4Lati(wb);
 		HSSFFont fontR = wb.createFont();
-		fontR.setColor(HSSFColor.RED.index);
+		fontR.setColor(HSSFColor.HSSFColorPredefined.RED.getIndex());
 		stylered.setFont(fontR);
 
 		// Intestazione del foglio excel
@@ -1972,7 +1976,7 @@ public class StatisticheMSController extends GenericController {
 
 		// Create a new font and alter it.
 		HSSFFont font = wb.createFont();
-		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		font.setBold(true);
 		csBold.setFont(font);
 
 		// primo foglio -----------------------------------------RIEPILOGO
@@ -1983,15 +1987,15 @@ public class StatisticheMSController extends GenericController {
 		HSSFCellStyle style = wb.createCellStyle();
 		style = getBordo4Lati(wb);
 		HSSFFont fontGR = wb.createFont();
-		fontGR.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
-		fontGR.setColor(HSSFColor.BLUE.index);
+		fontGR.setBold(true);
+		fontGR.setColor(HSSFColor.HSSFColorPredefined.BLUE.getIndex());
 		style.setFont(fontGR);
 
 		// Colore per TOTALI
 		HSSFCellStyle stylered = wb.createCellStyle();
 		stylered = getBordo4Lati(wb);
 		HSSFFont fontR = wb.createFont();
-		fontR.setColor(HSSFColor.RED.index);
+		fontR.setColor(HSSFColor.HSSFColorPredefined.RED.getIndex());
 		stylered.setFont(fontR);
 
 		// Intestazione del foglio excel
@@ -2403,27 +2407,27 @@ public class StatisticheMSController extends GenericController {
 		HSSFCellStyle csBold = getBordo4Lati(wb);
 		// Create a new font and alter it.
 		HSSFFont fontBold = wb.createFont();
-		fontBold.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		fontBold.setBold(true);
 		csBold.setFont(fontBold);
 
 		// Titolo 1
 		HSSFCellStyle csTitolo1 = getBordo4Lati(wb);
 
-		csTitolo1.setAlignment(HSSFCellStyle.ALIGN_LEFT);
-		csTitolo1.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		csTitolo1.setFillForegroundColor(HSSFColor.GREEN.index);
+		csTitolo1.setAlignment(HorizontalAlignment.LEFT);
+		csTitolo1.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		csTitolo1.setFillForegroundColor(HSSFColor.HSSFColorPredefined.GREEN.getIndex());
 		csTitolo1.setFont(fontBold);
 
 		// Titolo 2
 		HSSFCellStyle csTitolo2 = getBordo4Lati(wb);
 
-		csTitolo2.setAlignment(HSSFCellStyle.ALIGN_LEFT);
-		csTitolo2.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		csTitolo2.setFillForegroundColor(HSSFColor.YELLOW.index);
+		csTitolo2.setAlignment(HorizontalAlignment.LEFT);
+		csTitolo2.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		csTitolo2.setFillForegroundColor(HSSFColor.HSSFColorPredefined.YELLOW.getIndex());
 		csTitolo2.setFont(fontBold);
 
 		HSSFPalette palette = wb.getCustomPalette();
-		palette.setColorAtIndex(HSSFColor.GREEN.index, (byte) 204, (byte) 255, (byte) 204);
+		palette.setColorAtIndex(HSSFColor.HSSFColorPredefined.GREEN.getIndex(), (byte) 204, (byte) 255, (byte) 204);
 
 		// primo foglio
 		HSSFSheet sheet = wb.createSheet("Riepilogo");
@@ -2551,12 +2555,12 @@ public class StatisticheMSController extends GenericController {
 				HSSFCellStyle csBold = getBordo4Lati(wb);
 				// Create a new font and alter it.
 				HSSFFont font = wb.createFont();
-				font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+				font.setBold(true);
 				csBold.setFont(font);
 
 				HSSFCellStyle csBoldCenter = getBordo4Lati(wb);
 				csBoldCenter.setFont(font);
-				csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+				csBoldCenter.setAlignment(HorizontalAlignment.CENTER);
 
 				// primo foglio; RIEPILOGO_ISCRIZIONI
 				HSSFSheet sheet = sheetAppo;
@@ -2682,12 +2686,12 @@ public class StatisticheMSController extends GenericController {
 				HSSFCellStyle csBold = getBordo4Lati(wb);
 				// Create a new font and alter it.
 				HSSFFont font = wb.createFont();
-				font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+				font.setBold(true);
 				csBold.setFont(font);
 
 				HSSFCellStyle csBoldCenter = getBordo4Lati(wb);
 				csBoldCenter.setFont(font);
-				csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+				csBoldCenter.setAlignment(HorizontalAlignment.CENTER);
 
 				// primo foglio; Tipologia MS
 				HSSFSheet sheet = sheetAppo;
@@ -2812,38 +2816,38 @@ public class StatisticheMSController extends GenericController {
 				HSSFCellStyle csBold = wb.createCellStyle();
 				// Create a new font and alter it
 				HSSFFont fontBold = wb.createFont();
-				fontBold.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+				fontBold.setBold(true);
 				csBold.setFont(fontBold);
 
 				// Stile della cella con bordi ed allineamento a destra
 				HSSFCellStyle csC = getBordo4Lati(wb);
-				csC.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+				csC.setAlignment(HorizontalAlignment.CENTER);
 
 				// stile per celle col bordo con carattere grassetto
 				// ALLINEATO AL CENTRO
 				HSSFCellStyle csBoldCenter = getBordo4Lati(wb);
 				csBoldCenter.setFont(fontBold);
-				csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+				csBoldCenter.setAlignment(HorizontalAlignment.CENTER);
 
 				// Stile Titolo 1
 				HSSFCellStyle csTitolo1 = getBordo4Lati(wb);
 
-				csTitolo1.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-				csTitolo1.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-				csTitolo1.setFillForegroundColor(HSSFColor.GREEN.index);
+				csTitolo1.setAlignment(HorizontalAlignment.CENTER);
+				csTitolo1.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+				csTitolo1.setFillForegroundColor(HSSFColor.HSSFColorPredefined.GREEN.getIndex());
 				csTitolo1.setFont(fontBold);
 
 				// Stile Titolo 2
 				HSSFCellStyle csTitolo2 = getBordo4Lati(wb);
 
-				csTitolo2.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-				csTitolo2.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-				csTitolo2.setFillForegroundColor(HSSFColor.YELLOW.index);
+				csTitolo2.setAlignment(HorizontalAlignment.CENTER);
+				csTitolo2.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+				csTitolo2.setFillForegroundColor(HSSFColor.HSSFColorPredefined.YELLOW.getIndex());
 				csTitolo2.setFont(fontBold);
 
 				// Utilizzo colore non standard (204,255,204)
 				HSSFPalette palette = wb.getCustomPalette();
-				palette.setColorAtIndex(HSSFColor.GREEN.index, (byte) 204, (byte) 255, (byte) 204);
+				palette.setColorAtIndex(HSSFColor.HSSFColorPredefined.GREEN.getIndex(), (byte) 204, (byte) 255, (byte) 204);
 
 				int nRow = nRowAppo;
 				HSSFSheet sheet = sheetAppo;
@@ -2921,7 +2925,7 @@ public class StatisticheMSController extends GenericController {
 																								// negativo
 																								// indicano
 																								// che la
-																								// misura è
+																								// misura ï¿½
 																								// provvisoria)
 						if (annoNumero.startsWith("-")) {
 							annoNumero = annoNumero.substring(1, 5) + "/"

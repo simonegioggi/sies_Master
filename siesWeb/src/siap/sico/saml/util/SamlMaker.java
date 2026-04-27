@@ -45,7 +45,6 @@ import org.w3c.dom.Element;
 import siap.sico.saml.model.SamlModel;
 import siap.sico.webservice.config.NscProperties;
 import siap.util.SIAPPathProperties;
-import sun.misc.BASE64Encoder;
 import f3b.log.LogF3B;
 import f3b.util.F3BException;
 
@@ -61,7 +60,7 @@ public class SamlMaker {
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
-	SamlUtil mSamlUtil; // Classe di utilità per la creazione dell'assertion
+	SamlUtil mSamlUtil; // Classe di utilitï¿½ per la creazione dell'assertion
 	// SAML
 	// [FT] - 03/08/2016 - MAC_LOG - Commento la dichiarazione di mLog in favore della variabile siesLogger
 	// Logger mLog = LogF3B.getLogger();// Log
@@ -172,8 +171,7 @@ public class SamlMaker {
 
 			// storeAssertionToFile(cryptedAssertion);
 
-			BASE64Encoder encoder = new BASE64Encoder();
-			lReturncryptedAssertion = encoder.encode(cryptedAssertion.getBytes());
+			lReturncryptedAssertion = java.util.Base64.getEncoder().encodeToString(cryptedAssertion.getBytes());
 
 		} catch (Exception ex) {
 			ex.printStackTrace();

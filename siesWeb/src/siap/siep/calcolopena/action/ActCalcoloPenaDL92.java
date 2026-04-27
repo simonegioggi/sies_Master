@@ -7,6 +7,10 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
@@ -311,7 +315,7 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 
 		// Font
 		HSSFFont fontBold = wb.createFont();
-		fontBold.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		fontBold.setBold(true);
 
 		// Stili
 		// HSSFCellStyle csNull = wb.createCellStyle();
@@ -325,37 +329,37 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 
 		// Titolo 1 -
 		HSSFCellStyle csTitolo1 = getBordo4Lati(wb);
-		csTitolo1.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csTitolo1.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		csTitolo1.setFillForegroundColor(HSSFColor.LIGHT_GREEN.index);
+		csTitolo1.setAlignment(HorizontalAlignment.CENTER);
+		csTitolo1.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		csTitolo1.setFillForegroundColor(HSSFColor.HSSFColorPredefined.LIGHT_GREEN.getIndex());
 		csTitolo1.setFont(fontBold);
 
 		// Stile delle celle grigie allineata a destra
 		HSSFCellStyle csGrigioDestra = getBordo4Lati(wb);
-		csGrigioDestra.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
-		// csGrigioDestra.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		csGrigioDestra.setAlignment(HorizontalAlignment.RIGHT);
+		// csGrigioDestra.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 		csGrigioDestra.setWrapText(true); // testo a capo
-		// csGrigioDestra.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+		// csGrigioDestra.setFillForegroundColor(HSSFColor.HSSFColorPredefined.GREY_25_PERCENT.getIndex());
 
 		// Stile delle celle gialle con i dati allineate al centro (dati di input)
 		HSSFCellStyle csDatiInput = getBordo4Lati(wb);
-		csDatiInput.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csDatiInput.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		csDatiInput.setFillForegroundColor(HSSFColor.YELLOW.index);
+		csDatiInput.setAlignment(HorizontalAlignment.CENTER);
+		csDatiInput.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		csDatiInput.setFillForegroundColor(HSSFColor.HSSFColorPredefined.YELLOW.getIndex());
 		csDatiInput.setFont(fontBold);
 
 		// Stile delle celle grigie con i dati allineate al centro (dati calcolati)
 		HSSFCellStyle csDatiCalcolati = getBordo4Lati(wb);
-		csDatiCalcolati.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csDatiCalcolati.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		csDatiCalcolati.setFillForegroundColor(HSSFColor.LIGHT_ORANGE.index);
+		csDatiCalcolati.setAlignment(HorizontalAlignment.CENTER);
+		csDatiCalcolati.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		csDatiCalcolati.setFillForegroundColor(HSSFColor.HSSFColorPredefined.LIGHT_ORANGE.getIndex());
 		csDatiCalcolati.setFont(fontBold);
 
 		// Stile delle celle Verdi (dati calcolati)
 		HSSFCellStyle csVerdeCentro = getBordo4Lati(wb);
-		csVerdeCentro.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csVerdeCentro.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		csVerdeCentro.setFillForegroundColor(HSSFColor.GREEN.index);
+		csVerdeCentro.setAlignment(HorizontalAlignment.CENTER);
+		csVerdeCentro.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		csVerdeCentro.setFillForegroundColor(HSSFColor.HSSFColorPredefined.GREEN.getIndex());
 
 		// Impostare opportunamente la larghezza della prima riga
 		sheetRiepilogo.setColumnWidth(0, (105 * 256)); // Larghezza prima colonna
@@ -571,10 +575,10 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 
 		// Font
 		HSSFFont fontBold = wb.createFont();
-		fontBold.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		fontBold.setBold(true);
 
 		HSSFFont fontBoldRed = wb.createFont();
-		fontBoldRed.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		fontBoldRed.setBold(true);
 		fontBoldRed.setColor(HSSFFont.COLOR_RED);
 
 		// Colore celle RGB
@@ -586,32 +590,32 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 
 		HSSFCellStyle csBoldCenterRed = getBordo4Lati(wb);
 		csBoldCenterRed.setFont(fontBoldRed);
-		csBoldCenterRed.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csBoldCenterRed.setAlignment(HorizontalAlignment.CENTER);
 
 		// stile per celle col bordo centrata
 		HSSFCellStyle csCenter = getBordo4Lati(wb);
-		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csCenter.setAlignment(HorizontalAlignment.CENTER);
 
 		// stile per celle col bordo allineamento da desta
 		HSSFCellStyle csRight = getBordo4Lati(wb);
-		csRight.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+		csRight.setAlignment(HorizontalAlignment.RIGHT);
 
 		// Stile intestazione: bold centrato e sfondo grigio
 		HSSFCellStyle csIntestazione = getBordo4Lati(wb);
 		csIntestazione.setFont(fontBold);
-		csIntestazione.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		csIntestazione.setFillForegroundColor(HSSFColor.LIGHT_GREEN.index);
+		csIntestazione.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		csIntestazione.setFillForegroundColor(HSSFColor.HSSFColorPredefined.LIGHT_GREEN.getIndex());
 		// csIntestazione.setFillForegroundColor(myGreen.getIndexed());
-		csIntestazione.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csIntestazione.setAlignment(HorizontalAlignment.CENTER);
 		csIntestazione.setWrapText(true); // testo a capo
-		csIntestazione.setVerticalAlignment(HSSFCellStyle.VERTICAL_BOTTOM);
+		csIntestazione.setVerticalAlignment(VerticalAlignment.BOTTOM);
 
 		HSSFCellStyle csRiepilogo = getBordo4Lati(wb);
 		csRiepilogo.setFont(fontBold);
-		csRiepilogo.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		csRiepilogo.setFillForegroundColor(HSSFColor.LIGHT_ORANGE.index);
+		csRiepilogo.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		csRiepilogo.setFillForegroundColor(HSSFColor.HSSFColorPredefined.LIGHT_ORANGE.getIndex());
 		// csRiepilogo.setFillForegroundColor(myOrange.getIndexed());
-		csRiepilogo.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csRiepilogo.setAlignment(HorizontalAlignment.CENTER);
 
 		// Impostare opportunamente la larghezza della prima riga
 		sheetLibero.setColumnWidth(0, (5 * 256)); // Progressivo
@@ -670,7 +674,7 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 
 			nRow++;
 			row = sheetLibero.createRow(nRow);
-			setCell(row, 0, StringUtils.toStringJSP(lSemestreUtile.getProgressivo()) + "°", csCenter);
+			setCell(row, 0, StringUtils.toStringJSP(lSemestreUtile.getProgressivo()) + "ï¿½", csCenter);
 			setCell(row, 1, "semestre utile per L.A. ", csCenter);
 
 			if ("S".equals(lSemestreUtile.getIsCompreso()))
@@ -733,45 +737,45 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 
 		// Font
 		HSSFFont fontBold = wb.createFont();
-		fontBold.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		fontBold.setBold(true);
 
 		// stile per celle col bordo
 		HSSFCellStyle cs = getBordo4Lati(wb);
 
 		HSSFFont fontBoldRed = wb.createFont();
-		fontBoldRed.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		fontBoldRed.setBold(true);
 		fontBoldRed.setColor(HSSFFont.COLOR_RED);
 
 		HSSFCellStyle csBoldCenter = getBordo4Lati(wb);
 		csBoldCenter.setFont(fontBold);
-		csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csBoldCenter.setAlignment(HorizontalAlignment.CENTER);
 
 		HSSFCellStyle csBoldCenterRed = getBordo4Lati(wb);
 		csBoldCenterRed.setFont(fontBoldRed);
-		csBoldCenterRed.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csBoldCenterRed.setAlignment(HorizontalAlignment.CENTER);
 
 		// stile per celle col bordo centrata
 		HSSFCellStyle csCenter = getBordo4Lati(wb);
-		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csCenter.setAlignment(HorizontalAlignment.CENTER);
 
 		// stile per celle col bordo allineamento da desta
 		HSSFCellStyle csRight = getBordo4Lati(wb);
-		csRight.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+		csRight.setAlignment(HorizontalAlignment.RIGHT);
 
 		// Stile intestazione: bold centrato e sfondo grigio
 		HSSFCellStyle csIntestazione = getBordo4Lati(wb);
 		csIntestazione.setFont(fontBold);
-		csIntestazione.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		csIntestazione.setFillForegroundColor(HSSFColor.LIGHT_GREEN.index);
-		csIntestazione.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csIntestazione.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		csIntestazione.setFillForegroundColor(HSSFColor.HSSFColorPredefined.LIGHT_GREEN.getIndex());
+		csIntestazione.setAlignment(HorizontalAlignment.CENTER);
 		csIntestazione.setWrapText(true); // testo a capo
-		csIntestazione.setVerticalAlignment(HSSFCellStyle.VERTICAL_BOTTOM);
+		csIntestazione.setVerticalAlignment(VerticalAlignment.BOTTOM);
 
 		HSSFCellStyle csRiepilogo = getBordo4Lati(wb);
 		csRiepilogo.setFont(fontBold);
-		csRiepilogo.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		csRiepilogo.setFillForegroundColor(HSSFColor.LIGHT_ORANGE.index);
-		csRiepilogo.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csRiepilogo.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		csRiepilogo.setFillForegroundColor(HSSFColor.HSSFColorPredefined.LIGHT_ORANGE.getIndex());
+		csRiepilogo.setAlignment(HorizontalAlignment.CENTER);
 
 		// Impostare opportunamente la larghezza delle righe
 		sheetDetenuto.setColumnWidth(0, (6 * 256)); // Larghezza prima colonna
@@ -936,10 +940,10 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 	private HSSFCellStyle getBordo4Lati(HSSFWorkbook wb) {
 
 		HSSFCellStyle cs = wb.createCellStyle();
-		cs.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		cs.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		cs.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		cs.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		cs.setBorderBottom(BorderStyle.THIN);
+		cs.setBorderTop(BorderStyle.THIN);
+		cs.setBorderRight(BorderStyle.THIN);
+		cs.setBorderLeft(BorderStyle.THIN);
 		return cs;
 	}
 
@@ -950,10 +954,10 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 	//
 	// // Font
 	// HSSFFont fontBold = wb.createFont();
-	// fontBold.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+	// fontBold.setBold(true);
 	//
 	// HSSFFont fontBoldRed = wb.createFont();
-	// fontBoldRed.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+	// fontBoldRed.setBold(true);
 	// fontBoldRed.setColor(HSSFFont.COLOR_RED);
 	//
 	// // Colore celle RGB
@@ -965,32 +969,32 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 	//
 	// HSSFCellStyle csBoldCenterRed = getBordo4Lati(wb);
 	// csBoldCenterRed.setFont(fontBoldRed);
-	// csBoldCenterRed.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+	// csBoldCenterRed.setAlignment(HorizontalAlignment.CENTER);
 	//
 	// // stile per celle col bordo centrata
 	// HSSFCellStyle csCenter = getBordo4Lati(wb);
-	// csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+	// csCenter.setAlignment(HorizontalAlignment.CENTER);
 	//
 	// // stile per celle col bordo allineamento da desta
 	// HSSFCellStyle csRight = getBordo4Lati(wb);
-	// csRight.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+	// csRight.setAlignment(HorizontalAlignment.RIGHT);
 	//
 	// // Stile intestazione: bold centrato e sfondo grigio
 	// HSSFCellStyle csIntestazione = getBordo4Lati(wb);
 	// csIntestazione.setFont(fontBold);
-	// csIntestazione.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-	// csIntestazione.setFillForegroundColor(HSSFColor.LIGHT_GREEN.index);
+	// csIntestazione.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+	// csIntestazione.setFillForegroundColor(HSSFColor.HSSFColorPredefined.LIGHT_GREEN.getIndex());
 	// // csIntestazione.setFillForegroundColor(myGreen.getIndexed());
-	// csIntestazione.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+	// csIntestazione.setAlignment(HorizontalAlignment.CENTER);
 	// csIntestazione.setWrapText(true); // testo a capo
-	// csIntestazione.setVerticalAlignment(HSSFCellStyle.VERTICAL_BOTTOM);
+	// csIntestazione.setVerticalAlignment(VerticalAlignment.BOTTOM);
 	//
 	// HSSFCellStyle csRiepilogo = getBordo4Lati(wb);
 	// csRiepilogo.setFont(fontBold);
-	// csRiepilogo.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-	// csRiepilogo.setFillForegroundColor(HSSFColor.LIGHT_ORANGE.index);
+	// csRiepilogo.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+	// csRiepilogo.setFillForegroundColor(HSSFColor.HSSFColorPredefined.LIGHT_ORANGE.getIndex());
 	// // csRiepilogo.setFillForegroundColor(myOrange.getIndexed());
-	// csRiepilogo.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+	// csRiepilogo.setAlignment(HorizontalAlignment.CENTER);
 	//
 	// // Impostare opportunamente la larghezza della prima riga
 	// sheetLibero.setColumnWidth(0, (5 * 256)); // Progressivo
@@ -1041,7 +1045,7 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 	//
 	// nRow++;
 	// row = sheetLibero.createRow(nRow);
-	// setCell(row, 0, StringUtils.toStringJSP(lSemestreUtile.getProgressivo()) + "°", csCenter);
+	// setCell(row, 0, StringUtils.toStringJSP(lSemestreUtile.getProgressivo()) + "ï¿½", csCenter);
 	// setCell(row, 1, "semestre utile per L.A. ", csCenter);
 	//
 	// if (lSemestreUtile.getLAApplicate().intValue() < 45) {

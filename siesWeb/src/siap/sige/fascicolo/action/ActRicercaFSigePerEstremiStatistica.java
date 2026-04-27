@@ -7,6 +7,9 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
@@ -155,8 +158,8 @@ public class ActRicercaFSigePerEstremiStatistica extends ActRicercaFSigePerEstre
 					value = ("Magistrato: Magistrato non presente");
 				} else {
 					IMagistrato iMag = SIGELookupRemote.getMagistratoRemote();
-					// 20170918: [SG] aggiunto parametro di passaggio poichè il magistrato può essere inserito
-					// da un ufficio differente da quello in cui ha delle udienze poichè trasferito
+					// 20170918: [SG] aggiunto parametro di passaggio poichï¿½ il magistrato puï¿½ essere inserito
+					// da un ufficio differente da quello in cui ha delle udienze poichï¿½ trasferito
 					MagistratoModel magModel = iMag.ExRicercaMagistratoByCod(
 							ricercaFascSigeModel.getCodMagistrato(), getCodUfficioUtenteConnesso());
 					String nomeCognomeMag = magModel.getNome() + " " + magModel.getCognome();
@@ -262,10 +265,10 @@ public class ActRicercaFSigePerEstremiStatistica extends ActRicercaFSigePerEstre
 	private HSSFCellStyle getBordo4Lati(HSSFWorkbook wb) {
 
 		HSSFCellStyle cs = wb.createCellStyle();
-		cs.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		cs.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		cs.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		cs.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		cs.setBorderBottom(BorderStyle.THIN);
+		cs.setBorderTop(BorderStyle.THIN);
+		cs.setBorderRight(BorderStyle.THIN);
+		cs.setBorderLeft(BorderStyle.THIN);
 
 		return cs;
 	}
@@ -273,10 +276,10 @@ public class ActRicercaFSigePerEstremiStatistica extends ActRicercaFSigePerEstre
 	// private HSSFCellStyle getBordo4LatiBold(HSSFWorkbook wb) {
 	//
 	// HSSFCellStyle cs = wb.createCellStyle();
-	// cs.setBorderBottom(HSSFCellStyle.BORDER_THICK);
-	// cs.setBorderTop(HSSFCellStyle.BORDER_THICK);
-	// cs.setBorderRight(HSSFCellStyle.BORDER_THICK);
-	// cs.setBorderLeft(HSSFCellStyle.BORDER_THICK);
+	// cs.setBorderBottom(BorderStyle.THICK);
+	// cs.setBorderTop(BorderStyle.THICK);
+	// cs.setBorderRight(BorderStyle.THICK);
+	// cs.setBorderLeft(BorderStyle.THICK);
 	//
 	// return cs;
 	// }
@@ -319,7 +322,7 @@ public class ActRicercaFSigePerEstremiStatistica extends ActRicercaFSigePerEstre
 		row = sheet.createRow(nRow);
 
 		HSSFFont my_font = wb.createFont();
-		my_font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		my_font.setBold(true);
 
 		csNullBold.setFont(my_font);
 
@@ -346,20 +349,20 @@ public class ActRicercaFSigePerEstremiStatistica extends ActRicercaFSigePerEstre
 
 		// stile per celle col bordo con testo centrato
 		HSSFCellStyle csCenter = getBordo4Lati(wb);
-		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csCenter.setAlignment(HorizontalAlignment.CENTER);
+		csCenter.setVerticalAlignment(VerticalAlignment.CENTER);
 		csCenter.setWrapText(true);
 
 		// stile per celle col bordo con testo allineato a sinistra
 		HSSFCellStyle csLeft = getBordo4Lati(wb);
-		csLeft.setAlignment(HSSFCellStyle.ALIGN_LEFT);
-		csLeft.setVerticalAlignment(HSSFCellStyle.ALIGN_LEFT);
+		csLeft.setAlignment(HorizontalAlignment.LEFT);
+		csLeft.setVerticalAlignment(VerticalAlignment.CENTER);
 		csLeft.setWrapText(true);
 
 		// stile per celle col bordo con testo centrato e grossetto
 		HSSFCellStyle csCenterBold = getBordo4Lati(wb);
-		csCenterBold.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csCenterBold.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csCenterBold.setAlignment(HorizontalAlignment.CENTER);
+		csCenterBold.setVerticalAlignment(VerticalAlignment.CENTER);
 		csCenterBold.setWrapText(true);
 		csCenterBold.setFont(my_font);
 
@@ -367,7 +370,7 @@ public class ActRicercaFSigePerEstremiStatistica extends ActRicercaFSigePerEstre
 
 		// Intestazione colonne
 		numCol = 0;
-		setCell(row, numCol++, "N°\nord.", csCenterBold);
+		setCell(row, numCol++, "Nï¿½\nord.", csCenterBold);
 		setCell(row, numCol++, "Numero\nRegistro mod.\n32", csCenterBold);
 		setCell(row, numCol++, "Tipologia Atto", csCenterBold);
 		setCell(row, numCol++, "Tipologia\nincidente\nd'esecuzione", csCenterBold);
@@ -407,7 +410,7 @@ public class ActRicercaFSigePerEstremiStatistica extends ActRicercaFSigePerEstre
 			}
 			// Tipologia incidente d'esecuzione
 			// (In questa colonna viene riportato l'Oggetto del Procedimento,
-			// in presenza di più Oggetti viene riportata la dicitura "Oggetto Multiplo")
+			// in presenza di piï¿½ Oggetti viene riportata la dicitura "Oggetto Multiplo")
 			setCell(row, numCol++,
 					StringUtils.toStringJSP(lFascicoloSigeEsteso.getFascicoloSige().getDescOggetto()),
 					csCenter);
@@ -515,7 +518,7 @@ public class ActRicercaFSigePerEstremiStatistica extends ActRicercaFSigePerEstre
 		// risultato della ricerca supera 65536 record
 		if (lFascicoliSige != null && lFascicoliSige.size() > 65536) {
 			throw new F3BException(F3BException.USER_MESSAGE,
-					"Impostare almeno un parametro di ricerca, in quanto il risultato non è interamente visualizzabile.");
+					"Impostare almeno un parametro di ricerca, in quanto il risultato non ï¿½ interamente visualizzabile.");
 		}
 
 		if (lFascicoliSige != null)

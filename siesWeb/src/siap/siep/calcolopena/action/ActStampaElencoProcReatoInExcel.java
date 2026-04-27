@@ -7,13 +7,16 @@ import java.util.List;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.CellRangeAddress;
+import org.apache.poi.ss.util.CellRangeAddress;
 
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
@@ -77,10 +80,10 @@ public class ActStampaElencoProcReatoInExcel extends ActElencoProcReato {
 	private HSSFCellStyle getBordo4Lati(HSSFWorkbook wb) {
 
 		HSSFCellStyle cs = wb.createCellStyle();
-		cs.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		cs.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		cs.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		cs.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		cs.setBorderBottom(BorderStyle.THIN);
+		cs.setBorderTop(BorderStyle.THIN);
+		cs.setBorderRight(BorderStyle.THIN);
+		cs.setBorderLeft(BorderStyle.THIN);
 
 		return cs;
 	}
@@ -88,10 +91,10 @@ public class ActStampaElencoProcReatoInExcel extends ActElencoProcReato {
 	private HSSFCellStyle getBordo4LatiBold(HSSFWorkbook wb) {
 
 		HSSFCellStyle cs = wb.createCellStyle();
-		cs.setBorderBottom(HSSFCellStyle.BORDER_THICK);
-		cs.setBorderTop(HSSFCellStyle.BORDER_THICK);
-		cs.setBorderRight(HSSFCellStyle.BORDER_THICK);
-		cs.setBorderLeft(HSSFCellStyle.BORDER_THICK);
+		cs.setBorderBottom(BorderStyle.THICK);
+		cs.setBorderTop(BorderStyle.THICK);
+		cs.setBorderRight(BorderStyle.THICK);
+		cs.setBorderLeft(BorderStyle.THICK);
 
 		return cs;
 	}
@@ -99,10 +102,10 @@ public class ActStampaElencoProcReatoInExcel extends ActElencoProcReato {
 	private HSSFCellStyle getNoBordo(HSSFWorkbook wb) {
 
 		HSSFCellStyle cs = wb.createCellStyle();
-		cs.setBorderBottom(HSSFCellStyle.BORDER_NONE);
-		cs.setBorderTop(HSSFCellStyle.BORDER_NONE);
-		cs.setBorderRight(HSSFCellStyle.BORDER_NONE);
-		cs.setBorderLeft(HSSFCellStyle.BORDER_NONE);
+		cs.setBorderBottom(BorderStyle.NONE);
+		cs.setBorderTop(BorderStyle.NONE);
+		cs.setBorderRight(BorderStyle.NONE);
+		cs.setBorderLeft(BorderStyle.NONE);
 
 		return cs;
 	}
@@ -234,7 +237,7 @@ public class ActStampaElencoProcReatoInExcel extends ActElencoProcReato {
 	// END MEV 26 CUMULO step 2
 
 	/**
-	 * La funzione prepara la pagina xls con l'elenco dei Procedimenti per Reato L'elenco nella lista è quello
+	 * La funzione prepara la pagina xls con l'elenco dei Procedimenti per Reato L'elenco nella lista ï¿½ quello
 	 * passato attraverso il parametro lFascicoli.
 	 *
 	 * @param wb
@@ -263,7 +266,7 @@ public class ActStampaElencoProcReatoInExcel extends ActElencoProcReato {
 		row = sheet.createRow(nRow);
 
 		HSSFFont my_font = wb.createFont();
-		my_font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		my_font.setBold(true);
 
 		csNullBold.setFont(my_font);
 		// Intestazione Riga 1
@@ -301,7 +304,7 @@ public class ActStampaElencoProcReatoInExcel extends ActElencoProcReato {
 		}
 
 		if (!INazio.equals("")) {
-			SecondaRigaIntestazione += " - Nazionalità " + INazio;
+			SecondaRigaIntestazione += " - Nazionalitï¿½ " + INazio;
 		}
 
 		row = sheet.createRow(nRow);
@@ -343,27 +346,27 @@ public class ActStampaElencoProcReatoInExcel extends ActElencoProcReato {
 
 		// stile per celle col bordo con testo centrato
 		HSSFCellStyle csCenter = getBordo4Lati(wb);
-		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csCenter.setAlignment(HorizontalAlignment.CENTER);
+		csCenter.setVerticalAlignment(VerticalAlignment.CENTER);
 		csCenter.setWrapText(true);
 
 		// stile per celle col bordo con testo allineato a sinistra
 		HSSFCellStyle csLeft = getBordo4Lati(wb);
-		csLeft.setAlignment(HSSFCellStyle.ALIGN_LEFT);
-		csLeft.setVerticalAlignment(HSSFCellStyle.ALIGN_LEFT);
+		csLeft.setAlignment(HorizontalAlignment.LEFT);
+		csLeft.setVerticalAlignment(VerticalAlignment.CENTER);
 		csLeft.setWrapText(true);
 
 		// stile per celle col bordo con testo centrato e grossetto
 		HSSFCellStyle csCenterBold = getBordo4LatiBold(wb);
-		csCenterBold.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csCenterBold.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csCenterBold.setAlignment(HorizontalAlignment.CENTER);
+		csCenterBold.setVerticalAlignment(VerticalAlignment.CENTER);
 		csCenterBold.setWrapText(true);
 		csCenterBold.setFont(my_font);
 
 		// stile per celle senza bordo vuote
 		HSSFCellStyle csvuoto = getNoBordo(wb);
-		// csCenterBold.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		// csCenterBold.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		// csCenterBold.setAlignment(HorizontalAlignment.CENTER);
+		// csCenterBold.setVerticalAlignment(VerticalAlignment.CENTER);
 		// csCenterBold.setWrapText(true);
 		// csCenterBold.setFont(my_font);
 
@@ -726,7 +729,7 @@ public class ActStampaElencoProcReatoInExcel extends ActElencoProcReato {
 			IDate = getRequestStringParameter("IntestaDate");
 		}
 
-		// Descrizione tipo Nazionalità
+		// Descrizione tipo Nazionalitï¿½
 		String INazio = "";
 		if (!isRequestParameterNullObj("DescNazio")) {
 			INazio = getRequestStringParameter("DescNazio");
@@ -750,7 +753,7 @@ public class ActStampaElencoProcReatoInExcel extends ActElencoProcReato {
 		// risultato della ricerca supera 65536 record
 		if (lDettaglioFascicoli != null && lDettaglioFascicoli.size() > 65536) {
 			throw new F3BException(F3BException.USER_MESSAGE,
-					"Impostare almeno un parametro di ricerca, in quanto il risultato non è interamente visualizzabile.");
+					"Impostare almeno un parametro di ricerca, in quanto il risultato non ï¿½ interamente visualizzabile.");
 		}
 
 		if (lDettaglioFascicoli != null)

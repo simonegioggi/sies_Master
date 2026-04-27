@@ -11,6 +11,10 @@ import java.util.List;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
@@ -19,7 +23,7 @@ import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.CellReference;
+import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -758,27 +762,27 @@ public class StatisController extends GenericController {
 		HSSFCellStyle csBold = getBordo4Lati(wb);
 		// Create a new font and alter it.
 		HSSFFont fontBold = wb.createFont();
-		fontBold.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		fontBold.setBold(true);
 		csBold.setFont(fontBold);
 
 		// Titolo 1
 		HSSFCellStyle csTitolo1 = getBordo4Lati(wb);
 
-		csTitolo1.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csTitolo1.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		csTitolo1.setFillForegroundColor(HSSFColor.GREEN.index);
+		csTitolo1.setAlignment(HorizontalAlignment.CENTER);
+		csTitolo1.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		csTitolo1.setFillForegroundColor(HSSFColor.HSSFColorPredefined.GREEN.getIndex());
 		csTitolo1.setFont(fontBold);
 
 		// Titolo 2
 		HSSFCellStyle csTitolo2 = getBordo4Lati(wb);
 
-		csTitolo2.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csTitolo2.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		csTitolo2.setFillForegroundColor(HSSFColor.YELLOW.index);
+		csTitolo2.setAlignment(HorizontalAlignment.CENTER);
+		csTitolo2.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		csTitolo2.setFillForegroundColor(HSSFColor.HSSFColorPredefined.YELLOW.getIndex());
 		csTitolo2.setFont(fontBold);
 
 		HSSFPalette palette = wb.getCustomPalette();
-		palette.setColorAtIndex(HSSFColor.GREEN.index, (byte) 204, (byte) 255, (byte) 204);
+		palette.setColorAtIndex(HSSFColor.HSSFColorPredefined.GREEN.getIndex(), (byte) 204, (byte) 255, (byte) 204);
 
 		// primo foglio
 		HSSFSheet sheet = wb.createSheet("Riepilogo");
@@ -907,39 +911,39 @@ public class StatisController extends GenericController {
 		HSSFCellStyle csBold = wb.createCellStyle();
 		// Create a new font and alter it.
 		HSSFFont fontBold = wb.createFont();
-		fontBold.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		fontBold.setBold(true);
 		csBold.setFont(fontBold);
 
 		// Stile della cella con bordi e
 		// allineamento a destra
 		HSSFCellStyle csR = getBordo4Lati(wb);
-		csR.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+		csR.setAlignment(HorizontalAlignment.RIGHT);
 
 		// stile per celle col bordo con carattere grassetto
 		// ALLINEATO A DESTRA
 		HSSFCellStyle csBoldRight = getBordo4Lati(wb);
 		csBoldRight.setFont(fontBold);
-		csBoldRight.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+		csBoldRight.setAlignment(HorizontalAlignment.RIGHT);
 
 		// Stile Titolo 1
 		HSSFCellStyle csTitolo1 = getBordo4Lati(wb);
 
-		csTitolo1.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csTitolo1.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		csTitolo1.setFillForegroundColor(HSSFColor.GREEN.index);
+		csTitolo1.setAlignment(HorizontalAlignment.CENTER);
+		csTitolo1.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		csTitolo1.setFillForegroundColor(HSSFColor.HSSFColorPredefined.GREEN.getIndex());
 		csTitolo1.setFont(fontBold);
 
 		// Stile Titolo 2
 		HSSFCellStyle csTitolo2 = getBordo4Lati(wb);
 
-		csTitolo2.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csTitolo2.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		csTitolo2.setFillForegroundColor(HSSFColor.YELLOW.index);
+		csTitolo2.setAlignment(HorizontalAlignment.CENTER);
+		csTitolo2.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		csTitolo2.setFillForegroundColor(HSSFColor.HSSFColorPredefined.YELLOW.getIndex());
 		csTitolo2.setFont(fontBold);
 
 		// Utilizzo colore non standard (204,255,204)
 		HSSFPalette palette = wb.getCustomPalette();
-		palette.setColorAtIndex(HSSFColor.GREEN.index, (byte) 204, (byte) 255, (byte) 204);
+		palette.setColorAtIndex(HSSFColor.HSSFColorPredefined.GREEN.getIndex(), (byte) 204, (byte) 255, (byte) 204);
 
 		HSSFSheet sheet = wb.createSheet(nomeFoglio);
 
@@ -1242,7 +1246,7 @@ public class StatisController extends GenericController {
 
 		// Create a new font and alter it.
 		HSSFFont font = wb.createFont();
-		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		font.setBold(true);
 		csBold.setFont(font);
 
 		// primo foglio -----------------------------------------RIEPILOGO
@@ -1252,10 +1256,10 @@ public class StatisController extends GenericController {
 		// Colore per TIPOLOGIA
 		HSSFCellStyle style = wb.createCellStyle();
 		style = getBordo4Lati(wb);
-		// style.setFillBackgroundColor(HSSFColor.GREY_50_PERCENT.index);
+		// style.setFillBackgroundColor(HSSFColor.HSSFColorPredefined.GREY_50_PERCENT.getIndex());
 		HSSFFont fontGR = wb.createFont();
-		fontGR.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
-		fontGR.setColor(HSSFColor.BLUE.index);
+		fontGR.setBold(true);
+		fontGR.setColor(HSSFColor.HSSFColorPredefined.BLUE.getIndex());
 		style.setFont(fontGR);
 
 		// Colore per TOTALI
@@ -1263,7 +1267,7 @@ public class StatisController extends GenericController {
 		stylered = getBordo4Lati(wb);
 
 		HSSFFont fontR = wb.createFont();
-		fontR.setColor(HSSFColor.RED.index);
+		fontR.setColor(HSSFColor.HSSFColorPredefined.RED.getIndex());
 		stylered.setFont(fontR);
 
 		// Intestazione del foglio excel
@@ -1513,12 +1517,12 @@ public class StatisController extends GenericController {
 		HSSFCellStyle csBold = getBordo4Lati(wb);
 		// Create a new font and alter it.
 		HSSFFont font = wb.createFont();
-		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		font.setBold(true);
 		csBold.setFont(font);
 
 		HSSFCellStyle csBoldCenter = getBordo4Lati(wb);
 		csBoldCenter.setFont(font);
-		csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csBoldCenter.setAlignment(HorizontalAlignment.CENTER);
 
 		// primo foglio
 		HSSFSheet sheet = wb.createSheet("Riepilogo");
@@ -1705,12 +1709,12 @@ public class StatisController extends GenericController {
 		HSSFCellStyle csBold = getBordo4Lati(wb);
 		// Create a new font and alter it.
 		HSSFFont font = wb.createFont();
-		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		font.setBold(true);
 		csBold.setFont(font);
 
 		HSSFCellStyle csBoldCenter = getBordo4Lati(wb);
 		csBoldCenter.setFont(font);
-		csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csBoldCenter.setAlignment(HorizontalAlignment.CENTER);
 
 		// primo foglio
 		HSSFSheet sheet = wb.createSheet("Riepilogo");
@@ -1886,13 +1890,13 @@ public class StatisController extends GenericController {
 		HSSFCellStyle csBold = getBordo4Lati(wb);
 		// Create a new font and alter it.
 		HSSFFont font = wb.createFont();
-		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		font.setBold(true);
 		csBold.setFont(font);
 
 		// stile per celle col bordo con carattere grassetto centrato
 		HSSFCellStyle csBoldCenter = getBordo4Lati(wb);
 		csBoldCenter.setFont(font);
-		csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csBoldCenter.setAlignment(HorizontalAlignment.CENTER);
 
 		// foglio dettaglio
 		HSSFSheet sheet = wb.createSheet("Dettaglio");
@@ -2109,27 +2113,27 @@ public class StatisController extends GenericController {
 		HSSFCellStyle csBold = getBordo4Lati(wb);
 		// Create a new font and alter it.
 		HSSFFont font = wb.createFont();
-		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		font.setBold(true);
 		csBold.setFont(font);
 
 		// stile per celle col bordo con testo centrato
 		HSSFCellStyle csCenter = getBordo4Lati(wb);
-		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csCenter.setAlignment(HorizontalAlignment.CENTER);
+		csCenter.setVerticalAlignment(VerticalAlignment.CENTER);
 		csCenter.setWrapText(true);
 
 		// stile per celle col bordo con carattere grassetto centrato
 		HSSFCellStyle csBoldCenter = getBordo4Lati(wb);
 		csBoldCenter.setFont(font);
-		csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csBoldCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csBoldCenter.setAlignment(HorizontalAlignment.CENTER);
+		csBoldCenter.setVerticalAlignment(VerticalAlignment.CENTER);
 		csBoldCenter.setWrapText(true);
 
 		// stile per celle col bordo con carattere grassetto centrato e testo verticale
 		HSSFCellStyle csVert = getBordo4Lati(wb);
 		csVert.setFont(font);
-		csVert.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csVert.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csVert.setAlignment(HorizontalAlignment.CENTER);
+		csVert.setVerticalAlignment(VerticalAlignment.CENTER);
 		csVert.setRotation((short) 90);
 
 		// foglio dettaglio
@@ -2337,10 +2341,10 @@ public class StatisController extends GenericController {
 	private HSSFCellStyle getBordo4Lati(HSSFWorkbook wb) {
 
 		HSSFCellStyle cs = wb.createCellStyle();
-		cs.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		cs.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		cs.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		cs.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		cs.setBorderBottom(BorderStyle.THIN);
+		cs.setBorderTop(BorderStyle.THIN);
+		cs.setBorderRight(BorderStyle.THIN);
+		cs.setBorderLeft(BorderStyle.THIN);
 
 		return cs;
 	}
@@ -2403,7 +2407,7 @@ public class StatisController extends GenericController {
 		row = sheet.createRow(nRow);
 		// Create a cell and put a value in it.
 
-		// [SG] 11/11/2021 se è null scrivo ""
+		// [SG] 11/11/2021 se ï¿½ null scrivo ""
 		value = ("Tel. " + StringUtils.toStringJSP(uffUteConnesso.getTelefono()) + " - Fax "
 				+ StringUtils.toStringJSP(uffUteConnesso.getFax()));
 		setCell(row, 0, value, csNull);
@@ -2429,7 +2433,7 @@ public class StatisController extends GenericController {
 		row = sheet.createRow(nRow);
 		// Create a cell and put a value in it.
 
-		// [SG] 11/11/2021 se è null scrivo ""
+		// [SG] 11/11/2021 se ï¿½ null scrivo ""
 		value = ("Tel. " + StringUtils.toStringJSP(uffUteConnesso.getTelefono()) + " - Fax "
 				+ StringUtils.toStringJSP(uffUteConnesso.getFax()));
 		setCell(row, 0, value, csNull);
@@ -2692,27 +2696,27 @@ public class StatisController extends GenericController {
 		HSSFCellStyle csBold = getBordo4Lati(wb);
 		// Create a new font and alter it.
 		HSSFFont font = wb.createFont();
-		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		font.setBold(true);
 		csBold.setFont(font);
 
 		// stile per celle col bordo con testo centrato
 		HSSFCellStyle csCenter = getBordo4Lati(wb);
-		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csCenter.setAlignment(HorizontalAlignment.CENTER);
+		csCenter.setVerticalAlignment(VerticalAlignment.CENTER);
 		csCenter.setWrapText(true);
 
 		// stile per celle col bordo con carattere grassetto centrato
 		HSSFCellStyle csBoldCenter = getBordo4Lati(wb);
 		csBoldCenter.setFont(font);
-		csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csBoldCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csBoldCenter.setAlignment(HorizontalAlignment.CENTER);
+		csBoldCenter.setVerticalAlignment(VerticalAlignment.CENTER);
 		csBoldCenter.setWrapText(true);
 
 		// stile per celle col bordo con carattere grassetto centrato e testo verticale
 		HSSFCellStyle csVert = getBordo4Lati(wb);
 		csVert.setFont(font);
-		csVert.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csVert.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csVert.setAlignment(HorizontalAlignment.CENTER);
+		csVert.setVerticalAlignment(VerticalAlignment.CENTER);
 		csVert.setRotation((short) 90);
 
 		// foglio dettaglio
@@ -2983,7 +2987,7 @@ public class StatisController extends GenericController {
 		// HSSFCellStyle csBold = csNull;
 		// Create a new font and alter it.
 		// HSSFFont font = wb.createFont();
-		// font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		// font.setBold(true);
 		// csBold.setFont(font);
 
 		int nRow = 0;
@@ -3011,8 +3015,8 @@ public class StatisController extends GenericController {
 
 		// stile per celle col bordo con testo centrato
 		HSSFCellStyle csCenter = getBordo4Lati(wb);
-		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csCenter.setAlignment(HorizontalAlignment.CENTER);
+		csCenter.setVerticalAlignment(VerticalAlignment.CENTER);
 		csCenter.setWrapText(true);
 
 		row = sheet.createRow(nRow++);
@@ -3137,8 +3141,8 @@ public class StatisController extends GenericController {
 
 		// stile per celle col bordo con testo centrato
 		HSSFCellStyle csCenter = getBordo4Lati(wb);
-		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csCenter.setAlignment(HorizontalAlignment.CENTER);
+		csCenter.setVerticalAlignment(VerticalAlignment.CENTER);
 		csCenter.setWrapText(true);
 
 		row = sheet.createRow(nRow++);
@@ -3282,8 +3286,8 @@ public class StatisController extends GenericController {
 
 		// stile per celle col bordo con testo centrato
 		HSSFCellStyle csCenter = getBordo4Lati(wb);
-		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csCenter.setAlignment(HorizontalAlignment.CENTER);
+		csCenter.setVerticalAlignment(VerticalAlignment.CENTER);
 		csCenter.setWrapText(true);
 
 		row = sheet.createRow(nRow++);
@@ -3421,8 +3425,8 @@ public class StatisController extends GenericController {
 
 		// stile per celle col bordo con testo centrato
 		HSSFCellStyle csCenter = getBordo4Lati(wb);
-		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csCenter.setAlignment(HorizontalAlignment.CENTER);
+		csCenter.setVerticalAlignment(VerticalAlignment.CENTER);
 		csCenter.setWrapText(true);
 
 		row = sheet.createRow(nRow++);
@@ -3545,27 +3549,27 @@ public class StatisController extends GenericController {
 		HSSFCellStyle csBold = getBordo4Lati(wb);
 		// Create a new font and alter it.
 		HSSFFont font = wb.createFont();
-		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		font.setBold(true);
 		csBold.setFont(font);
 
 		// stile per celle col bordo con testo centrato
 		HSSFCellStyle csCenter = getBordo4Lati(wb);
-		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csCenter.setAlignment(HorizontalAlignment.CENTER);
+		csCenter.setVerticalAlignment(VerticalAlignment.CENTER);
 		csCenter.setWrapText(true);
 
 		// stile per celle col bordo con carattere grassetto centrato
 		HSSFCellStyle csBoldCenter = getBordo4Lati(wb);
 		csBoldCenter.setFont(font);
-		csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csBoldCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csBoldCenter.setAlignment(HorizontalAlignment.CENTER);
+		csBoldCenter.setVerticalAlignment(VerticalAlignment.CENTER);
 		csBoldCenter.setWrapText(true);
 
 		// stile per celle col bordo con carattere grassetto centrato e testo verticale
 		HSSFCellStyle csVert = getBordo4Lati(wb);
 		csVert.setFont(font);
-		csVert.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csVert.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csVert.setAlignment(HorizontalAlignment.CENTER);
+		csVert.setVerticalAlignment(VerticalAlignment.CENTER);
 		csVert.setRotation((short) 90);
 
 		// foglio dettaglio
@@ -3745,8 +3749,8 @@ public class StatisController extends GenericController {
 
 		// stile per celle col bordo con testo centrato
 		HSSFCellStyle csCenter = getBordo4Lati(wb);
-		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csCenter.setAlignment(HorizontalAlignment.CENTER);
+		csCenter.setVerticalAlignment(VerticalAlignment.CENTER);
 		csCenter.setWrapText(true);
 
 		row = sheet.createRow(nRow++);
@@ -3880,8 +3884,8 @@ public class StatisController extends GenericController {
 
 		// stile per celle col bordo con testo centrato
 		HSSFCellStyle csCenter = getBordo4Lati(wb);
-		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csCenter.setAlignment(HorizontalAlignment.CENTER);
+		csCenter.setVerticalAlignment(VerticalAlignment.CENTER);
 		csCenter.setWrapText(true);
 
 		row = sheet.createRow(nRow++);
@@ -4058,8 +4062,8 @@ public class StatisController extends GenericController {
 
 		// stile per celle col bordo con testo centrato
 		HSSFCellStyle csCenter = getBordo4Lati(wb);
-		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csCenter.setAlignment(HorizontalAlignment.CENTER);
+		csCenter.setVerticalAlignment(VerticalAlignment.CENTER);
 		csCenter.setWrapText(true);
 
 		row = sheet.createRow(nRow++);
@@ -4239,32 +4243,32 @@ public class StatisController extends GenericController {
 		HSSFCellStyle csBold = wb.createCellStyle();
 		// Create a new font and alter it.
 		HSSFFont font = wb.createFont();
-		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		font.setBold(true);
 		csBold.setFont(font);
 
 		// stile per celle col bordo con carattere grassetto centrato
 		HSSFCellStyle csBoldCenter = getBordo4Lati(wb);
 		csBoldCenter.setFont(font);
-		csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csBoldCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csBoldCenter.setAlignment(HorizontalAlignment.CENTER);
+		csBoldCenter.setVerticalAlignment(VerticalAlignment.CENTER);
 		csBoldCenter.setWrapText(true);
 
 		// stile per celle col bordo con testo centrato
 		HSSFCellStyle csCenter = getBordo4Lati(wb);
-		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csCenter.setAlignment(HorizontalAlignment.CENTER);
+		csCenter.setVerticalAlignment(VerticalAlignment.CENTER);
 		csCenter.setWrapText(true);
 
 		// Stile della cella con bordi e
 		// allineamento a destra
 		HSSFCellStyle csR = getBordo4Lati(wb);
-		csR.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+		csR.setAlignment(HorizontalAlignment.RIGHT);
 
 		// stile per celle col bordo con carattere grassetto
 		// ALLINEATO A DESTRA
 		HSSFCellStyle csBoldRight = getBordo4Lati(wb);
 		csBoldRight.setFont(font);
-		csBoldRight.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+		csBoldRight.setAlignment(HorizontalAlignment.RIGHT);
 
 		HSSFSheet sheet = wb.createSheet("Elenco");
 
@@ -4305,7 +4309,7 @@ public class StatisController extends GenericController {
 
 		numCol = 0;
 
-		setCell(row, numCol++, "N° SIEP", csBoldCenter);
+		setCell(row, numCol++, "Nï¿½ SIEP", csBoldCenter);
 		setCell(row, numCol++, "Cognome", csBoldCenter);
 		setCell(row, numCol++, "Nome", csBoldCenter);
 		setCell(row, numCol++, "Luogo Nascita", csBoldCenter);
@@ -4313,7 +4317,7 @@ public class StatisController extends GenericController {
 		if ("S".equals(aScaMod.getCodStatoNotifica())) {
 			setCell(row, numCol++, "Data Notifica", csBoldCenter);
 			setCell(row, numCol++, "Data Scadenza", csBoldCenter);
-			setCell(row, numCol++, "N° Giorni Residui", csBoldCenter);
+			setCell(row, numCol++, "Nï¿½ Giorni Residui", csBoldCenter);
 		} else {
 			setCell(row, numCol++, "Data Emissione Decreto", csBoldCenter);
 			setCell(row, numCol++, "Stato delle notifiche", csBoldCenter);
@@ -4388,7 +4392,7 @@ public class StatisController extends GenericController {
 		// stile per celle con carattere grassetto
 		/*
 		 * HSSFCellStyle csBold = wb.createCellStyle(); // Create a new font and alter it. HSSFFont font =
-		 * wb.createFont(); font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD); csBold.setFont(font);
+		 * wb.createFont(); font.setBold(true); csBold.setFont(font);
 		 */
 		int nRow = 0;
 
@@ -4413,8 +4417,8 @@ public class StatisController extends GenericController {
 
 		// stile per celle col bordo con testo centrato
 		HSSFCellStyle csCenter = getBordo4Lati(wb);
-		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csCenter.setAlignment(HorizontalAlignment.CENTER);
+		csCenter.setVerticalAlignment(VerticalAlignment.CENTER);
 		csCenter.setWrapText(true);
 
 		row = sheet.createRow(nRow++);
@@ -4513,7 +4517,7 @@ public class StatisController extends GenericController {
 
 		// Variabili per la gestione degli Oggetti senza riscontro
 		Vector<String> lCodiciConRiscontri = new Vector<>();
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nï¿½ 6 - Ottimizzazione SIUS Avvocati
 		// Ticket#202008250110 - SIES - chiusura connessione a DB
 		Connection lConn = null;
 		IspMotivoOggettoDAO lIspOggettiSenzaRiscontriDAO = null;
@@ -4577,8 +4581,8 @@ public class StatisController extends GenericController {
 
 		// stile per celle col bordo con testo centrato
 		HSSFCellStyle csCenter = getBordo4Lati(wb);
-		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csCenter.setAlignment(HorizontalAlignment.CENTER);
+		csCenter.setVerticalAlignment(VerticalAlignment.CENTER);
 		csCenter.setWrapText(true);
 
 		row = sheet.createRow(nRow++);
@@ -4644,7 +4648,7 @@ public class StatisController extends GenericController {
 		}
 
 		try {
-			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			// Scheda Intervento nï¿½ 6 - Ottimizzazione SIUS Avvocati
 			// Ticket#202008250110 - SIES - chiusura connessione a DB
 			lConn = getDBConnection();
 			// lIspOggettiSenzaRiscontriDAO = new IspMotivoOggettoDAO(getDBConnection());
@@ -4685,7 +4689,7 @@ public class StatisController extends GenericController {
 			siesLogger.error("F3BException: " + ex);
 			throw new F3BException("StatisController.creaFoglioOggettiPendenti: " + ex);
 		}
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nï¿½ 6 - Ottimizzazione SIUS Avvocati
 		// Ticket#202008250110 - SIES - chiusura connessione a DB
 		finally {
 			cleanup(lIspOggettiSenzaRiscontriDAO);
@@ -4721,7 +4725,7 @@ public class StatisController extends GenericController {
 
 		// Variabili per la gestione degli Oggetti senza riscontro
 		Vector<String> lCodiciConRiscontri = new Vector<>();
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nï¿½ 6 - Ottimizzazione SIUS Avvocati
 		// Ticket#202008250110 - SIES - chiusura connessione a DB
 		Connection lConn = null;
 		IspMotivoOggettoDAO lIspOggettiSenzaRiscontriDAO = null;
@@ -4757,8 +4761,8 @@ public class StatisController extends GenericController {
 
 		// stile per celle col bordo con testo centrato
 		HSSFCellStyle csCenter = getBordo4Lati(wb);
-		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csCenter.setAlignment(HorizontalAlignment.CENTER);
+		csCenter.setVerticalAlignment(VerticalAlignment.CENTER);
 		csCenter.setWrapText(true);
 
 		row = sheet.createRow(nRow++);
@@ -4818,7 +4822,7 @@ public class StatisController extends GenericController {
 		}
 
 		try {
-			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			// Scheda Intervento nï¿½ 6 - Ottimizzazione SIUS Avvocati
 			// Ticket#202008250110 - SIES - chiusura connessione a DB
 			lConn = getDBConnection();
 			// lIspOggettiSenzaRiscontriDAO = new IspMotivoOggettoDAO(getDBConnection());
@@ -4850,7 +4854,7 @@ public class StatisController extends GenericController {
 			siesLogger.error("F3BException: " + ex);
 			throw new F3BException("StatisController.creaFoglioOggettiPendenti: " + ex);
 		}
-		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Scheda Intervento nï¿½ 6 - Ottimizzazione SIUS Avvocati
 		// Ticket#202008250110 - SIES - chiusura connessione a DB
 		finally {
 			cleanup(lIspOggettiSenzaRiscontriDAO);
@@ -4910,8 +4914,8 @@ public class StatisController extends GenericController {
 
 		// stile per celle col bordo con testo centrato
 		HSSFCellStyle csCenter = getBordo4Lati(wb);
-		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csCenter.setAlignment(HorizontalAlignment.CENTER);
+		csCenter.setVerticalAlignment(VerticalAlignment.CENTER);
 		csCenter.setWrapText(true);
 
 		row = sheet.createRow(nRow++);
@@ -5027,8 +5031,8 @@ public class StatisController extends GenericController {
 
 		// stile per celle col bordo con testo centrato
 		HSSFCellStyle csCenter = getBordo4Lati(wb);
-		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csCenter.setAlignment(HorizontalAlignment.CENTER);
+		csCenter.setVerticalAlignment(VerticalAlignment.CENTER);
 		csCenter.setWrapText(true);
 
 		row = sheet.createRow(nRow++);
@@ -5108,32 +5112,32 @@ public class StatisController extends GenericController {
 		HSSFCellStyle csBold = wb.createCellStyle();
 		// Create a new font and alter it.
 		HSSFFont font = wb.createFont();
-		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		font.setBold(true);
 		csBold.setFont(font);
 
 		// stile per celle col bordo con carattere grassetto centrato
 		HSSFCellStyle csBoldCenter = getBordo4Lati(wb);
 		csBoldCenter.setFont(font);
-		csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csBoldCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csBoldCenter.setAlignment(HorizontalAlignment.CENTER);
+		csBoldCenter.setVerticalAlignment(VerticalAlignment.CENTER);
 		csBoldCenter.setWrapText(true);
 
 		// stile per celle col bordo con testo centrato
 		HSSFCellStyle csCenter = getBordo4Lati(wb);
-		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csCenter.setAlignment(HorizontalAlignment.CENTER);
+		csCenter.setVerticalAlignment(VerticalAlignment.CENTER);
 		csCenter.setWrapText(true);
 
 		// Stile della cella con bordi e
 		// allineamento a destra
 		HSSFCellStyle csR = getBordo4Lati(wb);
-		csR.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+		csR.setAlignment(HorizontalAlignment.RIGHT);
 
 		// stile per celle col bordo con carattere grassetto
 		// ALLINEATO A DESTRA
 		HSSFCellStyle csBoldRight = getBordo4Lati(wb);
 		csBoldRight.setFont(font);
-		csBoldRight.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+		csBoldRight.setAlignment(HorizontalAlignment.RIGHT);
 
 		HSSFSheet sheet = wb.createSheet("Elenco");
 
@@ -5174,7 +5178,7 @@ public class StatisController extends GenericController {
 
 		numCol = 0;
 
-		setCell(row, numCol++, "N° SIEP", csBoldCenter);
+		setCell(row, numCol++, "Nï¿½ SIEP", csBoldCenter);
 		setCell(row, numCol++, "Cognome", csBoldCenter);
 		setCell(row, numCol++, "Nome", csBoldCenter);
 		setCell(row, numCol++, "Luogo Nascita", csBoldCenter);
@@ -5403,51 +5407,51 @@ public class StatisController extends GenericController {
 		HSSFCellStyle csBold = getBordo4Lati(wb);
 		// Create a new font and alter it.
 		HSSFFont font = wb.createFont();
-		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		font.setBold(true);
 		csBold.setFont(font);
 
 		// stile per celle col bordo con testo centrato
 		HSSFCellStyle csCenter = getBordo4Lati(wb);
-		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		// csCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csCenter.setAlignment(HorizontalAlignment.CENTER);
+		// csCenter.setVerticalAlignment(VerticalAlignment.CENTER);
 		csCenter.setWrapText(true);
 
 		// stile per celle col bordo con carattere grassetto centrato
 		HSSFCellStyle csBoldCenter = getBordo4Lati(wb);
 		csBoldCenter.setFont(font);
-		csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		// csBoldCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csBoldCenter.setAlignment(HorizontalAlignment.CENTER);
+		// csBoldCenter.setVerticalAlignment(VerticalAlignment.CENTER);
 		csBoldCenter.setWrapText(true);
 
 		HSSFPalette palette = wb.getCustomPalette();
-		palette.setColorAtIndex(HSSFColor.GREEN.index, (byte) 198, (byte) 224, (byte) 180);
+		palette.setColorAtIndex(HSSFColor.HSSFColorPredefined.GREEN.getIndex(), (byte) 198, (byte) 224, (byte) 180);
 
 		// Stile righe Intestazioni
 		HSSFFont fontGR = wb.createFont();
-		fontGR.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
-		fontGR.setColor(HSSFColor.BLUE.index);
+		fontGR.setBold(true);
+		fontGR.setColor(HSSFColor.HSSFColorPredefined.BLUE.getIndex());
 
 		HSSFCellStyle csTitolo1 = getBordo4Lati(wb);
 
-		csTitolo1.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csTitolo1.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		csTitolo1.setFillForegroundColor(HSSFColor.GREEN.index);
+		csTitolo1.setAlignment(HorizontalAlignment.CENTER);
+		csTitolo1.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		csTitolo1.setFillForegroundColor(HSSFColor.HSSFColorPredefined.GREEN.getIndex());
 		csTitolo1.setFont(fontGR);
 
 		// stile per celle col bordo con carattere grassetto centrato e testo verticale
 		/*
 		 * HSSFCellStyle csVert = getBordo4Lati(wb); csVert.setFont(font);
-		 * csVert.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		 * csVert.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER); csVert.setRotation((short) 90);
+		 * csVert.setAlignment(HorizontalAlignment.CENTER);
+		 * csVert.setVerticalAlignment(VerticalAlignment.CENTER); csVert.setRotation((short) 90);
 		 */
 
 		// Stile righe Intestazioni
-		// palette.setColorAtIndex(HSSFColor.DARK_TEAL.index, (byte) 237, (byte) 125, (byte) 49);
+		// palette.setColorAtIndex(HSSFColor.HSSFColorPredefined.DARK_TEAL.getIndex(), (byte) 237, (byte) 125, (byte) 49);
 		HSSFFont fontGruppo = wb.createFont();
-		fontGruppo.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		fontGruppo.setBold(true);
 		// HSSFColor color = palette.findSimilarColor(237, 125, 49);
 		// fontGruppo.setColor(color.getIndex());
-		fontGruppo.setColor(HSSFColor.BLUE.index);
+		fontGruppo.setColor(HSSFColor.HSSFColorPredefined.BLUE.getIndex());
 
 		// foglio Elenco
 		HSSFSheet sheet = wb.createSheet("Elenco Procedimenti");
@@ -5462,9 +5466,9 @@ public class StatisController extends GenericController {
 		HSSFCellStyle style = wb.createCellStyle();
 		style = getBordo4Lati(wb);
 		HSSFFont fontR = wb.createFont();
-		// style.setFillForegroundColor(HSSFColor.LIME.index);
-		// style.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		fontR.setColor(HSSFColor.RED.index);
+		// style.setFillForegroundColor(HSSFColor.HSSFColorPredefined.LIME.getIndex());
+		// style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		fontR.setColor(HSSFColor.HSSFColorPredefined.RED.getIndex());
 		style.setFont(fontR);
 
 		// Intestazione del foglio excel
@@ -5680,8 +5684,8 @@ public class StatisController extends GenericController {
 
 		// stile per celle col bordo con testo centrato
 		HSSFCellStyle csCenter = getBordo4Lati(wb);
-		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csCenter.setAlignment(HorizontalAlignment.CENTER);
+		csCenter.setVerticalAlignment(VerticalAlignment.CENTER);
 		csCenter.setWrapText(true);
 
 		lRowExcel = sheet.createRow(lRow++);
@@ -5923,7 +5927,7 @@ public class StatisController extends GenericController {
 		} catch (Exception e) {
 			siesLogger.error(e.getMessage());
 		} finally {
-			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			// Scheda Intervento nï¿½ 6 - Ottimizzazione SIUS Avvocati
 			cleanup(lSoggettoDao);
 			cleanup(lDocumentoAllegatoDao);
 			cleanup(lImpugnazioneDao);
@@ -5985,8 +5989,8 @@ public class StatisController extends GenericController {
 
 		// stile per celle col bordo con testo centrato
 		lCellStyleCenter = getBordo4Lati(aWb);
-		lCellStyleCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		lCellStyleCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		lCellStyleCenter.setAlignment(HorizontalAlignment.CENTER);
+		lCellStyleCenter.setVerticalAlignment(VerticalAlignment.CENTER);
 		lCellStyleCenter.setWrapText(true);
 
 		lRow = lSheet.createRow(lRowCounter++);
@@ -6152,8 +6156,8 @@ public class StatisController extends GenericController {
 
 		// stile per celle col bordo con testo centrato
 		lCellStyleCenter = getBordo4Lati(lWb);
-		lCellStyleCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		lCellStyleCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		lCellStyleCenter.setAlignment(HorizontalAlignment.CENTER);
+		lCellStyleCenter.setVerticalAlignment(VerticalAlignment.CENTER);
 		lCellStyleCenter.setWrapText(true);
 
 		lRow = lSheet.createRow(lRowCounter++);
@@ -6422,8 +6426,8 @@ public class StatisController extends GenericController {
 
 		// stile per celle col bordo con testo centrato
 		lCellStyleCenter = getBordo4Lati(lWb);
-		lCellStyleCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		lCellStyleCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		lCellStyleCenter.setAlignment(HorizontalAlignment.CENTER);
+		lCellStyleCenter.setVerticalAlignment(VerticalAlignment.CENTER);
 		lCellStyleCenter.setWrapText(true);
 
 		lRow = lSheet.createRow(lRowCounter++);
@@ -6955,7 +6959,7 @@ public class StatisController extends GenericController {
 		HSSFCellStyle boldStyle = wb.createCellStyle();
 		HSSFFont fontBold = wb.createFont();
 
-		fontBold.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		fontBold.setBold(true);
 		boldStyle.setFont(fontBold);
 		return boldStyle;
 	}
@@ -7019,8 +7023,8 @@ public class StatisController extends GenericController {
 
 		// stile per celle col bordo con testo centrato
 		HSSFCellStyle csCenter = getBordo4Lati(wb);
-		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csCenter.setAlignment(HorizontalAlignment.CENTER);
+		csCenter.setVerticalAlignment(VerticalAlignment.CENTER);
 		csCenter.setWrapText(true);
 
 		row = sheet.createRow(nRow++);

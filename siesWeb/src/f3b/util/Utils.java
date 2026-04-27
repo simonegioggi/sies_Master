@@ -14,11 +14,9 @@ import org.apache.xerces.impl.dv.util.Base64;
 
 import f3b.security.SecurityException;
 import siap.sico.decodifiche.model.DecodificheModel;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 /**
- * Utils - Classe di utilità generica.
+ * Utils - Classe di utilitï¿½ generica.
  * 
  * @version 1.0
  */
@@ -61,10 +59,9 @@ public class Utils {
 	 */
 	public static String pwdNSCEncode(String password) throws SecurityException {
 
-		BASE64Encoder encoder = new BASE64Encoder();
 		String encodedBytes = null;
 		try {
-			encodedBytes = encoder.encodeBuffer(password.getBytes());
+			encodedBytes = java.util.Base64.getEncoder().encodeToString(password.getBytes());
 		} catch (Exception ex) {
 			throw new SecurityException("Errore durante il pwdNSCEncode della password");
 		}
@@ -80,10 +77,9 @@ public class Utils {
 	 */
 	public static String pwdNSCDecode(String password) throws SecurityException {
 
-		BASE64Decoder decoder = new BASE64Decoder();
 		byte[] decodedBytes = null;
 		try {
-			decodedBytes = decoder.decodeBuffer(password);
+			decodedBytes = java.util.Base64.getDecoder().decode(password);
 		} catch (Exception ex) {
 			throw new SecurityException("Errore durante il pwdNSCDecode della password");
 		}
@@ -191,7 +187,7 @@ public class Utils {
 	 */
 	public static Iterator sortHashKeys(Hashtable aHash) {
 
-		// Affinchè possa effetturae il sort della tabella di hash
+		// Affinchï¿½ possa effetturae il sort della tabella di hash
 		// e necessario ottenere da quest'ultimo un oggetto derivato dalla
 		// classe List.
 		// Tale passaggio avviene invocando il metodo asList della classe
@@ -211,7 +207,7 @@ public class Utils {
 	}
 
 	/**
-	 * STUB : PM - Ma questo non è uguale al precedente ?
+	 * STUB : PM - Ma questo non ï¿½ uguale al precedente ?
 	 * Questo metodo acccetta in ingresso una Hashtable e ritorna un oggetto Iterator che contiene la lista
 	 * delle chiavi sortate.
 	 *
@@ -221,7 +217,7 @@ public class Utils {
 	 */
 	public static Iterator sortHashKeysForBLOB(Hashtable aHash) {
 
-		// Affinchè possa effetturae il sort della tabella di hash
+		// Affinchï¿½ possa effetturae il sort della tabella di hash
 		// e necessario ottenere da quest'ultimo un oggetto derivato dalla
 		// classe List.
 		// Tale passaggio avviene invocando il metodo asList della classe
@@ -241,7 +237,7 @@ public class Utils {
 	}
 
 	/**
-	 * Verifica se la stringa passata è un valore numerico.
+	 * Verifica se la stringa passata ï¿½ un valore numerico.
 	 *
 	 * @param lValue
 	 *            Stringa da controllare.
@@ -345,7 +341,7 @@ public class Utils {
 	 *            la Stringa da verificare
 	 * @param trim
 	 *            true se vogliamo effettuare il trim sulla stringa
-	 * @return true se è presente, altrimenti false
+	 * @return true se ï¿½ presente, altrimenti false
 	 */
 	public static boolean isPresent(String s, boolean trim) {
 
@@ -360,7 +356,7 @@ public class Utils {
 	 *
 	 * @param s
 	 *            la Stringa da verificare
-	 * @return true se è presente, altrimenti false
+	 * @return true se ï¿½ presente, altrimenti false
 	 */
 	public static boolean isPresent(String s) {
 
@@ -419,7 +415,7 @@ public class Utils {
 	 *
 	 * @param o
 	 *            l'Object da verificare
-	 * @return true se è presente, altrimenti false
+	 * @return true se ï¿½ presente, altrimenti false
 	 */
 	public static boolean isPresent(Object o) {
 
@@ -431,7 +427,7 @@ public class Utils {
 	 *
 	 * @param o
 	 *            l'array di Object da verificare
-	 * @return true se è presente, altrimenti false
+	 * @return true se ï¿½ presente, altrimenti false
 	 */
 	public static boolean isPresent(Object[] o) {
 
@@ -490,7 +486,7 @@ public class Utils {
 	 *
 	 * @param s
 	 *            la Stringa da verificare
-	 * @return true se è presente, altrimenti false
+	 * @return true se ï¿½ presente, altrimenti false
 	 */
 	public static boolean isPresentNotTrattino(String s) {
 

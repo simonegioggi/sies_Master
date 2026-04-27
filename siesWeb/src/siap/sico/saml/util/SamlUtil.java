@@ -53,7 +53,6 @@ import org.opensaml.xml.parse.XMLParserException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import sun.misc.BASE64Encoder;
 import f3b.log.LogF3B;
 
 /**
@@ -229,8 +228,7 @@ public class SamlUtil { // extends XMLTestCase
 			streamIn.read(lBuffer, 0, streamIn.available());
 			streamIn.close();
 
-			BASE64Encoder encoder = new BASE64Encoder();
-			lReturnString = encoder.encode(lBuffer);
+			lReturnString = java.util.Base64.getEncoder().encodeToString(lBuffer);
 		} catch (FileNotFoundException e) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.info("FileCopy: " + e);
