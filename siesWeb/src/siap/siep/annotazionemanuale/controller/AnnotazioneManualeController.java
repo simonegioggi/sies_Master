@@ -73,18 +73,7 @@ import siap.sige.provvedimento.dao.ProvvedimentoSigeDAO;
 import siap.sige.provvedimento.model.ProvvedimentoSigeModel;
 
 /**
- * <p>
- * Title: AnnotazioneManualeController
- * </p>
- * <p>
- * Description: Classe Controller per AnnotazioneManuale
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * AnnotazioneManualeController - Classe Controller per AnnotazioneManuale
  *
  * @version 1.0
  */
@@ -351,9 +340,7 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	}
 
 	/**
-	 * <p>
 	 * Inserisce l'evento e l'annotazione manuale agganciandogliela. Invocata nel caso di inserimento:
-	 * </p>
 	 * Richieste e decisioni del GE<br>
 	 * - depenalizazione<br>
 	 * - incostituzionalità<br>
@@ -361,10 +348,8 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	 * Rideterminazione pena<br>
 	 * - Presofferto e fungibilità<br>
 	 *
-	 * <p>
 	 * !!! Aggancia all'evento anche tutte le annotazioni trovate a sistema per lo stesso fascicolo, non
 	 * ancora validate, e dello stesso tipo di quella che si sta inserendo ma con FLAG_APP_PROVVISORIA='-' (?)
-	 * <p>
 	 *
 	 * @param aAnnotazioneManuale
 	 *            - annotazione
@@ -2109,6 +2094,16 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 			lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
 			lPenResSqlDao.ricercaPenaResiduaByIdFascicoloDataDesc(aFascicolo.getIdFascicoloSiep());
 			Vector lpenaresidua = new Vector(lPenResSqlDao.getModels());
+			// 20260428 [SG]: aggiungere controllo preventivo se NON è stato fatto il calcolo della PR a valle
+			// dell'emissione del "Provvedimento computo Misura Cautelare Altro Reato art. 657 c.p.p."
+			// PenaResiduaModel lUltimaPenaResidua = null;
+			// if (!Utils.isNullObj(lpenaresidua) && lpenaresidua.size() > 0)
+			// lUltimaPenaResidua = (PenaResiduaModel) lpenaresidua.get(0);
+			// else
+			// lUltimaPenaResidua = new PenaResiduaModel();
+			// Ma in teoria il calcolo va fatto:
+			// if (Utils.isNullObj(lpenaresidua) && lpenaresidua.size() == 0)
+			// throw new F3BException("Attenzione! Eseguire il Calcolo della Pena");
 			PenaResiduaModel lUltimaPenaResidua = (PenaResiduaModel) lpenaresidua.get(0);
 
 			// =======================================================================
@@ -3281,7 +3276,6 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 			cleanup(lAnnDao);
 			cleanup(lConn);
 		}
-
 	}
 
 	/**
