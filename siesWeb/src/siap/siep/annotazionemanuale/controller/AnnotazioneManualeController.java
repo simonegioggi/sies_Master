@@ -15,6 +15,7 @@ import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
+import f3b.util.Utils;
 import f3b.util.report.ReportGenerator;
 import f3b.util.xml.TreeModel;
 import siap.controller.SiapController;
@@ -2028,7 +2029,7 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 
 		EventoDAO lEveDao = null;
 		EventoSqlDAO lEveSqlDao = null;
-		PenaResiduaDAO lPenResDao = null;
+		// PenaResiduaDAO lPenResDao = null;
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 		MisuraAlternativaSqlDAO lMisSqlDAO = null;
 		MisuraAlternativaDAO lMisDAO = null;
@@ -2094,17 +2095,13 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 			lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
 			lPenResSqlDao.ricercaPenaResiduaByIdFascicoloDataDesc(aFascicolo.getIdFascicoloSiep());
 			Vector lpenaresidua = new Vector(lPenResSqlDao.getModels());
-			// 20260428 [SG]: aggiungere controllo preventivo se NON è stato fatto il calcolo della PR a valle
+			// 20260428 [SG]: aggiunto controllo preventivo se NON è stato fatto il calcolo della PR a valle
 			// dell'emissione del "Provvedimento computo Misura Cautelare Altro Reato art. 657 c.p.p."
-			// PenaResiduaModel lUltimaPenaResidua = null;
-			// if (!Utils.isNullObj(lpenaresidua) && lpenaresidua.size() > 0)
-			// lUltimaPenaResidua = (PenaResiduaModel) lpenaresidua.get(0);
-			// else
-			// lUltimaPenaResidua = new PenaResiduaModel();
-			// Ma in teoria il calcolo va fatto:
-			// if (Utils.isNullObj(lpenaresidua) && lpenaresidua.size() == 0)
-			// throw new F3BException("Attenzione! Eseguire il Calcolo della Pena");
-			PenaResiduaModel lUltimaPenaResidua = (PenaResiduaModel) lpenaresidua.get(0);
+			PenaResiduaModel lUltimaPenaResidua = null;
+			if (!Utils.isNullObj(lpenaresidua) && lpenaresidua.size() == 0)
+				throw new F3BException("Attenzione! Eseguire il Calcolo della Pena: Assegnazioni » Calcolo Pena");
+			else
+				lUltimaPenaResidua = (PenaResiduaModel) lpenaresidua.get(0);
 
 			// =======================================================================
 			// Aggiorno lo scadenzario FinePena/VaneRicerche con la nuova data fine
@@ -2114,9 +2111,8 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 					|| codicePosizione.equals("17") || codicePosizione.equals("46")
 					|| codicePosizione.equals("47") || codicePosizione.equals("20")
 					|| codicePosizione.equals("26") || codicePosizione.equals("30"))
-					&& !codicePosizione.equals("13") // Espiazione Pena in Regime di
-														// Affidamento in Prova
-			) {
+					// Espiazione Pena in Regime di Affidamento in Prova
+					&& !codicePosizione.equals("13")) {
 				ScadenzarioModel lScaMod = null;
 
 				ScadenzarioModel lScaModSet = new ScadenzarioModel();
@@ -2209,7 +2205,7 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 			Vector lAnnVec = new Vector(lAnnManuSqlDAO.getModels());
 			AnnotazioneManualeModel lAnnManMod = null;
 
-			lPenResDao = new PenaResiduaDAO(lConn);
+			// lPenResDao = new PenaResiduaDAO(lConn);
 			for (int i = 0; i < lAnnVec.size(); i++) {
 				lAnnManMod = (AnnotazioneManualeModel) lAnnVec.get(i);
 
@@ -2351,7 +2347,7 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 			cleanup(lEveDao);
 			cleanup(lEveDaoBlob);
 			cleanup(lEveSqlDao);
-			cleanup(lPenResDao);
+			// cleanup(lPenResDao);
 			cleanup(lPenResSqlDao);
 			cleanup(lMisSqlDAO);
 			cleanup(lMisDAO);
