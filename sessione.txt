@@ -1,0 +1,69 @@
+SESSIONE COPILOT – sies_Master
+==============================
+
+Data: 2026-04-30
+Repository: simonegioggi/sies_Master
+Branch: copilot/generate-use-cases-for-siep-sige-siup
+
+
+CONTESTO DEL PROGETTO
+---------------------
+Il repository contiene il sistema SIES (Sistema Informativo per l'Esecuzione
+e la Sorveglianza), composto da due moduli principali:
+
+  - siesWeb          versione 12.9.2.0         rilasciata il 27/03/2026
+  - siesEsecuzione   versione release_12.9.2.0  rilasciata il 27/03/2026
+
+
+OBIETTIVO DELLA SESSIONE
+------------------------
+Generazione dei casi d'uso per i sottosistemi:
+
+  - SIEP  – Sistema Informativo per l'Esecuzione Penale
+  - SIGE  – Sistema Informativo per la Gestione dell'Esecuzione
+  - SIUP  – Sistema Informativo Unico Penale
+
+
+STRUTTURA DEL REPOSITORY
+-------------------------
+sies_Master/
+  comunicazioni.war       -> Applicazione web comunicazioni
+  siesWeb/                -> Modulo web principale (SIES Web)
+    src/
+      it/                 -> Package Java principali
+      siap/               -> Sottosistema SIAP
+      f3b/                -> Sottosistema f3b
+    defaultroot/
+    info.txt
+  siesEsecuzione/         -> Modulo esecuzione (WEB_ESECUZIONE)
+    src/
+    pom.xml
+    readMe.txt
+    info.txt
+
+
+SCAMBI DELLA SESSIONE
+---------------------
+
+Richiesta 1:
+  "salva questa sessione in un file pdf"
+
+  Risposta: Non e' possibile generare direttamente un file PDF dalla sessione.
+  Sono state proposte le seguenti alternative:
+    - Stampa dal browser -> Salva come PDF (Ctrl+P / Cmd+P)
+    - Copia e incolla in Word/LibreOffice -> Esporta PDF
+    - Screenshot completo della pagina
+    - Salvataggio del contenuto come file .md o .txt nel repository
+
+Richiesta 2:
+  "sia .md che .txt grazie"
+
+  Risposta: Creazione di entrambi i file (sessione.md e sessione.txt)
+  nel repository.
+
+
+NOTE TECNICHE
+-------------
+  - Build tool: Maven (pom.xml in siesEsecuzione)
+  - Ambiente raccomandato: Eclipse Kepler con JDK 1.6 e Tomcat 6
+  - Connessione SVN: https://production.eng.it/scm/svnrepos/sies
