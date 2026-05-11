@@ -1,0 +1,36 @@
+Campo;Obbligatorio;Tipo;Sezione;Note
+Anno R.G.N.R.;*;input text;Dati generali;Parte di "Anno/Numero R.G.N.R."
+Numero R.G.N.R.;*;input text;Dati generali;Parte di "Anno/Numero R.G.N.R."
+Anno Reg.Gen.;;input text;Dati generali;Parte di "Anno/Numero Reg.Gen."
+Numero Reg.Gen.;;input text;Dati generali;Parte di "Anno/Numero Reg.Gen."
+Tipo Registro Generale;*;select;Dati generali;Obbligatorio da controllo JavaScript Verify()
+Sede PM;*;input text;Dati generali;Marcato con (*) in pagina; talvolta readonly
+Giorno Data Sentenza;*;input text;Sentenza da Eseguire;Parte di "Data Sentenza"
+Mese Data Sentenza;*;input text;Sentenza da Eseguire;Parte di "Data Sentenza"
+Anno Data Sentenza;*;input text;Sentenza da Eseguire;Parte di "Data Sentenza"
+Anno Sentenza;*;input text;Sentenza da Eseguire;Parte di "Anno/Numero Sentenza"
+Numero Sentenza;*;input text;Sentenza da Eseguire;Parte di "Anno/Numero Sentenza"
+Autorità Emittente;*;select;Sentenza da Eseguire;
+Tipo Rito;;select;Sentenza da Eseguire;Visibile solo per alcune autorità emittenti
+Luogo Emittente;*;input text;Sentenza da Eseguire;
+Sezione Autorità Emittente;;input text;Sentenza da Eseguire;
+Tipo Provvedimento;;select;Altro Grado di Giudizio;
+Tipo Sentenza;;select;Altro Grado di Giudizio;Condizionalmente obbligatorio se si compila la sentenza di riferimento
+Giorno Data Sentenza di Riferimento;;input text;Altro Grado di Giudizio;Condizionalmente obbligatorio se si compila la sentenza di riferimento
+Mese Data Sentenza di Riferimento;;input text;Altro Grado di Giudizio;Condizionalmente obbligatorio se si compila la sentenza di riferimento
+Anno Data Sentenza di Riferimento;;input text;Altro Grado di Giudizio;Condizionalmente obbligatorio se si compila la sentenza di riferimento
+Anno Sentenza/Ordinanza Riferimento;;input text;Altro Grado di Giudizio;
+Numero Sentenza/Ordinanza Riferimento;;input text;Altro Grado di Giudizio;
+Autorità Sentenza Riferimento;;select;Altro Grado di Giudizio;Condizionalmente obbligatorio se si compila la sentenza di riferimento
+Tipo Rito Riferimento;;select;Altro Grado di Giudizio;Visibile solo per alcune autorità emittenti
+Luogo Sentenza Riferimento;;input text;Altro Grado di Giudizio;Condizionalmente obbligatorio se si compila la sentenza di riferimento
+Sezione Autorità Riferimento;;input text;Altro Grado di Giudizio;
+Tipo Provvedimento Cassazione;;select;Decisione Cassazione;
+Anno Re.Ge. Cassazione;;input text;Decisione Cassazione;Campo name=ANNOREGECAS
+Numero Re.Ge. Cassazione;;input text;Decisione Cassazione;Campo name=NUMREGECAS
+Anno Sentenza Cassazione;;input text;Decisione Cassazione;
+Numero Sentenza Cassazione;;input text;Decisione Cassazione;
+Anno Raccolta Generale;;input text;Decisione Cassazione;
+Numero Raccolta Generale;;input text;Decisione Cassazione;
+Dispositivo Cassazione;;select;Decisione Cassazione;
+Note;;textarea;Note Aggiuntive;
