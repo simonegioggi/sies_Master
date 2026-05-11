@@ -1,0 +1,65 @@
+Campo;Obbligatorio;Tipo;Sezione;Note
+Anni Reclusione;;input text;Pena;Almeno un campo della sezione Pena deve essere valorizzato
+Mesi Reclusione;;input text;Pena;Almeno un campo della sezione Pena deve essere valorizzato
+Giorni Reclusione;;input text;Pena;Almeno un campo della sezione Pena deve essere valorizzato
+Intero Multa;;input text;Pena;Almeno un campo della sezione Pena deve essere valorizzato
+Decimale Multa;;input text;Pena;Almeno un campo della sezione Pena deve essere valorizzato
+Valuta Multa;;select;Pena;
+Anni Arresto;;input text;Pena;Almeno un campo della sezione Pena deve essere valorizzato
+Mesi Arresto;;input text;Pena;Almeno un campo della sezione Pena deve essere valorizzato
+Giorni Arresto;;input text;Pena;Almeno un campo della sezione Pena deve essere valorizzato
+Intero Ammenda;;input text;Pena;Almeno un campo della sezione Pena deve essere valorizzato
+Decimale Ammenda;;input text;Pena;Almeno un campo della sezione Pena deve essere valorizzato
+Valuta Ammenda;;select;Pena;
+Ergastolo / Tipo Pena Detentiva;;select;Pena;Almeno un campo della sezione Pena deve essere valorizzato
+Anni Isolamento Diurno;;input text;Pena;
+Mesi Isolamento Diurno;;input text;Pena;
+Giorni Isolamento Diurno;;input text;Pena;
+Giorno Data Prescrizione;;input text;Pena;Data opzionale ma validata
+Mese Data Prescrizione;;input text;Pena;Data opzionale ma validata
+Anno Data Prescrizione;;input text;Pena;Data opzionale ma validata
+Sanzione Sostitutiva;;checkbox;Sanzione Sostitutiva;Se selezionata attiva obblighi condizionali
+Tipo Sanzione Sostitutiva;;select;Sanzione Sostitutiva;Obbligatorio se checkbox Sanzione Sostitutiva selezionato
+Anni Sanzione Sostitutiva;;input text;Sanzione Sostitutiva;Obbligatorio in alternativa alla pena pecuniaria secondo il tipo scelto
+Mesi Sanzione Sostitutiva;;input text;Sanzione Sostitutiva;Obbligatorio in alternativa alla pena pecuniaria secondo il tipo scelto
+Giorni Sanzione Sostitutiva;;input text;Sanzione Sostitutiva;Obbligatorio in alternativa alla pena pecuniaria secondo il tipo scelto
+Intero Pena Pecuniaria Sostitutiva Multa;;input text;Sanzione Sostitutiva;Obbligatorio per tipo pecuniario se selezionata
+Decimale Pena Pecuniaria Sostitutiva Multa;;input text;Sanzione Sostitutiva;Obbligatorio per tipo pecuniario se selezionata
+Valuta Pena Pecuniaria Sostitutiva Multa/Ammenda;;select;Sanzione Sostitutiva;
+Intero Pena Pecuniaria Sostitutiva Ammenda;;input text;Sanzione Sostitutiva;Obbligatorio per tipo pecuniario se selezionata
+Decimale Pena Pecuniaria Sostitutiva Ammenda;;input text;Sanzione Sostitutiva;Obbligatorio per tipo pecuniario se selezionata
+Pena Sostitutiva;;checkbox;Pene sostitutive Pene Detentive Brevi;Se selezionata attiva obblighi condizionali
+Tipo Pena Sostitutiva;;select;Pene sostitutive Pene Detentive Brevi;Obbligatorio se checkbox Pena Sostitutiva selezionato
+Anni Pena Sostitutiva;;input text;Pene sostitutive Pene Detentive Brevi;Obbligatorio in alternativa alla pena pecuniaria secondo il tipo scelto
+Mesi Pena Sostitutiva;;input text;Pene sostitutive Pene Detentive Brevi;Obbligatorio in alternativa alla pena pecuniaria secondo il tipo scelto
+Giorni Pena Sostitutiva;;input text;Pene sostitutive Pene Detentive Brevi;Obbligatorio in alternativa alla pena pecuniaria secondo il tipo scelto
+Intero Pena Pecuniaria Sostitutiva;;input text;Pene sostitutive Pene Detentive Brevi;Obbligatorio per tipo pecuniario se selezionata
+Decimale Pena Pecuniaria Sostitutiva;;input text;Pene sostitutive Pene Detentive Brevi;Obbligatorio per tipo pecuniario se selezionata
+Confisca per equivalente;;checkbox;Importo da Pagare Include;
+Continuazione con altre sentenze;;checkbox;Continuazione;Se selezionata attiva 2 blocchi continuazione
+Tipo Continuazione riga 1;;input/select;Continuazione;Condizionale se flag continuazione selezionato
+Anno Sentenza riga 1;;input text;Continuazione;Condizionale se flag continuazione selezionato
+Numero Sentenza riga 1;;input text;Continuazione;Condizionale se flag continuazione selezionato
+Giorno Data Sentenza riga 1;;input text;Continuazione;Condizionale se flag continuazione selezionato
+Mese Data Sentenza riga 1;;input text;Continuazione;Condizionale se flag continuazione selezionato
+Anno Data Sentenza riga 1;;input text;Continuazione;Condizionale se flag continuazione selezionato
+Autorità Sentenza riga 1;;select;Continuazione;Condizionale se flag continuazione selezionato
+Luogo Sentenza riga 1;;input text;Continuazione;Condizionale se flag continuazione selezionato
+Anno R.G.N.R. riga 1;;input text;Continuazione;Condizionale se valorizzati dati R.G.
+Numero R.G.N.R. riga 1;;input text;Continuazione;Condizionale se valorizzati dati R.G.
+Anno Reg. Gen. riga 1;;input text;Continuazione;Condizionale se valorizzati dati R.G.
+Numero Reg. Gen. riga 1;;input text;Continuazione;Condizionale se valorizzati dati R.G.
+Tipo Reg. Gen. riga 1;;select;Continuazione;Condizionale se valorizzati dati R.G.
+Tipo Continuazione riga 2;;input/select;Continuazione;Condizionale se flag continuazione selezionato
+Anno Sentenza riga 2;;input text;Continuazione;Condizionale se flag continuazione selezionato
+Numero Sentenza riga 2;;input text;Continuazione;Condizionale se flag continuazione selezionato
+Giorno Data Sentenza riga 2;;input text;Continuazione;Condizionale se flag continuazione selezionato
+Mese Data Sentenza riga 2;;input text;Continuazione;Condizionale se flag continuazione selezionato
+Anno Data Sentenza riga 2;;input text;Continuazione;Condizionale se flag continuazione selezionato
+Autorità Sentenza riga 2;;select;Continuazione;Condizionale se flag continuazione selezionato
+Luogo Sentenza riga 2;;input text;Continuazione;Condizionale se flag continuazione selezionato
+Anno R.G.N.R. riga 2;;input text;Continuazione;Condizionale se valorizzati dati R.G.
+Numero R.G.N.R. riga 2;;input text;Continuazione;Condizionale se valorizzati dati R.G.
+Anno Reg. Gen. riga 2;;input text;Continuazione;Condizionale se valorizzati dati R.G.
+Numero Reg. Gen. riga 2;;input text;Continuazione;Condizionale se valorizzati dati R.G.
+Tipo Reg. Gen. riga 2;;select;Continuazione;Condizionale se valorizzati dati R.G.
