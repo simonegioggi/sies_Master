@@ -1,0 +1,20 @@
+Campo,Obbligatorio,Note
+Cognome,*,Input testo
+Nome,*,Input testo
+Sesso,*,Select
+Data di nascita,,Composta da Giorno / Mese / Anno; obbligatoria solo in certe condizioni
+Data Presunta,,Select
+Età Presunta (anni),,Condizionale
+Età Presunta (mesi),,Condizionale
+Data commesso reato,,Condizionale; presente solo per alcuni profili
+Comune Nascita,*,Obbligatorio se Stato di Nascita = Italia
+Stato Cittadinanza,,Select
+Stato di Nascita,,Select
+Luogo di Nascita Estero,,Usato per nascita estera
+Paternità,,Input testo
+Cognome Madre,,Input testo
+Nome Madre,,Input testo
+Codice Fiscale,,Input testo
+Atto Nascita,,Input testo
+Codice CUI,,Input testo
+Note,,Textarea
