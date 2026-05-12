@@ -1,0 +1,56 @@
+Campo;Obbligatorio;Tipo;Sezione;Note
+Tipo di Pena Accessoria;*;select;Generale;Obbligatorio sempre (validazione req)
+Descrizione Altre P.A.;;input text;Generale;Visibile/editabile quando Tipo di Pena Accessoria = "Altre" (codice 999)
+Tipo Durata;;select;Generale;
+Anni Durata;;input text;Durata;
+Mesi Durata;;input text;Durata;
+Giorni Durata;;input text;Durata;
+Giorno Data Fine Validità;;input text;Data Fine Validità;
+Mese Data Fine Validità;;input text;Data Fine Validità;
+Anno Data Fine Validità;;input text;Data Fine Validità;
+Giorno Data Ordinanza GE;;input text;Estremi Ordinanza Applicazione del GE;
+Mese Data Ordinanza GE;;input text;Estremi Ordinanza Applicazione del GE;
+Anno Data Ordinanza GE;;input text;Estremi Ordinanza Applicazione del GE;
+Anno Ordinanza GE;;input text;Estremi Ordinanza Applicazione del GE;
+Numero Ordinanza GE;;input text;Estremi Ordinanza Applicazione del GE;
+Autorità Ordinanza GE;;select;Estremi Ordinanza Applicazione del GE;
+Luogo Ordinanza GE;;input text;Estremi Ordinanza Applicazione del GE;Valorizzabile anche da lookup comuni
+Tenore;;select;Estremi Ordinanza Condono/Revoca/Sostituzione/Depenalizzazione;
+Giorno Data Ordinanza PA;;input text;Estremi Ordinanza Condono/Revoca/Sostituzione/Depenalizzazione;
+Mese Data Ordinanza PA;;input text;Estremi Ordinanza Condono/Revoca/Sostituzione/Depenalizzazione;
+Anno Data Ordinanza PA;;input text;Estremi Ordinanza Condono/Revoca/Sostituzione/Depenalizzazione;
+Anno Ordinanza PA;;input text;Estremi Ordinanza Condono/Revoca/Sostituzione/Depenalizzazione;
+Numero Ordinanza PA;;input text;Estremi Ordinanza Condono/Revoca/Sostituzione/Depenalizzazione;
+Autorità Emittente PA;;select;Estremi Ordinanza Condono/Revoca/Sostituzione/Depenalizzazione;
+Luogo Ordinanza PA;;input text;Estremi Ordinanza Condono/Revoca/Sostituzione/Depenalizzazione;Valorizzabile anche da lookup comuni
+Fonte;;select;Estremi Condono/Depenalizzazione/Amnistia;
+Anno Fonte;;input text;Estremi Condono/Depenalizzazione/Amnistia;
+Numero Fonte;;input text;Estremi Condono/Depenalizzazione/Amnistia;
+Articolo Fonte;;input text;Estremi Condono/Depenalizzazione/Amnistia;
+Art.qualificante;;select;Estremi Condono/Depenalizzazione/Amnistia;
+Comma;;input text;Estremi Condono/Depenalizzazione/Amnistia;
+Lettera;;input text;Estremi Condono/Depenalizzazione/Amnistia;
+Numero (articolo);;input text;Estremi Condono/Depenalizzazione/Amnistia;
+Tipo di Pena Accessoria (in sostituzione);*;select;Estremi Pena Accessoria in Sostituzione;Obbligatorio se Tenore = "S" o "T"
+Revoca Condono;;checkbox;Revoca Condono;
+Giorno Data Sentenza Revoca;;input text;Revoca Condono;
+Mese Data Sentenza Revoca;;input text;Revoca Condono;
+Anno Data Sentenza Revoca;;input text;Revoca Condono;
+Anno Sentenza Revoca;;input text;Revoca Condono;
+Numero Sentenza Revoca;;input text;Revoca Condono;
+Autorità Sentenza Revoca;;select;Revoca Condono;
+Luogo Sentenza Revoca;;input text;Revoca Condono;Valorizzabile anche da lookup comuni
+Anno Re.Ge. PM Revoca;;input text;Revoca Condono;
+Numero Re.Ge. PM Revoca;;input text;Revoca Condono;
+Anno Re.Ge. GIP Revoca;;input text;Revoca Condono;
+Numero Re.Ge. GIP Revoca;;input text;Revoca Condono;
+Anno Re.Ge. DIB Revoca;;input text;Revoca Condono;
+Numero Re.Ge. DIB Revoca;;input text;Revoca Condono;
+Anno Re.Ge. CAS Revoca;;input text;Revoca Condono;
+Numero Re.Ge. CAS Revoca;;input text;Revoca Condono;
+Anno Re.Ge. CAP Revoca;;input text;Revoca Condono;
+Numero Re.Ge. CAP Revoca;;input text;Revoca Condono;
+Anno Re.Ge. CASAP Revoca;;input text;Revoca Condono;
+Numero Re.Ge. CASAP Revoca;;input text;Revoca Condono;
+Falsità di documenti;;checkbox;Revoca Condono;
+Note;;textarea;Revoca Condono;
