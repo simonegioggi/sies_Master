@@ -1,0 +1,91 @@
+Campo;Obbligatorio;Tipo;Sezione;Note
+Libero;;radio;Scelta sezione;Radio iniziale della pagina
+Espiazione Pena in Istituto di Detenzione;;radio;Scelta sezione;Radio iniziale della pagina
+Espiazione Pena in Altro Luogo;;radio;Scelta sezione;Radio iniziale della pagina
+Posizione Giuridica;*;select;Libero;Obbligatoria nella sezione Libero
+Detenuto per altra causa;;checkbox;Libero;Mostra la sottosezione altra causa
+Definitivo - in Istituto di Detenzione;;radio;Libero / Altra causa;Opzione radio visibile se è selezionato Detenuto per altra causa
+Misure Cautelari - in Istituto di Detenzione;;radio;Libero / Altra causa;Opzione radio visibile se è selezionato Detenuto per altra causa
+Misure Cautelari - in Altro Luogo;;radio;Libero / Altra causa;Opzione radio visibile se è selezionato Detenuto per altra causa
+Tipo Misura;*;select;Libero / Altra causa / Definitivo in istituto;Obbligatorio se è selezionato Detenuto per altra causa con radio DD
+Istituto;;input text;Libero / Altra causa / Definitivo in istituto;Readonly, valorizzato tramite popup
+Anno SIEP;;input text;Libero / Altra causa / Definitivo in istituto;
+Numero SIEP;;input text;Libero / Altra causa / Definitivo in istituto;
+Autorità;;select;Libero / Altra causa / Definitivo in istituto;
+Luogo;;input text;Libero / Altra causa / Definitivo in istituto;Selezionabile tramite popup
+Giorno Data Scadenza Altra Pena;;input text;Libero / Altra causa / Definitivo in istituto;Data opzionale ma validata
+Mese Data Scadenza Altra Pena;;input text;Libero / Altra causa / Definitivo in istituto;Data opzionale ma validata
+Anno Data Scadenza Altra Pena;;input text;Libero / Altra causa / Definitivo in istituto;Data opzionale ma validata
+Anno RG.N.R.;;input text;Libero / Altra causa / Misure cautelari in istituto;
+Numero RG.N.R.;;input text;Libero / Altra causa / Misure cautelari in istituto;
+Tipo Ufficio PM;*;select;Libero / Altra causa / Misure cautelari in istituto;Obbligatorio con radio MCD
+Sede;*;input text;Libero / Altra causa / Misure cautelari in istituto;Obbligatoria con radio MCD, valorizzabile tramite popup
+Anno B.D.M.C.;;input text;Libero / Altra causa / Misure cautelari in istituto;
+Numero B.D.M.C.;;input text;Libero / Altra causa / Misure cautelari in istituto;
+Anno Reg. Gen.;;input text;Libero / Altra causa / Misure cautelari in istituto;
+Numero Reg. Gen.;;input text;Libero / Altra causa / Misure cautelari in istituto;
+Tipo Ufficio Reg. Gen.;;select;Libero / Altra causa / Misure cautelari in istituto;
+Autorità Emittente;*;select;Libero / Altra causa / Misure cautelari in istituto;Obbligatoria con radio MCD
+Luogo Emittente;;input text;Libero / Altra causa / Misure cautelari in istituto;Selezionabile tramite popup
+Giorno Data emissione Ordinanza;;input text;Libero / Altra causa / Misure cautelari in istituto;Data opzionale ma validata
+Mese Data emissione Ordinanza;;input text;Libero / Altra causa / Misure cautelari in istituto;Data opzionale ma validata
+Anno Data emissione Ordinanza;;input text;Libero / Altra causa / Misure cautelari in istituto;Data opzionale ma validata
+Tipo Misura;*;select;Libero / Altra causa / Misure cautelari in istituto;Obbligatorio con radio MCD
+Istituto;;input text;Libero / Altra causa / Misure cautelari in istituto;Readonly, valorizzato tramite popup
+Anno RG.N.R.;;input text;Libero / Altra causa / Misure cautelari in altro luogo;
+Numero RG.N.R.;;input text;Libero / Altra causa / Misure cautelari in altro luogo;
+Tipo Ufficio PM;*;select;Libero / Altra causa / Misure cautelari in altro luogo;Obbligatorio con radio MCA
+Sede;*;input text;Libero / Altra causa / Misure cautelari in altro luogo;Obbligatoria con radio MCA, valorizzabile tramite popup
+Anno B.D.M.C.;;input text;Libero / Altra causa / Misure cautelari in altro luogo;
+Numero B.D.M.C.;;input text;Libero / Altra causa / Misure cautelari in altro luogo;
+Anno Reg. Gen.;;input text;Libero / Altra causa / Misure cautelari in altro luogo;
+Numero Reg. Gen.;;input text;Libero / Altra causa / Misure cautelari in altro luogo;
+Tipo Ufficio Reg. Gen.;;select;Libero / Altra causa / Misure cautelari in altro luogo;
+Autorità Emittente;*;select;Libero / Altra causa / Misure cautelari in altro luogo;Obbligatoria con radio MCA
+Luogo Emittente;;input text;Libero / Altra causa / Misure cautelari in altro luogo;Selezionabile tramite popup
+Giorno Data emissione Ordinanza;;input text;Libero / Altra causa / Misure cautelari in altro luogo;Data opzionale ma validata
+Mese Data emissione Ordinanza;;input text;Libero / Altra causa / Misure cautelari in altro luogo;Data opzionale ma validata
+Anno Data emissione Ordinanza;;input text;Libero / Altra causa / Misure cautelari in altro luogo;Data opzionale ma validata
+Tipo Misura;*;select;Libero / Altra causa / Misure cautelari in altro luogo;Obbligatorio con radio MCA
+Luogo di Espiazione;;input text;Libero / Altra causa / Misure cautelari in altro luogo;
+Autorità Competente per territorio;;select;Libero / Altra causa / Misure cautelari in altro luogo;
+Sede;;input text;Libero / Altra causa / Misure cautelari in altro luogo;Selezionabile tramite popup
+Indirizzo;;textarea;Libero / Altra causa / Misure cautelari in altro luogo;
+Posizione Giuridica;*;select;Espiazione Pena in Istituto di Detenzione;Obbligatoria nella sezione EI
+Giorno Data di Decorrenza Pena;*;input text;Espiazione Pena in Istituto di Detenzione;Obbligatoria e validata
+Mese Data di Decorrenza Pena;*;input text;Espiazione Pena in Istituto di Detenzione;Obbligatoria e validata
+Anno Data di Decorrenza Pena;*;input text;Espiazione Pena in Istituto di Detenzione;Obbligatoria e validata
+Istituto;;input text;Espiazione Pena in Istituto di Detenzione;Readonly, valorizzato tramite popup
+Posizione Giuridica;*;select;Espiazione Pena in Altro Luogo;Obbligatoria nella sezione EA
+Giorno Data di Decorrenza Pena;*;input text;Espiazione Pena in Altro Luogo;Obbligatoria e validata
+Mese Data di Decorrenza Pena;*;input text;Espiazione Pena in Altro Luogo;Obbligatoria e validata
+Anno Data di Decorrenza Pena;*;input text;Espiazione Pena in Altro Luogo;Obbligatoria e validata
+Luogo di Espiazione;;input text;Espiazione Pena in Altro Luogo;
+Autorità Competente per territorio;;select;Espiazione Pena in Altro Luogo;
+Sede;;input text;Espiazione Pena in Altro Luogo;Selezionabile tramite popup
+Indirizzo;;textarea;Espiazione Pena in Altro Luogo;
+Posizione Giuridica;*;select;Legacy / Form old;Obbligatoria se non è selezionato Detenuto per altra causa
+Giorno Data di Decorrenza;;input text;Legacy / Form old;Obbligatoria solo per alcune posizioni giuridiche (01/02), altrimenti opzionale ma validata
+Mese Data di Decorrenza;;input text;Legacy / Form old;Obbligatoria solo per alcune posizioni giuridiche (01/02), altrimenti opzionale ma validata
+Anno Data di Decorrenza;;input text;Legacy / Form old;Obbligatoria solo per alcune posizioni giuridiche (01/02), altrimenti opzionale ma validata
+Istituto;;input text;Legacy / Form old;Readonly, valorizzato tramite popup
+Altro Luogo Detenzione;;input text;Legacy / Form old;
+Luogo Prova Affidamento;;input text;Legacy / Form old;
+Luogo Lavoro Semilibertà;;input text;Legacy / Form old;
+Detenuto per altra causa;;checkbox;Legacy / Form old;
+Tipo Misura;*;select;Legacy / Form old / Detenuto per altra causa;Obbligatorio se è selezionato Detenuto per altra causa
+Giorno Data di Decorrenza;;input text;Legacy / Form old / Detenuto per altra causa;Data opzionale ma validata
+Mese Data di Decorrenza;;input text;Legacy / Form old / Detenuto per altra causa;Data opzionale ma validata
+Anno Data di Decorrenza;;input text;Legacy / Form old / Detenuto per altra causa;Data opzionale ma validata
+Giorno Data di Scadenza;;input text;Legacy / Form old / Detenuto per altra causa;Data opzionale ma validata
+Mese Data di Scadenza;;input text;Legacy / Form old / Detenuto per altra causa;Data opzionale ma validata
+Anno Data di Scadenza;;input text;Legacy / Form old / Detenuto per altra causa;Data opzionale ma validata
+Istituto;;input text;Legacy / Form old / Detenuto per altra causa;Readonly, valorizzato tramite popup
+Altro Luogo Detenzione;;input text;Legacy / Form old / Detenuto per altra causa;
+Anno Tit. Esec.;;input text;Legacy / Form old / Detenuto per altra causa;
+Numero Tit. Esec.;;input text;Legacy / Form old / Detenuto per altra causa;
+Giorno Data Tit. Esec.;;input text;Legacy / Form old / Detenuto per altra causa;Data opzionale ma validata
+Mese Data Tit. Esec.;;input text;Legacy / Form old / Detenuto per altra causa;Data opzionale ma validata
+Anno Data Tit. Esec.;;input text;Legacy / Form old / Detenuto per altra causa;Data opzionale ma validata
+Autorità;;select;Legacy / Form old / Detenuto per altra causa;
+Luogo;;input text;Legacy / Form old / Detenuto per altra causa;Selezionabile tramite popup
