@@ -1,0 +1,33 @@
+Campo;Obbligatorio;Tipo;Sezione;Note
+Cognome;*;input text;Dati difensore;Readonly di default, editabile in inserimento manuale (non reginde)
+Nome;*;input text;Dati difensore;Readonly di default, editabile in inserimento manuale (non reginde)
+Comune di Nascita;*;input text + popup comuni;Dati difensore;Obbligatorio se Stato di Nascita = Italia (in inserimento manuale)
+Stato di Nascita;;select;Dati difensore;Disabled di default, editabile in inserimento manuale (non reginde)
+Luogo di Nascita Estero;;input text;Dati difensore;Readonly di default, editabile in inserimento manuale (non reginde)
+Giorno Data di nascita;;input text;Dati difensore;Readonly di default, editabile in inserimento manuale (non reginde)
+Mese Data di nascita;;input text;Dati difensore;Readonly di default, editabile in inserimento manuale (non reginde)
+Anno Data di nascita;;input text;Dati difensore;Readonly di default, editabile in inserimento manuale (non reginde)
+Foro;*;select;Dati difensore;Disabled di default, editabile in inserimento manuale (non reginde)
+Indirizzo;;input text;Dati difensore;Readonly di default, editabile in inserimento manuale (non reginde)
+Con Studio in;;input text + popup comuni;Dati difensore;Readonly di default, editabile in inserimento manuale (non reginde)
+Telefono;;input text;Dati difensore;Readonly di default, editabile in inserimento manuale (non reginde)
+Fax;;input text;Dati difensore;Readonly di default, editabile in inserimento manuale (non reginde)
+e-mail;;input text;Dati difensore;Readonly di default, editabile in inserimento manuale (non reginde)
+pec;;input text;Dati difensore;Readonly di default, editabile in inserimento manuale (non reginde)
+Codice Fiscale;;input text;Dati difensore;Readonly di default, editabile in inserimento manuale (non reginde)
+Stato Difensore;;select;Dati difensore;Disabled di default, editabile in inserimento manuale (non reginde)
+Tipo Difensore;*;select;Dati difensore;Obbligatorio
+Giorno Data di Nomina;;input text;Nomina (Tipo Difensore = 02);Visibile per difensore di fiducia
+Mese Data di Nomina;;input text;Nomina (Tipo Difensore = 02);Visibile per difensore di fiducia
+Anno Data di Nomina;;input text;Nomina (Tipo Difensore = 02);Visibile per difensore di fiducia
+Giorno Data di Designazione;;input text;Designazione (Tipo Difensore = 01);Visibile per difensore d'ufficio
+Mese Data di Designazione;;input text;Designazione (Tipo Difensore = 01);Visibile per difensore d'ufficio
+Anno Data di Designazione;;input text;Designazione (Tipo Difensore = 01);Visibile per difensore d'ufficio
+Motivo della Designazione;*;select;Designazione (Tipo Difensore = 01);Obbligatorio se Tipo Difensore = 01
+Note;;textarea;Designazione (Tipo Difensore = 01);Visibile solo se Motivo della Designazione = 0008
+Autorità (notifica al Condannato);;select;Autorità notifica al Condannato;
+Sede (notifica al Condannato);;input text + popup comuni;Autorità notifica al Condannato;
+Indirizzo (notifica al Condannato);;textarea;Autorità notifica al Condannato;
+Istituto di Detenzione (notifica al Condannato);;popup lista istituti + hidden id;Autorità notifica al Condannato;Valorizzato tramite popup
+Autorità (notifica al Difensore);;select;Autorità notifica al Difensore;
+Sede (notifica al Difensore);;input text + popup comuni;Autorità notifica al Difensore;
