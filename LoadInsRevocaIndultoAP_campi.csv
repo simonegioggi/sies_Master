@@ -1,0 +1,23 @@
+Campo;Obbligatorio;Tipo;Sezione;Note
+Provvedimento di Concessione;*;select;Tipo Beneficio Revocato;Campo CAMPO_COD_DPR
+Tipo Provvedimento;*;select;Estremi del Provvedimento da Revocare;Campo CAMPO_COD_TIPO_PROVVEDIMENTO
+Giorno Data Provvedimento;*;input text;Estremi del Provvedimento da Revocare;Parte della data provvedimento
+Mese Data Provvedimento;*;input text;Estremi del Provvedimento da Revocare;Parte della data provvedimento
+Anno Data Provvedimento;*;input text;Estremi del Provvedimento da Revocare;Parte della data provvedimento
+Giorno Definitivo in Data;*;input text;Estremi del Provvedimento da Revocare;Obbligatorio se Tipo Provvedimento != 03
+Mese Definitivo in Data;*;input text;Estremi del Provvedimento da Revocare;Obbligatorio se Tipo Provvedimento != 03
+Anno Definitivo in Data;*;input text;Estremi del Provvedimento da Revocare;Obbligatorio se Tipo Provvedimento != 03
+Emessa da;*;select;Estremi del Provvedimento da Revocare;Campo CAMPO_COD_TIPO_AUTORITA_EMITTENTE
+Luogo;*;input text;Estremi del Provvedimento da Revocare;Campo CAMPO_COD_LUOGO_EMITTENTE
+Sezione;;input text;Estremi del Provvedimento da Revocare;Campo CAMPO_NUM_SEZIONE_AUTORITA_EMITTENTE
+Anni Reclusione;;input text;Eventuale Quantum;Campo CAMPO_NUM_ANNI_RECLUSIONE
+Mesi Reclusione;;input text;Eventuale Quantum;Campo CAMPO_NUM_MESI_RECLUSIONE
+Giorni Reclusione;;input text;Eventuale Quantum;Campo CAMPO_NUM_GIORNI_RECLUSIONE
+Multa Intero;;input text;Eventuale Quantum;Campo CAMPO_IMPORTO_MULTAINT
+Multa Decimale;;input text;Eventuale Quantum;Richiede parte intera se valorizzato
+Anni Arresto;;input text;Eventuale Quantum;Campo CAMPO_NUM_ANNI_ARRESTO
+Mesi Arresto;;input text;Eventuale Quantum;Campo CAMPO_NUM_MESI_ARRESTO
+Giorni Arresto;;input text;Eventuale Quantum;Campo CAMPO_NUM_GIORNI_ARRESTO
+Ammenda Intero;;input text;Eventuale Quantum;Campo CAMPO_IMPORTO_AMMENDAINT
+Ammenda Decimale;;input text;Eventuale Quantum;Richiede parte intera se valorizzato
+Note;;textarea;Eventuale Quantum;Campo CAMPO_NOTE
