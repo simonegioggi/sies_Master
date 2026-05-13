@@ -1,0 +1,36 @@
+Campo;Obbligatorio;Tipo;Sezione;Note
+Tipo Sospensione;*;select;Dati beneficio;Obbligatorio in alternativa a "Non Menzione" (almeno uno dei due valorizzato)
+Non Menzione;*;checkbox;Dati beneficio;Obbligatorio in alternativa a "Tipo Sospensione" (almeno uno dei due valorizzato)
+Anni Durata Sospensione;;input text;Durata sospensione;
+Obblighi del condannato ex art 165 c.p.;;select;Obblighi subordinati;Visibile/editabile se Tipo Sospensione = valore 03
+Tipologia Obbligo;;textarea;Obblighi subordinati;Visibile/editabile se Tipo Sospensione = valore 03
+Anni Termine Adempimento Obbligo;;input text;Obblighi subordinati;Visibile/editabile se Tipo Sospensione = valore 03
+Mesi Termine Adempimento Obbligo;;input text;Obblighi subordinati;Visibile/editabile se Tipo Sospensione = valore 03
+Giorni Termine Adempimento Obbligo;;input text;Obblighi subordinati;Visibile/editabile se Tipo Sospensione = valore 03
+Mesi Durata Prestazione Attività Non Retribuita;;input text;Prestazione non retribuita;Visibile/editabile se Obblighi subordinati = valore 08
+Giorni Durata Prestazione Attività Non Retribuita;;input text;Prestazione non retribuita;Visibile/editabile se Obblighi subordinati = valore 08
+Ore Settimanali;;input text;Prestazione non retribuita;Visibile/editabile se Obblighi subordinati = valore 08
+Frequenza Settimanale - Non Determinata;;radio;Prestazione non retribuita;Visibile/editabile se Obblighi subordinati = valore 08
+Frequenza Settimanale - Determinata;;radio;Prestazione non retribuita;Visibile/editabile se Obblighi subordinati = valore 08
+Lunedì;;checkbox;Tipologia orario;Visibile/editabile se Frequenza Settimanale = Determinata
+Dalle ore Lunedì;;input text;Tipologia orario;Visibile/editabile se Frequenza Settimanale = Determinata
+Alle ore Lunedì;;input text;Tipologia orario;Visibile/editabile se Frequenza Settimanale = Determinata
+Martedì;;checkbox;Tipologia orario;Visibile/editabile se Frequenza Settimanale = Determinata
+Dalle ore Martedì;;input text;Tipologia orario;Visibile/editabile se Frequenza Settimanale = Determinata
+Alle ore Martedì;;input text;Tipologia orario;Visibile/editabile se Frequenza Settimanale = Determinata
+Mercoledì;;checkbox;Tipologia orario;Visibile/editabile se Frequenza Settimanale = Determinata
+Dalle ore Mercoledì;;input text;Tipologia orario;Visibile/editabile se Frequenza Settimanale = Determinata
+Alle ore Mercoledì;;input text;Tipologia orario;Visibile/editabile se Frequenza Settimanale = Determinata
+Giovedì;;checkbox;Tipologia orario;Visibile/editabile se Frequenza Settimanale = Determinata
+Dalle ore Giovedì;;input text;Tipologia orario;Visibile/editabile se Frequenza Settimanale = Determinata
+Alle ore Giovedì;;input text;Tipologia orario;Visibile/editabile se Frequenza Settimanale = Determinata
+Venerdì;;checkbox;Tipologia orario;Visibile/editabile se Frequenza Settimanale = Determinata
+Dalle ore Venerdì;;input text;Tipologia orario;Visibile/editabile se Frequenza Settimanale = Determinata
+Alle ore Venerdì;;input text;Tipologia orario;Visibile/editabile se Frequenza Settimanale = Determinata
+Sabato;;checkbox;Tipologia orario;Visibile/editabile se Frequenza Settimanale = Determinata
+Dalle ore Sabato;;input text;Tipologia orario;Visibile/editabile se Frequenza Settimanale = Determinata
+Alle ore Sabato;;input text;Tipologia orario;Visibile/editabile se Frequenza Settimanale = Determinata
+Domenica;;checkbox;Tipologia orario;Visibile/editabile se Frequenza Settimanale = Determinata
+Dalle ore Domenica;;input text;Tipologia orario;Visibile/editabile se Frequenza Settimanale = Determinata
+Alle ore Domenica;;input text;Tipologia orario;Visibile/editabile se Frequenza Settimanale = Determinata
+Ente Incaricato dei controlli;;textarea;Tipologia orario;Visibile/editabile se Frequenza Settimanale = Determinata
