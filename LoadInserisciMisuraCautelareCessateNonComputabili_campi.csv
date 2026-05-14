@@ -1,0 +1,38 @@
+Campo;Obbligatorio;Tipo;Sezione;Note
+Anno RG.N.R.;;input text;Procedimento;
+Numero RG.N.R.;;input text;Procedimento;
+Tipo Ufficio PM;*;select;Procedimento;
+Sede Ufficio PM;*;input text;Procedimento;
+Anno B.D.M.C.;;input text;Procedimento;
+Numero B.D.M.C.;;input text;Procedimento;
+Anno Reg. Gen.;;input text;Procedimento;
+Numero Reg. Gen.;;input text;Procedimento;
+Tipo ufficio Reg. Gen.;;select;Procedimento;
+Autorità Emittente;*;select;Autorità emittente;
+Luogo Autorità Emittente;;input text;Autorità emittente;
+Giorno Data emissione Ordinanza;;input text;Autorità emittente;
+Mese Data emissione Ordinanza;;input text;Autorità emittente;
+Anno Data emissione Ordinanza;;input text;Autorità emittente;
+Espiazione pena (istituto detenzione / altro luogo);;radio;Misura cautelare;
+Misura non detentiva;*;select;Misura cautelare;Obbligatorio in alternativa alla misura detentiva
+Misura detentiva;*;select;Misura cautelare;Obbligatorio in alternativa alla misura non detentiva
+Giorno Data inizio misura;*;input text;Misura cautelare;
+Mese Data inizio misura;*;input text;Misura cautelare;
+Anno Data inizio misura;*;input text;Misura cautelare;
+Giorno Data fine misura;*;input text;Misura cautelare;
+Mese Data fine misura;*;input text;Misura cautelare;
+Anno Data fine misura;*;input text;Misura cautelare;
+Istituto di Detenzione;;input text (readonly con popup);Espiazione in istituto;Campo compilato tramite popup di selezione istituto
+Luogo di espiazione;;input text;Espiazione in altro luogo;
+Autorità competente per territorio;;select;Espiazione in altro luogo;
+Sede autorità competente;;input text;Espiazione in altro luogo;
+Indirizzo autorità competente;;textarea;Espiazione in altro luogo;
+Motivo Non Computabilità;;select;Non computabilità;
+Giorno Data provvedimento di Fungibilità;;input text;Non computabilità;
+Mese Data provvedimento di Fungibilità;;input text;Non computabilità;
+Anno Data provvedimento di Fungibilità;;input text;Non computabilità;
+Anno SIEP;;input text;Riferimento SIEP;
+Numero SIEP;;input text;Riferimento SIEP;
+Ufficio riferimento;;select;Riferimento SIEP;
+Sede riferimento;;input text;Riferimento SIEP;
+Note;;textarea;Note;
