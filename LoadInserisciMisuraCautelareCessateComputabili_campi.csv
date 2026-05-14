@@ -1,0 +1,29 @@
+Campo;Obbligatorio;Tipo;Sezione;Note
+Anno/Numero RG.N.R. - Anno;;input text;Dati procedimento;
+Anno/Numero RG.N.R. - Numero;;input text;Dati procedimento;
+Tipo Ufficio PM;*;select;Dati procedimento;Controllo obbligatorietà in VerifyAltreBDI()
+Sede PM;*;input text;Dati procedimento;Compilabile con popup ListaUfficiComuni
+Anno/Numero B.D.M.C. - Anno;;input text;Dati procedimento;
+Anno/Numero B.D.M.C. - Numero;;input text;Dati procedimento;
+Anno/Numero Reg. Gen. - Anno;;input text;Dati procedimento;
+Anno/Numero Reg. Gen. - Numero;;input text;Dati procedimento;
+Tipo Ufficio Reg. Gen.;;select;Dati procedimento;
+Autorità Emittente;*;select;Provvedimento;Controllo obbligatorietà in VerifyAltreBDI()
+Luogo Autorità Emittente;;input text;Provvedimento;Compilabile con popup ListaUfficiPerTipo
+Data emissione ordinanza - Giorno;;input text;Provvedimento;
+Data emissione ordinanza - Mese;;input text;Provvedimento;
+Data emissione ordinanza - Anno;;input text;Provvedimento;
+Espiazione pena (istituto di detenzione / altro luogo);;radio;Tipologia espiazione;Selezione modalità
+Misura cautelare non detentiva;*;select;Tipologia espiazione;Obbligatoria in alternativa alla misura detentiva
+Misura cautelare detentiva;*;select;Tipologia espiazione;Obbligatoria in alternativa alla misura non detentiva
+Data misura "Da" - Giorno;*;input text;Periodo misura;Controllo obbligatorietà in VerifyAltreBDI()
+Data misura "Da" - Mese;*;input text;Periodo misura;Controllo obbligatorietà in VerifyAltreBDI()
+Data misura "Da" - Anno;*;input text;Periodo misura;Controllo obbligatorietà in VerifyAltreBDI()
+Data misura "A" - Giorno;*;input text;Periodo misura;Controllo obbligatorietà in VerifyAltreBDI()
+Data misura "A" - Mese;*;input text;Periodo misura;Controllo obbligatorietà in VerifyAltreBDI()
+Data misura "A" - Anno;*;input text;Periodo misura;Controllo obbligatorietà in VerifyAltreBDI()
+Istituto di Detenzione;;input text (readonly+popup);Espiazione in istituto;Valorizzabile tramite popup ListaIstitutoDetenzione
+Luogo di espiazione;;textarea;Espiazione in altro luogo;
+Autorità competente per territorio;;select;Espiazione in altro luogo;
+Sede autorità competente;;input text;Espiazione in altro luogo;Compilabile con popup ListaComuni
+Indirizzo autorità competente;;textarea;Espiazione in altro luogo;
