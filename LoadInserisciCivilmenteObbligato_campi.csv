@@ -1,5 +1,5 @@
 Campo;Obbligatorio;Tipo;Sezione;Note
-Tipologia Persona (Fisica/Giuridica);*;radio;Selezione iniziale;Visibile solo in modalita inserimento (modalita = I)
+Tipologia Persona (Fisica/Giuridica);*;radio;Selezione iniziale;Visibile solo in modalità inserimento (modalita = I)
 Qualifica;;select;Persona Fisica;Se valorizzata mostra la sezione "Eventuale Seconda Persona Civilmente Obbligata"
 Cognome;*;input text;Persona Fisica;Obbligatorio
 Nome;*;input text;Persona Fisica;Obbligatorio
@@ -36,7 +36,7 @@ CAP Seconda Persona;;input text;Residenza/Domicilio Seconda Persona;
 Comune Estero Seconda Persona;;input text;Residenza/Domicilio Seconda Persona;
 Stato di Residenza Seconda Persona;;select;Residenza/Domicilio Seconda Persona;
 Qualifica;;select;Persona Giuridica;
-Societa;*;input text;Persona Giuridica;Obbligatorio
+Società;*;input text;Persona Giuridica;Obbligatorio
 Ragione Sociale;;select;Persona Giuridica;
 Provincia;;select;Persona Giuridica;
 Partita IVA/Codice Fiscale;;input text;Persona Giuridica;Validazione alfanumerica
