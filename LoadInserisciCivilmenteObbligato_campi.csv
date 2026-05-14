@@ -1,0 +1,61 @@
+Campo;Obbligatorio;Tipo;Sezione;Note
+Tipologia Persona (Fisica/Giuridica);*;radio;Selezione iniziale;Visibile solo in modalita inserimento (modalita = I)
+Qualifica;;select;Persona Fisica;Se valorizzata mostra la sezione "Eventuale Seconda Persona Civilmente Obbligata"
+Cognome;*;input text;Persona Fisica;Obbligatorio
+Nome;*;input text;Persona Fisica;Obbligatorio
+Sesso;*;select;Persona Fisica;Obbligatorio
+Giorno Data di Nascita;*;input text;Persona Fisica;Obbligatorio
+Mese Data di Nascita;*;input text;Persona Fisica;Obbligatorio
+Anno Data di Nascita;*;input text;Persona Fisica;Obbligatorio
+Comune di Nascita;*;input text;Persona Fisica;Obbligatorio se Stato di Nascita = Italia (039)
+Stato di Nascita;;select;Persona Fisica;
+Comune di Nascita Estero;;input text;Persona Fisica;Usato quando Stato di Nascita diverso da Italia
+Codice Fiscale;;input text;Persona Fisica;Validazione alfanumerica
+Pec;;input text;Persona Fisica;
+Email;;input text;Persona Fisica;
+Indirizzo;;input text;Residenza/Domicilio Persona Fisica;
+Comune di Residenza (Luogo);*;input text;Residenza/Domicilio Persona Fisica;Obbligatorio se Stato di Residenza = Italia (039)
+CAP;;input text;Residenza/Domicilio Persona Fisica;Validazione numerica
+Comune Estero;;input text;Residenza/Domicilio Persona Fisica;Usato quando Stato di Residenza diverso da Italia
+Stato di Residenza;;select;Residenza/Domicilio Persona Fisica;
+Cognome Seconda Persona Civilmente Obbligata;*;input text;Seconda Persona Civilmente Obbligata;Sezione condizionale (quando Qualifica diversa da '-')
+Nome Seconda Persona Civilmente Obbligata;*;input text;Seconda Persona Civilmente Obbligata;Sezione condizionale (quando Qualifica diversa da '-')
+Sesso Seconda Persona Civilmente Obbligata;*;select;Seconda Persona Civilmente Obbligata;Sezione condizionale (quando Qualifica diversa da '-')
+Giorno Data di Nascita Seconda Persona;*;input text;Seconda Persona Civilmente Obbligata;Se compilati Cognome/Nome seconda persona
+Mese Data di Nascita Seconda Persona;*;input text;Seconda Persona Civilmente Obbligata;Se compilati Cognome/Nome seconda persona
+Anno Data di Nascita Seconda Persona;*;input text;Seconda Persona Civilmente Obbligata;Se compilati Cognome/Nome seconda persona
+Comune di Nascita Seconda Persona;*;input text;Seconda Persona Civilmente Obbligata;Obbligatorio se Stato di Nascita seconda persona = Italia (039)
+Stato di Nascita Seconda Persona;;select;Seconda Persona Civilmente Obbligata;
+Comune di Nascita Estero Seconda Persona;;input text;Seconda Persona Civilmente Obbligata;
+Codice Fiscale Seconda Persona;;input text;Seconda Persona Civilmente Obbligata;Validazione alfanumerica non esplicita lato client per _ST
+Pec Seconda Persona;;input text;Seconda Persona Civilmente Obbligata;
+Email Seconda Persona;;input text;Seconda Persona Civilmente Obbligata;
+Indirizzo Seconda Persona;;input text;Residenza/Domicilio Seconda Persona;
+Comune di Residenza Seconda Persona (Luogo);*;input text;Residenza/Domicilio Seconda Persona;Obbligatorio se Stato di Residenza seconda persona = Italia (039)
+CAP Seconda Persona;;input text;Residenza/Domicilio Seconda Persona;
+Comune Estero Seconda Persona;;input text;Residenza/Domicilio Seconda Persona;
+Stato di Residenza Seconda Persona;;select;Residenza/Domicilio Seconda Persona;
+Qualifica;;select;Persona Giuridica;
+Societa;*;input text;Persona Giuridica;Obbligatorio
+Ragione Sociale;;select;Persona Giuridica;
+Provincia;;select;Persona Giuridica;
+Partita IVA/Codice Fiscale;;input text;Persona Giuridica;Validazione alfanumerica
+Sede Legale;;input text;Persona Giuridica;
+Sede Operativa/Indirizzo Attivita;;input text;Persona Giuridica;
+Cognome Legale Rappresentante;*;input text;Legale Rappresentante Persona Giuridica;Obbligatorio
+Nome Legale Rappresentante;*;input text;Legale Rappresentante Persona Giuridica;Obbligatorio
+Sesso Legale Rappresentante;*;select;Legale Rappresentante Persona Giuridica;Obbligatorio
+Giorno Data di Nascita Legale Rappresentante;*;input text;Legale Rappresentante Persona Giuridica;Obbligatorio
+Mese Data di Nascita Legale Rappresentante;*;input text;Legale Rappresentante Persona Giuridica;Obbligatorio
+Anno Data di Nascita Legale Rappresentante;*;input text;Legale Rappresentante Persona Giuridica;Obbligatorio
+Comune di Nascita Legale Rappresentante;*;input text;Legale Rappresentante Persona Giuridica;Obbligatorio se Stato di Nascita = Italia (039)
+Stato di Nascita Legale Rappresentante;;select;Legale Rappresentante Persona Giuridica;
+Comune di Nascita Estero Legale Rappresentante;;input text;Legale Rappresentante Persona Giuridica;
+Codice Fiscale Legale Rappresentante;;input text;Legale Rappresentante Persona Giuridica;
+Pec Legale Rappresentante;;input text;Legale Rappresentante Persona Giuridica;
+Email Legale Rappresentante;;input text;Legale Rappresentante Persona Giuridica;
+Indirizzo Legale Rappresentante;;input text;Residenza/Domicilio Persona Giuridica;
+Comune di Residenza Legale Rappresentante (Luogo);*;input text;Residenza/Domicilio Persona Giuridica;Obbligatorio se Stato di Residenza = Italia (039)
+CAP Residenza Legale Rappresentante;;input text;Residenza/Domicilio Persona Giuridica;Validazione numerica
+Comune Estero Residenza Legale Rappresentante;;input text;Residenza/Domicilio Persona Giuridica;
+Stato di Residenza Legale Rappresentante;;select;Residenza/Domicilio Persona Giuridica;
