@@ -30,41 +30,50 @@ public class ActLoadCalcoloPenaDL92 extends ActCalcoloPenaMain implements ICosta
 			// tasto "indietro" dalla form di calcolo
 			CalcoloPenaModel lCalcoloPenaMod = new CalcoloPenaModel();
 			PenaComplessivaModel lPenComp = new PenaComplessivaModel();
-			lPenComp.setNumAnniReclusione   (getRequestBigDecimalParameter(ICostantiPenaComplessiva.CAMPO_NUM_ANNI_RECLUSIONE));
-			lPenComp.setNumMesiReclusione   (getRequestBigDecimalParameter(ICostantiPenaComplessiva.CAMPO_NUM_MESI_RECLUSIONE));
-			lPenComp.setNumGiorniReclusione (getRequestBigDecimalParameter(ICostantiPenaComplessiva.CAMPO_NUM_GIORNI_RECLUSIONE));
+			lPenComp.setNumAnniReclusione(
+					getRequestBigDecimalParameter(ICostantiPenaComplessiva.CAMPO_NUM_ANNI_RECLUSIONE));
+			lPenComp.setNumMesiReclusione(
+					getRequestBigDecimalParameter(ICostantiPenaComplessiva.CAMPO_NUM_MESI_RECLUSIONE));
+			lPenComp.setNumGiorniReclusione(
+					getRequestBigDecimalParameter(ICostantiPenaComplessiva.CAMPO_NUM_GIORNI_RECLUSIONE));
 
-			lPenComp.setNumAnniArresto   (getRequestBigDecimalParameter(ICostantiPenaComplessiva.CAMPO_NUM_ANNI_ARRESTO));
-			lPenComp.setNumMesiArresto   (getRequestBigDecimalParameter(ICostantiPenaComplessiva.CAMPO_NUM_MESI_ARRESTO));
-			lPenComp.setNumGiorniArresto (getRequestBigDecimalParameter(ICostantiPenaComplessiva.CAMPO_NUM_GIORNI_ARRESTO));
+			lPenComp.setNumAnniArresto(
+					getRequestBigDecimalParameter(ICostantiPenaComplessiva.CAMPO_NUM_ANNI_ARRESTO));
+			lPenComp.setNumMesiArresto(
+					getRequestBigDecimalParameter(ICostantiPenaComplessiva.CAMPO_NUM_MESI_ARRESTO));
+			lPenComp.setNumGiorniArresto(
+					getRequestBigDecimalParameter(ICostantiPenaComplessiva.CAMPO_NUM_GIORNI_ARRESTO));
 
 			lCalcoloPenaMod.setPenaInSentenza(lPenComp);
-			
+
 			MisuraCautelareModel lMisCaut = new MisuraCautelareModel();
 			lMisCaut.setIdMisuraCautelare(new BigDecimal(999));
-			lMisCaut.setNumAnni   (getRequestBigDecimalParameter(ICostantiCalcoloPena.CAMPO_NUM_ANNI_PRESOFFERTO));
-			lMisCaut.setNumMesi   (getRequestBigDecimalParameter(ICostantiCalcoloPena.CAMPO_NUM_MESI_PRESOFFERTO));
-			lMisCaut.setNumGiorni (getRequestBigDecimalParameter(ICostantiCalcoloPena.CAMPO_NUM_GIORNI_PRESOFFERTO));
-			//lMisCaut.setCodTipoMisura("CA");
-			//lMisCaut.setFlagComputabile("S");
-			
+			lMisCaut.setNumAnni(
+					getRequestBigDecimalParameter(ICostantiCalcoloPena.CAMPO_NUM_ANNI_PRESOFFERTO));
+			lMisCaut.setNumMesi(
+					getRequestBigDecimalParameter(ICostantiCalcoloPena.CAMPO_NUM_MESI_PRESOFFERTO));
+			lMisCaut.setNumGiorni(
+					getRequestBigDecimalParameter(ICostantiCalcoloPena.CAMPO_NUM_GIORNI_PRESOFFERTO));
+			// lMisCaut.setCodTipoMisura("CA");
+			// lMisCaut.setFlagComputabile("S");
+
 			setRequestAttribute("lPresoffertoMod", lMisCaut);
-			
+
 			lCalcoloPenaMod.setTipoPenaIniziale(PENA_IN_SENTENZA);
-			
+
 			setRequestAttribute("lCalcoloPenaMod", lCalcoloPenaMod);
-			
+
 			// Posizione Giuridica
 			Date lDataInizioPena = null;
 			if ("D".equals(getRequestStringParameter(ICostantiCalcoloPena.CAMPO_POSIZIONE_GIURIDICA))) {
-				lDataInizioPena = getRequestDateParameter(ICostantiPenaResidua.CAMPO_ANNO_DATA_DECORRENZA_PENA,
-														  ICostantiPenaResidua.CAMPO_MESE_DATA_DECORRENZA_PENA,
-														  ICostantiPenaResidua.CAMPO_GIORNO_DATA_DECORRENZA_PENA);
+				lDataInizioPena = getRequestDateParameter(
+						ICostantiPenaResidua.CAMPO_ANNO_DATA_DECORRENZA_PENA,
+						ICostantiPenaResidua.CAMPO_MESE_DATA_DECORRENZA_PENA,
+						ICostantiPenaResidua.CAMPO_GIORNO_DATA_DECORRENZA_PENA);
 			}
 			setRequestAttribute("lDataInizioPena", lDataInizioPena);
-		}
-		else if (!this.isSessionAttributeNullObj("fascicolo")) {
-		  // Verifico se ho il fascicolo in sessione in questo caso precarico i dati della pena
+		} else if (!this.isSessionAttributeNullObj("fascicolo")) {
+			// Verifico se ho il fascicolo in sessione in questo caso precarico i dati della pena
 			BigDecimal lFascID = ((FascicoloSiepModel) getSessionAttribute("fascicolo")).getIdFascicoloSiep();
 			BigDecimal lIdEvento = null;
 

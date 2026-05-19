@@ -78,6 +78,11 @@ public interface ICostantiComputiCumulo {
     public static final String CAMPO_TDS_MESE_DATA_RECLUSIONE_A      = "TdsMeseDataReclusioneA"; 
     public static final String CAMPO_TDS_ANNO_DATA_RECLUSIONE_A      = "TdsAnnoDataReclusioneA"; 
     
+    // MEV_2025-48 - ALTRO – Benefici con anticipazione effetti
+    public static final String CAMPO_FLAG_APP_PROVVISORIA      = "FlagAppProvvisoria"; 
+    
+    
+    
     //========================================== 
     // Costanti che rappresentano le pagine jsp  
     //========================================== 
@@ -197,5 +202,13 @@ public interface ICostantiComputiCumulo {
     public static final String PG_ELENCO_RIDET_PENA_PM_ALTRO     = IWebConstants.ROOT_DIR  + "files/siap/siep/modulocumulo/ElencoRidetPenaPMAltroCumulo.jsp";
     public static final String PG_LOAD_INSERISCI_RIDET_PENA_PM_ALTRO = IWebConstants.ROOT_DIR  + "files/siap/siep/modulocumulo/LoadInserisciRidetPenaPMAltroCumulo.jsp";
     public static final String PG_LOAD_DETTAGLIO_RIDET_PENA_PM_ALTRO = IWebConstants.ROOT_DIR  + "files/siap/siep/modulocumulo/DettaglioRidetPenaPMAltroCumulo.jsp";
+    
+    //========================================== 
+    // ATTIVITA' DEL PM - RICH GE AMNISTIA/INDULTO/DEPENALIZZAZIONE/INCOST
+    // MEV_2025-48 - ALTRO – Benefici con anticipazione effetti
+    //========================================== 
+    public static final String PG_ELENCO_RICH_BENEFICI_GE = IWebConstants.ROOT_DIR  + "files/siap/siep/modulocumulo/ElencoRichiesteAlGEBeneficiCumulo.jsp";
+    public static final String PG_LOAD_INSERISCI_RICH_BENEFICI_GE_CUMULO = IWebConstants.ROOT_DIR  + "files/siap/siep/modulocumulo/LoadInserisciRichiesteAlGEBeneficiCumulo.jsp";
+    public static final String PG_LOAD_DETTAGLIO_RICH_BENEFICI_GE_CUMULO = IWebConstants.ROOT_DIR  + "files/siap/siep/modulocumulo/DettaglioRichiesteAlGEBeneficiCumulo.jsp";
     
 }

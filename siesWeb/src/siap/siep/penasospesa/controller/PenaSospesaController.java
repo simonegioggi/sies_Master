@@ -80,8 +80,7 @@ import siap.siep.statoprocedimento.dao.StatoProcedimentoDAO;
 import siap.siep.statoprocedimento.model.StatoProcedimentoModel;
 
 /**
- * Title: PenaAccessoriaController
- * Description: Classe Controller per PenaAccessoria
+ * PenaSospesaController - Classe Controller per Pena Sospesa
  *
  * @version 1.0
  */
@@ -153,7 +152,7 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 		ReatoDAO lReaDao = null;
 		CircostanzaDAO lCirDao = null;
 		PenaComplessivaDAO lPenDao = null;
-		// 19/04/2019 - MEV70 Aggiunto il passaggio della Misura Cautelare da Classe III a Classe I.
+		// 19/04/2019 - MEV70 Aggiunto il passaggio della Misura Cautelare da Classe III a Classe I
 		MisuraCautelareDAO lMCDao = null;
 		AnnotazioneManualeDAO lAnnotazManClasseIDao = null;
 		PenaAccessoriaDAO lPenAccDao = null;
@@ -175,7 +174,8 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 			lFasDao = new FascicoloSiepDAO(lConn);
 			// Cerco il Progressivo rispettivamente al tipo progressivo impostato
 			lFasDaoSql = new FascicoloSiepSqlDAO(lConn);
-			int nTipo = 1;
+			// MEV_2025-48: consento la scelta della classe tranne quella da cui provengo
+			int nTipo = aFascicoloSiep.getTipoProgressivo(); /*1*/
 			aFascicoloSiep.setTipoProgressivo(nTipo);
 			aFascicoloSiep.setCodStatoFascicolo("02"); // Iscritto
 			lFasDaoSql.getProgressivoFascicoloSiep(aFascicoloSiep);

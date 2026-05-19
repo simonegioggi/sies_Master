@@ -235,7 +235,13 @@ public class ActRicercaFascicolo extends ActionSiapMinor implements ICostantiFas
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("flagRicercaData---->" + flagRicercaData);
-			setRequestAttribute(IWebConstants.REQUEST_FOR_PAGING, getCompleteRequestURL());
+			// 2026.02.11 Si utilizza il nuovo metodo per costruire l'url di paginazione 
+			// in quanto se si selezionavano più classi, il metodo getCompleteRequestURL()
+			// riportava solo una classe (check) e le ricerche sulle pagine successive
+			// filtravano una sola classe facendo saltare la paginazione
+			//setRequestAttribute(IWebConstants.REQUEST_FOR_PAGING, getCompleteRequestURL());
+			setRequestAttribute(IWebConstants.REQUEST_FOR_PAGING, getCompleteRequestURLMultiVal());
+			
 
 			String lAzione = "siap.siep.fascicolo.action.ActRicercaFascicolo";
 			setRequestAttribute(ISIAPCostantiWeb.CAMPO_AZIONE_CHIAMANTE, lAzione);

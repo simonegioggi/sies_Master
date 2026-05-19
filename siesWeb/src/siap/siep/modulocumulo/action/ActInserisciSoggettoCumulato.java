@@ -1,13 +1,5 @@
 package siap.siep.modulocumulo.action;
 
-/**
- * <p>Title: ActInserisciSoggettoCumulato</p>
- * <p>Description: Azione di Inserimento del Soggetto Cumulato</p>
- * <p>Copyright: Copyright (c) 2002</p>
- * <p>Company: Bull</p>
- * @version 1.0
- */
-
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -17,29 +9,34 @@ import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
 import f3b.web.IWebConstants;
-//import f3b.web.RedirectTo;
 import siap.sico.decodifiche.action.ICostantiComune;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.decodifiche.model.DecodificheModel;
-import siap.sico.soggetto.action.ICostantiSoggetto;
 import siap.siep.fascicolo.action.ICostantiFascicoloSiep;
 import siap.siep.modulocumulo.controller.ISoggettoCumulato;
 import siap.siep.modulocumulo.model.SoggettoCumulatoModel;
 import siap.siep.util.SIEPLookupRemote;
 
+/**
+ * ActInserisciSoggettoCumulato - Azione di Inserimento del Soggetto Cumulato
+ *
+ * @version 1.0
+ */
 public class ActInserisciSoggettoCumulato extends ActionModuloCumulo implements ICostantiSoggettoCumulato {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	/**************************************************************************************
 	 * Azione di Inserimento del Soggetto Cumulato
-	 * 
+	 *
 	 * @return Nome della pagina JSP su cui posizionarsi al termine dell'elaborazione
 	 * @throws F3BException
 	 **************************************************************************************/
 	@SuppressWarnings("rawtypes")
 	public String processRequest() throws Exception {
+
 		String lModo = getRequestStringParameter("modalita");
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -86,9 +83,9 @@ public class ActInserisciSoggettoCumulato extends ActionModuloCumulo implements 
 		} else {
 			// altrimenti dalla sola descrizione (rischio omonimi)
 			lComMod = new ComuneModel(
-					// 20210521	MEV_Scheda-21 Correzione per la gestione delle Omonimie dei Comuni.
-					//getDatiComuneByDescrOmonimiaFlagVal(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
-					getDatiComuneByDescrOmonimia(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));    	
+					// 20210521 MEV_Scheda-21 Correzione per la gestione delle Omonimie dei Comuni.
+					// getDatiComuneByDescrOmonimiaFlagVal(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
+					getDatiComuneByDescrOmonimia(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
 		}
 
 		lSogMod.setCodComuneNascita(lComMod.getCodComune());
@@ -167,6 +164,9 @@ public class ActInserisciSoggettoCumulato extends ActionModuloCumulo implements 
 		String lDescriNazio = ((DecodificheModel) lStatoCitt.get(lIndModel)).getDescription();
 		lSogMod.setDescrNazionalita(lDescriNazio);
 
+		// 20260415 [SG]: aggiunto controllo su CF che deve essere obbligatorio e conforme
+		// SoggettoUtil.controllaCF(lSogMod);
+
 		// Chiama il controller
 		ISoggettoCumulato lSogCtrl = SIEPLookupRemote.getSoggettoCumuloRemote();
 		SoggettoCumulatoModel lSogRetMod = new SoggettoCumulatoModel();
@@ -189,6 +189,6 @@ public class ActInserisciSoggettoCumulato extends ActionModuloCumulo implements 
 		}
 
 		return lPage;
-
 	}
+
 }

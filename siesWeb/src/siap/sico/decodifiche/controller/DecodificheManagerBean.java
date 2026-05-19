@@ -445,6 +445,9 @@ public class DecodificheManagerBean {
 	// MEV_2023-35 Lista Oggetti Sospensione esecuzione pene accessorie (U141, C066)
 	private Collection mTipoPenaAccessoriaPS;
 
+	// MEV_2025-48: aggiunta nuova funzionalita'
+	private Collection mMotivoPC;
+
 	/**
 	 * Inizializzazione degli attributi del Singleton
 	 */
@@ -1948,6 +1951,11 @@ public class DecodificheManagerBean {
 			lModel.setContesto("");
 			lModel.setCodiceAlt2("");
 			// MEV_2023-33 - FINE
+
+			// MEV_2025-48: aggiunta nuova funzionalita'
+			lModel.setContesto("MOTIVO_PROVVEDIMENTO");
+			lModel.setCodiceAlternativo("PC");
+			mMotivoPC = lDecodifiche.ExRicercaDecodifiche(lModel);
 		} catch (F3BException ex) {
 			ex.printStackTrace();
 		} catch (Exception ex) {
@@ -3236,6 +3244,11 @@ public class DecodificheManagerBean {
 	// MEV_2023-35 Lista Oggetti Sospensione esecuzione pene accessorie (U141, C066)
 	public Collection getTipoPenaAccessoriaPS() {
 		return mTipoPenaAccessoriaPS;
+	}
+
+	// MEV_2025-48: aggiunta nuova funzionalita'
+	public Collection getMotivoPC() {
+		return mMotivoPC;
 	}
 
 }

@@ -123,4 +123,5 @@ public class SemestreDL92Model extends GenericModel {
 	public void setIsCompreso(String mIsCompreso) {
 		this.mIsCompreso = mIsCompreso;
 	}
+
 }

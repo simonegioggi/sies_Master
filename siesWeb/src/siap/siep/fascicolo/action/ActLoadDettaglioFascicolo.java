@@ -779,8 +779,10 @@ public class ActLoadDettaglioFascicolo extends ActionSiap implements ICostantiFa
 		// presente se la pena non è validata
 		if (lDettaglio.getPenaResidua() != null) {
 			// Inserisco la SS residua nel model della PR
-			if (lSSResiduaModel == null || lSSResiduaModel.getIdSanzioneSostResidua() == null)
+			if (lSSResiduaModel == null || lSSResiduaModel.getIdSanzioneSostResidua() == null) {
 				lSSResiduaModel = lSSCtrl.getUltimaSSResidua(aId, "N");
+			}
+
 			lDettaglio.getPenaResidua().setSanzSostResidua(lSSResiduaModel);
 		}
 
@@ -788,6 +790,36 @@ public class ActLoadDettaglioFascicolo extends ActionSiap implements ICostantiFa
 		Collection lReatiColl = lDettaglio.getReatiCircostanze();
 		Vector lReatiVect = new Vector(lReatiColl);
 		setRequestAttribute("continuazioni", lRCtrl.getTableContinuazioni(lReatiVect));
+
+		// MEV_2025-48: dicitura CARTABIA se almeno uno dei reati collegati al procedimento ha una data inizio
+		// > 30/12/2022
+		boolean isCartabia = false;
+		final Date dataCartabia = DateUtils.getDate("30/12/2022", "dd/MM/yyyy");
+		Date dataInizioReato = null;
+		Iterator itx = lReatiVect.iterator();
+		while (itx.hasNext()) {
+			ReatoModel rm = null;
+			Object obj = itx.next();
+			if (obj instanceof ReatoModel) {
+				rm = (ReatoModel) obj;
+			} else if (obj instanceof ReatoCircostanzaModel) {
+				ReatoCircostanzaModel rcm = (ReatoCircostanzaModel) obj;
+				rm = rcm.getReato();
+			}
+			Date dataReato = elaboraDataReato(rm);
+			if (dataReato != null) {
+				if (dataInizioReato == null)
+					dataInizioReato = dataReato;
+				else if (DateUtils.isLower(dataInizioReato, dataReato))
+					dataInizioReato = dataReato;
+				if (DateUtils.isGreater(dataInizioReato, dataCartabia))
+					isCartabia = true;
+			}
+		}
+
+		setRequestAttribute("isCartabia", isCartabia);
+		// FINE MEV_2025-48
+
 		setRequestAttribute("dettagliofascicolo", lDettaglio);
 
 		// MEV_2024-092: rework --> elimino questa aggiunta di descrizione PG

@@ -64,6 +64,9 @@ boolean retFlag = false;
 retFlag = ((TornaQui != null) && TornaQui.trim().length() > 1);
 String retParam = retFlag ? ("&TornaQui=" + TornaQui) : "";
 boolean ulterioreDescrizione = false;
+// MEV_2025-48: aggiunta gestione "UlterioreDescrizione"
+if (datiOrdinanza != null && datiOrdinanza.getOrdinanza() != null && datiOrdinanza.getOrdinanza().getUlterioreDescrizione() != null)
+	ulterioreDescrizione = true;
 // Flag per indicare la modalità di Modifica Ordinanza
 boolean modificaOrdinanza = false;
 if (modalita != null && modalita.trim().equalsIgnoreCase("M"))
@@ -87,7 +90,7 @@ if (!Utils.isPresent(codOggettoProcedimento)) {
 		codOggettoProcedimento = gpm.getCodOggettoProcedimento();
 }
 
-String UlterioreTitolo="";
+String UlterioreTitolo = "";
 if (codice.compareTo("VC") == 0)
 	UlterioreTitolo = " Rimedi Risarcitori Violazione Art.3 CEDU";
 if (UlterioreTitolo.compareTo("") != 0)
@@ -267,7 +270,7 @@ if (ulterioreDescrizione) {
 %>
   	<tr>
 	    <td class="l">Ulteriore descrizione della decisione </td>
-	    <td class="l"><font class="campo"> <%=StringUtils.toStringJSP( datiOrdinanza.getOrdinanza().getUlterioreDescrizione(), "-")%></font></td>
+	    <td class="l"><font class="campo"> <%=StringUtils.toStringJSP(datiOrdinanza.getOrdinanza().getUlterioreDescrizione(), "-")%></font></td>
   	</tr>
 <%
 }

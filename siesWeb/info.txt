@@ -26,3 +26,4 @@ In data 25/09/2025 eseguito il merge con il branch MEV_2024-092.
 	4)	in data 04/04/2025 eseguito merge col branch MEV_2019-021
 
 In data 09/12/2025 eseguito il merge con il branch SIES VERSIONE 12.8.4.0.
+In data 19/05/2026 eseguito il merge con il branch SIES VERSIONE 12.9.3.0

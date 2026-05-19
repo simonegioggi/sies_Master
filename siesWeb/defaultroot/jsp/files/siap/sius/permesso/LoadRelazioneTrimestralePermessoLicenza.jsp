@@ -74,12 +74,24 @@ function differenzaDate() {
 	dataFine.setYear(docRef.<%=ICostantiDepositoDecreto.CAMPO_ANNO_DATA_DEPOSITO_FINALE%>.value);      	
 	dataFine.setMonth(FillDM(docRef.<%=ICostantiDepositoDecreto.CAMPO_MESE_DATA_DEPOSITO_FINALE%>.value)-1);
 	dataFine.setDate(FillDM(docRef.<%=ICostantiDepositoDecreto.CAMPO_GIORNO_DATA_DEPOSITO_FINALE%>.value));
-	var diff = dataFine.getTime() - dataInizio.getTime();
-	diff = Math.floor(diff / (1000 * 60 * 60 * 24));
-	if (diff > 182.5) {
-  		alert ('Il range di date non può superare i 6 mesi!');
-	 	return false;        
-	}	
+
+	// 20260112 [SG] : segnalazione di UM dal 01/07/2025 al 31/12/2025 --> diff = 183 --> diff > 183
+// 	var diff = dataFine.getTime() - dataInizio.getTime();
+// 	diff = Math.floor(diff / (1000 * 60 * 60 * 24));
+// 	if (diff > 182.5) {
+//   	alert ('Il range di date non può superare i 6 mesi!');
+// 	 	return false;
+// 	}
+	// Calcolo della differenza in mesi
+	var mesiDiff = (dataFine.getFullYear() - dataInizio.getFullYear()) * 12;
+	mesiDiff += dataFine.getMonth() - dataInizio.getMonth();
+	// Se la differenza in mesi è maggiore di 6,
+	// oppure se sono esattamente 6 mesi, controlla che il giorno finale non sia maggiore del giorno iniziale
+	if (mesiDiff > 6 ||
+			(mesiDiff == 6 && dataFine.getDate() >= dataInizio.getDate())) {
+  		alert ('Il range di date non pu\u00F2 superare i 6 mesi!');
+	 	return false;
+	}
 	return true;
 }
 </script>  	

@@ -241,7 +241,7 @@
         <td colspan="4"><font class="label">&nbsp;</font></td>
       </tr> 
       <tr>
-        <td class1="Titolo" colspan="4" style="BACKGROUND-COLOR: green; text-align:center;">
+        <td class="Titolo" colspan="4" style="BACKGROUND-COLOR: green; text-align:center; background-image: none;">
             <font class="label" style="COLOR: white">Dati da indicare nei provvedimenti di esecuzione</font>
         </td>
       </tr>
@@ -272,7 +272,7 @@
         <td colspan="4"><font class="label">&nbsp;</font></td>
       </tr> 
       <tr>
-        <td class1="Titolo" colspan="4" style="BACKGROUND-COLOR: green; text-align:center;">
+        <td class="Titolo" colspan="4" style="BACKGROUND-COLOR: green; text-align:center; background-image: none;">
           <font class="label" style="COLOR: white">CALCOLI CON DATA DI ESECUZIONE</font>
         </td>
       </tr>  

@@ -1836,8 +1836,11 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 
 			/*
 			 * ISSUE MAC : Ticket#20200610014 — Anomalia SIES: modificato come in inserimento
-			 * FascicoloSiusUDSController.ExInserisciFascicoloSiusUDS Numero MAC : 20200610014 Autore : Gioggi
-			 * Data : 11 giu 2020 Branch : MAC_20200610014
+			 * FascicoloSiusUDSController.ExInserisciFascicoloSiusUDS 
+			 * Numero MAC : 20200610014 
+			 * Autore : Gioggi
+			 * Data : 11 giu 2020 
+			 * Branch : MAC_20200610014
 			 */
 			if (aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U004")
 					|| aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
@@ -4917,7 +4920,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 * Ricerca l'elenco dei fascicoli correntemente assegnati a un magistrato su un particolare ufficio in
 	 * base allo stato del fascicolo
 	 *
-	 * 20251010 [SG]: paginata la ricerca
+	 * MEV_2025-48: aggiunta nuova funzionalita': paginata la ricerca
 	 *
 	 * @param aCodMagistrato
 	 *            - Codice CSM del magistrato
@@ -5423,8 +5426,11 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	}
 
 	/*
-	 * ISSUE MEV : aggiunto aggiornamento stato fascicolo per decreto di tipo DM Numero MEV : 9 Autore :
-	 * Gioggi Data : 19 nov 2020 Branch : MEV_2019-09
+	 * ISSUE MEV : aggiunto aggiornamento stato fascicolo per decreto di tipo DM 
+	 * Numero MEV : 9 
+	 * Autore : Gioggi 
+	 * Data : 19 nov 2020 
+	 * Branch : MEV_2019-09
 	 */
 	public void aggiornaStatoFascicoloSius(FascicoloSiusModel fsm) throws F3BException {
 
@@ -5539,4 +5545,5 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 		return;
 	}
 	// FINE: MEV_2019-09
+
 }

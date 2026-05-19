@@ -36,9 +36,13 @@
                 <font class="campo"><%=StringUtils.toStringJSP(IstruttoriaCumulo.getNote(),"&nbsp;")%></font>
       <%      } %>
       
-      <font class="label">
+      <font class="label">&nbsp;&nbsp;
         <a class="cliccabile" href="/jsp/Main.jsp?Action=siap.siep.istruttoriacumulo.action.ActLoadElencoFascicoliCoinvolti&<%=ICostantiIstruttoriaCumulo.CAMPO_ID_ISTRUTTORIA_CUMULO%>=<%=IstruttoriaCumulo.getIdIstruttoriaCumulo()%>" title="Lista Titoli Coinvolti">
        (Elenco Titoli Coinvolti)
+       </a>
+       &nbsp;&nbsp;-&nbsp;&nbsp;
+       <a class="cliccabile" href="/jsp/Main.jsp?Action=siap.siep.modulocumulo.action.ActLoadInserisciDatiFinaliCumulo&<%=ICostantiIstruttoriaCumulo.CAMPO_ID_ISTRUTTORIA_CUMULO%>=<%=IstruttoriaCumulo.getIdIstruttoriaCumulo()%>" title="Dati FInali Cumulo">
+       (Dati Finali Cumulo)
        </a>
       </font>
     </td>

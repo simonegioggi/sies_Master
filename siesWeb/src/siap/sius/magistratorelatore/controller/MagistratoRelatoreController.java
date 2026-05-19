@@ -299,15 +299,15 @@ public class MagistratoRelatoreController extends SiapController implements IMag
 			siesLogger.error("DAOException: " + ex);
 			throw new F3BException(
 					"MagistratoRelatoreController.ExModificaMultiplaMagistratoRelatore: " + ex);
-		} catch (Exception e) { // 20251010 [SG]: paginata la ricerca
+		} catch (Exception e) { // MEV_2025-48: aggiunta nuova funzionalita': paginata la ricerca
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + e);
-			if (e instanceof SearchLimitException)
+			if (e instanceof SearchLimitException || e instanceof IllegalStateException)
 				throw new SIUSException(
-						"Attenzione: con i parametri inseriti la ricerca ritrova troppe occorrenze, "
-						+ "restringere i criteri di ricerca!");
+						"Attenzione: con la selezione 'Tutti' il sistema non riesce a completare "
+								+ "l'aggiornamento, procedere con la selezione per pagina!");
 			else
 				throw new SIUSException(F3BException.USER_MESSAGE, e.getMessage());
 		} finally {

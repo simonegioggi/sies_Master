@@ -26,7 +26,7 @@ public class ActRelazioneTrimestralePermessoLicenza extends ActionSius implement
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug("inizio");
+		siesLogger.debug(getClass().getName() + ".processRequest() : inizio!");
 
 		String lPagina = "1";
 		if (!isRequestParameterNullObj(IWebConstants.NUM_PAGE))
@@ -55,7 +55,8 @@ public class ActRelazioneTrimestralePermessoLicenza extends ActionSius implement
 		lCriteri.setCodUfficio(super.getCodUfficioUtenteConnesso());
 
 		IPermesso lCtrl = SIUSLookupRemote.getPermessoRemote();
-		Collection lColl = lCtrl.ExRicercaProvvedimentiPermessiLicenze(lCriteri);
+		// MEV_2025-48: paginata la ricerca
+		Collection lColl = lCtrl.ExRicercaProvvedimentiPermessiLicenze(lCriteri, Integer.parseInt(lPagina));
 
 		// Paginazione
 		int CountRisultati;
@@ -81,9 +82,10 @@ public class ActRelazioneTrimestralePermessoLicenza extends ActionSius implement
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug("fine");
+		siesLogger.debug(getClass().getName() + ".processRequest() : fine!");
 
-		return PG_RICERCA_PROVVEDIMENTI_PERMESSOLICENZA; // restituisce la jsp di VIEW
+		// restituisce la jsp di VIEW
+		return PG_RICERCA_PROVVEDIMENTI_PERMESSOLICENZA;
 	}
 
 	private String getDescrTipoRicerca(String aValue) {

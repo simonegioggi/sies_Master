@@ -5963,6 +5963,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			lStatoDao.setDataInserimento(lEveModel.getDataAggiornamento());
 			lStatoDao.setCodUfficioInserimento(lEveModel.getCodUfficioAggiornamento());
 			lStatoDao.insert();
+			lStatoDao.stop();
 		} finally {
 			cleanup(lStatoDao);
 		}

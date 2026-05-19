@@ -27,8 +27,8 @@ public class ActUploadL78del2013 extends ActionSiap implements ICostantiEvento {
 		FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 
 		EventoModel lModel = new EventoModel();
-		lModel.setIdEvento(getRequestBigDecimalParameter(CAMPO_ID_EVENTO));
-		// Ticket#202511060155 — SIEP
+		lModel.setIdEvento( getRequestBigDecimalParameter( CAMPO_ID_EVENTO) );
+		// Ticket#202511060155 — SIEP 
 		// si commenta il cod motivo altrimenti non è validabile dal cambio magistrato
 		// lModel.setCodMotivo(getRequestStringParameter("motivo"));
 
@@ -42,11 +42,12 @@ public class ActUploadL78del2013 extends ActionSiap implements ICostantiEvento {
 			lModel.setDocBlobIn(lSt);
 		}
 
-		lModel.setDataAggiornamento(DateUtils.getSysDate());
+		lModel.setDataAggiornamento( DateUtils.getSysDate());
 
-		lModel.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
-		lModel.setCodOperatoreAggiornamento(getCodUtenteConnesso());
+		lModel.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso() );
+		lModel.setCodOperatoreAggiornamento(getCodUtenteConnesso() );
 
+		
 		String lNonValidato = "N";
 		if (isRequestChecked(ICostantiEvento.CAMPO_VALIDA)) {
 			lModel.setFlagDocumentoRegistrato("S");
@@ -58,28 +59,28 @@ public class ActUploadL78del2013 extends ActionSiap implements ICostantiEvento {
 
 			IEvento lCtrl = SICOLookupRemote.getEventoRemote();
 			lCtrl.ExUpdateDocument(lModel);
-
+			
 			lNonValidato = "S";
-
+			
 		}
 
-		// Prepara la "pagina" di destinazione
+		//Prepara la "pagina" di destinazione
 		setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Aggiornamento Documento Avvenuto Correttamente!");
 
 		String titolo = null;
-		if (!isRequestParameterNullObj("titolo"))
+		if(!isRequestParameterNullObj("titolo"))
 			titolo = getRequestStringParameter("titolo");
 
-		// il flag lNonValidato serve solo nel caso degli arresti domiciliari,perchè è l'unico caso che
-		// ridirige su l'azione di trasferimento al tds...
+		//il flag lNonValidato serve solo nel caso degli arresti domiciliari,perchè è l'unico caso che 
+		//ridirige su l'azione di trasferimento al tds...
 		if (!isRequestParameterNullObj(CAMPO_AZIONE_DETTAGLIO)) {
 			String lAzione = getRequestStringParameter(CAMPO_AZIONE_DETTAGLIO);
 			if (lAzione.equals("siap.siep.ordineesecuzione.action.ActLoadTrasferisciProvvedimentoLS")
 					&& lNonValidato.equals("S")) {
-
+				
 				lAzione = "siap.siep.ordineesecuzione.action.ActDettaglioLSArrestiDomiciliari";
 			}
-
+			
 			RedirectTo lRedirigi = new RedirectTo();
 			lRedirigi.setPage(IWebConstants.PG_MAIN);
 			lRedirigi.setAction(lAzione + "&" + CAMPO_ID_EVENTO + "="

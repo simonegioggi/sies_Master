@@ -131,6 +131,7 @@ public class ActionNuovaIstanza extends ActionSiap
 	 * @throws F3BException
 	 */
 	protected SoggettoModel getSoggetto() throws Exception {
+
 		SoggettoModel lSogMod = new SoggettoModel();
 
 		lSogMod.setCognome(getRequestStringParameter(CAMPO_COGNOME));
@@ -182,6 +183,9 @@ public class ActionNuovaIstanza extends ActionSiap
 		lSogMod.setCodAfis(getRequestStringParameter(CAMPO_COD_AFIS).toUpperCase());
 		lSogMod.setNote(getRequestStringParameter(ICostantiSoggetto.CAMPO_NOTE));
 		lSogMod.setFlagPresenzaFascicolo("N");
+
+		// 20260415 [SG]: aggiunto controllo su CF che deve essere obbligatorio e conforme
+		// SoggettoUtil.controllaCF(lSogMod);
 
 		lSogMod.setCodOperatoreInserimento(getCodUtenteConnesso());
 		lSogMod.setDataInserimento(DateUtils.getSysDate());
@@ -260,6 +264,7 @@ public class ActionNuovaIstanza extends ActionSiap
 	 * @throws F3BException
 	 */
 	protected NuovaIstanzaModel getNuovaIstanza(BigDecimal lIdFascicolo) throws Exception {
+
 		NuovaIstanzaModel lNuoMod = new NuovaIstanzaModel();
 
 		lNuoMod.setCodStatoIstanza("01");// iscritto
@@ -609,6 +614,7 @@ public class ActionNuovaIstanza extends ActionSiap
 	 */
 
 	protected SentenzaModel getSentenzaStraniera() throws Exception {
+
 		SentenzaModel lSenMod = new SentenzaModel();
 
 		lSenMod.setCodTipoProvvedimento("05");
@@ -905,6 +911,7 @@ public class ActionNuovaIstanza extends ActionSiap
 	 * @throws F3BException
 	 */
 	protected BigDecimal getIdAvvocatoPresInserito() throws Exception {
+
 		AvvocatoModel lAvvMod = new AvvocatoModel();
 
 		BigDecimal idAvvocato = null;

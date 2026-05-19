@@ -1,13 +1,5 @@
 package siap.siep.istruttoriacumulo.action;
 
-/**
-* <p>Title: ActLoadInserisciIstruttoriaCumulo</p>
-* <p>Description: Classe Action per la load inserisci di IstruttoriaCumulo</p>
-* <p>Copyright: Copyright (c) 2002</p>
-* <p>Company: Bull</p>
-* @version 1.0
-*/
-
 import java.util.Vector;
 
 import f3b.util.F3BException;
@@ -17,14 +9,17 @@ import siap.sico.magistratocompetente.controller.IMagistratoCompetente;
 import siap.sico.magistratocompetente.model.MagistratoCompetenteMagistratoModel;
 import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
-import siap.siep.SIEPException;
-import siap.siep.avvocato.controller.IAvvocato;
 import siap.siep.fascicolo.action.ICostantiFascicoloSiep;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.istruttoriacumulo.controller.IIstruttoriaCumulo;
 import siap.siep.istruttoriacumulo.model.IstruttoriaCumuloModel;
 import siap.siep.util.SIEPLookupRemote;
 
+/**
+ * ActLoadInserisciIstruttoriaCumulo - Classe Action per la load inserisci di IstruttoriaCumulo
+ *
+ * @version 1.0
+ */
 public class ActLoadInserisciIstruttoriaCumulo extends ActionSiap implements ICostantiIstruttoriaCumulo {
 
 	/*****************************************************************************
@@ -37,25 +32,25 @@ public class ActLoadInserisciIstruttoriaCumulo extends ActionSiap implements ICo
 	@SuppressWarnings("rawtypes")
 	public String processRequest() throws F3BException {
 
-		if (this.isSessionAttributeNullObj("fascicolo")) {
+		if (isSessionAttributeNullObj("fascicolo")) {
 			return ICostantiFascicoloSiep.REDIRECT_FASCICOLO_RICERCATO + getClass().getName();
 		}
 
 		FascicoloSiepModel lFascMod = ((FascicoloSiepModel) (getSessionAttribute("fascicolo")));
 
 		// Verifico se il fascicolo è di competenza dell'ufficio
-		this.isFascicoloSiepDiCompetenza();
+		isFascicoloSiepDiCompetenza();
 
 		// Il fascicolo non può essere Archiviato
 		// FIXME gestire in STEP2 gli Archiviati. Va richiesto all'utente se vuole dearchiviarlo
 		// e farlo inn automatico.
-		this.isFascicoloArchiviatoDefinito();
+		isFascicoloArchiviatoDefinito();
 
 		// Verifico se il fascicolo è Validato
-		if (this.isFascicoloNonValidato())
+		if (isFascicoloNonValidato())
 			return IWebConstants.PG_MESSAGE;
 		// Verifico se esiste un precedente provvedimeno NON Validato
-		this.isEventoNonValidato();
+		isEventoNonValidato();
 
 		// Verifico se è presente Magistrato assegnatario. Potrebbe essere un migrato che
 		// nasce Validato ma senza Magistrato
@@ -71,25 +66,23 @@ public class ActLoadInserisciIstruttoriaCumulo extends ActionSiap implements ICo
 			return IWebConstants.PG_MESSAGE;
 		}
 
+		// MEV_2025-48: spostato questo controllo in dati finali
 		// Verifico se è presente almeno un Avvocato assegnatario. Potrebbe essere un migrato che
 		// nasce Validato ma senza Avvocato
 		// Controllo esistenza almeno un avvocato per fascicolo.
-		IAvvocato lAvv = SIEPLookupRemote.getAvvocatoRemote();
-		// Vector lAvvocati = null;
-
-		try {
-			/* lAvvocati = */lAvv.ExRicercaAvvocatiByFascicolo(lFascMod.getIdFascicoloSiep());
-		} catch (SIEPException e) {
-			RedirectTo lRedirigi = new RedirectTo();
-			lRedirigi.setPage(IWebConstants.PG_MAIN);
-			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
-					e.getMessage() + " Impossibile aprire una istruttoria cumulo.");
-			lRedirigi.setAction("siap.siep.avvocato.action.ActLoadInserisciAvvocato&"
-					+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
-			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
-
-			return IWebConstants.PG_MESSAGE;
-		}
+		// IAvvocato lAvv = SIEPLookupRemote.getAvvocatoRemote();
+		// try {
+		// /* lAvvocati = */lAvv.ExRicercaAvvocatiByFascicolo(lFascMod.getIdFascicoloSiep());
+		// } catch (SIEPException e) {
+		// RedirectTo lRedirigi = new RedirectTo();
+		// lRedirigi.setPage(IWebConstants.PG_MAIN);
+		// setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+		// e.getMessage() + " Impossibile aprire una istruttoria cumulo.");
+		// lRedirigi.setAction("siap.siep.avvocato.action.ActLoadInserisciAvvocato&"
+		// + ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
+		// setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
+		// return IWebConstants.PG_MESSAGE;
+		// }
 
 		// ==========================================================================
 		// Verifica se Già presente una istruttoria Cumulo aperta, in questo caso la

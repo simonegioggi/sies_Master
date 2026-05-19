@@ -179,7 +179,7 @@ public interface IFascicoloSiep {
 	 * Ricerca l'elenco dei fascicoli correntemente assegnati a un magistrato su un particolare ufficio in
 	 * base allo stato del fascicolo
 	 *
-	 * 20251010 [SG]: paginata la ricerca
+	 * MEV_2025-48: aggiunta nuova funzionalita': paginata la ricerca
 	 *
 	 * @param aCodMagistrato
 	 *            - Codice CSM del magistrato
@@ -200,6 +200,10 @@ public interface IFascicoloSiep {
 
 	public BigDecimal ExGetCountProcedimenti(String lCodMagistrato, String lCodUfficio, String[] lStato)
 			throws F3BException;
+
+	public FascicoloSiepModel ExInserisciFascicoloSiepPassaggioClasse(SoggettoModel soggettoModel,
+			FascicoloSiepModel fsmNew, DettaglioFascicoloModel dfm) throws F3BException;
+	// FINE MEV_2025-48
 
 	// paolo cherubini x supersoggetto 22 luglio 2009
 	public Vector ExRicercaFascicoloOnViewPagedSuperSoggetti(SoggettoModel aSogModel, String aCodUfficio,

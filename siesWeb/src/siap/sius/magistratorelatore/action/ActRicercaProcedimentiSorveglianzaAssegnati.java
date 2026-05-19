@@ -44,8 +44,7 @@ public class ActRicercaProcedimentiSorveglianzaAssegnati extends ActionSiap
 		String lCodUfficio = getCodUfficioUtenteConnesso();
 		String lStato[] = { "02", "03", "10" };
 
-		// 20251010 [SG]: paginata la ricerca
-		// pagina
+		// MEV_2025-48: aggiunta nuova funzionalita': paginata la ricerca
 		String lPagina = "1";
 		if (!isRequestParameterNullObj(IWebConstants.NUM_PAGE))
 			lPagina = getRequestStringParameter(IWebConstants.NUM_PAGE);

@@ -29,6 +29,9 @@
 <%@ page import="siap.siep.modulocumulo.model.ProcedimentoCumulatoModel"%>
 <%@ page import="siap.siep.modulocumulo.model.LibAnticipataCumuloModel"%>
 
+<%@ page import="siap.siep.modulocumulo.util.PeriodiCarcerazioneSoffertiModel"%>
+
+
 <%@page import="org.apache.log4j.Logger"%>
 <% final Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG); %>
 
@@ -272,6 +275,39 @@
         espandiTutto('+');
       });
       
+<%-- MEV_2025-48 - ALTRO - Visualizzazione Pena In Continuazione --%>
+      function evidenziaContinuazioni (trObject) {
+    	  var jQueryObj = $(trObject);
+    	  var idTitolo = jQueryObj.attr('idTitolo');
+    	  var continuazioni = $('tr[idTitoloR='+idTitolo+']');
+    	  continuazioni.css('background-color','yellow');
+      }
+
+      function togliEvidenziaContinuazioni (trObject) {
+          var jQueryObj = $(trObject);
+          var idTitolo = jQueryObj.attr('idTitolo');
+          var bckGroundColor = jQueryObj.css('background-color');
+          var continuazioni = $('tr[idTitoloR='+idTitolo+']');
+          continuazioni.css('background-color',bckGroundColor);
+      }
+      
+      function evidenziaSentenzaR (trObject) {
+          var jQueryObj = $(trObject);
+          var idTitoloR = jQueryObj.attr('idTitoloR');
+          var sentenzaR = $('tr[idTitolo='+idTitoloR+']');
+          sentenzaR.css('background-color','LightGreen');
+      }
+
+      function togliEvidenziaSentenzaR (trObject) {
+          var jQueryObj = $(trObject);
+          var idTitoloR = jQueryObj.attr('idTitoloR');
+          var bckGroundColor = jQueryObj.css('background-color');
+          var sentenzaR = $('tr[idTitolo='+idTitoloR+']');
+          sentenzaR.css('background-color',bckGroundColor);
+      }
+<%-- MEV_2025-48 - ALTRO - Visualizzazione Pena In Continuazione - FINE --%>
+      
+      
     </script>
 </head>
 
@@ -293,12 +329,13 @@
 
 	<br>
 
-	<table cellspacing="2" cellpadding="4" width="800px">
+	<table cellspacing="2" cellpadding="4" width="900px">
 		<tr>
 			<td colspan="8">
 				<font class='cBlack'>N.B. Di seguito sono riportate : </font>
 				<font class='cRosso'>in Rosso le quantità di pena da sommare alla Pena Principale, </font>
-				<font class='Label'>in Blu quelle da Detrarre. </font>
+				<font class='Label'>in Blu quelle da Detrarre, </font>
+				<font class='Label' style="color:grey;">in Grigio quelle non conteggiate. </font>
 			</td>
 		</tr>
 		
@@ -318,7 +355,7 @@
    Pena Principali
   ============================================================================== 
   --%>
-	<table id="idTabPD" cellspacing="2" cellpadding="4" width="800px">
+	<table id="idTabPD" cellspacing="2" cellpadding="4" width="900px">
 		<tr>
 			<td class="Titolo" colspan="9">Il cumulo delle pene risulta
 				essere pari a - Pena Principale &nbsp;<a
@@ -336,14 +373,14 @@
 		</tr>
 		<tr>
 			<td></td>
-			<td class="int">Anni</td>
-			<td class="int">Mesi</td>
-			<td class="int">Giorni</td>
-			<td class="int">Multa</td>
-			<td class="int">Anni</td>
-			<td class="int">Mesi</td>
-			<td class="int">Giorni</td>
-			<td class="int">Ammenda</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Anni</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Mesi</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Giorni</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Multa</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Anni</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Mesi</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Giorni</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Ammenda</td>
 		</tr>
 
 		<% 
@@ -354,6 +391,11 @@
     for (int i=0; i<lListaPeneComplessive.size(); i++) 
     {
       PenaComplessivaCumuloModel lPenaComp = lListaPeneComplessive.elementAt(i);
+      
+      // MEV_2025-48 - ALTRO - Visualizzazione Pena In Continuazione 
+      String contaContinuazioni = "";
+      if (lPenaComp.getContinuazioniCumulo()!=null && lPenaComp.getContinuazioniCumulo().size()>0)
+          contaContinuazioni=" (cont.) ";
       
       String lDescTitolo = null;
       
@@ -405,28 +447,97 @@
       
       String colorStyle ="";
       String lInfoSS = "";
+      String lInfoSosp = "";
+      String lInfoCont = "";
+      String colorStyleMulta ="";
+      String colorStyleAmmenda ="";
       if (lPenaComp!=null && lPenaComp.getSanzioneSostitutivaCumulo()!=null
            && !lPenaComp.getSanzioneSostitutivaCumulo().getIsRevocata()      
          ) 
       {
         colorStyle = "style='color: grey;'";
-        
+        colorStyleMulta = colorStyle;
+        colorStyleAmmenda = colorStyle;
+
         SanzioneSostitutivaCumuloModel lSSModel = lPenaComp.getSanzioneSostitutivaCumulo();
         lSSModel.calcolaStringaSanzione();
         String lInfSSText = "Pena Sostituita con la sanzione sostitutiva "+lSSModel.getStringaSanzione();
         
         lInfoSS = "&nbsp;<img align='absmiddle' src='/images/info.gif' border=0 title='"+StringUtils.encodeHTML(lInfSSText)+"'>";
       }
+      // MEV_2025-48 - ALTRO - Visualizzazione Pena Sospesa
+      else if (lPenaComp.getBeneficioSospensioneCumulo()!=null) 
+      {
+          //if ("02".equals(lBeneficioSosp.getCodSottotipoBeneficio()))
+          colorStyle = "style='color: grey;'";
+          colorStyleMulta = colorStyle;
+          colorStyleAmmenda = colorStyle;
+          String lInfSospText = "Pena Sospesa: "+lPenaComp.getBeneficioSospensioneCumulo().getDescrSottotipoBeneficio();
+          lInfoSosp = "&nbsp;<img align='absmiddle' src='/images/info.gif' border=0 title='"+StringUtils.encodeHTML(lInfSospText)+"'>";
+          if ("02".equals(lPenaComp.getBeneficioSospensioneCumulo().getCodSottotipoBeneficio())){
+              colorStyleMulta   = "style='color: red;'";
+              colorStyleAmmenda = "style='color: red;'";
+          }
+      }
+      // MEV_2025-48 - ALTRO - Visualizzazione Pena Sospesa - FINE
       // MEV70
       else {
           colorStyle = "style='color: red;'";    	  
+          colorStyleMulta = colorStyle;
+          colorStyleAmmenda = colorStyle;
       }
+
+      //  MEV_2025-48 - ALTRO - Visualizzazione Pena In Continuazione
+      if (lPenaComp.getTitoloContinuazioneR()!=null) 
+      {
+          colorStyle = "style='color: grey;'";
+          colorStyleMulta = colorStyle;
+          colorStyleAmmenda = colorStyle;
+          TitoloCumulatoModel lTitCont = lPenaComp.getTitoloContinuazioneR();
+          ProcedimentoCumulatoModel lProcRModel = lTitCont.getProcedimentoCumulato();
+          
+          String lDescTitoloR = lTitCont.getDescrTipoProvvedimento();
+          lDescTitoloR += " del " +  DateUtils.getDateToString( lTitCont.getDataProvvedimento(),"dd-MM-yyyy");
+          lDescTitoloR += " - "+lTitCont.getCodTipoAutoritaEmittente() + " "+ lTitCont.getDescrLuogoEmittente();
+
+          if (lProcRModel!=null) {
+              String nSiepR = "";
+              
+              if ("S".equals(lProcRModel.getFlagAccorpato()) && lProcRModel.getUfficioOrigine()!=null ){
+                UfficioModel lUfficioOrigine = lProcRModel.getUfficioOrigine();
       
+                nSiepR = lProcRModel.getChiaveAnnoFasCumulato() +"/"+ lProcRModel.getChiaveProgrOrigine();
+                nSiepR += " <font class=\"cRosso\">Ex "+lUfficioOrigine.getCodTipoUfficio()+" di "+lUfficioOrigine.getDescrComune()+"</font>"; 
+              }
+              else {
+                nSiepR = lProcRModel.getChiaveAnnoFasCumulato() +"/"+ lProcRModel.getChiaveProgrFasCumulato();
+                nSiepR += " "+lProcRModel.getCodTipoUfficioFasCumulato() + " di "+lProcRModel.getDescrLuogoUfficioFasCumulato();
+              }
+              lDescTitoloR += " ("+nSiepR+")";
+          }          
+          
+          String lInfContText = "Pena In Continuazione con la "+lDescTitoloR;
+
+          lInfoCont = "&nbsp;<img align='absmiddle' src='/images/info.gif' border=0 title='"+StringUtils.encodeHTML(lInfContText)+"'>";
+      }
+      // //  MEV_2025-48 - ALTRO - Visualizzazione Pena In Continuazione - FINE      
       
       //TODO evidenziare le PP sostituite
     %>
-		<tr style="display: none" id="SI">
-			<td class="l" <%=colorStyle%> title="<%=lDescrTitleSentenza%>"><%=lDescTitolo%><%=lInfoSS%></td>
+		<tr style="display: none" id="SI" 
+            <%-- MEV_2025-48 - ALTRO - Visualizzazione Pena In Continuazione --%>
+		    idTitolo="<%=lPenaComp.getTitIdTitoloCumulato()%>"
+		    idTitoloR="<%=lPenaComp.getTitoloContinuazioneR()!=null ? lPenaComp.getTitoloContinuazioneR().getIdTitoloCumulato() : ""%>"
+		    <% if (lPenaComp.getTitoloContinuazioneR()!=null) {%>
+		    onmouseover="evidenziaSentenzaR(this);"
+		    onmouseout="togliEvidenziaSentenzaR(this);;"
+		    <% } else {%>
+            onmouseover="evidenziaContinuazioni(this);"
+            onmouseout="togliEvidenziaContinuazioni(this);"
+		    <% } %>
+		    <%-- MEV_2025-48 - ALTRO - Visualizzazione Pena In Continuazione - FINE --%>
+		    >
+			<td class="l" <%=colorStyle%> title="<%=lDescrTitleSentenza%>"><%=lDescTitolo%><%=lInfoSS%><%=lInfoSosp%><%=lInfoCont%><%=contaContinuazioni%></td>
 
 <%-- 			<% if (lPenaComp.isErgastolo() && 1==2){ %> --%>
 <%-- 			<td class="r" colspan="3"><font class='cRosso'><%=lPenaComp.getDescrTipoPenaDetentiva()%></font> --%>
@@ -448,11 +559,11 @@
 			<td class="r" <%=colorStyle%>><%=StringUtils.toStringJSP(lPenaComp.getNumAnniReclusione(),"&nbsp;")%></td>
 			<td class="r" <%=colorStyle%>><%=StringUtils.toStringJSP(lPenaComp.getNumMesiReclusione(),"&nbsp;")%></td>
 			<td class="r" <%=colorStyle%>><%=StringUtils.toStringJSP(lPenaComp.getNumGiorniReclusione(),"&nbsp;")%></td>
-			<td class="r" <%=colorStyle%>><%=(lPenaComp.getImportoMulta()==null) ? "&nbsp;":StringUtils.toEuroFormat(lPenaComp.getImportoMulta()) %></td>
+			<td class="r" <%=colorStyleMulta%>><%=(lPenaComp.getImportoMulta()==null || lPenaComp.getImportoMulta().intValue()==0) ? "&nbsp;":StringUtils.toEuroFormat(lPenaComp.getImportoMulta()) %></td>
 			<td class="r" <%=colorStyle%>><%=StringUtils.toStringJSP(lPenaComp.getNumAnniArresto(),"&nbsp;")%></td>
 			<td class="r" <%=colorStyle%>><%=StringUtils.toStringJSP(lPenaComp.getNumMesiArresto(),"&nbsp;")%></td>
 			<td class="r" <%=colorStyle%>><%=StringUtils.toStringJSP(lPenaComp.getNumGiorniArresto(),"&nbsp;")%></td>
-			<td class="r" <%=colorStyle%>><%=(lPenaComp.getImportoAmmenda()==null) ? "&nbsp;":StringUtils.toEuroFormat(lPenaComp.getImportoAmmenda()) %></td>
+			<td class="r" <%=colorStyleAmmenda%>><%=(lPenaComp.getImportoAmmenda()==null || lPenaComp.getImportoAmmenda().intValue()==0) ? "&nbsp;":StringUtils.toEuroFormat(lPenaComp.getImportoAmmenda()) %></td>
 <%-- 			<% } %> --%>
 		</tr>
 		<% } %>
@@ -503,16 +614,135 @@
 
 	</table>
 
-	<%--
+
+<%--
+============================================================================== 
+  MEV_2025-48 - ALTRO - Ordinamento Periodi Carcerazione Sofferti
+============================================================================== 
+--%>
+    <br>
+    <table id="idTabMC" cellspacing="2" cellpadding="4" width="900px" style1="background-color:LightGreen;">
+        <tr>
+            <td class="Titolo" colspan="7">Dedotti i Periodi di carcerazione sofferti&nbsp;
+                <a href="Javascript:espandi('idTabMC','idExpCollMC');" id="idExpCollMC"><img align="middle" alt="Espandi"
+                    src="<%=IWebConstants.IMAGES_DIR%>expand.gif" border="0" />
+                </a>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="int" id="tdTipMisura">Tipo Misura</td>
+            <td class="int" id="tdPeriodoDa">Periodo dal</td>
+            <td class="int" id="tdPeriodoA">Periodo al</td>
+            <td class="int" style="padding-left:5px; padding-right:5px;">Anni</td>
+            <td class="int" style="padding-left:5px; padding-right:5px;">Mesi</td>
+            <td class="int" style="padding-left:5px; padding-right:5px;">Giorni</td>
+        </tr>
+        
+        <% 
+        Vector <PeriodiCarcerazioneSoffertiModel> lListaPeriodiCarcerazioneOrdinati;
+        lListaPeriodiCarcerazioneOrdinati = aCalcoloPenaModel.getPeriodiCarcerazioneOrdinati();
+        
+        for (int i=0; i<lListaPeriodiCarcerazioneOrdinati.size(); i++) 
+        {
+            PeriodiCarcerazioneSoffertiModel lPeriodoModel = lListaPeriodiCarcerazioneOrdinati.elementAt(i);
+            
+            CalendarModel lCalendar = lPeriodoModel.getCalendar();
+            String colorDataInizio = "" ; 
+            if (lPeriodoModel.isDataInizioEvidenziata())
+                colorDataInizio = "style='color:red'";
+            
+            String colorDataFine   = ""; 
+            if (lPeriodoModel.isDataFineEvidenziata())
+                colorDataFine = "style='color:red'";
+            
+            String lInfoAlert = "";
+            if (lPeriodoModel.getMsgAlert()!= null && lPeriodoModel.getMsgAlert().length()>0)
+                lInfoAlert = "&nbsp;<img align='absmiddle' src='/images/info.gif' border=0 title='"+StringUtils.encodeHTML(lPeriodoModel.getMsgAlert())+"'>";
+            
+            if (lPeriodoModel.isInContinuazione())
+                continue; // lo salto
+            %>
+            <tr style="display: block" id="SI">
+                <td class="l" Title="<%=lPeriodoModel.getDescTitolo()%>"><%=StringUtils.toStringJSP(lPeriodoModel.getDescrizione(),"&nbsp;")%><%=lInfoAlert%></td>
+                <td class="r" nowrap <%=colorDataInizio%> ><%=StringUtils.toStringJSP(DateUtils.getDateToString(lCalendar.getDataInizio(),"dd-MM-yyyy"),"")%></td>
+                <td class="r" nowrap <%=colorDataFine%>   ><%=StringUtils.toStringJSP(DateUtils.getDateToString(lCalendar.getDataFine(),"dd-MM-yyyy"),"")%></td>
+                <td class="c" nowrap><%=StringUtils.toStringJSP(lCalendar.getNumAnni(),"&nbsp;")%></td>
+                <td class="c" nowrap><%=StringUtils.toStringJSP(lCalendar.getNumMesi(),"&nbsp;")%></td>
+                <td class="c" nowrap><%=StringUtils.toStringJSP(lCalendar.getNumGiorni(),"&nbsp;")%></td>
+            </tr>
+            <%     
+            if (lPeriodoModel.isContinuativo()) {
+                for (PeriodiCarcerazioneSoffertiModel lPcfModel:lPeriodoModel.getListaPerInContinuazione()) {
+                    CalendarModel lCalendarCont = lPcfModel.getCalendar();  
+                    
+                    String colorDataInizioCont = "style='font-size=10px;'" ; 
+                    if (lPcfModel.isDataInizioEvidenziata())
+                        colorDataInizioCont = "style='font-size=10px;color:red'";
+                    
+                    String colorDataFineCont   = "style='font-size=10px;'"; 
+                    if (lPcfModel.isDataFineEvidenziata())
+                        colorDataFineCont = "style='font-size=10px;color:red'";    
+                    
+                    String lInfoAlertCont = "";
+                    if (lPcfModel.getMsgAlert()!= null && lPcfModel.getMsgAlert().length()>0)
+                        lInfoAlertCont = "&nbsp;<img align='absmiddle' src='/images/info.gif' border=0 title='"+StringUtils.encodeHTML(lPcfModel.getMsgAlert())+"'>";
+
+                    String tdStyle="style='font-size=10px'" ;
+                    %>
+			            <tr style="display: block" id="SI">
+			                <td class="l"  Title="<%=lPcfModel.getDescTitolo()%>" <%=tdStyle%>>
+			                     <ul style='margin-top:1px; margin-bottom:1px; padding-top:1px; padding-bottom:1px;'>
+			                         <li><%=StringUtils.toStringJSP(lPcfModel.getDescrizione(),"&nbsp;")%><%=lInfoAlertCont%></li>
+			                     </ul>			                     
+			                </td>
+			                <td class="r" <%=colorDataInizioCont%> nowrap><%=StringUtils.toStringJSP(DateUtils.getDateToString(lCalendarCont.getDataInizio(),"dd-MM-yyyy"),"")%></td>
+			                <td class="r" <%=colorDataFineCont%>   nowrap><%=StringUtils.toStringJSP(DateUtils.getDateToString(lCalendarCont.getDataFine(),"dd-MM-yyyy"),"")%></td>
+			                <%--
+			                <td class="c" <%=tdStyle%> nowrap><%=StringUtils.toStringJSP(lCalendarCont.getNumAnni(),"&nbsp;")%></td>
+			                <td class="c" <%=tdStyle%> nowrap><%=StringUtils.toStringJSP(lCalendarCont.getNumMesi(),"&nbsp;")%></td>
+			                <td class="c" <%=tdStyle%> nowrap><%=StringUtils.toStringJSP(lCalendarCont.getNumGiorni(),"&nbsp;")%></td>
+			                --%>
+			                <td class="c" <%=tdStyle%> nowrap>&nbsp;</td>
+                            <td class="c" <%=tdStyle%> nowrap>&nbsp;</td>
+                            <td class="c" <%=tdStyle%> nowrap>&nbsp;</td>
+                            
+			            </tr>                    
+                    <%
+                }
+            }
+        }
+        %>
+	    <%
+	    MisuraCautelareCumuloModel lTotMisCautModelN = aCalcoloPenaModel.getMisureCautelariTotaliCont();
+	    %>
+        <tr>
+            <td class="r" colspan="3" width="650px">Per un totale di</td>
+            <td class="c"><%=StringUtils.toStringJSP(lTotMisCautModelN.getNumAnni(),"&nbsp;")%></td>
+            <td class="c"><%=StringUtils.toStringJSP(lTotMisCautModelN.getNumMesi(),"&nbsp;")%></td>
+            <td class="c"><%=StringUtils.toStringJSP(lTotMisCautModelN.getNumGiorni(),"&nbsp;")%></td>
+        </tr>         
+    </table>
+
+<%--
+============================================================================== 
+  FINE - MEV_2025-48 - ALTRO - Ordinamento Periodi Carcerazione Sofferti
+============================================================================== 
+--%>
+
+<%--
   ============================================================================== 
   ==  Periodi di carcerazione sofferti
   ==   - Inserire le MISURE_CAUTELARI_CUMULO
   ==   - Inserire i Provvediment di Presofferto e Fungibilità
   ==   - Inserire l'Espiato
   ============================================================================== 
-  --%>
+--%>
+<%-- 
+// MEV_2025-48  ALTRO  Ordinamento Periodi Carcerazione Sofferti
+// codice sostituito dalla tabella precedente
 	<br>
-	<table id="idTabMC" cellspacing="2" cellpadding="4" width="800px">
+	<table id="idTabMCOld" cellspacing="2" cellpadding="4" width="900px" style="display:none;">
 		<tr>
 			<td class="Titolo" colspan="7">Dedotti i Periodi di carcerazione sofferti &nbsp;
 				<a href="Javascript:espandi('idTabMC','idExpCollMC');" id="idExpCollMC"><img align="middle" alt="Espandi"
@@ -523,12 +753,12 @@
 
 
 		<tr>
-			<td class="int" id="tdTipMisura"></td>
-			<td class="int" id="tdPeriodoDa"></td>
-			<td class="int" id="tdPeriodoA"></td>
-			<td class="int">Anni</td>
-			<td class="int">Mesi</td>
-			<td class="int">Giorni</td>
+			<td class="int" id="tdTipMisuraOld"></td>
+			<td class="int" id="tdPeriodoDaOld"></td>
+			<td class="int" id="tdPeriodoAOld"></td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Anni</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Mesi</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Giorni</td>
 			<!--td class="int">Tot Giorni</td-->
 		</tr>
 		<% 
@@ -555,9 +785,7 @@
 			<td class="c"><%=StringUtils.toStringJSP(lMCCumuloModel.getNumAnni(),"&nbsp;")%></td>
 			<td class="c"><%=StringUtils.toStringJSP(lMCCumuloModel.getNumMesi(),"&nbsp;")%></td>
 			<td class="c"><%=StringUtils.toStringJSP(lMCCumuloModel.getNumGiorni(),"&nbsp;")%></td>
-			<%-- td class="c"><%=StringUtils.toStringJSP(lMCCumuloModel.getGiorni(),"&nbsp;")%></td--%>
 		</tr>
-
 		<%
     }
     %>
@@ -598,7 +826,7 @@
           lDescrComputo += lComputo.getDescrTipoAnnotazione();
         else 
           lDescrComputo = "";
-        %>
+          
 		<tr style="display: none" id="SI">
 			<td class="l" Title="<%=lDescrProvv+" ["+lDescTitolo+"]"%> "><%=lDescrComputo%></td>
 
@@ -611,9 +839,11 @@
 			<td class="c" <%=lColorRevocati%>><%=StringUtils.toStringJSP(lComputo.getNumGiorniReclusione(),"&nbsp;")%></td>
 		</tr>
 		<% } %>
-		<% } %>
+	<% } %>
 
-		<%
+
+
+	<%
     //==========================================================================
     //  AGGIUNGERE ESPIATO
     //==========================================================================
@@ -668,6 +898,9 @@
 			<td class="c"><%=StringUtils.toStringJSP(lTotMisCautModel.getNumGiorni(),"&nbsp;")%></td>
 		</tr>
 	</table>
+	
+FINE  MEV_2025-48  ALTRO  Ordinamento Periodi Carcerazione Sofferti	
+--%>
 
   <%--
   =============================================================================== 
@@ -679,7 +912,7 @@
   	if (lListaProvvEspiatoRevocaMA.size()>0) {
   	%>
 		<br>
-		<table id="idTabRMA" cellspacing="2" cellpadding="4" width="800px">
+		<table id="idTabRMA" cellspacing="2" cellpadding="4" width="900px">
 			<tr>
 				<td class="Titolo" colspan="7">Dedotti i Periodi di carcerazione sofferti a seguito revoca di Misure Alternative&nbsp;
 					<a href="Javascript:espandi('idTabRMA','idExpCollRMA');" id="idExpCollRMA"><img align="middle" alt="Espandi"
@@ -690,9 +923,9 @@
 	
 			<tr>
 				<td class="c" colspan="3" width="600px">&nbsp;</td>
-				<td class="int">Anni</td>
-				<td class="int">Mesi</td>
-				<td class="int">Giorni</td>
+				<td class="int" style="padding-left:5px; padding-right:5px;">Anni</td>
+				<td class="int" style="padding-left:5px; padding-right:5px;">Mesi</td>
+				<td class="int" style="padding-left:5px; padding-right:5px;">Giorni</td>
 			</tr>
 	
 		<%
@@ -769,7 +1002,7 @@
   	if (lListaProvvSospDiff.size()>0) {
   	%>
 		<br>
-		<table id="idTabSD" cellspacing="2" cellpadding="4" width="800px">
+		<table id="idTabSD" cellspacing="2" cellpadding="4" width="900px">
 			<tr>
 				<td class="Titolo" colspan="7">Dedotti i Periodi di carcerazione sofferti a seguito Sospensione / Differimento della Pena&nbsp;
 					<a href="Javascript:espandi('idTabSD','idExpCollSD');" id="idExpCollSD"><img align="middle" alt="Espandi"
@@ -780,9 +1013,9 @@
 	
 			<tr>
 				<td class="c" colspan="3" width="600px">&nbsp;</td>
-				<td class="int">Anni</td>
-				<td class="int">Mesi</td>
-				<td class="int">Giorni</td>
+				<td class="int" style="padding-left:5px; padding-right:5px;">Anni</td>
+				<td class="int" style="padding-left:5px; padding-right:5px;">Mesi</td>
+				<td class="int" style="padding-left:5px; padding-right:5px;">Giorni</td>
 			</tr>
 	
 		<%
@@ -864,7 +1097,7 @@
   ============================================================================== 
   --%>
 	<br>
-	<table cellspacing="2" cellpadding="4" width="800px" id="idTabBen">
+	<table cellspacing="2" cellpadding="4" width="900px" id="idTabBen">
 		<tr>
 			<td class="Titolo" colspan="9">Dedotti i benefici &nbsp;
 				<a href="Javascript:espandi('idTabBen','idExpCollBen');" id="idExpCollBen">
@@ -881,14 +1114,14 @@
 		</tr>
 		<tr>
 			<td class="int">Beneficio</td>
-			<td class="int" nowrap>Anni</td>
-			<td class="int" nowrap>Mesi</td>
-			<td class="int" nowrap>Giorni</td>
-			<td class="int" nowrap>Multa</td>
-			<td class="int" nowrap>Anni</td>
-			<td class="int" nowrap>Mesi</td>
-			<td class="int" nowrap>Giorni</td>
-			<td class="int" nowrap>Ammenda</td>
+			<td class="int" nowrap style="padding-left:5px; padding-right:5px;">Anni</td>
+			<td class="int" nowrap style="padding-left:5px; padding-right:5px;">Mesi</td>
+			<td class="int" nowrap style="padding-left:5px; padding-right:5px;">Giorni</td>
+			<td class="int" nowrap style="padding-left:5px; padding-right:5px;">Multa</td>
+			<td class="int" nowrap style="padding-left:5px; padding-right:5px;">Anni</td>
+			<td class="int" nowrap style="padding-left:5px; padding-right:5px;">Mesi</td>
+			<td class="int" nowrap style="padding-left:5px; padding-right:5px;">Giorni</td>
+			<td class="int" nowrap style="padding-left:5px; padding-right:5px;">Ammenda</td>
 		</tr>
 		<% 
     Vector <BeneficioCumuloModel> lListaBenefici;
@@ -1097,7 +1330,7 @@ if (   (lBeneficio.isQuantumReclusioneZero())
   //============================================================================ 
   --%>
 	<br>
-	<table cellspacing="2" cellpadding="4" width="800px" id="idTabPP">
+	<table cellspacing="2" cellpadding="4" width="900px" id="idTabPP">
 		<tr>
 			<td class="Titolo" colspan="3">Dedotte le somme già pagate (multa/ammenda) &nbsp;
 				<a href="Javascript:espandi('idTabPP','idExpCollPP');" id="idExpCollPP">
@@ -1168,7 +1401,7 @@ if (   (lBeneficio.isQuantumReclusioneZero())
   ============================================================================== 
   --%>
 	<br>
-	<table cellspacing="2" cellpadding="4" width="800px" id="idTabRidPen">
+	<table cellspacing="2" cellpadding="4" width="900px" id="idTabRidPen">
 		<tr>
 			<td class="Titolo" colspan="9">Quantum di pena a seguito di rideterminazione pena - altro &nbsp;
 				<a href="Javascript:espandi('idTabRidPen','idExpCollRidPen');" id="idExpCollRidPen">
@@ -1185,14 +1418,14 @@ if (   (lBeneficio.isQuantumReclusioneZero())
 		</tr>
 		<tr>
 			<td class="int">Rideterminazione Pena</td>
-			<td class="int">Anni</td>
-			<td class="int">Mesi</td>
-			<td class="int">Giorni</td>
-			<td class="int">Multa</td>
-			<td class="int">Anni</td>
-			<td class="int">Mesi</td>
-			<td class="int">Giorni</td>
-			<td class="int">Ammenda</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Anni</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Mesi</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Giorni</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Multa</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Anni</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Mesi</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Giorni</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Ammenda</td>
 		</tr>
 	<% 
     //Vector <BeneficioCumuloModel> lListaBenefici;
@@ -1314,9 +1547,9 @@ if (   (lBeneficio.isQuantumReclusioneZero())
 			<td class="r">&nbsp;</td>
 			<td class="r">&nbsp;</td>
 			<% } else { %>
-			<td class="r" <%=colorStyleTotaliRPArr%> ><%=lTotArrestoRP.getNumAnni()%></td>
-			<td class="r" <%=colorStyleTotaliRPArr%> ><%=lTotArrestoRP.getNumMesi()%></td>
-			<td class="r" <%=colorStyleTotaliRPArr%> ><%=lTotArrestoRP.getNumGiorni()%></td>
+			<td class="r" <%=colorStyleTotaliRPArr%> ><%=lTotArrestoRPToView.getNumAnni()%></td>
+			<td class="r" <%=colorStyleTotaliRPArr%> ><%=lTotArrestoRPToView.getNumMesi()%></td>
+			<td class="r" <%=colorStyleTotaliRPArr%> ><%=lTotArrestoRPToView.getNumGiorni()%></td>
 			<% } %>
       
       
@@ -1341,7 +1574,7 @@ if (   (lBeneficio.isQuantumReclusioneZero())
   ============================================================================== 
   --%>
 	<br>
-	<table cellspacing="2" cellpadding="4" width="800px" id="idTabLA">
+	<table cellspacing="2" cellpadding="4" width="900px" id="idTabLA">
 		<tr>
 			<td class="Titolo" colspan="6">Considerata la liberazione anticipata/Rimedi risarcitori/Scomputi Permessi &nbsp;
 				<a href="Javascript:espandi('idTabLA','idExpCollLA');" id="idExpCollLA">
@@ -1467,7 +1700,7 @@ if (   (lBeneficio.isQuantumReclusioneZero())
   ============================================================================== 
   --%>
 	<br>
-	<table cellspacing="2" cellpadding="4" width="800px" id="idTabRichGE">
+	<table cellspacing="2" cellpadding="4" width="900px" id="idTabRichGE">
 		<tr>
 			<td class="Titolo" colspan="10">Richieste al GE Concessione
 				Benefici &nbsp;<a
@@ -1486,14 +1719,14 @@ if (   (lBeneficio.isQuantumReclusioneZero())
 		<tr>
 			<td class="int">&nbsp;</td>
 			<td class="int">Beneficio</td>
-			<td class="int">Anni</td>
-			<td class="int">Mesi</td>
-			<td class="int">Giorni</td>
-			<td class="int">Multa</td>
-			<td class="int">Anni</td>
-			<td class="int">Mesi</td>
-			<td class="int">Giorni</td>
-			<td class="int">Ammenda</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Anni</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Mesi</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Giorni</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Multa</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Anni</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Mesi</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Giorni</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Ammenda</td>
 		</tr>
 		<% 
     Vector <RichiestePmInCumuloModel> lListaRichiestePM;
@@ -1653,7 +1886,7 @@ if (   lCalReclusione.isQuantumZero() && lCalArresti.isQuantumZero()
   ============================================================================== 
   --%>
 	<br>
-	<table cellspacing="2" cellpadding="4" width="800px"
+	<table cellspacing="2" cellpadding="4" width="900px"
 		id="idTabRichGERev">
 		<tr>
 			<td class="Titolo" colspan="10">Richieste al GE Revoca Benefici
@@ -1673,14 +1906,14 @@ if (   lCalReclusione.isQuantumZero() && lCalArresti.isQuantumZero()
 		<tr>
 			<td class="int">&nbsp;</td>
 			<td class="int">Beneficio</td>
-			<td class="int">Anni</td>
-			<td class="int">Mesi</td>
-			<td class="int">Giorni</td>
-			<td class="int">Multa</td>
-			<td class="int">Anni</td>
-			<td class="int">Mesi</td>
-			<td class="int">Giorni</td>
-			<td class="int">Ammenda</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Anni</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Mesi</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Giorni</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Multa</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Anni</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Mesi</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Giorni</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Ammenda</td>
 		</tr>
 		<% 
     
@@ -1852,7 +2085,7 @@ if (   lCalReclusione.isQuantumZero() && lCalArresti.isQuantumZero()
       
   %>
 	<br>
-	<table id="idTabPD" cellspacing="2" cellpadding="4" width="800px">
+	<table id="idTabPD" cellspacing="2" cellpadding="4" width="900px">
 		<tr>
 			<td class="Titolo" colspan="9">Totale quantum</td>
 		</tr>
@@ -1865,14 +2098,14 @@ if (   lCalReclusione.isQuantumZero() && lCalArresti.isQuantumZero()
 		</tr>
 		<tr>
 			<td></td>
-			<td class="int">Anni</td>
-			<td class="int">Mesi</td>
-			<td class="int">Giorni</td>
-			<td class="int">Multa</td>
-			<td class="int">Anni</td>
-			<td class="int">Mesi</td>
-			<td class="int">Giorni</td>
-			<td class="int">Ammenda</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Anni</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Mesi</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Giorni</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Multa</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Anni</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Mesi</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Giorni</td>
+			<td class="int" style="padding-left:5px; padding-right:5px;">Ammenda</td>
 		</tr>
 
 		<tr>

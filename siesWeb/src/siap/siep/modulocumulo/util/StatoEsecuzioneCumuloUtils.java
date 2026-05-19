@@ -157,7 +157,13 @@ public class StatoEsecuzioneCumuloUtils {
 
 	// Codici delle Espulsioni.
 	public static List<String> aCodEspulsioneSORV = new ArrayList<String>(Arrays.asList("2140", "0029"));
+	
+	// MEV_2025-48 - ALTRO – Benefici con anticipazione effetti
+	// Si aggiungono le richieste al GE di concessione e revoca benefici Amnistia/Indulto/Depenalizzazione/Incostituzionalita
+	public static List<String> aCodRichiesteBeneficiAlGE = new ArrayList<String>(Arrays.asList("0287", "0288","0289","0291","0292","0293","0290","0294"));
 
+	
+	
 	/**
 	 *
 	 * @param aEvento
@@ -530,6 +536,16 @@ public class StatoEsecuzioneCumuloUtils {
 
 		return isRevocaSospCondPenaGE;
 	}
+	
+	// MEV_2025-48 - ALTRO – Benefici con anticipazione effetti
+    public static boolean isRichiestaBeneficiAlGE(String aCodMotivo) {
+        boolean isRichiestaBeneficiAlGE = false;
+
+        if (aCodRichiesteBeneficiAlGE.contains(aCodMotivo))
+            return true;
+
+        return isRichiestaBeneficiAlGE;
+    }
 
 	/**
 	 * Restituisce la Action per la visualizzazione del dettaglio
@@ -613,6 +629,10 @@ public class StatoEsecuzioneCumuloUtils {
 		{
 			return "siap.siep.modulocumulo.action.ActDettaglioAnnotazioneRevocaBeneficioCumulo";
 		}
+        else if (aCodRichiesteBeneficiAlGE.contains(aStatoEsecModel.getCodMotivo()))
+        {// MEV_2025-48 - ALTRO – Benefici con anticipazione effetti
+            return "siap.siep.modulocumulo.action.ActDettaglioRichBenGECumulo";
+        }		
 
 		// Dettaglio generico
 		return "siap.siep.modulocumulo.action.ActLoadDettaglioStatoEsecTitoloCumulato";

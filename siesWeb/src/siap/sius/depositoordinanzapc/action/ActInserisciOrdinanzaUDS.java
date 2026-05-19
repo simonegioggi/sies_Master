@@ -776,11 +776,8 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 			} // Ticket#20220415019 - FINE
 
 			/*
-			 * ISSUE MEV : aggiunto codice per gestione oggetto C029 
-			 * Numero MEV : 39 
-			 * Autore : Gioggi 
-			 * Data : 19/giu/2017 
-			 * Branch : MEV_39
+			 * ISSUE MEV : aggiunto codice per gestione oggetto C029 Numero MEV : 39 Autore : Gioggi Data :
+			 * 19/giu/2017 Branch : MEV_39
 			 */
 			if (codOggettoProcedimento.equalsIgnoreCase(OGG_ORD_APPELLO_CONTRO_PROVV_MS)) {
 				TenoreModel tenori[] = lOrdEveTenGP.getTenori();
@@ -1379,9 +1376,19 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 		if (!isRequestParameterNullObj(ICostantiDepositoDecreto.CAMPO_COD_TIPO_DECRETO))
 			lDepOrdModel = leggiDatiDecreto(lDepOrdModel);
 
+		// MEV_2025-48: aggiunta gestione "UlterioreDescrizione"
+		String motivazione = "";
 		// Inserisce, ove sia definito, il valore del campo "Ulteriori Descrizioni".
-		if (!isRequestParameterNullObj(CAMPO_ULTERIORE_DESCRIZIONE))
-			lDepOrdModel.setUlterioreDescrizione(getRequestStringParameter(CAMPO_ULTERIORE_DESCRIZIONE));
+		if (!isRequestParameterNullObj(CAMPO_MOTIVAZIONI))
+			motivazione += getRequestStringParameter(CAMPO_MOTIVAZIONI);
+		if (!isRequestParameterNullObj(CAMPO_ULTERIORE_DESCRIZIONE)) {
+			if (Utils.isPresent(motivazione))
+				motivazione += " - " + getRequestStringParameter(CAMPO_ULTERIORE_DESCRIZIONE);
+			else
+				motivazione += getRequestStringParameter(CAMPO_ULTERIORE_DESCRIZIONE);
+		}
+		if (Utils.isPresent(motivazione))
+			lDepOrdModel.setUlterioreDescrizione(motivazione);
 
 		// Ordinanza di Applicazione Sanzioni Sostitutiva (SS)
 		// prevede il campo Cod Ufficio Competente.

@@ -77,6 +77,8 @@
 <%-- MEV_2023-33: aggiunti useBean x gestione Civilmente Obbligato ed elenco stato pagamenti --%>
 <jsp:useBean id="existCivilmenteObbligato"	scope="request" class="java.lang.Boolean"/>
 <jsp:useBean id="existPagamenti"			scope="request" class="java.lang.Boolean"/>
+<%-- MEV_2025-48: aggiunta variabile --%>
+<jsp:useBean id="isCartabia"				scope="request" class="java.lang.Boolean"/>
 
 <%
 SoggettoModel soggetto = fascicolo.getSoggetto();
@@ -155,6 +157,12 @@ if (fascicolo.getFlagCumulante() != null && fascicolo.getFlagCumulante().equals(
 if (fascicolo.getCodOperatoreInserimento() != null && fascicolo.getCodOperatoreInserimento().startsWith("res-")) {
 %>
           	<font class="cRossoCumulo"> &nbsp;Migrato&nbsp; </font>&nbsp;
+<%
+}
+// MEV_2025-48: aggiunta sezione
+if (isCartabia) {
+%>
+			<font class="cRossoCumulo"> &nbsp;Cartabia&nbsp; </font>&nbsp;
 <%
 }
 if (fascicolo.getCodStatoFascicolo() != null && (fascicolo.getCodStatoFascicolo().equals("01"))) {
@@ -438,7 +446,7 @@ if (soggetto.getDescrComuneNascita().compareTo("-") == 0) {
 <%
 if (Utils.isPresent(soggetto.getCodAfis())) {
 %>
-      		<font class="label">Codice CUI : </font>
+      		<font class="label"> Codice CUI : </font>
       		<font class="campo"><%=StringUtils.toStringJSP(soggetto.getCodAfis())%></font>
 <%
 }
@@ -684,7 +692,7 @@ if (conta > 0) {
 %>
 	<tr>
 		<td class="L">
-<%            
+<%
 	if (conta > 1) {
 %>
 			<font class="label">Collegato ai Procedimenti: </font>
@@ -737,14 +745,14 @@ if (conta > 0) {
 %>
 			)
 <%
-}
+				}
 			}
 		}
       	if (itx.hasNext()) {
 %>
 			&nbsp;&nbsp;&nbsp;
 <%
-		}
+      	}
 	}
 %>
 		</td>
@@ -1183,7 +1191,13 @@ if (!"S".equals(fascicolo.getFlagCumulante())) {
 %>
 		</td>
 	</tr>
+<%-- MEV_2025-48: aggiunta nuova sezione --%>
 <%
+				if (Utils.isPresent(lPenCompMod.getCodTipoRito()) && "E".equals(lPenCompMod.getCodTipoRito())) {
+%>
+	<tr><td class="L"><font color="red">Importo da Pagare Include Confisca per Equivalente</font></td></tr>
+<%
+				}
   			}
 		}
 	}

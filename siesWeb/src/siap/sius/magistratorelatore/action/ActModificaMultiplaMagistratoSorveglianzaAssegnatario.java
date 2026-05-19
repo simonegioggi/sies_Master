@@ -37,6 +37,7 @@ public class ActModificaMultiplaMagistratoSorveglianzaAssegnatario extends Actio
 				ICostantiMagistratoRelatore.CAMPO_MESE_DATA_INIZIO,
 				ICostantiMagistratoRelatore.CAMPO_GIORNO_DATA_INIZIO));
 		lMagRelModel.setCodRuoloMagistrato("02");
+
 		lMagRelModel.setDataInserimento(DateUtils.getSysDate());
 		lMagRelModel.setCodOperatoreInserimento(getCodUtenteConnesso());
 		lMagRelModel.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
@@ -50,7 +51,7 @@ public class ActModificaMultiplaMagistratoSorveglianzaAssegnatario extends Actio
 		// ==========================================================================
 		// idFascicoloDaAggiornare = idFascicolo;anno/numero
 		// ==========================================================================
-		// 20251010 [SG]: paginata la ricerca
+		// MEV_2025-48: aggiunta nuova funzionalita': paginata la ricerca
 		Vector lListaAnnoNumero = new Vector();
 		if (!isRequestParameterNullObj("selezionaAll") && isRequestChecked("selezionaAll")) {
 			String lStato[] = { "02", "03", "10" };

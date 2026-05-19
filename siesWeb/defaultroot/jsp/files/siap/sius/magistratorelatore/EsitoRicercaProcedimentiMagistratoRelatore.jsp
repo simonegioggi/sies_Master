@@ -10,11 +10,12 @@
 <%@ page import="siap.sius.fascicolo.action.ICostantiFascicoloSius"%>
 <%@ page import="siap.web.ISIAPCostantiWeb"%>
 
-<jsp:useBean id="aMagistrato"        	scope="request" class="siap.sico.magistrato.model.MagistratoModel"/>
-<jsp:useBean id="aListaProcedimenti" 	scope="request" class="java.util.Vector"/>
-<jsp:useBean id="aListaSoggetti"		scope="request" class="java.util.Vector"/>
-<jsp:useBean id="AzioneChiamante"    	scope="request" class="java.lang.String"/>
-<%-- 20251010 [SG]: paginata la ricerca --%>
+<jsp:useBean id="aMagistrato"        scope="request" class="siap.sico.magistrato.model.MagistratoModel"/>
+<jsp:useBean id="aListaProcedimenti" scope="request" class="java.util.Vector" />
+<jsp:useBean id="aListaSoggetti" scope="request" class="java.util.Vector" />
+
+<jsp:useBean id="AzioneChiamante"    scope="request" class="java.lang.String" />
+<%-- MEV_2025-48: aggiunta nuova funzionalita': paginata la ricerca --%>
 <jsp:useBean id="totaleProcedimenti"	scope="request" class="java.lang.String"/>
 
 <%
@@ -233,7 +234,7 @@ if (aListaProcedimenti.size() > 0) {
 // Elenco dei fascicoli assegnati
 //========================================================================
 %>
-<%-- 20251010 [SG]: paginata la ricerca --%>
+<%-- MEV_2025-48: aggiunta nuova funzionalita': paginata la ricerca --%>
 <jsp:include page="<%=IWebConstants.PAGINAZIONE_RICERCA%>"></jsp:include>
 <br>
 <table>

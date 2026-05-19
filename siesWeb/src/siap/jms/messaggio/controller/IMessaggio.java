@@ -149,4 +149,7 @@ public interface IMessaggio {
 	public Vector<MessaggioModel> ExRicercaMessaggioByIdMessaggioSollecitato(String aTipoOperazione,
 			String aIdMesSollecitato) throws F3BException;
 
+	// MEV_2025-48 - 2.15 Gestione Annotazioni Trasmissioni
+	public void ExMarcaMessaggioVisto(BigDecimal aIdMessaggio) throws F3BException;
+	   
 }
