@@ -73,7 +73,7 @@ function checkEsiti() {
 function Verify() {
 	if (document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_CK_ATTI_AL_PRESIDENTE%>.checked) {
     	// Chiede conferma: nessun campo ma compilato ad eccezione del campo note
-    	if (confirm("Si stanno per restiture gli atti al Presidente. Nessuna ordinanza varra' inserita. Si vuole procedere?")) {
+    	if (confirm("Si stanno per restiture gli atti al Presidente. Nessuna ordinanza verra' inserita. Si vuole procedere?")) {
       		return true;
     	} else 
       		return false;
