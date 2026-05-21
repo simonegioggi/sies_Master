@@ -45,20 +45,8 @@ import siap.sius.tenore.model.TenoreModel;
 import siap.sius.tenore.model.TenoreProvvedimentoModel;
 
 /**
- * <p>
- * Title:TrasmissioneJMScontroller
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company:
- * </p>
+ * TrasmissioneJMScontroller - Classe controller per la trasmissione code JMS
  *
- * @author not attributable
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -377,7 +365,7 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 			// siesLogger.info( "Treemodel nel messaggio " + lRep.debugTreeXML(lTreeRoot));
 			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			// siesLogger.info(getClass().getPackage().getName() + ".getMessageForProvvedimento: fine");
+			// siesLogger.info(getClass().getName() + ".getMessageForProvvedimento: fine");
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"TrasmissioneJMSController.getMessageForProvvedimento: Non posso leggere : " + daoEx);
@@ -541,6 +529,12 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 					lEventiNot.add(lEveNotModel);
 				}
 				lDettFascicolo.setEventi(lEventiNot);
+
+				// Ticket#202509260133 - SIUS - errore: Impossibile ricostruire pena da espiare
+				// Si aggiungono tutti i dati, anche le pene residue altrimenti va in errore la presa in
+				// carico in caso di eventi di pena iniziale. Il sistema non riesce a ricostruire la pena.
+				lDettFascicolo = lFasc.ExAltriDatiFascicoloSiep(lDettFascicolo, aKeyFascicolo);
+				// Ticket#202509260133 - FINE
 				lTreeRoot = new TreeModel(lDettFascicolo);
 			}
 		} catch (DAOException ex) {

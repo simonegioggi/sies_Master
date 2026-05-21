@@ -36,6 +36,8 @@ import siap.siep.fascicolo.controller.IFascicoloSiepStampa;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.penacomplessiva.action.ICostantiPenaComplessiva;
 import siap.siep.penaresidua.action.ICostantiPenaResidua;
+import siap.siep.penaresidua.controller.IPenaResidua;
+import siap.siep.penaresidua.model.PenaResiduaModel;
 import siap.siep.sentenza.model.SentenzaModel;
 import siap.siep.util.SIEPLookupRemote;
 
@@ -135,18 +137,18 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 							ICostantiPenaResidua.CAMPO_GIORNO_DATA_DECORRENZA_PENA));
 		}
 
-		// new se ho provengo dalla form di calcolo recupero i check per l'esclusione dei periodi
-		Hashtable <String, String> listaIsCompresa = new Hashtable <String, String>();
-		if ( !isRequestParameterNullEmptyObj("numSemestriElaborati")) {
+		// new se provengo dalla form di calcolo recupero i check per l'esclusione dei periodi
+		Hashtable<String, String> listaIsCompresa = new Hashtable<>();
+		if (!isRequestParameterNullEmptyObj("numSemestriElaborati")) {
 			int numSemestriElaborati = getRequestIntParameter("numSemestriElaborati");
-			for  (int i=1; i<=numSemestriElaborati; i++) {
-				String idSemestre = "prgSemestre_"+i;
+			for (int i = 1; i <= numSemestriElaborati; i++) {
+				String idSemestre = "prgSemestre_" + i;
 				String isCompreso = getRequestStringParameter(idSemestre);
-				listaIsCompresa.put (idSemestre, isCompreso);
+				listaIsCompresa.put(idSemestre, isCompreso);
 			}
 		}
 		lCalcoloModel.setListaIsCompresa(listaIsCompresa);
-		
+
 		siesLogger.debug("Model prima del calcolo");
 		lCalcoloModel.stampaCalcolo();
 
@@ -200,6 +202,13 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 			IFascicoloSiepStampa lCtrStam = SIEPLookupRemote.getFascicoloSiepStampaRemote();
 			lTreeRoot = lCtrStam.prelevaDatiStampaFascicolo(lFascicoloModel, lUtente);
 
+			TreeModel lTreeFascicolo = lTreeRoot.findTreeModel(lTreeRoot, lFascicoloModel);
+
+			IPenaResidua lCtrlPenaResidua = SIEPLookupRemote.getPenaResiduaRemote();
+			PenaResiduaModel lPenRes = lCtrlPenaResidua
+					.ExRicercaPenaResiduaUltimaValidata(lFascicoloModel.getIdFascicoloSiep());
+			if (lPenRes != null && lPenRes.getIdPenaResidua() != null)
+				lTreeFascicolo.add(new TreeModel(lPenRes));
 		} else {
 			XModel lStampa = new XModel();
 
@@ -534,7 +543,8 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 
 		nRow++;
 		row = sheetRiepilogo.createRow(nRow);
-		setCell(row, 0, "Data scarcerazione con giorni Liberazione Anticipata applicata per intero (data fine pena calcolata con giorni non usufruibili):",
+		setCell(row, 0,
+				"Data scarcerazione con giorni Liberazione Anticipata applicata per intero (data fine pena calcolata con giorni non usufruibili):",
 				csGrigioDestra);
 		setCell(row, 1,
 				StringUtils.toStringJSP(DateUtils
@@ -543,7 +553,8 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 
 		nRow++;
 		row = sheetRiepilogo.createRow(nRow);
-		setCell(row, 0, "Data scarcerazione con giorni Liberazione Anticipata concessi (data fine pena calcolata con giorni di fungibilita'):",
+		setCell(row, 0,
+				"Data scarcerazione con giorni Liberazione Anticipata concessi (data fine pena calcolata con giorni di fungibilita'):",
 				csGrigioDestra);
 		setCell(row, 1,
 				StringUtils.toStringJSP(DateUtils
@@ -552,8 +563,7 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 
 		nRow++;
 		row = sheetRiepilogo.createRow(nRow);
-		setCell(row, 0,
-				"Data scarcerazione senza applicare l'ultimo semestre di Liberazione:",
+		setCell(row, 0, "Data scarcerazione senza applicare l'ultimo semestre di Liberazione:",
 				csGrigioDestra);
 		if (lCalcoloDL92Model.getLAFungibili().intValue() > 0)
 			setCell(row, 1,
@@ -848,12 +858,11 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 			setCell(row, 0, StringUtils.toStringJSP(lSemestreUtile.getProgressivo(), "0"), csCenter);
 			
 			setCell(row, 1, "semestre maturato per L.A. ", cs);
-			
+
 			if ("S".equals(lSemestreUtile.getIsCompreso()))
 				setCell(row, 2, "COMPRESO", csCenter);
 			else
-				setCell(row, 2, "ESCLUSO", csBoldCenterRed);			
-
+				setCell(row, 2, "ESCLUSO", csBoldCenterRed);
 			if (lSemestreUtile.getLAApplicate().intValue() < 45)
 				setCell(row, 3, StringUtils.toStringJSP(lSemestreUtile.getLAApplicate(), "0"),
 						csBoldCenterRed);

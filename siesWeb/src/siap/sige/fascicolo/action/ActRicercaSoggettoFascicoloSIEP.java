@@ -6,6 +6,8 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.web.IWebConstants;
 import siap.sico.decodifiche.action.ICostantiComune;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.model.ComuneModel;
@@ -20,25 +22,12 @@ import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.util.SIEPLookupRemote;
 import siap.sige.web.ActionSige;
 import siap.sius.fascicolo.action.ICostantiFascicoloSius;
-import f3b.log.LogF3B;
-import f3b.web.IWebConstants;
 
 /**
- * <p>
- * Title: ActLoadRicercaFascicoloSIEP
- * </p>
- * <p>
- * Description: Classe Action per la ricerca di Soggetti titolari di Procedimento SIEP.
- * </p>
+ * ActLoadRicercaFascicoloSIEP - Classe Action per la ricerca di Soggetti titolari di Procedimento SIEP.
  * L'action specializza siap.sius.fascicolo.action.ActRicercaSoggettoFascicoloSiep solo per cambiare
  * l'intestazione della pagina risultato della ricerca.
- * <p>
- * Copyright: Copyright (c) 2008
- * </p>
- * <p>
- * Company: Eutelia
- * </p>
- * 
+ *
  * @version 5.0
  */
 public class ActRicercaSoggettoFascicoloSIEP extends ActionSige {
@@ -76,28 +65,31 @@ public class ActRicercaSoggettoFascicoloSIEP extends ActionSige {
 			codFunzione = getRequestStringParameter(ICostantiFascicoloSius.COD_FUNZIONE_90020012);
 		}
 
-		/* 20210524	MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni.
-		if (getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA).length() > 1) {
-			ComuneModel lComMod = new ComuneModel(getCodComuneByDescrFlagVal(
-					getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)));
-			lSogMod.setCodComuneNascita(lComMod.getCodComune());
-		} */
+		/*
+		 * 20210524 MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni. if
+		 * (getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA).length() > 1) { ComuneModel
+		 * lComMod = new ComuneModel(getCodComuneByDescrFlagVal(
+		 * getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)));
+		 * lSogMod.setCodComuneNascita(lComMod.getCodComune()); }
+		 */
 		// Recupero dati del Comune di nascita
 		ComuneModel lComMod;
 		if (!isRequestParameterNullObj(ICostantiComune.CAMPO_COD_COMUNE_REALE)
 				&& getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE).length() > 0) {
 			// se presente dal codice comune (e descrizione)
-			lComMod = new ComuneModel(getDatiComuneByCodDescr(
-					getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
-					getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)));
+			lComMod = new ComuneModel(
+					getDatiComuneByCodDescr(getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
+							getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)));
 		} else {
 			// altrimenti dalla sola descrizione (rischio omonimi)
 			lComMod = new ComuneModel(getDatiComuneByDescrOmonimia(
 					getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)));
 		}
-		lSogMod.setCodComuneNascita(lComMod.getCodComune());
+		// 20250612 [SG]: risolto problema ricerca soggetto col "-" pari al cod comune nascita
+		// Ticket#20250612016 - SIES - ricerche soggetto
+		String codComuneNascita = "-".equals(lComMod.getCodComune()) ? "" : lComMod.getCodComune();
+		lSogMod.setCodComuneNascita(codComuneNascita);
 
-		
 		// riempie il model
 		lSogMod.setCognome(getRequestStringParameter(ICostantiSoggetto.CAMPO_COGNOME).toUpperCase());
 		lSogMod.setNome(getRequestStringParameter(ICostantiSoggetto.CAMPO_NOME).toUpperCase());
@@ -128,7 +120,7 @@ public class ActRicercaSoggettoFascicoloSIEP extends ActionSige {
 		if (lFascicoliSoggetti.size() == 1) {
 			gestioneRitorno();
 			FascicoloSiepModel lFascicoloSoggettoSiep = new FascicoloSiepModel(
-					(FascicoloSiepModel) lFascicoliSoggetti.firstElement());
+					lFascicoliSoggetti.firstElement());
 			// Inserisce il model soggetto in sessione
 			setSessionAttribute("fascicolo", lFascicoloSoggettoSiep);
 			// Inserisce il model soggetto nella request
@@ -152,7 +144,7 @@ public class ActRicercaSoggettoFascicoloSIEP extends ActionSige {
 			// Paginazione
 			BigDecimal CountRisultati;
 			if (isRequestParameterNullObj("CountRisultati")) {
-		        // MEV_57: aggiunto parametro di passaggio
+				// MEV_57: aggiunto parametro di passaggio
 				CountRisultati = lFascSogCtrl.ExGetNumFascicoloSiepBySoggetto(lSogMod, checkMinori());
 			} else
 				CountRisultati = getRequestBigDecimalParameter("CountRisultati");

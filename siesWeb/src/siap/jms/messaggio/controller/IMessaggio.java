@@ -8,18 +8,7 @@ import f3b.util.F3BException;
 import siap.jms.messaggio.model.MessaggioModel;
 
 /**
- * <p>
- * Title: MessaggioController
- * </p>
- * <p>
- * Description: Classe Controller per Messaggio
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * MessaggioController - Classe Controller per Messaggio
  * 
  * @version 1.0
  */
@@ -159,9 +148,8 @@ public interface IMessaggio {
 
 	public Vector<MessaggioModel> ExRicercaMessaggioByIdMessaggioSollecitato(String aTipoOperazione,
 			String aIdMesSollecitato) throws F3BException;
-  
-	// MEV_2024-DNA 
-	// Metodo di eliminazione dei messaggi ricevuti o inviati da un certo ufficio in un certo intervallo di date
-  public void ExCancellaMessaggioByCodUfficio (String aCodUfficio, Date aDataInviaDal, Date aDataInviaAl) throws F3BException;
-  // MEV_2024-DNA - FINE
+
+	// MEV_2025-48 - 2.15 Gestione Annotazioni Trasmissioni
+	public void ExMarcaMessaggioVisto(BigDecimal aIdMessaggio) throws F3BException;
+	   
 }

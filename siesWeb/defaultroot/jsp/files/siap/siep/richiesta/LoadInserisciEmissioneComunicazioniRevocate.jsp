@@ -518,9 +518,9 @@ frmvalidator.addValidation("<%= ICostantiRichiesta.CAMPO_SEDE_TDS %>","req","Luo
 frmvalidator.addValidation("<%= ICostantiRichiesta.CAMPO_SEDE_TDS %>","alphabetic");
 --%>
 
-  frmvalidator.addValidation("<%=ICostantiRichiesta.AUTORITA_SEDE%>","alphabetic");
-  frmvalidator.addValidation("Sede1","alphabetic");
-  frmvalidator.addValidation("Sede2","alphabetic");
+<%--   frmvalidator.addValidation("<%=ICostantiRichiesta.AUTORITA_SEDE%>","alphabetic"); --%>
+//   frmvalidator.addValidation("Sede1","alphabetic");
+//   frmvalidator.addValidation("Sede2","alphabetic");
 </script>
 </body>
 </html>

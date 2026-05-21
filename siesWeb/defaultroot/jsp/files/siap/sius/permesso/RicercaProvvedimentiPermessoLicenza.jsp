@@ -16,7 +16,7 @@
 <%@ page import="siap.sius.permesso.action.ICostantiPermesso"%>
 
 <jsp:useBean id="totali" 			scope="request" class="siap.sius.permesso.model.TotaliPermessiLicenzeModel"/>
-<jsp:useBean id="criteriRicerca" 	scope="request" class="siap.sius.permesso.model.CriteriRicercaProvPermessiLicenzeModel"/>
+<jsp:useBean id="criteriRicerca"	scope="request" class="siap.sius.permesso.model.CriteriRicercaProvPermessiLicenzeModel"/>
 
 <%
 Collection elenco = (Collection) request.getAttribute("elenco");
@@ -108,23 +108,58 @@ Collection elenco = (Collection) request.getAttribute("elenco");
 				</tr>
 			</table>
 		</td>
+		<%-- MEV_2025-48: aggiunte due righe per 'Regime 41 bis O.P.' ed una colonna 'Reati 51 c. 3 bis e 3 quater c.p.p.' --%>
+		<td>
+			<table cellspacing="2" cellpadding="2"> 
+				<tr><td>&nbsp;</td></tr>    
+				<tr>
+					<td class="L">
+						<font class="label">(di cui per art. 51 c. 3 bis e 3 quater c.p.p.)</font>&nbsp;&nbsp;&nbsp;
+						<font class="campo"><%=totali.getNumPN51()%></font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<font class="label">(di cui per art. 41 bis O.P.)</font>&nbsp;&nbsp;&nbsp;
+						<font class="campo"><%=totali.getNumPN41bis()%></font>
+					</td>
+				</tr>
+				<tr>
+					<td class="L">
+						<font class="label">(di cui per art. 51 c. 3 bis e 3 quater c.p.p.)</font>&nbsp;&nbsp;&nbsp;
+						<font class="campo"><%=totali.getNumPP51()%></font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<font class="label">(di cui per art. 41 bis O.P.)</font>&nbsp;&nbsp;&nbsp;
+						<font class="campo"><%=totali.getNumPP41bis()%></font>
+					</td>
+				</tr>
+				<tr><td>&nbsp;</td></tr>
+				<tr><td>&nbsp;</td></tr>
+				<tr><td>&nbsp;</td></tr>
+				<tr><td>&nbsp;</td></tr>
+				<tr><td>&nbsp;</td></tr>
+				<tr><td>&nbsp;</td></tr>
+			</table>
+		</td>
 	</tr>
 </table>
 <jsp:include page="<%=IWebConstants.PAGINAZIONE_RICERCA%>"></jsp:include>
 <table cellspacing="2" cellpadding="2" width="95%">
- 	<tr>
-		<td class="int" width="8%">Numero SIUS</td>
-		<td class="int" width="12%">Cognome Nome</td>
-		<td class="int" width="8%">Data di nascita</td>
-		<td class="int" width="12%">Luogo Detenzione</td>
-		<td class="int" width="10%">Data Deposito</td>
-		<td class="int" width="20%">Oggetto</td>
-		<td class="int" width="10%">GG/ORE Concessi</td>
-		<td class="int" width="15%">Esito</td>
-		<td class="int">Azioni</td>
-   </tr>
 <%
 Iterator itx = elenco.iterator();
+if (itx.hasNext()) {
+%>
+	<tr>
+		<td class="int" width="8%">Numero SIUS</td>
+		<td class="int" width="12%">Cognome Nome</td>
+		<td class="int" width="10%">Data di nascita</td>
+		<td class="int" width="12%">Luogo Detenzione</td>
+		<td class="int" width="10%">Data Deposito</td>
+		<td class="int" width="14%">Oggetto</td>
+		<td class="int" width="8%">GG/ORE Concessi</td>
+		<%-- MEV_2025-48: la colonna 'Esito' viene sostituita con una colonna 'Regime 41 bis O.P.' ed una colonna 'Reati 51 c. 3 bis e 3 quater c.p.p.' --%>
+<!-- 		<td class="int" width="15%">Esito</td> -->
+		<td class="int" width="15%">Reati 51 c. 3 bis e 3 quater c.p.p.</td>
+		<td class="int" width="15%">Regime 41 bis O.P.</td>
+		<td class="int">Azioni</td>
+	</tr>
+<%
+}
 while (itx.hasNext()) {
 	ProvvedimentoPermessoLicenzaModel lModel = (ProvvedimentoPermessoLicenzaModel) itx.next();
 %>
@@ -160,8 +195,12 @@ while (itx.hasNext()) {
 			<%=StringUtils.toStringJSP(lModel.getLicenza().getNumeroGiorni(), "-" )%> /
 			<%=StringUtils.toStringJSP(lModel.getLicenza().getNumeroOre(), "-" )%>
 		</td>
+<%-- 		<%=StringUtils.toStringJSP(lModel.getLicenza().getDescrEsito(), "-")%> --%>
 		<td class="c">
-			<%=StringUtils.toStringJSP(lModel.getLicenza().getDescrEsito(), "-")%>
+			<%=StringUtils.toStringJSP(("01").equals(lModel.getLicenza().getCodMotivoDetenzione()) ? "SI" : "-")%>
+		</td>
+		<td class="c">
+			<%=StringUtils.toStringJSP(("02").equals(lModel.getLicenza().getCodMotivoDetenzione()) ? "SI" : "-")%>
 		</td>
 		<td class="c">
 <% 

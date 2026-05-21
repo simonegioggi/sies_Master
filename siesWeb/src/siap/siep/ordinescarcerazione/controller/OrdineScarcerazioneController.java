@@ -1568,7 +1568,7 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 			NomeProvvedimentoModel lNomProvMod = new NomeProvvedimentoModel();
 			lNomProvDao = new NomeProvvedimentoDAO(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-			siesLogger.debug("שששש++CODMOTIVO" + lEveDao.getCodMotivo());
+			siesLogger.debug("CODMOTIVO = " + lEveDao.getCodMotivo());
 
 			if (lEveDao.getCodMotivo().equals("0081"))
 				lNomProvMod.setCodNomeProvvedimento("NP048");

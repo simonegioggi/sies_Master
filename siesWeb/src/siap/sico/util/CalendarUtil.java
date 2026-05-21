@@ -84,11 +84,11 @@ public class CalendarUtil {
     // - ggI>ggF   
     // - ggI<=ggF
     //==========================================================================
-		if (ggI > ggF) { // Calcolo il numero di giorni ad arrivare alla
-      // fine del mese di inizio (+1 dies a quo) + i giorni ad arrivare al 
-      // giorno fine
-							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
-							// posto di LogF3B.getLogger()
+		if (ggI > ggF) {
+			// Calcolo il numero di giorni ad arrivare alla
+			// fine del mese di inizio (+1 dies a quo) + i giorni ad arrivare al giorno fine
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
+			// posto di LogF3B.getLogger()
        siesLogger.debug("ggI>ggF");
 
 			int lNrGiorni = Integer.parseInt(DateUtils.getDayToString(DateUtils.getEndOfMonth(aaI, mmI)))
@@ -103,7 +103,8 @@ public class CalendarUtil {
        // espresso solo in anni
 			if (lModRet.getNumGiorni() == Integer
 					.parseInt(DateUtils.getDayToString(DateUtils.getEndOfMonth(aaI, mmI))) && mmI == mmF
-					&& aaI != aaF) { // vera se ggF=ggI-1
+					&& aaI != aaF) {
+				// vera se ggF=ggI-1
           // es 15/04/2001 14/04/2002 ==> quantum (0,0,1) lNrGiorni=30
           // es 15/03/2001 14/03/2002 ==> quantum (0,0,1) lNrGiorni=31
           // es 15/02/2001 14/02/2002 ==> quantum (0,0,1) lNrGiorni=28
@@ -111,7 +112,8 @@ public class CalendarUtil {
           lModRet.setNumGiorni(0);
           lModRet.setNumMesi(0);
           lModRet.setNumAnni(aaF-aaI);
-			} else { // =====================================================================
+			} else {
+				// =====================================================================
          // lNrGiorni può essere compreso tra 2 e 31 ma non viene normalizzato.
          // Esistono due casi particolari in cui invece di restituire il lNrGiorni 
          // calcolato questo viene convertito in 1 mese e 0 giorni. Ciò accade
@@ -154,7 +156,6 @@ public class CalendarUtil {
 //             lNrGiorni = lNrGiorni - 29; // cioè 0
 //             lModRet.setNumGiorni(lNrGiorni);
 //           }
-//
 //           // è false la prima if per cui può essere solo 28, se anno non bisestile
 //           // allora vuol dire ancora ggI=ggF+1, es 26/02/2001 25/02/2002 
 //           // n.b. potrebbe essere 28 di un bisestile, in questo caso ggI=ggF+2
@@ -208,18 +209,18 @@ public class CalendarUtil {
 				if (Integer.parseInt(DateUtils.getDayToString(DateUtils.getEndOfMonth(aaI, mmI))) == lModRet
 						.getNumGiorni()) {
 					// Il numero di GG calcolati coincide con il numero di gg del mese di partenza.
-          // In questo caso considero come se avessi scontato un mese intero, per
-          // cui porto i giorni a 0 e sommo 1 al mese
-          // n.b. questa situazione è vera in genere se ggI=01 e ggF=ultimo del mese 
-          //       di inizio ma anche se ggI>01 
-          // es 01/02/2003 28/03/2004 Qgg=28=giorni di febbraio 2003
-          // es 02/02/2003 29/03/2004 Qgg=28=giorni di febbraio 2003
-          // es 03/02/2003 30/03/2004 Qgg=28=giorni di febbraio 2003
-          // es 04/02/2003 31/03/2004 Qgg=28=giorni di febbraio 2003
-          // n.b. i gg calcolati potrebbero anche essere >utimo giorno del mese
-          //      es. 01/04/2001 31/05/2001 gg calcolato=31>30 (ultimo di aprile)
-          //      in questo caso la procedura restituisce un quantum di 31gg e 1mese
-          //      che normalizzato porterebbe a 1gg e 2mesi
+					// In questo caso considero come se avessi scontato un mese intero, per cui porto i
+					// giorni a 0 e sommo 1 al mese
+					// n.b. questa situazione è vera in genere se ggI=01 e ggF=ultimo del mese 
+					// di inizio ma anche se ggI>01 
+					// es 01/02/2003 28/03/2004 Qgg=28=giorni di febbraio 2003
+					// es 02/02/2003 29/03/2004 Qgg=28=giorni di febbraio 2003
+					// es 03/02/2003 30/03/2004 Qgg=28=giorni di febbraio 2003
+					// es 04/02/2003 31/03/2004 Qgg=28=giorni di febbraio 2003
+					// n.b. i gg calcolati potrebbero anche essere >utimo giorno del mese
+					// es. 01/04/2001 31/05/2001 gg calcolato=31>30 (ultimo di aprile)
+					// in questo caso la procedura restituisce un quantum di 31gg e 1mese
+					// che normalizzato porterebbe a 1gg e 2mesi
 					if (lModRet.getNumMesi() == 11) {
               lModRet.setNumGiorni(0);
               lModRet.setNumMesi(0);
@@ -235,14 +236,14 @@ public class CalendarUtil {
 				// mmI > mmF
 				if (Integer.parseInt(DateUtils.getDayToString(DateUtils.getEndOfMonth(aaI, mmI))) == lModRet
 						.getNumGiorni()) {
-					// Il numero di GG calcolati coincide con il numero di gg del mese di
-          // partenza. Vero solo se il ggI=01 e ggF=ultimo del mese di inizio.
-          // In questo caso considero come se avessi scontato un mese intero, per
-          // cui porto i giorni a 0 e sommo 1 al mese
-          // n.b. i gg calcolati potrebbero anche essere >utimo giorno del mese
-          //      es. 01/04/2001 31/05/2001 gg calcolato=31>30 (ultimo di aprile)
-          //      in questo caso la procedura restituisce un quantum di 31gg e 1mese
-          //      che normalizzato porterebbe a 1gg e 2mesi
+					// Il numero di GG calcolati coincide con il numero di gg del mese di partenza.
+					// Vero solo se il ggI=01 e ggF=ultimo del mese di inizio.
+					// In questo caso considero come se avessi scontato un mese intero, per
+					// cui porto i giorni a 0 e sommo 1 al mese
+					// n.b. i gg calcolati potrebbero anche essere >utimo giorno del mese
+					//      es. 01/04/2001 31/05/2001 gg calcolato=31>30 (ultimo di aprile)
+					//      in questo caso la procedura restituisce un quantum di 31gg e 1mese
+					//      che normalizzato porterebbe a 1gg e 2mesi
           lModRet.setNumGiorni(0);
           lModRet.setNumMesi(12-mmI+mmF+1);
 				} else {
@@ -309,8 +310,7 @@ public class CalendarUtil {
 				// LogF3B.getLogger()
           siesLogger.debug("lModRet 1 : "+lModRet);
 			} else {
-          if(mmI == 2 && lNrGiorni >= 28) // Se Febbraio e nrgiorni >= 28
-          {
+				if (mmI == 2 && lNrGiorni >= 28) { // Se Febbraio e nrgiorni >= 28
 					if (lNrGiorni > 28 && Integer
 							.parseInt(DateUtils.getDayToString(DateUtils.getEndOfMonth(aaI, mmI))) == 29) {
               lNrGiorni = lNrGiorni - 29;
@@ -718,19 +718,16 @@ public class CalendarUtil {
        aaB = aModelB.getNumAnni();
 
       // normalizzo A in modo che gg>0, mm>0 se possibile
-		if (ggA == 0 && mmA == 0) {
-			// es:(aa,mm,gg)=(2,0,0) >> (1,11,30)
+		if (ggA == 0 && mmA == 0) { // es:(aa,mm,gg)=(2,0,0) >> (1,11,30)
         ggA=30;
         mmA=11;
         aaA--;
       }
-		if (ggA == 0 && mmA > 0) {
-			// es:(aa,mm,gg)=(2,3,0) >> (2,2,30)
+		if (ggA == 0 && mmA > 0) { // es:(aa,mm,gg)=(2,3,0) >> (2,2,30)
         ggA=30;
         mmA--;
       }
-		if (ggA > 0 && mmA == 0 && aaA > 0) {
-			// es:(aa,mm,gg)=(2,0,11) >> (1,11,41)
+		if (ggA > 0 && mmA == 0 && aaA > 0) { // es:(aa,mm,gg)=(2,0,11) >> (1,11,41)
         ggA=ggA+30;
         mmA=11;
         aaA--;

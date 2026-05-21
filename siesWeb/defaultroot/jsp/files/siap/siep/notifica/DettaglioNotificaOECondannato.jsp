@@ -97,7 +97,9 @@
 %>
       </td>
       <td class="LBG">
-        <jsp:include page="<%=IWebConstants.PG_TOOLBAR_HEADER%>" />
+        <jsp:include page="<%=IWebConstants.PG_TOOLBAR_HEADER%>">
+        	<jsp:param name="Modificabile" value="<%=lNotMod.getDataAvvenutaNotifica() != null?"SI":"NO"%>"/>
+        </jsp:include>
       </td>
      </tr>
    </table>
@@ -120,9 +122,13 @@
 <%
 	}
 %>
-    <table cellspacing=2 cellpadding=2>
-       <input type="hidden" name="<%=ICostantiNotifica.CAMPO_ID_NOTIFICA%>" value="<%=lNotMod.getIdNotifica()%>">
-       <input type="hidden" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%=lNotMod.getEveIdEvento()%>">
+<table cellspacing=2 cellpadding=2>
+	<tr>
+		<td>
+			<input type="hidden" name="<%=ICostantiNotifica.CAMPO_ID_NOTIFICA%>" value="<%=lNotMod.getIdNotifica()%>">
+			<input type="hidden" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%=lNotMod.getEveIdEvento()%>">
+   		</td>
+   	</tr>
 <%
        //Controllo se Esiste la Data di Avvenuta Notifica
        if(lNotMod.getDataAvvenutaNotifica() != null)

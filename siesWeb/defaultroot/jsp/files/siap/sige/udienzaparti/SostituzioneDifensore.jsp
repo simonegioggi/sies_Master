@@ -613,7 +613,7 @@ if (Utils.isPresent(lAvv.getDescStatoNascita())) {
   frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_NOME %>","alpha");
 
   frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_FORO %>","req","Il campo Foro  è obbligatorio");
-  frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_FORO %>","alpha");
+<%--   frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_FORO %>","alpha"); --%>
 
   frmvalidator.setAddnlValidationFunction("Verify");
 </script>

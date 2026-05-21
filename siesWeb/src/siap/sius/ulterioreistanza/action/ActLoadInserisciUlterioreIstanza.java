@@ -13,7 +13,7 @@ import siap.sius.fascicolo.action.ICostantiFascicoloSius;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 
 /**
- * Classe Action per la load inserisci di UlterioreIstanza
+ * ActLoadInserisciUlterioreIstanza - Classe Action per la load inserisci di UlterioreIstanza
  *
  * @version 1.0
  */

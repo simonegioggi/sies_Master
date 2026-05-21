@@ -19,7 +19,7 @@ import sun.misc.BASE64Encoder;
 
 /**
  * Utils - Classe di utilità generica.
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -211,9 +211,8 @@ public class Utils {
 	}
 
 	/**
-	 * STUB : PM - Ma questo non è uguale al precedente ?
-	 * Questo metodo acccetta in ingresso una Hashtable e ritorna un oggetto Iterator che contiene la lista
-	 * delle chiavi sortate.
+	 * STUB : PM - Ma questo non è uguale al precedente ? Questo metodo acccetta in ingresso una Hashtable e
+	 * ritorna un oggetto Iterator che contiene la lista delle chiavi sortate.
 	 *
 	 * @param aHash
 	 *            insieme di elementi.
@@ -495,6 +494,14 @@ public class Utils {
 	public static boolean isPresentNotTrattino(String s) {
 
 		return isPresent(s, false) && !"-".equals(s);
+	}
+
+	// MEV_2025-48: aggiunto metodo
+	public static BigDecimal NullToZero(BigDecimal aValue) {
+
+		if (aValue == null)
+			aValue = new BigDecimal(0);
+		return aValue;
 	}
 
 }

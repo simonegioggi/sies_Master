@@ -4,43 +4,40 @@ import java.math.BigDecimal;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.web.IWebConstants;
 import siap.jms.ICostantiJMS;
 import siap.jms.JMSLookupRemote;
 import siap.jms.SIAPSender;
 import siap.jms.messaggio.action.ICostantiMessaggio;
 import siap.jms.messaggio.controller.IMessaggio;
 import siap.jms.messaggio.model.MessaggioModel;
-import siap.sico.jms.model.PresaInCaricoModel;
 import siap.sico.lock.model.LockModel;
 import siap.sico.ufficio.model.UfficioModel;
 import siap.sico.web.ActionSiap;
 import siap.siep.jms.controller.IPresaInCaricoJMS;
 import siap.siep.util.SIEPLookupRemote;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.web.IWebConstants;
 
 /**
- * Classe action che effettua l'effettivo inserimento dei dati dell'istanza
- * trasmessa da altro ufficio tramite jms.
+ * Classe action che effettua l'effettivo inserimento dei dati dell'istanza trasmessa da altro ufficio tramite
+ * jms. Dopo la presa in carico invia la risposta all'ufficio mittente.
  * 
- * Dopo la presa in carico invia la risposta all'ufficio mittente.
- *  
- * @author 
- *
+ * @version 1.0
  */
-public class ActConfermaPresaInCarico extends ActionSiap implements ICostantiJMS
-{
+public class ActConfermaPresaInCarico extends ActionSiap implements ICostantiJMS {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
-  public String processRequest() throws Exception
-  {
+
+	public String processRequest() throws Exception {
+
     //Controllo che non si stia lavorando su una entità in modifica ad altri
-    LockModel lck =
-    lockIfNotLocked("caricoistanza", getRequestStringParameter(ICostantiMessaggio.CAMPO_ID_MESSAGGIO), getCodUtenteConnesso());
-    if (lck != null)
-    {
-      setRequestAttribute (IWebConstants.MESSAGE_TEXT, "La presa in carico di questa istanza è in gestione ad un altro utente! <BR>Riprovare più tardi!");
+		LockModel lck = lockIfNotLocked("caricoistanza",
+				getRequestStringParameter(ICostantiMessaggio.CAMPO_ID_MESSAGGIO), getCodUtenteConnesso());
+		if (lck != null) {
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+					"La presa in carico di questa istanza è in gestione ad un altro utente! <BR>Riprovare più tardi!");
       return IWebConstants.PG_MESSAGE;
     }
 
@@ -58,22 +55,12 @@ public class ActConfermaPresaInCarico extends ActionSiap implements ICostantiJMS
     MessaggioModel lMessIns =  new MessaggioModel(lMess);
     MessaggioModel lMessReturn =null;
 
-    try
-    {
+		try {
       IPresaInCaricoJMS lPres = SIEPLookupRemote.getPresaInCarico();
-      // MEV_2024-DNA - Si passano al controller anche le informazione su data utente e ufficio 
-      //                che precede alla presa in carico
-      PresaInCaricoModel lPresaIncaricoModel = new PresaInCaricoModel();
-      lPresaIncaricoModel.setDataPresaInCarico (DateUtils.getSysDate());
-      lPresaIncaricoModel.setCodOperatorePresaInCarico (getCodUtenteConnesso());
-      lPresaIncaricoModel.setCodUfficioPresaInCarico (getCodUfficioUtenteConnesso());
-      //lMessReturn  = lPres.ExInserisciIstanzaTrasmessa(lMessIns);
-      lMessReturn  = lPres.ExInserisciIstanzaTrasmessa (lMessIns, lPresaIncaricoModel);
-      // MEV_2024-DNA - FINE
-    }
-    catch (Exception ex)
-    {
-       // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+      lMessReturn  = lPres.ExInserisciIstanzaTrasmessa(lMessIns);
+		} catch (Exception ex) {
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
        siesLogger.error("Exception nell'Inserimento dell'Istanza Trasmessa >>> " + ex);
        // se non rilanci l'eccezione non se ne accorge nessuno!!!!
     }
@@ -110,20 +97,20 @@ public class ActConfermaPresaInCarico extends ActionSiap implements ICostantiJMS
     lCrtl.ExModificaMessaggio(lMess);
 
     // setta la risposta nella request
-   /*  setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Ricezione Istanza Completata e Esito rispedito al Mittente!");
-
-    //Prepara la "pagina" di destinAction
-    RedirectTo lRedirigi = new RedirectTo();
-    lRedirigi.setPage( IWebConstants.PG_MAIN );
-    lRedirigi.setAction( "siap.siep.istanza.action.ActListaIstanzeRicevute" );
-    setRequestAttribute( IWebConstants.GOTO_PAGE, "" + lRedirigi );
-
-    return IWebConstants.PG_MESSAGE;*/
-
+		/*
+		 * setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+		 * "Ricezione Istanza Completata e Esito rispedito al Mittente!");
+		 *
+		 * //Prepara la "pagina" di destinAction RedirectTo lRedirigi = new RedirectTo(); lRedirigi.setPage(
+		 * IWebConstants.PG_MAIN ); lRedirigi.setAction( "siap.siep.istanza.action.ActListaIstanzeRicevute" );
+		 * setRequestAttribute( IWebConstants.GOTO_PAGE, "" + lRedirigi );
+		 *
+		 * return IWebConstants.PG_MESSAGE;
+		 */
 
      this.setRequestAttribute("Messaggio", lMessReturn);
 
      return f3b.web.IWebConstants.ROOT_DIR + "files/siap/siep/jms/RapportoTrasferimentoFascicolo.jsp";
+	}
 
-  }
 }

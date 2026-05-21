@@ -362,8 +362,9 @@
   frmvalidator.addValidation("<%=ICostantiSoggettoCumulato.CAMPO_ANNO_DATA_NASCITA %>","numeric");
   frmvalidator.addValidation("<%=ICostantiSoggettoCumulato.CAMPO_ANNO_DATA_NASCITA %>","gt=1900");
   frmvalidator.addValidation("<%=ICostantiSoggettoCumulato.CAMPO_ANNO_DATA_NASCITA %>","lt=3000");
-  
-  frmvalidator.addValidation("<%=ICostantiSoggettoCumulato.CAMPO_COD_COMUNE_NASCITA %>","alpha");
+  <%-- Ticket#202506130166 - SIES: Anomalia inserimento provvedimento - schermata sede dell'autorità emittente--%>
+  <%-- ELIMINATO CONTROLLO per consentire inserimento comuni tipo MERANO/MERAN) --%>
+<%--   frmvalidator.addValidation("<%=ICostantiSoggettoCumulato.CAMPO_COD_COMUNE_NASCITA %>","alpha"); --%>
   frmvalidator.addValidation("<%=ICostantiSoggettoCumulato.CAMPO_COD_STATO_NASCITA%>","alphanumeric");
   frmvalidator.addValidation("<%=ICostantiSoggettoCumulato.CAMPO_DESC_COMUNE_NASCITA_ESTERO%>","alphanumeric");
   
@@ -375,7 +376,7 @@
   frmvalidator.addValidation("<%=ICostantiSoggettoCumulato.CAMPO_NAZIONALITA %>","alphanumeric");  
   frmvalidator.addValidation("<%=ICostantiSoggettoCumulato.CAMPO_ATTO_NASCITA%>","alphanumeric");
   
-  frmvalidator.addValidation("<%=ICostantiSoggettoCumulato.CAMPO_DESC_COMUNE_NASCITA_ESTERO %>","alpha");
+<%--   frmvalidator.addValidation("<%=ICostantiSoggettoCumulato.CAMPO_DESC_COMUNE_NASCITA_ESTERO %>","alpha"); --%>
   frmvalidator.addValidation("<%=ICostantiSoggettoCumulato.CAMPO_COD_AFIS%>","alphanumeric" );
 
 </script>

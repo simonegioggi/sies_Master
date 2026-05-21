@@ -12,8 +12,7 @@ import siap.sius.udienza.model.UdienzaModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * Title: ActInserisciUdienza
- * Description: Classe Action per l'inserimento di Udienza
+ * ActInserisciUdienza - Classe Action per l'inserimento di Udienza
  *
  * @version 1.0
  */

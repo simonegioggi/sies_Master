@@ -49,18 +49,7 @@ import siap.sige.stampa.controller.IStampaSige;
 import siap.sige.util.SIGELookupRemote;
 
 /**
- * <p>
- * Title: ImpugnazioneController
- * </p>
- * <p>
- * Description: Classe Controller per Impugnazione
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * ImpugnazioneController - Classe Controller per Impugnazione
  *
  * @version 1.0
  */
@@ -506,7 +495,38 @@ public class ImpugnazioneSigeController extends SiapController implements IImpug
 									|| aFascicoloSige.getCodStatoFascicolo().equals("18")))) {
 				lFasDao = new FascicoloSigeDAO(lConn);
 
-				lFasDao.setCodStatoFascicolo("07"); // Emesso Provvedimento
+				// 20250827 [SG]: modifica della gestione annullamento impugnazione se anche l'ordinanza è
+				// annullata
+				IProvvedimentoSige ips = SIGELookupRemote.getProvvedimentoRemote();
+				Vector<ProvvedimentoSigeEventoModel> vpsem = ips
+						.ExRicercaProvvedimentiSigePerIdFasSige(aFascicoloSige.getIdFascicoloSige());
+				boolean existDecFisUdiVal = false;
+				boolean existOrdVal = false;
+				boolean testDataDef = false;
+				Iterator itx = vpsem.iterator();
+				while (itx.hasNext()) {
+					ProvvedimentoSigeEventoModel psem = (ProvvedimentoSigeEventoModel) itx.next();
+					if (psem.getEventoNotifica() != null && psem.getEventoNotifica().getEvento() != null) {
+						String flag = psem.getEventoNotifica().getEvento().getFlagDocumentoRegistrato();
+						String esito = psem.getEventoNotifica().getEvento().getCodEsito();
+						String tipoProvv = psem.getEventoNotifica().getEvento().getCodTipoProvvedimento();
+						if ("S".equals(flag) && "0601".equals(esito) && "02".equals(tipoProvv))
+							existDecFisUdiVal = true;
+						else if ("S".equals(flag) && "03".equals(tipoProvv))
+							existOrdVal = true;
+					}
+				}
+				String codStatoFasc = ICostantiFascicoloSige.COD_EMESSO_PROVVEDIMENTO;
+				if (existDecFisUdiVal && !existOrdVal) {
+					codStatoFasc = ICostantiFascicoloSige.COD_DECRETO_FISSAZIONE_UDIENZA;
+					testDataDef = true;
+				} else if (!existDecFisUdiVal && !existOrdVal) {
+					codStatoFasc = ICostantiFascicoloSige.COD_ISCRITTO;
+					testDataDef = true;
+				}
+				// Iscritto ("02"); Decreto Fissazione Udienza ("20"); Emesso Provvedimento ("07");
+				lFasDao.setCodStatoFascicolo(codStatoFasc);
+
 				lFasDao.setCodOperatoreAggiornamento(aImpugnazione.getCodOperatoreAggiornamento());
 				lFasDao.setCodUfficioAggiornamento(aImpugnazione.getCodUfficioAggiornamento());
 				lFasDao.setDataAggiornamento(aImpugnazione.getDataAggiornamento());
@@ -514,9 +534,11 @@ public class ImpugnazioneSigeController extends SiapController implements IImpug
 				// La Data definizione del fascicolo viene annullata quando viene
 				// inserita una Impugnazione(Opposizione/Ricorso), ma deve essere impostata nuovamente
 				// se l'Impugnazione viene annullata, con la Data di Deposito dell'Ordinanza
+				if (!testDataDef) {
 				Date dataDeposito = null;
 				lProvSqlDao = new ProvvedimentoSigeSqlDAO(lConn);
-				lProvSqlDao.ricercaProvvSigePerIdFasSigeTipiProvv(aFascicoloSige.getIdFascicoloSige(), "03");
+					lProvSqlDao.ricercaProvvSigePerIdFasSigeTipiProvv(aFascicoloSige.getIdFascicoloSige(),
+							"03");
 				lProvSqlDao.start();
 				while (lProvSqlDao.next()) {
 					ProvvedimentoSigeModel lProvModel = (ProvvedimentoSigeModel) lProvSqlDao.getModel();
@@ -524,6 +546,11 @@ public class ImpugnazioneSigeController extends SiapController implements IImpug
 				}
 
 				lFasDao.setDataDefinizione(dataDeposito);
+				} else {
+					lFasDao.setDataDefinizione(null);
+					lFasDao.setCodTipoDefinizione(null);
+					lFasDao.setDescrDefinizione("");
+				}
 
 				// Set del DAO e aggiornamento del FascicoloSige.
 				lFasDao.setCondizioneUpdate(aFascicoloSige.getIdFascicoloSige());
@@ -1284,7 +1311,45 @@ public class ImpugnazioneSigeController extends SiapController implements IImpug
 								.getFasIdFascicoloSige() != null) {
 					lFasDAO = new FascicoloSigeDAO(lConn);
 
-					lFasDAO.setCodStatoFascicolo(ICostantiFascicoloSige.COD_EMESSO_PROVVEDIMENTO);
+					// 20250827 [SG]: modifica della gestione annullamento impugnazione se anche l'ordinanza è
+					// annullata
+					IProvvedimentoSige ips = SIGELookupRemote.getProvvedimentoRemote();
+					Vector<ProvvedimentoSigeEventoModel> vpsem = ips.ExRicercaProvvedimentiSigePerIdFasSige(
+							impugnazione.getProvvedimentoSigeGenerato().getProvvedimento()
+									.getFasIdFascicoloSige());
+					boolean existDecFisUdiVal = false;
+					boolean existOrdVal = false;
+					boolean testDataDef = false;
+					Iterator itx = vpsem.iterator();
+					while (itx.hasNext()) {
+						ProvvedimentoSigeEventoModel psem = (ProvvedimentoSigeEventoModel) itx.next();
+						if (psem.getEventoNotifica() != null
+								&& psem.getEventoNotifica().getEvento() != null) {
+							String flag = psem.getEventoNotifica().getEvento().getFlagDocumentoRegistrato();
+							String esito = psem.getEventoNotifica().getEvento().getCodEsito();
+							String tipoProvv = psem.getEventoNotifica().getEvento().getCodTipoProvvedimento();
+							if ("S".equals(flag) && "0601".equals(esito) && "02".equals(tipoProvv))
+								existDecFisUdiVal = true;
+							else if ("S".equals(flag) && "03".equals(tipoProvv))
+								existOrdVal = true;
+						}
+					}
+					String codStatoFasc = ICostantiFascicoloSige.COD_EMESSO_PROVVEDIMENTO;
+					if (existDecFisUdiVal && !existOrdVal) {
+						codStatoFasc = ICostantiFascicoloSige.COD_DECRETO_FISSAZIONE_UDIENZA;
+						testDataDef = true;
+					} else if (!existDecFisUdiVal && !existOrdVal) {
+						codStatoFasc = ICostantiFascicoloSige.COD_ISCRITTO;
+						testDataDef = true;
+					}
+					// Iscritto ("02"); Decreto Fissazione Udienza ("20"); Emesso Provvedimento ("07");
+					lFasDAO.setCodStatoFascicolo(codStatoFasc);
+					if (testDataDef) {
+						lFasDAO.setDataDefinizione(null);
+						lFasDAO.setCodTipoDefinizione(null);
+						lFasDAO.setDescrDefinizione("");
+					}
+					// lFasDAO.setCodStatoFascicolo(ICostantiFascicoloSige.COD_EMESSO_PROVVEDIMENTO);
 					lFasDAO.setDataAggiornamento(new Date());
 
 					lFasDAO.setCondizioneUpdate(impugnazione.getProvvedimentoSigeGenerato().getProvvedimento()

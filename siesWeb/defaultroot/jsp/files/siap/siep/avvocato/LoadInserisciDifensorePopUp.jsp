@@ -150,7 +150,7 @@
 		frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_NOME %>","alpha");
 		
 		frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_FORO %>","req","Il campo Foro  è obbligatorio");
-		frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_FORO %>","alpha");
+<%-- 		frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_FORO %>","alpha"); --%>
 		
 		frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA%>","maxlen=4","La lunghezza massima per l'anno di nascita è di 4 caratteri");
 		frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA%>","minlen=4","La lunghezza minima per l'anno di nascita è di 4 caratteri");
@@ -166,10 +166,10 @@
 		frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>","gt=1");
 		frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>","lt=12");
 		
-		frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA%>","alphabetic");
+<%-- 		frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA%>","alphabetic"); --%>
 		frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_FORO%>","alphabetic");
 		
-		frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA%>","alphabetic");
+<%-- 		frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA%>","alphabetic"); --%>
 		
 		frmvalidator.setAddnlValidationFunction("Verify");
 	</script>

@@ -14,6 +14,7 @@ import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
+import f3b.util.Utils;
 import siap.controller.SiapController;
 import siap.siep.modulocumulo.dao.BeneficioCumuloSqlDAO;
 import siap.siep.modulocumulo.dao.ComputiCumuloSqlDAO;
@@ -65,12 +66,7 @@ import siap.siep.modulocumulo.model.TitoloCumulatoModel;
 import siap.siep.modulocumulo.util.StatoEsecuzioneCumuloUtils;
 
 /**
- * <p>
- * Title: RichiestePmInCumuloController
- * </p>
- * <p>
- * Description: Classe Controller per RichiestePmInCumulo
- * </p>
+ * RichiestePmInCumuloController - Classe Controller per RichiestePmInCumulo
  *
  * @version 1.0
  */
@@ -571,7 +567,6 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 			cleanup(lProvvDao);
 			cleanup(lConn);
 		}
-
 	}
 
 	/*****************************************************************************
@@ -695,6 +690,8 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 							if (i == 1) {
 								lRicMod.setAnnoSentenza(lTitMod.getAnnoSentenza().toString());
 								lRicMod.setNumeroSentenza(lTitMod.getNumeroSentenza());
+								// MEV_2025-48 - ALTRO - Visualizza data Sentenza su Richieste PM
+								lRicMod.setDataSentenza(lTitMod.getDataProvvedimento());
 							}
 						}
 					}
@@ -772,8 +769,13 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 						TitoloCumulatoModel lTitMod = (TitoloCumulatoModel) lTitSqlDao.getModelByKey();
 						if (lTitMod != null && lTitMod.getIdTitoloCumulato() != null) {
 							if (i == 1) {
-								lRicMod.setAnnoSentenza(lTitMod.getAnnoSentenza().toString());
+								lRicMod.setAnnoSentenza(!Utils.isNullObj(lTitMod.getAnnoSentenza())
+										? lTitMod.getAnnoSentenza().toString()
+										: "");
 								lRicMod.setNumeroSentenza(lTitMod.getNumeroSentenza());
+								
+                                // MEV_2025-48 - ALTRO - Visualizza data Sentenza su Richieste PM
+                                lRicMod.setDataSentenza(lTitMod.getDataProvvedimento());								
 							}
 						}
 					}
@@ -1746,9 +1748,8 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 	/**
 	 * Seleziona un singolo documento rtf sul DB e lo restituisce come ByteArrayOutputStream
 	 *
-	 * @param aRichiesta
-	 *            Inviata
-	 * @return Array con il Documento recuperato dal DB
+	 * @param aRichiesta Inviata
+	 * @return ByteArrayOutputStream con il Documento recuperato dal DB se presente
 	 * @throws F3BException
 	 */
 	public ByteArrayOutputStream ExGetDocumento(RichiesteInviateCumModel aRichiesteInv) throws F3BException {
@@ -1768,22 +1769,21 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 			lRicDao.selByKey();
 
 			lRicDao.start(1);
-			siesLogger.debug("--XX-- Dopo RicDao Start ");
 			if (lRicDao.next())
 				lByteArrayOut = lRicDao.getDocBlob();
 
 			lRicDao.stop();
 
-			if (lByteArrayOut == null)
-				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Documento Associato");
-
-			if (lByteArrayOut.size() == 0)
+			if ((lByteArrayOut == null) || (lByteArrayOut.size() == 0))
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Documento Associato");
 
 		} catch (DAOException ex) {
 			siesLogger.error("DAOException: ", ex);
 			throw new F3BException(
 					"RichiestePmInCumuloController.ExGetDocumento: Errore Dati NON trovati " + ex);
+	    } catch (F3BException ex) {
+	        siesLogger.warn("F3BException: "+ex.getMessage());
+	        throw ex;
 		} catch (Exception ex) {
 			siesLogger.error("Exception: ", ex);
 			throw new F3BException(

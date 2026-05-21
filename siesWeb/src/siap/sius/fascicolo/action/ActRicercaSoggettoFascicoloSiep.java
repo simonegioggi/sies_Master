@@ -22,20 +22,8 @@ import f3b.log.LogF3B;
 import f3b.web.IWebConstants;
 
 /**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company:
- * </p>
+ * ActRicercaSoggettoFascicoloSiep - Classe action per la ricerca Soggetto con titolo esecutivo
  * 
- * @author unascribed
  * @version 1.0
  */
 public class ActRicercaSoggettoFascicoloSiep extends ActionSiapMinor implements ICostantiFascicoloSius {
@@ -91,7 +79,10 @@ public class ActRicercaSoggettoFascicoloSiep extends ActionSiapMinor implements 
 			lComMod = new ComuneModel(getDatiComuneByDescrOmonimia(
 					getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)));
 		}
-		lSogMod.setCodComuneNascita(lComMod.getCodComune());
+		// 20250612 [SG]: risolto problema ricerca soggetto col "-" pari al cod comune nascita
+		// Ticket#20250612016 - SIES - ricerche soggetto
+		String codComuneNascita = "-".equals(lComMod.getCodComune()) ? "" : lComMod.getCodComune();
+		lSogMod.setCodComuneNascita(codComuneNascita);
 
 		// riempie il model
 		lSogMod.setCognome(getRequestStringParameter(ICostantiSoggetto.CAMPO_COGNOME).toUpperCase());

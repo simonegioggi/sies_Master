@@ -20,14 +20,11 @@ import siap.jms.util.ParserMessage;
 import siap.sico.evento.dao.EventoDAO;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
-import siap.sico.jms.controller.IPresaInCarico;
-import siap.sico.jms.controller.PresaInCaricoController;
 import siap.sico.libertaanticipata.controller.ILicenzaPeriodiLibAnticipata;
 import siap.sico.magistrato.controller.IMagistrato;
 import siap.sico.magistratocompetente.controller.IMagistratoCompetente;
 import siap.sico.misuraalternativa.controller.IMisuraAlternativa;
 import siap.sico.misuraalternativa.model.MisuraAlternativaModel;
-import siap.sico.jms.model.PresaInCaricoModel;
 import siap.sico.residenza.controller.IResidenza;
 import siap.sico.soggetto.controller.ISoggetto;
 import siap.sico.ufficio.controller.IUfficio;
@@ -101,18 +98,11 @@ import siap.siep.sospensione.model.SospensioneModel;
 import siap.siep.statoprocedimento.controller.IStatoProcedimento;
 import siap.siep.ulterioresanzionecumulo.controller.IUlterioreSanzioneCumulo;
 import siap.siep.util.SIEPLookupRemote;
-import siap.sius.collaboratore.dao.setCollaboratoreStProDAO;
 
 /**
- * <p>
- * Title: PresaInCaricoJMSController
- * </p>
- * <p>
- * Description: Classe che prende in carico i dati pervenuti da bdi remote.
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
+ * PresaInCaricoJMSController - Classe che prende in carico i dati pervenuti da bdi remote
+ * 
+ * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class PresaInCaricoJMSController extends SiapPresaInCaricoJMSController implements IPresaInCaricoJMS {
@@ -128,9 +118,7 @@ public class PresaInCaricoJMSController extends SiapPresaInCaricoJMSController i
 	 * @return
 	 * @throws F3BException
 	 */
-  // MEV_2024-DNA si aggiunge alla firma il model per trasferire le informazioni sull'utente che procede
-	// public MessaggioModel ExInserisciIstanzaTrasmessa(MessaggioModel aMessaggioModel) throws F3BException {
-  public MessaggioModel ExInserisciIstanzaTrasmessa (MessaggioModel aMessaggioModel, PresaInCaricoModel aPresaInCaricoModel) throws F3BException {
+	public MessaggioModel ExInserisciIstanzaTrasmessa(MessaggioModel aMessaggioModel) throws F3BException {
 
 		Connection lConn = null;
 
@@ -152,10 +140,7 @@ public class PresaInCaricoJMSController extends SiapPresaInCaricoJMSController i
 
 			if (!aMessaggioModel.getCodBdiDestinataria().equals(aMessaggioModel.getCodBdiMittente())) {
 
-			  // MEV_2024-DNA
-				//lMessReturn = ExInserisciFascicoloSiep(aMessaggioModel); 
-			  lMessReturn = ExInserisciFascicoloSiep (aMessaggioModel, aPresaInCaricoModel);
-			  // MEV_2024-DNA - FINE
+				lMessReturn = ExInserisciFascicoloSiep(aMessaggioModel);
 
 				lConn = getDBTransaction();
 
@@ -229,9 +214,7 @@ public class PresaInCaricoJMSController extends SiapPresaInCaricoJMSController i
 	 * @throws F3BException
 	 *             Propaga errore di eccezione.
 	 */
-  // MEV_2024-DNA si aggiunge alla firma il model per trasferire le informazioni sull'utente che procede
-	//public MessaggioModel ExInserisciNuovaIstanzaTrasmessa(MessaggioModel aMessaggioModel) throws F3BException {
-	public MessaggioModel ExInserisciNuovaIstanzaTrasmessa (MessaggioModel aMessaggioModel , PresaInCaricoModel aPresaInCaricoModel) 
+	public MessaggioModel ExInserisciNuovaIstanzaTrasmessa(MessaggioModel aMessaggioModel)
 	    throws F3BException {
 	  
 		Connection lConn = null;
@@ -252,10 +235,8 @@ public class PresaInCaricoJMSController extends SiapPresaInCaricoJMSController i
 						"Impossibile inserire il Messaggio Contenuto incorretto!");
 
 			if (!aMessaggioModel.getCodBdiDestinataria().equals(aMessaggioModel.getCodBdiMittente())) {
-			  // MEV_2024-DNA
-				//lMessReturn = ExInserisciFascicoloSiep(aMessaggioModel);
-				lMessReturn = ExInserisciFascicoloSiep (aMessaggioModel, aPresaInCaricoModel);
-				// MEV_2024-DNA - FINE
+				lMessReturn = ExInserisciFascicoloSiep(aMessaggioModel);
+
 				lConn = getDBTransaction();
 
 				// Evento
@@ -325,9 +306,7 @@ public class PresaInCaricoJMSController extends SiapPresaInCaricoJMSController i
 	 * @return
 	 * @throws F3BException
 	 */
-	// MEV_2024-DNA si aggiunge alla firma il model per trasferire le informazioni sull'utente che procede
-	//public MessaggioModel ExInserisciProvvedimentoTrasmesso(MessaggioModel aMessaggioModel)	throws F3BException {
-	public MessaggioModel ExInserisciProvvedimentoTrasmesso(MessaggioModel aMessaggioModel, PresaInCaricoModel aPresaInCaricoModel) 
+	public MessaggioModel ExInserisciProvvedimentoTrasmesso(MessaggioModel aMessaggioModel)
 	    throws F3BException {
 		Connection lConn = null;
 
@@ -346,10 +325,8 @@ public class PresaInCaricoJMSController extends SiapPresaInCaricoJMSController i
 						"Impossibile inserire il Messaggio Contenuto incorretto!");
 
 			if (!aMessaggioModel.getCodBdiDestinataria().equals(aMessaggioModel.getCodBdiMittente())) {
-			  // MEV_2024-DNA
-				// lMessReturn = ExInserisciFascicoloSiep(aMessaggioModel);
-				lMessReturn = ExInserisciFascicoloSiep (aMessaggioModel, aPresaInCaricoModel);
-			  // MEV_2024-DNA - FINE
+
+				lMessReturn = ExInserisciFascicoloSiep(aMessaggioModel);
 
 				lConn = getDBTransaction();
 
@@ -394,13 +371,6 @@ public class PresaInCaricoJMSController extends SiapPresaInCaricoJMSController i
 		return lMessReturn;
 	}
 
-	 // MEV_2024-DNA Temporaneo
-//	 public MessaggioModel ExInserisciFascicoloSiep (MessaggioModel aMessaggioModel) throws F3BException {
-//	   return this.ExInserisciFascicoloSiep (aMessaggioModel, null);
-//	 }
-
-	
-	
 	/**
 	 * Metodo di inserimento dei dati del fascicolo SIEP nel caso di trasmissione
 	 *
@@ -408,8 +378,7 @@ public class PresaInCaricoJMSController extends SiapPresaInCaricoJMSController i
 	 * @return
 	 * @throws F3BException
 	 */
-	//public MessaggioModel ExInserisciFascicoloSiep(MessaggioModel aMessaggioModel) throws F3BException {
-	public MessaggioModel ExInserisciFascicoloSiep (MessaggioModel aMessaggioModel, PresaInCaricoModel aPresaInCaricoModel) throws F3BException {
+	public MessaggioModel ExInserisciFascicoloSiep(MessaggioModel aMessaggioModel) throws F3BException {
 
 		Connection lConn = null;
 		FascicoloStoreProcedurePulisciDAO lProc = null;
@@ -458,7 +427,7 @@ public class PresaInCaricoJMSController extends SiapPresaInCaricoJMSController i
 				if (!lProc.getReturn().equals("0000")) {
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// LogF3B.getLogger()
-					siesLogger.error("ERRORE DURANTE LA STORE PROCEDURE...");
+					siesLogger.error("ERRORE DURANTE LA STORE PROCEDURE..."+lProc.getReturn());
 					throw new DAOException("Errore durante la chiamata alla Store Procedure");
 				}
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -573,9 +542,12 @@ public class PresaInCaricoJMSController extends SiapPresaInCaricoJMSController i
 			}
 
 			// inizioMEV_67 (SALVO L'INFORMAZIONE DI ALTRA_CAUSA)
-			// Ticket#20211019014 - in alcuni casi arrivano fascicoli con Posizione giuridica che punta (FK ALT_CAU_ID_ALTRA_CAUSA) 
-			// ALTRA_CAUSA ma il record ALTRA_CAUSA non viene trasferito perchè non recuprato dal metodo che carica il dettaglio fascicolo SIEP
-			// Quindi si testa se è stato trasferito il record AC e se l'id della PG coincide. In caso negativo si 
+			// Ticket#20211019014 - in alcuni casi arrivano fascicoli con Posizione giuridica che punta (FK
+			// ALT_CAU_ID_ALTRA_CAUSA)
+			// ALTRA_CAUSA ma il record ALTRA_CAUSA non viene trasferito perchè non recuprato dal metodo che
+			// carica il dettaglio fascicolo SIEP
+			// Quindi si testa se è stato trasferito il record AC e se l'id della PG coincide. In caso
+			// negativo si
 			// ripulisce il puntamento da PG
 			// Recupero idAltraCauso
 			BigDecimal idAltraCausa = null; // Ticket#20211019014
@@ -591,8 +563,10 @@ public class PresaInCaricoJMSController extends SiapPresaInCaricoJMSController i
 
 			if (lPars.getDettaglioFascicoloSiep().getPosizioneGiuridica() != null) {
 				// Ticket#20211019014 -
-				BigDecimal idAltraCausaPG = lPars.getDettaglioFascicoloSiep().getPosizioneGiuridica().getAltCauIdAltraCausa();
-				if (idAltraCausaPG!=null && (idAltraCausa==null || idAltraCausaPG.compareTo(idAltraCausa)!=0)) {
+				BigDecimal idAltraCausaPG = lPars.getDettaglioFascicoloSiep().getPosizioneGiuridica()
+						.getAltCauIdAltraCausa();
+				if (idAltraCausaPG != null
+						&& (idAltraCausa == null || idAltraCausaPG.compareTo(idAltraCausa) != 0)) {
 					lPars.getDettaglioFascicoloSiep().getPosizioneGiuridica().setAltCauIdAltraCausa(null);
 				}
 				// Ticket#20211019014 - FINE
@@ -1414,22 +1388,6 @@ public class PresaInCaricoJMSController extends SiapPresaInCaricoJMSController i
 						">>>>> DOPO INSERT Tabelle di Relazione con RICHIESTE_PM_IN_CUMULO   ------------||||||||||| ");
 			} // Chiude if(lVecIstruttorie!=null && lVecIstruttorie.size()>0)
 
-			
-			// MEV_2024-DNA - Si aggiunge la tracciatura sulla tabella PRESA_IN :CARICO dell'utente/ufficio che ha proceduto 
-			// alla prea in carico del fascicolo			
-			if (aPresaInCaricoModel!=null) {
-			  siesLogger.debug("TRACCAITURA SU PRESA_IN_CARICO");
-			  siesLogger.debug("aPresaInCaricoModel: "+aPresaInCaricoModel);
-			  
-			  IPresaInCarico lPresaInCaricoCtrl = SICOLookupRemote.getPresaInCaricoRemote();
-
-  		  aPresaInCaricoModel.setFasSieIdFascicoloSiep(lPars.getDettaglioFascicoloSiep().getFascicoloSiep().getIdFascicoloSiep());
- 		  
-  		  lPresaInCaricoCtrl.ExInserisciPresaInCarico (aPresaInCaricoModel, lConn);
-  		  siesLogger.debug("FINE TRACCAITURA SU PRESA_IN_CARICO");
-		  }
-		  // MEV_2024-DNA - FINE
-			
 			siesLogger.debug("lRapporto = " + lRapporto);
 			aMessaggioModel.setRapportoEsito(lRapporto);
 			lConn.commit();

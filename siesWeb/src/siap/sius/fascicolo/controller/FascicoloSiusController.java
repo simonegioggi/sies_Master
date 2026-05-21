@@ -47,7 +47,6 @@ import siap.sico.ufficio.model.UfficioModel;
 import siap.sico.utente.model.UtenteModel;
 import siap.sico.util.SICOLookupRemote;
 import siap.sico.util.report.ReportGenerator;
-import siap.siep.SIEPException;
 import siap.siep.altracausa.dao.AltraCausaSqlDAO;
 import siap.siep.altracausa.model.AltraCausaModel;
 import siap.siep.luogodetenzione.dao.LuogoDetenzioneDAO;
@@ -2012,7 +2011,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 		try {
 			lConn = getDBTransaction();
 			lFasDao = new FascicoloSiusDAO(lConn);
-
 			// Set del DAO e aggiornamento del FascicoloSius
 			lFasDao.setDAOFromModelForUpdate(aFascicoloSiusModel);
 			lFasDao.update();
@@ -4906,13 +4904,58 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 * Ricerca l'elenco dei fascicoli correntemente assegnati a un magistrato su un particolare ufficio in
 	 * base allo stato del fascicolo
 	 *
+	 * MEV_2025-48: aggiunta nuova funzionalita': paginata la ricerca
+	 *
 	 * @param aCodMagistrato
 	 *            - Codice CSM del magistrato
 	 * @param aCodUfficio
 	 *            - Codice ufficio di appartenenza del Procedimento
 	 * @param aStato
 	 *            - Array di COD_STATO_FASCICOLO
+	 * @param aPage
+	 *            - Paginazione
+	 *
 	 * @return
+	 */
+	public Vector ExRicercaFascicoliByMagistratoSorvAssegnatarioPaged(String aCodMagistrato,
+			String aCodUfficio, String[] aStato, int aPage) throws F3BException {
+
+		Connection lConn = null;
+		Vector lFascicoli = new Vector();
+
+		FascicoloSiusSqlDAO lFasSqlDao = null;
+
+		try {
+			lConn = getDBConnection();
+
+			lFasSqlDao = new FascicoloSiusSqlDAO(lConn);
+			lFasSqlDao.ricercaFascicoloSiusByMagistratoSorvAssegnatarioPaged(aCodMagistrato, aCodUfficio,
+					aStato, aPage);
+			lFascicoli = new Vector(lFasSqlDao.getModels());
+		} catch (DAOException daoEx) {
+			throw new SIUSException(F3BException.USER_MESSAGE,
+					"FascicoloSiusController.ExRicercaFascicoliByMagistratoSorvAssegnatarioPaged: Non posso leggere : "
+							+ daoEx);
+		} finally {
+			cleanup(lFasSqlDao);
+			cleanup(lConn);
+		}
+
+		return lFascicoli;
+	}
+
+	/**
+	 * Ricerca l'elenco dei fascicoli correntemente assegnati a un magistrato su un particolare ufficio in
+	 * base allo stato del fascicolo
+	 *
+	 * @param aCodMagistrato
+	 *            - Codice CSM del magistrato
+	 * @param aCodUfficio
+	 *            - Codice ufficio di appartenenza del Procedimento
+	 * @param aStato
+	 *            - Array di COD_STATO_FASCICOLO
+	 *
+	 * @return Vector
 	 */
 	public Vector ExRicercaFascicoliByMagistratoSorvAssegnatario(String aCodMagistrato, String aCodUfficio,
 			String[] aStato) throws F3BException {
@@ -4939,6 +4982,33 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 		}
 
 		return lFascicoli;
+	}
+
+	@Override
+	public BigDecimal ExGetCountProcedimenti(String lCodMagistrato, String lCodUfficio, String[] lStato)
+			throws F3BException {
+
+		BigDecimal lCount = new BigDecimal(0);
+		Connection lConn = null;
+
+		FascicoloSiusSqlDAO lFasSqlDao = null;
+		try {
+			lConn = getDBConnection();
+			lFasSqlDao = new FascicoloSiusSqlDAO(lConn);
+			lFasSqlDao.getCountProcedimenti(lCodMagistrato, lCodUfficio, lStato);
+			lFasSqlDao.start();
+			lFasSqlDao.next();
+			lCount = lFasSqlDao.getBigDecimal("HowManyRecords");
+			lFasSqlDao.stop();
+		} catch (DAOException daoEx) {
+			throw new SIUSException(SIUSException.USER_MESSAGE,
+					"FascicoloSiusController.ExGetCountProcedimenti: Non posso leggere gli elementi : "
+							+ daoEx);
+		} finally {
+			cleanup(lFasSqlDao);
+			cleanup(lConn);
+		}
+		return lCount;
 	}
 
 	/**
@@ -5070,7 +5140,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new SIEPException(F3BException.USER_MESSAGE,
+			throw new SIUSException(F3BException.USER_MESSAGE,
 					"FascicoloSiusController.ExRicercaLengthCertPenaleByIdFascicolo: Non posso leggere : "
 							+ daoEx);
 		} finally {
@@ -5110,7 +5180,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + ex);
-			throw new SIEPException("FascicoloSiepController.ExModificaNoteFascicoloSiep: " + ex);
+			throw new SIUSException("FascicoloSiepController.ExModificaNoteFascicoloSiep: " + ex);
 		} finally {
 			cleanup(lFasDao);
 			cleanup(lConn);
@@ -5327,7 +5397,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 			// info per il log
 			avvocaturaLogger.error("DAOException: " + ex);
 			// lancio nuova eccezione
-			throw new SIEPException("FascicoloSiusController.ricercaCodUfficioAppartenenza: " + ex);
+			throw new SIUSException("FascicoloSiusController.ricercaCodUfficioAppartenenza: " + ex);
 		} finally {
 			// stop degli oggetti di tipo "GenericDAO"
 			cleanup(asd);

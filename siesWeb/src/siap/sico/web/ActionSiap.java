@@ -213,8 +213,9 @@ public class ActionSiap extends Action {
 		siesLogger.debug("Action getCodComuneByDescr");
 
 		ComuneModel lComMod = new ComuneModel();
-
-		lComMod.setDescrizione(aDescrComune.toUpperCase());
+		// Ticket#202510210160 - SIES: Anomalia nomi comuni - PROV. BOLZANO
+		// uppercase trasforma VILLNÖß in VILLNOSS e non lo trova
+		lComMod.setDescrizione(aDescrComune/*.toUpperCase()*/);
 
 		IComune lComCtrl = SICOLookupRemote.getComuneRemote();
 		ComuneModel lComModRitorno = new ComuneModel(lComCtrl.ExGetCodiceComune(lComMod));
@@ -228,8 +229,9 @@ public class ActionSiap extends Action {
 		siesLogger.debug("Action getCodComuneByDescrFlagVal");
 
 		ComuneModel lComMod = new ComuneModel();
-
-		lComMod.setDescrizione(aDescrComune.toUpperCase());
+		// Ticket#202510210160 - SIES: Anomalia nomi comuni - PROV. BOLZANO
+		// uppercase trasforma VILLNÖß in VILLNOSS e non lo trova
+		lComMod.setDescrizione(aDescrComune/*.toUpperCase()*/);
 
 		IComune lComCtrl = SICOLookupRemote.getComuneRemote();
 		ComuneModel lComModRitorno = new ComuneModel(lComCtrl.ExGetCodiceComuneValidita(lComMod));
@@ -249,8 +251,9 @@ public class ActionSiap extends Action {
 	protected ComuneModel getDatiComuneByDescrOmonimia(String aDescrComune) throws F3BException {
 
 		ComuneModel lComMod = new ComuneModel();
-
-		lComMod.setDescrizione(aDescrComune.toUpperCase());
+		// Ticket#202510210160 - SIES: Anomalia nomi comuni - PROV. BOLZANO
+		// uppercase trasforma VILLNÖß in VILLNOSS e non lo trova
+		lComMod.setDescrizione(aDescrComune/*.toUpperCase()*/);
 		lComMod.setControlloOmonimi(true);
 
 		IComune lComCtrl = SICOLookupRemote.getComuneRemote();
@@ -263,8 +266,9 @@ public class ActionSiap extends Action {
 	protected ComuneModel getDatiComuneByDescrOmonimiaFlagVal(String aDescrComune) throws F3BException {
 
 		ComuneModel lComMod = new ComuneModel();
-
-		lComMod.setDescrizione(aDescrComune.toUpperCase());
+		// Ticket#202510210160 - SIES: Anomalia nomi comuni - PROV. BOLZANO
+		// uppercase trasforma VILLNÖß in VILLNOSS e non lo trova
+		lComMod.setDescrizione(aDescrComune/*.toUpperCase()*/);
 		lComMod.setControlloOmonimi(true);
 
 		IComune lComCtrl = SICOLookupRemote.getComuneRemote();
@@ -288,7 +292,9 @@ public class ActionSiap extends Action {
 		ComuneModel lComMod = new ComuneModel();
 
 		lComMod.setCodComune(aCodComune);
-		lComMod.setDescrizione(aDescrComune.toUpperCase());
+		// Ticket#202510210160 - SIES: Anomalia nomi comuni - PROV. BOLZANO
+		// uppercase trasforma VILLNÖß in VILLNOSS e non lo trova
+		lComMod.setDescrizione(aDescrComune/*.toUpperCase()*/);
 
 		IComune lComCtrl = SICOLookupRemote.getComuneRemote();
 		ComuneModel lComModRitorno = new ComuneModel(lComCtrl.ExGetCodiceComune(lComMod));
@@ -303,7 +309,9 @@ public class ActionSiap extends Action {
 		ComuneModel lComMod = new ComuneModel();
 
 		lComMod.setCodComune(aCodComune);
-		lComMod.setDescrizione(aDescrComune.toUpperCase());
+		// Ticket#202510210160 - SIES: Anomalia nomi comuni - PROV. BOLZANO
+		// uppercase trasforma VILLNÖß in VILLNOSS e non lo trova
+		lComMod.setDescrizione(aDescrComune/*.toUpperCase()*/);
 
 		IComune lComCtrl = SICOLookupRemote.getComuneRemote();
 		ComuneModel lComModRitorno = new ComuneModel(lComCtrl.ExGetCodiceComuneValidita(lComMod));
@@ -753,6 +761,37 @@ public class ActionSiap extends Action {
 		return lRequest.substring(0, lRequest.length() - 1);
 	}
 
+	
+
+	/**
+	 * Compone la Stringa completa di una request NON multipart ma con array di valori
+	 * es la ricerca avanzata SIEP per classi dove sono presenti i check tipoClasse
+	 *
+	 * @return
+	 * @throws F3BException
+	 * @since 2026.02.11
+	 */
+	public String getCompleteRequestURLMultiVal() throws F3BException {
+
+		String lRequest = this.getRequest().getRequestURL() + "?";
+		Set lKeys = getRequest().getParameterMap().keySet();
+
+		Iterator itx = lKeys.iterator();
+		while (itx.hasNext()) {
+			String key = (String) itx.next();
+			if (!(key.equals(IWebConstants.NUM_PAGE) || key.equals(IWebConstants.LINK_RITORNO)
+					|| key.equals(IWebConstants.FLAG_RITORNO)))
+			{
+				String [] val = getRequestStringParameters(key);
+				for (int i = 0; i< val.length; i++) {
+					lRequest += key + "=" + val[i] + "&";
+				}
+			}
+		}
+
+		return lRequest.substring(0, lRequest.length() - 1);
+	}
+	
 	/**
 	 * Compone la Stringa completa di una request NON multipart e NON con array di valori... Vengono saltati i
 	 * 2 parametri utilizzati nella gestione del ritorno, che sono: TornaQui, StoTornando.

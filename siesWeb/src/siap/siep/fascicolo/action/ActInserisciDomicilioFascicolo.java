@@ -75,6 +75,11 @@ public class ActInserisciDomicilioFascicolo extends ActionSiap implements ICosta
 		}
 		siesLogger.info(lComMod != null ? lComMod.getCodComune() : "");
 
+		// 20250612 [SG]: risolto problema ricerca soggetto col "-" pari al cod comune nascita
+		// Ticket#20250612016 - SIES - ricerche soggetto
+		lResMod.setCodComune(lComMod.getCodComune());
+		lResMod.setCodProvincia(lComMod.getCodProvincia());
+
 		lResMod.setCap(getRequestStringParameter(CAMPO_CAP));
 		lResMod.setIndirizzo(getRequestStringParameter(CAMPO_INDIRIZZO));
 

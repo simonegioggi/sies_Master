@@ -28,19 +28,7 @@ import siap.siep.sentenza.model.SentenzaModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * Azione Padre di tutte le Action della nuova istanza.
- * <p>
- * Title: ActionNuovaIstanza
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2009
- * </p>
- * <p>
- * Company: Agile S.r.l.
- * </p>
+ * ActionNuovaIstanza - Azione Padre di tutte le Action della nuova istanza.
  *
  * @version 5.0
  */
@@ -54,6 +42,7 @@ public class ActionNuovaIstanza extends ActionSiap
 	 * @throws F3BException
 	 */
 	protected FascicoloSiepModel getFascicolo(BigDecimal aIdSentenza) throws Exception {
+
 		// data irrevocabilità per ora non sò come gestirla verrà inserita nella modifica??
 
 		UtenteModel lUtenteMod = new UtenteModel(
@@ -110,6 +99,7 @@ public class ActionNuovaIstanza extends ActionSiap
 	 * @throws F3BException
 	 */
 	protected EventoModel getEvento(BigDecimal aIdFascicolo) throws Exception {
+
 		EventoModel lEveMod = new EventoModel();
 
 		lEveMod.setCodTipoEvento("03");
@@ -141,6 +131,7 @@ public class ActionNuovaIstanza extends ActionSiap
 	 * @throws F3BException
 	 */
 	protected SoggettoModel getSoggetto() throws Exception {
+
 		SoggettoModel lSogMod = new SoggettoModel();
 
 		lSogMod.setCognome(getRequestStringParameter(CAMPO_COGNOME));
@@ -192,6 +183,9 @@ public class ActionNuovaIstanza extends ActionSiap
 		lSogMod.setCodAfis(getRequestStringParameter(CAMPO_COD_AFIS).toUpperCase());
 		lSogMod.setNote(getRequestStringParameter(ICostantiSoggetto.CAMPO_NOTE));
 		lSogMod.setFlagPresenzaFascicolo("N");
+
+		// 20260415 [SG]: aggiunto controllo su CF che deve essere obbligatorio e conforme
+		// SoggettoUtil.controllaCF(lSogMod);
 
 		lSogMod.setCodOperatoreInserimento(getCodUtenteConnesso());
 		lSogMod.setDataInserimento(DateUtils.getSysDate());
@@ -270,6 +264,7 @@ public class ActionNuovaIstanza extends ActionSiap
 	 * @throws F3BException
 	 */
 	protected NuovaIstanzaModel getNuovaIstanza(BigDecimal lIdFascicolo) throws Exception {
+
 		NuovaIstanzaModel lNuoMod = new NuovaIstanzaModel();
 
 		lNuoMod.setCodStatoIstanza("01");// iscritto
@@ -619,6 +614,7 @@ public class ActionNuovaIstanza extends ActionSiap
 	 */
 
 	protected SentenzaModel getSentenzaStraniera() throws Exception {
+
 		SentenzaModel lSenMod = new SentenzaModel();
 
 		lSenMod.setCodTipoProvvedimento("05");
@@ -720,7 +716,7 @@ public class ActionNuovaIstanza extends ActionSiap
 		}
 	}
 
-	// 20210811 MEV_21 Inserimento Avvocato da associare all'Istanza in inserimento.
+	// 20210811 MEV_21 Inserimento Avvocato da associare all'Istanza in inserimento
 	/**
 	 * getIdAvvocatoInserito
 	 *
@@ -728,6 +724,7 @@ public class ActionNuovaIstanza extends ActionSiap
 	 * @throws F3BException
 	 */
 	protected BigDecimal getIdAvvocatoInserito() throws Exception {
+
 		AvvocatoModel lAvvMod = new AvvocatoModel();
 
 		BigDecimal idAvvocato = null;
@@ -859,22 +856,24 @@ public class ActionNuovaIstanza extends ActionSiap
 				// al vecchio Foro (con FLAG_REGINDE="NO") e si inserisce un nuovo Avvocato.
 				// Se non cambia il foro si aggiornano solo i dati provenienti da REGINDE o non si
 				// interviene(Avv. presente solo in SIES).
-				if (lAvvCertRegSies.getForo().equals(avvReginde.getForo())) {
-					avvReginde.setIdAvvocato(lAvvCertRegSies.getIdAvvocato());
-					avvReginde.setCodOperatoreAggiornamento(getCodUtenteConnesso());
-					avvReginde.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
-					avvReginde.setDataAggiornamento(DateUtils.getSysDate());
-					if (flagReginde)
-						avvReginde = lCtrl.ExAggiornaAvvocatoDaReginde(avvReginde);
-					else
-						avvReginde = lAvvCertRegSies;
-				} else {
-					lAvvCertRegSies.setFlagRegInde("NO");
-					lAvvCertRegSies.setCodOperatoreAggiornamento(getCodUtenteConnesso());
-					lAvvCertRegSies.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
-					lAvvCertRegSies.setDataAggiornamento(DateUtils.getSysDate());
-					lAvvCertRegSies = lCtrl.ExAggiornaAvvocatoDaReginde(lAvvCertRegSies);
-					avvReginde = lCtrl.ExInserisciAvvocato(avvReginde);
+				if (lAvvCertRegSies != null) {
+					if (lAvvCertRegSies.getForo().equals(avvReginde.getForo())) {
+						avvReginde.setIdAvvocato(lAvvCertRegSies.getIdAvvocato());
+						avvReginde.setCodOperatoreAggiornamento(getCodUtenteConnesso());
+						avvReginde.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
+						avvReginde.setDataAggiornamento(DateUtils.getSysDate());
+						if (flagReginde)
+							avvReginde = lCtrl.ExAggiornaAvvocatoDaReginde(avvReginde);
+						else
+							avvReginde = lAvvCertRegSies;
+					} else {
+						lAvvCertRegSies.setFlagRegInde("NO");
+						lAvvCertRegSies.setCodOperatoreAggiornamento(getCodUtenteConnesso());
+						lAvvCertRegSies.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
+						lAvvCertRegSies.setDataAggiornamento(DateUtils.getSysDate());
+						lAvvCertRegSies = lCtrl.ExAggiornaAvvocatoDaReginde(lAvvCertRegSies);
+						avvReginde = lCtrl.ExInserisciAvvocato(avvReginde);
+					}
 				}
 			}
 			idAvvocato = avvReginde.getIdAvvocato();
@@ -913,6 +912,7 @@ public class ActionNuovaIstanza extends ActionSiap
 	 * @throws F3BException
 	 */
 	protected BigDecimal getIdAvvocatoPresInserito() throws Exception {
+
 		AvvocatoModel lAvvMod = new AvvocatoModel();
 
 		BigDecimal idAvvocato = null;
@@ -1045,22 +1045,24 @@ public class ActionNuovaIstanza extends ActionSiap
 				// al vecchio Foro (con FLAG_REGINDE="NO") e si inserisce un nuovo Avvocato.
 				// Se non cambia il foro si aggiornano solo i dati provenienti da REGINDE o non si
 				// interviene(Avv. presente solo in SIES).
-				if (lAvvCertRegSies.getForo().equals(avvReginde.getForo())) {
-					avvReginde.setIdAvvocato(lAvvCertRegSies.getIdAvvocato());
-					avvReginde.setCodOperatoreAggiornamento(getCodUtenteConnesso());
-					avvReginde.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
-					avvReginde.setDataAggiornamento(DateUtils.getSysDate());
-					if (flagReginde)
-						avvReginde = lCtrl.ExAggiornaAvvocatoDaReginde(avvReginde);
-					else
-						avvReginde = lAvvCertRegSies;
-				} else {
-					lAvvCertRegSies.setFlagRegInde("NO");
-					lAvvCertRegSies.setCodOperatoreAggiornamento(getCodUtenteConnesso());
-					lAvvCertRegSies.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
-					lAvvCertRegSies.setDataAggiornamento(DateUtils.getSysDate());
-					lAvvCertRegSies = lCtrl.ExAggiornaAvvocatoDaReginde(lAvvCertRegSies);
-					avvReginde = lCtrl.ExInserisciAvvocato(avvReginde);
+				if (lAvvCertRegSies != null) {
+					if (lAvvCertRegSies.getForo().equals(avvReginde.getForo())) {
+						avvReginde.setIdAvvocato(lAvvCertRegSies.getIdAvvocato());
+						avvReginde.setCodOperatoreAggiornamento(getCodUtenteConnesso());
+						avvReginde.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
+						avvReginde.setDataAggiornamento(DateUtils.getSysDate());
+						if (flagReginde)
+							avvReginde = lCtrl.ExAggiornaAvvocatoDaReginde(avvReginde);
+						else
+							avvReginde = lAvvCertRegSies;
+					} else {
+						lAvvCertRegSies.setFlagRegInde("NO");
+						lAvvCertRegSies.setCodOperatoreAggiornamento(getCodUtenteConnesso());
+						lAvvCertRegSies.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
+						lAvvCertRegSies.setDataAggiornamento(DateUtils.getSysDate());
+						lAvvCertRegSies = lCtrl.ExAggiornaAvvocatoDaReginde(lAvvCertRegSies);
+						avvReginde = lCtrl.ExInserisciAvvocato(avvReginde);
+					}
 				}
 			}
 			idAvvocato = avvReginde.getIdAvvocato();

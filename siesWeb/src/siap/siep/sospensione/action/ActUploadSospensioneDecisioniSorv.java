@@ -78,4 +78,5 @@ public class ActUploadSospensioneDecisioniSorv extends ActionSiap implements ICo
 		// messaggio di ritorno
 		return IWebConstants.PG_MESSAGE;
 	}
+
 }

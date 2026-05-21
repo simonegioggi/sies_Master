@@ -498,7 +498,7 @@
   	frmvalidator.addValidation("<%= ICostantiRichiesta.CAMPO_SEDE_TDS %>","req","Luogo Tribunale di Sorveglianza obbligatoria");
   	--%>
  
-  	frmvalidator.addValidation("<%= ICostantiRichiesta.AUTORITA_SEDE %>","alphabetic");
+<%--   	frmvalidator.addValidation("<%= ICostantiRichiesta.AUTORITA_SEDE %>","alphabetic"); --%>
 </script>
 </body>
 </html>

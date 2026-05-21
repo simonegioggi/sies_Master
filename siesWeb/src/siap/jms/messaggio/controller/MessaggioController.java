@@ -25,18 +25,7 @@ import siap.sico.evento.model.EventoNotificaModel;
 import siap.siepe.ricezioneatti.model.CruscottoModel;
 
 /**
- * <p>
- * Title: MessaggioController
- * </p>
- * <p>
- * Description: Classe Controller per Messaggio
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * MessaggioController - Classe Controller per Messaggio
  *
  * @version 1.0
  */
@@ -47,7 +36,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	private static Logger siesLogger = Logger.getLogger(LogF3B.JMS_LOG);
 
 	/**
-	 * Inserisce MEssaggio
+	 * Inserisce Messaggio
 	 *
 	 * @param aMessaggio
 	 * @return
@@ -2340,41 +2329,30 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 
 		return lListaSolleciti;
 	}
-
-	 /**
-   * Metodo di eliminazione dei messaggi ricevuti o inviati da un certo ufficio in un certo intervallo di date
-   * 
-   * @since MEV_2024-DNA 
-   */
-    public void ExCancellaMessaggioByCodUfficio (String aCodUfficio, Date aDataInviaDal, Date aDataInviaAl) 
-        throws F3BException
-    {  
+  
+	/**
+	 * Metodo che marca FLAG_SISTO = 'S' sul messaggio
+	 * @since MEV_2025-48 - 2.15 Gestione Annotazioni Trasmissioni 
+	 */
+    public void ExMarcaMessaggioVisto(BigDecimal aIdMessaggio) throws F3BException {
         Connection lConn = null;
+
         MessaggioDAO lMesDao = null;
-        
         try {
             lConn = getDBConnection();
-            
             lMesDao = new MessaggioDAO(lConn);
-            lMesDao.setCondizioneByUfficio(aCodUfficio, aDataInviaDal, aDataInviaAl);
-            lMesDao.delete();
-            
-            rollback(lConn);
-            //commit(lConn);
+            lMesDao.setFlagVisto("S");
+            lMesDao.setCondizioneUpdate(aIdMessaggio);
+            lMesDao.update();
+            commit(lConn);
         } catch (DAOException daoEx) {
-            siesLogger.error("ExCancellaMessaggioByCodUfficio ", daoEx);
             rollback(lConn);
-            throw new F3BException("MessaggioController.ExCancellaMessaggioByCodUfficio: Non posso leggere : "+ daoEx);
-        } catch (Exception oEx) {
-            siesLogger.error("ExCancellaMessaggioByCodUfficio ", oEx);
-            rollback(lConn);
-            throw new F3BException("MessaggioController.ExCancellaMessaggioByCodUfficio: Non posso leggere : "+ oEx);
+            siesLogger.error("MessaggioController.ExMarcaMessaggioVisto", daoEx);
+            throw new F3BException("MessaggioController.ExMarcaMessaggioVisto: Non posso leggere : " + daoEx);
         } finally {
             cleanup(lMesDao);
             cleanup(lConn);
         }
-
-        return;
     }
-  
+	
 }

@@ -35,8 +35,7 @@ import siap.sius.util.SIUSLookupRemote;
 
 /**
  * ActInserisciEmissioneDecreto - Classe Action per l'inserimento dell'Emissione di un decreto generico.
- * L'azione legge contenuto ed oggetti relativi al procedimento scelto.
- * Legge il tipo di decreto da emettere.
+ * L'azione legge contenuto ed oggetti relativi al procedimento scelto. Legge il tipo di decreto da emettere.
  * Non effettua nesun inserimento nel DB ma passa i dati letti (tenori) alla form successiva.
  *
  * @version 1.0
@@ -133,9 +132,8 @@ public class ActInserisciEmissioneDecreto extends ActionSius implements ICostant
 		siesLogger.debug("N.ro Descr. oggetti ->" + lStDescr.countTokens());
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug("Descr. oggetti ->" +
-
-				getRequestStringParameter(ICostantiFascicoloSius.CAMPO_DESCR_OGGETTO));
+		siesLogger.debug(
+				"Descr. oggetti ->" + getRequestStringParameter(ICostantiFascicoloSius.CAMPO_DESCR_OGGETTO));
 
 		int lSizeVector = lStCodice.countTokens();
 

@@ -338,7 +338,9 @@
 %>
       </td>
       <td class="LBG">
-        <jsp:include page="<%=IWebConstants.PG_TOOLBAR_HEADER%>" />
+        <jsp:include page="<%=IWebConstants.PG_TOOLBAR_HEADER%>">
+        	<jsp:param name="Modificabile" value="<%=conta==0?"SI":"NO"%>"/>
+        </jsp:include>
       </td>
      </tr>
    </table>
@@ -346,7 +348,7 @@
 	   <jsp:include page="/jsp/files/siap/siep/fascicolo/DettaglioSoggettoSentenza.jsp"/>
 	 <br>
 <%
-	if( eventonotifica.getEvento() != null && eventonotifica.getEvento().getIdEvento() != null )
+	if( eventonotifica.getEvento() != null && eventonotifica.getEvento().getIdEvento() != null)
 	{
 %>
 	  <table cellspacing=0 cellpadding=0 width=95%>
@@ -383,11 +385,12 @@
           NotificaModel lNotMod = new NotificaModel();
           lNotMod = (NotificaModel)lNot.get(i);
 %>
-	       <input type="hidden" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%=lNotMod.getEveIdEvento()%>">
+	       <tr><td><input type="hidden" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%=lNotMod.getEveIdEvento()%>"></td></tr>
 <%
           if(lNotMod != null && lNotMod.getDataAvvenutaNotifica() != null)
           {
 %>
+          <tr>
           	<td class="l">Autorità delegata alla notifica</td>
 <%
    	          if(lNotMod.getAutoritaEsterna()!= null)
@@ -402,7 +405,9 @@
    	            <td class="l"><font class="campo"><%=StringUtils.toStringJSP(lNotMod.getIstitutoDetenzione().getIndirizzo())%></font>&nbsp; di &nbsp; <font class="campo"><%=StringUtils.toStringJSP(lNotMod.getIstitutoDetenzione().getDescrComune())%></font></td>
 <%
    	          }
-
+%>
+	</tr>
+<%
             if(lNotMod.getAvvIdAvvocatoFascicoloSiep() != null)
             {
               if(lNotMod.getAvvSiep()!= null)
@@ -466,6 +471,7 @@
             if( contaabilita >1 ) //Esiste piu' di una check box
             {
 %>
+             <tr>
               <td class="l">Autorità delegata alla notifica</td>
 <%
 	   			if(lNotMod.getAutoritaEsterna()!= null)
@@ -480,7 +486,9 @@
 	                <td class="l"><font class="campo"><%=StringUtils.toStringJSP(lNotMod.getIstitutoDetenzione().getIndirizzo())%></font>&nbsp; di &nbsp; <font class="campo"><%=StringUtils.toStringJSP(lNotMod.getIstitutoDetenzione().getDescrComune())%></font></td>
 <%
                 }
-
+%>
+	</tr>
+<%
 							if(lNotMod.getAvvIdAvvocatoFascicoloSiep()!=null)
               {
                 if(lNotMod.getAvvSiep() != null)
@@ -510,10 +518,9 @@
                 }
               }
 %>                  
-                   <input type="hidden" name="<%=ICostantiNotifica.CAMPO_ID_NOTIFICA_INS%>" value="<%=lNotMod.getIdNotifica()%>">
-
 		           <tr>
 		                <td class="l">
+		                	<input type="hidden" name="<%=ICostantiNotifica.CAMPO_ID_NOTIFICA_INS%>" value="<%=lNotMod.getIdNotifica()%>">
 		             	    <input type="checkbox" onclick="Javascript:Abilita('<%=totabilita%>');" name="<%=ICostantiOrdineEsecuzione.ABILITA_NOTIFICA%>" value="" >
 		                </td>
 		            </tr>
@@ -548,21 +555,24 @@
                vedosubmit = true;
                
 %>
-               <td class="l">Autorità delegata alla notifica</td>
+	<tr>
+		<td class="l">Autorità delegata alla notifica</td>
 <%
  	   						if(lNotMod.getAutoritaEsterna()!= null)
  	   						{
 %>
- 	                <td class="l"><font class="campo"><%=StringUtils.toStringJSP(lNotMod.getAutoritaEsterna().getDescrTipoAutorita())%></font>&nbsp; di &nbsp; <font class="campo"><%=StringUtils.toStringJSP(lNotMod.getAutoritaEsterna().getDescrSede())%></font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lNotMod.getAutoritaEsterna().getDescrTipoAutorita())%></font>&nbsp; di &nbsp; <font class="campo"><%=StringUtils.toStringJSP(lNotMod.getAutoritaEsterna().getDescrSede())%></font></td>
 <%
                  }
      						 else if(lNotMod.getIstitutoDetenzione()!= null)
                  {
 %>
- 	                <td class="l"><font class="campo"><%=StringUtils.toStringJSP(lNotMod.getIstitutoDetenzione().getIndirizzo())%></font>&nbsp; di &nbsp; <font class="campo"><%=StringUtils.toStringJSP(lNotMod.getIstitutoDetenzione().getDescrComune())%></font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lNotMod.getIstitutoDetenzione().getIndirizzo())%></font>&nbsp; di &nbsp; <font class="campo"><%=StringUtils.toStringJSP(lNotMod.getIstitutoDetenzione().getDescrComune())%></font></td>
 <%
                  }
-
+%>
+	</tr>
+<%
                	 if(lNotMod.getAvvIdAvvocatoFascicoloSiep()!=null)
                	 {
                  	 if(lNotMod.getAvvSiep() !=null)
@@ -592,10 +602,11 @@
                  		}
                		}
 %>
-                      <input type="hidden" name="<%=ICostantiNotifica.CAMPO_ID_NOTIFICA_INS%>" value="<%=lNotMod.getIdNotifica()%>">
-		    
 			         <tr>
-			           <td class="l"><input type="checkbox" onclick="Javascript:AbilitaUno();" name="<%=ICostantiOrdineEsecuzione.ABILITA_NOTIFICA%>"></td>
+			           <td class="l">
+				           <input type="hidden" name="<%=ICostantiNotifica.CAMPO_ID_NOTIFICA_INS%>" value="<%=lNotMod.getIdNotifica()%>">
+				           <input type="checkbox" onclick="Javascript:AbilitaUno();" name="<%=ICostantiOrdineEsecuzione.ABILITA_NOTIFICA%>">
+				       </td>
 			         </tr>
 			          <tr>
 		              <td class="l">Autorità che ha effettuato la notifica</td>

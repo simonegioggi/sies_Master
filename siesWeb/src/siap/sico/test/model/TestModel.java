@@ -45,6 +45,8 @@ public class TestModel extends GenericModel {
 	// MEV_2023-33 aggiunte due variabili per endpoint address PagoPA-PST (con get&set)
 	private String mTestWSServiziInvioPagamentiTelematici;
 	private String mTestWSServiziConsultazionePagamentiTelematici;
+	// release 10.8.0.3 per MEV_21: aggiunto test x ServiziInterrogazioneInterni
+	private String mTestWSServiziInterrogazioneInterni;
 
 	// protected static StringManager sm = StringManager.getManager("org.apache.catalina.servlets");
 
@@ -252,6 +254,14 @@ public class TestModel extends GenericModel {
 	public void setTestWSServiziConsultazionePagamentiTelematici(
 			String mTestWSServiziConsultazionePagamentiTelematici) {
 		this.mTestWSServiziConsultazionePagamentiTelematici = mTestWSServiziConsultazionePagamentiTelematici;
+	}
+
+	public String getTestWSServiziInterrogazioneInterni() {
+		return mTestWSServiziInterrogazioneInterni;
+	}
+
+	public void setTestWSServiziInterrogazioneInterni(String mTestWSServiziInterrogazioneInterni) {
+		this.mTestWSServiziInterrogazioneInterni = mTestWSServiziInterrogazioneInterni;
 	}
 
 }

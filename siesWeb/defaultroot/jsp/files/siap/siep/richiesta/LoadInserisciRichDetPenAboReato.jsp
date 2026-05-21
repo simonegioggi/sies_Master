@@ -276,7 +276,7 @@ if (!annotazioneManuale.isEmpty()) {
   var frmvalidator  = new Validator("f");
 
   frmvalidator.addValidation("<%= ICostantiRichiesta.CAMPO_SEDE_UFFICIO %>","req","La sede del Giudice dell' Esecuzione è obbligatoria");
-  frmvalidator.addValidation("<%= ICostantiRichiesta.CAMPO_SEDE_UFFICIO%>","alphabetic");
+<%--   frmvalidator.addValidation("<%= ICostantiRichiesta.CAMPO_SEDE_UFFICIO%>","alphabetic"); --%>
 </script>
 </body>
 </html>

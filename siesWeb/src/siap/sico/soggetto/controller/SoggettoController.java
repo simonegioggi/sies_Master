@@ -58,18 +58,9 @@ import siap.sius.fascicolo.dao.FascicoloSiusSqlDAO;
 import siap.sius.fascicolo.model.FascicoloSiusModel;
 
 /**
+ * SoggettoController - Classe controller del Soggetto
  *
- * <p>
- * Title: SoggettoController
- * </p>
- * <p>
- * Description: Classe controller del Soggetto
- * </p>
- * <p>
- * </p>
- * <p>
- * Company: Bull Italia S.p.A.
- * </p>
+ * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class SoggettoController extends SiapController implements ISoggetto {
@@ -659,7 +650,7 @@ public class SoggettoController extends SiapController implements ISoggetto {
 					try {
 						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
 						// di LogF3B.getLogger()
-						siesLogger.debug("Soggetto gi√† presente provo ad aggiornare KEY_SOGG_NSC ");
+						siesLogger.debug("Soggetto gi‡ presente provo ad aggiornare KEY_SOGG_NSC");
 
 						lSogDao.setKeySoggNsc(aSoggetto.getKeySoggNsc());
 
@@ -903,6 +894,11 @@ public class SoggettoController extends SiapController implements ISoggetto {
 				lStoricoSogg.setMeseNascita(lSoggVecchio.getMeseNascita());
 				lStoricoSogg.setDataNascita(lSoggVecchio.getDataNascita());
 				lStoricoSogg.setDataNascitaPresunta(lSoggVecchio.getDataNascitaPresunta());
+
+				// 20251021 [SG] : x trasmissione FC
+				if (aSoggetto != null && lSoggVecchio != null && lSoggVecchio.getKeySoggNsc() != null
+						&& aSoggetto.getKeySoggNsc() == null)
+					aSoggetto.setKeySoggNsc(lSoggVecchio.getKeySoggNsc());
 
 				// MODIFICO SOGGETTO
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
@@ -1227,7 +1223,7 @@ public class SoggettoController extends SiapController implements ISoggetto {
 						modificaNumFasc += aSoggettoVecchio.getCognome() + " " + aSoggettoVecchio.getNome()
 								+ " nato a " + aSoggettoVecchio.getDescrComuneNascita() + " il "
 								+ DateUtils.getDateToString(aSoggettoVecchio.getDataNascita(), "dd-MM-yyyy");
-						;
+
 						modificaDaPassare = modifica + modificaNumFasc + modificaSeguito;
 						aSoggetto.setMessage(modificaDaPassare);
 						lSogDuplicato = aSoggetto;

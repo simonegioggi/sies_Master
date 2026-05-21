@@ -1354,9 +1354,19 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 		if (!isRequestParameterNullObj(ICostantiDepositoDecreto.CAMPO_COD_TIPO_DECRETO))
 			lDepOrdModel = leggiDatiDecreto(lDepOrdModel);
 
+		// MEV_2025-48: aggiunta gestione "UlterioreDescrizione"
+		String motivazione = "";
 		// Inserisce, ove sia definito, il valore del campo "Ulteriori Descrizioni".
-		if (!isRequestParameterNullObj(CAMPO_ULTERIORE_DESCRIZIONE))
-			lDepOrdModel.setUlterioreDescrizione(getRequestStringParameter(CAMPO_ULTERIORE_DESCRIZIONE));
+		if (!isRequestParameterNullObj(CAMPO_MOTIVAZIONI))
+			motivazione += getRequestStringParameter(CAMPO_MOTIVAZIONI);
+		if (!isRequestParameterNullObj(CAMPO_ULTERIORE_DESCRIZIONE)) {
+			if (Utils.isPresent(motivazione))
+				motivazione += " - " + getRequestStringParameter(CAMPO_ULTERIORE_DESCRIZIONE);
+			else
+				motivazione += getRequestStringParameter(CAMPO_ULTERIORE_DESCRIZIONE);
+		}
+		if (Utils.isPresent(motivazione))
+			lDepOrdModel.setUlterioreDescrizione(motivazione);
 
 		// Ordinanza di Applicazione Sanzioni Sostitutiva (SS)
 		// prevede il campo Cod Ufficio Competente.

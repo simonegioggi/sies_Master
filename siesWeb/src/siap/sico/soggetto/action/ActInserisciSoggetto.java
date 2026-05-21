@@ -6,6 +6,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.web.IWebConstants;
 import siap.sico.decodifiche.action.ICostantiComune;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.model.ComuneModel;
@@ -18,25 +22,10 @@ import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
 import siap.siep.fascicolo.controller.IFascicoloSiep;
 import siap.siep.util.SIEPLookupRemote;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.web.IWebConstants;
 
 /**
- * <p>
- * Title: ActInserisciSoggetto
- * </p>
- * <p>
- * Description: Azione di Inserimento del Soggetto
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ * ActInserisciSoggetto - Azione di Inserimento del Soggetto
+ *
  * @version 1.0
  */
 @SuppressWarnings("rawtypes")
@@ -46,8 +35,7 @@ public class ActInserisciSoggetto extends ActionSiap implements ICostantiSoggett
 
 	/**
 	 * Azione di Inserimento del Soggetto
-	 * <p>
-	 * 
+	 *
 	 * @return Nome della pagina JSP su cui posizionarsi al termine dell'elaborazione
 	 * @throws F3BException
 	 */
@@ -94,19 +82,19 @@ public class ActInserisciSoggetto extends ActionSiap implements ICostantiSoggett
 		if (!isRequestParameterNullObj(ICostantiComune.CAMPO_COD_COMUNE_REALE)
 				&& getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE).length() > 0) {
 			// se presente dal codice comune (e descrizione)
-			// 20210524	MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni senza flag validità.
-			//lComMod = new ComuneModel(getDatiComuneByCodDescrFlagVal(
-			lComMod = new ComuneModel(getDatiComuneByCodDescr(
-					getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
-					getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
+			// 20210524 MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni senza flag validità.
+			// lComMod = new ComuneModel(getDatiComuneByCodDescrFlagVal(
+			lComMod = new ComuneModel(
+					getDatiComuneByCodDescr(getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
+							getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
 		} else {
 			// altrimenti dalla sola descrizione (rischio omonimi)
 			lComMod = new ComuneModel(
-					// 20210524	MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni senza flag validità.
-					//getDatiComuneByDescrOmonimiaFlagVal(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
+					// 20210524 MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni senza flag
+					// validità.
+					// getDatiComuneByDescrOmonimiaFlagVal(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
 					getDatiComuneByDescrOmonimia(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
 		}
-
 		lSogMod.setCodComuneNascita(lComMod.getCodComune());
 		lSogMod.setCodProvinciaNascita(lComMod.getCodProvincia());
 
@@ -171,6 +159,9 @@ public class ActInserisciSoggetto extends ActionSiap implements ICostantiSoggett
 		lDescri = ((DecodificheModel) lStatoCitt.get(lIndModel)).getDescription();
 		lSogMod.setDescrNazionalita(lDescri);
 
+		// 20260415 [SG]: aggiunto controllo su CF che deve essere obbligatorio e conforme
+		// SoggettoUtil.controllaCF(lSogMod);
+
 		// Se non c'è il flag si fa il controllo
 		if (isRequestParameterNullObj(FLAG_OMONIMI))
 			lSogMod.setMessage("omonimi");
@@ -179,8 +170,6 @@ public class ActInserisciSoggetto extends ActionSiap implements ICostantiSoggett
 		ISoggetto lSogCtrl = SICOLookupRemote.getSoggettoRemote();
 		IFascicoloSiep lFascSogCtrl = SIEPLookupRemote.getFascicoloSiepRemote();
 		SoggettoModel lSogRetMod = null;
-		// SoggettoModel lSogRetMod = new SoggettoModel();
-		// lSogRetMod = lSogCtrl.ExInserisciSoggetto(lSogMod);
 
 		String lPage = ""; // per passaggio a jsp
 		String lPagina = "1"; // per contare ricerca
@@ -188,7 +177,6 @@ public class ActInserisciSoggetto extends ActionSiap implements ICostantiSoggett
 		if (!isRequestParameterNullObj(IWebConstants.NUM_PAGE))
 			lPagina = getRequestStringParameter(IWebConstants.NUM_PAGE);
 
-//		String lReturnPage = "";
 		BigDecimal CountRisultati = null;
 
 		// MEV 15 Revisione Sige Parte 2
@@ -241,7 +229,8 @@ public class ActInserisciSoggetto extends ActionSiap implements ICostantiSoggett
 				lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
 						+ "=siap.sico.soggetto.action.ActLoadDettaglioSoggetto&" + CAMPO_ID_SOGGETTO + "="
 						+ lSogRetMod.getIdSoggetto().toString();
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.debug("Fascicoli non trovati per quel soggetto");
 			}
 
@@ -269,16 +258,17 @@ public class ActInserisciSoggetto extends ActionSiap implements ICostantiSoggett
 				this.setFunctionsAvailableToRequest("siap.sico.soggetto.action.ActRicercaSoggetto");
 			}
 		}
-//		else {
-			// lPage = IWebConstants.PG_MESSAGE;
-			// setRequestAttribute(IWebConstants.MESSAGE_TEXT,lSogRetMod.getMessage());
-			// // Prepara la "pagina" di destinazione
-			// RedirectTo lRedirigi = new RedirectTo();
-			// lRedirigi.setPage(IWebConstants.PG_MAIN);
-			// lRedirigi.setAction("siap.sico.soggetto.action.ActLoadDettaglioSoggetto");
-			// lRedirigi.setParameter(CAMPO_ID_SOGGETTO,lSogRetMod.getIdSoggetto().toString());
-			// setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
-//		}
+		// else {
+		// lPage = IWebConstants.PG_MESSAGE;
+		// setRequestAttribute(IWebConstants.MESSAGE_TEXT,lSogRetMod.getMessage());
+		// // Prepara la "pagina" di destinazione
+		// RedirectTo lRedirigi = new RedirectTo();
+		// lRedirigi.setPage(IWebConstants.PG_MAIN);
+		// lRedirigi.setAction("siap.sico.soggetto.action.ActLoadDettaglioSoggetto");
+		// lRedirigi.setParameter(CAMPO_ID_SOGGETTO,lSogRetMod.getIdSoggetto().toString());
+		// setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
+		// }
+
 		// valore di ritorno
 		return lPage;
 	}

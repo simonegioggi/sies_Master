@@ -1144,7 +1144,7 @@ if(lPosizione.getCodPosizioneGiuridica().equals("12")) {
 				&& lFascicoloAssociato.getFlagAltraCausa().equals("N"))) {
 %>
   	frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E %>","req","Luogo Autorità Destinazione obbligatoria");
-  	frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E %>","alphabetic");
+<%--   	frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E %>","alphabetic"); --%>
 <%
 		}
 	}
@@ -1154,19 +1154,19 @@ if(lPosizione.getCodPosizioneGiuridica().equals("12")) {
 				&& posizioneluogoaltra.getAltraCausa().getCodTipoPosGiuridica().equals("23")) {
 %>
 	frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E %>","req","Luogo Autorità Destinazione obbligatoria");
-	frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E %>","alphabetic");
+<%-- 	frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E %>","alphabetic"); --%>
 <%
 		}
 	}
 %>
  	frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>","req","Luogo Autorità Destinazione obbligatoria");
- 	frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>","alphabetic");
+<%--  	frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>","alphabetic"); --%>
 
 <%
 	if (lPosizione.getCodPosizioneGiuridica().equals("12")) {
 %>
   	frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_C %>","req","Luogo Altra Autorità di polizia obbligatoria");
-  	frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_C %>","alphabetic");
+<%--   	frmvalidator.addValidation("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_C %>","alphabetic"); --%>
 <%
 	}
 	if ((lFascicoloAssociato.getFlagAltraCausa() != null && lFascicoloAssociato.getFlagAltraCausa().equals("S"))
@@ -1175,7 +1175,7 @@ if(lPosizione.getCodPosizioneGiuridica().equals("12")) {
 %>
    	frmvalidator.addValidation("annoBdmc","numeric");
    	frmvalidator.addValidation("numeroBdmc","numeric");
-   	frmvalidator.addValidation("sedeBdmc","alphabetic");
+//    	frmvalidator.addValidation("sedeBdmc","alphabetic");
 <%
 	}
 %>

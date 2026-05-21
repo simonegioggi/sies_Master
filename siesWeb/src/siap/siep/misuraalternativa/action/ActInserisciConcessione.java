@@ -504,6 +504,8 @@ public class ActInserisciConcessione extends ActConcessione {
 						ICostantiMisuraAlternativa.CAMPO_MESE_DATA_SCARCERAZIONE,
 						ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE);
 			} else {
+				// if (!this.isRequestParameterNullObj("tipo") &&
+				// this.getRequestStringParameter("tipo").equals("scarcerare"))
 				// se non è libero compare la possibilità di inserire la data di scarcerazione o data
 				// esecuzione per i domiciliari
 				// se non si indica la data di scarcerazione si inserisce la data di emissione provvedimento

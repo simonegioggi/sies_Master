@@ -408,16 +408,32 @@ public class MisuraSicurezzaCumuloController extends SiapController implements I
 			lDatiFinaliDao.selCondizioneUpdate(aIdDatiFinali);
 
 			if (aIdFascMS == null) {
+			    // Non ho selezionato nulla
 				lDatiFinaliDao.setFlagCreaFascicoloMs(null);
 				lDatiFinaliDao.setFasSieIdFascicoloSiepMs(null);
+			// MEV_2025-48 - ALTRO - si gestiscono i casi di scelta S/N/null
+//	        } else {
+//                lDatiFinaliDao.setFlagCreaFascicoloMs("S");
+//                if (aIdFascMS.compareTo(new BigDecimal(0)) > 0) {
+//                    lDatiFinaliDao.setFasSieIdFascicoloSiepMs(aIdFascMS);
+//                } else {
+//                    lDatiFinaliDao.setFasSieIdFascicoloSiepMs(null);
+//                }
+//	        }
 			} else {
-				lDatiFinaliDao.setFlagCreaFascicoloMs("S");
 				if (aIdFascMS.compareTo(new BigDecimal(0)) > 0) {
 					lDatiFinaliDao.setFasSieIdFascicoloSiepMs(aIdFascMS);
-				} else {
+					lDatiFinaliDao.setFlagCreaFascicoloMs("S");
+				} else if (aIdFascMS.compareTo(new BigDecimal(0)) == 0 ){
+				    // ho selezionato di creare un nuovo fascicolo
+				    lDatiFinaliDao.setFlagCreaFascicoloMs("S");
+				    lDatiFinaliDao.setFasSieIdFascicoloSiepMs(null);
+				} else {// caso -1 o
+				    lDatiFinaliDao.setFlagCreaFascicoloMs("N"); 
 					lDatiFinaliDao.setFasSieIdFascicoloSiepMs(null);
 				}
 			}
+			// MEV_2025-48 - ALTRO   
 
 			lDatiFinaliDao.update();
 

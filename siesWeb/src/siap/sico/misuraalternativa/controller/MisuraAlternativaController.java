@@ -64,7 +64,7 @@ import siap.sius.tenore.dao.TenoreDAO;
 import siap.sius.tenore.model.TenoreModel;
 
 /**
- * Title: MisuraAlternativaController Description: Classe Controller per MisuraAlternativa
+ * MisuraAlternativaController - Classe Controller per MisuraAlternativa
  *
  * @version 1.0
  */
@@ -1065,7 +1065,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 
 			if (lMisMod == null) {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-				siesLogger.error(
+				siesLogger.debug(
 						"+++++Non e' presente nessuna Misura Alternativa associata a quel fascicolo con quelle condizioni+++");
 			}
 		} catch (DAOException daoEx) {
@@ -3305,9 +3305,9 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			lConn = getDBTransaction();
 
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-			siesLogger.error("------------------->: lMisMDS.ExUpdateValidaMARevoca(): ");
+			siesLogger.debug("------------------->: lMisMDS.ExUpdateValidaMARevoca(): ");
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-			siesLogger.error("------------------->: aEvento: " + aEvento);
+			siesLogger.debug("------------------->: aEvento: " + aEvento);
 
 			// ** Aggiorna EVENTO **
 			lEveSqlDao = new EventoSqlDAO(lConn);
@@ -3316,7 +3316,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			String Motivo = lEveModel.getCodMotivo();
 
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-			siesLogger.error("------------------->: Motivo: " + Motivo);
+			siesLogger.debug("------------------->: Motivo: " + Motivo);
 
 			// cercaDecreto Sosp
 			lMisDao = new MisuraAlternativaDAO(lConn);
@@ -3350,7 +3350,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			String lCodPosizione = lPosMod.getCodPosizioneGiuridica();
 
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-			siesLogger.error("------------------->: lCodPosizione: " + lCodPosizione);
+			siesLogger.debug("------------------->: lCodPosizione: " + lCodPosizione);
 
 			// Aggiorna NOME_PROVVREDIMENTO
 
@@ -3363,20 +3363,12 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 				lNomProvvDAO.setCodNomeProvvedimento("NP043");
 			} else if (Motivo.equals("0091")) {
 				lNomProvvDAO.setCodNomeProvvedimento("NP044");
-			} else if (Motivo.equals("0196")) // indultino
-			{
+			} else if (Motivo.equals("0196")) { // indultino
 				lNomProvvDAO.setCodNomeProvvedimento("NP021");
-			} else if (Motivo.equals(ICostantiMisuraAlternativa.REVOCA_ESP_PRESSO_DOM_MOTIVO) || // Espiazione
-																									// Pena
-																									// presso
-																									// Domicilio
-					Motivo.equals(ICostantiMisuraAlternativa.REVOCA_ESP_PRESSO_DOM_MOTIVO_DAUDS)) // 05/10/2011
-																									// Espiazione
-																									// Pena
-																									// presso
-																									// Domicilio
-																									// da UDS
-			{
+			} else if (Motivo.equals(ICostantiMisuraAlternativa.REVOCA_ESP_PRESSO_DOM_MOTIVO) ||
+					// Espiazione Pena presso Domicilio
+					// 05/10/2011 Espiazione Pena presso Domicilio da UDS
+					Motivo.equals(ICostantiMisuraAlternativa.REVOCA_ESP_PRESSO_DOM_MOTIVO_DAUDS)) {
 				lNomProvvDAO.setCodNomeProvvedimento("NP021");
 			} else if (Motivo.equals("0000")) {
 				lNomProvvDAO.setCodNomeProvvedimento("NP045");
@@ -3457,7 +3449,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			String lRevocaCalcolo = null;
 
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-			siesLogger.error("------------------->: lRevocaCalcolo: " + lRevocaCalcolo);
+			siesLogger.debug("------------------->: lRevocaCalcolo: " + lRevocaCalcolo);
 
 			// Per Tipo Misura "INDULTINO" , "AFFIDAMENTO" e "ESPIAZIONE PENA PRESSO DOMICILIO"
 			if (lMisMDS.getCodTipoMisura().equals("0196") || lMisMDS.getCodTipoMisura().equals("0014")
@@ -3476,7 +3468,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			// Aggiorna Inserisci PENA_RESIDUA
 
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-			siesLogger.error("------------------->: lRevocaCalcolo: " + lRevocaCalcolo);
+			siesLogger.debug("------------------->: lRevocaCalcolo: " + lRevocaCalcolo);
 
 			PenaResiduaModel lPenResMod = new PenaResiduaModel();
 			lPenResMod = InserimentoAggiornamentoPenResMisuraAlternativa(lConn, lEveModel,
@@ -3568,7 +3560,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 				}
 
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-				siesLogger.error("------------------->: lPosizione " + lPosizione);
+				siesLogger.debug("------------------->: lPosizione " + lPosizione);
 
 				InserimentoAggiornamentoPosizioneGiuridica(lConn, lPosizione, lPosMod,
 						lEveModel.getDataEmissione(), lEveModel, aFascicolo.getIdFascicoloSiep(),
@@ -3600,7 +3592,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 							&& lMisMDS.getDataInizioMisura() != null)) {
 
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-				siesLogger.error("------------------->: getDataFine ");
+				siesLogger.debug("------------------->: getDataFine ");
 
 				if (lPenResMod != null && lPenResMod.getDataFine() != null) {
 					lMisDao.setDAOFromModelForUpdate(lMisMDS);
@@ -3874,7 +3866,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			// Aggiorna Inserisci PENA_RESIDUA
 			// ======================================
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-			siesLogger.error("------------------->: lRevocaCalcolo: " + lRevocaCalcolo);
+			siesLogger.debug("------------------->: lRevocaCalcolo: " + lRevocaCalcolo);
 
 			PenaResiduaModel lPenResMod = new PenaResiduaModel();
 			lPenResMod = InserimentoAggiornamentoPenResMisuraAlternativa(lConn, lEveModel,
@@ -3978,7 +3970,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 				}
 
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-				siesLogger.error("------------------->: lPosizione " + lPosizione);
+				siesLogger.debug("------------------->: lPosizione " + lPosizione);
 
 				InserimentoAggiornamentoPosizioneGiuridica(lConn, lPosizione, lPosMod,
 						lEveModel.getDataEmissione(), aEvento, aFascicolo.getIdFascicoloSiep(),
@@ -4016,7 +4008,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 							&& (lCodPosizione.equals("51") || lCodPosizione.equals("52")))) {
 
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-				siesLogger.error("------------------->: Data fine Misura Alternativa: ");
+				siesLogger.debug("------------------->: Data fine Misura Alternativa: ");
 
 				if (lPenResMod != null && lPenResMod.getDataFine() != null) {
 					lMisDao.setDAOFromModelForUpdate(lMisMDS);
@@ -4418,7 +4410,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			// {
 			//
 			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-			// siesLogger.error("------------------->: Data fine Misura Alternativa: " );
+			// siesLogger.debug("------------------->: Data fine Misura Alternativa: " );
 			//
 			// if (lPenResMod != null && lPenResMod.getDataFine() != null)
 			// {
@@ -5532,7 +5524,8 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			// lPenResMod.setEveIdEvento(lEveModel.getIdEvento());
 			// altera il test if (lPenResMod.getEveIdEvento() == null){...} che diventa sempre false
 			// La PR viene sempre duplicata anche quaindo non necessario.
-			// Comunque anche in assenza dell'errore il semplice test if (lPenResMod.getEveIdEvento() == null) {...}
+			// Comunque anche in assenza dell'errore il semplice test if (lPenResMod.getEveIdEvento() == null)
+			// {...}
 			// è ERRATO. la PR recuperata potrebbe già puntare l'evento corrente e in questo caso non
 			// andrebbe recuperata.
 			// ticket#202007070114 [D.F.]- Aggiorno i dati del model da restituire alla chiamante
@@ -5818,6 +5811,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			lStatoDao.setDataInserimento(lEveModel.getDataAggiornamento());
 			lStatoDao.setCodUfficioInserimento(lEveModel.getCodUfficioAggiornamento());
 			lStatoDao.insert();
+			lStatoDao.stop();
 		} finally {
 			cleanup(lStatoDao);
 		}

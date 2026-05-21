@@ -1,13 +1,5 @@
 package siap.siepe.fascicolo.action;
 
-/**
-* <p>Title: ActRicercaFasSiepePuntuale</p>
-* <p>Description: Classe Action per la ricerca puntuale del Fascicolo SIEPE</p>
-* <p>Copyright: Copyright (c) 2006</p>
-* <p>Company: Bull</p>
-* @version 1.0
-*/
-
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -33,16 +25,24 @@ import siap.sius.fascicolo.controller.IFascicoloSius;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.util.SIUSLookupRemote;
 
+/**
+ * ActRicercaFasSiepePuntuale - Classe Action per la ricerca puntuale del Fascicolo SIEPE
+ *
+ * @version 1.0
+ */
 public class ActRicercaFasSiepePuntuale extends ActionSius implements ICostantiFascicoloSiepe {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+
 	protected FascicoloSiepeEstesoModel mFasSEMod = null;// occorre ereditarlo
 
 	@SuppressWarnings("rawtypes")
 	public String processRequest() throws Exception {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getPackage().getName() + "ActRicercaFasSiepePuntuale: inizio");
+		siesLogger.debug(this.getClass().getName() + "ActRicercaFasSiepePuntuale: inizio");
 
 		String lRetPage = PG_LOAD_DETTAGLIOFASCICOLOSIEPE;
 
@@ -116,4 +116,5 @@ public class ActRicercaFasSiepePuntuale extends ActionSius implements ICostantiF
 
 		return lRetPage;
 	}
+
 }

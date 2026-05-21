@@ -84,7 +84,7 @@ RegeSentenzaModel lSentenza = new RegeSentenzaModel();
 			src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif"
 			alt="Stampa questa videata" border=0></a></td>
 		<td class="LBG"><font class="label">Funzione :</font>&nbsp; <font
-			class="campo">Modifica Estremi Decreto Penale Rege</font>
+			class="campo">Modifica Estremi Decreto Penale Rege</font></td>
 		<td class="LBG"><jsp:include
 			page="<%=IWebConstants.PG_TOOLBAR_HEADER%>">
 			<jsp:param name="CampoIdEntita"
@@ -96,7 +96,6 @@ RegeSentenzaModel lSentenza = new RegeSentenzaModel();
 			lAction = "siap.regesies.regesentenza.action.ActModificaRegeDecreto";
 			lSentenza = new RegeSentenzaModel(regesentenza);
 		%>
-		</td>
 	</tr>
 </table>
 <br>
@@ -174,7 +173,7 @@ RegeSentenzaModel lSentenza = new RegeSentenzaModel();
 	</tr>
 
 	<tr>
-		<td class="l">Anno/Numero Reg.Gen. GIP </font></td>
+		<td class="l">Anno/Numero Reg.Gen. GIP</td>
 		<td class="L"><input Title="Anno Re.Ge. GIP"
 			value="<%=StringUtils.intZerotoString( lSentenza.getAnnoRegeGip()) %>"
 			type="text" name="<%= ICostantiRegeSentenza.CAMPO_ANNO_REGE_GIP %>"
@@ -185,7 +184,6 @@ RegeSentenzaModel lSentenza = new RegeSentenzaModel();
 			maxlength="6" size="6"></td>
 	<tr>
 		<td class="Titolo" colspan=4>Decreto Penale da Eseguire</td>
-	</tr>
 	</tr>
 	<tr>
 		<td class="l">Data Decreto <font class="ob">(*)</font></td>
@@ -235,7 +233,7 @@ RegeSentenzaModel lSentenza = new RegeSentenzaModel();
 		<img src="/images/filefolder.gif" border=0> </a></td>
 	</tr>
 	<tr>
-		<td class="l">Sezione Autorità Emittente </font></td>
+		<td class="l">Sezione Autorità Emittente</td>
 		<td class="L" colspan=3><input Title="Sezione Autorità Emittente"
 			value="<%=StringUtils.toStringJSP(lSentenza.getNumSezioneAutoritaEmittente()) %>"
 			type="text"
@@ -250,7 +248,7 @@ RegeSentenzaModel lSentenza = new RegeSentenzaModel();
 		<td class="Titolo" colspan=4>Sentenza Cassazione</td>
 	</tr>
 	<tr>
-		<td class="l">Anno/Numero Sentenza</font></td>
+		<td class="l">Anno/Numero Sentenza</td>
 		<td class="L" colspan=3><input Title="Anno Sentenza Cassazione"
 			value="<%=StringUtils.intZerotoString( lSentenza.getAnnoSentenzaCassazione())%>"
 			type="text"
@@ -264,7 +262,7 @@ RegeSentenzaModel lSentenza = new RegeSentenzaModel();
 	</tr>
 
 	<tr>
-		<td class="l">Anno/Numero Raccolta Generale</font></td>
+		<td class="l">Anno/Numero Raccolta Generale</td>
 		<td class="L" colspan=3><input Title="Anno Raccolta Generale"
 			value="<%=StringUtils.intZerotoString( lSentenza.getAnnoRaccoltaGenerale())%>"
 			type="text"
@@ -279,7 +277,7 @@ RegeSentenzaModel lSentenza = new RegeSentenzaModel();
 
 	<tr>
 
-		<td class="l">Dispositivo Cassazione</font></td>
+		<td class="l">Dispositivo Cassazione</td>
 		<td class="L" colspan=3><select Title="Dispositivo Cassazione"
 			name="<%= ICostantiRegeSentenza.CAMPO_COD_TIPO_DECISIONE_CASSAZIONE %>">
 			<%=tipoDecisioneCassazione%>
@@ -379,7 +377,7 @@ RegeSentenzaModel lSentenza = new RegeSentenzaModel();
   frmvalidator.addValidation("<%= ICostantiRegeSentenza.CAMPO_COD_TIPO_AUTORITA_EMITTENTE %>","req","Il campo Autorità Emittente è obbligatorio");
 
   frmvalidator.addValidation("<%= ICostantiRegeSentenza.CAMPO_COD_LUOGO_EMITTENTE %>","req","Il campo Luogo Emittente è obbligatorio");
-  frmvalidator.addValidation("<%= ICostantiRegeSentenza.CAMPO_COD_LUOGO_EMITTENTE%>","alphabetic");
+<%--   frmvalidator.addValidation("<%= ICostantiRegeSentenza.CAMPO_COD_LUOGO_EMITTENTE%>","alphabetic"); --%>
 
   frmvalidator.addValidation("<%= ICostantiRegeSentenza.CAMPO_GIORNO_DATA_IRREVOCABILITA%>","req","Il campo Giorno della Data irrevocabilità è obbligatorio");
   frmvalidator.addValidation("<%= ICostantiRegeSentenza.CAMPO_GIORNO_DATA_IRREVOCABILITA%>","numeric");

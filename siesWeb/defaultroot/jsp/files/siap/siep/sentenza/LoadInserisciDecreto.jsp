@@ -147,7 +147,7 @@
   <% }%>
 	</tr>
 	<tr>
-		<td class="l">Anno/Numero Reg.Gen. GIP </font></td>
+		<td class="l">Anno/Numero Reg.Gen. GIP</td>
 		<td class="L">
 			<input Title="Anno Re.Ge. GIP" value="<%=StringUtils.toStringJSP( lSentenza.getAnnoRegeGip()) %>" type="text" name="<%= ICostantiSentenza.CAMPO_ANNO_REGE_GIP %>" 
 			maxlength="4" size="4" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)"> /
@@ -155,7 +155,6 @@
 		</td>
 	<tr>
 		<td class="Titolo" colspan=4>Decreto Penale da Eseguire</td>
-	</tr>
 	</tr>
 	<tr>
 		<td class="l">Data Decreto <font class="ob">(*)</font></td>
@@ -219,7 +218,7 @@
 			</td>
 	</tr>
 	<tr>
-		<td class="l">Sezione Autorità Emittente </font></td>
+		<td class="l">Sezione Autorità Emittente</td>
 		<td class="L" colspan=3>
 			<input Title="Sezione Autorità Emittente" value="<%=StringUtils.toStringJSP(lSentenza.getNumSezioneAutoritaEmittente()) %>" type="text" name="<%= ICostantiSentenza.CAMPO_NUM_SEZIONE_AUTORITA_EMITTENTE %>" maxlength="30" size="30">
 		</td>
@@ -230,7 +229,7 @@
 		<td class="Titolo" colspan=4>Sentenza Cassazione</td>
 	</tr>
 	<tr>
-		<td class="l">Anno/Numero Sentenza</font></td>
+		<td class="l">Anno/Numero Sentenza</td>
 		<td class="L" colspan=3>
 			<input Title="Anno Sentenza Cassazione" value="<%=StringUtils.toStringJSP( lSentenza.getAnnoSentenzaCassazione())%>" type="text" name="<%= ICostantiSentenza.CAMPO_ANNO_SENTENZA_CASSAZIONE %>" 
 			maxlength="4" size="4" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)"> /
@@ -239,7 +238,7 @@
 	</tr>
 
 	<tr>
-		<td class="l">Anno/Numero Raccolta Generale</font></td>
+		<td class="l">Anno/Numero Raccolta Generale</td>
 		<td class="L" colspan=3>
 			<input Title="Anno Raccolta Generale" value="<%=StringUtils.toStringJSP( lSentenza.getAnnoRaccoltaGenerale())%>" type="text" name="<%= ICostantiSentenza.CAMPO_ANNO_RACCOLTA_GENERALE %>" 
 			maxlength="4" size="4" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)"> /
@@ -249,7 +248,7 @@
 
 	<tr>
 
-		<td class="l">Dispositivo Cassazione</font></td>
+		<td class="l">Dispositivo Cassazione</td>
 		<td class="L" colspan=3>
 			<select Title="Dispositivo Cassazione" name="<%= ICostantiSentenza.CAMPO_COD_TIPO_DECISIONE_CASSAZIONE %>"> 
 				<%=tipoDecisioneCassazione%>
@@ -317,8 +316,7 @@
   frmvalidator.addValidation("<%= ICostantiSentenza.CAMPO_COD_TIPO_AUTORITA_EMITTENTE %>","dontselect=0");
 
   frmvalidator.addValidation("<%= ICostantiSentenza.CAMPO_COD_LUOGO_EMITTENTE %>","req","Il campo Luogo Emittente è obbligatorio");
-  frmvalidator.addValidation("<%= ICostantiSentenza.CAMPO_COD_LUOGO_EMITTENTE%>","alphabetic");
-
-      </script>
+<%--   frmvalidator.addValidation("<%= ICostantiSentenza.CAMPO_COD_LUOGO_EMITTENTE%>","alphabetic"); --%>
+</script>
 </body>
 </html>

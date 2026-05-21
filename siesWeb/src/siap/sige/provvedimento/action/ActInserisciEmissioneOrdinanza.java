@@ -43,20 +43,8 @@ import siap.sige.util.SIGELookupRemote;
 import siap.sige.web.ActionSige;
 
 /**
- * <p>
- * Title: ActInserisciEmissioneOrdinanza
- * </p>
- * <p>
- * Description: Classe Action per l'inserimento di emissione ordinanza SIGE.
- * </p>
- * <p>
- * Copyright: Copyright (c) 2008
- * </p>
- * <p>
- * Company:
- * </p>
+ * ActInserisciEmissioneOrdinanza - Classe Action per l'inserimento di emissione ordinanza SIGE
  * 
- * @author unascribed
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -399,7 +387,6 @@ public class ActInserisciEmissioneOrdinanza extends ActionSige implements ICosta
 
 	/**
 	 * Ritorna l'Ufficio dal tipo ufficio, codice comune
-	 * <p>
 	 * 
 	 * @param aCodTipoUfficio
 	 *            codice del tipo ufficio.

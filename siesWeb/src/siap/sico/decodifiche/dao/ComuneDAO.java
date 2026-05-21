@@ -124,12 +124,14 @@ public class ComuneDAO extends SIAPTableDAO {
 	//
 
 	public GenericModel getModel() throws DAOException {
+
 		return new ComuneModel(getCodComune(), getCodProvincia(), getDescrizione(), getCap(),
 				getDataCaricamentoRege(), getCodSedeGiudiziaria(), "", false, getFlagValidita(), 
 				getCodCatastaleComune(), getDataAggiornamentoComune(), getDataFineValiditaComune());
 	}
 
 	public void selCondizioni(ComuneModel aModel, String FlagVal) {
+
 		String lCondizioni = new String();
 		boolean inserito = false;
 
@@ -147,13 +149,16 @@ public class ComuneDAO extends SIAPTableDAO {
 			}
 		}
 
+		// Ticket#202510210160 - SIES: Anomalia nomi comuni - PROV. BOLZANO
+		// uppercase di JAVA trasforma VILLNÖß in VILLNOSS e non lo trova
+		// allora uso UPPER lato SQL
 		if ((aModel.getDescrizione() != null) && !(aModel.getDescrizione().equals(""))) {
 			if (inserito)
-				lCondizioni += " AND DESCRIZIONE = '" + StringUtils.convertSqlString(aModel.getDescrizione())
-						+ "'";
+				lCondizioni += " AND DESCRIZIONE = UPPER('" + StringUtils.convertSqlString(aModel.getDescrizione())
+						+ "')";
 			else {
-				lCondizioni = " DESCRIZIONE = '" + StringUtils.convertSqlString(aModel.getDescrizione())
-						+ "'";
+				lCondizioni = " DESCRIZIONE = UPPER('" + StringUtils.convertSqlString(aModel.getDescrizione())
+						+ "')";
 				inserito = true;
 			}
 		} else {
@@ -203,13 +208,16 @@ public class ComuneDAO extends SIAPTableDAO {
 	}
 
 	public void selCondizioniLike(ComuneModel aModel) {
+
 		String lCondizioni = new String();
 		lCondizioni += "";
-		// boolean inserito = false;
 
+		// Ticket#202510210160 - SIES: Anomalia nomi comuni - PROV. BOLZANO
+		// uppercase di JAVA trasforma VILLNÖß in VILLNOSS e non lo trova
+		// allora uso UPPER lato SQL
 		if ((aModel.getDescrizione() != null) && !(aModel.getDescrizione().equals("")))
-			lCondizioni += " DESCRIZIONE LIKE '" + StringUtils.convertSqlString(aModel.getDescrizione())
-					+ "%' AND FLAG_VALIDITA = 'S'";
+			lCondizioni += " DESCRIZIONE LIKE UPPER('" + StringUtils.convertSqlString(aModel.getDescrizione())
+					+ "%') AND FLAG_VALIDITA = 'S'";
 		else if (aModel.getCodProvincia() != null)
 			lCondizioni += " COD_PROVINCIA = '" + aModel.getCodProvincia() + "' AND FLAG_VALIDITA = 'S'";
 
@@ -219,17 +227,21 @@ public class ComuneDAO extends SIAPTableDAO {
 
 	// 20210517	MEV_21
 	public void selCondizioniNascita(ComuneModel aModel) {
+
 		String lCondizioni = new String();
 		lCondizioni += "";
 
+		// Ticket#202510210160 - SIES: Anomalia nomi comuni - PROV. BOLZANO
+		// uppercase di JAVA trasforma VILLNÖß in VILLNOSS e non lo trova
+		// allora uso UPPER lato SQL
 		if ((aModel.getDescrizione() != null) && !(aModel.getDescrizione().equals("")))
-			lCondizioni += " DESCRIZIONE LIKE '" + StringUtils.convertSqlString(aModel.getDescrizione())
-					+ "%' ";
+			lCondizioni += " DESCRIZIONE LIKE UPPER('" + StringUtils.convertSqlString(aModel.getDescrizione())
+					+ "%')";
 		else if (aModel.getCodProvincia() != null)
 			lCondizioni += " COD_PROVINCIA = '" + aModel.getCodProvincia() + "'";
 
 		// 20210721	Condizione di esclusione NAPOLI NORD
-		lCondizioni += " AND NOT (DATA_FINE_VALIDITA_COMUNE is NULL AND FLAG_VALIDITA = 'N' ) ";
+		lCondizioni += " AND NOT (DATA_FINE_VALIDITA_COMUNE is NULL AND FLAG_VALIDITA = 'N')";
 
 		lCondizioni += " ORDER BY DESCRIZIONE ASC, DATA_FINE_VALIDITA_COMUNE DESC";
 		setCondition(lCondizioni);

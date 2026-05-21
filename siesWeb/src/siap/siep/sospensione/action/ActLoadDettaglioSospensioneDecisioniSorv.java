@@ -178,5 +178,5 @@ public class ActLoadDettaglioSospensioneDecisioniSorv extends ActMisuraAlternati
 		// pagina di ritorno
 		return PG_LOAD_DETTAGLIO_SOSPENSIONE_DECISIONI_SORVEGLIANZA;
 	}
-	
+
 }

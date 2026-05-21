@@ -178,7 +178,7 @@
   
   frmvalidator.addValidation("<%=ICostantiIstruttoria.SEDE_AUTORITA_DESTINATARIO%>", "req","Il campo Sede è obbligatorio");
   frmvalidator.addValidation("<%=ICostantiIstruttoria.SEDE_AUTORITA_DESTINATARIO%>","maxlen=35","La lunghezza massima per la Sede è di 35 caratteri");
-  frmvalidator.addValidation("<%=ICostantiIstruttoria.SEDE_AUTORITA_DESTINATARIO%>","alpha");
+<%--   frmvalidator.addValidation("<%=ICostantiIstruttoria.SEDE_AUTORITA_DESTINATARIO%>","alpha"); --%>
   
  </script>
 

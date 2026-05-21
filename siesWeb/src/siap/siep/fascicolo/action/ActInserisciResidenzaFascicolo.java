@@ -2,9 +2,6 @@ package siap.siep.fascicolo.action;
 
 import java.math.BigDecimal;
 
-import org.apache.log4j.Logger;
-
-import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
 import f3b.web.IWebConstants;
@@ -28,12 +25,9 @@ import siap.siep.util.SIEPLookupRemote;
  */
 public class ActInserisciResidenzaFascicolo extends ActionSiap implements ICostantiResidenza {
 	
-	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
-	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
-	
 	/**
 	 * Azione di Inserimento della Residenza
-	 * 
+	 *
 	 * @return Nome della pagina JSP da visualizzare al termine dell'elaborazione
 	 * @throws F3BException
 	 */
@@ -55,20 +49,17 @@ public class ActInserisciResidenzaFascicolo extends ActionSiap implements ICosta
 
 		// String lDescrComune = getRequestStringParameter(CAMPO_DESCR_COMUNE);
 
-		/* 20210531	MEV_Scheda-21 Correzione Comune Residenza per omonimie dei Comuni con flag validità.
-		if (getRequestStringParameter(CAMPO_DESCR_COMUNE).length() > 1) {
-			ComuneModel lComMod = new ComuneModel(
-					// 20210524	MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni.
-					//getCodComuneByDescrFlagVal(getRequestStringParameter(CAMPO_DESCR_COMUNE)));
-					getDatiComuneByDescrOmonimiaFlagVal(getRequestStringParameter(CAMPO_DESCR_COMUNE)));
-			lResMod.setCodComune(lComMod.getCodComune());
-			lResMod.setCodProvincia(lComMod.getCodProvincia());
-		} else {
-			lResMod.setCodProvincia("-");
-			lResMod.setCodComune("-");
-		} */
+		/*
+		 * 20210531 MEV_Scheda-21 Correzione Comune Residenza per omonimie dei Comuni con flag validità. if
+		 * (getRequestStringParameter(CAMPO_DESCR_COMUNE).length() > 1) { ComuneModel lComMod = new
+		 * ComuneModel( // 20210524 MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni.
+		 * //getCodComuneByDescrFlagVal(getRequestStringParameter(CAMPO_DESCR_COMUNE)));
+		 * getDatiComuneByDescrOmonimiaFlagVal(getRequestStringParameter(CAMPO_DESCR_COMUNE)));
+		 * lResMod.setCodComune(lComMod.getCodComune()); lResMod.setCodProvincia(lComMod.getCodProvincia()); }
+		 * else { lResMod.setCodProvincia("-"); lResMod.setCodComune("-"); }
+		 */
 
-		// 20210531	MEV_Scheda-21 Correzione Comune Residenza per omonimie dei Comuni con flag validità.
+		// 20210531 MEV_Scheda-21 Correzione Comune Residenza per omonimie dei Comuni con flag validità.
 		// Recupero dati del Comune di residenza
 		ComuneModel lComMod;
 		if (!isRequestParameterNullObj(ICostantiComune.CAMPO_COD_COMUNE_REALE)
@@ -82,7 +73,10 @@ public class ActInserisciResidenzaFascicolo extends ActionSiap implements ICosta
 			lComMod = new ComuneModel(
 					getDatiComuneByDescrOmonimiaFlagVal(getRequestStringParameter(CAMPO_DESCR_COMUNE)));
 		}
-		siesLogger.info(lComMod != null ? lComMod.getCodComune() : "");
+		// 20250612 [SG]: risolto problema ricerca soggetto col "-" pari al cod comune nascita
+		// Ticket#20250612016 - SIES - ricerche soggetto
+		lResMod.setCodComune(lComMod.getCodComune());
+		lResMod.setCodProvincia(lComMod.getCodProvincia());
 
 		lResMod.setCap(getRequestStringParameter(CAMPO_CAP));
 		lResMod.setIndirizzo(getRequestStringParameter(CAMPO_INDIRIZZO));
@@ -94,7 +88,7 @@ public class ActInserisciResidenzaFascicolo extends ActionSiap implements ICosta
 		lResMod.setDataInserimento(DateUtils.getSysDate());
 		lResMod.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
 		lResMod.setDescComuneEstero(getRequestStringParameter(CAMPO_DESC_COMUNE_ESTERO));
-		// NON é SULLA TABELLA RESIDENZA LA VALIDITA' lResMod.setDataInizioValidita( DateUtils.getSysDate() );
+		// NON é SULLA TABELLA RESIDENZA LA VALIDITA' lResMod.setDataInizioValidita(DateUtils.getSysDate());
 		lResMod.setSogIdSoggetto(lIdSoggetto);
 		lResMod.setIdResidenza(lIdResidenza);
 

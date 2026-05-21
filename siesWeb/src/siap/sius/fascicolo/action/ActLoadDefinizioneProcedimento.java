@@ -22,7 +22,11 @@ import siap.sius.util.SIUSLookupRemote;
 /**
  * Description: Azione adibita all'operazione di Definizione del Procedimento SIUS. Se il Fascicolo risulta
  * già Definito viene presentato il Dettaglio della Definizione. Se il Fascicolo è in uno degli stati:
+<<<<<<< HEAD
  * Unificato o Emesso Provvedimento, viene lanciata una Eccezione di Warning, negli altri casi viene 
+=======
+ * Unificato o Emesso Provvedimento, viene lanciata una Eccezione di Warning, negli altri casi viene
+>>>>>>> release_12.9.3.0
  * presentata la form di input per la Definizione.
  *
  * @version 1.0

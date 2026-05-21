@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
 import siap.jms.ICostantiJMS;
 import siap.jms.SIAPSender;
 import siap.jms.messaggio.model.MessaggioModel;
@@ -13,25 +15,11 @@ import siap.sico.web.ActionSiap;
 import siap.siepe.fascicolo.model.FascicoloSiepeEstesoModel;
 import siap.siepe.jms.controller.ITrasmissioneJMS;
 import siap.siepe.util.SIEPELookupRemote;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
 
 /**
- * <p>
- * Title: ActTrasferisciAttivita
- * </p>
- * <p>
- * Description: L'Azione impacchetta i dati da inviare nel messaggio, poi attiva l'invio del messaggio stesso
- * ai destinatari.
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: bull
- * </p>
- * 
- * @author not attributable
+ * ActTrasferisciAttivita - Classe action che impacchetta i dati da inviare nel messaggio, poi attiva l'invio
+ * del messaggio stesso ai destinatari.
+ *
  * @version 1.0
  */
 public class ActTrasferisciAttivita extends ActionSiap implements ICostantiJMS {
@@ -43,19 +31,20 @@ public class ActTrasferisciAttivita extends ActionSiap implements ICostantiJMS {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getPackage().getName() + ".ActTrasferisciAttivita: inizio");
+		siesLogger.debug(getClass().getName() + ".ActTrasferisciAttivita: inizio");
 
 		BigDecimal lIdAttivita = getRequestBigDecimalParameter(ICostantiAttivita.CAMPO_ID_ATTIVITA);
 
 		// Lettura dei dati in sessione
-		FascicoloSiepeEstesoModel lFascicoloEsteso = (FascicoloSiepeEstesoModel) getSessionAttribute("FascicoloSiepeEsteso");
+		FascicoloSiepeEstesoModel lFascicoloEsteso = (FascicoloSiepeEstesoModel) getSessionAttribute(
+				"FascicoloSiepeEsteso");
 
 		// Determinazione dei dati del Destinatario
 		String lCodUfficioDestinatario = getRequestStringParameter(ICostantiUfficio.CAMPO_COD_UFFICIO);
 		UfficioModel lUfficioDestinatario = getUfficioByCodUfficio(lCodUfficioDestinatario);
 		UfficioModel lBDIDestinatario = getUfficioByCodUfficio(lUfficioDestinatario.getCodDistretto());
 
-//		boolean inviato = false; // flag di controllo invio messaggio.
+		// boolean inviato = false; // flag di controllo invio messaggio.
 
 		// Dati BDI mittente.
 		UfficioModel lBDIMittente = getUfficioByCodUfficio(getUfficioUtenteConnesso().getCodDistretto());
@@ -92,10 +81,10 @@ public class ActTrasferisciAttivita extends ActionSiap implements ICostantiJMS {
 		// RIFERIMENTI FASCICOLO SIUS
 		if (lFascicoloEsteso.getFascicoloSius() != null
 				&& lFascicoloEsteso.getFascicoloSius().getFascicoloSiusModel() != null) {
-			lMessage.setChiaveAnnoSius(lFascicoloEsteso.getFascicoloSius().getFascicoloSiusModel()
-					.getChiaveAnno());
-			lMessage.setChiaveProgrSius(lFascicoloEsteso.getFascicoloSius().getFascicoloSiusModel()
-					.getChiaveProgr());
+			lMessage.setChiaveAnnoSius(
+					lFascicoloEsteso.getFascicoloSius().getFascicoloSiusModel().getChiaveAnno());
+			lMessage.setChiaveProgrSius(
+					lFascicoloEsteso.getFascicoloSius().getFascicoloSiusModel().getChiaveProgr());
 		}
 		// RIFERIMENTI FASCICOLO SIEP
 		if (lFascicoloEsteso.getFascicoloSiep() != null) {
@@ -113,19 +102,19 @@ public class ActTrasferisciAttivita extends ActionSiap implements ICostantiJMS {
 		}
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug("MESSAGGIO DA SPEDIRE A " + lBDIDestinatario.getDescrComune() + " : "
-				+ lMessage.toString());
+		siesLogger.debug(
+				"MESSAGGIO DA SPEDIRE A " + lBDIDestinatario.getDescrComune() + " : " + lMessage.toString());
 
 		SIAPSender lSender = new SIAPSender();
 		lSender.send(lMessage);
-//		inviato = true;
+		// inviato = true;
 
 		String lPage = ritornoDopoCancellazione("La trasmissione Attività è stata sottoposta al sistema!",
 				null);
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(getClass().getPackage().getName() + ".ActTrasferisciAttivita: fine");
+		siesLogger.debug(getClass().getName() + ".ActTrasferisciAttivita: fine");
 
 		return lPage;
 	}

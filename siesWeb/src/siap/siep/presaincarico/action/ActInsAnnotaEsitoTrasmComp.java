@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.apache.log4j.Logger;
+
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
@@ -17,27 +19,24 @@ import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
-import siap.sico.jms.model.PresaInCaricoModel;
-import siap.siep.SIEPException;
-import siap.siep.jms.controller.IPresaInCaricoJMS;
 import siap.sico.magistrato.action.ICostantiMagistrato;
 import siap.sico.ufficio.model.UfficioModel;
 import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
+import siap.siep.SIEPException;
 import siap.siep.annotazioneesitotrasmissione.action.ICostantiAnnotazioneEsitoTrasmissione;
 import siap.siep.annotazioneesitotrasmissione.model.AnnotazioneEsitoTrasmissioneModel;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.istruttoriacumulo.controller.IIstruttoriaCumulo;
+import siap.siep.jms.controller.IPresaInCaricoJMS;
 import siap.siep.ordineesecuzione.controller.IOrdineEsecuzione;
 import siap.siep.util.SIEPLookupRemote;
-
-import org.apache.log4j.Logger;
 
 /**
  * Action di inserimento dell'annotazione Esito Trasmissione atti per competenza Cumulo
  * 
  * @author d.fiorletta
- *
+ * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ActInsAnnotaEsitoTrasmComp extends ActionSiap
@@ -176,18 +175,7 @@ public class ActInsAnnotaEsitoTrasmComp extends ActionSiap
 				try {
 					MessaggioModel lMessIns = new MessaggioModel(lMess);
 					IPresaInCaricoJMS lPres = SIEPLookupRemote.getPresaInCarico();
-				  
-					// MEV_2024-DNA - Si passano al controller anche le informazione su data utente e ufficio 
-			    //                che precede alla presa in carico
-			    PresaInCaricoModel lPresaIncaricoModel = new PresaInCaricoModel();
-			    lPresaIncaricoModel.setDataPresaInCarico (DateUtils.getSysDate());
-			    lPresaIncaricoModel.setCodOperatorePresaInCarico (getCodUtenteConnesso());
-			    lPresaIncaricoModel.setCodUfficioPresaInCarico (getCodUfficioUtenteConnesso());
-			    
-					// /* lMessReturn = */lPres.ExInserisciFascicoloSiep(lMessIns);
-					/* lMessReturn = */lPres.ExInserisciFascicoloSiep(lMessIns, lPresaIncaricoModel);
-					// MEV_2024-DNA - FINE
-					
+					/* lMessReturn = */lPres.ExInserisciFascicoloSiep(lMessIns);
 					// n.b. l'esito dell'acquisizione viene registrato in lMessReturn.getRapportoEsito();
 				} catch (F3BException ex) {
 					siesLogger.error("Exception >>> " + ex, ex);
@@ -227,10 +215,10 @@ public class ActInsAnnotaEsitoTrasmComp extends ActionSiap
 					if(lMess.getDataEsito()!= null)
 						lAnnEsitoModel.setDataEsito(lMess.getDataEsito());
 					else
-						lAnnEsitoModel.setDataEsito(getRequestDateParameter(CAMPO_ANNO_DATA_ESITO, CAMPO_MESE_DATA_ESITO,
-								CAMPO_GIORNO_DATA_ESITO));
-					lAnnEsitoModel.setDataTrasmissione(getRequestDateParameter(CAMPO_ANNO_DATA_ESITO, CAMPO_MESE_DATA_ESITO,
-							CAMPO_GIORNO_DATA_ESITO));									
+					lAnnEsitoModel.setDataEsito(getRequestDateParameter(CAMPO_ANNO_DATA_ESITO,
+							CAMPO_MESE_DATA_ESITO, CAMPO_GIORNO_DATA_ESITO));
+				lAnnEsitoModel.setDataTrasmissione(getRequestDateParameter(CAMPO_ANNO_DATA_ESITO,
+						CAMPO_MESE_DATA_ESITO, CAMPO_GIORNO_DATA_ESITO));
 			}		
 		}		
 

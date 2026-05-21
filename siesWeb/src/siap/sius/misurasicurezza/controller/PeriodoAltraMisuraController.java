@@ -664,4 +664,35 @@ public class PeriodoAltraMisuraController extends SiapController implements IPer
 		return lProvvVec;
 	} // CHIUDE ExRicercaProvvedimentoEventoByFascicoloSiep
 
+	/**
+	 * Ticket#202602170130 - Si aggiunge metodo per recuperare i dati per IdEventoSIUS
+	 * @param aKeyEventoSius
+	 * @throws DAOException
+	 */
+	public ProvvedimentoEventoTenoreFascicoloSiusModel ExRicercaProvvedimentoEventoByIdEvento(BigDecimal aIdEventoSIUS) throws F3BException {
+
+		Connection lConn = null;
+		PeriodoAltraMisuraSqlDAO lPAMDao = null;
+		ProvvedimentoEventoTenoreFascicoloSiusModel lProvvMod = null;
+		try {
+			lConn = getDBConnection();
+			lPAMDao = new PeriodoAltraMisuraSqlDAO(lConn);
+			lPAMDao.ricercaProvvedimentoMisSicByIdFascicoloEvento(aIdEventoSIUS);
+			
+			lPAMDao.start();
+			lPAMDao.next();
+			lProvvMod = (ProvvedimentoEventoTenoreFascicoloSiusModel) lPAMDao.getModelEsitoMisSic();
+			lPAMDao.stop();
+		} catch (DAOException daoEx) {
+			siesLogger.debug("DAOException: ", daoEx);
+			throw new F3BException(
+					"PeriodoAltraMisuraController.ExRicercaProvvedimentoEventoByIdEvento: Non posso leggere : "
+							+ daoEx);
+		} finally {
+			cleanup(lPAMDao);
+			cleanup(lConn);
+		}
+
+		return lProvvMod;
+	}
 }

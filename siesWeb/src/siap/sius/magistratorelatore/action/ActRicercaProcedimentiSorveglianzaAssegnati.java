@@ -1,8 +1,10 @@
 package siap.sius.magistratorelatore.action;
 
+import java.math.BigDecimal;
 import java.util.Vector;
 
 import f3b.util.F3BException;
+import f3b.web.IWebConstants;
 import siap.sico.magistrato.action.ICostantiMagistrato;
 import siap.sico.magistrato.controller.IMagistrato;
 import siap.sico.magistrato.model.MagistratoModel;
@@ -39,28 +41,44 @@ public class ActRicercaProcedimentiSorveglianzaAssegnati extends ActionSiap
 		// Effettuo la ricerca dei fascicoli (Iscritti/Validati) dell'ufficio dell'utente
 		// connesso, assegnati attualmente al Magistrato specificato
 		// ==========================================================================
-		String lCodUfficio = this.getCodUfficioUtenteConnesso();
+		String lCodUfficio = getCodUfficioUtenteConnesso();
 		String lStato[] = { "02", "03", "10" };
+
+		// MEV_2025-48: aggiunta nuova funzionalita': paginata la ricerca
+		String lPagina = "1";
+		if (!isRequestParameterNullObj(IWebConstants.NUM_PAGE))
+			lPagina = getRequestStringParameter(IWebConstants.NUM_PAGE);
 
 		Vector lListaProcedimenti = null;
 		Vector lListaSoggetti = new Vector();
 
-		IFascicoloSius lFascSiusCtrl = SIUSLookupRemote.getFascicoloSiusRemote();
-		lListaProcedimenti = lFascSiusCtrl.ExRicercaFascicoliByMagistratoSorvAssegnatario(lCodMagistrato,
-				lCodUfficio, lStato);
-
+		IFascicoloSius ifs = SIUSLookupRemote.getFascicoloSiusRemote();
+		lListaProcedimenti = ifs.ExRicercaFascicoliByMagistratoSorvAssegnatarioPaged(lCodMagistrato,
+				lCodUfficio, lStato, Integer.parseInt(lPagina));
 		setRequestAttribute("aListaProcedimenti", lListaProcedimenti);
 
+		BigDecimal CountRisultati;
+		if (isRequestParameterNullObj("CountRisultati")) {
+			CountRisultati = ifs.ExGetCountProcedimenti(lCodMagistrato, lCodUfficio, lStato);
+		} else
+			CountRisultati = getRequestBigDecimalParameter("CountRisultati");
+
 		if (lListaProcedimenti != null) {
-			ISoggetto lSoggettoCtrl = SICOLookupRemote.getSoggettoRemote();
+			ISoggetto is = SICOLookupRemote.getSoggettoRemote();
 			for (int i = 0; i < lListaProcedimenti.size(); i++) {
 				FascicoloSiusModel lFascicolo = (FascicoloSiusModel) lListaProcedimenti.elementAt(i);
-				SoggettoModel lSoggetto = lSoggettoCtrl.ExRicercaSoggettoByKey(lFascicolo.getSogIdSoggetto());
+				SoggettoModel lSoggetto = is.ExRicercaSoggettoByKey(lFascicolo.getSogIdSoggetto());
 				lListaSoggetti.addElement(lSoggetto);
 			}
 			setRequestAttribute("aListaSoggetti", lListaSoggetti);
 		}
 
+		setRequestAttribute("CountRisultati", CountRisultati);
+		setRequestAttribute("totaleProcedimenti", "" + CountRisultati);
+		setRequestAttribute(IWebConstants.NUM_PAGE, lPagina);
+		setRequestAttribute(IWebConstants.REQUEST_FOR_PAGING, getCompleteRequestURL());
+
+		// pagina di ritorno
 		return PG_ESITO_RICERCAPROCEDIMENTI_SORVEGLIANZA;
 	}
 

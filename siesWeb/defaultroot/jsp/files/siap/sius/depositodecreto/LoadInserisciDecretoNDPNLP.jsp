@@ -196,8 +196,6 @@ if (lRicerca.verificaEsistenzaSospensione())
 
     // Controllo campo oggetto.
     frmvalidator.addValidation("<%=ICostantiFascicoloSius.CAMPO_DESCR_OGGETTO%>", "req","E' necessario selezionare almeno un oggetto");
-
-  </script>
-
-  </body>
+</script>
+</body>
 </html>

@@ -48,20 +48,8 @@ import siap.siep.statoprocedimento.model.StatoProcedimentoModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * <p>
- * Title: OrdineEsecuzioneAlfanoController
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2010
- * </p>
- * <p>
- * Company:
- * </p>
+ * OrdineEsecuzioneAlfanoController - Classe Controllore per OE Alfano
  *
- * @author not attributable
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -719,7 +707,10 @@ public class OrdineEsecuzioneAlfanoController extends SiapController implements 
 			lPosGiuDao = new PosizioneGiuridicaDAO(lConn);
 
 			// 10/2013 -- Aggiorno Pos Giu se O.E L78/2013
-			if (aEvento.getCodMotivo().equals("1024")) {
+			// Ticket#202511060155 — SIEP
+			// il cod motivo si recupera dal DB e non dall'evento in input
+			//if (aEvento.getCodMotivo().equals("1024")) {
+			if (lEveApp.getCodMotivo().equals("1024")) {
 				lPosGiuDao.setIdPosizioneGiuridica(lPosMod.getIdPosizioneGiuridica());
 				lPosGiuDao.setDataFine(DateUtils.getSysDate());
 				// lPosGiuDao.setDataFine(aEvento.getDataEmissione());
@@ -784,7 +775,10 @@ public class OrdineEsecuzioneAlfanoController extends SiapController implements 
 				lPenDao.insert();
 			}
 
-			if (aEvento.getCodMotivo().equals("1024"))
+	        // Ticket#202511060155 — SIEP
+            // il cod motivo si recupera dal DB e non dall'evento in input
+            //if (aEvento.getCodMotivo().equals("1024"))
+            if (lEveApp.getCodMotivo().equals("1024"))
 				lStatoProcMod.setCodStatoProcedimento("0509");
 			else if (lCodPosizione.equals("70"))
 				lStatoProcMod.setCodStatoProcedimento("0551");
@@ -812,7 +806,10 @@ public class OrdineEsecuzioneAlfanoController extends SiapController implements 
 			NomeProvvedimentoModel lNomProvMod = new NomeProvvedimentoModel();
 			lNomProvDao = new NomeProvvedimentoDAO(lConn);
 
-			if (aEvento.getCodMotivo().equals("1024"))
+	        // Ticket#202511060155 — SIEP
+            // il cod motivo si recupera dal DB e non dall'evento in input
+            //if (aEvento.getCodMotivo().equals("1024"))
+            if (lEveApp.getCodMotivo().equals("1024"))
 				lNomProvMod.setCodNomeProvvedimento("NP239");
 			else
 				lNomProvMod.setCodNomeProvvedimento("NP238");

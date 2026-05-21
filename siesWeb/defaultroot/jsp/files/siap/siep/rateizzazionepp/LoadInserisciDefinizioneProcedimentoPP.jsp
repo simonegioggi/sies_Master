@@ -44,45 +44,45 @@
 <jsp:useBean id="flagergastolo" scope="request" class="java.lang.String"/>
 
 <%
-FascicoloSiepModel lFascicoloAssociato = (FascicoloSiepModel) session.getAttribute("fascicolo");
-PosizioneGiuridicaModel lPosizione = posizioneluogoaltra.getPosizioneGiuridica();
-LuogoDetenzioneModel lLuogoDetenzione = posizioneluogoaltra.getLuogoDetenzione();
-AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
+FascicoloSiepModel fsm = (FascicoloSiepModel) session.getAttribute("fascicolo");
+PosizioneGiuridicaModel pgm = posizioneluogoaltra.getPosizioneGiuridica();
+AltraCausaModel acm = posizioneluogoaltra.getAltraCausa();
+
+if (pgm == null)
+	pgm = new PosizioneGiuridicaModel();
+
+if (acm == null)
+	acm = new AltraCausaModel();
 
 Date dataEmissione   = DateUtils.getSysDate();
 Date dataRicezione   = DateUtils.getSysDate();
 Date dataDefinizione = null;
 String sedeAutEst = "";
 String indAutEst = "";
-if (archiviazione.getIdArchiviazione()!=null){
-  dataEmissione    = archiviazione.getDataEmissione();
-  dataRicezione    = archiviazione.getDataRicezione();
-  dataDefinizione  = archiviazione.getDataDefinizione();
-  sedeAutEst       = archiviazione.getDescrLuogoEmittente();
-  indAutEst        = archiviazione.getIndirizzoEmittente();
+if (archiviazione.getIdArchiviazione() != null) {
+	dataEmissione    = archiviazione.getDataEmissione();
+	dataRicezione    = archiviazione.getDataRicezione();
+	dataDefinizione  = archiviazione.getDataDefinizione();
+	sedeAutEst       = archiviazione.getDescrLuogoEmittente();
+	indAutEst        = archiviazione.getIndirizzoEmittente();
 }
 
-SoggettoModel lSoggettoAssociato = lFascicoloAssociato.getSoggetto();
+SoggettoModel lSoggettoAssociato = fsm.getSoggetto();
 
 UtenteModel lUtenteMod = new UtenteModel((UtenteModel) session.getAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO));
 UfficioModel lUfficioUtenteConnesso = lUtenteMod.getUfficioUtente();
- 
 String lCasellario = lUfficioUtenteConnesso.getDescrComune();
 
-if( lSoggettoAssociato != null 
-    && 
-      (    lSoggettoAssociato.getCodStatoNascita() == null
-        ||  "".equals(lSoggettoAssociato.getCodStatoNascita()) 
-        || "-".equals(lSoggettoAssociato.getCodStatoNascita())
-       )
-   )
-{
-  lCasellario = "-";
+if (lSoggettoAssociato != null
+		&& (lSoggettoAssociato.getCodStatoNascita() == null
+		||  "".equals(lSoggettoAssociato.getCodStatoNascita())
+		|| "-".equals(lSoggettoAssociato.getCodStatoNascita()))) {
+	lCasellario = "-";
 }
 
-if (eventonotifica.getNotifiche()!=null && eventonotifica.getNotifiche().length>0){
+if (eventonotifica.getNotifiche() != null && eventonotifica.getNotifiche().length > 0) {
 	// Sto in modifica
-  lCasellario = eventonotifica.getNotifiche()[0].getAutoritaEsterna().getDescrSede();
+	lCasellario = eventonotifica.getNotifiche()[0].getAutoritaEsterna().getDescrSede();
 }
 %>
 <html>
@@ -251,13 +251,13 @@ if ("I".equals(modalita)) {
     <td class="L">
       <font class="campo">
 <%
-if (lFascicoloAssociato.getFlagAltraCausa() != null && lFascicoloAssociato.getFlagAltraCausa().equals("S")) {
+if (fsm.getFlagAltraCausa() != null && fsm.getFlagAltraCausa().equals("S")) {
 %>
-        DETENUTO PER ALTRA CAUSA - <%=lAltraCausa.getDescrTipoPosGiuridica()%>
+        DETENUTO PER ALTRA CAUSA - <%=acm.getDescrTipoPosGiuridica()%>
 <%
 } else {
 %>
-        <%=lPosizione.getDescrPosizioneGiuridica()%>
+        <%=pgm.getDescrPosizioneGiuridica()%>
 <%
 }
 %>

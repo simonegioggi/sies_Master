@@ -10,7 +10,7 @@ import siap.sico.decodifiche.model.ComuneModel;
 import siap.siep.avvocato.model.AvvocatoModel;
 
 /**
- * MEV_21_ aggiunta classe di utility per calcolare il luogo di nascita avvocati reginde
+ * MEV_21: aggiunta classe di utility per calcolare il luogo di nascita avvocati reginde
  *
  * @author sgioggi
  */
@@ -18,9 +18,8 @@ public class AvvocatoUtil {
 
 	public static ComuneModel calcolaComuneNascita(String cf) throws F3BException {
 
-		if (cf.length()<16) {
-			throw new SICOException(SICOException.USER_MESSAGE,
-					"Codice Fiscale "+cf+" non valido");
+		if (cf.length() < 16) {
+			throw new SICOException(SICOException.USER_MESSAGE, "Codice Fiscale " + cf + " non valido");
 		}
 		// Codice Comune Catastale
 		String ccc = cf.substring(11, 15).toUpperCase();
@@ -32,7 +31,8 @@ public class AvvocatoUtil {
 		for (int i = 3; i > 0; i--) {
 			char ch = ccc.charAt(i);
 			if (Character.isDigit(ch))
-				break;
+				// break;	Ticket#20250707018 - SIEP - reginde
+				continue;
 			String s = Character.toString(ch);
 			Matcher m = p.matcher(s);
 			if (!m.matches())
@@ -43,13 +43,13 @@ public class AvvocatoUtil {
 			// ricavo il comune dal COD_CATASTALE_COMUNE
 			IComune ic = SICOLookupRemote.getComuneRemote();
 			ComuneModel cm = new ComuneModel(ic.ExRicercaComuneByCodCatastale(ccc));
-	
+
 			// valore di ritorno
 			return cm;
 		} catch (Exception ex) {
 			throw new F3BException(ex);
 		}
-			
+
 	}
 
 	private static char sostituisciCarattere(char ch) {

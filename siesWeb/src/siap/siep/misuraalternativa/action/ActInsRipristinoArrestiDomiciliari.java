@@ -372,7 +372,6 @@ public class ActInsRipristinoArrestiDomiciliari extends ActRipristino {
 			lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
 					+ "=siap.siep.misuraalternativa.action.ActDettaglioRipristinoArrestiDomiciliari&"
 					+ ICostantiEvento.CAMPO_ID_EVENTO + "=" + lRetModel.getEvento().getIdEvento();
-
 		}
 		return lPage;
 	}

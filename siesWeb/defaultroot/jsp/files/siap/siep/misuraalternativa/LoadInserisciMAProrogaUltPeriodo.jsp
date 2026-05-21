@@ -954,8 +954,8 @@ else
 <%
  }%>
 
- frmvalidator.addValidation("<%= ICostantiMisuraAlternativa.CAMPO_SEDE_POL_C %>","alphabetic");
- frmvalidator.addValidation("<%= ICostantiMisuraAlternativa.CAMPO_SEDE_TDS %>","alphabetic");
+<%--  frmvalidator.addValidation("<%= ICostantiMisuraAlternativa.CAMPO_SEDE_POL_C %>","alphabetic"); --%>
+<%--  frmvalidator.addValidation("<%= ICostantiMisuraAlternativa.CAMPO_SEDE_TDS %>","alphabetic"); --%>
 </script>
 
 </body>

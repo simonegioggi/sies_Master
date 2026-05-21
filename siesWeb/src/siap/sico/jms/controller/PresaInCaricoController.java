@@ -3,11 +3,8 @@ package siap.sico.jms.controller;
 import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Vector;
-
 import org.apache.log4j.Logger;
 
 import f3b.dao.DAOException;
@@ -32,20 +29,13 @@ import siap.sico.libertaanticipata.model.LicenzaPeriodiLibAnticipataModel; // ST
 import siap.sico.libertaanticipata.model.PeriodoLibAnticipataModel;
 import siap.sico.misuraalternativa.dao.MisuraAlternativaDAO;
 import siap.sico.misuraalternativa.model.MisuraAlternativaModel;
-import siap.sico.jms.dao.PresaInCaricoDAO;
-import siap.sico.jms.dao.PresaInCaricoSqlDAO;
-import siap.sico.jms.model.PresaInCaricoModel;
 import siap.sico.residenza.dao.ResidenzaDAO;
 import siap.sico.residenza.dao.ResidenzaFascicoloSiusDAO;
 import siap.sico.residenza.model.ResidenzaAssociataModel;
 import siap.sico.soggetto.dao.SoggettoDAO;
 import siap.sico.soggetto.model.SoggettoModel;
-import siap.siep.agdgfascicolosiep.dao.AgdgFascicoloSiepDAO;
-import siap.siep.altrigradigiudizio.dao.AltriGradiGiudizioDAO;
 import siap.siep.autoritaesterna.dao.AutoritaEsternaDAO;
 import siap.siep.fascicolo.dao.FascicoloSiepDAO;
-import siap.siep.fascicolo.dao.FascicoloSiepSqlDAO;
-import siap.siep.fascicolo.dao.FascicoloStoreProcedurePulisciDAO;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.luogodetenzione.dao.LuogoDetenzioneDAO;
 import siap.siep.luogodetenzione.model.LuogoDetenzioneModel;
@@ -60,8 +50,6 @@ import siap.siep.scambiosanzione.dao.ScambioSanzioneDAO;
 import siap.siep.scambiosanzione.model.ScambioSanzioneModel;
 import siap.siep.sentenza.dao.SentenzaDAO;
 import siap.siep.sentenza.model.SentenzaModel;
-import siap.siep.sentenzariunita.dao.SentenzaRiunitaDAO;
-import siap.siep.statoprocedimento.dao.MaxStatoProcedimentoDAO;
 import siap.siep.statoprocedimento.dao.StatoProcedimentoDAO;
 import siap.siep.statoprocedimento.model.StatoProcedimentoModel;
 import siap.siepe.assistentesociale.dao.AssistenteSocialeDAO;
@@ -109,19 +97,12 @@ import siap.sius.tenore.dao.TenoreDAO;
 import siap.sius.tenore.model.TenoreModel;
 
 /**
- * <p>
- * Title: PresaInCaricoController
- * </p>
- * <p>
- * Description: Presa in carico di un'ordinanza proveniente da altra BDI
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- */
-/*
+ * PresaInCaricoController - Presa in carico di un'ordinanza proveniente da altra BDI
+ *
  * Luigi 28-06-2006 Questo Controller sostituira' l'analogo in siap.sius.jms.controller. In fase di test
- * continuano a sussistere entrambi.
+ * continuano a sussistere entrambi
+ *
+ * @version 1.0
  */
 @SuppressWarnings("rawtypes")
 public class PresaInCaricoController extends SiapController implements IPresaInCarico {
@@ -150,8 +131,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 		} catch (Exception e) {
 			rollback(lConn);
 			e.printStackTrace();
-			throw new F3BException(
-					this.getClass().getPackage().getName() + ".ExPresaInCaricoOrdinanza: " + e);
+			throw new F3BException(this.getClass().getName() + ".ExPresaInCaricoOrdinanza: " + e);
 		} finally {
 			cleanup(lConn);
 		}
@@ -294,7 +274,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 		} catch (Exception e) {
 			rollback(lConn);
 			e.printStackTrace();
-			throw new F3BException(this.getClass().getPackage().getName() + ".ExPresaInCaricoDecreto: " + e);
+			throw new F3BException(this.getClass().getName() + ".ExPresaInCaricoDecreto: " + e);
 		} finally {
 			cleanup(lConn);
 		}
@@ -434,7 +414,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 		} catch (Exception e) {
 			rollback(lConn);
 			e.printStackTrace();
-			throw new F3BException(this.getClass().getPackage().getName() + ".ExPresaInCaricoAttivita: " + e);
+			throw new F3BException(this.getClass().getName() + ".ExPresaInCaricoAttivita: " + e);
 		} finally {
 			cleanup(lConn);
 		}
@@ -496,8 +476,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 		} catch (Exception ex) {
 			rollback(lConn);
 			ex.printStackTrace();
-			throw new F3BException(
-					this.getClass().getPackage().getName() + ".ExPresaInCaricoRichiestaSiepe: " + ex);
+			throw new F3BException(this.getClass().getName() + ".ExPresaInCaricoRichiestaSiepe: " + ex);
 		} finally {
 			cleanup(lConn);
 		}
@@ -3430,8 +3409,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 		} catch (Exception e) {
 			rollback(lConn);
 			e.printStackTrace();
-			throw new F3BException(
-					this.getClass().getPackage().getName() + ".ExPresaInCaricoOrdinanza: " + e);
+			throw new F3BException(this.getClass().getName() + ".ExPresaInCaricoOrdinanza: " + e);
 		} finally {
 			cleanup(lConn);
 		}
@@ -3565,209 +3543,4 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 		}
 	}
 
-	//
-	// MEV_2024-DNA - Tracciatura in tabella della presa in carico
-  public void ExInserisciPresaInCarico (PresaInCaricoModel aPresaInCarico, Connection lConn)  throws F3BException {
-
-    siesLogger.info("PresaInCaricoController.ExInserisciPresaInCarico");
-    
-    PresaInCaricoDAO lPresaInCaricoDao = null;
-    try {
-      lPresaInCaricoDao = new PresaInCaricoDAO(lConn);
-      lPresaInCaricoDao.setDAOFromModel (aPresaInCarico);
-      lPresaInCaricoDao.insert();
-      lPresaInCaricoDao.stop();
-    } catch (Exception ex) {
-      siesLogger.error("Exception PresaInCaricoController.ExInserisciPresaInCarico: ", ex);
-      // NON POSSO RILANCIARE ECCESIONE TRATTANDOSI DI UNA TRACCIATURA
-      // L'ERRORE IN FASE DI TRACCIATURA NON PUO' INTERRROMPERE LA PRESA IN CARICO
-    } finally {
-      cleanup(lPresaInCaricoDao);
-    }
-
-    return;
-  }
-  
-  /*
-   * Restituisce un vettore con le prese in carico dei fascicoli per i quali almeno una presa in carico
-   * è stata effettuata dall'ufficio DNA.
-   * Vettore ordinato per IdFascicolo e Data presa in carico 
-   * 
-   * */
-  public Vector <PresaInCaricoModel> ExRicercaPresaInCaricoDNA (String aCodUfficioDNA) throws F3BException {
-    Connection lConn = null;
-    PresaInCaricoSqlDAO lPresaInCaricoSqlDao = null;
-    Vector <PresaInCaricoModel> lListaPreseInCarico = null;
-    try {
-      lConn = getDBConnection();
-      
-      lPresaInCaricoSqlDao = new PresaInCaricoSqlDAO(lConn);
-      
-      lPresaInCaricoSqlDao.ricercaPresaInCaricoDNA(aCodUfficioDNA);
-      
-      lListaPreseInCarico = new Vector <PresaInCaricoModel>(lPresaInCaricoSqlDao.getModels());
-    } catch (Exception ex) {
-      siesLogger.error("Exception PresaInCaricoController.ExRicercaPresaInCaricoDNA: ", ex);
-      throw new F3BException("Errore nella ricerca delle prese in carico DNA");
-    } finally {
-      cleanup (lPresaInCaricoSqlDao);
-      cleanup (lConn);
-    }
-    return lListaPreseInCarico;
-  }
-  
-  public void ExCancellaPreseInCaricoDNAbyIdFascicolo (BigDecimal aIdFascicoloSIEP, String aCodUfficioDNA) throws F3BException {
-    
-    Connection lConn = null;
-    PresaInCaricoDAO lPresaInCaricoDao = null;   
-    
-    try {
-      lConn = getDBConnection();
-      
-      lPresaInCaricoDao = new PresaInCaricoDAO(lConn);
-      lPresaInCaricoDao.setCondizioneDeleteDNA (aIdFascicoloSIEP, aCodUfficioDNA);
-      lPresaInCaricoDao.delete();
-
-      commit(lConn);
-    } catch (Exception ex) {
-      rollback(lConn);
-      siesLogger.error("Exception PresaInCaricoController.ExCancellaPreseInCaricoDNAbyIdFascicolo: ", ex);
-      throw new F3BException("Errore nella cancellazione record  delle prese in carico DNA");
-    } finally {
-      cleanup (lPresaInCaricoDao);
-      cleanup (lConn);
-    }
-
-    return;
-  }
-  
-  /**
-   * Metodo per cancellare fisicamente un fascicolo se preso in carico solo dalla DNA.
-   * 
-   * n.b. non rilancia volutamente eccezione. In caso di errore di cancellazione potrebbe essere dovuto al fatto
-   * che il fascicolo è stato agganciato da SIUS/SIGE trovandolo già a sistema senza passare per la presa in carico
-   * 
-   */
-  public void ExCancellaFascicoloPresoInCaricoDNAbyIdFascicolo (BigDecimal aIdFascicoloSIEP) throws F3BException {
-    
-    Connection lConn = null;
-    FascicoloStoreProcedurePulisciDAO lProcDAO = null;
-    
-    FascicoloSiepDAO lFascSiepDAO = null;
-    FascicoloSiepSqlDAO lFascSiepSqlDAO = null;
-    SentenzaDAO lSentenzaDAO = null;
-    SoggettoDAO lSoggettoDAO = null;
-    
-    MaxStatoProcedimentoDAO lMaxStatoProcedimentoDAO = null;
-    AgdgFascicoloSiepDAO lAgdgFascicoloSiepDAO = null;
-    SentenzaRiunitaDAO lSentenzaRiunitaDAO = null;
-    AltriGradiGiudizioDAO lAltriGradiGiudizioDAO = null;
-    
-    try {
-      lConn = getDBTransaction();
-      
-      lProcDAO = new FascicoloStoreProcedurePulisciDAO(lConn);
-      lProcDAO.setIdFascicolo(aIdFascicoloSIEP);
-      lProcDAO.execute();
-      
-      String lReturnSP = lProcDAO.getReturn();
-      
-      if (lReturnSP.equals("0000")) {
-        // Stored procedure OK procedo al tentativo di cancellazione del fascicolo siep sentenza e soggetto
-        siesLogger.debug("Stored procedure OK ("+lReturnSP+"), procedo con la cancellazione di fascicolo, soggetto, sentenza..."); 
-        
-        FascicoloSiepModel lFascicoloModel = null;
-        lFascSiepSqlDAO = new FascicoloSiepSqlDAO(lConn);
-        lFascSiepSqlDAO.ricercaFascicoloByKey(aIdFascicoloSIEP);
-        lFascicoloModel = (FascicoloSiepModel) lFascSiepSqlDAO.getModelByKey();
-            
-        // Attenzione prima di cancellare il fascicolo SIEP devo cancellare alcune tabelle che la SP
-        // non cancella e che puntano il fascicolo tramite FK
-        // - AGDG_FASCICOLO_SIEP 
-        // - MAX_STATO_PROCEDIMENTO - valorizzata da un trigger
-        // - 
-        // AGDG_FASCICOLO_SIEP - Punta sia il FASCICOLO_SIEP che la SENTENZA per cui va eliminata prima di entrambe
-        // MAX_STATO_PROCEDIMENTO - valorizzata dal trigger punta il FASCICOLO
-        // ALTRI_GRADI_GIUDIZIO
-        siesLogger.debug("Cancellazione MAX_STATO_PROCEDIMENTO..."); 
-        lMaxStatoProcedimentoDAO = new MaxStatoProcedimentoDAO (lConn);
-        lMaxStatoProcedimentoDAO.setCondizioneByIdFascicolo(aIdFascicoloSIEP);
-        lMaxStatoProcedimentoDAO.delete();
-        
-        siesLogger.debug("Cancellazione AGDG_FASCICOLO_SIEP..."); 
-        lAgdgFascicoloSiepDAO = new AgdgFascicoloSiepDAO (lConn);
-        lAgdgFascicoloSiepDAO.setCondizioneByIdFascicolo(aIdFascicoloSIEP);
-        lAgdgFascicoloSiepDAO.delete();        
-        
-        siesLogger.debug("Cancellazione FASCICOLO_SIEP..."); 
-        lFascSiepDAO = new FascicoloSiepDAO (lConn);
-        lFascSiepDAO.selCondizioneUpdate(aIdFascicoloSIEP);
-        lFascSiepDAO.delete();
-        
-        //===========================================
-        // SENTENZA
-        // - SENTENZA_RIUNITA
-        // - ALTRI_GRADI_GIUDIZIO
-        //   - AGDG_FASCICOLO_SIEP (già cancellata sul fascicolo)
-        // - TENORE_SENTENZA_REATO (tabella SIGE non cancellabile)
-        // - FAS_SIGE_SENTENZA     (tabella SIGE non cancellabile)
-        //===========================================
-        // PRIMA della cancellazione delle SENTENZA si deve procedene alla cancellazione delle tabelle
-        // collegate:
-        // - SENTENZA_RIUNITA
-        // - ALTRI_GRADI_GIUDIZIO
-        siesLogger.debug("Cancellazione SENTENZA_RIUNITA..."); 
-        lSentenzaRiunitaDAO = new SentenzaRiunitaDAO (lConn);
-        lSentenzaRiunitaDAO.setCondizioneByIdSentenza (lFascicoloModel.getSenIdSentenza());
-        lSentenzaRiunitaDAO.delete();
-        
-        siesLogger.debug("Cancellazione ALTRI_GRADI_GIUDIZIO..."); 
-        lAltriGradiGiudizioDAO = new AltriGradiGiudizioDAO (lConn);
-        lAltriGradiGiudizioDAO.setCondizioneByIdSentenza (lFascicoloModel.getSenIdSentenza());
-        lAltriGradiGiudizioDAO.delete();
-        
-        siesLogger.debug("Cancellazione SENTENZA..."); 
-        lSentenzaDAO = new SentenzaDAO (lConn);
-        lSentenzaDAO.selCondizioneUpdate(lFascicoloModel.getSenIdSentenza());
-        lSentenzaDAO.delete();
-        
-        //===========================================
-        // SOGGETTO
-        // - RESIDENZA
-        //   - RESIDENZA_FASCICOLO_SIGE (tabella SIGE non cancellabile)
-        // - SOGGETTO_DATTILO
-        //===========================================
-
-        siesLogger.debug("Cancellazione SOGGETTO..."); 
-        lSoggettoDAO = new SoggettoDAO (lConn);
-        lSoggettoDAO.selCondizioneUpdate(lFascicoloModel.getSogIdSoggetto());
-        lSoggettoDAO.delete();
-        
-        commit(lConn);
-      }
-      else {
-        siesLogger.error("ERRORE DURANTE LA STORE PROCEDURE PULISCI ALTRE BDI...lReturnSP = "+lReturnSP);  
-        rollback(lConn);
-      }
-
-    } catch (Exception ex) {
-      rollback(lConn);
-      siesLogger.error("Exception PresaInCaricoController.ExCancellaFascicoloPresoInCaricoDNAbyIdFascicolo: ", ex);
-      //throw new F3BException("Errore nella cancellazione del fascciolo delle prese in carico DNA");
-    } finally {
-      cleanup (lProcDAO);
-      cleanup (lFascSiepDAO);
-      cleanup (lSentenzaDAO);
-      cleanup (lSoggettoDAO);
-      
-      cleanup(lMaxStatoProcedimentoDAO);
-      cleanup(lAgdgFascicoloSiepDAO);
-      cleanup(lSentenzaRiunitaDAO);
-      cleanup(lAltriGradiGiudizioDAO);
-      
-      cleanup (lConn);
-    }
-
-    return;
-  }
 }

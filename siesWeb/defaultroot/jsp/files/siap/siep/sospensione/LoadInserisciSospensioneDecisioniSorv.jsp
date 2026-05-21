@@ -1143,7 +1143,7 @@ if (misuraalternativa == null || misuraalternativa.getIdMisuraAlternativa() == n
 }
 if (misuraalternativa == null || misuraalternativa.getIdMisuraAlternativa() == null) {
 %>
-  	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_SEDE_TDS_EMITT %>","alphabetic");
+<%--   frmvalidator.addValidation("<%= ICostantiMisuraAlternativa.CAMPO_SEDE_TDS_EMITT %>","alphabetic"); --%>
 <%
 }
 %>

@@ -3,32 +3,21 @@ package siap.sico.soggetto.dao;
 import java.math.BigDecimal;
 import java.sql.Connection;
 
+import f3b.dao.DAOException;
+import f3b.model.GenericModel;
+import f3b.util.DateUtils;
+import f3b.util.StringUtils;
+import f3b.web.IWebConstants;
 import siap.dao.SIAPSqlDAO;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.util.DecodificheUtils;
 import siap.sico.soggetto.action.ICostantiSoggetto;
 import siap.sico.soggetto.model.SoggettoModel;
 import siap.siep.util.MinorMask;
-import f3b.dao.DAOException;
-import f3b.model.GenericModel;
-import f3b.util.DateUtils;
-import f3b.util.StringUtils;
-import f3b.web.IWebConstants;
 
 /**
- * <p>
- * Title: SoggettoSqlDAO
- * </p>
- * <p>
- * Description: Classe SqlDAO che rappresenta la tabella Soggetto
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ * SoggettoSqlDAO - Classe SqlDAO che rappresenta la tabella Soggetto
+ *
  * @version 1.0
  */
 public class SoggettoSqlDAO extends SIAPSqlDAO {
@@ -39,9 +28,9 @@ public class SoggettoSqlDAO extends SIAPSqlDAO {
 
 	public void getCountSoggetti(SoggettoModel aModel, String aCodDistretto) throws DAOException {
 
-		String lStatement = "SELECT COUNT(*) HowManyRecords " + " FROM SOGGETTO " +
+		String lStatement = "SELECT COUNT(*) HowManyRecords  FROM SOGGETTO " +
 
-		" WHERE  COD_UFFICIO_INSERIMENTO IN (SELECT cod_ufficio FROM UFFICIO WHERE COD_DISTRETTO='"
+				" WHERE  COD_UFFICIO_INSERIMENTO IN (SELECT cod_ufficio FROM UFFICIO WHERE COD_DISTRETTO='"
 				+ aCodDistretto + "') ";
 
 		lStatement += this.setCondizione(aModel);
@@ -51,6 +40,7 @@ public class SoggettoSqlDAO extends SIAPSqlDAO {
 
 	// Paolo cherubini x SuperSoggetto
 	public void getCountFascicoliPerSoggetto(BigDecimal aIdSoggetto) throws DAOException {
+
 		String lStatement = "SELECT (conta_siep + conta_sige + conta_sius) HowManyRecords "
 				+ "FROM (SELECT COUNT (*) conta_siep FROM fascicolo_siep "
 				+ "WHERE fascicolo_siep.sog_id_soggetto = " + aIdSoggetto + ") siep, "
@@ -64,8 +54,8 @@ public class SoggettoSqlDAO extends SIAPSqlDAO {
 	// fine Paolo x SuperSoggetto
 
 	public void getEtaSoggetto(BigDecimal aIdSoggetto) throws DAOException {
-		String lStatement = "select t.eta_ora from V_SOGGETTO_ETA t " + "WHERE t.COD_SOGGETTO = "
-				+ aIdSoggetto + "";
+		String lStatement = "select t.eta_ora from V_SOGGETTO_ETA t WHERE t.COD_SOGGETTO = " + aIdSoggetto
+				+ "";
 		setStatement(lStatement);
 	}
 
@@ -84,15 +74,15 @@ public class SoggettoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * creata da Paolo cherubini 29/07/2009 Esegue la ricerca dei fascicoli in base al super soggetto
-	 * 
+	 *
 	 * @param soggetto
 	 *            model
 	 */
 	public void ricercaSuperSoggetto(String TipoRicerca, String strCodUfficioUtenteConnesso,
 			SoggettoModel aModel, String StrFascicolo, String strCodDistrettoUtenteConnesso,
 			String majorOffice, boolean fromDetail, String tipoUfficio) {
-		String lStatement = new String(getSuperSoggettoSqlQuery(StrFascicolo, strCodDistrettoUtenteConnesso,
-				majorOffice));
+		String lStatement = new String(
+				getSuperSoggettoSqlQuery(StrFascicolo, strCodDistrettoUtenteConnesso, majorOffice));
 
 		// 09/2011 Introduzione filtro FLAG_VALIDATO per Ricerca Altre BDI (solo fascicoli validati)
 		// Per segnalazione durante periodo garanzia
@@ -246,7 +236,7 @@ public class SoggettoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Ricerca i soggetti omonimi per il model passato
-	 * 
+	 *
 	 * @param aModel
 	 * @throws DAOException
 	 */
@@ -262,7 +252,7 @@ public class SoggettoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Ricerca Soggetto
-	 * 
+	 *
 	 * @param aModel
 	 * @throws DAOException
 	 */
@@ -279,7 +269,7 @@ public class SoggettoSqlDAO extends SIAPSqlDAO {
 		/*
 		 * --- 28/04 Union con altri soggetti di altri uffici con fascicolo validato... lStatement
 		 * +=" UNION ";
-		 * 
+		 *
 		 * lStatement += getSoggettoFascicoloSqlQuery(); lStatement += " " + setCondizione(aModel);
 		 */
 		lStatement += setOrder();
@@ -289,7 +279,7 @@ public class SoggettoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Ricerca Soggetto
-	 * 
+	 *
 	 * @param aModel
 	 * @throws DAOException
 	 */
@@ -298,7 +288,7 @@ public class SoggettoSqlDAO extends SIAPSqlDAO {
 	}
 
 	public void ricercaSoggettoAltreBDI(SoggettoModel aModel, boolean checkMin_Maj) throws DAOException {
-		
+
 		String lStatement = getSoggettoAltreBDISqlQuery(checkMin_Maj);
 
 		// lStatement += " " + setCondizione(aModel); // 07/02/2008
@@ -362,32 +352,32 @@ public class SoggettoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Ricerca Soggetto
-	 * 
+	 *
 	 * [EC] - 16/01/2018: esplicitato meglio il nome del parametro di input
+	 *
 	 * @return
 	 */
 	protected String getSoggettoAltreBDISqlQuery(boolean checkMajor) {
 		String lStatement = new String("");
 
-		lStatement += " SELECT ID_SOGGETTO," + " COD_FISCALE," + " COD_CS," + " COD_AFIS," + " COGNOME,"
-				+ " NOME," + " ANNO_NASCITA," + " DATA_NASCITA," + " DATA_REATO_SIUS,"
-				+ " DATA_NASCITA_PRESUNTA," + " COD_COMUNE_NASCITA," + " COM.DESCRIZIONE COMUNE,"
-				+ " COD_PROVINCIA_NASCITA," + " COD_STATO_NASCITA," + " DESC_COMUNE_NASCITA_ESTERO,"
-				+ " NAZIONALITA," + " PATERNITA," + " COGNOME_MADRE," + " NOME_MADRE," + " SESSO,"
-				+ " ATTO_NASCITA," + " SOGGETTO.NOTE," + " COD_COMUNE_CASELLARIO,"
-				+ " FLAG_PRESENZA_FASCICOLO," + " SOGGETTO.COD_OPERATORE_INSERIMENTO,"
-				+ " SOGGETTO.DATA_INSERIMENTO," + " SOGGETTO.COD_UFFICIO_INSERIMENTO,"
+		lStatement += " SELECT ID_SOGGETTO, COD_FISCALE, COD_CS, COD_AFIS, COGNOME,"
+				+ " NOME, ANNO_NASCITA, DATA_NASCITA, DATA_REATO_SIUS,"
+				+ " DATA_NASCITA_PRESUNTA, COD_COMUNE_NASCITA, COM.DESCRIZIONE COMUNE,"
+				+ " COD_PROVINCIA_NASCITA, COD_STATO_NASCITA, DESC_COMUNE_NASCITA_ESTERO,"
+				+ " NAZIONALITA, PATERNITA, COGNOME_MADRE, NOME_MADRE, SESSO,"
+				+ " ATTO_NASCITA, SOGGETTO.NOTE, COD_COMUNE_CASELLARIO,"
+				+ " FLAG_PRESENZA_FASCICOLO, SOGGETTO.COD_OPERATORE_INSERIMENTO,"
+				+ " SOGGETTO.DATA_INSERIMENTO, SOGGETTO.COD_UFFICIO_INSERIMENTO,"
 				+ " SOGGETTO.DATA_AGGIORNAMENTO,  SOGGETTO.COD_UFFICIO_AGGIORNAMENTO, "
-				+ " SOGGETTO.COD_OPERATORE_AGGIORNAMENTO, " + " MESE_NASCITA, "
-				+ " SEDE_GIUD.DESCRIZIONE DESCR_SEDE_GIUDIZIARIA, " + " KEY_SOGG_NSC, "
-				+ " ETA_PRESUNTA_ANNI, " + " ETA_PRESUNTA_MESI " + " FROM SOGGETTO, "
-				+
+				+ " SOGGETTO.COD_OPERATORE_AGGIORNAMENTO,  MESE_NASCITA, "
+				+ " SEDE_GIUD.DESCRIZIONE DESCR_SEDE_GIUDIZIARIA,  KEY_SOGG_NSC, "
+				+ " ETA_PRESUNTA_ANNI,  ETA_PRESUNTA_MESI  FROM SOGGETTO, " +
 				// " FASCICOLO_SIEP fasc, " + // commentato il 07/02/2008
-				" SEDE_GIUDIZIARIA SEDE_GIUD, " + " COMUNE COM, V_SOGGETTO_ETA VSE  "
+				" SEDE_GIUDIZIARIA SEDE_GIUD,  COMUNE COM, V_SOGGETTO_ETA VSE  "
 				+ " WHERE  SEDE_GIUD.COD_SEDE_GIUDIZIARIA = COD_COMUNE_CASELLARIO " +
 				// " fasc.SOG_ID_SOGGETTO = SOGGETTO.ID_SOGGETTO AND " + // commentato il 07/02/2008
-				" AND COD_COMUNE_NASCITA = COM.COD_COMUNE " + " AND SOGGETTO.ID_SOGGETTO = VSE.COD_SOGGETTO ";
-		
+				" AND COD_COMUNE_NASCITA = COM.COD_COMUNE  AND SOGGETTO.ID_SOGGETTO = VSE.COD_SOGGETTO ";
+
 		if (checkMajor) {
 			lStatement += " AND " + ICostantiSoggetto.CONDIZIONE_MAGGIORENNI + " ";
 		}
@@ -397,113 +387,96 @@ public class SoggettoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Ricerca Soggetto
-	 * 
+	 *
 	 * @return
 	 */
 	protected String getSoggettoSqlQuery() {
-		String lStatement = new String("");
 
-		lStatement += " SELECT ID_SOGGETTO," + " COD_FISCALE," + " COD_CS," + " COD_AFIS," + " COGNOME,"
-				+ " NOME," + " ANNO_NASCITA,"
-				+ " DATA_NASCITA,"
-				+ " DATA_REATO_SIUS,"
-				+ " DATA_NASCITA_PRESUNTA,"
-				+ " COD_COMUNE_NASCITA,"
-				+ " COM.DESCRIZIONE COMUNE,"
-				+ " COD_PROVINCIA_NASCITA,"
-				+
+		String lStatement = new String("");
+		lStatement += "SELECT ID_SOGGETTO, COD_FISCALE, COD_CS, COD_AFIS, COGNOME,"
+				+ " NOME, ANNO_NASCITA, DATA_NASCITA, DATA_REATO_SIUS,"
+				+ " DATA_NASCITA_PRESUNTA, COD_COMUNE_NASCITA, COM.DESCRIZIONE COMUNE,"
+				+ " COD_PROVINCIA_NASCITA," +
 				/* " PRO.RV_MEANING PROVINCIA," + */
-				" COD_STATO_NASCITA,"
-				+
+				" COD_STATO_NASCITA," +
 				/* " NAZ.RV_MEANING STATO," + */
-				" DESC_COMUNE_NASCITA_ESTERO,"
-				+ " NAZIONALITA,"
-				+
+				" DESC_COMUNE_NASCITA_ESTERO, NAZIONALITA," +
 				// " DECODENAZ.RV_MEANING DESCRNAZ," +
-				" PATERNITA," + " COGNOME_MADRE," + " NOME_MADRE," + " SESSO," + " ATTO_NASCITA,"
-				+ " SOGGETTO.NOTE," + " COD_COMUNE_CASELLARIO," + " FLAG_PRESENZA_FASCICOLO,"
-				+ " SOGGETTO.COD_OPERATORE_INSERIMENTO," + " SOGGETTO.DATA_INSERIMENTO,"
+				" PATERNITA, COGNOME_MADRE, NOME_MADRE, SESSO, ATTO_NASCITA,"
+				+ " SOGGETTO.NOTE, COD_COMUNE_CASELLARIO, FLAG_PRESENZA_FASCICOLO,"
+				+ " SOGGETTO.COD_OPERATORE_INSERIMENTO, SOGGETTO.DATA_INSERIMENTO,"
 				+ " SOGGETTO.COD_UFFICIO_INSERIMENTO,"
-				+ " SOGGETTO.DATA_AGGIORNAMENTO,  SOGGETTO.COD_UFFICIO_AGGIORNAMENTO, "
-				+ " SOGGETTO.COD_OPERATORE_AGGIORNAMENTO, " + " MESE_NASCITA, "
-				+ " SEDE_GIUD.DESCRIZIONE DESCR_SEDE_GIUDIZIARIA, " + " KEY_SOGG_NSC, "
-				+ " ETA_PRESUNTA_ANNI, " + " ETA_PRESUNTA_MESI " + " FROM SOGGETTO, "
-				+
+				+ " SOGGETTO.DATA_AGGIORNAMENTO, SOGGETTO.COD_UFFICIO_AGGIORNAMENTO, "
+				+ " SOGGETTO.COD_OPERATORE_AGGIORNAMENTO, MESE_NASCITA, "
+				+ " SEDE_GIUD.DESCRIZIONE DESCR_SEDE_GIUDIZIARIA, KEY_SOGG_NSC, "
+				+ " ETA_PRESUNTA_ANNI, ETA_PRESUNTA_MESI FROM SOGGETTO, " +
 				/*
-				 * " CG_REF_CODES NAZ," + " CG_REF_CODES PRO," +
+				 * " CG_REF_CODES NAZ, CG_REF_CODES PRO," +
 				 */
 				// " CG_REF_CODES DECODENAZ ," +
-				" SEDE_GIUDIZIARIA SEDE_GIUD, " + " COMUNE COM  "
+				" SEDE_GIUDIZIARIA SEDE_GIUD,  COMUNE COM  "
 				+ " WHERE  SEDE_GIUD.COD_SEDE_GIUDIZIARIA = COD_COMUNE_CASELLARIO AND " +
 				/*
-				 * " NAZ.RV_LOW_VALUE = COD_STATO_NASCITA AND " + " NAZ.RV_DOMAIN = 'NAZIONE' AND " +
-				 * " PRO.RV_LOW_VALUE = COD_PROVINCIA_NASCITA AND " + " PRO.RV_DOMAIN = 'PROVINCIA' AND " +
-				 * "  DECODENAZ.RV_LOW_VALUE = NAZIONALITA " + " AND DECODENAZ.RV_DOMAIN='NAZIONE' AND " +
+				 * " NAZ.RV_LOW_VALUE = COD_STATO_NASCITA AND  NAZ.RV_DOMAIN = 'NAZIONE' AND " +
+				 * " PRO.RV_LOW_VALUE = COD_PROVINCIA_NASCITA AND  PRO.RV_DOMAIN = 'PROVINCIA' AND " +
+				 * "  DECODENAZ.RV_LOW_VALUE = NAZIONALITA  AND DECODENAZ.RV_DOMAIN='NAZIONE' AND " +
 				 */
-				" COD_COMUNE_NASCITA = COM.COD_COMUNE";
+				" COD_COMUNE_NASCITA = COM.COD_COMUNE(+)";
 
 		return lStatement;
 	}
 
 	/**
 	 * Ricerca Soggetto e Alias
-	 * 
+	 *
 	 * @return
 	 */
 	protected String getSoggettoAliasSqlQuery() {
+
 		String lStatement = new String("");
 		/*
 		 * Modifica per ALIAS: e' stata inserita la disctinct e la LEFT OUTER JOIN sulla tabella ALIAS per
 		 * identificare i soggetti che hanno gli alias il campo aggiunto sulla query che identifica la
 		 * presenza dell'alias è SOG_ID_SOGGETTO dove è riportato l'id del soggetto.
 		 */
-		lStatement += " SELECT DISTINCT SOGGETTO.ID_SOGGETTO," + " SOGGETTO.COD_FISCALE,"
-				+ " SOGGETTO.COD_CS,"
-				+ " SOGGETTO.COD_AFIS,"
-				+ " SOGGETTO.COGNOME,"
-				+ " SOGGETTO.NOME,"
-				+ " SOGGETTO.ANNO_NASCITA,"
-				+ " SOGGETTO.DATA_NASCITA,"
-				+ " SOGGETTO.DATA_REATO_SIUS,"
-				+ " SOGGETTO.DATA_NASCITA_PRESUNTA,"
-				+ " SOGGETTO.COD_COMUNE_NASCITA,"
-				+ " COM.DESCRIZIONE COMUNE,"
-				+ " SOGGETTO.COD_PROVINCIA_NASCITA,"
-				+
+		lStatement += "SELECT DISTINCT SOGGETTO.ID_SOGGETTO, SOGGETTO.COD_FISCALE,"
+				+ " SOGGETTO.COD_CS, SOGGETTO.COD_AFIS, SOGGETTO.COGNOME, SOGGETTO.NOME,"
+				+ " SOGGETTO.ANNO_NASCITA, SOGGETTO.DATA_NASCITA, SOGGETTO.DATA_REATO_SIUS,"
+				+ " SOGGETTO.DATA_NASCITA_PRESUNTA, SOGGETTO.COD_COMUNE_NASCITA,"
+				+ " COM.DESCRIZIONE COMUNE, SOGGETTO.COD_PROVINCIA_NASCITA," +
 				/* " PRO.RV_MEANING PROVINCIA," + */
-				" SOGGETTO.COD_STATO_NASCITA,"
-				+
+				" SOGGETTO.COD_STATO_NASCITA," +
 				/* " NAZ.RV_MEANING STATO," + */
-				" SOGGETTO.DESC_COMUNE_NASCITA_ESTERO,"
-				+ " SOGGETTO.NAZIONALITA,"
-				+
+				" SOGGETTO.DESC_COMUNE_NASCITA_ESTERO, SOGGETTO.NAZIONALITA," +
 				// " DECODENAZ.RV_MEANING DESCRNAZ," +
-				" SOGGETTO.PATERNITA," + " SOGGETTO.COGNOME_MADRE," + " SOGGETTO.NOME_MADRE,"
-				+ " SOGGETTO.SESSO," + " SOGGETTO.ATTO_NASCITA," + " SOGGETTO.NOTE,"
-				+ " SOGGETTO.COD_COMUNE_CASELLARIO," + " SOGGETTO.FLAG_PRESENZA_FASCICOLO,"
-				+ " SOGGETTO.COD_OPERATORE_INSERIMENTO," + " SOGGETTO.DATA_INSERIMENTO,"
+				" SOGGETTO.PATERNITA, SOGGETTO.COGNOME_MADRE, SOGGETTO.NOME_MADRE,"
+				+ " SOGGETTO.SESSO, SOGGETTO.ATTO_NASCITA, SOGGETTO.NOTE,"
+				+ " SOGGETTO.COD_COMUNE_CASELLARIO, SOGGETTO.FLAG_PRESENZA_FASCICOLO,"
+				+ " SOGGETTO.COD_OPERATORE_INSERIMENTO, SOGGETTO.DATA_INSERIMENTO,"
 				+ " SOGGETTO.COD_UFFICIO_INSERIMENTO,"
-				+ " SOGGETTO.DATA_AGGIORNAMENTO,  SOGGETTO.COD_UFFICIO_AGGIORNAMENTO, "
-				+ " SOGGETTO.COD_OPERATORE_AGGIORNAMENTO, " + " SOGGETTO.MESE_NASCITA, "
-				+ " SEDE_GIUD.DESCRIZIONE DESCR_SEDE_GIUDIZIARIA, " + " SOG_ID_SOGGETTO, "
-				+ " KEY_SOGG_NSC, " + " SOGGETTO.ETA_PRESUNTA_ANNI, "
-				+ " SOGGETTO.ETA_PRESUNTA_MESI "
-				+ " FROM SOGGETTO LEFT OUTER JOIN ALIAS ON ID_SOGGETTO = SOG_ID_SOGGETTO, "
-				+
+				+ " SOGGETTO.DATA_AGGIORNAMENTO, SOGGETTO.COD_UFFICIO_AGGIORNAMENTO,"
+				+ " SOGGETTO.COD_OPERATORE_AGGIORNAMENTO, SOGGETTO.MESE_NASCITA,"
+				+ " SEDE_GIUD.DESCRIZIONE DESCR_SEDE_GIUDIZIARIA, SOG_ID_SOGGETTO, KEY_SOGG_NSC,"
+				+ " SOGGETTO.ETA_PRESUNTA_ANNI,  SOGGETTO.ETA_PRESUNTA_MESI"
+				+ " FROM SOGGETTO LEFT OUTER JOIN ALIAS ON ID_SOGGETTO = SOG_ID_SOGGETTO"
+				// Ticket#202506160114 - SIES - errore iscrizione manuale soggetto
+				// commentata where condition ed aggiunta left outer join sul comune
+				+ " LEFT OUTER JOIN COMUNE COM ON SOGGETTO.COD_COMUNE_NASCITA = COM.COD_COMUNE,"
 				/* " CG_REF_CODES NAZ," + */
 				/* " CG_REF_CODES PRO," + */
 				// " CG_REF_CODES DECODENAZ ," +
-				
-				// MODIFICA DEL 05/11/2018 (SOSTITUISCO LA VISTA V_SOGGETTO_MAGGIORENNE_NEW A POSTO DI QUELLA VECCHIA V_SOGGETTO_MAGGIORENNE)
-				" SEDE_GIUDIZIARIA SEDE_GIUD, " + " COMUNE COM,  " + " V_SOGGETTO_MAGGIORENNE_NEW VSM  "
-				+ " WHERE  SEDE_GIUD.COD_SEDE_GIUDIZIARIA = COD_COMUNE_CASELLARIO AND " +
+				// metto in join il comune per i soggetti stranieri
+				// MODIFICA DEL 05/11/2018 (SOSTITUISCO LA VISTA V_SOGGETTO_MAGGIORENNE_NEW A POSTO DI QUELLA
+				// VECCHIA V_SOGGETTO_MAGGIORENNE)
+				+ " SEDE_GIUDIZIARIA SEDE_GIUD, V_SOGGETTO_MAGGIORENNE_NEW VSM"
+				+ " WHERE SEDE_GIUD.COD_SEDE_GIUDIZIARIA = COD_COMUNE_CASELLARIO AND"
 				/*
-				 * " NAZ.RV_LOW_VALUE = SOGGETTO.COD_STATO_NASCITA AND " + " NAZ.RV_DOMAIN = 'NAZIONE' AND " +
+				 * " NAZ.RV_LOW_VALUE = SOGGETTO.COD_STATO_NASCITA AND  NAZ.RV_DOMAIN = 'NAZIONE' AND " +
 				 * " PRO.RV_LOW_VALUE = SOGGETTO.COD_PROVINCIA_NASCITA " +
-				 * " AND PRO.RV_DOMAIN = 'PROVINCIA' AND " + "  DECODENAZ.RV_LOW_VALUE = NAZIONALITA " +
+				 * " AND PRO.RV_DOMAIN = 'PROVINCIA' AND   DECODENAZ.RV_LOW_VALUE = NAZIONALITA " +
 				 * " AND DECODENAZ.RV_DOMAIN='NAZIONE' AND " +
 				 */
-				" SOGGETTO.COD_COMUNE_NASCITA = COM.COD_COMUNE AND "
+				// + " SOGGETTO.COD_COMUNE_NASCITA = COM.COD_COMUNE AND"
 				+ " SOGGETTO.ID_SOGGETTO = VSM.ID_SOGGETTO";
 
 		return lStatement;
@@ -531,23 +504,23 @@ public class SoggettoSqlDAO extends SIAPSqlDAO {
 		aModel.setCodProvinciaNascita(getString("COD_PROVINCIA_NASCITA"));
 		// La descrizione della Provincia di nascita la si ricava dalle Decodifiche in memoria per risparmiare
 		// una JOIN
-		aModel.setDescrProvinciaNascita(DecodificheUtils.getDescbyCode(DecodificheManager.getInstance()
-				.getProvincie(), aModel.getCodProvinciaNascita()));
+		aModel.setDescrProvinciaNascita(DecodificheUtils.getDescbyCode(
+				DecodificheManager.getInstance().getProvincie(), aModel.getCodProvinciaNascita()));
 		// aModel.setDescrProvinciaNascita(getString("PROVINCIA") );
 		aModel.setCodStatoNascita(getString("COD_STATO_NASCITA"));
 		aModel.setAttoNascita(getString("ATTO_NASCITA"));
 
 		// La descrizione dello stato di nascita la si ricava dalle Decodifiche in memoria per risparmiare una
 		// JOIN
-		aModel.setDescrStatoNascita(DecodificheUtils.getDescbyCode(DecodificheManager.getInstance()
-				.getNazioni(), aModel.getCodStatoNascita()));
+		aModel.setDescrStatoNascita(DecodificheUtils
+				.getDescbyCode(DecodificheManager.getInstance().getNazioni(), aModel.getCodStatoNascita()));
 		// aModel.setDescrStatoNascita(getString("STATO") );
 
 		aModel.setDescComuneNascitaEstero(getString("DESC_COMUNE_NASCITA_ESTERO"));
 		aModel.setNazionalita(getString("NAZIONALITA"));
 		// La descrizione della nazionalità la si ricava dalle Decodifiche in memoria per risparmiare una JOIN
-		aModel.setDescrNazionalita(DecodificheUtils.getDescbyCode(DecodificheManager.getInstance()
-				.getStatoCittadinanza(), aModel.getNazionalita()));
+		aModel.setDescrNazionalita(DecodificheUtils.getDescbyCode(
+				DecodificheManager.getInstance().getStatoCittadinanza(), aModel.getNazionalita()));
 		// aModel.setDescrNazionalita(getString("DESCRNAZ") );
 
 		aModel.setPaternita(getString("PATERNITA"));
@@ -591,23 +564,23 @@ public class SoggettoSqlDAO extends SIAPSqlDAO {
 		aModel.setCodProvinciaNascita(getString("COD_PROVINCIA_NASCITA"));
 		// La descrizione della Provincia di nascita la si ricava dalle Decodifiche in memoria per risparmiare
 		// una JOIN
-		aModel.setDescrProvinciaNascita(DecodificheUtils.getDescbyCode(DecodificheManager.getInstance()
-				.getProvincie(), aModel.getCodProvinciaNascita()));
+		aModel.setDescrProvinciaNascita(DecodificheUtils.getDescbyCode(
+				DecodificheManager.getInstance().getProvincie(), aModel.getCodProvinciaNascita()));
 		// aModel.setDescrProvinciaNascita(getString("PROVINCIA") );
 
 		aModel.setCodStatoNascita(getString("COD_STATO_NASCITA"));
 
 		// La descrizione dello stato di nascita la si ricava dalle Decodifiche in memoria per risparmiare una
 		// JOIN
-		aModel.setDescrStatoNascita(DecodificheUtils.getDescbyCode(DecodificheManager.getInstance()
-				.getNazioni(), aModel.getCodStatoNascita()));
+		aModel.setDescrStatoNascita(DecodificheUtils
+				.getDescbyCode(DecodificheManager.getInstance().getNazioni(), aModel.getCodStatoNascita()));
 		// aModel.setDescrStatoNascita(getString("STATO") );
 
 		aModel.setDescComuneNascitaEstero(getString("DESC_COMUNE_NASCITA_ESTERO"));
 		aModel.setNazionalita(getString("NAZIONALITA"));
 		// La descrizione della nazionalità la si ricava dalle Decodifiche in memoria per risparmiare una JOIN
-		aModel.setDescrNazionalita(DecodificheUtils.getDescbyCode(DecodificheManager.getInstance()
-				.getStatoCittadinanza(), aModel.getNazionalita()));
+		aModel.setDescrNazionalita(DecodificheUtils.getDescbyCode(
+				DecodificheManager.getInstance().getStatoCittadinanza(), aModel.getNazionalita()));
 		// aModel.setDescrNazionalita(getString("DESCRNAZ") );
 
 		aModel.setPaternita(getString("PATERNITA"));
@@ -636,7 +609,7 @@ public class SoggettoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Settaggio della condizione sul Soggetto
-	 * 
+	 *
 	 * @param aSm
 	 * @return
 	 */
@@ -753,7 +726,7 @@ public class SoggettoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Settaggio della condizione sul Soggetto per ricercare un Omonimo
-	 * 
+	 *
 	 * @param aSm
 	 * @return
 	 */
@@ -790,7 +763,7 @@ public class SoggettoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Settaggio della condizione sul Soggetto per ricerca su Altra BDI
-	 * 
+	 *
 	 * @param aSm
 	 * @return
 	 */
@@ -833,7 +806,7 @@ public class SoggettoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * setta l'ordinamento della Query
-	 * 
+	 *
 	 * @return
 	 */
 	private String setOrder() {
@@ -842,7 +815,7 @@ public class SoggettoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * setta l'ordinamento della Query Totale
-	 * 
+	 *
 	 * @return
 	 */
 	private String setOrderTotale() {
@@ -853,26 +826,26 @@ public class SoggettoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Ricerca Soggetto
-	 * 
+	 *
 	 * @return
 	 */
 	protected String getSuperSoggettoSqlQuery(String StrFascicolo, String strCodDistrettoUtenteConnesso,
 			String majorOffice) {
 		String lStatement = new String("");
 
-		lStatement += " SELECT ID_SOGGETTO," + " COD_FISCALE," + " COD_CS," + " COD_AFIS," + " COGNOME,"
-				+ " NOME," + " ANNO_NASCITA," + " DATA_NASCITA," + " DATA_REATO_SIUS,"
-				+ " DATA_NASCITA_PRESUNTA," + " COD_COMUNE_NASCITA," + " COM.DESCRIZIONE COMUNE,"
-				+ " COD_PROVINCIA_NASCITA," + " COD_STATO_NASCITA," + " DESC_COMUNE_NASCITA_ESTERO,"
-				+ " NAZIONALITA," + " PATERNITA," + " COGNOME_MADRE," + " NOME_MADRE," + " SESSO,"
-				+ " ATTO_NASCITA," + " SOGGETTO.NOTE," + " COD_COMUNE_CASELLARIO,"
-				+ " FLAG_PRESENZA_FASCICOLO," + " SOGGETTO.COD_OPERATORE_INSERIMENTO,"
-				+ " SOGGETTO.DATA_INSERIMENTO," + " SOGGETTO.COD_UFFICIO_INSERIMENTO,"
+		lStatement += " SELECT ID_SOGGETTO, COD_FISCALE, COD_CS, COD_AFIS, COGNOME,"
+				+ " NOME, ANNO_NASCITA, DATA_NASCITA, DATA_REATO_SIUS,"
+				+ " DATA_NASCITA_PRESUNTA, COD_COMUNE_NASCITA, COM.DESCRIZIONE COMUNE,"
+				+ " COD_PROVINCIA_NASCITA, COD_STATO_NASCITA, DESC_COMUNE_NASCITA_ESTERO,"
+				+ " NAZIONALITA, PATERNITA, COGNOME_MADRE, NOME_MADRE, SESSO,"
+				+ " ATTO_NASCITA, SOGGETTO.NOTE, COD_COMUNE_CASELLARIO,"
+				+ " FLAG_PRESENZA_FASCICOLO, SOGGETTO.COD_OPERATORE_INSERIMENTO,"
+				+ " SOGGETTO.DATA_INSERIMENTO, SOGGETTO.COD_UFFICIO_INSERIMENTO,"
 				+ " SOGGETTO.DATA_AGGIORNAMENTO,  SOGGETTO.COD_UFFICIO_AGGIORNAMENTO, "
-				+ " SOGGETTO.COD_OPERATORE_AGGIORNAMENTO, " + " MESE_NASCITA, "
-				+ " SEDE_GIUD.DESCRIZIONE DESCR_SEDE_GIUDIZIARIA, " + " KEY_SOGG_NSC, "
-				+ " ETA_PRESUNTA_ANNI, " + " ETA_PRESUNTA_MESI " + " FROM SOGGETTO, " + StrFascicolo + ","
-				+ " SEDE_GIUDIZIARIA SEDE_GIUD, " + " COMUNE COM, UFFICIO U";
+				+ " SOGGETTO.COD_OPERATORE_AGGIORNAMENTO,  MESE_NASCITA, "
+				+ " SEDE_GIUD.DESCRIZIONE DESCR_SEDE_GIUDIZIARIA,  KEY_SOGG_NSC, "
+				+ " ETA_PRESUNTA_ANNI,  ETA_PRESUNTA_MESI  FROM SOGGETTO, " + StrFascicolo + ","
+				+ " SEDE_GIUDIZIARIA SEDE_GIUD,  COMUNE COM, UFFICIO U";
 		if (StrFascicolo != null && !StrFascicolo.equals("")) {
 			if (StrFascicolo.equals("FASCICOLO_SIEP")) {
 				lStatement += ", v_soggetto_eta vse ";
@@ -889,7 +862,8 @@ public class SoggettoSqlDAO extends SIAPSqlDAO {
 				lStatement += StrFascicolo + ".ID_FASCICOLO_SIUS = vse.id_fascicolo_sius AND ";
 			}
 		}
-		lStatement += " COD_COMUNE_NASCITA = COM.COD_COMUNE AND " + " CHIAVE_UFFICIO = U.COD_UFFICIO";
+		// 20250616 [SG]: risolto problema ricerca soggetto senza comune nascita
+		lStatement += " COD_COMUNE_NASCITA = COM.COD_COMUNE(+) AND CHIAVE_UFFICIO = U.COD_UFFICIO";
 		if (strCodDistrettoUtenteConnesso.length() > 1)
 			lStatement += " AND U.COD_DISTRETTO = '" + strCodDistrettoUtenteConnesso + "'";
 		return lStatement;
@@ -915,7 +889,7 @@ public class SoggettoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * AVVOCATURA: aggiunto metodo di ricerca
-	 * 
+	 *
 	 * @param sm
 	 * @param codDistretto
 	 * @param codFiscaleAvvocato
@@ -957,7 +931,7 @@ public class SoggettoSqlDAO extends SIAPSqlDAO {
 	// + " SOGGETTO.COD_OPERATORE_INSERIMENTO,"
 	// + " SOGGETTO.DATA_INSERIMENTO,"
 	// + " SOGGETTO.COD_UFFICIO_INSERIMENTO,"
-	// + " SOGGETTO.DATA_AGGIORNAMENTO,  SOGGETTO.COD_UFFICIO_AGGIORNAMENTO,"
+	// + " SOGGETTO.DATA_AGGIORNAMENTO, SOGGETTO.COD_UFFICIO_AGGIORNAMENTO,"
 	// + " SOGGETTO.COD_OPERATORE_AGGIORNAMENTO,"
 	// + " MESE_NASCITA,"
 	// + " SEDE_GIUD.DESCRIZIONE DESCR_SEDE_GIUDIZIARIA,"
@@ -966,11 +940,12 @@ public class SoggettoSqlDAO extends SIAPSqlDAO {
 	// + " ETA_PRESUNTA_MESI"
 	// + " FROM SOGGETTO, FASCICOLO_SIUS,"
 	// +
-	// " SEDE_GIUDIZIARIA SEDE_GIUD, COMUNE COM, UFFICIO U, AVVOCATO AVV, AVVOCATO_FASCICOLO_SIUS AFS, v_sogsius_eta vse";
-	// query += "  WHERE  SEDE_GIUD.COD_SEDE_GIUDIZIARIA = COD_COMUNE_CASELLARIO AND"
+	// " SEDE_GIUDIZIARIA SEDE_GIUD, COMUNE COM, UFFICIO U, AVVOCATO AVV, AVVOCATO_FASCICOLO_SIUS AFS,
+	// v_sogsius_eta vse";
+	// query += " WHERE SEDE_GIUD.COD_SEDE_GIUDIZIARIA = COD_COMUNE_CASELLARIO AND"
 	// + " ID_SOGGETTO = SOG_ID_SOGGETTO AND";
 	// query += " FASCICOLO_SIUS.ID_FASCICOLO_SIUS = vse.id_fascicolo_sius AND";
-	// query += " COD_COMUNE_NASCITA = COM.COD_COMUNE AND " + " CHIAVE_UFFICIO = U.COD_UFFICIO";
+	// query += " COD_COMUNE_NASCITA = COM.COD_COMUNE AND CHIAVE_UFFICIO = U.COD_UFFICIO";
 	// query += " AND U.COD_TIPO_UFFICIO = '" + codTipoUfficio + "'";
 	// query += " AND FASCICOLO_SIUS.ID_FASCICOLO_SIUS = AFS.FAS_SIU_ID_FASCICOLO_SIUS";
 	// query += " AND AFS.AVV_ID_AVVOCATO = AVV.ID_AVVOCATO";

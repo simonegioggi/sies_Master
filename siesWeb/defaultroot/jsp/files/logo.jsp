@@ -19,8 +19,7 @@ UtenteModel lUteMod = (UtenteModel) session.getAttribute(ICostantiSecurity.SESSI
 UfficioModel lUffMod = lUteMod.getUfficioUtente();
 String CodUff = new String(lUffMod.getCodTipoUfficio());
 String img = new String("");
-if (CodUff.startsWith("TDS") || CodUff.startsWith("UDS")
-		|| CodUff.equals("DDA") || CodUff.equals("DNA")) {
+if (CodUff.startsWith("TDS") || CodUff.startsWith("UDS")) {
 	img = "/images/LOGOSius.gif";
 } else if ((CodUff.equals("UEPE") || CodUff.equals("UEPESS"))) {
 	img = "/images/LOGOSiepe.gif";

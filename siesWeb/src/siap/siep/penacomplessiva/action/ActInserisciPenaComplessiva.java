@@ -1,17 +1,12 @@
 package siap.siep.penacomplessiva.action;
 
-/**
-* <p>Title: ActInserisciPenaComplessiva</p>
-* <p>Description: Classe Action per l'inserimento di PenaComplessiva</p>
-* <p>Copyright: Copyright (c) 2002</p>
-* <p>Company: Bull</p>
-* @version 1.0
-*/
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import f3b.util.DateUtils;
+import f3b.util.Utils;
+import f3b.web.IWebConstants;
 import siap.sico.web.ActionSiap;
 import siap.siep.continuazione.action.ICostantiContinuazione;
 import siap.siep.continuazione.model.ContinuazioneModel;
@@ -21,10 +16,12 @@ import siap.siep.penacomplessiva.model.PenaComplessivaModel;
 import siap.siep.sanzionesostitutiva.action.ICostantiSanzioneSostitutiva;
 import siap.siep.sanzionesostitutiva.model.SanzioneSostitutivaModel;
 import siap.siep.util.SIEPLookupRemote;
-import f3b.util.DateUtils;
-import f3b.util.Utils;
-import f3b.web.IWebConstants;
 
+/**
+ * ActInserisciPenaComplessiva - Classe Action per l'inserimento di PenaComplessiva
+ *
+ * @version 1.0
+ */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ActInserisciPenaComplessiva extends ActionSiap
 		implements ICostantiPenaComplessiva, ICostantiSanzioneSostitutiva {
@@ -37,7 +34,7 @@ public class ActInserisciPenaComplessiva extends ActionSiap
 
 	/**
 	 * Azione di Inserimento del PenaComplessiva
-	 * 
+	 *
 	 * @return Nome della pagina JSP da visualizzare al termine dell'elaborazione
 	 * @throws Exception
 	 */
@@ -69,12 +66,14 @@ public class ActInserisciPenaComplessiva extends ActionSiap
 	}
 
 	/**
-	 * 
+	 * metodo protetto letturaDati
+	 *
 	 * @param aIdFascicoloSiep
 	 * @throws Exception
 	 */
-	protected void letturaDati(BigDecimal aIdFascicoloSiep) throws Exception {	    
-	    // Pena detentiva
+	protected void letturaDati(BigDecimal aIdFascicoloSiep) throws Exception {
+
+		// Pena detentiva
 		mPenaCompMod.setCodTipoPenaDetentiva(getRequestStringParameter(CAMPO_COD_TIPO_PENA_DETENTIVA));
 		mPenaCompMod.setNumAnniReclusione(getRequestBigDecimalParameter(CAMPO_NUM_ANNI_RECLUSIONE));
 		mPenaCompMod.setNumMesiReclusione(getRequestBigDecimalParameter(CAMPO_NUM_MESI_RECLUSIONE));
@@ -118,26 +117,17 @@ public class ActInserisciPenaComplessiva extends ActionSiap
 			}
 		}
 
-		// ? mPenaCompMod.setDataInizio( getRequestDateParameter(
-		// CAMPO_ANNO_DATA_INIZIO,CAMPO_MESE_DATA_INIZIO,CAMPO_GIORNO_DATA_INIZIO) );
-		// ? mPenaCompMod.setDataFine( getRequestDateParameter(
-		// CAMPO_ANNO_DATA_FINE,CAMPO_MESE_DATA_FINE,CAMPO_GIORNO_DATA_FINE) );
-		mPenaCompMod.setCodTipoRito("-");
-
-		/*
-		 * mPenaCompMod.setDataInizioIsolamentoDiurno( getRequestDateParameter(
-		 * CAMPO_ANNO_DATA_INIZIO_ISOLAMENTO_DIURNO, CAMPO_MESE_DATA_INIZIO_ISOLAMENTO_DIURNO,
-		 * CAMPO_GIORNO_DATA_INIZIO_ISOLAMENTO_DIURNO) ); mPenaCompMod.setDataFineIsolamentoDiurno(
-		 * getRequestDateParameter( CAMPO_ANNO_DATA_FINE_ISOLAMENTO_DIURNO,
-		 * CAMPO_MESE_DATA_FINE_ISOLAMENTO_DIURNO, CAMPO_GIORNO_DATA_FINE_ISOLAMENTO_DIURNO) );
-		 */
+		// MEV_2025-48: aggiunta nuova sezione
+		boolean flagConfiscaEquivalente = isRequestChecked(CAMPO_FLAG_CONFISCA_PER_EQUIVALENTE);
+		if (flagConfiscaEquivalente)
+			mPenaCompMod.setCodTipoRito("E");
+		else
+			mPenaCompMod.setCodTipoRito("-");
 
 		mPenaCompMod.setDataPrescrizione(getRequestDateParameter(CAMPO_ANNO_DATA_PRESCRIZIONE,
 				CAMPO_MESE_DATA_PRESCRIZIONE, CAMPO_GIORNO_DATA_PRESCRIZIONE));
 
 		// SANZIONE SOSTITUTIVA
-		// SanzioneSostitutivaModel mSanzSostMod = null;
-
 		boolean flagSanzioneSostitutiva = isRequestChecked(CAMPO_FLAG_SANZIONE_SOSTITUTIVA);
 		if (flagSanzioneSostitutiva) {
 			mSanzSostMod = new SanzioneSostitutivaModel();
@@ -190,42 +180,40 @@ public class ActInserisciPenaComplessiva extends ActionSiap
 			mSanzSostMod.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
 			mSanzSostMod.setDataInserimento(DateUtils.getSysDate());
 		}
-		// MEV_2023-13 - Si aggiungono le pene sostitutive delle pene detentive brevi che son altrenative 
-		//               alle precedenti Sanzioni Sostitutive
-	    else if (isRequestChecked(CAMPO_FLAG_PENA_SOSTITUTIVA)) {
-	        mSanzSostMod = new SanzioneSostitutivaModel();
+		// MEV_2023-13 - Si aggiungono le pene sostitutive delle pene detentive brevi che son altrenative
+		// alle precedenti Sanzioni Sostitutive
+		else if (isRequestChecked(CAMPO_FLAG_PENA_SOSTITUTIVA)) {
+			mSanzSostMod = new SanzioneSostitutivaModel();
 
-	        mSanzSostMod.setCodTipoSanzione(getRequestStringParameter(CAMPO_COD_TIPO_PENA_SOSTITUTIVA));
-	        
-	        // DURATA
-	        if (!this.isRequestParameterNullObj(CAMPO_NUM_ANNI_PENA_SOSTITUTIVA))
-	          mSanzSostMod.setNumAnni(getRequestBigDecimalParameter(CAMPO_NUM_ANNI_PENA_SOSTITUTIVA));
+			mSanzSostMod.setCodTipoSanzione(getRequestStringParameter(CAMPO_COD_TIPO_PENA_SOSTITUTIVA));
 
-	        if (!this.isRequestParameterNullObj(CAMPO_NUM_MESI_PENA_SOSTITUTIVA))
-	          mSanzSostMod.setNumMesi(getRequestBigDecimalParameter(CAMPO_NUM_MESI_PENA_SOSTITUTIVA));
+			// DURATA
+			if (!this.isRequestParameterNullObj(CAMPO_NUM_ANNI_PENA_SOSTITUTIVA))
+				mSanzSostMod.setNumAnni(getRequestBigDecimalParameter(CAMPO_NUM_ANNI_PENA_SOSTITUTIVA));
 
-	        if (!this.isRequestParameterNullObj(CAMPO_NUM_GIORNI_PENA_SOSTITUTIVA))
-	          mSanzSostMod.setNumGiorni(getRequestBigDecimalParameter(CAMPO_NUM_GIORNI_PENA_SOSTITUTIVA));
+			if (!this.isRequestParameterNullObj(CAMPO_NUM_MESI_PENA_SOSTITUTIVA))
+				mSanzSostMod.setNumMesi(getRequestBigDecimalParameter(CAMPO_NUM_MESI_PENA_SOSTITUTIVA));
 
-	        // IMPORTO
-	        if (!this.isRequestParameterNullObj(CAMPO_INTERO_PENA_PECUNIARIA_SOSTITUTIVA)  // not disable
-	            && (   !getRequestStringParameter(CAMPO_INTERO_PENA_PECUNIARIA_SOSTITUTIVA).equals("")
-	                || !getRequestStringParameter(CAMPO_DECIMALE_PENA_PECUNIARIA_SOSTITUTIVA).equals("")
-	               )
-	           ) 
-	        {
-	          // Previsto un solo importo, si carica sulla multa
-	          mSanzSostMod.setSanzionePecuniariaMulta(new BigDecimal(
-	                        getRequestStringParameter(CAMPO_INTERO_PENA_PECUNIARIA_SOSTITUTIVA) 
-	                + "." + getRequestStringParameter(CAMPO_DECIMALE_PENA_PECUNIARIA_SOSTITUTIVA)));
-	        }
+			if (!this.isRequestParameterNullObj(CAMPO_NUM_GIORNI_PENA_SOSTITUTIVA))
+				mSanzSostMod.setNumGiorni(getRequestBigDecimalParameter(CAMPO_NUM_GIORNI_PENA_SOSTITUTIVA));
 
-	        mSanzSostMod.setCodOperatoreInserimento (getCodUtenteConnesso());
-	        mSanzSostMod.setCodUfficioInserimento   (getCodUfficioUtenteConnesso());
-	        mSanzSostMod.setDataInserimento         (DateUtils.getSysDate());	        
-	    }
-	    // MEV_2023-13 - FINE
-		
+			// IMPORTO
+			if (!this.isRequestParameterNullObj(CAMPO_INTERO_PENA_PECUNIARIA_SOSTITUTIVA) // not disable
+					&& (!getRequestStringParameter(CAMPO_INTERO_PENA_PECUNIARIA_SOSTITUTIVA).equals("")
+							|| !getRequestStringParameter(CAMPO_DECIMALE_PENA_PECUNIARIA_SOSTITUTIVA)
+									.equals(""))) {
+				// Previsto un solo importo, si carica sulla multa
+				mSanzSostMod.setSanzionePecuniariaMulta(new BigDecimal(
+						getRequestStringParameter(CAMPO_INTERO_PENA_PECUNIARIA_SOSTITUTIVA) + "."
+								+ getRequestStringParameter(CAMPO_DECIMALE_PENA_PECUNIARIA_SOSTITUTIVA)));
+			}
+
+			mSanzSostMod.setCodOperatoreInserimento(getCodUtenteConnesso());
+			mSanzSostMod.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
+			mSanzSostMod.setDataInserimento(DateUtils.getSysDate());
+		}
+		// MEV_2023-13 - FINE
+
 		mPenaCompMod.setCodOperatoreInserimento(getCodUtenteConnesso());
 		mPenaCompMod.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
 		mPenaCompMod.setDataInserimento(DateUtils.getSysDate());

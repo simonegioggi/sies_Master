@@ -67,6 +67,9 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
+	// 20251203 variabile di classe
+	FascicoloGPModel fgpm = null;
+
 	/*
 	 * Metodo sovrascritto della classe ActInserisciEmissioneDecreto. La funzione verifica l'esistenza di una
 	 * ordinanza con la stessa data di emissione.
@@ -80,6 +83,7 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 	 * "Operazione non consentita. Per il procedimento indicato è già stata emessa una ordinanza nella stessa data."
 	 * ); retValue = true; } return retValue; }
 	 */
+
 	/**
 	 * Metodo sovrascritto della classe ActInserisciEmissioneDecreto. La funzione in base al codice tipo
 	 * ordinanza richiesto seleziona la jsp di input per l'ordinanza specifica.
@@ -104,48 +108,45 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 		// LogF3B.getLogger()
 		siesLogger.debug("cod Tipo Ordinanza = " + lCodTipoDec);
 
-		// per l'ordinanza di conversione serve trovare il fascicolo origine
-		// anche detto precedimento collegato
-		if (getSessionAttribute("fascicoloSiusGP") != null) {
-			FascicoloGPModel lFasGPMod = new FascicoloGPModel(
-					(FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"));
-			BigDecimal lIdFascicoloSiusOrigine = lFasGPMod.getFascicoloSiusModel()
-					.getIdFascicoloSiusOrigine();
-
+		// Si preleva dalla sessione il fascicolo GPModel
+		if (isSessionAttributeNullObj("fascicoloSiusGP"))
+			throw new SIUSException(SIUSException.USER_MESSAGE, "fascicoloSiusGP non in sessione");
+		fgpm = new FascicoloGPModel((FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"));
+		// per l'ordinanza di conversione serve trovare il fascicolo origine anche detto precedimento
+		// collegato
+		BigDecimal lIdFascicoloSiusOrigine = fgpm.getFascicoloSiusModel().getIdFascicoloSiusOrigine();
 			if (lIdFascicoloSiusOrigine != null) {
 				IFascicoloSius lCtrl = SIUSLookupRemote.getFascicoloSiusRemote();
 				FascicoloGPModel lFasGPModOrigine = lCtrl.ExRicercaFascicoloByKey(lIdFascicoloSiusOrigine);
 				FascicoloSiusModel lFasSiusOrigine = lFasGPModOrigine.getFascicoloSiusModel();
 				setRequestAttribute("lFasSiusOrigine", lFasSiusOrigine);
 
+			// prendo l'ultimo periodo altra sanzione per visualizzare la pena residua ed espiata
+			IPeriodoAltraSanzione lCtrllst = SIUSLookupRemote.getPeriodoAltraSanzioneRemote();
+			List lListaSanzioniSius = lCtrllst
+					.ExRicercaSanzioneSostitutivaByIdFascicolo(lIdFascicoloSiusOrigine);
+			if (lListaSanzioniSius != null && lListaSanzioniSius.size() > 0) {
+				PeriodoAltraSanzioneModel lPerMod = (PeriodoAltraSanzioneModel) lListaSanzioniSius
+						.get(lListaSanzioniSius.size() - 1);
+				setRequestAttribute("lPerMod", lPerMod);
+			}
+
+			// 04/06/2008 Puntamento al fascicolo Padre di E.S.S. per recupero dei quantum.
+			else if ((lFasGPModOrigine.getGeneraleProcedimentoModel().getCodTipoRegistro()
+					.compareTo("S12") == 0)
+					&& (lFasGPModOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
+							.compareTo("U019") != 0)) {
+				FascicoloGPModel lFasGPModPadreESS = lCtrl.ExRicercaFascicoloByAnnoProgrCodUfficio(
+						lFasGPModOrigine.getGeneraleProcedimentoModel().getAnnoS1(),
+						lFasGPModOrigine.getGeneraleProcedimentoModel().getProgrS1(),
+						lFasGPModOrigine.getGeneraleProcedimentoModel().getCodUfficioInserimento());
 				// prendo l'ultimo periodo altra sanzione per visualizzare la pena residua ed espiata
-				IPeriodoAltraSanzione lCtrllst = SIUSLookupRemote.getPeriodoAltraSanzioneRemote();
-				List lListaSanzioniSius = lCtrllst
-						.ExRicercaSanzioneSostitutivaByIdFascicolo(lIdFascicoloSiusOrigine);
+				lListaSanzioniSius = lCtrllst.ExRicercaSanzioneSostitutivaByIdFascicolo(
+						lFasGPModPadreESS.getFascicoloSiusModel().getIdFascicoloSius());
 				if (lListaSanzioniSius != null && lListaSanzioniSius.size() > 0) {
 					PeriodoAltraSanzioneModel lPerMod = (PeriodoAltraSanzioneModel) lListaSanzioniSius
 							.get(lListaSanzioniSius.size() - 1);
 					setRequestAttribute("lPerMod", lPerMod);
-				}
-
-				// 04/06/2008 Puntamento al fascicolo Padre di E.S.S. per recupero dei quantum.
-				else if ((lFasGPModOrigine.getGeneraleProcedimentoModel().getCodTipoRegistro()
-						.compareTo("S12") == 0)
-						&& (lFasGPModOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
-								.compareTo("U019") != 0)) {
-					FascicoloGPModel lFasGPModPadreESS = lCtrl.ExRicercaFascicoloByAnnoProgrCodUfficio(
-							lFasGPModOrigine.getGeneraleProcedimentoModel().getAnnoS1(),
-							lFasGPModOrigine.getGeneraleProcedimentoModel().getProgrS1(),
-							lFasGPModOrigine.getGeneraleProcedimentoModel().getCodUfficioInserimento());
-
-					// prendo l'ultimo periodo altra sanzione per visualizzare la pena residua ed espiata
-					lListaSanzioniSius = lCtrllst.ExRicercaSanzioneSostitutivaByIdFascicolo(
-							lFasGPModPadreESS.getFascicoloSiusModel().getIdFascicoloSius());
-					if (lListaSanzioniSius != null && lListaSanzioniSius.size() > 0) {
-						PeriodoAltraSanzioneModel lPerMod = (PeriodoAltraSanzioneModel) lListaSanzioniSius
-								.get(lListaSanzioniSius.size() - 1);
-						setRequestAttribute("lPerMod", lPerMod);
-					}
 				}
 			}
 		}
@@ -202,10 +203,8 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 			setLinkRitorno();
 		} else if (lCodTipoDec.compareTo(MISURA_SICUREZZA) == 0) {
 			// Lettura elenco Misure di Sicurezza Collegate al Fascicolo SIUS
-			FascicoloGPModel lFasGPMod = new FascicoloGPModel(
-					(FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"));
 			MisuraSicurezzaModel aMisuraSicurezza = new MisuraSicurezzaModel();
-			aMisuraSicurezza.setFasSiuIdFascicoloSius(lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
+			aMisuraSicurezza.setFasSiuIdFascicoloSius(fgpm.getFascicoloSiusModel().getIdFascicoloSius());
 			MisuraSicurezzaController lCtrl = new MisuraSicurezzaController();
 			Vector lVect = lCtrl.ExRicercaMisuraSicurezza(aMisuraSicurezza);
 			// Vector lVect = lCtrl.ExRicercaMisuraSicurezzaEstesa(aMisuraSicurezza); // Nuova funzione
@@ -229,14 +228,12 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 			// setLinkRitorno();
 		} else if (lCodTipoDec.compareTo(ORD_INOSSERVANZA_OBBLIGHI_MS) == 0) {
 			// Lettura Misura di Sicurezza in Esecuzione Collegata al Fascicolo SIUS EMS padre
-			FascicoloGPModel lFasGPMod = new FascicoloGPModel(
-					(FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"));
 			IEsecuzioneMS lEseMSCtrl = SIUSLookupRemote.getEsecuzioneMSRemote();
 			EsecuzioneMisuraSicurezzaModel aEMS = new EsecuzioneMisuraSicurezzaModel();
 			EMSFascGPModel lEmsFasModel = new EMSFascGPModel();
-			String annoEMS = lFasGPMod.getGeneraleProcedimentoModel().getAnnoS1().toString();
-			String progEMS = lFasGPMod.getGeneraleProcedimentoModel().getProgrS1().toString();
-			String uffiEMS = lFasGPMod.getFascicoloSiusModel().getChiaveUfficio();
+			String annoEMS = fgpm.getGeneraleProcedimentoModel().getAnnoS1().toString();
+			String progEMS = fgpm.getGeneraleProcedimentoModel().getProgrS1().toString();
+			String uffiEMS = fgpm.getFascicoloSiusModel().getChiaveUfficio();
 
 			Vector lVect = lEseMSCtrl.ExRicercaEsecuzioneMisureSicurezza(annoEMS, progEMS, null, null, null,
 					null, uffiEMS, 1);
@@ -273,10 +270,8 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 		} else if (lCodTipoDec.compareTo(TRASFORMA_MISURA_SICUREZZA) == 0) {
 
 			// Lettura elenco Misure di Sicurezza Collegate al Fascicolo SIUS
-			FascicoloGPModel lFasGPMod = new FascicoloGPModel(
-					(FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"));
 			MisuraSicurezzaModel aMisuraSicurezza = new MisuraSicurezzaModel();
-			aMisuraSicurezza.setFasSiuIdFascicoloSius(lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
+			aMisuraSicurezza.setFasSiuIdFascicoloSius(fgpm.getFascicoloSiusModel().getIdFascicoloSius());
 			MisuraSicurezzaController lCtrl = new MisuraSicurezzaController();
 			Vector lVectMS = lCtrl.ExRicercaMisuraSicurezza(aMisuraSicurezza);
 			setRequestAttribute("misuresicurezza", lVectMS);
@@ -285,9 +280,9 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 			IEsecuzioneMS lEseMSCtrl = SIUSLookupRemote.getEsecuzioneMSRemote();
 			EsecuzioneMisuraSicurezzaModel aEMS = new EsecuzioneMisuraSicurezzaModel();
 			EMSFascGPModel lEmsFasModel = new EMSFascGPModel();
-			String annoEMS = lFasGPMod.getGeneraleProcedimentoModel().getAnnoS1().toString();
-			String progEMS = lFasGPMod.getGeneraleProcedimentoModel().getProgrS1().toString();
-			String uffiEMS = lFasGPMod.getFascicoloSiusModel().getChiaveUfficio();
+			String annoEMS = fgpm.getGeneraleProcedimentoModel().getAnnoS1().toString();
+			String progEMS = fgpm.getGeneraleProcedimentoModel().getProgrS1().toString();
+			String uffiEMS = fgpm.getFascicoloSiusModel().getChiaveUfficio();
 
 			Vector lVectEMS = lEseMSCtrl.ExRicercaEsecuzioneMisureSicurezza(annoEMS, progEMS, null, null,
 					null, null, uffiEMS, 1);
@@ -574,17 +569,30 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 				if (lCodOggetto.indexOf("2471") < 0 && lCodOggetto.indexOf("2470") < 0)
 					throw new SIUSException(SIUSException.USER_MESSAGE,
 							"Ordinanza di Conversione Pene Pecuniare richiede un oggetto specifico");
-
-				// Lettura dell'eventuale Richiesta di Conversione Pene Pecuniarie.
-				RichiestaConversioneModel aRichiestaConversione = new RichiestaConversioneModel();
-				FascicoloGPModel lFasGPMod = new FascicoloGPModel(
-						(FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"));
-				aRichiestaConversione
-						.setFasSiuIdFascicoloSius(lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
 				IRichiestaConversione lCtrlRC = SIEPLookupRemote.getRichiestaConversioneRemote();
-				Vector lVectRichConversioniPP = lCtrlRC
-						.ExRicercaRichiestaConversioneEstesa(aRichiestaConversione);
-
+				RichiestaConversioneModel rcm = null;
+				// 20251203: se il SIUS è collegato ad un SIEP classe VII in cui è stata inserita una
+				// richiesta di conversione P.P., ma successivamente all'iscrizione del SIUS, allora aggiorno
+				// il record di richiesta conversione con ID_FASCICOLO_SIUS per poter emettere ordinanza
+				BigDecimal chiaveProgrSIEP = fgpm.getFascicoloSiusModel().getChiaveProgrSIEP();
+				if (!Utils.isNullObj(chiaveProgrSIEP) && chiaveProgrSIEP.intValue() > 70000
+						&& chiaveProgrSIEP.intValue() < 79999) {
+					rcm = lCtrlRC.ExRicercaRichiestaConversioneByIdFascicoloSiep(
+							fgpm.getFascicoloSiusModel().getFasSieIdFascicoloSiep());
+					// 20260303 [SG]: aggiunto controllo di consistenza oggetto model (rcm)
+					if (!Utils.isNullObj(rcm) && !Utils.isNullObj(rcm.getIdRichiestaConversione())
+							&& Utils.isNullObj(rcm.getFasSiuIdFascicoloSius())) {
+						rcm.setFasSiuIdFascicoloSius(fgpm.getFascicoloSiusModel().getIdFascicoloSius());
+						lCtrlRC.ExModificaRichiestaConversione(rcm);
+					}
+				}
+				// FINE 20251203
+				// Lettura dell'eventuale Richiesta di Conversione Pene Pecuniarie.
+				if (Utils.isNullObj(rcm)) {
+					rcm = new RichiestaConversioneModel();
+					rcm.setFasSiuIdFascicoloSius(fgpm.getFascicoloSiusModel().getIdFascicoloSius());
+				}
+				Vector lVectRichConversioniPP = lCtrlRC.ExRicercaRichiestaConversioneEstesa(rcm);
 				if (!(lVectRichConversioniPP.size() > 0))
 					throw new SIUSException(SIUSException.USER_MESSAGE,
 							"Ordinanza di Conversione Pene Pecuniare impossibile senza Richiesta Conversione");
@@ -640,11 +648,9 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 			setRequestAttribute("statolibertatis", "" + lOption);
 			setRequestAttribute("Action",
 					"siap.sius.depositoordinanzapc.action.ActInserisciOrdinanza_AmmProvv_AffiInProva_ServSoc");
-			FascicoloGPModel lFasGPMod = new FascicoloGPModel(
-					(FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"));
 			ITenore lCtrl = SIUSLookupRemote.getTenoreRemote();
 			Vector lTenori = lCtrl.ExRicercaTenoreByGenProc(
-					lFasGPMod.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
+					fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 			setRequestAttribute("listaTenori", lTenori);
 			String Codmag = getRequestStringParameter(ICostantiMagistratoRelatore.CAMPO_MAG_COD_MAGISTRATO);
 			setRequestAttribute("CodMagRel", Codmag);
@@ -668,16 +674,12 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 		// MEV_39 Appello Contro Provvedimento su Misura di Sicurezza
 		else if (lCodTipoDec.equalsIgnoreCase(APPELLO_MS)) {
 			// Lettura elenco Misure di Sicurezza Collegate al Fascicolo SIUS
-			FascicoloGPModel lFasGPMod = new FascicoloGPModel(
-					(FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"));
-
 			// 29/10/2019 eliminazione BLOCCO su richiesta di GASBARRI!!!
-			if (!Utils.isNullObj(lFasGPMod.getFascicoloSiusModel().getIdFascicoloSiusOrigine())) {
+			if (!Utils.isNullObj(fgpm.getFascicoloSiusModel().getIdFascicoloSiusOrigine())) {
 				// throw new SIUSException(SIUSException.USER_MESSAGE,
 				// "Impossibile leggere la Misura Sicurezza in Esecuzione!");
 				// fascicolo originale
-				BigDecimal idFascicoloSiusOrigine = lFasGPMod.getFascicoloSiusModel()
-						.getIdFascicoloSiusOrigine();
+				BigDecimal idFascicoloSiusOrigine = fgpm.getFascicoloSiusModel().getIdFascicoloSiusOrigine();
 				// info per il log
 				siesLogger.debug("ID del Fascicolo Origine ->" + idFascicoloSiusOrigine);
 				// ricerco provvedimento impugnato
@@ -699,12 +701,12 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 			}
 
 			// 29/10/2019 eliminazione BLOCCO su richiesta di GASBARRI!!!
-			BigDecimal idFascicoloSiusOrigine = lFasGPMod.getFascicoloSiusModel().getIdFascicoloSiusOrigine();
+			BigDecimal idFascicoloSiusOrigine = fgpm.getFascicoloSiusModel().getIdFascicoloSiusOrigine();
 			BigDecimal idFascicoloSiusLavorazione = null;
 			if (idFascicoloSiusOrigine != null) {
 				idFascicoloSiusLavorazione = idFascicoloSiusOrigine;
 			} else {
-				idFascicoloSiusLavorazione = lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius();
+				idFascicoloSiusLavorazione = fgpm.getFascicoloSiusModel().getIdFascicoloSius();
 			}
 
 			MisuraSicurezzaModel aMisuraSicurezza = new MisuraSicurezzaModel();
@@ -720,8 +722,7 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 				setRequestAttribute("misuresicurezza", v);
 			} else if (lVect.isEmpty()) {
 				// ricerco non per id fasc sius ma per id fasc sius
-				aMisuraSicurezza
-						.setFasSiuIdFascicoloSius(lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
+				aMisuraSicurezza.setFasSiuIdFascicoloSius(fgpm.getFascicoloSiusModel().getIdFascicoloSius());
 				lCtrl = new MisuraSicurezzaController();
 				lVect = lCtrl.ExRicercaMisuraSicurezza(aMisuraSicurezza);
 				if (!lVect.isEmpty()) {
@@ -814,35 +815,30 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 
 	// Viene ricavata la data di fine pena e passata alla request
 	private void ricavaDataFinepena() throws Exception {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("ricavaDataFinepena: inizio");
-
 		// Si preleva dalla sessione il fascicolo GPModel.
-		if (!isSessionAttributeNullObj("fascicoloSiusGP")) {
-			FascicoloGPModel lFasGPMod = new FascicoloGPModel(
-					(FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"));
-			if (lFasGPMod.getFascicoloSiusModel() != null) {
-				BigDecimal lIdFascicoloSiep = lFasGPMod.getFascicoloSiusModel().getFasSieIdFascicoloSiep();
-				if (lIdFascicoloSiep != null) {
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-					// LogF3B.getLogger()
-					siesLogger.debug("ID Fascicolo SIEP ->" + lIdFascicoloSiep);
-					IPenaResidua lPenaResCtrl = SIEPLookupRemote.getPenaResiduaRemote();
-					PenaResiduaModel lPenaRes = lPenaResCtrl
-							.ExRicercaPenaResiduaUltimaValidata(lIdFascicoloSiep);
-					if (lPenaRes != null) {
-						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
-						// di LogF3B.getLogger()
-						siesLogger.debug("ID Pena Residua ->" + lPenaRes.getIdPenaResidua());
-						if (lPenaRes.getDataFine() != null) {
-							setRequestAttribute("data_fine_misura_dd",
-									DateUtils.getDateToString(lPenaRes.getDataFine(), "dd"));
-							setRequestAttribute("data_fine_misura_MM",
-									DateUtils.getDateToString(lPenaRes.getDataFine(), "MM"));
-							setRequestAttribute("data_fine_misura_yyyy",
-									DateUtils.getDateToString(lPenaRes.getDataFine(), "yyyy"));
-						}
+		if (fgpm.getFascicoloSiusModel() != null) {
+			BigDecimal lIdFascicoloSiep = fgpm.getFascicoloSiusModel().getFasSieIdFascicoloSiep();
+			if (lIdFascicoloSiep != null) {
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("ID Fascicolo SIEP ->" + lIdFascicoloSiep);
+				IPenaResidua lPenaResCtrl = SIEPLookupRemote.getPenaResiduaRemote();
+				PenaResiduaModel lPenaRes = lPenaResCtrl.ExRicercaPenaResiduaUltimaValidata(lIdFascicoloSiep);
+				if (lPenaRes != null) {
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+					// di LogF3B.getLogger()
+					siesLogger.debug("ID Pena Residua ->" + lPenaRes.getIdPenaResidua());
+					if (lPenaRes.getDataFine() != null) {
+						setRequestAttribute("data_fine_misura_dd",
+								DateUtils.getDateToString(lPenaRes.getDataFine(), "dd"));
+						setRequestAttribute("data_fine_misura_MM",
+								DateUtils.getDateToString(lPenaRes.getDataFine(), "MM"));
+						setRequestAttribute("data_fine_misura_yyyy",
+								DateUtils.getDateToString(lPenaRes.getDataFine(), "yyyy"));
 					}
 				}
 			}
@@ -854,47 +850,40 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 
 	// Viene ricavata la Sanzione Residua o la Sanzione Sostitutiva e passata alla request
 	private void ricercaPenaComplessivaSanzioneSostitutivaByIdFasSiep() throws Exception {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("ricercaPenaComplessivaSanzioneSostitutivaByIdFasSiep: inizio");
+		if (fgpm.getFascicoloSiusModel() != null) {
+			BigDecimal lIdFascicoloSiep = fgpm.getFascicoloSiusModel().getFasSieIdFascicoloSiep();
+			if (lIdFascicoloSiep != null) {
+				// Se esiste il Fascicolo SIEP
 
-		// Si preleva dalla sessione il fascicolo GPModel.
-		if (!isSessionAttributeNullObj("fascicoloSiusGP")) {
-			FascicoloGPModel lFasGPMod = new FascicoloGPModel(
-					(FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"));
-			if (lFasGPMod.getFascicoloSiusModel() != null) {
-				BigDecimal lIdFascicoloSiep = lFasGPMod.getFascicoloSiusModel().getFasSieIdFascicoloSiep();
-				if (lIdFascicoloSiep != null) {
-					// Se esiste il Fascicolo SIEP
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("ID Fascicolo SIEP ->" + lIdFascicoloSiep);
 
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-					// LogF3B.getLogger()
-					siesLogger.debug("ID Fascicolo SIEP ->" + lIdFascicoloSiep);
+				// Si cerca la SANZIONE RESIDUA
+				ISanzioneSostitutiva lSSCtrl = SIEPLookupRemote.getSanzioneSostitutivaRemote();
+				SanzioneSostResiduaModel lSSResiduaModel = lSSCtrl.getUltimaSSResidua(lIdFascicoloSiep, null);
 
-					// Si cerca la SANZIONE RESIDUA
-					ISanzioneSostitutiva lSSCtrl = SIEPLookupRemote.getSanzioneSostitutivaRemote();
-					SanzioneSostResiduaModel lSSResiduaModel = lSSCtrl.getUltimaSSResidua(lIdFascicoloSiep,
-							null);
+				if (lSSResiduaModel == null || lSSResiduaModel.getIdSanzioneSostResidua() == null) {
+					// Se non è stata trovata la Sanzione Residua si ricerca la Sanzione Sostitutiva
 
-					if (lSSResiduaModel == null || lSSResiduaModel.getIdSanzioneSostResidua() == null) {
-						// Se non è stata trovata la Sanzione Residua si ricerca la Sanzione Sostitutiva
-
-						// Pena Complessiva e (al massimo 1 e al massimo 1)
-						IPenaComplessiva lPenComCtr = SIEPLookupRemote.getPenaComplessivaRemote();
-						PenaComplessivaSanzioneSostitutivaModel lPenCompSanzSost = lPenComCtr
-								.ExRicercaPenaComplessivaSanzioneSostitutivaByIdFascicoloSiep(
-										lIdFascicoloSiep);
-						// Se è stata trovata la Sanzione Sostitutiva si passa nella request
-						if (lPenCompSanzSost != null && lPenCompSanzSost.getSanzioneSostitutiva() != null)
-							setRequestAttribute("sanzione_sostitutiva",
-									lPenCompSanzSost.getSanzioneSostitutiva());
-					} else {
-						// Se è stata trovata la Sanzione Residua si passa nella request
-						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
-						// di LogF3B.getLogger()
-						siesLogger.debug("lSSResiduaModel = " + lSSResiduaModel);
-						setRequestAttribute("sanzione_residua", lSSResiduaModel);
-					}
+					// Pena Complessiva e (al massimo 1 e al massimo 1)
+					IPenaComplessiva lPenComCtr = SIEPLookupRemote.getPenaComplessivaRemote();
+					PenaComplessivaSanzioneSostitutivaModel lPenCompSanzSost = lPenComCtr
+							.ExRicercaPenaComplessivaSanzioneSostitutivaByIdFascicoloSiep(lIdFascicoloSiep);
+					// Se è stata trovata la Sanzione Sostitutiva si passa nella request
+					if (lPenCompSanzSost != null && lPenCompSanzSost.getSanzioneSostitutiva() != null)
+						setRequestAttribute("sanzione_sostitutiva",
+								lPenCompSanzSost.getSanzioneSostitutiva());
+				} else {
+					// Se è stata trovata la Sanzione Residua si passa nella request
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+					// di LogF3B.getLogger()
+					siesLogger.debug("lSSResiduaModel = " + lSSResiduaModel);
+					setRequestAttribute("sanzione_residua", lSSResiduaModel);
 				}
 			}
 		}
@@ -908,6 +897,7 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 	 * valorizzare la combo corrispondente nella form di inserimento.
 	 */
 	private void preparaListaTipoUfficiCompetente() throws Exception {
+
 		Option lOption = new Option(DecodificheManager.getInstance().getTipoUfficio());
 		// MEV10-s3: aggiunte tipologie di ufficio
 		// solo le Autorità Emittenti.
@@ -923,41 +913,39 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 
 		siesLogger.debug("ricercaMancatoPagamento");
 		RateizzazionePPModel lRataMancatoPagamento = null;
-		if (!isSessionAttributeNullObj("fascicoloSiusGP")) {
-			FascicoloGPModel lFasGPMod = (FascicoloGPModel) getSessionAttribute("fascicoloSiusGP");
-			BigDecimal lIdFasicoloSIEP = null;
-			if (lFasGPMod.getFascicoloSiusModel() != null
-					&& lFasGPMod.getFascicoloSiusModel().getFasSieIdFascicoloSiep() != null) {
-				lIdFasicoloSIEP = lFasGPMod.getFascicoloSiusModel().getFasSieIdFascicoloSiep();
-				// Ricerca ultimo evento 01-04-1308-Avviso mancato pagamento Pena Pecuniaria
-				// validato
-				EventoModel lEveRicerca = new EventoModel();
-				lEveRicerca.setFlagDocumentoRegistrato("S");
-				lEveRicerca.setFasSieIdFascicoloSiep(lIdFasicoloSIEP);
-				lEveRicerca.setCodMotivo("1308");
-				lEveRicerca.setCodTipoProvvedimento("04");
+		BigDecimal lIdFasicoloSIEP = null;
+		if (fgpm.getFascicoloSiusModel() != null
+				&& fgpm.getFascicoloSiusModel().getFasSieIdFascicoloSiep() != null) {
+			lIdFasicoloSIEP = fgpm.getFascicoloSiusModel().getFasSieIdFascicoloSiep();
+			// Ricerca ultimo evento 01-04-1308-Avviso mancato pagamento Pena Pecuniaria
+			// validato
+			EventoModel lEveRicerca = new EventoModel();
+			lEveRicerca.setFlagDocumentoRegistrato("S");
+			lEveRicerca.setFasSieIdFascicoloSiep(lIdFasicoloSIEP);
+			lEveRicerca.setCodMotivo("1308");
+			lEveRicerca.setCodTipoProvvedimento("04");
 
-				IEvento lEveCtrl = SICOLookupRemote.getEventoRemote();
-				// Vector <EventoModel> lListaAvvisi = lEveCtrl.ricercaEvento(new String[]{"1308"}, new
-				// String[]{"04"}, lEveRicerca);
-				Vector<EventoModel> lListaAvvisi = null;
-				try {
-					lListaAvvisi = lEveCtrl.ExRicercaEvento(lEveRicerca);
-				} catch (Exception e) {
-					siesLogger.debug("NON ESISTE un provvedimento di mancato pagamento (1308) sul "
-							+ "procedimento SIEP collegato!");
-				}
-				if (lListaAvvisi != null && lListaAvvisi.size() > 0) {
-					BigDecimal idEvento = lListaAvvisi.elementAt(0).getIdEvento();
-					IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
-					Vector<RateizzazionePPModel> listaRateizzazioni = irpp
-							.exRicercaRateizzazioniByIdEvento(idEvento);
-					if (listaRateizzazioni != null && listaRateizzazioni.size() > 0)
-						lRataMancatoPagamento = listaRateizzazioni.elementAt(0); // presente 1 solo di tipo U
-				}
+			IEvento lEveCtrl = SICOLookupRemote.getEventoRemote();
+			// Vector <EventoModel> lListaAvvisi = lEveCtrl.ricercaEvento(new String[]{"1308"}, new
+			// String[]{"04"}, lEveRicerca);
+			Vector<EventoModel> lListaAvvisi = null;
+			try {
+				lListaAvvisi = lEveCtrl.ExRicercaEvento(lEveRicerca);
+			} catch (Exception e) {
+				siesLogger.debug("NON ESISTE un provvedimento di mancato pagamento (1308) sul "
+						+ "procedimento SIEP collegato!");
+			}
+			if (lListaAvvisi != null && lListaAvvisi.size() > 0) {
+				BigDecimal idEvento = lListaAvvisi.elementAt(0).getIdEvento();
+				IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
+				Vector<RateizzazionePPModel> listaRateizzazioni = irpp
+						.exRicercaRateizzazioniByIdEvento(idEvento);
+				if (listaRateizzazioni != null && listaRateizzazioni.size() > 0)
+					lRataMancatoPagamento = listaRateizzazioni.elementAt(0); // presente 1 solo di tipo U
 			}
 		}
 
+		// valore di ritorno
 		return lRataMancatoPagamento;
 	}
 
@@ -968,31 +956,26 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 	 */
 	private void ricercaProvvedimentoRevocaPS() throws F3BException {
 
-		// Si preleva dalla sessione il fascicolo GPModel
-		if (!isSessionAttributeNullObj("fascicoloSiusGP")) {
-			FascicoloGPModel fgpm = new FascicoloGPModel(
-					(FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"));
-			if (!Utils.isNullObj(fgpm.getFascicoloSiusModel())) {
-				BigDecimal idFascicoloSiusOrigine = fgpm.getFascicoloSiusModel().getIdFascicoloSiusOrigine();
-				if (!Utils.isNullObj(idFascicoloSiusOrigine)) {
-					IFascicoloSius ifs = SIUSLookupRemote.getFascicoloSiusRemote();
-					FascicoloGPModel fgpmdOrigine = ifs.ExRicercaFascicoloByKey(idFascicoloSiusOrigine);
-					if ("U131".equals(fgpmdOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento())
-							|| "U132".equals(fgpmdOrigine.getGeneraleProcedimentoModel()
-									.getCodOggettoProcedimento())) {
-						FascicoloSiusModel fsm = fgpmdOrigine.getFascicoloSiusModel();
-						setRequestAttribute("procedimentoCollegato", fsm);
-						IEvento ie = SICOLookupRemote.getEventoRemote();
-						Vector<EventoModel> eventi = ie
-								.ExRicercaEventoByFascicoloSius(fsm.getIdFascicoloSius(), "01");
-						if (!eventi.isEmpty()) {
-							Iterator<EventoModel> iterEM = eventi.iterator();
-							while (iterEM.hasNext()) {
-								EventoModel em = iterEM.next();
-								if ("03".equals(em.getCodTipoProvvedimento())) {
-									setRequestAttribute("eventoProcedimentoCollegato", em);
-									break;
-								}
+		if (!Utils.isNullObj(fgpm.getFascicoloSiusModel())) {
+			BigDecimal idFascicoloSiusOrigine = fgpm.getFascicoloSiusModel().getIdFascicoloSiusOrigine();
+			if (!Utils.isNullObj(idFascicoloSiusOrigine)) {
+				IFascicoloSius ifs = SIUSLookupRemote.getFascicoloSiusRemote();
+				FascicoloGPModel fgpmdOrigine = ifs.ExRicercaFascicoloByKey(idFascicoloSiusOrigine);
+				if ("U131".equals(fgpmdOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento())
+						|| "U132".equals(
+								fgpmdOrigine.getGeneraleProcedimentoModel().getCodOggettoProcedimento())) {
+					FascicoloSiusModel fsm = fgpmdOrigine.getFascicoloSiusModel();
+					setRequestAttribute("procedimentoCollegato", fsm);
+					IEvento ie = SICOLookupRemote.getEventoRemote();
+					Vector<EventoModel> eventi = ie.ExRicercaEventoByFascicoloSius(fsm.getIdFascicoloSius(),
+							"01");
+					if (!eventi.isEmpty()) {
+						Iterator<EventoModel> iterEM = eventi.iterator();
+						while (iterEM.hasNext()) {
+							EventoModel em = iterEM.next();
+							if ("03".equals(em.getCodTipoProvvedimento())) {
+								setRequestAttribute("eventoProcedimentoCollegato", em);
+								break;
 							}
 						}
 					}

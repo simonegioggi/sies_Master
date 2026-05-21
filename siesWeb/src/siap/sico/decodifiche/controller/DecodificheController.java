@@ -25,12 +25,8 @@ import siap.sico.decodifiche.model.DecodificheModel;
 import siap.sico.decodifiche.model.OggettiModel;
 
 /**
- * Title: DecodificheController
- * Description: classe per la gestione delle decodifiche
- * Copyright: Copyright (c) 2002
- * Company: EII
+ * DecodificheController - Classe controlle per le decodifiche tabelle DB
  *
- * @author unascribed
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })

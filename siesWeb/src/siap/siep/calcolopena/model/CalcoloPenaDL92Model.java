@@ -64,7 +64,7 @@ public class CalcoloPenaDL92Model extends GenericModel {
 	private Date mDataScarcerazioneLANoFung; 
 	// ?? data fine pena dal Penultimo semestre ( a che serve????)
 	private Date mDataScarcerazionePenultimoSemestre;
-	
+
 	// Indica se il semestre con progressivo x è considerato valido ai fini della concessione delle LA
 	private Hashtable <String, String> mListaIsCompresa = new Hashtable <String, String>();
 
@@ -398,7 +398,6 @@ public class CalcoloPenaDL92Model extends GenericModel {
 				lSemetreUtile.setResiduoNumGiorni    (new BigDecimal (lCalModTot.getNumGiorni()));
 				lSemetreUtile.setLAApplicate         (lLaApplicate);
 				lSemetreUtile.setIsCompreso          (lIsCompreso);
-				
 				
 				mListaSemetri.add(lSemetreUtile);
   		}
