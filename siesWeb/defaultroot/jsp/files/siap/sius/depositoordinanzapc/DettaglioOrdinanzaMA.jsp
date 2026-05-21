@@ -10,11 +10,10 @@
 <%@ page import="siap.sius.generaleprocedimento.model.GeneraleProcedimentoModel"%>
 <%@ page import="f3b.web.IWebConstants"%>
 
-
-<jsp:useBean id="datiOrdinanza" scope="request" class="siap.sius.depositoordinanzapc.model.OrdinanzaEventoTenoriPrescrizioniModel"/>
+<jsp:useBean id="datiOrdinanza" 	scope="request" class="siap.sius.depositoordinanzapc.model.OrdinanzaEventoTenoriPrescrizioniModel"/>
 <%-- MEV10-s3: aggiunto riferimento all'oggetto "codTipoUfficio" --%>
-<jsp:useBean id="codTipoUfficio" scope="request" class="java.lang.String"/>
-
+<jsp:useBean id="codTipoUfficio"	scope="request" class="java.lang.String"/>
+<jsp:useBean id="TornaQui"     		scope="request" class="java.lang.String"/>
 
 <%
 //INIZIO: MEV_2019-09 (D.lgs. 123/2018)
@@ -74,30 +73,37 @@ if (ICostantiDepositoOrdinanzaPc.MISURA_ALTERNATIVA_AMMISSIONE_DL_123_2018.equal
       <td class="l"><font class="campo"> <%=StringUtils.toStringJSP(  datiOrdinanza.getOrdinanza().getServizioTerapeuticoComp(), "-")%></font></td>
     </tr>
 
-<% if (is678) { %>    
-     <tr>
-      <td class="l">Data Esecutivita' </td>
-      <td class="l"><font class="campo"> <%=StringUtils.toStringJSP( DateUtils.getDateToString(datiOrdinanza.getOrdinanza().getDataEsecutivita(),"dd/MM/yyyy"), "-")%></font></td>
+<%
+if (is678) {
+%>    
+	<tr>
+      	<td class="l">Data Esecutivita'</td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP( DateUtils.getDateToString(datiOrdinanza.getOrdinanza().getDataEsecutivita(),"dd/MM/yyyy"), "-")%></font></td>
+		<%-- 20260521 [SG]: aggiunto link alla gestione data esecutivita' e useBean per il torna indietro --%>
+		<td class="l">
+			<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.fascicolo.action.ActLoadRegistrazioneEsecutivitaApplicazioneProvvisoriaMA&TornaQui=<%=TornaQui%>">
+	        	Gestione Data Esecutivita'
+	       	</a>
+		</td>
     </tr>
-<% } %>
-
-<% if (!is678) { %>    
-     <tr>
-      <td class="l">Data Termine Misura </td>
-      <td class="l"><font class="campo"> <%=StringUtils.toStringJSP( DateUtils.getDateToString(datiOrdinanza.getOrdinanza().getDataFineMisura(),"dd/MM/yyyy"), "-")%></font></td>
+<%
+}
+if (!is678) {
+%>    
+	<tr>
+      	<td class="l">Data Termine Misura </td>
+      	<td class="l"><font class="campo"> <%=StringUtils.toStringJSP( DateUtils.getDateToString(datiOrdinanza.getOrdinanza().getDataFineMisura(),"dd/MM/yyyy"), "-")%></font></td>
     </tr>
-   <tr>
-      <td class="l">Durata Misura (AA-MM-GG)</td>
-      <td class="l">
-      <font class="campo">
-         <%=StringUtils.toStringJSP( datiOrdinanza.getOrdinanza().getNumAnniDetenzioneDom())%> - <%=StringUtils.toStringJSP( datiOrdinanza.getOrdinanza().getNumMesiDetenzioneDom())%> - <%=StringUtils.toStringJSP( datiOrdinanza.getOrdinanza().getNumGiorniDetenzioneDom())%>
-      </font>
-       </td>
-    </tr>
-<% } %>     
-    <tr>
-			<td>
-				<br>
-			</td>
-		</tr>
+   	<tr>
+      	<td class="l">Durata Misura (AA-MM-GG)</td>
+      	<td class="l">
+      		<font class="campo">
+         		<%=StringUtils.toStringJSP( datiOrdinanza.getOrdinanza().getNumAnniDetenzioneDom())%> - <%=StringUtils.toStringJSP( datiOrdinanza.getOrdinanza().getNumMesiDetenzioneDom())%> - <%=StringUtils.toStringJSP( datiOrdinanza.getOrdinanza().getNumGiorniDetenzioneDom())%>
+      		</font>
+       	</td>
+	</tr>
+<%
+}
+%>     
+	<tr><td><br></td></tr>
 </table>
