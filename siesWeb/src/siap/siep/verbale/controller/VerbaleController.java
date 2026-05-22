@@ -646,20 +646,25 @@ public class VerbaleController extends SiapController implements IVerbale {
 
 				if (lEveMod.getCodMotivo().equals("0001") || lEveMod.getCodMotivo().equals("0002")
 						|| lEveMod.getCodMotivo().equals("0003")  
-						|| (   codiciAffidamentoSorvNew.contains(lEveMod.getCodMotivo())      
-			  				&& !"0270".equals(lEveMod.getCodEsito()))) {
+						|| (   codiciAffidamentoSorvNew.contains(lEveMod.getCodMotivo())  
+							// 2026.05.21 - Per i nuovi codici passasempre a 13 - mai provvisoria
+			  				//&& !"0270".equals(lEveMod.getCodEsito())
+			  				)
+						) {
 					lPosDao.setCodPosizioneGiuridica("13");
 				}
 				if (lEveMod.getCodMotivo().equals("0004")
 						|| codiciSemilibertaSorvNew.contains(lEveMod.getCodMotivo()) // MEV_2019-09-SIEP	
 						) 
-			  {
+				{
 					lPosDao.setCodPosizioneGiuridica("14");
 				}
 				if (lEveMod.getCodMotivo().equals("0005") || lEveMod.getCodMotivo().equals("0010")
 						|| lEveMod.getCodMotivo().equals("0013") || lEveMod.getCodMotivo().equals("0011")
 						|| (codiciDetenzioneSorvNew.contains(lEveMod.getCodMotivo()) 
-			  				&& !"0270".equals(lEveMod.getCodEsito()))) {
+							// 2026.05.21 - Per i nuovi codici passasempre a 12 - mai provvisoria
+			  				//&& !"0270".equals(lEveMod.getCodEsito())
+			  				)) {
 					lPosDao.setCodPosizioneGiuridica("12");
 				}
 				if (lEveMod.getCodMotivo().equals("2245")) {
@@ -673,16 +678,21 @@ public class VerbaleController extends SiapController implements IVerbale {
 				//MEV_2019-09-SIEP si aggiungono i nuovi codici
 //				if (lEveMod.getCodMotivo().equals("2005") ) {
 			  if (lEveMod.getCodMotivo().equals("2005") 
-			  		|| (codiciDetenzioneSorvNew.contains(lEveMod.getCodMotivo()) 
-			  				&& "0270".equals(lEveMod.getCodEsito()))) {
+					// 2026.05.21 - Per i nuovi codici passa sempre a 12 - mai provvisoria
+			  		//|| (codiciDetenzioneSorvNew.contains(lEveMod.getCodMotivo()) 
+			  		//		&& "0270".equals(lEveMod.getCodEsito()))
+			  	  ) {
 					lPosDao.setCodPosizioneGiuridica("29"); // Detenzione domiciliare provvisoria
 				}
 			  
 			  //MEV_2019-09-SIEP si aggiungono i nuovi codici
 				//if (lEveMod.getCodMotivo().equals("2006") || lEveMod.getCodMotivo().equals("2008")  ) {
 			  if (lEveMod.getCodMotivo().equals("2006") || lEveMod.getCodMotivo().equals("2008") 
-			  		|| (   codiciAffidamentoSorvNew.contains(lEveMod.getCodMotivo())      
-			  				&& "0270".equals(lEveMod.getCodEsito()))) {
+					// 2026.05.21 - Per i nuovi codici passasempre a 13 - mai provvisoria
+					//  || (   codiciAffidamentoSorvNew.contains(lEveMod.getCodMotivo())      
+			  		//		&& "0270".equals(lEveMod.getCodEsito())
+			  		//		)
+			  		) {
 					lPosDao.setCodPosizioneGiuridica("54"); // AFFIDAMENTO in prova ammiss provvisoria
 				}
 				// 20191120 [SG]: aggiunto codice per gestione ticket
