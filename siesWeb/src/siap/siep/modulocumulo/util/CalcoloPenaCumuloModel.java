@@ -2159,6 +2159,13 @@ public class CalcoloPenaCumuloModel extends GenericModel {
 			if (lMCCumuloModel.getDataFine() == null)
 				continue;
 			// Ticket#202604140156 - FINE
+			
+			// Ticket#202605200152
+			// Salto anche quelle senza data inizio che non possono essere ordinate e che non dovrebbero nemmeno 
+			// essere presenti, ma spoiler lo sono
+			if (lMCCumuloModel.getDataInizio() == null)
+				continue;
+			// Ticket#202605200152 - FINE
 
 			String lTotGGMessaAllaProva = "";
 			if ("CL".equals(lMCCumuloModel.getCodTipoMisura())) {
@@ -2310,6 +2317,10 @@ public class CalcoloPenaCumuloModel extends GenericModel {
 		// Ordino i periodi di carcerazione
 		// =======================================================
 		siesLogger.debug("Prima Ordinamento: lListaPeriodiOrdinati.size() = " + lListaPeriodiOrdinati.size());
+//		for (int z=0;z<lListaPeriodiOrdinati.size();z++) {
+//			PeriodiCarcerazioneSoffertiModel lodPer = lListaPeriodiOrdinati.elementAt(z);
+//			siesLogger.debug("[TEST] Data Inizio "+lodPer.getDataInizio() + " --> "+lodPer.getDescTitolo());
+//		}
 		Collections.sort(lListaPeriodiOrdinati,
 				Comparator.comparing(PeriodiCarcerazioneSoffertiModel::getDataInizio));
 
