@@ -24,18 +24,7 @@ import siap.sige.util.SIGELookupRemote;
 import siap.sige.web.ActionSige;
 
 /**
- * <p>
- * Title: ActInserisciParteUdienza
- * </p>
- * <p>
- * Description: Classe Action per l'inserimento della Parte (Offesa/Civile) di una Udienza
- * </p>
- * <p>
- * Copyright: Copyright (c) 2008
- * </p>
- * <p>
- * Company: Engineeering S.p.A.
- * </p>
+ * ActInserisciParteUdienza - Classe Action per l'inserimento della Parte (Offesa/Civile) di una Udienza
  *
  * @version 1.0
  */
@@ -208,8 +197,10 @@ public class ActInserisciParteUdienza extends ActionSige implements ICostantiPar
 		} else
 			lAnagraficaParteModel.setDescrProvinciaNascita("-");
 
-		// Residenza/Domicilio
+		// 20260415 [SG]: aggiunto controllo su CF che deve essere obbligatorio e conforme
+		// SoggettoUtil.controllaCF(lSogMod);
 
+		// Residenza/Domicilio
 		// Tipo Residenza
 		residenzaMod.setCodTipoResidenza("R");
 

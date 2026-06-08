@@ -2,6 +2,6 @@ BRANCH SIES VERSIONE MEV_2026-24
 
 Nasce dal branch 12.8.5.0 in data 12/01/2026
 
-In data 30/03/2026 eseguito merge col branch release_12.9.2.0
+In data 08/06/2026 eseguito merge col branch release_12.9.2.0
 
-Questa MEV verrà rilasciata il 30/01/2026
+Questa MEV verrà rilasciata il 09/06/2026

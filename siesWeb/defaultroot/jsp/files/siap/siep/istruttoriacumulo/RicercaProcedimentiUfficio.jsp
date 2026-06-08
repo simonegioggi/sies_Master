@@ -129,7 +129,7 @@ for (int k=0; k<ListaProcedimenti.size();k++){
           //checkAbilitaRicercaProcedimento($('[name="checkRicercaProvv"]'));
           
           <%if ("true".equals(primoCaricamento)){ %>
-          if (codCUI.length > 0 ) {
+          if (codCUI.length > 0 && 1==2) {
               $('[name="checkCognome"]').prop('checked',true);
               $('[name="checkNome"]').prop('checked',true);
               $('[name="checkDataNascita"]').prop('checked',true);
@@ -144,17 +144,17 @@ for (int k=0; k<ListaProcedimenti.size();k++){
           <% } else { %>
           	<%-- if (request.getParameter("checkCognome")!=null) { %>$('[name="<%=ICostantiSoggetto.CAMPO_COGNOME%>"]').val('<%=request.getParameter("checkCognome")%>')<% } --%>
           	<% if ("checked".equals(isCheckCognome)) { %>
-          	    $('[name="<%=ICostantiSoggetto.CAMPO_COGNOME%>"]').val('<%=request.getParameter("checkCognome")%>');
+          	    $('[name="<%=ICostantiSoggetto.CAMPO_COGNOME%>"]').val("<%=request.getParameter("checkCognome")%>");
           		$('[name="checkCognome"]').prop('checked',true);
           		checkAbilitaDisabilitaCampi($('[name="checkCognome"]'),'<%=ICostantiSoggetto.CAMPO_COGNOME%>' );
           	<% } %>
           	<% if ("checked".equals(isCheckNome)) { %>
-	      	    $('[name="<%=ICostantiSoggetto.CAMPO_NOME%>"]').val('<%=request.getParameter("checkNome")%>');
+	      	    $('[name="<%=ICostantiSoggetto.CAMPO_NOME%>"]').val("<%=request.getParameter("checkNome")%>");
 	      		$('[name="checkNome"]').prop('checked',true);
 	      		checkAbilitaDisabilitaCampi($('[name="checkNome"]'),'<%=ICostantiSoggetto.CAMPO_NOME%>' );
       		<% } %>
           	<% if ("checked".equals(isCheckCUI)) { %>
-	      	    $('[name="<%=ICostantiSoggetto.CAMPO_COD_AFIS%>"]').val('<%=request.getParameter("checkCUI")%>');
+	      	    $('[name="<%=ICostantiSoggetto.CAMPO_COD_AFIS%>"]').val("<%=request.getParameter("checkCUI")%>");
 	      		$('[name="checkCUI"]').prop('checked',true);
 	      		checkAbilitaDisabilitaCampi($('[name="checkCUI"]'),'<%=ICostantiSoggetto.CAMPO_COD_AFIS%>' );
   			<% } %> 
@@ -169,7 +169,7 @@ for (int k=0; k<ListaProcedimenti.size();k++){
 	      		checkAbilitaDisabilitaDataNascita($('[name="checkDataNascita"]'));
       		<% } %>
           	<% if ("checked".equals(isCheckComune)) { %>
-	      	    $('[name="<%=ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA%>"]').val('<%=request.getParameter("checkComune")%>');
+	      	    $('[name="<%=ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA%>"]').val("<%=request.getParameter("checkComune")%>");
 	      		$('[name="checkComune"]').prop('checked',true);
 	      		checkAbilitaDisabilitaCampi($('[name="checkComune"]'),'<%=ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA%>' );
 			<% } %>
@@ -807,6 +807,8 @@ if (ListaProcedimenti == null || ListaProcedimenti.size() == 0) {
             }
             lAnnoNumeroSIEP += "<br> <font class=\"cRosso\">(Ex " + uffAccFasc.getCodTipoUfficio() + " di " + uffAccFasc.getDescrizione() + ")</font>";
         }
+  
+        
 %>  
 	    <tr>
 		<td class="c">
@@ -873,6 +875,87 @@ if (ListaProcedimenti == null || ListaProcedimenti.size() == 0) {
 %>
 
 		</tr>
+
+
+		<% 
+			// ====================================================
+			SoggettoModel lSoggTrovato = lfascicolo.getSoggetto();			
+			String lStrSoggetto = "<font class=\"label\">Cognome</font> ";
+//			lStrSoggetto += " <font class=\"campo\">"+StringUtils.toStringJSP(lSoggTrovato.getCognome()) +"&nbsp;"+StringUtils.toStringJSP(lSoggTrovato.getNome())+ "</font>&nbsp;";
+			lStrSoggetto += " <font class=\"campo\">"+StringUtils.toStringJSP(lSoggTrovato.getCognome())+"</font>&nbsp;";
+			lStrSoggetto += " <font class=\"label\">Nome</font> ";
+			lStrSoggetto += " <font class=\"campo\">"+StringUtils.toStringJSP(lSoggTrovato.getNome())+ "</font>&nbsp;";
+			
+		    if (lSoggTrovato.getSesso().compareTo("F")==0){
+		        lStrSoggetto += " <font class=\"label\">nata il :</font>&nbsp;";
+		    } else {
+		        lStrSoggetto += " <font class=\"label\">nato il :</font>&nbsp;";
+		    }
+		    
+		    // Data Nascita
+		    if (lSoggTrovato.getDataNascita() == null) {
+		        if ("S".equals(lSoggTrovato.getDataNascitaPresunta())) {
+		          lStrSoggetto += " <font class=\"campo\">" + StringUtils.toStringJSP(lSoggTrovato.getAnnoNascita()) + "</font>&nbsp;";
+		        } else {
+		          lStrSoggetto += " <font class=\"campo\">***</font>&nbsp;";
+		        }
+		    } else {
+		        lStrSoggetto += " <font class=\"campo\">"+StringUtils.toStringJSP(DateUtils.getDateToString(lSoggTrovato.getDataNascita(), "dd-MM-yyyy")) + "</font>&nbsp;";
+		    }
+		    // Luogo di nascita
+		    lStrSoggetto += " <font class=\"label\">in : </font>";
+		    lStrSoggetto += " <font class=\"campo\">";
+		    if (lSoggTrovato.getDescrComuneNascita().compareTo("-") == 0) {
+		      lStrSoggetto += StringUtils.toStringJSP(lSoggTrovato.getDescComuneNascitaEstero(), "") + " (" + lSoggTrovato.getDescrStatoNascita().toUpperCase() + ")";
+		    }
+		    else {
+		      lStrSoggetto += StringUtils.toStringJSP(lSoggTrovato.getDescrComuneNascita(), "" );
+		    }
+		    lStrSoggetto += "</font>";
+		    lStrSoggetto +=" <font class=\"label\">Stato di Nascita: </font>";
+		    lStrSoggetto +=" <font class=\"campo\">" + StringUtils.toStringJSP(lSoggTrovato.getDescrStatoNascita()) + "</font>";
+		    lStrSoggetto +=" <font class=\"label\">Codice CUI: </font>";
+		    lStrSoggetto +=" <font class=\"campo\">" + StringUtils.toStringJSP(lSoggTrovato.getCodAfis()) + "</font>";
+		    
+		    // Se l'anagrafica trovata differisce dai criteri di ricera vuol dire che esce solo per lo stesso CUI. La segnalo
+		    boolean isStessaAnagrafica = true;
+		    if (lsoggetto.getCognome()!=null && lsoggetto.getCognome().length()>0 && !lsoggetto.getCognome().equals(lSoggTrovato.getCognome()))
+		    	isStessaAnagrafica = false;
+		    if (lsoggetto.getNome()!=null && lsoggetto.getNome().length()>0 && !lsoggetto.getNome().equals(lSoggTrovato.getNome()))
+		    	isStessaAnagrafica = false;
+		    
+		    if ( lsoggetto.getDataNascita()!=null ) {
+				if (  (lsoggetto.getDataNascita() != null && lSoggTrovato.getDataNascita()==null)
+					||(lsoggetto.getDataNascita() == null && lSoggTrovato.getDataNascita()!=null)
+					||(!DateUtils.isEquals(lsoggetto.getDataNascita(), lSoggTrovato.getDataNascita()))
+				   )
+				    isStessaAnagrafica = false;
+		    }
+		    
+		    if (lsoggetto.getDescrComuneNascita()!=null && lsoggetto.getDescrComuneNascita().length()>0 && !lsoggetto.getDescrComuneNascita().equals(lSoggTrovato.getDescrComuneNascita()))
+		    	isStessaAnagrafica = false;
+		    if (lsoggetto.getCodStatoNascita()!=null && lsoggetto.getCodStatoNascita().length()>0 && !lsoggetto.getCodStatoNascita().equals(lSoggTrovato.getCodStatoNascita()))
+		    	isStessaAnagrafica = false;
+		    
+		%>
+		
+		<% if (!isStessaAnagrafica) { %>
+		<tr style="background-color: rgb(255,255,153);">
+			<td class="l" colspan="100%">&nbsp;&nbsp;
+				<span style="font-size: 17px;">&#8679;</span>
+				<span style="font-size: 17px;">&#8679;</span>
+				<font color="red">&nbsp;&nbsp;
+				[L'Anagrafica del Soggetto differisce da quella ricercata ma ha associato lo stesso Codice CUI]
+				</font>
+				<%=StringUtils.toStringJSP(lStrSoggetto,"&nbsp;")%>
+				&nbsp;&nbsp;
+				<span style="font-size: 17px;">&#8679;</span>
+				<span style="font-size: 17px;">&#8679;</span>
+			</td>
+		</tr>
+		<% } %>
+		
+		
 <%
 	} // end while
 }

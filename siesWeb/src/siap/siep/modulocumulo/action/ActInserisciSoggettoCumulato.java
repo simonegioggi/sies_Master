@@ -164,6 +164,9 @@ public class ActInserisciSoggettoCumulato extends ActionModuloCumulo implements 
 		String lDescriNazio = ((DecodificheModel) lStatoCitt.get(lIndModel)).getDescription();
 		lSogMod.setDescrNazionalita(lDescriNazio);
 
+		// 20260415 [SG]: aggiunto controllo su CF che deve essere obbligatorio e conforme
+		// SoggettoUtil.controllaCF(lSogMod);
+
 		// Chiama il controller
 		ISoggettoCumulato lSogCtrl = SIEPLookupRemote.getSoggettoCumuloRemote();
 		SoggettoCumulatoModel lSogRetMod = new SoggettoCumulatoModel();
