@@ -1,5 +1,5 @@
-BRANCH SIES VERSIONE 12.9.3.0
+Branch siesWeb Versione release_12.9.3.0
 
-Nasce dal branch 12.9.2.0 in data 27/03/2026
+Nasce dal branch release_12.9.2.0 in data 27/03/2026
 
-In data 15/06/2026 eseguito merge col BRANCH SIES VERSIONE MEV_2026-24
+In data 15/06/2026 eseguito merge col BRANCH SIESWEB VERSIONE MEV_2026-24
