@@ -1,6 +1,6 @@
-BRANCH SIES VERSIONE 12.8.3.0
+Branch siesWeb Versione release_12.8.3.0
 
-Nasce dal branch 12.8.2.0 in data 29/08/2025
+Nasce dal branch release_12.8.2.0 in data 29/08/2025
 
 In data 09/09/2025 eseguito il merge con il branch MEV_2019-09, ma senza il branch MEV_2024-DNA.
 	MEV_2019-09: 07/10/2020	-->	ID 09 SIES DLgs 123/18 e 121/18
@@ -26,4 +26,5 @@ In data 25/09/2025 eseguito il merge con il branch MEV_2024-092.
 	4)	in data 04/04/2025 eseguito merge col branch MEV_2019-021
 
 In data 09/12/2025 eseguito il merge con il branch SIES VERSIONE 12.8.4.0.
-In data 19/05/2026 eseguito il merge con il branch SIES VERSIONE 12.9.3.0
+In data 19/05/2026 eseguito il merge con il branch SIES VERSIONE 12.9.2.0
+In data 15/06/2026 eseguito il merge con il branch MEV_2026-24

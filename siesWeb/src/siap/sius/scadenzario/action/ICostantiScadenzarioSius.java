@@ -3,7 +3,7 @@ package siap.sius.scadenzario.action;
 import f3b.web.IWebConstants;
 
 /**
- * ICostantiScadenzario - Classe di costanti di Scadenzario SIUS
+ * ICostantiScadenzarioSius - Classe di costanti di Scadenzario SIUS
  *
  * @version 1.0
  */
@@ -18,10 +18,12 @@ public interface ICostantiScadenzarioSius {
 	public static final String CAMPO_GIORNO_DATA_FINE_SCADENZA = "GiornoDataFineScadenza";
 	public static final String CAMPO_MESE_DATA_FINE_SCADENZA = "MeseDataFineScadenza";
 	public static final String CAMPO_ANNO_DATA_FINE_SCADENZA = "AnnoDataFineScadenza";
+
 	public static final String CAMPO_ANNI_SCADENZA = "AnniScadenza";
 	public static final String CAMPO_MESI_SCADENZA = "MesiScadenza";
 	public static final String CAMPO_GIORNI_SCADENZA = "GiorniScadenza";
 	public static final String CAMPO_TIPO_RICERCA = "TipoRicerca";
+
 	public static final String TIPO_SCA_IRREVOCABILITA_PROVVEDIMENTO = "50";
 	public static final String TIPO_SCA_TERMINE_SOTTOSCRIZIONE_VERBALE_MA = "70";
 	public static final String TIPO_SCA_TERMINE_SANZIONE_SOSTITUTIVA = "80";
@@ -64,5 +66,22 @@ public interface ICostantiScadenzarioSius {
 			+ "files/siap/siep/scadenzario/RicercaScadenzarioVaneRicerche.jsp";
 	public static final String PG_LOAD_DETTAGLIOSCADENZARIOVANERICERCHE = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/scadenzario/DettaglioScadenzarioVaneRicerche.jsp";
+
+	// MEV_2026-1: aggiunte costanti
+	public static final String PG_LOAD_RICERCAFINEPENAPROCEDIMENTIPENDENTI = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/scadenzario/LoadRicercaFinePenaProcedimentiPendenti.jsp";
+	public static final String PG_RICERCAFINEPENAPROCEDIMENTIPENDENTI = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/scadenzario/RicercaFinePenaProcedimentiPendenti.jsp";
+	public static final String CAMPO_ANNO_INIZIALE = "AnnoIniziale";
+	public static final String CAMPO_NUM_INIZIALE = "NumeroIniziale";
+	public static final String CAMPO_ANNO_FINALE = "AnnoFinale";
+	public static final String CAMPO_NUM_FINALE = "NumeroFinale";
+	public static final String CAMPO_GIORNO_DATA_ISCRIZIONE_INIZIALE = "GiornoDataIscrizioneIniziale";
+	public static final String CAMPO_MESE_DATA_ISCRIZIONE_INIZIALE = "MeseDataIscrizioneIniziale";
+	public static final String CAMPO_ANNO_DATA_ISCRIZIONE_INIZIALE = "AnnoDataIscrizioneIniziale";
+	public static final String CAMPO_GIORNO_DATA_ISCRIZIONE_FINALE = "GiornoDataIscrizioneFinale";
+	public static final String CAMPO_MESE_DATA_ISCRIZIONE_FINALE = "MeseDataIscrizioneFinale";
+	public static final String CAMPO_ANNO_DATA_ISCRIZIONE_FINALE = "AnnoDataIscrizioneFinale";
+	// FINE MEV_2026-1
 
 }

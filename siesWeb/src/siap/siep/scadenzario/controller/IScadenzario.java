@@ -104,4 +104,8 @@ public interface IScadenzario {
 	//MEV_2023-33
 	public BigDecimal ExGetCountScadenzariPP(ScadenzarioModel aScadenzario) throws F3BException;
 	public Vector ExRicercaScadenzarioPagedPP(ScadenzarioModel aScadenzario, int aPage) throws F3BException;
+	
+	// MEV_2026-1 - Funzione di test per switch dello scadenzario fine pena su tabella PENA_RESIDUA invece di SCADENZARIO_SIEP
+	public BigDecimal ExGetCountScadenzariFinePena (ScadenzarioModel aScadenzario) throws F3BException;
+	
 }

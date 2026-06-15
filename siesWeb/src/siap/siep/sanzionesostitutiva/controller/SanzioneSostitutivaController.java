@@ -2957,7 +2957,6 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 					 * lBollDao.selCondizioneByIdFascicolo(aEvento.getFasSieIdFascicoloSiep());
 					 * lBollDao.update(); } }
 					 */
-
 				}
 			}
 

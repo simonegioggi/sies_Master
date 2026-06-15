@@ -53,6 +53,8 @@
 <%@ page import="siap.sius.fascicolo.action.ICostantiFascicoloSius"%>
 <%@ page import="siap.sius.misurasicurezza.model.PeriodoAltraMisuraModel"%>
 
+<%@ page import="siap.siep.calcolopena.action.ICostantiCalcoloPena"%>
+
 <%@ page import="org.apache.log4j.Logger"%>
 <%-- // [FT] - 05/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog --%>
 <% final Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);%>
@@ -1761,6 +1763,18 @@ if (dettagliofascicolo.getPenaResidua() != null) {
         	<font class="label">Fine Pena : </font>
         	<font  color=red><%=StringUtils.toStringJSP(DateUtils.getDateToString(lPenResMod.getDataFine(),"dd-MM-yyyy"))%></font>
         	<input type="hidden" name="dataFinePena" value="<%=DateUtils.getDateToString(lPenResMod.getDataFine(),"dd-MM-yyyy")%>"/>
+        	
+        	<%-- MEV-2026_1 --%>
+        	<% if (dettagliofascicolo.getCalcoloPenaDL92DB()!=null 
+        	       && dettagliofascicolo.getCalcoloPenaDL92DB().getDataScarcLaFung()!=null
+        	       ) 
+        	{ %>
+            <a class="cliccabile" href="/jsp/Main.jsp?Action=siap.siep.calcolopena.action.ActDettStoricoCalcoloPenaDL92&<%=ICostantiCalcoloPena.CAMPO_ID_CALCOLO_PENA_DL92 %>=<%=dettagliofascicolo.getCalcoloPenaDL92DB().getIdCalcoloPenaDL92() %>&TornaQui=20">
+                Fine Pena Virtuale</a>
+            : <font color="red"><%=StringUtils.toStringJSP(DateUtils.getDateToString(dettagliofascicolo.getCalcoloPenaDL92DB().getDataScarcLaFung(),"dd-MM-yyyy"))%></font>
+        	<%-- MEV-2026_1 --%>
+        	<% } %>
+        	
 <%
       	} else {
         	if (lPenResMod.getDataFine() != null) {
@@ -1768,6 +1782,17 @@ if (dettagliofascicolo.getPenaResidua() != null) {
            	<font class="label">Fine Pena : </font>
            	<font class="cVerde"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lPenResMod.getDataFine(),"dd-MM-yyyy"))%></font>
            	<input type="hidden" name="dataFinePena" value="<%=DateUtils.getDateToString(lPenResMod.getDataFine(),"dd-MM-yyyy")%>"/>
+           	
+            <%-- MEV-2026_1 --%>
+            <% if (   dettagliofascicolo.getCalcoloPenaDL92DB()!=null 
+                   && dettagliofascicolo.getCalcoloPenaDL92DB().getDataScarcLaFung()!=null
+                  ) 
+            { %>
+            <a class="cliccabile" href="/jsp/Main.jsp?Action=siap.siep.calcolopena.action.ActDettStoricoCalcoloPenaDL92&<%=ICostantiCalcoloPena.CAMPO_ID_CALCOLO_PENA_DL92 %>=<%=dettagliofascicolo.getCalcoloPenaDL92DB().getIdCalcoloPenaDL92() %>&TornaQui=20">
+                Fine Pena Virtuale</a>
+            : <font color="red"><%=StringUtils.toStringJSP(DateUtils.getDateToString(dettagliofascicolo.getCalcoloPenaDL92DB().getDataScarcLaFung(),"dd-MM-yyyy"))%></font>
+            <%-- MEV-2026_1 --%>
+            <% } %>           	
 <%
 			}
       	}

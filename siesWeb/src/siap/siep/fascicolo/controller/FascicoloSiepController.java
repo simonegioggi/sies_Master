@@ -64,6 +64,8 @@ import siap.siep.beneficio.dao.BeneficioSqlDAO;
 import siap.siep.beneficio.model.BeneficioModel;
 import siap.siep.calcolopena.controller.CalcoloPenaControllerF5;
 import siap.siep.calcolopena.model.CalcoloPenaModel;
+import siap.siep.calcolopenadl92.controller.ICalcoloPenaDL92;
+import siap.siep.calcolopenadl92.model.CalcoloPenaDL92ModelDB;
 import siap.siep.circostanza.controller.ICircostanza;
 import siap.siep.circostanza.dao.CircostanzaDAO;
 import siap.siep.circostanza.dao.CircostanzaSqlDAO;
@@ -1871,6 +1873,13 @@ public class FascicoloSiepController extends SiapController implements IFascicol
 			PenaResiduaModel lPenResMod = lPenResCtrl.ExRicercaPenaResiduaUltimaByDate(aIdFascicolo);
 			lDettaglio.setPenaResidua(lPenResMod);
 
+			// MEV-2026_1
+			siesLogger.debug("GetLastCalcoloDL92 da ExDettaglioFascicoloSiep");
+			ICalcoloPenaDL92 lCalcDL92Ctrl = SIEPLookupRemote.getCalcoloPenaDL92();
+			CalcoloPenaDL92ModelDB lCalcoloModel = lCalcDL92Ctrl.GetLastCalcoloDL92(aIdFascicolo);
+			lDettaglio.setCalcoloPenaDL92DB(lCalcoloModel);
+			// MEV-2026_1 - FINE
+
 			// Pena Presunta
 			IPenaPresunta lPenPresCtrl = SIEPLookupRemote.getPenaPresuntaRemote();
 			PenaPresuntaModel lPenPresMod = lPenPresCtrl
@@ -2122,6 +2131,13 @@ public class FascicoloSiepController extends SiapController implements IFascicol
 				// mlog.info(lDettaglio.getNoteFascicolo() + " --- " +
 				// lNoteMod.getNotaDispositivo());
 			}
+
+			// MEV-2026_1 - Si aggiunge lo storico completo dei calcoli pena virtuale DL92 x Trasferimento
+			siesLogger.debug("GetLastCalcoloDL92 da ExDettaglioFascicoloSiep");
+			Vector<CalcoloPenaDL92ModelDB> lListaCalcoloDL92Model = lCalcDL92Ctrl
+					.ExRicercaCalcoloPenaDL92ByIdFasCompleta(aIdFascicolo);
+			lDettaglio.setStoricoCalcoliPenaDL92DB(new ArrayList(lListaCalcoloDL92Model));
+			// MEV-2026_1 - FINE
 
 		} catch (F3BException fex) {
 			if (fex.getErrorCode() == F3BException.USER_MESSAGE) {
@@ -2439,6 +2455,19 @@ public class FascicoloSiepController extends SiapController implements IFascicol
 				siesLogger.debug("NOTE FASCICOLO: aDettaglio.getNoteFascicolo() >>>"
 						+ aDettaglio.getFascicoloSiep().getNote());
 			}
+
+			// // MEV-2026_1 - Si aggiunge lo storico completo dei calcoli pena virtuale DL92 x Trsferimento
+			// siesLogger.debug("GetLastCalcoloDL92 da ExAltriDatiFascicoloSiep");
+			// ICalcoloPenaDL92 lCalcDL92Ctrl = SIEPLookupRemote.getCalcoloPenaDL92();
+			// Vector <CalcoloPenaDL92ModelDB> lListaCalcoloDL92Model =
+			// lCalcDL92Ctrl.ExRicercaCalcoloPenaDL92ByIdFasCompleta(aIdFascicolo);
+			// //aDettaglio.setStoricoCalcoliPenaDL92DB(lListaCalcoloDL92Model);
+			// aDettaglio.setStoricoCalcoliPenaDL92DB(new ArrayList(lListaCalcoloDL92Model));
+			//
+			// siesLogger.debug("test 1 = "+(aDettaglio.getStoricoCalcoliPenaDL92DB()==null ? "null"
+			// :aDettaglio.getStoricoCalcoliPenaDL92DB().size()));
+			// // MEV-2026_1 - FINE
+
 		} catch (F3BException ex) {
 			ex.printStackTrace();
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
@@ -4904,6 +4933,13 @@ public class FascicoloSiepController extends SiapController implements IFascicol
 			IPenaResidua lPenResCtrl = SIEPLookupRemote.getPenaResiduaRemote();
 			PenaResiduaModel lPenResMod = lPenResCtrl.ExRicercaPenaResiduaUltimaByDate(aIdFascicolo);
 			lDettaglio.setPenaResidua(lPenResMod);
+
+			// MEV-2026_1
+			siesLogger.debug("GetLastCalcoloDL92 da ExDettaglioFascicoloSiepNew");
+			ICalcoloPenaDL92 lCalcDL92Ctrl = SIEPLookupRemote.getCalcoloPenaDL92();
+			CalcoloPenaDL92ModelDB lCalcoloModel = lCalcDL92Ctrl.GetLastCalcoloDL92(aIdFascicolo);
+			lDettaglio.setCalcoloPenaDL92DB(lCalcoloModel);
+			// MEV-2026_1 - FINE
 
 			// Pena Presunta
 			IPenaPresunta lPenPresCtrl = SIEPLookupRemote.getPenaPresuntaRemote();

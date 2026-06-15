@@ -51,11 +51,6 @@ public class CalcoloPenaDL92Model extends GenericModel {
 	private SemestreDL92Model mSemestrePresofferto = null;
 	private Vector<SemestreDL92Model> mListaSemetri = new Vector<>();
 	
-	// Totali LA
-	private BigDecimal mTotLAMaturabili;
-	private BigDecimal mTotLAApplicabili;
-	private BigDecimal mTotLAFungibili;
-
 	// Fine pena iniziale
 	private Date mDataScarcerazioneNoLA; 
   // Date effettiva scarcerazione con sole LA applicabili
@@ -135,18 +130,6 @@ public class CalcoloPenaDL92Model extends GenericModel {
 		return mListaSemetri;
 	}
 
-	public BigDecimal getTotLAMaturabili() {
-		return mTotLAMaturabili;
-	}
-
-	public BigDecimal getTotLAApplicabili() {
-		return mTotLAApplicabili;
-	}
-
-	public BigDecimal getTotLAFungibili() {
-		return mTotLAFungibili;
-	}
-
 	public Date getDataScarcerazioneNoLA() {
 		return mDataScarcerazioneNoLA;
 	}
@@ -219,18 +202,6 @@ public class CalcoloPenaDL92Model extends GenericModel {
     this.mListaSemetri = mListaSemetri;
   }
 
-	public void setTotLAMaturabili(BigDecimal mTotLAMaturabili) {
-		this.mTotLAMaturabili = mTotLAMaturabili;
-	}
-
-	public void setTotLAApplicabili(BigDecimal mTotLAApplicabili) {
-		this.mTotLAApplicabili = mTotLAApplicabili;
-	}
-
-	public void setTotLAFungibili(BigDecimal mTotLAFungibili) {
-		this.mTotLAFungibili = mTotLAFungibili;
-	}
-	
 	public void setDataScarcerazioneNoLA (Date mDataScarcerazioneNoLA) {
 		this.mDataScarcerazioneNoLA = mDataScarcerazioneNoLA;
 	}

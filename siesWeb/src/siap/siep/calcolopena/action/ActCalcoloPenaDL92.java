@@ -32,6 +32,8 @@ import siap.sico.util.CalendarUtil;
 import siap.sico.web.ActionSiap;
 import siap.siep.calcolopena.model.CalcoloPenaDL92Model;
 import siap.siep.calcolopena.model.SemestreDL92Model;
+import siap.siep.calcolopenadl92.controller.ICalcoloPenaDL92;
+import siap.siep.calcolopenadl92.model.CalcoloPenaDL92ModelDB;
 import siap.siep.fascicolo.controller.IFascicoloSiepStampa;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.penacomplessiva.action.ICostantiPenaComplessiva;
@@ -148,10 +150,9 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 			}
 		}
 		lCalcoloModel.setListaIsCompresa(listaIsCompresa);
-
-		siesLogger.debug("Modelprima del calcolo");
+		
+		siesLogger.debug("Model prima del calcolo");
 		lCalcoloModel.stampaCalcolo();
-
 		lCalcoloModel.calcolaPenaVirtuale();
 		lCalcoloModel.stampaCalcolo();
 		setRequestAttribute("EsitoCalcolo", lCalcoloModel);
@@ -176,7 +177,34 @@ public class ActCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPe
 			setRequestAttribute(IWebConstants.DISPOSITION_FIELD, IWebConstants.ATTACHMENT_DISPOSITION_FILE);
 
 			return IWebConstants.PG_DOWNLOAD_DOCUMENT;
-		} else {
+		} else if ("storicizza".equals(tipoOutput)) {
+            // MEV-2026_1
+	        siesLogger.debug("richiesta storicizzazione");
+	        if (!isSessionAttributeNullObj("fascicolo")) {
+	            FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
+	           
+	            CalcoloPenaDL92ModelDB lCalcPenaModelDB = new CalcoloPenaDL92ModelDB (lCalcoloModel);
+	            
+	            lCalcPenaModelDB.setFasSieIdFascicoloSiep(lFascicoloModel.getIdFascicoloSiep());
+	            lCalcPenaModelDB.setCodOperatoreInserimento(getCodUtenteConnesso());
+	            lCalcPenaModelDB.setDataInserimento(DateUtils.getSysDate());
+	            lCalcPenaModelDB.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
+	            
+	            ICalcoloPenaDL92 lCalcDL92Ctrl = SIEPLookupRemote.getCalcoloPenaDL92();
+	            // CalcoloPenaDL92ModelDB lRetModel = 
+	            lCalcDL92Ctrl.ExInserisciCalcoloPenaDL92(lCalcPenaModelDB, lCalcoloModel.getSemestrePresofferto(), lCalcoloModel.getListaSemetri());
+	            
+	            setRequestAttribute("msgStoricizzazione", "Calcolo pena storicizzato correttamente");
+	            setRequestAttribute("fromStoricizza", "S");
+	            
+//              String lPageDett = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
+//              + "=siap.siep.calcolopena.action.ActDettStoricoCalcoloPenaDL92&"
+//              +CAMPO_ID_CALCOLO_PENA_DL92+"="+ lRetModel.getIdCalcoloPenaDL92();
+//      return lPageDett;	            
+	        }    
+
+	        return PG_CALCOLOPENA_DL92;
+        } else {
 			siesLogger.debug("richiesto il dettaglio");
 			return PG_CALCOLOPENA_DL92;
 		}
