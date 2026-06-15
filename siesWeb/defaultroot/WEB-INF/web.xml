@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <web-app xmlns="http://java.sun.com/xml/ns/javaee"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-      version="3.0">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	version="3.0">
 
-  <display-name>S.I.E.S. Sistema Informativo Esecuzione e Sorveglianza</display-name>
-  
-  <listener>
-    <listener-class>siap.util.SessionManager</listener-class>
-  </listener>
+	<display-name>S.I.E.S. Sistema Informativo Esecuzione e Sorveglianza</display-name>
+
+	<listener>
+		<listener-class>siap.util.SessionManager</listener-class>
+	</listener>
 
 	<filter>
 		<filter-name>IECompatibilityFilter</filter-name>
@@ -21,205 +21,195 @@
 		<init-param>
 			<param-name>level</param-name>
 			<param-value>IE=5</param-value>
-		<!-- 
-		Level value 			Document modes
-		IE=5					Quirks Mode
-		IE=7					IE7 mode
-		IE=8					IE8 mode
-		IE=9					IE9 mode
-		IE=10					IE10 mode
-		IE=11					IE11 mode
-		IE=edge					The highest supported document mode of the browser
-		IE=EmulateIE7			IE7 mode (if a valid <!DOCTYPE> declaration is present) Quirks Mode (otherwise)
-		IE=EmulateIE8			IE8 mode (if a valid <!DOCTYPE> declaration is present) Quirks Mode (otherwise)
-		IE=EmulateIE9			IE9 mode (if a valid <!DOCTYPE> declaration is present) Quirks Mode (otherwise)
-		IE=EmulateIE10			IE10 mode (if a valid <!DOCTYPE> declaration is present) Quirks Mode (otherwise)
-		IE=EmulateIE11			IE11 mode (if a valid <!DOCTYPE> declaration is present) Quirks Mode (otherwise)
-		 -->
+			<!-- Level value Document modes IE=5 Quirks Mode IE=7 IE7 mode IE=8 IE8 
+				mode IE=9 IE9 mode IE=10 IE10 mode IE=11 IE11 mode IE=edge The highest supported 
+				document mode of the browser IE=EmulateIE7 IE7 mode (if a valid <!DOCTYPE> 
+				declaration is present) Quirks Mode (otherwise) IE=EmulateIE8 IE8 mode (if 
+				a valid <!DOCTYPE> declaration is present) Quirks Mode (otherwise) IE=EmulateIE9 
+				IE9 mode (if a valid <!DOCTYPE> declaration is present) Quirks Mode (otherwise) 
+				IE=EmulateIE10 IE10 mode (if a valid <!DOCTYPE> declaration is present) Quirks 
+				Mode (otherwise) IE=EmulateIE11 IE11 mode (if a valid <!DOCTYPE> declaration 
+				is present) Quirks Mode (otherwise) -->
 		</init-param>
 	</filter>
-	<!-- [FT] - 02/08/2016 - MAC_FILTRO - Anziché usare l'url-pattern /* che si riferisce a tutte le richieste,
-		 					 utilizzo degli url-pattern specifici per le richieste di pagine jsp, htm e html -->
+	<!-- [FT] - 02/08/2016 - MAC_FILTRO - Anziché usare l'url-pattern /* che 
+		si riferisce a tutte le richieste, utilizzo degli url-pattern specifici per 
+		le richieste di pagine jsp, htm e html -->
 
-
-  <!-- Ticket#20191024014: Filtro per gestite il timeout lato codice che esclude le Action che fanno Polling-->
-  <filter>
-    <filter-name>SessionTimeoutFilter</filter-name>
-    <filter-class>f3b.util.SessionTimeoutFilter</filter-class> <!-- mandatory -->
-    <init-param>
-      <param-name>timeoutSecond</param-name>
-      <param-value>1800</param-value> <!-- timeoutSecond = tempo in secondi per invalidare la sessione-->
-    </init-param>
-  </filter>
+	<!-- Ticket#20191024014: Filtro per gestite il timeout lato codice che esclude 
+		le Action che fanno Polling -->
+	<filter>
+		<filter-name>SessionTimeoutFilter</filter-name>
+		<filter-class>f3b.util.SessionTimeoutFilter</filter-class> <!-- mandatory -->
+		<init-param>
+			<param-name>timeoutSecond</param-name>
+			<param-value>1800</param-value> <!-- timeoutSecond = tempo in secondi per invalidare la sessione -->
+		</init-param>
+	</filter>
 
 	<filter-mapping>
-		<filter-name>IECompatibilityFilter</filter-name> 
+		<filter-name>IECompatibilityFilter</filter-name>
 		<url-pattern>*.jsp</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
-		<filter-name>IECompatibilityFilter</filter-name> 
+		<filter-name>IECompatibilityFilter</filter-name>
 		<url-pattern>*.htm</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
-		<filter-name>IECompatibilityFilter</filter-name> 
+		<filter-name>IECompatibilityFilter</filter-name>
 		<url-pattern>*.html</url-pattern>
 	</filter-mapping>
 
 	<!-- Ticket#20191024014 -->
 	<filter-mapping>
-    	<filter-name>SessionTimeoutFilter</filter-name> 
-    	<url-pattern>*.jsp</url-pattern>
-  	</filter-mapping>
+		<filter-name>SessionTimeoutFilter</filter-name>
+		<url-pattern>*.jsp</url-pattern>
+	</filter-mapping>
 
 	<!-- Inizio Blocco Servelet AXIS -->
 	<servlet>
-    <servlet-name>AxisServlet</servlet-name>
-    <display-name>Apache-Axis Servlet</display-name>
-    <servlet-class>
-        org.apache.axis.transport.http.AxisServlet
-    </servlet-class>
-  </servlet>
+		<servlet-name>AxisServlet</servlet-name>
+		<display-name>Apache-Axis Servlet</display-name>
+		<servlet-class>org.apache.axis.transport.http.AxisServlet</servlet-class>
+	</servlet>
 
-  <servlet>
-    <servlet-name>AdminServlet</servlet-name>
-    <display-name>Axis Admin Servlet</display-name>
-    <servlet-class>
-        org.apache.axis.transport.http.AdminServlet
-    </servlet-class>
-    <load-on-startup>100</load-on-startup>
-  </servlet>
+	<servlet>
+		<servlet-name>AdminServlet</servlet-name>
+		<display-name>Axis Admin Servlet</display-name>
+		<servlet-class>org.apache.axis.transport.http.AdminServlet</servlet-class>
+		<load-on-startup>100</load-on-startup>
+	</servlet>
 
-  <servlet>
-    <servlet-name>SOAPMonitorService</servlet-name>
-    <display-name>SOAPMonitorService</display-name>
-    <servlet-class>
-        org.apache.axis.monitor.SOAPMonitorService
-    </servlet-class>
-    <init-param>
-      <param-name>SOAPMonitorPort</param-name>
-      <param-value>5001</param-value>
-    </init-param>
-    <load-on-startup>100</load-on-startup>
-  </servlet>
+	<servlet>
+		<servlet-name>SOAPMonitorService</servlet-name>
+		<display-name>SOAPMonitorService</display-name>
+		<servlet-class>org.apache.axis.monitor.SOAPMonitorService</servlet-class>
+		<init-param>
+			<param-name>SOAPMonitorPort</param-name>
+			<param-value>5001</param-value>
+		</init-param>
+		<load-on-startup>100</load-on-startup>
+	</servlet>
 	<!-- Fine Blocco Servelet AXIS -->
-   
-  <servlet>
-       <servlet-name>SingletonInit</servlet-name>
-       <servlet-class>siap.util.SingletonInit</servlet-class>
-       <load-on-startup>1</load-on-startup>
-  </servlet>
-   
-  <servlet>
-       <servlet-name>ServletJMSWakeUp</servlet-name>
-       <servlet-class>siap.jms.util.ServletJMSWakeUp</servlet-class>
-  </servlet>
 
-  <servlet>
-    <servlet-name>CaricaHTML_Servlet</servlet-name>
-    <servlet-class>siap.siep.util.CaricaHTML_Servlet</servlet-class>
-  </servlet>
-  
-   <!-- INIZIO INTERVENTO PER SEGNALAZIONE m_dg.DOG07.06-08-2018.0025591.U per versione sies 11.3-->
-   <servlet>
-       <servlet-name>ListnerInit</servlet-name>
-       <servlet-class>siap.jms.util.ListnerInit</servlet-class>
-       <load-on-startup>1</load-on-startup>
-    </servlet>
-    <!-- FINE INTERVENTO PER SEGNALAZIONE m_dg.DOG07.06-08-2018.0025591.U -->
-   
-   <!-- Servlet per istanziare Quartz -->
-  <servlet>
-       <servlet-name>QuartzInit</servlet-name>
-       <servlet-class>siap.siep.pagoPA.util.QuartzInit</servlet-class>
-       <load-on-startup>20</load-on-startup>
-  </servlet>
-   <!-- Servlet per istanziare Quartz FINE -->
-  
-   
+	<servlet>
+		<servlet-name>SingletonInit</servlet-name>
+		<servlet-class>siap.util.SingletonInit</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>ServletJMSWakeUp</servlet-name>
+		<servlet-class>siap.jms.util.ServletJMSWakeUp</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>CaricaHTML_Servlet</servlet-name>
+		<servlet-class>siap.siep.util.CaricaHTML_Servlet</servlet-class>
+	</servlet>
+
+	<!-- INIZIO INTERVENTO PER SEGNALAZIONE m_dg.DOG07.06-08-2018.0025591.U 
+		per versione sies 11.3 -->
+	<servlet>
+		<servlet-name>ListnerInit</servlet-name>
+		<servlet-class>siap.jms.util.ListnerInit</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<!-- FINE INTERVENTO PER SEGNALAZIONE m_dg.DOG07.06-08-2018.0025591.U -->
+
+	<!-- Servlet per istanziare Quartz -->
+	<servlet>
+		<servlet-name>QuartzInit</servlet-name>
+		<servlet-class>siap.siep.pagoPA.util.QuartzInit</servlet-class>
+		<load-on-startup>20</load-on-startup>
+	</servlet>
+	<!-- Servlet per istanziare Quartz FINE -->
+
+
 	<!-- Inizio Blocco servelet-mapping AXIS -->
 	<servlet-mapping>
-    <servlet-name>AxisServlet</servlet-name>
-    <url-pattern>/servlet/AxisServlet</url-pattern>
-  </servlet-mapping>
+		<servlet-name>AxisServlet</servlet-name>
+		<url-pattern>/servlet/AxisServlet</url-pattern>
+	</servlet-mapping>
 
-  <servlet-mapping>
-    <servlet-name>AxisServlet</servlet-name>
-    <url-pattern>*.jws</url-pattern>
-  </servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>AxisServlet</servlet-name>
+		<url-pattern>*.jws</url-pattern>
+	</servlet-mapping>
 
-  <servlet-mapping>
-    <servlet-name>AxisServlet</servlet-name>
-    <url-pattern>/services/*</url-pattern>
-  </servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>AxisServlet</servlet-name>
+		<url-pattern>/services/*</url-pattern>
+	</servlet-mapping>
 
-  <servlet-mapping>
-    <servlet-name>SOAPMonitorService</servlet-name>
-    <url-pattern>/SOAPMonitor</url-pattern>
-  </servlet-mapping>
-  <!-- Fine Blocco servelet-mapping AXIS -->
-   
-  <servlet-mapping>
-    <servlet-name>SingletonInit</servlet-name>
-    <url-pattern>/siap/util/SingletonInit</url-pattern>
-  </servlet-mapping>
-    
-  <servlet-mapping>
-    <servlet-name>ServletJMSWakeUp</servlet-name>
-    <url-pattern>/ServletJMSWakeUp</url-pattern>
-  </servlet-mapping>
-      
-  <servlet-mapping>
-    <servlet-name>CaricaHTML_Servlet</servlet-name>
-    <url-pattern>/CaricaHTML_Servlet</url-pattern>
-  </servlet-mapping>
-  
-  <!-- INIZIO INTERVENTO PER SEGNALAZIONE m_dg.DOG07.06-08-2018.0025591.U per versione sies 11.3 -->
-  <servlet-mapping>
-    <servlet-name>ListnerInit</servlet-name>
-    <url-pattern>/siap/jms/util/ListnerInit</url-pattern>
-  </servlet-mapping>
-  <!-- FINE INTERVENTO PER SEGNALAZIONE m_dg.DOG07.06-08-2018.0025591.U --> 
-  
+	<servlet-mapping>
+		<servlet-name>SOAPMonitorService</servlet-name>
+		<url-pattern>/SOAPMonitor</url-pattern>
+	</servlet-mapping>
+	<!-- Fine Blocco servelet-mapping AXIS -->
 
-  
-  <!-- Inizio Blocco per Implementazione TIKA -->	
-  <mime-mapping>
-    <extension>doc</extension>
-    <mime-type>application/msword</mime-type>
-  </mime-mapping>
+	<servlet-mapping>
+		<servlet-name>SingletonInit</servlet-name>
+		<url-pattern>/siap/util/SingletonInit</url-pattern>
+	</servlet-mapping>
 
-  <mime-mapping>
-    <extension>docx</extension>
-    <mime-type>application/vnd.openxmlformats-officedocument.wordprocessingml.document</mime-type>
-  </mime-mapping>
+	<servlet-mapping>
+		<servlet-name>ServletJMSWakeUp</servlet-name>
+		<url-pattern>/ServletJMSWakeUp</url-pattern>
+	</servlet-mapping>
 
-  <mime-mapping>
-    <extension>xlsx</extension>
-    <mime-type>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</mime-type>
-  </mime-mapping>
-  <!-- Fine Blocco per Implementazione TIKA -->
-  
-  <welcome-file-list>
-      <welcome-file>login.jsp</welcome-file>
-  </welcome-file-list>
+	<servlet-mapping>
+		<servlet-name>CaricaHTML_Servlet</servlet-name>
+		<url-pattern>/CaricaHTML_Servlet</url-pattern>
+	</servlet-mapping>
 
-  <resource-ref id="ResourceRef1">
-         <res-ref-name>oracleds</res-ref-name>         
-         <res-type>javax.sql.DataSource</res-type>
-         <res-auth>Container</res-auth>
-         <res-sharing-scope>Shareable</res-sharing-scope>
-         <lookup-name>java:jboss/jdbc/oracleds</lookup-name>
-  </resource-ref>
+	<!-- INIZIO INTERVENTO PER SEGNALAZIONE m_dg.DOG07.06-08-2018.0025591.U 
+		per versione sies 11.3 -->
+	<servlet-mapping>
+		<servlet-name>ListnerInit</servlet-name>
+		<url-pattern>/siap/jms/util/ListnerInit</url-pattern>
+	</servlet-mapping>
+	<!-- FINE INTERVENTO PER SEGNALAZIONE m_dg.DOG07.06-08-2018.0025591.U -->
 
-	<!-- SG: soluzione errore main.jsp: getOutputStream() has already been called for this response -->
+	<!-- Inizio Blocco per Implementazione TIKA -->
+	<mime-mapping>
+		<extension>doc</extension>
+		<mime-type>application/msword</mime-type>
+	</mime-mapping>
+
+	<mime-mapping>
+		<extension>docx</extension>
+		<mime-type>application/vnd.openxmlformats-officedocument.wordprocessingml.document</mime-type>
+	</mime-mapping>
+
+	<mime-mapping>
+		<extension>xlsx</extension>
+		<mime-type>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</mime-type>
+	</mime-mapping>
+	<!-- Fine Blocco per Implementazione TIKA -->
+
+	<welcome-file-list>
+		<welcome-file>login.jsp</welcome-file>
+	</welcome-file-list>
+
+	<resource-ref id="ResourceRef1">
+		<res-ref-name>oracleds</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+		<res-sharing-scope>Shareable</res-sharing-scope>
+		<lookup-name>java:jboss/jdbc/oracleds</lookup-name>
+	</resource-ref>
+
+	<!-- SG: soluzione errore main.jsp: getOutputStream() has already been called 
+		for this response -->
 	<jsp-config>
-  		<jsp-property-group>
-    		<url-pattern>*.jsp</url-pattern>
-    		<trim-directive-whitespaces>true</trim-directive-whitespaces>
-  		</jsp-property-group>
 		<jsp-property-group>
-	  		<url-pattern>*.jspf</url-pattern>
-	  		<is-xml>false</is-xml>
+			<url-pattern>*.jsp</url-pattern>
+			<trim-directive-whitespaces>true</trim-directive-whitespaces>
+		</jsp-property-group>
+		<jsp-property-group>
+			<url-pattern>*.jspf</url-pattern>
+			<is-xml>false</is-xml>
 		</jsp-property-group>
 	</jsp-config>
 
