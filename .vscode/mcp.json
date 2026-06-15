@@ -1,0 +1,8 @@
+{
+  "servers": {
+    "dbmind": {
+      "type": "http",
+      "url": "http://localhost:8007/mcp"
+    }
+  }
+}
