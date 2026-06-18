@@ -35,6 +35,15 @@ public class EsitoArchiviazioniCumuloModel extends GenericModel {
 	private String mCodStatoFascAttuale;
 	private String mDescrizione;
 
+	/* MEV_2025-48 si aggiunge per decodifica Accorpati. Dato NON presente in tabella*/
+	private BigDecimal mChiaveProgrOrig;
+    public BigDecimal getChiaveProgrOrig() {
+        return mChiaveProgrOrig;
+    }
+    public void setChiaveProgrOrig(BigDecimal aValore) {
+        mChiaveProgrOrig = aValore;
+    }
+    /* MEV_2025-48 */
 	/*****************************************************************************
 	 * Costruttore di default che inizializza i campi del model I campi String vengono inizializzati a "",
 	 * tutti gli altri campi a null

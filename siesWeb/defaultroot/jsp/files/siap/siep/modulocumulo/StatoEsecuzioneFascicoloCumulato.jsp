@@ -237,7 +237,7 @@ if (lContaEventi==lContaSelezionati){
 
               <tr id="elenco<%=ProgrId%>" style="display:none">
                 <td colspan="100%">
-                <%@include file="/jsp/files/siap/sius/tenore/ListaTenori.jsp" %>
+                <%@include file="/jsp/files/siap/sius/tenore/ListaTenori.jspf" %>
                 </td>
               </tr>
             <%

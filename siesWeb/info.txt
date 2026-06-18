@@ -3,3 +3,6 @@ BRANCH SIES VERSIONE VSCI_12.8.5.0
 Nasce dal branch 12.8.5.0 in data 08/01/2026
 
 Versione creata x Visual Code Studio - Insiders (upgrade tecnologico)
+
+In data 18/06/2026 eseguito merge col BRANCH SIESWEB VERSIONE release_12.9.3.0
+che sarebbe la 12.10.0.0 (= MEV_2026-24)

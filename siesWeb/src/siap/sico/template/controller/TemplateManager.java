@@ -51,11 +51,10 @@ public class TemplateManager {
 			Iterator lItx = lVector.iterator();
 			while (lItx.hasNext()) {
 				TemplateModel lTemp = new TemplateModel((TemplateModel) lItx.next());
-				mTemplates.put(lTemp.getIdTemplate(), lTemp.getPathRicerca() + lTemp.getNomeTemplate());
+				// mTemplates.put(lTemp.getIdTemplate(), lTemp.getPathRicerca() + lTemp.getNomeTemplate());
 				// FIXME: commentare - vale solo per LOCALHOST
-				// String pathRicerca = lTemp.getPathRicerca().replace("/", "\\").replace("\\var\\SIES",
-				// "C:");
-				// mTemplates.put(lTemp.getIdTemplate(), pathRicerca + lTemp.getNomeTemplate());
+				String pathRicerca = lTemp.getPathRicerca().replace("/", "\\").replace("\\var\\SIES", "C:");
+				mTemplates.put(lTemp.getIdTemplate(), pathRicerca + lTemp.getNomeTemplate());
 				// TODO: commentare - vale solo per LOCALHOST
 			}
 		} catch (F3BException ex) {

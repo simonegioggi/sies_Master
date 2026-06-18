@@ -764,6 +764,12 @@ public class ActInserisciEmissioneDecretoDeposito extends ActionSius implements 
 		lLicMod.setDescrStatoPermesso(
 				getRequestStringParameter(ICostantiLicenzaLibanticipata.CAMPO_DESCR_STATO_PERMESSO));
 
+		// MEV_2025-48: aggiunta nuova sezione - codice motivo detenzione
+		if (!isRequestParameterNullObj(ICostantiLicenzaLibanticipata.CAMPO_CK_COD_MOTIVO_DETENZIONE)
+				&& isRequestChecked(ICostantiLicenzaLibanticipata.CAMPO_CK_COD_MOTIVO_DETENZIONE))
+			lLicMod.setCodMotivoDetenzione(getRequestStringParameters(
+					ICostantiLicenzaLibanticipata.CAMPO_CK_COD_MOTIVO_DETENZIONE)[0]);
+
 		// Restituisce il Risultato.
 		return lLicMod;
 	}

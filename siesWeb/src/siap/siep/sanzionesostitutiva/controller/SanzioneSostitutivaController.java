@@ -82,9 +82,9 @@ import siap.siep.verbale.dao.VerbaleDAO;
 import siap.siep.verbale.model.VerbaleModel;
 
 /**
- * Controller della Sanzioni Sostitutive
- * 
- * @version	1.0
+ * SanzioneSostitutivaController - Classe Controller della Sanzioni Sostitutive
+ *
+ * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class SanzioneSostitutivaController extends SiapController implements ISanzioneSostitutiva {
@@ -2796,32 +2796,36 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 					siesLogger.debug("Notifica al condannato. Attivo/Cancello lo scadenzario");
 
 					// 2023.11.20 - Cancello eventuali scadenzario 30 collegato ad altri eventi
-					lScaSqlDao.ricercaScadenzarioByTipoScadenzarioIdFascicolo("30", aEvento.getFasSieIdFascicoloSiep());
-					Vector <ScadenzarioModel> listaScadenzari = new Vector <ScadenzarioModel>(lScaSqlDao.getModels());
-					siesLogger.debug("listaScadenzari.size() = "+listaScadenzari.size());
+					lScaSqlDao.ricercaScadenzarioByTipoScadenzarioIdFascicolo("30",
+							aEvento.getFasSieIdFascicoloSiep());
+					Vector<ScadenzarioModel> listaScadenzari = new Vector<ScadenzarioModel>(
+							lScaSqlDao.getModels());
+					siesLogger.debug("listaScadenzari.size() = " + listaScadenzari.size());
 					for (ScadenzarioModel scadenzarioPrecedente : listaScadenzari) {
-					  if (scadenzarioPrecedente.getEveIdEvento().compareTo(aEvento.getIdEvento())!=0
-					      && "N".equals(scadenzarioPrecedente.getFlagVisto())) {
-					    siesLogger.debug("Annullo lo scadenzario con id = "+scadenzarioPrecedente.getIdScadenzario());
-//					    lScaDao.setFlagVisto("S");
-//					    lScaDao.setDataAggiornamento(DateUtils.getSysDate());
-//					    lScaDao.setCodOperatoreAggiornamento(lNotModel.getCodOperatoreInserimento());
-//					    lScaDao.setCodUfficioAggiornamento(lNotModel.getCodUfficioInserimento());
-              lScaDao.setCondizioneUpdate(scadenzarioPrecedente.getIdScadenzario());
-              lScaDao.delete();
-//              lScaDao.update();
-              lScaDao.stop();					    
-					  }					  
+						if (scadenzarioPrecedente.getEveIdEvento().compareTo(aEvento.getIdEvento()) != 0
+								&& "N".equals(scadenzarioPrecedente.getFlagVisto())) {
+							siesLogger.debug("Annullo lo scadenzario con id = "
+									+ scadenzarioPrecedente.getIdScadenzario());
+							// lScaDao.setFlagVisto("S");
+							// lScaDao.setDataAggiornamento(DateUtils.getSysDate());
+							// lScaDao.setCodOperatoreAggiornamento(lNotModel.getCodOperatoreInserimento());
+							// lScaDao.setCodUfficioAggiornamento(lNotModel.getCodUfficioInserimento());
+							lScaDao.setCondizioneUpdate(scadenzarioPrecedente.getIdScadenzario());
+							lScaDao.delete();
+							// lScaDao.update();
+							lScaDao.stop();
+						}
 					}
-				  // 2023.11.20 - 
-					
+					// 2023.11.20 -
+
 					Date dataScadenzaPrimaRata = null;
 
 					if (lNotModel.getDataAvvenutaNotifica() == null) {
 						siesLogger.debug("Notifica al condannato Rimossa, Cancello lo scadenzario");
-						
-					  // 2023.11.20 - Dovrei ripristinare lo scadenzario precedente. Storicizzazione attualmente non prevista					
-						
+
+						// 2023.11.20 - Dovrei ripristinare lo scadenzario precedente. Storicizzazione
+						// attualmente non prevista
+
 						lScaSqlDao.ricercaScadenzarioByIdEvento(aEvento.getIdEvento());
 						ScadenzarioModel lScadenzarioAttuale = (ScadenzarioModel) lScaSqlDao.getModelByKey();
 
@@ -2844,10 +2848,13 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 						lRateSqlDao = new RateizzazionePPSqlDAO(lConn);
 						RateizzazionePPModel primaRata = null;
 
-						lRateSqlDao
-								.ricercaRateizzazionePPByIdFascicoloSiep(aEvento.getFasSieIdFascicoloSiep());
+						// Ticket#20260522017 - Data rate --> cerco x evento piuttosto che per fascicolo
+						lRateSqlDao.ricercaRateizzazionePPByEveIdEvento(aEvento.getIdEvento());
 						Vector<RateizzazionePPModel> listaRate = new Vector<RateizzazionePPModel>(
 								lRateSqlDao.getModels());
+						if (Utils.isNullObj(listaRate) || listaRate.isEmpty())
+							lRateSqlDao.ricercaRateizzazionePPByIdFascicoloSiep(
+									aEvento.getFasSieIdFascicoloSiep());
 						for (RateizzazionePPModel rata : listaRate) {
 							if (rata.getProgressivoRata().compareTo(new BigDecimal(1)) == 0) {
 								primaRata = rata;
@@ -2937,11 +2944,10 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 					 * (BollettinoPagopaModel lBoll : lListaBollettini) { if (lBoll.getIuv() != null)
 					 * isBollettiniGenerati = true; if (lBoll.getDataAvvPagamento() != null)
 					 * isBollettiniPagati = true; // if (lBoll.getDataScadenza() != null) //
-					 * isDataScadenzaCalcolata = true; }
-					 *
-					 * if (isBollettiniGenerati) { //if (!isBollettiniPagati && !isDataScadenzaCalcolata) { if
-					 * (!isBollettiniPagati ) { // Calcolo la data scadenza e la aggiornao lBollDao = new
-					 * BollettinoPagopaDAO(lConn); lBollDao.setDataScadenza(dataScadenzaPrimaRata);
+					 * isDataScadenzaCalcolata = true; } if (isBollettiniGenerati) { //if (!isBollettiniPagati
+					 * && !isDataScadenzaCalcolata) { if (!isBollettiniPagati ) { // Calcolo la data scadenza
+					 * e la aggiornao lBollDao = new BollettinoPagopaDAO(lConn);
+					 * lBollDao.setDataScadenza(dataScadenzaPrimaRata);
 					 * lBollDao.selCondizioneByIdFascicolo(aEvento.getFasSieIdFascicoloSiep());
 					 * lBollDao.update(); } else { // se il primo bollettino è stato già pagato allora le date
 					 * dei successivi // sono state // calcolate in base al pagamento della prima rata. NON HA
@@ -2951,7 +2957,6 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 					 * lBollDao.selCondizioneByIdFascicolo(aEvento.getFasSieIdFascicoloSiep());
 					 * lBollDao.update(); } }
 					 */
-
 				}
 			}
 
@@ -2969,10 +2974,9 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 		} finally {
 			cleanup(lNotDAO);
 			cleanup(lAutDao);
-
 			cleanup(lScaDao);
+			cleanup(lScaSqlDao);
 			cleanup(lRateSqlDao);
-
 			cleanup(lBollSqlDao);
 			cleanup(lBollDao);
 

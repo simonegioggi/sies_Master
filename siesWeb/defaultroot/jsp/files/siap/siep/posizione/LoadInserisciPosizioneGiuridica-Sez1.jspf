@@ -114,10 +114,10 @@ if(lAltraCausa.getIstitutoDetenzione() != null && !"".equals(lAltraCausa.getIsti
 }
 %>
 
-<%@ include file="/jsp/files/siap/siep/posizione/LoadInserisciPosizioneGiuridica-Sez1DD.jsp" %>
-<%@ include file="/jsp/files/siap/siep/posizione/LoadInserisciPosizioneGiuridica-Sez1MCD.jsp" %>
-<%@ include file="/jsp/files/siap/siep/posizione/LoadInserisciPosizioneGiuridica-Sez1MCA.jsp" %>
+<%@ include file="/jsp/files/siap/siep/posizione/LoadInserisciPosizioneGiuridica-Sez1DD.jspf" %>
+<%@ include file="/jsp/files/siap/siep/posizione/LoadInserisciPosizioneGiuridica-Sez1MCD.jspf" %>
+<%@ include file="/jsp/files/siap/siep/posizione/LoadInserisciPosizioneGiuridica-Sez1MCA.jspf" %>
 
 </div>
 
-<%@ include file="/jsp/files/siap/siep/posizione/LoadInserisciPosizioneGiuridica-SezFooter.jsp" %>
+<%@ include file="/jsp/files/siap/siep/posizione/LoadInserisciPosizioneGiuridica-SezFooter.jspf" %>

@@ -161,7 +161,7 @@ conta_rec_visualizzati++;
     </tr>
     <tr style="display:none" id="rec_<%=id_record%>">
       <td class="l" colspan="100%">
-        <font class="campoSmall">
+        <font class="l" style="font-style:italic;">
         <%=StringUtils.toStringJSP(lIstruttoriaCumulo.getNote(),"&nbsp;")%>
         </font>
       </td>

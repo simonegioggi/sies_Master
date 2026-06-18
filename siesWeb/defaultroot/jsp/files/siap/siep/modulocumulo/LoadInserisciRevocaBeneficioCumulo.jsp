@@ -385,7 +385,7 @@ if(beneficioCumulo!=null && beneficioCumulo.getIdBeneficioCumulo()!=null)
 				value = "<%=StringUtils.toStringJSP(beneficioCumulo.getRifAnnoProvvedimento(),"")%>"   
 				onFocus="javascript:textboxSelect(this)" 
 				onkeypress="return TicTabNumField(this,event)"  
-				onBlur="javascript:value=FillDM(value)"> -
+				onBlur="javascript:value=FillYear(value)"> -
 			<input type="text" size="8" maxlength="8" name="<%= ICostantiBeneficiCumulo.CAMPO_RIF_NUMERO_SENTENZA%>"
 				value = "<%=StringUtils.toStringJSP(beneficioCumulo.getRifNumeroProvvedimento(),"")%>"  
 				onFocus="javascript:textboxSelect(this)" 

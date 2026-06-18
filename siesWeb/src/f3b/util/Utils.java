@@ -16,8 +16,8 @@ import f3b.security.SecurityException;
 import siap.sico.decodifiche.model.DecodificheModel;
 
 /**
- * Utils - Classe di utilitï¿½ generica.
- * 
+ * Utils - Classe di utilità generica.
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -187,7 +187,7 @@ public class Utils {
 	 */
 	public static Iterator sortHashKeys(Hashtable aHash) {
 
-		// Affinchï¿½ possa effetturae il sort della tabella di hash
+		// Affinchè possa effettuare il sort della tabella di hash
 		// e necessario ottenere da quest'ultimo un oggetto derivato dalla
 		// classe List.
 		// Tale passaggio avviene invocando il metodo asList della classe
@@ -207,7 +207,7 @@ public class Utils {
 	}
 
 	/**
-	 * STUB : PM - Ma questo non ï¿½ uguale al precedente ?
+	 * STUB : PM - Ma questo non è uguale al precedente ?
 	 * Questo metodo acccetta in ingresso una Hashtable e ritorna un oggetto Iterator che contiene la lista
 	 * delle chiavi sortate.
 	 *
@@ -217,7 +217,7 @@ public class Utils {
 	 */
 	public static Iterator sortHashKeysForBLOB(Hashtable aHash) {
 
-		// Affinchï¿½ possa effetturae il sort della tabella di hash
+		// Affinchè possa effetturae il sort della tabella di hash
 		// e necessario ottenere da quest'ultimo un oggetto derivato dalla
 		// classe List.
 		// Tale passaggio avviene invocando il metodo asList della classe
@@ -237,7 +237,7 @@ public class Utils {
 	}
 
 	/**
-	 * Verifica se la stringa passata ï¿½ un valore numerico.
+	 * Verifica se la stringa passata è un valore numerico.
 	 *
 	 * @param lValue
 	 *            Stringa da controllare.
@@ -341,7 +341,7 @@ public class Utils {
 	 *            la Stringa da verificare
 	 * @param trim
 	 *            true se vogliamo effettuare il trim sulla stringa
-	 * @return true se ï¿½ presente, altrimenti false
+	 * @return true se è presente, altrimenti false
 	 */
 	public static boolean isPresent(String s, boolean trim) {
 
@@ -356,7 +356,7 @@ public class Utils {
 	 *
 	 * @param s
 	 *            la Stringa da verificare
-	 * @return true se ï¿½ presente, altrimenti false
+	 * @return true se è presente, altrimenti false
 	 */
 	public static boolean isPresent(String s) {
 
@@ -415,7 +415,7 @@ public class Utils {
 	 *
 	 * @param o
 	 *            l'Object da verificare
-	 * @return true se ï¿½ presente, altrimenti false
+	 * @return true se è presente, altrimenti false
 	 */
 	public static boolean isPresent(Object o) {
 
@@ -427,7 +427,7 @@ public class Utils {
 	 *
 	 * @param o
 	 *            l'array di Object da verificare
-	 * @return true se ï¿½ presente, altrimenti false
+	 * @return true se è presente, altrimenti false
 	 */
 	public static boolean isPresent(Object[] o) {
 
@@ -486,11 +486,19 @@ public class Utils {
 	 *
 	 * @param s
 	 *            la Stringa da verificare
-	 * @return true se ï¿½ presente, altrimenti false
+	 * @return true se è presente, altrimenti false
 	 */
 	public static boolean isPresentNotTrattino(String s) {
 
 		return isPresent(s, false) && !"-".equals(s);
+	}
+
+	// MEV_2025-48: aggiunto metodo
+	public static BigDecimal NullToZero(BigDecimal aValue) {
+
+		if (aValue == null)
+			aValue = new BigDecimal(0);
+		return aValue;
 	}
 
 }

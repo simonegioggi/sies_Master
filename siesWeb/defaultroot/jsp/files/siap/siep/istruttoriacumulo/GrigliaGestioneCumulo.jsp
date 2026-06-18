@@ -253,6 +253,11 @@ String lTotaleMessaggi = "<font class=\"cRosso\">("+CountRisultati+")</font>";
           <a href="javascript:eseguiFunzione('siap.siep.istruttoriacumulo.action.ActLoadCancellaIstruttoriaCumulo')">Annullamento</a>
         </td>
       </tr>
+      <tr>
+        <td width="32%" class="menulines" nowrap>
+          <a href="javascript:eseguiFunzione('siap.siep.istruttoriacumulo.action.ActLoadTrasferisciIstruttoria')">Trasferimento e Chiusura Istruttoria</a>
+        </td>
+      </tr>
     </table>
 </form>    
 </body>

@@ -64,9 +64,6 @@
   <form method="POST" name="EsitoModificaProcedimentiMagistratoCompetente" action="<%= IWebConstants.PG_MAIN%>">
     <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.sico.magistratocompetente.action.ActRicercaProcedimentiAssegnati">
     <input type="HIDDEN" name="<%=ICostantiMagistrato.CAMPO_COD_MAGISTRATO %>" value="<%=aVecchioMagistrato.getCodMagistrato()%>" >
-  <form>
-    
-    
   <table style="width: 95%;">
     <%
     //========================================================================
@@ -104,6 +101,7 @@
         </table>
       </td>
     </tr>
-  </table>
+</table>
+</form>
 </body>
 </html>

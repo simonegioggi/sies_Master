@@ -19,7 +19,7 @@ import siap.sico.web.ActionSiap;
 import siap.sico.webservice.controller.IWebServices;
 import siap.siep.SIEPException;
 
-@SuppressWarnings("rawtypes")
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class ActWsBase extends ActionSiap {
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
@@ -168,28 +168,28 @@ public class ActWsBase extends ActionSiap {
 		}
 		return lEventoModel;
 	}
-	
-	
+
 	/**
-	 * nuovo metodo MEV_21
-	 * Metodo di decodifice che restituiesce un Vettore invece che un model solo nel 
-	 * caso dei comuni con più occorrenze su SIES per lo stesso codice NSC, va data
-	 * la possibilità al chiamate di scegliere il comune in base alla data di nascita
-	 * del soggetto
+	 * nuovo metodo MEV_21 Metodo di decodifice che restituiesce un Vettore invece che un model solo nel caso
+	 * dei comuni con più occorrenze su SIES per lo stesso codice NSC, va data la possibilità al chiamate di
+	 * scegliere il comune in base alla data di nascita del soggetto
+	 *
 	 * @param aDominio
 	 * @param aCodCentralizzato
 	 * @return
 	 * @throws Exception
 	 */
-	protected Vector <CodiciSiesNscModel> DecodificaComune (String aDominio, String aCodCentralizzato) throws Exception {
-		Vector <CodiciSiesNscModel> listaCodici = null;
-		
+	protected Vector<CodiciSiesNscModel> DecodificaComune(String aDominio, String aCodCentralizzato)
+			throws Exception {
+
+		Vector<CodiciSiesNscModel> listaCodici = null;
+
 		ICodiciSiesNsc lCtrlDecodifica = SICOLookupRemote.getCodiciSiesNscRemote();
-		
+
 		CodiciSiesNscModel lCodiciSiesNscModel = new CodiciSiesNscModel();
 		lCodiciSiesNscModel.setCoDomain(aDominio);
 		lCodiciSiesNscModel.setCoCodcentr(aCodCentralizzato);
-		
+
 		try {
 			listaCodici = lCtrlDecodifica.ExRicercaCodiciSiesNsc(lCodiciSiesNscModel);
 

@@ -401,6 +401,11 @@
 								href="javascript:eseguiFunzione('siap.siep.modulocumulo.action.ActRicercaRidetPenaPMAltroCumulo')">Rideterminazione Pena Altro</a>
             </td>            
           </tr>
+	        <tr>
+	          <td width="32%" class="menulines" nowrap>
+	            <a href="javascript:eseguiFunzione('siap.siep.modulocumulo.action.ActRicercaRichBenGE')">Richieste Benefici Al GE</a>
+	          </td>
+	        </tr>          
         </table>
       </td>
     </tr>

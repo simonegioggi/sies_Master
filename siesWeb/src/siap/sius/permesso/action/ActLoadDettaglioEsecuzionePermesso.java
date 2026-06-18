@@ -6,6 +6,8 @@ import java.util.Collection;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.sico.libertaanticipata.action.ICostantiLicenzaLibanticipata;
 import siap.sius.depositodecreto.action.ICostantiDepositoDecreto;
 import siap.sius.fascicolo.action.ActRicercaFSPuntuale;
@@ -15,16 +17,11 @@ import siap.sius.permesso.controller.IPermesso;
 import siap.sius.permesso.model.DepositoDecretoMotivazioniLicenzaModel;
 import siap.sius.provvedimento.action.ICostantiProvvedimento;
 import siap.sius.util.SIUSLookupRemote;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
- * <p>
- * Title: ActLoadDettaglioEsecuzionePermesso
- * </p>
- * <p>
- * Description: Classe Action per la load Dettaglio Esecuzione Permesso
- * </p>
+ * ActLoadDettaglioEsecuzionePermesso - Classe Action per la load Dettaglio Esecuzione Permesso
+ *
+ * @version 1.0
  */
 @SuppressWarnings("rawtypes")
 public class ActLoadDettaglioEsecuzionePermesso extends ActRicercaFSPuntuale
@@ -37,7 +34,7 @@ public class ActLoadDettaglioEsecuzionePermesso extends ActRicercaFSPuntuale
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getName() + ".processRequest: inizio");
+		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
 
 		String lRetPage = PG_DETTAGLIO_ESECUZIONE_PERMESSOLICENZA;
 
@@ -46,8 +43,8 @@ public class ActLoadDettaglioEsecuzionePermesso extends ActRicercaFSPuntuale
 		if (super.isRequestParameterNullObj(ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO)
 				|| super.isRequestParameterNullObj(ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR))
 			lIDFasSius = super.getFascicoloSiusModelInSessione().getIdFascicoloSius();
-		else // altrimenti prosegue con la ricerca del fascicolo attraverso le due chiavi ANNO/PROGR
-		{
+		else {
+			// altrimenti prosegue con la ricerca del fascicolo attraverso le due chiavi ANNO/PROGR
 			super.processRequest();
 			lIDFasSius = super.getFascicoloSiusModelInSessione().getIdFascicoloSius();
 		}
@@ -93,9 +90,10 @@ public class ActLoadDettaglioEsecuzionePermesso extends ActRicercaFSPuntuale
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(this.getClass().getName() + ".processRequest: fine");
+		siesLogger.debug(getClass().getName() + ".processRequest: fine");
 
-		return lRetPage; // restituisce la jsp di VIEW
+		// restituisce la jsp di VIEW
+		return lRetPage;
 	}
 
 }

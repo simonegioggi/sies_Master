@@ -35,6 +35,11 @@ public class ActDettaglioAltreSanzioni extends ActionModuloCumulo implements ICo
 
     setRequestAttribute("ListaMisureSicurezza", lElencoMisure);   
     
+    // MEV_2025-48 - 2.12 Alert su continuazione e revoche benefici
+    super.getListaTitContSganciate(null);
+    super.getListaTitConRevBenSganciati(null);
+    // MEV_2025-48 - 2.12 Alert su continuazione e revoche benefici
+    
     if (lDatiFinaliAgg.getDatiFinaliCumulo().getFasSieIdFascicoloSiepMs()!=null)
     {
       IFascicoloSiep lCtrlFasc = SIEPLookupRemote.getFascicoloSiepRemote();

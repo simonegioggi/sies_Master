@@ -207,19 +207,14 @@
        	}
        	else if(modo == "M" )
        	{
-       		nodeList.style.display='none';
+       		//nodeList.style.display='none';
        		
-   		<%  if(beneficioCumulo.getTitIdTitoloCumulatoCollegato()!=null)
-   			{  %>
-   		
+   		<%  if(beneficioCumulo.getTitIdTitoloCumulatoCollegato()!=null) {  %>   		
    				nodeDeasso.style.display='block';
-
-   		<%	}
-			else
-			{ %>
-				
+   				nodeList.style.display='none';
+   		<%	} else { %>				
 				nodeDeasso.style.display='none';
-			
+				nodeList.style.display='block';
 		<%	} %>
        		
        		if(valueSel == '03') // Ordinanza
@@ -311,7 +306,7 @@
 			<a href="Javascript:EliminaAssociazione();" title="Elimina associazione"><img src="/images/delete.gif" border=0></a>
 			</td>
 			<td>
-			<input type="text" name="testodeassocia" style="color:red;" maxlength="100" size="100" value="Al momento della modifica il provvedimento di Revoca serà DEASSOCIATO dal titolo di concessione" disabled>
+			<input type="text" name="testodeassocia" style="color:red;" maxlength="100" size="100" value="Al momento della modifica il provvedimento di Revoca sarà DEASSOCIATO dal titolo di concessione" disabled>
 			</td>
  		</tr>
 	</table>

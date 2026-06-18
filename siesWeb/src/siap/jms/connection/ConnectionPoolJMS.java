@@ -6,9 +6,6 @@ import javax.jms.QueueConnection;
 
 import org.apache.log4j.Logger;
 
-import siap.jms.ICostantiJMS;
-import siap.jms.config.JMSProperties;
-
 import com.sun.messaging.ConnectionConfiguration;
 import com.sun.messaging.jms.Connection;
 import com.sun.messaging.jms.notification.EventListener;
@@ -16,21 +13,14 @@ import com.sun.messaging.jms.notification.EventListener;
 import f3b.log.LogF3B;
 import f3b.util.F3BException; // 15/07/2005
 import f3b.util.Utils;
+import siap.jms.ICostantiJMS;
+import siap.jms.config.JMSProperties;
 
 /**
- * <p>
- * Title: ConnectionPoolJMS
- * </p>
- * <p>
- * Description: Classe che realizza il Pool delle connessioni OpenJMS locali Infatti il pool è con le code
- * locali che ricevono e che vengono riempite per spedire.
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
+ * ConnectionPoolJMS - Classe che realizza il Pool delle connessioni OpenJMS locali Infatti il pool è con le
+ * code locali che ricevono e che vengono riempite per spedire.
+ *
+ * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ConnectionPoolJMS implements ICostantiJMS {
@@ -39,7 +29,7 @@ public class ConnectionPoolJMS implements ICostantiJMS {
 	private static Logger siesLogger = Logger.getLogger(LogF3B.JMS_LOG);
 
 	// [FT] - 03/08/2016 - MAC_LOG - Commento la dichiarazione di mLog in favore della variabile siesLogger
-//	private static Logger mLog = LogF3B.getLogger();
+	// private static Logger mLog = LogF3B.getLogger();
 
 	private static boolean isAccessible = true;
 
@@ -81,7 +71,7 @@ public class ConnectionPoolJMS implements ICostantiJMS {
 	/**
 	 * Usato nel caso in cui il server JMS ha chiuso la connessione VIene fatto ripartire e viene ricreata una
 	 * connessione.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	public synchronized static void restart() throws Exception {
@@ -140,7 +130,8 @@ public class ConnectionPoolJMS implements ICostantiJMS {
 		siesLogger.info("[JMS]: inizio");
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-		siesLogger.info(" <<<<<<<<<<<<<<<<<<< Inizializzo il POOL di Connessioni MessageQueue >>>>>>>>>>>>>>>>>>>>>>");
+		siesLogger.info(
+				" <<<<<<<<<<<<<<<<<<< Inizializzo il POOL di Connessioni MessageQueue >>>>>>>>>>>>>>>>>>>>>>");
 		// Imposto i valori iniziali
 		mSize = JMSProperties.getInstance().getIntProperty(POOL_SIZE);
 
@@ -220,7 +211,7 @@ public class ConnectionPoolJMS implements ICostantiJMS {
 			com.sun.messaging.ConnectionFactory qFactory = new com.sun.messaging.ConnectionFactory();
 
 			// FIXME: DECOMMENTARE SOLO IN LOCALE, NO IN ESERCIZIO
-//			qFactory.setProperty(ConnectionConfiguration.imqAddressList, mUrl + "/imqhttp/tunnel");
+			qFactory.setProperty(ConnectionConfiguration.imqAddressList, mUrl + "/imqhttp/tunnel");
 			qFactory.setProperty(ConnectionConfiguration.imqReconnectEnabled, "true");
 			qFactory.setProperty(ConnectionConfiguration.imqReconnectInterval, "30000");
 			qFactory.setProperty(ConnectionConfiguration.imqReconnectAttempts, "-1");
@@ -235,7 +226,7 @@ public class ConnectionPoolJMS implements ICostantiJMS {
 			lCon = qFactory.createQueueConnection();
 
 			// 2010-10-07 - Casting per consentire di i inserire eventmonitor di connessione.
-			javax.jms.Connection lConn = (javax.jms.Connection) lCon;
+			javax.jms.Connection lConn = lCon;
 			Connection llConMQ = (Connection) lConn;
 
 			// Aggancio EventMonitor.
@@ -244,7 +235,8 @@ public class ConnectionPoolJMS implements ICostantiJMS {
 			llConMQ.setEventListener(eListener);
 
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-			siesLogger.info(" >>> MessageQueue Connesso a " + lCon.getMetaData().getJMSProviderName() + " <<<");
+			siesLogger
+					.info(" >>> MessageQueue Connesso a " + lCon.getMetaData().getJMSProviderName() + " <<<");
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.info(" Errore in createConnection MessageQueue Connesso a " + ex, ex);
@@ -270,7 +262,7 @@ public class ConnectionPoolJMS implements ICostantiJMS {
 
 	/**
 	 * Rilasca la connessione del pool di Connessioni JMS
-	 * 
+	 *
 	 * @param con
 	 *            La connessione da rilasciare
 	 */
@@ -280,19 +272,19 @@ public class ConnectionPoolJMS implements ICostantiJMS {
 		if (con != null) {
 			/*
 			 * long now = System.currentTimeMillis();
-			 * 
+			 *
 			 * // cerca l'Oggetto PooledConnection nel Pool for (int x = 0; x < mPool.size(); x++) {
 			 * PooledConnection lPCon = (PooledConnection) mPool.elementAt(x);
-			 * 
+			 *
 			 * if (lPCon.getConnection() == con) { long inUsoDa = (now - lPCon.getLastUsed());
-			 * 
+			 *
 			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-			 * siesLogger.info(" >>> Liberata Connessione JMS ("+lPCon. getConnection().hashCode()+") n. " + x +
-			 * " dopo "+inUsoDa+" ms<<< "); // Setta l'attributo InUse a false, che // di fatto rilascia la
+			 * siesLogger.info(" >>> Liberata Connessione JMS ("+lPCon. getConnection().hashCode()+") n. " + x
+			 * + " dopo "+inUsoDa+" ms<<< "); // Setta l'attributo InUse a false, che // di fatto rilascia la
 			 * connessione
-			 * 
+			 *
 			 * //lPCon.setInUse(false); //lPCon.setLastUsed(0L);
-			 * 
+			 *
 			 * break; } }
 			 */
 		}
@@ -300,7 +292,7 @@ public class ConnectionPoolJMS implements ICostantiJMS {
 
 	public synchronized QueueConnection getConnection() throws Exception {
 		// Controllo di accessibilità al pool
-		if (isAccessible == false)
+		if (!isAccessible)
 			throw new F3BException(F3BException.USER_MESSAGE,
 					"Il sistema JMS temporaneamente non è disponibile, riprovare!");
 
@@ -310,8 +302,8 @@ public class ConnectionPoolJMS implements ICostantiJMS {
 			// [FT] - 08/08/2016 - MAC_LOG - Recupero il chiamante utilizzando direttamente lo stacktrace
 			// in quanto essendo stato rimosso log4j, LocationInfo non è più disponibile.
 			StackTraceElement locationInfo = new Exception().getStackTrace()[1];
-//			LocationInfo locationInfo = new LocationInfo(new Throwable(),
-//					"siap.jms.connection.ConnectionPoolJMS.getConnection");
+			// LocationInfo locationInfo = new LocationInfo(new Throwable(),
+			// "siap.jms.connection.ConnectionPoolJMS.getConnection");
 			// LogF3B.getLogger("SIESCtrl").debug(locationInfo.getFormattedString());
 			lNomeChiamante = locationInfo.getClassName() + "." + locationInfo.getMethodName();
 			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
@@ -329,10 +321,12 @@ public class ConnectionPoolJMS implements ICostantiJMS {
 				pcon = (PooledConnection) mPool.elementAt(x);
 
 				// Testa se la connessione è in uso
-				if (pcon.inUse() == false) {
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-					siesLogger.info(" >>> Presa Connessione JMS (" + pcon.getConnection().hashCode() + ") n. " + x
-							+ " da una size " + mPool.size() + " su una SIZE iniziale " + mSize + " <<< ");
+				if (!pcon.inUse()) {
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// mLog
+					siesLogger.info(" >>> Presa Connessione JMS (" + pcon.getConnection().hashCode() + ") n. "
+							+ x + " da una size " + mPool.size() + " su una SIZE iniziale " + mSize
+							+ " <<< ");
 
 					// Si marca IN USO -- Deprecato MessageQueue e' tutto sincronizzato
 					// questa gestione casalinga non serve
@@ -346,7 +340,8 @@ public class ConnectionPoolJMS implements ICostantiJMS {
 					lStatoPool = lStatoPool + "<br> Connessione JMS n. " + (x + 1) + "/" + mPool.size()
 							+ " non disponibile. In uso da " + inUsoDa + " ms, "
 							+ pcon.getConsumerClassName();
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// mLog
 					siesLogger.error(" >>> Connessione JMS n. " + (x + 1) + "/" + mPool.size()
 							+ " non disponibile, in uso da " + inUsoDa + " ms, "
 							+ pcon.getConsumerClassName());
@@ -358,12 +353,10 @@ public class ConnectionPoolJMS implements ICostantiJMS {
 			if (e.getMessage().startsWith(""))
 				initializePool();
 
-			throw new F3BException(
-					F3BException.USER_MESSAGE,
+			throw new F3BException(F3BException.USER_MESSAGE,
 					"Il sistema sta provando a prendere una commessione con il sistema JMS. <br> Riprovare la spedizione della richiesta.");
 		}
-		throw new F3BException(
-				F3BException.USER_MESSAGE,
+		throw new F3BException(F3BException.USER_MESSAGE,
 				"Il sistema sta provando a prendere una commessione con il sistema JMS. <br> Riprovare la spedizione della richiesta.");
 
 		// Non trovo una connessione libera
@@ -383,49 +376,49 @@ public class ConnectionPoolJMS implements ICostantiJMS {
 	 * public synchronized QueueConnection getConnection() throws Exception { String lNomeChiamante = null;
 	 * try { // cerco di recuperare il nome della classe e metodo chiamante LocationInfo locationInfo = new
 	 * LocationInfo(new Throwable(),"siap.jms.connection.ConnectionPoolJMS.getConnection"); //
-	 * LogF3B.getLogger("SIESCtrl").debug(locationInfo.getFormattedString()); lNomeChiamante =
-	 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+	 * LogF3B.getLogger("SIESCtrl").debug(locationInfo.getFormattedString()); lNomeChiamante = // [FT] -
+	 * 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 	 * locationInfo.getClassName()+"."+locationInfo.getMethodName(); //siesLogger.error(lNomeChiamante);
-	 * 
+	 *
 	 * PooledConnection pcon = null;
-	 * 
+	 *
 	 * long now = System.currentTimeMillis();
-	 * 
+	 *
 	 * String lStatoPool = "Stato del Pool JMS: ";
-	 * 
+	 *
 	 * // cerca una connessione non in uso for (int x = 0; x < mPool.size(); x++) {
-	 * 
+	 *
 	 * pcon = (PooledConnection) mPool.elementAt(x);
-	 * 
+	 *
 	 * // Testa se la connessione è in uso if (pcon.inUse() == false) { LogF3B.getLogger
 	 * ().info(" >>> Presa Connessione JMS ("+pcon.getConnection( ).hashCode()+") n. "
 	 * +x+" da una size "+mPool.size()+" su una SIZE iniziale "+mSize+" <<< ");
-	 * 
+	 *
 	 * // Si marca IN USO -- Deprecato MessageQueue e' tutto sincronizzato //questa gestione casalinga non
 	 * serve // pcon.setInUse(true); // pcon.setLastUsed(now); pcon.setConsumerClassName(lNomeChiamante); //
 	 * ritorna la JMS Connection memorizzata nel PooledConnection return pcon.getConnection(); } else { long
 	 * inUsoDa = (now - pcon.getLastUsed()); lStatoPool = lStatoPool +
-	 * "<br> Connessione JMS n. "+(x+1)+"/"+mPool.size( )+" non disponibile. In uso da "
-	 * +// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+	 * "<br> Connessione JMS n. "+(x+1)+"/"+mPool.size( )+" non disponibile. In uso da " +// [FT] - 03/08/2016
+	 * - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 	 * +inUsoDa+" ms, "+pcon.getConsumerClassName(); siesLogger.error(" >>> Connessione JMS n. "
 	 * +(x+1)+"/"+mPool.size() +" non disponibile, in uso da "+inUsoDa+" ms, "+pcon .getConsumerClassName());
 	 * }
-	 * 
-	 * } } // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-	 * } } catch(Exception e) { siesLogger.error("Errore durante la connessione a Message Queue" ,e);
+	 *
+	 * } } // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog } }
+	 * catch(Exception e) { siesLogger.error("Errore durante la connessione a Message Queue" ,e);
 	 * if(e.getMessage().startsWith("")) initializePool();
-	 * 
+	 *
 	 * throw new F3BException(F3BException.USER_MESSAGE,
 	 * "Il sistema sta provando a prendere una commessione con il sistema JMS. <br> Riprovare la spedizione della richiesta."
 	 * ); } throw new F3BException(F3BException.USER_MESSAGE,
 	 * "Il sistema sta provando a prendere una commessione con il sistema JMS. <br> Riprovare la spedizione della richiesta."
 	 * );
-	 * 
-	 * // // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-	 * // Non trovo una connessione libera // throw una new exception //siesLogger.error(getClass().getName() +
+	 *
+	 * // // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog // Non
+	 * trovo una connessione libera // throw una new exception //siesLogger.error(getClass().getName() +
 	 * " OpenJMS - No Connection avaiable "+lStatoPool); //throw new
 	 * Exception("No Connection avaiable <br>"+lStatoPool);
-	 * 
+	 *
 	 * }
 	 */
 
@@ -438,7 +431,7 @@ public class ConnectionPoolJMS implements ICostantiJMS {
 		for (int x = 0; x < mPool.size(); x++) {
 			PooledConnection lPCon = (PooledConnection) mPool.elementAt(x);
 			// Se la PooledConnectionnon è in uso si chiude
-			if (lPCon.inUse() == false) {
+			if (!lPCon.inUse()) {
 				lPCon.close();
 			} else {
 				// Se è ancora in use, si dorme per 30 secondi e forza la chiusura
@@ -447,7 +440,8 @@ public class ConnectionPoolJMS implements ICostantiJMS {
 					lPCon.close();
 				} catch (InterruptedException ie) {
 					System.err.println(ie.getMessage());
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// mLog
 					siesLogger.error(ie.getClass().getName(), ie);
 				}
 			}
@@ -473,20 +467,23 @@ public class ConnectionPoolJMS implements ICostantiJMS {
 			long inUsoDa = (now - lPCon.getLastUsed());
 
 			// Se la PooledConnectionnon è in uso si chiude
-			if (lPCon.inUse() == true) {
+			if (lPCon.inUse()) {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-				siesLogger.error("Connessione " + (x + 1) + "/" + mPool.size() + ": stato = in Uso da " + inUsoDa
-						+ " ms da " + lPCon.getConsumerClassName());
+				siesLogger.error("Connessione " + (x + 1) + "/" + mPool.size() + ": stato = in Uso da "
+						+ inUsoDa + " ms da " + lPCon.getConsumerClassName());
 				lStatoPool = lStatoPool + "<br> Connessione JMS n. " + (x + 1) + "/" + mPool.size()
 						+ " non disponibile. In uso da " + inUsoDa + " ms, " + lPCon.getConsumerClassName();
 			} else {
 				if (lPCon.getConsumerClassName() == null) {
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-					siesLogger.error("Connessione " + (x + 1) + "/" + mPool.size() + ": stato = disponibile.");
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// mLog
+					siesLogger
+							.error("Connessione " + (x + 1) + "/" + mPool.size() + ": stato = disponibile.");
 					lStatoPool = lStatoPool + "<br> Connessione JMS n. " + (x + 1) + "/" + mPool.size()
 							+ " disponibile.";
 				} else {
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// mLog
 					siesLogger.error("Connessione " + (x + 1) + "/" + mPool.size()
 							+ ": stato = disponibile. Richiesta ultima volta da "
 							+ lPCon.getConsumerClassName() + " " + inUsoDa + " ms fa");
@@ -503,7 +500,7 @@ public class ConnectionPoolJMS implements ICostantiJMS {
 	/**
 	 * Metodo invocato quando il Garbage Collector distrugge l'oggetto. In questo modo vengono chiuse tutte le
 	 * connessioni altrimenti rimangono operti i socket (TCP) dei listener registrati sulle connessioni
-	 * 
+	 *
 	 * non funziona
 	 */
 	// protected void finalize(){

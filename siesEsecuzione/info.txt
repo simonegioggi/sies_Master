@@ -1,5 +1,3 @@
-BRANCH SIESESECUZIONE VERSIONE 12.8.3.0
+Branch siesEsecuzione Versione release_12.9.3.0
 
-Nasce dal branch 12.8.2.0 in data 25/07/2025
-
-Gestisce il trasferimento verso NSC dei fogli complementari (NO CUMULO).
+Nasce dal branch release_12.9.2.0 in data 27/03/2026

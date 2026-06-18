@@ -248,7 +248,7 @@ function effettoTree(a)
 %>
  					</table>
    				<div id="elenco<%=jPA%>" style="width: 100%; display:none">
-     				<%@include file="/jsp/files/siap/siep/sentenza/ListaFascicoliPerSentenza.jsp" %>
+     				<%@include file="/jsp/files/siap/siep/sentenza/ListaFascicoliPerSentenza.jspf" %>
    				</div>
 <%
    				lFascicoli.clear();
