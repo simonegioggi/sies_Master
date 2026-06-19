@@ -111,15 +111,15 @@ public class ProcProvvEmessiNoDepositoNumGGExcel extends SIAPExcelProducer {
 
 		// stile per celle col bordo con testo centrato
 		lCellStyleCenter = getBordo4Lati(lWb);
-		lCellStyleCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		lCellStyleCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		lCellStyleCenter.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
+		lCellStyleCenter.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
 		lCellStyleCenter.setWrapText(true);
 
 		lRow = lSheet.createRow(lRowCounter++);
 
 		lSheet.setColumnWidth(0, 10 * 256); // Progr
 		lSheet.setColumnWidth(1, 20 * 256); // Procedimento SIUS
-		lSheet.setColumnWidth(2, 50 * 256); // Generalità Soggetto
+		lSheet.setColumnWidth(2, 50 * 256); // Generalit? Soggetto
 		lSheet.setColumnWidth(3, 15 * 256); // Data Iscrizione
 		lSheet.setColumnWidth(4, 15 * 256); // Data Emissione
 		lSheet.setColumnWidth(5, 50 * 256); // Provvedimento
@@ -129,7 +129,7 @@ public class ProcProvvEmessiNoDepositoNumGGExcel extends SIAPExcelProducer {
 		// Intestazione colonne
 		setCell(lRow, 0, "Prog.", lCellStyleCenter);
 		setCell(lRow, 1, "Procedimento SIUS", lCellStyleCenter);
-		setCell(lRow, 2, "Generalità Soggetto", lCellStyleCenter);
+		setCell(lRow, 2, "Generalit? Soggetto", lCellStyleCenter);
 		setCell(lRow, 3, "Data Iscrizione", lCellStyleCenter);
 		setCell(lRow, 4, "Data Emissione", lCellStyleCenter);
 		setCell(lRow, 5, "Provvedimento", lCellStyleCenter);

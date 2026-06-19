@@ -1,5 +1,6 @@
 package siap.siep.misurasicurezza.action;
 
+import org.apache.log4j.Logger;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -108,7 +109,7 @@ public class ActLoadModificaArchiviazionePerProvvAltroUfficioMS extends ActionSi
 
 		setRequestAttribute("posizioneluogoaltra", lPos);
 
-		// ComboBox Autorità Emittente (Autorità Esterna, ovvero Altro Ufficio)
+		// ComboBox Autoritï¿½ Emittente (Autoritï¿½ Esterna, ovvero Altro Ufficio)
 		Option lAutoOption = new Option(DecodificheManager.getInstance().getTipoAutorita());
 		if (lArcMod != null && lArcMod.getIdArchiviazione() != null) {
 			if (lArcMod.getCodTipoAutoritaEmittente() != null) {
@@ -126,7 +127,7 @@ public class ActLoadModificaArchiviazionePerProvvAltroUfficioMS extends ActionSi
 
 		setRequestAttribute("tipoArchiviazioni", "" + lOptionT);
 
-		// Autorità per Notifiche
+		// Autoritï¿½ per Notifiche
 		String lCodTipoAutorita1 = "-";
 		String lCodTipoAutoritaND = "-";
 		UfficioModel lUffSorvModel = new UfficioModel();
@@ -158,7 +159,7 @@ public class ActLoadModificaArchiviazionePerProvvAltroUfficioMS extends ActionSi
 			}
 		}
 
-		// ComboBox Notifiche Altra Autorità
+		// ComboBox Notifiche Altra Autoritï¿½
 		Option lOptionE = new Option(DecodificheManager.getInstance().getTipoAutorita());
 		if (lCodTipoAutorita1.compareTo("-") != 0) {
 			lOptionE.setSelected(lCodTipoAutorita1);

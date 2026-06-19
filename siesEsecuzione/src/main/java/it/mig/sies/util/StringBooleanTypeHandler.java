@@ -15,7 +15,7 @@ import org.apache.ibatis.type.TypeHandler;
  * */
 
 public class StringBooleanTypeHandler
-        implements TypeHandler {
+        implements TypeHandler<Boolean> {
 	
 	/**
 	 * Prende il risultato della colonna dal ResultSet
@@ -23,9 +23,21 @@ public class StringBooleanTypeHandler
 	 * @param rs ResultSet
 	 * @throws SQLException
 	 * */
-    public Object getResult(ResultSet rs, String columnName)
+    @Override
+    public Boolean getResult(ResultSet rs, String columnName)
             throws SQLException {
         return valueOf((String) rs.getObject(columnName));
+    }
+
+    /**
+	 * Prende il risultato della colonna dal ResultSet tramite indice
+	 * @param i posizione da recuperare
+	 * @param rs ResultSet
+	 * @throws SQLException
+	 * */
+    @Override
+    public Boolean getResult(ResultSet rs, int i) throws SQLException {
+        return valueOf((String) rs.getObject(i));
     }
     
     /**
@@ -34,7 +46,8 @@ public class StringBooleanTypeHandler
 	 * @param cs CallableStatement
 	 * @throws SQLException
 	 * */
-    public Object getResult(CallableStatement cs, int i) throws SQLException {
+    @Override
+    public Boolean getResult(CallableStatement cs, int i) throws SQLException {
         return valueOf((String) cs.getObject(i));
     }
     
@@ -42,18 +55,15 @@ public class StringBooleanTypeHandler
 	 * Effettua il settaggio del parametro in un PreparedStatement
 	 * @throws SQLException
 	 * */
-    public void setParameter(PreparedStatement ps, int i, Object parameter, JdbcType jdbcType) throws SQLException {
-        Boolean bValue = (Boolean) parameter;
-        ps.setString(i, bValue.booleanValue() ? "Y" : "N");
+    @Override
+    public void setParameter(PreparedStatement ps, int i, Boolean parameter, JdbcType jdbcType) throws SQLException {
+        ps.setString(i, Boolean.TRUE.equals(parameter) ? "Y" : "N");
     }
     
     /**
 	 * Effettua il mapping Stringa-Boolean
 	 * */
-    public Object valueOf(String value) {
-        if (value.equals("Y")) {
-            return Boolean.TRUE;
-        }
-        return Boolean.FALSE;
+    public Boolean valueOf(String value) {
+        return "Y".equalsIgnoreCase(value);
     }
 }

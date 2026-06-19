@@ -1,5 +1,6 @@
 package siap.siep.misuracautelare.action;
 
+import org.apache.log4j.Logger;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Iterator;
@@ -56,7 +57,7 @@ public class ActRicercaMisuraCautelare extends ActionSiap implements ICostantiMi
 		Vector lVectSoloDataInizio = lCtrl.ExRicercaMisureCautelariByIdFascicoloSoloDataInizio(lIdFascicolo);
 		lVectSiDateNull.addAll(lVectSoloDataInizio);
 		// inizio MEV_10_S3
-		// Quando 2 o più misure cautelari computabili sono continuative il sistema
+		// Quando 2 o piï¿½ misure cautelari computabili sono continuative il sistema
 		// non deve visualizzare nell'elenco delle misure il "totale dei giorni"
 		Vector lMisureApp = new Vector();
 		Date lDateFinePrec = null;
@@ -99,7 +100,7 @@ public class ActRicercaMisuraCautelare extends ActionSiap implements ICostantiMi
 					giorni = DateUtils.getIntervallo(lDateFinePrec, lMisCautModel.getDataInizio());
 				}
 
-				// se la differenza tra la data fine e la data inizio è maggiore
+				// se la differenza tra la data fine e la data inizio ï¿½ maggiore
 				// di 1, significa che le 2 misure cautelari non sono continuative
 				// siesLogger.debug("giorni = "+giorni);
 				if (giorni > 1) {
@@ -108,7 +109,7 @@ public class ActRicercaMisuraCautelare extends ActionSiap implements ICostantiMi
 					lMisCautModel.setMisCautContinuativa("N");
 
 					// Recupero la misura cautelare precedente e imposto il flag
-					// MisCautContinuativa uguale ad 'N' solo se quest'ultimo è diverso
+					// MisCautContinuativa uguale ad 'N' solo se quest'ultimo ï¿½ diverso
 					// da 'S'
 					MisuraCautelareModel lMisCaut = (MisuraCautelareModel) lMisureApp.get(inc - 1);
 
@@ -122,15 +123,15 @@ public class ActRicercaMisuraCautelare extends ActionSiap implements ICostantiMi
 					}
 					// END - Ticket#20200715018
 
-					// se la differenza tra la data fine e la data inizio è
+					// se la differenza tra la data fine e la data inizio ï¿½
 					// uguale a 0 oppure uguale a 1 le misure cautelari
 					// sono continuative
 				} else if (giorni == 0 || giorni == 1) {
 					// misure cautelari continuative
 
-					// Ticket#20200715018 - la marco come ultima della serie SU. Verrà eventualmente setta a S
+					// Ticket#20200715018 - la marco come ultima della serie SU. Verrï¿½ eventualmente setta a S
 					// se
-					// il successivo record è in continuazione con il corrente altrimenti resta SU
+					// il successivo record ï¿½ in continuazione con il corrente altrimenti resta SU
 					// lMisCautModel.setMisCautContinuativa("S");
 					lMisCautModel.setMisCautContinuativa("SU"); // S = in continuazione con il precedente, U =
 																// ultimo (per ora) del gruppo
@@ -154,13 +155,13 @@ public class ActRicercaMisuraCautelare extends ActionSiap implements ICostantiMi
 				 * lMisCautModel.getFlagComputabile().equals("S") && lMisCautModel.getCodTipoMisura() != null
 				 * && !lMisCautModel.getCodTipoMisura().equals("") &&
 				 * !lMisCautModel.getCodTipoMisura().equals("CL")){ // misure cautelari computabili // imposto
-				 * il flag MisCautContinuativa uguale ad 'N' // perchè il totale dei giorni deve essere
+				 * il flag MisCautContinuativa uguale ad 'N' // perchï¿½ il totale dei giorni deve essere
 				 * visibile lMisCautModel.setMisCautContinuativa("N"); lMisureApp.add(lMisCautModel);
 				 */
 			} else {
 				// misure cautelari non computabili
 				// imposto il flag MisCautContinuativa uguale ad 'S'
-				// perchè il totale dei giorni non deve essere visibile
+				// perchï¿½ il totale dei giorni non deve essere visibile
 				lMisCautModel.setMisCautContinuativa("S");
 
 				// aggiungo la misura cautelare al vettore di appoggio
@@ -171,9 +172,9 @@ public class ActRicercaMisuraCautelare extends ActionSiap implements ICostantiMi
 		}
 
 		// calcolo dei totali parziali
-		// Se nell’elenco delle misure cautelari sono presenti 2 o più misure cautelari computabili
-		// il sistema nella riga dell’ultima misura cautelare computabile continuativa
-		// dovrà mostrare il totale espresso in Anni, Mesi e Giorni delle suddette
+		// Se nellï¿½elenco delle misure cautelari sono presenti 2 o piï¿½ misure cautelari computabili
+		// il sistema nella riga dellï¿½ultima misura cautelare computabile continuativa
+		// dovrï¿½ mostrare il totale espresso in Anni, Mesi e Giorni delle suddette
 		// misure cautelari computabili continuative.
 		int mNumTotAnniUltimaMisCauCom = 0;
 		int mNumTotMesiUltimaMisCauCom = 0;
@@ -205,7 +206,7 @@ public class ActRicercaMisuraCautelare extends ActionSiap implements ICostantiMi
 					(MisuraCautelareModel) lMisureApp.get(j));
 			if ((lMisCautAppModel.getMisCautContinuativa().equalsIgnoreCase("S")
 					|| lMisCautAppModel.getMisCautContinuativa().equalsIgnoreCase("SU") // Ticket#20200715018
-																						// - Anche SU è in
+																						// - Anche SU ï¿½ in
 																						// continuazione
 			) && lMisCautAppModel.getFlagComputabile().equalsIgnoreCase("S")) {
 				// misCautContinuativa=true;
@@ -233,7 +234,7 @@ public class ActRicercaMisuraCautelare extends ActionSiap implements ICostantiMi
 				// numPeriodiContinuativiRaggruppato = numPeriodiContinuativiRaggruppato +1;
 				nRigheMatriceMisContinuativi = nRigheMatriceMisContinuativi + 1;
 
-				// Ticket#20200715018 - Informo il record successivo che questo non è in continuazione con lui
+				// Ticket#20200715018 - Informo il record successivo che questo non ï¿½ in continuazione con lui
 				if (lMisCautAppModel.getMisCautContinuativa().equalsIgnoreCase("SU"))
 					precedentePeriodoNonConsecutivo = true; //
 				else if (lMisCautAppModel.getMisCautContinuativa().equalsIgnoreCase("S"))
@@ -445,9 +446,9 @@ public class ActRicercaMisuraCautelare extends ActionSiap implements ICostantiMi
 		// inizio gestione desc posizione giuridica
 		// I) se la posizione giuridica !="07" ==> parto dalla tabella POSIZIONE_GIURIDICA tramite
 		// CG_REF_CODES prendo la DescrPosizioneGiuridica
-		// II) se la posizione giuridica ="07" && COD_MASCHERA="L" non è presente altra causa la
+		// II) se la posizione giuridica ="07" && COD_MASCHERA="L" non ï¿½ presente altra causa la
 		// DescrPosizioneGiuridica="Libero"
-		// else la posizione giuridica ="07" ==> è presente altra causa la DescrPosizioneGiuridica si
+		// else la posizione giuridica ="07" ==> ï¿½ presente altra causa la DescrPosizioneGiuridica si
 		// considera
 		// la desc di CG_REF_CODES tramite la tabella ALTRA_CAUSA partendo dalla tabella
 		// POSIZIONE_GIURIDICA.ALT_CAU_ID_ALTRA_CAUSA
@@ -459,7 +460,7 @@ public class ActRicercaMisuraCautelare extends ActionSiap implements ICostantiMi
 		IAltraCausa lAcCtrl = SIEPLookupRemote.getAltraCausa();
 		if (lPos != null && lPos.getIdPosizioneGiuridica() != null
 				&& !lPos.getCodPosizioneGiuridica().equalsIgnoreCase("07")) {
-			// è già presente la descrizione giusta
+			// ï¿½ giï¿½ presente la descrizione giusta
 		} else if (lPos != null && lPos.getIdPosizioneGiuridica() != null
 				&& lPos.getCodPosizioneGiuridica().equalsIgnoreCase("07")
 				&& lPos.getAltCauIdAltraCausa() == null) {

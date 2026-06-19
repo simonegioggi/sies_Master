@@ -60,7 +60,7 @@ public class ActStampaScadenzarioDifferimentoMS extends ActionSiap implements IC
 
 		if (lm != null) {
 			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
-					"Questa funzione non può essere attivata contemporaneamente da più utenti!<BR>Riprovare più tardi!");
+					"Questa funzione non pu? essere attivata contemporaneamente da pi? utenti!<BR>Riprovare pi? tardi!");
 			return IWebConstants.PG_MESSAGE;
 		}
 
@@ -156,31 +156,31 @@ public class ActStampaScadenzarioDifferimentoMS extends ActionSiap implements IC
 		HSSFCellStyle csNull = wb.createCellStyle();
 		HSSFCellStyle csBold = wb.createCellStyle();
 		HSSFFont font = wb.createFont();
-		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		font.setBold(true);
 		csBold.setFont(font);
 
 		// stile per celle col bordo con carattere grassetto centrato
 		HSSFCellStyle csBoldCenter = ScadenzarioUtils.getBordo4Lati(wb);
 		csBoldCenter.setFont(font);
-		csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csBoldCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csBoldCenter.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
+		csBoldCenter.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
 		csBoldCenter.setWrapText(true);
 
 		// stile per celle col bordo con testo centrato
 		HSSFCellStyle csCenter = ScadenzarioUtils.getBordo4Lati(wb);
-		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csCenter.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
+		csCenter.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
 		csCenter.setWrapText(true);
 
 		// Stile della cella con bordi ed allineamento a destra
 		HSSFCellStyle csR = ScadenzarioUtils.getBordo4Lati(wb);
-		csR.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+		csR.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.RIGHT);
 
 		// stile per celle col bordo con carattere grassetto
 		// ALLINEATO A DESTRA
 		HSSFCellStyle csBoldRight = ScadenzarioUtils.getBordo4Lati(wb);
 		csBoldRight.setFont(font);
-		csBoldRight.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+		csBoldRight.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.RIGHT);
 
 		HSSFSheet sheet = wb.createSheet("Elenco");
 
@@ -210,12 +210,12 @@ public class ActStampaScadenzarioDifferimentoMS extends ActionSiap implements IC
 		row = sheet.createRow(nRow);
 		numCol = 0;
 
-		ScadenzarioUtils.setCell(row, numCol++, "N° SIEP", csBoldCenter);
+		ScadenzarioUtils.setCell(row, numCol++, "N? SIEP", csBoldCenter);
 		ScadenzarioUtils.setCell(row, numCol++, "Cognome", csBoldCenter);
 		ScadenzarioUtils.setCell(row, numCol++, "Nome", csBoldCenter);
 		ScadenzarioUtils.setCell(row, numCol++, "Data Inizio Differimento", csBoldCenter);
 		ScadenzarioUtils.setCell(row, numCol++, "Data Fine Differimento", csBoldCenter);
-		ScadenzarioUtils.setCell(row, numCol++, "N° Giorni Residui", csBoldCenter);
+		ScadenzarioUtils.setCell(row, numCol++, "N? Giorni Residui", csBoldCenter);
 
 		nRow++;
 

@@ -1,5 +1,6 @@
 package siap.jms.connection;
 
+import org.apache.log4j.Logger;
 import javax.jms.JMSException;
 import javax.jms.QueueConnection;
 
@@ -98,3 +99,4 @@ public class PooledConnection
     }
   }
 }
+

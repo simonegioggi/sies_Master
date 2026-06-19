@@ -1,5 +1,6 @@
 package siap.siep.pagoPaBatch.action;
 
+import org.apache.log4j.Logger;
 import f3b.util.F3BProperties;
 import siap.sico.web.ActionSiap;
 import siap.siep.pagoPaBatch.model.QuartzJobModel;

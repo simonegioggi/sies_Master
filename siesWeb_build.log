@@ -1,0 +1,35 @@
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by org.fusesource.jansi.internal.JansiLoader in an unnamed module (file:/C:/Users/sgioggi/tools/apache-maven-3.9.9/lib/jansi-2.4.1.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by com.google.common.util.concurrent.AbstractFuture$UnsafeAtomicHelper (file:/C:/Users/sgioggi/tools/apache-maven-3.9.9/lib/guava-33.2.1-jre.jar)
+WARNING: Please consider reporting this to the maintainers of class com.google.common.util.concurrent.AbstractFuture$UnsafeAtomicHelper
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for it.eng.mig:siesWeb:war:1.0
+[WARNING] 'dependencies.dependency.systemPath' for windward:windward-reports:jar should not point at files within the project directory, ${project.basedir}/defaultroot/WEB-INF/lib/WindwardReports.jar will be unresolvable by dependent projects @ line 191, column 16
+[WARNING] 'dependencies.dependency.systemPath' for jasper:jasper:jar should not point at files within the project directory, ${project.basedir}/defaultroot/WEB-INF/lib/jasper.jar will be unresolvable by dependent projects @ line 199, column 16
+[WARNING] 'dependencies.dependency.systemPath' for sun-messaging:imq:jar should not point at files within the project directory, ${project.basedir}/defaultroot/WEB-INF/lib/imq.jar will be unresolvable by dependent projects @ line 251, column 16
+[WARNING] 'dependencies.dependency.systemPath' for sun-messaging:imqjmx:jar should not point at files within the project directory, ${project.basedir}/defaultroot/WEB-INF/lib/imqjmx.jar will be unresolvable by dependent projects @ line 259, column 16
+[WARNING] 'dependencies.dependency.systemPath' for org.opensaml:opensaml:jar should not point at files within the project directory, ${project.basedir}/defaultroot/WEB-INF/lib/opensaml-2.2.3.jar will be unresolvable by dependent projects @ line 267, column 16
+[WARNING] 'dependencies.dependency.systemPath' for org.opensaml:xmltooling:jar should not point at files within the project directory, ${project.basedir}/defaultroot/WEB-INF/lib/xmltooling-1.2.0.jar will be unresolvable by dependent projects @ line 275, column 16
+[WARNING] 'dependencies.dependency.systemPath' for it.mig.sies:sies_v2:jar should not point at files within the project directory, ${project.basedir}/defaultroot/WEB-INF/lib/sies_v2.jar will be unresolvable by dependent projects @ line 296, column 16
+[WARNING] 'dependencies.dependency.systemPath' for it.mig.sies:sies_ese:jar should not point at files within the project directory, ${project.basedir}/defaultroot/WEB-INF/lib/sies_ese.jar will be unresolvable by dependent projects @ line 304, column 16
+[WARNING] 'dependencies.dependency.systemPath' for org.apache.xmlbeans:jsr173-api:jar should not point at files within the project directory, ${project.basedir}/defaultroot/WEB-INF/lib/jsr173_1.0_api_XMLBEANS.jar will be unresolvable by dependent projects @ line 319, column 16
+[WARNING] 'dependencies.dependency.systemPath' for org.apache.xmlbeans:xmlbeans-qname:jar should not point at files within the project directory, ${project.basedir}/defaultroot/WEB-INF/lib/xmlbeans-qname_XMLBEANS.jar will be unresolvable by dependent projects @ line 327, column 16
+[WARNING] 'dependencies.dependency.systemPath' for it.mig.sippi:sippi:jar should not point at files within the project directory, ${project.basedir}/defaultroot/WEB-INF/lib/sippi.jar will be unresolvable by dependent projects @ line 357, column 16
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] 
+[INFO] -------------------------< it.eng.mig:siesWeb >-------------------------
+[INFO] Building SIESWeb 1.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ war ]---------------------------------
+Terminare il processo batch (S/N)? Terminare il processo batch (S/N)? 
+^CImpossibile aprire il dispositivo o il file specificato.

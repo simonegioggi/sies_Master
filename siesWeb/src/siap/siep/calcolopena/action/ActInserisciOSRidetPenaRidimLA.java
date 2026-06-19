@@ -1,5 +1,6 @@
 package siap.siep.calcolopena.action;
 
+import org.apache.log4j.Logger;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -477,3 +478,4 @@ public class ActInserisciOSRidetPenaRidimLA extends ActOrdineEsecuzione implemen
 	}
 
 }
+

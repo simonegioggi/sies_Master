@@ -1,5 +1,6 @@
 package siap.siep.verbale.dao;
 
+import org.apache.log4j.Logger;
 import java.math.BigDecimal;
 import java.sql.Connection;
 

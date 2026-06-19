@@ -1,5 +1,6 @@
 package siap.siep.istruttoria.action;
 
+import org.apache.log4j.Logger;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.web.ActionSiap;
 import siap.siep.fascicolo.action.ICostantiFascicoloSiep;
@@ -61,3 +62,4 @@ public class ActLoadInserisciIstruttoriaRichiestaPagamentoPP extends ActionSiap 
   }
 
 }
+

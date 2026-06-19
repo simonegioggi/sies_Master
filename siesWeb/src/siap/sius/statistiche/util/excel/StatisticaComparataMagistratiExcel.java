@@ -98,8 +98,8 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 
 		// stile per celle col bordo con testo centrato
 		lCellStyleCenter = getBordo4Lati(aWb);
-		lCellStyleCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		lCellStyleCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		lCellStyleCenter.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
+		lCellStyleCenter.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
 		lCellStyleCenter.setWrapText(true);
 
 		lRow = lSheet.createRow(lRowCounter++);
@@ -109,7 +109,7 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 		lSheet.setColumnWidth(2, 15 * 256); // Sopravvenuti
 		lSheet.setColumnWidth(3, 15 * 256); // Accolti
 		lSheet.setColumnWidth(4, 15 * 256); // Rigettati
-		lSheet.setColumnWidth(5, 15 * 256); // Inammissibilità
+		lSheet.setColumnWidth(5, 15 * 256); // Inammissibilit?
 		lSheet.setColumnWidth(6, 15 * 256); // NLP/NDP
 		lSheet.setColumnWidth(7, 15 * 256); // Incompetenza
 		lSheet.setColumnWidth(8, 15 * 256); // Iscritti per Errore
@@ -124,7 +124,7 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 		setCell(lRow, 2, "Sopravvenuti", lCellStyleCenter);
 		setCell(lRow, 3, "Accolti", lCellStyleCenter);
 		setCell(lRow, 4, "Rigettati", lCellStyleCenter);
-		setCell(lRow, 5, "Inammissibilità", lCellStyleCenter);
+		setCell(lRow, 5, "Inammissibilit?", lCellStyleCenter);
 		setCell(lRow, 6, "NLP/NDP", lCellStyleCenter);
 		setCell(lRow, 7, "Incompetenza", lCellStyleCenter);
 		setCell(lRow, 8, "Iscritti per Errore", lCellStyleCenter);
@@ -279,8 +279,8 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 
 		// stile per celle col bordo con testo centrato
 		lCellStyleCenter = getBordo4Lati(aWb);
-		lCellStyleCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		lCellStyleCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		lCellStyleCenter.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
+		lCellStyleCenter.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
 		lCellStyleCenter.setWrapText(true);
 
 		lRow = lSheet.createRow(lRowCounter++);
@@ -291,7 +291,7 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 		lSheet.setColumnWidth(3, 10 * 256); // Sopravvenuti
 		lSheet.setColumnWidth(4, 10 * 256); // Accolti
 		lSheet.setColumnWidth(5, 10 * 256); // Rigettati
-		lSheet.setColumnWidth(6, 10 * 256); // Inammissibilità
+		lSheet.setColumnWidth(6, 10 * 256); // Inammissibilit?
 		lSheet.setColumnWidth(7, 10 * 256); // NLP/NDP
 		lSheet.setColumnWidth(8, 10 * 256); // Incompetenza
 		lSheet.setColumnWidth(9, 10 * 256); // Iscritti per Errore
@@ -307,7 +307,7 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 		setCell(lRow, 3, "Sopravvenuti", lCellStyleCenter);
 		setCell(lRow, 4, "Accolti", lCellStyleCenter);
 		setCell(lRow, 5, "Rigettati", lCellStyleCenter);
-		setCell(lRow, 6, "Inammissibilità", lCellStyleCenter);
+		setCell(lRow, 6, "Inammissibilit?", lCellStyleCenter);
 		setCell(lRow, 7, "NLP/NDP", lCellStyleCenter);
 		setCell(lRow, 8, "Incompetenza", lCellStyleCenter);
 		setCell(lRow, 9, "Iscritti per Errore", lCellStyleCenter);
@@ -424,7 +424,7 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 	 * La funzione prepara la pagina xls di ulteriore dettaglio sulla stastistica dei procedimenti del
 	 * Magistrato ordinati per oggetto ed in un periodo di riferimento. Il report preparato contiene l'elenco
 	 * dei Procedimenti SIUS di un Magistrato ordinati per oggetto specifico pendenti o sopravvenuti nel
-	 * periodo di riferimento. L'elenco dei procedimenti nella lista è quello passato attraverso il parametro
+	 * periodo di riferimento. L'elenco dei procedimenti nella lista ? quello passato attraverso il parametro
 	 * aElencoProc. Per ogni elemento nella lista viene riportato il suo stato di pendente, sopravvenuto,
 	 * definito.
 	 *
@@ -490,8 +490,8 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 
 		// stile per celle col bordo con testo centrato
 		HSSFCellStyle csCenter = getBordo4Lati(wb);
-		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csCenter.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
+		csCenter.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
 		csCenter.setWrapText(true);
 
 		lRow = lSheet.createRow(nRow++);

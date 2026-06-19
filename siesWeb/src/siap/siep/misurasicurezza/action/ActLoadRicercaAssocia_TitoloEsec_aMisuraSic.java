@@ -1,5 +1,6 @@
 package siap.siep.misurasicurezza.action;
 
+import org.apache.log4j.Logger;
 import java.math.BigDecimal;
 import java.util.Vector;
 
@@ -132,7 +133,7 @@ public class ActLoadRicercaAssocia_TitoloEsec_aMisuraSic extends ActionSiap impl
 	    }
 		setRequestAttribute("TipoTrib", "" + lOption);
 
-		// Autorità Emittente Titolo Esecutivo
+		// Autoritï¿½ Emittente Titolo Esecutivo
 		Option lOptionAut = new Option(DecodificheManager.getInstance().getAutoritaEmittente_Sorveglianza(),
 				"-");
 		if (lFasSiepMod != null && lFasSiepMod.getIdFascicoloSiep() != null

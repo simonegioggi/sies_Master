@@ -1,0 +1,16 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build siesWeb compile",
+			"type": "shell",
+			"command": "mvn",
+			"args": [
+				"-f",
+				"siesWeb/pom.xml",
+				"compile"
+			],
+			"isBackground": false
+		}
+	]
+}

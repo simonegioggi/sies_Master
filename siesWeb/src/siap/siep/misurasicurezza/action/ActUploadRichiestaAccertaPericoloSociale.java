@@ -1,5 +1,6 @@
 package siap.siep.misurasicurezza.action;
 
+import org.apache.log4j.Logger;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 

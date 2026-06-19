@@ -1,6 +1,7 @@
 package siap.siep.fascicolo.action;
 
 
+import org.apache.log4j.Logger;
 import java.math.BigDecimal;
 
 import siap.jms.JMSLookupRemote;
@@ -95,3 +96,5 @@ public class ActLoadFascicoloDaRicercaMessaggio extends ActionSiap implements IC
 
   }
 }
+
+

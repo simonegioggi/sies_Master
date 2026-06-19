@@ -1,5 +1,6 @@
 package siap.siep.misurasicurezza.action;
 
+import org.apache.log4j.Logger;
 import java.util.Vector;
 
 import siap.jms.ICostantiJMS;
@@ -13,7 +14,7 @@ import f3b.util.F3BException;
 import f3b.web.IWebConstants;
 
 /**
- * Action per la ricerca degli atti presi in carico me per i quali non si è ancora
+ * Action per la ricerca degli atti presi in carico me per i quali non si ï¿½ ancora
  * proceduto all'iscrizione dei provvedimenti di classe IV (esecuzione misure di sicurezza)
  * 
  * @author d.fiorletta
@@ -127,17 +128,17 @@ public class ActRicercaAttiPresiInCaricoDaIscrivere  extends ActionSiap implemen
     // FIXME 2 problemi:
     // 1) la presenza del record sulla tabella FASC_MS_TO_FASC_SIEP non implica
     //    che il fascicolo di classe IV sia stato iscritto a seguito della presa 
-    //    in carico del messaggio. Se presenti più trasmissioni andrebbe testato
+    //    in carico del messaggio. Se presenti piï¿½ trasmissioni andrebbe testato
     //    ogni MESSAGGIO per effettuare la presa in carico. Se il fascicolo 2008/13
     //    viene trasmesso 2 volte per iscrivere 2 fascicoli distinti di classe IV,
-    //    il secondo invio non comparirebbe nella lista perchè troverebbe il 
+    //    il secondo invio non comparirebbe nella lista perchï¿½ troverebbe il 
     //    record sulla tabella FASC_MS_TO_FASC_SIEP relativo al primo invio.
     // 2) il filtro a posteriori con il tempo risulta poco performante, infatti
     //    i messaggio in stato preso in carico andranno ad aumentare e quindi
     //    anche il numero di query per verificare se presente il record FASC_MS_TO_FASC_SIEP
     
     // Meglio cambiare lo stato del CDO_ESITO sulla richiesta in fase di iscrizione
-    // Tale esito è utile anche in caso si volessa mandare un messaggio al mittente
+    // Tale esito ï¿½ utile anche in caso si volessa mandare un messaggio al mittente
     // quando il fascicolo viene iscritto
     // -     : Valore iniziale
     // 01001 : Preso in Carico

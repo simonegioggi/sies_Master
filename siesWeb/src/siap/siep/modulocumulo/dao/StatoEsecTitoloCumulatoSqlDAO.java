@@ -1,5 +1,6 @@
 package siap.siep.modulocumulo.dao;
 
+import org.apache.log4j.Logger;
 /**
 * <p>Title: StatoEsecTitoloCumulatoSqlDAO</p>
 * <p>Description: Classe SqlDAO che rappresenta la tabella StatoEsecTitoloCumulato</p>

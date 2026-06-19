@@ -10,8 +10,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import org.apache.log4j.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import f3b.log.LogF3B;
 import f3b.model.GenericModel;
@@ -25,7 +25,7 @@ import f3b.util.StringUtils;
  * Title: GenericDAO
  * </p>
  * <p>
- * Description: E' la classe padre di tutti gli oggetti DAO, infatti essa ha la responsabilità di dialogare
+ * Description: E' la classe padre di tutti gli oggetti DAO, infatti essa ha la responsabilitï¿½ di dialogare
  * con il DBASE e la gestione di accesso ai dati del ResultSet
  * </p>
  * .
@@ -101,7 +101,7 @@ public class GenericDAO {
 			}
 			lString = lString.substring(0, lString.length() - 3);
 		} else
-			throw new DAOException("L'array passato non contiene alcun valore o è nullo[" + aElements + "]");
+			throw new DAOException("L'array passato non contiene alcun valore o ï¿½ nullo[" + aElements + "]");
 
 		return lString;
 	}
@@ -129,7 +129,7 @@ public class GenericDAO {
 			}
 			lString = lString.substring(0, lString.length() - 3);
 		} else
-			throw new DAOException("L'array passato non contiene alcun valore o è nullo[" + aElements + "]");
+			throw new DAOException("L'array passato non contiene alcun valore o ï¿½ nullo[" + aElements + "]");
 
 		return lString;
 	}
@@ -514,7 +514,7 @@ public class GenericDAO {
 	}
 
 	/**
-	 * Sposta il cursore del <code>ResulSet</code> di una unità.
+	 * Sposta il cursore del <code>ResulSet</code> di una unitï¿½.
 	 * <p>
 	 *
 	 * @throws DAOException
@@ -619,7 +619,7 @@ public class GenericDAO {
 			
 			// Loggature per verifica se e quanti RS restano aperti contemporaneamente
 			// Attivare solo per Debug per tracciare situazioni in cui lo stesso sqlDao
-			// viene usato può volte senza lo stop attivando più cursori contemporaneamente
+			// viene usato puï¿½ volte senza lo stop attivando piï¿½ cursori contemporaneamente
 //			if (oldRs!=null && oldRs.size()>0) {
 //				siesLogger.debug("Closing oldRs.size() = "+oldRs.size()+" - "+this.getClass());	
 //				Throwable t = new Throwable("Cleaning CACHED ResultSet");
@@ -907,7 +907,7 @@ public class GenericDAO {
 	}
 
 	/**
-	 * Ritorna il model come padre, tale metodo è da ridefinire in tutte le classi derivate.
+	 * Ritorna il model come padre, tale metodo ï¿½ da ridefinire in tutte le classi derivate.
 	 * <p>
 	 *
 	 * @return una nuova istanza di <code>GenericModel</code>.
@@ -1004,7 +1004,7 @@ public class GenericDAO {
 	/**
 	 * Richiama la funzione di stop() per rilasciare la connessione alla distruzione del DAO.
 	 */
-	// STUB : Probabilmente è inutile lanciare l'eccezione Luigi 7-9-04
+	// STUB : Probabilmente ï¿½ inutile lanciare l'eccezione Luigi 7-9-04
 	public void finalize() throws Exception {
 
 		stop();

@@ -1,5 +1,6 @@
 package siap.siep.rateizzazionepp.dao;
 
+import org.apache.log4j.Logger;
 import java.sql.Connection;
 
 import f3b.dao.DAOException;

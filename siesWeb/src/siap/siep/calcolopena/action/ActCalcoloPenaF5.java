@@ -1,5 +1,6 @@
 package siap.siep.calcolopena.action;
 
+import org.apache.log4j.Logger;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Vector;
@@ -122,3 +123,4 @@ public class ActCalcoloPenaF5 extends ActCalcoloPenaMain implements ICostantiCal
 	}
 
 }
+

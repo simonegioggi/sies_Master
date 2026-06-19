@@ -1,5 +1,6 @@
 package siap.siep.modulocumulo.action;
 
+import org.apache.log4j.Logger;
 /**
 * <p>Title: ActInserisciRevocaBeneficioCumulo</p>
 * <p>Description: Classe Action per l'inserimento della Revoca Beneficio (Sospensione Condizionale/Non Menzione)</p>
@@ -104,9 +105,9 @@ public class ActInserisciRevocaBeneficioCumulo extends ActionModuloCumulo implem
 		String GiornoProv = getRequestStringParameter(CAMPO_RIF_GIORNO_PROVVEDIMENTO);
 		lBenMod.setRifDataProvvedimento(DateUtils.getDate(AnnoProv, MeseProv, GiornoProv));
 
-		// se il Titolo è relativo ad un provvedimento di ORDINANZA(cod = 03), NON c'è nessuna sentenza di
+		// se il Titolo ï¿½ relativo ad un provvedimento di ORDINANZA(cod = 03), NON c'ï¿½ nessuna sentenza di
 		// riferimento:
-		// Quindi non c'è: Data Irrevocabilità - Id Riferimento Sentenza - Anno e Numero Sentenza di
+		// Quindi non c'ï¿½: Data Irrevocabilitï¿½ - Id Riferimento Sentenza - Anno e Numero Sentenza di
 		// Riferimento
 		String TipoProv = getRequestStringParameter(CAMPO_RIF_COD_TIPO_PROVVEDIMENTO);
 		if (lModalita.compareTo("I") == 0) {
@@ -258,7 +259,7 @@ public class ActInserisciRevocaBeneficioCumulo extends ActionModuloCumulo implem
 				// siesLogger.debug("--XX--ActInserisciRevocaBeneficioCumulo - Vector size
 				//// "+lConcessi.size());
 				if (lConcessi != null && lConcessi.size() > 0) {
-					// Troverò comunque un SOLO Beneficio Corrispondente
+					// Troverï¿½ comunque un SOLO Beneficio Corrispondente
 					Iterator Itx = lConcessi.iterator();
 					while (Itx.hasNext()) {
 						lBeneficioConcesso = (BeneficioCumuloModel) Itx.next();

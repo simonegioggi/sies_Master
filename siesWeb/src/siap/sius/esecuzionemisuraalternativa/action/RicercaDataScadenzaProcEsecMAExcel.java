@@ -134,17 +134,17 @@ public class RicercaDataScadenzaProcEsecMAExcel extends SIAPExcelProducer {
 
 		// stile per celle col bordo con testo centrato
 		hssfcsCenter = getBordo4Lati(hssw);
-		hssfcsCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		hssfcsCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		hssfcsCenter.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
+		hssfcsCenter.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
 		hssfcsCenter.setWrapText(true);
 
 		hssff = hssw.createFont();
-		hssff.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		hssff.setBold(true);
 
 		hssfcsCenterBold = getBordo4Lati(hssw);
 		hssfcsCenterBold.setFont(hssff);
-		hssfcsCenterBold.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		hssfcsCenterBold.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		hssfcsCenterBold.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
+		hssfcsCenterBold.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
 		hssfcsCenterBold.setWrapText(true);
 
 		hssfrBold = hssfs.createRow(contatoreRiga++);

@@ -1,5 +1,6 @@
 package siap.siep.cumulo.action;
 
+import org.apache.log4j.Logger;
 /**
  * <p>Title: ActInserisciPenaComplessivaCumulo</p>
  * <p>Description: Classe Action per l'inserimento di Cumulo</p>
@@ -297,3 +298,4 @@ public class ActInserisciPenaComplessivaCumulo extends ActionSiap implements ICo
 		return "";
 	}
 }
+

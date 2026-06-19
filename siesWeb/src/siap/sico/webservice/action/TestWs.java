@@ -1,5 +1,6 @@
 package siap.sico.webservice.action;
 
+import org.apache.log4j.Logger;
 public class TestWs {
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
@@ -150,3 +151,4 @@ public class TestWs {
 	// }
 
 }
+

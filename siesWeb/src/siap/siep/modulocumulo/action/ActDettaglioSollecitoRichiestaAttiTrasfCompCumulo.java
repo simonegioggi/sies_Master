@@ -1,5 +1,6 @@
 package siap.siep.modulocumulo.action;
 
+import org.apache.log4j.Logger;
 import java.math.BigDecimal;
 
 import f3b.util.F3BException;

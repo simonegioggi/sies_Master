@@ -216,12 +216,12 @@ public class RisultatoRicercaController extends SiapController implements IRisul
 		lCellStyleNull = lWb.createCellStyle();
 
 		HSSFFont my_font = lWb.createFont();
-		my_font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		my_font.setBold(true);
 
 		// stile per celle col bordo con testo centrato e grossetto
 		HSSFCellStyle csCenterBold = getBordo4LatiBold(lWb);
-		csCenterBold.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csCenterBold.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csCenterBold.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
+		csCenterBold.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
 		csCenterBold.setWrapText(true);
 		csCenterBold.setFont(my_font);
 
@@ -336,7 +336,7 @@ public class RisultatoRicercaController extends SiapController implements IRisul
 				+ " Mesi:" + lMesiSen + " Giorni: " + lGiorniSen, lCellStyleNull);
 		lRowCounter++;
 
-		// Nazionalità
+		// Nazionalit?
 		if (aParams.get("lNazione") != null) {
 			String nazionalita = "";
 			if (aParams.get("lNazione").equals("I")) {
@@ -345,7 +345,7 @@ public class RisultatoRicercaController extends SiapController implements IRisul
 				nazionalita = "Straniera";
 			}
 			lRow = lSheet.createRow(lRowCounter);
-			HSSFUtils.getInstance().setCell(lRow, 0, "Nazionalità: " + nazionalita, lCellStyleNull);
+			HSSFUtils.getInstance().setCell(lRow, 0, "Nazionalit?: " + nazionalita, lCellStyleNull);
 			lRowCounter++;
 		}
 
@@ -357,7 +357,7 @@ public class RisultatoRicercaController extends SiapController implements IRisul
 		// impostazione della larghezza
 		// delle colonne
 		lSheet.setColumnWidth(0, (short) (10 * 256)); // Prog
-		lSheet.setColumnWidth(1, (short) (15 * 256)); // N°SIEP
+		lSheet.setColumnWidth(1, (short) (15 * 256)); // N?SIEP
 		lSheet.setColumnWidth(2, (short) (20 * 256)); // Cognome
 		lSheet.setColumnWidth(3, (short) (20 * 256)); // Nome
 		lSheet.setColumnWidth(4, (short) (20 * 256)); // Luogo di Nascita
@@ -365,19 +365,19 @@ public class RisultatoRicercaController extends SiapController implements IRisul
 		lSheet.setColumnWidth(6, (short) (15 * 256)); // Data Fine Pena
 		lSheet.setColumnWidth(7, (short) (25 * 256)); // Pena Residua
 		lSheet.setColumnWidth(8, (short) (40 * 256)); // Posizione Giuridica
-		lSheet.setColumnWidth(9, (short) (25 * 256)); // Nazionalità
+		lSheet.setColumnWidth(9, (short) (25 * 256)); // Nazionalit?
 
 		// stile per celle col bordo con testo centrato
 		lCellStyleCenter = HSSFUtils.getInstance().getBordo4Lati(lWb);
-		lCellStyleCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		lCellStyleCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		lCellStyleCenter.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
+		lCellStyleCenter.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
 		lCellStyleCenter.setWrapText(true);
 
 		lRow = lSheet.createRow(lRowCounter++);
 
 		// Intestazione colonne
 		HSSFUtils.getInstance().setCell(lRow, (short) 0, "Progr.", csCenterBold);
-		HSSFUtils.getInstance().setCell(lRow, (short) 1, "N°SIEP", csCenterBold);
+		HSSFUtils.getInstance().setCell(lRow, (short) 1, "N?SIEP", csCenterBold);
 		HSSFUtils.getInstance().setCell(lRow, (short) 2, "Cognome", csCenterBold);
 		HSSFUtils.getInstance().setCell(lRow, (short) 3, "Nome", csCenterBold);
 		HSSFUtils.getInstance().setCell(lRow, (short) 4, "Luogo di Nascita", csCenterBold);
@@ -385,7 +385,7 @@ public class RisultatoRicercaController extends SiapController implements IRisul
 		HSSFUtils.getInstance().setCell(lRow, (short) 6, "Data Fine Pena", csCenterBold);
 		HSSFUtils.getInstance().setCell(lRow, (short) 7, "Pena Residua", csCenterBold);
 		HSSFUtils.getInstance().setCell(lRow, (short) 8, "Posizione Giuridica", csCenterBold);
-		HSSFUtils.getInstance().setCell(lRow, (short) 9, "Nazionalità", csCenterBold);
+		HSSFUtils.getInstance().setCell(lRow, (short) 9, "Nazionalit?", csCenterBold);
 
 		lItx = lElenco.iterator();
 		// inizio ciclo di scrittura dei dati
@@ -497,10 +497,10 @@ public class RisultatoRicercaController extends SiapController implements IRisul
 	private HSSFCellStyle getBordo4LatiBold(HSSFWorkbook wb) {
 
 		HSSFCellStyle cs = wb.createCellStyle();
-		cs.setBorderBottom(HSSFCellStyle.BORDER_THICK);
-		cs.setBorderTop(HSSFCellStyle.BORDER_THICK);
-		cs.setBorderRight(HSSFCellStyle.BORDER_THICK);
-		cs.setBorderLeft(HSSFCellStyle.BORDER_THICK);
+		cs.setBorderBottom(org.apache.poi.ss.usermodel.BorderStyle.THICK);
+		cs.setBorderTop(org.apache.poi.ss.usermodel.BorderStyle.THICK);
+		cs.setBorderRight(org.apache.poi.ss.usermodel.BorderStyle.THICK);
+		cs.setBorderLeft(org.apache.poi.ss.usermodel.BorderStyle.THICK);
 
 		return cs;
 	}

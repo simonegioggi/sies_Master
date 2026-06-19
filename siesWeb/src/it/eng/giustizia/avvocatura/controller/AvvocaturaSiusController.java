@@ -31,9 +31,6 @@ import it.eng.giustizia.avvocatura.ws.type.ricercaSoggettiConProcedimenti.NOTIFI
 import it.eng.giustizia.avvocatura.ws.type.ricercaSoggettiConProcedimenti.RIFERIMENTOFASCSIEPTYPE;
 import it.eng.giustizia.avvocatura.ws.type.ricercaSoggettiConProcedimenti.SOGGETTOTYPE;
 import it.eng.giustizia.avvocatura.ws.type.ricercaSoggettiConProcedimenti.TENORETYPE;
-import oracle.jdbc.driver.OracleConnection;
-import oracle.sql.STRUCT;
-import oracle.sql.StructDescriptor;
 
 /**
  * @author Gioggi
@@ -121,28 +118,16 @@ public class AvvocaturaSiusController extends GenericController implements IAvvo
 			stmt.registerOutParameter(14, java.sql.Types.VARCHAR); // Error Code
 			stmt.registerOutParameter(15, java.sql.Types.VARCHAR); // Error Descr
 
-			OracleConnection oracleConnection = null;
-			if (connection.isWrapperFor(OracleConnection.class)) {
-				oracleConnection = connection.unwrap(OracleConnection.class);
-				TypeFactory.setSchemaName(oracleConnection.getUserName());
-			} else {
-				// info per il log
-				avvocaturaLogger.error("Errore di connessione Oracle");
-				// imposto l'ERRORE
-				datiProcedimentoOutput.setERRORE(Mapper.mapErroreProcedimento("008", ""));
-			}
-
-			// definisco il parametro di input x la procedura
-			StructDescriptor itemDescriptor = StructDescriptor.createDescriptor("INP_AVV", oracleConnection);
+			TypeFactory.setSchemaName(connection.getMetaData().getUserName());
 
 			// parametri di passaggio
-			Object[] itemAtributes = new Object[] { new Integer(annoProcedimento),
-					new Integer(numeroProcedimento), codTipoUfficio, codDistretto, codFiscaleAvvocato,
+			Object[] itemAtributes = new Object[] { Integer.valueOf(annoProcedimento),
+					Integer.valueOf(numeroProcedimento), codTipoUfficio, codDistretto, codFiscaleAvvocato,
 					// MEV_20_Avvocatura_SIES_Sede aggiunto parametro codUfficio
 					codUfficio };
 
 			// definisco la struttura dati di input
-			STRUCT itemObject1 = new STRUCT(itemDescriptor, oracleConnection, itemAtributes);
+			Struct itemObject1 = connection.createStruct("INP_AVV", itemAtributes);
 			// e la imposto
 			stmt.setObject(1, itemObject1);
 

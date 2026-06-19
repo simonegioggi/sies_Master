@@ -1,5 +1,6 @@
 package siap.siep.istruttoriacumulo.dao;
 
+import org.apache.log4j.Logger;
 /**
 * <p>Title: IstruttoriaCumuloSqlDAO</p>
 * <p>Description: Classe SqlDAO che rappresenta la tabella IstruttoriaCumulo</p>
@@ -824,3 +825,4 @@ public class IstruttoriaCumuloSqlDAO extends SqlDAO {
 	}
 
 }
+

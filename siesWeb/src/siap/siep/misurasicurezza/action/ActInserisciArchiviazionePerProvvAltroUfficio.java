@@ -1,5 +1,6 @@
 package siap.siep.misurasicurezza.action;
 
+import org.apache.log4j.Logger;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -106,7 +107,7 @@ public class ActInserisciArchiviazionePerProvvAltroUfficio extends ActionSiap im
 		lEveNotMod.setEvento(lEveMod);
 
 		// - - - - - - - - - - - -
-		// Notifiche ---------> Altra Autorità
+		// Notifiche ---------> Altra Autoritï¿½
 
 		ArrayList lNotificheArray = new ArrayList();
 
@@ -196,7 +197,7 @@ public class ActInserisciArchiviazionePerProvvAltroUfficio extends ActionSiap im
 		// ========================================================================
 		// Recupera, se presenti le notifiche agli avvocati.
 		// Le notifiche possono essere effettuate o Tramite Unep o tramite il
-		// 'Sistema Notifiche Telematiche'. Ciò che cambia è il record Autorità esterna.
+		// 'Sistema Notifiche Telematiche'. Ciï¿½ che cambia ï¿½ il record Autoritï¿½ esterna.
 		if (isRequestChecked("Difesa")) {
 			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
 			// siesLogger.debug("Notifiche Atti (Difensore - Condannato) selezionato");

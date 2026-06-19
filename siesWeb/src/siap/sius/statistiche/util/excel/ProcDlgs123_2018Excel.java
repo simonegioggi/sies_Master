@@ -109,8 +109,8 @@ public class ProcDlgs123_2018Excel extends SIAPExcelProducer {
 
 		// stile per celle col bordo con testo centrato
 		lCellStyleCenter = getBordo4Lati(aWb);
-		lCellStyleCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		lCellStyleCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		lCellStyleCenter.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
+		lCellStyleCenter.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
 		lCellStyleCenter.setWrapText(true);
 
 		lRow = lSheet.createRow(lRowCounter++);

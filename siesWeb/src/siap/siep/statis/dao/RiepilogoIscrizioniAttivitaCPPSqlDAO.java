@@ -1,5 +1,6 @@
 package siap.siep.statis.dao;
 
+import org.apache.log4j.Logger;
 /**
 * <p>Title: IspTempiIscrizioneSqlDAO</p>
 * <p>Description: Classe SqlDAO che rappresenta la tabella IspTempiIscrizione</p>
@@ -149,3 +150,4 @@ public class RiepilogoIscrizioniAttivitaCPPSqlDAO extends SqlDAO
   }
   
 }	// CHIUDE RiepilogoIscrizioniAttivitaCPPSqlDAO()
+

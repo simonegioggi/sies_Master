@@ -67,10 +67,10 @@ public class ScadenzarioUtils {
 	public static HSSFCellStyle getBordo4Lati(HSSFWorkbook wb) {
 
 		HSSFCellStyle cs = wb.createCellStyle();
-		cs.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		cs.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		cs.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		cs.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		cs.setBorderBottom(org.apache.poi.ss.usermodel.BorderStyle.THIN);
+		cs.setBorderTop(org.apache.poi.ss.usermodel.BorderStyle.THIN);
+		cs.setBorderRight(org.apache.poi.ss.usermodel.BorderStyle.THIN);
+		cs.setBorderLeft(org.apache.poi.ss.usermodel.BorderStyle.THIN);
 
 		return cs;
 	}

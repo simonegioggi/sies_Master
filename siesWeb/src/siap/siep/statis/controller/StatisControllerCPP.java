@@ -12,7 +12,7 @@ import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.CellReference;
+import org.apache.poi.ss.util.CellReference;
 
 import f3b.controller.GenericController;
 import f3b.dao.DAOException;
@@ -59,7 +59,7 @@ public class StatisControllerCPP extends GenericController {
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	/**
-	 * per Statistica RIEPILOGO ISCRIZIONI E ATTIVITA' CPP Cerca i dati aggregati per anno gi� selezionati
+	 * per Statistica RIEPILOGO ISCRIZIONI E ATTIVITA' CPP Cerca i dati aggregati per anno gi? selezionati
 	 * dalla Strore-Procedure, per visualizzazione TOTALI ISCRIZIONI CPP sul foglio xls Riepilogo
 	 */
 	public Vector<RiepilogoIscrizioniAttivitaCPPModel> ExRicercaRiepilogoGeneraleIscrizioniAttivita(
@@ -102,7 +102,7 @@ public class StatisControllerCPP extends GenericController {
 	} // Chiude ExRicercaRiepilogoGeneraleIscrizioniAttivita
 
 	/**
-	 * Cerca i dati sui fascicoli di classe VII aggregati per anno (gi� selezionati dalla Strore-Procedure),
+	 * Cerca i dati sui fascicoli di classe VII aggregati per anno (gi? selezionati dalla Strore-Procedure),
 	 * per visualizzazione DETTAGLIO ATTIVITA CPP sul foglio xls di Riepilogo
 	 */
 
@@ -229,7 +229,7 @@ public class StatisControllerCPP extends GenericController {
 	// ======================================
 	/**
 	 * Per Statistica TEMPI ISCRIZIONE PROCEDIMENTI CPP ExRicercaRiepilogoTempiIscrizioniCPP: Cerca i dati sui
-	 * fascicoli di classe VII aggregati per anno (gi� selezionati dalla Strore-Procedure), per
+	 * fascicoli di classe VII aggregati per anno (gi? selezionati dalla Strore-Procedure), per
 	 * visualizzazione TEMPI ISCRIZIONE PROCEDIMENTI CPP sul foglio xls di Riepilogo
 	 */
 	public Vector<IspTempiModel> ExRicercaRiepilogoTempiIscrizioniCPP(int aAnnoIni, int aAnnoFin,
@@ -400,7 +400,7 @@ public class StatisControllerCPP extends GenericController {
 	// ======================================
 	/**
 	 * per Statistica RIEPILO PROCEDIMENTO PENDENTI CPP ExRicercaRiepilogoDefinitiCPP: Cerca i dati sui
-	 * fascicoli Definiti di classe VII aggregati per anno (gi� selezionati dalla Strore-Procedure), per
+	 * fascicoli Definiti di classe VII aggregati per anno (gi? selezionati dalla Strore-Procedure), per
 	 * visualizzazione sul foglio xls di Riepilogo Definiti
 	 */
 	public Vector<RiepilogoPendentiDefinitiCPPModel> ExRicercaRiepilogoDefinitiCPP(int aAnnoIni, int aAnnoFin,
@@ -582,7 +582,7 @@ public class StatisControllerCPP extends GenericController {
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 	/**
-	 * Crea il foglio excel per il Riepilogo dei Totali delle Attivit�/Iscrizioni dei Procedimenti Classe VII
+	 * Crea il foglio excel per il Riepilogo dei Totali delle Attivit?/Iscrizioni dei Procedimenti Classe VII
 	 * (Conversione Pene Pecuniarie)
 	 *
 	 * @param aVect
@@ -611,12 +611,12 @@ public class StatisControllerCPP extends GenericController {
 		HSSFCellStyle csBold = getBordo4Lati(wb);
 		// Create a new font and alter it.
 		HSSFFont font = wb.createFont();
-		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		font.setBold(true);
 		csBold.setFont(font);
 
 		HSSFCellStyle csBoldCenter = getBordo4Lati(wb);
 		csBoldCenter.setFont(font);
-		csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csBoldCenter.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
 
 		// primo foglio; RIEPILOGO_ISCRIZIONI
 		HSSFSheet sheet = wb.createSheet("Riepilogo Iscrizioni");
@@ -712,7 +712,7 @@ public class StatisControllerCPP extends GenericController {
 		nRow++;
 
 		// Secondo foglio; RIEPILOGO_ATTIVITA
-		sheet = wb.createSheet("Riepilogo Attivit�");
+		sheet = wb.createSheet("Riepilogo Attivit?");
 		sheet.setColumnWidth(0, (60 * 256));
 
 		nRow = 0;
@@ -724,7 +724,7 @@ public class StatisControllerCPP extends GenericController {
 		nRow++;
 
 		row = sheet.createRow(nRow);
-		setCell(row, 0, "Riepilogo Attivit� relativo al periodo dal " + dataIni + " al " + dataFin, csNull);
+		setCell(row, 0, "Riepilogo Attivit? relativo al periodo dal " + dataIni + " al " + dataFin, csNull);
 
 		nRow++;
 		nRow++;
@@ -748,7 +748,7 @@ public class StatisControllerCPP extends GenericController {
 		nColAnno = 0;
 		formula = "";
 
-		// inizio ciclo di scrittura dei dati Attivit�
+		// inizio ciclo di scrittura dei dati Attivit?
 		while (itx1.hasNext()) {
 			RiepilogoIscrizioniAttivitaCPPModel lMod = (RiepilogoIscrizioniAttivitaCPPModel) itx1.next();
 
@@ -778,7 +778,7 @@ public class StatisControllerCPP extends GenericController {
 			row = sheet.getRow(nRow);
 			if (row == null)
 				row = sheet.createRow(nRow);
-			setCell(row, 0, "Provvedimenti inoltrati all�Ufficio di Sorveglianza in attesa di risposta", cs);
+			setCell(row, 0, "Provvedimenti inoltrati all?Ufficio di Sorveglianza in attesa di risposta", cs);
 			setCell(row, nColAnno, lMod.getInoltroUDSinAttesadiRisposta().doubleValue(), cs);
 
 			nRow++;
@@ -794,7 +794,7 @@ public class StatisControllerCPP extends GenericController {
 			row = sheet.getRow(nRow);
 			if (row == null)
 				row = sheet.createRow(nRow);
-			setCell(row, 0, "Procedimenti privi di Attivit� ", cs);
+			setCell(row, 0, "Procedimenti privi di Attivit? ", cs);
 			setCell(row, nColAnno, lMod.getSenzaClasseI().doubleValue(), cs);
 
 			nRow++;
@@ -816,7 +816,7 @@ public class StatisControllerCPP extends GenericController {
 	} // CHIUDE ExCreateRiepilogoIscrizioni_Attivita()
 
 	/**
-	 * Crea il foglio excel per l'elenco Dettagliato delle varie Tipologie di Iscrizioni/Attivit� dei
+	 * Crea il foglio excel per l'elenco Dettagliato delle varie Tipologie di Iscrizioni/Attivit? dei
 	 * Procedimenti di Classe VII (Conversione Pene Pecuniarie)
 	 *
 	 * @param aVect
@@ -845,12 +845,12 @@ public class StatisControllerCPP extends GenericController {
 		HSSFCellStyle csBold = getBordo4Lati(wb);
 		// Create a new font and alter it.
 		HSSFFont font = wb.createFont();
-		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		font.setBold(true);
 		csBold.setFont(font);
 
 		HSSFCellStyle csBoldCenter = getBordo4Lati(wb);
 		csBoldCenter.setFont(font);
-		csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csBoldCenter.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
 
 		HSSFSheet sheet;
 
@@ -895,7 +895,7 @@ public class StatisControllerCPP extends GenericController {
 				uffUteConnesso, DescIntesta, dataIni, dataFin);
 
 		// Sesto foglio; DETTAGLIO Fascicoli PRIVI di ATTIVITA' e Iscritti senza Classe I
-		sheet = wb.createSheet("Elenco Privi di Attivit�");
+		sheet = wb.createSheet("Elenco Privi di Attivit?");
 		sheet = settaLarghezzaColumnElenco(sheet);
 
 		// nRow = 0;
@@ -1168,7 +1168,7 @@ public class StatisControllerCPP extends GenericController {
 		nRow++;
 
 		HSSFRow row = sheet.createRow(nRow);
-		setCell(row, 0, "Elenco Fascicoli senza Attivit� in essere, relativo al periodo dal " + dataIni
+		setCell(row, 0, "Elenco Fascicoli senza Attivit? in essere, relativo al periodo dal " + dataIni
 				+ " al " + dataFin, csNull);
 
 		int annoOld = 0;
@@ -1276,7 +1276,7 @@ public class StatisControllerCPP extends GenericController {
 	// ///////////////
 
 	/**
-	 * Crea il foglio excel per il Riepilogo dei Totali delle Attivit�/Iscrizioni dei Procedimenti Classe VII
+	 * Crea il foglio excel per il Riepilogo dei Totali delle Attivit?/Iscrizioni dei Procedimenti Classe VII
 	 * (Conversione Pene Pecuniarie)
 	 *
 	 * @param aVect
@@ -1306,15 +1306,15 @@ public class StatisControllerCPP extends GenericController {
 		HSSFCellStyle csBold = getBordo4Lati(wb);
 		// Create a new font and alter it.
 		HSSFFont font = wb.createFont();
-		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		font.setBold(true);
 		csBold.setFont(font);
 
 		HSSFCellStyle csBoldCenter = getBordo4Lati(wb);
 		csBoldCenter.setFont(font);
-		csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csBoldCenter.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
 
 		HSSFCellStyle csCenter = getBordo4Lati(wb);
-		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csCenter.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
 
 		HSSFCellStyle csNullBold = wb.createCellStyle();
 		csNullBold.setFont(font);
@@ -1358,7 +1358,7 @@ public class StatisControllerCPP extends GenericController {
 		String formula = "";
 		int nRow_Int = nRow;
 
-		Iterator itx = aVect.iterator(); // In Realt� c'� solo 1 Elemento nel vettore (il Trimestre o
+		Iterator itx = aVect.iterator(); // In Realt? c'? solo 1 Elemento nel vettore (il Trimestre o
 											// semestre)
 		while (itx.hasNext()) {
 			RiepilogoIscrizioniAttivitaCPPModel lMod = (RiepilogoIscrizioniAttivitaCPPModel) itx.next();
@@ -1399,7 +1399,7 @@ public class StatisControllerCPP extends GenericController {
 		nRow++;
 
 		// Secondo foglio; RIEPILOGO_ATTIVITA
-		sheet = wb.createSheet("Riepilogo Attivit�");
+		sheet = wb.createSheet("Riepilogo Attivit?");
 		sheet.setColumnWidth(0, (60 * 256));
 		sheet.setColumnWidth(1, (30 * 256));
 
@@ -1412,7 +1412,7 @@ public class StatisControllerCPP extends GenericController {
 		nRow++;
 
 		row = sheet.createRow(nRow);
-		setCell(row, 0, "Riepilogo Attivit� relativo al periodo dal " + dataIni + " al " + dataFin, csNull);
+		setCell(row, 0, "Riepilogo Attivit? relativo al periodo dal " + dataIni + " al " + dataFin, csNull);
 
 		nRow++;
 		nRow++;
@@ -1436,7 +1436,7 @@ public class StatisControllerCPP extends GenericController {
 		formula = "";
 		nRow_Int = nRow;
 
-		Iterator itx1 = aVect.iterator(); // In Realt� c'� solo 1 Elemento nel vettore (il Trimestre o
+		Iterator itx1 = aVect.iterator(); // In Realt? c'? solo 1 Elemento nel vettore (il Trimestre o
 											// semestre)
 		while (itx1.hasNext()) {
 			RiepilogoIscrizioniAttivitaCPPModel lMod = (RiepilogoIscrizioniAttivitaCPPModel) itx1.next();
@@ -1455,7 +1455,7 @@ public class StatisControllerCPP extends GenericController {
 			row = sheet.getRow(nRow);
 			if (row == null)
 				row = sheet.createRow(nRow);
-			setCell(row, 0, "Provvedimenti inoltrati all�Ufficio di Sorveglianza in attesa di risposta", cs);
+			setCell(row, 0, "Provvedimenti inoltrati all?Ufficio di Sorveglianza in attesa di risposta", cs);
 			setCell(row, 1, lMod.getInoltroUDSinAttesadiRisposta().doubleValue(), csCenter);
 
 			nRow++;
@@ -1471,7 +1471,7 @@ public class StatisControllerCPP extends GenericController {
 			row = sheet.getRow(nRow);
 			if (row == null)
 				row = sheet.createRow(nRow);
-			setCell(row, 0, "Procedimenti privi di Attivit� ", cs);
+			setCell(row, 0, "Procedimenti privi di Attivit? ", cs);
 			setCell(row, 1, lMod.getSenzaClasseI().doubleValue(), csCenter);
 
 			nRow++;
@@ -1503,12 +1503,12 @@ public class StatisControllerCPP extends GenericController {
 		HSSFCellStyle csBold = getBordo4Lati(wb);
 		// Create a new font and alter it.
 		HSSFFont font = wb.createFont();
-		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		font.setBold(true);
 		csBold.setFont(font);
 
 		HSSFCellStyle csBoldCenter = getBordo4Lati(wb);
 		csBoldCenter.setFont(font);
-		csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csBoldCenter.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
 
 		HSSFSheet sheet;
 
@@ -1715,7 +1715,7 @@ public class StatisControllerCPP extends GenericController {
 		nRow++;
 
 		// Sesto foglio; DETTAGLIO Fascicoli PRIVI di ATTIVITA' e Iscritti senza Classe I
-		sheet = wb.createSheet("Elenco Privi di Attivit�");
+		sheet = wb.createSheet("Elenco Privi di Attivit?");
 		sheet = settaLarghezzaColumnElenco(sheet);
 
 		nRow = 0;
@@ -1725,7 +1725,7 @@ public class StatisControllerCPP extends GenericController {
 		nRow++;
 
 		row = sheet.createRow(nRow);
-		setCell(row, 0, "Elenco Fascicoli privi di Attivit� in essere, relativo al periodo dal " + dataIni
+		setCell(row, 0, "Elenco Fascicoli privi di Attivit? in essere, relativo al periodo dal " + dataIni
 				+ " al " + dataFin, csNull);
 
 		nRow++;
@@ -1769,12 +1769,12 @@ public class StatisControllerCPP extends GenericController {
 		HSSFCellStyle csBold = getBordo4Lati(wb);
 		// Create a new font and alter it.
 		HSSFFont font = wb.createFont();
-		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		font.setBold(true);
 		csBold.setFont(font);
 
 		HSSFCellStyle csBoldCenter = getBordo4Lati(wb);
 		csBoldCenter.setFont(font);
-		csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csBoldCenter.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
 
 		// PRIMO FOGLIO: RIEPILOGO
 		HSSFSheet sheet = wb.createSheet("Riepilogo ");
@@ -1882,12 +1882,12 @@ public class StatisControllerCPP extends GenericController {
 		HSSFCellStyle csBold = getBordo4Lati(wb);
 		// Create a new font and alter it.
 		HSSFFont font = wb.createFont();
-		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		font.setBold(true);
 		csBold.setFont(font);
 
 		HSSFCellStyle csBoldCenter = getBordo4Lati(wb);
 		csBoldCenter.setFont(font);
-		csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csBoldCenter.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
 
 		HSSFCellStyle csNullBold = wb.createCellStyle();
 		csNullBold.setFont(font);
@@ -2090,12 +2090,12 @@ public class StatisControllerCPP extends GenericController {
 		HSSFCellStyle csBold = getBordo4Lati(wb);
 		// Create a new font and alter it.
 		HSSFFont font = wb.createFont();
-		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		font.setBold(true);
 		csBold.setFont(font);
 
 		HSSFCellStyle csBoldCenter = getBordo4Lati(wb);
 		csBoldCenter.setFont(font);
-		csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csBoldCenter.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
 
 		HSSFSheet sheet;
 
@@ -2147,12 +2147,12 @@ public class StatisControllerCPP extends GenericController {
 		HSSFCellStyle csBold = getBordo4Lati(wb);
 		// Create a new font and alter it.
 		HSSFFont font = wb.createFont();
-		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		font.setBold(true);
 		csBold.setFont(font);
 
 		HSSFCellStyle csBoldCenter = getBordo4Lati(wb);
 		csBoldCenter.setFont(font);
-		csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csBoldCenter.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
 
 		HSSFSheet sheet;
 
@@ -2293,7 +2293,7 @@ public class StatisControllerCPP extends GenericController {
 		nRow++;
 		nRow++;
 
-		// DISTINTA 1 : Intervalla Tra data impossibilit� esazione e data arrivo in cancellaria
+		// DISTINTA 1 : Intervalla Tra data impossibilit? esazione e data arrivo in cancellaria
 		row = sheet.createRow(nRow);
 		setCell(row, 0,
 				"Distinta dei fascicoli con intervallo tra le date di IMPOSSIBILITA' ESAZIONE e ARRIVO IN CANCELLERIA",
@@ -2583,7 +2583,7 @@ public class StatisControllerCPP extends GenericController {
 		nRow++;
 		nRow++;
 
-		// DISTINTA 1 : Intervalla Tra data impossibilit� esazione e data arrivo in cancellaria
+		// DISTINTA 1 : Intervalla Tra data impossibilit? esazione e data arrivo in cancellaria
 		row = sheet.createRow(nRow);
 		setCell(row, 0,
 				"Distinta dei fascicoli con intervallo tra le date di IMPOSSIBILITA' ESAZIONE e ARRIVO IN CANCELLERIA",
@@ -2903,7 +2903,7 @@ public class StatisControllerCPP extends GenericController {
 		// stile per celle col bordo
 		HSSFCellStyle cs = getBordo4Lati(wb);
 
-		// stile per celle col bordo con la propiet� Testo a Capo
+		// stile per celle col bordo con la propiet? Testo a Capo
 		HSSFCellStyle csWrap = getBordo4Lati(wb);
 		csWrap.setWrapText(true);
 
@@ -2911,12 +2911,12 @@ public class StatisControllerCPP extends GenericController {
 		HSSFCellStyle csBold = getBordo4Lati(wb);
 		// Create a new font and alter it.
 		HSSFFont font = wb.createFont();
-		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		font.setBold(true);
 		csBold.setFont(font);
 
 		HSSFCellStyle csBoldCenter = getBordo4Lati(wb);
 		csBoldCenter.setFont(font);
-		csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csBoldCenter.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
 
 		HSSFSheet sheet;
 
@@ -3032,19 +3032,19 @@ public class StatisControllerCPP extends GenericController {
 		HSSFCellStyle csBold = getBordo4Lati(wb);
 		// Create a new font and alter it.
 		HSSFFont font = wb.createFont();
-		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		font.setBold(true);
 		csBold.setFont(font);
 
 		HSSFCellStyle csBoldCenter = getBordo4Lati(wb);
 		csBoldCenter.setFont(font);
-		csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csBoldCenter.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
 
 		HSSFCellStyle csNullCenter = wb.createCellStyle();
-		csNullCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csNullCenter.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
 
 		HSSFCellStyle csNullCenterBold = wb.createCellStyle();
 		csNullCenterBold.setFont(font);
-		csNullCenterBold.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csNullCenterBold.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
 
 		// primo foglio; RIEPILOGO_ISCRIZIONI
 		HSSFSheet sheet = wb.createSheet("Riepilogo Definiti");
@@ -3069,7 +3069,7 @@ public class StatisControllerCPP extends GenericController {
 			row = sheet.createRow(nRow);
 
 		csBold.setWrapText(true);
-		setCell(row, 0, "PROCEDIMENTI DEFINITI CON PROVVEDIMENTO DEL GIUDICE DELL�ESECUZIONE", csBold);
+		setCell(row, 0, "PROCEDIMENTI DEFINITI CON PROVVEDIMENTO DEL GIUDICE DELL?ESECUZIONE", csBold);
 
 		Iterator itx = aVect.iterator();
 
@@ -3185,7 +3185,7 @@ public class StatisControllerCPP extends GenericController {
 			row = sheet.getRow(nRow);
 			if (row == null)
 				row = sheet.createRow(nRow);
-			setCell(row, 0, "Declaratoria estinzione Libert� Controllata", cs);
+			setCell(row, 0, "Declaratoria estinzione Libert? Controllata", cs);
 			setCell(row, nColAnno, lMod.getDefSanSos_Est_libCon().doubleValue(), cs);
 			nRow++;
 
@@ -3311,14 +3311,14 @@ public class StatisControllerCPP extends GenericController {
 			row = sheet.getRow(nRow);
 			if (row == null)
 				row = sheet.createRow(nRow);
-			setCell(row, 0, "N.L.P. per irreperibilit�", cs);
+			setCell(row, 0, "N.L.P. per irreperibilit?", cs);
 			setCell(row, nColAnno, lMod.getDefNLP_Irreperibilita().doubleValue(), cs);
 			nRow++;
 
 			row = sheet.getRow(nRow);
 			if (row == null)
 				row = sheet.createRow(nRow);
-			setCell(row, 0, "N.L.P. per accertata solvibilit�", cs);
+			setCell(row, 0, "N.L.P. per accertata solvibilit?", cs);
 			setCell(row, nColAnno, lMod.getDefNLP_Solvibilita().doubleValue(), cs);
 			nRow++;
 
@@ -3410,10 +3410,10 @@ public class StatisControllerCPP extends GenericController {
 	private HSSFCellStyle getBordo4Lati(HSSFWorkbook wb) {
 
 		HSSFCellStyle cs = wb.createCellStyle();
-		cs.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		cs.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		cs.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		cs.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		cs.setBorderBottom(org.apache.poi.ss.usermodel.BorderStyle.THIN);
+		cs.setBorderTop(org.apache.poi.ss.usermodel.BorderStyle.THIN);
+		cs.setBorderRight(org.apache.poi.ss.usermodel.BorderStyle.THIN);
+		cs.setBorderLeft(org.apache.poi.ss.usermodel.BorderStyle.THIN);
 
 		return cs;
 	}
@@ -3463,7 +3463,7 @@ public class StatisControllerCPP extends GenericController {
 		row = sheet.createRow(nRow);
 		// Create a cell and put a value in it.
 
-		// [SG] 11/11/2021 se � null scrivo ""
+		// [SG] 11/11/2021 se ? null scrivo ""
 		value = ("Tel. " + StringUtils.toStringJSP(uffUteConnesso.getTelefono()) + " - Fax "
 				+ StringUtils.toStringJSP(uffUteConnesso.getFax()));
 		setCell(row, 0, value, csNull);
@@ -3632,7 +3632,7 @@ public class StatisControllerCPP extends GenericController {
 	 * @param ufficio
 	 *            Codice ufficio
 	 * @param dataVerifica
-	 *            Data in cui � lanciata la procedura
+	 *            Data in cui ? lanciata la procedura
 	 * @throws F3BException
 	 *             propaga l'eccezione.
 	 */

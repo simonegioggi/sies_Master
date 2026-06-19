@@ -9,7 +9,6 @@ import javax.naming.StringRefAddr;
 import javax.naming.spi.ObjectFactory;
 
 //import oracle.jdbc.pool.OracleConnectionCacheImpl;
-import oracle.jdbc.pool.OracleDataSource;
 import f3b.util.F3BException;
 
 @SuppressWarnings("rawtypes")
@@ -31,7 +30,7 @@ public class F3bOracleDataSourceFactory implements ObjectFactory {
 		// - OracleConnectionCacheImpl (per la gestione dei pool)
 		// ======================================================================
 		if (s.equals("oracle.jdbc.pool.OracleDataSource")) {
-			obj1 = new OracleDataSource();
+			obj1 = Class.forName("oracle.jdbc.pool.OracleDataSource").getDeclaredConstructor().newInstance();
 			// }else if(s.equals("oracle.jdbc.pool.OracleConnectionCacheImpl")){
 			// obj1 = new OracleConnectionCacheImpl();
 		} else {
@@ -46,37 +45,37 @@ public class F3bOracleDataSourceFactory implements ObjectFactory {
 		if (obj1 != null) {
 			StringRefAddr stringrefaddr1 = null;
 			if ((stringrefaddr1 = (StringRefAddr) reference.get("url")) != null)
-				((OracleDataSource) (obj1)).setURL((String) stringrefaddr1.getContent());
+				invokeSetter(obj1, "setURL", (String) stringrefaddr1.getContent());
 			if ((stringrefaddr1 = (StringRefAddr) reference.get("userName")) != null
 					|| (stringrefaddr1 = (StringRefAddr) reference.get("u")) != null
 					|| (stringrefaddr1 = (StringRefAddr) reference.get("user")) != null)
-				((OracleDataSource) (obj1)).setUser((String) stringrefaddr1.getContent());
+				invokeSetter(obj1, "setUser", (String) stringrefaddr1.getContent());
 			if ((stringrefaddr1 = (StringRefAddr) reference.get("passWord")) != null
 					|| (stringrefaddr1 = (StringRefAddr) reference.get("password")) != null)
-				((OracleDataSource) (obj1)).setPassword((String) stringrefaddr1.getContent());
+				invokeSetter(obj1, "setPassword", (String) stringrefaddr1.getContent());
 			if ((stringrefaddr1 = (StringRefAddr) reference.get("description")) != null
 					|| (stringrefaddr1 = (StringRefAddr) reference.get("describe")) != null)
-				((OracleDataSource) (obj1)).setDescription((String) stringrefaddr1.getContent());
+				invokeSetter(obj1, "setDescription", (String) stringrefaddr1.getContent());
 			if ((stringrefaddr1 = (StringRefAddr) reference.get("driverType")) != null
 					|| (stringrefaddr1 = (StringRefAddr) reference.get("driver")) != null)
-				((OracleDataSource) (obj1)).setDriverType((String) stringrefaddr1.getContent());
+				invokeSetter(obj1, "setDriverType", (String) stringrefaddr1.getContent());
 			if ((stringrefaddr1 = (StringRefAddr) reference.get("serverName")) != null
 					|| (stringrefaddr1 = (StringRefAddr) reference.get("host")) != null)
-				((OracleDataSource) (obj1)).setServerName((String) stringrefaddr1.getContent());
+				invokeSetter(obj1, "setServerName", (String) stringrefaddr1.getContent());
 			if ((stringrefaddr1 = (StringRefAddr) reference.get("databaseName")) != null
 					|| (stringrefaddr1 = (StringRefAddr) reference.get("sid")) != null)
-				((OracleDataSource) (obj1)).setDatabaseName((String) stringrefaddr1.getContent());
+				invokeSetter(obj1, "setDatabaseName", (String) stringrefaddr1.getContent());
 			if ((stringrefaddr1 = (StringRefAddr) reference.get("networkProtocol")) != null
 					|| (stringrefaddr1 = (StringRefAddr) reference.get("protocol")) != null)
-				((OracleDataSource) (obj1)).setNetworkProtocol((String) stringrefaddr1.getContent());
+				invokeSetter(obj1, "setNetworkProtocol", (String) stringrefaddr1.getContent());
 			if ((stringrefaddr1 = (StringRefAddr) reference.get("portNumber")) != null
 					|| (stringrefaddr1 = (StringRefAddr) reference.get("port")) != null) {
 				String s6 = (String) stringrefaddr1.getContent();
-				((OracleDataSource) (obj1)).setPortNumber(Integer.parseInt(s6));
+				invokeSetter(obj1, "setPortNumber", Integer.valueOf(Integer.parseInt(s6)));
 			}
 			if ((stringrefaddr1 = (StringRefAddr) reference.get("tnsentryname")) != null
 					|| (stringrefaddr1 = (StringRefAddr) reference.get("tns")) != null)
-				((OracleDataSource) (obj1)).setTNSEntryName((String) stringrefaddr1.getContent());
+				invokeSetter(obj1, "setTNSEntryName", (String) stringrefaddr1.getContent());
 
 		}
 
@@ -125,6 +124,11 @@ public class F3bOracleDataSourceFactory implements ObjectFactory {
 		 * 
 		 */
 		return obj1;
+	}
+
+	private void invokeSetter(Object target, String method, Object value) throws Exception {
+		Class<?> type = (value instanceof Integer) ? Integer.TYPE : String.class;
+		target.getClass().getMethod(method, type).invoke(target, value);
 	}
 
 }

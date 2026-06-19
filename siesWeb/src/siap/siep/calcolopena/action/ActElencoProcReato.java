@@ -1,5 +1,6 @@
 package siap.siep.calcolopena.action;
 
+import org.apache.log4j.Logger;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Iterator;
@@ -1141,3 +1142,5 @@ public class ActElencoProcReato extends ActionSiap
 	} // chiude processRequest()
 
 } // Chiude classe
+
+

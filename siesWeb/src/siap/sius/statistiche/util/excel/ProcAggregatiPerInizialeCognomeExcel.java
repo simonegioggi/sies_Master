@@ -110,32 +110,32 @@ public class ProcAggregatiPerInizialeCognomeExcel extends SIAPExcelProducer {
 
 		// font grassetto
 		lFontBold = aWb.createFont();
-		lFontBold.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		lFontBold.setBold(true);
 
 		// stile per celle col bordo con testo a sinistra
 		lCellStyleLeft = getBordo4Lati(aWb);
-		lCellStyleLeft.setAlignment(HSSFCellStyle.ALIGN_LEFT);
-		lCellStyleLeft.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		lCellStyleLeft.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.LEFT);
+		lCellStyleLeft.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
 		lCellStyleLeft.setWrapText(true);
 
 		// stile per celle col bordo con testo a sinistra grassetto
 		lCellStyleLeftBold = getBordo4Lati(aWb);
 		lCellStyleLeftBold.setFont(lFontBold);
-		lCellStyleLeftBold.setAlignment(HSSFCellStyle.ALIGN_LEFT);
-		lCellStyleLeftBold.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		lCellStyleLeftBold.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.LEFT);
+		lCellStyleLeftBold.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
 		lCellStyleLeftBold.setWrapText(true);
 
 		// stile per celle col bordo con testo a destra
 		lCellStyleRight = getBordo4Lati(aWb);
-		lCellStyleRight.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
-		lCellStyleRight.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		lCellStyleRight.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.RIGHT);
+		lCellStyleRight.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
 		lCellStyleRight.setWrapText(true);
 
 		// stile per celle col bordo con testo a destra grassetto
 		lCellStyleRightBold = getBordo4Lati(aWb);
 		lCellStyleRightBold.setFont(lFontBold);
-		lCellStyleRightBold.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
-		lCellStyleRightBold.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		lCellStyleRightBold.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.RIGHT);
+		lCellStyleRightBold.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
 		lCellStyleRightBold.setWrapText(true);
 
 		lRow = lSheet.createRow(lRowCounter++);
@@ -230,32 +230,32 @@ public class ProcAggregatiPerInizialeCognomeExcel extends SIAPExcelProducer {
 
 		// font grassetto
 		lFontBold = aWb.createFont();
-		lFontBold.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		lFontBold.setBold(true);
 
 		// stile per celle col bordo con testo a sinistra
 		lCellStyleLeft = getBordo4Lati(aWb);
-		lCellStyleLeft.setAlignment(HSSFCellStyle.ALIGN_LEFT);
-		lCellStyleLeft.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		lCellStyleLeft.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.LEFT);
+		lCellStyleLeft.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
 		lCellStyleLeft.setWrapText(true);
 
 		// stile per celle col bordo con testo a sinistra grassetto
 		lCellStyleLeftBold = getBordo4Lati(aWb);
 		lCellStyleLeftBold.setFont(lFontBold);
-		lCellStyleLeftBold.setAlignment(HSSFCellStyle.ALIGN_LEFT);
-		lCellStyleLeftBold.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		lCellStyleLeftBold.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.LEFT);
+		lCellStyleLeftBold.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
 		lCellStyleLeftBold.setWrapText(true);
 
 		// stile per celle col bordo con testo a destra
 		lCellStyleRight = getBordo4Lati(aWb);
-		lCellStyleRight.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
-		lCellStyleRight.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		lCellStyleRight.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.RIGHT);
+		lCellStyleRight.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
 		lCellStyleRight.setWrapText(true);
 
 		// stile per celle col bordo con testo a destra grassetto
 		lCellStyleRightBold = getBordo4Lati(aWb);
 		lCellStyleRightBold.setFont(lFontBold);
-		lCellStyleRightBold.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
-		lCellStyleRightBold.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		lCellStyleRightBold.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.RIGHT);
+		lCellStyleRightBold.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
 		lCellStyleRightBold.setWrapText(true);
 
 		lRow = lSheet.createRow(lRowCounter++);
@@ -339,29 +339,29 @@ public class ProcAggregatiPerInizialeCognomeExcel extends SIAPExcelProducer {
 
 		// stile per celle col bordo con testo a sinistra
 		lCellStyleLeft = getBordo4Lati(aWb);
-		lCellStyleLeft.setAlignment(HSSFCellStyle.ALIGN_LEFT);
-		lCellStyleLeft.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		lCellStyleLeft.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.LEFT);
+		lCellStyleLeft.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
 		lCellStyleLeft.setWrapText(true);
 
 		// stile per celle col bordo con testo a sinistra grassetto
 		lFontBold = aWb.createFont();
-		lFontBold.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		lFontBold.setBold(true);
 		lCellStyleLeftBold = getBordo4Lati(aWb);
 		lCellStyleLeftBold.setFont(lFontBold);
-		lCellStyleLeftBold.setAlignment(HSSFCellStyle.ALIGN_LEFT);
-		lCellStyleLeftBold.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		lCellStyleLeftBold.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.LEFT);
+		lCellStyleLeftBold.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
 		lCellStyleLeftBold.setWrapText(true);
 
 		// stile per celle col bordo con testo centrato
 		lCellStyleCenter = getBordo4Lati(aWb);
-		lCellStyleCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		lCellStyleCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		lCellStyleCenter.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
+		lCellStyleCenter.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
 		lCellStyleCenter.setWrapText(true);
 
 		// stile per celle col bordo con testo a destra
 		lCellStyleRight = getBordo4Lati(aWb);
-		lCellStyleRight.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
-		lCellStyleRight.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		lCellStyleRight.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.RIGHT);
+		lCellStyleRight.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
 		lCellStyleRight.setWrapText(true);
 
 		lRow = lSheet.createRow(lRowCounter++);

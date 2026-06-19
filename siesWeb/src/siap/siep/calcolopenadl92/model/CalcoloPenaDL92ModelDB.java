@@ -1,5 +1,6 @@
 package siap.siep.calcolopenadl92.model;
 
+import org.apache.log4j.Logger;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Vector;
@@ -416,3 +417,5 @@ public class CalcoloPenaDL92ModelDB extends GenericModel {
         this.mListaSemetri = mListaSemetri;
     }
 }
+
+

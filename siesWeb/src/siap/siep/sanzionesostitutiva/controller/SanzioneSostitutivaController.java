@@ -182,10 +182,10 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 							.debug("Notifica[" + count + "] = " + aEvNotComunicazione.getNotifiche()[count]);
 
 					if (aEvNotComunicazione.getNotifiche()[count] != null) {
-						// Inserisco autorità esterna se non presente
+						// Inserisco autorit? esterna se non presente
 						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
 						// di LogF3B.getLogger()
-						siesLogger.debug("Inserisco autorità esterna se non presente");
+						siesLogger.debug("Inserisco autorit? esterna se non presente");
 						if (aEvNotComunicazione.getNotifiche()[count].getAutoritaEsterna() != null) {
 							lAutDao = new AutoritaEsternaDAO(lConn);
 
@@ -242,8 +242,8 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 			// ========================================================================
 			// Inserisco la PENA_RESIDUA.
 			// n.b. se presente a sistema pena residua non validata e non collegata ad
-			// alcun evento, la cancello. Situazione possibile se l'espulsione è
-			// il primo evento ed è stato effettuato il primo calcolo della pena
+			// alcun evento, la cancello. Situazione possibile se l'espulsione ?
+			// il primo evento ed ? stato effettuato il primo calcolo della pena
 			// ========================================================================
 			if (aPenaResiduaMod != null) {
 				// Elimino la pena residua non validata rimasta appesa se esiste
@@ -714,10 +714,10 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 					siesLogger.debug("Notifica[" + count + "] = " + aEvNotModel.getNotifiche()[count]);
 
 					if (aEvNotModel.getNotifiche()[count] != null) {
-						// Inserisco autorità esterna se non presente
+						// Inserisco autorit? esterna se non presente
 						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
 						// di LogF3B.getLogger()
-						siesLogger.debug("Inserisco autorità esterna se non presente");
+						siesLogger.debug("Inserisco autorit? esterna se non presente");
 						if (aEvNotModel.getNotifiche()[count].getAutoritaEsterna() != null) {
 							lAutDao = new AutoritaEsternaDAO(lConn);
 
@@ -1391,7 +1391,7 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 			siesLogger.debug("Aggiornamento stato procedimento");
 			String lStatoProcedimento = "";
 			if (lEveModelRich.getCodMotivo().equals("0932")) {
-				lStatoProcedimento = "0246"; // Trasmessa richiesta di revoca espulsione per irreperibilità in
+				lStatoProcedimento = "0246"; // Trasmessa richiesta di revoca espulsione per irreperibilit? in
 												// data
 			} else if (lEveModelRich.getCodMotivo().equals("0933")) {
 				lStatoProcedimento = "0247"; // Trasmessa richiesta di revoca espulsione per sanzione
@@ -1540,11 +1540,11 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 					siesLogger.debug("Notifica[" + count + "] = " + aEvNotModel.getNotifiche()[count]);
 
 					if (aEvNotModel.getNotifiche()[count] != null) {
-						// Inserisco autorità esterna se non presente
+						// Inserisco autorit? esterna se non presente
 						if (aEvNotModel.getNotifiche()[count].getAutoritaEsterna() != null) {
 							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
 							// posto di LogF3B.getLogger()
-							siesLogger.debug("Inserisco autorità esterna se non presente");
+							siesLogger.debug("Inserisco autorit? esterna se non presente");
 							lAutDao = new AutoritaEsternaDAO(lConn);
 
 							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
@@ -1858,12 +1858,12 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 					siesLogger.debug("Notifica[" + count + "] = " + aEvNotModel.getNotifiche()[count]);
 
 					if (aEvNotModel.getNotifiche()[count] != null) {
-						// Se è stata specificata anche l'autorità esterna per l'avvocato,
+						// Se ? stata specificata anche l'autorit? esterna per l'avvocato,
 						// recupero l'id da inserire nella notifica
-						// n.b. se autorità non presente la creo
+						// n.b. se autorit? non presente la creo
 						if (aEvNotModel.getNotifiche()[count].getAutoritaEsterna() != null) {
 							// Provo a verificare se a sistema (tab AUTORITA_ESTERNA) esiste
-							// già l'autorità esterna specificata nella form (dalla form ho solo
+							// gi? l'autorit? esterna specificata nella form (dalla form ho solo
 							// codice e sede)
 							lAutDao.setRicercaByAutSede(
 									aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
@@ -1921,7 +1921,7 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 			siesLogger.debug("Pena Residua lIdPenRes = " + lIdPenRes);
 
 			// //========================================================================
-			// // Recupero la PENA_RESIDUA collegata all'annotazione che ha già
+			// // Recupero la PENA_RESIDUA collegata all'annotazione che ha gi?
 			// // rideterminato la pena
 			// // n.b. La funzione non prevede il ricalcolo della pena
 			// //========================================================================
@@ -1930,32 +1930,32 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 			// siesLogger.debug("Inserimento Pena Residua");
 			// lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
 			// lPenResSqlDao.ricercaPenaResiduaByKeyEvento(aEvNotModel.getEvento().getEveIdEvento());
-			// PenaResiduaModel lPenaGiàRideterminata = (PenaResiduaModel)lPenResSqlDao.getModelByKey();
+			// PenaResiduaModel lPenaGi?Rideterminata = (PenaResiduaModel)lPenResSqlDao.getModelByKey();
 			// lPenResSqlDao.stop();
 			//
-			// if ( lPenaGiàRideterminata!=null
-			// && lPenaGiàRideterminata.getIdPenaResidua()!=null
+			// if ( lPenaGi?Rideterminata!=null
+			// && lPenaGi?Rideterminata.getIdPenaResidua()!=null
 			// )
 			// {
 			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			// siesLogger.debug("Recuperata pena residua ("+lPenaGiàRideterminata.getIdPenaResidua()+") non
+			// siesLogger.debug("Recuperata pena residua ("+lPenaGi?Rideterminata.getIdPenaResidua()+") non
 			// validata non agganciata da alcun evento. La aggancio all'evento corrente");
 			// lPenResDao = new PenaResiduaDAO(lConn);
 			//
-			// lPenaGiàRideterminata.setIdPenaResidua(null);
-			// lPenaGiàRideterminata.setEveIdEvento(lIdEvento);
-			// lPenaGiàRideterminata.setFlagValidato("N");
+			// lPenaGi?Rideterminata.setIdPenaResidua(null);
+			// lPenaGi?Rideterminata.setEveIdEvento(lIdEvento);
+			// lPenaGi?Rideterminata.setFlagValidato("N");
 			//
-			// lPenaGiàRideterminata.setCodOperatoreInserimento
+			// lPenaGi?Rideterminata.setCodOperatoreInserimento
 			// (aEvNotModel.getEvento().getCodOperatoreInserimento());
-			// lPenaGiàRideterminata.setCodUfficioInserimento
+			// lPenaGi?Rideterminata.setCodUfficioInserimento
 			// (aEvNotModel.getEvento().getCodUfficioInserimento());
-			// lPenaGiàRideterminata.setDataInserimento (aEvNotModel.getEvento().getDataInserimento());
+			// lPenaGi?Rideterminata.setDataInserimento (aEvNotModel.getEvento().getDataInserimento());
 			//
 			// // Inserisco
 			// lPenResDao = new PenaResiduaDAO(lConn);
-			// lPenResDao.setDAOFromModel(lPenaGiàRideterminata);
+			// lPenResDao.setDAOFromModel(lPenaGi?Rideterminata);
 			// BigDecimal lIdPenRes = lPenResDao.insert();
 			// lPenResDao.stop();
 			//
@@ -2541,12 +2541,12 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 					siesLogger.debug("Notifica[" + count + "] = " + aEvNotModel.getNotifiche()[count]);
 
 					if (aEvNotModel.getNotifiche()[count] != null) {
-						// Se è stata specificata anche l'autorità esterna per l'avvocato,
+						// Se ? stata specificata anche l'autorit? esterna per l'avvocato,
 						// recupero l'id da inserire nella notifica
-						// n.b. se autorità non presente la creo
+						// n.b. se autorit? non presente la creo
 						if (aEvNotModel.getNotifiche()[count].getAutoritaEsterna() != null) {
 							// Provo a verificare se a sistema (tab AUTORITA_ESTERNA) esiste
-							// già l'autorità esterna specificata nella form (dalla form ho solo
+							// gi? l'autorit? esterna specificata nella form (dalla form ho solo
 							// codice e sede)
 							lAutDao.setRicercaByAutSede(
 									aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
@@ -2752,14 +2752,14 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 					lAutMod = (AutoritaEsternaModel) lAutDao.getModelByKey();
 
 					if (lAutMod == null) {
-						// Autorità non presente, la inserisco
+						// Autorit? non presente, la inserisco
 						lAutDao.setDAOFromModel(lNotModel.getAutoritaEsternaDelegata());
 						lKeyAutDeleg = lAutDao.insert();
 						lAutDao.stop();
 
 						lNotModel.getAutoritaEsternaDelegata().setIdAutoritaEsterna(lKeyAutDeleg);
 					} else {
-						// Autorità già presente a sistema la aggancio alla notifixa
+						// Autorit? gi? presente a sistema la aggancio alla notifixa
 						lKeyAutDeleg = lAutMod.getIdAutoritaEsterna();
 
 						// Il campo descrizione rappresenta l'indirizzo in maschera
@@ -2922,7 +2922,7 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 					lBollDao = new BollettinoPagopaDAO(lConn);
 					if (lListaBollettini.size() > 0) {
 						// n.b. per ora si procede all'aggiornamento delle scadenze indipendentemente se il
-						// bollettino sia stato generato o meno o già pagato
+						// bollettino sia stato generato o meno o gi? pagato
 						Date dataScadenzaRataSuccessiva = dataScadenzaPrimaRata;
 						for (BollettinoPagopaModel lBoll : lListaBollettini) {
 							siesLogger.debug("ProgRata = " + lBoll.getProgRata() + ", dataScadenza "
@@ -2949,9 +2949,9 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 					 * e la aggiornao lBollDao = new BollettinoPagopaDAO(lConn);
 					 * lBollDao.setDataScadenza(dataScadenzaPrimaRata);
 					 * lBollDao.selCondizioneByIdFascicolo(aEvento.getFasSieIdFascicoloSiep());
-					 * lBollDao.update(); } else { // se il primo bollettino è stato già pagato allora le date
+					 * lBollDao.update(); } else { // se il primo bollettino ? stato gi? pagato allora le date
 					 * dei successivi // sono state // calcolate in base al pagamento della prima rata. NON HA
-					 * SENSO // MODIFICARE LE SCADENZA // Al più si potrebbe modificare SOLO la data scadenza
+					 * SENSO // MODIFICARE LE SCADENZA // Al pi? si potrebbe modificare SOLO la data scadenza
 					 * del PRIMO // bollettino pagato } } else { // la potrei aggiornare comunque lBollDao =
 					 * new BollettinoPagopaDAO(lConn); lBollDao.setDataScadenza(dataScadenzaPrimaRata);
 					 * lBollDao.selCondizioneByIdFascicolo(aEvento.getFasSieIdFascicoloSiep());
@@ -3041,12 +3041,12 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 					siesLogger.debug("Notifica[" + count + "] = " + aEvNotModel.getNotifiche()[count]);
 
 					if (aEvNotModel.getNotifiche()[count] != null) {
-						// Se è stata specificata anche l'autorità esterna per l'avvocato,
+						// Se ? stata specificata anche l'autorit? esterna per l'avvocato,
 						// recupero l'id da inserire nella notifica
-						// n.b. se autorità non presente la creo
+						// n.b. se autorit? non presente la creo
 						if (aEvNotModel.getNotifiche()[count].getAutoritaEsterna() != null) {
 							// Provo a verificare se a sistema (tab AUTORITA_ESTERNA) esiste
-							// già l'autorità esterna specificata nella form (dalla form ho solo
+							// gi? l'autorit? esterna specificata nella form (dalla form ho solo
 							// codice e sede)
 							lAutDao.setRicercaByAutSede(
 									aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
@@ -3222,12 +3222,12 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 				siesLogger.debug("Notifica[" + count + "] = " + aEvNotModel.getNotifiche()[count]);
 
 				if (aEvNotModel.getNotifiche()[count] != null) {
-					// Se è stata specificata anche l'autorità esterna per l'avvocato,
+					// Se ? stata specificata anche l'autorit? esterna per l'avvocato,
 					// recupero l'id da inserire nella notifica
-					// n.b. se autorità non presente la creo
+					// n.b. se autorit? non presente la creo
 					if (aEvNotModel.getNotifiche()[count].getAutoritaEsterna() != null) {
 						// Provo a verificare se a sistema (tab AUTORITA_ESTERNA) esiste
-						// già l'autorità esterna specificata nella form (dalla form ho solo
+						// gi? l'autorit? esterna specificata nella form (dalla form ho solo
 						// codice e sede)
 						lAutDao.setRicercaByAutSede(aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
 						AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
@@ -3324,12 +3324,12 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 				siesLogger.debug("Notifica[" + count + "] = " + aEvNotModel.getNotifiche()[count]);
 
 				if (aEvNotModel.getNotifiche()[count] != null) {
-					// Se è stata specificata anche l'autorità esterna per l'avvocato,
+					// Se ? stata specificata anche l'autorit? esterna per l'avvocato,
 					// recupero l'id da inserire nella notifica
-					// n.b. se autorità non presente la creo
+					// n.b. se autorit? non presente la creo
 					if (aEvNotModel.getNotifiche()[count].getAutoritaEsterna() != null) {
 						// Provo a verificare se a sistema (tab AUTORITA_ESTERNA) esiste
-						// già l'autorità esterna specificata nella form (dalla form ho solo
+						// gi? l'autorit? esterna specificata nella form (dalla form ho solo
 						// codice e sede)
 						lAutDao.setRicercaByAutSede(aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
 						AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
@@ -3526,12 +3526,12 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 					siesLogger.debug("Notifica[" + count + "] = " + aEvNotModel.getNotifiche()[count]);
 
 					if (aEvNotModel.getNotifiche()[count] != null) {
-						// Se è stata specificata anche l'autorità esterna per l'avvocato,
+						// Se ? stata specificata anche l'autorit? esterna per l'avvocato,
 						// recupero l'id da inserire nella notifica
-						// n.b. se autorità non presente la creo
+						// n.b. se autorit? non presente la creo
 						if (aEvNotModel.getNotifiche()[count].getAutoritaEsterna() != null) {
 							// Provo a verificare se a sistema (tab AUTORITA_ESTERNA) esiste
-							// già l'autorità esterna specificata nella form (dalla form ho solo
+							// gi? l'autorit? esterna specificata nella form (dalla form ho solo
 							// codice e sede)
 							lAutDao.setRicercaByAutSede(
 									aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
@@ -3640,12 +3640,12 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 					siesLogger.debug("Notifica[" + count + "] = " + aEvNotModel.getNotifiche()[count]);
 
 					if (aEvNotModel.getNotifiche()[count] != null) {
-						// Se è stata specificata anche l'autorità esterna per l'avvocato,
+						// Se ? stata specificata anche l'autorit? esterna per l'avvocato,
 						// recupero l'id da inserire nella notifica
-						// n.b. se autorità non presente la creo
+						// n.b. se autorit? non presente la creo
 						if (aEvNotModel.getNotifiche()[count].getAutoritaEsterna() != null) {
 							// Provo a verificare se a sistema (tab AUTORITA_ESTERNA) esiste
-							// già l'autorità esterna specificata nella form (dalla form ho solo
+							// gi? l'autorit? esterna specificata nella form (dalla form ho solo
 							// codice e sede)
 							lAutDao.setRicercaByAutSede(
 									aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
@@ -3709,7 +3709,7 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 		// Create a new font and alter it.
 		HSSFFont fontBold = wb.createFont();
-		fontBold.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		fontBold.setBold(true);
 
 		// stile per celle col bordo
 		HSSFCellStyle cs = wb.createCellStyle();
@@ -3725,26 +3725,26 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 		HSSFCellStyle csCenter = wb.createCellStyle();
 		csCenter = getBordo4Lati(wb);
-		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csCenter.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
 
 		HSSFCellStyle csRight = wb.createCellStyle();
 		csRight = getBordo4Lati(wb);
-		csRight.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+		csRight.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.RIGHT);
 
 		HSSFCellStyle csBoldCenter = wb.createCellStyle();
 		csBoldCenter = getBordo4Lati(wb);
 		csBoldCenter.setFont(fontBold);
-		csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csBoldCenter.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
 
 		HSSFCellStyle csEuroFormat = wb.createCellStyle();
 		// HSSFDataFormat dataFormat = wb.createDataFormat();
 		// csEuroFormat.setDataFormat(dataFormat.getFormat("0.00"));
 		short builtinFormatIndex = 4; // 4: "#,##0.00"
 		csEuroFormat.setDataFormat(builtinFormatIndex);
-		csEuroFormat.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		csEuroFormat.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		csEuroFormat.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		csEuroFormat.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		csEuroFormat.setBorderBottom(org.apache.poi.ss.usermodel.BorderStyle.THIN);
+		csEuroFormat.setBorderTop(org.apache.poi.ss.usermodel.BorderStyle.THIN);
+		csEuroFormat.setBorderRight(org.apache.poi.ss.usermodel.BorderStyle.THIN);
+		csEuroFormat.setBorderLeft(org.apache.poi.ss.usermodel.BorderStyle.THIN);
 
 		// primo foglio
 		HSSFSheet sheet = wb.createSheet("Stato Pagamenti");
@@ -3874,10 +3874,10 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 	private HSSFCellStyle getBordo4Lati(HSSFWorkbook wb) {
 
 		HSSFCellStyle cs = wb.createCellStyle();
-		cs.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		cs.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		cs.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		cs.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		cs.setBorderBottom(org.apache.poi.ss.usermodel.BorderStyle.THIN);
+		cs.setBorderTop(org.apache.poi.ss.usermodel.BorderStyle.THIN);
+		cs.setBorderRight(org.apache.poi.ss.usermodel.BorderStyle.THIN);
+		cs.setBorderLeft(org.apache.poi.ss.usermodel.BorderStyle.THIN);
 
 		return cs;
 	}
@@ -3910,7 +3910,7 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 		// Create a new font and alter it.
 		HSSFFont fontBold = wb.createFont();
-		fontBold.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		fontBold.setBold(true);
 
 		// stile per celle col bordo
 		HSSFCellStyle cs = wb.createCellStyle();
@@ -3926,33 +3926,33 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 		HSSFCellStyle csCenter = wb.createCellStyle();
 		csCenter = getBordo4Lati(wb);
-		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csCenter.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
 
 		HSSFCellStyle csRight = wb.createCellStyle();
 		csRight = getBordo4Lati(wb);
-		csRight.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+		csRight.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.RIGHT);
 
 		HSSFCellStyle csBoldCenter = wb.createCellStyle();
 		csBoldCenter = getBordo4Lati(wb);
 		csBoldCenter.setFont(fontBold);
-		csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csBoldCenter.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
 		csBoldCenter.setWrapText(true);
-		csBoldCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csBoldCenter.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
 
 		HSSFCellStyle csBoldRight = wb.createCellStyle();
 		// csBoldRight = getBordo4Lati(wb);
 		csBoldRight.setFont(fontBold);
-		csBoldRight.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+		csBoldRight.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.RIGHT);
 
 		HSSFCellStyle csEuroFormat = wb.createCellStyle();
 		// HSSFDataFormat dataFormat = wb.createDataFormat();
 		// csEuroFormat.setDataFormat(dataFormat.getFormat("0.00"));
 		short builtinFormatIndex = 4; // 4: "#,##0.00"
 		csEuroFormat.setDataFormat(builtinFormatIndex);
-		csEuroFormat.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		csEuroFormat.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		csEuroFormat.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		csEuroFormat.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		csEuroFormat.setBorderBottom(org.apache.poi.ss.usermodel.BorderStyle.THIN);
+		csEuroFormat.setBorderTop(org.apache.poi.ss.usermodel.BorderStyle.THIN);
+		csEuroFormat.setBorderRight(org.apache.poi.ss.usermodel.BorderStyle.THIN);
+		csEuroFormat.setBorderLeft(org.apache.poi.ss.usermodel.BorderStyle.THIN);
 
 		// primo foglio
 		HSSFSheet sheet = wb.createSheet("Scadenzario Pagamenti");
@@ -3960,7 +3960,7 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 		int numCol = 0;
 		int sizeCol = 21;
-		sheet.setColumnWidth(numCol++, (15 * 256)); // N° SIEP
+		sheet.setColumnWidth(numCol++, (15 * 256)); // N? SIEP
 		sheet.setColumnWidth(numCol++, (sizeCol * 256)); // Cognome
 		sheet.setColumnWidth(numCol++, (sizeCol * 256)); // Nome
 		sheet.setColumnWidth(numCol++, (sizeCol * 256)); // Luogo Nascita
@@ -4132,3 +4132,4 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 	}
 
 }
+

@@ -1,9 +1,10 @@
 package siap.siep.statis.dao;
 
+import org.apache.log4j.Logger;
 /**
 * <p>Title: RiepilogoPendentiDefinitiCPPSqlDAO</p>
 * <p>Description: Classe che rappresenta l'output del foglio Xls 'Riepilogo Definiti CPP'	</p>
-* <p>	La statistica è 'Riepilogo procedimenti pendenti CPP' (Procedimenti di classe VII) 	</p>
+* <p>	La statistica ï¿½ 'Riepilogo procedimenti pendenti CPP' (Procedimenti di classe VII) 	</p>
 * <p>	I totali raggruppati per anni sono presi dalla Tab. ISP_PROVVEDIMENTI_CPP			</p>
 */
 
@@ -253,3 +254,4 @@ public class RiepilogoPendentiDefinitiCPPSqlDAO extends SqlDAO
   }
   
 }	// CHIUDE RiepilogoIscrizioniAttivitaCPPSqlDAO()
+

@@ -1,5 +1,6 @@
 package siap.siep.istruttoria.action;
 
+import org.apache.log4j.Logger;
 import f3b.web.IWebConstants;
 import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
@@ -65,3 +66,4 @@ public class ActLoadInserisciEstrattoSentenze extends ActionSiap implements ICos
 	}
 
 }
+

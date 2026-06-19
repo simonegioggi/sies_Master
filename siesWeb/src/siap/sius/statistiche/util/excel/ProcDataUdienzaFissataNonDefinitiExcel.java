@@ -102,15 +102,15 @@ public class ProcDataUdienzaFissataNonDefinitiExcel extends SIAPExcelProducer {
 
 		// stile per celle col bordo con testo centrato
 		lCellStyleCenter = getBordo4Lati(lWb);
-		lCellStyleCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		lCellStyleCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		lCellStyleCenter.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
+		lCellStyleCenter.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
 		lCellStyleCenter.setWrapText(true);
 
 		lRow = lSheet.createRow(lRowCounter++);
 
 		lSheet.setColumnWidth(0, 10 * 256); // Prog
 		lSheet.setColumnWidth(1, 15 * 256); // Procedimento Sius
-		lSheet.setColumnWidth(2, 35 * 256); // Generalità Soggetto
+		lSheet.setColumnWidth(2, 35 * 256); // Generalit? Soggetto
 		lSheet.setColumnWidth(3, 15 * 256); // Data Udienza
 		lSheet.setColumnWidth(4, 15 * 256); // Data Iscrzione
 		lSheet.setColumnWidth(5, 35 * 256); // Contenuto
@@ -120,7 +120,7 @@ public class ProcDataUdienzaFissataNonDefinitiExcel extends SIAPExcelProducer {
 		// Intestazione colonne
 		setCell(lRow, (short) 0, "Prog", lCellStyleCenter);
 		setCell(lRow, (short) 1, "Procedimento SIUS", lCellStyleCenter);
-		setCell(lRow, (short) 2, "Generalità Soggetto", lCellStyleCenter);
+		setCell(lRow, (short) 2, "Generalit? Soggetto", lCellStyleCenter);
 		setCell(lRow, (short) 3, "Data Udienza", lCellStyleCenter);
 		setCell(lRow, (short) 4, "Data Iscrizione", lCellStyleCenter);
 		setCell(lRow, (short) 5, "Contenuto", lCellStyleCenter);

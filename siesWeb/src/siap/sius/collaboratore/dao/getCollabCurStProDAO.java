@@ -2,7 +2,9 @@ package siap.sius.collaboratore.dao;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -13,8 +15,6 @@ import f3b.dao.StoreProcedureDAO;
 import f3b.log.LogF3B;
 import f3b.model.GenericModel;
 import f3b.util.DateUtils;
-import oracle.jdbc.OracleCallableStatement;
-import oracle.jdbc.OracleTypes;
 import siap.sius.collaboratore.model.CollaboratoreModel;
 
 /**
@@ -22,7 +22,7 @@ import siap.sius.collaboratore.model.CollaboratoreModel;
  * COLLA.COLL. Le due funzioni sono COLLA.COLL.getCollabCur() e COLLA.COLL.getCollabById(). Schema : COLLA
  * Nome del package : COLL procedure getCollabCur ( par_ufficio IN VARCHAR2, par_id IN number, par_cur IN OUT
  * COLLAB_CUR) procedure getCollabById ( par_id IN number, par_cur IN OUT COLLAB_CUR); Entrambe le procedure
- * restituiscono il risultato attraverso un REF CURSOR, poichè tale tipo è gestito solo dai driver Oracle
+ * restituiscono il risultato attraverso un REF CURSOR, poichï¿½ tale tipo ï¿½ gestito solo dai driver Oracle
  * questa classe e le funzioni gestite non sono portabili su JDBS non Oracle.
  *
  * @version 1.0
@@ -67,7 +67,7 @@ public class getCollabCurStProDAO extends StoreProcedureDAO {
 		setArgInputPosition("ID", 2);
 
 		// Tipo di output gestito da OracleCallableStatement
-		setArgOutput("LISTA", OracleTypes.CURSOR);
+		setArgOutput("LISTA", Types.REF_CURSOR);
 		setArgOutputPosition("LISTA", 3);
 
 		// Valorizzazione dei parametri di Input
@@ -93,7 +93,7 @@ public class getCollabCurStProDAO extends StoreProcedureDAO {
 		setArgInputPosition("ID", 1);
 
 		// Tipo di output gestito da OracleCallableStatement
-		setArgOutput("LISTA", OracleTypes.CURSOR);
+		setArgOutput("LISTA", Types.REF_CURSOR);
 		setArgOutputPosition("LISTA", 2);
 
 		// Valorizzazione del parametro di Input
@@ -101,8 +101,8 @@ public class getCollabCurStProDAO extends StoreProcedureDAO {
 	}
 
 	/**
-	 * La funzione è analoga alla GenericDAO.getModels(). Chiama la execute() per eseguuire la stored
-	 * procedure di ricerca che è stata impostata dal costruttore; effettua un casting del ResouseSet ad
+	 * La funzione ï¿½ analoga alla GenericDAO.getModels(). Chiama la execute() per eseguuire la stored
+	 * procedure di ricerca che ï¿½ stata impostata dal costruttore; effettua un casting del ResouseSet ad
 	 * OracleResultSet e lo associa al CURSOR risultato della stored procedure; esegue quindi il ciclo di
 	 * fetch sul cursore e ritorna l'elenco di CollaboratoreModel costruiti attraverso l'uso della getModel().
 	 *
@@ -127,8 +127,12 @@ public class getCollabCurStProDAO extends StoreProcedureDAO {
 
 			if (mCallStat == null)
 				throw new DAOException("OracleCallableStatement NULL !!");
-			mRs = ((OracleCallableStatement) (mCallStat))
-					.getCursor(((Integer) mArgOutputsPosition.get("LISTA")).intValue());
+			Object cursor = mCallStat.getObject(((Integer) mArgOutputsPosition.get("LISTA")).intValue());
+			if (cursor instanceof ResultSet) {
+				mRs = (ResultSet) cursor;
+			} else {
+				throw new DAOException("REF_CURSOR non valido");
+			}
 
 			// mRs = (OracleResultSet) (mCallStat.getCursor( ( (Integer) mArgOutputsPosition.get("LISTA")
 			// ).intValue()));

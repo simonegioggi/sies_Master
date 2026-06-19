@@ -1,5 +1,6 @@
 package siap.siep.calcolopenadl92.dao;
 
+import org.apache.log4j.Logger;
 import java.math.BigDecimal;
 import java.sql.Connection;
 
@@ -118,3 +119,4 @@ public class CalcoloPenaDL92SqlDAO extends SIAPSqlDAO {
 	}
 
 }
+

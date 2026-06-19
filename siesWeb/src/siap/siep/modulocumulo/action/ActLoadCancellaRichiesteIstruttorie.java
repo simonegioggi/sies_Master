@@ -1,5 +1,6 @@
 package siap.siep.modulocumulo.action;
 
+import org.apache.log4j.Logger;
 import siap.sico.camponota.model.CampoNotaModel;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoModel;

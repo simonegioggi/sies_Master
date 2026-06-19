@@ -182,7 +182,7 @@ public class StatisController extends GenericController {
 		//
 		HSSFCellStyle bold = getBoldStyle(wb);
 		HSSFCellStyle boldDex = getBoldStyle(wb);
-		boldDex.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+		boldDex.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.RIGHT);
 
 		HashMap<String, Integer> testataRiepilogoHash = new HashMap<>();
 		// Vector<String> testataRiepilogo = container.getTestataRiepilogo();
@@ -224,7 +224,7 @@ public class StatisController extends GenericController {
 		// per le tipologie selezionate anche se non restituicono i dati
 		RicercaFogliCompModel filtro = container.getFiltro();
 		HSSFCellStyle csAllineatoDex = wb.createCellStyle();
-		csAllineatoDex.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+		csAllineatoDex.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.RIGHT);
 		// Ticket#20230202011 - FINE
 
 		siesLogger.debug("fcIscrittiManualmente.size() = " + fcIscrittiManualmente.size());
@@ -560,7 +560,7 @@ public class StatisController extends GenericController {
 		HSSFCellStyle boldStyle = wb.createCellStyle();
 		HSSFFont fontBold = wb.createFont();
 
-		fontBold.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		fontBold.setBold(true);
 		boldStyle.setFont(fontBold);
 		return boldStyle;
 	}
@@ -648,8 +648,8 @@ public class StatisController extends GenericController {
 
 		// stile per celle col bordo con testo centrato
 		lCellStyleCenter = getBordo4Lati(lWb);
-		lCellStyleCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		lCellStyleCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		lCellStyleCenter.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
+		lCellStyleCenter.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
 		lCellStyleCenter.setWrapText(true);
 
 		lRow = lSheet.createRow(lRowCounter++);
@@ -773,10 +773,10 @@ public class StatisController extends GenericController {
 	private HSSFCellStyle getBordo4Lati(HSSFWorkbook wb) {
 
 		HSSFCellStyle cs = wb.createCellStyle();
-		cs.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		cs.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		cs.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		cs.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		cs.setBorderBottom(org.apache.poi.ss.usermodel.BorderStyle.THIN);
+		cs.setBorderTop(org.apache.poi.ss.usermodel.BorderStyle.THIN);
+		cs.setBorderRight(org.apache.poi.ss.usermodel.BorderStyle.THIN);
+		cs.setBorderLeft(org.apache.poi.ss.usermodel.BorderStyle.THIN);
 
 		return cs;
 	}
@@ -840,8 +840,8 @@ public class StatisController extends GenericController {
 
 		// stile per celle col bordo con testo centrato
 		HSSFCellStyle csCenter = getBordo4Lati(wb);
-		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csCenter.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
+		csCenter.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
 		csCenter.setWrapText(true);
 
 		row = sheet.createRow(nRow++);
@@ -1021,8 +1021,8 @@ public class StatisController extends GenericController {
 
 		// stile per celle col bordo con testo centrato
 		HSSFCellStyle csCenter = getBordo4Lati(wb);
-		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		csCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csCenter.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
+		csCenter.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
 		csCenter.setWrapText(true);
 
 		row = sheet.createRow(nRow++);
@@ -1193,20 +1193,20 @@ public class StatisController extends GenericController {
 
 		// stile per celle col bordo con testo centrato ed in grassetto
 		HSSFCellStyle hssfcs = hssfwb.createCellStyle();
-		hssfcs.setBorderBottom(HSSFCellStyle.BORDER_THICK);
-		hssfcs.setBorderTop(HSSFCellStyle.BORDER_THICK);
-		hssfcs.setBorderRight(HSSFCellStyle.BORDER_THICK);
-		hssfcs.setBorderLeft(HSSFCellStyle.BORDER_THICK);
-		hssfcs.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		hssfcs.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		hssfcs.setBorderBottom(org.apache.poi.ss.usermodel.BorderStyle.THICK);
+		hssfcs.setBorderTop(org.apache.poi.ss.usermodel.BorderStyle.THICK);
+		hssfcs.setBorderRight(org.apache.poi.ss.usermodel.BorderStyle.THICK);
+		hssfcs.setBorderLeft(org.apache.poi.ss.usermodel.BorderStyle.THICK);
+		hssfcs.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
+		hssfcs.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
 		hssfcs.setWrapText(true);
 		HSSFFont hssff = hssfwb.createFont();
-		hssff.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		hssff.setBold(true);
 		hssfcs.setFont(hssff);
 
 		short numCol = 0;
 		foglio.setColumnWidth(numCol++, 10 * 256); // Progr.
-		foglio.setColumnWidth(numCol++, 10 * 256); // N° SIGE
+		foglio.setColumnWidth(numCol++, 10 * 256); // N? SIGE
 		foglio.setColumnWidth(numCol++, 15 * 256); // Data Iscrizione
 		foglio.setColumnWidth(numCol++, 15 * 256); // Data Arrivo in Cancelleria
 		foglio.setColumnWidth(numCol++, 20 * 256); // Cognome
@@ -1227,7 +1227,7 @@ public class StatisController extends GenericController {
 		numCol = 0;
 		// Intestazione colonne
 		HSSFUtils.getInstance().setCell(riga, numCol++, "Progr.", hssfcs);
-		HSSFUtils.getInstance().setCell(riga, numCol++, "N° SIGE", hssfcs);
+		HSSFUtils.getInstance().setCell(riga, numCol++, "N? SIGE", hssfcs);
 		HSSFUtils.getInstance().setCell(riga, numCol++, "Data Iscrizione", hssfcs);
 		HSSFUtils.getInstance().setCell(riga, numCol++, "Data Arrivo in Cancelleria", hssfcs);
 		HSSFUtils.getInstance().setCell(riga, numCol++, "Cognome", hssfcs);
@@ -1244,8 +1244,8 @@ public class StatisController extends GenericController {
 		// stile per celle col bordo con testo centrato
 		HSSFCellStyle hssfcsCorpo = null;
 		hssfcsCorpo = getBordo4Lati(hssfwb);
-		hssfcsCorpo.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		hssfcsCorpo.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		hssfcsCorpo.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
+		hssfcsCorpo.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
 		hssfcsCorpo.setWrapText(true);
 
 		Iterator<FascicoloSigeEstesoModel> i = v.iterator();
@@ -1386,20 +1386,20 @@ public class StatisController extends GenericController {
 
 		// stile per celle col bordo con testo centrato ed in grassetto
 		HSSFCellStyle hssfcs = hssfwb.createCellStyle();
-		hssfcs.setBorderBottom(HSSFCellStyle.BORDER_THICK);
-		hssfcs.setBorderTop(HSSFCellStyle.BORDER_THICK);
-		hssfcs.setBorderRight(HSSFCellStyle.BORDER_THICK);
-		hssfcs.setBorderLeft(HSSFCellStyle.BORDER_THICK);
-		hssfcs.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		hssfcs.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		hssfcs.setBorderBottom(org.apache.poi.ss.usermodel.BorderStyle.THICK);
+		hssfcs.setBorderTop(org.apache.poi.ss.usermodel.BorderStyle.THICK);
+		hssfcs.setBorderRight(org.apache.poi.ss.usermodel.BorderStyle.THICK);
+		hssfcs.setBorderLeft(org.apache.poi.ss.usermodel.BorderStyle.THICK);
+		hssfcs.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
+		hssfcs.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
 		hssfcs.setWrapText(true);
 		HSSFFont hssff = hssfwb.createFont();
-		hssff.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		hssff.setBold(true);
 		hssfcs.setFont(hssff);
 
 		short numCol = 0;
 		foglio.setColumnWidth(numCol++, 15 * 256); // Progr.
-		foglio.setColumnWidth(numCol++, 15 * 256); // N° Ricorso Opposizione
+		foglio.setColumnWidth(numCol++, 15 * 256); // N? Ricorso Opposizione
 		foglio.setColumnWidth(numCol++, 15 * 256); // Procedimento SIGE
 		foglio.setColumnWidth(numCol++, 25 * 256); // Generalita' Soggetto
 		foglio.setColumnWidth(numCol++, 15 * 256); // Data Emissione
@@ -1422,7 +1422,7 @@ public class StatisController extends GenericController {
 		numCol = 0;
 		// Intestazione colonne
 		HSSFUtils.getInstance().setCell(riga, numCol++, "Progr.", hssfcs);
-		HSSFUtils.getInstance().setCell(riga, numCol++, "N° Ricorso Opposizione", hssfcs);
+		HSSFUtils.getInstance().setCell(riga, numCol++, "N? Ricorso Opposizione", hssfcs);
 		HSSFUtils.getInstance().setCell(riga, numCol++, "Procedimento SIGE", hssfcs);
 		HSSFUtils.getInstance().setCell(riga, numCol++, "Generalita' Soggetto", hssfcs);
 		HSSFUtils.getInstance().setCell(riga, numCol++, "Data Emissione", hssfcs);
@@ -1445,8 +1445,8 @@ public class StatisController extends GenericController {
 		// stile per celle col bordo con testo centrato
 		HSSFCellStyle hssfcsCorpo = null;
 		hssfcsCorpo = getBordo4Lati(hssfwb);
-		hssfcsCorpo.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		hssfcsCorpo.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		hssfcsCorpo.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
+		hssfcsCorpo.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
 		hssfcsCorpo.setWrapText(true);
 
 		Iterator<FascicoloSigeEstesoModel> i = v.iterator();
@@ -1457,7 +1457,7 @@ public class StatisController extends GenericController {
 			riga = foglio.createRow(numeroRiga++);
 			// Progr.
 			HSSFUtils.getInstance().setCell(riga, numCol++, "" + progr, hssfcsCorpo);
-			// N° Ricorso Opposizione
+			// N? Ricorso Opposizione
 			HSSFUtils.getInstance().setCell(riga, numCol++, fsem.getImpugnazioneSige().getAnnoS7().toString()
 					+ "/" + fsem.getImpugnazioneSige().getProgrS7().toString(), hssfcsCorpo);
 			// Procedimento SIGE

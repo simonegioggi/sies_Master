@@ -1,5 +1,6 @@
 package siap.siep.misurasicurezza.action;
 
+import org.apache.log4j.Logger;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,7 +53,7 @@ public class ActDettaglioAnnotazioneDecisioneDellaSorveglianza extends ActSIESDe
 		 *
 		 *
 		 *
-		 * // MEV_39 ***** inizio ***** // -----> controllo se fascicolo di classe I è legato a fascicolo di
+		 * // MEV_39 ***** inizio ***** // -----> controllo se fascicolo di classe I ï¿½ legato a fascicolo di
 		 * classe IV // -----> in caso affermativo recupero i provvedimenti SIUS legati al fascicolo // ----->
 		 * di classe IV IMisuraSicurezza lCtrMis = SIEPLookupRemote.getMisuraSicurezzaRemote(); BigDecimal
 		 * fasSiefascCollegato = new BigDecimal(0); Vector vectFasIV = new Vector(); vectFasIV =

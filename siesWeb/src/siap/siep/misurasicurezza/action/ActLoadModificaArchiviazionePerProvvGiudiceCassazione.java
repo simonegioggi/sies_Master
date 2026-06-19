@@ -1,5 +1,6 @@
 package siap.siep.misurasicurezza.action;
 
+import org.apache.log4j.Logger;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -128,7 +129,7 @@ public class ActLoadModificaArchiviazionePerProvvGiudiceCassazione extends Actio
 
 		setRequestAttribute("tipoArchiviazioni", "" + lOptionT);
 
-		// Autorità per Notifiche
+		// Autoritï¿½ per Notifiche
 		String lCodTipoAutorita1 = "-";
 		String lCodTipoAutoritaND = "-";
 		UfficioModel lUffSorvModel = new UfficioModel();
@@ -170,7 +171,7 @@ public class ActLoadModificaArchiviazionePerProvvGiudiceCassazione extends Actio
 			}
 		}
 
-		// ComboBox Notifiche Altra Autorità
+		// ComboBox Notifiche Altra Autoritï¿½
 		Option lOptionE = new Option(DecodificheManager.getInstance().getTipoAutorita());
 		if (lCodTipoAutorita1.compareTo("-") != 0) {
 			lOptionE.setSelected(lCodTipoAutorita1);

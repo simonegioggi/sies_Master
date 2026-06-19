@@ -1,6 +1,7 @@
 package siap.siep.modulocumulo.action;
 
 
+import org.apache.log4j.Logger;
 /**
 * <p>Title: ActLoadInserisciPenaAccessoriaCumulo</p>
 * <p>Description: Classe Action per la load inserisci di PeneAccessorieCumulo</p>
@@ -42,7 +43,7 @@ public class ActLoadInserisciPenaAccessoriaCumulo extends ActionModuloCumulo imp
     super.getDatiIstruttoria();
     super.getDatiTitoloCumulato();
     
-// Vediamo se deve Inserire o Modificare : SE parametro "modalita" = NULL, allora  è INSERIMENTO
+// Vediamo se deve Inserire o Modificare : SE parametro "modalita" = NULL, allora  ï¿½ INSERIMENTO
     String lInsMod = "";
     if(isRequestParameterNullObj("modalita") )
     	lInsMod = "I";
@@ -82,7 +83,7 @@ public class ActLoadInserisciPenaAccessoriaCumulo extends ActionModuloCumulo imp
     }
     setRequestAttribute("DurataPeneAccessorie", "" + lOption );
     
-    // Imposta Modalità.
+    // Imposta Modalitï¿½.
     setRequestAttribute("modalita", lInsMod);
     
 	 BigDecimal lIdTitolo = getRequestBigDecimalParameter(ICostantiTitoloCumulato.CAMPO_ID_TITOLO_CUMULATO);
