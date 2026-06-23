@@ -1,3 +1,13 @@
-BRANCH siesWeb Versione release_12.10.0.0
+BRANCH siesWeb Versione release_12.10.1.0
 
-Nasce dal branch MEV_2026-24 in data 23/06/2026
+Nasce dal branch release_12.10.0.0 in data 23/06/2026
+
+Questa Release verrà rilasciata il 24/07/2026 (Patch mese di Aprile, Maggio, Giugno e Luglio 2026)
+
+Comprende i seguenti Ticket MAC:
+
+1)	Ticket#
+	Per la risoluzione della problematica è stata modificata la ...
+	Il problema era legato al fatto che ...
+	Classi modificate:
+	-   
