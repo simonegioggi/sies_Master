@@ -10,6 +10,7 @@ import siap.sico.misuraalternativa.model.MisuraAlternativaModel;
 import siap.sico.residenza.model.ResidenzaModel;
 import siap.siep.altracausa.model.AltraCausaModel;
 import siap.siep.calcolopena.model.CalcoloPenaModel;
+import siap.siep.calcolopenadl92.model.CalcoloPenaDL92ModelDB;
 import siap.siep.decretoordinanza.model.DecretoOrdinanzaSiepModel;
 import siap.siep.luogodetenzione.model.LuogoDetenzioneModel;
 import siap.siep.modulocumulo.model.PenaRideterminataCumuloModel;
@@ -90,8 +91,14 @@ public class DettaglioFascicoloModel extends GenericModel {
 	private List mReatoCircoCumulo; // ReatoCircostanzaCumuloModel
 	private List mCircostanzaCumulo; // CircostanzaCumuloModel
 	private String mFlagIstruttoriaPresente;
-
-	// COSTRUTTORE DI DEFAULT
+	
+	
+	// MEV-2026_1
+	private CalcoloPenaDL92ModelDB mCalcoloPenaDL92DB;
+	private List /*<CalcoloPenaDL92ModelDB>*/ mStoricoCalcoliPenaDL92DB;
+	
+	
+    // COSTRUTTORE DI DEFAULT
 	public DettaglioFascicoloModel() {
 		mFascicoloSiep = null;
 		mResidenza = null;
@@ -385,6 +392,16 @@ public class DettaglioFascicoloModel extends GenericModel {
 		return mFlagIstruttoriaPresente;
 	}
 
+    // MEV-2026_1
+    public CalcoloPenaDL92ModelDB getCalcoloPenaDL92DB() {
+        return mCalcoloPenaDL92DB;
+    }
+    
+    public List getStoricoCalcoliPenaDL92DB() {
+        return mStoricoCalcoliPenaDL92DB;
+    }
+    // MEV-2026_1 - FINE
+	
 	//
 	// METODI SET()
 	//
@@ -567,4 +584,32 @@ public class DettaglioFascicoloModel extends GenericModel {
 		mFlagIstruttoriaPresente = aValore;
 	}
 
+    // MEV-2026_1
+    public void setCalcoloPenaDL92DB(CalcoloPenaDL92ModelDB aValore) {
+        mCalcoloPenaDL92DB = aValore;
+    }
+    public void setStoricoCalcoliPenaDL92DB (List aValore) {
+        mStoricoCalcoliPenaDL92DB = aValore;
+    }   
+    // MEV-2026_1 - FINE   
+
+    
+    public String toString() {
+        String lStr = "DettaglioFascicoloModel: \n";
+        
+        if ( mFascicoloSiep!=null) lStr+=" mFascicoloSiep presente \n";
+        if ( mResidenza!=null) lStr+=" mResidenza presente \n";
+        if ( mPosizioneGiuridica!=null) lStr+=" mPosizioneGiuridica presente \n";
+        if ( mListAvvocati!=null) lStr+=" mListAvvocati presente \n";
+        if ( mListCircostanze!=null) lStr+=" mListCircostanze presente \n";
+        if ( mPenaResidua!=null) lStr+=" mPenaResidua presente \n";
+        if ( mListEventi!=null) lStr+=" mListEventi presente \n";
+        if ( mStatoProcedimento!=null) lStr+=" mStatoProcedimento presente \n";
+        if ( mMagistratoCompetente!=null) lStr+=" mMagistratoCompetente presente \n";  
+        if ( mDatiSiepPerTrasferimento!=null) lStr+=" mDatiSiepPerTrasferimento presente \n"; 
+        if ( mCalcoloPenaDL92DB!=null) lStr+=" mCalcoloPenaDL92DB presente \n"; 
+        if ( mStoricoCalcoliPenaDL92DB!=null) lStr+=" mStoricoCalcoliPenaDL92DB presente \n"; 
+        
+        return lStr;
+    }
 }

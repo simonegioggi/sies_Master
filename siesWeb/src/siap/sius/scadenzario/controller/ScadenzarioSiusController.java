@@ -508,4 +508,102 @@ public class ScadenzarioSiusController extends SiapController implements IScaden
 		return;
 	}
 
+	/**
+	 * Metodi per la Ricerca Fine Pena Procedimenti Pendenti Paginata
+	 *
+	 * @author sgioggi
+	 * @since MEV_2026-1
+	 */
+	@Override
+	public Vector ExRicercaFinePenaProcedimentiPendentiPaginata(String riferimento, BigDecimal ai,
+			BigDecimal ni, BigDecimal af, BigDecimal nf, Date dii, Date dif, Date dsi, Date dsf,
+			String codUfficio, boolean includiDefiniti, int pagina) throws F3BException {
+
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.debug(
+				"" + getClass().getName() + " .ExRicercaFinePenaProcedimentiPendentiPaginata(): inizio!");
+
+		Connection c = null;
+		Vector v = new Vector();
+		ScadenzarioSiusSqlDAO sssdao = null;
+		ScadenzarioSiusModel ssm = null;
+
+		try {
+			c = getDBConnection();
+			sssdao = new ScadenzarioSiusSqlDAO(c);
+			sssdao.ricercaFinePenaProcedimentiPendentiPaginata(riferimento, ai, ni, af, nf, dii, dif, dsi,
+					dsf, codUfficio, includiDefiniti);
+			// Ricerca paginata
+			// Viene fatta la ricerca non paginata se pagina ha un valore <= 0
+			if (pagina > 0)
+				sssdao.startPage(pagina);
+			else
+				sssdao.start();
+			while (sssdao.next()) {
+				ssm = sssdao.getFinePenaModel();
+				v.add(ssm);
+			}
+			sssdao.stop();
+		} catch (DAOException daoEx) {
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.error("DAOException: " + daoEx);
+			throw new F3BException(
+					"ScadenzarioSiusController.ExRicercaFinePenaProcedimentiPendentiPaginata: " + daoEx);
+		} finally {
+			cleanup(sssdao);
+			cleanup(c);
+		}
+
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.debug(
+				"" + getClass().getName() + " .ExRicercaFinePenaProcedimentiPendentiPaginata(): fine!");
+
+		// vettore di ritorno
+		return v;
+	}
+
+	@Override
+	public BigDecimal ExGetNumRicercaFinePenaProcedimentiPendenti(String riferimento, BigDecimal ai,
+			BigDecimal ni, BigDecimal af, BigDecimal nf, Date dii, Date dif, Date dsi, Date dsf,
+			String codUfficio, boolean includiDefiniti) throws F3BException {
+
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.debug(
+				"" + getClass().getName() + " .ExGetNumRicercaFinePenaProcedimentiPendenti(): inizio!");
+
+		Connection c = null;
+		ScadenzarioSiusSqlDAO sssdao = null;
+		BigDecimal records = new BigDecimal(0);
+
+		try {
+			c = getDBConnection();
+			sssdao = new ScadenzarioSiusSqlDAO(c);
+			sssdao.ricercaFinePenaProcedimentiPendentiPaginata(riferimento, ai, ni, af, nf, dii, dif, dsi,
+					dsf, codUfficio, includiDefiniti);
+			records = sssdao.getNumRowsSelected();
+		} catch (DAOException daoEx) {
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.error("DAOException: " + daoEx);
+			throw new F3BException(
+					"ScadenzarioSiusController.ExGetNumRicercaFinePenaProcedimentiPendenti: " + daoEx);
+		} finally {
+			cleanup(sssdao);
+			cleanup(c);
+		}
+
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger
+				.debug("" + getClass().getName() + " .ExGetNumRicercaFinePenaProcedimentiPendenti(): fine!");
+
+		// numero record di ritorno
+		return records;
+	}
+	// FINE MEV_2026-1
+
 }

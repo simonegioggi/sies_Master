@@ -61,18 +61,8 @@ import siap.sius.tenore.dao.TenoreDAO;
 import siap.sius.tenore.model.TenoreModel;
 
 /**
- * <p>
- * Title: LicenzaPeriodiLibAnticipataController
- * </p>
- * <p>
- * Description: Classe Controller per l'accesso a LICENZA_LIBAANTICIPATA e PERIODO_LIBANTICIPATA.
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * LicenzaPeriodiLibAnticipataController - Classe Controller per l'accesso a LICENZA_LIBAANTICIPATA e
+ * PERIODO_LIBANTICIPATA.
  *
  * @version 1.0
  */
@@ -652,7 +642,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController
 			lLicMod.setIdLicenzaLibanticipata(lKey);
 		} catch (DAOException ex) {
 			rollback(lConn);
-			throw new F3BException("LicenzaLibanticipataController.ExInserisci: Non posso inserire: " + ex);
+			throw new F3BException(
+					"LicenzaPeriodiLibAnticipataController.ExInserisci: Non posso inserire: " + ex);
 		} finally {
 			cleanup(lLicDao);
 			cleanup(lConn);
@@ -677,7 +668,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController
 			lLicMod.setIdLicenzaLibanticipata(lKey);
 		} catch (DAOException ex) {
 			throw new F3BException(
-					"LicenzaLibanticipataController Connection.ExInserisci: Non posso inserire: " + ex);
+					"LicenzaPeriodiLibAnticipataController Connection.ExInserisci: Non posso inserire: "
+							+ ex);
 		} finally {
 			cleanup(lLicDao);
 		}
@@ -700,7 +692,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController
 			lLicDao.ricercaLicenzaLibanticipataUltimaByIDFascicoloSIEP(aKey);
 			lLicMod = (LicenzaLibAnticipataModel) lLicDao.getModelByKey();
 		} catch (DAOException daoEx) {
-			throw new F3BException("LicenzaLibanticipataController.ExRicercaLicenzaLibanticipata: " + daoEx);
+			throw new F3BException(
+					"LicenzaPeriodiLibAnticipataController.ExRicercaLicenzaLibanticipata: " + daoEx);
 		} finally {
 			cleanup(lLicDao);
 			cleanup(lConn);
@@ -726,11 +719,12 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController
 		} catch (DAOException ex) {
 			rollback(lConn);
 			throw new F3BException(
-					"LicenzaLibanticipataController.ExModificaLicenzaLibanticipata: Non posso inserire: "
+					"LicenzaPeriodiLibAnticipataController.ExModificaLicenzaLibanticipata: Non posso inserire: "
 							+ ex);
 		} catch (Exception ex) {
 			rollback(lConn);
-			throw new F3BException("LicenzaLibanticipataController.ExModificaLicenzaLibanticipata : " + ex);
+			throw new F3BException(
+					"LicenzaPeriodiLibAnticipataController.ExModificaLicenzaLibanticipata : " + ex);
 		} finally {
 			cleanup(lLicDao);
 			cleanup(lConn);
@@ -757,7 +751,7 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController
 			lLicMod = (LicenzaLibAnticipataModel) lLicDao.getModelByKey();
 		} catch (DAOException daoEx) {
 			throw new F3BException(
-					"LicenzaLibanticipataController.ExRicercaLicenzaLibanticipataConcessayIDFascicoloSIEP: Non posso leggere : "
+					"LicenzaPeriodiLibAnticipataController.ExRicercaLicenzaLibanticipataConcessayIDFascicoloSIEP: Non posso leggere : "
 							+ daoEx);
 		} finally {
 			cleanup(lLicDao);
@@ -784,7 +778,7 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController
 			lLicDao.stop();
 		} catch (DAOException daoEx) {
 			throw new F3BException(
-					"LicenzaLibanticipataController.ExRicercaLicenzaLibanticipataByKey: Non posso leggere : "
+					"LicenzaPeriodiLibAnticipataController.ExRicercaLicenzaLibanticipataByKey: Non posso leggere : "
 							+ daoEx);
 		} finally {
 			cleanup(lLicDao);
@@ -846,7 +840,7 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException(
-					"LicenzaLibanticipataController.ExRicercaLicenzaLibanticipataConcesseDepositateByIdFascicoloSIEP: "
+					"LicenzaPeriodiLibAnticipataController.ExRicercaLicenzaLibanticipataConcesseDepositateByIdFascicoloSIEP: "
 							+ daoEx);
 		} finally {
 			cleanup(lLicDao);
@@ -912,7 +906,7 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException(
-					"LicenzaLibanticipataController.ExRicercaLicenzaLibanticipataConcesseDepositateByIdFascicoloSIEP: "
+					"LicenzaPeriodiLibAnticipataController.ExRicercaLicenzaLibanticipataConcesseDepositateByIdFascicoloSIEP: "
 							+ daoEx);
 		} finally {
 			cleanup(lLicDao);
@@ -962,7 +956,7 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController
 			}
 		} catch (DAOException daoEx) {
 			throw new F3BException(
-					"LicenzaLibanticipataController.ExRicercaLicenzaLibanticipataNonConcesseByIDFascicoloSIEP: Non posso leggere : "
+					"LicenzaPeriodiLibAnticipataController.ExRicercaLicenzaLibanticipataNonConcesseByIDFascicoloSIEP: Non posso leggere : "
 							+ daoEx);
 		} finally {
 			cleanup(lLicDao);
@@ -1000,7 +994,7 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController
 		} catch (DAOException ex) {
 			rollback(lConn);
 			throw new F3BException(
-					"LicenzaLibanticipataController.ExModificaFlagElaboratoLicenzaLibanticipataByIdFascicoloSiep : "
+					"LicenzaPeriodiLibAnticipataController.ExModificaFlagElaboratoLicenzaLibanticipataByIdFascicoloSiep : "
 							+ ex);
 		} finally {
 			cleanup(lLicSqlDao);
@@ -1040,7 +1034,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController
 			}
 		} catch (DAOException daoEx) {
 			throw new F3BException(
-					"LicenzaLibanticipataController.ExTotalePeriodiConcessiByIdFascicoloSiep: " + daoEx);
+					"LicenzaPeriodiLibAnticipataController.ExTotalePeriodiConcessiByIdFascicoloSiep: "
+							+ daoEx);
 		} finally {
 			cleanup(lLicSqlDao);
 			cleanup(lConn);
@@ -1085,7 +1080,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController
 			}
 		} catch (DAOException daoEx) {
 			throw new F3BException(
-					"LicenzaLibanticipataController.ExTotalePeriodiConcessiByIdFascicoloSiep: " + daoEx);
+					"LicenzaPeriodiLibAnticipataController.ExTotalePeriodiConcessiByIdFascicoloSiep: "
+							+ daoEx);
 		} finally {
 			cleanup(lLicSqlDao);
 			cleanup(lConn);
@@ -1126,7 +1122,7 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController
 			}
 		} catch (DAOException daoEx) {
 			throw new F3BException(
-					"LicenzaLibanticipataController.ExTotalePeriodiConcessiComputatiByIdFascicoloSiep: "
+					"LicenzaPeriodiLibAnticipataController.ExTotalePeriodiConcessiComputatiByIdFascicoloSiep: "
 							+ daoEx);
 		} finally {
 			cleanup(lLicSqlDao);
@@ -1167,7 +1163,7 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController
 			}
 		} catch (DAOException daoEx) {
 			throw new F3BException(
-					"LicenzaLibanticipataController.ExTotalePeriodiConcessiComputatiByIdFascicoloSiep: "
+					"LicenzaPeriodiLibAnticipataController.ExTotalePeriodiConcessiComputatiByIdFascicoloSiep: "
 							+ daoEx);
 		} finally {
 			cleanup(lLicSqlDao);
@@ -1217,7 +1213,7 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController
 			}
 		} catch (DAOException daoEx) {
 			throw new F3BException(
-					"LicenzaLibanticipataController.ExTotalePeriodiConcessiComputatiByIdFascicoloSiep: "
+					"LicenzaPeriodiLibAnticipataController.ExTotalePeriodiConcessiComputatiByIdFascicoloSiep: "
 							+ daoEx);
 		} finally {
 			cleanup(lLicSqlDao);
@@ -1340,14 +1336,16 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController
 			rollback(lConn);
 			rollback(lConnBlob);
 			daoEx.printStackTrace();
-			throw new F3BException("LicenzaLibanticipataController.ExUpdateValidaComunicazioneLA : " + daoEx);
+			throw new F3BException(
+					"LicenzaPeriodiLibAnticipataController.ExUpdateValidaComunicazioneLA : " + daoEx);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + ex);
 			rollback(lConn);
 			rollback(lConnBlob);
 			ex.printStackTrace();
-			throw new F3BException("LicenzaLibanticipataController.ExUpdateValidaComunicazioneLA : " + ex);
+			throw new F3BException(
+					"LicenzaPeriodiLibAnticipataController.ExUpdateValidaComunicazioneLA : " + ex);
 		} finally {
 			cleanup(lEveDao);
 			cleanup(lEveSql);
@@ -2427,7 +2425,7 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: ", daoEx);
 			throw new F3BException(
-					"LicenzaLibanticipataController.ExRicercaRimediRisarcitoriConcessiDepositatiByIdFascicoloSIEP: "
+					"LicenzaPeriodiLibAnticipataController.ExRicercaRimediRisarcitoriConcessiDepositatiByIdFascicoloSIEP: "
 							+ daoEx);
 		} finally {
 			cleanup(lLicSqlDao);
@@ -2595,7 +2593,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController
 			rollback(lConn);
 			rollback(lConnBlob);
 			throw new F3BException(
-					"LicenzaLibanticipataController.ExUpdateValidaComunicazioneRimediRisarcitori : " + daoEx);
+					"LicenzaPeriodiLibAnticipataController.ExUpdateValidaComunicazioneRimediRisarcitori : "
+							+ daoEx);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -2603,7 +2602,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController
 			rollback(lConn);
 			rollback(lConnBlob);
 			throw new F3BException(
-					"LicenzaLibanticipataController.ExUpdateValidaComunicazioneRimediRisarcitori : " + ex);
+					"LicenzaPeriodiLibAnticipataController.ExUpdateValidaComunicazioneRimediRisarcitori : "
+							+ ex);
 		} finally {
 			cleanup(lEveDao);
 			cleanup(lEveSqlDao);
@@ -2817,7 +2817,6 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController
 
 			FungibilitaModel lFunMod = (FungibilitaModel) lFunSqlDao.getModelByKey();
 			if (lFunMod != null) {
-
 				lFunDao.setFlagValidato("S");
 
 				lFunDao.setCodOperatoreAggiornamento(aEvento.getCodOperatoreAggiornamento());
@@ -2871,8 +2870,10 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController
 			lStatoDao.setDAOFromModel(lStatoProcMod);
 			lStatoDao.insert();
 			lStatoDao.stop();
-			// 0010: Pena in Esecuzione Fino al
-			lStatoProcMod.setData(lPenResMod.getDataFine());
+			// 20260422 [SG]: aggiunto controllo preventivo
+			if (lPenResMod != null && lPenResMod.getDataFine() != null)
+				// 0010: Pena in Esecuzione Fino al
+				lStatoProcMod.setData(lPenResMod.getDataFine());
 			lStatoProcMod.setCodStatoProcedimento("0010");
 			lStatoProcMod.setProgressivo(new BigDecimal(2));
 			lStatoDao.setDAOFromModel(lStatoProcMod);
@@ -3017,7 +3018,7 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController
 			rollback(lConnBlob);
 
 			throw new F3BException(
-					"LicenzaLibanticipataController.ExUpdateValidaOSRimediRisarcitori : " + sqe);
+					"LicenzaPeriodiLibAnticipataController.ExUpdateValidaOSRimediRisarcitori : " + sqe);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -3027,7 +3028,7 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController
 			rollback(lConnBlob);
 
 			throw new F3BException(
-					"LicenzaLibanticipataController.ExUpdateValidaOSRimediRisarcitori : " + ex);
+					"LicenzaPeriodiLibAnticipataController.ExUpdateValidaOSRimediRisarcitori : " + ex);
 		} finally {
 			cleanup(lEveDao);
 			cleanup(lEveSqlDao);
@@ -3134,7 +3135,7 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: ", daoEx);
 			throw new F3BException(
-					"LicenzaLibanticipataController.ExRicercaReclamoRimediRisarcitoriConcessiDepositatiByIdFascicoloSIEP: "
+					"LicenzaPeriodiLibAnticipataController.ExRicercaReclamoRimediRisarcitoriConcessiDepositatiByIdFascicoloSIEP: "
 							+ daoEx);
 		} finally {
 			cleanup(lLicSqlDao);
@@ -3303,7 +3304,7 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController
 			rollback(lConn);
 			rollback(lConnBlob);
 			throw new F3BException(
-					"LicenzaLibanticipataController.ExUpdateValidaComunicazioneReclamoRimediRisarcitori : "
+					"LicenzaPeriodiLibAnticipataController.ExUpdateValidaComunicazioneReclamoRimediRisarcitori : "
 							+ daoEx);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -3312,7 +3313,7 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController
 			rollback(lConn);
 			rollback(lConnBlob);
 			throw new F3BException(
-					"LicenzaLibanticipataController.ExUpdateValidaComunicazioneReclamoRimediRisarcitori : "
+					"LicenzaPeriodiLibAnticipataController.ExUpdateValidaComunicazioneReclamoRimediRisarcitori : "
 							+ ex);
 		} finally {
 			cleanup(lEveDao);

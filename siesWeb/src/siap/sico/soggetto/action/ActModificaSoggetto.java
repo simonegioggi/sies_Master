@@ -6,6 +6,12 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.security.model.ProfileModel;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.web.IWebConstants;
+import f3b.web.RedirectTo;
 import siap.sico.decodifiche.action.ICostantiComune;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.model.ComuneModel;
@@ -26,27 +32,10 @@ import siap.sige.util.SIGELookupRemote;
 import siap.sius.fascicolo.controller.IFascicoloSius;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.util.SIUSLookupRemote;
-import f3b.log.LogF3B;
-import f3b.security.model.ProfileModel;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.web.IWebConstants;
-import f3b.web.RedirectTo;
 
 /**
- * <p>
- * Title: ActModificaSoggetto
- * </p>
- * <p>
- * Description: Classe Action per la modifica di Soggetto
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ * ActModificaSoggetto - Classe Action per la modifica di Soggetto
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -63,7 +52,7 @@ public class ActModificaSoggetto extends ActionSiap implements ICostantiSoggetto
 
 	/**
 	 * Azione di Modifica del Soggetto
-	 * 
+	 *
 	 * @return Nome della pagina JSP da visualizzare al termine dell'elaborazione
 	 * @throws F3BException
 	 */
@@ -73,8 +62,8 @@ public class ActModificaSoggetto extends ActionSiap implements ICostantiSoggetto
 		LockModel lck = lockIfNotLocked("soggetto", getRequestStringParameter(CAMPO_ID_SOGGETTO),
 				getCodUtenteConnesso());
 		if (lck != null) {
-			setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Il " + lck.getEntity()
-					+ " è in gestione ad un altro utente! <BR>Riprovare più tardi!");
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+					"Il " + lck.getEntity() + " è in gestione ad un altro utente! <BR>Riprovare più tardi!");
 			return IWebConstants.PG_MESSAGE;
 		}
 
@@ -119,16 +108,17 @@ public class ActModificaSoggetto extends ActionSiap implements ICostantiSoggetto
 		if (!isRequestParameterNullObj(ICostantiComune.CAMPO_COD_COMUNE_REALE)
 				&& getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE).length() > 0) {
 			// se presente dal codice comune (e descrizione)
-			// 20210524	MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni senza flag validità.
-			//lComMod = new ComuneModel(getDatiComuneByCodDescrFlagVal(
-			lComMod = new ComuneModel(getDatiComuneByCodDescr(
-					getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
-					getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
+			// 20210524 MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni senza flag validità.
+			// lComMod = new ComuneModel(getDatiComuneByCodDescrFlagVal(
+			lComMod = new ComuneModel(
+					getDatiComuneByCodDescr(getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
+							getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
 		} else {
 			// altrimenti dalla sola descrizione (rischio omonimi)
 			lComMod = new ComuneModel(
-					// 20210524	MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni senza flag validità.
-					//getDatiComuneByDescrOmonimiaFlagVal(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
+					// 20210524 MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni senza flag
+					// validità.
+					// getDatiComuneByDescrOmonimiaFlagVal(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
 					getDatiComuneByDescrOmonimia(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
 		}
 
@@ -157,10 +147,9 @@ public class ActModificaSoggetto extends ActionSiap implements ICostantiSoggetto
 		int lIndModel = lNazioni.indexOf(lDecMod);
 		String lDescri = ((DecodificheModel) lNazioni.get(lIndModel)).getDescription();
 		lSogMod.setDescrStatoNascita(lDescri);
-
 		lSogMod.setDescrComuneNascita(lComMod.getDescrizione());
 
-		// Imposto la descrizione del comune
+		// Imposto la descrizione della provincia
 		lDecMod = new DecodificheModel();
 		lDecMod.setContesto("PROVINCIA");
 		lDecMod.setCode(lSogMod.getCodProvinciaNascita());
@@ -178,8 +167,12 @@ public class ActModificaSoggetto extends ActionSiap implements ICostantiSoggetto
 		lDescri = ((DecodificheModel) lStatoCitt.get(lIndModel)).getDescription();
 		lSogMod.setDescrNazionalita(lDescri);
 
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug("lSogMod.GetNazionalita = " + lSogMod.getNazionalita());
+
+		// 20260415 [SG]: aggiunto controllo su CF che deve essere obbligatorio e conforme
+		// SoggettoUtil.controllaCF(lSogMod);
 
 		String lPage = modificaSoggetto();
 		return lPage;
@@ -197,7 +190,7 @@ public class ActModificaSoggetto extends ActionSiap implements ICostantiSoggetto
 
 		// VERIFICO SE IL SOGGETTO è DI SIUS O DI SEP E FACCIO LA RICERCA DEI FASCICOLI IN BASE A QUESTO
 		UtenteModel lUtenteMod = (UtenteModel) getSessionAttribute("UtenteConnesso");
-		ProfileModel lProfilo = (ProfileModel) lUtenteMod.getUserProfile();
+		ProfileModel lProfilo = lUtenteMod.getUserProfile();
 		setRequestAttribute("profilo", lProfilo.getProfileId());
 		String profilo = lProfilo.getProfileId().toString();
 
@@ -270,20 +263,22 @@ public class ActModificaSoggetto extends ActionSiap implements ICostantiSoggetto
 		// Il soggetto non ha fascicoli
 		SoggettoModel lSogRet = new SoggettoModel();
 		if (lFascicoliSoggetti.size() == 0) {
-
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("lSogMod.GetNazionalita 2 = " + lSogMod.getNazionalita());
 
 			lSogRet = lSogCtrl.ExModificaSoggettoStorico(lSogMod, profilo, lSogVec, null);
 			lSogRet.setMessage("Aggiornamento");
 
 			// if (lSogRet == null)
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			// siesLogger.debug("colpa di lSogRet");
 
 			if (lSogRet.getMessage() == null) {
 				lSogRet.setMessage("Problemi durante la modifica del soggetto");
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.debug("colpa di getMessage");
 			}
 

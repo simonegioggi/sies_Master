@@ -3,6 +3,11 @@ package siap.siep.notifica.action;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.web.IWebConstants;
+import f3b.web.RedirectTo;
+import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.evento.controller.IEventoSimeone;
 import siap.sico.evento.model.EventoNotificaModel;
@@ -18,26 +23,10 @@ import siap.siep.notifica.model.NotificaModel;
 import siap.siep.posizione.controller.IPosizioneGiuridica;
 import siap.siep.posizione.model.PosizioneGiuridicaModel;
 import siap.siep.util.SIEPLookupRemote;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.web.IWebConstants;
-import f3b.web.RedirectTo;
-import f3b.web.html.Option;
 
 /**
- * <p>
- * Title: ActLoadRicercaOEDifensore
- * </p>
- * <p>
- * Description: Classe Action per la ricerca di Scadenzario Evento
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ * ActLoadRicercaOEDifensore - Classe Action per la ricerca di Scadenzario Evento
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -81,20 +70,21 @@ public class ActLoadRicercaOEDifensore extends ActionSiap implements ICostantiNo
 		if ("02".equals(lPosizione.getCodPosizioneGiuridica())
 				|| "04".equals(lPosizione.getCodPosizioneGiuridica()))
 			throw new SIEPException(SIEPException.USER_MESSAGE,
-					"La Posizione Giuridica Detenuto per questa causa in regime di arresti domiciliari non permette di annotare la notifica al Difensore.");
+					"La Posizione Giuridica Detenuto per questa causa in regime di arresti domiciliari non"
+							+ " permette di annotare la notifica al Difensore.");
 
 		Vector lNotVect = new Vector();
-
 		int lContaAvvocatiBuoni = 0;
 		// String lEsisteNotifica="N";
 		for (int i = 0; i < lEveNot.getNotifiche().length; i++) {
 			NotificaModel lNotMod = new NotificaModel();
 			lNotMod = lEveNot.getNotifiche()[i];
-			if (lNotMod.getCodTipoNotifica().equals("N")) {
+			if ("N".equals(lNotMod.getCodTipoNotifica()) && lNotMod.getAvvIdAvvocatoFascicoloSiep() != null
+					&& lNotMod.getAvvSiep() != null
+					&& lNotMod.getAvvSiep().getAvvocatoFascicoloSiepModel() != null
+					&& lNotMod.getAvvSiep().getAvvocatoFascicoloSiepModel().getDataFineValidita() == null) {
 				lContaAvvocatiBuoni++;
-				if (lNotMod.getAvvIdAvvocatoFascicoloSiep() != null) {
-					lNotVect.add(lNotMod);
-				}
+				lNotVect.add(lNotMod);
 			}
 			// lEsisteNotifica ="S";
 		}
@@ -146,9 +136,8 @@ public class ActLoadRicercaOEDifensore extends ActionSiap implements ICostantiNo
 			// ricerco le notifiche per caricarmo gli ID inseriti
 			// e trasforma il risultato che è un array in un vector da passare alla maschera successiva
 			// ArrayList lNotificheArrayRet = new ArrayList();
-			if (lNotificheArray.size() > 0) {
+			if (lNotificheArray.size() > 0)
 				/* lNotificheArrayRet = */lCtrlNot.ExInserisciNotifiche(lNotificheArray);
-			}
 
 			lEveNot = new EventoNotificaModel();
 			lEveNot = lCtrl.ExRicercaEventoNotificaByIdFascicoloDescrMotivo(lFascMod.getIdFascicoloSiep(),
@@ -157,7 +146,6 @@ public class ActLoadRicercaOEDifensore extends ActionSiap implements ICostantiNo
 				NotificaModel lNotMod = new NotificaModel();
 				lNotMod = lEveNot.getNotifiche()[i];
 				if (lNotMod.getCodTipoNotifica().equals("N")) {
-
 					if (lNotMod.getAvvIdAvvocatoFascicoloSiep() != null) {
 						lNotVect.add(lNotMod);
 					}
@@ -172,7 +160,8 @@ public class ActLoadRicercaOEDifensore extends ActionSiap implements ICostantiNo
 		setRequestAttribute("notifica", lNotVect);
 		// setRequestAttribute("scadenzari", lScadenzari);
 
-		return PG_LOAD_DETTAGLIO_NOTIFICA_DIFENSORE; // restituisce la jsp di VIEW
+		// restituisce la jsp di VIEW
+		return PG_LOAD_DETTAGLIO_NOTIFICA_DIFENSORE;
 	}
 
 }
