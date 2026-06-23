@@ -1,19 +1,17 @@
 package siap.sico.storicosoggetto.action;
 
-/**
- * <p>Title: ActModificaSoggetto</p>
- * <p>Description: Classe Action per la modifica di Soggetto</p>
- * <p>Copyright: Copyright (c) 2002</p>
- * <p>Company: Bull</p>
- * @version 1.0
- */
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.security.model.ProfileModel;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.web.IWebConstants;
+import f3b.web.RedirectTo;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.decodifiche.model.DecodificheModel;
@@ -24,30 +22,32 @@ import siap.sico.soggetto.model.SoggettoModel;
 import siap.sico.utente.model.UtenteModel;
 import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
-import f3b.log.LogF3B;
-import f3b.security.model.ProfileModel;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.web.IWebConstants;
-import f3b.web.RedirectTo;
 
+/**
+ * ActModificaSoggettoeStorici - Classe Action per la modifica di Soggetto
+ *
+ * @version 1.0
+ */
 public class ActModificaSoggettoeStorici extends ActionSiap implements ICostantiSoggetto {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+
 	/**
 	 * Azione di Modifica del Soggetto e di inserimento dei storici con i fascicoli selezionati
-	 * 
+	 *
 	 * @return Nome della pagina JSP da visualizzare al termine dell'elaborazione
 	 * @throws F3BException
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public String processRequest() throws F3BException {
+
 		// Controllo che non si stia lavorando su una entità in modifica ad altri
 		LockModel lck = lockIfNotLocked("soggetto", getRequestStringParameter(CAMPO_ID_SOGGETTO),
 				getCodUtenteConnesso());
 		if (lck != null) {
-			setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Il " + lck.getEntity()
-					+ " è in gestione ad un altro utente! <BR>Riprovare più tardi!");
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+					"Il " + lck.getEntity() + " è in gestione ad un altro utente! <BR>Riprovare più tardi!");
 			return IWebConstants.PG_MESSAGE;
 		}
 		// id del vecchio soggetto
@@ -56,7 +56,7 @@ public class ActModificaSoggettoeStorici extends ActionSiap implements ICostanti
 		// verifica se il profilo è sius o siep
 		UtenteModel lUtenteMod = (UtenteModel) getSessionAttribute("UtenteConnesso");
 
-		ProfileModel lProfilo = (ProfileModel) lUtenteMod.getUserProfile();
+		ProfileModel lProfilo = lUtenteMod.getUserProfile();
 
 		// riempie il model
 		SoggettoModel lSogMod = new SoggettoModel();
@@ -83,10 +83,11 @@ public class ActModificaSoggettoeStorici extends ActionSiap implements ICostanti
 
 		// 20210830 MEV_21 Recupero Codice Comune di Nascita
 		ComuneModel lComMod = null;
-		if (!this.isRequestParameterNullObj(CAMPO_COD_COMUNE_NASCITA) ) {
-			lComMod = new ComuneModel(getDatiComuneByCodDescr(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA), 
-									  						  getRequestStringParameter("DescrComuneNascita")) ) ;
-		} else 
+		if (!this.isRequestParameterNullObj(CAMPO_COD_COMUNE_NASCITA)) {
+			lComMod = new ComuneModel(
+					getDatiComuneByCodDescr(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA),
+							getRequestStringParameter("DescrComuneNascita")));
+		} else
 			lComMod = new ComuneModel(getCodComuneByDescr(getRequestStringParameter("DescrComuneNascita")));
 		lSogMod.setCodComuneNascita(lComMod.getCodComune());
 		lSogMod.setCodProvinciaNascita(lComMod.getCodProvincia());
@@ -137,14 +138,19 @@ public class ActModificaSoggettoeStorici extends ActionSiap implements ICostanti
 		lDescri = ((DecodificheModel) lStatoCitt.get(lIndModel)).getDescription();
 		lSogMod.setDescrNazionalita(lDescri);
 
+		// 20260415 [SG]: aggiunto controllo su CF che deve essere obbligatorio e conforme
+		// SoggettoUtil.controllaCF(lSogMod);
+
 		// Option lOption = new Option( DecodificheManager.getInstance().getNazioni());
 		// prendo il numero dei fascicoli presenti per questo soggetto
 		int lFascicoli = this.getRequestIntParameter("numerofascicoli");
 		int lFascicoliAltriUff = this.getRequestIntParameter("numerofascicoliAltriUff");
 
-		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		// siesLogger.debug("numerofascicoli -> " + lFascicoli);
-		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		// siesLogger.debug("numerofascicoliAltriUff -> " + lFascicoliAltriUff);
 
 		// BigDecimal[] lKeyFascicoliPresenti = new BigDecimal[lFascicoli];
@@ -155,11 +161,13 @@ public class ActModificaSoggettoeStorici extends ActionSiap implements ICostanti
 		for (int y = 0; y < lFascicoli; y++) {
 			if (!isRequestParameterNullObj("fascicolo" + y)) {
 				// nessuno = false;
-				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				// siesLogger.debug("id Fascicolo selezionato "+ getRequestStringParameter("fascicolo"
 				// + y));
 				lKeyFascicoliSelezionati.add(getRequestBigDecimalParameter("fascicolo" + y));
-				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				// siesLogger.debug("id Fascicolo selezionato "+
 				// getRequestBigDecimalParameter("fascicolo" + y));
 			} else {
@@ -172,25 +180,26 @@ public class ActModificaSoggettoeStorici extends ActionSiap implements ICostanti
 		// Chiama il controller.
 		if (lKeyFascicoliSelezionati.size() > 0) {
 			ISoggetto lSogCtrl = SICOLookupRemote.getSoggettoRemote();
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			// siesLogger.debug("fascicoli selezionati--->" + lKeyFascicoliSelezionati.size());
 
 			// CONTROLLO SE è UTENTE è SIUS O SIEP o SIGE
-			if (lProfilo.isSige()) // SIGE
-			{
-				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			if (lProfilo.isSige()) { // SIGE
+				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				// siesLogger.debug("UTENTE---->SIGE");
 				lSogRet = lSogCtrl.ExModificaSoggettoStoriciSige(lSogMod, lKeyFascicoliSelezionati,
 						lFascicoli, lFascicoliAltriUff, IdSoggettoVecchio);
-			} else if (lProfilo.isSiep()) // SIEP
-			{
-				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			} else if (lProfilo.isSiep()) { // SIEP
+				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				// siesLogger.debug("UTENTE---->SIEP");
 				lSogRet = lSogCtrl.ExModificaSoggettoStorici(lSogMod, lKeyFascicoliSelezionati,
 						IdSoggettoVecchio);
-			} else // sius
-			{
-				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			} else { // sius
+				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				// siesLogger.debug("UTENTE---->SIUS");
 				lSogRet = lSogCtrl.ExModificaSoggettoStoriciSius(lSogMod, lKeyFascicoliSelezionati,
 						lFascicoli, lFascicoliAltriUff, IdSoggettoVecchio);
@@ -198,14 +207,16 @@ public class ActModificaSoggettoeStorici extends ActionSiap implements ICostanti
 		}
 		// Controllo se nullo ????
 		if (lSogRet == null)
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("colpa di lSogRet");
 
 		// setta la risposta nella request
 		setRequestAttribute("soggetto", lSogRet);
 		String lPage = "";
 		if (lSogRet.getMessage() == null)
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("colpa di getMessage");
 
 		if (lSogRet.getMessage() != null) {
@@ -222,9 +233,10 @@ public class ActModificaSoggettoeStorici extends ActionSiap implements ICostanti
 			lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
 					+ "=siap.sico.soggetto.action.ActLoadDettaglioSoggettoModificato&" + CAMPO_ID_SOGGETTO
 					+ "=" + lSogRet.getIdSoggetto().toString();
-
 		}
 
+		// pagina di ritorno
 		return lPage;
 	}
+
 }

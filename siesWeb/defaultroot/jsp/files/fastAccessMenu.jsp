@@ -102,7 +102,9 @@
       });
       */
 
+      <% if (!UtenteConnesso.isUtenteSIGE()) { %>
       checkMessaggiRicevuti();
+      <% } %>
     });
 </script>
 

@@ -11,12 +11,17 @@
 <%@ page import="siap.sico.calendar.model.CalendarModel" %>
 <%@ page import="siap.sico.util.CalendarUtil" %>
 
+<%@ page import="siap.siep.fascicolo.model.FascicoloSiepModel" %>
 <%@ page import="siap.siep.calcolopena.model.SemestreDL92Model" %>
 <%@ page import="siap.siep.penacomplessiva.action.ICostantiPenaComplessiva"%>
 <%@ page import="siap.siep.penaresidua.action.ICostantiPenaResidua"%>
 <%@ page import="siap.siep.calcolopena.action.ICostantiCalcoloPena"%>
 
-<jsp:useBean id="EsitoCalcolo" scope="request" class="siap.siep.calcolopena.model.CalcoloPenaDL92Model" />
+<jsp:useBean id="EsitoCalcolo"   scope="request" class="siap.siep.calcolopena.model.CalcoloPenaDL92Model" />
+<jsp:useBean id="UtenteConnesso" scope="session" class="siap.sico.utente.model.UtenteModel" />
+
+<jsp:useBean id="msgStoricizzazione" scope="request" class="java.lang.String" />
+
 
 <%
 //==============================================================================
@@ -58,18 +63,39 @@
     document.CalcoloPenaDL92.submit();
   }
   
+  <%-- MEV-2026_1 --%>
+  function salvaDL92() {      
+	var msgAlert = "Si stanno storicizzando i calcoli sul procedimento corrente. Si vuole procedere?";
+	if (window.confirm(msgAlert)){
+      document.CalcoloPenaDL92.tipoOutput.value = "storicizza";
+      document.CalcoloPenaDL92.submit();
+    }
+  }
+  
+  function storicoDL92() {
+	  document.StoricoCalcoloPenaDL92.submit();	  
+  }
+  <%-- MEV-2026_1 FINE --%>
+  
+  
   function checkSel (checkObj, idSemestre) {
-	if (checkObj.checked) {
+  if (checkObj.checked) {
       document.getElementById(idSemestre).value = "S";
-	}
-	else {
+  }
+  else {
       document.getElementById(idSemestre).value = "N";
     }
+  }
+  
+  function showMsg () {
+	  <% if (msgStoricizzazione.length()>0) { %>
+	  alert("<%=msgStoricizzazione%>");
+	  <% } %>	  
   }
   </script>
 </head>
 
-<body class="corpo">
+<body class="corpo" onload="showMsg();">
   <table>
     <tr><td class="LBG"><a href="Javascript:window.print();"><img src="../../images/quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
       <td class="LBG">
@@ -108,29 +134,29 @@
     <input type="hidden" name="tipoOutput" value="">    
     
     <%--Per lanciare le stampe inserisco i campi hidden della form di partenza --%>
-	<input type="hidden" name="<%=ICostantiPenaComplessiva.CAMPO_NUM_ANNI_RECLUSIONE%>"   value="<%= StringUtils.toStringJSP  ( EsitoCalcolo.getNumAnniReclusione()  , "0") %>"   >
-	<input type="hidden" name="<%=ICostantiPenaComplessiva.CAMPO_NUM_MESI_RECLUSIONE%>"   value="<%= StringUtils.toStringJSP  ( EsitoCalcolo.getNumMesiReclusione()  , "0") %>"   >
-	<input type="hidden" name="<%=ICostantiPenaComplessiva.CAMPO_NUM_GIORNI_RECLUSIONE%>" value="<%= StringUtils.toStringJSP  ( EsitoCalcolo.getNumGiorniReclusione()  , "0") %>" >
-	
-	<input type="hidden" name="<%=ICostantiPenaComplessiva.CAMPO_INTERO_IMPORTO_MULTA%>"   value="<%=StringUtils.getParteIntera   ( EsitoCalcolo.getImportoMulta()) %>"  >
+    <input type="hidden" name="<%=ICostantiPenaComplessiva.CAMPO_NUM_ANNI_RECLUSIONE%>"   value="<%= StringUtils.toStringJSP  ( EsitoCalcolo.getNumAnniReclusione()  , "0") %>"   >
+    <input type="hidden" name="<%=ICostantiPenaComplessiva.CAMPO_NUM_MESI_RECLUSIONE%>"   value="<%= StringUtils.toStringJSP  ( EsitoCalcolo.getNumMesiReclusione()  , "0") %>"   >
+    <input type="hidden" name="<%=ICostantiPenaComplessiva.CAMPO_NUM_GIORNI_RECLUSIONE%>" value="<%= StringUtils.toStringJSP  ( EsitoCalcolo.getNumGiorniReclusione()  , "0") %>" >
+    
+    <input type="hidden" name="<%=ICostantiPenaComplessiva.CAMPO_INTERO_IMPORTO_MULTA%>"   value="<%=StringUtils.getParteIntera   ( EsitoCalcolo.getImportoMulta()) %>"  >
     <input type="hidden" name="<%=ICostantiPenaComplessiva.CAMPO_DECIMALE_IMPORTO_MULTA%>" value="<%=StringUtils.getParteDecimale ( EsitoCalcolo.getImportoMulta()) %>"   >
-	
-	<input type="hidden" name="<%=ICostantiPenaComplessiva.CAMPO_NUM_ANNI_ARRESTO%>"   value="<%= StringUtils.toStringJSP  ( EsitoCalcolo.getNumAnniArresto(), "0") %>" >
-	<input type="hidden" name="<%=ICostantiPenaComplessiva.CAMPO_NUM_MESI_ARRESTO%>"   value="<%= StringUtils.toStringJSP  ( EsitoCalcolo.getNumMesiArresto(), "0") %>" >
-	<input type="hidden" name="<%=ICostantiPenaComplessiva.CAMPO_NUM_GIORNI_ARRESTO%>" value="<%= StringUtils.toStringJSP  ( EsitoCalcolo.getNumGiorniArresto(), "0") %>" >
-	
-	<input type="hidden" name="<%=ICostantiPenaComplessiva.CAMPO_INTERO_IMPORTO_AMMENDA%>"   value="<%=StringUtils.getParteIntera   ( EsitoCalcolo.getImportoAmmenda()) %>"   >
+    
+    <input type="hidden" name="<%=ICostantiPenaComplessiva.CAMPO_NUM_ANNI_ARRESTO%>"   value="<%= StringUtils.toStringJSP  ( EsitoCalcolo.getNumAnniArresto(), "0") %>" >
+    <input type="hidden" name="<%=ICostantiPenaComplessiva.CAMPO_NUM_MESI_ARRESTO%>"   value="<%= StringUtils.toStringJSP  ( EsitoCalcolo.getNumMesiArresto(), "0") %>" >
+    <input type="hidden" name="<%=ICostantiPenaComplessiva.CAMPO_NUM_GIORNI_ARRESTO%>" value="<%= StringUtils.toStringJSP  ( EsitoCalcolo.getNumGiorniArresto(), "0") %>" >
+    
+    <input type="hidden" name="<%=ICostantiPenaComplessiva.CAMPO_INTERO_IMPORTO_AMMENDA%>"   value="<%=StringUtils.getParteIntera   ( EsitoCalcolo.getImportoAmmenda()) %>"   >
     <input type="hidden" name="<%=ICostantiPenaComplessiva.CAMPO_DECIMALE_IMPORTO_AMMENDA%>" value="<%=StringUtils.getParteDecimale ( EsitoCalcolo.getImportoAmmenda()) %>"   >
-	
-	<input type="hidden" name="<%=ICostantiCalcoloPena.CAMPO_NUM_ANNI_PRESOFFERTO%>"   value="<%= EsitoCalcolo.getNumAnniPresofferto()  %>" >
-	<input type="hidden" name="<%=ICostantiCalcoloPena.CAMPO_NUM_MESI_PRESOFFERTO%>"   value="<%= EsitoCalcolo.getNumMesiPresofferto()  %>" >
-	<input type="hidden" name="<%=ICostantiCalcoloPena.CAMPO_NUM_GIORNI_PRESOFFERTO%>" value="<%= EsitoCalcolo.getNumGiorniPresofferto()%>" >
-	
-	<input type="hidden" name="<%=ICostantiCalcoloPena.CAMPO_POSIZIONE_GIURIDICA%>" value="<%=StringUtils.toStringJSP(EsitoCalcolo.getPosizioneGiuridica())%>">
-	
-	<input type="hidden" name="<%=ICostantiPenaResidua.CAMPO_GIORNO_DATA_DECORRENZA_PENA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString (EsitoCalcolo.getDataInizioPena(), "dd")) %>" >
-	<input type="hidden" name="<%=ICostantiPenaResidua.CAMPO_MESE_DATA_DECORRENZA_PENA%>"   value="<%=StringUtils.toStringJSP(DateUtils.getDateToString (EsitoCalcolo.getDataInizioPena(), "MM")) %>" >
-	<input type="hidden" name="<%=ICostantiPenaResidua.CAMPO_ANNO_DATA_DECORRENZA_PENA%>"   value="<%=StringUtils.toStringJSP(DateUtils.getDateToString (EsitoCalcolo.getDataInizioPena(), "yyyy")) %>" >   
+    
+    <input type="hidden" name="<%=ICostantiCalcoloPena.CAMPO_NUM_ANNI_PRESOFFERTO%>"   value="<%= EsitoCalcolo.getNumAnniPresofferto()  %>" >
+    <input type="hidden" name="<%=ICostantiCalcoloPena.CAMPO_NUM_MESI_PRESOFFERTO%>"   value="<%= EsitoCalcolo.getNumMesiPresofferto()  %>" >
+    <input type="hidden" name="<%=ICostantiCalcoloPena.CAMPO_NUM_GIORNI_PRESOFFERTO%>" value="<%= EsitoCalcolo.getNumGiorniPresofferto()%>" >
+    
+    <input type="hidden" name="<%=ICostantiCalcoloPena.CAMPO_POSIZIONE_GIURIDICA%>" value="<%=StringUtils.toStringJSP(EsitoCalcolo.getPosizioneGiuridica())%>">
+    
+    <input type="hidden" name="<%=ICostantiPenaResidua.CAMPO_GIORNO_DATA_DECORRENZA_PENA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString (EsitoCalcolo.getDataInizioPena(), "dd")) %>" >
+    <input type="hidden" name="<%=ICostantiPenaResidua.CAMPO_MESE_DATA_DECORRENZA_PENA%>"   value="<%=StringUtils.toStringJSP(DateUtils.getDateToString (EsitoCalcolo.getDataInizioPena(), "MM")) %>" >
+    <input type="hidden" name="<%=ICostantiPenaResidua.CAMPO_ANNO_DATA_DECORRENZA_PENA%>"   value="<%=StringUtils.toStringJSP(DateUtils.getDateToString (EsitoCalcolo.getDataInizioPena(), "yyyy")) %>" >   
   
     <input type="hidden" name="numSemestriElaborati" value="<%=StringUtils.toStringJSP(EsitoCalcolo.getListaSemetri().size()) %>" >   
   
@@ -147,6 +173,10 @@
     %>   
   
   </form>
+  
+  <form method="POST" action="/jsp/Main.jsp" name="StoricoCalcoloPenaDL92">
+    <input type="hidden" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.calcolopena.action.ActLoadStoricoCalcoloPenaDL92">
+  </form> 
   
     <!-- ===================================================================== -->
     <!--                   SEZIONE CON I RISULTATO                             -->  
@@ -348,15 +378,15 @@
       Vector <SemestreDL92Model> mListaSemetri = EsitoCalcolo.getListaSemetri();
       
       for (int i = 0; i<mListaSemetri.size(); i++) {
-      	SemestreDL92Model lSemestreUtile = mListaSemetri.elementAt(i);
-      	String lPenaStr = lSemestreUtile.getResiduoNumAnni()+" anni - " 
+        SemestreDL92Model lSemestreUtile = mListaSemetri.elementAt(i);
+        String lPenaStr = lSemestreUtile.getResiduoNumAnni()+" anni - " 
                         + lSemestreUtile.getResiduoNumMesi()+" mesi - "
                         + lSemestreUtile.getResiduoNumGiorni()+" giorni ";
-      	
-      	String lColorLastSem="";
-      	if (lSemestreUtile.getLAApplicate().intValue()<45)
-      		lColorLastSem =  "style='color=red'";
-      	
+        
+        String lColorLastSem="";
+        if (lSemestreUtile.getLAApplicate().intValue()<45)
+          lColorLastSem =  "style='color=red'";
+        
       %>
       <tr>
         <td class="l" nowrap><font class="label"><%=lSemestreUtile.getProgressivo()%>&deg;</font></td>
@@ -394,10 +424,26 @@
     <table>
       <tr><td>&nbsp;</td></tr>
       <tr>
-        <td colspan="3">
+        <td colspan="1">
           <input class="bottone" type="submit" name="INSERISCI" value="Ricalcola"
                onClick="javascript:calcolaDL92();">
         </td>
+        <%-- MEV-2026_1 --%>
+        <% 
+        if (session.getAttribute("fascicolo") != null) {
+          FascicoloSiepModel lFascicolo = (FascicoloSiepModel) session.getAttribute("fascicolo");
+          if (UtenteConnesso.getUfficioUtente().getCodUfficio().equals(lFascicolo.getChiaveUfficio())) { 
+        %>
+	        <td colspan="1">
+	          <input class="bottone" type="submit" name="Valida" value="Valida"
+	               onClick="javascript:salvaDL92();">
+	        </td>
+	        <td colspan="1">
+	          <input class="bottone" type="submit" name="Storico" value="Storico Calcoli Validati"
+	               onClick="javascript:storicoDL92();">
+	        </td>
+	      <% } %>
+        <% } %>
       </tr>
     </table>
     
@@ -409,9 +455,9 @@
 <% 
 Date lDataScarcerazione = null;
 if (EsitoCalcolo.getDataScarcerazioneLAFung() != null)
-	lDataScarcerazione = EsitoCalcolo.getDataScarcerazioneLAFung();
+  lDataScarcerazione = EsitoCalcolo.getDataScarcerazioneLAFung();
 else 
-	lDataScarcerazione = EsitoCalcolo.getDataScarcerazioneNoLA();
+  lDataScarcerazione = EsitoCalcolo.getDataScarcerazioneNoLA();
 %>
   <div>
     <table cellspacing="4" cellpadding="4" width="55%"> 

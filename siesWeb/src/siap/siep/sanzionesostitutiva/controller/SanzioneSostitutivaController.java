@@ -82,7 +82,7 @@ import siap.siep.verbale.dao.VerbaleDAO;
 import siap.siep.verbale.model.VerbaleModel;
 
 /**
- * Controller della Sanzioni Sostitutive
+ * SanzioneSostitutivaController - Classe Controller della Sanzioni Sostitutive
  *
  * @version 1.0
  */
@@ -2848,10 +2848,13 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 						lRateSqlDao = new RateizzazionePPSqlDAO(lConn);
 						RateizzazionePPModel primaRata = null;
 
-						lRateSqlDao
-								.ricercaRateizzazionePPByIdFascicoloSiep(aEvento.getFasSieIdFascicoloSiep());
+						// Ticket#20260522017 - Data rate --> cerco x evento piuttosto che per fascicolo
+						lRateSqlDao.ricercaRateizzazionePPByEveIdEvento(aEvento.getIdEvento());
 						Vector<RateizzazionePPModel> listaRate = new Vector<RateizzazionePPModel>(
 								lRateSqlDao.getModels());
+						if (Utils.isNullObj(listaRate) || listaRate.isEmpty())
+							lRateSqlDao.ricercaRateizzazionePPByIdFascicoloSiep(
+									aEvento.getFasSieIdFascicoloSiep());
 						for (RateizzazionePPModel rata : listaRate) {
 							if (rata.getProgressivoRata().compareTo(new BigDecimal(1)) == 0) {
 								primaRata = rata;
@@ -2941,11 +2944,10 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 					 * (BollettinoPagopaModel lBoll : lListaBollettini) { if (lBoll.getIuv() != null)
 					 * isBollettiniGenerati = true; if (lBoll.getDataAvvPagamento() != null)
 					 * isBollettiniPagati = true; // if (lBoll.getDataScadenza() != null) //
-					 * isDataScadenzaCalcolata = true; }
-					 *
-					 * if (isBollettiniGenerati) { //if (!isBollettiniPagati && !isDataScadenzaCalcolata) { if
-					 * (!isBollettiniPagati ) { // Calcolo la data scadenza e la aggiornao lBollDao = new
-					 * BollettinoPagopaDAO(lConn); lBollDao.setDataScadenza(dataScadenzaPrimaRata);
+					 * isDataScadenzaCalcolata = true; } if (isBollettiniGenerati) { //if (!isBollettiniPagati
+					 * && !isDataScadenzaCalcolata) { if (!isBollettiniPagati ) { // Calcolo la data scadenza
+					 * e la aggiornao lBollDao = new BollettinoPagopaDAO(lConn);
+					 * lBollDao.setDataScadenza(dataScadenzaPrimaRata);
 					 * lBollDao.selCondizioneByIdFascicolo(aEvento.getFasSieIdFascicoloSiep());
 					 * lBollDao.update(); } else { // se il primo bollettino è stato già pagato allora le date
 					 * dei successivi // sono state // calcolate in base al pagamento della prima rata. NON HA
@@ -2955,7 +2957,6 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 					 * lBollDao.selCondizioneByIdFascicolo(aEvento.getFasSieIdFascicoloSiep());
 					 * lBollDao.update(); } }
 					 */
-
 				}
 			}
 

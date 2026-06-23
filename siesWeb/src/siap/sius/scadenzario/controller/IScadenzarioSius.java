@@ -8,7 +8,7 @@ import f3b.util.F3BException;
 import siap.sius.scadenzario.model.ScadenzarioSiusModel;
 
 /**
- * ScadenzarioSiusController - Classe Controller per Scadenzario Sius
+ * IScadenzarioSius - Classe Interfaccia per Scadenzario Sius
  *
  * @version 1.0
  */
@@ -48,5 +48,35 @@ public interface IScadenzarioSius {
 	public void ExSetVistoScadenzario(ScadenzarioSiusModel aScadenzarioSius) throws F3BException;
 
 	public Vector ExElencoTipiScadenzarioByTipoUfficio(String aTipoUfficio) throws F3BException;
+
+	/**
+	 * Metodi per la Ricerca Fine Pena Procedimenti Pendenti Paginata
+	 *
+	 * @param riferimento
+	 * @param ai
+	 * @param ni
+	 * @param af
+	 * @param nf
+	 * @param dii
+	 * @param dif
+	 * @param dsi
+	 * @param dsf
+	 * @param codUfficio
+	 * @param pagina
+	 * @param includiDefiniti 
+	 * @return Vector
+	 * @throws F3BException
+	 *
+	 * @author sgioggi
+	 * @since MEV_2026-1
+	 */
+	public Vector ExRicercaFinePenaProcedimentiPendentiPaginata(String riferimento, BigDecimal ai,
+			BigDecimal ni, BigDecimal af, BigDecimal nf, Date dii, Date dif, Date dsi, Date dsf,
+			String codUfficio, boolean includiDefiniti, int pagina) throws F3BException;
+
+	public BigDecimal ExGetNumRicercaFinePenaProcedimentiPendenti(String riferimento, BigDecimal ai,
+			BigDecimal ni, BigDecimal af, BigDecimal nf, Date dii, Date dif, Date dsi, Date dsf,
+			String codUfficio, boolean includiDefiniti) throws F3BException;
+	// FINE MEV_2026-1
 
 }

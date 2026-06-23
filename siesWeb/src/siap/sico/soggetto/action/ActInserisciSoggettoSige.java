@@ -20,19 +20,8 @@ import siap.siep.fascicolo.controller.IFascicoloSiep;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * <p>
- * Title: ActInserisciSoggettoSige
- * </p>
- * <p>
- * Description: Azione di Inserimento del Soggetto Sige, in presenza di Omonimia
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Engineering S.p.A.
- * </p>
- * 
+ * ActInserisciSoggettoSige - Azione di Inserimento del Soggetto Sige, in presenza di Omonimia
+ *
  * @version 1.0
  */
 public class ActInserisciSoggettoSige extends ActionSiap implements ICostantiSoggetto {
@@ -132,6 +121,9 @@ public class ActInserisciSoggettoSige extends ActionSiap implements ICostantiSog
 		lDescri = ((DecodificheModel) lStatoCitt.get(lIndModel)).getDescription();
 		lSogMod.setDescrNazionalita(lDescri);
 
+		// 20260415 [SG]: aggiunto controllo su CF che deve essere obbligatorio e conforme
+		// SoggettoUtil.controllaCF(lSogMod);
+
 		// Chiama il controller
 		ISoggetto lSogCtrl = SICOLookupRemote.getSoggettoRemote();
 		IFascicoloSiep lFascSogCtrl = SIEPLookupRemote.getFascicoloSiepRemote();
@@ -184,6 +176,7 @@ public class ActInserisciSoggettoSige extends ActionSiap implements ICostantiSog
 			}
 		}
 
+		// pagina di ritorno
 		return lPage;
 	}
 

@@ -55,7 +55,7 @@ function Verifica() {
         }
       	if (document.DettaglioNotifica.<%=ICostantiOrdineEsecuzione.ABILITA_NOTIFICA%>[x].checked) {
       		if (document.DettaglioNotifica.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>[x].value == '-') {
-            	alert('Indicare autorit√† delegata!');
+            	alert('Indicare autorit‡ delegata!');
              	return false;
        		}
       	}
@@ -95,7 +95,7 @@ function VerificaUno() {
 	        return false;
       	}
       	if (document.DettaglioNotifica.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>.value == '-') {
-			alert('Indicare autorit√† delegata!');
+			alert('Indicare autorit‡ delegata!');
 			return false;
       	}
     	var data_emissione  =  document.DettaglioNotifica.dataemissione.value;
@@ -136,8 +136,8 @@ ggData[<%=i%>] = '<%=StringUtils.toStringJSP(DateUtils.getDateToString(lNotMod.g
 mmData[<%=i%>] = '<%=StringUtils.toStringJSP(DateUtils.getDateToString(lNotMod.getDataAvvenutaNotifica(), "MM") )%>';
 aaData[<%=i%>] = '<%=StringUtils.toStringJSP(DateUtils.getDateToString(lNotMod.getDataAvvenutaNotifica(), "yyyy") )%>';
 tipoAut[<%=i%>] = '<%=(lNotMod.getAutoritaEsternaDelegata()!= null ) ? lNotMod.getAutoritaEsternaDelegata().getCodTipoAutorita() : "-"%>';
-sedeAut[<%=i%>] = '<%=(lNotMod.getAutoritaEsternaDelegata()!= null ) ? lNotMod.getAutoritaEsternaDelegata().getDescrSede() : ""%>';
-indirizzo[<%=i%>] = '<%=( (lNotMod.getAutoritaEsternaDelegata() != null) && (lNotMod.getAutoritaEsternaDelegata().getDescrizione() != null) ) ? lNotMod.getAutoritaEsternaDelegata().getDescrizione() : ""%>';
+sedeAut[<%=i%>] = "<%=(lNotMod.getAutoritaEsternaDelegata()!= null ) ? lNotMod.getAutoritaEsternaDelegata().getDescrSede() : ""%>";
+indirizzo[<%=i%>] = "<%=( (lNotMod.getAutoritaEsternaDelegata() != null) && (lNotMod.getAutoritaEsternaDelegata().getDescrizione() != null) ) ? lNotMod.getAutoritaEsternaDelegata().getDescrizione() : ""%>";
 <%
 }
 %>
@@ -178,9 +178,9 @@ if (lNot.size() > 0)
 %>      
  	    var tipoAut = '<%=(lNotModUno.getAutoritaEsternaDelegata() != null ) ? lNotModUno.getAutoritaEsternaDelegata().getCodTipoAutorita() : "-"%>';
     	document.DettaglioNotifica.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>.value=tipoAut;
-	    var sedeAut = '<%=(lNotModUno.getAutoritaEsternaDelegata() != null ) ? lNotModUno.getAutoritaEsternaDelegata().getDescrSede() : ""%>';
+	    var sedeAut = "<%=(lNotModUno.getAutoritaEsternaDelegata() != null ) ? lNotModUno.getAutoritaEsternaDelegata().getDescrSede() : ""%>";
     	document.DettaglioNotifica.<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>.value=sedeAut;
-	    var indirizzo = '<%=( (lNotModUno.getAutoritaEsternaDelegata() != null) && (lNotModUno.getAutoritaEsternaDelegata().getDescrizione() != null) ) ? lNotModUno.getAutoritaEsternaDelegata().getDescrizione() : ""%>';
+	    var indirizzo = "<%=( (lNotModUno.getAutoritaEsternaDelegata() != null) && (lNotModUno.getAutoritaEsternaDelegata().getDescrizione() != null) ) ? lNotModUno.getAutoritaEsternaDelegata().getDescrizione() : ""%>";
     	document.DettaglioNotifica.<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>.value=indirizzo;
       	var node = document.getElementById('divAvv');
       	node.style.display='inline';
@@ -231,7 +231,7 @@ if (lLungNot == 1) {
 }
 </script>
 </head>
-<body class="corpo"  onLoad="javascript:ControlloCheck();">
+<body class="corpo" onLoad="javascript:ControlloCheck();">
 <form name="DettaglioNotifica" method="POST" action="/jsp/Main.jsp">
 <table>
 	<tr><td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
@@ -266,9 +266,13 @@ for(int i = 0; i < lLungNot; i++) {
 	lNotMod = (NotificaModel) lNot.get(i);
 %>
 	<tr>
-		<input type="hidden" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%=lEveMod.getNotifiche()[i].getEveIdEvento()%>">
-		<input type="hidden" name="<%=ICostantiNotifica.CAMPO_ID_NOTIFICA%>" value="<%=lNotMod.getIdNotifica()%>">
-		<td class="l">Autorit√† delegata alla notifica</td>
+		<td>
+			<input type="hidden" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%=lEveMod.getNotifiche()[i].getEveIdEvento()%>">
+			<input type="hidden" name="<%=ICostantiNotifica.CAMPO_ID_NOTIFICA%>" value="<%=lNotMod.getIdNotifica()%>">
+		</td>
+	</tr>
+	<tr>
+		<td class="l">Autorit‡ delegata alla notifica</td>
 <%
 	if (lNotMod.getAutoritaEsterna() != null) {
 %>
@@ -311,16 +315,16 @@ for(int i = 0; i < lLungNot; i++) {
 			}
 		}
 %>
-	<input type="hidden" name="<%=ICostantiNotifica.CAMPO_ID_NOTIFICA_INS%>" value="<%=lNotMod.getIdNotifica()%>">
 	<tr>
 		<td class="l">
+			<input type="hidden" name="<%=ICostantiNotifica.CAMPO_ID_NOTIFICA_INS%>" value="<%=lNotMod.getIdNotifica()%>">
  			<input type="checkbox" onclick="Javascript:Abilita('<%=totabilita%>');" name="<%=ICostantiOrdineEsecuzione.ABILITA_NOTIFICA%>" value="<%=lNotMod.getIdNotifica()%>" >
         </td>
 	</tr>        
 	<tr>		           
-        <td class="l">Autorit√† che ha effettuato la notifica</td>
+        <td class="l">Autorit‡ che ha effettuato la notifica</td>
      	<td class="l" colspan="2">
-			<select Title="Autorit√† che ha effettuato la notifica"  class="small" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>">
+			<select Title="Autorit‡ che ha effettuato la notifica"  class="small" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>">
 <%
 		Iterator lIter = autoritaEsternaDelegata.iterator();
 		while (lIter.hasNext()) {
@@ -336,7 +340,7 @@ for(int i = 0; i < lLungNot; i++) {
 	<tr>				       
      	<td class="l">Sede</td>
 	 	<td class="L">
-			<input readOnly title="Sede Autorit√† che ha effettuato la notifica" value="<%= lNotMod.getAutoritaEsternaDelegata()!= null ? StringUtils.toStringJSP(lNotMod.getAutoritaEsternaDelegata().getDescrSede()) : ""%>" type="text" name="<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>"  maxlength="35" size="35">
+			<input readOnly title="Sede Autorit‡ che ha effettuato la notifica" value="<%= lNotMod.getAutoritaEsternaDelegata()!= null ? StringUtils.toStringJSP(lNotMod.getAutoritaEsternaDelegata().getDescrSede()) : ""%>" type="text" name="<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>"  maxlength="35" size="35">
 			<div id="divAvv<%=totabilita %>" style="display:none; width:100%;">
 				<a href="Javascript:ListaComuni('DettaglioNotifica','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>[<%=totabilita%>]');">
 					<img src="/images/filefolder.gif" border=0>
@@ -397,9 +401,9 @@ for(int i = 0; i < lLungNot; i++) {
 		</td>
 	</tr>
 	<tr>
-   		<td class="l">Autorit√† che ha effettuato la notifica</td>
+   		<td class="l">Autorit‡ che ha effettuato la notifica</td>
 		<td class="l" colspan="2">
-			<select disabled Title="Autorit√† che ha effettuato la notifica" class="small" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>">
+			<select disabled Title="Autorit‡ che ha effettuato la notifica" class="small" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>">
 <%
 		Iterator lIter = autoritaEsternaDelegata.iterator();
 		while (lIter.hasNext()) {
@@ -415,7 +419,7 @@ for(int i = 0; i < lLungNot; i++) {
 	<tr>				       
      	<td class="l">Sede</td>
 		<td class="L">
-			<input readOnly title="Sede Autorit√† che ha effettuato la notifica" value="<%= lNotMod.getAutoritaEsternaDelegata()!= null ? StringUtils.toStringJSP(lNotMod.getAutoritaEsternaDelegata().getDescrSede()) : ""%>" type="text" name="<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>"  maxlength="35" size="35">
+			<input readOnly title="Sede Autorit‡ che ha effettuato la notifica" value="<%= lNotMod.getAutoritaEsternaDelegata()!= null ? StringUtils.toStringJSP(lNotMod.getAutoritaEsternaDelegata().getDescrSede()) : ""%>" type="text" name="<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>"  maxlength="35" size="35">
 			<div id="divAvv" style="display:none; width:100%;">
 				<a href="Javascript:ListaComuni('DettaglioNotifica','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>');">
 					<img src="/images/filefolder.gif" border=0>

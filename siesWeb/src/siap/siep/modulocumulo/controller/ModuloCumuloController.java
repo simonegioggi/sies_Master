@@ -2984,6 +2984,21 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 						lStessoTitolo = true;
 					}
 					// Ticket#202601140182 - FINE
+			
+					// Ticket#202605120115 - Duplicazione fascicoli
+					// Sto caricando i titoli dell'ultimo cumulo validati. In tale Cumulo esiste 
+					// ovviamente anche il cumulante che ho sicuramente già caricato. Quello 
+					// dell'istruttoria VA SALTATO è sicuramente meno aggiornato essendo stato inserito in fase
+					// di apertura istruttoria e "congelato" a quel momento.
+			        if (   aFascicoloSiepCumulato.getChiaveAnno().compareTo(lProcModel.getChiaveAnnoFasCumulato()) == 0
+			            && aFascicoloSiepCumulato.getChiaveProgr().compareTo(lProcModel.getChiaveProgrFasCumulato()) == 0
+			            && aFascicoloSiepCumulato.getChiaveUfficio().equals(lProcModel.getCodUfficioFasCumulato())
+			           ) 
+			        {
+			          siesLogger.debug("Stesso titolo del cumulante lo salto");
+			          lStessoTitolo = true;
+			        }				
+					// Ticket#202605120115 - FINE
 				} else {
 					siesLogger.debug("Procedimento cumulato assente");
 				}

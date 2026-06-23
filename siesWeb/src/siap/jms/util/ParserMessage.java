@@ -365,8 +365,19 @@ public class ParserMessage {
 						mMagistrati.add(lObj);
 					}
 
-					if (lObj instanceof DettaglioFascicoloModel)
+					if (lObj instanceof DettaglioFascicoloModel) {
 						mDettaglioFascicoloSiep = (DettaglioFascicoloModel) lObj;
+						
+						// MEV-2026_1 - Aggiunte loggature (da eliminare)
+						siesLogger.debug("MEV-2026_1: toString() = "+mDettaglioFascicoloSiep.toString());
+						siesLogger.debug("MEV-2026_1: getAvvocati() = "+mDettaglioFascicoloSiep.getAvvocati());
+						if (mDettaglioFascicoloSiep.getAvvocati()!=null)
+						    siesLogger.debug("MEV-2026_1: getAvvocati().size() = "+mDettaglioFascicoloSiep.getAvvocati().size());
+                        siesLogger.debug("MEV-2026_1: getStoricoCalcoliPenaDL92DB() = "+mDettaglioFascicoloSiep.getStoricoCalcoliPenaDL92DB());
+                        if (mDettaglioFascicoloSiep.getStoricoCalcoliPenaDL92DB()!=null)
+                            siesLogger.debug("MEV-2026_1: getStoricoCalcoliPenaDL92DB().size() = "+mDettaglioFascicoloSiep.getStoricoCalcoliPenaDL92DB().size());
+                        // MEV-2026_1 -FINE 
+					}
 
 					// STUB 21/03/2005 Aggiunta per Trasmissione Ordinanza.
 					if (lObj instanceof LicenzaPeriodiLibAnticipataModel) {
@@ -431,4 +442,51 @@ public class ParserMessage {
 		}
 	}
 
+	
+	/**
+	 * Metodo di TEST per il traverse completo della struttura
+	 * @param aTreeModel
+	 * @param level
+	 * @throws Exception
+	 */
+  public static void iterateFullObjectModel(TreeModel aTreeModel, int level) throws Exception {
+      String lIdent = "  ";
+      for (int i=0; i<level; i++) 
+        lIdent+=lIdent;
+      
+      siesLogger.debug(lIdent+"level = " + level);
+      try {
+        if (aTreeModel != null) {
+          int nChildCount = aTreeModel.getChildCount();
+
+          for (int i = 0; i < nChildCount; i++) {
+            TreeModel lTreeChild = (TreeModel) aTreeModel.getChildAt(i);
+
+            Object lObj = lTreeChild.getModel();
+            siesLogger.debug(lIdent+"Tipo Nodo: " + lObj.getClass().getName());
+
+            if (lObj instanceof DettaglioFascicoloModel) {
+                DettaglioFascicoloModel lDettaglioFascicoloSiep = (DettaglioFascicoloModel) lObj;
+
+                siesLogger.debug("MEV-2026_1: toString() = "+lDettaglioFascicoloSiep.toString());
+                siesLogger.debug("MEV-2026_1: getAvvocati() = "+lDettaglioFascicoloSiep.getAvvocati());
+                
+                if (lDettaglioFascicoloSiep.getAvvocati()!=null)
+                    siesLogger.debug("MEV-2026_1: getAvvocati().size() = "+lDettaglioFascicoloSiep.getAvvocati().size());
+                
+                siesLogger.debug("MEV-2026_1: getStoricoCalcoliPenaDL92DB() = "+lDettaglioFascicoloSiep.getStoricoCalcoliPenaDL92DB());
+                if (lDettaglioFascicoloSiep.getStoricoCalcoliPenaDL92DB()!=null)
+                    siesLogger.debug("MEV-2026_1: getStoricoCalcoliPenaDL92DB().size() = "+lDettaglioFascicoloSiep.getStoricoCalcoliPenaDL92DB().size());
+               
+            }            
+            
+            ParserMessage.iterateFullObjectModel (lTreeChild,level+1);
+          }
+        }
+
+      } catch (Exception ex) {
+        siesLogger.error("Err Level "+level, ex);
+        throw ex;
+      }
+    }
 }

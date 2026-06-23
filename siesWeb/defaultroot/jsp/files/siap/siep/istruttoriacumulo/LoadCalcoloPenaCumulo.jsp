@@ -664,7 +664,7 @@
                 continue; // lo salto
             %>
             <tr style="display: block" id="SI">
-                <td class="l" Title="<%=lPeriodoModel.getDescTitolo()%>"><%=StringUtils.toStringJSP(lPeriodoModel.getDescrizione(),"&nbsp;")%><%=lInfoAlert%></td>
+                <td class="l" Title="<%=StringUtils.toStringJSP(lPeriodoModel.getDescTitolo(),"")%>"><%=StringUtils.toStringJSP(lPeriodoModel.getDescrizione(),"&nbsp;")%><%=lInfoAlert%></td>
                 <td class="r" nowrap <%=colorDataInizio%> ><%=StringUtils.toStringJSP(DateUtils.getDateToString(lCalendar.getDataInizio(),"dd-MM-yyyy"),"")%></td>
                 <td class="r" nowrap <%=colorDataFine%>   ><%=StringUtils.toStringJSP(DateUtils.getDateToString(lCalendar.getDataFine(),"dd-MM-yyyy"),"")%></td>
                 <td class="c" nowrap><%=StringUtils.toStringJSP(lCalendar.getNumAnni(),"&nbsp;")%></td>
@@ -691,7 +691,7 @@
                     String tdStyle="style='font-size=10px'" ;
                     %>
 			            <tr style="display: block" id="SI">
-			                <td class="l"  Title="<%=lPcfModel.getDescTitolo()%>" <%=tdStyle%>>
+			                <td class="l"  Title="<%=StringUtils.toStringJSP(lPcfModel.getDescTitolo(),"")%>" <%=tdStyle%>>
 			                     <ul style='margin-top:1px; margin-bottom:1px; padding-top:1px; padding-bottom:1px;'>
 			                         <li><%=StringUtils.toStringJSP(lPcfModel.getDescrizione(),"&nbsp;")%><%=lInfoAlertCont%></li>
 			                     </ul>			                     

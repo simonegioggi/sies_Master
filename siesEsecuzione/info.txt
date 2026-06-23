@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 BRANCH DEVELOP di SIESESECUZIONE
 
 Allineato al:
@@ -5,3 +6,8 @@ Allineato al:
 Branch siesEsecuzione Versione release_12.9.2.0
 
 Questa release è stata rilasciata il 27/03/2026
+=======
+BRANCH siesEsecuzione Versione release_12.10.0.0
+
+Nasce dal branch MEV_2026-24 in data 23/06/2026
+>>>>>>> release_12.10.0.0
