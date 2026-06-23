@@ -1,7 +1,3 @@
-BRANCH SIES VERSIONE MEV_2026-24
+BRANCH siesWeb Versione release_12.10.0.0
 
-Nasce dal branch 12.8.5.0 in data 12/01/2026
-
-In data 08/06/2026 eseguito merge col branch release_12.9.2.0
-
-Questa MEV verrà rilasciata il 09/06/2026
+Nasce dal branch MEV_2026-24 in data 23/06/2026
