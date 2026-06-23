@@ -75,31 +75,31 @@
 <%
 if ("L".equals(lPosizione.getCodMaschera())){
 %>
-<%@ include file="/jsp/files/siap/siep/posizione/DettaglioPosizioneGiuridica-L.jsp" %>
+<%@ include file="/jsp/files/siap/siep/posizione/DettaglioPosizioneGiuridica-L.jspf" %>
 <%	
 } else if ("L1".equals(lPosizione.getCodMaschera())){
 %>
-<%@ include file="/jsp/files/siap/siep/posizione/DettaglioPosizioneGiuridica-L1.jsp" %>
+<%@ include file="/jsp/files/siap/siep/posizione/DettaglioPosizioneGiuridica-L1.jspf" %>
 <%	
 } else if ("L2".equals(lPosizione.getCodMaschera())){
 %>
-<%@ include file="/jsp/files/siap/siep/posizione/DettaglioPosizioneGiuridica-L2.jsp" %>
+<%@ include file="/jsp/files/siap/siep/posizione/DettaglioPosizioneGiuridica-L2.jspf" %>
 <%	
 } else if ("L3".equals(lPosizione.getCodMaschera())){
 %>
-<%@ include file="/jsp/files/siap/siep/posizione/DettaglioPosizioneGiuridica-L3.jsp" %>
+<%@ include file="/jsp/files/siap/siep/posizione/DettaglioPosizioneGiuridica-L3.jspf" %>
 <%	
 } else if ("EI".equals(lPosizione.getCodMaschera())){
 %>
-<%@ include file="/jsp/files/siap/siep/posizione/DettaglioPosizioneGiuridica-EI.jsp" %>
+<%@ include file="/jsp/files/siap/siep/posizione/DettaglioPosizioneGiuridica-EI.jspf" %>
 <%	
 } else if ("EA".equals(lPosizione.getCodMaschera())){
 %>
-<%@ include file="/jsp/files/siap/siep/posizione/DettaglioPosizioneGiuridica-EA.jsp" %>
+<%@ include file="/jsp/files/siap/siep/posizione/DettaglioPosizioneGiuridica-EA.jspf" %>
 <%	
 } else {
 %>
-<%@ include file="/jsp/files/siap/siep/posizione/DettaglioPosizioneGiuridica-Old.jsp" %>
+<%@ include file="/jsp/files/siap/siep/posizione/DettaglioPosizioneGiuridica-Old.jspf" %>
 <%	
 }
 %>
