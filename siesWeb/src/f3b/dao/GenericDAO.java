@@ -10,8 +10,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import f3b.log.LogF3B;
 import f3b.model.GenericModel;
@@ -37,7 +37,7 @@ import f3b.util.StringUtils;
 public class GenericDAO {
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
-	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+	private static Logger siesLogger = LogManager.getLogger(LogF3B.SIES_LOG);
 
 	// Tipi di oggetti gestiti.
 	protected static final int STRING = 1;
