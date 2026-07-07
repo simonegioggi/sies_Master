@@ -29,7 +29,7 @@ public class ActLoadEmissioneApplicazioneProvvisoriaMA extends ActLoadEmissioneD
 		// ExRicercaDepositoDecretoByIdEvento
 		// Si aggiunge il controllo che il contenuto sia C050/C051
 		// e che sia stato emesso un EVENTO con cod_tipo_provvedimento = 02, cod_esito = 0610 e
-		// flag_documento_registrato = ‘S’
+		// flag_documento_registrato = ï¿½Sï¿½
 
 		FascicoloGPModel lFascicoloGPModel = new FascicoloGPModel(
 				(FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"));
@@ -48,7 +48,7 @@ public class ActLoadEmissioneApplicazioneProvvisoriaMA extends ActLoadEmissioneD
 		IDepositoDecreto idd = SIUSLookupRemote.getDepositoDecretoRemote();
 		if (idd.ExVerificaEsistenzaDepositoDecretoByIdGenProcCodTipoDec(idGP,
 				DECRETO_DESIGNAZIONE_MAGISTRATO_RELATORE_PER_MA)) {
-			// Se già esiste un decreto viene chiamato il dettaglio.
+			// Se giï¿½ esiste un decreto viene chiamato il dettaglio.
 			DepositoDecretoModel ddm = idd.ExRicercaDepositoDecretoByGenProc(idGP,
 					DECRETO_DESIGNAZIONE_MAGISTRATO_RELATORE_PER_MA);
 
@@ -59,18 +59,18 @@ public class ActLoadEmissioneApplicazioneProvvisoriaMA extends ActLoadEmissioneD
 
 			if (!"S".equals(em.getFlagDocumentoRegistrato()))
 				throw new SIUSException(SIUSException.USER_MESSAGE,
-						"Per il procedimento indicato non è stato emesso il provvedimento di designazione Magistrato Relatore");
+						"Per il procedimento indicato non ï¿½ stato emesso il provvedimento di designazione Magistrato Relatore");
 
 			if (!"0610".equals(codEsito))
 				throw new SIUSException(SIUSException.USER_MESSAGE,
-						"Per il procedimento indicato non è stato emesso il provvedimento di designazione Magistrato Relatore!");
+						"Per il procedimento indicato non ï¿½ stato emesso il provvedimento di designazione Magistrato Relatore!");
 
 			if (!"22".equals(lFascicoloGPModel.getFascicoloSiusModel().getCodStatoFascicolo()))
 				throw new SIUSException(SIUSException.USER_MESSAGE,
-						"Stato Procedimento non coerente con l'emissione dell'Applicazione Provvisoria!");
+						"Stato Procedimento non coerente con l'emissione dell'Applicazione Misure Alternative Dl 123/2018!");
 		} else {
 			throw new SIUSException(SIUSException.USER_MESSAGE,
-					"Per il procedimento indicato non è stato emesso il provvedimento di designazione Magistrato Relatore!");
+					"Per il procedimento indicato non ï¿½ stato emesso il provvedimento di designazione Magistrato Relatore!");
 		}
 
 		setRequestAttribute("isOrdApplMADL1232018", "SI"); // AM Ammissione Provvisoria
