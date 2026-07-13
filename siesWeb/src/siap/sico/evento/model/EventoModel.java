@@ -98,6 +98,12 @@ public class EventoModel extends GenericModel {
 	// Numero di documenti allegati e validati associati all'evento
 	private int mNumAllValidati;
 	private String mDescrProvvedimento;
+
+	// Identificativo del documento su Mercurio (Documentale Unico del Ministero della Giustizia),
+	// valorizzato dopo l'archiviazione/firma tramite siap.mercurio.client.MercurioDocumentaleClient.
+	// NOTA: richiede la colonna EVENTO.ID_DOC_MERCURIO (VARCHAR2(100)) e il relativo mapping MyBatis,
+	// non ancora presenti a DB (cfr. stima_integrazione_mercurio.md §2.2/§4).
+	private String mIdDocMercurio;
 	private String mDescrizioneData; // STUB 21/10/2005 REWORK STATO ESECUZIONE.
 	private Date mData; // STUB 21/10/2005 REWORK STATO ESECUZIONE.
 	private BigDecimal mPenAccIdPenaAccessoria; // STUB 08/02/2006 NUOVE PENE
@@ -615,6 +621,14 @@ public class EventoModel extends GenericModel {
 
 	public String getFlagDocumentoRegistrato() {
 		return mFlagDocumentoRegistrato;
+	}
+
+	public String getIdDocMercurio() {
+		return mIdDocMercurio;
+	}
+
+	public void setIdDocMercurio(String aIdDocMercurio) {
+		mIdDocMercurio = aIdDocMercurio;
 	}
 
 	public String getCodMagistrato() {

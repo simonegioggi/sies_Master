@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -12,8 +11,17 @@ import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
+import f3b.util.F3BException;
 import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
+import siap.mercurio.client.MercurioAuthClient;
+import siap.mercurio.client.MercurioDocumentaleClient;
+import siap.mercurio.client.MercurioFirmaClient;
+import siap.mercurio.config.MercurioConfig;
+import siap.mercurio.exception.MercurioIntegrationException;
+import siap.mercurio.model.MercurioArchiviazioneRequest;
+import siap.mercurio.model.MercurioArchiviazioneResponse;
+import siap.mercurio.model.MercurioFirmaRequest;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.soggetto.controller.ISoggetto;
@@ -42,7 +50,7 @@ import siap.sius.util.SIUSLookupRemote;
  *
  * @version 1.0
  */
-@SuppressWarnings({ "rawtypes", "unchecked" })
+@SuppressWarnings("unchecked")
 public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
@@ -58,6 +66,99 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 	public IEvento mEveCtrl = null;
 	public byte[] mBytes = null;
 
+	// Client per l'integrazione con il Documentale Unico Mercurio (archiviazione + firma digitale),
+	// inizializzati lazy da integraMercurio(). Attivabile/disattivabile tramite
+	// MercurioConfig.isIntegrationEnabled() (property mercurio.integration.enabled).
+	private MercurioAuthClient mMercurioAuthClient;
+	private MercurioDocumentaleClient mMercurioDocumentaleClient;
+	private MercurioFirmaClient mMercurioFirmaClient;
+
+	/**
+	 * Integrazione con il Documentale Unico Mercurio: archivia il documento allegato all'evento
+	 * (createStream, Â§8.3.2) e ne firma digitalmente il contenuto appena archiviato (signContent,
+	 * Â§8.3.14), impostando su {@code aModel} l'identificativo Mercurio restituito
+	 * ({@code idDocMercurio}).
+	 *
+	 * Non modifica in alcun modo il flusso di persistenza BLOB esistente: legge i byte da
+	 * {@code mInStr} e poi lo riavvolge con {@code reset()} in modo che
+	 * {@code EventoModel.setDocBlobIn(mInStr)} continui a funzionare come prima.
+	 *
+	 * L'integrazione e' disattivata di default (property {@code mercurio.integration.enabled=false}) e,
+	 * in caso di errore, per default NON blocca l'upload (fail-open, property
+	 * {@code mercurio.integration.blockOnError=false}): la politica di rollback definitiva e' ancora da
+	 * confermare con il referente funzionale (cfr. stima_integrazione_mercurio.md, rischio R5).
+	 *
+	 * @param aModel model dell'evento in corso di aggiornamento; su esito positivo viene valorizzato
+	 *               {@code idDocMercurio}.
+	 * @param aId    id evento, utilizzato solo per comporre il nome file e per i log.
+	 */
+	protected void integraMercurio(EventoModel aModel, BigDecimal aId) throws Exception {
+
+		MercurioConfig lConfig = MercurioConfig.getInstance();
+		if (!lConfig.isIntegrationEnabled()) {
+			return;
+		}
+		if (mInStr == null) {
+			siesLogger.debug(this.getClass().getName() + ".integraMercurio(): mInStr nullo, nessun documento da inviare a Mercurio.");
+			return;
+		}
+
+		try {
+			// Lettura dei byte del documento senza consumare mInStr: verrÃ  riavvolto subito dopo, in modo
+			// che la successiva EventoModel.setDocBlobIn(mInStr) continui a persistere il BLOB come oggi.
+			byte[] lContenuto = new byte[mInStr.available()];
+			mInStr.read(lContenuto);
+			mInStr.reset();
+
+			if (mMercurioDocumentaleClient == null) {
+				mMercurioAuthClient = new MercurioAuthClient();
+				mMercurioDocumentaleClient = new MercurioDocumentaleClient(mMercurioAuthClient);
+				mMercurioFirmaClient = new MercurioFirmaClient(mMercurioAuthClient);
+			}
+
+			MercurioArchiviazioneRequest lArchRequest = new MercurioArchiviazioneRequest();
+			lArchRequest.setContenuto(lContenuto);
+			// TODO: nome file e tipo documento reali (non presenti sul form di upload); da confermare con
+			// il referente funzionale Mercurio.
+			lArchRequest.setNomeFile("EVENTO_" + aId + ".pdf");
+			lArchRequest.setTipoDocumento("EVENTO");
+			BigDecimal lIdFascicolo = aModel.getFasSieIdFascicoloSiep() != null ? aModel.getFasSieIdFascicoloSiep()
+					: aModel.getFasSiuIdFascicoloSius();
+			if (lIdFascicolo != null) {
+				lArchRequest.setIdFascicolo(lIdFascicolo.toString());
+			}
+			lArchRequest.setCodiceUfficio(getCodUfficioUtenteConnesso());
+			lArchRequest.setUtente(getCodUtenteConnesso());
+
+			MercurioArchiviazioneResponse lArchResponse = mMercurioDocumentaleClient.archivia(lArchRequest);
+			if (!lArchResponse.isEsito() || lArchResponse.getIdDocMercurio() == null
+					|| lArchResponse.getContentId() == null) {
+				throw new MercurioIntegrationException(
+						"Archiviazione su Mercurio non riuscita o priva di documentIdClient/contentId per evento "
+								+ aId, null);
+			}
+
+			MercurioFirmaRequest lFirmaRequest = new MercurioFirmaRequest();
+			lFirmaRequest.setUsername(lConfig.getSignUsername());
+			lFirmaRequest.setPassword(lConfig.getSignPassword());
+			lFirmaRequest.setPin(lConfig.getSignPin());
+			lFirmaRequest.setReason(lConfig.getSignReason());
+
+			mMercurioFirmaClient.firma(lArchResponse.getIdDocMercurio(), lArchResponse.getContentId(), lFirmaRequest);
+
+			aModel.setIdDocMercurio(lArchResponse.getIdDocMercurio());
+			siesLogger.info(this.getClass().getName() + ".integraMercurio(): evento " + aId
+					+ " archiviato e firmato su Mercurio, idDocMercurio=" + lArchResponse.getIdDocMercurio());
+		} catch (MercurioIntegrationException e) {
+			siesLogger.error(this.getClass().getName() + ".integraMercurio(): errore integrazione Mercurio per evento "
+					+ aId, e);
+			if (lConfig.isBlockOnIntegrationError()) {
+				throw e;
+			}
+		}
+	}
+
+	@Override
 	public String processRequest() throws Exception {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -85,7 +186,7 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 		// *********************************************
 		// MEV_AVVOCATURA - INIZIO
 		// **********************************************
-		// Flag che segnala la necessità di inserire o meno un record nella tabella
+		// Flag che segnala la necessita' di inserire o meno un record nella tabella
 		// AVVISI_AVVOCATO
 		String lFlgAvvocatura = "";
 		if (!isRequestParameterNullObj("FlagAvvocatura")) {
@@ -95,18 +196,16 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 		// MEV_AVVOCATURA - FINE
 		// **********************************************
 
-		// Flag che segnala la necessità del controllo della presenza del documento nel BLOB
+		// Flag che segnala la necessita' del controllo della presenza del documento nel BLOB
 		boolean lControlloBlob = true;
 		// Se si proviene dalla form di Warning non si effettua il controllo sul BLOB
-		if (!isRequestParameterNullObj(CAMPO_CK_WARNING))
+		if (!isRequestParameterNullObj(CAMPO_CK_WARNING)) {
 			lControlloBlob = false;
-
+		}
 		if (lControlloBlob) {
 			// Lettura del file di Upload
-
 			InputStream lInput = null;
 			lInput = getFile(ICostantiEvento.CAMPO_BLOB);
-
 			if (lInput != null && lInput.available() > 0) {
 				byte[] lBuffer = new byte[lInput.available()];
 				lInput.read(lBuffer);
@@ -115,13 +214,15 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 				// LogF3B.getLogger()
 				siesLogger.debug("BYTE ARRAY INPUT LENGTH >>> " + mInStr.available());
 				lControlloBlob = false;
-			} else
+			} else {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
 				siesLogger.warn("file di Upload non disponibile !");
+				throw new SIUSException(F3BException.USER_MESSAGE, "Attenzione: allegato mancante!");
+			}
 		}
 
-		// 20171011: [SG] controllo preventivo se l'evento sia già validato
+		// 20171011: [SG] controllo preventivo se l'evento sia gia' validato
 		IEvento iEvento = SICOLookupRemote.getEventoRemote();
 		EventoModel em = iEvento.ExRicercaEventoByKey(lId);
 		// if (em.getFlagDocumentoRegistrato() != null && "S".equals(em.getFlagDocumentoRegistrato()))
@@ -176,11 +277,13 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 					lCtrl.ExUpdateDocument(lModel);
 				}
 			} else {
-				if (!isRequestChecked(ICostantiEvento.CAMPO_VALIDA))
+				if (!isRequestChecked(ICostantiEvento.CAMPO_VALIDA)) {
 					lControlloBlob = false;
+				}
 			}
-		} else if (!isRequestChecked(ICostantiEvento.CAMPO_VALIDA))
+		} else if (!isRequestChecked(ICostantiEvento.CAMPO_VALIDA)) {
 			lControlloBlob = false;
+		}
 
 		boolean lisUpdate = true;
 
@@ -198,12 +301,10 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 		}
 		// Update
 		if (lisUpdate) {
-
 			// INIZIO @emma 12072018 intervento post COLLAUDO 11.2
 			if ("S".equals(lFlagValidazioneEsito)) {
-				// se è stata chiesta la validazione dell'esito, devo updatare
+				// se e' stata chiesta la validazione dell'esito, devo updatare
 				// il nuovo campo flag_validazione_esito ='S' sulla tabella IMPUGNAZIONE_SIGE
-
 				// Lettura ID Impugnazione
 				// BigDecimal lIdImpu =
 				// getRequestBigDecimalParameter(ICostantiImpugnazioneSige.CAMPO_ID_IMPUGNAZIONE);
@@ -226,15 +327,16 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
 					"Aggiornamento Documento Avvenuto Correttamente!");
 		}
-		// Se c'è lo stack di ritorno effettua un ritorno in cima
+		// Se c'e' lo stack di ritorno effettua un ritorno in cima
 		String lRitorno = goToRitorno();
 		if (lRitorno == null && !isRequestParameterNullObj(CAMPO_AZIONE_DETTAGLIO)) {
 			RedirectTo lRedirigi = new RedirectTo();
 			lRedirigi.setPage(IWebConstants.PG_MAIN);
 			lRedirigi.setAction(getRequestStringParameter(CAMPO_AZIONE_DETTAGLIO) + "&" + CAMPO_ID_EVENTO
 					+ "=" + getRequestStringParameter(ICostantiEvento.CAMPO_ID_EVENTO));
-			if (!isSessionAttributeNullObj(IWebConstants.STACK_RITORNO))
+			if (!isSessionAttributeNullObj(IWebConstants.STACK_RITORNO)) {
 				lRedirigi.setParameter(IWebConstants.LINK_RITORNO, "");
+			}
 			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
 		}
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -309,13 +411,19 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 		lModel.setDataAggiornamento(DateUtils.getSysDate());
 		lModel.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
 		lModel.setCodOperatoreAggiornamento(getCodUtenteConnesso());
-		if (isRequestChecked(ICostantiEvento.CAMPO_VALIDA))
+		if (isRequestChecked(ICostantiEvento.CAMPO_VALIDA)) {
 			lModel.setFlagDocumentoRegistrato("S");
-		else
+		} else {
 			lModel.setFlagDocumentoRegistrato("N");
+		}
+
+		// Integrazione con il Documentale Unico Mercurio (archiviazione + firma del documento allegato).
+		integraMercurio(lModel, aId);
+
 		// Aggiornamento del record attraverso la chiamata al Controller
-		if (mEveCtrl == null)
+		if (mEveCtrl == null) {
 			mEveCtrl = SICOLookupRemote.getEventoRemote();
+		}
 
 		mEveCtrl.ExUpdateDocument(lModel);
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -325,7 +433,7 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 	}
 
 	/**
-	 * Funzione di utilità. Viene richiamata per controllare l'esistenza del documento nel BLOB della tabella
+	 * Funzione di utilita'. Viene richiamata per controllare l'esistenza del documento nel BLOB della tabella
 	 * EVENTO. Se tale documento non esiste viene lanciata un'eccezione.
 	 *
 	 * @param aId
@@ -341,8 +449,9 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 		EventoModel lModel = new EventoModel();
 		lModel.setIdEvento(aId);
 		// Attivazione della funzione attraverso il Controller
-		if (mEveCtrl == null)
+		if (mEveCtrl == null) {
 			mEveCtrl = SICOLookupRemote.getEventoRemote();
+		}
 		mEveCtrl.ExGetDocumento(lModel);
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -371,13 +480,19 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 		lModel.setDataAggiornamento(DateUtils.getSysDate());
 		lModel.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
 		lModel.setCodOperatoreAggiornamento(getCodUtenteConnesso());
-		if (isRequestChecked(ICostantiEvento.CAMPO_VALIDA))
+		if (isRequestChecked(ICostantiEvento.CAMPO_VALIDA)) {
 			lModel.setFlagDocumentoRegistrato("S");
-		else
+		} else {
 			lModel.setFlagDocumentoRegistrato("N");
+		}
+
+		// Integrazione con il Documentale Unico Mercurio (archiviazione + firma del documento allegato).
+		integraMercurio(lModel, aId);
+
 		// Aggiornamento del record attraverso la chiamata al Controller
-		if (mEveCtrl == null)
+		if (mEveCtrl == null) {
 			mEveCtrl = SICOLookupRemote.getEventoRemote();
+		}
 
 		// *********************************************
 		// MEV_AVVOCATURA - INIZIO
@@ -424,9 +539,10 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 
 			// Recupero il Fascicolo Sius in sessione
 			FascicoloGPModel lFasGPMod = null;
-			if (isSessionAttributeNullObj("fascicoloSiusGP"))
-				throw new SIUSException(SIUSException.USER_MESSAGE,
+			if (isSessionAttributeNullObj("fascicoloSiusGP")) {
+				throw new SIUSException(F3BException.USER_MESSAGE,
 						"Fascicolo SIUS non presente in sessione!");
+			}
 
 			lFasGPMod = (FascicoloGPModel) getSessionAttribute("fascicoloSiusGP");
 
@@ -452,7 +568,7 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 			 */
 			// ***** FINE INTERVENTO MEV_20 *****//
 			if (lFasGPMod != null && lFasGPMod.getFascicoloSiusModel() != null) {
-				// provo a verificare se è presente nell'oggetto FascicoloGPModel
+				// provo a verificare se e' presente nell'oggetto FascicoloGPModel
 				cognomeSoggetto = lFasGPMod.getFascicoloSiusModel().getSoggetto() != null
 						? lFasGPMod.getFascicoloSiusModel().getSoggetto().getCognome()
 						: "";
@@ -472,11 +588,8 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 
 			AvvisiAvvocatoModel lAvvisiAvvModel = null;
 
-			Iterator itxAvv = avvocati.iterator();
-			while (itxAvv.hasNext()) {
+			for (AvvocatoSiusModel lAvv : avvocati) {
 				lAvvisiAvvModel = new AvvisiAvvocatoModel();
-
-				AvvocatoSiusModel lAvv = (AvvocatoSiusModel) itxAvv.next();
 
 				lAvvisiAvvModel.setIdAvvocato(lAvv.getAvvocato().getIdAvvocato());
 				lAvvisiAvvModel.setCognomeSoggeto(cognomeSoggetto);
