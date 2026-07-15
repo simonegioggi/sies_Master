@@ -16,17 +16,9 @@ import siap.sige.udienzaparti.model.AnagraficaPartiUdienzaModel;
 import siap.sige.util.SIGELookupRemote;
 
 /**
- * <p>
- * Title: ActModificaParteUdienza
- * </p>
- * <p>
- * Description: Classe Azione di modifica della Parte Udienza (Offesa/Civile - Fisica/Giuridica)
- * <p>
- * Copyright: Copyright (c) 2008
- * </p>
- * <p>
- * Company: Engineering S.p.A.
- * </p>
+ * ActModificaParteUdienza - Classe Azione di modifica della Parte Udienza (Offesa/Civile - Fisica/Giuridica)
+ *
+ * @version 1.0
  */
 public class ActModificaParteUdienza extends ActionSiap implements ICostantiPartiUdienza {
 
@@ -60,11 +52,11 @@ public class ActModificaParteUdienza extends ActionSiap implements ICostantiPart
 		// lRedir.setParameter(IWebConstants.FLAG_RITORNO, "1");
 
 		return lRedir.toString();
-
 	}
 
 	@SuppressWarnings("rawtypes")
 	protected AnagraficaPartiUdienzaModel letturaAnagraficaParte() throws Exception {
+
 		AnagraficaPartiUdienzaModel lAnagraficaParteModel = new AnagraficaPartiUdienzaModel();
 		ResidenzaModel residenzaMod = new ResidenzaModel();
 
@@ -177,8 +169,10 @@ public class ActModificaParteUdienza extends ActionSiap implements ICostantiPart
 		// Flag Convocazione Udienza
 		lAnagraficaParteModel.setFlagConvUdienza(getRequestStringParameter(CAMPO_CONVOCAZIONE_UDIENZA));
 
-		// Residenza/Domicilio
+		// 20260415 [SG]: aggiunto controllo su CF che deve essere obbligatorio e conforme
+		// SoggettoUtil.controllaCF(lSogMod);
 
+		// Residenza/Domicilio
 		// Tipo Residenza
 		residenzaMod.setCodTipoResidenza("R");
 

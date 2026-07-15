@@ -22,6 +22,8 @@ import siap.siep.scadenzario.model.ScadenzarioModel;
  */
 public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 
+	// private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+
 	public ScadenzarioSoggettoSqlDAO(Connection con) {
 		super(con);
 	}
@@ -31,12 +33,13 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 
 		String lSql = "";
 		// Select generale
-		if ("CSMS".equals(tipoRicerca))
+		if ("CSMS".equals(tipoRicerca)) {
 			lSql = getSqlQueryMisSic();
-		else if ("DIFFMS".equals(tipoRicerca)) { // 05/12/2019 : ANOMALIA IN COLLAUDO 11.3 (terza sessione)
+		} else if ("DIFFMS".equals(tipoRicerca)) { // 05/12/2019 : ANOMALIA IN COLLAUDO 11.3 (terza sessione)
 			lSql = getSqlQueryNew();
-		} else
+		} else {
 			lSql = getSqlQueryOLD(); // 05/12/2019 : ANOMALIA IN COLLAUDO 11.3 (terza sessione)
+		}
 		// Imposto le Condizioni
 		lSql += " " + setCondizione(aModel);
 		// MEV_39: differenziamo l'ordinamento
@@ -56,8 +59,9 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 					+ " xx.RV_MEANING, xx.ID_SCADENZARIO_SIEP, XX.DATA_INIZIO_SCADENZA, XX.DATA_FINE_SCADENZA, xx.COD_STATO_NOTIFICA, XX.RESIDUO,"
 					+ " XX.DATA_SCADENZA_COMUNICAZIONE, xx.FLAG_VISTO ";
 			// FINE MEV_39: AGGIUNGO LA LISTAGG
-		} else
+		} else {
 			lSql += " ORDER BY SCA.DATA_FINE_SCADENZA DESC";
+		}
 		setStatement(lSql);
 	}
 
@@ -67,18 +71,38 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 		String lSql = new String("");
 		if ("20".equals(aModel.getCodTipoScadenzario())) {
 			lSql = getSqlQueryNew();
+			// MEV-2026_1 - Se incrociano i dati con la pena virtuale
+		} else if ("02".equals(aModel.getCodTipoScadenzario())) {
+			if (aModel.getScadFinePenaSuPenaResidua()) {
+				// Nuova ricerca su pena residua
+				lSql = getSqlQueryFinePenaSuPenaResidua();
+			} else { // Vecchia Ricerca su SCADENZARIO_SIEP
+				// Vecchia Ricerca su SCADENZARIO_SIEP
+				lSql = getSqlQueryFinePena();
+				// MEV-2026_1
+			}
 		} else {
 			lSql = getSqlQueryOLD();
 		}
 
 		String lPaginedStatement = new String("");
 
-		lSql += " " + setCondizione(aModel);
+		if ("02".equals(aModel.getCodTipoScadenzario())) {
+			if (aModel.getScadFinePenaSuPenaResidua()) {
+				// Condizione su PENA_RESIDUA
+				lSql += " " + setCondizioneScadFinePena(aModel);
+			} else { // Condizione su SCADENZARIO_SIEP
+				// Condizione su SCADENZARIO_SIEP
+				lSql += " " + setCondizione(aModel);
+			}
+		} else {
+			lSql += " " + setCondizione(aModel);
+		}
+
 		lSql += " " + setOrderByResiduo();
 
-		lPaginedStatement = "SELECT * FROM (SELECT INNER.* , Rownum rn FROM (" + lSql
-				+ "  ) INNER ) WHERE rn between  " + ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1)
-				+ " AND " + (aPage) * IWebConstants.RESULT_PER_PAGE;
+		lPaginedStatement = "SELECT * FROM (SELECT INNER.* , Rownum rn FROM (" + lSql + "  ) INNER ) WHERE rn between  "
+				+ ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1) + " AND " + (aPage) * IWebConstants.RESULT_PER_PAGE;
 
 		setStatement(lPaginedStatement);
 	}
@@ -125,6 +149,105 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 		lStatement += " AND TIPSCA.RV_DOMAIN = 'TIPO_SCADENZARIO'";
 		lStatement += " AND TIPSCA.RV_LOW_VALUE = SCA.COD_TIPO_SCADENZARIO";
 		lStatement += " AND TIPCOM.COD_COMUNE = SOG.COD_COMUNE_NASCITA";
+
+		return lStatement;
+	}
+
+	/**
+	 *
+	 * @return
+	 * @since MEV-2026_1
+	 */
+	protected String getSqlQueryFinePena() {
+		String lStatement = new String("");
+		lStatement = "SELECT SOG.ID_SOGGETTO, SOG.NOME, SOG.COGNOME, TIPCOM.DESCRIZIONE COMUNE_NASCITA,";
+		lStatement += " SOG.DATA_NASCITA, FAS.ID_FASCICOLO_SIEP, FAS.CHIAVE_ANNO, FAS.CHIAVE_PROGR,";
+		lStatement += " SCA.ID_SCADENZARIO_SIEP, SCA.DATA_INIZIO_SCADENZA, SCA.DATA_FINE_SCADENZA,";
+		lStatement += " TIPSCA.RV_MEANING, SCA.COD_STATO_NOTIFICA,";
+		// MEV_39: aggiunto campo in estrazione
+		lStatement += " SCA.FLAG_VISTO,";
+		lStatement += " (SCA.DATA_FINE_SCADENZA-TO_DATE(TO_CHAR(SYSDATE,'DD/MM/YYYY'),'DD/MM/YYYY')) RESIDUO";
+		// MEV-2026_1 -
+		lStatement += " , PENA_VIRTUALE.DATA_SCARC_LA_FUNG AS DATA_FINE_PENA_VIRTUALE ";
+		// MEV-2026_1 -
+		lStatement += " FROM SOGGETTO SOG, SCADENZARIO_SIEP SCA, FASCICOLO_SIEP FAS,";
+		lStatement += " CG_REF_CODES TIPSCA, COMUNE TIPCOM";
+		// MEV-2026_1 - Si va in join con la tabella CALCOLO_PENA_DL92 per recuperare
+		// la pena virtuale se presente
+		lStatement += " , (SELECT c.FAS_SIE_ID_FASCICOLO_SIEP, c.DATA_SCARC_LA_FUNG ";
+		lStatement += "      FROM CALCOLO_PENA_DL92 c ";
+		lStatement += "     WHERE 1= 1  ";
+		// lStatement += " AND c.COD_UFFICIO_INSERIMENTO = '00127202101' ";
+		lStatement += "       AND c.DATA_INSERIMENTO =  ";
+		lStatement += "       ( SELECT MAX(DATA_INSERIMENTO)  ";
+		lStatement += "           FROM CALCOLO_PENA_DL92 dd  ";
+		lStatement += "          WHERE dd.FAS_SIE_ID_FASCICOLO_SIEP = c.FAS_SIE_ID_FASCICOLO_SIEP  ";
+		// lStatement += " AND dd.COD_UFFICIO_INSERIMENTO = '00127202101' ";
+		lStatement += "        ) ";
+		lStatement += "     ) PENA_VIRTUALE ";
+		// MEV-2026_1 - FINE
+		lStatement += " WHERE SCA.FAS_SIE_ID_FASCICOLO_SIEP = FAS.ID_FASCICOLO_SIEP";
+		lStatement += " AND FAS.SOG_ID_SOGGETTO = SOG.ID_SOGGETTO";
+		lStatement += " AND TIPSCA.RV_DOMAIN = 'TIPO_SCADENZARIO'";
+		lStatement += " AND TIPSCA.RV_LOW_VALUE = SCA.COD_TIPO_SCADENZARIO";
+		lStatement += " AND TIPCOM.COD_COMUNE = SOG.COD_COMUNE_NASCITA";
+
+		return lStatement;
+	}
+
+	/**
+	 * 01.2026 metodo di test per estrarre lo scadenzario fine pena incrociando
+	 * direttamente la tabella PENA_RESIDUA (ultima pena validata) invece della
+	 * tabella SCADENZARIO_SIEP n.b. come alias delle colonne si usano gli stessi
+	 * nomi del metodo che legge da SCADENZARIO_SIEP per non dover modificare il
+	 * getModel
+	 *
+	 * @return
+	 */
+	protected String getSqlQueryFinePenaSuPenaResidua() {
+		String lStatement = new String("");
+		lStatement = "SELECT SOG.ID_SOGGETTO, SOG.NOME, SOG.COGNOME, TIPCOM.DESCRIZIONE COMUNE_NASCITA ";
+		lStatement += " , SOG.DATA_NASCITA, FAS.ID_FASCICOLO_SIEP, FAS.CHIAVE_ANNO, FAS.CHIAVE_PROGR ";
+		lStatement += " , '' AS ID_SCADENZARIO_SIEP, PENA_RESIDUA_CORRENTE.DATA_INIZIO AS DATA_INIZIO_SCADENZA, PENA_RESIDUA_CORRENTE.DATA_FINE AS DATA_FINE_SCADENZA ";
+		lStatement += " , 'Fine Pena' AS RV_MEANING, '' AS COD_STATO_NOTIFICA ";
+		// MEV_39: aggiunto campo in estrazione
+		lStatement += " , '' AS FLAG_VISTO ";
+		lStatement += " , (PENA_RESIDUA_CORRENTE.DATA_FINE-TO_DATE(TO_CHAR(SYSDATE,'DD/MM/YYYY'),'DD/MM/YYYY')) RESIDUO";
+		// MEV-2026_1 -
+		lStatement += " , PENA_VIRTUALE.DATA_SCARC_LA_FUNG AS DATA_FINE_PENA_VIRTUALE ";
+		// MEV-2026_1 -
+		lStatement += " FROM SOGGETTO SOG, FASCICOLO_SIEP FAS, COMUNE TIPCOM";
+		// ===============================================================================
+		// MEV-2026_1 - Si va in join con la tabella CALCOLO_PENA_DL92 per recuperare
+		// la pena virtuale se presente
+		lStatement += " , (SELECT c.FAS_SIE_ID_FASCICOLO_SIEP, c.DATA_SCARC_LA_FUNG ";
+		lStatement += "      FROM CALCOLO_PENA_DL92 c ";
+		lStatement += "     WHERE 1= 1  ";
+		lStatement += "       AND c.DATA_INSERIMENTO =  ";
+		lStatement += "       ( SELECT MAX(DATA_INSERIMENTO)  ";
+		lStatement += "           FROM CALCOLO_PENA_DL92 dd  ";
+		lStatement += "          WHERE dd.FAS_SIE_ID_FASCICOLO_SIEP = c.FAS_SIE_ID_FASCICOLO_SIEP  ";
+		lStatement += "        ) ";
+		lStatement += "     ) PENA_VIRTUALE ";
+		// ===============================================================================
+		lStatement += ", (SELECT p.FAS_SIE_ID_FASCICOLO_SIEP, p.DATA_INIZIO, p.DATA_FINE  ";
+		lStatement += "     FROM PENA_RESIDUA p ";
+		lStatement += "    WHERE 1= 1  ";
+		lStatement += "      AND p.FLAG_VALIDATO = 'S' ";
+		lStatement += "      AND p.DATA_INSERIMENTO =  ";
+		lStatement += "      ( SELECT MAX(pp.DATA_INSERIMENTO) ";
+		lStatement += "          FROM PENA_RESIDUA pp  ";
+		lStatement += "         WHERE pp.FAS_SIE_ID_FASCICOLO_SIEP = p.FAS_SIE_ID_FASCICOLO_SIEP  ";
+		lStatement += "           AND pp.FLAG_VALIDATO = 'S' ";
+		lStatement += "      )  ";
+		lStatement += " ) PENA_RESIDUA_CORRENTE ";
+		// ===============================================================================
+		// MEV-2026_1 - FINE
+		// ===============================================================================
+		lStatement += " WHERE 1=1 ";
+		lStatement += "   AND FAS.SOG_ID_SOGGETTO = SOG.ID_SOGGETTO ";
+		lStatement += "   AND TIPCOM.COD_COMUNE = SOG.COD_COMUNE_NASCITA ";
+		lStatement += "   AND PENA_RESIDUA_CORRENTE.FAS_SIE_ID_FASCICOLO_SIEP = FAS.ID_FASCICOLO_SIEP ";
 
 		return lStatement;
 	}
@@ -183,8 +306,8 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 			// lStatement +=
 			// " ) WHERE rn BETWEEN "+((aPage-1)*IWebConstants.RESULT_PER_PAGE+1)+
 			// " AND "+ (aPage)*IWebConstants.RESULT_PER_PAGE;
-			lStatement += " ) INNER )WHERE rn BETWEEN " + ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1)
-					+ " AND " + (aPage) * IWebConstants.RESULT_PER_PAGE;
+			lStatement += " ) INNER )WHERE rn BETWEEN " + ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1) + " AND "
+					+ (aPage) * IWebConstants.RESULT_PER_PAGE;
 		}
 
 		setStatement(lStatement);
@@ -192,15 +315,21 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 
 	// private String getSqlQueryVVR() {
 	// String lStatement = new String("");
-	// lStatement = "SELECT SOG.ID_SOGGETTO, SOG.NOME, SOG.COGNOME, TIPCOM.DESCRIZIONE COMUNE_NASCITA,";
-	// lStatement += " SOG.DATA_NASCITA, FAS.ID_FASCICOLO_SIEP, FAS.CHIAVE_ANNO, FAS.CHIAVE_PROGR,";
-	// lStatement += " SCA.ID_SCADENZARIO_SIEP, SCA.DATA_INIZIO_SCADENZA, SCA.DATA_FINE_SCADENZA,";
+	// lStatement = "SELECT SOG.ID_SOGGETTO, SOG.NOME, SOG.COGNOME,
+	// TIPCOM.DESCRIZIONE COMUNE_NASCITA,";
+	// lStatement += " SOG.DATA_NASCITA, FAS.ID_FASCICOLO_SIEP, FAS.CHIAVE_ANNO,
+	// FAS.CHIAVE_PROGR,";
+	// lStatement += " SCA.ID_SCADENZARIO_SIEP, SCA.DATA_INIZIO_SCADENZA,
+	// SCA.DATA_FINE_SCADENZA,";
 	// lStatement += " TIPSCA.RV_MEANING, SCA.COD_STATO_NOTIFICA,";
-	// lStatement += " (SCA.DATA_FINE_SCADENZA-TO_DATE(TO_CHAR(SYSDATE,'DD/MM/YYYY'),'DD/MM/YYYY')) RESIDUO,";
+	// lStatement += "
+	// (SCA.DATA_FINE_SCADENZA-TO_DATE(TO_CHAR(SYSDATE,'DD/MM/YYYY'),'DD/MM/YYYY'))
+	// RESIDUO,";
 	//
 	// lStatement += " VER.DATA_EMISSIONE";
 	//
-	// lStatement += " FROM SOGGETTO SOG, SCADENZARIO_SIEP SCA, FASCICOLO_SIEP FAS, EVENTO EVE, VERBALE VER,";
+	// lStatement += " FROM SOGGETTO SOG, SCADENZARIO_SIEP SCA, FASCICOLO_SIEP FAS,
+	// EVENTO EVE, VERBALE VER,";
 	// lStatement += " CG_REF_CODES TIPSCA, COMUNE TIPCOM";
 	// lStatement += " WHERE SCA.FAS_SIE_ID_FASCICOLO_SIEP = FAS.ID_FASCICOLO_SIEP";
 	// lStatement += " AND FAS.SOG_ID_SOGGETTO = SOG.ID_SOGGETTO";
@@ -225,27 +354,27 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 		setStatement(lSql);
 	}
 
-	public void ricercaScadenzarioSimeonePagedCompleta(ScadenzarioModel aModel, int aPage)
-			throws DAOException {
+	public void ricercaScadenzarioSimeonePagedCompleta(ScadenzarioModel aModel, int aPage) throws DAOException {
 		String lSql = "";
 
 		// 20171128 [EC]
-		// per scadenzario Legge 165/98 (Decreti Sospensione In Definizione) modifico la query per anomalia
+		// per scadenzario Legge 165/98 (Decreti Sospensione In Definizione) modifico la
+		// query per anomalia
 		// segnalata da TESTA dovuta a duplicazione di record
 		// inseriti su SCADENZARIO_SIEP
-		if ("01".equals(aModel.getCodTipoScadenzario()))
+		if ("01".equals(aModel.getCodTipoScadenzario())) {
 			lSql = getSqlQuerySimeoneDecretiSospInDefinizione();
-		else
+		} else {
 			lSql = getSqlQuerySimeone();
+		}
 
 		String lPaginedStatement = new String("");
 
 		lSql += " " + setCondizione(aModel);
 		lSql += " " + setOrderByDataInizioScadenza();
 
-		lPaginedStatement = "SELECT * FROM (SELECT INNER.* , Rownum rn FROM (" + lSql
-				+ "  ) INNER ) WHERE rn between  " + ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1)
-				+ " AND " + (aPage) * IWebConstants.RESULT_PER_PAGE;
+		lPaginedStatement = "SELECT * FROM (SELECT INNER.* , Rownum rn FROM (" + lSql + "  ) INNER ) WHERE rn between  "
+				+ ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1) + " AND " + (aPage) * IWebConstants.RESULT_PER_PAGE;
 
 		setStatement(lPaginedStatement);
 	}
@@ -293,7 +422,8 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 	}
 
 	/**
-	 * Query per estrarre la lista dei Decreti di Sospensione In Definizione per la Legge 165/98
+	 * Query per estrarre la lista dei Decreti di Sospensione In Definizione per la
+	 * Legge 165/98
 	 *
 	 * @return
 	 */
@@ -302,9 +432,11 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 
 		lStatement = "SELECT DISTINCT SOG.ID_SOGGETTO, SOG.NOME, SOG.COGNOME, ";
 
-		// Paolo Cherubini 16/01/2012 b1/rr/065 sostituisco la seguente riga per ovviare al fatto che non esce
+		// Paolo Cherubini 16/01/2012 b1/rr/065 sostituisco la seguente riga per ovviare
+		// al fatto che non esce
 		// il comune nei soggetti nati all'estero
-		// per cui si procede con il seguente ordine si prende il comune di nascita se non cè il comune
+		// per cui si procede con il seguente ordine si prende il comune di nascita se
+		// non cè il comune
 		// nascita estero se non cè lo stato nascita
 		// lStatement += "TIPCOM.DESCRIZIONE COMUNE_NASCITA, ";
 		lStatement += " nvl (replace(tipcom.descrizione,'-',sog.DESC_COMUNE_NASCITA_ESTERO), upper(nazione.rv_meaning )) comune_nascita, ";
@@ -328,8 +460,7 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 	}
 
 	// 27/03/2015 Scadenzario Fine pena Mis Sic
-	public void ricercaScadenzarioPagedCompletaMisSic(ScadenzarioModel aModel, int aPage)
-			throws DAOException {
+	public void ricercaScadenzarioPagedCompletaMisSic(ScadenzarioModel aModel, int aPage) throws DAOException {
 
 		String lSql = getSqlQueryMisSic();
 
@@ -354,12 +485,13 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 		// FINE MEV_39: AGGIUNGO LA LISTAGG
 
 		// 20191121 [SG]: aggiunto controllo
-		if (Utils.isPresent(aPage))
+		if (Utils.isPresent(aPage)) {
 			lPaginedStatement = "SELECT * FROM (SELECT INNER.* , Rownum rn FROM (" + lSql
-					+ "  ) INNER ) WHERE rn between  " + ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1)
-					+ " AND " + (aPage) * IWebConstants.RESULT_PER_PAGE;
-		else
+					+ "  ) INNER ) WHERE rn between  " + ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1) + " AND "
+					+ (aPage) * IWebConstants.RESULT_PER_PAGE;
+		} else {
 			lPaginedStatement = "SELECT COUNT(*) totale FROM (" + lSql + ")";
+		}
 
 		setStatement(lPaginedStatement);
 	}
@@ -392,8 +524,7 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 		lStatement += " AND TIPCOM.COD_COMUNE = SOG.COD_COMUNE_NASCITA";
 		lStatement += " AND SCA.FAS_SIE_ID_FASCICOLO_SIEP = FASCMS.FAS_SIE_ID_FASCICOLO_SIEP(+)";
 
-		lStatement += "  AND SCA.ID_SCADENZARIO_SIEP ="
-				+ "                     (SELECT MAX(SCADE.ID_SCADENZARIO_SIEP)"
+		lStatement += "  AND SCA.ID_SCADENZARIO_SIEP =" + "                     (SELECT MAX(SCADE.ID_SCADENZARIO_SIEP)"
 				+ "                        FROM SCADENZARIO_SIEP SCADE"
 				// 20191121 [SG]: aggiunta and condition
 				+ "                       WHERE SCADE.FAS_SIE_ID_FASCICOLO_SIEP=FAS.ID_FASCICOLO_SIEP and COD_TIPO_SCADENZARIO = '20')";
@@ -408,9 +539,11 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 		lStatement += " AND PR.DATA_INSERIMENTO = (SELECT MAX(DATA_INSERIMENTO) FROM PENA_RESIDUA"
 				+ "  WHERE FAS_SIE_ID_FASCICOLO_SIEP = SCA.RIF_FASC_SIEP_ORIG AND FLAG_VALIDATO = 'S')";
 		lStatement += " AND FAS.FLAG_VALIDATO = 'S' ";
-		// MEV_39 [EC] In scadenziario non devono apparire i procedimenti per i quali è stata fatta richiesta
+		// MEV_39 [EC] In scadenziario non devono apparire i procedimenti per i quali è
+		// stata fatta richiesta
 		// di accertamento di pericolosità sociale
-		// oppure una trasmissione atti per competenza. Se poi a seguito della trasmissione è stata fatta una
+		// oppure una trasmissione atti per competenza. Se poi a seguito della
+		// trasmissione è stata fatta una
 		// restituzione atti (5200 conn esito 01003), il procedimento deve riapparire
 		lStatement += " AND ( FAS.ID_FASCICOLO_SIEP NOT IN (SELECT EE.FAS_SIE_ID_FASCICOLO_SIEP"
 				+ " FROM EVENTO EE WHERE  EE.FAS_SIE_ID_FASCICOLO_SIEP=FAS.ID_FASCICOLO_SIEP "
@@ -422,19 +555,22 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 		// lStatement += " AND MS.FAS_SIE_ID_FASCICOLO_SIEP(+) = FAS.ID_FASCICOLO_SIEP";
 		// modifico per non estrarre i dati incrociati del titolo 4 e titolo 1
 		// 20191121 [SG]: aggiunta where condition
-		// 20200124 [SG]: modifica by BVN per risolvere problematica scadenzario classe IV fascicoli mancanti
+		// 20200124 [SG]: modifica by BVN per risolvere problematica scadenzario classe
+		// IV fascicoli mancanti
 		// problema riscontrato in collaudo 11.3 con versione oracle installata a PA!
-		// lStatement += " AND ((MS.FAS_SIE_ID_FASCICOLO_SIEP = FAS.ID_FASCICOLO_SIEP and
-		// FAS.ID_FASCICOLO_SIEP not in (select AAA.Fas_Sie_Id_Fascicolo_Collegato from FASC_MS_TO_FASC_SIEP
+		// lStatement += " AND ((MS.FAS_SIE_ID_FASCICOLO_SIEP = FAS.ID_FASCICOLO_SIEP
+		// and
+		// FAS.ID_FASCICOLO_SIEP not in (select AAA.Fas_Sie_Id_Fascicolo_Collegato from
+		// FASC_MS_TO_FASC_SIEP
 		// AAA where AAA.chiave_progr_siep > 40000"
 		// + " ) )or (FASCMS.Fas_Sie_Id_Fascicolo_Siep=FAS.ID_FASCICOLO_SIEP and
-		// fascms.chiave_progr_siep>40000 AND MS.FAS_SIE_ID_FASCICOLO_SIEP = FAS.ID_FASCICOLO_SIEP))";
+		// fascms.chiave_progr_siep>40000 AND MS.FAS_SIE_ID_FASCICOLO_SIEP =
+		// FAS.ID_FASCICOLO_SIEP))";
 		lStatement += " AND ((MS.FAS_SIE_ID_FASCICOLO_SIEP = FAS.ID_FASCICOLO_SIEP and not exists"
 				+ " (select AAA.Fas_Sie_Id_Fascicolo_Collegato" + "    from FASC_MS_TO_FASC_SIEP AAA"
 				+ " where AAA.chiave_progr_siep > 40000 and FAS.ID_FASCICOLO_SIEP=AAA.Fas_Sie_Id_Fascicolo_Collegato))"
 				+ " or" + "(FASCMS.Fas_Sie_Id_Fascicolo_Siep = FAS.ID_FASCICOLO_SIEP and"
-				+ " fascms.chiave_progr_siep > 40000 AND"
-				+ " MS.FAS_SIE_ID_FASCICOLO_SIEP = FAS.ID_FASCICOLO_SIEP))";
+				+ " fascms.chiave_progr_siep > 40000 AND" + " MS.FAS_SIE_ID_FASCICOLO_SIEP = FAS.ID_FASCICOLO_SIEP))";
 		//
 		lStatement += " AND RMS.RV_DOMAIN = 'TIPO_MISURA_SICUREZZA' AND RMS.RV_LOW_VALUE = MS.COD_TIPO";
 		// FINE MEV_39
@@ -448,11 +584,13 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 		String ldata1 = new String();
 		String ldata2 = new String();
 
-		if (aModel.getDataInizioScadenza() != null)
+		if (aModel.getDataInizioScadenza() != null) {
 			ldata1 = DateUtils.getDateToString(aModel.getDataInizioScadenza(), "dd/MM/yyyy");
+		}
 
-		if (aModel.getDataFineScadenza() != null)
+		if (aModel.getDataFineScadenza() != null) {
 			ldata2 = DateUtils.getDateToString(aModel.getDataFineScadenza(), "dd/MM/yyyy");
+		}
 
 		if (aModel.getCodTipoScadenzario() != null) {
 			lCondizioni += " AND SCA.COD_TIPO_SCADENZARIO = '" + aModel.getCodTipoScadenzario() + "'";
@@ -463,35 +601,41 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 			lCondizioni += " AND SCA.FAS_SIE_ID_FASCICOLO_SIEP = " + aModel.getFasSieIdFascicoloSiep();
 		}
 
-		// MEV_39: il controllo ora va fatto sul campo DATA_FINE della tabella PENA_RESIDUA
+		// MEV_39: il controllo ora va fatto sul campo DATA_FINE della tabella
+		// PENA_RESIDUA
 		// per tipo scadenzario = 20
 		if (aModel.getTipoRic().equals("sette")) {
-			if ("20".equals(aModel.getCodTipoScadenzario()))
-				lCondizioni += " AND PR.DATA_FINE BETWEEN TO_DATE('" + ldata1
-						+ "','DD/MM/YYYY') AND TO_DATE('" + ldata2 + "','DD/MM/YYYY')";
-			else
+			if ("20".equals(aModel.getCodTipoScadenzario())) {
+				lCondizioni += " AND PR.DATA_FINE BETWEEN TO_DATE('" + ldata1 + "','DD/MM/YYYY') AND TO_DATE('" + ldata2
+						+ "','DD/MM/YYYY')";
+			} else {
 				lCondizioni += " AND SCA.DATA_FINE_SCADENZA BETWEEN TO_DATE('" + ldata1
 						+ "','DD/MM/YYYY') AND TO_DATE('" + ldata2 + "','DD/MM/YYYY')";
+			}
 		}
 
-		// MEV_39: il controllo ora va fatto sul campo DATA_FINE della tabella PENA_RESIDUA
+		// MEV_39: il controllo ora va fatto sul campo DATA_FINE della tabella
+		// PENA_RESIDUA
 		// per tipo scadenzario = 20
 		// scaduti
 		if (aModel.getTipoRic().equals("scaduto")) {
-			if ("20".equals(aModel.getCodTipoScadenzario()))
+			if ("20".equals(aModel.getCodTipoScadenzario())) {
 				lCondizioni += " AND PR.DATA_FINE < TO_DATE('" + ldata1 + "','DD/MM/YYYY')";
-			else
+			} else {
 				lCondizioni += " AND SCA.DATA_FINE_SCADENZA < TO_DATE('" + ldata1 + "','DD/MM/YYYY')";
+			}
 		}
 
-		// MEV_39: il controllo ora va fatto sul campo DATA_FINE della tabella PENA_RESIDUA
+		// MEV_39: il controllo ora va fatto sul campo DATA_FINE della tabella
+		// PENA_RESIDUA
 		// per tipo scadenzario = 20
 		// oggi
 		if (aModel.getTipoRic().equals("oggi")) {
-			if ("20".equals(aModel.getCodTipoScadenzario()))
+			if ("20".equals(aModel.getCodTipoScadenzario())) {
 				lCondizioni += " AND PR.DATA_FINE = TO_DATE('" + ldata2 + "','DD/MM/YYYY')";
-			else
+			} else {
 				lCondizioni += " AND SCA.DATA_FINE_SCADENZA = TO_DATE('" + ldata2 + "','DD/MM/YYYY')";
+			}
 		}
 
 		// PER UFFICIO
@@ -501,23 +645,20 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 
 		// Cerca i fascicoli a partire da una coppia Progressivo/Anno
 		if ((aModel.getChiaveAnnoIniziale() != null) && (aModel.getChiaveAnnoIniziale().intValue() >= 0)
-				&& (aModel.getChiaveProgrIniziale() != null)
-				&& (aModel.getChiaveProgrIniziale().intValue() >= 0)) {
+				&& (aModel.getChiaveProgrIniziale() != null) && (aModel.getChiaveProgrIniziale().intValue() >= 0)) {
 			lCondizioni += " AND ( (FAS.CHIAVE_ANNO > " + aModel.getChiaveAnnoIniziale() + ")";
-			lCondizioni += " OR (FAS.CHIAVE_ANNO = " + aModel.getChiaveAnnoIniziale()
-					+ " AND FAS.CHIAVE_PROGR >= " + aModel.getChiaveProgrIniziale() + "))";
+			lCondizioni += " OR (FAS.CHIAVE_ANNO = " + aModel.getChiaveAnnoIniziale() + " AND FAS.CHIAVE_PROGR >= "
+					+ aModel.getChiaveProgrIniziale() + "))";
 		}
 
 		// Cerca i fascicoli fino ad una coppia Progressivo/Anno
 		if ((aModel.getChiaveAnnoFinale() != null) && (aModel.getChiaveAnnoFinale().intValue() >= 0)
-				&& (aModel.getChiaveProgrFinale() != null)
-				&& (aModel.getChiaveProgrFinale().intValue() >= 0)) {
+				&& (aModel.getChiaveProgrFinale() != null) && (aModel.getChiaveProgrFinale().intValue() >= 0)) {
 			// Nel caso non venga specificata la coppia di ricerca iniziale,
 			// vengono cercati i fascicoli
 			// a partire dal primo fascicolo dell'anno finale specificato
 			if ((aModel.getChiaveAnnoIniziale() == null)
-					|| (aModel.getChiaveAnnoIniziale().intValue() <= 0)
-							&& (aModel.getChiaveProgrIniziale() == null)
+					|| (aModel.getChiaveAnnoIniziale().intValue() <= 0) && (aModel.getChiaveProgrIniziale() == null)
 					|| (aModel.getChiaveProgrIniziale().intValue() <= 0)) {
 				lCondizioni += " AND ( (FAS.CHIAVE_ANNO > " + aModel.getChiaveAnnoFinale() + ")";
 				lCondizioni += " OR (FAS.CHIAVE_ANNO = " + aModel.getChiaveAnnoFinale()
@@ -525,21 +666,19 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 			}
 
 			lCondizioni += " AND ( (FAS.CHIAVE_ANNO < " + aModel.getChiaveAnnoFinale() + ")";
-			lCondizioni += " OR (FAS.CHIAVE_ANNO = " + aModel.getChiaveAnnoFinale()
-					+ " AND FAS.CHIAVE_PROGR <= " + aModel.getChiaveProgrFinale() + "))";
+			lCondizioni += " OR (FAS.CHIAVE_ANNO = " + aModel.getChiaveAnnoFinale() + " AND FAS.CHIAVE_PROGR <= "
+					+ aModel.getChiaveProgrFinale() + "))";
 		}
 
 		// Cerca i fascicoli a partire da una data
 		if ((aModel.getDataEmissioneIniziale() != null)) {
 			lCondizioni += " AND ( SCA.DATA_INIZIO_SCADENZA >= TO_DATE('"
-					+ DateUtils.getDateToString(aModel.getDataEmissioneIniziale(), "ddMMyyyy")
-					+ "', 'DDMMYYYY')) ";
+					+ DateUtils.getDateToString(aModel.getDataEmissioneIniziale(), "ddMMyyyy") + "', 'DDMMYYYY')) ";
 		}
 
 		if ((aModel.getDataEmissioneFinale() != null)) {
 			lCondizioni += " AND ( SCA.DATA_INIZIO_SCADENZA <= TO_DATE('"
-					+ DateUtils.getDateToString(aModel.getDataEmissioneFinale(), "ddMMyyyy")
-					+ "', 'DDMMYYYY')) ";
+					+ DateUtils.getDateToString(aModel.getDataEmissioneFinale(), "ddMMyyyy") + "', 'DDMMYYYY')) ";
 		}
 
 		// 20180122 [EC]
@@ -572,7 +711,8 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 		}
 
 		// 20171128 [EC]
-		// per scadenzario Legge 165/98 (Decreti Sospensione In Definizione) modifico la query per anomalia
+		// per scadenzario Legge 165/98 (Decreti Sospensione In Definizione) modifico la
+		// query per anomalia
 		// segnalata da TESTA dovuta a duplicazione di record
 		// inseriti su SCADENZARIO_SIEP
 		if ("01".equals(aModel.getCodTipoScadenzario())) {
@@ -585,6 +725,71 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 		if ("21".equals(aModel.getCodTipoScadenzario())) {
 			lCondizioni += "  AND SCA.DATA_INIZIO_SCADENZA IS NOT NULL AND SCA.DATA_FINE_SCADENZA IS NOT NULL  ";
 		}
+
+		// MEV-2026_1 - Si aggiunge la join con la pena virtuale
+		if ("02".equals(aModel.getCodTipoScadenzario())) {
+			lCondizioni += " AND PENA_VIRTUALE.FAS_SIE_ID_FASCICOLO_SIEP(+) = SCA.FAS_SIE_ID_FASCICOLO_SIEP ";
+		}
+		// MEV-2026_1 - FINE
+
+		return lCondizioni;
+	}
+
+	//
+	/**
+	 * MEV_2026-1 - Test per andare in join con la pena residua (SOLO scadenzario
+	 * fine pena) Imposta le condizioni della ricerca sulla pseudo tabella
+	 * PENA_RESIDUA_CORRENTE
+	 *
+	 * @param aModel
+	 * @return
+	 */
+	private String setCondizioneScadFinePena(ScadenzarioModel aModel) {
+		String lCondizioni = new String();
+
+		String ldata1 = new String();
+		String ldata2 = new String();
+
+		if (aModel.getDataInizioScadenza() != null) {
+			ldata1 = DateUtils.getDateToString(aModel.getDataInizioScadenza(), "dd/MM/yyyy");
+		}
+
+		if (aModel.getDataFineScadenza() != null) {
+			ldata2 = DateUtils.getDateToString(aModel.getDataFineScadenza(), "dd/MM/yyyy");
+		}
+
+		if (aModel.getFasSieIdFascicoloSiep() != null
+				&& aModel.getFasSieIdFascicoloSiep().compareTo(new BigDecimal(0)) != 0) {
+			lCondizioni += " AND FAS.ID_FASCICOLO_SIEP = " + aModel.getFasSieIdFascicoloSiep();
+		}
+
+		// sette = in scadenza entro gg mm aaaa
+		if (aModel.getTipoRic().equals("sette")) {
+			lCondizioni += " AND PENA_RESIDUA_CORRENTE.DATA_FINE BETWEEN TO_DATE('" + ldata1
+					+ "','DD/MM/YYYY') AND TO_DATE('" + ldata2 + "','DD/MM/YYYY')";
+		}
+
+		// scaduti
+		if (aModel.getTipoRic().equals("scaduto")) {
+			lCondizioni += " AND PENA_RESIDUA_CORRENTE.DATA_FINE < TO_DATE('" + ldata1 + "','DD/MM/YYYY')";
+		}
+
+		// MEV_39: il controllo ora va fatto sul campo DATA_FINE della tabella
+		// PENA_RESIDUA
+		// per tipo scadenzario = 20
+		// oggi
+		if (aModel.getTipoRic().equals("oggi")) {
+			lCondizioni += " AND PENA_RESIDUA_CORRENTE.DATA_FINE = TO_DATE('" + ldata2 + "','DD/MM/YYYY')";
+		}
+
+		// PER UFFICIO
+		if (aModel.getCodUfficioInserimento() != null && !aModel.getCodUfficioInserimento().equals("")) {
+			lCondizioni += " AND FAS.CHIAVE_UFFICIO = '" + aModel.getCodUfficioInserimento() + "'";
+		}
+
+		lCondizioni += " AND PENA_RESIDUA_CORRENTE.FAS_SIE_ID_FASCICOLO_SIEP = FAS.ID_FASCICOLO_SIEP ";
+		lCondizioni += " AND PENA_VIRTUALE.FAS_SIE_ID_FASCICOLO_SIEP(+) = FAS.ID_FASCICOLO_SIEP ";
+		lCondizioni += " AND PENA_RESIDUA_CORRENTE.DATA_FINE IS NOT null ";
 
 		return lCondizioni;
 	}
@@ -601,6 +806,7 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 	// return " ORDER BY a.id_fascicolo_siep";
 	// }
 
+	@Override
 	public GenericModel getModel() throws DAOException {
 
 		ScadenzarioModel aModel = new ScadenzarioModel();
@@ -629,6 +835,12 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 		aModel.setCodStatoNotifica(getString("COD_STATO_NOTIFICA"));
 		// MEV_39: aggiunto campo in estrazione
 		aModel.setFlagVisto(getString("FLAG_VISTO"));
+
+		// MEV-2026_1 - recupera ance il campo Fine Pena Virtuale
+		if (findColumn("DATA_FINE_PENA_VIRTUALE")) {
+			aModel.setDataFinePenaVirtuale(getDate("DATA_FINE_PENA_VIRTUALE"));
+		}
+		// MEV-2026_1 - FINE
 
 		return aModel;
 	}
@@ -739,8 +951,8 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 	}
 
 	/*
-	 * ISSUE MEV : aggiunti metodi di ricerca Numero MEV : 39 Autore : Gioggi Data : 27/giu/2017 Branch :
-	 * MEV_39
+	 * ISSUE MEV : aggiunti metodi di ricerca Numero MEV : 39 Autore : Gioggi Data :
+	 * 27/giu/2017 Branch : MEV_39
 	 */
 	public void ricercaScadenzarioCSMSByKey(BigDecimal idScadenzario, String codUfficioUtenteConnesso)
 			throws DAOException {
@@ -814,15 +1026,13 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 	public void ricercaScadenzarioDifferimentoMSPaged(ScadenzarioModel aScadenzario, int aPage) {
 
 		String lPaginedStatement = new String("");
-		String lSql = "SELECT DISTINCT SCA.ID_SCADENZARIO_SIEP, " + "SOG.ID_SOGGETTO, " + "SOG.NOME, "
-				+ "SOG.COGNOME, " + "TIPCOM.DESCRIZIONE COMUNE_NASCITA, " + "SOG.DATA_NASCITA, "
-				+ "FAS.ID_FASCICOLO_SIEP, " + "FAS.CHIAVE_ANNO, " + "FAS.CHIAVE_PROGR, "
-				+ "SCA.DATA_INIZIO_SCADENZA, " + "SCA.DATA_FINE_SCADENZA, " + "TIPSCA.RV_MEANING, "
-				+ "SCA.COD_STATO_NOTIFICA, " + "SCA.FLAG_VISTO, " + "(SCA.DATA_FINE_SCADENZA - "
+		String lSql = "SELECT DISTINCT SCA.ID_SCADENZARIO_SIEP, " + "SOG.ID_SOGGETTO, " + "SOG.NOME, " + "SOG.COGNOME, "
+				+ "TIPCOM.DESCRIZIONE COMUNE_NASCITA, " + "SOG.DATA_NASCITA, " + "FAS.ID_FASCICOLO_SIEP, "
+				+ "FAS.CHIAVE_ANNO, " + "FAS.CHIAVE_PROGR, " + "SCA.DATA_INIZIO_SCADENZA, " + "SCA.DATA_FINE_SCADENZA, "
+				+ "TIPSCA.RV_MEANING, " + "SCA.COD_STATO_NOTIFICA, " + "SCA.FLAG_VISTO, " + "(SCA.DATA_FINE_SCADENZA - "
 				+ "TO_DATE(TO_CHAR(SYSDATE, 'DD/MM/YYYY'), 'DD/MM/YYYY')) RESIDUO " + "FROM SOGGETTO SOG, "
-				+ "SCADENZARIO_SIEP SCA, " + "FASCICOLO_SIEP FAS, " + "CG_REF_CODES TIPSCA, "
-				+ "COMUNE TIPCOM, " + "EVENTO E "
-				+ "WHERE SCA.FAS_SIE_ID_FASCICOLO_SIEP = FAS.ID_FASCICOLO_SIEP "
+				+ "SCADENZARIO_SIEP SCA, " + "FASCICOLO_SIEP FAS, " + "CG_REF_CODES TIPSCA, " + "COMUNE TIPCOM, "
+				+ "EVENTO E " + "WHERE SCA.FAS_SIE_ID_FASCICOLO_SIEP = FAS.ID_FASCICOLO_SIEP "
 				+ "AND FAS.SOG_ID_SOGGETTO = SOG.ID_SOGGETTO " + "AND TIPSCA.RV_DOMAIN = 'TIPO_SCADENZARIO' "
 				+ "AND TIPSCA.RV_LOW_VALUE = SCA.COD_TIPO_SCADENZARIO "
 				+ "AND TIPCOM.COD_COMUNE = SOG.COD_COMUNE_NASCITA "
@@ -834,15 +1044,15 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 		// PROCEDIMENTI COMPLETI DI DATI DEL DIFFERIMENTO
 		lSql += " AND SCA.DATA_INIZIO_SCADENZA IS NOT NULL  AND SCA.DATA_FINE_SCADENZA IS NOT NULL ";
 		// INTERVENTO PER ANOMALIA 14 POST COLLAUDO 11.3
-		// 05/12/2019 : ULTERIORE ANOMALIA IN COLLAUDO 11.3 DI NOVEMBRE 2019: DEVONO ESSERE VISIBILI IN
+		// 05/12/2019 : ULTERIORE ANOMALIA IN COLLAUDO 11.3 DI NOVEMBRE 2019: DEVONO
+		// ESSERE VISIBILI IN
 		// SCADENZIARIO SOLO QUELLI VALIDATI
 		lSql += " AND SCA.EVE_ID_EVENTO=E.ID_EVENTO AND E.FLAG_DOCUMENTO_REGISTRATO = 'S'";
 
 		lSql += setCondizione(aScadenzario);
 		lSql += " ORDER BY SCA.DATA_FINE_SCADENZA DESC";
-		lPaginedStatement = "SELECT * FROM (SELECT INNER.* , Rownum rn FROM (" + lSql
-				+ ") INNER ) WHERE rn between  " + ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1) + " AND "
-				+ (aPage) * IWebConstants.RESULT_PER_PAGE;
+		lPaginedStatement = "SELECT * FROM (SELECT INNER.* , Rownum rn FROM (" + lSql + ") INNER ) WHERE rn between  "
+				+ ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1) + " AND " + (aPage) * IWebConstants.RESULT_PER_PAGE;
 		setStatement(lPaginedStatement);
 	}
 	// ***** FINE INTERVENTO MEV_39 *****//
@@ -889,6 +1099,22 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 		setStatement(lStatement);
 	}
 
+	/**
+	 * MEV_2026-1 - Metodo che effettua la count sulla tabella PENA_RESIDUA invece
+	 * di SCADENZARIO_SIEP
+	 * 
+	 * @param aModel
+	 * @throws DAOException
+	 */
+	public void getCountScadenzariFinePena(ScadenzarioModel aModel) throws DAOException {
+		String lStatement = "SELECT COUNT(*) HowManyRecords ";
+		lStatement += " from (" + getSqlQueryFinePenaSuPenaResidua();
+		lStatement += " " + setCondizioneScadFinePena(aModel);
+		lStatement += ")";
+
+		setStatement(lStatement);
+	}
+
 	public void ricercaScadenzarioPagedPPCompleta(ScadenzarioModel aModel, int aPage) throws DAOException {
 		String lSql = new String("");
 		lSql = getSqlQueryScadenzarioPP();
@@ -900,12 +1126,13 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 		lSql += " order by BOL.DATA_SCADENZA ASC ";
 		// lSql += " " + setOrderByResiduo();
 
-		if (aPage == 0)
+		if (aPage == 0) {
 			lPaginedStatement = lSql;
-		else
+		} else {
 			lPaginedStatement = "SELECT * FROM (SELECT INNER.* , Rownum rn FROM (" + lSql
-					+ "  ) INNER ) WHERE rn between  " + ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1)
-					+ " AND " + (aPage) * IWebConstants.RESULT_PER_PAGE;
+					+ "  ) INNER ) WHERE rn between  " + ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1) + " AND "
+					+ (aPage) * IWebConstants.RESULT_PER_PAGE;
+		}
 
 		setStatement(lPaginedStatement);
 	}
@@ -959,11 +1186,13 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 		String ldata1 = new String();
 		String ldata2 = new String();
 
-		if (aModel.getDataInizioScadenza() != null)
+		if (aModel.getDataInizioScadenza() != null) {
 			ldata1 = DateUtils.getDateToString(aModel.getDataInizioScadenza(), "dd/MM/yyyy");
+		}
 
-		if (aModel.getDataFineScadenza() != null)
+		if (aModel.getDataFineScadenza() != null) {
 			ldata2 = DateUtils.getDateToString(aModel.getDataFineScadenza(), "dd/MM/yyyy");
+		}
 
 		if (aModel.getCodTipoScadenzario() != null) {
 			lCondizioni += " AND SCA.COD_TIPO_SCADENZARIO = '" + aModel.getCodTipoScadenzario() + "'";
@@ -975,8 +1204,8 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 		}
 
 		if (aModel.getTipoRic().equals("sette")) {
-			lCondizioni += " AND BOL.DATA_SCADENZA BETWEEN TO_DATE('" + ldata1
-					+ "','DD/MM/YYYY') AND TO_DATE('" + ldata2 + "','DD/MM/YYYY')";
+			lCondizioni += " AND BOL.DATA_SCADENZA BETWEEN TO_DATE('" + ldata1 + "','DD/MM/YYYY') AND TO_DATE('"
+					+ ldata2 + "','DD/MM/YYYY')";
 		} else if (aModel.getTipoRic().equals("scaduto")) {
 			lCondizioni += " AND BOL.DATA_SCADENZA < TO_DATE('" + ldata1 + "','DD/MM/YYYY')";
 		} else if (aModel.getTipoRic().equals("oggi")) {
@@ -990,8 +1219,7 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 
 		// Cerca i fascicoli a partire da una coppia Progressivo/Anno
 		if (aModel.getChiaveAnnoIniziale() != null && aModel.getChiaveAnnoIniziale().intValue() >= 0
-				&& aModel.getChiaveProgrIniziale() != null
-				&& aModel.getChiaveProgrIniziale().intValue() >= 0) {
+				&& aModel.getChiaveProgrIniziale() != null && aModel.getChiaveProgrIniziale().intValue() >= 0) {
 			lCondizioni += " AND (   (FAS.CHIAVE_ANNO > " + aModel.getChiaveAnnoIniziale() + ")";
 			lCondizioni += "      OR (    FAS.CHIAVE_ANNO = " + aModel.getChiaveAnnoIniziale();
 			lCondizioni += "          AND FAS.CHIAVE_PROGR >= " + aModel.getChiaveProgrIniziale() + "))";
@@ -1001,8 +1229,7 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 		if (aModel.getChiaveAnnoFinale() != null && aModel.getChiaveAnnoFinale().intValue() >= 0
 				&& aModel.getChiaveProgrFinale() != null && aModel.getChiaveProgrFinale().intValue() >= 0) {
 			if ((aModel.getChiaveAnnoIniziale() == null)
-					|| (aModel.getChiaveAnnoIniziale().intValue() <= 0)
-							&& (aModel.getChiaveProgrIniziale() == null)
+					|| (aModel.getChiaveAnnoIniziale().intValue() <= 0) && (aModel.getChiaveProgrIniziale() == null)
 					|| (aModel.getChiaveProgrIniziale().intValue() <= 0)) {
 				lCondizioni += " AND (   (FAS.CHIAVE_ANNO > " + aModel.getChiaveAnnoFinale() + ")";
 				lCondizioni += "      OR (    FAS.CHIAVE_ANNO = " + aModel.getChiaveAnnoFinale();
@@ -1015,6 +1242,15 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 		}
 
 		return lCondizioni;
+	}
+
+	public boolean findColumn(String aValue) {
+		try {
+			mRs.findColumn(aValue);
+		} catch (Exception sqex) {
+			return false;
+		}
+		return true;
 	}
 
 }

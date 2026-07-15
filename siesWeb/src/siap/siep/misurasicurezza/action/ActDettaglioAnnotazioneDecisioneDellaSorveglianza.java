@@ -29,7 +29,6 @@ import siap.sius.util.SIUSLookupRemote;
  * ActDettaglioAnnotazioneDecisioneDellaSorveglianza - Classe Action per il dettaglio dell' Inserimento del
  * provvedimento di Annotazione della Decisione della Sorveglianza
  *
- * @author AMBROS
  * @version 1.0
  */
 public class ActDettaglioAnnotazioneDecisioneDellaSorveglianza extends ActSIESDettaglioProvvedimento
@@ -137,8 +136,8 @@ public class ActDettaglioAnnotazioneDecisioneDellaSorveglianza extends ActSIESDe
 			}
 		}
 
+		// pagina di ritorno
 		return PG_DETTAGLIO_ANNOTA_DECISIONE_SORVEGLIANZA;
-
 	} // chiude processRequest
 
 } // Chiude Classe

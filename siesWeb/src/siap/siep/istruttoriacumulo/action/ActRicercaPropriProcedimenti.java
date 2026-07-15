@@ -171,6 +171,8 @@ public class ActRicercaPropriProcedimenti extends ActionModuloCumulo implements 
 		if (lFascicoliSoggetti != null && lFascicoliSoggetti.size() > 0)
 			siesLogger.debug("--XX-- ======================== >>>>   TROVATI  >" + lFascicoliSoggetti.size()
 					+ "< Procedimenti legati alla Ricerca effettuata");
+		else
+	          siesLogger.debug("--XX-- ======================== >>>>   Nessun fascicolo TROVATO  >");
 
 		// Passaggio Lista dei Fascicoli Trovati
 		setRequestAttribute("ListaProcedimenti", lFascicoliSoggetti);

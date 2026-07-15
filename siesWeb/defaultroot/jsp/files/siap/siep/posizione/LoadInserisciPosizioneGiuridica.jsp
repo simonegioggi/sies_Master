@@ -356,7 +356,7 @@ showScelte = "display: none;"; //nascondo il div con i radiobutton
 
 <div id="divSezioneOld" style="<%=showOld%>">
 <form method="POST" action="<%= IWebConstants.PG_MAIN%>" name="LoadInserisciPosizioneGiuridicaOld">
-<%@include file="/jsp/files/siap/siep/posizione/LoadInserisciPosizioneGiuridica-Old.jsp"%>
+<%@include file="/jsp/files/siap/siep/posizione/LoadInserisciPosizioneGiuridica-Old.jspf"%>
 <%
 if (lRedir != null && !lRedir.equals("")) {
 %>
@@ -374,7 +374,7 @@ if (lRedir != null && !lRedir.equals("")) {
 
 <div id="divSezioneLibero" style="display: none;">
 <form method="POST" action="<%= IWebConstants.PG_MAIN%>" name="LoadInserisciPosizioneGiuridicaS1">
-<%@include file="/jsp/files/siap/siep/posizione/LoadInserisciPosizioneGiuridica-Sez1.jsp"%>
+<%@include file="/jsp/files/siap/siep/posizione/LoadInserisciPosizioneGiuridica-Sez1.jspf"%>
 <%
 if (lRedir != null &&  !lRedir.equals("")) {
 %>
@@ -392,7 +392,7 @@ if (lRedir != null &&  !lRedir.equals("")) {
 
 <div id="divSezioneIstituto" style="display: none;">
 <form method="POST" action="<%= IWebConstants.PG_MAIN%>" name="LoadInserisciPosizioneGiuridicaS2">
-<%@include file="/jsp/files/siap/siep/posizione/LoadInserisciPosizioneGiuridica-Sez2.jsp"%>
+<%@include file="/jsp/files/siap/siep/posizione/LoadInserisciPosizioneGiuridica-Sez2.jspf"%>
 <%
 if (lRedir!=null &&  !lRedir.equals("")) {
 %>
@@ -410,7 +410,7 @@ if (lRedir!=null &&  !lRedir.equals("")) {
 
 <div id="divSezioneAltro" style="display: none;">
 <form method="POST" action="<%= IWebConstants.PG_MAIN%>" name="LoadInserisciPosizioneGiuridicaS3">
-<%@include file="/jsp/files/siap/siep/posizione/LoadInserisciPosizioneGiuridica-Sez3.jsp"%>
+<%@include file="/jsp/files/siap/siep/posizione/LoadInserisciPosizioneGiuridica-Sez3.jspf"%>
 <%
 if (lRedir!=null &&  !lRedir.equals("")) {
 %>

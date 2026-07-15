@@ -78,6 +78,12 @@ public class ScadenzarioModel extends GenericModel {
 	// MEV_2023-33
 	private BollettinoPagopaModel mBollettinoModel = null;
 	
+	// MEV-2026_1
+	private Date mDataFinePenaVirtuale;
+	// Indica se lo scadenzario fine pena deve lavorare sulla PENA_RESIDUA (true)
+	// o su SCADENZARIO_SIEP (false) default=flase vecchia gestione
+	private boolean mScadFinePenaSuPenaResidua = false;
+	
 	// COSTRUTTORE DI DEFAULT
 	public ScadenzarioModel() {
 
@@ -122,7 +128,9 @@ public class ScadenzarioModel extends GenericModel {
 		this.mDescrTipoMS = null;
 		this.mDataScadenzaComunicazione = null;
 		// MEV_2023-33
-		this.mBollettinoModel = null;
+		this.mBollettinoModel = null;		
+		// MEV-2026_1
+		this.mDataFinePenaVirtuale = null;
 	}
 
 	// COSTRUTTORE DI COPIA
@@ -169,9 +177,11 @@ public class ScadenzarioModel extends GenericModel {
 		this.mIdFascicoloSiepOrigine = aModel.mIdFascicoloSiepOrigine;
 		this.mDescrTipoMS = aModel.mDescrTipoMS;
 		this.mDataScadenzaComunicazione = aModel.mDataScadenzaComunicazione;
-    // MEV_2023-33
-    this.mBollettinoModel = aModel.mBollettinoModel;
-	}
+        // MEV_2023-33
+        this.mBollettinoModel = aModel.mBollettinoModel;
+        // MEV-2026_1
+        this.mDataFinePenaVirtuale = aModel.mDataFinePenaVirtuale;
+    }
 
 	// COSTRUTTORE MODEL
 	public ScadenzarioModel(BigDecimal aIdScadenzario, String aCodTipoScadenzario,
@@ -187,6 +197,8 @@ public class ScadenzarioModel extends GenericModel {
 			BigDecimal aIdFascicoloSiepOrigine, String aDescrTipoMS, Date aDataScadenzaComunicazione
 		  // MEV_2023-33
 			, BollettinoPagopaModel aBollettinoModel
+	        // MEV-2026_1
+	        , Date aDataFinePenaVirtuale
 	    ) {
 
 		this.mIdScadenzario = aIdScadenzario;
@@ -231,6 +243,8 @@ public class ScadenzarioModel extends GenericModel {
 		this.mDataScadenzaComunicazione = aDataScadenzaComunicazione;
 		// MEV_2023-33
 		this.mBollettinoModel = aBollettinoModel;
+        // MEV-2026_1
+		this.mDataFinePenaVirtuale = aDataFinePenaVirtuale;
 	}
 
 	//
@@ -426,7 +440,16 @@ public class ScadenzarioModel extends GenericModel {
 	public BollettinoPagopaModel getBollettinoModel(){
 	  return mBollettinoModel;
 	}
-
+	
+	// MEV-2026_1
+    public Date getDataFinePenaVirtuale() {
+        return mDataFinePenaVirtuale;
+    }	
+    public boolean getScadFinePenaSuPenaResidua() {
+        return mScadFinePenaSuPenaResidua;
+    }
+    // MEV-2026_1
+    
 	//
 	// METODI SET()
 	//
@@ -592,8 +615,17 @@ public class ScadenzarioModel extends GenericModel {
   public void setBollettinoModel (BollettinoPagopaModel aValore){
     mBollettinoModel = aValore;
   }
-	
-	
+    
+    // MEV-2026_1
+    public void setDataFinePenaVirtuale(Date aValore) {
+      mDataFinePenaVirtuale = aValore;
+    }
+    public void setScadFinePenaSuPenaResidua(boolean aValore) {
+        mScadFinePenaSuPenaResidua = aValore;
+    }
+    // MEV-2026_1
+    
+    
 	public String toString() {
 
 		String lStr = new String();

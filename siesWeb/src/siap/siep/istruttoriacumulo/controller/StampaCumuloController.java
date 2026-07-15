@@ -111,12 +111,7 @@ import siap.siep.sentenza.model.SentenzaModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * <p>
- * Title: StampaCumuloController
- * </p>
- * <p>
- * Description: Classe Controller per StampaCumuloController
- * </p>
+ * StampaCumuloController - Classe Controller per StampaCumuloController
  *
  * @version 1.0
  */
@@ -143,13 +138,13 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 
 	protected CalcoloPenaCumuloModel aCalcoloPenaModel = new CalcoloPenaCumuloModel();
 
-
 	/**
 	*
 	*/
 	public TreeModel prelevaDatiIstruttoriaCumulo(FascicoloSiepModel lFascicoloModel, UtenteModel aUtenteMod,
 			UfficioModel lUfficioMod, IstruttoriaCumuloModel aIstruttoriaCumulo,
 			Vector<TitoloCumulatoModel> aListaTitoli, Date lDataEmissione) throws F3BException {
+
 		siesLogger.debug("prelevaDatiIstruttoriaCumulo INIZIO");
 
 		Connection lConn = null;
@@ -509,24 +504,21 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 								// Sanzione Sostitutiva Cumulo
 								SanzioneSostitutivaCumuloModel lSSCumMod1 = new SanzioneSostitutivaCumuloModel();
 
-								//==========================================================================================
+								// ==========================================================================================
 								// Ticket#20200715012 - la pena complessiva potrebbe non essere presente.
 								BigDecimal idPenaCompCumulo = null;
-								if (lPenaCum!=null) 
+								if (lPenaCum != null)
 									idPenaCompCumulo = lPenaCum.getIdPenaComplessivaCum();
-									
+
 								lSSCumSqlDao.ricercaSanzioneSostitutivaByIdPenaComplessivaCumTitoloCum(
-										idPenaCompCumulo,
-										lRichTitCumMod.getTitIdTitoloCumulato());
-								
-//								lSSCumSqlDao.ricercaSanzioneSostitutivaByIdPenaComplessivaCumTitoloCum(
-//										lPenaCum.getIdPenaComplessivaCum(),
-//										lRichTitCumMod.getTitIdTitoloCumulato());								
+										idPenaCompCumulo, lRichTitCumMod.getTitIdTitoloCumulato());
+
+								// lSSCumSqlDao.ricercaSanzioneSostitutivaByIdPenaComplessivaCumTitoloCum(
+								// lPenaCum.getIdPenaComplessivaCum(),
+								// lRichTitCumMod.getTitIdTitoloCumulato());
 								// END Ticket#20200715012
-								//==========================================================================================
-								
-								
-								
+								// ==========================================================================================
+
 								lSSCumSqlDao.start();
 								while (lSSCumSqlDao.next()) {
 
@@ -604,10 +596,10 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 										}
 
 									} // Chiude Ciclo Benefici
-									// Ticket#202603160115 - stop() per chiudere subito il cursore
+										// Ticket#202603160115 - stop() per chiudere subito il cursore
 									lBenSqlDao.stop();
 									// Ticket#202603160115 - FINE
-									
+
 									// =========================================================================================
 									// REVOCA BENEFICIO Concesso con Ordinanza (dati su StatoEsecTitoloCum e
 									// ComputiCumulo)
@@ -630,7 +622,9 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 										lCompCumSqlDao.start();
 										if (lCompCumSqlDao.next()) {
 											lCompMod = (ComputiCumuloModel) lCompCumSqlDao.getModel();
-
+											// normalizzazione dei quantum
+											lCompMod.normalizzaQuantum();
+											//
 											lCompMod.calcolaStringaAmmenda();
 											lCompMod.calcolaStringaReclusione();
 
@@ -660,8 +654,10 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 													lStatoEseMod.getDescrTipoProvvedimento(),
 													lStatoEseMod.getDataEmissione(), lCompMod.getAnnoProvv(),
 													// Ticket#20210824013 - il ProgrProvv potrebbe essere null
-													//lCompMod.getProgrProvv().toString(),
-													lCompMod.getProgrProvv()!=null ? lCompMod.getProgrProvv().toString() : null,
+													// lCompMod.getProgrProvv().toString(),
+													lCompMod.getProgrProvv() != null
+															? lCompMod.getProgrProvv().toString()
+															: null,
 													// Ticket#20210824013 - FINE
 													lStatoEseMod.getCodUfficioEmittente(),
 													lStatoEseMod.getDescrUfficioEmittente(),
@@ -717,11 +713,11 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 											}
 
 										} // Chiude Computi
-										// Ticket#202603160115 - stop() per chiudere subito il cursore
+											// Ticket#202603160115 - stop() per chiudere subito il cursore
 										lCompCumSqlDao.stop();
 										// Ticket#202603160115 - FINE
 									} // Chiude Ciclo su StatoEsecuzione
-									// Ticket#202603160115 - stop() per chiudere subito il cursore
+										// Ticket#202603160115 - stop() per chiudere subito il cursore
 									lStatoEsecTitoCumSqlDAO.stop();
 									// Ticket#202603160115 - FINE
 								} // Chiude if CodAnnotazione = 021
@@ -847,7 +843,9 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 										lCompCumSqlDao.start();
 										if (lCompCumSqlDao.next()) {
 											lCompMod = (ComputiCumuloModel) lCompCumSqlDao.getModel();
-
+											// Normalizzazione dei quantum
+											lCompMod.normalizzaQuantum();
+											//
 											lCompMod.calcolaStringaAmmenda();
 											lCompMod.calcolaStringaReclusione();
 
@@ -861,9 +859,11 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 													lStatoEseMod.getDescrTipoProvvedimento(),
 													lStatoEseMod.getDataEmissione(), lCompMod.getAnnoProvv(),
 													// Ticket#20210824013 - il ProgrProvv potrebbe essere null
-													//lCompMod.getProgrProvv().toString(),
-													lCompMod.getProgrProvv()!=null ? lCompMod.getProgrProvv().toString() : null,
-													// Ticket#20210824013 - FINE													
+													// lCompMod.getProgrProvv().toString(),
+													lCompMod.getProgrProvv() != null
+															? lCompMod.getProgrProvv().toString()
+															: null,
+													// Ticket#20210824013 - FINE
 													lStatoEseMod.getCodUfficioEmittente(),
 													lStatoEseMod.getDescrUfficioEmittente(),
 													lStatoEseMod.getCodLuogoEmittente(),
@@ -1022,7 +1022,7 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 							}
 
 						} // chiude while (lRichPMTitSqlDao.next()) { Elenco Titoli Cimilati della Ricjìhiesta
-						// Ticket#202603160115 - stop() per chiudere subito il cursore
+							// Ticket#202603160115 - stop() per chiudere subito il cursore
 						lRichPMTitSqlDao.stop();
 						// Ticket#202603160115 - FINE
 						lTreeIstruMod.add(lTreeRichiestaPMMod);
@@ -1485,7 +1485,6 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 		}
 
 		return lTreeRoot;
-
 	} // Chiude prelevaDatiIstruttoriaCumulo()
 
 	/**
@@ -1494,6 +1493,7 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 	public TreeModel prelevaDatiIstruttoriaPerPropostaCumulo(FascicoloSiepModel lFascicoloModel,
 			UtenteModel aUtenteMod, UfficioModel lUfficioMod, IstruttoriaCumuloModel aIstruttoriaCumulo,
 			Vector<TitoloCumulatoModel> aListaTitoli, String lFunzione) throws F3BException {
+
 		Connection lConn = null;
 
 		SoggettoSqlDAO lSogDao = null;
@@ -1856,26 +1856,25 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 							// Ricerca Sanzione Sost Cum Dao");
 							// ======= >>>>>>>>>>>>>>>>> MEV_70 - Aggiungo sempre la SanzioneSostitutiva, in
 							// caso esista, legata alla PENA COMPLESSIVA
-							// Sanzione Sostitutiva Cumulo							
+							// Sanzione Sostitutiva Cumulo
 							SanzioneSostitutivaCumuloModel lSSCumMod1 = new SanzioneSostitutivaCumuloModel();
-							
-							//==========================================================================================
+
+							// ==========================================================================================
 							// Ticket#20200715012 - la pena complessiva potrebbe non essere presente.
 							BigDecimal idPenaCompCumulo = null;
-							if (lPenaCum!=null) 
+							if (lPenaCum != null)
 								idPenaCompCumulo = lPenaCum.getIdPenaComplessivaCum();
-								
+
 							lSSCumSqlDao.ricercaSanzioneSostitutivaByIdPenaComplessivaCumTitoloCum(
-									idPenaCompCumulo,
-									lRichTitCumMod.getTitIdTitoloCumulato());
-							
-//							lSSCumSqlDao.ricercaSanzioneSostitutivaByIdPenaComplessivaCumTitoloCum(
-//									lPenaCum.getIdPenaComplessivaCum(),
-//									lRichTitCumMod.getTitIdTitoloCumulato());	
-							
+									idPenaCompCumulo, lRichTitCumMod.getTitIdTitoloCumulato());
+
+							// lSSCumSqlDao.ricercaSanzioneSostitutivaByIdPenaComplessivaCumTitoloCum(
+							// lPenaCum.getIdPenaComplessivaCum(),
+							// lRichTitCumMod.getTitIdTitoloCumulato());
+
 							// END Ticket#20200715012
-							//==========================================================================================
-							
+							// ==========================================================================================
+
 							lSSCumSqlDao.start();
 							while (lSSCumSqlDao.next()) {
 
@@ -2001,9 +2000,11 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 												lStatoEseMod.getDescrTipoProvvedimento(),
 												lStatoEseMod.getDataEmissione(), lCompMod.getAnnoProvv(),
 												// Ticket#20210824013 - il ProgrProvv potrebbe essere null
-												//lCompMod.getProgrProvv().toString(),
-												lCompMod.getProgrProvv()!=null ? lCompMod.getProgrProvv().toString() : null,
-												// Ticket#20210824013 - FINE												
+												// lCompMod.getProgrProvv().toString(),
+												lCompMod.getProgrProvv() != null
+														? lCompMod.getProgrProvv().toString()
+														: null,
+												// Ticket#20210824013 - FINE
 												lStatoEseMod.getCodUfficioEmittente(),
 												lStatoEseMod.getDescrUfficioEmittente(),
 												lStatoEseMod.getCodLuogoEmittente(),
@@ -2185,9 +2186,11 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 												lStatoEseMod.getDescrTipoProvvedimento(),
 												lStatoEseMod.getDataEmissione(), lCompMod.getAnnoProvv(),
 												// Ticket#20210824013 - il ProgrProvv potrebbe essere null
-												//lCompMod.getProgrProvv().toString(),
-												lCompMod.getProgrProvv()!=null ? lCompMod.getProgrProvv().toString() : null,
-												// Ticket#20210824013 - FINE												
+												// lCompMod.getProgrProvv().toString(),
+												lCompMod.getProgrProvv() != null
+														? lCompMod.getProgrProvv().toString()
+														: null,
+												// Ticket#20210824013 - FINE
 												lStatoEseMod.getCodUfficioEmittente(),
 												lStatoEseMod.getDescrUfficioEmittente(),
 												lStatoEseMod.getCodLuogoEmittente(),
@@ -2513,11 +2516,12 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 
 				lTreeIstruMod.add(new TreeModel(lBen));
 			}
-			
+
 			// MEV_2025-48 - ALTRO – Aggiunta Ramo <CalcoloPenaCumulo>
 			IDatiFinaliCumulo lDatFinCtrl = SIEPLookupRemote.getDatiFinaliCumuloRemote();
-			TreeModel lTreeCalcoloPenaNew = null; 
-			lTreeCalcoloPenaNew = lDatFinCtrl.getTreeModelCalcoloPenaCumulo(aIstruttoriaCumulo.getIdIstruttoriaCumulo());
+			TreeModel lTreeCalcoloPenaNew = null;
+			lTreeCalcoloPenaNew = lDatFinCtrl
+					.getTreeModelCalcoloPenaCumulo(aIstruttoriaCumulo.getIdIstruttoriaCumulo());
 			lTreeIstruMod.add(lTreeCalcoloPenaNew);
 			// MEV_2025-48 - ALTRO – Aggiunta Ramo <CalcoloPenaCumulo> - FINE
 
@@ -2562,12 +2566,12 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 		}
 
 		return lTreeRoot;
-
 	} // Chiude prelevaDatiIstruttoriaPerPropostaCumulo()
 
 	public TreeModel prelevaDatiRichiestaInviataCumulo(Connection aConn, TreeModel lTreeMod,
 			UtenteModel aUtenteMod, UfficioModel lUfficioMod, IstruttoriaCumuloModel aIstruttoriaCumulo,
 			RichiesteInviateCumModel lRichMod) throws F3BException {
+
 		Connection lConn = null;
 
 		// se il parametro aConn = null provengo da Stampa Richiesta Inviata e ritorna un TreeModel completo
@@ -2681,17 +2685,17 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 						TreeModel lTreeRichiestaPMMod = new TreeModel(lRichPMCumMod);
 
 						// MEV_2025-48 - Si aggiunge la decisione se presente
-						lProvvSqlDao.ricercaProvvedimentoGeSorvCumByIdRichiesta(lRichPMCumMod.getIdRichiestePmInCumulo());
-					    ProvvedimentoGeSorvCumModel lDecisione = null;
-					    lDecisione = (ProvvedimentoGeSorvCumModel) lProvvSqlDao.getModelByKey();
-						if (lDecisione!=null) {
-						    lRichPMCumMod.setIsPresenzaDecisione(true);
-						    lTreeRichiestaPMMod.add(new TreeModel(lDecisione));
-						}
-						else 
-						    lRichPMCumMod.setIsPresenzaDecisione(false);
+						lProvvSqlDao.ricercaProvvedimentoGeSorvCumByIdRichiesta(
+								lRichPMCumMod.getIdRichiestePmInCumulo());
+						ProvvedimentoGeSorvCumModel lDecisione = null;
+						lDecisione = (ProvvedimentoGeSorvCumModel) lProvvSqlDao.getModelByKey();
+						if (lDecisione != null) {
+							lRichPMCumMod.setIsPresenzaDecisione(true);
+							lTreeRichiestaPMMod.add(new TreeModel(lDecisione));
+						} else
+							lRichPMCumMod.setIsPresenzaDecisione(false);
 						// MEV_2025-48 - FINE
-						
+
 						// Spostare qui il caricamento nei benefici
 						// Eventuale Richiesta di APPLICAZIONE BENEFICIO Concesso sul Titolo
 						// ====== SOLO SE CON ANTICIPAZIONE DEGLI EFFETTI VA AGGIUNTA ======
@@ -2758,24 +2762,22 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 								// in caso esista, legata alla PENA COMPLESSIVA
 								// Sanzione Sostitutiva Cumulo
 								SanzioneSostitutivaCumuloModel lSSCumMod1 = new SanzioneSostitutivaCumuloModel();
-								
-								//==========================================================================================
+
+								// ==========================================================================================
 								// Ticket#20200715012 - la pena complessiva potrebbe non essere presente.
 								BigDecimal idPenaCompCumulo = null;
-								if (lPenaCum!=null) 
+								if (lPenaCum != null)
 									idPenaCompCumulo = lPenaCum.getIdPenaComplessivaCum();
-									
+
 								lSSCumSqlDao.ricercaSanzioneSostitutivaByIdPenaComplessivaCumTitoloCum(
-										idPenaCompCumulo,
-										lRichTitCumMod.getTitIdTitoloCumulato());
-								
-								
-//								lSSCumSqlDao.ricercaSanzioneSostitutivaByIdPenaComplessivaCumTitoloCum(
-//										lPenaCum.getIdPenaComplessivaCum(),
-//										lRichTitCumMod.getTitIdTitoloCumulato());								
+										idPenaCompCumulo, lRichTitCumMod.getTitIdTitoloCumulato());
+
+								// lSSCumSqlDao.ricercaSanzioneSostitutivaByIdPenaComplessivaCumTitoloCum(
+								// lPenaCum.getIdPenaComplessivaCum(),
+								// lRichTitCumMod.getTitIdTitoloCumulato());
 								// END Ticket#20200715012
-								//==========================================================================================
-				
+								// ==========================================================================================
+
 								lSSCumSqlDao.start();
 								while (lSSCumSqlDao.next()) {
 
@@ -2903,9 +2905,11 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 													lStatoEseMod.getDescrTipoProvvedimento(),
 													lStatoEseMod.getDataEmissione(), lCompMod.getAnnoProvv(),
 													// Ticket#20210824013 - il ProgrProvv potrebbe essere null
-													//lCompMod.getProgrProvv().toString(),
-													lCompMod.getProgrProvv()!=null ? lCompMod.getProgrProvv().toString() : null,
-													// Ticket#20210824013 - FINE													
+													// lCompMod.getProgrProvv().toString(),
+													lCompMod.getProgrProvv() != null
+															? lCompMod.getProgrProvv().toString()
+															: null,
+													// Ticket#20210824013 - FINE
 													lStatoEseMod.getCodUfficioEmittente(),
 													lStatoEseMod.getDescrUfficioEmittente(),
 													lStatoEseMod.getCodLuogoEmittente(),
@@ -3090,9 +3094,11 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 													lStatoEseMod.getDescrTipoProvvedimento(),
 													lStatoEseMod.getDataEmissione(), lCompMod.getAnnoProvv(),
 													// Ticket#20210824013 - il ProgrProvv potrebbe essere null
-													//lCompMod.getProgrProvv().toString(),
-													lCompMod.getProgrProvv()!=null ? lCompMod.getProgrProvv().toString() : null,
-													// Ticket#20210824013 - FINE													
+													// lCompMod.getProgrProvv().toString(),
+													lCompMod.getProgrProvv() != null
+															? lCompMod.getProgrProvv().toString()
+															: null,
+													// Ticket#20210824013 - FINE
 													lStatoEseMod.getCodUfficioEmittente(),
 													lStatoEseMod.getDescrUfficioEmittente(),
 													lStatoEseMod.getCodLuogoEmittente(),
@@ -3297,7 +3303,6 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 		} else {
 			return lTreeRichiestaINV;
 		}
-
 	} // Chiude prelevaDatiRichiestaInviataCumulo()
 
 	/**
@@ -3356,7 +3361,6 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 		// aCalcoloPenaModel.addBeneficio(lBenCum);
 		// // siesLogger.debug("--XXYYZZ-- aCalcoloPenaModel size =
 		// // "+aCalcoloPenaModel.getListaBenefici().size());
-
 	}
 
 	// =================================================================================
@@ -3365,6 +3369,7 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 	// Eventuali Revoche
 	private PenaComplessivaCumuloModel cercaPenaComplessivaCum(BigDecimal aKeyTitolo, Connection aConn)
 			throws F3BException {
+
 		PenaComplessivaCumuloModel lPcCum = null;
 		PenaComplessivaCumuloSqlDAO lPcCumSqlDao = null;
 
@@ -3389,6 +3394,7 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 			UtenteModel aUtenteMod, UfficioModel lUfficioMod, IstruttoriaCumuloModel aIstruttoriaCumulo,
 			Vector<TitoloCumulatoModel> aListaTitoli, EventoNotificaModel aEventoNotModel,
 			String lDestinatario) throws F3BException {
+
 		siesLogger.debug("prelevaDatiComunicazioniCumulo INIZIO");
 
 		Connection lConn = null;
@@ -3654,7 +3660,6 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 		}
 
 		return lTreeRoot;
-
 	} // Chiude prelevaDatiComunicazioniCumulo()
 
 	/**
@@ -3750,9 +3755,7 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 
 			TreeModel lTreeRiepIndu = new TreeModel(lIndulto);
 			lTreeIstruMod.add(lTreeRiepIndu);
-
 		}
-
 	} // Chiude preparaIndulti()
 
 	/**
@@ -3762,6 +3765,7 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 	 * @return XModel
 	 */
 	public XModel createRootX(UfficioModel lUfficioMod, UtenteModel aUtenteModel) throws F3BException {
+
 		XModel lStampa = new XModel();
 
 		String descrTipoUff = lUfficioMod.getDescrTipoUfficio().toUpperCase();
@@ -3795,7 +3799,6 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 		}
 
 		return lStampa;
-
 	} // Chiude createRootX()
 
 	/**
@@ -4135,7 +4138,7 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 			Vector lBenefici = new Vector(lBenSqlDao.getModels());
 
 			// MEV_70 : sul ciclo dei titoli per fare uscire BENEFICIO REVOCATO anche sotto la NON MENZIONE
-			Boolean bRevoca = false; // <===
+			boolean bRevoca = false; // <===
 
 			if (lBenefici != null && lBenefici.size() > 0) {
 				Iterator lItxB = lBenefici.iterator();
@@ -4525,10 +4528,10 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 			// ----------------------------------------------------------------------------------------
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: ", daoEx);
-			throw new F3BException("StampaController.appendDatiAnalitici " + daoEx);
+			throw new F3BException("StampaCumuloController.appendDatiAnalitici " + daoEx);
 		} catch (Exception e) {
 			siesLogger.error("Exception: " + e, e);
-			throw new F3BException("StampaController.appendDatiAnalitici: Eccezione Generica: " + e);
+			throw new F3BException("StampaCumuloController.appendDatiAnalitici: Eccezione Generica: " + e);
 		} finally {
 			cleanup(lPenSqlDao);
 			cleanup(lSanSqlDao);
@@ -4539,7 +4542,6 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 			cleanup(lBenSqlDao);
 			cleanup(lPenaRidSqlDao);
 		}
-
 	} // Chiude appendDatiAnalitici()
 
 	// =================
@@ -4604,6 +4606,9 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 							Iterator lItxCmp = lVecCompCum.iterator();
 							while (lItxCmp.hasNext()) {
 								lCompMod = (ComputiCumuloModel) lItxCmp.next();
+								// Normalizzazione dei quantum
+								lCompMod.normalizzaQuantum();
+								//
 								if (lCompMod != null && lCompMod.getIdComputiCumulo() != null) {
 									if (!lCompMod.isQuantumReclusioneZero())
 										lCompMod.calcolaStringaReclusione();
@@ -4767,7 +4772,7 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 								// ======= Fine DAL AL ===========================================
 
 							} // Chiude while (lLibAntCumSqlDao.next())
-							// Ticket#202603160115 - stop() per chiudere subito il cursore
+								// Ticket#202603160115 - stop() per chiudere subito il cursore
 							lLibAntCumSqlDao.stop();
 							// Ticket#202603160115 - FINE
 						}
@@ -4780,11 +4785,11 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 			}
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: ", daoEx);
-			throw new F3BException("StampaController.appendStatoEsecuzioneTitoloCum " + daoEx);
+			throw new F3BException("StampaCumuloController.appendStatoEsecuzioneTitoloCum " + daoEx);
 		} catch (Exception e) {
 			siesLogger.error("Exception: " + e, e);
 			throw new F3BException(
-					"StampaController.appendStatoEsecuzioneTitoloCum: Eccezione Generica: " + e);
+					"StampaCumuloController.appendStatoEsecuzioneTitoloCum: Eccezione Generica: " + e);
 		} finally {
 			cleanup(lStEsecSqlDao);
 			cleanup(lCompSqlDao);
@@ -4794,7 +4799,6 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 			cleanup(lLibAntCumSqlDao);
 			cleanup(lPeriCumSqlDao);
 		}
-
 	} // CHIUDE appendStatoEsecuzioneTitoloCum()
 
 	/**
@@ -4804,6 +4808,7 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 	 * @throws F3BException
 	 */
 	private String DatiSentenzaRevoca(BeneficioCumuloModel lBen) throws F3BException {
+
 		String StringaDati = "";
 		String StringQuant = "";
 		String StringaRevo = "";
@@ -4866,6 +4871,7 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 	 * @throws F3BException
 	 */
 	private String Datitotquant(BeneficioCumuloModel beneficio) throws F3BException {
+
 		String StringQuant = "";
 
 		// Preparazione Quantum Reclusione
@@ -4927,6 +4933,7 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 	 */
 	protected TreeModel getTreeSoggetto(BigDecimal lKeySoggetto, FascicoloSiepModel aFascicoloSiep,
 			Connection lConn) throws F3BException {
+
 		SoggettoSqlDAO lSogSqlDao = null;
 		ResidenzaSqlDAO lResDqlDao = null;
 		AliasSqlDAO lAliasSqlDAO = null;
@@ -5011,6 +5018,7 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 	 */
 	private void AggiungiRichiesteDelPm(BigDecimal aIdIstruttoriaCumulo,
 			CalcoloPenaCumuloModel aCalcoloPenaModel, Connection aConn) throws Exception {
+
 		siesLogger.debug("================================ ");
 		siesLogger.debug("Recupero le richieste al GE/SORV ");
 		siesLogger.debug("================================ ");
@@ -5107,14 +5115,13 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 		} finally {
 			cleanup(lRichPmInCumuloSqlDao);
 			cleanup(lProvvGeSorvSqlDao);
-
 		}
-
 	}
 
 	// MEV_70 ===========================================================
 	private PenaResiduaModel calcolaResiduoPenaAdOggi(PenaRideterminataCumuloModel aPenaRidetCumulo,
 			Date aOggi) throws Exception {
+
 		PenaResiduaModel lPenaInEspiazione = aPenaRidetCumulo.getPenaResidua();
 
 		// Calcolo il residuo pena se interrompessi Oggi

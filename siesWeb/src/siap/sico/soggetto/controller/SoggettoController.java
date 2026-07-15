@@ -650,7 +650,7 @@ public class SoggettoController extends SiapController implements ISoggetto {
 					try {
 						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
 						// di LogF3B.getLogger()
-						siesLogger.debug("Soggetto gi√† presente provo ad aggiornare KEY_SOGG_NSC ");
+						siesLogger.debug("Soggetto gi‡ presente provo ad aggiornare KEY_SOGG_NSC");
 
 						lSogDao.setKeySoggNsc(aSoggetto.getKeySoggNsc());
 

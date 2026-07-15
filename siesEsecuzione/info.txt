@@ -1,7 +1,9 @@
-BRANCH SIESESECUZIONE VERSIONE 12.8.2.0_TFC
+BRANCH siesEsecuzione Versione TFC_PRE_MEV16CUMULO
 
-Nasce dal branch 12.8.2.0 in data 25/07/2025
+Nasce dal release_branch 12.8.2.0 in data 25/07/2025
 
 In data 25/03/2026 eseguito merge col branch 12.9.2.0
+
+In data 15/07/2026 eseguito merge col branch release_12.10.1.0
 
 Gestisce il trasferimento verso NSC dei fogli complementari (NO CUMULO).

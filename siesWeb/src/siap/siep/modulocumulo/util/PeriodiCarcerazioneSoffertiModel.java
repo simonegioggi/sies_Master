@@ -37,7 +37,13 @@ public class PeriodiCarcerazioneSoffertiModel {
     
     public String        getDescrizione()           { return mDescrizione; }
     public String        getDescTitolo()            { return mDescTitolo; }
-    public CalendarModel getCalendar()              { return mCalendar; }
+    public CalendarModel getCalendar()              { 
+        // 2026.03 Si normalizzano i dati
+        CalendarUtil lCalUtils = new CalendarUtil();
+        if (mCalendar!=null)
+            mCalendar = lCalUtils.ricalcolaGAM(mCalendar);
+        return mCalendar; 
+    }
     public Date          getDataInizio()            { return mDataInizio; }
     public BigDecimal    getIdTitoloCumulato()      { return mIdTitoloCumulato; }
     public String        getMsgAlert()              { return mMsgAlert; }    
@@ -73,6 +79,8 @@ public class PeriodiCarcerazioneSoffertiModel {
             CalendarUtil lCalUtils = new CalendarUtil();
             CalendarModel lCalCalcolo = new CalendarModel();
             lCalCalcolo = lCalUtils.CalcolaNumGiorniMesiAnni(mCalendar, false);
+            // 2026.03 Si normalizzano i dati
+            lCalCalcolo = lCalUtils.ricalcolaGAM(lCalCalcolo);
             mCalendar.setNumGiorni (lCalCalcolo.getNumGiorni());
             mCalendar.setNumMesi   (lCalCalcolo.getNumMesi());
             mCalendar.setNumAnni   (lCalCalcolo.getNumAnni());

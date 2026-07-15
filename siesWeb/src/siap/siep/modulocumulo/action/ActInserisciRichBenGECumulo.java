@@ -121,7 +121,10 @@ public class ActInserisciRichBenGECumulo extends ActionModuloCumulo
 	}
 
 	/**
+	 * Metodo getDatiProvvedimento
 	 * 
+	 * @param aTipoOper
+	 * @return StatoEsecTitoloCumulatoModel
 	 * @throws F3BException
 	 */
 	private StatoEsecTitoloCumulatoModel getDatiProvvedimento(String aTipoOper) throws F3BException {

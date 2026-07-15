@@ -49,7 +49,7 @@ public class EventoSimeoneSqlDAO extends SIAPSqlDAO {
 			throws DAOException {
 		String lStatement = getSqlQuery();
 		lStatement += " AND FAS_SIE_ID_FASCICOLO_SIEP = " + aIdFascicolo;
-		lStatement += " AND COD_UFFICIO_INSERIMENTO = " + aCodUfficio;
+		lStatement += " AND COD_UFFICIO_INSERIMENTO = '" + aCodUfficio + "'";
 		lStatement += setOrderEventoDesc();
 
 		setStatement(lStatement);

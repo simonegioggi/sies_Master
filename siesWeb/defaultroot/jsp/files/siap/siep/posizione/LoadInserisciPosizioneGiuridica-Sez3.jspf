@@ -83,4 +83,4 @@
       </tr>
     </table>
 
-<%@ include file="/jsp/files/siap/siep/posizione/LoadInserisciPosizioneGiuridica-SezFooter.jsp" %>
+<%@ include file="/jsp/files/siap/siep/posizione/LoadInserisciPosizioneGiuridica-SezFooter.jspf" %>
