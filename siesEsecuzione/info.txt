@@ -1,3 +1,5 @@
 Branch siesEsecuzione Versione release_12.8.3.0
 
 Nasce dal branch release_12.8.2.0 in data 29/08/2025
+
+In data 15/07/2026 eseguito il merge con il branch release_12.10.1.0
