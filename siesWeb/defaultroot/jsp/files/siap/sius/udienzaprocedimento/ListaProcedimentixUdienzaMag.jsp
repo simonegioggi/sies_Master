@@ -161,7 +161,7 @@
          </tr>
         </table>
         <div id="elenco<%=jMag%>" style="display:none; width:100%;">
-        <%@ include file="/jsp/files/siap/sius/udienzaprocedimento/ListaProcedimentixUdienzaMagChild.jsp" %>
+        <%@ include file="/jsp/files/siap/sius/udienzaprocedimento/ListaProcedimentixUdienzaMagChild.jspf" %>
         </div>
 <%      procMagistrato.clear();
 %>      <table width=90%>
@@ -202,7 +202,7 @@
       </tr>
       </table >
       <div id="elenco<%=jMag%>" style="display:none; width:100%;">
-       <%@ include file="/jsp/files/siap/sius/udienzaprocedimento/ListaProcedimentixUdienzaMagChild.jsp" %>
+       <%@ include file="/jsp/files/siap/sius/udienzaprocedimento/ListaProcedimentixUdienzaMagChild.jspf" %>
       </div>
 <%    jTot += j;
 %>    <table width=90%>

@@ -941,4 +941,38 @@ public class ScadenzarioController extends SiapController implements IScadenzari
 	  }
 	// MEV_2023-33 - FINE
 	
+	 
+	/**
+	 * MEV_2026-1 - Funzione di test per switch dello scadenzario fine pena su tabella PENA_RESIDUA invece di SCADENZARIO_SIEP
+	 * Effettua la count (ricerca paginata) sulla nuova tabella
+	 */
+    public BigDecimal ExGetCountScadenzariFinePena(ScadenzarioModel aScadenzario) throws F3BException {
+
+        BigDecimal lCount = new BigDecimal(0);
+        Connection lConn = null;
+
+        ScadenzarioSoggettoSqlDAO lScaSogSqlDao = null; 
+
+        try {
+            lConn = getDBConnection();
+
+            lScaSogSqlDao = new ScadenzarioSoggettoSqlDAO(lConn);
+            lScaSogSqlDao.getCountScadenzariFinePena(aScadenzario);
+            lScaSogSqlDao.start();
+            lScaSogSqlDao.next();
+
+            lCount = lScaSogSqlDao.getBigDecimal("HowManyRecords");
+            lScaSogSqlDao.stop();
+        } catch (DAOException daoEx) {
+            throw new SIEPException(SIEPException.USER_MESSAGE,
+                    "ScadenzarioController.ExGetCountScadenzariFinePena: Non posso leggere : " + daoEx);
+        } finally {
+            cleanup(lScaSogSqlDao);
+            cleanup(lConn);
+        }
+
+        return lCount;
+    }	 
+	 
+	 
 } // CHIUDE CLASSE ScadenzarioController

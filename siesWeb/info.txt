@@ -1,6 +1,6 @@
-BRANCH SIES VERSIONE 12.9.2.0-ADN
+BRANCH siesWeb Versione release_12.9.2.0-ADN
 
-Nasce dal branch 12.9.2.0 in data 11/03/2026
+Nasce dal branch release_12.9.2.0 in data 11/03/2026
 
 Questa Release verrà rilasciata il dd/MM/2026
 
@@ -12,3 +12,5 @@ Obiettivi:
 	Prevedere un'attivita' di associazione degli utenti ADN con le utenze SIES.
 	Garantire una continuita' di funzionamento delle interazioni e delle interconnessioni che oggi il SIES ha con altri sistemi (SIC),
 	a valle della dismissione del sistema IGI nel SIC.
+
+In data 15/07/2026 eseguito merge col branch release_12.10.1.0

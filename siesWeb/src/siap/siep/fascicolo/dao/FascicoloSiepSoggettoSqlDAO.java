@@ -749,7 +749,9 @@ public class FascicoloSiepSoggettoSqlDAO extends SIAPSqlDAO {
 			lStatement += "   ST.DATA_PROVVEDIMENTO , ST.ID_SENTENZA, ST.ANNO_SENTENZA, ST.NUMERO_SENTENZA,";
 			lStatement += "   ST.COD_TIPO_PROVVEDIMENTO, PROVV.RV_MEANING DESCR_PROVVEDIMENTO,";
 			lStatement += "   ST.COD_TIPO_AUTORITA_EMITTENTE COD_TIPO_AUTORITA_EMITTENTE, AUTORITA_EMITTENTE.RV_MEANING DESCR_AUTO_EMITTENTE,";
-			lStatement += "   ST.COD_LUOGO_EMITTENTE COD_LUOGO_EMITTENTE, LUOGO_EMITTENTE.DESCRIZIONE DESCR_LUOGO_EMITTENTE";
+			lStatement += "   ST.COD_LUOGO_EMITTENTE COD_LUOGO_EMITTENTE, LUOGO_EMITTENTE.DESCRIZIONE DESCR_LUOGO_EMITTENTE ";
+			// 2026.04.01 - Si aggiunge la decodifica della Nazione
+			lStatement += "   , NAZIONE.RV_MEANING as DESCR_STATO_NASCITA ";
 		} else {
 			lStatement += " Select count(*) HowManyRecords ";
 		}
@@ -758,7 +760,9 @@ public class FascicoloSiepSoggettoSqlDAO extends SIAPSqlDAO {
 		lStatement += " UFFICIO_DESCR UD, UFFICIO U, COMUNE C, CG_REF_CODES AUTORITA_EMITTENTE, ";
 		lStatement += " COMUNE COMUNE_NASCITA, COMUNE LUOGO_EMITTENTE, ";
 		lStatement += " CG_REF_CODES STATO_FASC,";
-		lStatement += " CG_REF_CODES PROVV";
+		lStatement += " CG_REF_CODES PROVV ";
+		// 2026.04.01 - Si aggiunge la decodifica della Nazione
+		lStatement += " , CG_REF_CODES NAZIONE ";
 		// lStatement +=
 		// " LEFT OUTER JOIN CG_REF_CODES STATO_FASC ON (F.COD_STATO_FASCICOLO = STATO_FASC.RV_LOW_VALUE AND
 		// STATO_FASC.RV_DOMAIN = 'STATO_FASCICOLO')";
@@ -773,6 +777,8 @@ public class FascicoloSiepSoggettoSqlDAO extends SIAPSqlDAO {
 		lStatement += " AND NVL(ST.COD_TIPO_AUTORITA_EMITTENTE, '-') = AUTORITA_EMITTENTE.RV_LOW_VALUE AND AUTORITA_EMITTENTE.RV_DOMAIN = 'TIPO_UFFICIO_EMITTENTE'";
 		lStatement += " AND NVL(ST.COD_TIPO_PROVVEDIMENTO, '-') = PROVV.RV_LOW_VALUE AND PROVV.RV_DOMAIN = 'TIPO_PROVVEDIMENTO'";
 		lStatement += " AND nvl(F.COD_STATO_FASCICOLO,'-') = STATO_FASC.RV_LOW_VALUE AND STATO_FASC.RV_DOMAIN = 'STATO_FASCICOLO' ";
+		// 2026.04.01 - Si aggiunge la decodifica della Nazione
+		lStatement += " AND nvl(S.COD_STATO_NASCITA,'-') = NAZIONE.RV_LOW_VALUE AND NAZIONE.RV_DOMAIN = 'NAZIONE' ";
 		// lStatement +=
 
 		return lStatement;
@@ -804,9 +810,6 @@ public class FascicoloSiepSoggettoSqlDAO extends SIAPSqlDAO {
 			lCondizioni += " AND UPPER(COGNOME) like '" + StringUtils.convertSqlString(aSm.getCognome()).toUpperCase() + "%'";
 		}
 
-		if (!(aSm.getCodAfis().equals(""))) {
-			lCondizioni += " AND COD_AFIS = '" + aSm.getCodAfis() + "'";
-		}
 
 		if (aSm.getDataNascita() != null) {
 			// 20180110: [SG] aggiunta trunc sulla data nascita per gestire la presenza di ore min sec
@@ -835,6 +838,26 @@ public class FascicoloSiepSoggettoSqlDAO extends SIAPSqlDAO {
 			lCondizioni += " AND COD_STATO_NASCITA = '" + aSm.getCodStatoNascita() + "'";
 		}
 
+		
+			
+		// 2026.04.01 - Il CUI deve andare in OR con i restanti dati anagrafici
+//		if (!(aSm.getCodAfis().equals(""))) {
+//		lCondizioni += " AND COD_AFIS = '" + aSm.getCodAfis() + "'";
+//	    }
+		if (!(aSm.getCodAfis().equals(""))) {
+			if (lCondizioni.length()>0) {
+				String newString =  "";
+				newString += " AND ( ";
+				newString +=        "("+lCondizioni.replaceFirst("AND", "") + ")"; // rimuovo il primo AND
+				newString +=     " OR COD_AFIS = '" + aSm.getCodAfis() + "'";
+				newString +=     " ) ";
+				lCondizioni = newString;
+			} else {
+				lCondizioni += " AND COD_AFIS = '" + aSm.getCodAfis() + "'";
+			}
+		}	
+		// 2026.04.01 - FINE
+		
 		return lCondizioni;
 	}
 
@@ -1068,6 +1091,7 @@ public class FascicoloSiepSoggettoSqlDAO extends SIAPSqlDAO {
 		lSoggetto.setDescrComuneNascita(getString("DESCR_COMUNE_NASCITA"));
 		lSoggetto.setCodAfis(getString("COD_AFIS"));
 		lSoggetto.setCodStatoNascita(getString("COD_STATO_NASCITA"));
+		lSoggetto.setDescrStatoNascita(getString("DESCR_STATO_NASCITA"));		
 		lSoggetto.setNazionalita(getString("NAZIONALITA"));
 
 		// UD.DESCR_COMUNE DESCR_COMUNE, ";

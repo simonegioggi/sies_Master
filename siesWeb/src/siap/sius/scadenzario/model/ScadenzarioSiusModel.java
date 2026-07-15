@@ -1,24 +1,24 @@
 package siap.sius.scadenzario.model;
 
-/**
-* <p>Title: ScadenzarioSiusModel</p>
-* <p>Description: Classe Model che rappresenta lo ScadenzarioSius</p>
-* <p>Copyright: Copyright (c) 2002</p>
-* <p>Company: Bull</p>
-* @version 1.0
-*/
-
 import java.math.BigDecimal;
 import java.util.Date;
 
-import siap.sico.evento.model.EventoModel;
-import siap.sius.fascicolo.model.FascicoloSiusModel;
 import f3b.model.GenericModel;
+import siap.sico.evento.model.EventoModel;
+import siap.siep.posizione.model.PosizioneGiuridicaModel;
+import siap.sius.fascicolo.model.FascicoloSiusModel;
+import siap.sius.generaleprocedimento.model.GeneraleProcedimentoModel;
+import siap.sius.rifasiep.model.RiferimentoFascicoloSiepModel;
 
+/**
+ * ScadenzarioSiusModel - Classe Model che rappresenta lo Scadenzario Sius
+ *
+ * @version 1.0
+ */
 public class ScadenzarioSiusModel extends GenericModel {
 
 	/**
-	 * 
+	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = 6473173902669874789L;
 
@@ -42,9 +42,17 @@ public class ScadenzarioSiusModel extends GenericModel {
 	private FascicoloSiusModel mFascicoloSius;
 	private BigDecimal mEveIdEvento; // 02/08/2004
 	private EventoModel mEvento; // 02/08/2004
+	// MEV_2026-1: aggiunte variabili e gestite nella classe
+	private RiferimentoFascicoloSiepModel mRiferimentoFascicoloSiep;
+	private PosizioneGiuridicaModel mPosizioneGiuridica;
+	private GeneraleProcedimentoModel mGeneraleProcedimento;
+	private Date mDataFinePenaVirtuale;
+	private BigDecimal mGiorniResiduiVirtuali;
+	// FINE MEV_2026-1
 
 	// COSTRUTTORE DI DEFAULT
 	public ScadenzarioSiusModel() {
+
 		this.mIdScadenzarioSius = null;
 		this.mCodTipoScadenzario = "";
 		this.mDescrTipoScadenzario = "";
@@ -65,10 +73,16 @@ public class ScadenzarioSiusModel extends GenericModel {
 		this.mFascicoloSius = null;
 		this.mEveIdEvento = null;
 		this.mEvento = null;
+		this.mRiferimentoFascicoloSiep = null;
+		this.mPosizioneGiuridica = null;
+		this.mGeneraleProcedimento = null;
+		this.mDataFinePenaVirtuale = null;
+		this.mGiorniResiduiVirtuali = null;
 	}
 
 	// COSTRUTTORE DI COPIA
 	public ScadenzarioSiusModel(ScadenzarioSiusModel aModel) {
+
 		this.mIdScadenzarioSius = aModel.mIdScadenzarioSius;
 		this.mCodTipoScadenzario = aModel.mCodTipoScadenzario;
 		this.mDescrTipoScadenzario = aModel.mDescrTipoScadenzario;
@@ -89,6 +103,11 @@ public class ScadenzarioSiusModel extends GenericModel {
 		this.mGiorniResidui = aModel.mGiorniResidui;
 		this.mEveIdEvento = aModel.mEveIdEvento;
 		this.mEvento = aModel.mEvento;
+		this.mRiferimentoFascicoloSiep = aModel.mRiferimentoFascicoloSiep;
+		this.mPosizioneGiuridica = aModel.mPosizioneGiuridica;
+		this.mGeneraleProcedimento = aModel.mGeneraleProcedimento;
+		this.mDataFinePenaVirtuale = aModel.mDataFinePenaVirtuale;
+		this.mGiorniResiduiVirtuali = aModel.mGiorniResiduiVirtuali;
 	}
 
 	// COSTRUTTORE MODEL
@@ -98,7 +117,11 @@ public class ScadenzarioSiusModel extends GenericModel {
 			String aCodUfficioInserimento, String aDescrUfficioInserimento, String aCodOperatoreAggiornamento,
 			Date aDataAggiornamento, String aCodUfficioAggiornamento, String aDescrUfficioAggiornamento,
 			BigDecimal aGiorniResidui, BigDecimal aFasSiuIdFascicoloSius, FascicoloSiusModel aFascicoloSius,
-			BigDecimal aEveIdEvento, EventoModel aEvento) {
+			BigDecimal aEveIdEvento, EventoModel aEvento,
+			RiferimentoFascicoloSiepModel aRiferimentoFascicoloSiep,
+			PosizioneGiuridicaModel aPosizioneGiuridica, GeneraleProcedimentoModel aGeneraleProcedimento,
+			Date aDataFinePenaVirtuale, BigDecimal aGiorniResiduiVirtuali) {
+
 		this.mIdScadenzarioSius = aIdScadenzarioSius;
 		this.mCodTipoScadenzario = aCodTipoScadenzario;
 		this.mDescrTipoScadenzario = aDescrTipoScadenzario;
@@ -119,6 +142,11 @@ public class ScadenzarioSiusModel extends GenericModel {
 		this.mFascicoloSius = aFascicoloSius;
 		this.mEveIdEvento = aEveIdEvento;
 		this.mEvento = aEvento;
+		this.mRiferimentoFascicoloSiep = aRiferimentoFascicoloSiep;
+		this.mPosizioneGiuridica = aPosizioneGiuridica;
+		this.mGeneraleProcedimento = aGeneraleProcedimento;
+		this.mDataFinePenaVirtuale = aDataFinePenaVirtuale;
+		this.mGiorniResiduiVirtuali = aGiorniResiduiVirtuali;
 	}
 
 	//
@@ -204,6 +232,26 @@ public class ScadenzarioSiusModel extends GenericModel {
 		return mEvento;
 	}
 
+	public RiferimentoFascicoloSiepModel getRiferimentoFascicoloSiep() {
+		return mRiferimentoFascicoloSiep;
+	}
+
+	public PosizioneGiuridicaModel getPosizioneGiuridica() {
+		return mPosizioneGiuridica;
+	}
+
+	public GeneraleProcedimentoModel getGeneraleProcedimento() {
+		return mGeneraleProcedimento;
+	}
+
+	public Date getDataFinePenaVirtuale() {
+		return mDataFinePenaVirtuale;
+	}
+
+	public BigDecimal getGiorniResiduiVirtuali() {
+		return mGiorniResiduiVirtuali;
+	}
+
 	//
 	// METODI SET()
 	//
@@ -287,16 +335,35 @@ public class ScadenzarioSiusModel extends GenericModel {
 		mEvento = aValore;
 	}
 
-	public String toString() {
-		String lStr = new String();
+	public void setRiferimentoFascicoloSiep(RiferimentoFascicoloSiepModel aValore) {
+		mRiferimentoFascicoloSiep = aValore;
+	}
 
+	public void setPosizioneGiuridica(PosizioneGiuridicaModel aValore) {
+		mPosizioneGiuridica = aValore;
+	}
+
+	public void setGeneraleProcedimento(GeneraleProcedimentoModel aValore) {
+		mGeneraleProcedimento = aValore;
+	}
+
+	public void setDataFinePenaVirtuale(Date aValore) {
+		this.mDataFinePenaVirtuale = aValore;
+	}
+
+	public void setGiorniResiduiVirtuali(BigDecimal aValore) {
+		this.mGiorniResiduiVirtuali = aValore;
+	}
+
+	public String toString() {
+
+		String lStr = new String();
 		lStr = "" + mIdScadenzarioSius + " - " + mCodTipoScadenzario + " - " + mDescrTipoScadenzario + " - "
 				+ mDataInizioScadenza + " - " + mDataFineScadenza + " - " + mFlagVisto + " - " + mDataVisto
 				+ " - " + mCodOperatoreInserimento + " - " + mDataInserimento + " - " + mCodUfficioInserimento
 				+ " - " + mDescrUfficioInserimento + " - " + mCodOperatoreAggiornamento + " - "
 				+ mDataAggiornamento + " - " + mCodUfficioAggiornamento + " - " + mDescrUfficioAggiornamento
 				+ " - " + mFasSiuIdFascicoloSius + " - " + mEveIdEvento;
-
 		return lStr;
 	}
 

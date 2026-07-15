@@ -368,7 +368,7 @@ if ("U019".equals(codOggettoProcedimentoES)) {
 %>
     		</table>
     			<div id="elenco<%=jESS%>" style="display:none; width:100%;">
-      			<%@include file="/jsp/files/siap/sius/esecuzionesanzionesostitutiva/ListaProcedimentiCorrelati.jsp" %>
+      			<%@include file="/jsp/files/siap/sius/esecuzionesanzionesostitutiva/ListaProcedimentiCorrelati.jspf" %>
     			</div>
 <%	    	procCorrelati.clear();
     			jESS++;

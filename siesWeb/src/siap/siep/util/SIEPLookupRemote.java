@@ -15,6 +15,7 @@ import siap.siep.avvocato.controller.IAvvocato;
 import siap.siep.beneficio.controller.IBeneficio;
 import siap.siep.calcolopena.controller.ICalcoloPena;
 import siap.siep.calcolopena.controller.ICalcoloPenaF5;
+import siap.siep.calcolopenadl92.controller.ICalcoloPenaDL92;
 import siap.siep.certificatostatoesecuzione.controller.ICertificatoStatoEsec;
 import siap.siep.circostanza.controller.ICircostanza;
 import siap.siep.competenza.controller.ICompetenza;
@@ -1076,4 +1077,13 @@ public class SIEPLookupRemote extends LookupClass {
 
      return lRemote;
  }   
+   
+   // MEV-2026_1
+   public static ICalcoloPenaDL92 getCalcoloPenaDL92() throws F3BException {
+       Object lRef;
+       ICalcoloPenaDL92 lRemote;
+       lRef = lookup("siap.siep.calcolopenadl92.controller.CalcoloPenaDL92Controller");
+       lRemote = (ICalcoloPenaDL92) lRef;
+       return lRemote;
+   }
 }

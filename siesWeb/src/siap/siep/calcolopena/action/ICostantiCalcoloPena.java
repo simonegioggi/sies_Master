@@ -95,4 +95,11 @@ public interface ICostantiCalcoloPena {
   public static final String PG_LOAD_CALCOLOPENA_DL92 = IWebConstants.ROOT_DIR + "files/siap/siep/calcolopena/LoadCalcoloPenaDL92.jsp";
   public static final String PG_CALCOLOPENA_DL92      = IWebConstants.ROOT_DIR + "files/siap/siep/calcolopena/EsitoCalcoloPenaDL92.jsp";
   // MEV_2024-092 - FINE
+  
+  // MEV_2026-1
+  public static final String CAMPO_ID_CALCOLO_PENA_DL92= "idCalcoloPenaDL92";
+  public static final String PG_LOAD_STORICO_CALCPENA_DL92 = IWebConstants.ROOT_DIR + "files/siap/siep/calcolopena/StoricoCalcoloPenaDL92.jsp";
+  public static final String PG_DETT_STORICO_CALCPENA_DL92 = IWebConstants.ROOT_DIR + "files/siap/siep/calcolopena/DettStoricoCalcoloPenaDL92.jsp";
+  // MEV_2026-1 - FINE
+
 }
