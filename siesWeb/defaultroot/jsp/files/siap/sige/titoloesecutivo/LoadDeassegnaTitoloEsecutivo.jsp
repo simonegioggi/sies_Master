@@ -259,6 +259,11 @@
         <td class="l">Comune Nascita <font class=ob>(*)</font></td>
         <td class="L">
           <input title="Comune di Nascita" value="<%=StringUtils.toStringJSP(lSoggetto.getDescrComuneNascita()) %>" type="text" name="<%= ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA %>"  maxlength="35" size="35" onChange="cancellaCodComuneReale();">
+          <%-- Ticket#20260806014 --%>
+          <input type="hidden" title="Cod Comune Nascita" 
+                 value="<%=StringUtils.toStringJSP(lSoggetto.getCodComuneNascita()) %>"            
+                 name="<%= ICostantiComune.CAMPO_COD_COMUNE_REALE %>">
+          <%-- Ticket#20260806014 - FINE --%>
           <a href="Javascript:ListaComuni('LoadDeassegnaTitoloEsecutivo','<%= ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA %>');">
             <img src="/images/filefolder.gif" border=0>
           </a>
