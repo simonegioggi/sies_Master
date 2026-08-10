@@ -30,6 +30,12 @@ public class ActLoadRicercaTitoloDaRichiedere extends ActionModuloCumulo impleme
 					"L'istruttoria corrente non risulta Aperta. Non è possibile effettuare richieste atti.");
 		}
 
+		// Ticket#202607240122 — Allert in
+		// Si sta per inserire un evento. Anche se da CUMULO deve comunque verificare 
+		// che non esistano eventi non validati
+		this.isEventoNonValidato();
+		// Ticket#202607240122 - FINE
+		
 		//
 		Option lComboAutorità = new Option(DecodificheManager.getInstance().getTipoUfficioSIEP());
 		setRequestAttribute("tipoAutorita", "" + lComboAutorità);

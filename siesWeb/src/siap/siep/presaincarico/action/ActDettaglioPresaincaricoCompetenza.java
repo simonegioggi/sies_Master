@@ -27,13 +27,8 @@ import siap.siep.util.SIEPLookupRemote;
 import siap.sius.SIUSException;
 
 /**
- * <p>
- * Title: ActDettaglioPresaincaricoCompetenza
- * </p>
- * <p>
- * Action per il caricamento dei dati del messaggio di trasmissione per competenza e visualizzazione del
- * dettaglio
- * </p>
+ * ActDettaglioPresaincaricoCompetenza - Action per il caricamento dei dati del messaggio di trasmissione per
+ * competenza e visualizzazione del dettaglio
  */
 public class ActDettaglioPresaincaricoCompetenza extends ActionSiap implements ICostantiPresaincarico {
 
@@ -158,10 +153,15 @@ public class ActDettaglioPresaincaricoCompetenza extends ActionSiap implements I
 			ICompetenza lCtrlCompetenza = SIEPLookupRemote.getCompetenzaRemote();
 			Vector<CompetenzaModel> lListaCompetenze = lCtrlCompetenza
 					.ExRicercaCompetenzaByIdFascicoloSiep(lFasModel.getIdFascicoloSiep());
-			lUltimaCompetenza = lListaCompetenze.lastElement();
+			// [SG]: workaround x Ticket#202608050111
+			// lUltimaCompetenza = lListaCompetenze.lastElement();
+			if (lListaCompetenze != null && !lListaCompetenze.isEmpty()) {
+				lUltimaCompetenza = lListaCompetenze.lastElement();
+				siesLogger.debug("--XX-- Dal BLOB del MESSAGGIO UltimaCompetenza = " + lUltimaCompetenza);
+			}
 		} else {
 			siesLogger.debug(
-					" --XX-- Fascicolo da Cumulare proveniente da fuori Distretto, leggo il BLOB del MESSAGGIO");
+					"--XX-- Fascicolo da Cumulare proveniente da fuori Distretto, leggo il BLOB del MESSAGGIO");
 
 			ParserMessage lParser = null;
 			if (lMess != null) {
@@ -173,7 +173,7 @@ public class ActDettaglioPresaincaricoCompetenza extends ActionSiap implements I
 				lFasModel = lParser.getDettaglioFascicoloSiep().getFascicoloSiep();
 			else
 				throw new SIUSException(SIUSException.USER_MESSAGE,
-						"Errore nella Ricezione del Procedimento. <BR>Rivolgersi all'amministratore di sistema! ");
+						"Errore nella Ricezione del Procedimento. <BR>Rivolgersi all'amministratore di sistema!");
 
 			if (lParser.getDettaglioFascicoloSiep().getFascicoloSiep().getSoggetto() != null)
 				lFasModel.setSoggetto(lParser.getDettaglioFascicoloSiep().getFascicoloSiep().getSoggetto());
@@ -188,7 +188,7 @@ public class ActDettaglioPresaincaricoCompetenza extends ActionSiap implements I
 
 			if (lListaCompetenze != null && !lListaCompetenze.isEmpty()) {
 				lUltimaCompetenza = (CompetenzaModel) lListaCompetenze.lastElement();
-				siesLogger.debug(" --XX-- Dal BLOB del MESSAGGIO UltimaCompetenza = " + lUltimaCompetenza);
+				siesLogger.debug("--XX-- Dal BLOB del MESSAGGIO UltimaCompetenza = " + lUltimaCompetenza);
 			}
 		}
 
