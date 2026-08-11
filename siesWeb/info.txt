@@ -9,7 +9,7 @@ Comprende i seguenti Ticket MAC:
 1)	Ticket#20260806014 - Eliminazione sentenza dal SIGE
 	Per la risoluzione della problematica è stata aggiunto il campo nascosto per gestire il codice comune di
 	nascita del soggetto.
-	Il problema era legato al fatto che non era gestito il campo nascosto cul campo "Comune" del comune di
-	nascita del soggetto nella funzionalità della de-assegnazione del procedimento SIEP. 
+	Il problema era legato al fatto che non era gestito il campo nascosto "Comune" del comune di nascita del
+	soggetto nella funzionalità della de-assegnazione del procedimento SIEP.
 	Classi modificate:
 	-   siap/sige/titoloesecutivo/LoadDeassegnaTitoloEsecutivo.jsp
