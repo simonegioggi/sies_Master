@@ -2,12 +2,14 @@ BRANCH siesWeb Versione release_12.10.1.0
 
 Nasce dal branch release_12.10.0.0 in data 23/06/2026
 
-Questa Release verrà rilasciata il 24/07/2026 (Patch mese di Aprile, Maggio, Giugno e Luglio 2026)
+Questa Release verrà rilasciata il 28/08/2026 (Patch mese di Aprile, Maggio, Giugno, Luglio e Agosto 2026)
 
 Comprende i seguenti Ticket MAC:
 
-1)	Ticket#
-	Per la risoluzione della problematica è stata modificata la ...
-	Il problema era legato al fatto che ...
+1)	Ticket#20260806014 - Eliminazione sentenza dal SIGE
+	Per la risoluzione della problematica è stata aggiunto il campo nascosto per gestire il codice comune di
+	nascita del soggetto.
+	Il problema era legato al fatto che non era gestito il campo nascosto cul campo "Comune" del comune di
+	nascita del soggetto nella funzionalità della de-assegnazione del procedimento SIEP. 
 	Classi modificate:
-	-   
+	-   siap/sige/titoloesecutivo/LoadDeassegnaTitoloEsecutivo.jsp

@@ -139,17 +139,14 @@
         }
         return ritorno;
       }
-      
-      function cancellaCodComuneReale() {
-      
-      	document.LoadDeassegnaTitoloEsecutivo.<%=ICostantiComune.CAMPO_COD_COMUNE_REALE%>.value = "";      	
-      }
-    </script>
 
-  </head>
-
-  <body class="corpo">
-  <link rel="STYLESHEET" type="text/css" href="/css/style.css">
+function cancellaCodComuneReale() {
+	document.LoadDeassegnaTitoloEsecutivo.<%=ICostantiComune.CAMPO_COD_COMUNE_REALE%>.value = "";      	
+}
+</script>
+</head>
+<body class="corpo">
+<!-- <link rel="STYLESHEET" type="text/css" href="/css/style.css"> -->
   <table>
     <tr><td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
       <td class="LBG">
@@ -160,23 +157,18 @@
           
 %>
             <font class="campo">De-assegnazione Procedimento SIEP</font>
-
       </td>
     </tr>
   </table>
-
   <br>
-
-  <table>
-    <tr>
-      <jsp:include page="<%=ICostantiFascicoloSige.PG_LOAD_SINTESIPROCEDIMENTOSIGE%>"/>    
-    </tr>
-  </table>
-  <br>
-  
-  <FORM method="POST" action="<%=IWebConstants.PG_MAIN%>" name='LoadDeassegnaTitoloEsecutivo'>
-   
-   <table cellspacing=0 cellpadding=0 width=95%>
+<table>
+	<tr>
+      	<jsp:include page="<%=ICostantiFascicoloSige.PG_LOAD_SINTESIPROCEDIMENTOSIGE%>"/>
+	</tr>
+</table>
+<br>
+<FORM method="POST" action="<%=IWebConstants.PG_MAIN%>" name='LoadDeassegnaTitoloEsecutivo'>
+<table cellspacing=0 cellpadding=0 width=95%>
     <tr>
       <td class="l" width=50%>Per confermare la De-assegnazione del Procedimento SIEP </td>
       <td class="lRosso">  
@@ -192,7 +184,6 @@
       <!-- <td class="l"><input title="Cognome" name="<//%=ICostantiTitoloEsecutivo.CHECK_DEASSEGNA_TITOLO_ESECUTIVO%>" value="S" type="text"></td> -->	
     </tr>
   </table>
-  
   <br>
   <br>
   <br>
@@ -244,10 +235,8 @@
               <input title="Anno Data di nascita" value="<%=StringUtils.toStringJSP( DateUtils.getDateToString(lSoggetto.getDataNascita(),"yyyy")) %>" type="text" name="<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA %>" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
 <%
             }
-         
 %>
-
-          </td>
+		</td>
         <td class="l">Data Presunta</td>
         <td class="L">
           <select title="Data presunta" name="<%=ICostantiSoggetto.CAMPO_DATA_NASCITA_PRESUNTA%>">
@@ -326,65 +315,58 @@
 				<td class="L"><input title="Codice CUI" value="<%=StringUtils.toStringJSP(lSoggetto.getCodAfis()) %>" type="text"
         name="<%= ICostantiSoggetto.CAMPO_COD_AFIS %>"  maxlength="7" size="7"></td>
 		  <td >&nbsp;</td><td >&nbsp;</td>
-
         </tr>
-
 		<tr>
       <td class="l">Note</td>
       <td class="L" colspan=3>
         <TEXTAREA title="note" name="<%= ICostantiSoggetto.CAMPO_NOTE %>"  cols=80 rows=5 ><%=StringUtils.toStringJSP(lSoggetto.getNote() )%></textarea>
       </td>
 		</tr>
-       
-  </table>
-     
-   <br>
-    <tr>
-      <td>
-        <input onclick="Javascript:return Verify();" class="bottone" type="submit" name="Ricerca" value="Conferma">
-      </td>
-    </tr>
+</table>
+<br>
+<table>
+	<tr>
+      	<td>
+        	<input onclick="Javascript:return Verify();" class="bottone" type="submit" name="Ricerca" value="Conferma">
+      	</td>
+	</tr>
+</table>
+<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="<%=lAction%>" >
+<input type="HIDDEN" name="<%=ICostantiSoggetto.CAMPO_ID_SOGGETTO%>" value="<%=lSoggetto.getIdSoggetto()%>">
+<input type="HIDDEN" name="modalita" value="<%=modalita%>" >
+</FORM>
 
-    <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="<%=lAction%>" >
-    <input type="HIDDEN" name="<%=ICostantiSoggetto.CAMPO_ID_SOGGETTO%>" value="<%=lSoggetto.getIdSoggetto()%>">
-    <input type="HIDDEN" name="modalita" value="<%=modalita%>" >
+<script language="JavaScript" type="text/javascript">
+var frmvalidator  = new Validator("LoadDeassegnaTitoloEsecutivo");
+frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_NOME %>","req","Il campo Nome Soggetto è obbligatorio");
+frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_NOME %>","maxlen=35","La lunghezza massima per il nome è di 35 caratteri");
+frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_NOME %>","alpha");
 
-  </FORM>
+frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COGNOME %>","req","Il campo Cognome Soggetto è obbligatorio");
+frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COGNOME %>","maxlen=35","La lunghezza massima per il cognome è di 35 caratteri");
+frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COGNOME %>","alpha");
 
-  <script language="JavaScript" type="text/javascript">
-    var frmvalidator  = new Validator("LoadDeassegnaTitoloEsecutivo");
-    frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_NOME %>","req","Il campo Nome Soggetto è obbligatorio");
-    frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_NOME %>","maxlen=35","La lunghezza massima per il nome è di 35 caratteri");
-    frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_NOME %>","alpha");
+frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA %>","req","Il campo Anno di Nascita è obbligatorio");
+frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>","maxlen=4","La lunghezza massima per l'anno di nascita è di 4 caratteri");
+frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>","minlen=4","La lunghezza minima per l'anno di nascita è di 4 caratteri");
+frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>","numeric");
+frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>","gt=1900");
+frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>","lt=3000");
 
-    frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COGNOME %>","req","Il campo Cognome Soggetto è obbligatorio");
-    frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COGNOME %>","maxlen=35","La lunghezza massima per il cognome è di 35 caratteri");
-    frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COGNOME %>","alpha");
-
-
-    frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA %>","req","Il campo Anno di Nascita è obbligatorio");
-    frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>","maxlen=4","La lunghezza massima per l'anno di nascita è di 4 caratteri");
-    frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>","minlen=4","La lunghezza minima per l'anno di nascita è di 4 caratteri");
-    frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>","numeric");
-    frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>","gt=1900");
-    frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ANNO_DATA_NASCITA%>","lt=3000");
-
-    frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COD_FISCALE %>","alphanumeric");
-    frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COD_AFIS %>","alphanumeric");
-    frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_NAZIONALITA%>","alphabetic");
-    frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>","alphanumeric");
-    frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_DESC_COMUNE_NASCITA_ESTERO%>","alphanumeric");
-    frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_PATERNITA%>","alphabetic");
-    frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COGNOME_MADRE%>","alphabetic");
-    frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_NOME_MADRE%>","alphabetic");
-    frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ATTO_NASCITA%>","alphanumeric");
-    <%-- Ticket#202506130166 - SIES: Anomalia inserimento provvedimento - schermata sede dell'autorità emittente--%>
-    <%-- ELIMINATO CONTROLLO per consentire inserimento comuni tipo MERANO/MERAN) --%>
-<%--     frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA %>","alpha"); --%>
-<%--     frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_DESC_COMUNE_NASCITA_ESTERO %>","alpha"); --%>
-    frmvalidator.setAddnlValidationFunction("Verifica");
-    
-  </script>
-
-  </body>
+frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COD_FISCALE %>","alphanumeric");
+frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COD_AFIS %>","alphanumeric");
+frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_NAZIONALITA%>","alphabetic");
+frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>","alphanumeric");
+frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_DESC_COMUNE_NASCITA_ESTERO%>","alphanumeric");
+frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_PATERNITA%>","alphabetic");
+frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COGNOME_MADRE%>","alphabetic");
+frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_NOME_MADRE%>","alphabetic");
+frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_ATTO_NASCITA%>","alphanumeric");
+<%-- Ticket#202506130166 - SIES: Anomalia inserimento provvedimento - schermata sede dell'autorità emittente--%>
+<%-- ELIMINATO CONTROLLO per consentire inserimento comuni tipo MERANO/MERAN) --%>
+<%-- frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA %>","alpha"); --%>
+<%-- frmvalidator.addValidation("<%= ICostantiSoggetto.CAMPO_DESC_COMUNE_NASCITA_ESTERO %>","alpha"); --%>
+frmvalidator.setAddnlValidationFunction("Verifica");
+</script>
+</body>
 </html>
