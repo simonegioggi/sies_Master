@@ -49,6 +49,12 @@
         desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComune&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=300,height=500");
       }
       
+      <%-- Ticket#20260806014 --%>
+      function ListaComuniNascita(a_formname,a_fieldname) {
+    		desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComuneNascita&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=400,height=500");
+      }      
+      <%-- Ticket#20260806014 - FINE --%>      
+      
       function Verifica ()
       {
           return true;
@@ -252,10 +258,13 @@ function cancellaCodComuneReale() {
           <input type="hidden" title="Cod Comune Nascita" 
                  value="<%=StringUtils.toStringJSP(lSoggetto.getCodComuneNascita()) %>"            
                  name="<%= ICostantiComune.CAMPO_COD_COMUNE_REALE %>">
-          <%-- Ticket#20260806014 - FINE --%>
+          <%--  
           <a href="Javascript:ListaComuni('LoadDeassegnaTitoloEsecutivo','<%= ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA %>');">
+          --%>
+          <a href="Javascript: ListaComuniNascita ('LoadDeassegnaTitoloEsecutivo','<%= ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA %>');">
             <img src="/images/filefolder.gif" border=0>
           </a>
+          <%-- Ticket#20260806014 - FINE --%> 
         </td>
       </tr>
 
