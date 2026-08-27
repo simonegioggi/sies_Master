@@ -41,7 +41,7 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 		// se selezionato SIEP non si fa nulla
 		// se iscritto manualmente si va in INSERT (non certificato)
 		// ===========================================================
-		BigDecimal idAvvocato = this.inserisciAggiornaAvvocato();
+		BigDecimal idAvvocato = inserisciAggiornaAvvocato();
 
 		// Prima di agganciare l'avvocato al fascicol controlllo che:
 		// - non sia già presente sul fascicolo
@@ -115,21 +115,21 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 
 		lAvvFascMod.setDataFineValidita(null);
 
-		if (!this.isRequestParameterNullObj(ICostantiAvvocatoFascicoloSius.CAMPO_COD_MOTIVO_DESIGNAZIONE)) {
+		if (!isRequestParameterNullObj(ICostantiAvvocatoFascicoloSius.CAMPO_COD_MOTIVO_DESIGNAZIONE)) {
 			lAvvFascMod.setCodMotivoDesignazione(
 					getRequestStringParameter(ICostantiAvvocatoFascicoloSius.CAMPO_COD_MOTIVO_DESIGNAZIONE));
 		} else {
 			lAvvFascMod.setCodMotivoDesignazione("-");
 		}
 
-		if (!this.isRequestParameterNullObj(ICostantiAvvocatoFascicoloSius.CAMPO_COD_TIPO_AUTORITA))
+		if (!isRequestParameterNullObj(ICostantiAvvocatoFascicoloSius.CAMPO_COD_TIPO_AUTORITA))
 			lAvvFascMod.setCodTipoAutorita(
 					getRequestStringParameter(ICostantiAvvocatoFascicoloSius.CAMPO_COD_TIPO_AUTORITA));
 		else
 			lAvvFascMod.setCodTipoAutorita("-");
 
-		if (!this.isRequestParameterNullObj(ICostantiAvvocatoFascicoloSius.CAMPO_COD_SEDE_AUTORITA)
-				&& (!this.isRequestParameterNullObj(ICostantiAvvocatoFascicoloSius.CAMPO_COD_TIPO_AUTORITA)
+		if (!isRequestParameterNullObj(ICostantiAvvocatoFascicoloSius.CAMPO_COD_SEDE_AUTORITA)
+				&& (!isRequestParameterNullObj(ICostantiAvvocatoFascicoloSius.CAMPO_COD_TIPO_AUTORITA)
 						&& !getRequestStringParameter(ICostantiAvvocatoFascicoloSius.CAMPO_COD_TIPO_AUTORITA)
 								.equals("-"))) {
 			ComuneModel lComMod = new ComuneModel(getCodComuneByDescr(
@@ -139,22 +139,21 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 			lAvvFascMod.setSedeAutorita("-");
 		}
 
-		if (!this.isRequestParameterNullObj(ICostantiAvvocatoFascicoloSius.CAMPO_INDIRIZZO_TIPO_AUTORITA))
+		if (!isRequestParameterNullObj(ICostantiAvvocatoFascicoloSius.CAMPO_INDIRIZZO_TIPO_AUTORITA))
 			lAvvFascMod.setIndirizzoTipoAutorita(
 					getRequestStringParameter(ICostantiAvvocatoFascicoloSius.CAMPO_INDIRIZZO_TIPO_AUTORITA));
-		if (!this.isRequestParameterNullObj(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE))
+		if (!isRequestParameterNullObj(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE))
 			lAvvFascMod.setIstDetIdIstitutoDetenzione(
 					getRequestStringParameter(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE));
 
-		if (!this.isRequestParameterNullObj(ICostantiAvvocatoFascicoloSius.CAMPO_COD_TIPO_AUTORITA_DIF))
+		if (!isRequestParameterNullObj(ICostantiAvvocatoFascicoloSius.CAMPO_COD_TIPO_AUTORITA_DIF))
 			lAvvFascMod.setCodTipoAutoritaDif(
 					getRequestStringParameter(ICostantiAvvocatoFascicoloSius.CAMPO_COD_TIPO_AUTORITA_DIF));
 		else
 			lAvvFascMod.setCodTipoAutoritaDif("-");
 
-		if (!this.isRequestParameterNullObj(ICostantiAvvocatoFascicoloSius.CAMPO_COD_SEDE_AUTORITA_DIF)
-				&& (!this
-						.isRequestParameterNullObj(ICostantiAvvocatoFascicoloSius.CAMPO_COD_TIPO_AUTORITA_DIF)
+		if (!isRequestParameterNullObj(ICostantiAvvocatoFascicoloSius.CAMPO_COD_SEDE_AUTORITA_DIF)
+				&& (!isRequestParameterNullObj(ICostantiAvvocatoFascicoloSius.CAMPO_COD_TIPO_AUTORITA_DIF)
 						&& !getRequestStringParameter(
 								ICostantiAvvocatoFascicoloSius.CAMPO_COD_TIPO_AUTORITA_DIF).equals("-"))) {
 			String lComneAutoritaDif = getRequestStringParameter(
@@ -167,7 +166,7 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 
 		lAvvFascMod.setCodOperatoreInserimento(getCodUtenteConnesso());
 		lAvvFascMod.setDataInserimento(DateUtils.getSysDate());
-		lAvvFascMod.setCodUfficioInserimento(this.getCodUfficioUtenteConnesso());
+		lAvvFascMod.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
 
 		// ======================================
 		// Chiamo la funzione di Sostituzione
@@ -180,8 +179,8 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 				.getFascicoloSiusModel().getIdFascicoloSius());
 		lAvvFascUp.setDataFineValidita(DateUtils.getSysDate());
 
-		lAvvFascUp.setCodUfficioAggiornamento(this.getCodUfficioUtenteConnesso());
-		lAvvFascUp.setCodOperatoreAggiornamento(this.getCodUtenteConnesso());
+		lAvvFascUp.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
+		lAvvFascUp.setCodOperatoreAggiornamento(getCodUtenteConnesso());
 		lAvvFascUp.setDataAggiornamento(DateUtils.getSysDate());
 
 		AvvocatoFascicoloSiusModel lAvvMod = new AvvocatoFascicoloSiusModel();
@@ -251,20 +250,20 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 	// if (lAvvFascMod.getCodTipoAvvocato().equals("03")) {
 	// lAvvFascMod.setDataInizioValidita(DateUtils.getSysDate());
 	// }
-	// if (!this.isRequestParameterNullObj(ICostantiAvvocatoFascicoloSius.CAMPO_COD_MOTIVO_DESIGNAZIONE)) {
+	// if (!isRequestParameterNullObj(ICostantiAvvocatoFascicoloSius.CAMPO_COD_MOTIVO_DESIGNAZIONE)) {
 	// lAvvFascMod.setCodMotivoDesignazione(
 	// getRequestStringParameter(ICostantiAvvocatoFascicoloSius.CAMPO_COD_MOTIVO_DESIGNAZIONE));
 	// } else {
 	// lAvvFascMod.setCodMotivoDesignazione("-");
 	// }
-	// if (!this.isRequestParameterNullObj(ICostantiAvvocatoFascicoloSius.CAMPO_COD_TIPO_AUTORITA))
+	// if (!isRequestParameterNullObj(ICostantiAvvocatoFascicoloSius.CAMPO_COD_TIPO_AUTORITA))
 	// lAvvFascMod.setCodTipoAutorita(
 	// getRequestStringParameter(ICostantiAvvocatoFascicoloSius.CAMPO_COD_TIPO_AUTORITA));
 	// else
 	// lAvvFascMod.setCodTipoAutorita("-");
 	//
-	// if (!this.isRequestParameterNullObj(ICostantiAvvocatoFascicoloSius.CAMPO_COD_SEDE_AUTORITA)
-	// && (!this.isRequestParameterNullObj(ICostantiAvvocatoFascicoloSius.CAMPO_COD_TIPO_AUTORITA)
+	// if (!isRequestParameterNullObj(ICostantiAvvocatoFascicoloSius.CAMPO_COD_SEDE_AUTORITA)
+	// && (!isRequestParameterNullObj(ICostantiAvvocatoFascicoloSius.CAMPO_COD_TIPO_AUTORITA)
 	// && !getRequestStringParameter(ICostantiAvvocatoFascicoloSius.CAMPO_COD_TIPO_AUTORITA)
 	// .equals("-"))) {
 	// // String lComuneAutorita =
@@ -276,22 +275,21 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 	// lAvvFascMod.setSedeAutorita("-");
 	// }
 	//
-	// if (!this.isRequestParameterNullObj(ICostantiAvvocatoFascicoloSius.CAMPO_INDIRIZZO_TIPO_AUTORITA))
+	// if (!isRequestParameterNullObj(ICostantiAvvocatoFascicoloSius.CAMPO_INDIRIZZO_TIPO_AUTORITA))
 	// lAvvFascMod.setIndirizzoTipoAutorita(
 	// getRequestStringParameter(ICostantiAvvocatoFascicoloSius.CAMPO_INDIRIZZO_TIPO_AUTORITA));
-	// if (!this.isRequestParameterNullObj(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE))
+	// if (!isRequestParameterNullObj(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE))
 	// lAvvFascMod.setIstDetIdIstitutoDetenzione(
 	// getRequestStringParameter(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE));
 	//
-	// if (!this.isRequestParameterNullObj(ICostantiAvvocatoFascicoloSius.CAMPO_COD_TIPO_AUTORITA_DIF))
+	// if (!isRequestParameterNullObj(ICostantiAvvocatoFascicoloSius.CAMPO_COD_TIPO_AUTORITA_DIF))
 	// lAvvFascMod.setCodTipoAutoritaDif(
 	// getRequestStringParameter(ICostantiAvvocatoFascicoloSius.CAMPO_COD_TIPO_AUTORITA_DIF));
 	// else
 	// lAvvFascMod.setCodTipoAutoritaDif("-");
 	//
-	// if (!this.isRequestParameterNullObj(ICostantiAvvocatoFascicoloSius.CAMPO_COD_SEDE_AUTORITA_DIF)
-	// && (!this
-	// .isRequestParameterNullObj(ICostantiAvvocatoFascicoloSius.CAMPO_COD_TIPO_AUTORITA_DIF)
+	// if (!isRequestParameterNullObj(ICostantiAvvocatoFascicoloSius.CAMPO_COD_SEDE_AUTORITA_DIF)
+	// && (!isRequestParameterNullObj(ICostantiAvvocatoFascicoloSius.CAMPO_COD_TIPO_AUTORITA_DIF)
 	// && !getRequestStringParameter(
 	// ICostantiAvvocatoFascicoloSius.CAMPO_COD_TIPO_AUTORITA_DIF).equals("-"))) {
 	// String lComneAutoritaDif = getRequestStringParameter(
@@ -303,7 +301,7 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 	// lAvvFascMod.setSedeAutoritaDif("-");
 	// }
 	//
-	// if (!this.isRequestParameterNullObj(ICostantiAvvocatoFascicoloSius.CAMPO_NOTE)) {
+	// if (!isRequestParameterNullObj(ICostantiAvvocatoFascicoloSius.CAMPO_NOTE)) {
 	// lAvvFascMod.setNote(getRequestStringParameter(ICostantiAvvocatoFascicoloSius.CAMPO_NOTE));
 	// }
 	//
@@ -311,19 +309,19 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 	// // LogF3B.getLogger()
 	// siesLogger.debug(" PAOLO appar = " + lAvvModRic.getCodUffAppartenenza());
 	//
-	// if (!lAvvModRic.getCodUffAppartenenza().equals(this.getCodUfficioUtenteConnesso())) {
+	// if (!lAvvModRic.getCodUffAppartenenza().equals(getCodUfficioUtenteConnesso())) {
 	// lAvvModRic.setForo(getRequestStringParameter(CAMPO_FORO).toUpperCase());
 	// lAvvModRic.setIndirizzo(getRequestStringParameter(CAMPO_INDIRIZZO).toUpperCase());
 	// lAvvModRic.setTelefono(getRequestStringParameter(CAMPO_TELEFONO));
 	// lAvvModRic.setFax(getRequestStringParameter(CAMPO_FAX));
 	// lAvvModRic.setEMail(getRequestStringParameter(CAMPO_E_MAIL).toUpperCase());
-	// lAvvModRic.setCodUffAppartenenza(this.getCodUfficioUtenteConnesso());
-	// ComuneModel lComModRes = new ComuneModel(this.getCodComuneByDescr(
+	// lAvvModRic.setCodUffAppartenenza(getCodUfficioUtenteConnesso());
+	// ComuneModel lComModRes = new ComuneModel(getCodComuneByDescr(
 	// getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA)));
 	// lAvvModRic.setCodComuneResidenza(lComModRes.getCodComune());
 	//
-	// lAvvModRic.setCodUfficioInserimento(this.getCodUfficioUtenteConnesso());
-	// lAvvModRic.setCodOperatoreInserimento(this.getCodUtenteConnesso());
+	// lAvvModRic.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
+	// lAvvModRic.setCodOperatoreInserimento(getCodUtenteConnesso());
 	// lAvvModRic.setDataInserimento(DateUtils.getSysDate());
 	//
 	// lAvvModRic = lCtrl.ExInserisciAvvocato(lAvvModRic);
@@ -360,11 +358,11 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 	// lAvvModRic.setFax(getRequestStringParameter(CAMPO_FAX));
 	// lAvvModRic.setEMail(getRequestStringParameter(CAMPO_E_MAIL).toUpperCase());
 	//
-	// lAvvModRic.setCodUfficioAggiornamento(this.getCodUfficioUtenteConnesso());
-	// lAvvModRic.setCodOperatoreAggiornamento(this.getCodUtenteConnesso());
+	// lAvvModRic.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
+	// lAvvModRic.setCodOperatoreAggiornamento(getCodUtenteConnesso());
 	// lAvvModRic.setDataAggiornamento(DateUtils.getSysDate());
 	//
-	// ComuneModel lComModRes = new ComuneModel(this.getCodComuneByDescr(
+	// ComuneModel lComModRes = new ComuneModel(getCodComuneByDescr(
 	// getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA)));
 	// lAvvModRic.setCodComuneResidenza(lComModRes.getCodComune());
 	//
@@ -377,7 +375,7 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 	//
 	// lAvvFascMod.setCodOperatoreInserimento(getCodUtenteConnesso());
 	// lAvvFascMod.setDataInserimento(DateUtils.getSysDate());
-	// lAvvFascMod.setCodUfficioInserimento(this.getCodUfficioUtenteConnesso());
+	// lAvvFascMod.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
 	// lAvvFascMod.setFasSiuIdFascicoloSius(((FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"))
 	// .getFascicoloSiusModel().getIdFascicoloSius());
 	// lAvvFascMod.setAvvIdAvvocato(lAvvModRic.getIdAvvocato());
@@ -389,8 +387,8 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 	// .getFascicoloSiusModel().getIdFascicoloSius());
 	// lAvvFascUp.setDataFineValidita(DateUtils.getSysDate());
 	//
-	// lAvvFascUp.setCodUfficioAggiornamento(this.getCodUfficioUtenteConnesso());
-	// lAvvFascUp.setCodOperatoreAggiornamento(this.getCodUtenteConnesso());
+	// lAvvFascUp.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
+	// lAvvFascUp.setCodOperatoreAggiornamento(getCodUtenteConnesso());
 	// lAvvFascUp.setDataAggiornamento(DateUtils.getSysDate());
 	//
 	// AvvocatoFascicoloSiusModel lAvvMod = new AvvocatoFascicoloSiusModel();
@@ -420,21 +418,22 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 		AvvocatoModel amReginde = new AvvocatoModel();
 
 		if (getRequestStringParameter(CAMPO_ID_AVVOCATO).contains("COA") // Reginde
-				|| getRequestStringParameter(CAMPO_ID_AVVOCATO).equals("") // Iscrizione manuale
-		) {
+				|| getRequestStringParameter(CAMPO_ID_AVVOCATO).equals("")) { // Iscrizione manuale
 			// Si recuperano tutte le informazioni dalla Form solo se avvocato selezionato reginde o inserito
 			// manualmente. Se selezionao SIEP i dati NON servono
+			siesLogger.debug("Iscrizione manuale o Reginde: CAMPO_ID_AVVOCATO = "
+					+ getRequestStringParameter(CAMPO_ID_AVVOCATO));
 			Date dataNascita = null;
 			String codLuogoNascita = "-";
 			String codProvincia = "-";
 			String codCap = null;
 			String codNonAttivita = "-";
 			ComuneModel comuneNascita = null;
-			String descLuogoNascitaReginde = "";
 			String descCodLuogoNascita = "039".equals(getRequestStringParameter(CAMPO_COD_STATO_NASCITA))
 					? getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)
 					: getRequestStringParameter(CAMPO_DESC_COMUNE_NASCITA_REGINDE);
 
+			String descLuogoNascitaReginde = "";
 			// Decodifico il luogo di nascita
 			siesLogger.debug("Decodifico il luogo di nascita: " + descCodLuogoNascita);
 			// **********************************************************************
@@ -445,14 +444,23 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 			try {
 				if (!isRequestParameterNullObj(ICostantiComune.CAMPO_COD_COMUNE_REALE)
 						&& getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE).length() > 0) {
-					comuneNascita = new ComuneModel(getDatiComuneByCodDescr(
-							getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
-							getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)));
+					// 20260826 [SG]: gestito errore Ticket#20260825011
+					try {
+						comuneNascita = new ComuneModel(getDatiComuneByCodDescr(
+								getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
+								getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)));
+					} catch (Exception e) {
+						if (!isRequestParameterNullObj(CAMPO_CODICE_FISCALE)
+								&& getRequestStringParameter(CAMPO_CODICE_FISCALE).length() > 0) {
+							String codiFiscAvv = getRequestStringParameter(CAMPO_CODICE_FISCALE);
+							comuneNascita = AvvocatoUtil.calcolaComuneNascita(codiFiscAvv);
+						} else
+							throw e;
+					}
 					codLuogoNascita = comuneNascita.getCodComune();
 					codProvincia = comuneNascita.getCodProvincia();
 					codCap = comuneNascita.getCap();
 					descCodLuogoNascita = comuneNascita.getDescrizione();
-
 					// altrimenti dalla sola descrizione (rischio omonimi).
 				} else if (getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA).length() > 2) {
 					comuneNascita = new ComuneModel(
@@ -544,11 +552,9 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 			amReginde.setCodStatoNascita(getRequestStringParameter(CAMPO_COD_STATO_NASCITA));
 			amReginde.setDescrStatoNascita(null);
 
-			//
 			amReginde.setForo(getRequestStringParameter(CAMPO_FORO).toUpperCase());
 			amReginde.setDescComuneSedeForo(null);
 
-			//
 			amReginde.setDescrComuneStudio(descLuogoResidenza);
 			amReginde.setCodComuneResidenza(codLuogoResidenza);
 			amReginde.setIndirizzo(getRequestStringParameter(CAMPO_INDIRIZZO));
@@ -560,7 +566,6 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 			amReginde.setEMail(getRequestStringParameter(CAMPO_E_MAIL));
 			amReginde.setPec(getRequestStringParameter(CAMPO_PEC));
 
-			//
 			amReginde.setCodNonAttivita(codNonAttivita); // a che serve??
 			amReginde.setDescrNonAttivita(null);
 
