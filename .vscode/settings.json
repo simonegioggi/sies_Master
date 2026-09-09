@@ -1,3 +1,11 @@
 {
-    "java.configuration.updateBuildConfiguration": "automatic"
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.jdt.ls.java.home": "C:\\Users\\sgioggi\\Desktop\\jdk-25.0.2",
+    "java.configuration.runtimes": [
+        {
+            "name": "JavaSE-25",
+            "path": "C:\\Users\\sgioggi\\Desktop\\jdk-25.0.2",
+            "default": true
+        }
+    ]
 }

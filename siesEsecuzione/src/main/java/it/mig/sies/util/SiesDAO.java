@@ -39,7 +39,6 @@ import it.mig.sies.type.esecuzione_NEW.ChiaviProvvedimentoGiudiziario;
  *
  * @author Federico Paparoni
  */
-@SuppressWarnings("unchecked")
 public class SiesDAO {
 
 	private static final Logger logger = Logger.getLogger(SiesDAO.class);

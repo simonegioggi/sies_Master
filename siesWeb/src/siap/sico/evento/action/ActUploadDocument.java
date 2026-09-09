@@ -85,7 +85,7 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 		// *********************************************
 		// MEV_AVVOCATURA - INIZIO
 		// **********************************************
-		// Flag che segnala la necessità di inserire o meno un record nella tabella
+		// Flag che segnala la necessitï¿½ di inserire o meno un record nella tabella
 		// AVVISI_AVVOCATO
 		String lFlgAvvocatura = "";
 		if (!isRequestParameterNullObj("FlagAvvocatura")) {
@@ -95,7 +95,7 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 		// MEV_AVVOCATURA - FINE
 		// **********************************************
 
-		// Flag che segnala la necessità del controllo della presenza del documento nel BLOB
+		// Flag che segnala la necessitï¿½ del controllo della presenza del documento nel BLOB
 		boolean lControlloBlob = true;
 		// Se si proviene dalla form di Warning non si effettua il controllo sul BLOB
 		if (!isRequestParameterNullObj(CAMPO_CK_WARNING))
@@ -103,7 +103,6 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 
 		if (lControlloBlob) {
 			// Lettura del file di Upload
-
 			InputStream lInput = null;
 			lInput = getFile(ICostantiEvento.CAMPO_BLOB);
 
@@ -118,10 +117,13 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 			} else
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
-				siesLogger.warn("file di Upload non disponibile !");
+				siesLogger.warn("file di Upload non disponibile!");
+				siesLogger.error("file di Upload non allegato!");
+				throw new SIUSException(SIUSException.USER_MESSAGE,
+						"Attenzione: Allegare il Documento!");
 		}
 
-		// 20171011: [SG] controllo preventivo se l'evento sia già validato
+		// 20171011: [SG] controllo preventivo se l'evento sia giï¿½ validato
 		IEvento iEvento = SICOLookupRemote.getEventoRemote();
 		EventoModel em = iEvento.ExRicercaEventoByKey(lId);
 		// if (em.getFlagDocumentoRegistrato() != null && "S".equals(em.getFlagDocumentoRegistrato()))
@@ -201,7 +203,7 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 
 			// INIZIO @emma 12072018 intervento post COLLAUDO 11.2
 			if ("S".equals(lFlagValidazioneEsito)) {
-				// se è stata chiesta la validazione dell'esito, devo updatare
+				// se ï¿½ stata chiesta la validazione dell'esito, devo updatare
 				// il nuovo campo flag_validazione_esito ='S' sulla tabella IMPUGNAZIONE_SIGE
 
 				// Lettura ID Impugnazione
@@ -226,7 +228,7 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
 					"Aggiornamento Documento Avvenuto Correttamente!");
 		}
-		// Se c'è lo stack di ritorno effettua un ritorno in cima
+		// Se c'ï¿½ lo stack di ritorno effettua un ritorno in cima
 		String lRitorno = goToRitorno();
 		if (lRitorno == null && !isRequestParameterNullObj(CAMPO_AZIONE_DETTAGLIO)) {
 			RedirectTo lRedirigi = new RedirectTo();
@@ -325,7 +327,7 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 	}
 
 	/**
-	 * Funzione di utilità. Viene richiamata per controllare l'esistenza del documento nel BLOB della tabella
+	 * Funzione di utilitï¿½. Viene richiamata per controllare l'esistenza del documento nel BLOB della tabella
 	 * EVENTO. Se tale documento non esiste viene lanciata un'eccezione.
 	 *
 	 * @param aId
@@ -452,7 +454,7 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 			 */
 			// ***** FINE INTERVENTO MEV_20 *****//
 			if (lFasGPMod != null && lFasGPMod.getFascicoloSiusModel() != null) {
-				// provo a verificare se è presente nell'oggetto FascicoloGPModel
+				// provo a verificare se ï¿½ presente nell'oggetto FascicoloGPModel
 				cognomeSoggetto = lFasGPMod.getFascicoloSiusModel().getSoggetto() != null
 						? lFasGPMod.getFascicoloSiusModel().getSoggetto().getCognome()
 						: "";
