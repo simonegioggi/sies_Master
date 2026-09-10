@@ -55,12 +55,18 @@ public class ActDeassegnaTitoloEsecutivo extends ActionSiap
 		if (isRequestChecked(CHECK_DEASSEGNA_TITOLO_ESECUTIVO)) {
 			String chiaveAnnoSiep = fsem.getFascicoloSiep().getChiaveAnno().toString();
 			String chiaveProgSiep = fsem.getFascicoloSiep().getChiaveProgr().toString();
-
+			
+			// Ticket#20260806014 - Si sposta l'aggiornamento dei dati di sessione a valle 
+			// dell'aggiornamento del DB per evitare disallineamenti in caso di eccezione
+			// E si salva l'idSoggetto per eventuale ripristino
 			// Impostazione a null dei riferimenti del Titolo Esecutivo su FascicoloGPModel.
-			fsem.getFascicoloSiep().setIdFascicoloSiep(null);
+			/*fsem.getFascicoloSiep().setIdFascicoloSiep(null);
 			fsem.getFascicoloSiep().setChiaveAnno(null);
 			fsem.getFascicoloSiep().setChiaveProgr(null);
-			fsem.getFascicoloSiep().setChiaveUfficio(null);
+			fsem.getFascicoloSiep().setChiaveUfficio(null);*/
+			
+			BigDecimal idSoggettoOLD = fsem.getFascicoloSige().getSogIdSoggetto();
+			// Ticket#20260806014 - FINE 
 
 			// Il soggetto non è più quello del fascicolo SIEP
 			// E' un nuovo soggetto anche nel caso abbia anagrafica identica a quella del fascicolo siep
@@ -77,7 +83,20 @@ public class ActDeassegnaTitoloEsecutivo extends ActionSiap
 			try {
 				fascicoloSigeEsteso = lCtrlTE.ExDeassegnaTitoloEsecutivo(fsem, chiaveAnnoSiep,
 						chiaveProgSiep);
+				
+				// Ticket#20260806014 - Si sposta l'aggiornamento dei dati di sessione a valle 
+				// dell'aggiornamento del DB per evitare disallineamenti in caso di eccezione
+				// Impostazione a null dei riferimenti del Titolo Esecutivo su FascicoloGPModel.
+				fsem.getFascicoloSiep().setIdFascicoloSiep(null);
+				fsem.getFascicoloSiep().setChiaveAnno(null);
+				fsem.getFascicoloSiep().setChiaveProgr(null);
+				fsem.getFascicoloSiep().setChiaveUfficio(null);				
+				// Ticket#20260806014 - FINE 
 			} catch (Exception ex) {
+				// Ticket#20260806014 - si ripristina il soggetto
+				fsem.getFascicoloSige().setSogIdSoggetto(idSoggettoOLD);
+				// Ticket#20260806014 - FINE
+				
 				if (ex.getMessage().contains("FAS_SIGE_SEN_UK")) {
 					RedirectTo rt = new RedirectTo();
 					rt.setPage(IWebConstants.PG_MAIN);

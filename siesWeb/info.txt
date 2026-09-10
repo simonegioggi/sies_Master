@@ -6,6 +6,6 @@ In data 22/10/2025 eseguito merge col branch release_12.8.3.0
 
 In data 25/03/2026 eseguito merge col branch release_12.9.2.0
 
-In data 15/07/2026 eseguito merge col branch release_12.10.1.0
+In data 10/09/2026 eseguito merge col branch release_12.10.1.0
 
 Gestisce il trasferimento verso NSC dei fogli complementari (NO CUMULO).

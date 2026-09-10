@@ -6,6 +6,7 @@ import java.sql.Connection;
 import f3b.dao.DAOException;
 import f3b.model.GenericModel;
 import f3b.util.DateUtils;
+import f3b.util.StringUtils;
 import f3b.web.IWebConstants;
 import siap.dao.SIAPSqlDAO;
 import siap.sico.soggetto.model.SoggettoModel;
@@ -710,9 +711,18 @@ public class NuovaIstanzaSqlDAO extends SIAPSqlDAO {
 		lCondizioni += " and NUOVA_ISTANZA.FAS_SIE_ID_FASCICOLO_SIEP in ( ";
 		lCondizioni += " select ID_FASCICOLO_SIEP from FASCICOLO_SIEP where SOG_ID_SOGGETTO in ( ";
 		lCondizioni += " select ID_SOGGETTO from SOGGETTO where ";
-		lCondizioni += " COGNOME like '%" + aSogMod.getCognome() + "%' ";
+		
+		// 2026.07.30 - Errore durante i test per ticket Ticket#20260729015 sui nominativi con apostrofi
+		/*lCondizioni += " COGNOME like '%" + aSogMod.getCognome() + "%' ";
 		if (aSogMod.getNome() != null)
-			lCondizioni += " and NOME like '%" + aSogMod.getNome() + "%' ";
+			lCondizioni += " and NOME like '%" + aSogMod.getNome() + "%' ";*/		
+		
+		lCondizioni += " COGNOME like '%" + StringUtils.convertSqlString(aSogMod.getCognome()) + "%' ";
+		if (aSogMod.getNome() != null)
+			lCondizioni += " and NOME like '%" + StringUtils.convertSqlString(aSogMod.getNome()) + "%' ";
+		// 2026.07.30 - FINE 
+		
+		
 		if (aSogMod.getDataNascita() != null)
 			// 20180110: [SG] aggiunta trunc sulla data nascita per gestire la presenza di ore min sec
 			lCondizioni += " and trunc(DATA_NASCITA) = TO_DATE('"
@@ -751,9 +761,25 @@ public class NuovaIstanzaSqlDAO extends SIAPSqlDAO {
 		 * " select ID_FASCICOLO_SIEP from FASCICOLO_SIEP where SOG_ID_SOGGETTO in ( "; lCondizioni +=
 		 * " select ID_SOGGETTO from SOGGETTO where ";
 		 */
+		// 2026.07.30 - Errore durante i test per ticket Ticket#20260729015 sui nominativi con apostrofi
+		/*
 		lCondizioni += " and COGNOME like '" + aSogMod.getCognome() + "%' ";
 		if (aSogMod.getNome() != null)
 			lCondizioni += " and NOME like '" + aSogMod.getNome() + "%' ";
+		 */
+		
+		lCondizioni += " and COGNOME like '" + StringUtils.convertSqlString(aSogMod.getCognome()) + "%' ";
+		
+		if (aSogMod.getNome() != null)
+			lCondizioni += " and NOME like '" + StringUtils.convertSqlString(aSogMod.getNome()) + "%' ";
+		// 2026.07.30 - FINE
+		
+		if (aSogMod.getNome() != null)
+			// 2026.07.30 - Errore durante i test per ticket sui nominativi con apostrofi
+			//lCondizioni += " and NOME like '" + aSogMod.getNome() + "%' ";
+			lCondizioni += " and NOME like '" + StringUtils.convertSqlString(aSogMod.getNome()) + "%' ";
+			// 2026.07.30 - FINE		
+		
 		if (aSogMod.getDataNascita() != null)
 			// 20180110: [SG] aggiunta trunc sulla data nascita per gestire la presenza di ore min sec
 			lCondizioni += " and trunc(DATA_NASCITA) = TO_DATE('"
