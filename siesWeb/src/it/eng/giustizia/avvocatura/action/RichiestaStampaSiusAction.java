@@ -54,7 +54,7 @@ public class RichiestaStampaSiusAction extends ActionSius {
 		if ("00000".equals(codUfficio) || !Utils.isPresent(codUfficio)) {
 			FascicoloGPModel fgpm = ifs.ExRicercaFascicoloByKey(idFascicoloSius);
 			if (!Utils.isNullObj(fgpm) && !Utils.isNullObj(fgpm.getFascicoloSiusModel())
-					&& !Utils.isNullObj(fgpm.getFascicoloSiusModel().getChiaveUfficio()))
+					&& !Utils.isPresent(fgpm.getFascicoloSiusModel().getChiaveUfficio()))
 				codUfficio = fgpm.getFascicoloSiusModel().getChiaveUfficio();
 		}
 
