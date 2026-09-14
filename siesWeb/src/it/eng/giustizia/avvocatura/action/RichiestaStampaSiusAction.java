@@ -3,17 +3,18 @@
  */
 package it.eng.giustizia.avvocatura.action;
 
-import f3b.log.LogF3B;
-import it.eng.giustizia.avvocatura.util.Mapper;
-import it.eng.giustizia.avvocatura.ws.type.richiestaStampa.DATISTAMPAOUTPUT;
-
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.util.Utils;
+import it.eng.giustizia.avvocatura.util.Mapper;
+import it.eng.giustizia.avvocatura.ws.type.richiestaStampa.DATISTAMPAOUTPUT;
 import siap.sius.ActionSius;
 import siap.sius.fascicolo.controller.IFascicoloSius;
+import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
@@ -26,7 +27,7 @@ public class RichiestaStampaSiusAction extends ActionSius {
 
 	/**
 	 * Metodo per l'elaborazione della richiesta della stampa
-	 * 
+	 *
 	 * @param idFascicoloSius
 	 * @param codDistretto
 	 * @param codiceFiscaleAvvocato
@@ -38,18 +39,30 @@ public class RichiestaStampaSiusAction extends ActionSius {
 			String codiceFiscaleAvvocato, String codTipoUfficio) throws Exception {
 
 		// info per il log
-		avvocaturaLogger.info("Starting Point della classe: RichiestaStampaSiusAction, metodo: richiestaStampa");
+		avvocaturaLogger
+				.info("Starting Point della classe: RichiestaStampaSiusAction, metodo: richiestaStampa");
 
 		// richiesta per codice ufficio -- ExStampaProcedimento
 		IFascicoloSius ifs = SIUSLookupRemote.getFascicoloSiusRemote();
 
 		// ricerco codice ufficio appartenenza
-		String codUfficio = ifs.ricercaCodUfficioAppartenenza(idFascicoloSius, codiceFiscaleAvvocato, codDistretto, codTipoUfficio);
+		String codUfficio = ifs.ricercaCodUfficioAppartenenza(idFascicoloSius, codiceFiscaleAvvocato,
+				codDistretto, codTipoUfficio);
+		// [SG] 20260914 - per gli avvocati di REGINDE il COD_UFFICIO_APPARTENENZA = '00000'
+		// Ticket#202609100113 - non viene visualizzata la data di udienza e non e' possibile
+		// effettuare la stampa (data udienza NON visibile poiche' è PREFISSATA)
+		if ("00000".equals(codUfficio) || !Utils.isPresent(codUfficio)) {
+			FascicoloGPModel fgpm = ifs.ExRicercaFascicoloByKey(idFascicoloSius);
+			if (!Utils.isNullObj(fgpm) && !Utils.isNullObj(fgpm.getFascicoloSiusModel())
+					&& !Utils.isNullObj(fgpm.getFascicoloSiusModel().getChiaveUfficio()))
+				codUfficio = fgpm.getFascicoloSiusModel().getChiaveUfficio();
+		}
 
 		// info per il log
 		avvocaturaLogger.debug("Eseguo la richiesta di stampa per: ID_FASCICOLO_SIUS = " + idFascicoloSius);
 		avvocaturaLogger.debug("Eseguo la richiesta di stampa per: COD_DISTRETTO = " + codDistretto);
-		avvocaturaLogger.debug("Eseguo la richiesta di stampa per: COD_FISCALE_AVVOCATO = " + codiceFiscaleAvvocato);
+		avvocaturaLogger
+				.debug("Eseguo la richiesta di stampa per: COD_FISCALE_AVVOCATO = " + codiceFiscaleAvvocato);
 		avvocaturaLogger.debug("Eseguo la richiesta di stampa per: COD_TIPO_UFFICIO = " + codTipoUfficio);
 		avvocaturaLogger.debug("Eseguo la richiesta di stampa per: COD_UFFICIO = " + codUfficio);
 		// eseguo la richiesta di stampa
@@ -67,7 +80,7 @@ public class RichiestaStampaSiusAction extends ActionSius {
 
 	/**
 	 * Metodo per la valorizzazione del type di output
-	 * 
+	 *
 	 * @param report
 	 * @param idFascicoloSius
 	 * @return DATISTAMPAOUTPUT
@@ -77,7 +90,8 @@ public class RichiestaStampaSiusAction extends ActionSius {
 			throws Exception {
 
 		// info per il log
-		avvocaturaLogger.debug("Starting Point della classe: RichiestaStampaSiusAction, metodo: copyModelToType");
+		avvocaturaLogger
+				.debug("Starting Point della classe: RichiestaStampaSiusAction, metodo: copyModelToType");
 
 		// instanzio ed inizializzo un oggetto di tipo "DATISTAMPAOUTPUT"
 		DATISTAMPAOUTPUT dso = new DATISTAMPAOUTPUT();
@@ -91,7 +105,8 @@ public class RichiestaStampaSiusAction extends ActionSius {
 			dso.setERRORE(Mapper.mapErroreRichiestaStampa("000", ""));
 		} catch (Exception e) {
 			// info per il log
-			avvocaturaLogger.error("Errore nella mappatura dei dati della richiesta stampa: " + e.getMessage(), e);
+			avvocaturaLogger
+					.error("Errore nella mappatura dei dati della richiesta stampa: " + e.getMessage(), e);
 			// imposto l'ERRORE
 			dso.setERRORE(Mapper.mapErroreRichiestaStampa("017", e.getMessage()));
 		}
