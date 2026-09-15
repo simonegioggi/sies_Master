@@ -219,7 +219,7 @@ function effettoTree(a)
 %>
  					</table>
    				<div id="elenco<%=jPA%>" style="display:none; width:100%;">
-     				<%@include file="/jsp/files/siap/siep/nuovaistanza/ListaFascicoliPerNuovaIstanza.jsp" %>
+     				<%@include file="/jsp/files/siap/siep/nuovaistanza/ListaFascicoliPerNuovaIstanza.jspf" %>
    				</div>
 <%
 					lFascicoli.clear();

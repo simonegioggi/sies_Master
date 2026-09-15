@@ -237,7 +237,7 @@
 %>
     		</table>
     			<div id="elenco<%=jPA%>" style="display:none; width:100%;">
-      			<%@include file="/jsp/files/siap/siep/penaaccessoria/ListaProvvedimentiPA.jsp" %>
+      			<%@include file="/jsp/files/siap/siep/penaaccessoria/ListaProvvedimentiPA.jspf" %>
     			</div>
   		<table width="100%">
 <%	    	eventiPA.clear();

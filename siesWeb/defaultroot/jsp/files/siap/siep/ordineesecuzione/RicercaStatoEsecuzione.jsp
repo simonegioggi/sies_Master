@@ -300,7 +300,7 @@
 %>
     		</table>
     			<div id="elenco<%=jPA%>" style="display:none; width:100%;">
-      			<%@include file="/jsp/files/siap/sius/tenore/ListaTenori.jsp" %>
+      			<%@include file="/jsp/files/siap/sius/tenore/ListaTenori.jspf" %>
     			</div>
 <%	    	lTenori.clear();
     			jPA++;

@@ -338,7 +338,7 @@
 %>
     		</table>
     			<div id="elenco<%=jEMS%>" style="display:none; width:100%;">
-      			<%@include file="/jsp/files/siap/sius/esecuzionemisurasicurezza/ListaProcedimentiEMSCorrelati.jsp" %>
+      			<%@include file="/jsp/files/siap/sius/esecuzionemisurasicurezza/ListaProcedimentiEMSCorrelati.jspf" %>
     			</div>
 <%	    	procCorrelati.clear();
     			jEMS++;
