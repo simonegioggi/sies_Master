@@ -1,13 +1,7 @@
-<<<<<<< HEAD
-BRANCH DEVELOP di SIESWEB
+BRANCH DEVELOP di siesWeb
 
 Allineato al:
 
-BRANCH SIES VERSIONE 12.9.2.0
+Branch siesWeb Versione release_12.10.1.0
 
-Questa Release è stata rilasciata il 27/03/2026
-=======
-BRANCH siesWeb Versione release_12.10.0.0
-
-Nasce dal branch MEV_2026-24 in data 23/06/2026
->>>>>>> release_12.10.0.0
+Questa release è stata rilasciata il 28/08/2026

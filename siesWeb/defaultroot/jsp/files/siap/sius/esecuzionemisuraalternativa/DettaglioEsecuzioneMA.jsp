@@ -342,7 +342,7 @@ if (misure.isEmpty()) {
 %>
     		</table>
     			<div id="elenco<%=jEMA%>" style="width: 100%; display:none">
-      			<%@include file="/jsp/files/siap/sius/esecuzionemisuraalternativa/ListaProcedimentiCorrelati.jsp" %>
+      			<%@include file="/jsp/files/siap/sius/esecuzionemisuraalternativa/ListaProcedimentiCorrelati.jspf" %>
     			</div>
 <%	    	procCorrelati.clear();
     			jEMA++;

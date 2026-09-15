@@ -392,6 +392,15 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 
 			lNomProvvDAO.setEveIdEvento(aEvento.getIdEvento());
 
+			// [FT] - 13/07/2026 - Ticket #20260713011 - Cancellazione provvedimenti / validazione bloccata.
+			// Stesso difetto individuato in ExUpdateValidaOSLibAnt e ExUpdateValidaOS: la insert su
+			// NOME_PROVVEDIMENTO non era idempotente e falliva con ORA-00001 (vincolo di unicita' su
+			// EVE_ID_EVENTO) in caso di rivalidazione dello stesso evento, con conseguente rollback
+			// silenzioso della transazione. Si applica lo stesso pattern "cancella poi inserisci" gia'
+			// usato per STATO_PROCEDIMENTO poco piu' sotto in questo stesso metodo.
+			lNomProvvDAO.setCondizioneByEveIdEvento(aEvento.getIdEvento());
+			lNomProvvDAO.delete();
+
 			lNomProvvDAO.insert();
 			lNomProvvDAO.stop();
 
@@ -649,15 +658,23 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 			rollback(lConn);
 			rollback(lConnBlob);
 			daoEx.printStackTrace();
-			throw new F3BException(
-					"OrdineScarcerazioneController.ExUpdateValidaOrdineScarcerazione : " + daoEx);
+			// Ticket#20260713011 - S2: messaggio utente esplicito invece dell'eccezione tecnica grezza
+			// (F3BException.USER_MESSAGE viene mostrato all'utente in modo leggibile da ErrorPage.jsp,
+			// il dettaglio tecnico resta comunque tracciato nei log sopra).
+			throw new F3BException(F3BException.USER_MESSAGE,
+					"Impossibile completare la validazione del provvedimento: l'operazione non e' stata registrata. "
+					+ "Verificare che il provvedimento non sia gia' stato validato in precedenza e riprovare. "
+					+ "Se il problema persiste contattare l'assistenza tecnica.");
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + ex);
 			rollback(lConn);
 			rollback(lConnBlob);
 			ex.printStackTrace();
-			throw new F3BException("OrdineScarcerazioneController.ExUpdateValidaOrdineScarcerazione : " + ex);
+			// Ticket#20260713011 - S2: messaggio utente esplicito instead of raw system exception
+			throw new F3BException(F3BException.USER_MESSAGE,
+					"Impossibile completare la validazione del provvedimento a causa di un errore di sistema. "
+					+ "Riprovare piu' tardi; se il problema persiste contattare l'assistenza tecnica.");
 		} finally {
 			cleanup(lEveDao);
 			cleanup(lEveSqlDao);
@@ -1162,6 +1179,15 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 			lNomProvMod.setCodNomeProvvedimento("NP022");
 
 			lNomProvMod.setEveIdEvento(aEvento.getIdEvento());
+
+			// [FT] - 13/07/2026 - Ticket #20260713011 - Cancellazione provvedimenti / validazione bloccata.
+			// Stesso difetto individuato in ExUpdateValidaOSLibAnt: la insert su NOME_PROVVEDIMENTO non era
+			// idempotente e falliva con ORA-00001 (vincolo di unicita' su EVE_ID_EVENTO) in caso di
+			// rivalidazione dello stesso evento, con conseguente rollback silenzioso della transazione.
+			// Si applica lo stesso pattern "cancella poi inserisci" gia' usato qui sopra per STATO_PROCEDIMENTO.
+			lNomProvDao.setCondizioneByEveIdEvento(aEvento.getIdEvento());
+			lNomProvDao.delete();
+
 			lNomProvDao.setDAOFromModel(lNomProvMod);
 			lNomProvDao.insert();
 			/*********************************************
@@ -1282,14 +1308,23 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 			rollback(lConn);
 			rollback(lConnBlob);
 			daoEx.printStackTrace();
-			throw new F3BException("OrdineScarcerazioneController.ExUpdateValidaOS : " + daoEx);
+			// Ticket#20260713011 - S2: messaggio utente esplicito invece dell'eccezione tecnica grezza
+			// (F3BException.USER_MESSAGE viene mostrato all'utente in modo leggibile da ErrorPage.jsp,
+			// il dettaglio tecnico resta comunque tracciato nei log sopra).
+			throw new F3BException(F3BException.USER_MESSAGE,
+					"Impossibile completare la validazione del provvedimento: l'operazione non e' stata registrata. "
+					+ "Verificare che il provvedimento non sia gia' stato validato in precedenza e riprovare. "
+					+ "Se il problema persiste contattare l'assistenza tecnica.");
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + ex);
 			rollback(lConn);
 			rollback(lConnBlob);
 			ex.printStackTrace();
-			throw new F3BException("OrdineScarcerazioneController.ExUpdateValidaOS : " + ex);
+			// Ticket#20260713011 - S2: messaggio utente esplicito instead of raw system exception
+			throw new F3BException(F3BException.USER_MESSAGE,
+					"Impossibile completare la validazione del provvedimento a causa di un errore di sistema. "
+					+ "Riprovare piu' tardi; se il problema persiste contattare l'assistenza tecnica.");
 		} finally {
 			cleanup(lEveDao);
 			cleanup(lStatoDao);
@@ -1576,6 +1611,18 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 				lNomProvMod.setCodNomeProvvedimento("NP049");
 
 			lNomProvMod.setEveIdEvento(aEvento.getIdEvento());
+
+			// [FT] - 13/07/2026 - Ticket #20260713011 - Cancellazione provvedimenti / validazione bloccata.
+			// La insert su NOME_PROVVEDIMENTO non era idempotente: in caso di rivalidazione dello stesso
+			// evento (es. doppio click su "Conferma" mentre la pagina risultava bloccata, o ripetizione
+			// della validazione) l'insert falliva con ORA-00001 (violazione vincolo di unicita' su
+			// EVE_ID_EVENTO), la transazione veniva annullata (rollback) e l'utente non riceveva alcun
+			// messaggio di errore (la casella di validazione restava semplicemente grigia).
+			// Si applica qui lo stesso pattern "cancella poi inserisci" gia' utilizzato sopra per
+			// STATO_PROCEDIMENTO, rendendo l'operazione ripetibile senza errori.
+			lNomProvDao.setCondizioneByEveIdEvento(aEvento.getIdEvento());
+			lNomProvDao.delete();
+
 			lNomProvDao.setDAOFromModel(lNomProvMod);
 			lNomProvDao.insert();
 
@@ -1757,14 +1804,23 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 			rollback(lConn);
 			rollback(lConnBlob);
 			daoEx.printStackTrace();
-			throw new F3BException("OrdineScarcerazioneController.ExUpdateValidaOSLibAnt : " + daoEx);
+			// Ticket#20260713011 - S2: messaggio utente esplicito invece dell'eccezione tecnica grezza
+			// (F3BException.USER_MESSAGE viene mostrato all'utente in modo leggibile da ErrorPage.jsp,
+			// il dettaglio tecnico resta comunque tracciato nei log sopra).
+			throw new F3BException(F3BException.USER_MESSAGE,
+					"Impossibile completare la validazione del provvedimento: l'operazione non e' stata registrata. "
+					+ "Verificare che il provvedimento non sia gia' stato validato in precedenza e riprovare. "
+					+ "Se il problema persiste contattare l'assistenza tecnica.");
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + ex);
 			rollback(lConn);
 			rollback(lConnBlob);
 			ex.printStackTrace();
-			throw new F3BException("OrdineScarcerazioneController.ExUpdateValidaOSLibAnt : " + ex);
+			// Ticket#20260713011 - S2: messaggio utente esplicito instead of raw system exception
+			throw new F3BException(F3BException.USER_MESSAGE,
+					"Impossibile completare la validazione del provvedimento a causa di un errore di sistema. "
+					+ "Riprovare piu' tardi; se il problema persiste contattare l'assistenza tecnica.");
 		} finally {
 			cleanup(lEveDao);
 			cleanup(lStatoDao);

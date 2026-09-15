@@ -171,7 +171,7 @@
 %>
  		</table>
    		<div id="elenco<%=jPA%>" style="display:none; width:100%;">
-     		<%@include file="/jsp/files/siap/sico/soggetto/ListaProcedimentiSige.jsp" %>
+     		<%@include file="/jsp/files/siap/sico/soggetto/ListaProcedimentiSige.jspf" %>
    		</div>
 <%
 		lFascicoli.clear();
