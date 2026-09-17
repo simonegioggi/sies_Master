@@ -600,7 +600,7 @@ if (!(lMis.getMisCautContinuativa()!=null && lMis.getMisCautContinuativa().equal
     //"Cessata al momento del passaggio in giudicato computabili"  
     Date DItempdata;       
     Date DFtempdata;
-    String DItemp=""; String DFtemp="";
+    // String DItemp=""; String DFtemp="";
     int sommaColonnaAnni = 0;
 	int sommaColonnaMesi = 0;
 	int sommaColonnaGiorni = 0;
@@ -615,8 +615,14 @@ if (!(lMis.getMisCautContinuativa()!=null && lMis.getMisCautContinuativa().equal
 			//scambia gli elementi con indice i e jMin
 			if(i != jMin){
 				//scambia
-				DItemp = (String)vectorPeriodi.get(jMin);
-				DFtemp = (String)vectorPeriodi.get(jMin+1);
+				// Ticket#202609150114 - Non posso fare il cast da Date to String				
+				//DItemp = (String)vectorPeriodi.get(jMin);
+				//DFtemp = (String)vectorPeriodi.get(jMin+1);
+				Date DItemp; 
+				Date DFtemp;
+				DItemp = (Date) vectorPeriodi.get(jMin);
+				DFtemp = (Date) vectorPeriodi.get(jMin+1);
+				// Ticket#202609150114 - FINE
 				vectorPeriodi.set(jMin, vectorPeriodi.get(i));
 				vectorPeriodi.set(jMin+1,vectorPeriodi.get(i+1));
 				vectorPeriodi.set(i,DItemp);
