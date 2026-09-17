@@ -6,9 +6,9 @@ Questa Release verrà rilasciata il 25/09/2026 (Patch mese di Settembre 2026)
 
 Comprende i seguenti Ticket MAC:
 
-1)	Ticket#202609
-	
-	Per la risoluzione della problematica è stata modificata ...
-	Il problema era legato al fatto che ...
+1)	Ticket#202609100113 - non viene visualizzata la data di udienza e non è possibile effettuare la stampa
+	Per la risoluzione della problematica è stata aggiunto un controllo sul codice ufficio appartenenza dell'avvocato.
+	Il problema era legato al fatto che quando si inserisce un avvocato dal sistema REGINDE, 
+	nel database viene inserito il valore '00000' nel campo "AVVOCATO.COD_UFFICIO_APPARTENENZA".
 	Classi modificate:
-	-	
+	-	/it/eng/giustizia/avvocatura/action/RichiestaStampaSiusAction.java
