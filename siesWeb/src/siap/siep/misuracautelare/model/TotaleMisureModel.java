@@ -6,9 +6,12 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
+
 import siap.sico.calendar.model.CalendarModel;
 import siap.sico.util.CalendarUtil;
 import siap.siep.util.CaricaHTML_Servlet;
+import f3b.log.LogF3B;
 import f3b.model.GenericModel;
 import f3b.util.DateUtils;
 
@@ -37,6 +40,8 @@ public class TotaleMisureModel extends GenericModel {
 	 */
 	private static final long serialVersionUID = -3487564714749216421L;
 
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+	
 	long mTotaleAnni;
 	long mTotaleMesi;
 	long mTotaleGiorni;
@@ -133,10 +138,12 @@ public class TotaleMisureModel extends GenericModel {
 		// inizio calcolo totale custodia cautelare Anni Mesi Giorni
 		// dove consideriamo periodi sovrapposti solo per Misure Cautelari
 		// "Cessata al momento del passaggio in giudicato computabili"
+		
+		//siesLogger.debug("calcolaTotaleMisure...");
+		
 		Date DItempdata;
 		Date DFtempdata;
-		String DItemp = "";
-		String DFtemp = "";
+
 		int sommaColonnaAnni = 0;
 		int sommaColonnaMesi = 0;
 		int sommaColonnaGiorni = 0;
@@ -151,11 +158,14 @@ public class TotaleMisureModel extends GenericModel {
 		Iterator itx = aMisure.iterator();
 		while (itx.hasNext()) {
 			MisuraCautelareModel lMis = (MisuraCautelareModel) itx.next();
+			//siesLogger.debug("calcolaTotaleMisure: itx.hasNext()");
 			if (lMis.getGiorni() == null && lMis.getFlagModificaManuale() == null
 					&& lMis.getFlagComputabile().equals("S")) {
+				//siesLogger.debug("calcolaTotaleMisure: if 1");
 				if (lMis.getCodOperatoreInserimento() == null || (lMis.getCodOperatoreInserimento() != null
 						&& lMis.getCodOperatoreInserimento().length() > 2
 						&& !lMis.getCodOperatoreInserimento().substring(0, 3).equalsIgnoreCase("RES"))) {
+					//siesLogger.debug("calcolaTotaleMisure: vectorPeriodi.add: "+lMis.getDataInizio());
 					vectorPeriodi.add(lMis.getDataInizio());
 					vectorPeriodi.add(lMis.getDataFine());
 				}
@@ -299,8 +309,14 @@ public class TotaleMisureModel extends GenericModel {
 				// scambia gli elementi con indice i e jMin
 				if (i != jMin) {
 					// scambia
-					DItemp = (String) vectorPeriodi.get(jMin);
-					DFtemp = (String) vectorPeriodi.get(jMin + 1);
+					// Ticket#202609150114 - Non posso fare il cast da Date to String
+//					DItemp = (String) vectorPeriodi.get(jMin);
+//					DFtemp = (String) vectorPeriodi.get(jMin + 1);
+					Date DItemp = null;
+					Date DFtemp = null;
+					DItemp = (Date) vectorPeriodi.get(jMin);
+					DFtemp = (Date) vectorPeriodi.get(jMin + 1);
+					// Ticket#202609150114 - FINE 
 					vectorPeriodi.set(jMin, vectorPeriodi.get(i));
 					vectorPeriodi.set(jMin + 1, vectorPeriodi.get(i + 1));
 					vectorPeriodi.set(i, DItemp);
@@ -616,8 +632,8 @@ public class TotaleMisureModel extends GenericModel {
 		// "Cessata al momento del passaggio in giudicato computabili"
 		Date DItempdata;
 		Date DFtempdata;
-		String DItemp = "";
-		String DFtemp = "";
+		//String DItemp = "";
+		//String DFtemp = "";
 		int sommaColonnaAnni = 0;
 		int sommaColonnaMesi = 0;
 		int sommaColonnaGiorni = 0;
@@ -780,8 +796,14 @@ public class TotaleMisureModel extends GenericModel {
 				// scambia gli elementi con indice i e jMin
 				if (i != jMin) {
 					// scambia
-					DItemp = (String) vectorPeriodi.get(jMin);
-					DFtemp = (String) vectorPeriodi.get(jMin + 1);
+					// Ticket#202609150114 - Non posso fare il cast da Date to String
+//					DItemp = (String) vectorPeriodi.get(jMin);
+//					DFtemp = (String) vectorPeriodi.get(jMin + 1);
+					Date DItemp = null;
+					Date DFtemp = null;
+					DItemp = (Date) vectorPeriodi.get(jMin);
+					DFtemp = (Date) vectorPeriodi.get(jMin + 1);
+					// Ticket#202609150114 - FINE					
 					vectorPeriodi.set(jMin, vectorPeriodi.get(i));
 					vectorPeriodi.set(jMin + 1, vectorPeriodi.get(i + 1));
 					vectorPeriodi.set(i, DItemp);
