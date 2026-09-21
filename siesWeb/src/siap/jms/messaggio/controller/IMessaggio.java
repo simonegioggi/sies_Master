@@ -152,4 +152,9 @@ public interface IMessaggio {
 	// MEV_2025-48 - 2.15 Gestione Annotazioni Trasmissioni
 	public void ExMarcaMessaggioVisto(BigDecimal aIdMessaggio) throws F3BException;
 	   
+	// 20269.09.11 - Si aggiunge il filtro sulla data invio
+	public BigDecimal ExCountRicercaMessaggio(MessaggioModel aMessaggio, Date aDataInizio,
+	            Date aDataFine) throws F3BException;
+	public Vector ExRicercaMessaggioPaged(MessaggioModel aMessaggio, Date aDataInizio,
+			Date aDataFine, int aPage) throws F3BException;
 }

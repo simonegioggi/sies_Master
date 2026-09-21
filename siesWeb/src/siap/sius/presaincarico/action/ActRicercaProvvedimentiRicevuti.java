@@ -156,7 +156,27 @@ public class ActRicercaProvvedimentiRicevuti extends ActionSiap implements ICost
 																												// paginata
 			siesLogger.debug("--XX--  >>>>>>>>>>>>>>>>>>  NON faccio la Ricerca semplice");
 		} else {
-			lVect = lCrtl.ExRicercaMessaggio(lMessaggio);
+			// 2026.09.11 Si modifica la ricerca aggiungendo la paginazione e il filtro sulle date a
+			// monte della query
+			//lVect = lCrtl.ExRicercaMessaggio(lMessaggio);
+			if (lDataInizio == null)
+				lDataInizio = DateUtils.getMonthBefore(DateUtils.getSysDate());
+			if (lDataFine == null)
+				lDataFine = DateUtils.getSysDate();			
+			
+			BigDecimal lCountRisultati = null;
+			if (isRequestParameterNullObj("CountRisultati"))
+				lCountRisultati = lCrtl.ExCountRicercaMessaggio(lMessaggio,lDataInizio, lDataFine);
+			else 
+				lCountRisultati = getRequestBigDecimalParameter("CountRisultati");
+			
+			siesLogger.debug("--2026.09.11 lCountRisultati = "+lCountRisultati);
+			siesLogger.debug("--2026.09.11 lPagina = "+lPagina);
+			lVect = lCrtl.ExRicercaMessaggioPaged(lMessaggio,lDataInizio, lDataFine, (new BigDecimal(lPagina)).intValue());
+			
+			setRequestAttribute("CountRisultati", lCountRisultati);
+			setRequestAttribute(IWebConstants.NUM_PAGE, lPagina);
+			setRequestAttribute(IWebConstants.REQUEST_FOR_PAGING, getCompleteRequestURL());			
 		}
 
 		// 05/03/2008 Se la Data inizio non viene valorizzata si imposta al mese precedente.

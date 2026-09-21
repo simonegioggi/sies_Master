@@ -105,6 +105,15 @@
 %>
 
   <div align="left">
+  <%-- 2026.09.11 si aggiunge la paginazione --%>
+  <%--	PARAMETRI PER LA PAGINAZIONE --%>
+  <% if (request.getAttribute(IWebConstants.NUM_PAGE)!=null) { %>
+  <input type="hidden" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.sius.presaincarico.action.ActRicercaProvvedimentiRicevuti">
+  <input type="hidden" name="<%=IWebConstants.NUM_PAGE%>" value="1">  
+  <jsp:include page="<%=IWebConstants.PAGINAZIONE_RICERCA%>"></jsp:include>
+  <% } %>
+  <%-- 2026.09.11 - FINE --%>
+  
   <table cellspacing=2 cellpadding=2>
     <tr>
       <td class="int">Anno/Numero SIEP</td>
