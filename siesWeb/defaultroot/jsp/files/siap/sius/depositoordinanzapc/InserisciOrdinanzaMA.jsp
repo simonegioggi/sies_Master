@@ -51,7 +51,11 @@ else
       // Luogo di Svolgimento della prova è obbligatorio
       var lTenori=document.InserisciOrdinanzaMA.<%=ICostantiTenore.CAMPO_COD_OGGETTO_TENORE%>;
       if (typeof (lTenori[0]) =="undefined" ) {
-		if ((lTenori.value in {'0001':1, '0002':1, '0003':1, '0005':1, '0010':1, '0012':1, '0013':1, '0195':1, '0362':1, '0610':1}) && lEsiti.value == '0001')
+    	<%-- 
+    	MEV_2026-105 si aggiunge il codice '0604' - Detenzione Domiciliare ex art. 94 ter DPR 309/90 - Art. 94 ter T.U. DPR 309/90 
+  		if ((lTenori.value in {'0001':1, '0002':1, '0003':1, '0005':1, '0010':1, '0012':1, '0013':1, '0195':1, '0362':1, '0610':1}) && lEsiti.value == '0001')
+    	--%>
+		if ((lTenori.value in {'0001':1, '0002':1, '0003':1, '0005':1, '0010':1, '0012':1, '0013':1, '0195':1, '0362':1, '0610':1, '0604':1}) && lEsiti.value == '0001')
         {	
             if (document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_LUOGO_SVOLGIMENTO_PROVA%>.value == "") {
           	alert ('Luogo di svolgimento della prova obbligatorio!');
