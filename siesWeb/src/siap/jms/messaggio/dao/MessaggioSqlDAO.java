@@ -46,12 +46,14 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 	public void ricercaMessaggio(MessaggioModel aModel) throws DAOException {
 
 		String lSql = getSqlQuery();
-		lSql += " " + setCondizione(aModel);
+		lSql += " " + setCondizione(aModel, null, null);
 		lSql += setOrder();
 
 		setStatement(lSql);
 	}
 
+
+	
 	public void ricercaMessaggioPerJmsId(String JmsID) throws DAOException {
 
 		String lSql = getSqlQuery();
@@ -1104,7 +1106,8 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 				+ " tipo_ufficio_fasc_siep_cum.RV_MEANING descr_ufficio_siep_cum,"
 				+ " comune_fasc_siep_cum.DESCRIZIONE sede_ufficio_siep_cum, NOTE,"
 				+ " CHIAVE_ANNO_SIEPE, CHIAVE_PROGR_SIEPE, COGNOME_SOGGETTO, NOME_SOGGETTO, DATA_NASCITA,"
-				+ " COD_STATO_NASCITA, COD_COMUNE_NASCITA FROM MESSAGGIO,"
+				+ " COD_STATO_NASCITA, COD_COMUNE_NASCITA "
+				+ " FROM MESSAGGIO,"
 				+ " JMS_CODE mit, JMS_CODE dest, JMS_CODE ESITO, ufficio uff, comune comuff,"
 				+ " cg_ref_codes tipuff, ufficio uffdest,comune comuffdest, cg_ref_codes tipuffdest,"
 				+ " JMS_CODE tipoMess,JMS_CODE tipOperazione"
@@ -1551,7 +1554,9 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 		return aModel;
 	}
 
-	public String setCondizione(MessaggioModel aModel) {
+	// 2026.09.11 si aggiungono le date 
+	//public String setCondizione(MessaggioModel aModel, Date aDataInizio, Date aDataFine) {
+	public String setCondizione(MessaggioModel aModel, Date aDataInizio, Date aDataFine) {
 
 		String lCondizioni = new String();
 		if (aModel.getCodTipoMessaggio() != null && aModel.getCodTipoMessaggio().trim().length() > 0)
@@ -1578,9 +1583,23 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 		}
 		if (aModel.getFlagVisto() != null && aModel.getFlagVisto().trim().length() > 0)
 			lCondizioni += " AND FLAG_VISTO = '" + aModel.getFlagVisto() + "' ";
-		if (aModel.getDataInvio() != null)
-			lCondizioni += " AND TO_CHAR(DATA_INVIO,'YYYYMMDD') = '"
+		
+		
+	    // 2026.09.11
+		if (aDataInizio != null || aDataFine != null) {
+			if (aDataInizio != null)
+				lCondizioni += " AND TO_CHAR(DATA_INVIO,'YYYYMMDD') >= '"
+						+ DateUtils.getDateToString(aDataInizio, "yyyyMMdd") + "'";
+			if (aDataFine != null)
+				lCondizioni += " AND TO_CHAR(DATA_INVIO,'YYYYMMDD') <= '"
+						+ DateUtils.getDateToString(aDataFine, "yyyyMMdd") + "'";
+		} else { 
+			if (aModel.getDataInvio() != null)		
+			   lCondizioni += " AND TO_CHAR(DATA_INVIO,'YYYYMMDD') = '"
 					+ DateUtils.getDateToString(aModel.getDataInvio(), "yyyyMMdd") + "'";
+		}
+		// 2026.09.11
+		
 		if (aModel.getChiaveAnnoFasCumulante() != null && aModel.getChiaveProgrFasCumulante() != null) {
 			lCondizioni += " AND CHIAVE_ANNO_FAS_CUMULANTE =" + aModel.getChiaveAnnoFasCumulante();
 			lCondizioni += " AND CHIAVE_PROGR_FAS_CUMULANTE =" + aModel.getChiaveProgrFasCumulante();
@@ -1861,7 +1880,7 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 		String lSql = new String("");
 		String lPaginedStatement = new String("");
 		lSql = getPagedSqlQuery(aPage);
-		lSql += " " + setCondizione(aModel);
+		lSql += " " + setCondizione(aModel,null, null);
 		lSql += " " + setCondizioneDataInvio(aDataInizio, aDataFine);
 		lSql += setOrder();
 		// Se apage = 0 , la Query serve per il totale
@@ -1957,4 +1976,87 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 		return lStatement;
 	}
 
+	
+	// ===============================================================================
+	// 2026.09.11b
+	public void getCountRicercaMessaggio(MessaggioModel aModel, Date aDataInizio,
+			Date aDataFine) throws DAOException {
+
+		String lSql = getSqlCountMessaggi();
+		
+        lSql+= " , JMS_CODE mit, JMS_CODE dest, JMS_CODE ESITO, ufficio uff, comune comuff,"
+        + " cg_ref_codes tipuff, ufficio uffdest,comune comuffdest, cg_ref_codes tipuffdest,"
+        + " JMS_CODE tipoMess,JMS_CODE tipOperazione"
+        // Aggiunte join per recuperare i dati descrittivi dell'ufficio siep: CHIAVE_UFFICIO_SIEP
+        + ", UFFICIO ufficio_fasc_siep, COMUNE comune_fasc_siep ,CG_REF_CODES tipo_ufficio_fasc_siep"
+        + ", UFFICIO ufficio_fasc_siep_cum, COMUNE comune_fasc_siep_cum,"
+        + " CG_REF_CODES tipo_ufficio_fasc_siep_cum"
+        + ", UFFICIO uffInoltro, COMUNE comUffInoltro, CG_REF_CODES tipUffInoltro"
+        + ", UFFICIO uffReplyTo, COMUNE comuffReplyTo, CG_REF_CODES tipuffReplyTo WHERE"
+        + " COD_TIPO_MESSAGGIO = tipoMess.CODICE and tipoMess.dominio = 'TIPO_MESSAGGIO'"
+        + " and COD_TIPO_OPERAZIONE = tipOperazione.CODICE and tipOperazione.dominio ="
+        + " 'TIPO_OPERAZIONE' and COD_BDI_MITTENTE = mit.CODICE and mit.dominio = 'BDI'"
+        + " and COD_BDI_DESTINATARIA = dest.CODICE and dest.dominio = 'BDI'"
+        + " and ESITO.CODICE = COD_ESITO AND ESITO.dominio = 'CODICE_ESITO'"
+        + " and uff.COD_UFFICIO = COD_UFFICIO_MITTENTE and comuff.COD_COMUNE = uff.COD_COMUNE"
+        + " and uff.COD_TIPO_UFFICIO =tipuff.RV_LOW_VALUE and tipuff.RV_DOMAIN ='TIPO_UFFICIO'"
+        + " and uffdest.COD_UFFICIO = COD_UFFICIO_DESTINATARIO"
+        + " and comuffdest.COD_COMUNE = uffdest.COD_COMUNE"
+        + " and uffdest.COD_TIPO_UFFICIO =tipuffdest.RV_LOW_VALUE"
+        + " and tipuffdest.RV_DOMAIN ='TIPO_UFFICIO'"
+        // Aggiunte join per recuperare i dati descrittivo dell'ufficio siep: CHIAVE_UFFICIO_SIEP
+        // n.b. CHIAVE_UFFICIO_SIEP potrebbe essere null
+        + " AND ufficio_fasc_siep.COD_UFFICIO = nvl(MESSAGGIO.CHIAVE_UFFICIO_SIEP, '-')"
+        + " AND ufficio_fasc_siep.COD_COMUNE = comune_fasc_siep.COD_COMUNE"
+        + " AND ufficio_fasc_siep.COD_TIPO_UFFICIO = tipo_ufficio_fasc_siep.RV_LOW_VALUE"
+        + " AND tipo_ufficio_fasc_siep.RV_DOMAIN ='TIPO_UFFICIO'"
+        // n.b. CHIAVE_UFFICIO_FAS_CUMULANTE potrebbe essere null
+        + " AND ufficio_fasc_siep_cum.COD_UFFICIO = nvl(MESSAGGIO.CHIAVE_UFFICIO_FAS_CUMULANTE, '-')"
+        + " AND ufficio_fasc_siep_cum.COD_COMUNE = comune_fasc_siep_cum.COD_COMUNE"
+        + " AND ufficio_fasc_siep_cum.COD_TIPO_UFFICIO = tipo_ufficio_fasc_siep_cum.RV_LOW_VALUE"
+        + " AND tipo_ufficio_fasc_siep_cum.RV_DOMAIN ='TIPO_UFFICIO'"
+        // ============ UFFICIO/BDI INOLTRO =========================
+        + " AND uffInoltro.COD_UFFICIO = nvl(MESSAGGIO.COD_UFFICIO_INOLTRO, '-')"
+        + " AND uffInoltro.COD_COMUNE = comUffInoltro.COD_COMUNE"
+        + " AND uffInoltro.COD_TIPO_UFFICIO = tipUffInoltro.RV_LOW_VALUE"
+        + " AND tipUffInoltro.RV_DOMAIN ='TIPO_UFFICIO'"
+        // ============ UFFICIO/BDI REPLY TO =========================
+        + " AND uffReplyTo.COD_UFFICIO = nvl(MESSAGGIO.COD_UFFICIO_REPLY_TO, '-')"
+        + " AND uffReplyTo.COD_COMUNE = comuffReplyTo.COD_COMUNE"
+        + " AND uffReplyTo.COD_TIPO_UFFICIO = tipuffReplyTo.RV_LOW_VALUE"
+        + " AND tipuffReplyTo.RV_DOMAIN ='TIPO_UFFICIO' ";		
+		
+		lSql += " " + setCondizione(aModel, aDataInizio, aDataFine);
+		lSql += setOrder();
+
+		setStatement(lSql);
+	}
+	
+	/*
+	public void ricercaMessaggio(MessaggioModel aModel, Date aDataInizio,
+			Date aDataFine) throws DAOException {
+
+		String lSql = getSqlQuery();
+		lSql += " " + setCondizione(aModel, aDataInizio, aDataFine);
+		lSql += setOrder();
+
+		setStatement(lSql);
+	}
+	*/
+	
+	public void ricercaMessaggioPaged(MessaggioModel aModel, Date aDataInizio, Date aDataFine,
+			int aPage) throws DAOException {
+
+		String lSql = new String("");
+		String lPaginedStatement = new String("");
+		lSql = getSqlQuery();
+		lSql += " " + setCondizione(aModel,aDataInizio, aDataFine);
+		lSql += setOrder();
+		
+		lPaginedStatement = "SELECT * FROM (SELECT INNER.* , Rownum rn FROM (" + lSql
+				+ " ) INNER ) WHERE rn between " + ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1)
+				+ " AND " + (aPage) * IWebConstants.RESULT_PER_PAGE;
+		setStatement(lPaginedStatement);
+	}
+	// 2026.09.11 - FINE
 }

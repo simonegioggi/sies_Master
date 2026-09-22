@@ -2355,4 +2355,61 @@ public class MessaggioController extends SiapController implements IMessaggio, I
         }
     }
 	
+    // 2026.09.11 - TEST Si aggiunge il filtro sulla data invio
+    public BigDecimal ExCountRicercaMessaggio(MessaggioModel aMessaggio, Date aDataInizio,
+            Date aDataFine) throws F3BException {
+      Connection lConn = null;
+      BigDecimal lCount = new BigDecimal(0);
+      MessaggioSqlDAO lMesSqlDao = null;
+
+      try {
+        lConn = getDBConnection();
+
+        lMesSqlDao = new MessaggioSqlDAO(lConn);
+
+        lMesSqlDao.getCountRicercaMessaggio(aMessaggio, aDataInizio, aDataFine);
+
+        lMesSqlDao.start();
+        lMesSqlDao.next();
+        lCount = lMesSqlDao.getBigDecimal("HowManyRecords");
+        lMesSqlDao.stop();
+
+      } catch (DAOException daoEx) {
+        siesLogger.error("DAOException: ", daoEx);
+        throw new F3BException("MessaggioController.ExCountRicercaMessaggio: " + daoEx);
+      } finally {
+        cleanup(lMesSqlDao);
+        cleanup(lConn);
+      }
+
+      return lCount;
+    }    
+    
+    
+    
+	public Vector ExRicercaMessaggioPaged(MessaggioModel aMessaggio, Date aDataInizio,
+			Date aDataFine, int aPage) throws F3BException {
+
+		Connection lConn = null;
+
+		Vector lMessaggii = new Vector();
+		MessaggioSqlDAO lMesSqlDao = null;
+
+		try {
+			lConn = getDBConnection();
+			lMesSqlDao = new MessaggioSqlDAO(lConn);
+			lMesSqlDao.ricercaMessaggioPaged (aMessaggio, aDataInizio, aDataFine, aPage);
+			lMessaggii = new Vector(lMesSqlDao.getModels());
+		} catch (DAOException daoEx) {
+			siesLogger.error("", daoEx);
+			throw new F3BException("MessaggioController.ExRicercaMessaggio datainizio, dataFIne: Non posso leggere : " + daoEx);
+		} finally {
+			cleanup(lMesSqlDao);
+			cleanup(lConn);
+		}
+		siesLogger.info("[JMS]: fine");
+		return lMessaggii;
+
+	}
+    
 }
