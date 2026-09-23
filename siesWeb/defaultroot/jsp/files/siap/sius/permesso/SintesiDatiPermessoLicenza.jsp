@@ -1,4 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page import="f3b.util.Utils"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
 
@@ -88,17 +89,18 @@ if (lCodTipoLicenza.equalsIgnoreCase(ICostantiLicenzaLibanticipata.LICENZA)
    	</tr>
     <tr>
       	<td class="l">Presenza Scorta</td>
-<%         
-if (lLic.getFlagScorta().toUpperCase().compareTo("N") == 0) {
+<%
+// 20260923[SG]: Ticket#20260923017 - cambiata impostazione controllo
+if (Utils.isPresent(lLic.getFlagScorta()) && lLic.getFlagScorta().toUpperCase().compareTo("S") == 0) {
 %>							
 		<td class="l">
-			<font class="campo">No</font>
+			<font class="campo">Si</font>
 		</td>
 <%
 } else {
 %>
        	<td class="l">
-       		<font class="campo">Si</font>
+       		<font class="campo">No</font>
        	</td>
 <%
 }
