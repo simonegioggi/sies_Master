@@ -99,13 +99,14 @@ while (itx1.hasNext()) {
 	<tr>
    		<td class="l">Presenza Scorta</td>
 <%
-if (Utils.isPresent(lLic.getFlagScorta()) && lLic.getFlagScorta().toUpperCase().compareTo("N") == 0) {
+	// 20260923[SG]: Ticket#20260923017 - cambiata impostazione controllo
+	if (Utils.isPresent(lLic.getFlagScorta()) && lLic.getFlagScorta().toUpperCase().compareTo("S") == 0) {
 %>
-		<td class="l"><font class="campo">No</font></td>
+		<td class="l"><font class="campo">Si</font></td>
 <%
 } else {
 %>
-		<td class="l"><font class="campo">Si</font></td>
+		<td class="l"><font class="campo">No</font></td>
 <%
 }
 %>
