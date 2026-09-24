@@ -88,8 +88,8 @@
 
   <body class="corpo">
     <table>
-    <tr><td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
-      <td class=LBG><font class="label">Funzione : </font><font class="campo">Emissione Decreto Revoca Applicazione Provvisoria Misura Alternativ</font>&nbsp;
+    <tr><td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border="0"></a></td>
+      <td class=LBG><font class="label">Funzione : </font><font class="campo">Emissione Decreto Revoca Applicazione Provvisoria Misura Alternativa</font>
       <%
         String lAction = new String();
         lAction = "siap.sius.depositodecreto.action.ActInserisciEmissioneDecretoDeposito";
