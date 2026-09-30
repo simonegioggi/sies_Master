@@ -1,20 +1,24 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%@ page import="f3b.web.IWebConstants"%>
+<%@ page import="f3b.util.Utils"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils" %>
 <%@ page import="f3b.security.model.FunctionModel" %>
-<%@ page import="siap.web.ISIAPCostantiWeb"%>
+<%@ page import="f3b.web.IWebConstants"%>
+
+<%@ page import="siap.sico.util.SICOLookupRemote"%>
 <%@ page import="siap.sico.security.action.ICostantiSecurity" %> 
 <%@ page import="siap.sico.security.model.FunzioneModel" %>
 <%@ page import="siap.sico.evento.model.EventoModel"%>
-<%@ page import="siap.sius.fascicolo.action.ICostantiFascicoloSius" %>
-<%@ page import="siap.sico.soggetto.model.SoggettoModel" %>
 <%@ page import="siap.sico.utente.model.UtenteModel" %>
 
 <%@ page import="siap.sico.evento.action.ICostantiEvento"%>
+<%@ page import="siap.siep.beneficio.action.ICostantiBeneficio"%>
 <%@ page import="siap.sius.documentoallegato.action.ICostantiDocumentoAllegato" %>
 <%@ page import="siap.sius.provvedimento.action.ICostantiProvvedimento" %>
-<%@ page import="siap.siep.beneficio.action.ICostantiBeneficio"%>
+<%@ page import="siap.sius.fascicolo.action.ICostantiFascicoloSius"%>
+<%@ page import="siap.web.ISIAPCostantiWeb"%>
+
+<%@ page import="java.math.BigDecimal"%>
 
 <jsp:useBean id="documentoAllegato"   	scope="request" class="siap.sius.documentoallegato.model.DocumentoAllegatoModel"/>
 <jsp:useBean id="fascicoloSiusGP"     	scope="session" class="siap.sius.fascicolo.model.FascicoloGPModel"/>
@@ -207,6 +211,16 @@ if ("01".equals(codTipoProvvedimento)
 }
 %>
 }
+
+<%-- 20260930 [SG]: inserita funzione di controllo esistenza trasmissione provvedimento e soggetto provvisori a NSC --%>
+function verificaTrasmissione() {
+	var abilitaTrasmissioneFC = <%=Utils.isPresent(fascicolo) && Utils.isPresent(fascicolo.getSoggetto().getKeySoggNsc()) && Utils.isPresent(fascicolo.getKeyProvvNsc())%>
+	if (!abilitaTrasmissioneFC) {
+		alert("Attenzione! Prima di trasmettere il Foglio Complementare, assicurarsi di aver effettuato il trasferimento Procedimento SIEP verso NSC!");
+		return false;
+	}
+	return true;
+}
 </script>
 </head>
 
@@ -246,12 +260,15 @@ if (provenienza != null && provenienza.equals("InsertFC")) {
 		<!-- Gestione Foglio Complementare -->
 		<%-- MEV 16: aggiunti parametri di passaggio per INSERT, UPDATE e DELETE --%>
  		<td class="LBG">
-			<a href="#" onClick="openPopup('/siesEsecuzione/index.jsp?action=INSERT&idEvento=<%=idEventoInterconnessione%>&idUtente=<%=idUtente%>&tipoWS=siepToNsc&idSoggetto=<%=fascicolo.getSoggetto().getIdSoggetto()%>&idSentenza=<%=fascicolo.getSenIdSentenza()%>&idFascicoloSiep=<%=fascicolo.getIdFascicoloSiep()%>');return(false);">
+ 			<%-- 20260930 [SG]: inserito controllo esistenza trasmissione provvedimento e soggetto provvisori a NSC --%>
+<%-- 		<a href="#" onClick="openPopup('/siesEsecuzione/index.jsp?action=INSERT&idEvento=<%=idEventoInterconnessione%>&idUtente=<%=idUtente%>&tipoWS=siepToNsc&idSoggetto=<%=fascicolo.getSoggetto().getIdSoggetto()%>&idSentenza=<%=fascicolo.getSenIdSentenza()%>&idFascicoloSiep=<%=fascicolo.getIdFascicoloSiep()%>'); return(false);"> --%>
+			<a href="#" onClick="if (verificaTrasmissione()) {openPopup('/siesEsecuzione/index.jsp?action=INSERT&idEvento=<%=idEventoInterconnessione%>&idUtente=<%=idUtente%>&tipoWS=siepToNsc&idSoggetto=<%=fascicolo.getSoggetto().getIdSoggetto()%>&idSentenza=<%=fascicolo.getSenIdSentenza()%>&idFascicoloSiep=<%=fascicolo.getIdFascicoloSiep()%>');} return(false);">
 				<img id="TrasmissioneFC" align="middle" src="/images/insertWS.png" alt="Trasmissione Foglio Complementare al SIC" width="24" height="24" border="0">
   			</a>
 		</td>
 		<td class="LBG">
- 			<a href="#" onClick="openPopup('/siesEsecuzione/index.jsp?action=UPDATE&idEvento=<%=idEventoInterconnessione%>&idUtente=<%=idUtente%>&tipoWS=siepToNsc&idSoggetto=<%=fascicolo.getSoggetto().getIdSoggetto()%>&idSentenza=<%=fascicolo.getSenIdSentenza()%>&idFascicoloSiep=<%=fascicolo.getIdFascicoloSiep()%>');return(false);" >
+<%--  		<a href="#" onClick="openPopup('/siesEsecuzione/index.jsp?action=UPDATE&idEvento=<%=idEventoInterconnessione%>&idUtente=<%=idUtente%>&tipoWS=siepToNsc&idSoggetto=<%=fascicolo.getSoggetto().getIdSoggetto()%>&idSentenza=<%=fascicolo.getSenIdSentenza()%>&idFascicoloSiep=<%=fascicolo.getIdFascicoloSiep()%>'); return(false);"> --%>
+			<a href="#" onClick="if (verificaTrasmissione()) {openPopup('/siesEsecuzione/index.jsp?action=UPDATE&idEvento=<%=idEventoInterconnessione%>&idUtente=<%=idUtente%>&tipoWS=siepToNsc&idSoggetto=<%=fascicolo.getSoggetto().getIdSoggetto()%>&idSentenza=<%=fascicolo.getSenIdSentenza()%>&idFascicoloSiep=<%=fascicolo.getIdFascicoloSiep()%>');} return false;">
 				<img id="ModificaFC" align="middle" src="/images/updateWS.png" alt="Modifica Foglio Complementare sul SIC" width="24" height="24" border="0">
   			</a>
 		</td>
