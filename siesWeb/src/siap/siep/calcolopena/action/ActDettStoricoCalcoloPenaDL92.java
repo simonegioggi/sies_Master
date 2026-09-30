@@ -2,9 +2,6 @@ package siap.siep.calcolopena.action;
 
 import java.math.BigDecimal;
 
-import org.apache.log4j.Logger;
-
-import f3b.log.LogF3B;
 import siap.sico.ufficio.model.UfficioModel;
 import siap.sico.web.ActionSiap;
 import siap.siep.calcolopenadl92.controller.ICalcoloPenaDL92;
@@ -17,8 +14,10 @@ import siap.siep.util.SIEPLookupRemote;
  * @since MEV-2026_1
  */
 public class ActDettStoricoCalcoloPenaDL92 extends ActionSiap implements ICostantiCalcoloPena {
-    private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
+	// private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+
+	@Override
     public String processRequest() throws Exception {
         
         BigDecimal idCalcolo = null;
@@ -33,8 +32,9 @@ public class ActDettStoricoCalcoloPenaDL92 extends ActionSiap implements ICostan
         setRequestAttribute("EsitoCalcolo", lCalcoloModel);
         setRequestAttribute("UfficioCalcolo", lUfficioCalcolo);
         
-        if (!isRequestParameterNullObj("fromLista"))
+		if (!isRequestParameterNullObj("fromLista")) {
             setRequestAttribute("fromLista", "S");        
+		}
         
         return PG_DETT_STORICO_CALCPENA_DL92;
     }

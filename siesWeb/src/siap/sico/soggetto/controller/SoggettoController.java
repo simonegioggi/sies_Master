@@ -920,7 +920,6 @@ public class SoggettoController extends SiapController implements ISoggetto {
 				lStoricoSogg.setCodFiscale(lSoggVecchio.getCodFiscale());
 				lStoricoSogg.setCodCs(lSoggVecchio.getCodCs());
 				lStoricoSogg.setCodAfis(lSoggVecchio.getCodAfis());
-
 				lStoricoSogg.setCodStatoNascita(lSoggVecchio.getCodStatoNascita());
 				lStoricoSogg.setDescComuneNascitaEstero(lSoggVecchio.getDescComuneNascitaEstero());
 				lStoricoSogg.setNazionalita(lSoggVecchio.getNazionalita());
