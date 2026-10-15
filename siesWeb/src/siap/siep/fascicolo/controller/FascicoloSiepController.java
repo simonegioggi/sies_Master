@@ -3470,6 +3470,64 @@ public class FascicoloSiepController extends SiapController implements IFascicol
 		return lCount;
 	}
 
+	public Vector ExRicercaFascicoliByMagistratoAssegnatario(String aCodMagistrato, String aCodUfficio,
+			String[] aStato, String aTipoCriterio, String aValoreCriterio) throws F3BException {
+
+		Connection lConn = null;
+		Vector lFascicoli = new Vector();
+
+		FascicoloSiepSqlDAO lFasSqlDao = null;
+
+		try {
+			lConn = getDBConnection();
+
+			lFasSqlDao = new FascicoloSiepSqlDAO(lConn);
+			lFasSqlDao.ricercaFascicoloSiepByMagistratoAssegnatario(aCodMagistrato, aCodUfficio, aStato,
+					aTipoCriterio, aValoreCriterio);
+
+			lFascicoli = new Vector(lFasSqlDao.getModels());
+
+			lFasSqlDao.stop();
+		} catch (DAOException daoEx) {
+			throw new SIEPException(F3BException.USER_MESSAGE,
+					"FascicoloSiepController.ExRicercaFascicoliByMagistratoAssegnatario: Non posso leggere : "
+							+ daoEx);
+		} finally {
+			cleanup(lFasSqlDao);
+			cleanup(lConn);
+		}
+
+		return lFascicoli;
+	}
+
+	@Override
+	public BigDecimal ExGetCountProcedimenti(String lCodMagistrato, String lCodUfficio, String[] lStato,
+			String aTipoCriterio, String aValoreCriterio) throws F3BException {
+
+		BigDecimal lCount = new BigDecimal(0);
+		Connection lConn = null;
+
+		FascicoloSiepSqlDAO lFasSqlDao = null;
+		try {
+			lConn = getDBConnection();
+			lFasSqlDao = new FascicoloSiepSqlDAO(lConn);
+			lFasSqlDao.getCountProcedimenti(lCodMagistrato, lCodUfficio, lStato, aTipoCriterio,
+					aValoreCriterio);
+			lFasSqlDao.start();
+			lFasSqlDao.next();
+			lCount = lFasSqlDao.getBigDecimal("HowManyRecords");
+			lFasSqlDao.stop();
+		} catch (DAOException daoEx) {
+			throw new SIEPException(SIEPException.USER_MESSAGE,
+					"FascicoloSiepController.ExGetCountProcedimenti: Non posso leggere gli elementi : "
+							+ daoEx);
+		} finally {
+			cleanup(lFasSqlDao);
+			cleanup(lConn);
+		}
+		return lCount;
+	}
+
 	// Nuova funzionalità di definizione procedimento per passaggio di classe e creazione nuovo fascicolo
 	public FascicoloSiepModel ExInserisciFascicoloSiepPassaggioClasse(SoggettoModel sm,
 			FascicoloSiepModel fsmNew, DettaglioFascicoloModel dfm) throws F3BException {

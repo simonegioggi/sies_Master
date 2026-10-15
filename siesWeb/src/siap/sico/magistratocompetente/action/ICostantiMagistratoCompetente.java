@@ -40,4 +40,10 @@ public interface ICostantiMagistratoCompetente
   public static final String PG_LOAD_RICERCAPROCEDIMENTI  = IWebConstants.ROOT_DIR + "files/siap/sico/magistratocompetente/LoadRicercaProcedimentiMagistratoCompetente.jsp";
   public static final String PG_ESITO_RICERCAPROCEDIMENTI = IWebConstants.ROOT_DIR + "files/siap/sico/magistratocompetente/EsitoRicercaProcedimentiMagistratoCompetente.jsp";
   public static final String PG_ESITO_MODIFICAPROCEDIMENTI = IWebConstants.ROOT_DIR + "files/siap/sico/magistratocompetente/EsitoModificaMultiplaMagistratoAssegnatario.jsp";
+
+  public static final String CAMPO_TIPO_CRITERIO_RIASSEGNAZIONE = "TipoCriterioRiassegnazione";
+  public static final String CAMPO_VALORE_CRITERIO_RIASSEGNAZIONE = "ValoreCriterioRiassegnazione";
+
+  public static final String PG_LOAD_RIASSEGNAZIONEMASSIVA_PROCEDIMENTI = IWebConstants.ROOT_DIR + "files/siap/sico/magistratocompetente/LoadRiassegnazioneMassivaProcedimenti.jsp";
+  public static final String PG_ESITO_RIASSEGNAZIONEMASSIVA_PROCEDIMENTI = IWebConstants.ROOT_DIR + "files/siap/sico/magistratocompetente/EsitoRiassegnazioneMassivaProcedimenti.jsp";
 }
