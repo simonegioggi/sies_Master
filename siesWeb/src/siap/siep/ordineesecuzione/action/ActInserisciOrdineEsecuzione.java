@@ -80,7 +80,8 @@ public class ActInserisciOrdineEsecuzione extends ActOrdineEsecuzione implements
 		case 16:
 		case 20:
 		case 46:
-		case 47: {
+		case 47:
+		case 56: { // MEV_2026-105: Libero ex art. 94 ter DPR 309/90 (evento 06-0057 esistente)
 			lPage = InserisciOELibero();
 			break;
 		}

@@ -198,17 +198,19 @@ public interface IFascicoloSiep {
 	public Vector ExRicercaFascicoliByMagistratoAssegnatario(String aCodMagistrato, String aCodUfficio,
 			String[] aStato) throws F3BException;
 
-	public Vector ExRicercaFascicoliByMagistratoAssegnatario(String aCodMagistrato, String aCodUfficio,
-			String[] aStato, String aTipoCriterio, String aValoreCriterio) throws F3BException;
-
 	public BigDecimal ExGetCountProcedimenti(String lCodMagistrato, String lCodUfficio, String[] lStato)
 			throws F3BException;
 
-	public BigDecimal ExGetCountProcedimenti(String lCodMagistrato, String lCodUfficio, String[] lStato,
-			String aTipoCriterio, String aValoreCriterio) throws F3BException;
-
 	public FascicoloSiepModel ExInserisciFascicoloSiepPassaggioClasse(SoggettoModel soggettoModel,
 			FascicoloSiepModel fsmNew, DettaglioFascicoloModel dfm) throws F3BException;
+	// MEV_2026-105: riassegnazione massiva procedimenti
+	public Vector ExRicercaProcedimentiRiassegnazioneMassiva(String aCodMagistrato, String aCodUfficio,
+			String[] aStato, String aTipoCriterio, String aValoreCriterio, String aCodMagistratoEscluso)
+			throws F3BException;
+
+	public BigDecimal ExGetCountProcedimentiRiassegnazioneMassiva(String aCodMagistrato, String aCodUfficio,
+			String[] aStato, String aTipoCriterio, String aValoreCriterio, String aCodMagistratoEscluso)
+			throws F3BException;
 	// FINE MEV_2025-48
 
 	// paolo cherubini x supersoggetto 22 luglio 2009

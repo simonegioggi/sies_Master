@@ -3470,56 +3470,64 @@ public class FascicoloSiepController extends SiapController implements IFascicol
 		return lCount;
 	}
 
-	public Vector ExRicercaFascicoliByMagistratoAssegnatario(String aCodMagistrato, String aCodUfficio,
-			String[] aStato, String aTipoCriterio, String aValoreCriterio) throws F3BException {
-
+	// MEV_2026-105: riassegnazione massiva procedimenti.
+	// Ogni riga: idFascicolo, anno, progressivo, cognome e nome soggetto, cod/cognome/nome magistrato attuale
+	@Override
+	public Vector ExRicercaProcedimentiRiassegnazioneMassiva(String aCodMagistrato, String aCodUfficio,
+			String[] aStato, String aTipoCriterio, String aValoreCriterio, String aCodMagistratoEscluso)
+			throws F3BException {
 		Connection lConn = null;
-		Vector lFascicoli = new Vector();
-
+		Vector lRisultato = new Vector();
 		FascicoloSiepSqlDAO lFasSqlDao = null;
-
 		try {
 			lConn = getDBConnection();
-
 			lFasSqlDao = new FascicoloSiepSqlDAO(lConn);
-			lFasSqlDao.ricercaFascicoloSiepByMagistratoAssegnatario(aCodMagistrato, aCodUfficio, aStato,
-					aTipoCriterio, aValoreCriterio);
-
-			lFascicoli = new Vector(lFasSqlDao.getModels());
-
+			lFasSqlDao.ricercaProcedimentiRiassegnazioneMassiva(aCodMagistrato, aCodUfficio, aStato,
+					aTipoCriterio, aValoreCriterio, aCodMagistratoEscluso);
+			lFasSqlDao.start();
+			while (lFasSqlDao.next()) {
+				String[] lRiga = new String[8];
+				lRiga[0] = "" + lFasSqlDao.getBigDecimal("ID_FASCICOLO_SIEP");
+				lRiga[1] = "" + lFasSqlDao.getBigDecimal("CHIAVE_ANNO");
+				lRiga[2] = "" + lFasSqlDao.getBigDecimal("CHIAVE_PROGR");
+				lRiga[3] = lFasSqlDao.getString("COGNOME_SOGGETTO");
+				lRiga[4] = lFasSqlDao.getString("NOME_SOGGETTO");
+				lRiga[5] = lFasSqlDao.getString("MAG_COD_MAGISTRATO");
+				lRiga[6] = lFasSqlDao.getString("COGNOME_MAGISTRATO");
+				lRiga[7] = lFasSqlDao.getString("NOME_MAGISTRATO");
+				lRisultato.add(lRiga);
+			}
 			lFasSqlDao.stop();
 		} catch (DAOException daoEx) {
-			throw new SIEPException(F3BException.USER_MESSAGE,
-					"FascicoloSiepController.ExRicercaFascicoliByMagistratoAssegnatario: Non posso leggere : "
+			throw new SIEPException(SIEPException.USER_MESSAGE,
+					"FascicoloSiepController.ExRicercaProcedimentiRiassegnazioneMassiva: Non posso leggere : "
 							+ daoEx);
 		} finally {
 			cleanup(lFasSqlDao);
 			cleanup(lConn);
 		}
-
-		return lFascicoli;
+		return lRisultato;
 	}
 
 	@Override
-	public BigDecimal ExGetCountProcedimenti(String lCodMagistrato, String lCodUfficio, String[] lStato,
-			String aTipoCriterio, String aValoreCriterio) throws F3BException {
-
+	public BigDecimal ExGetCountProcedimentiRiassegnazioneMassiva(String aCodMagistrato, String aCodUfficio,
+			String[] aStato, String aTipoCriterio, String aValoreCriterio, String aCodMagistratoEscluso)
+			throws F3BException {
 		BigDecimal lCount = new BigDecimal(0);
 		Connection lConn = null;
-
 		FascicoloSiepSqlDAO lFasSqlDao = null;
 		try {
 			lConn = getDBConnection();
 			lFasSqlDao = new FascicoloSiepSqlDAO(lConn);
-			lFasSqlDao.getCountProcedimenti(lCodMagistrato, lCodUfficio, lStato, aTipoCriterio,
-					aValoreCriterio);
+			lFasSqlDao.getCountProcedimentiRiassegnazioneMassiva(aCodMagistrato, aCodUfficio, aStato,
+					aTipoCriterio, aValoreCriterio, aCodMagistratoEscluso);
 			lFasSqlDao.start();
 			lFasSqlDao.next();
 			lCount = lFasSqlDao.getBigDecimal("HowManyRecords");
 			lFasSqlDao.stop();
 		} catch (DAOException daoEx) {
 			throw new SIEPException(SIEPException.USER_MESSAGE,
-					"FascicoloSiepController.ExGetCountProcedimenti: Non posso leggere gli elementi : "
+					"FascicoloSiepController.ExGetCountProcedimentiRiassegnazioneMassiva: Non posso leggere gli elementi : "
 							+ daoEx);
 		} finally {
 			cleanup(lFasSqlDao);

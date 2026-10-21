@@ -61,18 +61,9 @@ public class ActModificaMultiplaMagistratoAssegnatario extends ActionSiap
 			String lStato[] = { "02", "03" };
 			Vector lListaProcedimenti = null;
 			IFascicoloSiep ifs = SIEPLookupRemote.getFascicoloSiepRemote();
-			String lTipoCriterio = isRequestParameterNullObj(CAMPO_TIPO_CRITERIO_RIASSEGNAZIONE) ? null
-					: getRequestStringParameter(CAMPO_TIPO_CRITERIO_RIASSEGNAZIONE);
-			String lValoreCriterio = isRequestParameterNullObj(CAMPO_VALORE_CRITERIO_RIASSEGNAZIONE) ? null
-					: getRequestStringParameter(CAMPO_VALORE_CRITERIO_RIASSEGNAZIONE);
-			String lCodMagistratoOld = getRequestStringParameter(ICostantiMagistrato.CAMPO_COD_MAGISTRATO + "_OLD");
-			if (lTipoCriterio != null && lValoreCriterio != null && lValoreCriterio.trim().length() > 0) {
-				lListaProcedimenti = ifs.ExRicercaFascicoliByMagistratoAssegnatario(lCodMagistratoOld,
-						getCodUfficioUtenteConnesso(), lStato, lTipoCriterio, lValoreCriterio);
-			} else {
-				lListaProcedimenti = ifs.ExRicercaFascicoliByMagistratoAssegnatario(lCodMagistratoOld,
-						getCodUfficioUtenteConnesso(), lStato);
-			}
+			lListaProcedimenti = ifs.ExRicercaFascicoliByMagistratoAssegnatario(
+					getRequestStringParameter(ICostantiMagistrato.CAMPO_COD_MAGISTRATO + "_OLD"),
+					getCodUfficioUtenteConnesso(), lStato);
 			String[] lListaIdFascicoli = new String[lListaProcedimenti.size()];
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
