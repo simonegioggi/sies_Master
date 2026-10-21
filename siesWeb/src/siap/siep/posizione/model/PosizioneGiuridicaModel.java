@@ -426,6 +426,7 @@ public class PosizioneGiuridicaModel extends GenericModel {
 				|| mCodPosizioneGiuridica.equals("17") // LIBERO IN DIFFERIMENTO PENA (PROVVISORIA)
 				|| mCodPosizioneGiuridica.equals("46") // LIBERO in Sospensione
 				|| mCodPosizioneGiuridica.equals("47") // LIBERO in Sospensione DPR 309/90
+				|| mCodPosizioneGiuridica.equals("56") // MEV_2026-105: LIBERO ex art. 94 ter DPR 309/90
 				|| mCodPosizioneGiuridica.equals("20") // EVASO
 				|| mCodPosizioneGiuridica.equals("26") // ESPULSO
 				|| mCodPosizioneGiuridica.equals("30") // ESTRADATO

@@ -43,6 +43,9 @@ public interface ICostantiMagistratoCompetente
 
   public static final String CAMPO_TIPO_CRITERIO_RIASSEGNAZIONE = "TipoCriterioRiassegnazione";
   public static final String CAMPO_VALORE_CRITERIO_RIASSEGNAZIONE = "ValoreCriterioRiassegnazione";
+  public static final String CAMPO_AMBITO_RIASSEGNAZIONE = "AmbitoRiassegnazione";
+  public static final String AMBITO_RIASSEGNAZIONE_UFFICIO = "UFFICIO";
+  public static final String AMBITO_RIASSEGNAZIONE_MAGISTRATO = "MAGISTRATO";
 
   public static final String PG_LOAD_RIASSEGNAZIONEMASSIVA_PROCEDIMENTI = IWebConstants.ROOT_DIR + "files/siap/sico/magistratocompetente/LoadRiassegnazioneMassivaProcedimenti.jsp";
   public static final String PG_ESITO_RIASSEGNAZIONEMASSIVA_PROCEDIMENTI = IWebConstants.ROOT_DIR + "files/siap/sico/magistratocompetente/EsitoRiassegnazioneMassivaProcedimenti.jsp";
