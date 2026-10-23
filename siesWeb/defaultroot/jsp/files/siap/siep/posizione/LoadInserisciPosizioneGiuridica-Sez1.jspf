@@ -25,7 +25,7 @@
 			elencoPosGiurAltraCausa.add("79");
 			elencoPosGiurAltraCausa.add("80");
 			elencoPosGiurAltraCausa.add("81");
-			elencoPosGiurAltraCausa.add("57");
+			elencoPosGiurAltraCausa.add("57"); // 20261023-MEV_2026-105_INLAY
 			Iterator lIterS1 = posizioneGiuridicaIscrizione.iterator();
 			String statoPosizione = "";
             while(lIterS1.hasNext()) {

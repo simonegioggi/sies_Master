@@ -21,7 +21,7 @@ public class StatoEsecuzioneCumuloUtils {
 
 	// Codici delle sosp PM: Comma 5, DL78, L199
 	public static List<String> aCodSospC5Provv = new ArrayList<String>(Arrays.asList("0061", "0104", "0063",
-			"0105", "0117", "5506", "5507", "5508", "5511", "5512", "5510", "5513", "0760", "0761", "0762"));
+			"0105", "0117", "5506", "5507", "5508", "5511", "5512", "5510", "5513", "0760", "0761", "0762")); // 20261023-MEV_2026-105_INLAY
 	public static List<String> aCodSospC5VVR = new ArrayList<String>(Arrays.asList("0313"));
 	public static List<String> aCodSospC5DecIRR = new ArrayList<String>(Arrays.asList("0282"));
 
@@ -30,7 +30,7 @@ public class StatoEsecuzioneCumuloUtils {
 	public static List<String> aCodSospIstanza = new ArrayList<String>(Arrays.asList("0993"));
 
 	public static List<String> aCodSospC5Revoca = new ArrayList<String>(
-			Arrays.asList("0078", "0079", "0080", "5514", "5515", "5516", "5519", "5520", "5518", "5521", "0763", "0764", "0767"));
+			Arrays.asList("0078", "0079", "0080", "5514", "5515", "5516", "5519", "5520", "5518", "5521", "0763", "0764", "0767")); // 20261023-MEV_2026-105_INLAY
 	public static List<String> aCodSospC5RevocaSorv = new ArrayList<String>(
 			Arrays.asList("9000", "9001", "9002"));
 

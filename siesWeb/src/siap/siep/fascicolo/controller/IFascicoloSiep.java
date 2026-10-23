@@ -203,14 +203,14 @@ public interface IFascicoloSiep {
 
 	public FascicoloSiepModel ExInserisciFascicoloSiepPassaggioClasse(SoggettoModel soggettoModel,
 			FascicoloSiepModel fsmNew, DettaglioFascicoloModel dfm) throws F3BException;
-	// MEV_2026-105: riassegnazione massiva procedimenti
-	public Vector ExRicercaProcedimentiRiassegnazioneMassiva(String aCodMagistrato, String aCodUfficio,
-			String[] aStato, String aTipoCriterio, String aValoreCriterio, String aCodMagistratoEscluso)
-			throws F3BException;
-
-	public BigDecimal ExGetCountProcedimentiRiassegnazioneMassiva(String aCodMagistrato, String aCodUfficio,
-			String[] aStato, String aTipoCriterio, String aValoreCriterio, String aCodMagistratoEscluso)
-			throws F3BException;
+	// MEV_2026-105: riassegnazione massiva procedimenti // 20261023-MEV_2026-105_INLAY
+	public Vector ExRicercaProcedimentiRiassegnazioneMassiva(String aCodMagistrato, String aCodUfficio, // 20261023-MEV_2026-105_INLAY
+			String[] aStato, String aTipoCriterio, String aValoreCriterio, String aCodMagistratoEscluso) // 20261023-MEV_2026-105_INLAY
+			throws F3BException; // 20261023-MEV_2026-105_INLAY
+ // 20261023-MEV_2026-105_INLAY
+	public BigDecimal ExGetCountProcedimentiRiassegnazioneMassiva(String aCodMagistrato, String aCodUfficio, // 20261023-MEV_2026-105_INLAY
+			String[] aStato, String aTipoCriterio, String aValoreCriterio, String aCodMagistratoEscluso) // 20261023-MEV_2026-105_INLAY
+			throws F3BException; // 20261023-MEV_2026-105_INLAY
 	// FINE MEV_2025-48
 
 	// paolo cherubini x supersoggetto 22 luglio 2009

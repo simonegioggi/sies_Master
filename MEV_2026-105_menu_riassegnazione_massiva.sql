@@ -1,3 +1,4 @@
+-- 20261023-MEV_2026-105_INLAY
 -- MEV_2026-105 - Voce di menu "Riassegnazione massiva procedimenti"
 -- Clona la funzione "Elenco Procedimenti Assegnati" (ActLoadRicercaProcedimentiAssegnati)
 -- con le stesse relazioni di menu e gli stessi profili abilitati.
