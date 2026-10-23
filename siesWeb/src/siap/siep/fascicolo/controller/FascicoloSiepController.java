@@ -3470,72 +3470,72 @@ public class FascicoloSiepController extends SiapController implements IFascicol
 		return lCount;
 	}
 
-	// MEV_2026-105: riassegnazione massiva procedimenti.
-	// Ogni riga: idFascicolo, anno, progressivo, cognome e nome soggetto, cod/cognome/nome magistrato attuale
-	@Override
-	public Vector ExRicercaProcedimentiRiassegnazioneMassiva(String aCodMagistrato, String aCodUfficio,
-			String[] aStato, String aTipoCriterio, String aValoreCriterio, String aCodMagistratoEscluso)
-			throws F3BException {
-		Connection lConn = null;
-		Vector lRisultato = new Vector();
-		FascicoloSiepSqlDAO lFasSqlDao = null;
-		try {
-			lConn = getDBConnection();
-			lFasSqlDao = new FascicoloSiepSqlDAO(lConn);
-			lFasSqlDao.ricercaProcedimentiRiassegnazioneMassiva(aCodMagistrato, aCodUfficio, aStato,
-					aTipoCriterio, aValoreCriterio, aCodMagistratoEscluso);
-			lFasSqlDao.start();
-			while (lFasSqlDao.next()) {
-				String[] lRiga = new String[8];
-				lRiga[0] = "" + lFasSqlDao.getBigDecimal("ID_FASCICOLO_SIEP");
-				lRiga[1] = "" + lFasSqlDao.getBigDecimal("CHIAVE_ANNO");
-				lRiga[2] = "" + lFasSqlDao.getBigDecimal("CHIAVE_PROGR");
-				lRiga[3] = lFasSqlDao.getString("COGNOME_SOGGETTO");
-				lRiga[4] = lFasSqlDao.getString("NOME_SOGGETTO");
-				lRiga[5] = lFasSqlDao.getString("MAG_COD_MAGISTRATO");
-				lRiga[6] = lFasSqlDao.getString("COGNOME_MAGISTRATO");
-				lRiga[7] = lFasSqlDao.getString("NOME_MAGISTRATO");
-				lRisultato.add(lRiga);
-			}
-			lFasSqlDao.stop();
-		} catch (DAOException daoEx) {
-			throw new SIEPException(SIEPException.USER_MESSAGE,
-					"FascicoloSiepController.ExRicercaProcedimentiRiassegnazioneMassiva: Non posso leggere : "
-							+ daoEx);
-		} finally {
-			cleanup(lFasSqlDao);
-			cleanup(lConn);
-		}
-		return lRisultato;
-	}
-
-	@Override
-	public BigDecimal ExGetCountProcedimentiRiassegnazioneMassiva(String aCodMagistrato, String aCodUfficio,
-			String[] aStato, String aTipoCriterio, String aValoreCriterio, String aCodMagistratoEscluso)
-			throws F3BException {
-		BigDecimal lCount = new BigDecimal(0);
-		Connection lConn = null;
-		FascicoloSiepSqlDAO lFasSqlDao = null;
-		try {
-			lConn = getDBConnection();
-			lFasSqlDao = new FascicoloSiepSqlDAO(lConn);
-			lFasSqlDao.getCountProcedimentiRiassegnazioneMassiva(aCodMagistrato, aCodUfficio, aStato,
-					aTipoCriterio, aValoreCriterio, aCodMagistratoEscluso);
-			lFasSqlDao.start();
-			lFasSqlDao.next();
-			lCount = lFasSqlDao.getBigDecimal("HowManyRecords");
-			lFasSqlDao.stop();
-		} catch (DAOException daoEx) {
-			throw new SIEPException(SIEPException.USER_MESSAGE,
-					"FascicoloSiepController.ExGetCountProcedimentiRiassegnazioneMassiva: Non posso leggere gli elementi : "
-							+ daoEx);
-		} finally {
-			cleanup(lFasSqlDao);
-			cleanup(lConn);
-		}
-		return lCount;
-	}
-
+	// MEV_2026-105: riassegnazione massiva procedimenti. // 20261023-MEV_2026-105_INLAY
+	// Ogni riga: idFascicolo, anno, progressivo, cognome e nome soggetto, cod/cognome/nome magistrato attuale // 20261023-MEV_2026-105_INLAY
+	@Override // 20261023-MEV_2026-105_INLAY
+	public Vector ExRicercaProcedimentiRiassegnazioneMassiva(String aCodMagistrato, String aCodUfficio, // 20261023-MEV_2026-105_INLAY
+			String[] aStato, String aTipoCriterio, String aValoreCriterio, String aCodMagistratoEscluso) // 20261023-MEV_2026-105_INLAY
+			throws F3BException { // 20261023-MEV_2026-105_INLAY
+		Connection lConn = null; // 20261023-MEV_2026-105_INLAY
+		Vector lRisultato = new Vector(); // 20261023-MEV_2026-105_INLAY
+		FascicoloSiepSqlDAO lFasSqlDao = null; // 20261023-MEV_2026-105_INLAY
+		try { // 20261023-MEV_2026-105_INLAY
+			lConn = getDBConnection(); // 20261023-MEV_2026-105_INLAY
+			lFasSqlDao = new FascicoloSiepSqlDAO(lConn); // 20261023-MEV_2026-105_INLAY
+			lFasSqlDao.ricercaProcedimentiRiassegnazioneMassiva(aCodMagistrato, aCodUfficio, aStato, // 20261023-MEV_2026-105_INLAY
+					aTipoCriterio, aValoreCriterio, aCodMagistratoEscluso); // 20261023-MEV_2026-105_INLAY
+			lFasSqlDao.start(); // 20261023-MEV_2026-105_INLAY
+			while (lFasSqlDao.next()) { // 20261023-MEV_2026-105_INLAY
+				String[] lRiga = new String[8]; // 20261023-MEV_2026-105_INLAY
+				lRiga[0] = "" + lFasSqlDao.getBigDecimal("ID_FASCICOLO_SIEP"); // 20261023-MEV_2026-105_INLAY
+				lRiga[1] = "" + lFasSqlDao.getBigDecimal("CHIAVE_ANNO"); // 20261023-MEV_2026-105_INLAY
+				lRiga[2] = "" + lFasSqlDao.getBigDecimal("CHIAVE_PROGR"); // 20261023-MEV_2026-105_INLAY
+				lRiga[3] = lFasSqlDao.getString("COGNOME_SOGGETTO"); // 20261023-MEV_2026-105_INLAY
+				lRiga[4] = lFasSqlDao.getString("NOME_SOGGETTO"); // 20261023-MEV_2026-105_INLAY
+				lRiga[5] = lFasSqlDao.getString("MAG_COD_MAGISTRATO"); // 20261023-MEV_2026-105_INLAY
+				lRiga[6] = lFasSqlDao.getString("COGNOME_MAGISTRATO"); // 20261023-MEV_2026-105_INLAY
+				lRiga[7] = lFasSqlDao.getString("NOME_MAGISTRATO"); // 20261023-MEV_2026-105_INLAY
+				lRisultato.add(lRiga); // 20261023-MEV_2026-105_INLAY
+			} // 20261023-MEV_2026-105_INLAY
+			lFasSqlDao.stop(); // 20261023-MEV_2026-105_INLAY
+		} catch (DAOException daoEx) { // 20261023-MEV_2026-105_INLAY
+			throw new SIEPException(SIEPException.USER_MESSAGE, // 20261023-MEV_2026-105_INLAY
+					"FascicoloSiepController.ExRicercaProcedimentiRiassegnazioneMassiva: Non posso leggere : " // 20261023-MEV_2026-105_INLAY
+							+ daoEx); // 20261023-MEV_2026-105_INLAY
+		} finally { // 20261023-MEV_2026-105_INLAY
+			cleanup(lFasSqlDao); // 20261023-MEV_2026-105_INLAY
+			cleanup(lConn); // 20261023-MEV_2026-105_INLAY
+		} // 20261023-MEV_2026-105_INLAY
+		return lRisultato; // 20261023-MEV_2026-105_INLAY
+	} // 20261023-MEV_2026-105_INLAY
+ // 20261023-MEV_2026-105_INLAY
+	@Override // 20261023-MEV_2026-105_INLAY
+	public BigDecimal ExGetCountProcedimentiRiassegnazioneMassiva(String aCodMagistrato, String aCodUfficio, // 20261023-MEV_2026-105_INLAY
+			String[] aStato, String aTipoCriterio, String aValoreCriterio, String aCodMagistratoEscluso) // 20261023-MEV_2026-105_INLAY
+			throws F3BException { // 20261023-MEV_2026-105_INLAY
+		BigDecimal lCount = new BigDecimal(0); // 20261023-MEV_2026-105_INLAY
+		Connection lConn = null; // 20261023-MEV_2026-105_INLAY
+		FascicoloSiepSqlDAO lFasSqlDao = null; // 20261023-MEV_2026-105_INLAY
+		try { // 20261023-MEV_2026-105_INLAY
+			lConn = getDBConnection(); // 20261023-MEV_2026-105_INLAY
+			lFasSqlDao = new FascicoloSiepSqlDAO(lConn); // 20261023-MEV_2026-105_INLAY
+			lFasSqlDao.getCountProcedimentiRiassegnazioneMassiva(aCodMagistrato, aCodUfficio, aStato, // 20261023-MEV_2026-105_INLAY
+					aTipoCriterio, aValoreCriterio, aCodMagistratoEscluso); // 20261023-MEV_2026-105_INLAY
+			lFasSqlDao.start(); // 20261023-MEV_2026-105_INLAY
+			lFasSqlDao.next(); // 20261023-MEV_2026-105_INLAY
+			lCount = lFasSqlDao.getBigDecimal("HowManyRecords"); // 20261023-MEV_2026-105_INLAY
+			lFasSqlDao.stop(); // 20261023-MEV_2026-105_INLAY
+		} catch (DAOException daoEx) { // 20261023-MEV_2026-105_INLAY
+			throw new SIEPException(SIEPException.USER_MESSAGE, // 20261023-MEV_2026-105_INLAY
+					"FascicoloSiepController.ExGetCountProcedimentiRiassegnazioneMassiva: Non posso leggere gli elementi : " // 20261023-MEV_2026-105_INLAY
+							+ daoEx); // 20261023-MEV_2026-105_INLAY
+		} finally { // 20261023-MEV_2026-105_INLAY
+			cleanup(lFasSqlDao); // 20261023-MEV_2026-105_INLAY
+			cleanup(lConn); // 20261023-MEV_2026-105_INLAY
+		} // 20261023-MEV_2026-105_INLAY
+		return lCount; // 20261023-MEV_2026-105_INLAY
+	} // 20261023-MEV_2026-105_INLAY
+ // 20261023-MEV_2026-105_INLAY
 	// Nuova funzionalità di definizione procedimento per passaggio di classe e creazione nuovo fascicolo
 	public FascicoloSiepModel ExInserisciFascicoloSiepPassaggioClasse(SoggettoModel sm,
 			FascicoloSiepModel fsmNew, DettaglioFascicoloModel dfm) throws F3BException {

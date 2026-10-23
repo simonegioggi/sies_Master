@@ -1556,72 +1556,72 @@ public class FascicoloSiepSqlDAO extends SIAPSqlDAO {
 		setStatement(lStatement);
 	}
 
-	// MEV_2026-105: riassegnazione massiva procedimenti (intero ufficio o singolo magistrato)
-	private String buildRiassegnazioneMassivaCondizioni(String aCodMagistrato, String aCodUfficio,
-			String[] aStato, String aTipoCriterio, String aValoreCriterio, String aCodMagistratoEscluso) {
-		StringBuilder cond = new StringBuilder();
-		cond.append(" WHERE FASC.CHIAVE_UFFICIO = '").append(StringUtils.convertSqlString(aCodUfficio)).append("'");
-		if (aCodMagistrato != null && aCodMagistrato.trim().length() > 0) {
-			cond.append(" AND MC.MAG_COD_MAGISTRATO = '").append(StringUtils.convertSqlString(aCodMagistrato.trim())).append("'");
-		}
-		if (aCodMagistratoEscluso != null && aCodMagistratoEscluso.trim().length() > 0) {
-			cond.append(" AND MC.MAG_COD_MAGISTRATO <> '").append(StringUtils.convertSqlString(aCodMagistratoEscluso.trim())).append("'");
-		}
-		if (aStato != null && aStato.length > 0) {
-			cond.append(" AND FASC.COD_STATO_FASCICOLO IN (");
-			for (int i = 0; i < aStato.length; i++) {
-				if (i > 0) cond.append(",");
-				cond.append("'").append(StringUtils.convertSqlString(aStato[i])).append("'");
-			}
-			cond.append(")");
-		}
-		if (aTipoCriterio != null && aTipoCriterio.trim().length() > 0) {
-			String valore = aValoreCriterio == null ? "" : aValoreCriterio.toUpperCase();
-			StringBuilder elenco = new StringBuilder();
-			boolean lettere = "COGNOME".equalsIgnoreCase(aTipoCriterio.trim());
-			for (int i = 0; i < valore.length(); i++) {
-				char c = valore.charAt(i);
-				boolean ok = lettere ? (c >= 'A' && c <= 'Z') : (c >= '0' && c <= '9');
-				if (ok && elenco.indexOf("'" + c + "'") < 0) {
-					if (elenco.length() > 0) elenco.append(",");
-					elenco.append("'").append(c).append("'");
-				}
-			}
-			if (elenco.length() == 0) {
-				cond.append(" AND 1 = 0");
-			} else if (lettere) {
-				cond.append(" AND EXISTS (SELECT 1 FROM SOGGETTO SOG WHERE SOG.ID_SOGGETTO = FASC.SOG_ID_SOGGETTO")
-						.append(" AND UPPER(SUBSTR(SOG.COGNOME, 1, 1)) IN (").append(elenco).append("))");
-			} else {
-				cond.append(" AND TO_CHAR(MOD(FASC.CHIAVE_PROGR, 10)) IN (").append(elenco).append(")");
-			}
-		}
-		return cond.toString();
-	}
-
-	public void ricercaProcedimentiRiassegnazioneMassiva(String aCodMagistrato, String aCodUfficio,
-			String[] aStato, String aTipoCriterio, String aValoreCriterio, String aCodMagistratoEscluso)
-			throws DAOException {
-		String lStatement = "SELECT FASC.ID_FASCICOLO_SIEP, FASC.CHIAVE_ANNO, FASC.CHIAVE_PROGR,"
-				+ " SOGG.COGNOME COGNOME_SOGGETTO, SOGG.NOME NOME_SOGGETTO, MC.MAG_COD_MAGISTRATO,"
-				+ " MAG.COGNOME COGNOME_MAGISTRATO, MAG.NOME NOME_MAGISTRATO"
-				+ " FROM FASCICOLO_SIEP FASC"
-				+ " INNER JOIN MAGISTRATO_COMPETENTE MC ON (FASC.ID_FASCICOLO_SIEP = MC.FAS_SIE_ID_FASCICOLO_SIEP AND MC.DATA_FINE IS NULL)"
-				+ " LEFT OUTER JOIN SOGGETTO SOGG ON (SOGG.ID_SOGGETTO = FASC.SOG_ID_SOGGETTO)"
-				+ " LEFT OUTER JOIN MAGISTRATO MAG ON (MAG.COD_MAGISTRATO = MC.MAG_COD_MAGISTRATO AND MAG.COD_UFFICIO_APPARTENENZA = FASC.CHIAVE_UFFICIO)"
-				+ buildRiassegnazioneMassivaCondizioni(aCodMagistrato, aCodUfficio, aStato, aTipoCriterio,
-						aValoreCriterio, aCodMagistratoEscluso)
-				+ " ORDER BY FASC.CHIAVE_ANNO ASC, FASC.CHIAVE_PROGR ASC";
-		setStatement(lStatement);
-	}
-
-	public void getCountProcedimentiRiassegnazioneMassiva(String aCodMagistrato, String aCodUfficio,
-			String[] aStato, String aTipoCriterio, String aValoreCriterio, String aCodMagistratoEscluso) {
-		String lStatement = "SELECT COUNT(*) AS HowManyRecords FROM FASCICOLO_SIEP FASC"
-				+ " INNER JOIN MAGISTRATO_COMPETENTE MC ON (FASC.ID_FASCICOLO_SIEP = MC.FAS_SIE_ID_FASCICOLO_SIEP AND MC.DATA_FINE IS NULL)"
-				+ buildRiassegnazioneMassivaCondizioni(aCodMagistrato, aCodUfficio, aStato, aTipoCriterio,
-						aValoreCriterio, aCodMagistratoEscluso);
-		setStatement(lStatement);
-	}
-
+	// MEV_2026-105: riassegnazione massiva procedimenti (intero ufficio o singolo magistrato) // 20261023-MEV_2026-105_INLAY
+	private String buildRiassegnazioneMassivaCondizioni(String aCodMagistrato, String aCodUfficio, // 20261023-MEV_2026-105_INLAY
+			String[] aStato, String aTipoCriterio, String aValoreCriterio, String aCodMagistratoEscluso) { // 20261023-MEV_2026-105_INLAY
+		StringBuilder cond = new StringBuilder(); // 20261023-MEV_2026-105_INLAY
+		cond.append(" WHERE FASC.CHIAVE_UFFICIO = '").append(StringUtils.convertSqlString(aCodUfficio)).append("'"); // 20261023-MEV_2026-105_INLAY
+		if (aCodMagistrato != null && aCodMagistrato.trim().length() > 0) { // 20261023-MEV_2026-105_INLAY
+			cond.append(" AND MC.MAG_COD_MAGISTRATO = '").append(StringUtils.convertSqlString(aCodMagistrato.trim())).append("'"); // 20261023-MEV_2026-105_INLAY
+		} // 20261023-MEV_2026-105_INLAY
+		if (aCodMagistratoEscluso != null && aCodMagistratoEscluso.trim().length() > 0) { // 20261023-MEV_2026-105_INLAY
+			cond.append(" AND MC.MAG_COD_MAGISTRATO <> '").append(StringUtils.convertSqlString(aCodMagistratoEscluso.trim())).append("'"); // 20261023-MEV_2026-105_INLAY
+		} // 20261023-MEV_2026-105_INLAY
+		if (aStato != null && aStato.length > 0) { // 20261023-MEV_2026-105_INLAY
+			cond.append(" AND FASC.COD_STATO_FASCICOLO IN ("); // 20261023-MEV_2026-105_INLAY
+			for (int i = 0; i < aStato.length; i++) { // 20261023-MEV_2026-105_INLAY
+				if (i > 0) cond.append(","); // 20261023-MEV_2026-105_INLAY
+				cond.append("'").append(StringUtils.convertSqlString(aStato[i])).append("'"); // 20261023-MEV_2026-105_INLAY
+			} // 20261023-MEV_2026-105_INLAY
+			cond.append(")"); // 20261023-MEV_2026-105_INLAY
+		} // 20261023-MEV_2026-105_INLAY
+		if (aTipoCriterio != null && aTipoCriterio.trim().length() > 0) { // 20261023-MEV_2026-105_INLAY
+			String valore = aValoreCriterio == null ? "" : aValoreCriterio.toUpperCase(); // 20261023-MEV_2026-105_INLAY
+			StringBuilder elenco = new StringBuilder(); // 20261023-MEV_2026-105_INLAY
+			boolean lettere = "COGNOME".equalsIgnoreCase(aTipoCriterio.trim()); // 20261023-MEV_2026-105_INLAY
+			for (int i = 0; i < valore.length(); i++) { // 20261023-MEV_2026-105_INLAY
+				char c = valore.charAt(i); // 20261023-MEV_2026-105_INLAY
+				boolean ok = lettere ? (c >= 'A' && c <= 'Z') : (c >= '0' && c <= '9'); // 20261023-MEV_2026-105_INLAY
+				if (ok && elenco.indexOf("'" + c + "'") < 0) { // 20261023-MEV_2026-105_INLAY
+					if (elenco.length() > 0) elenco.append(","); // 20261023-MEV_2026-105_INLAY
+					elenco.append("'").append(c).append("'"); // 20261023-MEV_2026-105_INLAY
+				} // 20261023-MEV_2026-105_INLAY
+			} // 20261023-MEV_2026-105_INLAY
+			if (elenco.length() == 0) { // 20261023-MEV_2026-105_INLAY
+				cond.append(" AND 1 = 0"); // 20261023-MEV_2026-105_INLAY
+			} else if (lettere) { // 20261023-MEV_2026-105_INLAY
+				cond.append(" AND EXISTS (SELECT 1 FROM SOGGETTO SOG WHERE SOG.ID_SOGGETTO = FASC.SOG_ID_SOGGETTO") // 20261023-MEV_2026-105_INLAY
+						.append(" AND UPPER(SUBSTR(SOG.COGNOME, 1, 1)) IN (").append(elenco).append("))"); // 20261023-MEV_2026-105_INLAY
+			} else { // 20261023-MEV_2026-105_INLAY
+				cond.append(" AND TO_CHAR(MOD(FASC.CHIAVE_PROGR, 10)) IN (").append(elenco).append(")"); // 20261023-MEV_2026-105_INLAY
+			} // 20261023-MEV_2026-105_INLAY
+		} // 20261023-MEV_2026-105_INLAY
+		return cond.toString(); // 20261023-MEV_2026-105_INLAY
+	} // 20261023-MEV_2026-105_INLAY
+ // 20261023-MEV_2026-105_INLAY
+	public void ricercaProcedimentiRiassegnazioneMassiva(String aCodMagistrato, String aCodUfficio, // 20261023-MEV_2026-105_INLAY
+			String[] aStato, String aTipoCriterio, String aValoreCriterio, String aCodMagistratoEscluso) // 20261023-MEV_2026-105_INLAY
+			throws DAOException { // 20261023-MEV_2026-105_INLAY
+		String lStatement = "SELECT FASC.ID_FASCICOLO_SIEP, FASC.CHIAVE_ANNO, FASC.CHIAVE_PROGR," // 20261023-MEV_2026-105_INLAY
+				+ " SOGG.COGNOME COGNOME_SOGGETTO, SOGG.NOME NOME_SOGGETTO, MC.MAG_COD_MAGISTRATO," // 20261023-MEV_2026-105_INLAY
+				+ " MAG.COGNOME COGNOME_MAGISTRATO, MAG.NOME NOME_MAGISTRATO" // 20261023-MEV_2026-105_INLAY
+				+ " FROM FASCICOLO_SIEP FASC" // 20261023-MEV_2026-105_INLAY
+				+ " INNER JOIN MAGISTRATO_COMPETENTE MC ON (FASC.ID_FASCICOLO_SIEP = MC.FAS_SIE_ID_FASCICOLO_SIEP AND MC.DATA_FINE IS NULL)" // 20261023-MEV_2026-105_INLAY
+				+ " LEFT OUTER JOIN SOGGETTO SOGG ON (SOGG.ID_SOGGETTO = FASC.SOG_ID_SOGGETTO)" // 20261023-MEV_2026-105_INLAY
+				+ " LEFT OUTER JOIN MAGISTRATO MAG ON (MAG.COD_MAGISTRATO = MC.MAG_COD_MAGISTRATO AND MAG.COD_UFFICIO_APPARTENENZA = FASC.CHIAVE_UFFICIO)" // 20261023-MEV_2026-105_INLAY
+				+ buildRiassegnazioneMassivaCondizioni(aCodMagistrato, aCodUfficio, aStato, aTipoCriterio, // 20261023-MEV_2026-105_INLAY
+						aValoreCriterio, aCodMagistratoEscluso) // 20261023-MEV_2026-105_INLAY
+				+ " ORDER BY FASC.CHIAVE_ANNO ASC, FASC.CHIAVE_PROGR ASC"; // 20261023-MEV_2026-105_INLAY
+		setStatement(lStatement); // 20261023-MEV_2026-105_INLAY
+	} // 20261023-MEV_2026-105_INLAY
+ // 20261023-MEV_2026-105_INLAY
+	public void getCountProcedimentiRiassegnazioneMassiva(String aCodMagistrato, String aCodUfficio, // 20261023-MEV_2026-105_INLAY
+			String[] aStato, String aTipoCriterio, String aValoreCriterio, String aCodMagistratoEscluso) { // 20261023-MEV_2026-105_INLAY
+		String lStatement = "SELECT COUNT(*) AS HowManyRecords FROM FASCICOLO_SIEP FASC" // 20261023-MEV_2026-105_INLAY
+				+ " INNER JOIN MAGISTRATO_COMPETENTE MC ON (FASC.ID_FASCICOLO_SIEP = MC.FAS_SIE_ID_FASCICOLO_SIEP AND MC.DATA_FINE IS NULL)" // 20261023-MEV_2026-105_INLAY
+				+ buildRiassegnazioneMassivaCondizioni(aCodMagistrato, aCodUfficio, aStato, aTipoCriterio, // 20261023-MEV_2026-105_INLAY
+						aValoreCriterio, aCodMagistratoEscluso); // 20261023-MEV_2026-105_INLAY
+		setStatement(lStatement); // 20261023-MEV_2026-105_INLAY
+	} // 20261023-MEV_2026-105_INLAY
+ // 20261023-MEV_2026-105_INLAY
 }

@@ -132,7 +132,7 @@ public interface ICostantiEvento {
 
 	// MEV 16: aggiunte costanti per cui deve essere visibile l'icona del FC
 	public static final String[] CODICI_SOSPENSIONE_DELLA_PENA = new String[] { "0061", "0063", "0078",
-			"0117", "0364", "0365", "0495", "0760", "0761", "0762" };
+			"0117", "0364", "0365", "0495", "0760", "0761", "0762" }; // 20261023-MEV_2026-105_INLAY
 	public static final String[] CODICI_AVVENUTA_ESECUZIONE_PENA = new String[] { "0006", "0096", "0097",
 			"0098", "0099", "0473", "0587", "0588" };
 	// codici.avvenutaesecuzionepena=0006|0081|0083|0096|0097|0098|0099|0424|0473|0587|0588|2245|2630|UTE1

@@ -80,8 +80,8 @@ public class ActInserisciOrdineEsecuzione extends ActOrdineEsecuzione implements
 		case 16:
 		case 20:
 		case 46:
-		case 47:
-		case 56: { // MEV_2026-105: Libero ex art. 94 ter DPR 309/90 (evento 06-0057 esistente)
+		case 47: // 20261023-MEV_2026-105_INLAY
+		case 56: { // MEV_2026-105: Libero ex art. 94 ter DPR 309/90 (evento 06-0057 esistente) // 20261023-MEV_2026-105_INLAY
 			lPage = InserisciOELibero();
 			break;
 		}
@@ -94,14 +94,14 @@ public class ActInserisciOrdineEsecuzione extends ActOrdineEsecuzione implements
 			lPage = InserisciOEDetDom();
 			break;
 		}
-		case 57: { // MEV_2026-105: altra causa AD ex art. 94 ter
-			lPage = InserisciOEAltraCausaAdPcCcAddpr("OE-DET-AC-CC-94T");
-			break;
-		}
-		case 58: { // MEV_2026-105: questa causa AD ex art. 94 ter
-			lPage = InserisciOEDetenutoQcAdPcCc("OE-QC-94T");
-			break;
-		}
+		case 57: { // MEV_2026-105: altra causa AD ex art. 94 ter // 20261023-MEV_2026-105_INLAY
+			lPage = InserisciOEAltraCausaAdPcCcAddpr("OE-DET-AC-CC-94T"); // 20261023-MEV_2026-105_INLAY
+			break; // 20261023-MEV_2026-105_INLAY
+		} // 20261023-MEV_2026-105_INLAY
+		case 58: { // MEV_2026-105: questa causa AD ex art. 94 ter // 20261023-MEV_2026-105_INLAY
+			lPage = InserisciOEDetenutoQcAdPcCc("OE-QC-94T"); // 20261023-MEV_2026-105_INLAY
+			break; // 20261023-MEV_2026-105_INLAY
+		} // 20261023-MEV_2026-105_INLAY
 		case 70: {
 			lPage = InserisciOEDetenutoQcAdPcCc("OE-QC-AD");
 			break;

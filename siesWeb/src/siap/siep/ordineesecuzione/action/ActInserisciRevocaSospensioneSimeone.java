@@ -210,12 +210,12 @@ public class ActInserisciRevocaSospensioneSimeone extends ActOrdineEsecuzione
 					lEveNot.getEvento().setCodMotivo("0078");
 				} else if (lPosizione.equals("02") || lPosizione.equals("04") || lPosizione.equals("49")) {
 					lEveNot.getEvento().setCodMotivo("0080");
-				} else if (lPosizione.equals("56")) {
-					lEveNot.getEvento().setCodMotivo("0764");
-				} else if (lPosizione.equals("57")) {
-					lEveNot.getEvento().setCodMotivo("0763");
-				} else if (lPosizione.equals("59")) {
-					lEveNot.getEvento().setCodMotivo("0767");
+				} else if (lPosizione.equals("56")) { // 20261023-MEV_2026-105_INLAY
+					lEveNot.getEvento().setCodMotivo("0764"); // 20261023-MEV_2026-105_INLAY
+				} else if (lPosizione.equals("57")) { // 20261023-MEV_2026-105_INLAY
+					lEveNot.getEvento().setCodMotivo("0763"); // 20261023-MEV_2026-105_INLAY
+				} else if (lPosizione.equals("59")) { // 20261023-MEV_2026-105_INLAY
+					lEveNot.getEvento().setCodMotivo("0767"); // 20261023-MEV_2026-105_INLAY
 				} else if (lPosizione.equals("82")) {
 					lEveNot.getEvento().setCodMotivo("5514");
 				} else if (lPosizione.equals("83")) {
@@ -280,12 +280,12 @@ public class ActInserisciRevocaSospensioneSimeone extends ActOrdineEsecuzione
 					lEve.getEvento().setCodMotivo("0078");
 				} else if (lPosizione.equals("02") || lPosizione.equals("04") || lPosizione.equals("49")) {
 					lEve.getEvento().setCodMotivo("0080");
-				} else if (lPosizione.equals("56")) {
-					lEve.getEvento().setCodMotivo("0764");
-				} else if (lPosizione.equals("57")) {
-					lEve.getEvento().setCodMotivo("0763");
-				} else if (lPosizione.equals("59")) {
-					lEve.getEvento().setCodMotivo("0767");
+				} else if (lPosizione.equals("56")) { // 20261023-MEV_2026-105_INLAY
+					lEve.getEvento().setCodMotivo("0764"); // 20261023-MEV_2026-105_INLAY
+				} else if (lPosizione.equals("57")) { // 20261023-MEV_2026-105_INLAY
+					lEve.getEvento().setCodMotivo("0763"); // 20261023-MEV_2026-105_INLAY
+				} else if (lPosizione.equals("59")) { // 20261023-MEV_2026-105_INLAY
+					lEve.getEvento().setCodMotivo("0767"); // 20261023-MEV_2026-105_INLAY
 				} else if (lPosizione.equals("82")) {
 					lEve.getEvento().setCodMotivo("5514");
 				} else if (lPosizione.equals("83")) {
@@ -353,13 +353,13 @@ public class ActInserisciRevocaSospensioneSimeone extends ActOrdineEsecuzione
 				lEveMod.getEvento().setCodMotivo("0078");
 			} else if (lPosizione.equals("02") || lPosizione.equals("04") || lPosizione.equals("49"))
 				lEveMod.getEvento().setCodMotivo("0080");
-			else if (lPosizione.equals("56")) {
-				lEveMod.getEvento().setCodMotivo("0764");
-			} else if (lPosizione.equals("57")) {
-				lEveMod.getEvento().setCodMotivo("0763");
-			} else if (lPosizione.equals("59")) {
-				lEveMod.getEvento().setCodMotivo("0767");
-			} else if (lPosizione.equals("82")) {
+			else if (lPosizione.equals("56")) { // 20261023-MEV_2026-105_INLAY
+				lEveMod.getEvento().setCodMotivo("0764"); // 20261023-MEV_2026-105_INLAY
+			} else if (lPosizione.equals("57")) { // 20261023-MEV_2026-105_INLAY
+				lEveMod.getEvento().setCodMotivo("0763"); // 20261023-MEV_2026-105_INLAY
+			} else if (lPosizione.equals("59")) { // 20261023-MEV_2026-105_INLAY
+				lEveMod.getEvento().setCodMotivo("0767"); // 20261023-MEV_2026-105_INLAY
+			} else if (lPosizione.equals("82")) { // 20261023-MEV_2026-105_INLAY
 				lEveMod.getEvento().setCodMotivo("5514");
 			} else if (lPosizione.equals("83")) {
 				lEveMod.getEvento().setCodMotivo("5515");
