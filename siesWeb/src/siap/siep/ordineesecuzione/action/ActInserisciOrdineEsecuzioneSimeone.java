@@ -83,6 +83,18 @@ public class ActInserisciOrdineEsecuzioneSimeone extends ActOrdineEsecuzione
 			lPage = InserisciLSArrestiDomiciliari();
 			break;
 		}
+		case 56: { // MEV_2026-105: Libero ex art. 94 ter
+			lPage = InserisciLSLibero("LS-LIB-94T");
+			break;
+		}
+		case 57: { // MEV_2026-105: altra causa AD ex art. 94 ter
+			lPage = InserisciLSAltraCausaDacMspAdPcCcAddpr("OE-S-AC-94T");
+			break;
+		}
+		case 58: { // MEV_2026-105: questa causa AD ex art. 94 ter
+			lPage = InserisciLSArrestiDomiciliariPcCcAddpr("OE-CS-94T");
+			break;
+		}
 		case 70: {
 			lPage = InserisciLSArrestiDomiciliariPcCcAddpr("OE-CS-ADDPR");
 			break;
@@ -159,6 +171,10 @@ public class ActInserisciOrdineEsecuzioneSimeone extends ActOrdineEsecuzione
 	 * @throws Exception
 	 */
 	private String InserisciLSLibero() throws Exception {
+		return InserisciLSLibero(null);
+	}
+
+	private String InserisciLSLibero(String aMotivo) throws Exception {
 		String lCodiceOperatore = this.getCodUtenteConnesso();
 		String lCodiceUfficio = this.getCodUfficioUtenteConnesso();
 		Date lDataEmissione = getRequestDateParameter(ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE,
@@ -170,7 +186,9 @@ public class ActInserisciOrdineEsecuzioneSimeone extends ActOrdineEsecuzione
 		String lIstPre = null;
 		lIstPre = getRequestStringParameter("istanza");
 
-		if (lIstPre.equals("N"))
+		if (aMotivo != null)
+			lEve.getEvento().setDescrMotivo(aMotivo);
+		else if (lIstPre.equals("N"))
 			lEve.getEvento().setDescrMotivo("LS-LIB");
 		else
 			lEve.getEvento().setDescrMotivo("LS-LIB-I");

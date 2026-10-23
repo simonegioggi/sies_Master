@@ -36,7 +36,7 @@ public class ActLoadDettaglioDecretoSospensione extends ActSIESDettaglioProvvedi
 
     EventoNotificaModel lEveNot = new EventoNotificaModel();
     IEventoSimeone lCtrlSimeone = SICOLookupRemote.getEventoSimeoneRemote();
-    String[] motivo ={"0061","0062","0063","0104","0105","0117","0000"};
+    String[] motivo ={"0061","0062","0063","0104","0105","0117","0000","0760","0761","0762"};
 
     lEveNot = lCtrlSimeone.ExRicercaEventoNotificaByIdFascicoloCodiceMotivo(lFascMod.getIdFascicoloSiep(),motivo);
     setRequestAttribute("eventonotificasimeone", lEveNot);

@@ -3811,6 +3811,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			}
 			case 2:
 			case 4: // Arresti domiciliari
+			case 58: // MEV_2026-105
 			case 70:
 			case 71:
 			case 72: {
@@ -3840,6 +3841,13 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 					lStatoProcMod.setCodStatoProcedimento("0001");
 				break;
 			}
+			case 56: { // MEV_2026-105: Libero ex art. 94 ter, invariata dopo validazione
+				lCodPosizione = "56";
+				if (!lCodStatoAggiornato)
+					lStatoProcMod.setCodStatoProcedimento("0001");
+				break;
+			}
+			case 57: // MEV_2026-105
 			case 74:
 			case 75:
 			case 76:
@@ -4098,7 +4106,8 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 					case 27:
 					case 46:
 					case 47:
-					case 48: {
+					case 48:
+					case 56: {
 						lPosDao.setCodMaschera("L");
 						break;
 					}
@@ -4174,7 +4183,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 						} else if (lIntPos == 76 || lIntPos == 77) {
 							lPosDao.setCodMaschera("L2");
 							break;
-						} else if (lIntPos == 78 || lIntPos == 79 || lIntPos == 80 || lIntPos == 81) {
+						} else if (lIntPos == 57 || lIntPos == 78 || lIntPos == 79 || lIntPos == 80 || lIntPos == 81) {
 							lPosDao.setCodMaschera("L3");
 							break;
 						}
@@ -5022,6 +5031,17 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 					lStatoProcMod.setCodStatoProcedimento("0011");
 				break;
 			}
+			case 56: // MEV_2026-105: Libero ex art. 94 ter resta 56
+			case 57: { // MEV_2026-105: altra causa AD ex art. 94 ter -> Libero 56
+				lPosizione = "56";
+				lStatoProcMod.setCodStatoProcedimento("0011");
+				break;
+			}
+			case 58: { // MEV_2026-105: AD ex art. 94 ter -> 59
+				lPosizione = "59";
+				lStatoProcMod.setCodStatoProcedimento("0011");
+				break;
+			}
 			case 70: {
 				lPosizione = "84";
 				lStatoProcMod.setCodStatoProcedimento("0011");
@@ -5120,6 +5140,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			// Aggiorna POSIZIONE_GIURIDICA
 
 			if (lCodPosizione.equals("02") || lCodPosizione.equals("07") || lCodPosizione.equals("10")
+					|| lCodPosizione.equals("56") || lCodPosizione.equals("58")
 					|| lCodPosizione.equals("70") || lCodPosizione.equals("71") || lCodPosizione.equals("72")
 					|| lCodPosizione.equals("76") || lCodPosizione.equals("77") || lCodPosizione.equals("78")
 					|| lCodPosizione.equals("79") || lCodPosizione.equals("80") || lCodPosizione.equals("81")
@@ -5292,6 +5313,8 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 					|| "5511".equals(lEveApp.getCodMotivo()) // 5511 = [OE] Altra causa - Permanenza in casa
 					|| "5512".equals(lEveApp.getCodMotivo()) // 5512 = [OE] Altra causa - Collocamento in
 																// comunita'
+					|| "0760".equals(lEveApp.getCodMotivo()) // MEV_2026-105: OE con sospensione, Libero ex art. 94 ter
+					|| "0761".equals(lEveApp.getCodMotivo()) // MEV_2026-105: OE con sospensione, altra causa AD ex art. 94 ter
 					|| "5513".equals(lEveApp.getCodMotivo()) // 5513 = [OE] Altra causa - Arresti domiciliari
 																// ex art. 89 DPR309/90
 			) {
@@ -5984,7 +6007,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			} else {
 				if (lCodPosizione.equals("49") || lCodPosizione.equals("04") || lCodPosizione.equals("02")
 						|| lCodPosizione.equals("82") || lCodPosizione.equals("83")
-						|| lCodPosizione.equals("84")) {
+						|| lCodPosizione.equals("84") || lCodPosizione.equals("59")) {
 					lStatoProcMod.setCodStatoProcedimento("0121");
 				} else if (lCodPosizione.equals("76") || lCodPosizione.equals("77")
 						|| lCodPosizione.equals("78") || lCodPosizione.equals("79")
@@ -6039,7 +6062,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 				}
 			} else if (lCodPosizione.equals("49") || lCodPosizione.equals("04") || lCodPosizione.equals("02")
 					|| lCodPosizione.equals("82") || lCodPosizione.equals("83")
-					|| lCodPosizione.equals("84")) {
+					|| lCodPosizione.equals("84") || lCodPosizione.equals("59")) {
 				// lCodPosizione = "03";
 				lPosizione = "03";
 				lPosizioInsAgg = "S";

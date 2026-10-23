@@ -168,6 +168,7 @@ public class ActLoadInserisciOrdineEsecuzione extends ActionSiap implements ICos
 					|| lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("71")
 					// MEV10-s3: aggiunte altre posizioni giuridiche
 					|| lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("72")
+					|| lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("58")
 					|| lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("70")) {
 				lOption = new Option(DecodificheManager.getInstance().getTipoAutorita());
 			} else {

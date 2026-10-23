@@ -184,6 +184,7 @@ public class ActLoadInserisciOrdineEsecuzioneSimeone extends ActionSiap implemen
 			// modifica relativa al tipo istituto
 			if (lPos != null && lPos.getAltraCausa() != null
 					&& (lPos.getAltraCausa().getCodTipoPosGiuridica().equals("23")
+							|| lPos.getAltraCausa().getCodTipoPosGiuridica().equals("57")
 							|| lPos.getAltraCausa().getCodTipoPosGiuridica().equals("78")
 							|| lPos.getAltraCausa().getCodTipoPosGiuridica().equals("79")
 							|| lPos.getAltraCausa().getCodTipoPosGiuridica().equals("80")
