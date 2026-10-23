@@ -83,7 +83,7 @@ public class ActLoadInserisciDecretoSospensione extends ActionSiap implements IC
 		// MEV 10_S3 gestite nuove posizioni giuridiche
 		// 17/04/2019  MEV70 Aggiunta nuovi Codici. 
     	//String[] motivo ={"0061","0062","0063","0104","0105","0117","0000","5506","5507","5508","5509","5510","5511","5512","5513"};
-    	String[] motivo ={"0061","0062","0063","0104","0105","0117","0000","5506","5507","5508","5509","5510","5511","5512","5513","0635","0637","0642","0661","0666"};
+    	String[] motivo ={"0061","0062","0063","0104","0105","0117","0000","5506","5507","5508","5509","5510","5511","5512","5513","0760","0761","0762","0635","0637","0642","0661","0666"};
     	lEveNot = lCtrl.ExRicercaEventoNotificaByIdFascicoloCodiceMotivo(lFascMod.getIdFascicoloSiep(),motivo);
 
     	if (lEveNot == null || lEveNot.getEvento() == null)

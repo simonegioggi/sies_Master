@@ -94,6 +94,14 @@ public class ActInserisciOrdineEsecuzione extends ActOrdineEsecuzione implements
 			lPage = InserisciOEDetDom();
 			break;
 		}
+		case 57: { // MEV_2026-105: altra causa AD ex art. 94 ter
+			lPage = InserisciOEAltraCausaAdPcCcAddpr("OE-DET-AC-CC-94T");
+			break;
+		}
+		case 58: { // MEV_2026-105: questa causa AD ex art. 94 ter
+			lPage = InserisciOEDetenutoQcAdPcCc("OE-QC-94T");
+			break;
+		}
 		case 70: {
 			lPage = InserisciOEDetenutoQcAdPcCc("OE-QC-AD");
 			break;

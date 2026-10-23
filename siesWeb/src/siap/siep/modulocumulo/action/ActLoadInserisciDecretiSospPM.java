@@ -76,7 +76,7 @@ public class ActLoadInserisciDecretiSospPM extends ActionModuloCumulo
 
 		// Combo tipo provvedimento per il Comma 5
 		Option lComboTipoProvvC5 = new Option(DecodificheManager.getInstance().getMotivoProvvedimento());
-    lComboTipoProvvC5.setFilter(new String[]{"0061","0104","0063","0117","5506","5507","5508","5511","5512","5510","5513"});
+    lComboTipoProvvC5.setFilter(new String[]{"0061","0104","0063","0117","5506","5507","5508","5511","5512","5510","5513","0760","0761","0762"});
 
 		// Combo Istanza Pervenuta/Depositata
 		Vector<DecodificheModel> lIstanzaDepPer = new Vector<>();
@@ -92,7 +92,7 @@ public class ActLoadInserisciDecretiSospPM extends ActionModuloCumulo
 
 		// Combo tipo provvedimento Revoca il Comma 5
 		Option lComboTipoProvvC5Rev = new Option(DecodificheManager.getInstance().getMotivoProvvedimento());
-    lComboTipoProvvC5Rev.setFilter(new String[]{"-","0078","0079","0080","5514","5515","5516","5519","5520","5518","5521"}); 
+    lComboTipoProvvC5Rev.setFilter(new String[]{"-","0078","0079","0080","5514","5515","5516","5519","5520","5518","5521","0763","0764","0767"}); 
 
 		// Combo Motivo Revoca Comma 5
 		Option lComboMotivoRevC5 = new Option(DecodificheManager.getInstance().getRevocaDecSosp());
@@ -131,7 +131,7 @@ public class ActLoadInserisciDecretiSospPM extends ActionModuloCumulo
 			// 23/07/2018 Descrizione Motivo provvedimento per il Comma 5 concatenata con RV_ALT5
 			Collection lTipoProvvedimento = DecodificheManager.getInstance().getMotivoProvvedimento();
 			Collection DecodComboTipoProvvC5 = new Vector();
-      String[] lComboTipoProvvC5Filter = {"0061","0104","0063","0117","5506","5507","5508","5511","5512","5510","5513"};
+      String[] lComboTipoProvvC5Filter = {"0061","0104","0063","0117","5506","5507","5508","5511","5512","5510","5513","0760","0761","0762"};
 			Iterator itx = lTipoProvvedimento.iterator();
 			// int ind = 0;
 			while (itx.hasNext()) {
