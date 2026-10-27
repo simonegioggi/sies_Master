@@ -16,6 +16,8 @@ public class ActLoadCertificatoSoggetto extends ActionSiap implements ICostantiS
 
 	public String processRequest() throws Exception {
 
+		// 20261021 [SG]: modificato parametro proveniente dalla REQUEST
+		// BigDecimal lId = getRequestBigDecimalParameter("IDSoggetto");
 		BigDecimal idSoggetto = getRequestBigDecimalParameter("IdSoggetto");
 		SoggettoCertificatoModel scm = new SoggettoCertificatoModel();
 		scm.setSogIdSoggetto(idSoggetto);
