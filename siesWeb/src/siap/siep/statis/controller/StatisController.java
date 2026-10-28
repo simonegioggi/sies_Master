@@ -5255,6 +5255,100 @@ public class StatisController extends GenericController {
 		return lTrasmessi;
 	} // chiude ExRicercaTrasmessiL78del2013
 
+	// 20261028-MEV_2026-105_INLAY: Ricerca provvedimenti ex art. 94 ter DPR 309/90 - report Excel
+	public void ExCreateReportProvvedimenti94Ter(ScadenzarioModel aScaMod, UfficioModel aUffMod,
+			HSSFWorkbook wb, Boolean aDefiniti, String aCodUfficio) throws F3BException {
+
+		HSSFCellStyle csNull = wb.createCellStyle();
+		HSSFFont font = wb.createFont();
+		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		HSSFCellStyle csBoldCenter = getBordo4Lati(wb);
+		csBoldCenter.setFont(font);
+		csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csBoldCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csBoldCenter.setWrapText(true);
+		HSSFCellStyle csCenter = getBordo4Lati(wb);
+		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		csCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		csCenter.setWrapText(true);
+
+		HSSFSheet sheet = wb.createSheet("Elenco");
+		int nRow = setIntestazione(sheet, aUffMod, csNull);
+		nRow += 2;
+
+		HSSFRow row = sheet.createRow(nRow);
+		setCell(row, 0, "Provvedimenti emessi ex art. 94 ter DPR 309/90", csNull);
+		nRow += 3;
+
+		int numCol = 0;
+		sheet.setColumnWidth(numCol++, (15 * 256));
+		sheet.setColumnWidth(numCol++, (20 * 256));
+		sheet.setColumnWidth(numCol++, (20 * 256));
+		sheet.setColumnWidth(numCol++, (25 * 256));
+		sheet.setColumnWidth(numCol++, (15 * 256));
+		sheet.setColumnWidth(numCol++, (60 * 256));
+		sheet.setColumnWidth(numCol++, (15 * 256));
+		sheet.setColumnWidth(numCol++, (50 * 256));
+
+		row = sheet.createRow(nRow++);
+		numCol = 0;
+		setCell(row, numCol++, "N\u00b0 SIEP", csBoldCenter);
+		setCell(row, numCol++, "Cognome", csBoldCenter);
+		setCell(row, numCol++, "Nome", csBoldCenter);
+		setCell(row, numCol++, "Luogo Nascita", csBoldCenter);
+		setCell(row, numCol++, "Data Nascita", csBoldCenter);
+		setCell(row, numCol++, "Provvedimento", csBoldCenter);
+		setCell(row, numCol++, "Data Emissione Decreto", csBoldCenter);
+		setCell(row, numCol++, "Stato Procedimento", csBoldCenter);
+
+		Connection lConn = null;
+		EventoSimeoneSqlDAO lEveFasDao = null;
+		try {
+			lConn = getDBConnection();
+			lEveFasDao = new EventoSimeoneSqlDAO(lConn);
+			lEveFasDao.ricercaEvento94TerXreport(aScaMod, aDefiniti, aCodUfficio);
+			lEveFasDao.start();
+
+			int lTot = 0;
+			while (lEveFasDao.next()) {
+				EventoFascicoloStatoModel lEveFas = (EventoFascicoloStatoModel) lEveFasDao.getModelL78del2013();
+				FascicoloSiepModel lFas = lEveFas.getFascicoloSiep();
+				SoggettoModel lSog = lFas.getSoggetto();
+				EventoModel mEvento = lEveFas.getEvento();
+
+				numCol = 0;
+				row = sheet.createRow(nRow++);
+				setCell(row, numCol++, lFas.getChiaveAnno() + "/" + lFas.getChiaveProgr(), csCenter);
+				setCell(row, numCol++, StringUtils.toStringJSP(lSog.getCognome()), csCenter);
+				setCell(row, numCol++, StringUtils.toStringJSP(lSog.getNome()), csCenter);
+				setCell(row, numCol++, StringUtils.toStringJSP(lSog.getDescrComuneNascita()), csCenter);
+				setCell(row, numCol++,
+						StringUtils.toStringJSP(DateUtils.getDateToString(lSog.getDataNascita(), "dd/MM/yyyy")),
+						csCenter);
+				setCell(row, numCol++, StringUtils.toStringJSP(mEvento.getDescrMotivo()), csCenter);
+				setCell(row, numCol++, StringUtils.toStringJSP(
+						DateUtils.getDateToString(mEvento.getDataEmissione(), "dd/MM/yyyy")), csCenter);
+				setCell(row, numCol++, StringUtils.toStringJSP(
+						lEveFas.getStatoProcedimento().getDescrStatoProcedimento()), csCenter);
+				lTot++;
+			}
+			lEveFasDao.stop();
+
+			if (lTot == 0) {
+				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
+			}
+			nRow++;
+			row = sheet.createRow(nRow);
+			setCell(row, 0, "Totale provvedimenti: " + lTot, csNull);
+		} catch (DAOException daoEx) {
+			siesLogger.error("DAOException: " + daoEx);
+			throw new F3BException("StatisController.ExCreateReportProvvedimenti94Ter: " + daoEx);
+		} finally {
+			cleanup(lEveFasDao);
+			cleanup(lConn);
+		}
+	}
+
 	public Vector<IspAttivitaMagistratiModel> ExCercaMotivi(String Tipologia) throws F3BException {
 
 		Connection lConn = null;
