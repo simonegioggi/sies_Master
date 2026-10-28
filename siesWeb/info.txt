@@ -1,14 +1,13 @@
-BRANCH siesWeb Versione release_12.10.2.0
+BRANCH siesWeb Versione release_12.10.3.0
 
-Nasce dal branch release_12.10.1.0 in data 16/09/2026
+Nasce dal branch release_12.10.2.0 in data 28/10/2026
 
-Questa Release verrà rilasciata il 25/09/2026 (Patch mese di Settembre 2026)
+Questa Release verrà rilasciata il 27/11/2026 (Patch mesi di ottobre e Novembre 2026)
 
 Comprende i seguenti Ticket MAC:
 
-1)	Ticket#202609100113 - non viene visualizzata la data di udienza e non è possibile effettuare la stampa
-	Per la risoluzione della problematica è stata aggiunto un controllo sul codice ufficio appartenenza dell'avvocato.
-	Il problema era legato al fatto che quando si inserisce un avvocato dal sistema REGINDE, 
-	nel database viene inserito il valore '00000' nel campo "AVVOCATO.COD_UFFICIO_APPARTENENZA".
+1)	Ticket#2026
+	Per la risoluzione della problematica è stata .
+	Il problema era legato al fatto che .
 	Classi modificate:
-	-	/it/eng/giustizia/avvocatura/action/RichiestaStampaSiusAction.java
+	-	
