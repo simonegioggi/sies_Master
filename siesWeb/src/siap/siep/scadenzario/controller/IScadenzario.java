@@ -83,6 +83,13 @@ public interface IScadenzario {
 	public List ExRicercaTrasmessiL78del2013Paged(ScadenzarioModel aScadenzario, int aPage, Boolean Attivi,
 			String acoduffcoll, Boolean nostato) throws F3BException;
 
+	// 20261028-MEV_2026-105_INLAY: Ricerca provvedimenti ex art. 94 ter DPR 309/90
+	public BigDecimal ExGetCountProvvedimenti94Ter(ScadenzarioModel aScadenzario, Boolean aDefiniti,
+			String aCodUfficio) throws F3BException;
+
+	public List ExRicercaProvvedimenti94TerPaged(ScadenzarioModel aScadenzario, int aPage, Boolean aDefiniti,
+			String aCodUfficio) throws F3BException;
+
 	// 27/03/2015 Scadenzario Fine pena Mis Sic -->
 	// public BigDecimal ExGetCountScadenzariMisSic(ScadenzarioModel aScadenzario) throws F3BException;
 

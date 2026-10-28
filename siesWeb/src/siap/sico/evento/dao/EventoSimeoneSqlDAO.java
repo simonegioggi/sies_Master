@@ -1064,6 +1064,96 @@ public class EventoSimeoneSqlDAO extends SIAPSqlDAO {
 
 	} // chiude setCondizioniL78del2013
 
+	// 20261028-MEV_2026-105_INLAY: Ricerca provvedimenti emessi ex art. 94 ter DPR 309/90 (COD_MOTIVO 0760, 0761, 0762)
+	public void ricercaEvento94TerCount(ScadenzarioModel aModel, Boolean aDefiniti, String aCodUfficio)
+			throws DAOException {
+		setStatement("SELECT COUNT(*) HowManyRecords FROM (" + getSqlQuery94Ter(aCodUfficio) + " "
+				+ setCondizioni94Ter(aModel, aDefiniti) + ")");
+	}
+
+	public void ricercaEvento94TerPaged(ScadenzarioModel aModel, int aPage, Boolean aDefiniti,
+			String aCodUfficio) throws DAOException {
+		String lSql = getSqlQuery94Ter(aCodUfficio) + " " + setCondizioni94Ter(aModel, aDefiniti)
+				+ " ORDER BY 6,7";
+		setStatement("SELECT * FROM (SELECT INNER.* , Rownum rn FROM (" + lSql
+				+ "  ) INNER ) WHERE rn between  " + ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1)
+				+ " AND " + (aPage) * IWebConstants.RESULT_PER_PAGE);
+	}
+
+	public void ricercaEvento94TerXreport(ScadenzarioModel aModel, Boolean aDefiniti, String aCodUfficio)
+			throws DAOException {
+		setStatement(getSqlQuery94Ter(aCodUfficio) + " " + setCondizioni94Ter(aModel, aDefiniti)
+				+ " ORDER BY 6,7");
+	}
+
+	protected String getSqlQuery94Ter(String aCodUfficio) throws DAOException {
+		String lStatement = "SELECT DISTINCT(EVENTO.ID_EVENTO), EVENTO.COD_MOTIVO,";
+		lStatement += " EVENTO.DATA_EMISSIONE, CODMOV.RV_MEANING MOTIVO, CODTIPPRO.RV_MEANING PROVVEDIMENTO,";
+		lStatement += " FAS.CHIAVE_ANNO, FAS.CHIAVE_PROGR,FAS.ID_FASCICOLO_SIEP,";
+		lStatement += " CODPRO.RV_MEANING STATO_DEL_PROCEDIMENTO,";
+		lStatement += " SOG.ID_SOGGETTO, SOG.COGNOME, SOG.NOME, SOG.DATA_NASCITA, TIPCOM.DESCRIZIONE COMUNE_NASCITA ";
+		lStatement += " FROM EVENTO, SOGGETTO SOG, STATO_PROCEDIMENTO PROC, FASCICOLO_SIEP FAS,";
+		lStatement += " CG_REF_CODES CODPRO, CG_REF_CODES CODTIPPRO, CG_REF_CODES CODMOV, COMUNE TIPCOM";
+		lStatement += " WHERE";
+		lStatement += " EVENTO.COD_TIPO_EVENTO = '01'";
+		lStatement += " AND EVENTO.COD_MOTIVO IN ('0760', '0761', '0762')";
+		lStatement += " AND EVENTO.FLAG_DOCUMENTO_REGISTRATO = 'S'";
+		lStatement += " AND EVENTO.COD_TIPO_PROVVEDIMENTO = CODTIPPRO.RV_LOW_VALUE AND CODTIPPRO.RV_DOMAIN = 'TIPO_PROVVEDIMENTO'";
+		lStatement += " AND EVENTO.COD_MOTIVO = CODMOV.RV_LOW_VALUE AND CODMOV.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO'";
+		lStatement += " AND PROC.COD_STATO_PROCEDIMENTO = CODPRO.RV_LOW_VALUE AND CODPRO.RV_DOMAIN = 'STATO_PROCEDIMENTO'";
+		lStatement += " AND PROC.PROGRESSIVO = 1";
+		lStatement += " AND FAS.SOG_ID_SOGGETTO = SOG.ID_SOGGETTO";
+		lStatement += " AND FAS.COD_UFFICIO_INSERIMENTO = '" + aCodUfficio.replace("'", "''") + "'";
+		lStatement += " AND EVENTO.FAS_SIE_ID_FASCICOLO_SIEP = FAS.ID_FASCICOLO_SIEP";
+		lStatement += " AND PROC.FAS_SIE_ID_FASCICOLO_SIEP = FAS.ID_FASCICOLO_SIEP";
+		lStatement += " AND TIPCOM.COD_COMUNE = SOG.COD_COMUNE_NASCITA";
+		return lStatement;
+	}
+
+	private String setCondizioni94Ter(ScadenzarioModel aModel, Boolean aDefiniti) {
+		StringBuilder lCond = new StringBuilder();
+
+		// il filtro sulla tipologia accetta solo i tre motivi previsti dalla norma
+		if (aModel.getCodiciStatoNotifica() != null && aModel.getCodiciStatoNotifica().length > 0) {
+			StringBuilder lIn = new StringBuilder();
+			for (String lMotivo : aModel.getCodiciStatoNotifica()) {
+				if ("0760".equals(lMotivo) || "0761".equals(lMotivo) || "0762".equals(lMotivo)) {
+					if (lIn.length() > 0)
+						lIn.append(",");
+					lIn.append("'").append(lMotivo).append("'");
+				}
+			}
+			if (lIn.length() > 0)
+				lCond.append(" AND EVENTO.COD_MOTIVO IN (").append(lIn).append(")");
+		}
+
+		if (aModel.getDataEmissioneIniziale() != null)
+			lCond.append(" AND EVENTO.DATA_EMISSIONE >= TO_DATE('")
+					.append(DateUtils.getDateToString(aModel.getDataEmissioneIniziale(), "dd/MM/yyyy"))
+					.append("','DD/MM/YYYY')");
+		if (aModel.getDataEmissioneFinale() != null)
+			lCond.append(" AND EVENTO.DATA_EMISSIONE <= TO_DATE('")
+					.append(DateUtils.getDateToString(aModel.getDataEmissioneFinale(), "dd/MM/yyyy"))
+					.append("','DD/MM/YYYY')");
+
+		if (aModel.getChiaveAnnoIniziale() != null && aModel.getChiaveProgrIniziale() != null) {
+			lCond.append(" AND ( (FAS.CHIAVE_ANNO > ").append(aModel.getChiaveAnnoIniziale())
+					.append(") OR (FAS.CHIAVE_ANNO = ").append(aModel.getChiaveAnnoIniziale())
+					.append(" AND FAS.CHIAVE_PROGR >= ").append(aModel.getChiaveProgrIniziale()).append("))");
+		}
+		if (aModel.getChiaveAnnoFinale() != null && aModel.getChiaveProgrFinale() != null) {
+			lCond.append(" AND ( (FAS.CHIAVE_ANNO < ").append(aModel.getChiaveAnnoFinale())
+					.append(") OR (FAS.CHIAVE_ANNO = ").append(aModel.getChiaveAnnoFinale())
+					.append(" AND FAS.CHIAVE_PROGR <= ").append(aModel.getChiaveProgrFinale()).append("))");
+		}
+
+		// di default i procedimenti Definiti/Archiviati (COD_STATO_FASCICOLO 01, 06) sono scartati
+		if (aDefiniti == null || !aDefiniti.booleanValue())
+			lCond.append(" AND FAS.COD_STATO_FASCICOLO NOT IN ('01', '06')");
+
+		return lCond.toString();
+	}
+
 	public GenericModel getModelL78del2013() throws DAOException {
 		EventoFascicoloStatoModel lEveFasc = new EventoFascicoloStatoModel();
 		EventoModel aModel = new EventoModel();

@@ -643,6 +643,69 @@ public class ScadenzarioController extends SiapController implements IScadenzari
 		return lScadenzario;
 	}
 
+	// 20261028-MEV_2026-105_INLAY: Ricerca provvedimenti ex art. 94 ter DPR 309/90
+	public BigDecimal ExGetCountProvvedimenti94Ter(ScadenzarioModel aScadenzario, Boolean aDefiniti,
+			String aCodUfficio) throws F3BException {
+
+		BigDecimal HowManyRecords = null;
+		Connection lConn = null;
+		EventoSimeoneSqlDAO lEveFasDao = null;
+
+		try {
+			lConn = getDBConnection();
+
+			lEveFasDao = new EventoSimeoneSqlDAO(lConn);
+			lEveFasDao.ricercaEvento94TerCount(aScadenzario, aDefiniti, aCodUfficio);
+			lEveFasDao.start();
+			lEveFasDao.next();
+
+			HowManyRecords = lEveFasDao.getBigDecimal("HowManyRecords");
+			lEveFasDao.stop();
+
+		} catch (DAOException daoEx) {
+			throw new F3BException("ScadenzarioController.ExGetCountProvvedimenti94Ter: " + daoEx);
+		} finally {
+			cleanup(lEveFasDao);
+			cleanup(lConn);
+		}
+
+		return HowManyRecords;
+	}
+
+	public List ExRicercaProvvedimenti94TerPaged(ScadenzarioModel aScadenzario, int aPage, Boolean aDefiniti,
+			String aCodUfficio) throws F3BException {
+
+		Connection lConn = null;
+		List lEventi = new ArrayList();
+		EventoSimeoneSqlDAO lEveFasDao = null;
+
+		try {
+			lConn = getDBConnection();
+
+			lEveFasDao = new EventoSimeoneSqlDAO(lConn);
+			lEveFasDao.ricercaEvento94TerPaged(aScadenzario, aPage, aDefiniti, aCodUfficio);
+			lEveFasDao.start();
+
+			while (lEveFasDao.next()) {
+				lEventi.add(lEveFasDao.getModelL78del2013());
+			}
+
+			lEveFasDao.stop();
+
+			if (lEventi.size() == 0) {
+				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
+			}
+
+		} catch (DAOException daoEx) {
+			throw new F3BException("ScadenzarioController.ExRicercaProvvedimenti94TerPaged: " + daoEx);
+		} finally {
+			cleanup(lEveFasDao);
+			cleanup(lConn);
+		}
+
+		return lEventi;
+	}
+
 	// AMBROSINO Decreto L78/2013
 	public BigDecimal ExGetCountTrasmessiL78del2013(ScadenzarioModel aScadenzario, Boolean Attivi,
 			String acoduffcoll, Boolean nostato) throws F3BException {

@@ -110,6 +110,11 @@ public interface ICostantiScadenzario {
 			+ "files/siap/siep/scadenzario/LoadRicercaProcTrasmessiL78del2013.jsp";
 	public static final String PG_RICERCA_PROCEDIMENTI_TRASMESSI_L78_2013 = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/scadenzario/RicercaProcedimentiTrasmessiL78del2013.jsp";
+	// 20261028-MEV_2026-105_INLAY: Ricerca provvedimenti emessi ex art. 94 ter DPR 309/90
+	public static final String PG_LOAD_RICERCA_PROVVEDIMENTI_94TER = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/scadenzario/LoadRicercaProvvedimenti94Ter.jsp";
+	public static final String PG_RICERCA_PROVVEDIMENTI_94TER = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/scadenzario/RicercaProvvedimenti94Ter.jsp";
 	// Misure Sicurezza
 	public static final String PG_LOAD_RICERCASCADENZARIOFINEPENA_MS = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/scadenzario/LoadRicercaScadenzarioFinePenaMisureSicurezza.jsp";

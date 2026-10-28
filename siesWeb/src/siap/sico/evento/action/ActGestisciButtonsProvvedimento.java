@@ -134,6 +134,13 @@ public class ActGestisciButtonsProvvedimento
 
 									if (lMotivoProvvedimento.equals("0063"))
 										lAction = "siap.siep.ordineesecuzione.action.ActDettaglioLSArrestiDomiciliari";
+									// 20261028-MEV_2026-105_INLAY: OE con sospensione ex art. 94 ter DPR 309/90
+									if (lMotivoProvvedimento.equals("0760"))
+										lAction = "siap.siep.ordineesecuzione.action.ActDettaglioLSLibero";
+									if (lMotivoProvvedimento.equals("0761"))
+										lAction = "siap.siep.ordineesecuzione.action.ActDettaglioLSAltraCausa";
+									if (lMotivoProvvedimento.equals("0762"))
+										lAction = "siap.siep.ordineesecuzione.action.ActDettaglioLSArrestiDomiciliari";
 
 									if (lMotivoProvvedimento.equals("0078") || lMotivoProvvedimento.equals("0079")
 											|| lMotivoProvvedimento.equals("0080"))
@@ -484,6 +491,13 @@ public class ActGestisciButtonsProvvedimento
 									lAction = "siap.siep.ordineesecuzione.action.ActStampaLSAltraCausa";
 								if (lMotivoProvvedimento.equals("0063"))
 									lAction = "siap.siep.ordineesecuzione.action.ActStampaLSArrestiDomiciliari";
+								// 20261028-MEV_2026-105_INLAY: OE con sospensione ex art. 94 ter DPR 309/90
+								if (lMotivoProvvedimento.equals("0760"))
+									lAction = "siap.siep.ordineesecuzione.action.ActStampaLSLibero";
+								if (lMotivoProvvedimento.equals("0761"))
+									lAction = "siap.siep.ordineesecuzione.action.ActStampaLSAltraCausa";
+								if (lMotivoProvvedimento.equals("0762"))
+									lAction = "siap.siep.ordineesecuzione.action.ActStampaLSArrestiDomiciliari";
 								if (lMotivoProvvedimento.equals("0078"))
 									lAction = "siap.siep.ordineesecuzione.action.ActStampaRevocaLSLibero";
 								if (lMotivoProvvedimento.equals("0079"))
@@ -610,6 +624,13 @@ public class ActGestisciButtonsProvvedimento
 										lAction = "siap.siep.ordineesecuzione.action.ActDettaglioLSAltraCausa";
 
 									if (lMotivoProvvedimento.equals("0063"))
+										lAction = "siap.siep.ordineesecuzione.action.ActDettaglioLSArrestiDomiciliari";
+									// 20261028-MEV_2026-105_INLAY: OE con sospensione ex art. 94 ter DPR 309/90
+									if (lMotivoProvvedimento.equals("0760"))
+										lAction = "siap.siep.ordineesecuzione.action.ActDettaglioLSLibero";
+									if (lMotivoProvvedimento.equals("0761"))
+										lAction = "siap.siep.ordineesecuzione.action.ActDettaglioLSAltraCausa";
+									if (lMotivoProvvedimento.equals("0762"))
 										lAction = "siap.siep.ordineesecuzione.action.ActDettaglioLSArrestiDomiciliari";
 
 									if (lMotivoProvvedimento.equals("0078") || lMotivoProvvedimento.equals("0079")
