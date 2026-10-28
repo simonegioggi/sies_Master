@@ -3,3 +3,5 @@ BRANCH siesWeb VERSIONE MEV_2026-105
 Nasce dal branch release_12.10.1.0 in data 08/09/2026
 
 In data 23/09/2026 eseguito merge con il branch release_12.10.2.0
+
+In data 28/10/2026 eseguito merge con il branch release_12.10.3.0
