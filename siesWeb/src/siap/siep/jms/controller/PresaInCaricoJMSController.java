@@ -40,7 +40,6 @@ import siap.siep.avvocato.model.AvvocatoModel;
 import siap.siep.beneficio.controller.IBeneficio;
 import siap.siep.calcolopena.model.SemestreDL92Model;
 import siap.siep.calcolopenadl92.dao.CalcoloPenaDL92DAO;
-import siap.siep.calcolopenadl92.dao.CalcoloPenaDL92SqlDAO;
 import siap.siep.calcolopenadl92.dao.SemestreDL92DAO;
 import siap.siep.calcolopenadl92.model.CalcoloPenaDL92ModelDB;
 import siap.siep.circostanza.controller.ICircostanza;
@@ -106,7 +105,7 @@ import siap.siep.util.SIEPLookupRemote;
 
 /**
  * PresaInCaricoJMSController - Classe che prende in carico i dati pervenuti da bdi remote
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -433,7 +432,7 @@ public class PresaInCaricoJMSController extends SiapPresaInCaricoJMSController i
 				if (!lProc.getReturn().equals("0000")) {
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// LogF3B.getLogger()
-					siesLogger.error("ERRORE DURANTE LA STORE PROCEDURE..."+lProc.getReturn());
+					siesLogger.error("ERRORE DURANTE LA STORE PROCEDURE..." + lProc.getReturn());
 					throw new DAOException("Errore durante la chiamata alla Store Procedure");
 				}
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -474,11 +473,11 @@ public class PresaInCaricoJMSController extends SiapPresaInCaricoJMSController i
 
 			// MEV-2026_1 - Si inseriscono se presenti i dati dello Storico calcolo pena DL92
 			if (lPars.getDettaglioFascicoloSiep().getStoricoCalcoliPenaDL92DB() != null) {
-                lRapporto += this.inserisciStoricoCalcPenaDL92(lPars.getDettaglioFascicoloSiep().getStoricoCalcoliPenaDL92DB(),
-                        lConn);			    
+				lRapporto += this.inserisciStoricoCalcPenaDL92(
+						lPars.getDettaglioFascicoloSiep().getStoricoCalcoliPenaDL92DB(), lConn);
 			}
 			// MEV-2026_1 - FINE
-			
+
 			// 22/01/2008 Gestione INSERT degli EVENTI con ripetizione del ciclo: Risolto così il problema
 			// delle integrità referenziali (EVE_ID_EVENTO e EVE_ID_EVENTO_REVOCA)
 			// 22/01/2008 Gestione INSERT degli EVENTI con azzeramento campi (PEN_RES_ID_PENA_RESIDUA e
@@ -1547,67 +1546,65 @@ public class PresaInCaricoJMSController extends SiapPresaInCaricoJMSController i
 				lCodEsito);
 		return lRapporto;
 	}
-	
 
 	/**
-	 * Inserisce i dati sulle tabelle:
-	 *  - CALCOLO_PENA_DL92
-	 *    - SEMESTRI_LA_DL92
-	 *    
+	 * Inserisce i dati sulle tabelle: - CALCOLO_PENA_DL92 - SEMESTRI_LA_DL92
+	 * 
 	 * @param lStorico
 	 * @param lConn
 	 * @return
 	 * @throws F3BException
-	 * @since MEV-2026_1 
+	 * @since MEV-2026_1
 	 */
-    protected String inserisciStoricoCalcPenaDL92 (List <CalcoloPenaDL92ModelDB> lStorico, Connection lConn) throws F3BException {
-        siesLogger.debug("Sono in inserisciStoricoCalcPenaDL92");
-        
-        String lCodEsito = "00000";
-        CalcoloPenaDL92DAO lCalcoloDao = null;
-        SemestreDL92DAO lSemestreDao = null;
+	protected String inserisciStoricoCalcPenaDL92(List<CalcoloPenaDL92ModelDB> lStorico, Connection lConn)
+			throws F3BException {
 
-        String lRapporto = new String("");
-        
+		siesLogger.debug("Sono in inserisciStoricoCalcPenaDL92");
 
-        
-        for (CalcoloPenaDL92ModelDB lCalcolo : lStorico) {
-            try {
-                lCalcoloDao = new CalcoloPenaDL92DAO (lConn);
-                lSemestreDao = new SemestreDL92DAO (lConn);
-                
-                siesLogger.debug("Insert idCalc = "+lCalcolo.getIdCalcoloPenaDL92());
-                
-                lCalcoloDao.setDAOFromModel(lCalcolo);
-                lCalcoloDao.setWithoutSequence(true);
-                lCalcoloDao.insert();
-                lCalcoloDao.stop();
-                lCodEsito = "00000";
-                
-                
-                Vector <SemestreDL92Model> lListaSemestri =  lCalcolo.getListaSemetri();
-                if (lListaSemestri!=null) {
-                    for (SemestreDL92Model lSemestre : lListaSemestri) {
-                        siesLogger.debug("Insert idSemetre = "+lSemestre.getIdSemestriLaDl92());
-                        lSemestreDao.setDAOFromModel(lSemestre);
-                        lSemestreDao.setWithoutSequence(true);
-                        lSemestreDao.insert();
-                        lSemestreDao.stop();
-                        lCodEsito = "00000"; 
-                    }
-                } 
-            } catch (DAOException ex) {
-                if (ex.UNIQUE_CONSTRAINT_VIOLATED) {
-                    lCodEsito = "00001";
-                    lRapporto += buildRapporto("Inserimento ", " storico pene Virtuali ", lCodEsito);
-                } else
-                    throw new F3BException(F3BException.USER_MESSAGE, "Impossibile inserire la pena virtuale! ");
-            } finally {
-                cleanup(lCalcoloDao);                
-                cleanup(lSemestreDao);
-            }
-        }
+		String lCodEsito = "00000";
+		CalcoloPenaDL92DAO lCalcoloDao = null;
+		SemestreDL92DAO lSemestreDao = null;
 
-        return lRapporto;
-    }	
+		String lRapporto = new String("");
+
+		for (CalcoloPenaDL92ModelDB lCalcolo : lStorico) {
+			try {
+				lCalcoloDao = new CalcoloPenaDL92DAO(lConn);
+				lSemestreDao = new SemestreDL92DAO(lConn);
+
+				siesLogger.debug("Insert idCalc = " + lCalcolo.getIdCalcoloPenaDL92());
+
+				lCalcoloDao.setDAOFromModel(lCalcolo);
+				lCalcoloDao.setWithoutSequence(true);
+				lCalcoloDao.insert();
+				lCalcoloDao.stop();
+				lCodEsito = "00000";
+
+				Vector<SemestreDL92Model> lListaSemestri = lCalcolo.getListaSemetri();
+				if (lListaSemestri != null) {
+					for (SemestreDL92Model lSemestre : lListaSemestri) {
+						siesLogger.debug("Insert idSemetre = " + lSemestre.getIdSemestriLaDl92());
+						lSemestreDao.setDAOFromModel(lSemestre);
+						lSemestreDao.setWithoutSequence(true);
+						lSemestreDao.insert();
+						lSemestreDao.stop();
+						lCodEsito = "00000";
+					}
+				}
+			} catch (DAOException ex) {
+				if (ex.UNIQUE_CONSTRAINT_VIOLATED) {
+					lCodEsito = "00001";
+					lRapporto += buildRapporto("Inserimento ", " storico pene Virtuali ", lCodEsito);
+				} else
+					throw new F3BException(F3BException.USER_MESSAGE,
+							"Impossibile inserire la pena virtuale! ");
+			} finally {
+				cleanup(lCalcoloDao);
+				cleanup(lSemestreDao);
+			}
+		}
+
+		return lRapporto;
+	}
+
 }
