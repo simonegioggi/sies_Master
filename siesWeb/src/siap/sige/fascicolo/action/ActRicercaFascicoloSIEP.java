@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Vector;
 
+import f3b.web.IWebConstants;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.soggetto.action.ICostantiSoggetto;
 import siap.sico.ufficio.controller.IUfficio;
@@ -15,24 +16,12 @@ import siap.siep.sentenza.action.ICostantiSentenza;
 import siap.siep.util.SIEPLookupRemote;
 import siap.sige.web.ActionSige;
 import siap.sius.fascicolo.action.ICostantiFascicoloSius;
-import f3b.web.IWebConstants;
 
 /**
- * <p>
- * Title: ActLoadRicercaFascicoloSIEP
- * </p>
- * <p>
- * Description: Classe Action per la ricerca del Procedimento SIEP.
- * </p>
- * L'action specializza siap.sius.fascicolo.action.ActRicercaFascicolo solo per cambiare l'intestazione della
- * pagina risultato della ricerca.
- * <p>
- * Copyright: Copyright (c) 2008
- * </p>
- * <p>
- * Company: Eutelia
- * </p>
- * 
+ * ActLoadRicercaFascicoloSIEP - Classe Action per la ricerca del Procedimento SIEP. L'action specializza
+ * siap.sius.fascicolo.action.ActRicercaFascicolo solo per cambiare l'intestazione della pagina risultato
+ * della ricerca.
+ *
  * @version 5.0
  */
 public class ActRicercaFascicoloSIEP extends ActionSige implements ICostantiFascicoloSiep {
@@ -67,9 +56,9 @@ public class ActRicercaFascicoloSIEP extends ActionSige implements ICostantiFasc
 			// Si Utilizza il campo setCodUfficioInserimento come veicolo per
 			// trasmettere il codice ufficio recuperato dal tipo ufficio e dalla
 			// descr ufficio
-			lFasMod.setCodUfficioInserimento(getCodUfficioByCodTipoUfficioDescrComune(
-					getRequestStringParameter(CAMPO_CHIAVE_UFFICIO),
-					getRequestStringParameter(CAMPO_DESCR_COMUNE_UFFICIO)));
+			lFasMod.setCodUfficioInserimento(
+					getCodUfficioByCodTipoUfficioDescrComune(getRequestStringParameter(CAMPO_CHIAVE_UFFICIO),
+							getRequestStringParameter(CAMPO_DESCR_COMUNE_UFFICIO)));
 		}
 
 		if (!isRequestParameterNullObj(CAMPO_CHIAVE_ACCORPATO)) {
@@ -83,29 +72,29 @@ public class ActRicercaFascicoloSIEP extends ActionSige implements ICostantiFasc
 
 		if (!getRequestStringParameter(CAMPO_DESCR_COMUNE_UFFICIO).equals("")) {
 			IUfficio lUffCtrl = SICOLookupRemote.getUfficioRemote();
-			if (lUffCtrl.verifyUfficioByDescrComune((getRequestStringParameter(CAMPO_DESCR_COMUNE_UFFICIO)
-					.toUpperCase())))
-				lFasMod.setDescrComuneUfficio((getRequestStringParameter(CAMPO_DESCR_COMUNE_UFFICIO)
-						.toUpperCase()));
+			if (lUffCtrl.verifyUfficioByDescrComune(
+					(getRequestStringParameter(CAMPO_DESCR_COMUNE_UFFICIO).toUpperCase())))
+				lFasMod.setDescrComuneUfficio(
+						(getRequestStringParameter(CAMPO_DESCR_COMUNE_UFFICIO).toUpperCase()));
 		}
 
-		if (!isRequestParameterNullObj(CAMPO_CHIAVE_ANNO))
-			lFasMod.setChiaveAnno(getRequestBigDecimalParameter(CAMPO_CHIAVE_ANNO));
-
-		if (!isRequestParameterNullObj(CAMPO_CHIAVE_PROGR))
-			lFasMod.setChiaveProgr(getRequestBigDecimalParameter(CAMPO_CHIAVE_PROGR));
-
-		if (!isRequestParameterNullObj(CAMPO_CHIAVE_ANNO_INIZIALE))
-			lFasMod.setChiaveAnnoIniziale(getRequestBigDecimalParameter(CAMPO_CHIAVE_ANNO_INIZIALE));
-
-		if (!isRequestParameterNullObj(CAMPO_CHIAVE_PROGR_INIZIALE))
-			lFasMod.setChiaveProgrIniziale(getRequestBigDecimalParameter(CAMPO_CHIAVE_PROGR_INIZIALE));
-
-		if (!isRequestParameterNullObj(CAMPO_CHIAVE_ANNO_FINALE))
-			lFasMod.setChiaveAnnoFinale(getRequestBigDecimalParameter(CAMPO_CHIAVE_ANNO_FINALE));
-
-		if (!isRequestParameterNullObj(CAMPO_CHIAVE_PROGR_FINALE))
-			lFasMod.setChiaveProgrFinale(getRequestBigDecimalParameter(CAMPO_CHIAVE_PROGR_FINALE));
+		// 20261023 [SG]: aggiunto controllo per gestione ricerca per intervallo di procedimenti
+		String lTipoRicerca = getRequestStringParameter("tipo");
+		if ("Singolo".equalsIgnoreCase(lTipoRicerca)) {
+			if (!isRequestParameterNullObj(CAMPO_CHIAVE_ANNO))
+				lFasMod.setChiaveAnno(getRequestBigDecimalParameter(CAMPO_CHIAVE_ANNO));
+			if (!isRequestParameterNullObj(CAMPO_CHIAVE_PROGR))
+				lFasMod.setChiaveProgr(getRequestBigDecimalParameter(CAMPO_CHIAVE_PROGR));
+		} else {
+			if (!isRequestParameterNullObj(CAMPO_CHIAVE_ANNO_INIZIALE))
+				lFasMod.setChiaveAnnoIniziale(getRequestBigDecimalParameter(CAMPO_CHIAVE_ANNO_INIZIALE));
+			if (!isRequestParameterNullObj(CAMPO_CHIAVE_PROGR_INIZIALE))
+				lFasMod.setChiaveProgrIniziale(getRequestBigDecimalParameter(CAMPO_CHIAVE_PROGR_INIZIALE));
+			if (!isRequestParameterNullObj(CAMPO_CHIAVE_ANNO_FINALE))
+				lFasMod.setChiaveAnnoFinale(getRequestBigDecimalParameter(CAMPO_CHIAVE_ANNO_FINALE));
+			if (!isRequestParameterNullObj(CAMPO_CHIAVE_PROGR_FINALE))
+				lFasMod.setChiaveProgrFinale(getRequestBigDecimalParameter(CAMPO_CHIAVE_PROGR_FINALE));
+		}
 
 		// FascicoloSiepController lCtrl = new FascicoloSiepController();
 		IFascicoloSiep lCtrl = SIEPLookupRemote.getFascicoloSiepRemote();
@@ -118,8 +107,8 @@ public class ActRicercaFascicoloSIEP extends ActionSige implements ICostantiFasc
 
 		if (lVect.size() == 1) {
 			lReturnPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
-					+ "=siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&" + CAMPO_ID_FASCICOLO_SIEP
-					+ "=" + ((FascicoloSiepModel) lVect.get(0)).getIdFascicoloSiep().toString();
+					+ "=siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&" + CAMPO_ID_FASCICOLO_SIEP + "="
+					+ ((FascicoloSiepModel) lVect.get(0)).getIdFascicoloSiep().toString();
 		} else {
 			// Collection di decodifica del COD_STATO
 			Collection lCol = DecodificheManager.getInstance().getStatoProcedimento();
@@ -138,7 +127,7 @@ public class ActRicercaFascicoloSIEP extends ActionSige implements ICostantiFasc
 			setRequestAttribute(IWebConstants.REQUEST_FOR_PAGING, getCompleteRequestURL());
 			setRequestAttribute("fascicoli", lVect);
 
-			// lReturnPage = PG_RICERCAFASCICOLO_SIEP;
+			// pagina di ritorno
 			lReturnPage = ICostantiFascicoloSius.PG_RICERCAFASCICOLO;
 		}
 
