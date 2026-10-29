@@ -100,7 +100,8 @@ if ("M".equals(modalita) && isPresentiBollettini) {
 	    return false;
   	}
 	var sommaRate = 0.0;
-	if ($('$<%=ICostantiRateizzazionePP.CAMPO_TIPO_RATEIZZAZIONE%>:checked').val() == "U") {
+	// 20261029 [SG]: aggiunto controllo su valuta
+	if ($("input[name='<%=ICostantiRateizzazionePP.CAMPO_TIPO_RATEIZZAZIONE%>']:checked").val() == "U") {
 	    var valoreRata = document.LoadInserisciRateizzazionePP.<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_UNICA_I%>.value
 				+ "." + document.LoadInserisciRateizzazionePP.<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_UNICA_D%>.value;
 	    if (valoreRata == "." || parseFloat(valoreRata) == "0.0") {
@@ -115,7 +116,8 @@ if ("M".equals(modalita) && isPresentiBollettini) {
 			return false;
 	    }
 	    sommaRate = parseFloat(valoreRata);
-  	} else if ($('$<%=ICostantiRateizzazionePP.CAMPO_TIPO_RATEIZZAZIONE%>:checked').val() == "R") {
+  	// 20261029 [SG]: aggiunto controllo su valuta
+  	} else if ($("input[name='<%=ICostantiRateizzazionePP.CAMPO_TIPO_RATEIZZAZIONE%>']:checked").val() == "R") {
   		for (i = 0; i < maxNumRate; i++) {
       		idrata = "rata_" + i;
       		display = document.getElementById(idrata).style.display;
@@ -125,6 +127,19 @@ if ("M".equals(modalita) && isPresentiBollettini) {
         		if (isNaN(numRate) || numRate < 1) {
 					alert("Indicare il numero di rate per la rata N. " + (Rigo + 1));
 					document.getElementById('<%=ICostantiRateizzazionePP.CAMPO_NUM_RATE%>_' + Rigo).focus();
+					return false;
+        		}
+        		// 20261029 [SG]: aggiunto controllo su valuta
+        		var rataI = document.getElementById('<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_I%>_' + Rigo);
+        		var rataD = document.getElementById('<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_D%>_' + Rigo);
+        		if (!/^\d*$/.test(rataI.value)) {
+					alert("L'importo della rata N. " + (Rigo + 1) + " deve essere numerico");
+					rataI.focus();
+					return false;
+        		}
+        		if (!/^\d*$/.test(rataD.value)) {
+					alert("I decimali della rata N. " + (Rigo + 1) + " devono essere numerici");
+					rataD.focus();
 					return false;
         		}
         		var valoreRata = document.getElementById('<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_I%>_' + Rigo).value
@@ -170,8 +185,9 @@ if (modalita.equals("I")) {
 <%
 } else {
 %>
-	$("$<%=ICostantiRateizzazionePP.CAMPO_TIPO_RATEIZZAZIONE%>[value='<%=tipoRateizzazione%>']").attr('checked', 'checked');
-	if ($('$<%=ICostantiRateizzazionePP.CAMPO_TIPO_RATEIZZAZIONE%>:checked').val() == "R") {
+	// 20261029 [SG]: aggiunto controllo su valuta
+	$("input[name='<%=ICostantiRateizzazionePP.CAMPO_TIPO_RATEIZZAZIONE%>'][value='<%=tipoRateizzazione%>']").attr('checked', 'checked');
+	if ($("input[name='<%=ICostantiRateizzazionePP.CAMPO_TIPO_RATEIZZAZIONE%>']:checked").val() == "R") {
   		var conta = 0;
   		for (i = (maxNumRate - 1); i > 0; i--) {
     		conta++;      
@@ -193,7 +209,8 @@ if (modalita.equals("I")) {
 }
 
 function radioTipoPagamento() {
-	if ($('$<%=ICostantiRateizzazionePP.CAMPO_TIPO_RATEIZZAZIONE%>:checked').val() == "U") {
+	// 20261029 [SG]: aggiunto controllo su valuta
+	if ($("input[name='<%=ICostantiRateizzazionePP.CAMPO_TIPO_RATEIZZAZIONE%>']:checked").val() == "U") {
 	    document.LoadInserisciRateizzazionePP.<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_UNICA_I%>.disabled = false;
 	    document.LoadInserisciRateizzazionePP.<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_UNICA_D%>.disabled = false; 
 	    document.LoadInserisciRateizzazionePP.<%=ICostantiRateizzazionePP.CAMPO_SCADENZA_GIORNI_RATA_UNICA%>.disabled = false;
@@ -214,7 +231,8 @@ function radioTipoPagamento() {
 		document.LoadInserisciRateizzazionePP.<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_I%>_0.disabled = true;
 		document.LoadInserisciRateizzazionePP.<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_D%>_0.disabled = true;
 		document.LoadInserisciRateizzazionePP.<%=ICostantiRateizzazionePP.CAMPO_SCADENZA_GIORNI%>_0.disabled = true;
-	} else if ($('$<%=ICostantiRateizzazionePP.CAMPO_TIPO_RATEIZZAZIONE%>:checked').val() == "R") {
+	// 20261029 [SG]: aggiunto controllo su valuta
+	} else if ($("input[name='<%=ICostantiRateizzazionePP.CAMPO_TIPO_RATEIZZAZIONE%>']:checked").val() == "R") {
 	    document.LoadInserisciRateizzazionePP.<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_UNICA_I%>.disabled = true;
 	    document.LoadInserisciRateizzazionePP.<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_UNICA_D%>.disabled = true; 
 	    document.LoadInserisciRateizzazionePP.<%=ICostantiRateizzazionePP.CAMPO_SCADENZA_GIORNI_RATA_UNICA%>.disabled = true;
@@ -521,6 +539,13 @@ for (int i = 0; i < maxNumRate; i++) {
 <script language="JavaScript" type="text/javascript">
 var frmvalidator = new Validator("LoadInserisciRateizzazionePP");
 frmvalidator.setAddnlValidationFunction("Verify");
+
+// 20261029 [SG]: aggiunto controllo su valuta
+frmvalidator.addValidation("<%=ICostantiRateizzazionePP.CAMPO_VALORE_IMPORTO_I%>","numeric");
+frmvalidator.addValidation("<%=ICostantiRateizzazionePP.CAMPO_VALORE_IMPORTO_D%>","numeric");
+
+frmvalidator.addValidation("<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_UNICA_I%>","numeric");
+frmvalidator.addValidation("<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_UNICA_D%>","numeric");
 </script>
 </body>
 </html>
