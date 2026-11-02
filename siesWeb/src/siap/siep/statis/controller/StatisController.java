@@ -5325,7 +5325,7 @@ public class StatisController extends GenericController {
 				setCell(row, numCol++,
 						StringUtils.toStringJSP(DateUtils.getDateToString(lSog.getDataNascita(), "dd/MM/yyyy")),
 						csCenter);
-				setCell(row, numCol++, StringUtils.toStringJSP(mEvento.getDescrMotivo()), csCenter);
+				setCell(row, numCol++, StringUtils.toStringJSP(mEvento.getDescrProvvedimento()) + " " + StringUtils.toStringJSP(mEvento.getDescrMotivo()), csCenter); // 20261102-MEV_2026-105_INLAY
 				setCell(row, numCol++, StringUtils.toStringJSP(
 						DateUtils.getDateToString(mEvento.getDataEmissione(), "dd/MM/yyyy")), csCenter);
 				setCell(row, numCol++, StringUtils.toStringJSP(
