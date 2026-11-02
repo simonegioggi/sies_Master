@@ -65,15 +65,20 @@ public class ActReportExcelProvvedimenti94Ter extends ActProvvedimenti94TerBase 
 	}
 
 	private String coppia(String aAnno, String aNum) throws F3BException {
-		String lA = getRequestStringParameter(aAnno);
-		String lN = getRequestStringParameter(aNum);
+		String lA = getParam(aAnno);
+		String lN = getParam(aNum);
 		return (lA != null && lA.trim().length() > 0) ? lA.trim() + " / " + (lN == null ? "" : lN.trim()) : "-";
 	}
 
 	private String data(String aG, String aM, String aA, String aSfx) throws F3BException {
-		String lG = getRequestStringParameter(aG + "Emissione" + aSfx);
+		String lG = getParam(aG + "Emissione" + aSfx);
 		if (lG == null || lG.trim().length() == 0) return "-";
-		return lG.trim() + "/" + getRequestStringParameter(aM + "Emissione" + aSfx) + "/"
-				+ getRequestStringParameter(aA + "Emissione" + aSfx);
+		return lG.trim() + "/" + getParam(aM + "Emissione" + aSfx) + "/"
+				+ getParam(aA + "Emissione" + aSfx);
+	}
+
+	// 20261102-MEV_2026-105_INLAY: legge un parametro opzionale (null se assente)
+	private String getParam(String aName) {
+		return getRequest().getParameter(aName);
 	}
 }
