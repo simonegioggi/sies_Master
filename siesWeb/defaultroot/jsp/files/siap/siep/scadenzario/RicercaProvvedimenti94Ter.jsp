@@ -42,6 +42,36 @@
       </tr>
     </table>
     <br>
+<%-- 20261102-MEV_2026-105_INLAY: riepilogo filtri impostati nella form di ricerca --%>
+<%
+  String fAI = request.getParameter(ICostantiFascicoloSiep.CAMPO_CHIAVE_ANNO_INIZIALE), fNI = request.getParameter(ICostantiFascicoloSiep.CAMPO_CHIAVE_PROGR_INIZIALE);
+  String fAF = request.getParameter(ICostantiFascicoloSiep.CAMPO_CHIAVE_ANNO_FINALE), fNF = request.getParameter(ICostantiFascicoloSiep.CAMPO_CHIAVE_PROGR_FINALE);
+  String dI = "", dF = "";
+  if (request.getParameter("GiornoEmissioneIniziale") != null && request.getParameter("GiornoEmissioneIniziale").trim().length() > 0)
+    dI = request.getParameter("GiornoEmissioneIniziale") + "/" + request.getParameter("MeseEmissioneIniziale") + "/" + request.getParameter("AnnoEmissioneIniziale");
+  if (request.getParameter("GiornoEmissioneFinale") != null && request.getParameter("GiornoEmissioneFinale").trim().length() > 0)
+    dF = request.getParameter("GiornoEmissioneFinale") + "/" + request.getParameter("MeseEmissioneFinale") + "/" + request.getParameter("AnnoEmissioneFinale");
+  String[] tipi = request.getParameterValues("tipoNotifica");
+  StringBuilder tipiDescr = new StringBuilder();
+  for (int t = 0; tipi != null && t < tipi.length; t++) {
+    String d = "Tutti";
+    if ("0760".equals(tipi[t])) d = "OE con sospensione Libero";
+    else if ("0761".equals(tipi[t])) d = "OE con sospensione Custodia Cautelare Altra Causa AD";
+    else if ("0762".equals(tipi[t])) d = "OE con sospensione Custodia Cautelare Questa Causa AD";
+    tipiDescr.append(tipiDescr.length() > 0 ? "; " : "").append(d);
+  }
+  boolean fDefiniti = "S".equals(request.getParameter("estraiDefiniti"));
+%>
+    <table width="80%" cellpadding=2 cellspacing=2>
+      <tr><td class="Titolo" colspan="2">Filtri di ricerca impostati</td></tr>
+      <tr><td class="L" width="30%"><font class="label">Procedimenti da (Anno/Numero)</font></td><td class="l"><%=(fAI != null && fAI.trim().length() > 0) ? StringUtils.toStringJSP(fAI.trim() + " / " + fNI.trim()) : "-"%></td></tr>
+      <tr><td class="L"><font class="label">Procedimenti a (Anno/Numero)</font></td><td class="l"><%=(fAF != null && fAF.trim().length() > 0) ? StringUtils.toStringJSP(fAF.trim() + " / " + fNF.trim()) : "-"%></td></tr>
+      <tr><td class="L"><font class="label">Data emissione iniziale</font></td><td class="l"><%=dI.length() > 0 ? StringUtils.toStringJSP(dI) : "-"%></td></tr>
+      <tr><td class="L"><font class="label">Data emissione finale</font></td><td class="l"><%=dF.length() > 0 ? StringUtils.toStringJSP(dF) : "-"%></td></tr>
+      <tr><td class="L"><font class="label">Tipologia provvedimento</font></td><td class="l"><%=StringUtils.toStringJSP(tipiDescr.toString())%></td></tr>
+      <tr><td class="L"><font class="label">Estrazione anche procedimenti Definiti</font></td><td class="l"><%=fDefiniti ? "Si" : "No"%></td></tr>
+    </table>
+    <br>
     <font class="label">Totale provvedimenti estratti:</font>&nbsp;<font class="campo"><%=totale%></font>
     <br>
     <jsp:include page="<%=IWebConstants.PAGINAZIONE_RICERCA%>"></jsp:include>
@@ -98,7 +128,7 @@
         <td class=C><%=StringUtils.toStringJSP(lSog.getNome())%>&nbsp;</td>
         <td class=C><%=StringUtils.toStringJSP(lSog.getDescrComuneNascita())%>&nbsp;</td>
         <td class=C><%=StringUtils.toStringJSP(DateUtils.getDateToString(lSog.getDataNascita(), "dd/MM/yyyy"))%>&nbsp;</td>
-        <td class=C><%=StringUtils.toStringJSP(lEve.getDescrMotivo())%>&nbsp;</td>
+        <td class=C><%=StringUtils.toStringJSP(lEve.getDescrProvvedimento())%> <%=StringUtils.toStringJSP(lEve.getDescrMotivo())%>&nbsp;</td>
         <td class=C><%=StringUtils.toStringJSP(DateUtils.getDateToString(lEve.getDataEmissione(), "dd/MM/yyyy"))%>&nbsp;</td>
         <td class=C><%=lSca.getStatoProcedimento() != null ? StringUtils.toStringJSP(lSca.getStatoProcedimento().getDescrStatoProcedimento()) : ""%>&nbsp;</td>
         <td class=C>
