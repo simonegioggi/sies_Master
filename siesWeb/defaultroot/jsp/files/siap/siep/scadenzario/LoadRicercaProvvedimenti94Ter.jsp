@@ -133,18 +133,21 @@
     </table>
     <br>
     <table width="80%" cellspacing=2 cellpadding=2>
-      <tr><td class="Titolo" colspan="2">Tipologia Provvedimento</td></tr>
+      <tr><td class="Titolo" colspan="3">Tipologia Provvedimento</td></tr>
       <tr>
         <td width="15%" class="l">Tutti <input type="checkbox" checked name="tipoNotifica" onClick="selezionaTipologiaTutti();" value="Tutti"></td>
-        <td width="50%" class="l">OE con sospensione Libero ex art. 94 Ter DPR 309/90 ----------------------------------------------&gt; <input type="checkbox" name="tipoNotifica" onClick="selezionaTipologiaNoTutti();" value="0760"></td>
+        <td width="75%" class="l">OE con sospensione Libero ex art. 94 Ter DPR 309/90</td>
+        <td width="10%" class="l" align="center"><input type="checkbox" name="tipoNotifica" onClick="selezionaTipologiaNoTutti();" value="0760"></td>
       </tr>
       <tr>
-        <td width="15%">&nbsp;</td>
-        <td width="50%" class="l">OE con sospensione Custodia Cautelare Altra Causa Arresti Domiciliari ex art. 94 Ter DPR 309/90 --&gt; <input type="checkbox" name="tipoNotifica" onClick="selezionaTipologiaNoTutti();" value="0761"></td>
+        <td width="15%" class="l">&nbsp;</td>
+        <td width="75%" class="l">OE con sospensione Custodia Cautelare Altra Causa Arresti Domiciliari ex art. 94 Ter DPR 309/90</td>
+        <td width="10%" class="l" align="center"><input type="checkbox" name="tipoNotifica" onClick="selezionaTipologiaNoTutti();" value="0761"></td>
       </tr>
       <tr>
-        <td width="15%">&nbsp;</td>
-        <td width="50%" class="l">OE con sospensione Custodia Cautelare Questa Causa Arresti Domiciliari ex art. 94 Ter DPR 309/90 --&gt; <input type="checkbox" name="tipoNotifica" onClick="selezionaTipologiaNoTutti();" value="0762"></td>
+        <td width="15%" class="l">&nbsp;</td>
+        <td width="75%" class="l">OE con sospensione Custodia Cautelare Questa Causa Arresti Domiciliari ex art. 94 Ter DPR 309/90</td>
+        <td width="10%" class="l" align="center"><input type="checkbox" name="tipoNotifica" onClick="selezionaTipologiaNoTutti();" value="0762"></td>
       </tr>
     </table>
     <br>
