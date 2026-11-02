@@ -5257,7 +5257,7 @@ public class StatisController extends GenericController {
 
 	// 20261028-MEV_2026-105_INLAY: Ricerca provvedimenti ex art. 94 ter DPR 309/90 - report Excel
 	public void ExCreateReportProvvedimenti94Ter(ScadenzarioModel aScaMod, UfficioModel aUffMod,
-			HSSFWorkbook wb, Boolean aDefiniti, String aCodUfficio) throws F3BException {
+			HSSFWorkbook wb, Boolean aDefiniti, String aCodUfficio, java.util.List<String[]> aFiltri) throws F3BException { // 20261102-MEV_2026-105_INLAY
 
 		HSSFCellStyle csNull = wb.createCellStyle();
 		HSSFFont font = wb.createFont();
@@ -5278,7 +5278,12 @@ public class StatisController extends GenericController {
 
 		HSSFRow row = sheet.createRow(nRow);
 		setCell(row, 0, "Provvedimenti emessi ex art. 94 ter DPR 309/90", csNull);
-		nRow += 3;
+		nRow += 2; // 20261102-MEV_2026-105_INLAY
+		for (int f = 0; aFiltri != null && f < aFiltri.size(); f++) { // 20261102-MEV_2026-105_INLAY
+			row = sheet.createRow(nRow++); // 20261102-MEV_2026-105_INLAY
+			setCell(row, 0, aFiltri.get(f)[0] + ": " + aFiltri.get(f)[1], csNull); // 20261102-MEV_2026-105_INLAY
+		} // 20261102-MEV_2026-105_INLAY
+		nRow += 1; // 20261102-MEV_2026-105_INLAY
 
 		int numCol = 0;
 		sheet.setColumnWidth(numCol++, (15 * 256));
