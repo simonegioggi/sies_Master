@@ -3,6 +3,8 @@ package siap.siep.nuovaistanza.action;
 import java.math.BigDecimal;
 import java.util.Vector;
 
+import f3b.util.F3BException;
+import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.util.DecodificheUtils;
 import siap.sico.evento.action.ICostantiEvento;
@@ -20,23 +22,10 @@ import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.nuovaistanza.controller.INuovaIstanza;
 import siap.siep.nuovaistanza.model.NuovaIstanzaModel;
 import siap.siep.util.SIEPLookupRemote;
-import f3b.util.F3BException;
-import f3b.web.html.Option;
 
 /**
- * <p>
- * Title: ActLoadDettaglioNuovaIstanza
- * </p>
- * <p>
- * Description: Classe Action per la load dettaglio di NuovaIstanza
- * </p>
- * <p>
- * Copyright: Copyright (c) 2009
- * </p>
- * <p>
- * Company: Agile S.r.l.
- * </p>
- * 
+ * ActLoadDettaglioNuovaIstanza - Classe Action per la load dettaglio di NuovaIstanza
+ *
  * @version 5.0
  */
 public class ActLoadDettaglioNuovaIstanza extends ActionSiap implements ICostantiNuovaIstanza {
@@ -51,7 +40,7 @@ public class ActLoadDettaglioNuovaIstanza extends ActionSiap implements ICostant
 
 		INuovaIstanza lCtrl = SIEPLookupRemote.getNuovaIstanzaRemote();
 		NuovaIstanzaModel lNuoMod = null;
-		if (this.isRequestParameterNullObj("TipoVis"))
+		if (isRequestParameterNullObj("TipoVis") && !"1001".equals(lEveMod.getCodMotivo()))
 			lNuoMod = lCtrl.ExRicercaNuovaIstanzaByEveIdEvento(lEveMod.getIdEvento());
 		else
 			lNuoMod = lCtrl.ExRicercaNuovaIstanzaByEveIdEvento(lEveMod.getEveIdEvento());
@@ -73,8 +62,8 @@ public class ActLoadDettaglioNuovaIstanza extends ActionSiap implements ICostant
 			AvvocatoModel lAvv = lCtrlAvv.ExRicercaAvvocatoByKey(lNuoMod.getAvvIdAvvocato());
 			// 29/06/2011 Il Tipo Avvocato va recuperato da NuovaIstanza
 			if (lNuoMod.getTipoAvvocato() != null)
-				lAvv.setDescrTipo(DecodificheUtils.getDescbyCode(DecodificheManager.getInstance()
-						.getTipoAvvocato(), lNuoMod.getTipoAvvocato()));
+				lAvv.setDescrTipo(DecodificheUtils.getDescbyCode(
+						DecodificheManager.getInstance().getTipoAvvocato(), lNuoMod.getTipoAvvocato()));
 			lNuoMod.setAvvocato(lAvv);
 		}
 
@@ -87,8 +76,8 @@ public class ActLoadDettaglioNuovaIstanza extends ActionSiap implements ICostant
 			AvvocatoModel lAvvocato = new AvvocatoModel((AvvocatoModel) lAvvocati.get(0));
 			// 29/06/2011 Il Tipo Avvocato va recuperato da NuovaIstanza
 			if (lNuoMod.getTipoAvvocato() != null)
-				lAvvocato.setDescrTipo(DecodificheUtils.getDescbyCode(DecodificheManager.getInstance()
-						.getTipoAvvocato(), lNuoMod.getTipoAvvocato()));
+				lAvvocato.setDescrTipo(DecodificheUtils.getDescbyCode(
+						DecodificheManager.getInstance().getTipoAvvocato(), lNuoMod.getTipoAvvocato()));
 
 			lNuoMod.setAvvocatoPresentante(lAvvocato);
 		}
@@ -125,13 +114,14 @@ public class ActLoadDettaglioNuovaIstanza extends ActionSiap implements ICostant
 		}
 		setRequestAttribute("competenza", lCompetenza);
 
-		if (this.isRequestParameterNullObj("TipoVis")) {
+		if (isRequestParameterNullObj("TipoVis") && !"1001".equals(lEveMod.getCodMotivo())) {
 			return PG_LOAD_DETTAGLIONUOVAISTANZA;
 		} else {
-			if (this.getRequestStringParameter("TipoVis").equals("Inoltro")) {
+			if ("1001".equals(lEveMod.getCodMotivo())
+					|| getRequestStringParameter("TipoVis").equals("Inoltro")) {
 				return PG_LOAD_DETTAGLIO_INOLTRO_PM;
 			}
-			if (this.getRequestStringParameter("TipoVis").equals("Disposizione")) {
+			if (getRequestStringParameter("TipoVis").equals("Disposizione")) {
 				EventoNotificaModel lEveNotMod = lCtrlEvento.ExRicercaEventoNotificaByKey(lIdEvento);
 				setRequestAttribute("eventonotifica", lEveNotMod);
 				return PG_LOAD_DETTAGLIO_DISPOSIZIONI_PM;
