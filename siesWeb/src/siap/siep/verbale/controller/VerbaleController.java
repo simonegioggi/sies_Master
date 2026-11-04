@@ -966,7 +966,9 @@ public class VerbaleController extends SiapController implements IVerbale {
 					lFlagOE = "S";
 				} else if (lEveModOELSRSCUM != null && (lEveModOELSRSCUM.getCodMotivo().equals("0078"))
 						|| lEveModOELSRSCUM.getCodMotivo().equals("0079")
-						|| lEveModOELSRSCUM.getCodMotivo().equals("0080")) {
+						|| lEveModOELSRSCUM.getCodMotivo().equals("0080")
+						|| lEveModOELSRSCUM.getCodMotivo().equals("0763") || lEveModOELSRSCUM.getCodMotivo().equals("0764")
+						|| lEveModOELSRSCUM.getCodMotivo().equals("0767")) { // 20261104-MEV_2026-105_INLAY
 					lFlagRS = "S";
 				}
 				/*
