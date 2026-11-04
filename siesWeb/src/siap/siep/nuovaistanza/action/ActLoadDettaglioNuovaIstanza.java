@@ -40,6 +40,7 @@ public class ActLoadDettaglioNuovaIstanza extends ActionSiap implements ICostant
 
 		INuovaIstanza lCtrl = SIEPLookupRemote.getNuovaIstanzaRemote();
 		NuovaIstanzaModel lNuoMod = null;
+		// 20261104 [SG]: aggiunta and condition per evento di inoltro istanza
 		if (isRequestParameterNullObj("TipoVis") && !"1001".equals(lEveMod.getCodMotivo()))
 			lNuoMod = lCtrl.ExRicercaNuovaIstanzaByEveIdEvento(lEveMod.getIdEvento());
 		else
@@ -114,20 +115,23 @@ public class ActLoadDettaglioNuovaIstanza extends ActionSiap implements ICostant
 		}
 		setRequestAttribute("competenza", lCompetenza);
 
-		if (isRequestParameterNullObj("TipoVis") && !"1001".equals(lEveMod.getCodMotivo())) {
-			return PG_LOAD_DETTAGLIONUOVAISTANZA;
-		} else {
-			if ("1001".equals(lEveMod.getCodMotivo())
-					|| getRequestStringParameter("TipoVis").equals("Inoltro")) {
-				return PG_LOAD_DETTAGLIO_INOLTRO_PM;
-			}
-			if (getRequestStringParameter("TipoVis").equals("Disposizione")) {
-				EventoNotificaModel lEveNotMod = lCtrlEvento.ExRicercaEventoNotificaByKey(lIdEvento);
-				setRequestAttribute("eventonotifica", lEveNotMod);
-				return PG_LOAD_DETTAGLIO_DISPOSIZIONI_PM;
-			}
-			return PG_LOAD_DETTAGLIONUOVAISTANZA;
+		// if (isRequestParameterNullObj("TipoVis")) {
+		// return PG_LOAD_DETTAGLIONUOVAISTANZA;
+		// } else {
+		// 20261104 [SG]: aggiunta or condition per evento di inoltro istanza
+		if ("1001".equals(lEveMod.getCodMotivo()) || (!isRequestParameterNullObj("TipoVis")
+				&& getRequestStringParameter("TipoVis").equals("Inoltro"))) {
+			return PG_LOAD_DETTAGLIO_INOLTRO_PM;
 		}
+		if (!isRequestParameterNullObj("TipoVis")
+				&& getRequestStringParameter("TipoVis").equals("Disposizione")) {
+			EventoNotificaModel lEveNotMod = lCtrlEvento.ExRicercaEventoNotificaByKey(lIdEvento);
+			setRequestAttribute("eventonotifica", lEveNotMod);
+			return PG_LOAD_DETTAGLIO_DISPOSIZIONI_PM;
+		}
+		// pagina di ritorno
+		return PG_LOAD_DETTAGLIONUOVAISTANZA;
+		// }
 	}
 
 }
