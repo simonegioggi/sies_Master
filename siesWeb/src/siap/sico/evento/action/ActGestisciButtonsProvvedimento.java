@@ -143,7 +143,9 @@ public class ActGestisciButtonsProvvedimento
 										lAction = "siap.siep.ordineesecuzione.action.ActDettaglioLSArrestiDomiciliari";
 
 									if (lMotivoProvvedimento.equals("0078") || lMotivoProvvedimento.equals("0079")
-											|| lMotivoProvvedimento.equals("0080"))
+											|| lMotivoProvvedimento.equals("0080")
+											|| lMotivoProvvedimento.equals("0763") || lMotivoProvvedimento.equals("0764")
+											|| lMotivoProvvedimento.equals("0767")) // 20261104-MEV_2026-105_INLAY
 										lAction = "siap.siep.ordineesecuzione.action.ActDettaglioRevocaLSAltrePosizioni";
 
 									if (lMotivoProvvedimento.equals("0104"))
@@ -502,6 +504,13 @@ public class ActGestisciButtonsProvvedimento
 									lAction = "siap.siep.ordineesecuzione.action.ActStampaRevocaLSLibero";
 								if (lMotivoProvvedimento.equals("0079"))
 									lAction = "siap.siep.ordineesecuzione.action.ActStampaRevocaLSAltraCausa";
+								// 20261104-MEV_2026-105_INLAY: revoca sospensione ex art. 94 ter DPR 309/90
+								if (lMotivoProvvedimento.equals("0764"))
+									lAction = "siap.siep.ordineesecuzione.action.ActStampaRevocaLSLibero";
+								if (lMotivoProvvedimento.equals("0763"))
+									lAction = "siap.siep.ordineesecuzione.action.ActStampaRevocaLSAltraCausa";
+								if (lMotivoProvvedimento.equals("0767"))
+									lAction = "siap.siep.ordineesecuzione.action.ActStampaRevocaLSAltrePosizioni";
 								if (lMotivoProvvedimento.equals("0104"))
 									lAction = "siap.siep.ordineesecuzione.action.ActStampaLSLiberoIstanzaProdotta";
 								if (lMotivoProvvedimento.equals("0117"))
@@ -634,7 +643,9 @@ public class ActGestisciButtonsProvvedimento
 										lAction = "siap.siep.ordineesecuzione.action.ActDettaglioLSArrestiDomiciliari";
 
 									if (lMotivoProvvedimento.equals("0078") || lMotivoProvvedimento.equals("0079")
-											|| lMotivoProvvedimento.equals("0080"))
+											|| lMotivoProvvedimento.equals("0080")
+											|| lMotivoProvvedimento.equals("0763") || lMotivoProvvedimento.equals("0764")
+											|| lMotivoProvvedimento.equals("0767")) // 20261104-MEV_2026-105_INLAY
 										lAction = "siap.siep.ordineesecuzione.action.ActDettaglioRevocaLSAltrePosizioni";
 
 									if (lMotivoProvvedimento.equals("0104"))

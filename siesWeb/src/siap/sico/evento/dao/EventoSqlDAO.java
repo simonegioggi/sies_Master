@@ -992,7 +992,7 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		// '5509', '5510', '5511', '5512', '5513', '5506', '5507', '5508', '5525', '5526', '5530', '5531',
 		// '5532'))";
 		// Si aggiungono i codici '0661','0635','0642','0637'
-		lStatement += " AND (EVENTO.COD_MOTIVO IN ('0661','0635','0642','0637','0061','0062','0117','0105','0104','0063', '0364', '5509', '5510', '5511', '5512', '5513', '5506', '5507', '5508', '5525', '5526', '5530', '5531', '5532'))";
+		lStatement += " AND (EVENTO.COD_MOTIVO IN ('0661','0635','0642','0637','0061','0062','0117','0105','0104','0063', '0364', '5509', '5510', '5511', '5512', '5513', '5506', '5507', '5508', '5525', '5526', '5530', '5531', '5532', '0760', '0761', '0762'))"; // 20261104-MEV_2026-105_INLAY
 		// Ticket#20220712011 - FINE
 		lStatement += " AND (EVENTO.FLAG_DOCUMENTO_REGISTRATO ='S') ";
 		lStatement += " AND FAS_SIE_ID_FASCICOLO_SIEP = " + aIdFascicolo;
@@ -1007,7 +1007,7 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 
 		lStatement += " AND (EVENTO.COD_TIPO_EVENTO = '01')";
 		lStatement += " AND (EVENTO.COD_TIPO_PROVVEDIMENTO = '06')";
-		lStatement += " AND (EVENTO.COD_MOTIVO IN ('0061','0063','0105','0104','0117'))";
+		lStatement += " AND (EVENTO.COD_MOTIVO IN ('0061','0063','0105','0104','0117','0760','0761','0762'))"; // 20261104-MEV_2026-105_INLAY
 		lStatement += " AND (EVENTO.FLAG_DOCUMENTO_REGISTRATO ='N' OR EVENTO.FLAG_DOCUMENTO_REGISTRATO IS NULL)";
 		lStatement += " AND FAS_SIE_ID_FASCICOLO_SIEP = " + aIdFascicolo;
 
@@ -1021,7 +1021,7 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 
 		lStatement += " AND (EVENTO.COD_TIPO_EVENTO = '01')";
 		lStatement += " AND (EVENTO.COD_TIPO_PROVVEDIMENTO = '16')";
-		lStatement += " AND (EVENTO.COD_MOTIVO IN ('0078','0079','0080'))";
+		lStatement += " AND (EVENTO.COD_MOTIVO IN ('0078','0079','0080','0763','0764','0767'))"; // 20261104-MEV_2026-105_INLAY
 		lStatement += " AND (EVENTO.FLAG_DOCUMENTO_REGISTRATO ='N' OR EVENTO.FLAG_DOCUMENTO_REGISTRATO IS NULL)";
 		lStatement += " AND FAS_SIE_ID_FASCICOLO_SIEP = " + aIdFascicolo;
 
