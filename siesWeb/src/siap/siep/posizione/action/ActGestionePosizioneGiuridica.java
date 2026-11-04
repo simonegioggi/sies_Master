@@ -49,6 +49,10 @@ public class ActGestionePosizioneGiuridica extends ActionSiap implements ICostan
 		mappa.put("CL", "57"); // MEV_2026-105: TIPO_MISURA_CAUTELARE Custodia Cautelare per Altra Causa - AD ex art 94 ter [CL] ---> POSIZIONE_GIURIDICA [57] // 20261023-MEV_2026-105_INLAY
 		mappa.put("EA", "74"); // TIPO_MISURA_CAUTELARE / Espiazione pena per Altra Causa in Regime di Detenzione (cod. EA) --> POSIZIONE_GIURIDICA / Libero - Espiazione pena per Altra Causa in Regime di Detenzione (cod. 74)
 		mappa.put("EB", "75"); // TIPO_MISURA_CAUTELARE / Espiazione pena per Altra Causa  in Misura Sicurezza  Detentiva (Internato) (cod. EB) ---> POSIZIONE_GIURIDICA / Libero - Espiazione pena per Altra Causa  in Misura Sicurezza  Detentiva (Internato) (cod. 75)
+
+		
+		// MEV_2026_105 - Si aggiunge "CN"
+		mappa.put("CN", "57"); // TIPO_MISURA_CAUTELARE / 'Custodia Cautelare per Altra Causa - Regime di Arresti Domiciliari ex art 94 Ter DPR 309/90 (Cod. CN)  ---> POSIZIONE_GIURIDICA / Libero - Espiazione pena per Altra Causa - CC Regime di Arresti Domiciliari ex art 94 Ter DPR 309/90 (cod. 57)
 		
 		if (mappa.containsKey(code)) {
 			ret = mappa.get(code);

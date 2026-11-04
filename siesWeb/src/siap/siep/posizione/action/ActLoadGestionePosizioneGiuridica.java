@@ -29,19 +29,8 @@ import siap.siep.posizione.model.PosizioneGiuridicaModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * <p>
- * Title: ActLoadInserisciPosizioneGiuridica
- * </p>
- * <p>
- * Description: Classe Action per la load inserisci di PosizioneGiuridica
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ * ActLoadInserisciPosizioneGiuridica - Classe Action per la load inserisci di PosizioneGiuridica
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -52,7 +41,7 @@ public class ActLoadGestionePosizioneGiuridica extends ActionSiap implements ICo
 
 	/**
 	 * Funzione per aggiungere le Posizioni Giuridiche sulla vecchia maschera
-	 * 
+	 *
 	 * @param lFasMod
 	 * @throws F3BException
 	 */
@@ -110,7 +99,7 @@ public class ActLoadGestionePosizioneGiuridica extends ActionSiap implements ICo
 
 	/**
 	 * Funzione per aggiungere le Posizioni Giuridiche sulla nuova maschera
-	 * 
+	 *
 	 * @param lFasMod
 	 * @throws F3BException
 	 */
@@ -124,7 +113,7 @@ public class ActLoadGestionePosizioneGiuridica extends ActionSiap implements ICo
 
 	/**
 	 * Funzione per aggiungere le Posizioni Giuridiche sulla nuova maschera
-	 * 
+	 *
 	 * @param lFasMod
 	 * @throws F3BException
 	 */
@@ -138,7 +127,7 @@ public class ActLoadGestionePosizioneGiuridica extends ActionSiap implements ICo
 
 	/**
 	 * Funzione per aggiungere il TipoMisura sulla vecchia maschera
-	 * 
+	 *
 	 * @param lFasMod
 	 * @throws F3BException
 	 */
@@ -152,7 +141,7 @@ public class ActLoadGestionePosizioneGiuridica extends ActionSiap implements ICo
 
 	/**
 	 * Funzione per aggiungere il TipoMisura sulla nuova maschera
-	 * 
+	 *
 	 * @param lFasMod
 	 * @throws F3BException
 	 */
@@ -168,14 +157,18 @@ public class ActLoadGestionePosizioneGiuridica extends ActionSiap implements ICo
 		lOption = new Option(DecodificheManager.getInstance().getTipoMisuraCautelare(), lSelTipoMisCau);
 		lOption.setFilter(new String[] { "-", "CF", "CG" });
 		setRequestAttribute("tipoMisuraCautelareL2", lOption.toString());
-		lOption.setFilter(new String[] { "-", "CH", "CI", "CJ", "CK", "CL" }); // 20261023-MEV_2026-105_INLAY
+		// 20261023-MEV_2026-105_INLAY
+		lOption.setFilter(new String[] { "-", "CH", "CI", "CJ", "CK", "CL" });
+		// MEV_2026_105 - Si aggiunge "CN"
+		// lOption.setFilter(new String[] { "-", "CH", "CI", "CJ", "CK" });
+		lOption.setFilter(new String[] { "-", "CH", "CI", "CJ", "CK", "CL", "CN" });
 		setRequestAttribute("tipoMisuraCautelareL3", lOption.toString());
 
 	}
 
 	/**
 	 * Azione di Load Inserisci Posizione Giuridica
-	 * 
+	 *
 	 * @return Nome della pagina JSP su cui posizionarsi al termine dell'elaborazione
 	 * @throws Exception
 	 */
