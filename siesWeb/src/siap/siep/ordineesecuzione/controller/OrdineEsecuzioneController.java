@@ -6011,7 +6011,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 					lStatoProcMod.setCodStatoProcedimento("0121");
 				} else if (lCodPosizione.equals("76") || lCodPosizione.equals("77")
 						|| lCodPosizione.equals("78") || lCodPosizione.equals("79")
-						|| lCodPosizione.equals("80") || lCodPosizione.equals("81")) {
+						|| lCodPosizione.equals("80") || lCodPosizione.equals("81") || lCodPosizione.equals("57")) { // 20261105-MEV_2026-105_INLAY
 					lStatoProcMod.setCodStatoProcedimento("0120");
 				} else {
 					lStatoProcMod.setCodStatoProcedimento("0120");
@@ -6046,7 +6046,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 								|| lAltraCausa.getCodTipoPosGiuridica().equalsIgnoreCase("78")
 								|| lAltraCausa.getCodTipoPosGiuridica().equalsIgnoreCase("79")
 								|| lAltraCausa.getCodTipoPosGiuridica().equalsIgnoreCase("80")
-								|| lAltraCausa.getCodTipoPosGiuridica().equalsIgnoreCase("81"))) {
+								|| lAltraCausa.getCodTipoPosGiuridica().equalsIgnoreCase("81") || lAltraCausa.getCodTipoPosGiuridica().equalsIgnoreCase("57"))) { // 20261105-MEV_2026-105_INLAY
 					// lCodPosizione = "07";
 					lPosizione = "07";
 					lPosizioInsAgg = "S";
@@ -6095,7 +6095,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 				// inserisco la nuova posizione giuridica
 				if (lCodPosizione.equalsIgnoreCase("76") || lCodPosizione.equalsIgnoreCase("77")
 						|| lCodPosizione.equalsIgnoreCase("78") || lCodPosizione.equalsIgnoreCase("79")
-						|| lCodPosizione.equalsIgnoreCase("80") || lCodPosizione.equalsIgnoreCase("81")) {
+						|| lCodPosizione.equalsIgnoreCase("80") || lCodPosizione.equalsIgnoreCase("81") || lCodPosizione.equalsIgnoreCase("57")) { // 20261105-MEV_2026-105_INLAY
 					// inserisco la nuova posizione giuridica e' perfettamente uguale alla precedente, serve
 					// per mantenere lo storico di diverse posizioni giuridiche
 					// anche se hanno uguali valori(arresti domiciliari che si riferiscono a due ordinanze
@@ -6185,7 +6185,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 					&& (lCodPosizione.equalsIgnoreCase("76") || lCodPosizione.equalsIgnoreCase("77")
 							|| lCodPosizione.equalsIgnoreCase("78") || lCodPosizione.equalsIgnoreCase("79")
 							|| lCodPosizione.equalsIgnoreCase("80")
-							|| lCodPosizione.equalsIgnoreCase("81"))) {
+							|| lCodPosizione.equalsIgnoreCase("81") || lCodPosizione.equalsIgnoreCase("57"))) { // 20261105-MEV_2026-105_INLAY
 				// la nuova posizione giuridica e' perfettamente uguale alla precedente, serve per mantenere
 				// lo
 				// storico di diverse posizioni giuridiche
