@@ -25,7 +25,7 @@ import siap.siep.util.SIEPLookupRemote;
 
 /**
  * ActLoadDettaglioNuovaIstanza - Classe Action per la load dettaglio di NuovaIstanza
- * 
+ *
  * @version 5.0
  */
 public class ActLoadDettaglioNuovaIstanza extends ActionSiap implements ICostantiNuovaIstanza {
@@ -122,16 +122,16 @@ public class ActLoadDettaglioNuovaIstanza extends ActionSiap implements ICostant
 		if ("1001".equals(lEveMod.getCodMotivo()) || (!isRequestParameterNullObj("TipoVis")
 				&& getRequestStringParameter("TipoVis").equals("Inoltro"))) {
 			return PG_LOAD_DETTAGLIO_INOLTRO_PM;
-			}
+		}
 		if (!isRequestParameterNullObj("TipoVis")
 				&& getRequestStringParameter("TipoVis").equals("Disposizione")) {
-				EventoNotificaModel lEveNotMod = lCtrlEvento.ExRicercaEventoNotificaByKey(lIdEvento);
-				setRequestAttribute("eventonotifica", lEveNotMod);
-				return PG_LOAD_DETTAGLIO_DISPOSIZIONI_PM;
-			}
-		// pagina di ritorno
-			return PG_LOAD_DETTAGLIONUOVAISTANZA;
-		// }
+			EventoNotificaModel lEveNotMod = lCtrlEvento.ExRicercaEventoNotificaByKey(lIdEvento);
+			setRequestAttribute("eventonotifica", lEveNotMod);
+			return PG_LOAD_DETTAGLIO_DISPOSIZIONI_PM;
 		}
+		// pagina di ritorno
+		return PG_LOAD_DETTAGLIONUOVAISTANZA;
+		// }
+	}
 
 }
