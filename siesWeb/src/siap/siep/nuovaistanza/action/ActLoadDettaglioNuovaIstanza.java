@@ -115,10 +115,10 @@ public class ActLoadDettaglioNuovaIstanza extends ActionSiap implements ICostant
 		}
 		setRequestAttribute("competenza", lCompetenza);
 
+		// 20261104 [SG]: cambiata logica per evento di inoltro istanza
 		// if (isRequestParameterNullObj("TipoVis")) {
 		// return PG_LOAD_DETTAGLIONUOVAISTANZA;
 		// } else {
-		// 20261104 [SG]: aggiunta or condition per evento di inoltro istanza
 		if ("1001".equals(lEveMod.getCodMotivo()) || (!isRequestParameterNullObj("TipoVis")
 				&& getRequestStringParameter("TipoVis").equals("Inoltro"))) {
 			return PG_LOAD_DETTAGLIO_INOLTRO_PM;
