@@ -121,7 +121,7 @@ public class ActStampaRevocaLSAltrePosizioni extends ActionSiap implements ICost
 							&& !lPos.getAltraCausa().getCodTipoPosGiuridica().equals("78")
 							&& !lPos.getAltraCausa().getCodTipoPosGiuridica().equals("79")
 							&& !lPos.getAltraCausa().getCodTipoPosGiuridica().equals("80")
-							&& !lPos.getAltraCausa().getCodTipoPosGiuridica().equals("81")
+							&& !lPos.getAltraCausa().getCodTipoPosGiuridica().equals("81") && !lPos.getAltraCausa().getCodTipoPosGiuridica().equals("57") // 20261105-MEV_2026-105_INLAY
 							&& !lPos.getAltraCausa().getCodTipoPosGiuridica().equals("76"))) {
 				lTemplate = "7";
 			}
@@ -151,7 +151,7 @@ public class ActStampaRevocaLSAltrePosizioni extends ActionSiap implements ICost
 					&& (lPos.getAltraCausa().getCodTipoPosGiuridica().equals("78")
 							|| lPos.getAltraCausa().getCodTipoPosGiuridica().equals("79")
 							|| lPos.getAltraCausa().getCodTipoPosGiuridica().equals("80")
-							|| lPos.getAltraCausa().getCodTipoPosGiuridica().equals("81"))) {
+							|| lPos.getAltraCausa().getCodTipoPosGiuridica().equals("81") || lPos.getAltraCausa().getCodTipoPosGiuridica().equals("57"))) { // 20261105-MEV_2026-105_INLAY
 				lTemplate = "9";
 			} else if (lPos.getPosizioneGiuridica() != null && lPos.getPosizioneGiuridica().isLibero()
 					|| (lPos.getAltraCausa() != null && lPos.getAltraCausa().getCodTipoPosGiuridica() != null
@@ -159,7 +159,7 @@ public class ActStampaRevocaLSAltrePosizioni extends ActionSiap implements ICost
 							&& !lPos.getAltraCausa().getCodTipoPosGiuridica().equals("78")
 							&& !lPos.getAltraCausa().getCodTipoPosGiuridica().equals("79")
 							&& !lPos.getAltraCausa().getCodTipoPosGiuridica().equals("80")
-							&& !lPos.getAltraCausa().getCodTipoPosGiuridica().equals("81")
+							&& !lPos.getAltraCausa().getCodTipoPosGiuridica().equals("81") && !lPos.getAltraCausa().getCodTipoPosGiuridica().equals("57") // 20261105-MEV_2026-105_INLAY
 							&& !lPos.getAltraCausa().getCodTipoPosGiuridica().equals("76"))) {
 				lTemplate = "5";
 			}
@@ -184,7 +184,7 @@ public class ActStampaRevocaLSAltrePosizioni extends ActionSiap implements ICost
 				} else if (lPos.getAltraCausa().getCodTipoPosGiuridica().equals("78")
 						|| lPos.getAltraCausa().getCodTipoPosGiuridica().equals("79")
 						|| lPos.getAltraCausa().getCodTipoPosGiuridica().equals("80")
-						|| lPos.getAltraCausa().getCodTipoPosGiuridica().equals("81")) {
+						|| lPos.getAltraCausa().getCodTipoPosGiuridica().equals("81") || lPos.getAltraCausa().getCodTipoPosGiuridica().equals("57")) { // 20261105-MEV_2026-105_INLAY
 					lTemplate = "9";
 				}
 			}

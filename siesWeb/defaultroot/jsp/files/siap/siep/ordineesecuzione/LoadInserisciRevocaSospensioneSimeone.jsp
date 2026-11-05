@@ -282,7 +282,7 @@
         {
            nodeor.style.visibility='visible';
            noderevpm.style.visibility='hidden';
-          if((pos == '49') || (altraca == 'S' && (codTipoPosGiuridica != '78' && codTipoPosGiuridica != '79' && codTipoPosGiuridica != '80' && codTipoPosGiuridica != '81')))
+          if((pos == '49') || (altraca == 'S' && (codTipoPosGiuridica != '78' && codTipoPosGiuridica != '79' && codTipoPosGiuridica != '80' && codTipoPosGiuridica != '81' && codTipoPosGiuridica != '57'))) // 20261105-MEV_2026-105_INLAY
           {
            nodeist.style.visibility='visible';
            nodeautori.style.visibility='hidden';
@@ -322,7 +322,7 @@
           nodeor.style.visibility='hidden';
           noderevpm.style.visibility='hidden';
 
-          if(altraca == 'S' && (codTipoPosGiuridica != '78' && codTipoPosGiuridica != '79' && codTipoPosGiuridica != '80' && codTipoPosGiuridica != '81'))
+          if(altraca == 'S' && (codTipoPosGiuridica != '78' && codTipoPosGiuridica != '79' && codTipoPosGiuridica != '80' && codTipoPosGiuridica != '81' && codTipoPosGiuridica != '57')) // 20261105-MEV_2026-105_INLAY
           {
             nodeist.style.visibility='visible';
             nodeautori.style.visibility='hidden';

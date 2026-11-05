@@ -508,7 +508,7 @@ public class ActGestisciButtonsProvvedimento
 								if (lMotivoProvvedimento.equals("0764"))
 									lAction = "siap.siep.ordineesecuzione.action.ActStampaRevocaLSLibero";
 								if (lMotivoProvvedimento.equals("0763"))
-									lAction = "siap.siep.ordineesecuzione.action.ActStampaRevocaLSAltraCausa";
+									lAction = "siap.siep.ordineesecuzione.action.ActStampaRevocaLSAltrePosizioni"; // 20261105-MEV_2026-105_INLAY
 								if (lMotivoProvvedimento.equals("0767"))
 									lAction = "siap.siep.ordineesecuzione.action.ActStampaRevocaLSAltrePosizioni";
 								if (lMotivoProvvedimento.equals("0104"))

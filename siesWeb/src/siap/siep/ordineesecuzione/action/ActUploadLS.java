@@ -75,7 +75,7 @@ public class ActUploadLS extends ActionSiap
 		    	  if (codPosCorrente.equals("07") && lPos.getAltraCausa()!=null && 
 			    		  (lPos.getAltraCausa().getCodTipoPosGiuridica().equals("78") || lPos.getAltraCausa().getCodTipoPosGiuridica().equals("79") || 
 			    				  lPos.getAltraCausa().getCodTipoPosGiuridica().equals("80") ||
-			    				  lPos.getAltraCausa().getCodTipoPosGiuridica().equals("81")))
+			    				  lPos.getAltraCausa().getCodTipoPosGiuridica().equals("81") || lPos.getAltraCausa().getCodTipoPosGiuridica().equals("57"))) // 20261105-MEV_2026-105_INLAY
 			      {
 			    	  lPos.getPosizioneGiuridica().setCodMaschera("L3");
 			    	  //lPos.getPosizioneGiuridica().setAltCauIdAltraCausa(null);
@@ -110,7 +110,7 @@ public class ActUploadLS extends ActionSiap
 		      if(codPosCorrente!=null && codPosCorrente.equalsIgnoreCase("07") && lPos.getAltraCausa()!=null && lPos.getAltraCausa().getCodTipoPosGiuridica()!=null &&
 		    	  (lPos.getAltraCausa().getCodTipoPosGiuridica().equalsIgnoreCase("76") || lPos.getAltraCausa().getCodTipoPosGiuridica().equalsIgnoreCase("77") ||  
 		    	  lPos.getAltraCausa().getCodTipoPosGiuridica().equalsIgnoreCase("78") || lPos.getAltraCausa().getCodTipoPosGiuridica().equalsIgnoreCase("79") || 
-		    	  lPos.getAltraCausa().getCodTipoPosGiuridica().equalsIgnoreCase("80") || lPos.getAltraCausa().getCodTipoPosGiuridica().equalsIgnoreCase("81")) ) {
+		    	  lPos.getAltraCausa().getCodTipoPosGiuridica().equalsIgnoreCase("80") || lPos.getAltraCausa().getCodTipoPosGiuridica().equalsIgnoreCase("81") || lPos.getAltraCausa().getCodTipoPosGiuridica().equalsIgnoreCase("57")) ) { // 20261105-MEV_2026-105_INLAY
 		          //inserisco la nuova posizione giuridica è perfettamente uguale alla precedente, serve per mantenere lo storico di diverse posizioni giuridiche 
 		          //anche se hanno uguali valori(arresti domiciliari che si riferiscono a due ordinanze diverse ==> cambia solo il periodo)
 		    	  lFascMod.setFlagAltraCausa("S");
