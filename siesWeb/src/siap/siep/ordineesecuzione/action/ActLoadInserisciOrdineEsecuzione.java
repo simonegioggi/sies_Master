@@ -150,7 +150,8 @@ public class ActLoadInserisciOrdineEsecuzione extends ActionSiap implements ICos
 		if (lFascMod.getFlagAltraCausa() != null && lFascMod.getFlagAltraCausa().equals("S")) {
 			// modifica relativa al tipo istituto
 			if (lPos.getAltraCausa() != null && lPos.getAltraCausa().getCodTipoPosGiuridica() != null
-					&& lPos.getAltraCausa().getCodTipoPosGiuridica().equals("23")) {
+					&& (lPos.getAltraCausa().getCodTipoPosGiuridica().equals("23")
+							|| lPos.getAltraCausa().getCodTipoPosGiuridica().equals("57"))) { // 20261117-MEV_2026-105_INLAY
 				lOption = new Option(DecodificheManager.getInstance().getTipoAutorita());
 			} else {
 				if (lPos.getAltraCausa() != null && lPos.getAltraCausa().getIstitutoDetenzione() != null) {
