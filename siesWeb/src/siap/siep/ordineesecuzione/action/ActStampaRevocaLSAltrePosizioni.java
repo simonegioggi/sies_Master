@@ -99,6 +99,7 @@ public class ActStampaRevocaLSAltrePosizioni extends ActionSiap implements ICost
 							|| lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("82")
 							|| lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("83")
 							|| lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("84")
+							|| lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("59") // 20261118-MEV_2026-105_INLAY
 							|| lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("77")
 							|| lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("78")
 							|| lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("79")
@@ -153,6 +154,8 @@ public class ActStampaRevocaLSAltrePosizioni extends ActionSiap implements ICost
 							|| lPos.getAltraCausa().getCodTipoPosGiuridica().equals("80")
 							|| lPos.getAltraCausa().getCodTipoPosGiuridica().equals("81") || lPos.getAltraCausa().getCodTipoPosGiuridica().equals("57"))) { // 20261105-MEV_2026-105_INLAY
 				lTemplate = "9";
+			} else if (isPosArrestiDomRevoca(lPos)) { // 20261118-MEV_2026-105_INLAY
+				lTemplate = "0"; // 20261118-MEV_2026-105_INLAY
 			} else if (lPos.getPosizioneGiuridica() != null && lPos.getPosizioneGiuridica().isLibero()
 					|| (lPos.getAltraCausa() != null && lPos.getAltraCausa().getCodTipoPosGiuridica() != null
 							&& !lPos.getAltraCausa().getCodTipoPosGiuridica().equals("77")
@@ -190,6 +193,8 @@ public class ActStampaRevocaLSAltrePosizioni extends ActionSiap implements ICost
 			}
 			// 20200129 [SG]: segnalazione post collaudo 11.3: se soggetto è libero allora deve uscire
 			// template "SIEP_RS_REVO.rtf"
+			else if (isPosArrestiDomRevoca(lPos)) // 20261118-MEV_2026-105_INLAY
+				lTemplate = "0"; // 20261118-MEV_2026-105_INLAY
 			else if (lPos.getPosizioneGiuridica() != null && lPos.getPosizioneGiuridica().isLibero())
 				lTemplate = "8";
 		}
@@ -215,4 +220,11 @@ public class ActStampaRevocaLSAltrePosizioni extends ActionSiap implements ICost
 		return IWebConstants.PG_DOWNLOAD;
 	}
 
+
+	// 20261118-MEV_2026-105_INLAY: posizioni 84 (art. 89) e 59 (94 ter) senza altra causa: template RS-024/RS-024_94T (flag 0)
+	private boolean isPosArrestiDomRevoca(PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lPos) {
+		return (lPos.getAltraCausa() == null || lPos.getAltraCausa().getIdAltraCausa() == null) && lPos.getPosizioneGiuridica() != null
+				&& ("84".equals(lPos.getPosizioneGiuridica().getCodPosizioneGiuridica())
+						|| "59".equals(lPos.getPosizioneGiuridica().getCodPosizioneGiuridica()));
+	}
 }
