@@ -2550,10 +2550,12 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 		 * ;
 		 */
 		// NUOVA INFRASTRUTTURA: modifica alla query per ottimizzazione in due punti
-		lStatement += "(SELECT id_evento FROM evento WHERE data_inserimento in (select max(data_inserimento) FROM evento WHERE cod_tipo_provvedimento IN ('02', '03', '14') AND FAS_SIE_ID_FASCICOLO_SIEP = '"
+		// 20261118-MEV_2026-105_INLAY: EVENTO.FAS_SIE_ID_FASCICOLO_SIEP puo' essere NULL (es. provvedimenti 03 inseriti da SIUS):
+		// gli eventi si legano al procedimento SIEP tramite FAS_SIU_ID_FASCICOLO_SIUS
+		lStatement += "(SELECT id_evento FROM evento WHERE cod_tipo_provvedimento IN ('02', '03', '14') AND data_inserimento in (select max(data_inserimento) FROM evento WHERE cod_tipo_provvedimento IN ('02', '03', '14') AND FAS_SIU_ID_FASCICOLO_SIUS IN (SELECT ID_FASCICOLO_SIUS FROM FASCICOLO_SIUS WHERE FAS_SIE_ID_FASCICOLO_SIEP = '"
 				+ lId_FascicoloSiep
-				+ "' group by fas_siu_id_fascicolo_sius) AND FAS_SIE_ID_FASCICOLO_SIEP = '"
-				+ lId_FascicoloSiep + "') EV2, EVENTO EV ";
+				+ "') group by fas_siu_id_fascicolo_sius) AND FAS_SIU_ID_FASCICOLO_SIUS IN (SELECT ID_FASCICOLO_SIUS FROM FASCICOLO_SIUS WHERE FAS_SIE_ID_FASCICOLO_SIEP = '"
+				+ lId_FascicoloSiep + "')) EV2, EVENTO EV ";
 		lStatement += "WHERE FASC.FAS_SIE_ID_FASCICOLO_SIEP = '" + lId_FascicoloSiep + "' ";
 		lStatement += "AND FASC.ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS ";
 		lStatement += "AND FASC.SOG_ID_SOGGETTO = SOGG.ID_SOGGETTO ";
