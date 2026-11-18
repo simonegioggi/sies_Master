@@ -63,6 +63,21 @@ public class ActOrdineEsecuzione extends ActionSiap implements ICostantiOrdineEs
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
+	// 20261118-MEV_2026-105_INLAY
+	private static String getCodMotivo94Ter(String aSigla) {
+		if ("LS-LIB-94T".equals(aSigla))
+			return "0760";
+		if ("OE-S-AC-94T".equals(aSigla))
+			return "0761";
+		if ("OE-CS-94T".equals(aSigla))
+			return "0762";
+		if ("OE-DET-AC-CC-94T".equals(aSigla))
+			return "0765";
+		if ("OE-QC-94T".equals(aSigla))
+			return "0766";
+		return null;
+	}
+
 	/**
 	 * Imposta tutti gli attributi dell'Evento
 	 * 
@@ -81,6 +96,10 @@ public class ActOrdineEsecuzione extends ActionSiap implements ICostantiOrdineEs
 		DecodificheModel lDecMod = lDec.ExRicercaDecodificheByHighValue(aEvento.getDescrMotivo());
 		if (lDecMod != null && lDecMod.getCode() != null)
 			lEve.setCodMotivo(lDecMod.getCode());
+		// 20261118-MEV_2026-105_INLAY: motivi art. 94 ter risolti per codice, le sigle su CG_REF_CODES non sono univoche
+		String lCodMotivo94Ter = getCodMotivo94Ter(aEvento.getDescrMotivo());
+		if (lCodMotivo94Ter != null)
+			lEve.setCodMotivo(lCodMotivo94Ter);
 
 		FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 		lEve.setFasSieIdFascicoloSiep(lFascicoloModel.getIdFascicoloSiep());
