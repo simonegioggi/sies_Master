@@ -99,9 +99,9 @@
 					  document.LoadInserisciOrdineEsecuzione.<%=ICostantiPenaResidua.CAMPO_GIORNO_DATA_FINE%>.value='0'+document.LoadInserisciOrdineEsecuzione.<%=ICostantiPenaResidua.CAMPO_GIORNO_DATA_FINE%>.value;
 				  if (document.LoadInserisciOrdineEsecuzione.<%=ICostantiPenaResidua.CAMPO_MESE_DATA_FINE%>.value.length==1)
 					  document.LoadInserisciOrdineEsecuzione.<%=ICostantiPenaResidua.CAMPO_MESE_DATA_FINE%>.value='0'+document.LoadInserisciOrdineEsecuzione.<%=ICostantiPenaResidua.CAMPO_MESE_DATA_FINE%>.value;
-		
+
 				  var data_to_verifica = document.LoadInserisciOrdineEsecuzione.<%=ICostantiPenaResidua.CAMPO_GIORNO_DATA_FINE%>.value+'/'+document.LoadInserisciOrdineEsecuzione.<%=ICostantiPenaResidua.CAMPO_MESE_DATA_FINE%>.value+'/'+document.LoadInserisciOrdineEsecuzione.<%=ICostantiPenaResidua.CAMPO_ANNO_DATA_FINE%>.value;
-		
+
 		      if (!ControllaData(data_to_verifica) )
 				  {
 		                       alert('Data fine pena non valida');
@@ -161,18 +161,18 @@
        		}
 		<%
 		}
-		if (lPosizione.getCodPosizioneGiuridica().equals("07") 		||
-				lPosizione.getCodPosizioneGiuridica().equals("10")  || 
-		    	lPosizione.getCodPosizioneGiuridica().equals("02")  || 
-		    	lPosizione.getCodPosizioneGiuridica().equals("04")  || 
-		    	lPosizione.getCodPosizioneGiuridica().equals("16")  || 
-		    	lPosizione.getCodPosizioneGiuridica().equals("20")  || 
-		    	lPosizione.getCodPosizioneGiuridica().equals("46")  || 
-		    	lPosizione.getCodPosizioneGiuridica().equals("47")  || 
-		    	lPosizione.getCodPosizioneGiuridica().equals("12")  ||
-		    	lPosizione.getCodPosizioneGiuridica().equals("71")  ||
+		if (lPosizione.getCodPosizioneGiuridica().equals("07") ||
+				lPosizione.getCodPosizioneGiuridica().equals("10") ||
+				lPosizione.getCodPosizioneGiuridica().equals("02") ||
+				lPosizione.getCodPosizioneGiuridica().equals("04") ||
+				lPosizione.getCodPosizioneGiuridica().equals("16") ||
+				lPosizione.getCodPosizioneGiuridica().equals("20") ||
+				lPosizione.getCodPosizioneGiuridica().equals("46") ||
+				lPosizione.getCodPosizioneGiuridica().equals("47") ||
+				lPosizione.getCodPosizioneGiuridica().equals("12") ||
+				lPosizione.getCodPosizioneGiuridica().equals("71") ||
 				// MEV10-s3: aggiunte altre posizioni giuridiche
-				lPosizione.getCodPosizioneGiuridica().equals("72")  ||
+				lPosizione.getCodPosizioneGiuridica().equals("72") ||
 				lPosizione.getCodPosizioneGiuridica().equals("58") || // 20261118-MEV_2026-105_INLAY
 				lPosizione.getCodPosizioneGiuridica().equals("70")) {
 			if (lFascicoloAssociato.getFlagAltraCausa()== null 		||
@@ -295,14 +295,14 @@
 		  		alert("Le informazioni relative al fascicolo Bdmc se presenti vanno riempite tutte");
 		  		return false;
 			}
-		  		
+
 			if ((document.LoadInserisciOrdineEsecuzione.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>_BDMC.value != "-" ||
 					document.LoadInserisciOrdineEsecuzione.<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E %>_BDMC.value != "") &&
 					document.LoadInserisciOrdineEsecuzione.annoBdmc.value == "") {
 		  		alert("Destinatario per notifica B.D.M.C. puo' essere inserito solo in presenza di un associazione con un Fascicolo B.D.M.C.");
 		  		return false;
-			}	
-		  				
+			}
+
 		  	if (document.LoadInserisciOrdineEsecuzione.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>_BDMC.value != "-" &&
 		  			document.LoadInserisciOrdineEsecuzione.<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E %>_BDMC.value == "") {
 		  		alert("Inserire la sede per notifica B.D.M.C.");
@@ -393,7 +393,7 @@
 <%
               	} else {
 %>
-					DETENUTO PER ALTRA CAUSA 
+					DETENUTO PER ALTRA CAUSA
 <%
               	}
 
@@ -470,14 +470,14 @@
 
         // Nel Caso di Posizione Giuridica ARRESTI DOMICILIARI ( 02, 04)
         // oppure REGIME DI PERMANENZA IN CASA (71)
-        if(lPosizione.getCodPosizioneGiuridica() != null && 
-           ( lPosizione.getCodPosizioneGiuridica().equals("02") || 
-        	 lPosizione.getCodPosizioneGiuridica().equals("04") ||
-        	 lPosizione.getCodPosizioneGiuridica().equals("71") ||
-       		 // MEV10-s3: aggiunte altre posizioni giuridiche
-       		 lPosizione.getCodPosizioneGiuridica().equals("72") ||
-       		 lPosizione.getCodPosizioneGiuridica().equals("58") || // 20261118-MEV_2026-105_INLAY
-       		 lPosizione.getCodPosizioneGiuridica().equals("70"))
+        if(lPosizione.getCodPosizioneGiuridica() != null &&
+           ( lPosizione.getCodPosizioneGiuridica().equals("02") ||
+             lPosizione.getCodPosizioneGiuridica().equals("04") ||
+             lPosizione.getCodPosizioneGiuridica().equals("71") ||
+             // MEV10-s3: aggiunte altre posizioni giuridiche
+             lPosizione.getCodPosizioneGiuridica().equals("72") ||
+             lPosizione.getCodPosizioneGiuridica().equals("58") || // 20261118-MEV_2026-105_INLAY
+             lPosizione.getCodPosizioneGiuridica().equals("70"))
            )
         {
           if(lLuogoDetenzione.getAltroLuogo() != null)
@@ -660,7 +660,7 @@
         </td>
       </tr>
      </table>
-     
+
      <table width=100%>
        <tr><td class="Titolo" colspan=6> Magistrato </td></tr>
        <tr>
@@ -678,18 +678,18 @@
       </tr>
     </table>
 
-    
+
    <!-- ==================================================================== -->
    <!-- Inizio istruzioni x integrazione Bdmc Carlo                          -->
    <!-- Se detenuto altra causa o Libero                                     -->
    <!-- ==================================================================== -->
-   <% if (   ( lFascicoloAssociato.getFlagAltraCausa()!=null && lFascicoloAssociato.getFlagAltraCausa().equals("S")) 
-          || ( lPosizione.getCodPosizioneGiuridica() != null && lPosizione.getCodPosizioneGiuridica().equals("07") ) 
+   <% if (   ( lFascicoloAssociato.getFlagAltraCausa()!=null && lFascicoloAssociato.getFlagAltraCausa().equals("S"))
+          || ( lPosizione.getCodPosizioneGiuridica() != null && lPosizione.getCodPosizioneGiuridica().equals("07") )
           || (lPosizione.getCodPosizioneGiuridica() != null && lPosizione.getCodPosizioneGiuridica().equals("10")  )
          )
    {  // Libero o detenuto altra causa:
    %>
-    <table>   
+    <table>
       <tr>
         <td class="l" id="VisualizzaBDMC" style="display:block" >
           <!--input type="button" name="vedi" value="Espandi BDMC (Banca Dati Misure Cautelari)" onClick="javascript:VisualizzaBDMC();"-->
@@ -702,10 +702,10 @@
       </tr>
     </table>
    <% } %>
-   
+
 <div id="divDatiBDMC" style="display:none" >
-   <% if (   ( lFascicoloAssociato.getFlagAltraCausa()!=null && lFascicoloAssociato.getFlagAltraCausa().equals("S")) 
-          || ( lPosizione.getCodPosizioneGiuridica() != null && lPosizione.getCodPosizioneGiuridica().equals("07") ) 
+   <% if (   ( lFascicoloAssociato.getFlagAltraCausa()!=null && lFascicoloAssociato.getFlagAltraCausa().equals("S"))
+          || ( lPosizione.getCodPosizioneGiuridica() != null && lPosizione.getCodPosizioneGiuridica().equals("07") )
           || (lPosizione.getCodPosizioneGiuridica() != null && lPosizione.getCodPosizioneGiuridica().equals("10"))
          )
    {  // Libero o detenuto altra causa:
@@ -718,7 +718,7 @@
            <input  title="annoBdmc"  type="text" name="annoBdmc" maxlength="4" size="4">
          / <input  title= "numeroBdmc"    type="text" name="numeroBdmc"        maxlength="6" size="6">
         </td>
-      
+
         <td class="l">Autorità </td>
         <td class="L" >
           <select id="autbdmc" Title="Autorità Bdmc" name="autoritaBdmc">
@@ -736,16 +736,16 @@
           </a>
         </td>
       </tr>
-    </table>  
+    </table>
    <%} %>
-   
-    
+
+
     <!-- Se Libero ma Detenuto Altra Causa -->
-    <% if (   (lFascicoloAssociato.getFlagAltraCausa()!=null && lFascicoloAssociato.getFlagAltraCausa().equals("S") ) 
-           && (   ( lPosizione.getCodPosizioneGiuridica() != null && lPosizione.getCodPosizioneGiuridica().equals("07") ) 
+    <% if (   (lFascicoloAssociato.getFlagAltraCausa()!=null && lFascicoloAssociato.getFlagAltraCausa().equals("S") )
+           && (   ( lPosizione.getCodPosizioneGiuridica() != null && lPosizione.getCodPosizioneGiuridica().equals("07") )
                || ( lPosizione.getCodPosizioneGiuridica() != null && lPosizione.getCodPosizioneGiuridica().equals("10") )
               )
-          )  
+          )
     { %>
     <table width=100%>
       <tr>
@@ -758,10 +758,10 @@
       </tr>
     </table>
     <%} %>
-   
+
     <!-- Se Libero ma NON detenuto altra causa -->
-    <% if (   (lFascicoloAssociato.getFlagAltraCausa()!=null && !lFascicoloAssociato.getFlagAltraCausa().equals("S")) 
-           && (    ( lPosizione.getCodPosizioneGiuridica() != null && lPosizione.getCodPosizioneGiuridica().equals("07") ) 
+    <% if (   (lFascicoloAssociato.getFlagAltraCausa()!=null && !lFascicoloAssociato.getFlagAltraCausa().equals("S"))
+           && (    ( lPosizione.getCodPosizioneGiuridica() != null && lPosizione.getCodPosizioneGiuridica().equals("07") )
                 || (lPosizione.getCodPosizioneGiuridica() != null && lPosizione.getCodPosizioneGiuridica().equals("10"))
               )
           )
@@ -781,14 +781,14 @@
       </tr>
     </table>
     <%} %>
-   
+
     <!-- ================================== -->
     <!-- Destinatario per Notifica B.D.M.C. -->
     <!-- ================================== -->
-    <% 
-    if (   ( lPosizione.getCodPosizioneGiuridica() != null && lPosizione.getCodPosizioneGiuridica().equals("07") ) 
+    <%
+    if (   ( lPosizione.getCodPosizioneGiuridica() != null && lPosizione.getCodPosizioneGiuridica().equals("07") )
         || ( lPosizione.getCodPosizioneGiuridica() != null && lPosizione.getCodPosizioneGiuridica().equals("10") )
-       )  
+       )
     {   %>
     <table width=100%>
       <tr>
@@ -821,8 +821,8 @@
    <!-- ==================================================================== -->
    <!-- fine istruzioni x integrazione Bdmc Carlo                            -->
    <!-- ==================================================================== -->
-</div>   
-   
+</div>
+
     <table width=100%>
     <tr>
       <td class="Titolo" colspan=6>Destinatario per Esecuzione </td>
@@ -831,7 +831,7 @@
 <%if(lFascicoloAssociato.getFlagAltraCausa()!=null && lFascicoloAssociato.getFlagAltraCausa().equals("S") )
 {%>
 <tr>
-	<%if(lAltraCausa.getCodTipoPosGiuridica().equals("74") || lAltraCausa.getCodTipoPosGiuridica().equals("75") 
+	<%if(lAltraCausa.getCodTipoPosGiuridica().equals("74") || lAltraCausa.getCodTipoPosGiuridica().equals("75")
     		|| lAltraCausa.getCodTipoPosGiuridica().equals("76") || lAltraCausa.getCodTipoPosGiuridica().equals("77"))
 	{%>
         	<td class="l" width=20%>Istituto di Detenzione </td>
@@ -871,7 +871,7 @@
 
 <%}else{
 if(posizioneluogoaltra != null && posizioneluogoaltra.getAltraCausa() != null && posizioneluogoaltra.getAltraCausa().getIstitutoDetenzione() != null)
- { 
+ {
 %>
               <td class="l">
               <input readonly Title="Istituto" name="Comune" value="<%=StringUtils.toStringJSP(posizioneluogoaltra.getAltraCausa().getIstitutoDetenzione().getDescrTipoIstituto())%> di <%=StringUtils.toStringJSP(posizioneluogoaltra.getAltraCausa().getIstitutoDetenzione().getDescrComune())%>" size=50>
@@ -899,20 +899,20 @@ if(posizioneluogoaltra != null && posizioneluogoaltra.getAltraCausa() != null &&
 
 <%}else{%>
       <td class="l" width=20%>Autorità Destinazione <font class=ob>(*)</font> </td>
-<%if( lPosizione.getCodPosizioneGiuridica().equals("07") || 
-	  lPosizione.getCodPosizioneGiuridica().equals("10") || 
-	  lPosizione.getCodPosizioneGiuridica().equals("02") || 
-	  lPosizione.getCodPosizioneGiuridica().equals("04") || 
-	  lPosizione.getCodPosizioneGiuridica().equals("16") || 
-	  lPosizione.getCodPosizioneGiuridica().equals("20") || 
-	  lPosizione.getCodPosizioneGiuridica().equals("46") || 
-	  lPosizione.getCodPosizioneGiuridica().equals("47") || 
-	  lPosizione.getCodPosizioneGiuridica().equals("12") ||
-	  lPosizione.getCodPosizioneGiuridica().equals("71") ||
-	  // MEV10-s3: aggiunte altre posizioni giuridiche
-	  lPosizione.getCodPosizioneGiuridica().equals("72") ||
-	  lPosizione.getCodPosizioneGiuridica().equals("58") || // 20261118-MEV_2026-105_INLAY
-	  lPosizione.getCodPosizioneGiuridica().equals("70")
+<%if( lPosizione.getCodPosizioneGiuridica().equals("07") ||
+	lPosizione.getCodPosizioneGiuridica().equals("10") ||
+	lPosizione.getCodPosizioneGiuridica().equals("02") ||
+	lPosizione.getCodPosizioneGiuridica().equals("04") ||
+	lPosizione.getCodPosizioneGiuridica().equals("16") ||
+	lPosizione.getCodPosizioneGiuridica().equals("20") ||
+	lPosizione.getCodPosizioneGiuridica().equals("46") ||
+	lPosizione.getCodPosizioneGiuridica().equals("47") ||
+	lPosizione.getCodPosizioneGiuridica().equals("12") ||
+	lPosizione.getCodPosizioneGiuridica().equals("71") ||
+	// MEV10-s3: aggiunte altre posizioni giuridiche
+	lPosizione.getCodPosizioneGiuridica().equals("72") ||
+	lPosizione.getCodPosizioneGiuridica().equals("58") || // 20261118-MEV_2026-105_INLAY
+	lPosizione.getCodPosizioneGiuridica().equals("70")
 	 )
 {%>
      <td class="L" colspan="3">
@@ -1130,19 +1130,19 @@ if(lPosizione.getCodPosizioneGiuridica().equals("12")) {
 	 	}
 	}
 	if (lPosizione.getCodPosizioneGiuridica().equals("07")
-			|| lPosizione.getCodPosizioneGiuridica().equals("10")
-			|| lPosizione.getCodPosizioneGiuridica().equals("02")
-			|| lPosizione.getCodPosizioneGiuridica().equals("04")
-			|| lPosizione.getCodPosizioneGiuridica().equals("16")
-			|| lPosizione.getCodPosizioneGiuridica().equals("20")
-			|| lPosizione.getCodPosizioneGiuridica().equals("46")
-			|| lPosizione.getCodPosizioneGiuridica().equals("47")
-			|| lPosizione.getCodPosizioneGiuridica().equals("12")
-			|| lPosizione.getCodPosizioneGiuridica().equals("71")
-			// MEV10-s3: aggiunte altre posizioni giuridiche
-			|| lPosizione.getCodPosizioneGiuridica().equals("72")
-			|| lPosizione.getCodPosizioneGiuridica().equals("58") // 20261118-MEV_2026-105_INLAY
-			|| lPosizione.getCodPosizioneGiuridica().equals("70")) {
+		|| lPosizione.getCodPosizioneGiuridica().equals("10")
+		|| lPosizione.getCodPosizioneGiuridica().equals("02")
+		|| lPosizione.getCodPosizioneGiuridica().equals("04")
+		|| lPosizione.getCodPosizioneGiuridica().equals("16")
+		|| lPosizione.getCodPosizioneGiuridica().equals("20")
+		|| lPosizione.getCodPosizioneGiuridica().equals("46")
+		|| lPosizione.getCodPosizioneGiuridica().equals("47")
+		|| lPosizione.getCodPosizioneGiuridica().equals("12")
+		|| lPosizione.getCodPosizioneGiuridica().equals("71")
+		// MEV10-s3: aggiunte altre posizioni giuridiche
+		|| lPosizione.getCodPosizioneGiuridica().equals("72")
+		|| lPosizione.getCodPosizioneGiuridica().equals("58") // 20261118-MEV_2026-105_INLAY
+		|| lPosizione.getCodPosizioneGiuridica().equals("70")) {
 		if (lFascicoloAssociato.getFlagAltraCausa() == null
 				|| (lFascicoloAssociato.getFlagAltraCausa() !=null
 				&& lFascicoloAssociato.getFlagAltraCausa().equals("N"))) {
