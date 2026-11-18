@@ -99,6 +99,17 @@ public class ActLoadInserisciOrdineEsecuzione extends ActionSiap implements ICos
 			return IWebConstants.PG_MESSAGE;
 		}
 
+		// 20261118-MEV_2026-105_INLAY: Emissione OE non gestisce le posizioni 56 e 57 (art. 94 ter)
+		String lCodPosOE = lPos.getPosizioneGiuridica().getCodPosizioneGiuridica();
+		String lCodAltraOE = (lFascMod.getFlagAltraCausa() != null && lFascMod.getFlagAltraCausa().equals("S")
+				&& lPos.getAltraCausa() != null) ? lPos.getAltraCausa().getCodTipoPosGiuridica() : null;
+		if ("56".equals(lCodPosOE) || "57".equals(lCodPosOE) || "57".equals(lCodAltraOE)) {
+			RedirectTo lRedirigi = new RedirectTo();
+			lRedirigi.setPage(IWebConstants.PG_MAIN);
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Posizione giuridica non gestita");
+			return IWebConstants.PG_MESSAGE;
+		}
+
 		setRequestAttribute("posizioneluogoaltra", lPos);
 
 		// Ricerca l'ultima pena residua per quel fascicolo
