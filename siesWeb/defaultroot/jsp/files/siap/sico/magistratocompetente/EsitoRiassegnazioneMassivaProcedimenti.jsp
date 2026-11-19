@@ -86,6 +86,13 @@ function Conferma() {
   var data_to_verify = frm.<%=ICostantiMagistratoCompetente.CAMPO_GIORNO_DATA_INIZIO%>.value
                  +'/'+ frm.<%=ICostantiMagistratoCompetente.CAMPO_MESE_DATA_INIZIO%>.value
                  +'/'+ frm.<%=ICostantiMagistratoCompetente.CAMPO_ANNO_DATA_INIZIO%>.value;
+  // 20261119-MEV_2026-105_INLAY: la data di inizio competenza e' obbligatoria
+  if (frm.<%=ICostantiMagistratoCompetente.CAMPO_GIORNO_DATA_INIZIO%>.value == "" ||
+      frm.<%=ICostantiMagistratoCompetente.CAMPO_MESE_DATA_INIZIO%>.value == "" ||
+      frm.<%=ICostantiMagistratoCompetente.CAMPO_ANNO_DATA_INIZIO%>.value == "") {
+    alert('Data di inizio competenza obbligatoria');
+    return;
+  }
   if (!ControllaDataPassaVuota(data_to_verify)) {
     alert('Data di inizio competenza non valida');
     return;
