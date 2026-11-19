@@ -206,11 +206,12 @@ if (lRiassegnabili > 0) {
     </td>
   </tr>
   <tr>
-    <td class="l">Data Inizio Competenza</td>
+    <%-- 20261119-MEV_2026-105_INLAY: data non preimpostata, da indicare manualmente (obbligatoria) --%>
+    <td class="l">Data Inizio Competenza <font class=ob>(*)</font></td>
     <td class="L">
-      <input value="<%=DateUtils.getDateToString(DateUtils.getSysDate(), "dd")%>"   type="text" size="2" maxlength="2" name="<%=ICostantiMagistratoCompetente.CAMPO_GIORNO_DATA_INIZIO%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> -
-      <input value="<%=DateUtils.getDateToString(DateUtils.getSysDate(), "MM")%>"   type="text" size="2" maxlength="2" name="<%=ICostantiMagistratoCompetente.CAMPO_MESE_DATA_INIZIO%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> -
-      <input value="<%=DateUtils.getDateToString(DateUtils.getSysDate(), "yyyy")%>" type="text" size="4" maxlength="4" name="<%=ICostantiMagistratoCompetente.CAMPO_ANNO_DATA_INIZIO%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
+      <input value=""   type="text" size="2" maxlength="2" name="<%=ICostantiMagistratoCompetente.CAMPO_GIORNO_DATA_INIZIO%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> -
+      <input value=""   type="text" size="2" maxlength="2" name="<%=ICostantiMagistratoCompetente.CAMPO_MESE_DATA_INIZIO%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> -
+      <input value="" type="text" size="4" maxlength="4" name="<%=ICostantiMagistratoCompetente.CAMPO_ANNO_DATA_INIZIO%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
     </td>
   </tr>
   <tr><td>&nbsp;</td></tr>
