@@ -99,7 +99,7 @@ public class ActLoadInserisciOrdineEsecuzione extends ActionSiap implements ICos
 			return IWebConstants.PG_MESSAGE;
 		}
 
-		// 20261118-MEV_2026-105_INLAY: Emissione OE non gestisce le posizioni 56 e 57 (art. 94 ter)
+		// 20261118-MEV_2026-105_SG: Emissione OE non gestisce le posizioni 56 e 57 (art. 94 ter)
 		String lCodPosOE = lPos.getPosizioneGiuridica().getCodPosizioneGiuridica();
 		String lCodAltraOE = (lFascMod.getFlagAltraCausa() != null && lFascMod.getFlagAltraCausa().equals("S")
 				&& lPos.getAltraCausa() != null) ? lPos.getAltraCausa().getCodTipoPosGiuridica() : null;
@@ -162,7 +162,7 @@ public class ActLoadInserisciOrdineEsecuzione extends ActionSiap implements ICos
 			// modifica relativa al tipo istituto
 			if (lPos.getAltraCausa() != null && lPos.getAltraCausa().getCodTipoPosGiuridica() != null
 					&& (lPos.getAltraCausa().getCodTipoPosGiuridica().equals("23")
-							|| lPos.getAltraCausa().getCodTipoPosGiuridica().equals("57"))) { // 20261117-MEV_2026-105_INLAY
+							|| lPos.getAltraCausa().getCodTipoPosGiuridica().equals("57"))) { // 20261117-MEV_2026-105_SG
 				lOption = new Option(DecodificheManager.getInstance().getTipoAutorita());
 			} else {
 				if (lPos.getAltraCausa() != null && lPos.getAltraCausa().getIstitutoDetenzione() != null) {
@@ -180,7 +180,7 @@ public class ActLoadInserisciOrdineEsecuzione extends ActionSiap implements ICos
 					|| lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("71")
 					// MEV10-s3: aggiunte altre posizioni giuridiche
 					|| lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("72")
-					|| lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("58") // 20261023-MEV_2026-105_INLAY
+					|| lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("58") // 20261023-MEV_2026-105_SG
 					|| lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("70")) {
 				lOption = new Option(DecodificheManager.getInstance().getTipoAutorita());
 			} else {

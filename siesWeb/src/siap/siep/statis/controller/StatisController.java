@@ -5255,9 +5255,9 @@ public class StatisController extends GenericController {
 		return lTrasmessi;
 	} // chiude ExRicercaTrasmessiL78del2013
 
-	// 20261028-MEV_2026-105_INLAY: Ricerca provvedimenti ex art. 94 ter DPR 309/90 - report Excel
+	// 20261028-MEV_2026-105_SG: Ricerca provvedimenti ex art. 94 ter DPR 309/90 - report Excel
 	public void ExCreateReportProvvedimenti94Ter(ScadenzarioModel aScaMod, UfficioModel aUffMod,
-			HSSFWorkbook wb, Boolean aDefiniti, String aCodUfficio, java.util.List<String[]> aFiltri) throws F3BException { // 20261102-MEV_2026-105_INLAY
+			HSSFWorkbook wb, Boolean aDefiniti, String aCodUfficio, java.util.List<String[]> aFiltri) throws F3BException { // 20261102-MEV_2026-105_SG
 
 		HSSFCellStyle csNull = wb.createCellStyle();
 		HSSFFont font = wb.createFont();
@@ -5278,12 +5278,12 @@ public class StatisController extends GenericController {
 
 		HSSFRow row = sheet.createRow(nRow);
 		setCell(row, 0, "Provvedimenti emessi ex art. 94 ter DPR 309/90", csNull);
-		nRow += 2; // 20261102-MEV_2026-105_INLAY
-		for (int f = 0; aFiltri != null && f < aFiltri.size(); f++) { // 20261102-MEV_2026-105_INLAY
-			row = sheet.createRow(nRow++); // 20261102-MEV_2026-105_INLAY
-			setCell(row, 0, aFiltri.get(f)[0] + ": " + aFiltri.get(f)[1], csNull); // 20261102-MEV_2026-105_INLAY
-		} // 20261102-MEV_2026-105_INLAY
-		nRow += 1; // 20261102-MEV_2026-105_INLAY
+		nRow += 2; // 20261102-MEV_2026-105_SG
+		for (int f = 0; aFiltri != null && f < aFiltri.size(); f++) { // 20261102-MEV_2026-105_SG
+			row = sheet.createRow(nRow++); // 20261102-MEV_2026-105_SG
+			setCell(row, 0, aFiltri.get(f)[0] + ": " + aFiltri.get(f)[1], csNull); // 20261102-MEV_2026-105_SG
+		} // 20261102-MEV_2026-105_SG
+		nRow += 1; // 20261102-MEV_2026-105_SG
 
 		int numCol = 0;
 		sheet.setColumnWidth(numCol++, (15 * 256));
@@ -5330,7 +5330,7 @@ public class StatisController extends GenericController {
 				setCell(row, numCol++,
 						StringUtils.toStringJSP(DateUtils.getDateToString(lSog.getDataNascita(), "dd/MM/yyyy")),
 						csCenter);
-				setCell(row, numCol++, StringUtils.toStringJSP(mEvento.getDescrProvvedimento()) + " " + StringUtils.toStringJSP(mEvento.getDescrMotivo()), csCenter); // 20261102-MEV_2026-105_INLAY
+				setCell(row, numCol++, StringUtils.toStringJSP(mEvento.getDescrProvvedimento()) + " " + StringUtils.toStringJSP(mEvento.getDescrMotivo()), csCenter); // 20261102-MEV_2026-105_SG
 				setCell(row, numCol++, StringUtils.toStringJSP(
 						DateUtils.getDateToString(mEvento.getDataEmissione(), "dd/MM/yyyy")), csCenter);
 				setCell(row, numCol++, StringUtils.toStringJSP(

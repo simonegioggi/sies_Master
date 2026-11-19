@@ -313,7 +313,7 @@ var frmvalidator = new Validator("ElencoProcedimentiPerMagistratoCompetente");
 frmvalidator.addValidation("<%=ICostantiMagistrato.CAMPO_COGNOME %>","req","Il Cognome del Magistrato è obbligatorio");
 frmvalidator.addValidation("<%=ICostantiMagistrato.CAMPO_COGNOME %>","req","Il Nome del Magistrato è obbligatorio");
 
-frmvalidator.addValidation("<%=ICostantiMagistratoCompetente.CAMPO_ANNO_DATA_INIZIO%>","req","Il campo Anno Inizio Validita obbligatorio"); // 20261119-MEV_2026-105_INLAY
+frmvalidator.addValidation("<%=ICostantiMagistratoCompetente.CAMPO_ANNO_DATA_INIZIO%>","req","Il campo Anno Inizio Validita obbligatorio"); // 20261119-MEV_2026-105_SG
 frmvalidator.addValidation("<%=ICostantiMagistratoCompetente.CAMPO_ANNO_DATA_INIZIO%>","numeric");
 frmvalidator.addValidation("<%=ICostantiMagistratoCompetente.CAMPO_ANNO_DATA_INIZIO%>","gt=1900");
 frmvalidator.addValidation("<%=ICostantiMagistratoCompetente.CAMPO_ANNO_DATA_INIZIO%>","lt=3000");

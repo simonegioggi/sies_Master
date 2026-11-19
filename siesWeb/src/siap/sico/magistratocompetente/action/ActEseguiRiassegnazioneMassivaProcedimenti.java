@@ -1,4 +1,4 @@
-// 20261023-MEV_2026-105_INLAY - MEV Legge 140/2026
+// 20261023-MEV_2026-105_SG - MEV Legge 140/2026
 package siap.sico.magistratocompetente.action;
 
 import java.io.ByteArrayOutputStream;
@@ -68,7 +68,7 @@ public class ActEseguiRiassegnazioneMassivaProcedimenti extends ActionSiap
 		lMagCompModel.setMagCodMagistrato(lCodMagistratoNew);
 		lMagCompModel.setDataInizio(getRequestDateParameter(CAMPO_ANNO_DATA_INIZIO, CAMPO_MESE_DATA_INIZIO,
 				CAMPO_GIORNO_DATA_INIZIO));
-		// 20261119-MEV_2026-105_INLAY: DATA_INIZIO e' NOT NULL
+		// 20261119-MEV_2026-105_SG: DATA_INIZIO e' NOT NULL
 		if (lMagCompModel.getDataInizio() == null) {
 			throw new F3BException(F3BException.USER_MESSAGE, "Data di inizio competenza obbligatoria");
 		}

@@ -98,7 +98,7 @@ public class ActLoadCalcoloPena extends ActionSiap {
 																	// Regime di Arresti Domiciliari (PRIMA)
 				|| PGMod.getCodPosizioneGiuridica().equals("03") // Espiazione Pena in Regime Carcerario
 				|| PGMod.getCodPosizioneGiuridica().equals("04") // Arresti Domiciliari ex art. 656/10
-				|| PGMod.getCodPosizioneGiuridica().equals("58") // 20261118-MEV_2026-105_INLAY: Custodia
+				|| PGMod.getCodPosizioneGiuridica().equals("58") // 20261118-MEV_2026-105_SG: Custodia
 																	// Cautelare ex art. 94 ter
 				|| PGMod.getCodPosizioneGiuridica().equals("70") // Custodia Cautelare in Regime di Arresti
 																	// Domiciliare ex art 89 dpr 309/90

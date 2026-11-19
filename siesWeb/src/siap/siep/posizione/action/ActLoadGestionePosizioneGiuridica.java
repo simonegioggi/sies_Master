@@ -157,7 +157,7 @@ public class ActLoadGestionePosizioneGiuridica extends ActionSiap implements ICo
 		lOption = new Option(DecodificheManager.getInstance().getTipoMisuraCautelare(), lSelTipoMisCau);
 		lOption.setFilter(new String[] { "-", "CF", "CG" });
 		setRequestAttribute("tipoMisuraCautelareL2", lOption.toString());
-		// 20261023-MEV_2026-105_INLAY
+		// 20261023-MEV_2026-105_SG
 		// lOption.setFilter(new String[] { "-", "CH", "CI", "CJ", "CK", "CL" });
 		// MEV_2026_105 - Si aggiunge "CN"
 		// lOption.setFilter(new String[] { "-", "CH", "CI", "CJ", "CK" });
