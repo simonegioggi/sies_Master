@@ -109,7 +109,7 @@ function Conferma() {
 }
 
 function ListaMagistrati(a_formname) {
-  // codnum=xxx evita che la pop up precarichi il campo Data Inizio Competenza
+  // codnum=xxx: cambio competenza (la pop up non precarica la data di iscrizione del fascicolo)
   window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.magistrato.action.ActLoadRicercaMagistratoAssegnazioneLista&formname="+a_formname+"&codnum=xxx", "Ricerca_WMagistrato","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=500,height=500");
 }
 </script>

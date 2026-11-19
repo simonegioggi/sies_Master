@@ -93,7 +93,7 @@ if (fascicolo==null)
               //alert('I campi data non esistono nella form');
             }
           }
-          else
+          else if ('<%=formname%>' != 'RiassegnazioneMassivaProcedimenti')
           { // sono in modifica del magistrato, il nuovo magistrato è competente da oggi
             try {
               window.parent.opener.document.<%=formname%>.<%=ICostantiMagistratoCompetente.CAMPO_GIORNO_DATA_INIZIO%>.value = <%=DateUtils.getDateToString(DateUtils.getSysDate(), "dd")%>;
@@ -105,6 +105,7 @@ if (fascicolo==null)
             }
           }
 
+          // 20261119-MEV_2026-105_SG: nella Riassegnazione massiva la data di inizio competenza non viene preimpostata
           window.parent.close();
 
           return;
