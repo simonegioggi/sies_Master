@@ -443,7 +443,7 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 				lTipoMisura = "CM"; // Custodia Cautelare in Regime di Arresti Domiciliari ex art 89 dpr
 									// 309/90
 			} else if (aPosizioneGiuridica.getCodPosizioneGiuridica().equals("58")) {
-				lTipoMisura = "CM"; // 20261118-MEV_2026-105_INLAY: 58 come la 70 (AD ex art. 94 ter)
+				lTipoMisura = "CM"; // 20261118-MEV_2026-105_SG: 58 come la 70 (AD ex art. 94 ter)
 			} else if (aPosizioneGiuridica.getCodPosizioneGiuridica().equals("71")) {
 				lTipoMisura = "CB"; // Custodia Cautelare in Regime di Permanenza in Casa
 			} else if (aPosizioneGiuridica.getCodPosizioneGiuridica().equals("72")) {

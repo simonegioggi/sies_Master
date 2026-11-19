@@ -173,7 +173,7 @@
 				lPosizione.getCodPosizioneGiuridica().equals("71") ||
 				// MEV10-s3: aggiunte altre posizioni giuridiche
 				lPosizione.getCodPosizioneGiuridica().equals("72") ||
-				lPosizione.getCodPosizioneGiuridica().equals("58") || // 20261118-MEV_2026-105_INLAY
+				lPosizione.getCodPosizioneGiuridica().equals("58") || // 20261118-MEV_2026-105_SG
 				lPosizione.getCodPosizioneGiuridica().equals("70")) {
 			if (lFascicoloAssociato.getFlagAltraCausa()== null 		||
 					(lFascicoloAssociato.getFlagAltraCausa()!=null  &&
@@ -476,7 +476,7 @@
              lPosizione.getCodPosizioneGiuridica().equals("71") ||
              // MEV10-s3: aggiunte altre posizioni giuridiche
              lPosizione.getCodPosizioneGiuridica().equals("72") ||
-             lPosizione.getCodPosizioneGiuridica().equals("58") || // 20261118-MEV_2026-105_INLAY
+             lPosizione.getCodPosizioneGiuridica().equals("58") || // 20261118-MEV_2026-105_SG
              lPosizione.getCodPosizioneGiuridica().equals("70"))
            )
         {
@@ -911,7 +911,7 @@ if(posizioneluogoaltra != null && posizioneluogoaltra.getAltraCausa() != null &&
 	lPosizione.getCodPosizioneGiuridica().equals("71") ||
 	// MEV10-s3: aggiunte altre posizioni giuridiche
 	lPosizione.getCodPosizioneGiuridica().equals("72") ||
-	lPosizione.getCodPosizioneGiuridica().equals("58") || // 20261118-MEV_2026-105_INLAY
+	lPosizione.getCodPosizioneGiuridica().equals("58") || // 20261118-MEV_2026-105_SG
 	lPosizione.getCodPosizioneGiuridica().equals("70")
 	 )
 {%>
@@ -1141,7 +1141,7 @@ if(lPosizione.getCodPosizioneGiuridica().equals("12")) {
 		|| lPosizione.getCodPosizioneGiuridica().equals("71")
 		// MEV10-s3: aggiunte altre posizioni giuridiche
 		|| lPosizione.getCodPosizioneGiuridica().equals("72")
-		|| lPosizione.getCodPosizioneGiuridica().equals("58") // 20261118-MEV_2026-105_INLAY
+		|| lPosizione.getCodPosizioneGiuridica().equals("58") // 20261118-MEV_2026-105_SG
 		|| lPosizione.getCodPosizioneGiuridica().equals("70")) {
 		if (lFascicoloAssociato.getFlagAltraCausa() == null
 				|| (lFascicoloAssociato.getFlagAltraCausa() !=null

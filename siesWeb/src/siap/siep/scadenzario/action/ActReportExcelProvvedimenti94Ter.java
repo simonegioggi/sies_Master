@@ -1,4 +1,4 @@
-// 20261028-MEV_2026-105_INLAY - MEV Legge 140/2026: ricerca provvedimenti emessi ex art. 94 ter DPR 309/90
+// 20261028-MEV_2026-105_SG - MEV Legge 140/2026: ricerca provvedimenti emessi ex art. 94 ter DPR 309/90
 package siap.siep.scadenzario.action;
 
 import java.io.ByteArrayOutputStream;
@@ -27,7 +27,7 @@ public class ActReportExcelProvvedimenti94Ter extends ActProvvedimenti94TerBase 
 		HSSFWorkbook wb = new HSSFWorkbook();
 		StatisController lStatisCtrl = new StatisController();
 		lStatisCtrl.ExCreateReportProvvedimenti94Ter(lScaMod, getUfficioUtenteConnesso(), wb, lDefiniti,
-				this.getCodUfficioUtenteConnesso(), buildRiepilogoFiltri()); // 20261102-MEV_2026-105_INLAY
+				this.getCodUfficioUtenteConnesso(), buildRiepilogoFiltri()); // 20261102-MEV_2026-105_SG
 
 		ByteArrayOutputStream fileOut = new ByteArrayOutputStream();
 		try {
@@ -43,7 +43,7 @@ public class ActReportExcelProvvedimenti94Ter extends ActProvvedimenti94TerBase 
 		return IWebConstants.PG_DOWNLOAD_DOCUMENT;
 	}
 
-	// 20261102-MEV_2026-105_INLAY: riepilogo dei filtri impostati nella form di ricerca
+	// 20261102-MEV_2026-105_SG: riepilogo dei filtri impostati nella form di ricerca
 	private java.util.List<String[]> buildRiepilogoFiltri() throws F3BException {
 		java.util.List<String[]> l = new java.util.ArrayList<String[]>();
 		l.add(new String[] { "Procedimenti da (Anno/Numero)", coppia(CAMPO_CHIAVE_ANNO_INIZIALE, CAMPO_CHIAVE_PROGR_INIZIALE) });
@@ -77,7 +77,7 @@ public class ActReportExcelProvvedimenti94Ter extends ActProvvedimenti94TerBase 
 				+ getParam(aA + "Emissione" + aSfx);
 	}
 
-	// 20261102-MEV_2026-105_INLAY: legge un parametro opzionale (null se assente)
+	// 20261102-MEV_2026-105_SG: legge un parametro opzionale (null se assente)
 	private String getParam(String aName) {
 		return getRequest().getParameter(aName);
 	}

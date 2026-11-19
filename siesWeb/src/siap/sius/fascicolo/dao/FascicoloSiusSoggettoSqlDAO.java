@@ -2550,7 +2550,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 		 * ;
 		 */
 		// NUOVA INFRASTRUTTURA: modifica alla query per ottimizzazione in due punti
-		// 20261118-MEV_2026-105_INLAY: EVENTO.FAS_SIE_ID_FASCICOLO_SIEP puo' essere NULL (es. provvedimenti 03 inseriti da SIUS):
+		// 20261118-MEV_2026-105_SG: EVENTO.FAS_SIE_ID_FASCICOLO_SIEP puo' essere NULL (es. provvedimenti 03 inseriti da SIUS):
 		// gli eventi si legano al procedimento SIEP tramite FAS_SIU_ID_FASCICOLO_SIUS
 		lStatement += "(SELECT id_evento FROM evento WHERE cod_tipo_provvedimento IN ('02', '03', '14') AND data_inserimento in (select max(data_inserimento) FROM evento WHERE cod_tipo_provvedimento IN ('02', '03', '14') AND FAS_SIU_ID_FASCICOLO_SIUS IN (SELECT ID_FASCICOLO_SIUS FROM FASCICOLO_SIUS WHERE FAS_SIE_ID_FASCICOLO_SIEP = '"
 				+ lId_FascicoloSiep

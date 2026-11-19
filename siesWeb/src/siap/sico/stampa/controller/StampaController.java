@@ -780,9 +780,9 @@ public class StampaController extends SIAPStampaController implements IStampa {
 							|| aEveModel.getEvento().getCodMotivo().equals("5507")
 							|| aEveModel.getEvento().getCodMotivo().equals("5508")
 							// Ticket#20220323018 - FINE
-							|| aEveModel.getEvento().getCodMotivo().equals("0760") // 20261104-MEV_2026-105_INLAY
-							|| aEveModel.getEvento().getCodMotivo().equals("0761") // 20261104-MEV_2026-105_INLAY
-							|| aEveModel.getEvento().getCodMotivo().equals("0762") // 20261104-MEV_2026-105_INLAY
+							|| aEveModel.getEvento().getCodMotivo().equals("0760") // 20261104-MEV_2026-105_SG
+							|| aEveModel.getEvento().getCodMotivo().equals("0761") // 20261104-MEV_2026-105_SG
+							|| aEveModel.getEvento().getCodMotivo().equals("0762") // 20261104-MEV_2026-105_SG
 							|| aEveModel.getEvento().getCodMotivo().equals("0063"))) {
 				if (!lPos.isLibero()) {
 					PenaResiduaModel lPenaModel = null;
@@ -1912,9 +1912,9 @@ public class StampaController extends SIAPStampaController implements IStampa {
 							|| aEveModel.getEvento().getCodMotivo().equals("5507")
 							|| aEveModel.getEvento().getCodMotivo().equals("5508")
 							// Ticket#20220323018 - FINE
-							|| aEveModel.getEvento().getCodMotivo().equals("0760") // 20261104-MEV_2026-105_INLAY
-							|| aEveModel.getEvento().getCodMotivo().equals("0761") // 20261104-MEV_2026-105_INLAY
-							|| aEveModel.getEvento().getCodMotivo().equals("0762") // 20261104-MEV_2026-105_INLAY
+							|| aEveModel.getEvento().getCodMotivo().equals("0760") // 20261104-MEV_2026-105_SG
+							|| aEveModel.getEvento().getCodMotivo().equals("0761") // 20261104-MEV_2026-105_SG
+							|| aEveModel.getEvento().getCodMotivo().equals("0762") // 20261104-MEV_2026-105_SG
 							|| aEveModel.getEvento().getCodMotivo().equals("0063"))) {
 				if (!lPos.isLibero()) {
 					PenaResiduaModel lPenaModel = null;

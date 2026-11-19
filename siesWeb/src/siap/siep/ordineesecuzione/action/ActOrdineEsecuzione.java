@@ -63,7 +63,7 @@ public class ActOrdineEsecuzione extends ActionSiap implements ICostantiOrdineEs
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
-	// 20261118-MEV_2026-105_INLAY
+	// 20261118-MEV_2026-105_SG
 	private static String getCodMotivo94Ter(String aSigla) {
 		if ("LS-LIB-94T".equals(aSigla))
 			return "0760";
@@ -96,7 +96,7 @@ public class ActOrdineEsecuzione extends ActionSiap implements ICostantiOrdineEs
 		DecodificheModel lDecMod = lDec.ExRicercaDecodificheByHighValue(aEvento.getDescrMotivo());
 		if (lDecMod != null && lDecMod.getCode() != null)
 			lEve.setCodMotivo(lDecMod.getCode());
-		// 20261118-MEV_2026-105_INLAY: motivi art. 94 ter risolti per codice, le sigle su CG_REF_CODES non sono univoche
+		// 20261118-MEV_2026-105_SG: motivi art. 94 ter risolti per codice, le sigle su CG_REF_CODES non sono univoche
 		String lCodMotivo94Ter = getCodMotivo94Ter(aEvento.getDescrMotivo());
 		if (lCodMotivo94Ter != null)
 			lEve.setCodMotivo(lCodMotivo94Ter);

@@ -643,7 +643,7 @@ public class ScadenzarioController extends SiapController implements IScadenzari
 		return lScadenzario;
 	}
 
-	// 20261028-MEV_2026-105_INLAY: Ricerca provvedimenti ex art. 94 ter DPR 309/90
+	// 20261028-MEV_2026-105_SG: Ricerca provvedimenti ex art. 94 ter DPR 309/90
 	public BigDecimal ExGetCountProvvedimenti94Ter(ScadenzarioModel aScadenzario, Boolean aDefiniti,
 			String aCodUfficio) throws F3BException {
 

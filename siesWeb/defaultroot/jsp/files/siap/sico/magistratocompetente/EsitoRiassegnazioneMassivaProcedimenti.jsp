@@ -1,4 +1,4 @@
-<%-- 20261023-MEV_2026-105_INLAY --%>
+<%-- 20261023-MEV_2026-105_SG --%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
@@ -86,7 +86,7 @@ function Conferma() {
   var data_to_verify = frm.<%=ICostantiMagistratoCompetente.CAMPO_GIORNO_DATA_INIZIO%>.value
                  +'/'+ frm.<%=ICostantiMagistratoCompetente.CAMPO_MESE_DATA_INIZIO%>.value
                  +'/'+ frm.<%=ICostantiMagistratoCompetente.CAMPO_ANNO_DATA_INIZIO%>.value;
-  // 20261119-MEV_2026-105_INLAY: la data di inizio competenza e' obbligatoria
+  // 20261119-MEV_2026-105_SG: la data di inizio competenza e' obbligatoria
   if (frm.<%=ICostantiMagistratoCompetente.CAMPO_GIORNO_DATA_INIZIO%>.value == "" ||
       frm.<%=ICostantiMagistratoCompetente.CAMPO_MESE_DATA_INIZIO%>.value == "" ||
       frm.<%=ICostantiMagistratoCompetente.CAMPO_ANNO_DATA_INIZIO%>.value == "") {
@@ -206,7 +206,7 @@ if (lRiassegnabili > 0) {
     </td>
   </tr>
   <tr>
-    <%-- 20261119-MEV_2026-105_INLAY: data non preimpostata, da indicare manualmente (obbligatoria) --%>
+    <%-- 20261119-MEV_2026-105_SG: data non preimpostata, da indicare manualmente (obbligatoria) --%>
     <td class="l">Data Inizio Competenza <font class=ob>(*)</font></td>
     <td class="L">
       <input value=""   type="text" size="2" maxlength="2" name="<%=ICostantiMagistratoCompetente.CAMPO_GIORNO_DATA_INIZIO%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> -
