@@ -68,6 +68,10 @@ public class ActEseguiRiassegnazioneMassivaProcedimenti extends ActionSiap
 		lMagCompModel.setMagCodMagistrato(lCodMagistratoNew);
 		lMagCompModel.setDataInizio(getRequestDateParameter(CAMPO_ANNO_DATA_INIZIO, CAMPO_MESE_DATA_INIZIO,
 				CAMPO_GIORNO_DATA_INIZIO));
+		// 20261119-MEV_2026-105_INLAY: DATA_INIZIO e' NOT NULL
+		if (lMagCompModel.getDataInizio() == null) {
+			throw new F3BException(F3BException.USER_MESSAGE, "Data di inizio competenza obbligatoria");
+		}
 		lMagCompModel.setCodRuoloMagistrato("01");
 		lMagCompModel.setDataInserimento(DateUtils.getSysDate());
 		lMagCompModel.setCodOperatoreInserimento(getCodUtenteConnesso());
