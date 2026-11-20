@@ -184,7 +184,7 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 		String s = getSqlQuery();
 		s += " AND STATO_PAGAMENTO = 'PN' "; // PN = NON PAGATO
 		if (dayOffset > 0) {
-			s += " AND DATA_ULTIMO_CONTROLLO < (SYSDATE-" + dayOffset + ")"; //
+			s += " AND (DATA_ULTIMO_CONTROLLO IS NULL OR DATA_ULTIMO_CONTROLLO < SYSDATE-" + dayOffset + ")"; // 20261120-MEV_2026-105_SG
 		}
 		setStatement(s);
 
@@ -199,7 +199,7 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 		s += " AND STATO_PAGAMENTO = 'PN' "; // PN = NON PAGATO
 		s += " AND CODICE_FISCALE = '" + aCodiceFiscale + "' ";
 		if (dayOffset > 0) {
-			s += " AND DATA_ULTIMO_CONTROLLO < (SYSDATE-" + dayOffset + ")"; //
+			s += " AND (DATA_ULTIMO_CONTROLLO IS NULL OR DATA_ULTIMO_CONTROLLO < SYSDATE-" + dayOffset + ")"; // 20261120-MEV_2026-105_SG
 		}
 		setStatement(s);
 
@@ -244,7 +244,7 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 		}
 
 		if (controllateDaGiorni > 0) {
-			s += " AND DATA_ULTIMO_CONTROLLO < (SYSDATE-" + controllateDaGiorni + ")";
+			s += " AND (DATA_ULTIMO_CONTROLLO IS NULL OR DATA_ULTIMO_CONTROLLO < SYSDATE-" + controllateDaGiorni + ")"; // 20261120-MEV_2026-105_SG
 		}
 		setStatement(s);
 
@@ -368,7 +368,7 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 		}
 
 		if (controllateDaGiorni > 0) {
-			s += " AND DATA_ULTIMO_CONTROLLO < (SYSDATE-" + controllateDaGiorni + ")";
+			s += " AND (DATA_ULTIMO_CONTROLLO IS NULL OR DATA_ULTIMO_CONTROLLO < SYSDATE-" + controllateDaGiorni + ")"; // 20261120-MEV_2026-105_SG
 		}
 		setStatement(s);
 
