@@ -138,7 +138,7 @@
     </tr>
     <tr>
       <td class="L">
-        <font class="label">Data irrevocabilità : </font>&nbsp;
+        <font class="label">Data irrevocabilit&agrave; : </font>&nbsp;
         <font class="campo"><%=DateUtils.getDateToString(lFas.getDataIrrevocabilita(), "dd-MM-yyyy")%></font>
       </td>
     </tr>
@@ -167,7 +167,9 @@
                         <td class="l">Luogo di Nascita</td>
                         <td class="l"><font class="campo"><%=StringUtils.toStringJSP(lSog.getDescrComuneNascita())%></font></td>
           <tr>
-                        <td class="l">Data Notifica</td>
+<!--                    <td class="l">Data Notifica</td> -->
+ 						<%-- 20261123 [SG]: sostituita data notifica con data irrevocabilita' su richiesta Cataldi--%>
+						<td class="l">Data Irrevocabilit&agrave;</td>
                         <td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lSca.getDataInizioScadenza(),"dd/MM/yyyy")) %></font>&nbsp;</td>
           </tr>
           <tr>
