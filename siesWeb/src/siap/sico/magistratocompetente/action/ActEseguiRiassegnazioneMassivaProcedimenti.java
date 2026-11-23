@@ -5,9 +5,13 @@ import java.io.ByteArrayOutputStream;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.util.CellRangeAddress;
 
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
@@ -104,13 +108,22 @@ public class ActEseguiRiassegnazioneMassivaProcedimenti extends ActionSiap
 		HSSFSheet lSheet = lExcel.createSheet("Procedimenti riassegnati");
 		String[] lIntestazioni = { "Anno", "Numero", "Condannato", "Magistrato precedente",
 				"Nuovo magistrato", "Data inizio competenza" };
-		HSSFRow lHeader = lSheet.createRow(0);
+		// 20261123-MEV_2026-105_SG: titolo del foglio, riga vuota, poi intestazioni delle colonne
+		HSSFFont lFontTitolo = lExcel.createFont();
+		lFontTitolo.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		HSSFCellStyle lStileTitolo = lExcel.createCellStyle();
+		lStileTitolo.setFont(lFontTitolo);
+		HSSFCell lTitolo = lSheet.createRow(0).createCell(0);
+		lTitolo.setCellValue("ELENCO PROCEDIMENTI RIASSEGNATI");
+		lTitolo.setCellStyle(lStileTitolo);
+		lSheet.addMergedRegion(new CellRangeAddress(0, 0, 0, lIntestazioni.length - 1));
+		HSSFRow lHeader = lSheet.createRow(2);
 		for (int c = 0; c < lIntestazioni.length; c++) {
 			lHeader.createCell(c).setCellValue(lIntestazioni[c]);
 		}
 		for (int i = 0; i < lProcedimenti.size(); i++) {
 			String[] lRiga = (String[]) lProcedimenti.get(i);
-			HSSFRow lRow = lSheet.createRow(i + 1);
+			HSSFRow lRow = lSheet.createRow(i + 3);
 			lRow.createCell(0).setCellValue(lRiga[1]);
 			lRow.createCell(1).setCellValue(lRiga[2]);
 			lRow.createCell(2).setCellValue((nz(lRiga[3]) + " " + nz(lRiga[4])).trim());
@@ -118,7 +131,7 @@ public class ActEseguiRiassegnazioneMassivaProcedimenti extends ActionSiap
 			lRow.createCell(4).setCellValue(lNuovoMagistrato);
 			lRow.createCell(5).setCellValue(lDataCompetenza);
 		}
-		HSSFRow lTotale = lSheet.createRow(lProcedimenti.size() + 2);
+		HSSFRow lTotale = lSheet.createRow(lProcedimenti.size() + 4);
 		lTotale.createCell(0).setCellValue("Totale procedimenti riassegnati");
 		lTotale.createCell(1).setCellValue(lProcedimenti.size());
 		for (int c = 0; c < lIntestazioni.length; c++) {
