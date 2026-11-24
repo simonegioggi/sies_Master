@@ -1581,6 +1581,10 @@ else
 <%
 	} // end ulteriori sanzioni in cumulo
 
+%>
+<%-- 20261124-MEV_2026-124_SG --%>
+<jsp:include page="/jsp/files/siap/siep/fascicolo/DettaglioEsecuzionePenaSostitutiva.jsp"/>
+<%
 //==============================================================================
 // Riepilogo generale dei totali delle quantità componenti la pena relevate su RES
 //==============================================================================
