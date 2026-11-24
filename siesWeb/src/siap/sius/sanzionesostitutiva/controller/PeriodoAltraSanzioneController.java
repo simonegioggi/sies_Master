@@ -271,6 +271,70 @@ public class PeriodoAltraSanzioneController extends SiapController implements IP
 		return lPerMod;
 	}
 
+	// 20260512-MEV_2026-124_SG: variante con evento di annotazione
+	public PeriodoAltraSanzioneModel ExInserisciPeriodoAltraSanzione(PeriodoAltraSanzioneModel lPerMod,
+			ScadenzarioSiusModel lScaMod1, EsecuzioneSanzioneSostitutivaModel lEssMod,
+			ScadenzarioSiusModel lScaMod2, EventoModel aEveMod) throws F3BException {
+
+		Connection lConn = null;
+		PeriodoAltraSanzioneDAO lPerDao = null;
+		EventoDAO lEveDao = null;
+		EsecuzioneSanzioneSostitutivaDAO lEseDao = null;
+		ScadenzarioSiusDAO lScaDao = null;
+
+		try {
+			lConn = getDBTransaction();
+
+			// 20260512-MEV_2026-124_SG: inserimento evento di annotazione e aggancio al periodo
+			if (aEveMod != null) {
+				lEveDao = new EventoDAO(lConn);
+				lEveDao.setDAOFromModel(aEveMod);
+				lPerMod.setEveIdEvento(lEveDao.insert());
+			}
+
+			// inserimento Periodo Altra Sanzione
+			lPerDao = new PeriodoAltraSanzioneDAO(lConn);
+			lPerDao.setDAOFromModel(lPerMod);
+			BigDecimal lSequence = lPerDao.insert();
+			lPerMod = new PeriodoAltraSanzioneModel(lPerMod);
+			lPerMod.setMessage("Inserimento avvenuto correttamente!");
+			lPerMod.setIdPeriodoAltraSanzione(lSequence);
+
+			// inserisci scadenzario
+			// lScaMod1.setEveIdEvento(lPerMod.getIdPeriodoAltraSanzione());
+			lScaDao = new ScadenzarioSiusDAO(lConn);
+			lScaDao.setDAOFromModel(lScaMod1);
+			lScaDao.insert();
+
+			// modifica Esecuzione Sanzione Sostitutiva
+			lEseDao = new EsecuzioneSanzioneSostitutivaDAO(lConn);
+			lEseDao.setDAOFromModelForUpdate(lEssMod);
+			lEseDao.update();
+
+			// eventuale modifica scadenzario
+			if (lScaMod2 != null) {
+				lScaDao = new ScadenzarioSiusDAO(lConn);
+				lScaDao.setDAOFromModelForUpdate(lScaMod2);
+				lScaDao.update();
+			}
+
+			commit(lConn);
+		} catch (DAOException daoEx) {
+			rollback(lConn);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+			siesLogger.error("DAOException: " + daoEx);
+			throw new F3BException(
+					"PeriodoAltraSanzioneController.ExInserisciPeriodoAltraSanzione: " + daoEx);
+		} finally {
+			cleanup(lEveDao);
+			cleanup(lPerDao);
+			cleanup(lEseDao);
+			cleanup(lScaDao);
+			cleanup(lConn);
+		}
+		return lPerMod;
+	}
+
 	/*****************************************************************************
 	 * 5bis Inserimento Periodo Altra Sanzione e Modifica ESS modifica scadenzario eventuale modifica altro
 	 * scadenzario
@@ -320,6 +384,69 @@ public class PeriodoAltraSanzioneController extends SiapController implements IP
 			throw new F3BException(
 					"PeriodoAltraSanzioneController.ExInserisciPeriodoAltraSanzione: " + daoEx);
 		} finally {
+			cleanup(lPerDao);
+			cleanup(lEseDao);
+			cleanup(lScaDao);
+			cleanup(lConn);
+		}
+		return lPerMod;
+	}
+
+	// 20260512-MEV_2026-124_SG: variante con evento di annotazione
+	public PeriodoAltraSanzioneModel ExInserisciPeriodoAltraSanzione(PeriodoAltraSanzioneModel lPerMod,
+			EsecuzioneSanzioneSostitutivaModel lEssMod, ScadenzarioSiusModel lScaMod1,
+			ScadenzarioSiusModel lScaMod2, EventoModel aEveMod) throws F3BException {
+
+		Connection lConn = null;
+		PeriodoAltraSanzioneDAO lPerDao = null;
+		EventoDAO lEveDao = null;
+		EsecuzioneSanzioneSostitutivaDAO lEseDao = null;
+		ScadenzarioSiusDAO lScaDao = null;
+
+		try {
+			lConn = getDBTransaction();
+
+			// 20260512-MEV_2026-124_SG: inserimento evento di annotazione e aggancio al periodo
+			if (aEveMod != null) {
+				lEveDao = new EventoDAO(lConn);
+				lEveDao.setDAOFromModel(aEveMod);
+				lPerMod.setEveIdEvento(lEveDao.insert());
+			}
+
+			// inserimento Periodo Altra Sanzione
+			lPerDao = new PeriodoAltraSanzioneDAO(lConn);
+			lPerDao.setDAOFromModel(lPerMod);
+			BigDecimal lSequence = lPerDao.insert();
+			lPerMod = new PeriodoAltraSanzioneModel(lPerMod);
+			lPerMod.setMessage("Inserimento avvenuto correttamente!");
+			lPerMod.setIdPeriodoAltraSanzione(lSequence);
+
+			// modifica Esecuzione Sanzione Sostitutiva
+			lEseDao = new EsecuzioneSanzioneSostitutivaDAO(lConn);
+			lEseDao.setDAOFromModelForUpdate(lEssMod);
+			lEseDao.update();
+
+			// modifica scadenzario
+			lScaDao = new ScadenzarioSiusDAO(lConn);
+			lScaDao.setDAOFromModelForUpdate(lScaMod1);
+			lScaDao.update();
+
+			// eventuale modifica scadenzario
+			if (lScaMod2 != null) {
+				lScaDao = new ScadenzarioSiusDAO(lConn);
+				lScaDao.setDAOFromModelForUpdate(lScaMod2);
+				lScaDao.update();
+			}
+
+			commit(lConn);
+		} catch (DAOException daoEx) {
+			rollback(lConn);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+			siesLogger.error("DAOException: " + daoEx);
+			throw new F3BException(
+					"PeriodoAltraSanzioneController.ExInserisciPeriodoAltraSanzione: " + daoEx);
+		} finally {
+			cleanup(lEveDao);
 			cleanup(lPerDao);
 			cleanup(lEseDao);
 			cleanup(lScaDao);
@@ -427,6 +554,73 @@ public class PeriodoAltraSanzioneController extends SiapController implements IP
 			lPerDao = new PeriodoAltraSanzioneDAO(lConn);
 			lPerDao.selCondizioneUpdate(idPerMod);
 			lPerDao.delete();
+
+			commit(lConn);
+		} catch (DAOException daoEx) {
+			rollback(lConn);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+			siesLogger.error("DAOException: " + daoEx);
+			throw new F3BException("PeriodoAltraSanzioneController.ExCancellaPeriodoAltraSanzione: " + daoEx);
+		} finally {
+			cleanup(lEveDao);
+			cleanup(lScaDao);
+			cleanup(lPerDao);
+			cleanup(lEseDao);
+			cleanup(lConn);
+		}
+	}
+
+	// 20260512-MEV_2026-124_SG: variante con cancellazione evento collegato
+	public void ExCancellaPeriodoAltraSanzione(ScadenzarioSiusModel lScaMod1, ScadenzarioSiusModel lScaMod2,
+			ScadenzarioSiusModel lScaMod3, BigDecimal idPerMod, EsecuzioneSanzioneSostitutivaModel lEssMod,
+			BigDecimal idEventoDaCancellare) throws F3BException {
+
+		Connection lConn = null;
+		EventoDAO lEveDao = null;
+		ScadenzarioSiusDAO lScaDao = null;
+		PeriodoAltraSanzioneDAO lPerDao = null;
+		EsecuzioneSanzioneSostitutivaDAO lEseDao = null;
+
+		try {
+			lConn = getDBTransaction();
+
+			// eventuale cancellazione scadenzario
+			if (lScaMod1 != null) {
+				lScaDao = new ScadenzarioSiusDAO(lConn);
+				lScaDao.setDAOFromModelForUpdate(lScaMod1);
+				lScaDao.delete();
+			}
+
+			// eventuale modifica altro scadenzario
+			if (lScaMod2 != null) {
+				lScaDao = new ScadenzarioSiusDAO(lConn);
+				lScaDao.setDAOFromModelForUpdate(lScaMod2);
+				lScaDao.update();
+			}
+
+			// eventuale modifica altro scadenzario
+			if (lScaMod3 != null) {
+				lScaDao = new ScadenzarioSiusDAO(lConn);
+				lScaDao.setDAOFromModelForUpdate(lScaMod3);
+				lScaDao.update();
+			}
+
+			// modifica Esecuzione Sanzione Sostitutiva
+			lEseDao = new EsecuzioneSanzioneSostitutivaDAO(lConn);
+			lEseDao.setDAOFromModelForUpdate(lEssMod);
+			lEseDao.update();
+
+			// cancellazione periodo
+			lPerDao = new PeriodoAltraSanzioneDAO(lConn);
+			lPerDao.selCondizioneUpdate(idPerMod);
+			lPerDao.delete();
+
+			// 20260512-MEV_2026-124_SG: cancellazione evento di annotazione collegato
+			if (idEventoDaCancellare != null) {
+				lEveDao = new EventoDAO(lConn);
+				lEveDao.selCondizioneUpdate(idEventoDaCancellare);
+				lEveDao.delete();
+			}
 
 			commit(lConn);
 		} catch (DAOException daoEx) {

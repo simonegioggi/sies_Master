@@ -9,6 +9,7 @@ import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.util.SICOLookupRemote;
+import siap.sius.util.SIUSLookupRemote;
 import siap.sius.ActionSius;
 import siap.sius.SIUSException;
 import f3b.log.LogF3B;
@@ -57,6 +58,18 @@ extends ActionSius implements ICostantiProvvedimento
     
     if (lEve.getCodTipoEvento().compareTo("20") == 0 )    
     	lPage.setAction("siap.sius.misurasicurezza.action.ActLoadDettaglioMisuraSicurezzaUDS");
+
+    // 20260512-MEV_2026-124_SG: annotazione inizio sospensione pena sostitutiva -> dettaglio della sospensione
+    if (lEve.getCodTipoEvento().compareTo("13") == 0
+        && siap.sius.sanzionesostitutiva.action.ActSanzioneSostitutiva.COD_MOTIVO_ANNOTAZIONE_SOSPENSIONE_PS.equals(lEve.getCodMotivo()))
+    {
+      siap.sius.sanzionesostitutiva.model.PeriodoAltraSanzioneModel lPas =
+          SIUSLookupRemote.getPeriodoAltraSanzioneRemote().ExRicercaSanzioneSostitutivaByIdEvento(lIdEvento);
+      if (lPas != null && lPas.getIdPeriodoAltraSanzione() != null)
+        lPage.setAction("siap.sius.sanzionesostitutiva.action.ActLoadDettaglioSospensioneSanzioneSostitutivaUDS&"
+            + siap.sius.sanzionesostitutiva.action.ICostantiSanzioneSostitutiva.CAMPO_ID_PERIODO_ALTRA_SANZIONE
+            + "=" + lPas.getIdPeriodoAltraSanzione());
+    }
 
     lRetPage = lPage.toString();
     

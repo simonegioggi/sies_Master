@@ -14,6 +14,7 @@
 <%@ page import="siap.sico.util.CalendarUtil"%>
 
 <jsp:useBean id="listaSanzioniSius" scope="request" class="java.util.ArrayList"/>
+<jsp:useBean id="modalitaInserimentoPAS" scope="request" class="java.util.HashMap"/>
 <jsp:useBean id="eventoUltimoPAS" 	scope="request" class="siap.sico.evento.model.EventoModel"/>
 <jsp:useBean id="fascicoloSiusGP" 	scope="session" class="siap.sius.fascicolo.model.FascicoloGPModel"/>
 
@@ -63,7 +64,7 @@ function cancella(idEvento, flagMotivo, flagDocumentoRegistrato, idPeriodoAltraS
     	</td>
     	<td class="LBG">
 			<font class="label">Funzione :</font>
-			<font class="campo"> Elenco Periodi <%=tipoSostituzione%> Sostitutiva</font>
+			<font class="campo"> Elenco Periodi <%="Pena".equals(tipoSostituzione) ? "Esecuzione Pena" : "Sanzione"%> Sostitutiva</font>
     	</td>
 	</tr>
 </table>
@@ -75,6 +76,8 @@ function cancella(idEvento, flagMotivo, flagDocumentoRegistrato, idPeriodoAltraS
 	    <td class="int">Durata <%=tipoSostituzione%> Sostitutiva</td>
 	    <td class="int">Note</td>
 	    <td class="int">Motivo</td>
+	    <td class="int">Modalit&agrave; inserimento</td>
+	    <td class="int">Quantum da recuperare</td>
 <%
 Object lObj = null;
 lObj = session.getAttribute("fascicoloSiusGP");
@@ -128,6 +131,24 @@ if (!listaSanzioniSius.isEmpty()) {
 		</td>
 	 	<td class="c">
 	  		<%=StringUtils.toStringJSP(lPeriodoAltraSanzioneModel.getDescrMotivo(), "-")%>
+		</td>
+		<td class="c">
+			<%=StringUtils.toStringJSP((String) modalitaInserimentoPAS.get(lPeriodoAltraSanzioneModel.getIdPeriodoAltraSanzione()), "-")%>
+		</td>
+		<td class="c">
+<%
+		if ("1".equals(lPeriodoAltraSanzioneModel.getDaRecuperare())) {
+%>
+			<font class="label">Anni</font> <font class="campo"><%=StringUtils.toStringJSP(lPeriodoAltraSanzioneModel.getDaRecuperareAA(), "0")%></font>
+			<font class="label">Mesi</font> <font class="campo"><%=StringUtils.toStringJSP(lPeriodoAltraSanzioneModel.getDaRecuperareMM(), "0")%></font>
+			<font class="label">Giorni</font> <font class="campo"><%=StringUtils.toStringJSP(lPeriodoAltraSanzioneModel.getDaRecuperareGG(), "0")%></font>
+<%
+		} else {
+%>
+			-
+<%
+		}
+%>
 		</td>
 		<td class="c">
 <%

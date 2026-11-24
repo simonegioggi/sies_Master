@@ -65,7 +65,7 @@ if ("U019".equals(codOggettoProcedimentoES)) {
   strLabelBtnModifica   = "Modifica procedimento di Esecuzione P.S.";
   strProcedimentES      = "N.ro Procedimento E.P.S. : ";
   strDurataES           = "Durata pena: ";
-  strElencoES           = "Elenco Periodi Pena Sostitutiva ";
+  strElencoES           = "Elenco Periodi Esecuzione Pena Sostitutiva ";
   strEsecuzionePriva    = "Esecuzione Pena Sostitutiva priva di procedimenti";
 }
 %>

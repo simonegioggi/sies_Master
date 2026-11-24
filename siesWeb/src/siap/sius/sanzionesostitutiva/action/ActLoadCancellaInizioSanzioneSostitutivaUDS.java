@@ -11,6 +11,7 @@ import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
 import siap.sico.evento.controller.IEvento;
+import siap.sico.evento.model.EventoModel;
 import siap.sico.util.SICOLookupRemote;
 import siap.sius.esecuzionesanzionesostitutiva.controller.IEsecuzioneSS;
 import siap.sius.esecuzionesanzionesostitutiva.model.EsecuzioneSanzioneSostitutivaModel;
@@ -47,10 +48,15 @@ public class ActLoadCancellaInizioSanzioneSostitutivaUDS extends ActSanzioneSost
 		// 15/05/2008 Controllo EVENTO. Si permette la cancellazione senza alcun messaggio, se l'evento è
 		// annullato.
 		// In caso di Decreto/Ordinanza attiva si consente la scelta se cancellare o meno.
+		// 20260512-MEV_2026-124_SG: evento di annotazione manuale della sospensione, da cancellare con il periodo
+		BigDecimal lIdEventoAnnotazione = null;
 		if (lPerMod.getEveIdEvento() != null) {
 			// Preleva l'evento.
 			IEvento lCtrl = SICOLookupRemote.getEventoRemote();
-			/* EventoModel lEveMod = */lCtrl.ExRicercaEventoByKey(lPerMod.getEveIdEvento());
+			EventoModel lEveMod = lCtrl.ExRicercaEventoByKey(lPerMod.getEveIdEvento());
+			if (lEveMod != null && COD_MOTIVO_ANNOTAZIONE_SOSPENSIONE_PS.equals(lEveMod.getCodMotivo())
+					&& !"A".equals(lEveMod.getFlagDocumentoRegistrato()))
+				lIdEventoAnnotazione = lEveMod.getIdEvento();
 
 			// controllo evento
 			/*
@@ -203,7 +209,8 @@ public class ActLoadCancellaInizioSanzioneSostitutivaUDS extends ActSanzioneSost
 				lESSModel.setDataTermineAttuale(lPerMod.getDataScadenza());
 				lScaMod81c = lCtrl
 						.ExRicercaScadenzarioSiusByIdFascicoloTipo(lPerMod.getFasSiuIdFascicoloSius(), "81");
-				lCtrl1.ExCancellaPeriodoAltraSanzione(lScaMod81c, null, lScaMod80, IdPerCanc, lESSModel);
+				lCtrl1.ExCancellaPeriodoAltraSanzione(lScaMod81c, null, lScaMod80, IdPerCanc, lESSModel,
+						lIdEventoAnnotazione);
 			} else {
 				// se cancello una sospensione:
 				// (termine differimento) scadenzario 81 -> ripristino al precedente
@@ -219,7 +226,8 @@ public class ActLoadCancellaInizioSanzioneSostitutivaUDS extends ActSanzioneSost
 						.ExRicercaScadenzarioSiusByIdFascicoloTipo(lPerMod.getFasSiuIdFascicoloSius(), "81");
 				lPerMod = (PeriodoAltraSanzioneModel) lListaSanzioniSius.get(lListaSanzioniSius.size() - 3);
 				lScaMod81m = riempioScadenzario(lPerMod, lScaMod81m, "81");
-				lCtrl1.ExCancellaPeriodoAltraSanzione(null, lScaMod81m, lScaMod80, IdPerCanc, lESSModel);
+				lCtrl1.ExCancellaPeriodoAltraSanzione(null, lScaMod81m, lScaMod80, IdPerCanc, lESSModel,
+						lIdEventoAnnotazione);
 			}
 		}
 

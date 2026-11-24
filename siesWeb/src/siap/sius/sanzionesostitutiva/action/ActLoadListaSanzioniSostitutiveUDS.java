@@ -50,6 +50,21 @@ public class ActLoadListaSanzioniSostitutiveUDS extends ActSanzioneSostitutiva
 			EventoModel lEveMod = lCtrlEve.ExRicercaEventoByKey(ultimoPAS.getEveIdEvento());
 			setRequestAttribute("eventoUltimoPAS", lEveMod);
 		}
+		// 20260512-MEV_2026-124_SG: modalita' di inserimento (annotazione manuale / emissione ordinanza)
+		java.util.Map<BigDecimal, String> lModalita = new java.util.HashMap<BigDecimal, String>();
+		IEvento lCtrlEvePas = SICOLookupRemote.getEventoRemote();
+		for (Object lObj : lListaSanzioniSius) {
+			PeriodoAltraSanzioneModel lPas = (PeriodoAltraSanzioneModel) lObj;
+			String lModo = "Annotazione manuale";
+			if ("03".equals(lPas.getFlagMotivo()) && lPas.getEveIdEvento() != null) {
+				EventoModel lEvePas = lCtrlEvePas.ExRicercaEventoByKey(lPas.getEveIdEvento());
+				if (lEvePas != null
+						&& !ActSanzioneSostitutiva.COD_MOTIVO_ANNOTAZIONE_SOSPENSIONE_PS.equals(lEvePas.getCodMotivo()))
+					lModo = "Emissione ordinanza/decreto";
+			}
+			lModalita.put(lPas.getIdPeriodoAltraSanzione(), lModo);
+		}
+		setRequestAttribute("modalitaInserimentoPAS", lModalita);
 		setRequestAttribute("listaSanzioniSius", lListaSanzioniSius);
 		return PG_LOAD_LISTASANZIONISOSTITUTIVE;
 	}

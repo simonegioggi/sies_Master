@@ -145,6 +145,17 @@ function Verify() {
 		return false;
 	}
 
+<%
+// 20260512-MEV_2026-124_SG: per la sospensione di pena/sanzione sostitutiva e' obbligatoria la sola Data Decorrenza
+if (!("U141".equals(contenuto) || "C066".equals(contenuto))) {
+%>
+	if (chk_valore_data_inizio == false) {
+		alert('Inserire la "Data Decorrenza Sospensione"');
+		return false;
+	}
+<%
+}
+%>
 	// MEV_2023-35: proposta durante il collaudo la necessità di inserire almeno un valore
 // 	if (chk_valore_data_inizio == false && chk_valore_periodo == 0 && chk_valore_data_fine == false) {
 // 		alert('Inserire "Data Decorrenza Sospensione" o "Periodo Sospensione" o "Fino al"');
