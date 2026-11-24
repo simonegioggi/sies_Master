@@ -5022,11 +5022,29 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 					lStatoProcMod.setCodStatoProcedimento("0011");
 				break;
 			}
+			// MEV_2026-105 - Si gestisce la NUOVA PG 56 - Libero ex art. 94 Ter DPR 309/90
+			case 56: // Libero ex art. 94 Ter DPR 309/90
+			{
+				lPosizione = "56";  // Resta nella stessa posizione
+				if (!lCodStatoAggiornato)
+					lStatoProcMod.setCodStatoProcedimento("0011");
+				break;
+			}
+			// MEV_2026-105 - FINE
 			case 70: {
 				lPosizione = "84";
 				lStatoProcMod.setCodStatoProcedimento("0011");
 				break;
 			}
+			// MEV_2026-105 - Si gestisce la NUOVA PG 58
+			case 58: // Custodia Cautelare per Questa Causa in Regime di Arresti Domiciliari ex art 94 Ter DPR 309/90 
+			{
+				lPosizione = "58";  // Resta nella stessa posizione
+				if (!lCodStatoAggiornato)
+					lStatoProcMod.setCodStatoProcedimento("0011");
+				break;
+			}
+			// MEV_2026-105 - FINE
 			case 71: // Libero
 			{
 				lPosizione = "82";

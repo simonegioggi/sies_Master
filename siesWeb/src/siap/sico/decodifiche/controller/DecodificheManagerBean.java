@@ -798,6 +798,18 @@ public class DecodificheManagerBean {
 			lModel.setFiltro("PRIMA");
 			lModel.setCode("90");
 			lListPrima.addAll(lDecodifiche.ExRicercaDecodificheOrdinatePerCodiceAlternativo(lModel));
+			
+			// MEV_2026-105 - Si gestisce la NUOVA PG 56 - Libero ex art. 94 Ter DPR 309/90
+			lModel.setContesto("POSIZIONE_GIURIDICA");
+			lModel.setFiltro("PRIMA");
+			lModel.setCode("56");
+			lListPrima.addAll(lDecodifiche.ExRicercaDecodificheOrdinatePerCodiceAlternativo(lModel));
+			lModel.setContesto("POSIZIONE_GIURIDICA");
+			lModel.setFiltro("PRIMA");
+			lModel.setCode("58");
+			lListPrima.addAll(lDecodifiche.ExRicercaDecodificheOrdinatePerCodiceAlternativo(lModel));
+			// MEV_2026-105 - FINE
+			
 			mPosizioneGiuridicaIscrizione = lListPrima;
 
 			// POSIZIONE GIURIDICA ISCRIZIONE CIDICE MASCHERA

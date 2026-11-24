@@ -3,6 +3,9 @@ package siap.siep.ordineesecuzione.action;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import org.apache.log4j.Logger;
+
+import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
 import f3b.web.IWebConstants;
@@ -18,6 +21,7 @@ import siap.siep.notifica.model.NotificaModel;
 import siap.siep.ordineesecuzione.controller.IOrdineEsecuzione;
 import siap.siep.penaresidua.action.ICostantiPenaResidua;
 import siap.siep.penaresidua.model.PenaResiduaModel;
+import siap.siep.posizione.action.ICostantiPosizioneGiuridica;
 import siap.siep.posizione.controller.IPosizioneGiuridica;
 import siap.siep.posizione.model.PosizioneGiuridicaModel;
 import siap.siep.util.SIEPLookupRemote;
@@ -39,6 +43,8 @@ import siap.siep.util.SIEPLookupRemote;
  */
 public class ActInserisciOrdineEsecuzioneSimeone extends ActOrdineEsecuzione
 		implements ICostantiOrdineEsecuzione {
+	
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 	/**
 	 * Azione di Inserimento del Evento
 	 * 
@@ -87,6 +93,12 @@ public class ActInserisciOrdineEsecuzioneSimeone extends ActOrdineEsecuzione
 			lPage = InserisciLSArrestiDomiciliariPcCcAddpr("OE-CS-ADDPR");
 			break;
 		}
+		// MEV_2026-105 - Si gestisce la NUOVA PG 58 - CC QC ex art. 94 Ter DPR 309/90 (come 70)
+		case 58: {
+			lPage = InserisciLSArrestiDomiciliariPcCcAddpr("OE-CS-ADDPR94");
+			break;
+		}
+		// MEV_2026-105 - FINE
 		case 71: {
 			lPage = InserisciLSArrestiDomiciliariPcCcAddpr("OE-CS-PC");
 			break;
@@ -136,6 +148,9 @@ public class ActInserisciOrdineEsecuzioneSimeone extends ActOrdineEsecuzione
 		case 17: // Libero
 		case 20: // Libero
 		case 26: // Libero
+		// MEV_2026-105 - Si gestisce la NUOVA PG 56 - Libero ex art. 94 Ter DPR 309/90
+		case 56: // Libero
+		// MEV_2026-105 - FINE	
 		case 30: {
 			lPage = InserisciLSLibero();
 			break;
@@ -170,11 +185,30 @@ public class ActInserisciOrdineEsecuzioneSimeone extends ActOrdineEsecuzione
 		String lIstPre = null;
 		lIstPre = getRequestStringParameter("istanza");
 
-		if (lIstPre.equals("N"))
-			lEve.getEvento().setDescrMotivo("LS-LIB");
-		else
-			lEve.getEvento().setDescrMotivo("LS-LIB-I");
-
+		// MEV_2026-105 - Si gestisce la NUOVA PG 56 - Libero ex art. 94 Ter DPR 309/90
+		// che prevede 2 nuovi RV_HIGH_VALUE
+		//if (lIstPre.equals("N"))
+		//	lEve.getEvento().setDescrMotivo("LS-LIB");
+		//else
+		//	lEve.getEvento().setDescrMotivo("LS-LIB-I");
+		
+		String lCodPG = getRequestStringParameter(ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA);
+		
+		if ("56".equals(lCodPG)) {
+			siesLogger.debug("Sono in PG 56");
+			if (lIstPre.equals("N"))
+				lEve.getEvento().setDescrMotivo("LS-LIB94");
+			else
+				lEve.getEvento().setDescrMotivo("LS-LIB94-I");			
+		}
+		else {		
+			if (lIstPre.equals("N"))
+				lEve.getEvento().setDescrMotivo("LS-LIB");
+			else
+				lEve.getEvento().setDescrMotivo("LS-LIB-I");
+		}
+		// MEV_2026-105 - FINE
+		
 		lEve.setEvento(setEventoOrdineEsecuzione(lEve.getEvento()));
 		lEve.getMagistrato()
 				.setCodMagistrato(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MAGISTRATO));
