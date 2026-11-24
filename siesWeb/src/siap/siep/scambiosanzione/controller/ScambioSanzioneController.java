@@ -34,6 +34,7 @@ import siap.siep.posizione.dao.PosizioneGiuridicaDAO;
 import siap.siep.posizione.model.PosizioneGiuridicaModel;
 import siap.siep.scambiosanzione.dao.ScambioSanzioneDAO;
 import siap.siep.scambiosanzione.dao.ScambioSanzioneRichiestaConvSqlDAO;
+import siap.siep.scambiosanzione.dao.ProvvedimentoPenaSostitutivaSqlDAO;
 import siap.siep.scambiosanzione.dao.ScambioSanzioneSqlDAO;
 import siap.siep.scambiosanzione.model.ScambioSanzioneModel;
 import siap.siep.statoprocedimento.dao.StatoProcedimentoDAO;
@@ -820,6 +821,50 @@ public class ScambioSanzioneController extends SiapController implements IScambi
 			cleanup(lConn);
 		}
 		return lEveRet;
+	}
+
+	// 20261124-MEV_2026-124_SG: provvedimenti SIUS delle pene sostitutive (Riforma Cartabia) da annotare in SIEP
+	public List ExRicercaProvvedimentiPenaSostitutiva(BigDecimal aFascicoloSiep, String[] aMotivi)
+			throws F3BException {
+
+		Connection lConn = null;
+		ProvvedimentoPenaSostitutivaSqlDAO lDao = null;
+
+		try {
+			lConn = getDBConnection();
+			lDao = new ProvvedimentoPenaSostitutivaSqlDAO(lConn);
+			lDao.ricercaProvvedimentiPS(aFascicoloSiep, aMotivi);
+			return new ArrayList(lDao.getModels());
+		} catch (DAOException daoEx) {
+			throw new F3BException(
+					"ScambioSanzioneController.ExRicercaProvvedimentiPenaSostitutiva: Non posso leggere : "
+							+ daoEx);
+		} finally {
+			cleanup(lDao);
+			cleanup(lConn);
+		}
+	}
+
+	// 20261124-MEV_2026-124_SG
+	public ScambioSanzioneModel ExRicercaProvvedimentoPenaSostitutivaByIdEvento(BigDecimal aIdEvento)
+			throws F3BException {
+
+		Connection lConn = null;
+		ProvvedimentoPenaSostitutivaSqlDAO lDao = null;
+
+		try {
+			lConn = getDBConnection();
+			lDao = new ProvvedimentoPenaSostitutivaSqlDAO(lConn);
+			lDao.ricercaProvvedimentoPSByIdEvento(aIdEvento);
+			return (ScambioSanzioneModel) lDao.getModelByKey();
+		} catch (DAOException daoEx) {
+			throw new F3BException(
+					"ScambioSanzioneController.ExRicercaProvvedimentoPenaSostitutivaByIdEvento: Non posso leggere : "
+							+ daoEx);
+		} finally {
+			cleanup(lDao);
+			cleanup(lConn);
+		}
 	}
 
 }

@@ -81,7 +81,7 @@ if (!fascicoloNotInSession.equals("S")) {
   			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadRiscontroTrasmissioneAttiEsecuzione">Riscontro Trasmissione Atti per Esecuzione</a>
 		</td>
 		<td width="32%" class="menulines" nowrap>
-  			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.web.ActionUnderConstruction">Annotazione Provvedimento Pena Sostitutiva</a>
+  			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadAnnotazioneProvvedimentoPS">Annotazione Provvedimento Pena Sostitutiva<%-- 20261124-MEV_2026-124_SG --%></a>
   		</td>
 	</tr>
 	<tr>
@@ -89,7 +89,7 @@ if (!fascicoloNotInSession.equals("S")) {
     		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.web.ActionUnderConstruction">Affidamento in Prova al Servizio Sociale</a>
 		</td>
 		<td width="32%" class="menulines" nowrap>
-  			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.web.ActionUnderConstruction">Annotazione Revoca / Conversione</a>
+  			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadAnnotazioneRevocaConversionePS">Annotazione Revoca / Conversione<%-- 20261124-MEV_2026-124_SG --%></a>
 		</td>
 		<td width="32%" class="menulines" nowrap>
   			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.web.ActionUnderConstruction">Richiesta Revoca Pena Sostitutiva al GE</a>
