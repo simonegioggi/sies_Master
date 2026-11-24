@@ -43,6 +43,7 @@ public class DepositoOrdinanzaPcDAO extends SIAPTableDAO {
 		setField("LUOGO_SVOLGIMENTO_PROVA", STRING);
 		setField("SERVIZIO_TERAPEUTICO_COMP", STRING);
 		setField("NUM_GIORNI_DETENZIONE_DOM", BIG_DECIMAL);
+		setField("NUM_ORE_LPU", BIG_DECIMAL);
 		setField("NUM_MESI_DETENZIONE_DOM", BIG_DECIMAL);
 		setField("NUM_ANNI_DETENZIONE_DOM", BIG_DECIMAL);
 		setField("NUM_GIORNI_PERMESSO_ACCORDATI", BIG_DECIMAL);
@@ -151,6 +152,11 @@ public class DepositoOrdinanzaPcDAO extends SIAPTableDAO {
 
 	public String getServizioTerapeuticoComp() throws DAOException {
 		return getString("SERVIZIO_TERAPEUTICO_COMP");
+	}
+
+	// MEV_2026-124_SG: ore di lavoro di pubblica utilita' da conversione pena
+	public BigDecimal getNumOreLpu() throws DAOException {
+		return getBigDecimal("NUM_ORE_LPU");
 	}
 
 	public BigDecimal getNumGiorniDetenzioneDom() throws DAOException {
@@ -404,6 +410,10 @@ public class DepositoOrdinanzaPcDAO extends SIAPTableDAO {
 		setString("SERVIZIO_TERAPEUTICO_COMP", aValore);
 	}
 
+	public void setNumOreLpu(BigDecimal aValore) {
+		setBigDecimal("NUM_ORE_LPU", aValore);
+	}
+
 	public void setNumGiorniDetenzioneDom(BigDecimal aValore) {
 		setBigDecimal("NUM_GIORNI_DETENZIONE_DOM", aValore);
 	}
@@ -644,6 +654,7 @@ public class DepositoOrdinanzaPcDAO extends SIAPTableDAO {
 		setLuogoSvolgimentoProva(aModel.getLuogoSvolgimentoProva());
 		setServizioTerapeuticoComp(aModel.getServizioTerapeuticoComp());
 		setNumGiorniDetenzioneDom(aModel.getNumGiorniDetenzioneDom());
+		setNumOreLpu(aModel.getNumOreLpu());
 		setNumMesiDetenzioneDom(aModel.getNumMesiDetenzioneDom());
 		setNumAnniDetenzioneDom(aModel.getNumAnniDetenzioneDom());
 		setNumGiorniPermessoAccordati(aModel.getNumGiorniPermessoAccordati());
@@ -712,6 +723,7 @@ public class DepositoOrdinanzaPcDAO extends SIAPTableDAO {
 		setLuogoSvolgimentoProva(aModel.getLuogoSvolgimentoProva());
 		setServizioTerapeuticoComp(aModel.getServizioTerapeuticoComp());
 		setNumGiorniDetenzioneDom(aModel.getNumGiorniDetenzioneDom());
+		setNumOreLpu(aModel.getNumOreLpu());
 		setNumMesiDetenzioneDom(aModel.getNumMesiDetenzioneDom());
 		setNumAnniDetenzioneDom(aModel.getNumAnniDetenzioneDom());
 		setNumGiorniPermessoAccordati(aModel.getNumGiorniPermessoAccordati());

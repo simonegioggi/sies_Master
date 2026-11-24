@@ -3501,6 +3501,8 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 				dopdao.setNumGiorniDetenzioneDom(dopm.getNumGiorniDetenzioneDom());
 				dopdao.setNumMesiDetenzioneDom(dopm.getNumMesiDetenzioneDom());
 				dopdao.setNumAnniDetenzioneDom(dopm.getNumAnniDetenzioneDom());
+				if (dopm.getNumOreLpu() != null)
+					dopdao.setNumOreLpu(dopm.getNumOreLpu());
 				dopdao.setCodOperatoreAggiornamento(dopm.getCodOperatoreAggiornamento());
 				dopdao.setCodUfficioAggiornamento(dopm.getCodUfficioAggiornamento());
 				dopdao.setDataAggiornamento(dopm.getDataAggiornamento());
@@ -3508,6 +3510,30 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 				// dopdao.setIdEventoGenerato(lModRet.getEvento().getIdEvento());
 				dopdao.setCondizioneUpdate(lModRet.getOrdinanza().getIdDepositoOrdinanzaPc());
 				dopdao.update();
+			}
+
+			// MEV_2026-124_SG: ordinanza unica - gli esiti di revoca pena pecuniaria sostitutiva e conversione
+			// (0282 semiliberta', 0283 detenzione domiciliare, 0284 lavoro di pubblica utilita') generano la
+			// RICHIESTA_CONVERSIONE come faceva la precedente ordinanza di Revoca e Conversione (CR)
+			if (!Utils.isNullObj(dopm) && Utils.isPresent(dopm.getCodTipoSanzione())
+					&& !Utils.isNullObj(lModRet.getTenori()) && lModRet.getTenori().length > 0
+					&& ("0282".equals(lModRet.getTenori()[0].getCodEsitoTenore())
+							|| "0283".equals(lModRet.getTenori()[0].getCodEsitoTenore())
+							|| "0284".equals(lModRet.getTenori()[0].getCodEsitoTenore()))) {
+				RichiestaConversioneModel lRicRev = new RichiestaConversioneModel();
+				lRicRev.setImportoMulta(dopm.getSommaRisarcimento());
+				lRicRev.setCodTipoSanzione(dopm.getCodTipoSanzione());
+				lRicRev.setDurataEsitoAnni(dopm.getNumAnniDetenzioneDom());
+				lRicRev.setDurataEsitoMesi(dopm.getNumMesiDetenzioneDom());
+				lRicRev.setDurataEsitoGiorni(dopm.getNumGiorniDetenzioneDom());
+				lRicRev.setFasSiuIdFascicoloSius(lModRet.getEvento().getFasSiuIdFascicoloSius());
+				lRicRev.setEveIdEvento(lModRet.getEvento().getIdEvento());
+				lRicRev.setCodOperatoreAggiornamento(lModRet.getEvento().getCodOperatoreInserimento());
+				lRicRev.setCodUfficioAggiornamento(lModRet.getEvento().getCodUfficioInserimento());
+				lRicRev.setDataAggiornamento(lModRet.getEvento().getDataInserimento());
+				lRicConvDAO = new RichiestaConversioneDAO(lConn);
+				lRicConvDAO.setDAOFromModel(lRicRev);
+				lRicConvDAO.insert();
 			}
 
 			commit(lConn);

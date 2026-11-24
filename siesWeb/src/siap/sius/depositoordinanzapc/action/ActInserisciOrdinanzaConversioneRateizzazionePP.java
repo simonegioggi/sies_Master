@@ -211,7 +211,9 @@ public class ActInserisciOrdinanzaConversioneRateizzazionePP extends ActInserisc
 				}
 			} else if (tipologia.equals("3205") || tipologia.equals("3206") || tipologia.equals("3207")
 			// MEV_2025-48: aggiunto esito (3209) per Oggetto: 3180 - Contenuto: U142 - TIPO ORDINANZA: SR
-					|| tipologia.equals("3208") || tipologia.equals("3209") || tipologia.equals("3217")) {
+					|| tipologia.equals("3208") || tipologia.equals("3209") || tipologia.equals("3217")
+					// MEV_2026-124_SG: esiti di revoca pena pecuniaria sostitutiva e conversione
+					|| tipologia.equals("3222") || tipologia.equals("3223") || tipologia.equals("3224")) {
 				if (!isRequestParameterNullObj(
 						ICostantiDepositoOrdinanzaPc.CAMPO_INTERO_PENA_PECUNIARIA_CONVERTITA)
 						&& ((getRequestStringParameter(
@@ -245,6 +247,10 @@ public class ActInserisciOrdinanzaConversioneRateizzazionePP extends ActInserisc
 					dopm.setCodOperatoreAggiornamento(getCodUtenteConnesso());
 					dopm.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
 					dopm.setDataAggiornamento(DateUtils.getSysDate());
+					// MEV_2026-124_SG: ore di lavoro di pubblica utilita'
+					if (!isRequestParameterNullObj(ICostantiDepositoOrdinanzaPc.CAMPO_NUM_ORE_LPU)
+							&& Utils.isPresent(getRequestStringParameter(ICostantiDepositoOrdinanzaPc.CAMPO_NUM_ORE_LPU)))
+						dopm.setNumOreLpu(new BigDecimal(getRequestStringParameter(ICostantiDepositoOrdinanzaPc.CAMPO_NUM_ORE_LPU).trim()));
 					dopm.setCodTipoSanzione(
 							getRequestStringParameter(ICostantiDepositoOrdinanzaPc.CAMPO_FLAG_TIPO_SANZIONE));
 				}

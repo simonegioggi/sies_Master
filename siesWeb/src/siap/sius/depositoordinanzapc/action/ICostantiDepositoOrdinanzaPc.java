@@ -34,6 +34,8 @@ public interface ICostantiDepositoOrdinanzaPc {
 	public static final String CAMPO_LUOGO_SVOLGIMENTO_PROVA = "LuogoSvolgimentoProva";
 	public static final String CAMPO_SERVIZIO_TERAPEUTICO_COMP = "ServizioTerapeuticoComp";
 	public static final String CAMPO_NUM_GIORNI_DETENZIONE_DOM = "NumGiorniDetenzioneDom";
+	// MEV_2026-124_SG: ore lavoro di pubblica utilita' da conversione pena
+	public static final String CAMPO_NUM_ORE_LPU = "NumOreLpu";
 	public static final String CAMPO_NUM_MESI_DETENZIONE_DOM = "NumMesiDetenzioneDom";
 	public static final String CAMPO_NUM_ANNI_DETENZIONE_DOM = "NumAnniDetenzioneDom";
 	public static final String CAMPO_NUM_GIORNI_PERMESSO_ACCORDATI = "NumGiorniPermessoAccordati";
