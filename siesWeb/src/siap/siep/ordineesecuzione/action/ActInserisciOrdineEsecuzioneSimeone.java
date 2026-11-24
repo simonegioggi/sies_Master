@@ -3,6 +3,9 @@ package siap.siep.ordineesecuzione.action;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import org.apache.log4j.Logger;
+
+import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
 import f3b.web.IWebConstants;
@@ -18,30 +21,25 @@ import siap.siep.notifica.model.NotificaModel;
 import siap.siep.ordineesecuzione.controller.IOrdineEsecuzione;
 import siap.siep.penaresidua.action.ICostantiPenaResidua;
 import siap.siep.penaresidua.model.PenaResiduaModel;
+import siap.siep.posizione.action.ICostantiPosizioneGiuridica;
 import siap.siep.posizione.controller.IPosizioneGiuridica;
 import siap.siep.posizione.model.PosizioneGiuridicaModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
+ * ActInserisciOrdineEsecuzioneSimeone - Classe responsabile dell'Inserimento degli Ordini di Esecuzione
+ * Simeone
  *
- * <p>
- * Title: ActInserisciOrdineEsecuzioneSimeone
- * </p>
- * <p>
- * Description: Inserimento degli Ordini di Esecuzione Simeone
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * @version 1.0
  */
 public class ActInserisciOrdineEsecuzioneSimeone extends ActOrdineEsecuzione
 		implements ICostantiOrdineEsecuzione {
+
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+
 	/**
 	 * Azione di Inserimento del Evento
-	 * 
+	 *
 	 * @return Nome della pagina JSP da visualizzare al termine dell'elaborazione
 	 * @throws F3BException
 	 */
@@ -83,16 +81,20 @@ public class ActInserisciOrdineEsecuzioneSimeone extends ActOrdineEsecuzione
 			lPage = InserisciLSArrestiDomiciliari();
 			break;
 		}
-		case 56: { // MEV_2026-105: Libero ex art. 94 ter // 20261023-MEV_2026-105_SG
-			lPage = InserisciLSLibero("LS-LIB-94T"); // 20261023-MEV_2026-105_SG
-			break; // 20261023-MEV_2026-105_SG
-		} // 20261023-MEV_2026-105_SG
+		// case 56: { // MEV_2026-105: Libero ex art. 94 ter // 20261023-MEV_2026-105_SG
+		// lPage = InserisciLSLibero("LS-LIB-94T"); // 20261023-MEV_2026-105_SG
+		// break; // 20261023-MEV_2026-105_SG
+		// } // 20261023-MEV_2026-105_SG
 		case 57: { // MEV_2026-105: altra causa AD ex art. 94 ter // 20261023-MEV_2026-105_SG
 			lPage = InserisciLSAltraCausaDacMspAdPcCcAddpr("OE-S-AC-94T"); // 20261023-MEV_2026-105_SG
 			break; // 20261023-MEV_2026-105_SG
 		} // 20261023-MEV_2026-105_SG
-		case 58: { // MEV_2026-105: questa causa AD ex art. 94 ter // 20261023-MEV_2026-105_SG
-			lPage = InserisciLSArrestiDomiciliariPcCcAddpr("OE-CS-94T"); // 20261023-MEV_2026-105_SG
+		case 58: {
+			// MEV_2026-105: questa causa AD ex art. 94 ter // 20261023-MEV_2026-105_SG
+			// MEV_2026-105 - Si gestisce la NUOVA PG 58 - CC QC ex art. 94 Ter DPR 309/90 (come 70)
+			// lPage = InserisciLSArrestiDomiciliariPcCcAddpr("OE-CS-94T"); // 20261023-MEV_2026-105_SG
+			lPage = InserisciLSArrestiDomiciliariPcCcAddpr("OE-CS-ADDPR94");
+			// MEV_2026-105 - FINE
 			break; // 20261023-MEV_2026-105_SG
 		} // 20261023-MEV_2026-105_SG
 		case 70: {
@@ -107,11 +109,13 @@ public class ActInserisciOrdineEsecuzioneSimeone extends ActOrdineEsecuzione
 			lPage = InserisciLSArrestiDomiciliariPcCcAddpr("OE-CS-CC");
 			break;
 		}
-		//Ticket#202205020111 — SIEP - Ordini di Esecuzione/Scarcerazione
+		// Ticket#202205020111 — SIEP - Ordini di Esecuzione/Scarcerazione
 		// Si aggiungono anche le PG 74 e 75
-		//case 76: {		
-		case 76: case 75: case 74: {
-	    //Ticket#202205020111 — FINE
+		// case 76: {
+		case 76:
+		case 75:
+		case 74: {
+			// Ticket#202205020111 - FINE
 			lPage = InserisciLSAltraCausa();
 			break;
 		}
@@ -148,7 +152,10 @@ public class ActInserisciOrdineEsecuzioneSimeone extends ActOrdineEsecuzione
 		case 17: // Libero
 		case 20: // Libero
 		case 26: // Libero
-		case 30: {
+		case 30: // Libero
+			// MEV_2026-105 - Si gestisce la NUOVA PG 56 - Libero ex art. 94 Ter DPR 309/90
+		case 56: {
+			// MEV_2026-105 - FINE
 			lPage = InserisciLSLibero();
 			break;
 		}
@@ -166,14 +173,15 @@ public class ActInserisciOrdineEsecuzioneSimeone extends ActOrdineEsecuzione
 
 	/**
 	 * Inserisci l'ordine di Esecuzione Simeone per Libero
-	 * 
+	 *
 	 * @return
 	 * @throws Exception
 	 */
 	private String InserisciLSLibero() throws Exception {
 		return InserisciLSLibero(null); // 20261023-MEV_2026-105_SG
 	} // 20261023-MEV_2026-105_SG
- // 20261023-MEV_2026-105_SG
+		// 20261023-MEV_2026-105_SG
+
 	private String InserisciLSLibero(String aMotivo) throws Exception { // 20261023-MEV_2026-105_SG
 		String lCodiceOperatore = this.getCodUtenteConnesso();
 		String lCodiceUfficio = this.getCodUfficioUtenteConnesso();
@@ -192,6 +200,27 @@ public class ActInserisciOrdineEsecuzioneSimeone extends ActOrdineEsecuzione
 			lEve.getEvento().setDescrMotivo("LS-LIB");
 		else
 			lEve.getEvento().setDescrMotivo("LS-LIB-I");
+
+		// MEV_2026-105 - Si gestisce la NUOVA PG 56 - Libero ex art. 94 Ter DPR 309/90
+		// che prevede 2 nuovi RV_HIGH_VALUE
+		// if (lIstPre.equals("N"))
+		// lEve.getEvento().setDescrMotivo("LS-LIB");
+		// else
+		// lEve.getEvento().setDescrMotivo("LS-LIB-I");
+		String lCodPG = getRequestStringParameter(ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA);
+		if ("56".equals(lCodPG)) {
+			siesLogger.debug("Sono in PG 56");
+			if (lIstPre.equals("N"))
+				lEve.getEvento().setDescrMotivo("LS-LIB94");
+			else
+				lEve.getEvento().setDescrMotivo("LS-LIB94-I");
+		} else {
+			if (lIstPre.equals("N"))
+				lEve.getEvento().setDescrMotivo("LS-LIB");
+			else
+				lEve.getEvento().setDescrMotivo("LS-LIB-I");
+		}
+		// MEV_2026-105 - FINE
 
 		lEve.setEvento(setEventoOrdineEsecuzione(lEve.getEvento()));
 		lEve.getMagistrato()
@@ -287,7 +316,7 @@ public class ActInserisciOrdineEsecuzioneSimeone extends ActOrdineEsecuzione
 
 	/**
 	 * Inserisci LSA rresti Domiciliari
-	 * 
+	 *
 	 * @return JSP page
 	 * @throws Exception
 	 */
@@ -454,7 +483,7 @@ public class ActInserisciOrdineEsecuzioneSimeone extends ActOrdineEsecuzione
 
 	/**
 	 * Inserisci LSA rresti Domiciliari
-	 * 
+	 *
 	 * @return JSP page
 	 * @throws Exception
 	 */
@@ -610,7 +639,7 @@ public class ActInserisciOrdineEsecuzioneSimeone extends ActOrdineEsecuzione
 
 	/**
 	 * Inserisci l'Ordine di Esecuzione Simeone per un Detenuto Altra Causa
-	 * 
+	 *
 	 * @return
 	 * @throws Exception
 	 */
@@ -725,7 +754,7 @@ public class ActInserisciOrdineEsecuzioneSimeone extends ActOrdineEsecuzione
 
 	/**
 	 * Inserisci l'Ordine di Esecuzione Simeone per un Detenuto Altra Causa
-	 * 
+	 *
 	 * @return
 	 * @throws Exception
 	 */
@@ -847,7 +876,7 @@ public class ActInserisciOrdineEsecuzioneSimeone extends ActOrdineEsecuzione
 
 	/**
 	 * Inserisci LS Altre Posizioni
-	 * 
+	 *
 	 * @return
 	 * @throws Exception
 	 */

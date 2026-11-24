@@ -200,9 +200,17 @@
 						|| (lPosizione.getCodPosizioneGiuridica().equals("07") && lFascicoloAssociato.getFlagAltraCausa()== null  )
 						|| (lPosizione.getCodPosizioneGiuridica().equals("10") && lFascicoloAssociato.getFlagAltraCausa()== null )
 						|| (lPosizione.getCodPosizioneGiuridica().equals("-") && lFascicoloAssociato.getFlagAltraCausa()== null )
-						|| lPosizione.getCodPosizioneGiuridica().equals("02") || lPosizione.getCodPosizioneGiuridica().equals("04") || lPosizione.getCodPosizioneGiuridica().equals("16") || lPosizione.getCodPosizioneGiuridica().equals("20")
+						|| lPosizione.getCodPosizioneGiuridica().equals("02") || lPosizione.getCodPosizioneGiuridica().equals("04") 
+						|| lPosizione.getCodPosizioneGiuridica().equals("16") || lPosizione.getCodPosizioneGiuridica().equals("20")
 						|| lPosizione.getCodPosizioneGiuridica().equals("46") || lPosizione.getCodPosizioneGiuridica().equals("47")
-						|| lPosizione.getCodPosizioneGiuridica().equals("70") || lPosizione.getCodPosizioneGiuridica().equals("71")|| lPosizione.getCodPosizioneGiuridica().equals("72"))
+						|| lPosizione.getCodPosizioneGiuridica().equals("70") || lPosizione.getCodPosizioneGiuridica().equals("71")
+						|| lPosizione.getCodPosizioneGiuridica().equals("72")
+						// MEV_2026-105 - Si gestisce la NUOVA PG 56 - Libero ex art. 94 Ter DPR 309/90
+						|| lPosizione.getCodPosizioneGiuridica().equals("56")
+			            // MEV_2026-105 - Si gestisce la NUOVA PG 58 - CC QC ex art. 94 Ter DPR 309/90 (come 70)
+			            || lPosizione.getCodPosizioneGiuridica().equals("58")						
+						// MEV_2026-105 - FINE
+						)
         {
 %>
           if (document.LoadInserisciOrdineEsecuzione.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>[document.LoadInserisciOrdineEsecuzione.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>.selectedIndex].value == '-' )
@@ -277,7 +285,13 @@
      			&& document.LoadInserisciOrdineEsecuzione.<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>.value != '47'
      			&& document.LoadInserisciOrdineEsecuzione.<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>.value != '70'
      			&& document.LoadInserisciOrdineEsecuzione.<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>.value != '71'
-     			&& document.LoadInserisciOrdineEsecuzione.<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>.value != '72')
+     			&& document.LoadInserisciOrdineEsecuzione.<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>.value != '72'
+     			// MEV_2026-105 - Si gestisce la NUOVA PG 56 - Libero ex art. 94 Ter DPR 309/90 (come 07/10)
+     			&& document.LoadInserisciOrdineEsecuzione.<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>.value != '56'
+     			// MEV_2026-105 - Si gestisce la NUOVA PG 58 - CC QC ex art. 94 Ter DPR 309/90 (come 70)
+     			&& document.LoadInserisciOrdineEsecuzione.<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>.value != '58'
+     			// MEV_2026-105 - FINE 
+    	)
 
      {
        if (document.LoadInserisciOrdineEsecuzione.<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>.value == "")
@@ -304,7 +318,11 @@
 		if (lPosizione.getCodPosizioneGiuridica().equals("04") || lPosizione.getCodPosizioneGiuridica().equals("02")
 				|| lPosizione.getCodPosizioneGiuridica().equals("70")
 				|| lPosizione.getCodPosizioneGiuridica().equals("71")
-				|| lPosizione.getCodPosizioneGiuridica().equals("72"))
+				|| lPosizione.getCodPosizioneGiuridica().equals("72")
+	            // MEV_2026-105 - Si gestisce la NUOVA PG 58 - CC QC ex art. 94 Ter DPR 309/90 (come 70)
+	            || lPosizione.getCodPosizioneGiuridica().equals("58")
+				// MEV_2026-105 - FINE				
+				)
    	{
 %>
 	  if (document.LoadInserisciOrdineEsecuzione.<%=ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_UEPE_USSM_SS%>.value == '-' )
@@ -525,11 +543,17 @@
         }
 
         // Nel Caso di Posizione Giuridica ARRESTI DOMICILIARI ( 02, 04)
-        if (lPosizione.getCodPosizioneGiuridica() != null && (lPosizione.getCodPosizioneGiuridica().equals("02") ||
-        lPosizione.getCodPosizioneGiuridica().equals("04")
-        || lPosizione.getCodPosizioneGiuridica().equals("70")
-        || lPosizione.getCodPosizioneGiuridica().equals("71")
-        || lPosizione.getCodPosizioneGiuridica().equals("72")) )
+        if (lPosizione.getCodPosizioneGiuridica() != null 
+           && (    lPosizione.getCodPosizioneGiuridica().equals("02") 
+        		|| lPosizione.getCodPosizioneGiuridica().equals("04")
+		        || lPosizione.getCodPosizioneGiuridica().equals("70")
+		        || lPosizione.getCodPosizioneGiuridica().equals("71")
+		        || lPosizione.getCodPosizioneGiuridica().equals("72")
+		        // MEV_2026-105 - Si gestisce la NUOVA PG 58 - CC QC ex art. 94 Ter DPR 309/90 (come 70)
+		        || lPosizione.getCodPosizioneGiuridica().equals("58")
+				// MEV_2026-105 - FINE        
+		     ) 
+           )
         {
           if (lLuogoDetenzione.getAltroLuogo() != null)
           {
@@ -843,7 +867,13 @@ if (lFascicoloAssociato.getFlagAltraCausa() != null && lFascicoloAssociato.getFl
 			|| lPosizione.getCodPosizioneGiuridica().equals("78") || lPosizione.getCodPosizioneGiuridica().equals("79") 
 			|| lPosizione.getCodPosizioneGiuridica().equals("80") || lPosizione.getCodPosizioneGiuridica().equals("81")
 			|| lPosizione.getCodPosizioneGiuridica().equals("70") || lPosizione.getCodPosizioneGiuridica().equals("71")
-			|| lPosizione.getCodPosizioneGiuridica().equals("72")) {
+			|| lPosizione.getCodPosizioneGiuridica().equals("72")
+			// MEV_2026-105 - Si gestisce la NUOVA PG 56 - Libero ex art. 94 Ter DPR 309/90
+			|| lPosizione.getCodPosizioneGiuridica().equals("56")
+            // MEV_2026-105 - Si gestisce la NUOVA PG 58 - CC QC ex art. 94 Ter DPR 309/90 (come 70)
+            || lPosizione.getCodPosizioneGiuridica().equals("58")			
+			// MEV_2026-105 - FINE
+			) {
 %>
  		<td class="L" colspan="3">
        		<select  Title="Autorita Esterna" class="small" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>">
@@ -1001,10 +1031,16 @@ while (lItxAvv.hasNext()) {
 if (lPosizione.getCodPosizioneGiuridica().equals("04") || lPosizione.getCodPosizioneGiuridica().equals("02")
 		|| lPosizione.getCodPosizioneGiuridica().equals("70")
 		|| lPosizione.getCodPosizioneGiuridica().equals("71")
-		|| lPosizione.getCodPosizioneGiuridica().equals("72")) {
+		|| lPosizione.getCodPosizioneGiuridica().equals("72")
+        // MEV_2026-105 - Si gestisce la NUOVA PG 58 - CC QC ex art. 94 Ter DPR 309/90 (come 70)
+        || lPosizione.getCodPosizioneGiuridica().equals("58")
+		// MEV_2026-105 - FINE		
+	) 
+{
 %>
 	<tr>
-		<td class="Titolo" colspan=6> Notifica Servizio Sociale</td></tr>
+		<td class="Titolo" colspan=6> Notifica Servizio Sociale</td>
+    </tr>
    	<tr>
         <td class="l">Destinatario</td>
         <td class="l">
@@ -1080,12 +1116,17 @@ if (istanza != null && istanza.getIdEvento() != null) {
 		</td>
 	</tr>
 <%
-if (((istanza != null) && (istanza.getIdEvento() != null))
-		||(lPosizione.getCodPosizioneGiuridica().equals("04"))
+if ( ( (istanza != null) && 
+		(istanza.getIdEvento() != null))
+		|| (lPosizione.getCodPosizioneGiuridica().equals("04"))
 		|| (lPosizione.getCodPosizioneGiuridica().equals("02"))
 		|| (lPosizione.getCodPosizioneGiuridica().equals("70"))
 		|| (lPosizione.getCodPosizioneGiuridica().equals("71"))
-		|| (lPosizione.getCodPosizioneGiuridica().equals("72"))) {
+		|| (lPosizione.getCodPosizioneGiuridica().equals("72"))
+        // MEV_2026-105 - Si gestisce la NUOVA PG 58 - CC QC ex art. 94 Ter DPR 309/90 (come 70)
+        || (lPosizione.getCodPosizioneGiuridica().equals("58"))
+		// MEV_2026-105 - FINE			
+) {
 %>
 	<tr><td class="Titolo" colspan=6> Notifica Ente di Sorveglianza</td></tr>
    	<tr>
@@ -1163,7 +1204,13 @@ if (lPosizione.getCodPosizioneGiuridica().equals("07")
         || lPosizione.getCodPosizioneGiuridica().equals("47")
         || lPosizione.getCodPosizioneGiuridica().equals("70")
         || lPosizione.getCodPosizioneGiuridica().equals("71")
-        || lPosizione.getCodPosizioneGiuridica().equals("72")) {
+        || lPosizione.getCodPosizioneGiuridica().equals("72")
+        // MEV_2026-105 - Si gestisce la NUOVA PG 56 - Libero ex art. 94 Ter DPR 309/90
+        || lPosizione.getCodPosizioneGiuridica().equals("56")
+        // MEV_2026-105 - Si gestisce la NUOVA PG 58 - CC QC ex art. 94 Ter DPR 309/90 (come 70)
+        || lPosizione.getCodPosizioneGiuridica().equals("58")        
+        // MEV_2026-105 - FINE
+		) {
 	if (lFascicoloAssociato.getFlagAltraCausa() == null
 			|| (lFascicoloAssociato.getFlagAltraCausa() != null
 				&& lFascicoloAssociato.getFlagAltraCausa().equals("N"))) {
@@ -1192,7 +1239,11 @@ if (lPosizione.getCodPosizioneGiuridica().equals("04")
 		|| lPosizione.getCodPosizioneGiuridica().equals("02")
 		|| lPosizione.getCodPosizioneGiuridica().equals("70")
 		|| lPosizione.getCodPosizioneGiuridica().equals("71")
-		|| lPosizione.getCodPosizioneGiuridica().equals("72")) {
+		|| lPosizione.getCodPosizioneGiuridica().equals("72")
+        // MEV_2026-105 - Si gestisce la NUOVA PG 58 - CC QC ex art. 94 Ter DPR 309/90 (come 70)
+        || lPosizione.getCodPosizioneGiuridica().equals("58")        
+        // MEV_2026-105 - FINE	
+) {
 %>
  	frmvalidator.addValidation("<%= ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_UDS %>","req","Sede UDS obbligatoria");
 <%--  	frmvalidator.addValidation("<%= ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_UDS %>","alphabetic"); --%>
@@ -1203,7 +1254,11 @@ if (((istanza != null) && (istanza.getIdEvento() != null))
 		|| (lPosizione.getCodPosizioneGiuridica().equals("02"))
 		|| (lPosizione.getCodPosizioneGiuridica().equals("70"))
 		|| (lPosizione.getCodPosizioneGiuridica().equals("71"))
-		|| (lPosizione.getCodPosizioneGiuridica().equals("72"))) {
+		|| (lPosizione.getCodPosizioneGiuridica().equals("72"))
+        // MEV_2026-105 - Si gestisce la NUOVA PG 58 - CC QC ex art. 94 Ter DPR 309/90 (come 70)
+        || (lPosizione.getCodPosizioneGiuridica().equals("58"))    
+        // MEV_2026-105 - FINE
+) {
 %>
  	frmvalidator.addValidation("<%= ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_TDS %>","req","Sede TDS obbligatoria");
 <%--  	frmvalidator.addValidation("<%= ICostantiOrdineEsecuzione.CAMPO_COD_SEDE_TDS %>","alphabetic"); --%>
@@ -1214,7 +1269,11 @@ if ((!lPosizione.getCodPosizioneGiuridica().equals("07")
 		&& !lPosizione.getCodPosizioneGiuridica().equals("16")
 		&& !lPosizione.getCodPosizioneGiuridica().equals("20")
 		&& !lPosizione.getCodPosizioneGiuridica().equals("46")
-		&& !lPosizione.getCodPosizioneGiuridica().equals("47"))
+		&& !lPosizione.getCodPosizioneGiuridica().equals("47")
+        // MEV_2026-105 - Si gestisce la NUOVA PG 56 - Libero ex art. 94 Ter DPR 309/90
+        && !lPosizione.getCodPosizioneGiuridica().equals("56")
+        // MEV_2026-105 - FINE
+		)
 			|| (((lFascicoloAssociato.getFlagAltraCausa() != null
 				&& lFascicoloAssociato.getFlagAltraCausa().equals("S"))
 				&& (penaresidua.getDataFinePresunta() != null

@@ -125,7 +125,7 @@ import siap.siep.util.SIEPLookupRemote;
 import siap.sius.documentoallegato.dao.DocumentoAllegatoDAO;
 
 /**
- * Title: OrdineEsecuzioneController
+ * OrdineEsecuzioneController - classe Controller per gli Ordini di Esecuzione
  *
  * @version 1.0
  */
@@ -2175,7 +2175,8 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 							&& em.getDataTrasmissioneAtti().compareTo(em.getDataEmissione()) == 0
 							&& em.getCodOperatoreInserimento().equals(aEvento.getCodOperatoreInserimento())) {
 
-						// 2024.02.14 posso cancellare il decreto/ordinanza solo se non puntato da altri eventi
+						// 2024.02.14 posso cancellare il decreto/ordinanza solo se non puntato da altri
+						// eventi
 						// Es ammissione provvisoria ad affidamento o detenzione
 						// lEventoProc.setIdEvento(lEveRet.getEveIdEvento());
 						// lEventoProc.execute();
@@ -3841,7 +3842,8 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 					lStatoProcMod.setCodStatoProcedimento("0001");
 				break;
 			}
-			case 56: { // MEV_2026-105: Libero ex art. 94 ter, invariata dopo validazione // 20261023-MEV_2026-105_SG
+			case 56: { // MEV_2026-105: Libero ex art. 94 ter, invariata dopo validazione //
+						// 20261023-MEV_2026-105_SG
 				lCodPosizione = "56"; // 20261023-MEV_2026-105_SG
 				if (!lCodStatoAggiornato) // 20261023-MEV_2026-105_SG
 					lStatoProcMod.setCodStatoProcedimento("0001"); // 20261023-MEV_2026-105_SG
@@ -4183,7 +4185,8 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 						} else if (lIntPos == 76 || lIntPos == 77) {
 							lPosDao.setCodMaschera("L2");
 							break;
-						} else if (lIntPos == 57 || lIntPos == 78 || lIntPos == 79 || lIntPos == 80 || lIntPos == 81) { // 20261023-MEV_2026-105_SG
+						} else if (lIntPos == 57 || lIntPos == 78 || lIntPos == 79 || lIntPos == 80
+								|| lIntPos == 81) { // 20261023-MEV_2026-105_SG
 							lPosDao.setCodMaschera("L3");
 							break;
 						}
@@ -5031,17 +5034,36 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 					lStatoProcMod.setCodStatoProcedimento("0011");
 				break;
 			}
-			case 56: // MEV_2026-105: Libero ex art. 94 ter resta 56 // 20261023-MEV_2026-105_SG
+			// case 56: // MEV_2026-105: Libero ex art. 94 ter resta 56 // 20261023-MEV_2026-105_SG
+			// MEV_2026-105 - Si gestisce la NUOVA PG 56 - Libero ex art. 94 Ter DPR 309/90
+			case 56: // Libero ex art. 94 Ter DPR 309/90
+			{
+				lPosizione = "56"; // Resta nella stessa posizione
+				if (!lCodStatoAggiornato)
+					lStatoProcMod.setCodStatoProcedimento("0011");
+				break;
+			}
+			// MEV_2026-105 - FINE
 			case 57: { // MEV_2026-105: altra causa AD ex art. 94 ter -> Libero 56 // 20261023-MEV_2026-105_SG
 				lPosizione = "56"; // 20261023-MEV_2026-105_SG
 				lStatoProcMod.setCodStatoProcedimento("0011"); // 20261023-MEV_2026-105_SG
 				break; // 20261023-MEV_2026-105_SG
 			} // 20261023-MEV_2026-105_SG
-			case 58: { // MEV_2026-105: AD ex art. 94 ter -> 59 // 20261023-MEV_2026-105_SG
-				lPosizione = "59"; // 20261023-MEV_2026-105_SG
-				lStatoProcMod.setCodStatoProcedimento("0011"); // 20261023-MEV_2026-105_SG
-				break; // 20261023-MEV_2026-105_SG
-			} // 20261023-MEV_2026-105_SG
+				// case 58: { // MEV_2026-105: AD ex art. 94 ter -> 59 // 20261023-MEV_2026-105_SG
+				// lPosizione = "59"; // 20261023-MEV_2026-105_SG
+				// lStatoProcMod.setCodStatoProcedimento("0011"); // 20261023-MEV_2026-105_SG
+				// break; // 20261023-MEV_2026-105_SG
+				// } // 20261023-MEV_2026-105_SG
+				// MEV_2026-105 - Si gestisce la NUOVA PG 58
+			case 58: // Custodia Cautelare per Questa Causa in Regime di Arresti Domiciliari ex art 94 Ter DPR
+						// 309/90
+			{
+				lPosizione = "58"; // Resta nella stessa posizione
+				if (!lCodStatoAggiornato)
+					lStatoProcMod.setCodStatoProcedimento("0011");
+				break;
+			}
+			// MEV_2026-105 - FINE
 			case 70: {
 				lPosizione = "84";
 				lStatoProcMod.setCodStatoProcedimento("0011");
@@ -5313,8 +5335,11 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 					|| "5511".equals(lEveApp.getCodMotivo()) // 5511 = [OE] Altra causa - Permanenza in casa
 					|| "5512".equals(lEveApp.getCodMotivo()) // 5512 = [OE] Altra causa - Collocamento in
 																// comunita'
-					|| "0760".equals(lEveApp.getCodMotivo()) // MEV_2026-105: OE con sospensione, Libero ex art. 94 ter // 20261023-MEV_2026-105_SG
-					|| "0761".equals(lEveApp.getCodMotivo()) // MEV_2026-105: OE con sospensione, altra causa AD ex art. 94 ter // 20261023-MEV_2026-105_SG
+					|| "0760".equals(lEveApp.getCodMotivo()) // MEV_2026-105: OE con sospensione, Libero ex
+																// art. 94 ter // 20261023-MEV_2026-105_SG
+					|| "0761".equals(lEveApp.getCodMotivo()) // MEV_2026-105: OE con sospensione, altra causa
+																// AD ex art. 94 ter //
+																// 20261023-MEV_2026-105_SG
 					|| "5513".equals(lEveApp.getCodMotivo()) // 5513 = [OE] Altra causa - Arresti domiciliari
 																// ex art. 89 DPR309/90
 			) {
@@ -6011,7 +6036,8 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 					lStatoProcMod.setCodStatoProcedimento("0121");
 				} else if (lCodPosizione.equals("76") || lCodPosizione.equals("77")
 						|| lCodPosizione.equals("78") || lCodPosizione.equals("79")
-						|| lCodPosizione.equals("80") || lCodPosizione.equals("81") || lCodPosizione.equals("57")) { // 20261105-MEV_2026-105_SG
+						|| lCodPosizione.equals("80") || lCodPosizione.equals("81")
+						|| lCodPosizione.equals("57")) { // 20261105-MEV_2026-105_SG
 					lStatoProcMod.setCodStatoProcedimento("0120");
 				} else {
 					lStatoProcMod.setCodStatoProcedimento("0120");
@@ -6046,7 +6072,8 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 								|| lAltraCausa.getCodTipoPosGiuridica().equalsIgnoreCase("78")
 								|| lAltraCausa.getCodTipoPosGiuridica().equalsIgnoreCase("79")
 								|| lAltraCausa.getCodTipoPosGiuridica().equalsIgnoreCase("80")
-								|| lAltraCausa.getCodTipoPosGiuridica().equalsIgnoreCase("81") || lAltraCausa.getCodTipoPosGiuridica().equalsIgnoreCase("57"))) { // 20261105-MEV_2026-105_SG
+								|| lAltraCausa.getCodTipoPosGiuridica().equalsIgnoreCase("81")
+								|| lAltraCausa.getCodTipoPosGiuridica().equalsIgnoreCase("57"))) { // 20261105-MEV_2026-105_SG
 					// lCodPosizione = "07";
 					lPosizione = "07";
 					lPosizioInsAgg = "S";
@@ -6061,8 +6088,8 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 					lPosizioInsAgg = "S";
 				}
 			} else if (lCodPosizione.equals("49") || lCodPosizione.equals("04") || lCodPosizione.equals("02")
-					|| lCodPosizione.equals("82") || lCodPosizione.equals("83")
-					|| lCodPosizione.equals("84") || lCodPosizione.equals("59")) { // 20261023-MEV_2026-105_SG
+					|| lCodPosizione.equals("82") || lCodPosizione.equals("83") || lCodPosizione.equals("84")
+					|| lCodPosizione.equals("59")) { // 20261023-MEV_2026-105_SG
 				// lCodPosizione = "03";
 				lPosizione = "03";
 				lPosizioInsAgg = "S";
@@ -6095,7 +6122,8 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 				// inserisco la nuova posizione giuridica
 				if (lCodPosizione.equalsIgnoreCase("76") || lCodPosizione.equalsIgnoreCase("77")
 						|| lCodPosizione.equalsIgnoreCase("78") || lCodPosizione.equalsIgnoreCase("79")
-						|| lCodPosizione.equalsIgnoreCase("80") || lCodPosizione.equalsIgnoreCase("81") || lCodPosizione.equalsIgnoreCase("57")) { // 20261105-MEV_2026-105_SG
+						|| lCodPosizione.equalsIgnoreCase("80") || lCodPosizione.equalsIgnoreCase("81")
+						|| lCodPosizione.equalsIgnoreCase("57")) { // 20261105-MEV_2026-105_SG
 					// inserisco la nuova posizione giuridica e' perfettamente uguale alla precedente, serve
 					// per mantenere lo storico di diverse posizioni giuridiche
 					// anche se hanno uguali valori(arresti domiciliari che si riferiscono a due ordinanze
@@ -6184,8 +6212,8 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			} else if (lCodPosizione != null && lCodPosizione.equalsIgnoreCase("07")
 					&& (lCodPosizione.equalsIgnoreCase("76") || lCodPosizione.equalsIgnoreCase("77")
 							|| lCodPosizione.equalsIgnoreCase("78") || lCodPosizione.equalsIgnoreCase("79")
-							|| lCodPosizione.equalsIgnoreCase("80")
-							|| lCodPosizione.equalsIgnoreCase("81") || lCodPosizione.equalsIgnoreCase("57"))) { // 20261105-MEV_2026-105_SG
+							|| lCodPosizione.equalsIgnoreCase("80") || lCodPosizione.equalsIgnoreCase("81")
+							|| lCodPosizione.equalsIgnoreCase("57"))) { // 20261105-MEV_2026-105_SG
 				// la nuova posizione giuridica e' perfettamente uguale alla precedente, serve per mantenere
 				// lo
 				// storico di diverse posizioni giuridiche
@@ -9045,11 +9073,8 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	} // Chiude ExInserisciOENotificaMisSis
 
 	/*
-	 * ISSUE MEV : aggiunto metodo di inserimento OE differimento con notifiche 
-	 * Numero MEV : 39 
-	 * Autore : Gioggi 
-	 * Data : 07/mar/2017 
-	 * Branch : MEV_39
+	 * ISSUE MEV : aggiunto metodo di inserimento OE differimento con notifiche Numero MEV : 39 Autore :
+	 * Gioggi Data : 07/mar/2017 Branch : MEV_39
 	 */
 	public EventoNotificaModel ExInserisciOLDifferimentoConNotifiche(EventoNotificaModel enm,
 			PenaResiduaModel prm, MisuraAlternativaModel mam) throws F3BException {
