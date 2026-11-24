@@ -4052,6 +4052,14 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 	public OrdinanzaEventoTenoriGProcModel ExInserisciOrdinanzaRevocaPS(
 			OrdinanzaEventoTenoriGProcModel aGProcOrdEveTenori,
 			EsecuzioneSanzioneSostitutivaModel aEsecSenSostMod) throws F3BException {
+		return ExInserisciOrdinanzaRevocaPS(aGProcOrdEveTenori, aEsecSenSostMod, null, null);
+	}
+
+	// 20260512-MEV_2026-124_SG: aggiunge Data Revoca, pena residua e data pagamento PP nell'elenco periodi
+	public OrdinanzaEventoTenoriGProcModel ExInserisciOrdinanzaRevocaPS(
+			OrdinanzaEventoTenoriGProcModel aGProcOrdEveTenori,
+			EsecuzioneSanzioneSostitutivaModel aEsecSenSostMod, Date aDataRevoca, Date aDataPagamentoPP)
+			throws F3BException {
 
 		Connection lConn = null;
 		OrdinanzaEventoTenoriGProcModel lModRet = null;
@@ -4076,6 +4084,10 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 				lEsecSanSostDAO.setDAOFromModel(aEsecSenSostMod);
 				lEsecSanSostDAO.insert();
 			}
+			if (aDataRevoca != null) {
+				aggiornaPeriodoRevocaPS(lConn, lModRet.getGeneraleProcedimento().getFasSiuIdFascicoloSius(),
+						aDataRevoca, aDataPagamentoPP);
+			}
 			commit(lConn);
 		} catch (DAOException daoEx) {
 			rollback(lConn);
@@ -4094,5 +4106,74 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			cleanup(lConn);
 		}
 		return lModRet;
+	}
+
+	/**
+	 * 20260512-MEV_2026-124_SG: sul periodo piu' recente (non di sospensione) della pena sostitutiva revocata registra la
+	 * Data Revoca, la pena residua da espiare (data revoca - data termine attuale) e l'eventuale data di
+	 * avvenuto pagamento della pena pecuniaria.
+	 */
+	private void aggiornaPeriodoRevocaPS(Connection aConn, BigDecimal aIdFascicoloRevoca, Date aDataRevoca,
+			Date aDataPagamentoPP) throws SQLException {
+		String lSelect = "SELECT * FROM (SELECT P.ID_PERIODO_ALTRA_SANZIONE, ESS.DATA_TERMINE_ATTUALE "
+				+ "FROM GENERALE_PROCEDIMENTO GF, GENERALE_PROCEDIMENTO GP, FASCICOLO_SIUS FF, FASCICOLO_SIUS FP, "
+				+ "ESECUZIONE_SANZIONE_SOST ESS, PERIODO_ALTRA_SANZIONE P "
+				+ "WHERE GF.FAS_SIU_ID_FASCICOLO_SIUS = ? AND GP.ANNO_S1 = GF.ANNO_S1 AND GP.PROGR_S1 = GF.PROGR_S1 "
+				+ "AND FF.ID_FASCICOLO_SIUS = GF.FAS_SIU_ID_FASCICOLO_SIUS AND FP.ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS "
+				+ "AND FP.CHIAVE_UFFICIO = FF.CHIAVE_UFFICIO AND ESS.GEN_PRID_GENERALE_PROCEDIMENTO = GP.ID_GENERALE_PROCEDIMENTO "
+				+ "AND P.FAS_SIU_ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS AND P.FLAG_MOTIVO <> '03' "
+				+ "ORDER BY P.DATA_INIZIO_ESECUZIONE DESC, P.ID_PERIODO_ALTRA_SANZIONE DESC) WHERE ROWNUM = 1";
+		java.sql.PreparedStatement lSel = null;
+		java.sql.ResultSet lRs = null;
+		BigDecimal lIdPeriodo = null;
+		java.sql.Date lTermine = null;
+		try {
+			lSel = aConn.prepareStatement(lSelect);
+			lSel.setBigDecimal(1, aIdFascicoloRevoca);
+			lRs = lSel.executeQuery();
+			if (lRs.next()) {
+				lIdPeriodo = lRs.getBigDecimal(1);
+				lTermine = lRs.getDate(2);
+			}
+		} finally {
+			if (lRs != null)
+				lRs.close();
+			if (lSel != null)
+				lSel.close();
+		}
+		if (lIdPeriodo == null) {
+			siesLogger.warn("aggiornaPeriodoRevocaPS: nessun periodo trovato per il fascicolo " + aIdFascicoloRevoca);
+			return;
+		}
+
+		int lGG = 0, lMM = 0, lAA = 0;
+		if (lTermine != null && DateUtils.isLower(aDataRevoca, lTermine)) {
+			siap.sico.calendar.model.CalendarModel lCal = new siap.sico.calendar.model.CalendarModel();
+			lCal.setDataInizio(aDataRevoca);
+			lCal.setDataFine(lTermine);
+			lCal = new siap.sico.util.CalendarUtil().CalcolaNumGiorniMesiAnni(lCal, true);
+			lGG = lCal.getNumGiorni();
+			lMM = lCal.getNumMesi();
+			lAA = lCal.getNumAnni();
+		}
+
+		java.sql.PreparedStatement lUpd = null;
+		try {
+			lUpd = aConn.prepareStatement("UPDATE PERIODO_ALTRA_SANZIONE SET DATA_REVOCA = ?, DATA_PAGAMENTO_PP = ?, "
+					+ "RESIDUA_GG = ?, RESIDUA_MM = ?, RESIDUA_AA = ? WHERE ID_PERIODO_ALTRA_SANZIONE = ?");
+			lUpd.setDate(1, new java.sql.Date(aDataRevoca.getTime()));
+			if (aDataPagamentoPP != null)
+				lUpd.setDate(2, new java.sql.Date(aDataPagamentoPP.getTime()));
+			else
+				lUpd.setNull(2, java.sql.Types.DATE);
+			lUpd.setInt(3, lGG);
+			lUpd.setInt(4, lMM);
+			lUpd.setInt(5, lAA);
+			lUpd.setBigDecimal(6, lIdPeriodo);
+			lUpd.executeUpdate();
+		} finally {
+			if (lUpd != null)
+				lUpd.close();
+		}
 	}
 }

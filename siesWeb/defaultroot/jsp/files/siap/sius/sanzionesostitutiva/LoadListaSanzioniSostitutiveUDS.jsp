@@ -73,6 +73,7 @@ function cancella(idEvento, flagMotivo, flagDocumentoRegistrato, idPeriodoAltraS
   	<tr>
 	    <td class="int">Data Decorrenza</td>
 	    <td class="int">Data Scadenza </td>
+	    <td class="int">Data Revoca</td>
 	    <td class="int">Durata <%=tipoSostituzione%> Sostitutiva</td>
 	    <td class="int">Note</td>
 	    <td class="int">Motivo</td>
@@ -100,6 +101,18 @@ if (!listaSanzioniSius.isEmpty()) {
 		</td>
 		<td class="c">
 		  	<%=StringUtils.toStringJSP(DateUtils.getDateToString(lPeriodoAltraSanzioneModel.getDataScadenza(),"dd-MM-yyyy"), "-")%>
+		</td>
+		<%-- 20260512-MEV_2026-124_SG --%>
+		<td class="c">
+		  	<%=StringUtils.toStringJSP(DateUtils.getDateToString(lPeriodoAltraSanzioneModel.getDataRevoca(),"dd-MM-yyyy"), "-")%>
+<% if (lPeriodoAltraSanzioneModel.getDataRevoca() != null) { %>
+			<br><font class="label">Pena residua: Anni</font> <font class="campo"><%=StringUtils.toStringJSP(lPeriodoAltraSanzioneModel.getResiduaAA(), "0")%></font>
+			<font class="label">Mesi</font> <font class="campo"><%=StringUtils.toStringJSP(lPeriodoAltraSanzioneModel.getResiduaMM(), "0")%></font>
+			<font class="label">Giorni</font> <font class="campo"><%=StringUtils.toStringJSP(lPeriodoAltraSanzioneModel.getResiduaGG(), "0")%></font>
+<% } %>
+<% if (lPeriodoAltraSanzioneModel.getDataPagamentoPP() != null) { %>
+			<br><font class="label">Pagamento PP:</font> <font class="campo"><%=DateUtils.getDateToString(lPeriodoAltraSanzioneModel.getDataPagamentoPP(),"dd-MM-yyyy")%></font>
+<% } %>
 		</td>
 <%
 		CalendarModel lCal = new CalendarModel();

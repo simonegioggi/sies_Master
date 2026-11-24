@@ -6,6 +6,7 @@ import f3b.log.LogF3B;
 import f3b.util.F3BException;
 import siap.sius.SIUSException;
 import siap.sius.depositoordinanzapc.controller.IDepositoOrdinanzaPc;
+import siap.sius.depositoordinanzapc.action.ICostantiDepositoOrdinanzaPc;
 import siap.sius.depositoordinanzapc.model.OrdinanzaEventoTenoriGProcModel;
 import siap.sius.esecuzionesanzionesostitutiva.action.ICostantiEsecuzioneSS;
 import siap.sius.esecuzionesanzionesostitutiva.model.EsecuzioneSanzioneSostitutivaModel;
@@ -21,6 +22,10 @@ import siap.sius.util.SIUSLookupRemote;
  */
 public class ActInserisciOrdinanzaRevocaPS extends ActInserisciOrdinanzaUDS {
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+
+	private boolean isParamVuoto(String aNome) throws F3BException {
+		return isRequestParameterNullObj(aNome) || "".equals(getRequestStringParameter(aNome).trim());
+	}
 
 	public String processRequest() throws Exception {
 		siesLogger.debug("ActInserisciOrdinanzaRevocaPS.processRequest()");
@@ -48,7 +53,18 @@ public class ActInserisciOrdinanzaRevocaPS extends ActInserisciOrdinanzaUDS {
 		}
 
 		EsecuzioneSanzioneSostitutivaModel lEsecSanSost = null;
+		// 20260512-MEV_2026-124_SG: Data Revoca (decorrenza) per l'elenco periodi, default data emissione
+		java.util.Date lDataRevoca = null;
 		if (isRevoca) {
+			if (!isParamVuoto(ICostantiDepositoOrdinanzaPc.CAMPO_ANNO_DATA_DECORRENZA)
+					&& !isParamVuoto(ICostantiDepositoOrdinanzaPc.CAMPO_MESE_DATA_DECORRENZA)
+					&& !isParamVuoto(ICostantiDepositoOrdinanzaPc.CAMPO_GIORNO_DATA_DECORRENZA)) {
+				lDataRevoca = getRequestDateParameter(ICostantiDepositoOrdinanzaPc.CAMPO_ANNO_DATA_DECORRENZA,
+						ICostantiDepositoOrdinanzaPc.CAMPO_MESE_DATA_DECORRENZA,
+						ICostantiDepositoOrdinanzaPc.CAMPO_GIORNO_DATA_DECORRENZA);
+			}
+			if (lDataRevoca == null)
+				lDataRevoca = aOrdEveTenGP.getEvento().getDataEmissione();
 			siesLogger.debug("isRevoca ");
 			lEsecSanSost = new EsecuzioneSanzioneSostitutivaModel();
 
@@ -80,7 +96,7 @@ public class ActInserisciOrdinanzaRevocaPS extends ActInserisciOrdinanzaUDS {
 		// OrdinanzaEventoTenoriGProcModel lModRet =
 		// IDepOrdCtrl.ExInserisciOrdinanzaRevocaConversionePPS(aOrdEveTenGP, lRicConv);
 		OrdinanzaEventoTenoriGProcModel lModRet = IDepOrdCtrl.ExInserisciOrdinanzaRevocaPS(aOrdEveTenGP,
-				lEsecSanSost);
+				lEsecSanSost, lDataRevoca, null);
 
 		if (lModRet == null)
 			throw new SIUSException(SIUSException.USER_MESSAGE, "NESSUN INSERIMENTO EFFETTUATO.");

@@ -227,6 +227,11 @@ public interface IDepositoOrdinanzaPc {
     public OrdinanzaEventoTenoriGProcModel ExInserisciOrdinanzaRevocaPS (
         OrdinanzaEventoTenoriGProcModel aGProcOrdEveTenori,
         EsecuzioneSanzioneSostitutivaModel aEsecSenSostMod) throws F3BException;    
+    // 20260512-MEV_2026-124_SG
+    public OrdinanzaEventoTenoriGProcModel ExInserisciOrdinanzaRevocaPS (
+        OrdinanzaEventoTenoriGProcModel aGProcOrdEveTenori,
+        EsecuzioneSanzioneSostitutivaModel aEsecSenSostMod,
+        java.util.Date aDataRevoca, java.util.Date aDataPagamentoPP) throws F3BException;
     // MEV_2023-35 - FINE
 
 }

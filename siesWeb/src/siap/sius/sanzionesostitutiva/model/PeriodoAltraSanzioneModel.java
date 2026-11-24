@@ -60,6 +60,9 @@ public class PeriodoAltraSanzioneModel extends GenericModel {
 	private BigDecimal mResiduaGG;
 	private BigDecimal mResiduaMM;
 	private BigDecimal mResiduaAA;
+	// 20260512-MEV_2026-124_SG
+	private Date mDataRevoca;
+	private Date mDataPagamentoPP;
 
 	/*****************************************************************************
 	 * Costruttore di default che inizializza i campi del model I campi String vengono inizializzati a "",
@@ -153,6 +156,8 @@ public class PeriodoAltraSanzioneModel extends GenericModel {
 		this.mResiduaGG = aModel.mResiduaGG;
 		this.mResiduaMM = aModel.mResiduaMM;
 		this.mResiduaAA = aModel.mResiduaAA;
+		this.mDataRevoca = aModel.mDataRevoca;
+		this.mDataPagamentoPP = aModel.mDataPagamentoPP;
 	}
 
 	/*****************************************************************************
@@ -364,6 +369,22 @@ public class PeriodoAltraSanzioneModel extends GenericModel {
 	public BigDecimal getResiduaMM() {
 		return mResiduaMM;
 	};
+
+	public Date getDataRevoca() {
+		return mDataRevoca;
+	}
+
+	public void setDataRevoca(Date aValore) {
+		mDataRevoca = aValore;
+	}
+
+	public Date getDataPagamentoPP() {
+		return mDataPagamentoPP;
+	}
+
+	public void setDataPagamentoPP(Date aValore) {
+		mDataPagamentoPP = aValore;
+	}
 
 	public BigDecimal getResiduaAA() {
 		return mResiduaAA;

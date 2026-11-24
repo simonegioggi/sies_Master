@@ -36,6 +36,20 @@ String[] esiti  = (String[])request.getAttribute("esiti");
     {
       var lEsiti=document.InserisciOrdinanzaGenerica.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>;
       var ritorno = VerifyCombo(lEsiti,"Esito");
+<%-- 20260512-MEV_2026-124_SG --%>
+<% if ("U146".equals(contenuto)) { %>
+      if (ritorno) {
+        var lF = document.InserisciOrdinanzaGenerica;
+        var lDataPag = lF.<%=ICostantiDepositoOrdinanzaPc.CAMPO_GIORNO_DATA_PAGAMENTO_PP%>.value + '/'
+          + lF.<%=ICostantiDepositoOrdinanzaPc.CAMPO_MESE_DATA_PAGAMENTO_PP%>.value + '/'
+          + lF.<%=ICostantiDepositoOrdinanzaPc.CAMPO_ANNO_DATA_PAGAMENTO_PP%>.value;
+        if (lF.<%=ICostantiDepositoOrdinanzaPc.CAMPO_GIORNO_DATA_PAGAMENTO_PP%>.value == '' || ControllaDataPassaVuota(lDataPag)) {
+          alert('Data avvenuto pagamento ' + lDataPag + ' non valida o non indicata!');
+          lF.<%=ICostantiDepositoOrdinanzaPc.CAMPO_GIORNO_DATA_PAGAMENTO_PP%>.focus();
+          return false;
+        }
+      }
+<% } %>
       return ritorno;
     }
     
@@ -83,6 +97,9 @@ String[] esiti  = (String[])request.getAttribute("esiti");
  <%
   String lAction = new String();
   lAction = "siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaUDS";
+  // 20260512-MEV_2026-124_SG: revoca per avvenuto pagamento PP (art. 660 c.15) con data pagamento
+  if ("U146".equals(contenuto))
+    lAction = "siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaRevocaPagamentoPPS";
  %>
 
   <body class="corpo" >
@@ -146,6 +163,17 @@ String[] esiti  = (String[])request.getAttribute("esiti");
 
  <table cellspacing="2" cellpadding="2" width="90%">
 
+    <%-- 20260512-MEV_2026-124_SG --%>
+    <% if ("U146".equals(contenuto)) { %>
+    <tr>
+      <td class="l">Data avvenuto pagamento pena pecuniaria (*)</td>
+      <td class="l">
+        <input type="text" size="2" maxlength="2" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_GIORNO_DATA_PAGAMENTO_PP%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
+        <input type="text" size="2" maxlength="2" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_MESE_DATA_PAGAMENTO_PP%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
+        <input type="text" size="4" maxlength="4" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_ANNO_DATA_PAGAMENTO_PP%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
+      </td>
+    </tr>
+    <% } %>
     <tr>
       <td class="l">Ulteriore descrizione della decisione</td>
       <td class="l"><TEXTAREA title="Ulteriore descrizione della decisione" name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_ULTERIORE_DESCRIZIONE %>" cols="70" rows="4" ></textarea></td>
