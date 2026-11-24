@@ -14,6 +14,7 @@ import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.evento.dao.EventoDAO;
 import siap.sico.evento.model.EventoModel;
+import siap.siep.penaresidua.util.PenaSostitutivaSospensioneUtil;
 import siap.sius.esecuzionesanzionesostitutiva.dao.EsecuzioneSanzioneSostitutivaDAO;
 import siap.sius.esecuzionesanzionesostitutiva.model.EsecuzioneSanzioneSostitutivaModel;
 import siap.sius.sanzionesostitutiva.dao.OrdinanzaSospensioneDaAnnotareSqlDAO;
@@ -318,6 +319,8 @@ public class PeriodoAltraSanzioneController extends SiapController implements IP
 				lScaDao.update();
 			}
 
+			// 20261124-MEV_2026-124_SG: aggiornamento SIEP (pena residua sospesa/ripresa)
+			aggiornaSiepSospensione(lConn, lPerMod);
 			commit(lConn);
 		} catch (DAOException daoEx) {
 			rollback(lConn);
@@ -438,6 +441,8 @@ public class PeriodoAltraSanzioneController extends SiapController implements IP
 				lScaDao.update();
 			}
 
+			// 20261124-MEV_2026-124_SG: aggiornamento SIEP (pena residua sospesa/ripresa)
+			aggiornaSiepSospensione(lConn, lPerMod);
 			commit(lConn);
 		} catch (DAOException daoEx) {
 			rollback(lConn);
@@ -550,6 +555,8 @@ public class PeriodoAltraSanzioneController extends SiapController implements IP
 			lEseDao.setDAOFromModelForUpdate(lEssMod);
 			lEseDao.update();
 
+			// 20261124-MEV_2026-124_SG: aggiornamento SIEP (pena residua sospesa/ripresa)
+			aggiornaSiepRipresa(lConn, lPerMod, lEssMod);
 			commit(lConn);
 		} catch (DAOException daoEx) {
 			rollback(lConn);
@@ -869,4 +876,29 @@ public class PeriodoAltraSanzioneController extends SiapController implements IP
 			cleanup(lConn);
 		}
 	}
+
+	// 20261124-MEV_2026-124_SG: sospensione pena sostitutiva -> pena residua SIEP "sospesa"
+	private void aggiornaSiepSospensione(Connection aConn, PeriodoAltraSanzioneModel aPerMod)
+			throws DAOException {
+		if (aPerMod.getFasSieIdFascicoloSiep() == null)
+			return;
+		PenaSostitutivaSospensioneUtil.sospendi(aConn, aPerMod.getFasSieIdFascicoloSiep(),
+				aPerMod.getEveIdEvento(), aPerMod.getResiduaAA(), aPerMod.getResiduaMM(),
+				aPerMod.getResiduaGG(), aPerMod.getCodOperatoreInserimento(),
+				aPerMod.getCodUfficioInserimento());
+	}
+
+	// 20261124-MEV_2026-124_SG: ripresa pena sostitutiva -> toglie la sospensione e ripresenta le date inizio/fine pena
+	private void aggiornaSiepRipresa(Connection aConn, PeriodoAltraSanzioneModel aPerMod,
+			EsecuzioneSanzioneSostitutivaModel aEssMod) throws DAOException {
+		if (aPerMod.getFasSieIdFascicoloSiep() == null || !"02".equals(aPerMod.getFlagMotivo()))
+			return;
+		PenaSostitutivaSospensioneUtil.riprendi(aConn, aPerMod.getFasSieIdFascicoloSiep(),
+				aPerMod.getEveIdEvento(), aEssMod.getDataInizioSanzione(), aEssMod.getDataTermineAttuale(),
+				aPerMod.getCodOperatoreAggiornamento() != null ? aPerMod.getCodOperatoreAggiornamento()
+						: aPerMod.getCodOperatoreInserimento(),
+				aPerMod.getCodUfficioAggiornamento() != null ? aPerMod.getCodUfficioAggiornamento()
+						: aPerMod.getCodUfficioInserimento());
+	}
+
 }
