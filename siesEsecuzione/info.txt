@@ -1,3 +1,5 @@
-BRANCH siesEsecuzione Versione release_12.10.3.0
+BRANCH siesEsecuzione Versione MEV_2026-124
 
-Nasce dal branch release_12.10.2.0 in data 28/10/2026
+Nasce dal branch release_12.10.3.0 in data 24/11/2026
+
+Questa Release verrà rilasciata il dd/mm/2026
