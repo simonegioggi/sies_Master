@@ -3,3 +3,13 @@ BRANCH siesWeb Versione MEV_2026-124
 Nasce dal branch release_12.10.3.0 in data 24/11/2026
 
 Questa Release verrà rilasciata il dd/mm/2026
+
+Nuove funzioni SIEP (3.1 e 3.5): "Annotazione Provvedimenti Pene Sostitutive" e "Annotazione Revoca/Conversione",
+con un nuovo evento di tipo Provvedimento Detenzione Domiciliare Sostitutiva.
+Inizio, sospensione e ripresa dell'esecuzione (3.2, 3.3, 3.4): nuovi eventi di Annotazione con template e destinatari,
+e aggiornamento di quanto è visibile su SIEP.
+Scadenzario e monitoraggio (3.2.2, 3.11): scadenzario procedimenti con pena sostitutiva scaduta, e ricerca delle pene sospese senza ripresa.
+Calcolo pena e Certificato Stato Esecuzione (3.1.2, 3.2.2): calcolo anche sui quantum della pena sostitutiva.
+Revoche e ordinanze (3.5, 3.6): calcolo della pena residua, nuova data di revoca, e rinvio che passa dalla funzione Inizio Sospensione.
+Conversione pene pecuniarie (3.7, 3.8, 3.9): nuovo oggetto, un contenuto unificato, una nuova ordinanza con il campo Ore e una procedura PL/SQL di migrazione dei dati.
+Form e controlli (3.1.1, 3.10, 3.12): controlli sulle ordinanze, periodo di sospensione mostrato nel Dettaglio Ordinanza e quantum riportati in automatico.
