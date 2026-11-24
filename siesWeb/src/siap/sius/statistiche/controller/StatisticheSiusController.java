@@ -1387,6 +1387,52 @@ public class StatisticheSiusController extends SiapController implements IStatis
 		return lProcedimenti;
 	}
 
+	// MEV_2026-124_SG: pene sostitutive sospese e prive di ripresa
+	public Collection<siap.sius.statistiche.model.PenaSostitutivaSospesaModel> ExRicercaPeneSostitutiveSospesePaginata(
+			String aCodUfficio, int aPagina) throws F3BException {
+		Connection lConn = null;
+		Collection<siap.sius.statistiche.model.PenaSostitutivaSospesaModel> lElenco = new ArrayList<>();
+		siap.sius.statistiche.dao.PeneSostitutiveSospeseSqlDAO lSqlDao = null;
+		try {
+			lConn = getDBConnection();
+			lSqlDao = new siap.sius.statistiche.dao.PeneSostitutiveSospeseSqlDAO(lConn);
+			lSqlDao.ricercaSospeseSenzaRipresa(aCodUfficio);
+			if (aPagina > 0) {
+				lSqlDao.startPage(aPagina);
+			} else {
+				lSqlDao.start();
+			}
+			while (lSqlDao.next()) {
+				lElenco.add((siap.sius.statistiche.model.PenaSostitutivaSospesaModel) lSqlDao.getModel());
+			}
+			lSqlDao.stop();
+		} catch (Exception ex) {
+			siesLogger.error("ExRicercaPeneSostitutiveSospesePaginata - Exception: " + ex);
+			throw new SIUSException(SIUSException.USER_MESSAGE, ICostantiStatistiche.MESSAGGIO_ERRORE_GENERICO);
+		} finally {
+			cleanup(lSqlDao);
+			cleanup(lConn);
+		}
+		return lElenco;
+	}
+
+	public BigDecimal ExGetNumRicercaPeneSostitutiveSospese(String aCodUfficio) throws F3BException {
+		Connection lConn = null;
+		siap.sius.statistiche.dao.PeneSostitutiveSospeseSqlDAO lSqlDao = null;
+		try {
+			lConn = getDBConnection();
+			lSqlDao = new siap.sius.statistiche.dao.PeneSostitutiveSospeseSqlDAO(lConn);
+			lSqlDao.ricercaSospeseSenzaRipresa(aCodUfficio);
+			return lSqlDao.getNumRowsSelected();
+		} catch (Exception ex) {
+			siesLogger.error("ExGetNumRicercaPeneSostitutiveSospese - Exception: " + ex);
+			throw new SIUSException(SIUSException.USER_MESSAGE, ICostantiStatistiche.MESSAGGIO_ERRORE_GENERICO);
+		} finally {
+			cleanup(lSqlDao);
+			cleanup(lConn);
+		}
+	}
+
 	public BigDecimal ExGetNumRicercaProcPerProvvNoValidatiNoDeposito(RicercaProcedimentoModel aModel)
 			throws F3BException {
 

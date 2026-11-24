@@ -141,6 +141,8 @@ public interface ICostantiStatistiche {
 
 	public static final String PG_LOAD_RICERCA_PROC_PROVV_NO_VALIDATI_NO_DEP = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/LoadRicercaProcedimentiPerProvvNoValidatiNoDepositati.jsp";
 
+	// MEV_2026-124_SG
+	public static final String PG_RICERCA_PENE_SOSTITUTIVE_SOSPESE = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/RicercaPeneSostitutiveSospese.jsp";
 	public static final String PG_RICERCA_PROC_PROVV_NO_VALIDATI_NO_DEP = IWebConstants.ROOT_DIR + "files/siap/sius/statistiche/RicercaProcedimentiPerProvvNoValidatiNoDepositati.jsp";
 
 	// FR015, FA016 - Ricerca procedimenti con provvedimento emesso

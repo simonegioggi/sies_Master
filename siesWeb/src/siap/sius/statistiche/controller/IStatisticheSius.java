@@ -126,6 +126,12 @@ public interface IStatisticheSius {
 
 	public BigDecimal ExGetNumRicercaProcFissatiNoDef(RicercaProcedimentoModel aModel) throws F3BException;
 
+	// MEV_2026-124_SG: pene sostitutive sospese e prive di ripresa
+	public java.util.Collection<siap.sius.statistiche.model.PenaSostitutivaSospesaModel> ExRicercaPeneSostitutiveSospesePaginata(
+			String aCodUfficio, int aPagina) throws F3BException;
+
+	public BigDecimal ExGetNumRicercaPeneSostitutiveSospese(String aCodUfficio) throws F3BException;
+
 	// 20131221 - FR015 - FA016
 	public Collection<EveFasGepSogProvModel> ExRicercaProcPerProvvNoValidatiNoDeposito(
 			RicercaProcedimentoModel aModel) throws F3BException;
