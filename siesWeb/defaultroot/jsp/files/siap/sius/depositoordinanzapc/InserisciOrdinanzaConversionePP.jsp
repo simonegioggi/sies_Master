@@ -163,9 +163,8 @@ if ("U142".equals(contenuto) || "U143".equals(contenuto) || "U145".equals(conten
 			    return false;
 			}
 		}
-		if (document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_ANNI_DETENZIONE_DOM%>.value == ''
-				&& document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_MESI_DETENZIONE_DOM%>.value == ''
-				&& document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_DETENZIONE_DOM%>.value == '') {
+		// MEV_2026-124_SG: almeno un quantum diverso da zero
+		if ((Number(document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_ANNI_DETENZIONE_DOM%>.value) || 0) + (Number(document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_MESI_DETENZIONE_DOM%>.value) || 0) + (Number(document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_DETENZIONE_DOM%>.value) || 0) == 0) {
 			alert("Quantum Pena Sostituiva obbligatorio per l'esito scelto!");
 			document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_ANNI_DETENZIONE_DOM%>.focus();
 		    return false;
