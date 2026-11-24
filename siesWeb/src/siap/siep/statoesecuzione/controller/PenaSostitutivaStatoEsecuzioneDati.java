@@ -14,6 +14,13 @@ public class PenaSostitutivaStatoEsecuzioneDati extends SiapController {
 	private static final String[] MOTIVI_PS = { "2900", "2901", "2910", "2911", "2912", "2913", "2914", "2935",
 			"2936", "2937", "2938", "2940", "2941", "3190", "3200", "9300", "9301" };
 
+	public static String getElencoMotiviSql() {
+		StringBuffer lBuf = new StringBuffer();
+		for (int i = 0; i < MOTIVI_PS.length; i++)
+			lBuf.append(i > 0 ? ",'" : "'").append(MOTIVI_PS[i]).append("'");
+		return lBuf.toString();
+	}
+
 	public static boolean isMotivoPenaSostitutiva(String aCodMotivo) {
 		if (aCodMotivo == null)
 			return false;

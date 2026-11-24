@@ -570,6 +570,8 @@ function pr()
         } // End if x controllo protezione SIUS.
       }
 %>
+  <%-- 20261124-MEV_2026-124_SG --%>
+  <jsp:include page="/jsp/files/siap/sius/fascicolo/ElencoAnnotazioniPenaSostitutivaSiep.jsp"/>
   </FORM>
   <br>
   </body>
