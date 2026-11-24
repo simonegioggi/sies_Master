@@ -54,6 +54,9 @@ public class CreatorStatoEsecuzione {
 		// MEV_2023-33
 		if (aTipoEvento.equals("PENEPECUNIARIE"))
 			lStatoEsec = new StatoEsecuzionePP(lStatElement);
+		// 20261124-MEV_2026-124_SG
+		if (aTipoEvento.equals("PROVVPS"))
+			lStatoEsec = new StatoEsecuzioneProvvPS(lStatElement);
 
 		return lStatoEsec;
 	}
@@ -77,6 +80,10 @@ public class CreatorStatoEsecuzione {
 			if (aEvento.getCodTipoProvvedimento().equals("02")
 					|| aEvento.getCodTipoProvvedimento().equals("03"))
 				return "SIUS";
+
+			// 20261124-MEV_2026-124_SG
+			if (PenaSostitutivaStatoEsecuzioneDati.isMotivoPenaSostitutiva(aEvento.getCodMotivo()))
+				return "PROVVPS";
 
 			if (aEvento.getCodTipoProvvedimento().equals("19") && aEvento.getCodMotivo().equals("0315"))
 				return "REFERTO";
