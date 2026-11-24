@@ -56,10 +56,11 @@ public class ActLoadListaSanzioniSostitutiveUDS extends ActSanzioneSostitutiva
 		for (Object lObj : lListaSanzioniSius) {
 			PeriodoAltraSanzioneModel lPas = (PeriodoAltraSanzioneModel) lObj;
 			String lModo = "Annotazione manuale";
-			if ("03".equals(lPas.getFlagMotivo()) && lPas.getEveIdEvento() != null) {
+			if (("03".equals(lPas.getFlagMotivo()) || "02".equals(lPas.getFlagMotivo())) && lPas.getEveIdEvento() != null) {
 				EventoModel lEvePas = lCtrlEvePas.ExRicercaEventoByKey(lPas.getEveIdEvento());
 				if (lEvePas != null
-						&& !ActSanzioneSostitutiva.COD_MOTIVO_ANNOTAZIONE_SOSPENSIONE_PS.equals(lEvePas.getCodMotivo()))
+						&& !ActSanzioneSostitutiva.COD_MOTIVO_ANNOTAZIONE_SOSPENSIONE_PS.equals(lEvePas.getCodMotivo())
+						&& !ActSanzioneSostitutiva.COD_MOTIVO_ANNOTAZIONE_RIPRESA_PS.equals(lEvePas.getCodMotivo()))
 					lModo = "Emissione ordinanza/decreto";
 			}
 			lModalita.put(lPas.getIdPeriodoAltraSanzione(), lModo);

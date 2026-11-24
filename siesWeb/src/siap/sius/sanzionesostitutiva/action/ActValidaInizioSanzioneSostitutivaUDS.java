@@ -106,7 +106,11 @@ implements  ICostantiSanzioneSostitutiva
 		   ****************************************************************************/
 			// non è necessario modificare entrambi gli scadenzari
 			// non siamo nel caso della sospensione
-			lCtrl.ExModificaPeriodoAltraSanzione(lScaMod,null,lPerMod ,lEssMod);
+			// 20260512-MEV_2026-124_SG: la ripresa inserisce l'evento di annotazione (Altri Atti)
+			EventoModel lEveRipresa = null;
+			if (lPerMod.getFlagMotivo().equals("02") && lPerMod.getEveIdEvento() == null)
+				lEveRipresa = preparoEventoRipresa(lPerMod);
+			lCtrl.ExModificaPeriodoAltraSanzione(lScaMod,null,lPerMod ,lEssMod, lEveRipresa);
 		}
 	    //====================================================================== 
 	    // Prepara la pagina di destinazione

@@ -54,7 +54,8 @@ public class ActLoadCancellaInizioSanzioneSostitutivaUDS extends ActSanzioneSost
 			// Preleva l'evento.
 			IEvento lCtrl = SICOLookupRemote.getEventoRemote();
 			EventoModel lEveMod = lCtrl.ExRicercaEventoByKey(lPerMod.getEveIdEvento());
-			if (lEveMod != null && COD_MOTIVO_ANNOTAZIONE_SOSPENSIONE_PS.equals(lEveMod.getCodMotivo())
+			if (lEveMod != null && (COD_MOTIVO_ANNOTAZIONE_SOSPENSIONE_PS.equals(lEveMod.getCodMotivo())
+					|| COD_MOTIVO_ANNOTAZIONE_RIPRESA_PS.equals(lEveMod.getCodMotivo()))
 					&& !"A".equals(lEveMod.getFlagDocumentoRegistrato()))
 				lIdEventoAnnotazione = lEveMod.getIdEvento();
 
@@ -185,7 +186,8 @@ public class ActLoadCancellaInizioSanzioneSostitutivaUDS extends ActSanzioneSost
 			// cancello periodo
 			// modifico lo scadenzario 80 -> ripristino la Data Termine Attuale
 			// modifico ESS -> ripristino la Data Termine Attuale
-			lCtrl1.ExCancellaPeriodoAltraSanzione(null, null, lScaMod80, IdPerCanc, lESSModel);
+			lCtrl1.ExCancellaPeriodoAltraSanzione(null, null, lScaMod80, IdPerCanc, lESSModel,
+					lIdEventoAnnotazione);
 		}
 
 		ScadenzarioSiusModel lScaMod81c = null;

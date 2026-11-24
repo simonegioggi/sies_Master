@@ -59,6 +59,18 @@ extends ActionSius implements ICostantiProvvedimento
     if (lEve.getCodTipoEvento().compareTo("20") == 0 )    
     	lPage.setAction("siap.sius.misurasicurezza.action.ActLoadDettaglioMisuraSicurezzaUDS");
 
+    // 20260512-MEV_2026-124_SG: annotazione ripresa esecuzione pena sostitutiva -> dettaglio della ripresa
+    if (lEve.getCodTipoEvento().compareTo("13") == 0
+        && siap.sius.sanzionesostitutiva.action.ActSanzioneSostitutiva.COD_MOTIVO_ANNOTAZIONE_RIPRESA_PS.equals(lEve.getCodMotivo()))
+    {
+      siap.sius.sanzionesostitutiva.model.PeriodoAltraSanzioneModel lPasR =
+          SIUSLookupRemote.getPeriodoAltraSanzioneRemote().ExRicercaSanzioneSostitutivaByIdEvento(lIdEvento);
+      if (lPasR != null && lPasR.getIdPeriodoAltraSanzione() != null)
+        lPage.setAction("siap.sius.sanzionesostitutiva.action.ActLoadDettaglioInizioSanzioneSostitutivaUDS&"
+            + siap.sius.sanzionesostitutiva.action.ICostantiSanzioneSostitutiva.CAMPO_ID_PERIODO_ALTRA_SANZIONE
+            + "=" + lPasR.getIdPeriodoAltraSanzione());
+    }
+
     // 20260512-MEV_2026-124_SG: annotazione inizio sospensione pena sostitutiva -> dettaglio della sospensione
     if (lEve.getCodTipoEvento().compareTo("13") == 0
         && siap.sius.sanzionesostitutiva.action.ActSanzioneSostitutiva.COD_MOTIVO_ANNOTAZIONE_SOSPENSIONE_PS.equals(lEve.getCodMotivo()))

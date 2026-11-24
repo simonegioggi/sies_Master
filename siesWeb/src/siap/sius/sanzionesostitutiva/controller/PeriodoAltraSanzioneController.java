@@ -507,6 +507,65 @@ public class PeriodoAltraSanzioneController extends SiapController implements IP
 		return lPerMod;
 	}
 
+	// 20260512-MEV_2026-124_SG: variante con evento di annotazione
+	public PeriodoAltraSanzioneModel ExModificaPeriodoAltraSanzione(ScadenzarioSiusModel lScaMod1,
+			ScadenzarioSiusModel lScaMod2, PeriodoAltraSanzioneModel lPerMod,
+			EsecuzioneSanzioneSostitutivaModel lEssMod, EventoModel aEveMod) throws F3BException {
+
+		Connection lConn = null;
+		EventoDAO lEveDao = null;
+		ScadenzarioSiusDAO lScaDao = null;
+		PeriodoAltraSanzioneDAO lPerDao = null;
+		EsecuzioneSanzioneSostitutivaDAO lEseDao = null;
+
+		try {
+			lConn = getDBTransaction();
+
+			// 20260512-MEV_2026-124_SG: inserimento evento di annotazione e aggancio al periodo
+			if (aEveMod != null) {
+				lEveDao = new EventoDAO(lConn);
+				lEveDao.setDAOFromModel(aEveMod);
+				lPerMod.setEveIdEvento(lEveDao.insert());
+			}
+
+			// modifica scadenzario sospensione
+			lScaDao = new ScadenzarioSiusDAO(lConn);
+			lScaDao.setDAOFromModelForUpdate(lScaMod1);
+			lScaDao.update();
+
+			// eventuale modifica altro scadenzario
+			if (lScaMod2 != null) {
+				lScaDao = new ScadenzarioSiusDAO(lConn);
+				lScaDao.setDAOFromModelForUpdate(lScaMod2);
+				lScaDao.update();
+			}
+
+			// modifica Periodo Altra Sanzione
+			lPerDao = new PeriodoAltraSanzioneDAO(lConn);
+			lPerDao.setDAOFromModelforUpdate(lPerMod);
+			lPerDao.update();
+
+			// modifica Esecuzione Sanzione Sostitutiva
+			lEseDao = new EsecuzioneSanzioneSostitutivaDAO(lConn);
+			lEseDao.setDAOFromModelForUpdate(lEssMod);
+			lEseDao.update();
+
+			commit(lConn);
+		} catch (DAOException daoEx) {
+			rollback(lConn);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+			siesLogger.error("DAOException: " + daoEx);
+			throw new F3BException("PeriodoAltraSanzioneController.ExModificaPeriodoAltraSanzione: " + daoEx);
+		} finally {
+			cleanup(lEveDao);
+			cleanup(lScaDao);
+			cleanup(lPerDao);
+			cleanup(lEseDao);
+			cleanup(lConn);
+		}
+		return lPerMod;
+	}
+
 	/*****************************************************************************
 	 * 7 cancella Periodo Altra Sanzione (ripresa sanzione) Modifica Ess eventuale cancella scadenzario
 	 * eventuale modifiche di altri 2 scadenzari

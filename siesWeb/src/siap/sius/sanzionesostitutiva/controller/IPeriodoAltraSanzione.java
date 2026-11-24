@@ -89,6 +89,11 @@ public interface IPeriodoAltraSanzione {
 			ScadenzarioSiusModel lScaMod3, BigDecimal idPerMod, EsecuzioneSanzioneSostitutivaModel lEssMod,
 			BigDecimal idEventoDaCancellare) throws F3BException;
 
+	// 20260512-MEV_2026-124_SG: variante con evento di annotazione
+	public PeriodoAltraSanzioneModel ExModificaPeriodoAltraSanzione(ScadenzarioSiusModel lScaMod1,
+			ScadenzarioSiusModel lScaMod2, PeriodoAltraSanzioneModel lPerMod,
+			EsecuzioneSanzioneSostitutivaModel lEssMod, EventoModel aEveMod) throws F3BException;
+
 	/****************************************************************************
 	 * Effettua la ricerca per chiave
 	 * 
