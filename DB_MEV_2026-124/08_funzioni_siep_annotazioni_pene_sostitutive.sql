@@ -7,7 +7,7 @@ DECLARE
     SELECT COUNT(*) INTO n FROM funzione WHERE id_funzione = p_id;
     IF n = 0 THEN
       INSERT INTO funzione (id_funzione, descrizione, cod_tipo_funzione, azione_contesto_java)
-      VALUES (p_id, p_descr, 'R', p_azione);
+      VALUES (p_id, p_descr, 'I', p_azione);
     END IF;
     FOR p IN (SELECT column_value AS prf FROM TABLE(sys.odcinumberlist(4, 30, 40, 50))) LOOP
       SELECT COUNT(*) INTO n FROM funzione_profilo WHERE fun_id_funzione = p_id AND prf_cod_profilo = p.prf;
