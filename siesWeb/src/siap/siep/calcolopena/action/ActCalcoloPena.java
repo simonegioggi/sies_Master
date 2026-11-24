@@ -1190,9 +1190,16 @@ public class ActCalcoloPena extends ActionSiap implements ICostantiAnnotazioneMa
 			}
 
 			// Carico la SS nel model solo se trattasi di Semidetenzione o Libertà controllata
+			// 20261124-MEV_2026-124_SG: anche le pene sostitutive (T semiliberta', V detenzione domiciliare)
+			if (lSSResidua != null && (lSSResidua.getCodTipoSanzione().equals("S")
+					|| lSSResidua.getCodTipoSanzione().equals("L")
+					|| lSSResidua.getCodTipoSanzione().equals("T")
+					|| lSSResidua.getCodTipoSanzione().equals("V"))) {
+				lPenaRideterminata.setSanzSostResidua(lSSResidua);
+			}
+
 			if (lSSResidua != null && (lSSResidua.getCodTipoSanzione().equals("S")
 					|| lSSResidua.getCodTipoSanzione().equals("L"))) {
-				lPenaRideterminata.setSanzSostResidua(lSSResidua);
 
 				// In questo caso devo verificare anche se presente già a sistema la Trasmissione atti per
 				// competenza (02-31-0396,0941) in quanto in questo caso il tasto Conferma deve portare su
