@@ -227,32 +227,61 @@
 		</tr>
 		<tr>
 <% 			lPerMod = (PeriodoAltraSanzioneModel) listaSanzioniSius
-			.get(listaSanzioniSius.size()-1);%>
+			.get(listaSanzioniSius.size()-1);
+	// 20261124-MEV_2026-124_SG: precompilazione con i dati dell'ordinanza di sospensione
+	PeriodoAltraSanzioneModel ordSosp = (PeriodoAltraSanzioneModel) request.getAttribute("OrdinanzaSospensione");
+	if (lPerMod.getDataScadenza() == null)
+		ordSosp = null;
+	String ordGG = "", ordMM = "", ordAA = "";
+	String ordInizioG = "", ordInizioM = "", ordInizioA = "";
+	String ordFineG = "", ordFineM = "", ordFineA = "";
+	String ordEve = "";
+	if (ordSosp != null) {
+		ordEve = String.valueOf(ordSosp.getEveIdEvento());
+		if (ordSosp.getDataInizioEsecuzione() != null) {
+			ordInizioG = DateUtils.getDateToString(ordSosp.getDataInizioEsecuzione(), "dd");
+			ordInizioM = DateUtils.getDateToString(ordSosp.getDataInizioEsecuzione(), "MM");
+			ordInizioA = DateUtils.getDateToString(ordSosp.getDataInizioEsecuzione(), "yyyy");
+		}
+		boolean ordQuantum = (ordSosp.getSospensioneAA() != null && ordSosp.getSospensioneAA().signum() > 0)
+			|| (ordSosp.getSospensioneMM() != null && ordSosp.getSospensioneMM().signum() > 0)
+			|| (ordSosp.getSospensioneGG() != null && ordSosp.getSospensioneGG().signum() > 0);
+		if (ordQuantum) {
+			ordAA = String.valueOf(ordSosp.getSospensioneAA() == null ? 0 : ordSosp.getSospensioneAA().intValue());
+			ordMM = String.valueOf(ordSosp.getSospensioneMM() == null ? 0 : ordSosp.getSospensioneMM().intValue());
+			ordGG = String.valueOf(ordSosp.getSospensioneGG() == null ? 0 : ordSosp.getSospensioneGG().intValue());
+		} else if (ordSosp.getDataScadenza() != null) {
+			ordFineG = DateUtils.getDateToString(ordSosp.getDataScadenza(), "dd");
+			ordFineM = DateUtils.getDateToString(ordSosp.getDataScadenza(), "MM");
+			ordFineA = DateUtils.getDateToString(ordSosp.getDataScadenza(), "yyyy");
+		}
+	}%>
+			<input type="HIDDEN" name="<%=ICostantiSanzioneSostitutiva.CAMPO_EVE_ID_EVENTO%>" value="<%=ordEve%>">
 			<td class="l">Data decorrenza sospensione / differimento <font class="ob">(*)</font></td>
 			<td class="L"><input type="text" size="2" maxlength="2"
-				name="<%=ICostantiSanzioneSostitutiva.CAMPO_GIORNO_DATA_INIZIO_ESECUZIONE%>"
+				value="<%=ordInizioG%>" name="<%=ICostantiSanzioneSostitutiva.CAMPO_GIORNO_DATA_INIZIO_ESECUZIONE%>"
 				onFocus="javascript:textboxSelect(this)"
 				onkeypress="return TicTabNumField(this,event)"
 				onBlur="javascript:value=FillDM(value)"> / <input type="text"
 				size="2" maxlength="2"
-				name="<%=ICostantiSanzioneSostitutiva.CAMPO_MESE_DATA_INIZIO_ESECUZIONE%>"
+				value="<%=ordInizioM%>" name="<%=ICostantiSanzioneSostitutiva.CAMPO_MESE_DATA_INIZIO_ESECUZIONE%>"
 				onFocus="javascript:textboxSelect(this)"
 				onkeypress="return TicTabNumField(this,event)"
 				onBlur="javascript:value=FillDM(value)"> / <input type="text"
 				size="4" maxlength="4"
-				name="<%=ICostantiSanzioneSostitutiva.CAMPO_ANNO_DATA_INIZIO_ESECUZIONE%>"
+				value="<%=ordInizioA%>" name="<%=ICostantiSanzioneSostitutiva.CAMPO_ANNO_DATA_INIZIO_ESECUZIONE%>"
 				onFocus="javascript:textboxSelect(this)"
 				onkeypress="return TicTabNumField(this,event)"
 				onBlur="javascript:value=FillYear(value)"></td>
 		</tr>
 		<tr>
 			<td class="L" width="40%">Periodo sospensione:</td>
-			<td>Anni <input title="Anni" size="2" maxlength="2" value=""
+			<td>Anni <input title="Anni" size="2" maxlength="2" value="<%=ordAA%>"
 				type="text"
 				name="<%=ICostantiSanzioneSostitutiva.CAMPO_SOSPENSIONE_AA%>">
-			Mesi <input title="Mesi" size="2" maxlength="2" value="" type="text"
+			Mesi <input title="Mesi" size="2" maxlength="2" value="<%=ordMM%>" type="text"
 				name="<%=ICostantiSanzioneSostitutiva.CAMPO_SOSPENSIONE_MM%>">
-			Giorni <input title="Giorni" size="2" maxlength="2" value=""
+			Giorni <input title="Giorni" size="2" maxlength="2" value="<%=ordGG%>"
 				type="text"
 				name="<%= ICostantiSanzioneSostitutiva.CAMPO_SOSPENSIONE_GG%>">
 			</td>
@@ -260,9 +289,9 @@
 		<tr>
 			<td class="l">Fino al</td>
 			<td class="L">
-        <input value="" type="text" size="2" maxlength="2" name="<%=ICostantiSanzioneSostitutiva.CAMPO_GIORNO_DATA_SCADENZA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
-        <input value="" type="text" size="2" maxlength="2" name="<%=ICostantiSanzioneSostitutiva.CAMPO_MESE_DATA_SCADENZA%>"	onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"	onBlur="javascript:value=FillDM(value)"> /
-        <input value=""	type="text" size="4" maxlength="4" name="<%=ICostantiSanzioneSostitutiva.CAMPO_ANNO_DATA_SCADENZA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
+        <input value="<%=ordFineG%>" type="text" size="2" maxlength="2" name="<%=ICostantiSanzioneSostitutiva.CAMPO_GIORNO_DATA_SCADENZA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
+        <input value="<%=ordFineM%>" type="text" size="2" maxlength="2" name="<%=ICostantiSanzioneSostitutiva.CAMPO_MESE_DATA_SCADENZA%>"	onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"	onBlur="javascript:value=FillDM(value)"> /
+        <input value="<%=ordFineA%>"	type="text" size="4" maxlength="4" name="<%=ICostantiSanzioneSostitutiva.CAMPO_ANNO_DATA_SCADENZA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
       </td>
 		</tr>
 		<tr>

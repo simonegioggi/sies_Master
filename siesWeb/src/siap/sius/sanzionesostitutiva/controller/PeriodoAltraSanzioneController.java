@@ -16,6 +16,7 @@ import siap.sico.evento.dao.EventoDAO;
 import siap.sico.evento.model.EventoModel;
 import siap.sius.esecuzionesanzionesostitutiva.dao.EsecuzioneSanzioneSostitutivaDAO;
 import siap.sius.esecuzionesanzionesostitutiva.model.EsecuzioneSanzioneSostitutivaModel;
+import siap.sius.sanzionesostitutiva.dao.OrdinanzaSospensioneDaAnnotareSqlDAO;
 import siap.sius.sanzionesostitutiva.dao.PeriodoAltraSanzioneDAO;
 import siap.sius.sanzionesostitutiva.dao.PeriodoAltraSanzioneSqlDAO;
 import siap.sius.sanzionesostitutiva.model.PeriodoAltraSanzioneModel;
@@ -595,4 +596,24 @@ public class PeriodoAltraSanzioneController extends SiapController implements IP
 		return lPerMod;
 	}
 
+
+	// 20261124-MEV_2026-124_SG: ordinanza di sospensione da annotare (precompilazione form)
+	public PeriodoAltraSanzioneModel ExRicercaOrdinanzaSospensioneDaAnnotare(BigDecimal aIdFascicoloSius)
+			throws F3BException {
+		Connection lConn = null;
+		OrdinanzaSospensioneDaAnnotareSqlDAO lDao = null;
+		try {
+			lConn = getDBConnection();
+			lDao = new OrdinanzaSospensioneDaAnnotareSqlDAO(lConn);
+			lDao.ricerca(aIdFascicoloSius);
+			return (PeriodoAltraSanzioneModel) lDao.getModelByKey();
+		} catch (DAOException daoEx) {
+			siesLogger.error("DAOException: " + daoEx);
+			throw new F3BException(
+					"PeriodoAltraSanzioneController.ExRicercaOrdinanzaSospensioneDaAnnotare: " + daoEx);
+		} finally {
+			cleanup(lDao);
+			cleanup(lConn);
+		}
+	}
 }

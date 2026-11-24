@@ -104,4 +104,8 @@ public interface IPeriodoAltraSanzione {
 	public PeriodoAltraSanzioneModel ExRicercaSanzioneSostitutivaByIdEvento(BigDecimal aKey)
 			throws F3BException;
 
+
+	// 20261124-MEV_2026-124_SG: ordinanza di sospensione da annotare (precompilazione form)
+	public PeriodoAltraSanzioneModel ExRicercaOrdinanzaSospensioneDaAnnotare(BigDecimal aIdFascicoloSius)
+			throws F3BException;
 }

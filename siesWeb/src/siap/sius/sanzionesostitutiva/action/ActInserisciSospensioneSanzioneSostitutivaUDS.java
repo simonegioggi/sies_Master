@@ -45,6 +45,10 @@ public class ActInserisciSospensioneSanzioneSostitutivaUDS extends ActSanzioneSo
 		BigDecimal lIdFasSius = recuperoIdFascicolo();
 		BigDecimal lIdFasSiep = recuperoIdFascicoloSiep();
 		lPerMod.setFasSiuIdFascicoloSius(lIdFasSius);
+		// 20261124-MEV_2026-124_SG: aggancia il periodo all'ordinanza di sospensione da cui e' stato precompilato
+		if (!isRequestParameterNullObj(CAMPO_EVE_ID_EVENTO)
+				&& getRequestStringParameter(CAMPO_EVE_ID_EVENTO).trim().length() > 0)
+			lPerMod.setEveIdEvento(getRequestBigDecimalParameter(CAMPO_EVE_ID_EVENTO));
 		lPerMod.setFasSieIdFascicoloSiep(lIdFasSiep);
 
 		// setto i dati dell'utente che effettua l'inserimento

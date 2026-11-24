@@ -66,6 +66,11 @@ public class ActLoadInserisciSospensioneSanzioneSostitutivaUDS extends ActSanzio
 		setRequestAttribute("tipoAutorita", lOptionAut.toString());
 		setRequestAttribute("listaSanzioniSius", lListaSanzioniSius);
 
+		// 20261124-MEV_2026-124_SG: precompila data inizio e quantum con i dati dell'ordinanza di sospensione
+		PeriodoAltraSanzioneModel lOrdSosp = lCtrl1.ExRicercaOrdinanzaSospensioneDaAnnotare(lIdFasSius);
+		if (lOrdSosp != null && lOrdSosp.getEveIdEvento() != null)
+			setRequestAttribute("OrdinanzaSospensione", lOrdSosp);
+
 		String lRetPage = PG_LOADINSERISCISOSPENSIONESANZIONESOSTITUTIVA;
 
 		return lRetPage; // restituisce la jsp di VIEW
