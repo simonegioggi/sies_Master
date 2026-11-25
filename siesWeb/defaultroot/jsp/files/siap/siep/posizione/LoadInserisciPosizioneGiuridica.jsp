@@ -143,7 +143,7 @@ function ListaUfficiComuni(a_formname,a_fieldname,codTipoUfficio) {
 			</a>
 		</td>
         <td class=LBG>
-          	<font class="label">Funzione :</font>&nbsp;
+          	<font class="label">Funzione:</font>&nbsp;
 <%
 PosizioneGiuridicaModel lPosGiu = new PosizioneGiuridicaModel();
 Date lDataDecorrenza = null;
@@ -175,6 +175,9 @@ if (lPosGiu != null && lPosGiu.getCodPosizioneGiuridica() != null && !lPosGiu.ge
 	    case 7: 
 	    case 8:
 	    case 10:
+	    // MEV_2026-105 - Si gestisce la NUOVA PG 56 - Libero ex art. 94 Ter DPR 309/90
+	    case 56:
+	    // MEV_2026-105 - FINE
 	    case 16:
 	    case 17:
 	    case 20:               	  

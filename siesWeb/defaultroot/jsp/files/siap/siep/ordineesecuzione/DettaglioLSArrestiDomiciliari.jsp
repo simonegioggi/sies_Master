@@ -8,6 +8,9 @@
 <%@ page import="java.math.BigDecimal"%>
 
 <%@ page import="siap.sico.evento.model.EventoNotificaModel"%>
+<%@ page import="siap.siep.notifica.model.NotificaModel"%>
+<%@ page import="siap.siep.avvocato.model.AvvocatoSiepModel"%>
+
 <%@ page import="siap.sico.evento.action.ICostantiEvento"%>
 <%@ page import="siap.web.ISIAPCostantiWeb"%>
 
@@ -297,6 +300,11 @@
       }
 %>
  </tr>
+ 
+ 
+ 
+ 
+ 
 <tr>
      <td class="l">Data Emissione</td>
      <td class="L" colspan=1><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lEve.getEvento().getDataEmissione(),"dd-MM-yyyy"))%></font>
@@ -307,6 +315,12 @@
      		<td class="L" colspan=1><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lEve.getNotifiche()[0].getDataInvio(),"dd-MM-yyyy"))%></font></td>
      <%} %>
 </tr>
+
+<%--
+===============================================================
+                     FOGLIO COMPLEMENTARE
+=============================================================== 
+--%>
 		<tr>
     	<td class="l">
      		Foglio Complementare
@@ -352,32 +366,47 @@
 %>   	
    </tr>
 </table>
+
+
+
+
+<%--
+===============================================================
+                  MAGISTRATO E DESTINATARI 
+=============================================================== 
+--%>
 <table>
 <%
-		if(lMagistrato != null)
-		{
+if(lMagistrato != null)
+{
 %>
-      <tr>
-        <td class="l">Magistrato</td>
-        <td class="L" colspan="2">
-          <font class="campo">
-            <%=StringUtils.toStringJSP(lMagistrato.getCognome())%> &nbsp;<%=StringUtils.toStringJSP(lMagistrato.getNome())%>
-          </font>
-        </td>
-      </tr>
+  <tr>
+    <td class="l">Magistrato</td>
+    <td class="L" colspan="2">
+      <font class="campo">
+      <%=StringUtils.toStringJSP(lMagistrato.getCognome())%> &nbsp;<%=StringUtils.toStringJSP(lMagistrato.getNome())%>
+      </font>
+    </td>
+  </tr>
 <%}%>
-<%if(istanza!=null && istanza.getIdEvento()!=null)
-{%>
-     <tr>
-       <td class="l">Data Istanza </td>
-       <td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(istanza.getDataEmissione(),"dd-MM-yyyy"))%>&nbsp;</font></td>
-     </tr>
 
-     <tr>
-     <td class="l">Oggetto dell'Istanza </td>
-     <td class="l"><font class="campo"><%=StringUtils.toStringJSP(istanza.getDescrMotivo()) %> &nbsp;</font></td>
-    </tr>
+
+<%--    SE PRESENTE ISTANZA   --%>
+<%if(istanza!=null && istanza.getIdEvento()!=null){%>
+  <tr>
+    <td class="l">Data Istanza </td>
+    <td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(istanza.getDataEmissione(),"dd-MM-yyyy"))%>&nbsp;</font></td>
+  </tr>
+
+  <tr>
+    <td class="l">Oggetto dell'Istanza </td>
+    <td class="l"><font class="campo"><%=StringUtils.toStringJSP(istanza.getDescrMotivo()) %> &nbsp;</font></td>
+  </tr>
 <%}%>
+
+
+<%-- 
+
 <%
 if(lEve.getNotifiche() != null && lEve.getNotifiche().length >0)
 {
@@ -440,43 +469,212 @@ if(lEve.getNotifiche()[0].getAutoritaEsterna() != null){%>
    <%}
     }%>
   <%count++;}}%>
-
+--%>
    <!--Notifica del Tribunale di Sorveglianza e i Servizi Sociali (SCD)-->
 
-<%
-  if (fogliocomplementare.equals("0"))
+<%-- 
+============================================================================
+ MEV_2026-105 - si riscrive la sezione dell notifiche che non FUNZIONA
+============================================================================
+--%>
+<tr>
+	<td> <br> </td>
+</tr>
+<tr>
+	<td class="Titolo" colspan=6> Notifiche</td>
+</tr>
+
+<% 
+NotificaModel[] listaNotifiche = lEve.getNotifiche();
+%>
+
+<%-- 
+============================================================================
+  AUTORITA x la NOTIFICA AL CONDANNATO
+============================================================================
+--%>
+<% 
+for (int i=0; i<listaNotifiche.length; i++) {
+  NotificaModel notifica = listaNotifiche[i];
+  
+  if (   "E".equals(notifica.getCodTipoNotifica())
+      && notifica.getAutoritaEsterna() != null
+     ) 
   {
+  %>
+  <tr>
+    <td class="l">Autorità Destinazione</td>
+    <td class="L" colspan=2>
+        <font class="campo"><%=StringUtils.toStringJSP( notifica.getAutoritaEsterna().getDescrTipoAutorita() )%></font>&nbsp;
+        di
+        <font class="campo"><%=StringUtils.toStringJSP( notifica.getAutoritaEsterna().getDescrSede())%></font>&nbsp;
+    </td>
+  </tr>
+  
+  <% if(notifica.getNote() != null) { %>
+     <tr>
+      <td class="l">Indirizzo</td>
+      <td class="L" colspan="2"><font class="campo"><%=StringUtils.toStringJSP(lEve.getNotifiche()[0].getNote())%></font>&nbsp;</td>
+     </tr>
+  <%}%>
+       
+  <%
+  }
+}
+%> 
+
+<%--
+===============================================================
+                        AVVOCATI
+=============================================================== 
+--%>
+<% 
+
+for (int i=0; i<listaNotifiche.length; i++) {
+  NotificaModel notifica = listaNotifiche[i];
+  
+  if (notifica.getAvvIdAvvocatoFascicoloSiep()!=null) 
+  {
+    AvvocatoSiepModel avvocato = notifica.getAvvSiep();
+    %>
+    <tr>
+      <td class="l">Avvocato per  Notifica</td>
+      <td class="L" colspan="2">
+        <font class="campo" ><%=StringUtils.toStringJSP(avvocato.getAvvocato().getCognome()) +" "+StringUtils.toStringJSP(avvocato.getAvvocato().getNome())%></font>&nbsp;
+        &nbsp;Foro di&nbsp;
+        <font class="campo">
+          <%=StringUtils.toStringJSP(avvocato.getAvvocato().getForo())%>
+        </font>
+        &nbsp;Difensore di&nbsp;
+        <font class="campo">
+        <%=StringUtils.toStringJSP(avvocato.getAvvocato().getDescrTipo())%>
+        </font>
+      </td>
+    </tr>
+    
+    <tr>
+        <td class="l">Autorità Notifica</td>
+        <td class="L" colspan=2>
+            <font class="campo"><%=StringUtils.toStringJSP( notifica.getAutoritaEsterna().getDescrTipoAutorita() )%></font>&nbsp;
+            di
+            <font class="campo"><%=StringUtils.toStringJSP( notifica.getAutoritaEsterna().getDescrSede())%></font>&nbsp;
+        </td>
+    </tr> 
+      
+    <% if (notifica.getNote() != null) { %>
+         <tr>
+          <td class="l">Note</td>
+          <td class="L" colspan="2"><font class="campo"><%=StringUtils.toStringJSP(notifica.getNote())%></font>&nbsp;</td>
+         </tr>
+    <%}%> 
+             
+    <%    
+  }
+}
+%> 
+
+
+<%--
+===============================================================
+    UEPE - TDS - UDS
+=============================================================== 
+--%>
+<%
+for (int i=0; i<listaNotifiche.length; i++) {
+  NotificaModel notifica = listaNotifiche[i];
+  
+  // CSSA
+  if (notifica.getCSSA()!=null)
+  {
+  %>
+      <tr>
+        <td class="l">Destinatario</td>
+        <td class="l">
+          <font class="campo">UFFICIO DI ESECUZIONE PENALE ESTERNA</font> di 
+          <font class="campo"><%=StringUtils.toStringJSP(notifica.getCSSA().getComune())+ " " +StringUtils.toStringJSP(notifica.getCSSA().getIndirizzo())%></font>
+        </td>
+      </tr>
+      <%if(notifica.getNote()!=null){%>
+      <tr>
+        <td class="l">Note</td>
+        <td class="L" colspan="2"><font class="campo"><%=StringUtils.toStringJSP(notifica.getNote())%></font>&nbsp;</td>
+      </tr>
+      <%}%>    
+    <%    
+    }
+    else if (notifica.getUfficio()!=null 
+              && (   "UDS".equals(notifica.getUfficio().getCodTipoUfficio()) 
+                  || "UDSM".equals(notifica.getUfficio().getCodTipoUfficio()) 
+                  || "TDS".equals(notifica.getUfficio().getCodTipoUfficio()) 
+                  || "TDSM".equals(notifica.getUfficio().getCodTipoUfficio()) 
+                 )
+              && "N".equals(notifica.getCodTipoNotifica()) 
+             )
+    {
+    %>
+      <tr>
+        <td class="l">Destinatario</td>
+        <td class="l">
+          <font class="campo"><%=StringUtils.toStringJSP(notifica.getUfficio().getDescrTipoUfficio())%></font> 
+          di <font class="campo"><%=StringUtils.toStringJSP(notifica.getUfficio().getDescrComune())%></font>
+        </td>
+      </tr>
+      <%if(notifica.getNote()!=null){%>
+      <tr>
+        <td class="l">Note</td>
+        <td class="L" colspan="2"><font class="campo"><%=StringUtils.toStringJSP(notifica.getNote())%></font>&nbsp;</td>
+      </tr>
+      <%}%> 
+    <%    
+  }
+}
+%>
+
+
+<%--
+===============================================================
+   MEV_2026-105 - FINE - REWORK NOTIFICHE
+=============================================================== 
+--%>
+
+<%-- 
+<%
+if (fogliocomplementare.equals("0"))
+{
      count--;
-    }%>
+}%>
+
 <%
-  if(posizioneluogoaltra.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("04") || posizioneluogoaltra.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("02"))
-  {
+if(   posizioneluogoaltra.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("04") 
+   || posizioneluogoaltra.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("02"))
+{
   if(lEve.getNotifiche() != null && lEve.getNotifiche().length >0)
   {
-  if(lEve.getNotifiche()[count+1].getCSSA()!=null)
-   {%>
-   <tr>
+    if(lEve.getNotifiche()[count+1].getCSSA()!=null)
+    {%>
+    <tr>
         <td class="l">Destinatario</td>
          <td class="l"><font class="campo">UFFICIO DI ESECUZIONE PENALE ESTERNA</font> di <font class="campo"><%=StringUtils.toStringJSP(lEve.getNotifiche()[count+1].getCSSA().getComune())+ " " +StringUtils.toStringJSP(lEve.getNotifiche()[count+1].getCSSA().getIndirizzo())%></font></td>
-   </td>
-   </tr>
-<%}%>
-<%if(lEve.getNotifiche()[count+1].getNote()!=null){%>
+    </tr>
+    <%}%>
+
+    <%if(lEve.getNotifiche()[count+1].getNote()!=null){%>
         <tr>
           <td class="l">Note</td>
           <td class="L" colspan="2"><font class="campo"><%=StringUtils.toStringJSP(lEve.getNotifiche()[count+1].getNote())%></font>&nbsp;</td>
         </tr>
         <input type="hidden" value="SSPA" >
- <%}%>
-<%if(lEve.getNotifiche()[count+2].getUfficio()!=null){%>
-
+   <%}%>
+   
+   <%if(lEve.getNotifiche()[count+2].getUfficio()!=null){%>
    <tr>
         <td class="l">Destinatario</td>
         <td class="l"><font class="campo">UFFICIO DI SORVEGLIANZA</font> di <font class="campo">
        <%=StringUtils.toStringJSP(lEve.getNotifiche()[count+2].getUfficio().getDescrComune())%></font></td>
      </tr>
-<%}%>
-<%if(lEve.getNotifiche()[count+2].getNote()!= null){%>
+   <%}%>
+
+   <%if(lEve.getNotifiche()[count+2].getNote()!= null){%>
    <tr>
       <td class="l">Note</td>
       <td class="L" colspan="2"><font class="campo"><%=StringUtils.toStringJSP(lEve.getNotifiche()[count+2].getNote())%></font>&nbsp;</td>
@@ -485,6 +683,7 @@ if(lEve.getNotifiche()[0].getAutoritaEsterna() != null){%>
   <%}
   }
 }%>
+
  <%//modifica relativa al tipo istituto
 
    if(((istanza != null) && (istanza.getIdEvento()!=null))&&(lEve.getNotifiche() != null && lEve.getNotifiche().length >0 && lEve.getNotifiche()[count+3].getUfficio()!= null))
@@ -498,6 +697,7 @@ if(lEve.getNotifiche()[0].getAutoritaEsterna() != null){%>
          </font></td>
    </tr>
 <% }%>
+
 <% if(lEve.getNotifiche() != null && lEve.getNotifiche().length >0 && lEve.getNotifiche()[count+3].getNote() != null)
    {%>
    <tr>
@@ -508,8 +708,10 @@ if(lEve.getNotifiche()[0].getAutoritaEsterna() != null){%>
    <tr>
   </tr>
 
-
+--%>
   </table>
+  
+  
   <br>
   <div align=left style="visibility:hidden" id="upld">
     <FORM name="comandi" enctype="multipart/form-data" method="post" onSubmit="return controllaUpload();">

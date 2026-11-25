@@ -430,6 +430,8 @@ public class PosizioneGiuridicaModel extends GenericModel {
 				|| mCodPosizioneGiuridica.equals("20") // EVASO
 				|| mCodPosizioneGiuridica.equals("26") // ESPULSO
 				|| mCodPosizioneGiuridica.equals("30") // ESTRADATO
+				// MEV_2026-105 - Si aggiunge la PG 56
+				|| mCodPosizioneGiuridica.equals("56") // Libero ex art. 94 Ter DPR 309/90
 		)) {
 			return true;
 		} else

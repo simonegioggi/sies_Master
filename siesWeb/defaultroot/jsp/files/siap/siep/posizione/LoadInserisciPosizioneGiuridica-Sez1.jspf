@@ -46,6 +46,12 @@
                 	  selected = "selected";
             	  }
             	  
+             	 // MEV_2026-105 - Si preseleziona la PG corrente se disponibile
+             	 if (lDecMod.getCode().equals(lPosGiu.getCodPosizioneGiuridica()) ) {
+             		selected = "selected";
+             	 }
+             	 // MEV_2026-105 - FINE
+             	
             	  if(lDecMod.getCode().equals("10")) {
 %>
                   	<option style="color:red" value="<%=lDecMod.getCode()%>" <%=selected%>/><%=lDecMod.getDescription()%>
