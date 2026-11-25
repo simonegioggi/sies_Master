@@ -12,8 +12,9 @@ DECLARE
     FOR p IN (SELECT column_value AS prf FROM TABLE(sys.odcinumberlist(4, 30, 40, 50))) LOOP
       SELECT COUNT(*) INTO n FROM funzione_profilo WHERE fun_id_funzione = p_id AND prf_cod_profilo = p.prf;
       IF n = 0 THEN
-        INSERT INTO funzione_profilo (data_inizio_validita, fun_id_funzione, prf_cod_profilo, flag_attivo)
-        VALUES (TO_DATE('2000-01-01', 'YYYY-MM-DD'), p_id, p.prf, 'S');
+        INSERT INTO funzione_profilo (data_inizio_validita, fun_id_funzione, prf_cod_profilo, flag_attivo,
+          cod_operatore_inserimento, data_inserimento)
+        VALUES (TO_DATE('2000-01-01', 'YYYY-MM-DD'), p_id, p.prf, 'S', '20261125-MEV_2026-124_SG', SYSDATE);
       END IF;
     END LOOP;
   END;
