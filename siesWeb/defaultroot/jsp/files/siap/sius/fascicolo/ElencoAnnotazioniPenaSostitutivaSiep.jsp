@@ -11,7 +11,7 @@
 <%@ page import="siap.siep.dettaglioprovvedimento.controller.DettaglioProvvedimentoManager" %>
 <%@ page import="siap.siep.fascicolo.penasostitutiva.ElencoAnnotazioniPenaSostitutivaController" %>
 <%
-  String lCodUtentePS = ((siap.sico.utente.model.UtenteModel) session.getAttribute("UtenteConnesso")).getCodUtente();
+  String lCodUtentePS = ((siap.sico.utente.model.UtenteModel) session.getAttribute("UtenteConnesso")).getUserId();
   BigDecimal lIdFascPS = null;
   if (request.getParameter(ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP) != null
       && request.getParameter(ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP).length() > 0) {
