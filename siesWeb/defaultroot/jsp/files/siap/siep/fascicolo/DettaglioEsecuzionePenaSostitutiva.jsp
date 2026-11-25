@@ -4,6 +4,10 @@
 <%@ page import="siap.siep.fascicolo.model.DettaglioFascicoloModel" %>
 <%@ page import="siap.siep.penaresidua.model.PenaResiduaModel" %>
 <%@ page import="siap.siep.sanzionesostitutiva.model.SanzioneSostResiduaModel" %>
+<%@ page import="f3b.web.IWebConstants" %>
+<%@ page import="java.math.BigDecimal" %>
+<%@ page import="siap.sius.fascicolo.action.ICostantiFascicoloSius" %>
+<%@ page import="siap.siep.fascicolo.penasostitutiva.FascicoloSiusPenaSostitutivaController" %>
 <%
 DettaglioFascicoloModel lDettEPS = (DettaglioFascicoloModel) request.getAttribute("dettagliofascicolo");
 PenaResiduaModel lPenaEPS = lDettEPS != null ? lDettEPS.getPenaResidua() : null;
@@ -12,6 +16,7 @@ if (lSsrEPS != null && lSsrEPS.getCodTipoSanzione() != null
     && ("T".equals(lSsrEPS.getCodTipoSanzione()) || "V".equals(lSsrEPS.getCodTipoSanzione())))
 {
   boolean lSospesaEPS = "S".equals(lPenaEPS.getFlagPenaSospesa());
+  BigDecimal lIdFasSiusEPS = new FascicoloSiusPenaSostitutivaController().getIdFascicoloSius(lSsrEPS.getEveIdEvento());
 %>
 <table cellspacing="0" cellpadding="0" width="95%">
   <tr>
@@ -39,6 +44,11 @@ if (lSsrEPS != null && lSsrEPS.getCodTipoSanzione() != null
     <td class="l"><font class="label">Data fine presunta</font></td>
     <td class="l"><font class="campo"><%=lSsrEPS.getDataFinePresunta() != null ? DateUtils.getDateToString(lSsrEPS.getDataFinePresunta(), "dd-MM-yyyy") : "-"%></font></td>
   </tr>
+<% if (lIdFasSiusEPS != null) { %>
+  <tr>
+    <td class="l" colspan="4"><a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>=<%=lIdFasSiusEPS%>">Dettaglio procedimento SIUS</a></td>
+  </tr>
+<% } %>
 </table>
 <%
 }
