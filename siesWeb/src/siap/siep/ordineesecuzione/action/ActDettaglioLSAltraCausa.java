@@ -5,6 +5,7 @@ import java.util.Date;
 
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
+import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.util.SICOLookupRemote;
 import siap.siep.SIEPException;
@@ -129,8 +130,41 @@ public class ActDettaglioLSAltraCausa extends ActSIESDettaglioProvvedimento
 		 * 
 		 * }
 		 */
+		
+		// MEV_2026-105 - Si corregge il problema che prevederva un solo codice evento sia per istaza prodotta che senza istanza
+		// 01-06-5513 - Ordine di Esecuzione -- Pos.Giur. : LIBERO - Detenuto altra causa (81)
+		// 01-06-0761 - Ordine di Esecuzione -- Pos.Giur. : LIBERO - Detenuto altra causa (57) (new MEV 2026-105)
+		// 
+		// Ma 2 Action di dettaglio. NOTA le 2 action vengono aggaciate dalla ActInserisciOrdineEsecuzioneSimeone
+		// - ActDettaglioLSAltraCausaIstanzaProdotta
+		// - ActDettaglioLSAltraCausa
+		// Aprendo il dettaglio da elenco provv del PM o dal link NON VALIDATO (dett fasciolo) agganciava sempre
+		// il dettaglio senza istanza prodotta (ActDettaglioLSAltraCausa) essendo associato sulla DETTAGLIO_PROVVEDIMENTO
+		// all'unico codice evento
+		// Nota il problema è per parecchi codici, ovvero tutti ALTRA CAUSA, in questi casi il codice evento è unico
+		// 5509, 5510, 5511,5512, 5513
+		// 
+		// Quindi in sostenza questa action viene richiamata da elenco provv PM sia in caso di Istanza prodotta che non prodotta,
+		// mentre dalla ActInserisci solo in caso di istanza NON prodotta.
+		// Per gestire il caso di Istanza prodotta si testa la sua presenza
+		// Provo a recuperare l'istanza se esiste
+		// Attenzione!! il metodo getEventoIstanza se ide evtno è null recuper auna istanza a caso anche annullata 
+		// collegata al fascicolo
+		EventoModel lEventoIstanza = null;
+		if (lEveMod.getEvento().getEveIdEvento()!=null) {
+		    lEventoIstanza = this.getEventoIstanza(lEveMod.getEvento().getEveIdEvento(),
+				lEveMod.getEvento().getFasSieIdFascicoloSiep());
+		}
+		
+		if (lEventoIstanza!=null && lEventoIstanza.getIdEvento()!=null) {
+			setRequestAttribute("istanza", lEventoIstanza);
+			return PG_DETTAGLIO_LS_ALTRA_CAUSA_ISTANZA;
+		} else {
+			return PG_DETTAGLIO_LS_ALTRA_CAUSA;
+		}
 
-		return PG_DETTAGLIO_LS_ALTRA_CAUSA;
+		//return PG_DETTAGLIO_LS_ALTRA_CAUSA;
+		// MEV_2026-105 - FINE
 	}
 
 }

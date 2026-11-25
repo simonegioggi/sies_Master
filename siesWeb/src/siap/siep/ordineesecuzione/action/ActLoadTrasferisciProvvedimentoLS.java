@@ -24,10 +24,13 @@ public class ActLoadTrasferisciProvvedimentoLS extends ActionSiap implements ICo
     //Insieme degli uffici destinatari
     //Option lOption = new Option(DecodificheManager.getInstance().getTipoUfficioSIUS(), "-");
     Option lOption = new Option(DecodificheManager.getInstance().getTipoUfficioSiusTDSMUDSM(), "-");
-    String[] lFiltro = new String[3];
+    // MEV_2026-105 - Si aggiungono UDS e UDSM
+    String[] lFiltro = new String[5];
     lFiltro[0] = "-";
     lFiltro[1] = "TDS";
     lFiltro[2] = "TDSM";
+    lFiltro[3] = "UDS";
+    lFiltro[4] = "UDSM";
 
     lOption.setFilter(lFiltro);
 

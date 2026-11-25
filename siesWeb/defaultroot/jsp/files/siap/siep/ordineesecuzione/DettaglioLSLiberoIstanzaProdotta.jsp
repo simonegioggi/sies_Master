@@ -420,7 +420,7 @@
 <%if(lEve.getNotifiche()[count+1].getUfficio()!=null){%>
    <tr>
          <td class="l">Destinatario</td >
-         <td class="L"><font class="campo">TRIBUNALE DI SORVEGLIANZA</font> di <font class="campo">
+         <td class="L"><font class="campo"><%=StringUtils.toStringJSP(lEve.getNotifiche()[count+1].getUfficio().getDescrTipoUfficio())%></font> di <font class="campo">
          <%=StringUtils.toStringJSP(lEve.getNotifiche()[count+1].getUfficio().getDescrComune())%>
          </font></td>
    </tr>

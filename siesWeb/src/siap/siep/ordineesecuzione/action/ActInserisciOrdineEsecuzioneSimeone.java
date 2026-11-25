@@ -86,7 +86,8 @@ public class ActInserisciOrdineEsecuzioneSimeone extends ActOrdineEsecuzione
 		// break; // 20261023-MEV_2026-105_SG
 		// } // 20261023-MEV_2026-105_SG
 		case 57: { // MEV_2026-105: altra causa AD ex art. 94 ter // 20261023-MEV_2026-105_SG
-			lPage = InserisciLSAltraCausaDacMspAdPcCcAddpr("OE-S-AC-94T"); // 20261023-MEV_2026-105_SG
+			//lPage = InserisciLSAltraCausaDacMspAdPcCcAddpr("OE-S-AC-94T"); // 20261023-MEV_2026-105_SG
+			lPage = InserisciLSAltraCausaDacMspAdPcCcAddpr("OE-S-AC-ADDPR94");
 			break; // 20261023-MEV_2026-105_SG
 		} // 20261023-MEV_2026-105_SG
 		case 58: {

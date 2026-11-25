@@ -19,6 +19,8 @@ import siap.siep.SIEPException;
 import siap.siep.avvocato.controller.IAvvocato;
 import siap.siep.fascicolo.action.ICostantiFascicoloSiep;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
+import siap.siep.nuovaistanza.controller.INuovaIstanza;
+import siap.siep.nuovaistanza.model.NuovaIstanzaModel;
 import siap.siep.penaresidua.controller.IPenaResidua;
 import siap.siep.penaresidua.model.PenaResiduaModel;
 import siap.siep.posizione.controller.IPosizioneGiuridica;
@@ -172,10 +174,13 @@ public class ActLoadInserisciOrdineEsecuzioneSimeone extends ActionSiap implemen
 
 		// Lista UFFICIO DI SORVEGLIANZA (-/TDS/TDSM)
 		lOptionUffDest = new Option(DecodificheManager.getInstance().getTipoUfficioSiepTDSMUDSM(), "-");
-		lFiltro = new String[3];
+		// MEV_2026-105 - Si aggiungono UDS e UDSM
+		lFiltro = new String[5];
 		lFiltro[0] = "-";
 		lFiltro[1] = "TDS";
 		lFiltro[2] = "TDSM";
+		lFiltro[3] = "UDS";
+		lFiltro[4] = "UDSM";
 		lOptionUffDest.setFilter(lFiltro);
 		setRequestAttribute("tipUffDestEntSor", "" + lOptionUffDest);
 
@@ -269,6 +274,13 @@ public class ActLoadInserisciOrdineEsecuzioneSimeone extends ActionSiap implemen
 				setRequestAttribute("istanza", lVectEvento.firstElement());
 				lOption = new Option(DecodificheManager.getInstance().getTipoUfficioSIUS());
 				setRequestAttribute("tipoufficiosius", "" + lOption);
+				
+				// MEV_2026-105 - Si prova a recuparare il dettaglio dell'istanza
+				//EventoModel lEveIstanza = (EventoModel) lVectEvento.firstElement();
+				//INuovaIstanza lCtrlNuovaIst = SIEPLookupRemote.getNuovaIstanzaRemote();
+				//NuovaIstanzaModel lNuovaIsta = lCtrlNuovaIst.ExRicercaNuovaIstanzaByEveIdEvento(lEveIstanza.getIdEvento());
+				//setRequestAttribute("NuovaIstanza", lNuovaIsta);
+				// MEV_2026-105 - FINE
 			}
 		}
 

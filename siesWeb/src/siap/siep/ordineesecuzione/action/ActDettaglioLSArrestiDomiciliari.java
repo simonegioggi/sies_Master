@@ -112,7 +112,12 @@ public class ActDettaglioLSArrestiDomiciliari extends ActSIESDettaglioProvvedime
 
 		EventoModel lEventoIstanza = this.getEventoIstanza(lEveMod.getEvento().getEveIdEvento(),
 				lEveMod.getEvento().getFasSieIdFascicoloSiep());
-		setRequestAttribute("istanza", lEventoIstanza);
+		
+		// MEV_2026-105 - Visualizzava anche vecchie istabza annullate
+		if (   lEventoIstanza!=null && lEventoIstanza.getIdEvento()!=null 
+		    && "S".equals(lEventoIstanza.getFlagDocumentoRegistrato()))
+			setRequestAttribute("istanza", lEventoIstanza);
+		// MEV_2026-105 - FINE
 
 		return PG_DETTAGLIO_LS_ARRESTI_DOMICILIARI;
 	}

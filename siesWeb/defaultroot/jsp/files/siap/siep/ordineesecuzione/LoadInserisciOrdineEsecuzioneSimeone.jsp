@@ -49,6 +49,9 @@
 <jsp:useBean id="tipUffDestMagSor"        scope="request" class="java.lang.String"/>
 <jsp:useBean id="tipUffDestEntSor"        scope="request" class="java.lang.String"/>
 
+<jsp:useBean id="NuovaIstanza"  scope="request" class="siap.siep.nuovaistanza.model.NuovaIstanzaModel"/>
+
+
 <!--jsp:useBean id="posizione"          scope="request" class="siap.siep.posizione.model.PosizioneGiuridicaModel"/-->
 <!--jsp:useBean id="detenutoAltraCausa" scope="request" class="java.lang.String"/-->
 <!--jsp:useBean id="altracausaposizionegiuridica"       scope="request" class="siap.siep.altracausa.model.AltraCausaModel"/-->
@@ -772,6 +775,12 @@
 		       <td class="l">Oggetto dell'Istanza </td>
 		       <td class="l"><font class="campo"><%=StringUtils.toStringJSP(istanza.getDescrMotivo()) %> &nbsp;</font></td>
 		    </tr>
+            <%  if (NuovaIstanza!=null && NuovaIstanza.getIdNuovaIstanza() != null)	{ %>	    
+		     <tr>
+		       <td class="l">Contenuto </td>
+		       <td class="l"><font class="campo"><%=StringUtils.toStringJSP(NuovaIstanza.getDescrContenuto()) %> &nbsp;</font></td>
+		    </tr>		    
+            <% } %>		    
 <%
 		}
 %>
@@ -789,7 +798,11 @@ if (lFascicoloAssociato.getFlagAltraCausa() != null && lFascicoloAssociato.getFl
 			|| posizioneluogoaltra.getAltraCausa().getCodTipoPosGiuridica().equals("78")
 			|| posizioneluogoaltra.getAltraCausa().getCodTipoPosGiuridica().equals("79")
 			|| posizioneluogoaltra.getAltraCausa().getCodTipoPosGiuridica().equals("80")
-			|| posizioneluogoaltra.getAltraCausa().getCodTipoPosGiuridica().equals("81"))) {
+			|| posizioneluogoaltra.getAltraCausa().getCodTipoPosGiuridica().equals("81")
+			// MEV_2026-105 - Si gestisce la NUOVA PG 57
+			|| posizioneluogoaltra.getAltraCausa().getCodTipoPosGiuridica().equals("57")
+			// MEV_2026-105 - FINE			
+			)) {
 %>
 		<td class="L" colspan="3">
        		<select Title="Autorita Esterna" class="small" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>">
@@ -871,7 +884,9 @@ if (lFascicoloAssociato.getFlagAltraCausa() != null && lFascicoloAssociato.getFl
 			// MEV_2026-105 - Si gestisce la NUOVA PG 56 - Libero ex art. 94 Ter DPR 309/90
 			|| lPosizione.getCodPosizioneGiuridica().equals("56")
             // MEV_2026-105 - Si gestisce la NUOVA PG 58 - CC QC ex art. 94 Ter DPR 309/90 (come 70)
-            || lPosizione.getCodPosizioneGiuridica().equals("58")			
+            || lPosizione.getCodPosizioneGiuridica().equals("58")		
+            // MEV_2026-105 - Si gestisce la NUOVA PG 57 - (come 81)
+            || lPosizione.getCodPosizioneGiuridica().equals("57")
 			// MEV_2026-105 - FINE
 			) {
 %>

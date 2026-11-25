@@ -5058,7 +5058,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			case 58: // Custodia Cautelare per Questa Causa in Regime di Arresti Domiciliari ex art 94 Ter DPR
 						// 309/90
 			{
-				lPosizione = "58"; // Resta nella stessa posizione
+				lPosizione = "59"; // Arresti Domiciliare ex art 94 Ter dpr 309/90 - ex art. 656 comma 10 cpp
 				if (!lCodStatoAggiornato)
 					lStatoProcMod.setCodStatoProcedimento("0011");
 				break;
@@ -5166,6 +5166,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 					|| lCodPosizione.equals("70") || lCodPosizione.equals("71") || lCodPosizione.equals("72")
 					|| lCodPosizione.equals("76") || lCodPosizione.equals("77") || lCodPosizione.equals("78")
 					|| lCodPosizione.equals("79") || lCodPosizione.equals("80") || lCodPosizione.equals("81")
+					|| lCodPosizione.equals("57") // MEV_2026-105
 					|| (aFascicolo.getFlagAltraCausa() != null
 							&& aFascicolo.getFlagAltraCausa().equals("S"))) {
 				lPosDao = new PosizioneGiuridicaDAO(lConn);
@@ -5193,6 +5194,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 
 				// inserisco la nuova posizione giuridica
 				if (lCodPosizione.equalsIgnoreCase("76") || lCodPosizione.equalsIgnoreCase("77")
+						|| lCodPosizione.equalsIgnoreCase("57") // MEV_2026-105
 						|| lCodPosizione.equalsIgnoreCase("78") || lCodPosizione.equalsIgnoreCase("79")
 						|| lCodPosizione.equalsIgnoreCase("80") || lCodPosizione.equalsIgnoreCase("81")) {
 					// inserisco la nuova posizione giuridica e' perfettamente uguale alla precedente, serve
