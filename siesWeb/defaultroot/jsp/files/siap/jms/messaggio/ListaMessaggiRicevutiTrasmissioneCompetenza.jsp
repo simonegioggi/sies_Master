@@ -449,12 +449,12 @@ if(IstruttoriaCumulo !=null && IstruttoriaCumulo.getIdIstruttoriaCumulo()!=null)
         Cognome &nbsp;
         <input type="text" title="Cognome" maxlength="50" size="50"
                name="<%=ICostantiSoggetto.CAMPO_COGNOME%>" 
-               value="<%=StringUtils.toStringJSP(request.getParameter (ICostantiSoggetto.CAMPO_COGNOME),"")%>"
+               value="<%=StringUtils.toStringJSP(request.getParameter(ICostantiSoggetto.CAMPO_COGNOME), "")%>"
                >
         Nome &nbsp;
         <input type="text" title="Nome"  maxlength="50" size="50"
                name="<%=ICostantiSoggetto.CAMPO_NOME%>"
-               value="<%=StringUtils.toStringJSP(request.getParameter (ICostantiSoggetto.CAMPO_NOME),"")%>"
+               value="<%=StringUtils.toStringJSP(request.getParameter(ICostantiSoggetto.CAMPO_NOME), "")%>"
                >
       </td>
     </tr>
