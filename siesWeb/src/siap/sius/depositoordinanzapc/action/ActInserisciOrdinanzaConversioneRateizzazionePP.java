@@ -152,7 +152,7 @@ public class ActInserisciOrdinanzaConversioneRateizzazionePP extends ActInserisc
 			// Si distingue tra i casi di Conversione e Rateizzazione
 			if (!isRequestParameterNullObj(ICostantiTenore.CAMPO_COD_ESITO_TENORE))
 				tipologia = getRequestStringParameter(ICostantiTenore.CAMPO_COD_ESITO_TENORE);
-			if (tipologia.equals("3210") || tipologia.equals("3228")) {
+			if (tipologia.equals("3211") || tipologia.equals("3228")) {
 				if (!isRequestParameterNullObj(ICostantiRateizzazionePP.CAMPO_VALORE_IMPORTO_I)
 						&& ((getRequestStringParameter(
 								ICostantiRateizzazionePP.CAMPO_VALORE_IMPORTO_I) != null

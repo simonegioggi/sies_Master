@@ -4537,8 +4537,20 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			if (lLista != null && lLista.size() > 0) {
 				for (int i = 0; i < lLista.size(); i++) {
 					FascMsToFascSiepModel lFasToMsModel = lLista.elementAt(i);
-					if (lFasToMsModel.getFasSieIdFascicoloCollegato()
-							.compareTo(lFascicoloCumulante.getIdFascicoloSiep()) == 0) {
+					
+					// Ticket#20261123012 - Su FASC_MS_TO_FASC_SIEP il campo FAS_SIE_ID_FASCICOLO_COLLEGATO
+					// potrebbe essere null (vedi annotazione esito trasmissione delle MS)
+					// Il confronto va fatto sui campi not null in tabella
+					//  - CHIAVE_ANNO_SIEP_COLLEGATO
+					//  - CHIAVE_PROGR_SIEP_COLLEGATO
+					//  - CHIAVE_UFFICIO_SIEP_COLLEGATO 
+					/*if (lFasToMsModel.getFasSieIdFascicoloCollegato()
+							.compareTo(lFascicoloCumulante.getIdFascicoloSiep()) == 0) {*/
+					if (   lFasToMsModel.getChiaveAnnoSiepCollegato().compareTo(lFascicoloCumulante.getChiaveAnno()) == 0
+						&& lFasToMsModel.getChiaveProgrSiepCollegato().compareTo(lFascicoloCumulante.getChiaveProgr()) == 0
+						&& lFasToMsModel.getChiaveUfficioSiepCollegato().equals(lFascicoloCumulante.getChiaveUfficio())
+					   )
+                   {
 						siesLogger.debug("Il classe IV è già collegato al cumulante");
 						idFasToMsModel = lFasToMsModel.getIdFascMsToFascSiep();
 						isClasseIVGiaCollegato = true;
