@@ -40,7 +40,7 @@ String lAction = new String();
 lAction = "siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaConversioneRateizzazionePP";
 
 // MEV_2023-35: aggiunta diversificazione per contenuto e gestito nella pagina il nuovo contenuto
-// 2470 (Conversione pena pecuniaria - U070) 	--> 3180+3181 (U142)	&&	1773 (U070) 		--> 3210 (U142)	-->	3228 (U145)
+// 2470 (Conversione pena pecuniaria - U070) 	--> 3180+3181 (U142)	&&	1773 (U070) 		--> 3211 (U142)	-->	3228 (U145)
 // 2471 (Rateizzazione pena pecuniaria - U070)	--> 3180+3181 (U142)	&&	1770+1771 (U070)	--> 3205+3206+3207+3208 (U142) --> 3217 (U143)
 String descrContenuto = "", tipoConversione = "Conversione";
 if ("U142".equals(contenuto))
@@ -76,7 +76,7 @@ function Verify() {
 // MEV_2023-35: aggiunto controllo preventivo
 if ("U142".equals(contenuto) || "U143".equals(contenuto) || "U145".equals(contenuto)) {
 %>
-	if (document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3210'
+	if (document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3211'
 			|| document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3228') {
 <%
 	BigDecimal importoDaPagare = new BigDecimal(0);
@@ -224,7 +224,7 @@ function selectEsito() {
 	// Esito 'Rateizza...'
 	else if (document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '1773'
 			// MEV_2023-35: aggiunta or condition sempre per l'esito "Rateizza Pagamento"
-			|| document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3210'
+			|| document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3211'
 			|| document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3228') {
 		node = document.getElementById("divConversione");
 		node.style.display = 'none';
