@@ -90,6 +90,8 @@ public class ProvvedimentoPenaSostitutivaSqlDAO extends ScambioSanzioneSqlDAO {
 			lSql.append("'").append(aMotivi[i]).append("'");
 		}
 		lSql.append(")");
+		// 20261127-MEV_2026-124_SG: le conversioni di pene pecuniarie sono annotabili solo se l'esito e' una pena sostitutiva
+		lSql.append(" AND (EVENTO.COD_MOTIVO NOT IN ('3180','3181') OR EVENTO.COD_ESITO IN ('0156','0157','0276','0277','0278'))");
 		lSql.append(" AND NOT EXISTS (SELECT 1 FROM EVENTO ANN WHERE ANN.EVE_ID_EVENTO = EVENTO.ID_EVENTO");
 		lSql.append("   AND ANN.FAS_SIE_ID_FASCICOLO_SIEP = EVENTO.FAS_SIE_ID_FASCICOLO_SIEP");
 		lSql.append("   AND ANN.FAS_SIU_ID_FASCICOLO_SIUS IS NULL AND ANN.COD_TIPO_PROVVEDIMENTO = '04')");

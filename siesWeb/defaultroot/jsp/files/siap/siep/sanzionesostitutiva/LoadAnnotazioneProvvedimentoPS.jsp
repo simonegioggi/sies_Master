@@ -117,7 +117,7 @@
 		    </td>
 		    <td class="LBG">
 		    	<font class="label">Funzione :</font>&nbsp;&nbsp;
-		    	<font class="campo">Annotazione Provvedimento Sanzione Sostitutiva</font>
+		    	<%-- 20261127-MEV_2026-124_SG: etichetta Pena sostitutiva --%><font class="campo">Annotazione Provvedimento Pena Sostitutiva</font>
 			</td>
 		</tr>
 	</table>
@@ -211,7 +211,7 @@ if(lSanSos != null && lSanSos.getIdSanzioneSostitutiva() != null)
 %>
 
 <tr>
-<td class="L"><font class="label">Sanzione Sostitutiva applicata: </font></td>
+<%-- 20261127-MEV_2026-124_SG: etichetta Pena sostitutiva --%><td class="L"><font class="label">Pena Sostitutiva applicata: </font></td>
 <td class="L" colspan="5">
 <%
 if((lSanSos.getNumAnni()!=null && lSanSos.getNumAnni().compareTo(new BigDecimal(0))!=0) || (lSanSos.getNumMesi()!=null && lSanSos.getNumMesi().compareTo(new BigDecimal(0))!=0) || (lSanSos.getNumGiorni()!=null && lSanSos.getNumGiorni().compareTo(new BigDecimal(0))!=0))
@@ -252,7 +252,7 @@ if(lSanSos.getSanzionePecuniariaAmmenda() != null && lSanSos.getSanzionePecuniar
   {
 %>
      <tr>
-      <td class="l">Sanzione sostitutiva da espiare:</td>  
+      <%-- 20261127-MEV_2026-124_SG: etichetta Pena sostitutiva --%><td class="l">Pena sostitutiva da espiare:</td>  
       <td class="L">
            <font class="campo"><%=StringUtils.toStringJSP(penaresidua.getDescrTipoSanzione())%>&nbsp;</font>
            <font class="label">Anni:&nbsp; </font><font class="campo"><%=StringUtils.toStringJSP(penaresidua.getNumAnniSS(), "0")%>&nbsp;</font>

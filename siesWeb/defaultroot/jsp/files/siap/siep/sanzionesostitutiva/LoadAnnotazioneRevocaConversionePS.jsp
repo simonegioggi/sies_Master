@@ -190,7 +190,7 @@
     <tr>
       <td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
       <td class="LBG"><font class="label">Funzione :</font>&nbsp;&nbsp;
-        <font class="campo">Annotazione Revoca\Conversione Sanzione Sostitutiva</font>
+        <%-- 20261127-MEV_2026-124_SG: etichetta Pena sostitutiva --%><font class="campo">Annotazione Revoca\Conversione Pena Sostitutiva</font>
       </td>
     </tr>
 </table>
@@ -233,7 +233,7 @@
   {
 %>
      <tr>
-      <td class="l">Sanzione sostitutiva da espiare</td>  
+      <%-- 20261127-MEV_2026-124_SG: etichetta Pena sostitutiva --%><td class="l">Pena sostitutiva da espiare</td>  
       <td class="L">
            <font class="campo"><%=StringUtils.toStringJSP(penaresidua.getDescrTipoSanzione())%>&nbsp;</font>
            <font class="label">Anni:&nbsp; </font><font class="campo"><%=StringUtils.toStringJSP(penaresidua.getNumAnniSS(), "0")%>&nbsp;</font>

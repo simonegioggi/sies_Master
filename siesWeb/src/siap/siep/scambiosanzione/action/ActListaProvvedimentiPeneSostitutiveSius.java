@@ -17,7 +17,7 @@ import siap.siep.util.SIEPLookupRemote;
 public class ActListaProvvedimentiPeneSostitutiveSius extends ActionSiap implements ICostantiScambioSanzione {
 
 	// Applicazione pena sostitutiva
-	private static final String[] MOTIVI_ANNOTAZIONE = { "2900", "2901" };
+	private static final String[] MOTIVI_ANNOTAZIONE = { "2900", "2901", "3180", "3181" }; // 20261127-MEV_2026-124_SG conversione pene pecuniarie in pena sostitutiva
 	// Conversione e revoca pena sostitutiva
 	private static final String[] MOTIVI_REVOCA_CONVERSIONE = { "2910", "2911", "2912", "2913", "2914", "2935",
 			"2936", "2937", "2938", "2940", "2941", "3200", "3190" };
