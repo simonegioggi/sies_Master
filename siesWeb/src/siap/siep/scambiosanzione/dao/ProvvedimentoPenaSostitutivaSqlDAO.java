@@ -100,6 +100,17 @@ public class ProvvedimentoPenaSostitutivaSqlDAO extends ScambioSanzioneSqlDAO {
 		setStatement(lSql.toString());
 	}
 
+	// 20261127-MEV_2026-124_SG: ultimo provvedimento SIUS di applicazione/conversione pena sostitutiva (annotato o meno)
+	public void ricercaUltimoProvvedimentoPS(BigDecimal aFascicoloSiep) {
+		StringBuilder lSql = new StringBuilder("SELECT * FROM (");
+		lSql.append(getSqlQueryPS());
+		lSql.append(" AND EVENTO.FAS_SIE_ID_FASCICOLO_SIEP = ").append(aFascicoloSiep);
+		lSql.append(" AND EVENTO.COD_MOTIVO IN ('2900','2901','3180','3181')");
+		lSql.append(" AND (EVENTO.COD_MOTIVO NOT IN ('3180','3181') OR EVENTO.COD_ESITO IN ('0156','0157','0276','0277','0278'))");
+		lSql.append(" ORDER BY EVENTO.DATA_EMISSIONE DESC, EVENTO.ID_EVENTO DESC ) WHERE ROWNUM = 1");
+		setStatement(lSql.toString());
+	}
+
 	public void ricercaProvvedimentoPSByIdEvento(BigDecimal aIdEvento) {
 		setStatement(getSqlQueryPS() + " AND EVENTO.ID_EVENTO = " + aIdEvento);
 	}

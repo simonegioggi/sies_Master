@@ -81,4 +81,6 @@ public interface IScambioSanzione {
 	public ScambioSanzioneModel ExRicercaProvvedimentoPenaSostitutivaByIdEvento(BigDecimal aIdEvento)
 			throws F3BException;
 
+	// 20261127-MEV_2026-124_SG
+	public ScambioSanzioneModel ExRicercaUltimoProvvedimentoPenaSostitutiva(BigDecimal aFascicoloSiep) throws F3BException;
 }

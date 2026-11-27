@@ -2417,6 +2417,40 @@ if (lScambioMod != null && lScambioMod.getIdScambioSanzione() != null
     	</td>
   	</tr>
 <%
+} else {
+	// 20261127-MEV_2026-124_SG: estremi dell'ordinanza SIUS di applicazione/conversione pena sostitutiva (Riforma Cartabia)
+	ScambioSanzioneModel lProvvPS = siap.siep.util.SIEPLookupRemote.getScambioSanzionRemote()
+			.ExRicercaUltimoProvvedimentoPenaSostitutiva(fascicolo.getIdFascicoloSiep());
+	if (lProvvPS != null && lProvvPS.getIdScambioSanzione() != null) {
+%>
+	<%-- 20261127-MEV_2026-124_SG --%>
+	<tr>
+		<td class="L">
+			<font class="label">Situazione pena sostitutiva : </font>
+			<font class="campo"><%=StringUtils.toStringJSP(lProvvPS.getDescrNaturaSanzione())%></font>
+			<font class="label">Procedimento SIUS : </font>
+			<font class="campo">
+<%
+		if (vediLinkSorv.compareTo("S") == 0) {
+%>
+				<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.fascicolo.action.ActLoadDettaglioFascicoloPerAnnoProgUfficio&<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO%>=<%=lProvvPS.getChiaveAnnoFascicoloSius()%>&<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR%>=<%=lProvvPS.getChiaveProgrFascicoloSius()%>&<%=ICostantiFascicoloSius.CAMPO_CHIAVE_UFFICIO%>=<%=lProvvPS.getCodUfficioSorveglianza()%>" title="Procedimento Sorveglianza">
+					<%=StringUtils.toStringJSP(lProvvPS.getChiaveAnnoFascicoloSius())%>/<%=StringUtils.toStringJSP(lProvvPS.getChiaveProgrFascicoloSius())%>
+				</a>
+<%
+		} else {
+%>
+				<%=StringUtils.toStringJSP(lProvvPS.getChiaveAnnoFascicoloSius())%>/<%=StringUtils.toStringJSP(lProvvPS.getChiaveProgrFascicoloSius())%>
+<%
+		}
+%>
+			</font>
+			<font class="campo">&nbsp;&nbsp;<%=StringUtils.toStringJSP(lProvvPS.getDescrUfficioSorveglianza())%></font>
+			<font class="label"> di </font>
+			<font class="campo"><%=StringUtils.toStringJSP(lProvvPS.getComuneUfficioSorveglianza())%></font>
+		</td>
+	</tr>
+<%
+	}
 } // Chiude if (lScambiomod != null ...
  
 //==============================================================================

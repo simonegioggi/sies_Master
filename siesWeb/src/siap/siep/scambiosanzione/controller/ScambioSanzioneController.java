@@ -867,4 +867,27 @@ public class ScambioSanzioneController extends SiapController implements IScambi
 		}
 	}
 
+
+	// 20261127-MEV_2026-124_SG: ultimo provvedimento SIUS di pena sostitutiva per il dettaglio procedimento
+	public ScambioSanzioneModel ExRicercaUltimoProvvedimentoPenaSostitutiva(BigDecimal aFascicoloSiep)
+			throws F3BException {
+
+		Connection lConn = null;
+		ProvvedimentoPenaSostitutivaSqlDAO lDao = null;
+
+		try {
+			lConn = getDBConnection();
+			lDao = new ProvvedimentoPenaSostitutivaSqlDAO(lConn);
+			lDao.ricercaUltimoProvvedimentoPS(aFascicoloSiep);
+			return (ScambioSanzioneModel) lDao.getModelByKey();
+		} catch (DAOException daoEx) {
+			throw new F3BException(
+					"ScambioSanzioneController.ExRicercaUltimoProvvedimentoPenaSostitutiva: Non posso leggere : "
+							+ daoEx);
+		} finally {
+			cleanup(lDao);
+			cleanup(lConn);
+		}
+	}
+
 }
