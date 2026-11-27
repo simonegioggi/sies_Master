@@ -1198,6 +1198,7 @@ public class ActCalcoloPena extends ActionSiap implements ICostantiAnnotazioneMa
 				lPenaRideterminata.setSanzSostResidua(lSSResidua);
 			}
 
+			// 20261127-MEV_2026-124_SG - la gestione dei dati specifici di S/L resta invariata (blocco separato dal caricamento per T/V)
 			if (lSSResidua != null && (lSSResidua.getCodTipoSanzione().equals("S")
 					|| lSSResidua.getCodTipoSanzione().equals("L"))) {
 

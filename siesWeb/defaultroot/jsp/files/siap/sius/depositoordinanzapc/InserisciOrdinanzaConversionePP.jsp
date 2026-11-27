@@ -174,6 +174,7 @@ if ("U142".equals(contenuto) || "U143".equals(contenuto) || "U145".equals(conten
 	// MEV_2025-48: aggiunto controllo
 	if ("U142".equals(contenuto)) {
 %>
+	// 20261127-MEV_2026-124_SG - controlli esiti di revoca e compatibilita' con l'oggetto
 	if (document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value in { '3222':1, '3223':1, '3224':1 }
 			&& document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_OGGETTO_TENORE%>.value != '3190') {
 		alert("Esito di revoca pena pecuniaria sostitutiva incompatibile con l'oggetto selezionato");
@@ -186,15 +187,18 @@ if ("U142".equals(contenuto) || "U143".equals(contenuto) || "U145".equals(conten
 			&& document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_FLAG_TIPO_SANZIONE%>[3].checked == false) {
 		alert("Per l'esito 'Dispone conversione pena irrogata dal GdP in permanenza domiciliare' scegliere la Pena Sostitutiva 'Permanenza Domiciliare'");
 		return false;
+	// 20261127-MEV_2026-124_SG - esiti di conversione: controllo tipo pena sostitutiva
 	} else if ((document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3205' || document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3222')
 			&& document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_FLAG_TIPO_SANZIONE%>[0].checked == false) {
 		alert("Per l'esito 'Dispone conversione in Semilibertà Sostitutiva' scegliere la Pena Sostitutiva 'Semilibertà'");
 		return false;
+	// 20261127-MEV_2026-124_SG - esiti di conversione: controllo tipo pena sostitutiva
 	} else if ((document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3206' || document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3223')
 			&& document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_FLAG_TIPO_SANZIONE%>[1].checked == false) {
 		alert("Per l'esito 'Dispone conversione in Detenzione Domiciliare Sostitutiva' scegliere la Pena Sostitutiva 'Detenzione Domiciliare'");
 		return false;
 	} else if ((document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3207'
+			// 20261127-MEV_2026-124_SG - esiti di conversione: controllo tipo pena sostitutiva
 			|| document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3208' || document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3224')
 			&& document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_FLAG_TIPO_SANZIONE%>[2].checked == false) {
 		alert("Per gli esiti 'Dispone conversione in Lavoro Pubblica Utilità Sostitutivo' e 'Dispone conversione pena irrogata dal GDP in Lavoro Pubblica Utilità' scegliere la Pena Sostitutiva 'Lavoro Pubblica Utilità'");
@@ -231,6 +235,7 @@ function selectEsito() {
 	if (document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value in { '1770':1, '1771':1 }
 			// MEV_2023-35: aggiunti esisti
 			// MEV_2025-48: aggiunto esito (3209) per Oggetto: 3180 - Contenuto: U142 - TIPO ORDINANZA: SR
+			// 20261127-MEV_2026-124_SG - esiti di conversione: visualizzazione sezione conversione
 			|| document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value in { '3205':1, '3206':1, '3207':1, '3208':1, '3209':1, '3217':1, '3222':1, '3223':1, '3224':1 }) {
 		node = document.getElementById("divConversione");
 		node.style.display = 'block';

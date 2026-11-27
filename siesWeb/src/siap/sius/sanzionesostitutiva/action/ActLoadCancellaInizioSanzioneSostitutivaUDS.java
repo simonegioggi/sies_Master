@@ -11,7 +11,7 @@ import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
 import siap.sico.evento.controller.IEvento;
-import siap.sico.evento.model.EventoModel;
+import siap.sico.evento.model.EventoModel; // 20261127-MEV_2026-124_SG
 import siap.sico.util.SICOLookupRemote;
 import siap.sius.esecuzionesanzionesostitutiva.controller.IEsecuzioneSS;
 import siap.sius.esecuzionesanzionesostitutiva.model.EsecuzioneSanzioneSostitutivaModel;
@@ -186,6 +186,7 @@ public class ActLoadCancellaInizioSanzioneSostitutivaUDS extends ActSanzioneSost
 			// cancello periodo
 			// modifico lo scadenzario 80 -> ripristino la Data Termine Attuale
 			// modifico ESS -> ripristino la Data Termine Attuale
+			// 20261127-MEV_2026-124_SG - passaggio dell'evento di annotazione
 			lCtrl1.ExCancellaPeriodoAltraSanzione(null, null, lScaMod80, IdPerCanc, lESSModel,
 					lIdEventoAnnotazione);
 		}
@@ -211,6 +212,7 @@ public class ActLoadCancellaInizioSanzioneSostitutivaUDS extends ActSanzioneSost
 				lESSModel.setDataTermineAttuale(lPerMod.getDataScadenza());
 				lScaMod81c = lCtrl
 						.ExRicercaScadenzarioSiusByIdFascicoloTipo(lPerMod.getFasSiuIdFascicoloSius(), "81");
+				// 20261127-MEV_2026-124_SG - passaggio dell'evento di annotazione
 				lCtrl1.ExCancellaPeriodoAltraSanzione(lScaMod81c, null, lScaMod80, IdPerCanc, lESSModel,
 						lIdEventoAnnotazione);
 			} else {
@@ -228,6 +230,7 @@ public class ActLoadCancellaInizioSanzioneSostitutivaUDS extends ActSanzioneSost
 						.ExRicercaScadenzarioSiusByIdFascicoloTipo(lPerMod.getFasSiuIdFascicoloSius(), "81");
 				lPerMod = (PeriodoAltraSanzioneModel) lListaSanzioniSius.get(lListaSanzioniSius.size() - 3);
 				lScaMod81m = riempioScadenzario(lPerMod, lScaMod81m, "81");
+				// 20261127-MEV_2026-124_SG - passaggio dell'evento di annotazione
 				lCtrl1.ExCancellaPeriodoAltraSanzione(null, lScaMod81m, lScaMod80, IdPerCanc, lESSModel,
 						lIdEventoAnnotazione);
 			}

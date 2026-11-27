@@ -9,7 +9,7 @@ import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.util.SICOLookupRemote;
-import siap.sius.util.SIUSLookupRemote;
+import siap.sius.util.SIUSLookupRemote; // 20261127-MEV_2026-124_SG
 import siap.sius.ActionSius;
 import siap.sius.SIUSException;
 import f3b.log.LogF3B;

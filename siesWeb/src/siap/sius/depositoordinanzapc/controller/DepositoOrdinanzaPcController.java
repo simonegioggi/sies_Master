@@ -3501,6 +3501,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 				dopdao.setNumGiorniDetenzioneDom(dopm.getNumGiorniDetenzioneDom());
 				dopdao.setNumMesiDetenzioneDom(dopm.getNumMesiDetenzioneDom());
 				dopdao.setNumAnniDetenzioneDom(dopm.getNumAnniDetenzioneDom());
+				// 20261127-MEV_2026-124_SG - salvataggio del numero ore LPU
 				if (dopm.getNumOreLpu() != null)
 					dopdao.setNumOreLpu(dopm.getNumOreLpu());
 				dopdao.setCodOperatoreAggiornamento(dopm.getCodOperatoreAggiornamento());
@@ -4084,6 +4085,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 				lEsecSanSostDAO.setDAOFromModel(aEsecSenSostMod);
 				lEsecSanSostDAO.insert();
 			}
+			// 20261127-MEV_2026-124_SG - aggiornamento data revoca/pagamento sul periodo
 			if (aDataRevoca != null) {
 				aggiornaPeriodoRevocaPS(lConn, lModRet.getGeneraleProcedimento().getFasSiuIdFascicoloSius(),
 						aDataRevoca, aDataPagamentoPP);

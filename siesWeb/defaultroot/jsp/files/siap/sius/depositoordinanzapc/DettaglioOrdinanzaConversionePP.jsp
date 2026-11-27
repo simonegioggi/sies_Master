@@ -232,6 +232,7 @@ if ("0159".equals(tenori[0].getCodEsitoTenore()) && !Utils.isNullObj(rate) && !r
 			<font class="cRosso">&nbsp;GIORNI: <%=StringUtils.toStringJSP(dopm.getNumGiorniDetenzioneDom(), "0")%></font>
 			<font class="label">di</font>
 			<font class="cRosso">&nbsp;<%=StringUtils.toStringJSP(descrTipoSanzione)%></font>
+<%-- 20261127-MEV_2026-124_SG - visualizzazione ore Lavoro Pubblica Utilita' --%>
 <%
 	if (dopm.getNumOreLpu() != null) {
 %>

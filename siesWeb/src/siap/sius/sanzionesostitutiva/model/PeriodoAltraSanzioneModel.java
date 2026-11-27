@@ -156,6 +156,7 @@ public class PeriodoAltraSanzioneModel extends GenericModel {
 		this.mResiduaGG = aModel.mResiduaGG;
 		this.mResiduaMM = aModel.mResiduaMM;
 		this.mResiduaAA = aModel.mResiduaAA;
+		// 20261127-MEV_2026-124_SG - data revoca e data pagamento PP
 		this.mDataRevoca = aModel.mDataRevoca;
 		this.mDataPagamentoPP = aModel.mDataPagamentoPP;
 	}
@@ -370,6 +371,7 @@ public class PeriodoAltraSanzioneModel extends GenericModel {
 		return mResiduaMM;
 	};
 
+	// 20261127-MEV_2026-124_SG - data revoca e data pagamento PP
 	public Date getDataRevoca() {
 		return mDataRevoca;
 	}

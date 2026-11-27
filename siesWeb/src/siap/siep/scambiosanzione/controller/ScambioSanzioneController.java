@@ -34,7 +34,7 @@ import siap.siep.posizione.dao.PosizioneGiuridicaDAO;
 import siap.siep.posizione.model.PosizioneGiuridicaModel;
 import siap.siep.scambiosanzione.dao.ScambioSanzioneDAO;
 import siap.siep.scambiosanzione.dao.ScambioSanzioneRichiestaConvSqlDAO;
-import siap.siep.scambiosanzione.dao.ProvvedimentoPenaSostitutivaSqlDAO;
+import siap.siep.scambiosanzione.dao.ProvvedimentoPenaSostitutivaSqlDAO; // 20261127-MEV_2026-124_SG
 import siap.siep.scambiosanzione.dao.ScambioSanzioneSqlDAO;
 import siap.siep.scambiosanzione.model.ScambioSanzioneModel;
 import siap.siep.statoprocedimento.dao.StatoProcedimentoDAO;

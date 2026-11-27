@@ -6,7 +6,7 @@ import f3b.log.LogF3B;
 import f3b.util.F3BException;
 import siap.sius.SIUSException;
 import siap.sius.depositoordinanzapc.controller.IDepositoOrdinanzaPc;
-import siap.sius.depositoordinanzapc.action.ICostantiDepositoOrdinanzaPc;
+import siap.sius.depositoordinanzapc.action.ICostantiDepositoOrdinanzaPc; // 20261127-MEV_2026-124_SG
 import siap.sius.depositoordinanzapc.model.OrdinanzaEventoTenoriGProcModel;
 import siap.sius.esecuzionesanzionesostitutiva.action.ICostantiEsecuzioneSS;
 import siap.sius.esecuzionesanzionesostitutiva.model.EsecuzioneSanzioneSostitutivaModel;
@@ -23,6 +23,7 @@ import siap.sius.util.SIUSLookupRemote;
 public class ActInserisciOrdinanzaRevocaPS extends ActInserisciOrdinanzaUDS {
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
+	// 20261127-MEV_2026-124_SG - verifica parametro assente o vuoto
 	private boolean isParamVuoto(String aNome) throws F3BException {
 		return isRequestParameterNullObj(aNome) || "".equals(getRequestStringParameter(aNome).trim());
 	}
@@ -95,6 +96,7 @@ public class ActInserisciOrdinanzaRevocaPS extends ActInserisciOrdinanzaUDS {
 		IDepositoOrdinanzaPc IDepOrdCtrl = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
 		// OrdinanzaEventoTenoriGProcModel lModRet =
 		// IDepOrdCtrl.ExInserisciOrdinanzaRevocaConversionePPS(aOrdEveTenGP, lRicConv);
+		// 20261127-MEV_2026-124_SG - passaggio della data revoca al controller
 		OrdinanzaEventoTenoriGProcModel lModRet = IDepOrdCtrl.ExInserisciOrdinanzaRevocaPS(aOrdEveTenGP,
 				lEsecSanSost, lDataRevoca, null);
 

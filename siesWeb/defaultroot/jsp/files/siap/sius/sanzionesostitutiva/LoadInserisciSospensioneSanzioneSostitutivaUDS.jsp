@@ -257,6 +257,7 @@
 		}
 	}%>
 			<input type="HIDDEN" name="<%=ICostantiSanzioneSostitutiva.CAMPO_EVE_ID_EVENTO%>" value="<%=ordEve%>">
+			<%-- 20261127-MEV_2026-124_SG - campi precompilati con i dati dell'ordinanza di sospensione (data decorrenza) --%>
 			<td class="l">Data decorrenza sospensione / differimento <font class="ob">(*)</font></td>
 			<td class="L"><input type="text" size="2" maxlength="2"
 				value="<%=ordInizioG%>" name="<%=ICostantiSanzioneSostitutiva.CAMPO_GIORNO_DATA_INIZIO_ESECUZIONE%>"
@@ -274,6 +275,7 @@
 				onkeypress="return TicTabNumField(this,event)"
 				onBlur="javascript:value=FillYear(value)"></td>
 		</tr>
+		<%-- 20261127-MEV_2026-124_SG - campi precompilati con i dati dell'ordinanza di sospensione (periodo) --%>
 		<tr>
 			<td class="L" width="40%">Periodo sospensione:</td>
 			<td>Anni <input title="Anni" size="2" maxlength="2" value="<%=ordAA%>"
@@ -286,6 +288,7 @@
 				name="<%= ICostantiSanzioneSostitutiva.CAMPO_SOSPENSIONE_GG%>">
 			</td>
 		</tr>
+		<%-- 20261127-MEV_2026-124_SG - campi precompilati con i dati dell'ordinanza di sospensione (fino al) --%>
 		<tr>
 			<td class="l">Fino al</td>
 			<td class="L">
