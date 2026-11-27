@@ -73,4 +73,12 @@ public interface IScambioSanzione {
 	public ScambioSanzioneModel ExRicercaScambioSanzioneByEveIdEventoNoControlValid(BigDecimal aIdEvento)
 			throws F3BException;
 
+	// 20261124-MEV_2026-124_SG: provvedimenti SIUS delle pene sostitutive (Riforma Cartabia) da annotare in SIEP
+	public java.util.List ExRicercaProvvedimentiPenaSostitutiva(BigDecimal aFascicoloSiep, String[] aMotivi)
+			throws F3BException;
+
+	// 20261124-MEV_2026-124_SG
+	public ScambioSanzioneModel ExRicercaProvvedimentoPenaSostitutivaByIdEvento(BigDecimal aIdEvento)
+			throws F3BException;
+
 }

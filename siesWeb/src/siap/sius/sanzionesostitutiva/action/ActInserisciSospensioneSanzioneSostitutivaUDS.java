@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
 import f3b.web.IWebConstants;
+import siap.sico.evento.model.EventoModel; // 20261127-MEV_2026-124_SG
 import siap.sico.calendar.model.CalendarModel;
 import siap.sico.ufficio.controller.IUfficio;
 import siap.sico.util.CalendarUtil;
@@ -45,6 +46,10 @@ public class ActInserisciSospensioneSanzioneSostitutivaUDS extends ActSanzioneSo
 		BigDecimal lIdFasSius = recuperoIdFascicolo();
 		BigDecimal lIdFasSiep = recuperoIdFascicoloSiep();
 		lPerMod.setFasSiuIdFascicoloSius(lIdFasSius);
+		// 20261124-MEV_2026-124_SG: aggancia il periodo all'ordinanza di sospensione da cui e' stato precompilato
+		if (!isRequestParameterNullObj(CAMPO_EVE_ID_EVENTO)
+				&& getRequestStringParameter(CAMPO_EVE_ID_EVENTO).trim().length() > 0)
+			lPerMod.setEveIdEvento(getRequestBigDecimalParameter(CAMPO_EVE_ID_EVENTO));
 		lPerMod.setFasSieIdFascicoloSiep(lIdFasSiep);
 
 		// setto i dati dell'utente che effettua l'inserimento
@@ -129,14 +134,22 @@ public class ActInserisciSospensioneSanzioneSostitutivaUDS extends ActSanzioneSo
 		if (!lPerMod.getDaRecuperare().equals("1"))
 			lScaMod80 = null;
 
+		// 20260512-MEV_2026-124_SG: annotazione manuale (non agganciata a un'ordinanza) -> nuovo evento in Altri Atti
+		EventoModel lEveSospensione = null;
+		if (lPerMod.getEveIdEvento() == null)
+			lEveSospensione = preparoEventoSospensione(lPerMod);
+
 		if (flScaMod81.equals("SI")) {
 			// inserisco il periodo, inserisco lo scadenzario 81
 			// eventualmente aggiorno la data termine attuale sull'esecuzione e sullo scadenzario 80
-			lPerMod = lCtrl.ExInserisciPeriodoAltraSanzione(lPerMod, lScaMod81, lESSModel, lScaMod80);
+			lPerMod = lCtrl.ExInserisciPeriodoAltraSanzione(lPerMod, lScaMod81, lESSModel, lScaMod80,
+					lEveSospensione);
 		} else {
 			// inserisco il periodo, modifico lo scadenzario 81
 			// eventualmente aggiorno la data termine attuale sull'esecuzione e sullo scadenzario 80
-			lPerMod = lCtrl.ExInserisciPeriodoAltraSanzione(lPerMod, lESSModel, lScaMod81, lScaMod80);
+			// 20261127-MEV_2026-124_SG - passaggio dell'evento di sospensione
+			lPerMod = lCtrl.ExInserisciPeriodoAltraSanzione(lPerMod, lESSModel, lScaMod81, lScaMod80,
+					lEveSospensione);
 		}
 
 		setRequestAttribute("lCalMode", lCalMode);

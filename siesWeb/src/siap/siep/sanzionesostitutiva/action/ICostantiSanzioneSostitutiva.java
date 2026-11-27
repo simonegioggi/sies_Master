@@ -188,6 +188,16 @@ public interface ICostantiSanzioneSostitutiva {
 	public static final String PG_DETTAGLIO_RICHIESTA_REVOCA = IWebConstants.ROOT_DIR
 			+ "/files/siap/siep/sanzionesostitutiva/DettaglioRichiestaRevocaSS.jsp";
 
+	// 20261124-MEV_2026-124_SG: pagine annotazioni pene sostitutive (Riforma Cartabia)
+	public static final String PG_LOAD_ANNOTAZIONE_PROVVEDIMENTO_PS = IWebConstants.ROOT_DIR
+			+ "/files/siap/siep/sanzionesostitutiva/LoadAnnotazioneProvvedimentoPS.jsp";
+	public static final String PG_DETTAGLIO_ANNOTAZIONE_PROVVEDIMENTO_PS = IWebConstants.ROOT_DIR
+			+ "/files/siap/siep/sanzionesostitutiva/DettaglioAnnotazioneProvvedimentoPS.jsp";
+	public static final String PG_LOAD_ANNOTAZIONE_REVOCA_CONVERSIONE_PS = IWebConstants.ROOT_DIR
+			+ "/files/siap/siep/sanzionesostitutiva/LoadAnnotazioneRevocaConversionePS.jsp";
+	public static final String PG_DETTAGLIO_ANNOTAZIONE_REVOCA_CONVERSIONE_PS = IWebConstants.ROOT_DIR
+			+ "/files/siap/siep/sanzionesostitutiva/DettaglioAnnotazioneRevocaConversionePS.jsp";
+
 	// GRIGLIE BOTTONI
 	public static final String PG_GRIGLIA_ALTRE_SANZIONI = IWebConstants.ROOT_DIR
 			+ "/files/siap/siep/sanzionesostitutiva/GrigliaBottoniAltreSanzioni.jsp";

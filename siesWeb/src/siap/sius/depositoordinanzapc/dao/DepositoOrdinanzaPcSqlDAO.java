@@ -375,6 +375,7 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		lStatement += "LUOGO_SVOLGIMENTO_PROVA, ";
 		lStatement += "SERVIZIO_TERAPEUTICO_COMP, ";
 		lStatement += "NUM_GIORNI_DETENZIONE_DOM, ";
+		lStatement += "NUM_ORE_LPU, "; // 20261124-MEV_2026-124_SG
 		lStatement += "NUM_MESI_DETENZIONE_DOM, ";
 		lStatement += "NUM_ANNI_DETENZIONE_DOM, ";
 		lStatement += "NUM_GIORNI_PERMESSO_ACCORDATI, ";
@@ -466,6 +467,7 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		lStatement += "LUOGO_SVOLGIMENTO_PROVA, ";
 		lStatement += "SERVIZIO_TERAPEUTICO_COMP, ";
 		lStatement += "NUM_GIORNI_DETENZIONE_DOM, ";
+		lStatement += "NUM_ORE_LPU, "; // 20261124-MEV_2026-124_SG
 		lStatement += "NUM_MESI_DETENZIONE_DOM, ";
 		lStatement += "NUM_ANNI_DETENZIONE_DOM, ";
 		lStatement += "NUM_GIORNI_PERMESSO_ACCORDATI, ";
@@ -550,6 +552,7 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		lStatement += "LUOGO_SVOLGIMENTO_PROVA, ";
 		lStatement += "SERVIZIO_TERAPEUTICO_COMP, ";
 		lStatement += "NUM_GIORNI_DETENZIONE_DOM, ";
+		lStatement += "NUM_ORE_LPU, "; // 20261124-MEV_2026-124_SG
 		lStatement += "NUM_MESI_DETENZIONE_DOM, ";
 		lStatement += "NUM_ANNI_DETENZIONE_DOM, ";
 		lStatement += "NUM_GIORNI_PERMESSO_ACCORDATI, ";
@@ -634,6 +637,7 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		lStatement += "LUOGO_SVOLGIMENTO_PROVA, ";
 		lStatement += "SERVIZIO_TERAPEUTICO_COMP, ";
 		lStatement += "NUM_GIORNI_DETENZIONE_DOM, ";
+		lStatement += "NUM_ORE_LPU, "; // 20261124-MEV_2026-124_SG
 		lStatement += "NUM_MESI_DETENZIONE_DOM, ";
 		lStatement += "NUM_ANNI_DETENZIONE_DOM, ";
 		lStatement += "NUM_GIORNI_PERMESSO_ACCORDATI, ";
@@ -716,6 +720,7 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		aModel.setLuogoSvolgimentoProva(getString("LUOGO_SVOLGIMENTO_PROVA"));
 		aModel.setServizioTerapeuticoComp(getString("SERVIZIO_TERAPEUTICO_COMP"));
 		aModel.setNumGiorniDetenzioneDom(getBigDecimal("NUM_GIORNI_DETENZIONE_DOM"));
+		aModel.setNumOreLpu(getBigDecimal("NUM_ORE_LPU")); // 20261124-MEV_2026-124_SG
 		aModel.setNumMesiDetenzioneDom(getBigDecimal("NUM_MESI_DETENZIONE_DOM"));
 		aModel.setNumAnniDetenzioneDom(getBigDecimal("NUM_ANNI_DETENZIONE_DOM"));
 		aModel.setNumGiorniPermessoAccordati(getBigDecimal("NUM_GIORNI_PERMESSO_ACCORDATI"));

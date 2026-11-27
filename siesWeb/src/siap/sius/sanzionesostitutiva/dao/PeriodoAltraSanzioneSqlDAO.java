@@ -153,7 +153,7 @@ public class PeriodoAltraSanzioneSqlDAO extends SqlDAO {
 				// 12-05-2008 Modifica Periodo da Recuperare in GG, MM, AA
 				// "NUMERO_GIORNI, "+
 				"DA_RECUPERARE_GG, " + "DA_RECUPERARE_MM, " + "DA_RECUPERARE_AA, " + "ESPIATA_GG, "
-				+ "ESPIATA_MM, " + "ESPIATA_AA, " + "RESIDUA_GG, " + "RESIDUA_MM, " + "RESIDUA_AA ";
+				+ "ESPIATA_MM, " + "ESPIATA_AA, " + "RESIDUA_GG, " + "RESIDUA_MM, " + "RESIDUA_AA, DATA_REVOCA, DATA_PAGAMENTO_PP "; // 20261124-MEV_2026-124_SG
 
 		// aggiungere qui gli eventuali campi descrizioni
 
@@ -218,6 +218,8 @@ public class PeriodoAltraSanzioneSqlDAO extends SqlDAO {
 		aModel.setResiduaGG(getBigDecimal("RESIDUA_GG"));
 		aModel.setResiduaMM(getBigDecimal("RESIDUA_MM"));
 		aModel.setResiduaAA(getBigDecimal("RESIDUA_AA"));
+		aModel.setDataRevoca(getDate("DATA_REVOCA")); // 20261124-MEV_2026-124_SG
+		aModel.setDataPagamentoPP(getDate("DATA_PAGAMENTO_PP")); // 20261124-MEV_2026-124_SG
 
 		// aModel.setDescrUfficioAggiornamento(getString("") );
 

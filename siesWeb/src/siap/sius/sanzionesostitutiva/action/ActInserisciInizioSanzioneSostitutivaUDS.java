@@ -26,6 +26,16 @@ implements  ICostantiSanzioneSostitutiva
 			lPerMod.setFasSiuIdFascicoloSius(lIdFasSius);
 			lPerMod.setFasSieIdFascicoloSiep(lIdFasSiep);
 			
+			// 20260512-MEV_2026-124_SG: i quantum della pena sostitutiva devono essere valorizzati
+			siap.sius.esecuzionesanzionesostitutiva.model.EsecuzioneSanzioneSostitutivaModel lEssQ =
+					siap.sius.util.SIUSLookupRemote.getEsecuzioneSSRemote().ExRicercaEsecuzioneSanzioneSostitutivaByIdFascicolo(lIdFasSius);
+			if (lEssQ != null
+					&& (lEssQ.getNumAnniSanzione() == null || lEssQ.getNumAnniSanzione().intValue() == 0)
+					&& (lEssQ.getNumMesiSanzione() == null || lEssQ.getNumMesiSanzione().intValue() == 0)
+					&& (lEssQ.getNumGiorniSanzione() == null || lEssQ.getNumGiorniSanzione().intValue() == 0))
+				throw new siap.sius.SIUSException(siap.sius.SIUSException.USER_MESSAGE,
+						"Attenzione! Valorizzare i quantum della pena sostitutiva (Modifica procedimento di Esecuzione) prima di procedere.");
+
 			//setto i dati dell'utente che effettua l'inserimento
 			lPerMod.setCodOperatoreInserimento(getCodUtenteConnesso());
 			lPerMod.setCodUfficioInserimento(getCodUfficioUtenteConnesso());

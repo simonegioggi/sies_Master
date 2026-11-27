@@ -14,9 +14,11 @@ import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.evento.dao.EventoDAO;
 import siap.sico.evento.model.EventoModel;
+import siap.siep.penaresidua.util.PenaSostitutivaSospensioneUtil; // 20261127-MEV_2026-124_SG
 import siap.sius.esecuzionesanzionesostitutiva.dao.EsecuzioneSanzioneSostitutivaDAO;
 import siap.sius.esecuzionesanzionesostitutiva.model.EsecuzioneSanzioneSostitutivaModel;
-import siap.sius.sanzionesostitutiva.dao.PeriodoAltraSanzioneDAO;
+import siap.sius.sanzionesostitutiva.dao.OrdinanzaSospensioneDaAnnotareSqlDAO;
+import siap.sius.sanzionesostitutiva.dao.PeriodoAltraSanzioneDAO; // 20261127-MEV_2026-124_SG
 import siap.sius.sanzionesostitutiva.dao.PeriodoAltraSanzioneSqlDAO;
 import siap.sius.sanzionesostitutiva.model.PeriodoAltraSanzioneModel;
 import siap.sius.scadenzario.dao.ScadenzarioSiusDAO;
@@ -270,6 +272,72 @@ public class PeriodoAltraSanzioneController extends SiapController implements IP
 		return lPerMod;
 	}
 
+	// 20260512-MEV_2026-124_SG: variante con evento di annotazione
+	public PeriodoAltraSanzioneModel ExInserisciPeriodoAltraSanzione(PeriodoAltraSanzioneModel lPerMod,
+			ScadenzarioSiusModel lScaMod1, EsecuzioneSanzioneSostitutivaModel lEssMod,
+			ScadenzarioSiusModel lScaMod2, EventoModel aEveMod) throws F3BException {
+
+		Connection lConn = null;
+		PeriodoAltraSanzioneDAO lPerDao = null;
+		EventoDAO lEveDao = null;
+		EsecuzioneSanzioneSostitutivaDAO lEseDao = null;
+		ScadenzarioSiusDAO lScaDao = null;
+
+		try {
+			lConn = getDBTransaction();
+
+			// 20260512-MEV_2026-124_SG: inserimento evento di annotazione e aggancio al periodo
+			if (aEveMod != null) {
+				lEveDao = new EventoDAO(lConn);
+				lEveDao.setDAOFromModel(aEveMod);
+				lPerMod.setEveIdEvento(lEveDao.insert());
+			}
+
+			// inserimento Periodo Altra Sanzione
+			lPerDao = new PeriodoAltraSanzioneDAO(lConn);
+			lPerDao.setDAOFromModel(lPerMod);
+			BigDecimal lSequence = lPerDao.insert();
+			lPerMod = new PeriodoAltraSanzioneModel(lPerMod);
+			lPerMod.setMessage("Inserimento avvenuto correttamente!");
+			lPerMod.setIdPeriodoAltraSanzione(lSequence);
+
+			// inserisci scadenzario
+			// lScaMod1.setEveIdEvento(lPerMod.getIdPeriodoAltraSanzione());
+			lScaDao = new ScadenzarioSiusDAO(lConn);
+			lScaDao.setDAOFromModel(lScaMod1);
+			lScaDao.insert();
+
+			// modifica Esecuzione Sanzione Sostitutiva
+			lEseDao = new EsecuzioneSanzioneSostitutivaDAO(lConn);
+			lEseDao.setDAOFromModelForUpdate(lEssMod);
+			lEseDao.update();
+
+			// eventuale modifica scadenzario
+			if (lScaMod2 != null) {
+				lScaDao = new ScadenzarioSiusDAO(lConn);
+				lScaDao.setDAOFromModelForUpdate(lScaMod2);
+				lScaDao.update();
+			}
+
+			// 20261124-MEV_2026-124_SG: aggiornamento SIEP (pena residua sospesa/ripresa)
+			aggiornaSiepSospensione(lConn, lPerMod);
+			commit(lConn);
+		} catch (DAOException daoEx) {
+			rollback(lConn);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+			siesLogger.error("DAOException: " + daoEx);
+			throw new F3BException(
+					"PeriodoAltraSanzioneController.ExInserisciPeriodoAltraSanzione: " + daoEx);
+		} finally {
+			cleanup(lEveDao);
+			cleanup(lPerDao);
+			cleanup(lEseDao);
+			cleanup(lScaDao);
+			cleanup(lConn);
+		}
+		return lPerMod;
+	}
+
 	/*****************************************************************************
 	 * 5bis Inserimento Periodo Altra Sanzione e Modifica ESS modifica scadenzario eventuale modifica altro
 	 * scadenzario
@@ -319,6 +387,71 @@ public class PeriodoAltraSanzioneController extends SiapController implements IP
 			throw new F3BException(
 					"PeriodoAltraSanzioneController.ExInserisciPeriodoAltraSanzione: " + daoEx);
 		} finally {
+			cleanup(lPerDao);
+			cleanup(lEseDao);
+			cleanup(lScaDao);
+			cleanup(lConn);
+		}
+		return lPerMod;
+	}
+
+	// 20260512-MEV_2026-124_SG: variante con evento di annotazione
+	public PeriodoAltraSanzioneModel ExInserisciPeriodoAltraSanzione(PeriodoAltraSanzioneModel lPerMod,
+			EsecuzioneSanzioneSostitutivaModel lEssMod, ScadenzarioSiusModel lScaMod1,
+			ScadenzarioSiusModel lScaMod2, EventoModel aEveMod) throws F3BException {
+
+		Connection lConn = null;
+		PeriodoAltraSanzioneDAO lPerDao = null;
+		EventoDAO lEveDao = null;
+		EsecuzioneSanzioneSostitutivaDAO lEseDao = null;
+		ScadenzarioSiusDAO lScaDao = null;
+
+		try {
+			lConn = getDBTransaction();
+
+			// 20260512-MEV_2026-124_SG: inserimento evento di annotazione e aggancio al periodo
+			if (aEveMod != null) {
+				lEveDao = new EventoDAO(lConn);
+				lEveDao.setDAOFromModel(aEveMod);
+				lPerMod.setEveIdEvento(lEveDao.insert());
+			}
+
+			// inserimento Periodo Altra Sanzione
+			lPerDao = new PeriodoAltraSanzioneDAO(lConn);
+			lPerDao.setDAOFromModel(lPerMod);
+			BigDecimal lSequence = lPerDao.insert();
+			lPerMod = new PeriodoAltraSanzioneModel(lPerMod);
+			lPerMod.setMessage("Inserimento avvenuto correttamente!");
+			lPerMod.setIdPeriodoAltraSanzione(lSequence);
+
+			// modifica Esecuzione Sanzione Sostitutiva
+			lEseDao = new EsecuzioneSanzioneSostitutivaDAO(lConn);
+			lEseDao.setDAOFromModelForUpdate(lEssMod);
+			lEseDao.update();
+
+			// modifica scadenzario
+			lScaDao = new ScadenzarioSiusDAO(lConn);
+			lScaDao.setDAOFromModelForUpdate(lScaMod1);
+			lScaDao.update();
+
+			// eventuale modifica scadenzario
+			if (lScaMod2 != null) {
+				lScaDao = new ScadenzarioSiusDAO(lConn);
+				lScaDao.setDAOFromModelForUpdate(lScaMod2);
+				lScaDao.update();
+			}
+
+			// 20261124-MEV_2026-124_SG: aggiornamento SIEP (pena residua sospesa/ripresa)
+			aggiornaSiepSospensione(lConn, lPerMod);
+			commit(lConn);
+		} catch (DAOException daoEx) {
+			rollback(lConn);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+			siesLogger.error("DAOException: " + daoEx);
+			throw new F3BException(
+					"PeriodoAltraSanzioneController.ExInserisciPeriodoAltraSanzione: " + daoEx);
+		} finally {
+			cleanup(lEveDao);
 			cleanup(lPerDao);
 			cleanup(lEseDao);
 			cleanup(lScaDao);
@@ -379,6 +512,67 @@ public class PeriodoAltraSanzioneController extends SiapController implements IP
 		return lPerMod;
 	}
 
+	// 20260512-MEV_2026-124_SG: variante con evento di annotazione
+	public PeriodoAltraSanzioneModel ExModificaPeriodoAltraSanzione(ScadenzarioSiusModel lScaMod1,
+			ScadenzarioSiusModel lScaMod2, PeriodoAltraSanzioneModel lPerMod,
+			EsecuzioneSanzioneSostitutivaModel lEssMod, EventoModel aEveMod) throws F3BException {
+
+		Connection lConn = null;
+		EventoDAO lEveDao = null;
+		ScadenzarioSiusDAO lScaDao = null;
+		PeriodoAltraSanzioneDAO lPerDao = null;
+		EsecuzioneSanzioneSostitutivaDAO lEseDao = null;
+
+		try {
+			lConn = getDBTransaction();
+
+			// 20260512-MEV_2026-124_SG: inserimento evento di annotazione e aggancio al periodo
+			if (aEveMod != null) {
+				lEveDao = new EventoDAO(lConn);
+				lEveDao.setDAOFromModel(aEveMod);
+				lPerMod.setEveIdEvento(lEveDao.insert());
+			}
+
+			// modifica scadenzario sospensione
+			lScaDao = new ScadenzarioSiusDAO(lConn);
+			lScaDao.setDAOFromModelForUpdate(lScaMod1);
+			lScaDao.update();
+
+			// eventuale modifica altro scadenzario
+			if (lScaMod2 != null) {
+				lScaDao = new ScadenzarioSiusDAO(lConn);
+				lScaDao.setDAOFromModelForUpdate(lScaMod2);
+				lScaDao.update();
+			}
+
+			// modifica Periodo Altra Sanzione
+			lPerDao = new PeriodoAltraSanzioneDAO(lConn);
+			lPerDao.setDAOFromModelforUpdate(lPerMod);
+			lPerDao.update();
+
+			// modifica Esecuzione Sanzione Sostitutiva
+			lEseDao = new EsecuzioneSanzioneSostitutivaDAO(lConn);
+			lEseDao.setDAOFromModelForUpdate(lEssMod);
+			lEseDao.update();
+
+			// 20261124-MEV_2026-124_SG: aggiornamento SIEP (pena residua sospesa/ripresa)
+			aggiornaSiepRipresa(lConn, lPerMod, lEssMod);
+			commit(lConn);
+		} catch (DAOException daoEx) {
+			rollback(lConn);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+			siesLogger.error("DAOException: " + daoEx);
+			throw new F3BException("PeriodoAltraSanzioneController.ExModificaPeriodoAltraSanzione: " + daoEx);
+		} finally {
+			cleanup(lEveDao);
+			cleanup(lScaDao);
+			cleanup(lPerDao);
+			cleanup(lEseDao);
+			cleanup(lConn);
+		}
+		return lPerMod;
+	}
+
 	/*****************************************************************************
 	 * 7 cancella Periodo Altra Sanzione (ripresa sanzione) Modifica Ess eventuale cancella scadenzario
 	 * eventuale modifiche di altri 2 scadenzari
@@ -426,6 +620,73 @@ public class PeriodoAltraSanzioneController extends SiapController implements IP
 			lPerDao = new PeriodoAltraSanzioneDAO(lConn);
 			lPerDao.selCondizioneUpdate(idPerMod);
 			lPerDao.delete();
+
+			commit(lConn);
+		} catch (DAOException daoEx) {
+			rollback(lConn);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+			siesLogger.error("DAOException: " + daoEx);
+			throw new F3BException("PeriodoAltraSanzioneController.ExCancellaPeriodoAltraSanzione: " + daoEx);
+		} finally {
+			cleanup(lEveDao);
+			cleanup(lScaDao);
+			cleanup(lPerDao);
+			cleanup(lEseDao);
+			cleanup(lConn);
+		}
+	}
+
+	// 20260512-MEV_2026-124_SG: variante con cancellazione evento collegato
+	public void ExCancellaPeriodoAltraSanzione(ScadenzarioSiusModel lScaMod1, ScadenzarioSiusModel lScaMod2,
+			ScadenzarioSiusModel lScaMod3, BigDecimal idPerMod, EsecuzioneSanzioneSostitutivaModel lEssMod,
+			BigDecimal idEventoDaCancellare) throws F3BException {
+
+		Connection lConn = null;
+		EventoDAO lEveDao = null;
+		ScadenzarioSiusDAO lScaDao = null;
+		PeriodoAltraSanzioneDAO lPerDao = null;
+		EsecuzioneSanzioneSostitutivaDAO lEseDao = null;
+
+		try {
+			lConn = getDBTransaction();
+
+			// eventuale cancellazione scadenzario
+			if (lScaMod1 != null) {
+				lScaDao = new ScadenzarioSiusDAO(lConn);
+				lScaDao.setDAOFromModelForUpdate(lScaMod1);
+				lScaDao.delete();
+			}
+
+			// eventuale modifica altro scadenzario
+			if (lScaMod2 != null) {
+				lScaDao = new ScadenzarioSiusDAO(lConn);
+				lScaDao.setDAOFromModelForUpdate(lScaMod2);
+				lScaDao.update();
+			}
+
+			// eventuale modifica altro scadenzario
+			if (lScaMod3 != null) {
+				lScaDao = new ScadenzarioSiusDAO(lConn);
+				lScaDao.setDAOFromModelForUpdate(lScaMod3);
+				lScaDao.update();
+			}
+
+			// modifica Esecuzione Sanzione Sostitutiva
+			lEseDao = new EsecuzioneSanzioneSostitutivaDAO(lConn);
+			lEseDao.setDAOFromModelForUpdate(lEssMod);
+			lEseDao.update();
+
+			// cancellazione periodo
+			lPerDao = new PeriodoAltraSanzioneDAO(lConn);
+			lPerDao.selCondizioneUpdate(idPerMod);
+			lPerDao.delete();
+
+			// 20260512-MEV_2026-124_SG: cancellazione evento di annotazione collegato
+			if (idEventoDaCancellare != null) {
+				lEveDao = new EventoDAO(lConn);
+				lEveDao.selCondizioneUpdate(idEventoDaCancellare);
+				lEveDao.delete();
+			}
 
 			commit(lConn);
 		} catch (DAOException daoEx) {
@@ -593,6 +854,51 @@ public class PeriodoAltraSanzioneController extends SiapController implements IP
 			cleanup(lConn);
 		}
 		return lPerMod;
+	}
+
+
+	// 20261124-MEV_2026-124_SG: ordinanza di sospensione da annotare (precompilazione form)
+	public PeriodoAltraSanzioneModel ExRicercaOrdinanzaSospensioneDaAnnotare(BigDecimal aIdFascicoloSius)
+			throws F3BException {
+		Connection lConn = null;
+		OrdinanzaSospensioneDaAnnotareSqlDAO lDao = null;
+		try {
+			lConn = getDBConnection();
+			lDao = new OrdinanzaSospensioneDaAnnotareSqlDAO(lConn);
+			lDao.ricerca(aIdFascicoloSius);
+			return (PeriodoAltraSanzioneModel) lDao.getModelByKey();
+		} catch (DAOException daoEx) {
+			siesLogger.error("DAOException: " + daoEx);
+			throw new F3BException(
+					"PeriodoAltraSanzioneController.ExRicercaOrdinanzaSospensioneDaAnnotare: " + daoEx);
+		} finally {
+			cleanup(lDao);
+			cleanup(lConn);
+		}
+	}
+
+	// 20261124-MEV_2026-124_SG: sospensione pena sostitutiva -> pena residua SIEP "sospesa"
+	private void aggiornaSiepSospensione(Connection aConn, PeriodoAltraSanzioneModel aPerMod)
+			throws DAOException {
+		if (aPerMod.getFasSieIdFascicoloSiep() == null)
+			return;
+		PenaSostitutivaSospensioneUtil.sospendi(aConn, aPerMod.getFasSieIdFascicoloSiep(),
+				aPerMod.getEveIdEvento(), aPerMod.getResiduaAA(), aPerMod.getResiduaMM(),
+				aPerMod.getResiduaGG(), aPerMod.getCodOperatoreInserimento(),
+				aPerMod.getCodUfficioInserimento());
+	}
+
+	// 20261124-MEV_2026-124_SG: ripresa pena sostitutiva -> toglie la sospensione e ripresenta le date inizio/fine pena
+	private void aggiornaSiepRipresa(Connection aConn, PeriodoAltraSanzioneModel aPerMod,
+			EsecuzioneSanzioneSostitutivaModel aEssMod) throws DAOException {
+		if (aPerMod.getFasSieIdFascicoloSiep() == null || !"02".equals(aPerMod.getFlagMotivo()))
+			return;
+		PenaSostitutivaSospensioneUtil.riprendi(aConn, aPerMod.getFasSieIdFascicoloSiep(),
+				aPerMod.getEveIdEvento(), aEssMod.getDataInizioSanzione(), aEssMod.getDataTermineAttuale(),
+				aPerMod.getCodOperatoreAggiornamento() != null ? aPerMod.getCodOperatoreAggiornamento()
+						: aPerMod.getCodOperatoreInserimento(),
+				aPerMod.getCodUfficioAggiornamento() != null ? aPerMod.getCodUfficioAggiornamento()
+						: aPerMod.getCodUfficioInserimento());
 	}
 
 }

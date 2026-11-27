@@ -34,6 +34,8 @@ public interface ICostantiDepositoOrdinanzaPc {
 	public static final String CAMPO_LUOGO_SVOLGIMENTO_PROVA = "LuogoSvolgimentoProva";
 	public static final String CAMPO_SERVIZIO_TERAPEUTICO_COMP = "ServizioTerapeuticoComp";
 	public static final String CAMPO_NUM_GIORNI_DETENZIONE_DOM = "NumGiorniDetenzioneDom";
+	// MEV_2026-124_SG: ore lavoro di pubblica utilita' da conversione pena
+	public static final String CAMPO_NUM_ORE_LPU = "NumOreLpu";
 	public static final String CAMPO_NUM_MESI_DETENZIONE_DOM = "NumMesiDetenzioneDom";
 	public static final String CAMPO_NUM_ANNI_DETENZIONE_DOM = "NumAnniDetenzioneDom";
 	public static final String CAMPO_NUM_GIORNI_PERMESSO_ACCORDATI = "NumGiorniPermessoAccordati";
@@ -84,6 +86,10 @@ public interface ICostantiDepositoOrdinanzaPc {
 	public static final String CAMPO_GIORNO_DATA_DECORRENZA = "GiornoDataDecorrenza";
 	public static final String CAMPO_MESE_DATA_DECORRENZA = "MeseDataDecorrenza";
 	public static final String CAMPO_ANNO_DATA_DECORRENZA = "AnnoDataDecorrenza";
+	// 20260512-MEV_2026-124_SG: data avvenuto pagamento pena pecuniaria (revoca art. 660 c.15 c.p.p.)
+	public static final String CAMPO_GIORNO_DATA_PAGAMENTO_PP = "GiornoDataPagamentoPP";
+	public static final String CAMPO_MESE_DATA_PAGAMENTO_PP = "MeseDataPagamentoPP";
+	public static final String CAMPO_ANNO_DATA_PAGAMENTO_PP = "AnnoDataPagamentoPP";
 	public static final String CAMPO_GIORNO_DATA_PROROGA = "GiornoDataProroga";
 	public static final String CAMPO_MESE_DATA_PROROGA = "MeseDataProroga";
 	public static final String CAMPO_ANNO_DATA_PROROGA = "AnnoDataProroga";

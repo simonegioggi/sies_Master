@@ -143,7 +143,9 @@ if ("U142".equals(contenuto) || "U143".equals(contenuto) || "U145".equals(conten
 			// MEV_2025-48: aggiunto esito (3209) per Oggetto: 3180 - Contenuto: U142 - TIPO ORDINANZA: SR
 			// ESITO_PROVVEDIMENTO = 0287 (Dispone conversione pena irrogata dal GdP in permanenza domiciliare)
 			|| document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3209'
-			|| document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3217') {
+			|| document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3217'
+			// MEV_2026-124_SG: esiti di revoca pena pecuniaria sostitutiva e conversione
+			|| document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value in { '3222':1, '3223':1, '3224':1 }) {
 		var importoDaPagare = document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_INTERO_PENA_PECUNIARIA_CONVERTITA%>.value
 			+ "." + document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_DECIMALE_PENA_PECUNIARIA_CONVERTITA%>.value;
 		if (importoDaPagare == "." || parseFloat(importoDaPagare) == "0.0") {
@@ -161,9 +163,8 @@ if ("U142".equals(contenuto) || "U143".equals(contenuto) || "U145".equals(conten
 			    return false;
 			}
 		}
-		if (document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_ANNI_DETENZIONE_DOM%>.value == ''
-				&& document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_MESI_DETENZIONE_DOM%>.value == ''
-				&& document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_DETENZIONE_DOM%>.value == '') {
+		// MEV_2026-124_SG: almeno un quantum diverso da zero
+		if ((Number(document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_ANNI_DETENZIONE_DOM%>.value) || 0) + (Number(document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_MESI_DETENZIONE_DOM%>.value) || 0) + (Number(document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_DETENZIONE_DOM%>.value) || 0) == 0) {
 			alert("Quantum Pena Sostituiva obbligatorio per l'esito scelto!");
 			document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_ANNI_DETENZIONE_DOM%>.focus();
 		    return false;
@@ -173,23 +174,44 @@ if ("U142".equals(contenuto) || "U143".equals(contenuto) || "U145".equals(conten
 	// MEV_2025-48: aggiunto controllo
 	if ("U142".equals(contenuto)) {
 %>
-	if (document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3209'
+	// 20261127-MEV_2026-124_SG - controlli esiti di revoca e compatibilita' con l'oggetto
+	if (document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value in { '3222':1, '3223':1, '3224':1 }
+			&& document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_OGGETTO_TENORE%>.value != '3190') {
+		alert("Esito di revoca pena pecuniaria sostitutiva incompatibile con l'oggetto selezionato");
+		return false;
+	} else if (document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value in { '3205':1, '3206':1, '3207':1, '3208':1, '3209':1 }
+			&& document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_OGGETTO_TENORE%>.value == '3190') {
+		alert("Esito incompatibile con l'oggetto 'Revoca e Conversione pene pecuniarie sostitutive': scegliere un esito di revoca");
+		return false;
+	} else if (document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3209'
 			&& document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_FLAG_TIPO_SANZIONE%>[3].checked == false) {
 		alert("Per l'esito 'Dispone conversione pena irrogata dal GdP in permanenza domiciliare' scegliere la Pena Sostitutiva 'Permanenza Domiciliare'");
 		return false;
-	} else if (document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3205'
+	// 20261127-MEV_2026-124_SG - esiti di conversione: controllo tipo pena sostitutiva
+	} else if ((document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3205' || document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3222')
 			&& document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_FLAG_TIPO_SANZIONE%>[0].checked == false) {
 		alert("Per l'esito 'Dispone conversione in Semilibertà Sostitutiva' scegliere la Pena Sostitutiva 'Semilibertà'");
 		return false;
-	} else if (document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3206'
+	// 20261127-MEV_2026-124_SG - esiti di conversione: controllo tipo pena sostitutiva
+	} else if ((document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3206' || document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3223')
 			&& document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_FLAG_TIPO_SANZIONE%>[1].checked == false) {
 		alert("Per l'esito 'Dispone conversione in Detenzione Domiciliare Sostitutiva' scegliere la Pena Sostitutiva 'Detenzione Domiciliare'");
 		return false;
 	} else if ((document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3207'
-			|| document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3208')
+			// 20261127-MEV_2026-124_SG - esiti di conversione: controllo tipo pena sostitutiva
+			|| document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3208' || document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value == '3224')
 			&& document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_FLAG_TIPO_SANZIONE%>[2].checked == false) {
 		alert("Per gli esiti 'Dispone conversione in Lavoro Pubblica Utilità Sostitutivo' e 'Dispone conversione pena irrogata dal GDP in Lavoro Pubblica Utilità' scegliere la Pena Sostitutiva 'Lavoro Pubblica Utilità'");
 		return false;
+	}
+	// MEV_2026-124_SG: con Lavoro Pubblica Utilità il numero di ore è obbligatorio
+	if (document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_FLAG_TIPO_SANZIONE%>[2].checked) {
+		var ore = document.InserisciOrdinanzaConversionePP.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_ORE_LPU%>;
+		if (ore.value == '' || isNaN(ore.value) || parseInt(ore.value, 10) < 1) {
+			alert("Indicare il numero di ore di Lavoro Pubblica Utilità");
+			ore.focus();
+			return false;
+		}
 	}
 <%
 	}
@@ -213,7 +235,8 @@ function selectEsito() {
 	if (document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value in { '1770':1, '1771':1 }
 			// MEV_2023-35: aggiunti esisti
 			// MEV_2025-48: aggiunto esito (3209) per Oggetto: 3180 - Contenuto: U142 - TIPO ORDINANZA: SR
-			|| document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value in { '3205':1, '3206':1, '3207':1, '3208':1, '3209':1, '3217':1 }) {
+			// 20261127-MEV_2026-124_SG - esiti di conversione: visualizzazione sezione conversione
+			|| document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>[document.InserisciOrdinanzaConversionePP.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>.selectedIndex].value in { '3205':1, '3206':1, '3207':1, '3208':1, '3209':1, '3217':1, '3222':1, '3223':1, '3224':1 }) {
 		node = document.getElementById("divConversione");
 		node.style.display = 'block';
 		node = document.getElementById("divRateizzazione");
@@ -476,6 +499,9 @@ while (itx.hasNext()) {
 			<input value="03" type="radio" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_FLAG_TIPO_SANZIONE%>">
 			<font class="label"> Permanenza Domiciliare </font>
 			<input value="04" type="radio" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_FLAG_TIPO_SANZIONE%>">
+			<%-- MEV_2026-124_SG: ore per Lavoro Pubblica Utilità --%>
+			<br><font class="label">Ore (solo per Lavoro Pubblica Utilit&agrave;)</font>
+			<font class="campo"> <input title="Ore Lavoro Pubblica Utilit&agrave;" type="text" size="4" maxlength="4" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_ORE_LPU%>" onkeypress="return TicTabNumField(this,event)"></font>
 <%
 	} else {
 %>

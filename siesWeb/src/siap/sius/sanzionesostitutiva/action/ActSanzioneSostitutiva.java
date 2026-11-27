@@ -305,6 +305,26 @@ public class ActSanzioneSostitutiva extends ActionSius implements ICostantiSanzi
 		return lEve;
 	}
 
+	// 20260512-MEV_2026-124_SG: motivo dell'evento di annotazione inizio sospensione pena sostitutiva
+	public static final String COD_MOTIVO_ANNOTAZIONE_SOSPENSIONE_PS = "9300";
+
+	// 20260512-MEV_2026-124_SG: motivo dell'evento di annotazione ripresa esecuzione pena sostitutiva
+	public static final String COD_MOTIVO_ANNOTAZIONE_RIPRESA_PS = "9301";
+
+	// 20260512-MEV_2026-124_SG: evento di annotazione della ripresa esecuzione (visibile in Altri Atti)
+	protected EventoModel preparoEventoRipresa(PeriodoAltraSanzioneModel lPerMod) throws F3BException {
+		EventoModel lEve = preparoEvento(lPerMod);
+		lEve.setCodMotivo(COD_MOTIVO_ANNOTAZIONE_RIPRESA_PS);
+		return lEve;
+	}
+
+	// 20260512-MEV_2026-124_SG: evento di annotazione manuale dell'inizio sospensione (visibile in Altri Atti)
+	protected EventoModel preparoEventoSospensione(PeriodoAltraSanzioneModel lPerMod) throws F3BException {
+		EventoModel lEve = preparoEvento(lPerMod);
+		lEve.setCodMotivo(COD_MOTIVO_ANNOTAZIONE_SOSPENSIONE_PS);
+		return lEve;
+	}
+
 	protected void caricoIstitutiDetenzione(PeriodoAltraSanzioneModel lPerMod) throws F3BException {
 
 		IstitutoDetenzioneModel lIstMod = null;

@@ -95,7 +95,18 @@ if (ICostantiDepositoOrdinanzaPc.COD_OGGETTO_SOSPENSIONE_ESECUZIONE_PENE_ACCESSO
 %>
   	<tr>
 	    <td class="l">Periodo Sospensione</td>
+	    <%-- 20261124-MEV_2026-124_SG - 3.12 periodo calcolato tra le due date se anni/mesi/giorni sono a zero --%>
+	    <%
+	    java.math.BigDecimal[] lPerCalc = siap.sius.depositoordinanzapc.util.PeriodoSospensioneUtil.getPeriodoCalcolato(
+	    		datiOrdinanza.getOrdinanza().getSospensioneAASS(), datiOrdinanza.getOrdinanza().getSospensioneMMSS(),
+	    		datiOrdinanza.getOrdinanza().getSospensioneGGSS(), datiOrdinanza.getOrdinanza().getDataSospensioneSS(),
+	    		datiOrdinanza.getOrdinanza().getDataScadenzaSospensioneSS());
+	    if (lPerCalc != null) {
+	    %>
+	    <td class="l"><font class="campo">ANNI <%=lPerCalc[0]%> MESI <%=lPerCalc[1]%> GIORNI <%=lPerCalc[2]%></font></td>
+	    <% } else { %>
 	    <td class="l"><font class="campo">ANNI <%=datiOrdinanza.getOrdinanza().getSospensioneAASS()%> MESI <%=datiOrdinanza.getOrdinanza().getSospensioneMMSS()%> GIORNI <%=datiOrdinanza.getOrdinanza().getSospensioneGGSS()%></font></td>
+	    <% } %>
   	</tr>
 <%
 // 	}

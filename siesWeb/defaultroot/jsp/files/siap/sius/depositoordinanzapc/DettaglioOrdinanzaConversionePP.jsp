@@ -211,7 +211,10 @@ if ("0159".equals(tenori[0].getCodEsitoTenore()) && !Utils.isNullObj(rate) && !r
 		|| "0278".equals(tenori[0].getCodEsitoTenore()) || "0279".equals(tenori[0].getCodEsitoTenore())
 		|| "0281".equals(tenori[0].getCodEsitoTenore())
 		// MEV_2025-48: aggiunto esito (3209) per Oggetto: 3180 - Contenuto: U142
-		|| "0287".equals(tenori[0].getCodEsitoTenore())) {
+		|| "0287".equals(tenori[0].getCodEsitoTenore())
+		// MEV_2026-124_SG: esiti di revoca pena pecuniaria sostitutiva e conversione
+		|| "0282".equals(tenori[0].getCodEsitoTenore()) || "0283".equals(tenori[0].getCodEsitoTenore())
+		|| "0284".equals(tenori[0].getCodEsitoTenore())) {
 	String descrTipoSanzione = "01".equals(dopm.getCodTipoSanzione()) ? "Semilibert&agrave;" :
 		 "02".equals(dopm.getCodTipoSanzione()) ? "Detenzione Domiciliare" : 
 			 "03".equals(dopm.getCodTipoSanzione()) ? "Lavoro Pubblica Utilit&agrave;" : "Permanenza Domiciliare";
@@ -229,6 +232,15 @@ if ("0159".equals(tenori[0].getCodEsitoTenore()) && !Utils.isNullObj(rate) && !r
 			<font class="cRosso">&nbsp;GIORNI: <%=StringUtils.toStringJSP(dopm.getNumGiorniDetenzioneDom(), "0")%></font>
 			<font class="label">di</font>
 			<font class="cRosso">&nbsp;<%=StringUtils.toStringJSP(descrTipoSanzione)%></font>
+<%-- 20261127-MEV_2026-124_SG - visualizzazione ore Lavoro Pubblica Utilita' --%>
+<%
+	if (dopm.getNumOreLpu() != null) {
+%>
+			<font class="label">&nbsp;Ore:</font>
+			<font class="cRosso">&nbsp;<%=StringUtils.toStringJSP(dopm.getNumOreLpu())%></font>
+<%
+	}
+%>
 		</td>
 	</tr>
 <%

@@ -76,6 +76,24 @@ public class ActAnnullaProvvedimento  extends ActionSiap
     IPeriodoAltraSanzione lCtrlPAS = SIUSLookupRemote.getPeriodoAltraSanzioneRemote();
     PeriodoAltraSanzioneModel mPerAlSanz = lCtrlPAS.ExRicercaSanzioneSostitutivaByIdEvento(lKeyEvento);
 
+    // 20260512-MEV_2026-124_SG: l'annullamento di un'annotazione di sospensione/ripresa o di un'ordinanza di sospensione cancella
+    // automaticamente il periodo di sospensione collegato (solo se e' l'ultimo periodo del fascicolo)
+    if (mPerAlSanz != null && mPerAlSanz.getIdPeriodoAltraSanzione() != null
+        && ("03".equals(mPerAlSanz.getFlagMotivo()) || "02".equals(mPerAlSanz.getFlagMotivo())) && mPerAlSanz.getFasSiuIdFascicoloSius() != null
+        && !isSessionAttributeNullObj("fascicoloSiusGP"))
+    {
+      java.util.List lListaPAS = lCtrlPAS.ExRicercaSanzioneSostitutivaByIdFascicolo(mPerAlSanz.getFasSiuIdFascicoloSius());
+      if (!lListaPAS.isEmpty()
+          && mPerAlSanz.getIdPeriodoAltraSanzione().equals(
+              ((PeriodoAltraSanzioneModel) lListaPAS.get(lListaPAS.size() - 1)).getIdPeriodoAltraSanzione()))
+      {
+        return IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
+            + "=siap.sius.sanzionesostitutiva.action.ActLoadCancellaInizioSanzioneSostitutivaUDS"
+            + "&" + siap.sius.sanzionesostitutiva.action.ICostantiSanzioneSostitutiva.CAMPO_ID_PERIODO_ALTRA_SANZIONE
+            + "=" + mPerAlSanz.getIdPeriodoAltraSanzione();
+      }
+    }
+
     IPeriodoAltraMisura lCtrlPAM = SIUSLookupRemote.getPeriodoAltraMisuraRemote();
     PeriodoAltraMisuraModel mPerAlMisu = lCtrlPAM.ExRicercaMisuraSicurezzaByIdEvento(lKeyEvento);
 

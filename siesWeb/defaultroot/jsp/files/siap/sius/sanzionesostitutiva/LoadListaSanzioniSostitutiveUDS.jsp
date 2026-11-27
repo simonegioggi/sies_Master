@@ -14,6 +14,8 @@
 <%@ page import="siap.sico.util.CalendarUtil"%>
 
 <jsp:useBean id="listaSanzioniSius" scope="request" class="java.util.ArrayList"/>
+<%-- 20261127-MEV_2026-124_SG - modalita' inserimento dei periodi --%>
+<jsp:useBean id="modalitaInserimentoPAS" scope="request" class="java.util.HashMap"/>
 <jsp:useBean id="eventoUltimoPAS" 	scope="request" class="siap.sico.evento.model.EventoModel"/>
 <jsp:useBean id="fascicoloSiusGP" 	scope="session" class="siap.sius.fascicolo.model.FascicoloGPModel"/>
 
@@ -61,9 +63,10 @@ function cancella(idEvento, flagMotivo, flagDocumentoRegistrato, idPeriodoAltraS
         		<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0>
       		</a>
     	</td>
+    	<%-- 20261127-MEV_2026-124_SG - titolo in base al tipo sostituzione --%>
     	<td class="LBG">
 			<font class="label">Funzione :</font>
-			<font class="campo"> Elenco Periodi <%=tipoSostituzione%> Sostitutiva</font>
+			<font class="campo"> Elenco Periodi <%="Pena".equals(tipoSostituzione) ? "Esecuzione Pena" : "Sanzione"%> Sostitutiva</font>
     	</td>
 	</tr>
 </table>
@@ -72,9 +75,14 @@ function cancella(idEvento, flagMotivo, flagDocumentoRegistrato, idPeriodoAltraS
   	<tr>
 	    <td class="int">Data Decorrenza</td>
 	    <td class="int">Data Scadenza </td>
+	    <%-- 20261127-MEV_2026-124_SG - colonna Data Revoca --%>
+	    <td class="int">Data Revoca</td>
 	    <td class="int">Durata <%=tipoSostituzione%> Sostitutiva</td>
 	    <td class="int">Note</td>
 	    <td class="int">Motivo</td>
+	    <%-- 20261127-MEV_2026-124_SG - colonne modalita' inserimento e quantum da recuperare --%>
+	    <td class="int">Modalit&agrave; inserimento</td>
+	    <td class="int">Quantum da recuperare</td>
 <%
 Object lObj = null;
 lObj = session.getAttribute("fascicoloSiusGP");
@@ -97,6 +105,18 @@ if (!listaSanzioniSius.isEmpty()) {
 		</td>
 		<td class="c">
 		  	<%=StringUtils.toStringJSP(DateUtils.getDateToString(lPeriodoAltraSanzioneModel.getDataScadenza(),"dd-MM-yyyy"), "-")%>
+		</td>
+		<%-- 20260512-MEV_2026-124_SG --%>
+		<td class="c">
+		  	<%=StringUtils.toStringJSP(DateUtils.getDateToString(lPeriodoAltraSanzioneModel.getDataRevoca(),"dd-MM-yyyy"), "-")%>
+<% if (lPeriodoAltraSanzioneModel.getDataRevoca() != null) { %>
+			<br><font class="label">Pena residua: Anni</font> <font class="campo"><%=StringUtils.toStringJSP(lPeriodoAltraSanzioneModel.getResiduaAA(), "0")%></font>
+			<font class="label">Mesi</font> <font class="campo"><%=StringUtils.toStringJSP(lPeriodoAltraSanzioneModel.getResiduaMM(), "0")%></font>
+			<font class="label">Giorni</font> <font class="campo"><%=StringUtils.toStringJSP(lPeriodoAltraSanzioneModel.getResiduaGG(), "0")%></font>
+<% } %>
+<% if (lPeriodoAltraSanzioneModel.getDataPagamentoPP() != null) { %>
+			<br><font class="label">Pagamento PP:</font> <font class="campo"><%=DateUtils.getDateToString(lPeriodoAltraSanzioneModel.getDataPagamentoPP(),"dd-MM-yyyy")%></font>
+<% } %>
 		</td>
 <%
 		CalendarModel lCal = new CalendarModel();
@@ -128,6 +148,25 @@ if (!listaSanzioniSius.isEmpty()) {
 		</td>
 	 	<td class="c">
 	  		<%=StringUtils.toStringJSP(lPeriodoAltraSanzioneModel.getDescrMotivo(), "-")%>
+		</td>
+		<%-- 20261127-MEV_2026-124_SG - celle modalita' inserimento e quantum da recuperare --%>
+		<td class="c">
+			<%=StringUtils.toStringJSP((String) modalitaInserimentoPAS.get(lPeriodoAltraSanzioneModel.getIdPeriodoAltraSanzione()), "-")%>
+		</td>
+		<td class="c">
+<%
+		if ("1".equals(lPeriodoAltraSanzioneModel.getDaRecuperare())) {
+%>
+			<font class="label">Anni</font> <font class="campo"><%=StringUtils.toStringJSP(lPeriodoAltraSanzioneModel.getDaRecuperareAA(), "0")%></font>
+			<font class="label">Mesi</font> <font class="campo"><%=StringUtils.toStringJSP(lPeriodoAltraSanzioneModel.getDaRecuperareMM(), "0")%></font>
+			<font class="label">Giorni</font> <font class="campo"><%=StringUtils.toStringJSP(lPeriodoAltraSanzioneModel.getDaRecuperareGG(), "0")%></font>
+<%
+		} else {
+%>
+			-
+<%
+		}
+%>
 		</td>
 		<td class="c">
 <%

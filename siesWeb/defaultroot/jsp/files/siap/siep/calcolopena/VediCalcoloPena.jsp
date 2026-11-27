@@ -259,6 +259,8 @@ BigDecimal totalegiornilibanticipata    = (BigDecimal) request.getAttribute("tot
         if (   SanzioneSostitutivaInSentenza.getCodTipoSanzione().equals("S")
             || SanzioneSostitutivaInSentenza.getCodTipoSanzione().equals("L")
             || SanzioneSostitutivaInSentenza.getCodTipoSanzione().equals("E")
+            || SanzioneSostitutivaInSentenza.getCodTipoSanzione().equals("T") /* 20261124-MEV_2026-124_SG */
+            || SanzioneSostitutivaInSentenza.getCodTipoSanzione().equals("V")
            ) 
         { 
         %>
@@ -570,6 +572,8 @@ BigDecimal totalegiornilibanticipata    = (BigDecimal) request.getAttribute("tot
       && PenaComplessiva.getCodTipoSanzione()!=null
       && (   PenaComplessiva.getCodTipoSanzione().equals("S")
           || PenaComplessiva.getCodTipoSanzione().equals("L")
+          || PenaComplessiva.getCodTipoSanzione().equals("T") // 20261124-MEV_2026-124_SG
+          || PenaComplessiva.getCodTipoSanzione().equals("V") // 20261124-MEV_2026-124_SG
           //|| PenaComplessiva.getCodTipoSanzione().equals("E")
          )
      ) 
@@ -583,6 +587,10 @@ BigDecimal totalegiornilibanticipata    = (BigDecimal) request.getAttribute("tot
       <td class="l">Semidetenzione : &nbsp;</td>
     <% } else if (PenaComplessiva.getCodTipoSanzione().equals("L")) {  %>
       <td class="l">Libertà Controllata : &nbsp;</td>
+    <% }  else if (PenaComplessiva.getCodTipoSanzione().equals("T")) {  %><%-- 20261124-MEV_2026-124_SG --%>
+      <td class="l">Semilibert&agrave; sostitutiva : &nbsp;</td>
+    <% } else if (PenaComplessiva.getCodTipoSanzione().equals("V")) {  %><%-- 20261124-MEV_2026-124_SG --%>
+      <td class="l">Detenzione domiciliare sostitutiva : &nbsp;</td>
     <% } else if (PenaComplessiva.getCodTipoSanzione().equals("P")) {  %>
       <td class="l">Pena Pecuniaria : &nbsp;</td>
     <% } else if (PenaComplessiva.getCodTipoSanzione().equals("E")) {  %>
@@ -593,6 +601,8 @@ BigDecimal totalegiornilibanticipata    = (BigDecimal) request.getAttribute("tot
     if (   PenaComplessiva.getCodTipoSanzione().equals("S")
         || PenaComplessiva.getCodTipoSanzione().equals("L")
         || PenaComplessiva.getCodTipoSanzione().equals("E")
+        || PenaComplessiva.getCodTipoSanzione().equals("T") // 20261124-MEV_2026-124_SG
+        || PenaComplessiva.getCodTipoSanzione().equals("V")
        ) 
     { %>
       <td class="l"> &nbsp;

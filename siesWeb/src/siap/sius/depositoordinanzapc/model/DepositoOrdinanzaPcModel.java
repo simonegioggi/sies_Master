@@ -36,6 +36,8 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 	private String mLuogoSvolgimentoProva;
 	private String mServizioTerapeuticoComp;
 	private BigDecimal mNumGiorniDetenzioneDom;
+	// MEV_2026-124_SG
+	private BigDecimal mNumOreLpu;
 	private BigDecimal mNumMesiDetenzioneDom;
 	private BigDecimal mNumAnniDetenzioneDom;
 	private BigDecimal mNumGiorniPermessoAccordati;
@@ -123,6 +125,7 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 		this.mLuogoSvolgimentoProva = "";
 		this.mServizioTerapeuticoComp = "";
 		this.mNumGiorniDetenzioneDom = null;
+		this.mNumOreLpu = null; // 20261127-MEV_2026-124_SG
 		this.mNumMesiDetenzioneDom = null;
 		this.mNumAnniDetenzioneDom = null;
 		this.mNumGiorniPermessoAccordati = null;
@@ -206,6 +209,7 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 		this.mLuogoSvolgimentoProva = aModel.mLuogoSvolgimentoProva;
 		this.mServizioTerapeuticoComp = aModel.mServizioTerapeuticoComp;
 		this.mNumGiorniDetenzioneDom = aModel.mNumGiorniDetenzioneDom;
+		this.mNumOreLpu = aModel.mNumOreLpu; // 20261127-MEV_2026-124_SG
 		this.mNumMesiDetenzioneDom = aModel.mNumMesiDetenzioneDom;
 		this.mNumAnniDetenzioneDom = aModel.mNumAnniDetenzioneDom;
 		this.mNumGiorniPermessoAccordati = aModel.mNumGiorniPermessoAccordati;
@@ -446,6 +450,11 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 
 	public String getServizioTerapeuticoComp() {
 		return mServizioTerapeuticoComp;
+	}
+
+	// 20261127-MEV_2026-124_SG - numero ore LPU
+	public BigDecimal getNumOreLpu() {
+		return mNumOreLpu;
 	}
 
 	public BigDecimal getNumGiorniDetenzioneDom() {
@@ -772,6 +781,11 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 
 	public void setServizioTerapeuticoComp(String aValore) {
 		this.mServizioTerapeuticoComp = aValore;
+	}
+
+	// 20261127-MEV_2026-124_SG - numero ore LPU
+	public void setNumOreLpu(BigDecimal aValore) {
+		this.mNumOreLpu = aValore;
 	}
 
 	public void setNumGiorniDetenzioneDom(BigDecimal aValore) {

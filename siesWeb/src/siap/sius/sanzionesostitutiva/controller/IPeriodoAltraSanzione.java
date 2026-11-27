@@ -76,6 +76,24 @@ public interface IPeriodoAltraSanzione {
 			ScadenzarioSiusModel lScaMod3, BigDecimal idPerMod, EsecuzioneSanzioneSostitutivaModel lEssMod)
 			throws F3BException;
 
+	// 20260512-MEV_2026-124_SG: varianti con evento di annotazione
+	public PeriodoAltraSanzioneModel ExInserisciPeriodoAltraSanzione(PeriodoAltraSanzioneModel lPerMod,
+			ScadenzarioSiusModel lScaMod1, EsecuzioneSanzioneSostitutivaModel lEssMod,
+			ScadenzarioSiusModel lScaMod2, EventoModel aEveMod) throws F3BException;
+
+	public PeriodoAltraSanzioneModel ExInserisciPeriodoAltraSanzione(PeriodoAltraSanzioneModel lPerMod,
+			EsecuzioneSanzioneSostitutivaModel lEssMod, ScadenzarioSiusModel lScaMod1,
+			ScadenzarioSiusModel lScaMod2, EventoModel aEveMod) throws F3BException;
+
+	public void ExCancellaPeriodoAltraSanzione(ScadenzarioSiusModel lScaMod1, ScadenzarioSiusModel lScaMod2,
+			ScadenzarioSiusModel lScaMod3, BigDecimal idPerMod, EsecuzioneSanzioneSostitutivaModel lEssMod,
+			BigDecimal idEventoDaCancellare) throws F3BException;
+
+	// 20260512-MEV_2026-124_SG: variante con evento di annotazione
+	public PeriodoAltraSanzioneModel ExModificaPeriodoAltraSanzione(ScadenzarioSiusModel lScaMod1,
+			ScadenzarioSiusModel lScaMod2, PeriodoAltraSanzioneModel lPerMod,
+			EsecuzioneSanzioneSostitutivaModel lEssMod, EventoModel aEveMod) throws F3BException;
+
 	/****************************************************************************
 	 * Effettua la ricerca per chiave
 	 * 
@@ -104,4 +122,8 @@ public interface IPeriodoAltraSanzione {
 	public PeriodoAltraSanzioneModel ExRicercaSanzioneSostitutivaByIdEvento(BigDecimal aKey)
 			throws F3BException;
 
+
+	// 20261124-MEV_2026-124_SG: ordinanza di sospensione da annotare (precompilazione form)
+	public PeriodoAltraSanzioneModel ExRicercaOrdinanzaSospensioneDaAnnotare(BigDecimal aIdFascicoloSius)
+			throws F3BException;
 }

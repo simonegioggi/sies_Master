@@ -67,6 +67,9 @@ public interface ICostantiScambioSanzione {
     
     public static final String ANNOTAZIONE = "ANNOTAZIONE";
     public static final String REVOCA_CONVERSIONE = "REVOCA_CONVERSIONE";
+    // 20261124-MEV_2026-124_SG: pene sostitutive (Riforma Cartabia)
+    public static final String PENE_SOSTITUTIVE = "PENE_SOSTITUTIVE";
+    public static final String REVOCA_CONVERSIONE_PENE_SOSTITUTIVE = "REVOCA_CONVERSIONE_PENE_SOSTITUTIVE";
     
     public static final String CAMPO_DESC_UFF_SORVE = "DescUfficioSorveglianza";
     public static final String CAMPO_DESC_UFF_EMITT = "DescUfficioEmittente";
